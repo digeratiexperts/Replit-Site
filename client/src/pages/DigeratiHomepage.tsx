@@ -370,6 +370,130 @@ export const DigeratiHomepage = (): JSX.Element => {
         </div>
       </section>
 
+      {/* Portfolio Section */}
+      <section id="portfolio" className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Our Portfolio
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Explore our recent projects and success stories
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card className="overflow-hidden hover:shadow-xl transition-shadow" data-testid="portfolio-1">
+              <div className="h-48 bg-gradient-to-br from-purple-400 to-blue-400"></div>
+              <CardHeader>
+                <CardTitle>E-Commerce Platform</CardTitle>
+                <CardDescription>
+                  Modern online shopping experience with integrated payment systems and real-time inventory management.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">React</span>
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">Node.js</span>
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">Stripe</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="overflow-hidden hover:shadow-xl transition-shadow" data-testid="portfolio-2">
+              <div className="h-48 bg-gradient-to-br from-green-400 to-blue-400"></div>
+              <CardHeader>
+                <CardTitle>Healthcare App</CardTitle>
+                <CardDescription>
+                  Patient management system with telemedicine capabilities and secure health record storage.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">React Native</span>
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">AWS</span>
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">HIPAA</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="overflow-hidden hover:shadow-xl transition-shadow" data-testid="portfolio-3">
+              <div className="h-48 bg-gradient-to-br from-pink-400 to-purple-400"></div>
+              <CardHeader>
+                <CardTitle>Financial Dashboard</CardTitle>
+                <CardDescription>
+                  Real-time analytics dashboard for financial institutions with advanced data visualization.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">Vue.js</span>
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">D3.js</span>
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">Python</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="overflow-hidden hover:shadow-xl transition-shadow" data-testid="portfolio-4">
+              <div className="h-48 bg-gradient-to-br from-yellow-400 to-orange-400"></div>
+              <CardHeader>
+                <CardTitle>Education Platform</CardTitle>
+                <CardDescription>
+                  Interactive learning management system with video conferencing and progress tracking.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">Next.js</span>
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">WebRTC</span>
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">MongoDB</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="overflow-hidden hover:shadow-xl transition-shadow" data-testid="portfolio-5">
+              <div className="h-48 bg-gradient-to-br from-red-400 to-pink-400"></div>
+              <CardHeader>
+                <CardTitle>Social Media App</CardTitle>
+                <CardDescription>
+                  Community platform with real-time messaging, content sharing, and engagement analytics.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">Flutter</span>
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">Firebase</span>
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">GraphQL</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="overflow-hidden hover:shadow-xl transition-shadow" data-testid="portfolio-6">
+              <div className="h-48 bg-gradient-to-br from-indigo-400 to-purple-400"></div>
+              <CardHeader>
+                <CardTitle>IoT Dashboard</CardTitle>
+                <CardDescription>
+                  Smart home automation system with device management and energy monitoring capabilities.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">Angular</span>
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">MQTT</span>
+                  <span className="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">Azure IoT</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center mt-12">
+            <Button size="lg" variant="outline" className="border-purple-600 text-purple-600 hover:bg-purple-50" data-testid="button-view-all-projects">
+              View All Projects <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* Testimonials Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
