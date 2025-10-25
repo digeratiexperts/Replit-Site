@@ -20,13 +20,12 @@ export const DigeratiCTASection = (): JSX.Element => {
         
         <p className="text-white mb-8 font-semibold">Trusted by 100+ Arizona Businesses.</p>
         
-        <Button 
-          size="lg" 
-          className="bg-white text-purple-700 hover:bg-gray-100 hover:text-purple-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl font-semibold" 
+        <button 
+          className="h-10 px-8 rounded-md bg-white text-purple-700 hover:bg-gray-100 hover:text-purple-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-semibold"
           data-testid="button-cta-assessment"
         >
           Get My Free Assessment
-        </Button>
+        </button>
       </div>
     </section>
   );

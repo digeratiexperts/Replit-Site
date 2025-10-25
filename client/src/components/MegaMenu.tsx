@@ -287,12 +287,14 @@ export function MegaMenu() {
           {/* Logo */}
           <div className="flex items-center space-x-8">
             <a href="/" className="flex items-center">
-              <img 
-                src="/logo.png" 
-                alt="Digerati Experts" 
-                className="h-12 w-auto object-contain" 
-                style={{ maxWidth: '180px' }}
-              />
+              <div className="bg-white rounded-lg p-3" style={{ backgroundColor: '#ffffff' }}>
+                <img 
+                  src="/logo.png" 
+                  alt="Digerati Experts" 
+                  className="h-20 w-auto object-contain" 
+                  style={{ maxWidth: '250px', minHeight: '80px' }}
+                />
+              </div>
             </a>
 
             {/* Desktop Navigation */}
