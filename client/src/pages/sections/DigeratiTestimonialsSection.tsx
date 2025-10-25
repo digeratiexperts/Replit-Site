@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Testimonial {
   rating: number;
@@ -45,6 +45,19 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
     setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft') {
+        handlePrevious();
+      } else if (event.key === 'ArrowRight') {
+        handleNext();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -88,27 +101,25 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                 </div>
               </div>
 
-              <div className="absolute top-1/2 -translate-y-1/2 left-4">
-                <button
-                  onClick={handlePrevious}
-                  className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
-                  data-testid="testimonial-prev"
-                  aria-label="Previous testimonial"
-                >
-                  <ChevronLeft className="h-5 w-5 text-gray-700" />
-                </button>
-              </div>
+              <button
+                onClick={handlePrevious}
+                className="absolute top-1/2 -translate-y-1/2 left-4 z-10 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-600"
+                data-testid="testimonial-prev"
+                aria-label="Previous testimonial"
+                type="button"
+              >
+                <ChevronLeft className="h-5 w-5 text-gray-700" />
+              </button>
 
-              <div className="absolute top-1/2 -translate-y-1/2 right-4">
-                <button
-                  onClick={handleNext}
-                  className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
-                  data-testid="testimonial-next"
-                  aria-label="Next testimonial"
-                >
-                  <ChevronRight className="h-5 w-5 text-gray-700" />
-                </button>
-              </div>
+              <button
+                onClick={handleNext}
+                className="absolute top-1/2 -translate-y-1/2 right-4 z-10 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-600"
+                data-testid="testimonial-next"
+                aria-label="Next testimonial"
+                type="button"
+              >
+                <ChevronRight className="h-5 w-5 text-gray-700" />
+              </button>
             </CardContent>
           </Card>
 
