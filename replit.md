@@ -1,16 +1,58 @@
-# Digerati Experts - Modern Digital Agency Website
+# Digerati Experts - Managed Security Service Provider (MSP/MSSP) Website
 
 ## Overview
-Digerati Experts is a modern, fully responsive digital agency website built with React, TypeScript, and Tailwind CSS. The site features a contemporary design with gradient backgrounds, smooth animations, and a comprehensive portfolio showcase. This project was implemented from a Figma design to create a professional web presence for a digital transformation company.
+Digerati Experts is a modern, fully responsive website for a Managed Security Service Provider (MSP/MSSP) based in Chandler, Arizona. Built with React, TypeScript, and Tailwind CSS, the site features cybersecurity-focused messaging including "Hackers Don't Wait. Protect Your Business Now" as the hero headline, showcasing managed IT and security services with a professional purple gradient design.
 
 ## Recent Changes (January 2025)
-- Implemented complete Figma design as a modern digital agency website
-- Created responsive navigation with mobile menu support
-- Built hero section with gradient backgrounds and call-to-action forms
-- Added comprehensive sections: Services, Portfolio, About, Testimonials, Contact
-- Integrated modern UI components using shadcn/ui and Lucide icons
-- Implemented smooth scrolling navigation and anchor links
-- Added fully responsive design optimized for all screen sizes
+- **Major Pivot**: Transformed from generic digital agency to MSP/MSSP cybersecurity-focused website
+- Updated all content to reflect managed security services and IT support offerings
+- Added Chandler, Arizona location with local phone number (480) 848-6116
+- Implemented "Hackers Don't Wait. Protect Your Business Now" hero messaging
+- Created comprehensive services sections: Managed Security, Managed IT, Compliance & Governance
+- Added security-focused statistics and value propositions throughout
+- Updated testimonials to reflect Arizona business clients
+- Added pricing tiers: Essential ($299/mo), Professional ($599/mo), Enterprise (Custom)
+- Added emergency support hotline and 24/7 SOC monitoring emphasis
+
+## Business Information
+
+### Company Details
+- **Company Name**: Digerati Experts
+- **Type**: Managed Security Service Provider (MSP/MSSP)
+- **Location**: 3165 S Alma School Rd Suite 29, Chandler, AZ 85248
+- **Phone**: (480) 848-6116
+- **Email**: info@digerati-experts.com
+- **Domain**: digerati-experts.com
+- **Office Hours**: Monday-Friday 7:00 AM - 6:00 PM MST
+- **24/7 Security Operations Center**: Always Active
+
+### Core Services
+
+#### Managed Security Services
+- SOC-as-a-Service
+- Endpoint Detection & Response
+- Vulnerability Management
+- Incident Response
+- 24/7 Security Monitoring
+
+#### Managed IT Services
+- Network Management
+- Help Desk Support
+- Cloud Migration
+- Backup & Disaster Recovery
+
+#### Compliance & Governance
+- HIPAA Compliance
+- PCI DSS Compliance
+- NIST Framework
+- Security Audits
+
+### Key Differentiators
+- **Local Presence**: Based in Chandler, serving Phoenix metropolitan area
+- **Rapid Response**: 15-minute response time for critical incidents
+- **Certifications**: Team holds CISSP, CCSP, CEH, and Security+ certifications
+- **Track Record**: 500+ Arizona businesses protected, 99.9% uptime, 0 breaches
+- **24/7 Protection**: Round-the-clock Security Operations Center
 
 ## Project Architecture
 
@@ -19,40 +61,36 @@ Digerati Experts is a modern, fully responsive digital agency website built with
 - **Routing**: Wouter with hash-based navigation for smooth scrolling
 - **UI Components**: shadcn/ui with Radix UI primitives
 - **Icons**: Lucide React for consistent iconography
-- **Styling**: Tailwind CSS with custom gradients and animations
+- **Styling**: Tailwind CSS with custom purple-blue gradients
 - **Layout**: Fully responsive design with mobile-first approach
 
 ### Backend (Currently Minimal)
 - **Server**: Express.js with TypeScript
-- **Database**: PostgreSQL available (but not actively used for the landing page)
+- **Database**: PostgreSQL available (not actively used for the landing page)
 - **Build Tool**: Vite for fast development and optimized builds
 
 ## Key Features
 
 ### Website Sections
-1. **Navigation**: Fixed header with responsive mobile menu
-2. **Hero Section**: Gradient background with CTAs and contact form
-3. **Services**: Three service offerings with feature lists
-4. **Portfolio**: Six project showcases with technology stacks
-5. **About**: Company information and value propositions
-6. **Testimonials**: Customer reviews and ratings
-7. **Contact**: Contact form and company information
-8. **Footer**: Comprehensive links and social media
+1. **Navigation**: Fixed header with responsive mobile menu and emergency hotline
+2. **Hero Section**: Cybersecurity-focused messaging with free assessment form
+3. **Alert Banner**: Critical security alerts for Arizona businesses
+4. **Services**: Three core service offerings (Security, IT, Compliance)
+5. **Why MSP Section**: Statistics and value propositions for managed security
+6. **About**: Local presence, certifications, and rapid response capabilities
+7. **Pricing**: Three-tier transparent pricing model
+8. **Testimonials**: Arizona business client reviews
+9. **CTA Section**: Urgent security call-to-action
+10. **Contact**: Comprehensive contact form with Chandler office location
+11. **Footer**: Industry links, resources, and emergency hotline
 
 ### Design Features
 - **Modern Gradients**: Purple to blue gradient themes throughout
+- **Security Icons**: Shield, lock, and security-focused iconography
 - **Responsive Design**: Mobile-first approach with breakpoint optimization
-- **Smooth Scrolling**: Hash-based navigation with anchor links
-- **Interactive Elements**: Hover effects and transitions
 - **Professional Typography**: Clean, readable fonts with proper hierarchy
-- **Card-Based Layout**: Consistent card components for content organization
-
-### Technical Features
-- **Component Architecture**: Reusable React components
-- **Type Safety**: Full TypeScript implementation
-- **Performance**: Optimized with Vite build system
-- **SEO-Ready**: Semantic HTML structure
-- **Accessibility**: Proper ARIA labels and semantic elements
+- **Trust Indicators**: Certifications, statistics, and client testimonials
+- **Urgency Elements**: Alert banners and security statistics
 
 ## Project Structure
 ```
@@ -63,16 +101,17 @@ Digerati Experts is a modern, fully responsive digital agency website built with
 │       ├── hooks/       # Custom React hooks
 │       ├── lib/         # Utilities (API client, WebSocket, query client)
 │       ├── pages/       # Page components
-│       │   └── views/   # Different view modes (Kanban, List, etc.)
+│       │   ├── DigeratiHomepage.tsx  # Main MSP/MSSP website
+│       │   └── Homepage.tsx          # Legacy component (unused)
 │       └── App.tsx      # Main application component
 ├── server/
 │   ├── index.ts         # Server entry point
-│   ├── routes.ts        # API routes & WebSocket setup
-│   ├── storage.ts       # Database operations layer
+│   ├── routes.ts        # API routes (unused for landing page)
+│   ├── storage.ts       # Database operations (unused)
 │   ├── db.ts            # Database connection
 │   └── vite.ts          # Vite dev server integration
 ├── shared/
-│   └── schema.ts        # Shared database schema & types
+│   └── schema.ts        # Database schema (unused for landing page)
 └── package.json         # Dependencies and scripts
 ```
 
@@ -85,7 +124,7 @@ npm run build        # Build for production
 npm start            # Start production server
 ```
 
-### Database Management
+### Database Management (Currently Unused)
 ```bash
 npm run db:push      # Push schema changes to database
 npm run check        # TypeScript type checking
@@ -97,40 +136,39 @@ The application uses the following environment variables (automatically configur
 - `PORT`: Server port (default: 5000)
 - `NODE_ENV`: Environment mode (development/production)
 
-## Technical Highlights
+## Content Strategy
 
-### Database Schema Design
-- Uses PostgreSQL enums for type safety (priority, status, roles, view types)
-- Comprehensive foreign key relationships with cascade deletes
-- Timestamps for all entities (created_at, updated_at)
-- JSON fields for extensibility (custom_fields, metadata)
-- Self-referential relationships for subtasks
+### Target Audience
+- Small to medium businesses in Arizona
+- Companies needing HIPAA, PCI DSS compliance
+- Organizations concerned about ransomware and cyber threats
+- Businesses looking to reduce IT costs while improving security
 
-### API Design
-- RESTful endpoints with consistent patterns
-- Proper HTTP status codes (200, 201, 204, 400, 404, 500)
-- Request validation with Zod schemas
-- WebSocket integration for real-time updates
-- Error handling middleware
+### Key Messaging
+- **Primary**: "Hackers Don't Wait. Protect Your Business Now"
+- **Value Props**: 24/7 protection, reduced cyber liability, compliance assurance
+- **Urgency**: Statistics about breach costs and frequency
+- **Trust**: Local presence, certifications, client testimonials
 
-### Frontend Architecture
-- Component-based architecture with React
-- Custom hooks for WebSocket and state management
-- TanStack Query for server state management
-- Optimistic updates for better UX
-- Responsive design with mobile support
+### SEO Optimization
+- **Title**: "Digerati Experts - Managed Security Service Provider | Chandler, AZ"
+- **Description**: "Arizona's trusted MSP/MSSP. Get 24/7 cybersecurity monitoring, managed IT services, and compliance support. Protect your business from hackers today."
+- **Keywords**: MSP, MSSP, managed security, cybersecurity, Chandler Arizona, IT support
 
 ## Future Enhancements (Potential)
-- File attachments with object storage
-- Advanced search with full-text search
-- Email notifications
-- Custom workflows and automation
-- API integrations (Slack, GitHub, etc.)
-- Mobile apps (React Native)
-- Advanced analytics and reporting
+- Client portal integration
+- Real-time threat dashboard
+- Security blog and resources section
+- Automated vulnerability assessment tool
+- Integration with ticketing system
+- Live chat support
+- Security training portal
+- API for client security metrics
 
 ## Notes
-- The application uses Replit's built-in PostgreSQL database
-- WebSocket path is `/api/ws` (separate from Vite HMR)
-- All IDs use UUID (varchar) for distributed system compatibility
-- The demo uses a hardcoded user ID for simplicity
+- The website is optimized for conversion with multiple CTAs and forms
+- Emergency support phone number is prominently displayed
+- Uses fear-based marketing balanced with solution-focused messaging
+- Backend infrastructure exists but is unused (could be leveraged for client portal)
+- All IDs use UUID format for future scalability
+- The application is ready for production deployment
