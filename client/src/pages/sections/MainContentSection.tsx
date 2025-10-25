@@ -53,20 +53,20 @@ const testimonialData = {
 
 export const MainContentSection = (): JSX.Element => {
   return (
-    <section className="flex flex-col w-full items-start gap-2.5 px-[120px] py-[100px] relative [background:url(../figmaAssets/background-1.png)_50%_50%_/_cover,linear-gradient(0deg,rgba(3,2,40,1)_0%,rgba(3,2,40,1)_100%)]">
-      <div className="flex flex-col items-start gap-[100px] relative self-stretch w-full flex-[0_0_auto]">
-        <div className="flex items-start gap-[125px] relative self-stretch w-full flex-[0_0_auto]">
-          <div className="inline-flex flex-col items-start justify-center gap-[19px] relative flex-[0_0_auto]">
-            <div className="relative flex items-center justify-center self-stretch h-6 mt-[-1.00px] [font-family:'Poppins',Helvetica] font-normal text-white text-xl tracking-[-0.70px] leading-6 whitespace-nowrap">
+    <section className="flex flex-col w-full items-start gap-2.5 px-4 md:px-8 lg:px-[120px] py-12 md:py-16 lg:py-[100px] relative [background:url(../figmaAssets/background-1.png)_50%_50%_/_cover,linear-gradient(0deg,rgba(3,2,40,1)_0%,rgba(3,2,40,1)_100%)]">
+      <div className="flex flex-col items-start gap-12 md:gap-16 lg:gap-[100px] relative self-stretch w-full flex-[0_0_auto]">
+        <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-[125px] relative self-stretch w-full flex-[0_0_auto]">
+          <div className="inline-flex flex-col items-start justify-center gap-[19px] relative flex-[0_0_auto] w-full lg:w-auto">
+            <div className="relative flex items-center justify-center self-stretch h-6 mt-[-1.00px] [font-family:'Poppins',Helvetica] font-normal text-white text-lg md:text-xl tracking-[-0.70px] leading-6">
               FREQUENTLY ASKED QUESTIONS
             </div>
 
-            <div className="relative flex items-center justify-center w-[465px] [font-family:'Poppins',Helvetica] font-normal text-white text-[52px] tracking-[0] leading-[73px]">
+            <div className="relative flex items-center justify-center w-full lg:w-[465px] [font-family:'Poppins',Helvetica] font-normal text-white text-3xl md:text-4xl lg:text-[52px] tracking-[0] leading-tight md:leading-[73px]">
               Find answers to common queries about us.
             </div>
           </div>
 
-          <div className="relative w-[610px]">
+          <div className="relative w-full lg:w-[610px]">
             <Accordion
               type="single"
               collapsible
@@ -98,7 +98,7 @@ export const MainContentSection = (): JSX.Element => {
         </div>
 
         <div className="relative self-stretch w-full">
-          <div className="flex items-start gap-[125px] relative self-stretch w-full">
+          <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-[125px] relative self-stretch w-full">
             <div className="flex flex-col items-start gap-5">
               <div className="relative flex items-center gap-[10px]">
                 <img

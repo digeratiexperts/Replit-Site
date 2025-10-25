@@ -36,9 +36,9 @@ const formFields = [
 
 export const ServicesSection = (): JSX.Element => {
   return (
-    <section className="flex items-center justify-center gap-[104px] px-4 py-8">
-      <div className="flex flex-col w-full max-w-[610px] items-start gap-8">
-        <h2 className="[font-family:'Poppins',Helvetica] font-normal text-6xl tracking-[0] leading-[72px]">
+    <section className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-[104px] px-4 md:px-8 lg:px-[120px] py-8 md:py-12 lg:py-16">
+      <div className="flex flex-col w-full lg:max-w-[610px] items-start gap-8">
+        <h2 className="[font-family:'Poppins',Helvetica] font-normal text-3xl md:text-4xl lg:text-5xl xl:text-6xl tracking-[0] leading-tight md:leading-[72px]">
           <span className="font-bold text-[#ffc107]">
             Hackers Don&apos;t Wait.
           </span>
