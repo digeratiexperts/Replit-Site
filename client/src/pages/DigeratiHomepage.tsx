@@ -112,13 +112,13 @@ export const DigeratiHomepage = (): JSX.Element => {
 
       {/* Hero Section */}
       <section id="home" className="relative pt-16 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-blue-600 to-purple-700"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-blue-600 to-purple-700 opacity-95"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
         
         {/* Decorative elements */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500 rounded-full opacity-20 blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500 rounded-full opacity-20 blur-3xl"></div>
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-400 rounded-full opacity-30 blur-3xl animate-pulse"></div>
+          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-400 rounded-full opacity-30 blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
@@ -155,7 +155,7 @@ export const DigeratiHomepage = (): JSX.Element => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button 
                   size="lg" 
-                  className="bg-white text-purple-600 hover:bg-gray-100 hover:text-purple-700"
+                  className="bg-white text-purple-600 hover:bg-gray-100 hover:text-purple-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl"
                   data-testid="button-hero-start"
                 >
                   Get Free Assessment <ArrowRight className="ml-2 h-5 w-5" />
@@ -163,7 +163,7 @@ export const DigeratiHomepage = (): JSX.Element => {
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="border-white text-white hover:bg-white hover:text-purple-600"
+                  className="border-white text-white hover:bg-white hover:text-purple-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-purple-600 transition-all duration-200"
                   data-testid="button-hero-demo"
                 >
                   <Phone className="mr-2 h-4 w-4" />
@@ -183,24 +183,24 @@ export const DigeratiHomepage = (): JSX.Element => {
                     <form className="space-y-4">
                       <div>
                         <Label htmlFor="full-name">Full Name *</Label>
-                        <Input id="full-name" placeholder="John Smith" data-testid="input-full-name" />
+                        <Input id="full-name" placeholder="John Smith" data-testid="input-full-name" className="focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200" />
                       </div>
                       <div>
                         <Label htmlFor="email">Email Address *</Label>
-                        <Input id="email" type="email" placeholder="john@company.com" data-testid="input-email" />
+                        <Input id="email" type="email" placeholder="john@company.com" data-testid="input-email" className="focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200" />
                       </div>
                       <div>
                         <Label htmlFor="phone">Phone Number *</Label>
-                        <Input id="phone" type="tel" placeholder="(480) 000-0000" data-testid="input-phone" />
+                        <Input id="phone" type="tel" placeholder="(480) 000-0000" data-testid="input-phone" className="focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200" />
                       </div>
                       <div>
                         <Label htmlFor="company">Company Name *</Label>
-                        <Input id="company" placeholder="Your Company Inc." data-testid="input-company" />
+                        <Input id="company" placeholder="Your Company Inc." data-testid="input-company" className="focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200" />
                       </div>
                       <p className="text-xs text-gray-500">
                         All information submitted is protected and handled in compliance with our Privacy Policy.
                       </p>
-                      <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700" data-testid="button-submit">
+                      <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg" data-testid="button-submit">
                         Get My Free Assessment
                       </Button>
                     </form>
@@ -235,9 +235,9 @@ export const DigeratiHomepage = (): JSX.Element => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="border-2 hover:border-purple-600 transition-colors group">
+            <Card className="border-2 border-gray-200 hover:border-purple-600 transition-all duration-300 group shadow-md hover:shadow-xl">
               <CardHeader>
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                   <Shield className="h-6 w-6 text-white" />
                 </div>
                 <CardTitle>Security-First Operations</CardTitle>
@@ -249,9 +249,9 @@ export const DigeratiHomepage = (): JSX.Element => {
               </CardContent>
             </Card>
 
-            <Card className="border-2 hover:border-purple-600 transition-colors group">
+            <Card className="border-2 border-gray-200 hover:border-purple-600 transition-all duration-300 group shadow-md hover:shadow-xl">
               <CardHeader>
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                   <Users className="h-6 w-6 text-white" />
                 </div>
                 <CardTitle>Co-Managed or Fully Managed</CardTitle>
@@ -263,9 +263,9 @@ export const DigeratiHomepage = (): JSX.Element => {
               </CardContent>
             </Card>
 
-            <Card className="border-2 hover:border-purple-600 transition-colors group">
+            <Card className="border-2 border-gray-200 hover:border-purple-600 transition-all duration-300 group shadow-md hover:shadow-xl">
               <CardHeader>
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                   <Activity className="h-6 w-6 text-white" />
                 </div>
                 <CardTitle>Executive-Level Transparency</CardTitle>
@@ -293,9 +293,9 @@ export const DigeratiHomepage = (): JSX.Element => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="border hover:shadow-xl transition-all duration-300 hover:-translate-y-1" data-testid="card-threat-monitoring">
+            <Card className="border-2 border-gray-200 hover:border-purple-600 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group" data-testid="card-threat-monitoring">
               <CardHeader>
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-md">
                   <Eye className="h-6 w-6 text-white" />
                 </div>
                 <CardTitle>24/7 Threat Monitoring & Response</CardTitle>
@@ -307,9 +307,9 @@ export const DigeratiHomepage = (): JSX.Element => {
               </CardContent>
             </Card>
 
-            <Card className="border hover:shadow-xl transition-all duration-300 hover:-translate-y-1" data-testid="card-endpoint">
+            <Card className="border-2 border-gray-200 hover:border-purple-600 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group" data-testid="card-endpoint">
               <CardHeader>
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-md">
                   <ShieldCheck className="h-6 w-6 text-white" />
                 </div>
                 <CardTitle>Endpoint Protection (EDR/XDR)</CardTitle>
@@ -323,7 +323,7 @@ export const DigeratiHomepage = (): JSX.Element => {
 
             <Card className="border hover:shadow-xl transition-all duration-300 hover:-translate-y-1" data-testid="card-mfa">
               <CardHeader>
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-md">
                   <UserCheck className="h-6 w-6 text-white" />
                 </div>
                 <CardTitle>User Access & MFA Enforcement</CardTitle>
@@ -337,7 +337,7 @@ export const DigeratiHomepage = (): JSX.Element => {
 
             <Card className="border hover:shadow-xl transition-all duration-300 hover:-translate-y-1" data-testid="card-identity">
               <CardHeader>
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-md">
                   <KeyRound className="h-6 w-6 text-white" />
                 </div>
                 <CardTitle>Identity & Access Management</CardTitle>
@@ -351,7 +351,7 @@ export const DigeratiHomepage = (): JSX.Element => {
 
             <Card className="border hover:shadow-xl transition-all duration-300 hover:-translate-y-1" data-testid="card-cloud">
               <CardHeader>
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-md">
                   <Cloud className="h-6 w-6 text-white" />
                 </div>
                 <CardTitle>Cloud Security Hardening</CardTitle>
@@ -365,7 +365,7 @@ export const DigeratiHomepage = (): JSX.Element => {
 
             <Card className="border hover:shadow-xl transition-all duration-300 hover:-translate-y-1" data-testid="card-phishing">
               <CardHeader>
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-md">
                   <AlertCircle className="h-6 w-6 text-white" />
                 </div>
                 <CardTitle>Phishing & Email Security</CardTitle>
@@ -379,7 +379,7 @@ export const DigeratiHomepage = (): JSX.Element => {
           </div>
 
           <div className="text-center mt-8">
-            <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700" size="lg">
+            <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg" size="lg">
               Explore More Services <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
@@ -486,7 +486,7 @@ export const DigeratiHomepage = (): JSX.Element => {
                     max={100} 
                     min={1} 
                     step={1}
-                    className="mt-2"
+                    className="mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2"
                   />
                 </div>
 
@@ -499,7 +499,7 @@ export const DigeratiHomepage = (): JSX.Element => {
                     max={200} 
                     min={15} 
                     step={5}
-                    className="mt-2"
+                    className="mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2"
                   />
                 </div>
 
@@ -512,7 +512,7 @@ export const DigeratiHomepage = (): JSX.Element => {
                     max={24} 
                     min={1} 
                     step={1}
-                    className="mt-2"
+                    className="mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2"
                   />
                 </div>
               </div>
@@ -535,7 +535,7 @@ export const DigeratiHomepage = (): JSX.Element => {
               </div>
 
               <div className="mt-6 text-center">
-                <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700">
+                <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg">
                   Open Detailed Calculator <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
@@ -568,7 +568,7 @@ export const DigeratiHomepage = (): JSX.Element => {
                     max={100} 
                     min={1} 
                     step={1}
-                    className="mt-2"
+                    className="mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2"
                   />
                 </div>
 
@@ -607,7 +607,7 @@ export const DigeratiHomepage = (): JSX.Element => {
               </div>
 
               <div className="mt-6 text-center">
-                <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700">
+                <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg">
                   Open Detailed Estimator <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
@@ -629,36 +629,36 @@ export const DigeratiHomepage = (): JSX.Element => {
           </div>
 
           <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-8">
-            <div className="text-center group hover:scale-105 transition-transform">
-              <div className="w-20 h-20 bg-gradient-to-r from-purple-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:from-purple-200 group-hover:to-blue-200">
+            <div className="text-center group hover:scale-105 transition-all duration-300 cursor-pointer">
+              <div className="w-20 h-20 bg-gradient-to-r from-purple-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:from-purple-200 group-hover:to-blue-200 transition-all duration-300 shadow-md group-hover:shadow-lg">
                 <Briefcase className="h-10 w-10 text-purple-600" />
               </div>
               <h3 className="font-semibold text-gray-900">Law Firms</h3>
             </div>
 
-            <div className="text-center group hover:scale-105 transition-transform">
-              <div className="w-20 h-20 bg-gradient-to-r from-purple-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:from-purple-200 group-hover:to-blue-200">
+            <div className="text-center group hover:scale-105 transition-all duration-300 cursor-pointer">
+              <div className="w-20 h-20 bg-gradient-to-r from-purple-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:from-purple-200 group-hover:to-blue-200 transition-all duration-300 shadow-md group-hover:shadow-lg">
                 <Calculator className="h-10 w-10 text-purple-600" />
               </div>
               <h3 className="font-semibold text-gray-900">CPA Firms</h3>
             </div>
 
-            <div className="text-center group hover:scale-105 transition-transform">
-              <div className="w-20 h-20 bg-gradient-to-r from-purple-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:from-purple-200 group-hover:to-blue-200">
+            <div className="text-center group hover:scale-105 transition-all duration-300 cursor-pointer">
+              <div className="w-20 h-20 bg-gradient-to-r from-purple-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:from-purple-200 group-hover:to-blue-200 transition-all duration-300 shadow-md group-hover:shadow-lg">
                 <Stethoscope className="h-10 w-10 text-purple-600" />
               </div>
               <h3 className="font-semibold text-gray-900">Medical<br/>Practices</h3>
             </div>
 
-            <div className="text-center group hover:scale-105 transition-transform">
-              <div className="w-20 h-20 bg-gradient-to-r from-purple-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:from-purple-200 group-hover:to-blue-200">
+            <div className="text-center group hover:scale-105 transition-all duration-300 cursor-pointer">
+              <div className="w-20 h-20 bg-gradient-to-r from-purple-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:from-purple-200 group-hover:to-blue-200 transition-all duration-300 shadow-md group-hover:shadow-lg">
                 <Home className="h-10 w-10 text-purple-600" />
               </div>
               <h3 className="font-semibold text-gray-900">Real Estate<br/>Firms</h3>
             </div>
 
-            <div className="text-center group hover:scale-105 transition-transform">
-              <div className="w-20 h-20 bg-gradient-to-r from-purple-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:from-purple-200 group-hover:to-blue-200">
+            <div className="text-center group hover:scale-105 transition-all duration-300 cursor-pointer">
+              <div className="w-20 h-20 bg-gradient-to-r from-purple-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:from-purple-200 group-hover:to-blue-200 transition-all duration-300 shadow-md group-hover:shadow-lg">
                 <Heart className="h-10 w-10 text-purple-600" />
               </div>
               <h3 className="font-semibold text-gray-900">Animal<br/>Hospitals</h3>
@@ -681,7 +681,7 @@ export const DigeratiHomepage = (): JSX.Element => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="relative hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <Card className="relative border-2 border-gray-200 hover:border-purple-600 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
               <CardHeader>
                 <CardTitle className="text-xl">Basic IT</CardTitle>
                 <div className="mt-4">
@@ -717,10 +717,10 @@ export const DigeratiHomepage = (): JSX.Element => {
                   </li>
                 </ul>
                 <div className="mt-6 space-y-2">
-                  <Button className="w-full" variant="outline">
+                  <Button className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 transition-all duration-200 hover:bg-purple-50" variant="outline">
                     Learn More
                   </Button>
-                  <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700">
+                  <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg">
                     Book a Strategy Call
                   </Button>
                 </div>
@@ -764,17 +764,17 @@ export const DigeratiHomepage = (): JSX.Element => {
                   </li>
                 </ul>
                 <div className="mt-6 space-y-2">
-                  <Button className="w-full" variant="outline">
+                  <Button className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 transition-all duration-200 hover:bg-purple-50" variant="outline">
                     Learn More
                   </Button>
-                  <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700">
+                  <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg">
                     Book a Strategy Call
                   </Button>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="relative hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <Card className="relative border-2 border-gray-200 hover:border-purple-600 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
               <CardHeader>
                 <CardTitle className="text-xl">Enterprise</CardTitle>
                 <div className="mt-4">
@@ -810,10 +810,10 @@ export const DigeratiHomepage = (): JSX.Element => {
                   </li>
                 </ul>
                 <div className="mt-6 space-y-2">
-                  <Button className="w-full" variant="outline">
+                  <Button className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 transition-all duration-200 hover:bg-purple-50" variant="outline">
                     Learn More
                   </Button>
-                  <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700">
+                  <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg">
                     Book a Strategy Call
                   </Button>
                 </div>
@@ -828,10 +828,10 @@ export const DigeratiHomepage = (): JSX.Element => {
 
           <div className="mt-12 text-center">
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700">
+              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg">
                 Book a 15-Minute Intro Call
               </Button>
-              <Button size="lg" variant="outline" className="border-purple-600 text-purple-600 hover:bg-purple-50">
+              <Button size="lg" variant="outline" className="border-purple-600 text-purple-600 hover:bg-purple-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 transition-all duration-200">
                 See Full Pricing & Packages
               </Button>
             </div>
@@ -907,9 +907,11 @@ export const DigeratiHomepage = (): JSX.Element => {
                 <button
                   key={index}
                   onClick={() => setCurrentTestimonial(index)}
-                  className={`w-2 h-2 rounded-full transition-colors ${
-                    currentTestimonial === index ? 'bg-purple-600' : 'bg-gray-300'
+                  className={`w-3 h-3 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 hover:scale-125 ${
+                    currentTestimonial === index ? 'bg-purple-600 w-8' : 'bg-gray-300 hover:bg-gray-400'
                   }`}
+                  aria-label={`Go to testimonial ${index + 1}`}
+                  data-testid={`testimonial-indicator-${index}`}
                 />
               ))}
             </div>
@@ -951,10 +953,10 @@ export const DigeratiHomepage = (): JSX.Element => {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 hover:text-purple-700" data-testid="button-cta-assessment">
+            <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 hover:text-purple-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl" data-testid="button-cta-assessment">
               Get Free Security Assessment
             </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-purple-600" data-testid="button-cta-call">
+            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-purple-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-purple-600 transition-all duration-200" data-testid="button-cta-call">
               Call Now: (480) 519-5892
             </Button>
           </div>
@@ -974,8 +976,8 @@ export const DigeratiHomepage = (): JSX.Element => {
           </div>
 
           <div className="space-y-4">
-            <Card>
-              <CardHeader className="cursor-pointer hover:bg-gray-50">
+            <Card className="hover:shadow-lg transition-all duration-200 hover:border-purple-600 border-2">
+              <CardHeader className="cursor-pointer hover:bg-gray-50 transition-colors duration-200">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg">What is your best service?</CardTitle>
                   <ChevronDown className="h-5 w-5 text-gray-500" />
@@ -988,8 +990,8 @@ export const DigeratiHomepage = (): JSX.Element => {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="cursor-pointer hover:bg-gray-50">
+            <Card className="hover:shadow-lg transition-all duration-200 hover:border-purple-600 border-2">
+              <CardHeader className="cursor-pointer hover:bg-gray-50 transition-colors duration-200">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg">How do I choose the right plan for my business?</CardTitle>
                   <ChevronDown className="h-5 w-5 text-gray-500" />
@@ -1002,8 +1004,8 @@ export const DigeratiHomepage = (): JSX.Element => {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="cursor-pointer hover:bg-gray-50">
+            <Card className="hover:shadow-lg transition-all duration-200 hover:border-purple-600 border-2">
+              <CardHeader className="cursor-pointer hover:bg-gray-50 transition-colors duration-200">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg">Can I customize the solutions?</CardTitle>
                   <ChevronDown className="h-5 w-5 text-gray-500" />
@@ -1016,8 +1018,8 @@ export const DigeratiHomepage = (): JSX.Element => {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="cursor-pointer hover:bg-gray-50">
+            <Card className="hover:shadow-lg transition-all duration-200 hover:border-purple-600 border-2">
+              <CardHeader className="cursor-pointer hover:bg-gray-50 transition-colors duration-200">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg">Is my data secure?</CardTitle>
                   <ChevronDown className="h-5 w-5 text-gray-500" />
@@ -1096,19 +1098,19 @@ export const DigeratiHomepage = (): JSX.Element => {
                 <form className="space-y-4">
                   <div>
                     <Label htmlFor="contact-name">Your Name *</Label>
-                    <Input id="contact-name" placeholder="John Smith" data-testid="input-contact-name" />
+                    <Input id="contact-name" placeholder="John Smith" data-testid="input-contact-name" className="focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200" />
                   </div>
                   <div>
                     <Label htmlFor="contact-email">Business Email *</Label>
-                    <Input id="contact-email" type="email" placeholder="john@company.com" data-testid="input-contact-email" />
+                    <Input id="contact-email" type="email" placeholder="john@company.com" data-testid="input-contact-email" className="focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200" />
                   </div>
                   <div>
                     <Label htmlFor="contact-phone">Phone Number *</Label>
-                    <Input id="contact-phone" type="tel" placeholder="(480) 000-0000" data-testid="input-contact-phone" />
+                    <Input id="contact-phone" type="tel" placeholder="(480) 000-0000" data-testid="input-contact-phone" className="focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200" />
                   </div>
                   <div>
                     <Label htmlFor="contact-company">Company Name</Label>
-                    <Input id="contact-company" placeholder="Your Company Inc." data-testid="input-contact-company" />
+                    <Input id="contact-company" placeholder="Your Company Inc." data-testid="input-contact-company" className="focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200" />
                   </div>
                   <div>
                     <Label htmlFor="contact-service">Service Interested In</Label>
@@ -1127,9 +1129,9 @@ export const DigeratiHomepage = (): JSX.Element => {
                   </div>
                   <div>
                     <Label htmlFor="contact-message">Message</Label>
-                    <Textarea id="contact-message" placeholder="Tell us about your security needs..." rows={4} data-testid="textarea-contact-message" />
+                    <Textarea id="contact-message" placeholder="Tell us about your security needs..." rows={4} data-testid="textarea-contact-message" className="focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200" />
                   </div>
-                  <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700" data-testid="button-send-message">
+                  <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg" data-testid="button-send-message">
                     Send Message
                   </Button>
                 </form>
@@ -1158,11 +1160,11 @@ export const DigeratiHomepage = (): JSX.Element => {
             <div>
               <h4 className="text-lg font-semibold mb-4">Services</h4>
               <ul className="space-y-2">
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Managed Security</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Managed IT</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Compliance Services</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Incident Response</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Security Training</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1">Managed Security</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1">Managed IT</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1">Compliance Services</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1">Incident Response</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1">Security Training</a></li>
               </ul>
             </div>
 
