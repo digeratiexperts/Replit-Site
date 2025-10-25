@@ -151,7 +151,7 @@ export function MegaMenu() {
   const handleMouseLeave = () => {
     timeoutRef.current = setTimeout(() => {
       setActiveMenu(null);
-    }, 100);
+    }, 150);
   };
 
   const handleMenuMouseEnter = () => {
@@ -161,15 +161,26 @@ export function MegaMenu() {
   };
 
   useEffect(() => {
+    // Close menu when clicking outside
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.mega-menu-container')) {
+        setActiveMenu(null);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
+      document.removeEventListener('click', handleClickOutside);
     };
   }, []);
 
   return (
-    <nav className="bg-white shadow-sm border-b sticky top-0 z-50">
+    <nav className="bg-white shadow-sm border-b sticky top-0 z-50 mega-menu-container">
       <div className="container mx-auto">
         <div className="flex items-center justify-between h-16 px-4 lg:px-8">
           {/* Logo */}
