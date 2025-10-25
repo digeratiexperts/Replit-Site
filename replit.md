@@ -1,7 +1,7 @@
-# Digerati - Modern Digital Agency Website
+# Digerati Experts - Modern Digital Agency Website
 
 ## Overview
-Digerati is a modern, fully responsive digital agency website built with React, TypeScript, and Tailwind CSS. The site features a contemporary design with gradient backgrounds, smooth animations, and a comprehensive portfolio showcase. This project was implemented from a Figma design to create a professional web presence for a digital transformation company.
+Digerati Experts is a modern, fully responsive digital agency website built with React, TypeScript, and Tailwind CSS. The site features a contemporary design with gradient backgrounds, smooth animations, and a comprehensive portfolio showcase. This project was implemented from a Figma design to create a professional web presence for a digital transformation company.
 
 ## Recent Changes (January 2025)
 - Implemented complete Figma design as a modern digital agency website
