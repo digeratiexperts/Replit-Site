@@ -46,8 +46,8 @@ import {
   Globe,
   UserCheck,
   KeyRound,
-  CloudLock,
-  MailWarning,
+  CloudOff,
+  AlertCircle,
   FileWarning,
   ChevronDown
 } from "lucide-react";
@@ -433,7 +433,7 @@ export const DigeratiHomepage = (): JSX.Element => {
             <Card className="border hover:shadow-xl transition-all duration-300 hover:-translate-y-1" data-testid="card-cloud">
               <CardHeader>
                 <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4">
-                  <CloudLock className="h-6 w-6 text-white" />
+                  <Cloud className="h-6 w-6 text-white" />
                 </div>
                 <CardTitle>Cloud Security Hardening</CardTitle>
               </CardHeader>
@@ -447,7 +447,7 @@ export const DigeratiHomepage = (): JSX.Element => {
             <Card className="border hover:shadow-xl transition-all duration-300 hover:-translate-y-1" data-testid="card-phishing">
               <CardHeader>
                 <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4">
-                  <MailWarning className="h-6 w-6 text-white" />
+                  <AlertCircle className="h-6 w-6 text-white" />
                 </div>
                 <CardTitle>Phishing & Email Security</CardTitle>
               </CardHeader>
@@ -947,15 +947,15 @@ export const DigeratiHomepage = (): JSX.Element => {
                   <span className="ml-2 text-sm text-gray-600">5-Star Rating</span>
                 </div>
                 
-                <p className="text-lg text-gray-700 italic text-center mb-6">
+                <p className="text-lg text-gray-700 italic text-center mb-6" data-testid="testimonial-text">
                   "{testimonials[currentTestimonial].text}"
                 </p>
                 
                 <div className="flex items-center justify-center">
                   <div className="w-12 h-12 bg-gray-300 rounded-full mr-4"></div>
                   <div>
-                    <div className="font-semibold text-gray-900">{testimonials[currentTestimonial].author}</div>
-                    <div className="text-sm text-gray-600">{testimonials[currentTestimonial].role}</div>
+                    <div className="font-semibold text-gray-900" data-testid="testimonial-author">{testimonials[currentTestimonial].author}</div>
+                    <div className="text-sm text-gray-600" data-testid="testimonial-role">{testimonials[currentTestimonial].role}</div>
                   </div>
                 </div>
 
@@ -963,6 +963,8 @@ export const DigeratiHomepage = (): JSX.Element => {
                   <button
                     onClick={() => setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length)}
                     className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                    data-testid="testimonial-prev"
+                    aria-label="Previous testimonial"
                   >
                     <ChevronLeft className="h-5 w-5 text-gray-700" />
                   </button>
@@ -972,6 +974,8 @@ export const DigeratiHomepage = (): JSX.Element => {
                   <button
                     onClick={() => setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)}
                     className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                    data-testid="testimonial-next"
+                    aria-label="Next testimonial"
                   >
                     <ChevronRight className="h-5 w-5 text-gray-700" />
                   </button>
