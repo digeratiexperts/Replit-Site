@@ -110,8 +110,7 @@ export const DigeratiHeroSection = (): JSX.Element => {
             <div className="flex flex-col sm:flex-row gap-4">
               <Button 
                 size="lg" 
-                className="bg-white hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl"
-                style={{ color: '#6b21a8' }}
+                className="bg-white text-purple-700 hover:bg-gray-100 hover:text-purple-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl"
                 data-testid="button-hero-start"
                 onClick={() => {
                   document.getElementById('assessment-form')?.scrollIntoView({ behavior: 'smooth' });
