@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import logoImage from '@assets/Transparent_Logo_1761416551861.png';
 
 interface MegaMenuItem {
   title: string;
@@ -173,15 +174,8 @@ export function MegaMenu() {
         <div className="flex items-center justify-between h-16 px-4 lg:px-8">
           {/* Logo */}
           <div className="flex items-center space-x-8">
-            <a href="/" className="flex items-center space-x-2">
-              {/* Replace this shield icon with your actual logo image: */}
-              {/* <img src="your-logo-url-here" alt="Digerati Experts" className="h-10" /> */}
-              <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
-                <Shield className="h-6 w-6 text-white" />
-              </div>
-              <span className="font-bold text-xl bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                Digerati Experts
-              </span>
+            <a href="/" className="flex items-center">
+              <img src={logoImage} alt="Digerati Experts" className="h-10 object-contain" />
             </a>
 
             {/* Desktop Navigation */}
