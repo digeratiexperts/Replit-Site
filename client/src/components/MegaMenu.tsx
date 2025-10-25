@@ -174,6 +174,8 @@ export function MegaMenu() {
           {/* Logo */}
           <div className="flex items-center space-x-8">
             <a href="/" className="flex items-center space-x-2">
+              {/* Replace this shield icon with your actual logo image: */}
+              {/* <img src="your-logo-url-here" alt="Digerati Experts" className="h-10" /> */}
               <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
                 <Shield className="h-6 w-6 text-white" />
               </div>
