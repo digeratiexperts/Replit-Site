@@ -35,7 +35,7 @@ export const DigeratiHomepage = (): JSX.Element => {
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                  Digerati
+                  Digerati Experts
                 </h1>
               </div>
               <div className="hidden md:block ml-10">
@@ -304,7 +304,7 @@ export const DigeratiHomepage = (): JSX.Element => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-                Why Choose Digerati?
+                Why Choose Digerati Experts?
               </h2>
               <p className="text-lg text-gray-600 mb-8">
                 With over a decade of experience in digital transformation, we've helped hundreds of businesses 
@@ -617,7 +617,7 @@ export const DigeratiHomepage = (): JSX.Element => {
               <div className="space-y-4">
                 <div className="flex items-center">
                   <Mail className="h-6 w-6 text-purple-600 mr-3" />
-                  <span className="text-gray-700">hello@digerati.com</span>
+                  <span className="text-gray-700">info@digerati-experts.com</span>
                 </div>
                 <div className="flex items-center">
                   <Phone className="h-6 w-6 text-purple-600 mr-3" />
@@ -675,7 +675,7 @@ export const DigeratiHomepage = (): JSX.Element => {
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
-                Digerati
+                Digerati Experts
               </h3>
               <p className="text-gray-400">
                 Your partner in digital transformation and innovation.
@@ -714,7 +714,7 @@ export const DigeratiHomepage = (): JSX.Element => {
 
           <div className="border-t border-gray-800 mt-8 pt-8 text-center">
             <p className="text-gray-400">
-              © 2024 Digerati. All rights reserved. | Designed with ❤️ by Digerati Team
+              © 2024 Digerati Experts. All rights reserved. | Designed with ❤️ by Digerati Experts Team
             </p>
           </div>
         </div>
