@@ -22,7 +22,7 @@ export const DigeratiCTASection = (): JSX.Element => {
         
         <Button 
           size="lg" 
-          className="bg-white text-purple-600 hover:bg-gray-100 hover:text-purple-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl" 
+          className="bg-white !text-purple-700 font-semibold hover:bg-gray-100 hover:!text-purple-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl" 
           data-testid="button-cta-assessment"
         >
           Get My Free Assessment
