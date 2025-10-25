@@ -5,13 +5,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 
-import { Homepage } from "@/pages/Homepage";
+import { DigeratiHomepage } from "@/pages/DigeratiHomepage";
 
 function Router() {
   return (
     <Switch>
       {/* Add pages below */}
-      <Route path="/" component={Homepage} />
+      <Route path="/" component={DigeratiHomepage} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>
