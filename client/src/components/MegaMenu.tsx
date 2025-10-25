@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import logoImage from '@assets/Transparent_Logo_1761416551861.png';
+import logoImage from '@assets/Transparent_Logo_1761418156480.png';
 
 interface MegaMenuItem {
   title: string;

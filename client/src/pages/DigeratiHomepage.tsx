@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MegaMenu } from "@/components/MegaMenu";
+import { WaveSeparator } from "@/components/WaveSeparator";
 import { 
   ArrowRight, 
   CheckCircle, 
@@ -211,13 +212,10 @@ export const DigeratiHomepage = (): JSX.Element => {
           </div>
         </div>
 
-        {/* Wave separator */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 120" className="w-full h-20 fill-white">
-            <path d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,58.7C960,64,1056,64,1152,58.7C1248,53,1344,43,1392,37.3L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z"></path>
-          </svg>
-        </div>
       </section>
+
+      {/* Wave separator between hero and next section */}
+      <WaveSeparator variant="multi" className="-mt-1" />
 
       {/* Why Choose Section */}
       <section className="py-20 bg-gray-50">
@@ -385,6 +383,9 @@ export const DigeratiHomepage = (): JSX.Element => {
           </div>
         </div>
       </section>
+
+      {/* Wave separator between Services and How We Protect sections */}
+      <WaveSeparator variant="default" />
 
       {/* How We Protect Your Business Section - New from Figma */}
       <section className="py-20 bg-gray-50">
@@ -616,6 +617,9 @@ export const DigeratiHomepage = (): JSX.Element => {
         </div>
       </section>
 
+      {/* Wave separator between calculators and industries */}
+      <WaveSeparator variant="gradient" />
+
       {/* Industries Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -838,6 +842,9 @@ export const DigeratiHomepage = (): JSX.Element => {
           </div>
         </div>
       </section>
+
+      {/* Wave separator between pricing and testimonials */}
+      <WaveSeparator variant="inverted" />
 
       {/* Testimonials Section */}
       <section className="py-20 bg-white">
@@ -1140,6 +1147,9 @@ export const DigeratiHomepage = (): JSX.Element => {
           </div>
         </div>
       </section>
+
+      {/* Wave separator before footer */}
+      <WaveSeparator variant="smooth" />
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">

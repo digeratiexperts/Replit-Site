@@ -205,3 +205,85 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
+
+/* Button hover text color fixes */
+@layer utilities {
+  /* Ensure gradient buttons maintain white text on hover */
+  .bg-gradient-to-r:hover {
+    color: white !important;
+  }
+  
+  /* Fix outline button text colors on hover */
+  .border-white:hover {
+    color: inherit !important;
+  }
+  
+  /* Ensure all buttons with gradients keep white text */
+  [class*="from-purple-"][class*="to-blue-"]:hover {
+    color: white !important;
+  }
+  
+  /* Ensure text remains white on gradient buttons */
+  .text-white:hover {
+    color: white !important;
+  }
+}
+
+/* Wave separator animations */
+@keyframes wave {
+  0%, 100% {
+    transform: translateX(0) translateY(0);
+  }
+  33% {
+    transform: translateX(-10px) translateY(-5px);
+  }
+  66% {
+    transform: translateX(10px) translateY(5px);
+  }
+}
+
+@keyframes wave-reverse {
+  0%, 100% {
+    transform: translateX(0) translateY(0);
+  }
+  33% {
+    transform: translateX(10px) translateY(-3px);
+  }
+  66% {
+    transform: translateX(-10px) translateY(3px);
+  }
+}
+
+@keyframes wave-slow {
+  0%, 100% {
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    transform: translateX(-20px) translateY(-8px);
+  }
+}
+
+/* Wave separator styles */
+.wave-separator {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.wave-layer {
+  position: absolute;
+  width: 110%;
+  left: -5%;
+}
+
+.wave-animate {
+  animation: wave 20s ease-in-out infinite;
+}
+
+.wave-animate-reverse {
+  animation: wave-reverse 25s ease-in-out infinite;
+}
+
+.wave-animate-slow {
+  animation: wave-slow 30s ease-in-out infinite;
+}
