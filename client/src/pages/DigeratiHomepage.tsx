@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { MegaMenu } from "@/components/MegaMenu";
 import { 
   ArrowRight, 
   CheckCircle, 
@@ -54,7 +55,6 @@ import {
 import { useState, useEffect } from "react";
 
 export const DigeratiHomepage = (): JSX.Element => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [employees, setEmployees] = useState(10);
   const [hourlyWage, setHourlyWage] = useState(50);
   const [downtime, setDowntime] = useState(4);
@@ -108,88 +108,7 @@ export const DigeratiHomepage = (): JSX.Element => {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                  Digerati Experts
-                </h1>
-              </div>
-              <div className="hidden md:block ml-10">
-                <div className="flex items-baseline space-x-4">
-                  <a href="#home" className="text-gray-900 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                    Home
-                  </a>
-                  <a href="#services" className="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                    Services
-                  </a>
-                  <a href="#pricing" className="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                    Pricing
-                  </a>
-                  <a href="#about" className="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                    About
-                  </a>
-                  <a href="#contact" className="text-gray-700 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                    Contact
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className="hidden md:flex items-center space-x-4">
-              <a href="tel:4805195892" className="text-purple-600 font-semibold hover:text-purple-700">
-                (480) 519-5892
-              </a>
-              <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700" data-testid="button-get-started">
-                Get Free Assessment
-              </Button>
-            </div>
-            <div className="md:hidden">
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-gray-700 hover:text-purple-600"
-                data-testid="button-mobile-menu"
-              >
-                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-b border-gray-200">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <a href="#home" className="text-gray-900 hover:text-purple-600 block px-3 py-2 rounded-md text-base font-medium">
-                Home
-              </a>
-              <a href="#services" className="text-gray-700 hover:text-purple-600 block px-3 py-2 rounded-md text-base font-medium">
-                Services
-              </a>
-              <a href="#pricing" className="text-gray-700 hover:text-purple-600 block px-3 py-2 rounded-md text-base font-medium">
-                Pricing
-              </a>
-              <a href="#about" className="text-gray-700 hover:text-purple-600 block px-3 py-2 rounded-md text-base font-medium">
-                About
-              </a>
-              <a href="#contact" className="text-gray-700 hover:text-purple-600 block px-3 py-2 rounded-md text-base font-medium">
-                Contact
-              </a>
-              <div className="pt-4 pb-3 border-t border-gray-200">
-                <div className="flex flex-col space-y-2 px-3">
-                  <a href="tel:4805195892" className="text-purple-600 font-semibold">
-                    Call: (480) 519-5892
-                  </a>
-                  <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700">
-                    Get Free Assessment
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </nav>
+      <MegaMenu />
 
       {/* Hero Section */}
       <section id="home" className="relative pt-16 overflow-hidden">
