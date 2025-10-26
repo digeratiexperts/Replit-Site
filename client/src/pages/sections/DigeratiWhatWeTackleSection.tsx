@@ -1,122 +1,102 @@
-import { Shield, Server, Users, FileCheck, Bug, Laptop, Zap, Clock, Database, Lock, AlertTriangle, HeadphonesIcon } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Shield, Bug, Lock, Database, AlertTriangle, Users } from "lucide-react";
 
 export const DigeratiWhatWeTackleSection = (): JSX.Element => {
-  const services = [
+  const challenges = [
     {
-      icon: <Bug className="h-8 w-8" />,
-      title: "Malware & Ransomware",
-      description: "Advanced threat detection and immediate response to malicious software attacks"
+      icon: <Bug className="h-10 w-10" />,
+      title: "Ransomware & Malware",
+      description: "Advanced threat detection and rapid response to eliminate malicious attacks before damage occurs"
     },
     {
-      icon: <Server className="h-8 w-8" />,
-      title: "System Downtime",
-      description: "Proactive monitoring to prevent outages and rapid recovery when issues occur"
+      icon: <Database className="h-10 w-10" />,
+      title: "Data Loss Prevention",
+      description: "Comprehensive backup strategies with tested disaster recovery ensuring business continuity"
     },
     {
-      icon: <Users className="h-8 w-8" />,
-      title: "Insider Threats",
-      description: "Monitor and control access to prevent internal security breaches"
-    },
-    {
-      icon: <FileCheck className="h-8 w-8" />,
+      icon: <AlertTriangle className="h-10 w-10" />,
       title: "Compliance Gaps",
-      description: "Ensure HIPAA, PCI DSS, and industry-specific compliance requirements"
+      description: "Navigate HIPAA, PCI DSS, and SOC 2 requirements with continuous monitoring and reporting"
     },
     {
-      icon: <Database className="h-8 w-8" />,
-      title: "Data Loss",
-      description: "Comprehensive backup strategies and disaster recovery planning"
+      icon: <Lock className="h-10 w-10" />,
+      title: "Phishing & Social Engineering",
+      description: "Multi-layered email security combined with ongoing employee security awareness training"
     },
     {
-      icon: <Lock className="h-8 w-8" />,
-      title: "Access Control",
-      description: "Multi-factor authentication and zero-trust security models"
+      icon: <Shield className="h-10 w-10" />,
+      title: "Zero-Day Vulnerabilities",
+      description: "Proactive patch management and security assessments to close gaps before exploitation"
     },
     {
-      icon: <Zap className="h-8 w-8" />,
-      title: "Phishing Attacks",
-      description: "Email security and employee training to prevent social engineering"
-    },
-    {
-      icon: <AlertTriangle className="h-8 w-8" />,
-      title: "Vulnerability Management",
-      description: "Regular security assessments and patch management"
-    },
-    {
-      icon: <Clock className="h-8 w-8" />,
-      title: "Incident Response",
-      description: "24/7 security operations center with rapid incident containment"
-    },
-    {
-      icon: <Laptop className="h-8 w-8" />,
-      title: "Endpoint Security",
-      description: "Protect all devices with advanced EDR solutions"
-    },
-    {
-      icon: <Shield className="h-8 w-8" />,
-      title: "Network Defense",
-      description: "Firewall management and intrusion prevention systems"
-    },
-    {
-      icon: <HeadphonesIcon className="h-8 w-8" />,
-      title: "IT Support",
-      description: "Comprehensive help desk and technical support services"
+      icon: <Users className="h-10 w-10" />,
+      title: "Insider Threats",
+      description: "User behavior analytics and access controls to prevent internal security breaches"
     }
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-b from-slate-900 via-purple-950 to-slate-900 relative overflow-hidden">
-      {/* Background decoration */}
+    <section className="py-20 bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900 relative overflow-hidden">
+      {/* Background effects */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-20 w-96 h-96 bg-purple-600 rounded-full opacity-10 blur-3xl"></div>
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-blue-600 rounded-full opacity-10 blur-3xl"></div>
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600 rounded-full opacity-5 blur-3xl"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600 rounded-full opacity-5 blur-3xl"></div>
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-white mb-4">
+        <div className="text-center mb-16">
+          <h2 className="text-5xl font-bold text-white mb-6">
             What We Tackle
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            From ransomware to compliance gaps, we handle the full spectrum of IT and security challenges 
-            so you can focus on growing your business.
+          <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+            Your business faces evolving cyber threats daily. We handle these complex challenges 
+            with enterprise-grade solutions, so you can focus on growth without worry.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {services.map((service, index) => (
-            <Card 
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {challenges.map((challenge, index) => (
+            <div 
               key={index} 
-              className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-2xl group"
+              className="group relative"
+              data-testid={`tackle-card-${index}`}
             >
-              <CardHeader>
-                <div className="text-purple-400 group-hover:text-purple-300 transition-colors mb-2">
-                  {service.icon}
+              {/* Card with gradient border effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl opacity-50 group-hover:opacity-100 blur-xl transition-all duration-500"></div>
+              <div className="relative bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-sm rounded-2xl p-8 h-full border border-white/10 hover:border-purple-500/30 transition-all duration-300 hover:transform hover:-translate-y-1">
+                {/* Icon container */}
+                <div className="mb-6">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-gradient-to-br from-purple-600/20 to-blue-600/20 border border-purple-500/30 group-hover:border-purple-400/50 transition-colors">
+                    <div className="text-purple-400 group-hover:text-purple-300 transition-colors">
+                      {challenge.icon}
+                    </div>
+                  </div>
                 </div>
-                <CardTitle className="text-white text-lg">
-                  {service.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-gray-300">
-                  {service.description}
-                </CardDescription>
-              </CardContent>
-            </Card>
+                
+                {/* Content */}
+                <h3 className="text-xl font-semibold text-white mb-3">
+                  {challenge.title}
+                </h3>
+                <p className="text-gray-400 leading-relaxed">
+                  {challenge.description}
+                </p>
+              </div>
+            </div>
           ))}
         </div>
 
-        <div className="text-center mt-12">
-          <p className="text-gray-300 mb-6">
-            Don't see your specific challenge? We customize solutions for any IT or security need.
+        {/* Bottom CTA */}
+        <div className="text-center mt-16">
+          <p className="text-lg text-gray-300 mb-6">
+            Don't see your specific challenge? We handle it all.
           </p>
-          <button 
-            className="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl font-semibold"
-            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+          <a 
+            href="#contact"
+            className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/25"
+            data-testid="tackle-cta"
           >
-            Explore More Solutions
-          </button>
+            Discuss Your Security Needs
+            <Shield className="ml-2 h-5 w-5" />
+          </a>
         </div>
       </div>
     </section>
