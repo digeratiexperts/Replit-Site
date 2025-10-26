@@ -8,13 +8,18 @@ import { DigeratiAlertBanner } from "./sections/DigeratiAlertBanner";
 import { DigeratiServicesSection } from "./sections/DigeratiServicesSection";
 import { DigeratiHowWeProtectSection } from "./sections/DigeratiHowWeProtectSection";
 import { DigeratiCalculatorsSection } from "./sections/DigeratiCalculatorsSection";
+import { DigeratiWhatWeTackleSection } from "./sections/DigeratiWhatWeTackleSection";
+import { DigeratiThreatsInsightsSection } from "./sections/DigeratiThreatsInsightsSection";
+import { DigeratiAIAssistanceSection } from "./sections/DigeratiAIAssistanceSection";
+import { DigeratiProtectEnableSection } from "./sections/DigeratiProtectEnableSection";
 import { DigeratiIndustriesSection } from "./sections/DigeratiIndustriesSection";
 import { DigeratiPricingSection } from "./sections/DigeratiPricingSection";
 import { DigeratiTestimonialsSection } from "./sections/DigeratiTestimonialsSection";
 import { DigeratiFAQSection } from "./sections/DigeratiFAQSection";
 import { DigeratiCTASection } from "./sections/DigeratiCTASection";
+import { DigeratiNewsletterSection } from "./sections/DigeratiNewsletterSection";
 import { DigeratiContactSection } from "./sections/DigeratiContactSection";
-import { DigeratiFooterSection } from "./sections/DigeratiFooterSection";
+import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooterSection";
 
 export const DigeratiHomepage = (): JSX.Element => {
   // State for calculators - managed here as it's shared between calculator sections
@@ -83,7 +88,13 @@ export const DigeratiHomepage = (): JSX.Element => {
         serviceCost={serviceCost}
       />
 
-      {/* Wave separator between calculators and industries */}
+      {/* What We Tackle Section - Dark background */}
+      <DigeratiWhatWeTackleSection />
+
+      {/* Recent Threats & Insights Section - White background */}
+      <DigeratiThreatsInsightsSection />
+
+      {/* Wave separator */}
       <WaveSeparator variant="gradient" />
 
       {/* Industries Section */}
@@ -92,26 +103,32 @@ export const DigeratiHomepage = (): JSX.Element => {
       {/* Pricing Section */}
       <DigeratiPricingSection />
 
-      {/* Wave separator between pricing and testimonials */}
+      {/* We Exist to Protect Section - Dark background */}
+      <DigeratiProtectEnableSection />
+
+      {/* Wave separator between dark and light sections */}
       <WaveSeparator variant="inverted" />
 
       {/* Testimonials Section */}
       <DigeratiTestimonialsSection />
 
+      {/* AI Assistance Section - Dark background */}
+      <DigeratiAIAssistanceSection />
+
       {/* CTA Section */}
       <DigeratiCTASection />
 
-      {/* FAQ Section */}
+      {/* FAQ Section - will update to dark */}
       <DigeratiFAQSection />
+
+      {/* Newsletter Section - Dark background */}
+      <DigeratiNewsletterSection />
 
       {/* Contact Section */}
       <DigeratiContactSection />
 
-      {/* Wave separator before footer */}
-      <WaveSeparator variant="smooth" />
-
-      {/* Footer */}
-      <DigeratiFooterSection />
+      {/* Enhanced Footer - Dark background */}
+      <DigeratiEnhancedFooterSection />
     </div>
   );
 };
