@@ -228,32 +228,37 @@ export function MegaMenu() {
 
   // Enhanced click outside handler
   useEffect(() => {
+    if (!activeMenu) return;
+    
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       
-      // Check if click is outside the menu container
-      if (menuContainerRef.current && !menuContainerRef.current.contains(target)) {
-        closeMenu();
+      // Check if click is on a dropdown trigger button
+      const isButtonClick = target.closest('button[data-menu-trigger]');
+      if (isButtonClick) {
+        // Let the button's onClick handler manage the state
+        return;
       }
       
-      // Check if click is on the nav but not on a dropdown
-      const isNavClick = target.closest('.mega-menu-nav');
+      // Check if click is inside a dropdown
       const isDropdownClick = target.closest('.mega-menu-dropdown');
-      
-      if (isNavClick && !isDropdownClick && activeMenu) {
-        // Clicked on nav area but not in dropdown - close menu
-        const isButtonClick = target.closest('button[data-menu-trigger]');
-        if (!isButtonClick) {
-          closeMenu();
-        }
+      if (isDropdownClick) {
+        // Don't close if clicking inside dropdown
+        return;
       }
+      
+      // Close menu for any other click
+      closeMenu();
     };
 
-    // Add event listener with capture phase for better reliability
-    document.addEventListener('mousedown', handleClickOutside, true);
+    // Use a small delay to avoid immediate closure on open
+    const timer = setTimeout(() => {
+      document.addEventListener('click', handleClickOutside, true);
+    }, 0);
     
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside, true);
+      clearTimeout(timer);
+      document.removeEventListener('click', handleClickOutside, true);
     };
   }, [activeMenu, closeMenu]);
 
@@ -277,23 +282,21 @@ export function MegaMenu() {
 
   return (
     <nav 
-      className="bg-white shadow-sm border-b sticky top-0 z-50 mega-menu-container"
+      className="fixed top-0 left-0 right-0 z-50 mega-menu-container bg-black/95 backdrop-blur-sm"
       ref={menuContainerRef}
       role="navigation"
       aria-label="Main navigation"
     >
       <div className="container mx-auto">
-        <div className="flex items-center justify-between h-16 px-4 lg:px-8">
+        <div className="flex items-center justify-between h-20 px-4 lg:px-8">
           {/* Logo */}
           <div className="flex items-center space-x-8">
             <a href="/" className="flex items-center">
-              <div className="bg-white rounded-lg p-3" style={{ backgroundColor: '#ffffff' }}>
-                <img 
-                  src="/logo.png" 
-                  alt="Digerati Experts" 
-                  className="h-20 w-auto object-contain" 
-                  style={{ maxWidth: '250px', minHeight: '80px' }}
-                />
+              <div className="flex items-center">
+                <div className="text-2xl font-bold">
+                  <span className="text-yellow-400" style={{fontWeight: '300', letterSpacing: '0.05em'}}>DIGERATI</span>
+                  <span className="text-white ml-1" style={{fontWeight: '400'}}>Experts</span>
+                </div>
               </div>
             </a>
 
@@ -309,7 +312,7 @@ export function MegaMenu() {
                   {item.isSimple ? (
                     <a
                       href={item.href}
-                      className="px-3 py-2 text-gray-700 hover:text-purple-600 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded"
+                      className="px-3 py-2 text-white hover:text-yellow-300 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 rounded"
                       data-testid={`nav-${item.name.toLowerCase()}`}
                       onClick={handleLinkClick}
                       aria-label={`Go to ${item.name}`}
@@ -321,8 +324,8 @@ export function MegaMenu() {
                       ref={(el) => {
                         if (el) navButtonsRef.current.set(item.name, el);
                       }}
-                      className={`px-3 py-2 text-gray-700 hover:text-purple-600 font-medium transition-colors flex items-center focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded ${
-                        activeMenu === item.name ? 'text-purple-600' : ''
+                      className={`px-3 py-2 text-white hover:text-yellow-300 font-medium transition-colors flex items-center focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 rounded ${
+                        activeMenu === item.name ? 'text-yellow-300' : ''
                       }`}
                       data-testid={`nav-${item.name.toLowerCase()}`}
                       data-menu-trigger="true"
@@ -424,7 +427,7 @@ export function MegaMenu() {
             {/* Phone Number */}
             <a
               href="tel:480-519-5892"
-              className="hidden lg:flex items-center text-purple-600 hover:text-purple-700 font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1"
+              className="hidden lg:flex items-center text-white hover:text-yellow-300 font-semibold focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 rounded px-2 py-1"
               data-testid="nav-phone"
               aria-label="Call us at 480-519-5892"
             >
@@ -437,7 +440,7 @@ export function MegaMenu() {
               href="https://portal.digerati-experts.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden lg:flex items-center text-gray-700 hover:text-purple-600 font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1"
+              className="hidden lg:flex items-center text-white hover:text-yellow-300 font-medium focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 rounded px-2 py-1"
               data-testid="client-portal"
               aria-label="Access client portal (opens in new window)"
             >
@@ -447,7 +450,7 @@ export function MegaMenu() {
 
             {/* Get Protected Now CTA */}
             <Button
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-2 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-2 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 border border-purple-500/30"
               data-testid="nav-cta"
               onClick={() => {
                 handleLinkClick();
@@ -460,13 +463,13 @@ export function MegaMenu() {
 
             {/* Mobile Menu Button */}
             <button
-              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="lg:hidden p-2 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-yellow-400"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               data-testid="mobile-menu-toggle"
               aria-expanded={mobileMenuOpen}
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             >
-              <svg className="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 {mobileMenuOpen ? (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 ) : (
@@ -480,7 +483,7 @@ export function MegaMenu() {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div 
-            className="lg:hidden bg-white border-t"
+            className="lg:hidden bg-gray-900 border-t border-gray-800"
             role="dialog"
             aria-label="Mobile navigation menu"
           >

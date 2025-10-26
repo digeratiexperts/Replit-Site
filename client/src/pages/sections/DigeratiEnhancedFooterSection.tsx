@@ -1,11 +1,11 @@
-import { Shield, Phone, Mail, MapPin, Linkedin, Twitter, Facebook, Instagram, ExternalLink, Lock } from "lucide-react";
+import { Shield, Phone, Mail, MapPin, Linkedin, Twitter, Facebook, Instagram, ExternalLink, Lock, FileText, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const DigeratiEnhancedFooterSection = (): JSX.Element => {
   const currentYear = new Date().getFullYear();
 
   const quickAccess = [
-    { name: "Client Portal", href: "#", icon: <ExternalLink className="h-3 w-3" /> },
+    { name: "Client Portal", href: "https://portal.digerati-experts.com" },
     { name: "Submit Ticket", href: "#" },
     { name: "Remote Support", href: "#" },
     { name: "Pay Invoice", href: "#" },
@@ -41,73 +41,45 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
   ];
 
   const locations = [
-    "Chandler",
-    "Phoenix", 
-    "Gilbert",
-    "Tempe",
-    "Mesa",
-    "Scottsdale"
+    { name: "Chandler", primary: true },
+    { name: "Phoenix", primary: false },
+    { name: "Gilbert", primary: false },
+    { name: "Tempe", primary: false },
+    { name: "Mesa", primary: false },
+    { name: "Scottsdale", primary: false }
   ];
 
-  const certifications = [
-    { name: "Microsoft Partner", icon: "🏆" },
-    { name: "Apple Consultants", icon: "🍎" },
-    { name: "SOC 2 Type II", icon: "🔒" }
+  const partners = [
+    { name: "Microsoft Partner", verified: true },
+    { name: "Apple Consultants", verified: true },
+    { name: "SOC 2 Type II", verified: true }
   ];
 
   return (
-    <footer className="bg-gradient-to-b from-slate-900 to-black pt-16 pb-8">
+    <footer className="bg-gradient-to-b from-slate-900 via-slate-950 to-black">
       {/* Main footer content */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-12 border-b border-gray-800">
-          {/* Company info */}
-          <div className="lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="bg-white rounded-lg p-2">
-                <img 
-                  src="/logo.png" 
-                  alt="Digerati Experts" 
-                  className="h-8 w-auto object-contain"
-                />
-              </div>
-              <div>
-                <h3 className="text-white font-bold">DIGERATI</h3>
-                <p className="text-xs text-gray-400">Experts</p>
-              </div>
-            </div>
-            
-            <p className="text-gray-400 text-sm mb-4">
-              Your trusted partner for managed IT, cybersecurity, and compliance.
-            </p>
-
-            {/* Social links */}
-            <div className="flex gap-3">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                <Linkedin className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                <Instagram className="h-5 w-5" />
-              </a>
-            </div>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-16">
+        {/* Logo and company info section */}
+        <div className="mb-12">
+          <div className="text-3xl font-bold">
+            <span className="text-yellow-400" style={{fontWeight: '300', letterSpacing: '0.05em'}}>DIGERATI</span>
+            <span className="text-white ml-1" style={{fontWeight: '400'}}>Experts</span>
           </div>
+        </div>
 
+        {/* Footer columns */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-12">
           {/* Quick Access */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Quick Access</h4>
-            <ul className="space-y-2">
+            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider">Quick Access</h4>
+            <ul className="space-y-3">
               {quickAccess.map((item, index) => (
                 <li key={index}>
                   <a 
                     href={item.href} 
-                    className="text-gray-400 hover:text-purple-400 text-sm transition-colors flex items-center gap-1"
+                    className="text-gray-400 hover:text-purple-400 text-sm transition-colors"
+                    data-testid={`footer-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
                   >
-                    {item.icon}
                     {item.name}
                   </a>
                 </li>
@@ -117,13 +89,14 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
 
           {/* Services */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Services</h4>
-            <ul className="space-y-2">
+            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider">Services</h4>
+            <ul className="space-y-3">
               {services.map((item, index) => (
                 <li key={index}>
                   <a 
                     href={item.href} 
                     className="text-gray-400 hover:text-purple-400 text-sm transition-colors"
+                    data-testid={`footer-service-${index}`}
                   >
                     {item.name}
                   </a>
@@ -134,17 +107,18 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
 
           {/* Legal */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Legal</h4>
-            <ul className="space-y-2">
+            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider">Legal</h4>
+            <ul className="space-y-3">
               {legal.map((item, index) => (
                 <li key={index}>
                   <a 
                     href={item.href} 
-                    className="text-gray-400 hover:text-purple-400 text-sm transition-colors flex items-center gap-2"
+                    className="text-gray-400 hover:text-purple-400 text-sm transition-colors inline-flex items-center gap-2"
+                    data-testid={`footer-legal-${index}`}
                   >
-                    {item.name}
+                    <span>{item.name}</span>
                     {item.badge && (
-                      <span className="text-xs bg-purple-600/20 text-purple-400 px-1.5 py-0.5 rounded">
+                      <span className="text-xs bg-purple-600/20 text-purple-300 px-2 py-0.5 rounded">
                         {item.badge}
                       </span>
                     )}
@@ -156,13 +130,14 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
 
           {/* Trust */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Trust</h4>
-            <ul className="space-y-2">
+            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider">Trust</h4>
+            <ul className="space-y-3">
               {trust.map((item, index) => (
                 <li key={index}>
                   <a 
                     href={item.href} 
                     className="text-gray-400 hover:text-purple-400 text-sm transition-colors"
+                    data-testid={`footer-trust-${index}`}
                   >
                     {item.name}
                   </a>
@@ -172,64 +147,122 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           </div>
         </div>
 
-        {/* Compliance section */}
-        <div className="py-8 border-b border-gray-800">
-          <div className="bg-gradient-to-r from-purple-900/20 to-blue-900/20 rounded-lg p-6 border border-purple-500/20">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <Lock className="h-6 w-6 text-purple-400" />
+        {/* Compliance Section */}
+        <div className="border-t border-gray-800 py-8">
+          <div className="bg-gradient-to-r from-purple-900/20 to-blue-900/20 rounded-lg p-6 mb-8 border border-purple-800/30">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <Shield className="h-6 w-6 text-purple-400 mt-1 flex-shrink-0" />
                 <div>
-                  <h5 className="text-white font-semibold">Need SOC 2 or Security Documentation?</h5>
-                  <p className="text-gray-400 text-sm">Request compliance documents for vendor onboarding and security reviews</p>
+                  <h3 className="text-white font-semibold mb-1 flex items-center gap-2">
+                    COMPLIANCE READY
+                  </h3>
+                  <p className="text-gray-400 text-sm">
+                    Need SOC 2 or Security Documentation?
+                  </p>
+                  <p className="text-gray-400 text-sm mt-1">
+                    Request compliance documents for vendor onboarding and security reviews
+                  </p>
                 </div>
               </div>
               <Button 
-                variant="outline"
-                className="border-purple-500/50 text-purple-400 hover:bg-purple-500/10"
+                className="bg-white text-purple-700 hover:bg-gray-100 font-semibold px-6 py-2 shadow-lg flex items-center gap-2"
+                data-testid="footer-request-docs"
               >
-                Request Docs →
+                Request Docs
+                <ArrowRight className="h-4 w-4" />
               </Button>
             </div>
           </div>
         </div>
 
-        {/* Locations and certifications */}
-        <div className="py-8 border-b border-gray-800">
-          <div className="text-center mb-6">
-            <h5 className="text-gray-400 text-sm uppercase tracking-wider mb-4">Serving Greater Phoenix</h5>
-            <div className="flex flex-wrap justify-center gap-4">
-              {locations.map((location, index) => (
-                <button
-                  key={index}
-                  className="px-4 py-2 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors text-sm flex items-center gap-1"
-                >
-                  <MapPin className="h-3 w-3" />
-                  {location}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-6 mt-8">
-            {certifications.map((cert, index) => (
-              <div key={index} className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 rounded-lg">
-                <span className="text-2xl">{cert.icon}</span>
-                <span className="text-gray-300 text-sm font-medium">{cert.name}</span>
+        {/* Areas Served Section */}
+        <div className="border-t border-gray-800 pt-8 pb-6">
+          <h4 className="text-gray-400 text-sm font-semibold mb-4 uppercase tracking-wider">
+            Serving Greater Phoenix
+          </h4>
+          <div className="flex flex-wrap gap-4">
+            {locations.map((location, index) => (
+              <div 
+                key={index} 
+                className={`
+                  flex items-center gap-2 px-4 py-2 rounded-full 
+                  ${location.primary 
+                    ? 'bg-purple-900/30 border border-purple-700/50 text-purple-300' 
+                    : 'bg-gray-800/50 border border-gray-700/50 text-gray-400'}
+                  transition-all hover:bg-purple-900/40 hover:border-purple-700/70 hover:text-purple-300
+                `}
+                data-testid={`footer-location-${location.name.toLowerCase()}`}
+              >
+                <MapPin className="h-3 w-3" />
+                <span className="text-sm font-medium">{location.name}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Copyright and final info */}
-        <div className="pt-8 text-center">
-          <p className="text-gray-500 text-sm mb-2">
-            © {currentYear} Digerati Experts, LLC. All rights reserved.
-          </p>
-          <p className="text-gray-600 text-xs">
-            Proudly Protecting Businesses Since [Year] | 
-            <span className="mx-2">Arizona Technology Council Member</span> | 
-            <span className="ml-2">BBB A+ Rated</span>
-          </p>
+        {/* Partner Badges Section */}
+        <div className="border-t border-gray-800 pt-6 pb-4">
+          <div className="flex flex-wrap items-center gap-6">
+            {partners.map((partner, index) => (
+              <div 
+                key={index}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 rounded-lg border border-gray-700/50"
+                data-testid={`footer-partner-${index}`}
+              >
+                {partner.verified && (
+                  <Shield className="h-4 w-4 text-green-400" />
+                )}
+                <span className="text-gray-300 text-sm font-medium">{partner.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom section with social and copyright */}
+        <div className="border-t border-gray-800 pt-6 pb-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            {/* Social links */}
+            <div className="flex items-center gap-4">
+              <a 
+                href="#" 
+                className="text-gray-400 hover:text-white transition-colors"
+                aria-label="LinkedIn"
+                data-testid="footer-linkedin"
+              >
+                <Linkedin className="h-5 w-5" />
+              </a>
+              <a 
+                href="#" 
+                className="text-gray-400 hover:text-white transition-colors"
+                aria-label="Twitter"
+                data-testid="footer-twitter"
+              >
+                <Twitter className="h-5 w-5" />
+              </a>
+              <a 
+                href="#" 
+                className="text-gray-400 hover:text-white transition-colors"
+                aria-label="Facebook"
+                data-testid="footer-facebook"
+              >
+                <Facebook className="h-5 w-5" />
+              </a>
+              <a 
+                href="#" 
+                className="text-gray-400 hover:text-white transition-colors"
+                aria-label="Instagram"
+                data-testid="footer-instagram"
+              >
+                <Instagram className="h-5 w-5" />
+              </a>
+            </div>
+            
+            {/* Copyright */}
+            <div className="text-gray-400 text-sm text-center">
+              © {currentYear} Digerati Experts, LLC. All rights reserved.
+            </div>
+          </div>
         </div>
       </div>
     </footer>

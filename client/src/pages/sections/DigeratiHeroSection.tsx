@@ -66,9 +66,9 @@ export const DigeratiHeroSection = (): JSX.Element => {
   };
 
   return (
-    <section id="home" className="relative pt-16 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-blue-600 to-purple-700 opacity-95"></div>
-      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+    <section id="home" className="relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-purple-700/50 to-transparent"></div>
       
       {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
@@ -76,11 +76,11 @@ export const DigeratiHeroSection = (): JSX.Element => {
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-400 rounded-full opacity-30 blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-24 lg:pt-36 lg:pb-32">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="text-white">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-              <span className="text-yellow-300">Hackers Don't Wait.</span>
+              <span className="text-yellow-400" style={{color: '#FFD700'}}>Hackers Don't Wait.</span>
               <br />
               <span className="text-white">Protect Your Business Now.</span>
             </h1>

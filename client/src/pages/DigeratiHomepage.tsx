@@ -1,5 +1,5 @@
 import { MegaMenu } from "@/components/MegaMenu";
-import { WaveSeparator } from "@/components/WaveSeparator";
+import { SimpleDivider } from "@/components/SimpleDivider";
 import { useState, useEffect } from "react";
 
 // Import all section components
@@ -56,7 +56,7 @@ export const DigeratiHomepage = (): JSX.Element => {
       <DigeratiHeroSection />
 
       {/* Wave separator between hero and next section */}
-      <WaveSeparator variant="multi" className="-mt-1" />
+      <SimpleDivider variant="default" className="-mt-1" />
 
       {/* Why Choose Section (Alert Banner) */}
       <DigeratiAlertBanner />
@@ -65,7 +65,7 @@ export const DigeratiHomepage = (): JSX.Element => {
       <DigeratiServicesSection />
 
       {/* Wave separator between Services and How We Protect sections */}
-      <WaveSeparator variant="default" />
+      <SimpleDivider variant="inverted" />
 
       {/* How We Protect Your Business Section */}
       <DigeratiHowWeProtectSection />
@@ -95,7 +95,7 @@ export const DigeratiHomepage = (): JSX.Element => {
       <DigeratiThreatsInsightsSection />
 
       {/* Wave separator */}
-      <WaveSeparator variant="gradient" />
+      <SimpleDivider variant="dark" />
 
       {/* Industries Section */}
       <DigeratiIndustriesSection />
@@ -107,7 +107,7 @@ export const DigeratiHomepage = (): JSX.Element => {
       <DigeratiProtectEnableSection />
 
       {/* Wave separator between dark and light sections */}
-      <WaveSeparator variant="inverted" />
+      <SimpleDivider variant="inverted" />
 
       {/* Testimonials Section */}
       <DigeratiTestimonialsSection />
