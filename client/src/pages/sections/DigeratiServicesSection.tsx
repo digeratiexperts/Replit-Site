@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eye, ShieldCheck, UserCheck, KeyRound, Cloud, AlertCircle, ArrowRight } from "lucide-react";
+import { designSystem } from "@/lib/designSystem";
 
 export const DigeratiServicesSection = (): JSX.Element => {
   const services = [
@@ -43,44 +43,46 @@ export const DigeratiServicesSection = (): JSX.Element => {
   ];
 
   return (
-    <section id="services" className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+    <section id="services" className={`${designSystem.spacing.section} ${designSystem.colors.background.primary}`}>
+      <div className={designSystem.spacing.container}>
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className={`${designSystem.typography.h2} mb-4`}>
             What We Provide
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className={`${designSystem.typography.body.large} max-w-3xl mx-auto`}>
             Our comprehensive suite of security services is designed to protect your business at every level, from endpoints to cloud infrastructure.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className={`grid md:grid-cols-2 lg:grid-cols-3 ${designSystem.spacing.gap.large}`}>
           {services.map((service, index) => {
             const Icon = service.icon;
             return (
-              <Card 
+              <div 
                 key={index} 
-                className="border-2 border-gray-200 hover:border-purple-600 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group" 
+                className={designSystem.components.serviceCard.container}
                 data-testid={service.testId}
               >
-                <CardHeader>
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-md">
-                    <Icon className="h-6 w-6 text-white" />
-                  </div>
-                  <CardTitle>{service.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">
-                    {service.description}
-                  </p>
-                </CardContent>
-              </Card>
+                <div className={designSystem.components.serviceCard.icon}>
+                  <Icon className={designSystem.components.serviceCard.iconSvg} />
+                </div>
+                <h3 className={designSystem.components.serviceCard.title}>
+                  {service.title}
+                </h3>
+                <p className={designSystem.components.serviceCard.description}>
+                  {service.description}
+                </p>
+              </div>
             );
           })}
         </div>
 
-        <div className="text-center mt-8">
-          <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg" size="lg">
+        <div className="text-center mt-12">
+          <Button 
+            className={designSystem.components.button.primary}
+            size="lg"
+            data-testid="button-explore-services"
+          >
             Explore More Services <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </div>

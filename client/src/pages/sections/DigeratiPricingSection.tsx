@@ -45,25 +45,26 @@ export const DigeratiPricingSection = (): JSX.Element => {
   ];
 
   return (
-    <section id="pricing" className="py-20 bg-gradient-to-r from-purple-50 to-blue-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+    <section id="pricing" className="py-16 md:py-20 lg:py-24 bg-gradient-to-br from-purple-50 to-blue-50">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-4">
             ProActive Ecosystem Pricing
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
             Clear, predictable, and compliance-ready. Packages start at <span className="font-bold text-purple-600">$165 per user/month</span>. 
             A <span className="font-bold text-purple-600">$1,200/site minimum</span> applies for offices with 5+ users.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-6 md:gap-8">
           {pricingPlans.map((plan, index) => (
             <Card 
               key={index} 
-              className={`relative hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 ${
-                plan.isPopular ? 'border-purple-600 border-2' : 'border-2 border-gray-200 hover:border-purple-600'
+              className={`relative bg-white hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 ${
+                plan.isPopular ? 'border-purple-600 border-2 shadow-lg' : 'border border-gray-200 hover:border-purple-300'
               }`}
+              data-testid={`pricing-${plan.name.toLowerCase().replace(' ', '-')}`}
             >
               {plan.isPopular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
