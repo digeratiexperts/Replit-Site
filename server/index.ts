@@ -1,10 +1,18 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { createServer } from "http";
-import { setupVite, serveStatic, log } from "./vite";
 import { registerRoutes } from "./routes";
+import { createServer as createViteServer } from "vite";
+import path from "path";
+import fs from "fs";
 
 const app = express();
 const server = createServer(app);
+
+// Simple logging utility
+const log = (message: string) => {
+  const timestamp = new Date().toISOString().split("T")[1].split(".")[0];
+  console.log(`[${timestamp}] ${message}`);
+};
 
 // --------- EARLY, LOUD TRACE so we know what URL actually hit Express
 app.use((req, _res, next) => {
@@ -25,15 +33,54 @@ app.all("/healthz", (_req, res) => res.status(200).send("ok"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// --------- Register your API routes (these should mount under /api)
-await registerRoutes(app);
+// --------- Setup async initialization
+(async () => {
+  // Register your API routes (these should mount under /api)
+  await registerRoutes(app);
 
-// --------- Vite in dev, Static in prod (NEVER touch /api/*)
-if (app.get("env") === "development") {
-  await setupVite(app, server);
-} else {
-  serveStatic(app);
-}
+  // Vite in dev, Static in prod (NEVER touch /api/*)
+  if (app.get("env") === "development") {
+    // Set up Vite development server
+    const vite = await createViteServer({
+      server: {
+        middlewareMode: true,
+        hmr: { server },
+      },
+      configFile: path.resolve(process.cwd(), "vite.config.ts"),
+    });
+    
+    app.use(vite.middlewares);
+    log("✨ Vite development server middleware attached");
+  } else {
+    // Serve static files in production
+    const distPath = path.resolve(process.cwd(), "dist/public");
+    const indexPath = path.join(distPath, "index.html");
+    
+    // Serve static files
+    app.use(express.static(distPath));
+    
+    // SPA fallback - send index.html for all non-API routes
+    app.get("*", (req, res, next) => {
+      // Skip API routes
+      if (req.path.startsWith("/api")) {
+        return next();
+      }
+      
+      // Check if index.html exists
+      if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+      } else {
+        log(`⚠️ Production build not found at ${distPath}`);
+        res.status(404).send(`
+          <h1>Production Build Not Found</h1>
+          <p>Please run <code>npm run build</code> to create a production build.</p>
+        `);
+      }
+    });
+    
+    log(`📦 Serving static files from ${distPath}`);
+  }
+})();
 
 /** Utility to list routes for debugging */
 function listEndpoints(): Array<{ method: string; path: string }> {
