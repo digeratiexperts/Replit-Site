@@ -13,16 +13,16 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900 relative overflow-hidden">
+    <section className="py-20 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-blue-500 rounded-full opacity-10 blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-purple-500 rounded-full opacity-10 blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-blue-200 rounded-full opacity-30 blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-purple-200 rounded-full opacity-30 blur-3xl animate-pulse delay-1000"></div>
         
         {/* Circuit pattern overlay */}
         <div className="absolute inset-0 opacity-5">
           <div className="h-full w-full" style={{
-            backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 35px, rgba(120, 119, 198, 0.3) 35px, rgba(120, 119, 198, 0.3) 70px)`,
+            backgroundImage: `repeating-linear-gradient(90deg, transparent, transparent 35px, rgba(147, 51, 234, 0.1) 35px, rgba(147, 51, 234, 0.1) 70px)`,
           }}></div>
         </div>
       </div>
@@ -64,14 +64,14 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
           {/* Right side - Content */}
           <div>
             <div className="mb-6">
-              <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30 mb-4">
+              <Badge className="bg-yellow-100 text-yellow-700 border-yellow-300 mb-4">
                 <Sparkles className="h-3 w-3 mr-1" />
                 AI-Powered Protection
               </Badge>
-              <h2 className="text-4xl font-bold text-white mb-4">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">
                 Expert Assistance Using AI
               </h2>
-              <p className="text-xl text-gray-300 mb-6">
+              <p className="text-xl text-gray-600 mb-6">
                 Our AI-powered security platform works 24/7 to predict, prevent, and respond to threats 
                 before they impact your business. Think of it as your tireless digital security expert.
               </p>
@@ -79,30 +79,30 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
 
             <div className="space-y-3 mb-8">
               {aiFeatures.map((feature, index) => (
-                <div key={index} className="flex items-start gap-3 text-gray-300">
-                  <CheckCircle className="h-5 w-5 text-green-400 mt-0.5 flex-shrink-0" />
+                <div key={index} className="flex items-start gap-3 text-gray-700">
+                  <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
                   <span>{feature}</span>
                 </div>
               ))}
             </div>
 
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 mb-8">
-              <h3 className="text-white font-semibold mb-2">Smarter Security, Better Results</h3>
-              <p className="text-gray-300 text-sm mb-4">
+            <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg p-6 border border-purple-200 mb-8">
+              <h3 className="text-gray-900 font-semibold mb-2">Smarter Security, Better Results</h3>
+              <p className="text-gray-600 text-sm mb-4">
                 Our AI reduces false positives by 85% and identifies real threats 3x faster than traditional methods.
               </p>
               <div className="flex gap-4">
                 <div>
-                  <div className="text-2xl font-bold text-purple-400">0.3s</div>
-                  <div className="text-xs text-gray-400">Threat Detection</div>
+                  <div className="text-2xl font-bold text-purple-600">0.3s</div>
+                  <div className="text-xs text-gray-600">Threat Detection</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-blue-400">99.9%</div>
-                  <div className="text-xs text-gray-400">Accuracy Rate</div>
+                  <div className="text-2xl font-bold text-blue-600">99.9%</div>
+                  <div className="text-xs text-gray-600">Accuracy Rate</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-green-400">24/7</div>
-                  <div className="text-xs text-gray-400">Monitoring</div>
+                  <div className="text-2xl font-bold text-green-600">24/7</div>
+                  <div className="text-xs text-gray-600">Monitoring</div>
                 </div>
               </div>
             </div>
@@ -118,7 +118,7 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
               <Button 
                 size="lg"
                 variant="outline"
-                className="border-white/30 text-white hover:bg-white/10"
+                className="border-gray-300 text-gray-700 hover:bg-gray-50"
               >
                 Learn More
               </Button>

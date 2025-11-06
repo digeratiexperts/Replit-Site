@@ -38,17 +38,17 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-b from-slate-900 via-purple-950 to-slate-900 relative overflow-hidden">
+    <section className="py-20 bg-white relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0">
         {/* Gradient orbs */}
-        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-purple-600 rounded-full opacity-10 blur-3xl"></div>
-        <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-blue-600 rounded-full opacity-10 blur-3xl"></div>
+        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-purple-100 rounded-full opacity-40 blur-3xl"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-blue-100 rounded-full opacity-40 blur-3xl"></div>
         
         {/* Animated border */}
         <div className="absolute inset-0">
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-50"></div>
-          <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50"></div>
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-purple-300 to-transparent opacity-50"></div>
+          <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-blue-300 to-transparent opacity-50"></div>
         </div>
       </div>
 
@@ -60,7 +60,7 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
               {avatars.map((avatar, index) => (
                 <div
                   key={index}
-                  className="w-12 h-12 rounded-full border-2 border-slate-900 overflow-hidden bg-gray-200"
+                  className="w-12 h-12 rounded-full border-2 border-white overflow-hidden bg-gray-200 shadow-md"
                   style={{ zIndex: avatars.length - index }}
                 >
                   <img src={avatar} alt={`Subscriber ${index + 1}`} className="w-full h-full object-cover" />
@@ -68,10 +68,10 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
               ))}
             </div>
 
-            <h2 className="text-4xl font-bold text-white mb-4">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
               Subscribe to Our Newsletter & Stay Secure
             </h2>
-            <p className="text-xl text-gray-300 mb-8">
+            <p className="text-xl text-gray-600 mb-8">
               Enter your email to receive expert updates and personalized security advice.
             </p>
 

@@ -28,7 +28,7 @@ Digerati Experts is a modern, fully responsive website for a Managed Security Se
 - **Company Name**: Digerati Experts
 - **Type**: Managed Security Service Provider (MSP/MSSP)
 - **Location**: 3165 S Alma School Rd Suite 29, Chandler, AZ 85248
-- **Phone**: (480) 848-6116
+- **Phone**: 325-480-9870
 - **Email**: info@digerati-experts.com
 - **Domain**: digerati-experts.com
 - **Office Hours**: Monday-Friday 7:00 AM - 6:00 PM MST
