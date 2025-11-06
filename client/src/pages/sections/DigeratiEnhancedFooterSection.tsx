@@ -1,5 +1,6 @@
 import { Shield, Phone, Mail, MapPin, Linkedin, Twitter, Facebook, Instagram, ExternalLink, Lock, FileText, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import logoImage from '@assets/DE-Logo-new_1762461524794.webp';
 
 export const DigeratiEnhancedFooterSection = (): JSX.Element => {
   const currentYear = new Date().getFullYear();
@@ -61,10 +62,12 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-16">
         {/* Logo and company info section */}
         <div className="mb-12">
-          <div className="text-3xl font-bold">
-            <span className="text-yellow-400" style={{fontWeight: '300', letterSpacing: '0.05em'}}>DIGERATI</span>
-            <span className="text-white ml-1" style={{fontWeight: '400'}}>Experts</span>
-          </div>
+          <img 
+            src={logoImage} 
+            alt="Digerati Experts Logo" 
+            className="h-12 w-auto"
+            data-testid="logo-footer"
+          />
         </div>
 
         {/* Footer columns */}

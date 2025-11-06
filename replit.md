@@ -15,7 +15,7 @@ Digerati Experts is a modern, fully responsive website for a Managed Security Se
 - Added emergency support hotline and 24/7 SOC monitoring emphasis
 - **Latest Updates (November 2025)**:
   - Implemented comprehensive mega menu navigation system with dropdown sections
-  - Added actual company logo to replace text branding
+  - Added actual Digerati Experts company logo (webp format) to replace text branding in header and footer
   - Created multi-level navigation structure matching live site at digerati-experts.com
   - Preserved "Get Protected Now" CTA button and Client Portal link
   - Added interactive calculators (downtime cost and service estimator)

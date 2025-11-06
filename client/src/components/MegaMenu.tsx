@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import logoImage from '@assets/DE-Logo-new_1762461524794.webp';
 
 interface MegaMenuItem {
   title: string;
@@ -292,12 +293,12 @@ export function MegaMenu() {
           {/* Logo */}
           <div className="flex items-center space-x-8">
             <a href="/" className="flex items-center">
-              <div className="flex items-center">
-                <div className="text-2xl font-bold">
-                  <span className="text-yellow-400" style={{fontWeight: '300', letterSpacing: '0.05em'}}>DIGERATI</span>
-                  <span className="text-white ml-1" style={{fontWeight: '400'}}>Experts</span>
-                </div>
-              </div>
+              <img 
+                src={logoImage} 
+                alt="Digerati Experts Logo" 
+                className="h-10 w-auto"
+                data-testid="logo-header"
+              />
             </a>
 
             {/* Desktop Navigation */}
