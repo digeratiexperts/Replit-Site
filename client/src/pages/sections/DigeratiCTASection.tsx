@@ -3,17 +3,17 @@ import { Star } from "lucide-react";
 
 export const DigeratiCTASection = (): JSX.Element => {
   return (
-    <section className="py-20 bg-gradient-to-br from-purple-50 via-blue-50 to-white relative overflow-hidden">
+    <section className="py-16 md:py-20 lg:py-24 bg-gradient-to-br from-purple-50 via-blue-50 to-white relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-purple-100/50 to-blue-100/50 blur-3xl"></div>
       </div>
       
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-6">
           Get a $20,000 Pen Test – Free
         </h2>
-        <p className="text-xl text-gray-600 mb-8">
+        <p className="text-lg md:text-xl text-gray-600 leading-relaxed mb-8">
           Discover vulnerabilities before attackers do – without paying a cent.
         </p>
         

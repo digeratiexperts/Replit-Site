@@ -34,13 +34,13 @@ export const DigeratiFAQSection = (): JSX.Element => {
   };
 
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-16 md:py-20 lg:py-24 bg-gray-50">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-4">
             Frequently Asked Questions
           </h2>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
             Find answers to common queries about us.
           </p>
         </div>
@@ -49,7 +49,8 @@ export const DigeratiFAQSection = (): JSX.Element => {
           {faqs.map((faq, index) => (
             <Card 
               key={index} 
-              className="hover:shadow-lg transition-all duration-200 hover:border-purple-600 border-2"
+              className="bg-white border border-gray-200 hover:border-purple-300 hover:shadow-xl transition-all duration-300"
+              data-testid={`faq-${index}`}
             >
               <CardHeader 
                 className="cursor-pointer hover:bg-gray-50 transition-colors duration-200"
