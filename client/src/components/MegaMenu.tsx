@@ -427,12 +427,12 @@ export function MegaMenu() {
             {/* Phone Number */}
             <a
               href="tel:480-519-5892"
-              className="hidden lg:flex items-center text-white hover:text-yellow-300 font-semibold focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 rounded px-2 py-1"
+              className="hidden lg:flex items-center text-white hover:text-yellow-300 font-semibold focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 rounded px-2 py-1 whitespace-nowrap"
               data-testid="nav-phone"
               aria-label="Call us at 480-519-5892"
             >
-              <Phone className="h-4 w-4 mr-2" aria-hidden="true" />
-              (480) 519-5892
+              <Phone className="h-4 w-4 mr-2 flex-shrink-0" aria-hidden="true" />
+              <span className="whitespace-nowrap">480-519-5892</span>
             </a>
 
             {/* Client Portal */}

@@ -48,81 +48,97 @@ export const DigeratiHomepage = (): JSX.Element => {
   }, [serviceEmployees, servicePackage]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50">
       {/* Navigation */}
       <MegaMenu />
 
       {/* Hero Section */}
       <DigeratiHeroSection />
 
-      {/* Wave separator between hero and next section */}
-      <SimpleDivider variant="default" className="-mt-1" />
+      {/* Why Choose Section (Alert Banner) - Seamless transition */}
+      <div className="-mt-16">
+        <DigeratiAlertBanner />
+      </div>
 
-      {/* Why Choose Section (Alert Banner) */}
-      <DigeratiAlertBanner />
-
-      {/* Services Section */}
-      <DigeratiServicesSection />
-
-      {/* Wave separator between Services and How We Protect sections */}
-      <SimpleDivider variant="inverted" />
+      {/* Services Section - Smooth transition */}
+      <div className="bg-white">
+        <DigeratiServicesSection />
+      </div>
 
       {/* How We Protect Your Business Section */}
-      <DigeratiHowWeProtectSection />
+      <div className="bg-gradient-to-b from-white to-slate-50">
+        <DigeratiHowWeProtectSection />
+      </div>
 
       {/* Calculators Section (both downtime and service cost) */}
-      <DigeratiCalculatorsSection
-        employees={employees}
-        setEmployees={setEmployees}
-        hourlyWage={hourlyWage}
-        setHourlyWage={setHourlyWage}
-        downtime={downtime}
-        setDowntime={setDowntime}
-        industry={industry}
-        setIndustry={setIndustry}
-        downtimeCost={downtimeCost}
-        serviceEmployees={serviceEmployees}
-        setServiceEmployees={setServiceEmployees}
-        servicePackage={servicePackage}
-        setServicePackage={setServicePackage}
-        serviceCost={serviceCost}
-      />
+      <div className="bg-slate-50">
+        <DigeratiCalculatorsSection
+          employees={employees}
+          setEmployees={setEmployees}
+          hourlyWage={hourlyWage}
+          setHourlyWage={setHourlyWage}
+          downtime={downtime}
+          setDowntime={setDowntime}
+          industry={industry}
+          setIndustry={setIndustry}
+          downtimeCost={downtimeCost}
+          serviceEmployees={serviceEmployees}
+          setServiceEmployees={setServiceEmployees}
+          servicePackage={servicePackage}
+          setServicePackage={setServicePackage}
+          serviceCost={serviceCost}
+        />
+      </div>
 
-      {/* What We Tackle Section - Dark background */}
-      <DigeratiWhatWeTackleSection />
+      {/* What We Tackle Section - Gradient transition to dark */}
+      <div className="bg-gradient-to-b from-slate-50 to-slate-900">
+        <DigeratiWhatWeTackleSection />
+      </div>
 
-      {/* Recent Threats & Insights Section - White background */}
-      <DigeratiThreatsInsightsSection />
+      {/* Recent Threats & Insights Section - Stay in dark theme */}
+      <div className="bg-slate-900">
+        <DigeratiThreatsInsightsSection />
+      </div>
 
-      {/* Wave separator */}
-      <SimpleDivider variant="dark" />
-
-      {/* Industries Section */}
-      <DigeratiIndustriesSection />
+      {/* Industries Section - Transition back to light */}
+      <div className="bg-gradient-to-b from-slate-900 via-slate-800 to-white">
+        <DigeratiIndustriesSection />
+      </div>
 
       {/* Pricing Section */}
-      <DigeratiPricingSection />
+      <div className="bg-white">
+        <DigeratiPricingSection />
+      </div>
 
-      {/* We Exist to Protect Section - Dark background */}
-      <DigeratiProtectEnableSection />
-
-      {/* Wave separator between dark and light sections */}
-      <SimpleDivider variant="inverted" />
+      {/* We Exist to Protect Section - Transition to dark */}
+      <div className="bg-gradient-to-b from-white via-slate-700 to-slate-900">
+        <DigeratiProtectEnableSection />
+      </div>
 
       {/* Testimonials Section */}
-      <DigeratiTestimonialsSection />
+      <div className="bg-slate-900">
+        <DigeratiTestimonialsSection />
+      </div>
 
-      {/* AI Assistance Section - Dark background */}
-      <DigeratiAIAssistanceSection />
+      {/* AI Assistance Section - Stay dark */}
+      <div className="bg-slate-900">
+        <DigeratiAIAssistanceSection />
+      </div>
 
-      {/* CTA Section */}
-      <DigeratiCTASection />
+      {/* CTA Section - Transition to lighter */}
+      <div className="bg-gradient-to-b from-slate-900 to-slate-800">
+        <DigeratiCTASection />
+      </div>
 
-      {/* FAQ Section - will update to dark */}
-      <DigeratiFAQSection />
+      {/* FAQ Section */}
+      <div className="bg-slate-800">
+        <DigeratiFAQSection />
+      </div>
 
-      {/* Newsletter Section - Dark background */}
-      <DigeratiNewsletterSection />
+      {/* Newsletter Section */}
+      <div className="bg-gradient-to-b from-slate-800 to-slate-900">
+        <DigeratiNewsletterSection />
+      </div>
 
       {/* Contact Section */}
       <DigeratiContactSection />
