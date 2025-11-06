@@ -6,11 +6,11 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
 
   const quickAccess = [
     { name: "Client Portal", href: "https://portal.digerati-experts.com" },
-    { name: "Submit Ticket", href: "#" },
-    { name: "Remote Support", href: "#" },
-    { name: "Pay Invoice", href: "#" },
-    { name: "Knowledge Base", href: "#" },
-    { name: "System Status", href: "#" }
+    { name: "Submit Ticket", href: "/support/submit-ticket" },
+    { name: "Remote Support", href: "/support/remote-support" },
+    { name: "Pay Invoice", href: "/support/pay-invoice" },
+    { name: "Knowledge Base", href: "/support/knowledge-base" },
+    { name: "System Status", href: "/support/system-status" }
   ];
 
   const services = [
@@ -23,21 +23,21 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
   ];
 
   const legal = [
-    { name: "MSA", badge: "v2025.1", href: "#" },
-    { name: "SLA", badge: "v2025.1", href: "#" },
-    { name: "AUP", badge: "v2025.1", href: "#" },
-    { name: "DPA", badge: "v2025.1", href: "#" },
-    { name: "Privacy Policy", href: "#" },
-    { name: "Terms of Use", href: "#" },
-    { name: "Sample SOW", href: "#" }
+    { name: "MSA", badge: "v2025.1", href: "/legal/msa" },
+    { name: "SLA", badge: "v2025.1", href: "/legal/sla" },
+    { name: "AUP", badge: "v2025.1", href: "/legal/aup" },
+    { name: "DPA", badge: "v2025.1", href: "/legal/dpa" },
+    { name: "Privacy Policy", href: "/legal/privacy-policy" },
+    { name: "Terms of Use", href: "/legal/terms-of-use" },
+    { name: "Sample SOW", href: "/legal/sample-sow" }
   ];
 
   const trust = [
-    { name: "Trust Center", href: "#" },
-    { name: "Status Page", href: "#" },
-    { name: "Vulnerability Disclosure", href: "#" },
-    { name: "security.txt", href: "#" },
-    { name: "Accessibility", href: "#" }
+    { name: "Trust Center", href: "/trust/trust-center" },
+    { name: "Status Page", href: "/support/system-status" },
+    { name: "Vulnerability Disclosure", href: "/trust/vulnerability-disclosure" },
+    { name: "security.txt", href: "/.well-known/security.txt" },
+    { name: "Accessibility", href: "/trust/accessibility" }
   ];
 
   const locations = [

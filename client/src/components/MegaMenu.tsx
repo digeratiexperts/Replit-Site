@@ -39,30 +39,30 @@ export function MegaMenu() {
         {
           title: 'ProActive Ecosystem',
           items: [
-            { title: 'Office Package', description: 'Complete IT management for small offices', icon: <Server className="h-5 w-5" /> },
-            { title: 'Managed IT Support', description: 'Full-service IT support and maintenance', icon: <Shield className="h-5 w-5" /> },
-            { title: 'Managed Workplace', description: 'End-to-end workplace technology management', icon: <Users className="h-5 w-5" /> },
-            { title: 'Cloud Backup', description: 'Secure cloud backup and recovery', icon: <FileCheck className="h-5 w-5" /> },
-            { title: 'Security Awareness', description: 'Employee security training programs', icon: <Shield className="h-5 w-5" /> },
+            { title: 'Office Package', description: 'Complete IT management for small offices', icon: <Server className="h-5 w-5" />, url: '/solutions/office-package' },
+            { title: 'Managed IT Support', description: 'Full-service IT support and maintenance', icon: <Shield className="h-5 w-5" />, url: '/solutions/managed-it-support' },
+            { title: 'Managed Workplace', description: 'End-to-end workplace technology management', icon: <Users className="h-5 w-5" />, url: '/solutions/managed-workplace' },
+            { title: 'Cloud Backup', description: 'Secure cloud backup and recovery', icon: <FileCheck className="h-5 w-5" />, url: '/solutions/cloud-backup' },
+            { title: 'Security Awareness', description: 'Employee security training programs', icon: <Shield className="h-5 w-5" />, url: '/solutions/security-awareness' },
           ]
         },
         {
           title: 'Business Solutions',
           featured: true,
           items: [
-            { title: 'Co-Managed IT', description: 'Augment your existing IT team', badge: 'Popular' },
-            { title: 'Threat Detection & Response', description: '24/7 monitoring and incident response' },
-            { title: 'Security Operations', description: 'Full SOC-as-a-Service' },
-            { title: 'Backup & Disaster Recovery', description: 'Complete business continuity' },
+            { title: 'Co-Managed IT', description: 'Augment your existing IT team', badge: 'Popular', url: '/solutions/co-managed-it' },
+            { title: 'Threat Detection & Response', description: '24/7 monitoring and incident response', url: '/solutions/threat-detection' },
+            { title: 'Security Operations', description: 'Full SOC-as-a-Service', url: '/solutions/security-operations' },
+            { title: 'Backup & Disaster Recovery', description: 'Complete business continuity', url: '/solutions/backup-disaster-recovery' },
           ]
         },
         {
           title: 'Enterprise',
           items: [
-            { title: 'vCIO & Strategy', description: 'Strategic IT planning and guidance', badge: 'Best for Compliance' },
-            { title: 'Data Encryption & Control', description: 'Advanced data protection' },
-            { title: 'Compliance & Risk Reports', description: 'Audit-ready documentation' },
-            { title: 'Unified Security Posture', description: 'Comprehensive security management' },
+            { title: 'vCIO & Strategy', description: 'Strategic IT planning and guidance', badge: 'Best for Compliance', url: '/solutions/vcio-strategy' },
+            { title: 'Data Encryption & Control', description: 'Advanced data protection', url: '/solutions/data-encryption' },
+            { title: 'Compliance & Risk Reports', description: 'Audit-ready documentation', url: '/solutions/compliance-reports' },
+            { title: 'Unified Security Posture', description: 'Comprehensive security management', url: '/solutions/unified-security' },
           ]
         }
       ]
@@ -73,19 +73,19 @@ export function MegaMenu() {
         {
           title: 'Industries We Serve',
           items: [
-            { title: 'Healthcare', description: 'HIPAA-compliant IT solutions', icon: <Shield className="h-5 w-5" /> },
-            { title: 'Law Firms', description: 'Secure document management', icon: <FileCheck className="h-5 w-5" /> },
-            { title: 'Accounting & Finance', description: 'PCI DSS compliance support', icon: <Server className="h-5 w-5" /> },
-            { title: 'Real Estate', description: 'Transaction security solutions', icon: <Users className="h-5 w-5" /> },
-            { title: 'Nonprofits', description: 'Cost-effective IT management', icon: <Shield className="h-5 w-5" /> },
+            { title: 'Healthcare', description: 'HIPAA-compliant IT solutions', icon: <Shield className="h-5 w-5" />, url: '/industries/healthcare' },
+            { title: 'Law Firms', description: 'Secure document management', icon: <FileCheck className="h-5 w-5" />, url: '/industries/law-firms' },
+            { title: 'Accounting & Finance', description: 'PCI DSS compliance support', icon: <Server className="h-5 w-5" />, url: '/industries/accounting-finance' },
+            { title: 'Real Estate', description: 'Transaction security solutions', icon: <Users className="h-5 w-5" />, url: '/industries/real-estate' },
+            { title: 'Nonprofits', description: 'Cost-effective IT management', icon: <Shield className="h-5 w-5" />, url: '/industries/nonprofits' },
           ]
         },
         {
           title: 'Why Digerati',
           items: [
-            { title: 'Audit-Ready Docs', description: 'Complete compliance documentation' },
-            { title: 'Rapid Response', description: '15-minute response time guarantee' },
-            { title: 'Insurance Aligned', description: 'Meets carrier requirements' },
+            { title: 'Audit-Ready Docs', description: 'Complete compliance documentation', url: '/about/compliance' },
+            { title: 'Rapid Response', description: '15-minute response time guarantee', url: '/about/support' },
+            { title: 'Insurance Aligned', description: 'Meets carrier requirements', url: '/about/insurance' },
           ]
         }
       ]
@@ -96,17 +96,17 @@ export function MegaMenu() {
         {
           title: 'Learn',
           items: [
-            { title: 'Case Studies', description: 'Real-world success stories' },
-            { title: 'Blog & News', description: 'Latest security insights' },
-            { title: 'Videos & Webinars', description: 'Educational content library' },
+            { title: 'Case Studies', description: 'Real-world success stories', url: '/resources/case-studies' },
+            { title: 'Blog & News', description: 'Latest security insights', url: '/resources/blog' },
+            { title: 'Videos & Webinars', description: 'Educational content library', url: '/resources/videos' },
           ]
         },
         {
           title: 'Tools',
           items: [
-            { title: 'Downtime Calculator', description: 'Calculate your downtime costs' },
-            { title: 'Security Checklist', description: 'Complete security assessment' },
-            { title: 'Datasheets', description: 'Technical specifications' },
+            { title: 'Downtime Calculator', description: 'Calculate your downtime costs', url: '#calculators' },
+            { title: 'Security Checklist', description: 'Complete security assessment', url: '/resources/security-checklist' },
+            { title: 'Datasheets', description: 'Technical specifications', url: '/resources/datasheets' },
           ]
         }
       ]
@@ -130,9 +130,9 @@ export function MegaMenu() {
         {
           title: 'Company',
           items: [
-            { title: 'Mission & Values', description: 'Our commitment to partnership' },
-            { title: 'Case Studies', description: 'Arizona business success stories' },
-            { title: 'Meet The Experts', description: 'Our certified Chandler team' },
+            { title: 'Mission & Values', description: 'Our commitment to partnership', url: '/about/mission-values' },
+            { title: 'Case Studies', description: 'Arizona business success stories', url: '/resources/case-studies' },
+            { title: 'Meet The Experts', description: 'Our certified Chandler team', url: '/about/team' },
           ]
         }
       ]
