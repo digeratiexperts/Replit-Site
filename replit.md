@@ -17,6 +17,7 @@ Digerati Experts is a modern, fully responsive website for a Managed Security Se
   - Implemented comprehensive mega menu navigation system with dropdown sections
   - Added actual Digerati Experts company logo (webp format) to replace text branding in header and footer
   - Created multi-level navigation structure matching live site at digerati-experts.com
+  - **Scroll-responsive navigation**: Top bar shrinks smoothly when scrolling down (80px → 64px, logo 40px → 32px)
   - Preserved "Get Protected Now" CTA button and Client Portal link
   - Added interactive calculators (downtime cost and service estimator)
   - Implemented testimonial carousel with navigation

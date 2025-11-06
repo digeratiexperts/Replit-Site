@@ -28,6 +28,7 @@ export function MegaMenu() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
+  const [isScrolled, setIsScrolled] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const menuContainerRef = useRef<HTMLDivElement>(null);
   const navButtonsRef = useRef<Map<string, HTMLButtonElement>>(new Map());
@@ -272,6 +273,17 @@ export function MegaMenu() {
     };
   }, [handleKeyDown]);
 
+  // Scroll detection
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      setIsScrolled(scrollPosition > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
@@ -283,20 +295,26 @@ export function MegaMenu() {
 
   return (
     <nav 
-      className="fixed top-0 left-0 right-0 z-50 mega-menu-container bg-black/95 backdrop-blur-sm"
+      className={`fixed top-0 left-0 right-0 z-50 mega-menu-container bg-black/95 backdrop-blur-sm transition-all duration-300 ${
+        isScrolled ? 'shadow-lg' : ''
+      }`}
       ref={menuContainerRef}
       role="navigation"
       aria-label="Main navigation"
     >
       <div className="container mx-auto">
-        <div className="flex items-center justify-between h-20 px-4 lg:px-8">
+        <div className={`flex items-center justify-between px-4 lg:px-8 transition-all duration-300 ${
+          isScrolled ? 'h-16' : 'h-20'
+        }`}>
           {/* Logo */}
           <div className="flex items-center space-x-8">
             <a href="/" className="flex items-center">
               <img 
                 src={logoImage} 
                 alt="Digerati Experts Logo" 
-                className="h-10 w-auto"
+                className={`w-auto transition-all duration-300 ${
+                  isScrolled ? 'h-8' : 'h-10'
+                }`}
                 data-testid="logo-header"
               />
             </a>
