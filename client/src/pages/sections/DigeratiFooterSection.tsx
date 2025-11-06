@@ -56,8 +56,8 @@ export const DigeratiFooterSection = (): JSX.Element => {
             </p>
             <div className="mt-4 md:mt-0 flex items-center space-x-4">
               <span className="text-gray-400">24/7 Emergency:</span>
-              <a href="tel:4805195892" className="text-purple-400 font-semibold hover:text-purple-300">
-                (480) 519-5892
+              <a href="tel:3254809870" className="text-purple-400 font-semibold hover:text-purple-300">
+                325-480-9870
               </a>
             </div>
           </div>

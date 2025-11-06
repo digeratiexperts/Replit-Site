@@ -426,13 +426,13 @@ export function MegaMenu() {
           <div className="flex items-center space-x-4">
             {/* Phone Number */}
             <a
-              href="tel:480-519-5892"
+              href="tel:325-480-9870"
               className="hidden lg:flex items-center text-white hover:text-yellow-300 font-semibold focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 rounded px-2 py-1 whitespace-nowrap"
               data-testid="nav-phone"
-              aria-label="Call us at 480-519-5892"
+              aria-label="Call us at 325-480-9870"
             >
               <Phone className="h-4 w-4 mr-2 flex-shrink-0" aria-hidden="true" />
-              <span className="whitespace-nowrap">480-519-5892</span>
+              <span className="whitespace-nowrap">325-480-9870</span>
             </a>
 
             {/* Client Portal */}

@@ -5,7 +5,7 @@ const contactCards = [
   {
     icon: "/figmaAssets/background-2.svg",
     label: "CALL US",
-    value: "(480) 519-5892",
+    value: "325-480-9870",
   },
   {
     icon: "/figmaAssets/background-3.svg",

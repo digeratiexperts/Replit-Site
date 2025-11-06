@@ -48,7 +48,7 @@ export const DigeratiHomepage = (): JSX.Element => {
   }, [serviceEmployees, servicePackage]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50">
+    <div className="min-h-screen bg-white">
       {/* Navigation */}
       <MegaMenu />
 
@@ -60,18 +60,16 @@ export const DigeratiHomepage = (): JSX.Element => {
         <DigeratiAlertBanner />
       </div>
 
-      {/* Services Section - Smooth transition */}
-      <div className="bg-white">
-        <DigeratiServicesSection />
-      </div>
+      {/* Services Section */}
+      <DigeratiServicesSection />
 
       {/* How We Protect Your Business Section */}
-      <div className="bg-gradient-to-b from-white to-slate-50">
+      <div className="bg-gradient-to-b from-white to-gray-50">
         <DigeratiHowWeProtectSection />
       </div>
 
-      {/* Calculators Section (both downtime and service cost) */}
-      <div className="bg-slate-50">
+      {/* Calculators Section */}
+      <div className="bg-gray-50">
         <DigeratiCalculatorsSection
           employees={employees}
           setEmployees={setEmployees}
@@ -90,60 +88,62 @@ export const DigeratiHomepage = (): JSX.Element => {
         />
       </div>
 
-      {/* What We Tackle Section - Gradient transition to dark */}
-      <div className="bg-gradient-to-b from-slate-50 to-slate-900">
+      {/* What We Tackle Section */}
+      <div className="bg-gradient-to-b from-gray-50 to-white">
         <DigeratiWhatWeTackleSection />
       </div>
 
-      {/* Recent Threats & Insights Section - Stay in dark theme */}
-      <div className="bg-slate-900">
+      {/* Recent Threats & Insights Section */}
+      <div className="bg-white">
         <DigeratiThreatsInsightsSection />
       </div>
 
-      {/* Industries Section - Transition back to light */}
-      <div className="bg-gradient-to-b from-slate-900 via-slate-800 to-white">
+      {/* Industries Section */}
+      <div className="bg-gradient-to-b from-white to-gray-50">
         <DigeratiIndustriesSection />
       </div>
 
       {/* Pricing Section */}
-      <div className="bg-white">
+      <div className="bg-gray-50">
         <DigeratiPricingSection />
       </div>
 
-      {/* We Exist to Protect Section - Transition to dark */}
-      <div className="bg-gradient-to-b from-white via-slate-700 to-slate-900">
+      {/* We Exist to Protect Section */}
+      <div className="bg-gradient-to-b from-gray-50 to-white">
         <DigeratiProtectEnableSection />
       </div>
 
       {/* Testimonials Section */}
-      <div className="bg-slate-900">
+      <div className="bg-white">
         <DigeratiTestimonialsSection />
       </div>
 
-      {/* AI Assistance Section - Stay dark */}
-      <div className="bg-slate-900">
+      {/* AI Assistance Section */}
+      <div className="bg-gradient-to-b from-white to-gray-50">
         <DigeratiAIAssistanceSection />
       </div>
 
-      {/* CTA Section - Transition to lighter */}
-      <div className="bg-gradient-to-b from-slate-900 to-slate-800">
+      {/* CTA Section */}
+      <div className="bg-gray-50">
         <DigeratiCTASection />
       </div>
 
       {/* FAQ Section */}
-      <div className="bg-slate-800">
+      <div className="bg-gradient-to-b from-gray-50 to-white">
         <DigeratiFAQSection />
       </div>
 
       {/* Newsletter Section */}
-      <div className="bg-gradient-to-b from-slate-800 to-slate-900">
+      <div className="bg-white">
         <DigeratiNewsletterSection />
       </div>
 
       {/* Contact Section */}
-      <DigeratiContactSection />
+      <div className="bg-gradient-to-b from-white to-gray-50">
+        <DigeratiContactSection />
+      </div>
 
-      {/* Enhanced Footer - Dark background */}
+      {/* Enhanced Footer */}
       <DigeratiEnhancedFooterSection />
     </div>
   );

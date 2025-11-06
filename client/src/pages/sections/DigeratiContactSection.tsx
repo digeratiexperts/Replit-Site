@@ -90,7 +90,7 @@ export const DigeratiContactSection = (): JSX.Element => {
               </div>
               <div className="flex items-center">
                 <Phone className="h-6 w-6 text-purple-600 mr-3" />
-                <span className="text-gray-700">(480) 519-5892</span>
+                <span className="text-gray-700">325-480-9870</span>
               </div>
               <div className="flex items-center">
                 <MapPin className="h-6 w-6 text-purple-600 mr-3" />
