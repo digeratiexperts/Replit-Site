@@ -228,7 +228,9 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
             {/* Social links */}
             <div className="flex items-center gap-4">
               <a 
-                href="#" 
+                href="https://www.linkedin.com/company/digerati-experts" 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors"
                 aria-label="LinkedIn"
                 data-testid="footer-linkedin"
@@ -236,7 +238,9 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                 <Linkedin className="h-5 w-5" />
               </a>
               <a 
-                href="#" 
+                href="https://twitter.com/digerati_experts" 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors"
                 aria-label="Twitter"
                 data-testid="footer-twitter"
@@ -244,7 +248,9 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                 <Twitter className="h-5 w-5" />
               </a>
               <a 
-                href="#" 
+                href="https://www.facebook.com/digeratiexperts" 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors"
                 aria-label="Facebook"
                 data-testid="footer-facebook"
@@ -252,7 +258,9 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                 <Facebook className="h-5 w-5" />
               </a>
               <a 
-                href="#" 
+                href="https://www.instagram.com/digerati.experts" 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors"
                 aria-label="Instagram"
                 data-testid="footer-instagram"

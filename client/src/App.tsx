@@ -15,6 +15,14 @@ const MissionValues = lazy(() => import("@/pages/about/MissionValues"));
 const Team = lazy(() => import("@/pages/about/Team"));
 const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy"));
 const TermsOfUse = lazy(() => import("@/pages/legal/TermsOfUse"));
+const MSA = lazy(() => import("@/pages/legal/MSA"));
+const SLA = lazy(() => import("@/pages/legal/SLA"));
+const AUP = lazy(() => import("@/pages/legal/AUP"));
+const DPA = lazy(() => import("@/pages/legal/DPA"));
+const SampleSOW = lazy(() => import("@/pages/legal/SampleSOW"));
+const TrustCenter = lazy(() => import("@/pages/trust/TrustCenter"));
+const VulnerabilityDisclosure = lazy(() => import("@/pages/trust/VulnerabilityDisclosure"));
+const Accessibility = lazy(() => import("@/pages/trust/Accessibility"));
 const SubmitTicket = lazy(() => import("@/pages/support/SubmitTicket"));
 const GenericServicePage = lazy(() => import("@/pages/GenericServicePage"));
 
@@ -144,6 +152,48 @@ function Router() {
       <Route path="/legal/terms-of-use" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <TermsOfUse />
+        </Suspense>
+      )} />
+      <Route path="/legal/msa" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <MSA />
+        </Suspense>
+      )} />
+      <Route path="/legal/sla" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <SLA />
+        </Suspense>
+      )} />
+      <Route path="/legal/aup" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <AUP />
+        </Suspense>
+      )} />
+      <Route path="/legal/dpa" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <DPA />
+        </Suspense>
+      )} />
+      <Route path="/legal/sample-sow" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <SampleSOW />
+        </Suspense>
+      )} />
+      
+      {/* Trust Pages */}
+      <Route path="/trust/trust-center" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <TrustCenter />
+        </Suspense>
+      )} />
+      <Route path="/trust/vulnerability-disclosure" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <VulnerabilityDisclosure />
+        </Suspense>
+      )} />
+      <Route path="/trust/accessibility" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <Accessibility />
         </Suspense>
       )} />
       
