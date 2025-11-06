@@ -294,30 +294,66 @@ export function MegaMenu() {
   }, []);
 
   return (
-    <nav 
-      className={`fixed top-0 left-0 right-0 z-50 mega-menu-container bg-black/95 backdrop-blur-sm transition-all duration-300 ${
-        isScrolled ? 'shadow-lg' : ''
-      }`}
-      ref={menuContainerRef}
-      role="navigation"
-      aria-label="Main navigation"
-    >
-      <div className="container mx-auto">
-        <div className={`flex items-center justify-between px-4 lg:px-8 transition-all duration-300 ${
-          isScrolled ? 'h-16' : 'h-20'
-        }`}>
-          {/* Logo */}
-          <div className="flex items-center space-x-8">
-            <a href="/" className="flex items-center">
-              <img 
-                src={logoImage} 
-                alt="Digerati Experts Logo" 
-                className={`w-auto transition-all duration-300 ${
-                  isScrolled ? 'h-8' : 'h-10'
-                }`}
-                data-testid="logo-header"
-              />
+    <>
+      {/* Top Utility Bar */}
+      <div 
+        className={`fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-purple-900 to-blue-900 transition-all duration-300 ${
+          isScrolled ? 'h-0 overflow-hidden opacity-0' : 'h-10'
+        }`}
+      >
+        <div className="container mx-auto px-4 lg:px-8 h-full flex items-center justify-end">
+          <div className="flex items-center space-x-6">
+            {/* Phone Number */}
+            <a
+              href="tel:325-480-9870"
+              className="flex items-center text-white/90 hover:text-white text-sm font-medium transition-colors"
+              data-testid="utility-phone"
+            >
+              <Phone className="h-3.5 w-3.5 mr-1.5" />
+              <span>325-480-9870</span>
             </a>
+
+            {/* Client Portal */}
+            <a
+              href="https://portal.digerati-experts.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center text-white/90 hover:text-white text-sm font-medium transition-colors"
+              data-testid="utility-portal"
+            >
+              Client Portal
+              <ExternalLink className="h-3 w-3 ml-1" />
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Navigation */}
+      <nav 
+        className={`fixed left-0 right-0 z-50 mega-menu-container bg-black/95 backdrop-blur-sm transition-all duration-300 ${
+          isScrolled ? 'top-0 shadow-lg' : 'top-10'
+        }`}
+        ref={menuContainerRef}
+        role="navigation"
+        aria-label="Main navigation"
+      >
+        <div className="container mx-auto">
+          <div className={`flex items-center justify-between px-4 lg:px-8 transition-all duration-300 ${
+            isScrolled ? 'h-16' : 'h-20'
+          }`}>
+            {/* Logo */}
+            <div className="flex items-center lg:space-x-12">
+              <a href="/" className="flex items-center flex-shrink-0">
+                <img 
+                  src={logoImage} 
+                  alt="Digerati Experts Logo" 
+                  className={`transition-all duration-300 ${
+                    isScrolled ? 'h-8' : 'h-12'
+                  }`}
+                  style={{ width: 'auto', maxWidth: '200px' }}
+                  data-testid="logo-header"
+                />
+              </a>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-1 mega-menu-nav">
@@ -443,30 +479,6 @@ export function MegaMenu() {
 
           {/* Right Side Actions */}
           <div className="flex items-center space-x-4">
-            {/* Phone Number */}
-            <a
-              href="tel:325-480-9870"
-              className="hidden lg:flex items-center text-white hover:text-yellow-300 font-semibold focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 rounded px-2 py-1 whitespace-nowrap"
-              data-testid="nav-phone"
-              aria-label="Call us at 325-480-9870"
-            >
-              <Phone className="h-4 w-4 mr-2 flex-shrink-0" aria-hidden="true" />
-              <span className="whitespace-nowrap">325-480-9870</span>
-            </a>
-
-            {/* Client Portal */}
-            <a
-              href="https://portal.digerati-experts.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden lg:flex items-center text-white hover:text-yellow-300 font-medium focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 rounded px-2 py-1"
-              data-testid="client-portal"
-              aria-label="Access client portal (opens in new window)"
-            >
-              Client Portal
-              <ExternalLink className="h-3 w-3 ml-1" aria-hidden="true" />
-            </a>
-
             {/* Get Protected Now CTA */}
             <Button
               className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-2 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 border border-purple-500/30"
@@ -552,12 +564,12 @@ export function MegaMenu() {
               {/* Mobile Actions */}
               <div className="pt-4 border-t space-y-3">
                 <a
-                  href="tel:480-519-5892"
+                  href="tel:325-480-9870"
                   className="flex items-center text-purple-600 font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1"
-                  aria-label="Call us at 480-519-5892"
+                  aria-label="Call us at 325-480-9870"
                 >
                   <Phone className="h-4 w-4 mr-2" aria-hidden="true" />
-                  (480) 519-5892
+                  325-480-9870
                 </a>
                 <a
                   href="https://portal.digerati-experts.com"
@@ -585,5 +597,6 @@ export function MegaMenu() {
         )}
       </div>
     </nav>
+    </>
   );
 }
