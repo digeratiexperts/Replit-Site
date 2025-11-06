@@ -1,71 +1,102 @@
 import express, { type Request, Response, NextFunction } from "express";
-import { registerRoutes } from "./routes";
+import { createServer } from "http";
 import { setupVite, serveStatic, log } from "./vite";
+import { registerRoutes } from "./routes";
 
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+const server = createServer(app);
 
-app.use((req, res, next) => {
-  const start = Date.now();
-  const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
-
-  const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
-  };
-
-  res.on("finish", () => {
-    const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-      }
-
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
-      }
-
-      log(logLine);
-    }
-  });
-
+// --------- EARLY, LOUD TRACE so we know what URL actually hit Express
+app.use((req, _res, next) => {
+  log(`→ ${req.method} ${req.originalUrl}`);
   next();
 });
 
-(async () => {
-  const server = await registerRoutes(app);
+// --------- HEALTH MUST WIN (placed before everything else)
+app.all("/api/health", (_req, res) => {
+  const port = process.env.REPLIT_SERVER_PORT || process.env.PORT || "unknown";
+  res.status(200).json({ status: "ok", env: app.get("env"), port });
+});
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+// Backup simple health
+app.all("/healthz", (_req, res) => res.status(200).send("ok"));
 
-    res.status(status).json({ message });
-    throw err;
+// --------- Basic parsers (after health so nothing delays it)
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+// --------- Register your API routes (these should mount under /api)
+await registerRoutes(app);
+
+// --------- Vite in dev, Static in prod (NEVER touch /api/*)
+if (app.get("env") === "development") {
+  await setupVite(app, server);
+} else {
+  serveStatic(app);
+}
+
+/** Utility to list routes for debugging */
+function listEndpoints(): Array<{ method: string; path: string }> {
+  const routes: Array<{ method: string; path: string }> = [];
+  const stack: any[] = (app as any)?._router?.stack || [];
+  const dig = (layer: any, prefix = "") => {
+    if (layer.route && layer.route.path) {
+      const methods = Object.keys(layer.route.methods || {}).map((m) =>
+        m.toUpperCase(),
+      );
+      methods.forEach((m) =>
+        routes.push({ method: m, path: prefix + layer.route.path }),
+      );
+    } else if (layer.name === "router" && layer.handle?.stack) {
+      const newPrefix =
+        layer.regexp && layer.regexp.fast_star
+          ? prefix + "*"
+          : prefix + (layer.regexp?.fast_slash ? "" : "");
+      layer.handle.stack.forEach((l: any) => dig(l, prefix));
+    }
+  };
+  stack.forEach((l) => dig(l, ""));
+  return routes;
+}
+
+// Debug endpoint to see registered routes
+app.get("/__debug/routes", (_req, res) =>
+  res.json({ routes: listEndpoints() }),
+);
+
+// --------- JSON 404 so we can see what path failed
+app.use((req, res) => {
+  res.status(404).json({
+    error: "Not Found",
+    path: req.originalUrl,
+    knownHealth: ["/api/health", "/healthz"],
   });
+});
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
+// --------- Central error handler
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+  const status = err.status || err.statusCode || 500;
+  log(`✖ ${status} ${err.message || "Internal Server Error"}`);
+  res.status(status).json({ message: err.message || "Internal Server Error" });
+});
+
+// --------- Port + listen
+const port = parseInt(
+  process.env.REPLIT_SERVER_PORT || process.env.PORT || "8080",
+  10,
+);
+const host = "0.0.0.0";
+
+log(
+  `🌐 Using port: ${port} (PORT=${process.env.PORT || "unset"}, REPLIT_SERVER_PORT=${process.env.REPLIT_SERVER_PORT || "unset"})`,
+);
+
+server.listen(port, host, () => {
+  log(`🚀 Running on http://${host}:${port}`);
+  const slug = process.env.REPL_SLUG;
+  const owner = process.env.REPL_OWNER;
+  if (slug && owner) {
+    log(`🌍 Try: https://${slug}-${owner}.replit.app/api/health`);
+    log(`🔎 Routes: https://${slug}-${owner}.replit.app/__debug/routes`);
   }
-
-  // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '5000', 10);
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
-  });
-})();
+});
