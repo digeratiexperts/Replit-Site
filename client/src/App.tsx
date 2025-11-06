@@ -12,7 +12,9 @@ const ManagedITSupport = lazy(() => import("@/pages/solutions/ManagedITSupport")
 const Healthcare = lazy(() => import("@/pages/industries/Healthcare"));
 const CaseStudies = lazy(() => import("@/pages/resources/CaseStudies"));
 const MissionValues = lazy(() => import("@/pages/about/MissionValues"));
+const Team = lazy(() => import("@/pages/about/Team"));
 const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy"));
+const TermsOfUse = lazy(() => import("@/pages/legal/TermsOfUse"));
 const SubmitTicket = lazy(() => import("@/pages/support/SubmitTicket"));
 const GenericServicePage = lazy(() => import("@/pages/GenericServicePage"));
 
@@ -113,6 +115,11 @@ function Router() {
           <MissionValues />
         </Suspense>
       )} />
+      <Route path="/about/team" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <Team />
+        </Suspense>
+      )} />
       
       {/* Support Pages */}
       <Route path="/support/submit-ticket" component={() => (
@@ -132,6 +139,11 @@ function Router() {
       <Route path="/legal/privacy-policy" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <PrivacyPolicy />
+        </Suspense>
+      )} />
+      <Route path="/legal/terms-of-use" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <TermsOfUse />
         </Suspense>
       )} />
       
