@@ -350,13 +350,13 @@ export function MegaMenu() {
                       ref={(el) => {
                         if (el) dropdownRefs.current.set(item.name, el);
                       }}
-                      className="absolute left-0 mt-0 w-screen max-w-7xl bg-white shadow-xl rounded-b-lg border-t-4 border-purple-600 mega-menu-dropdown"
+                      className="fixed left-0 right-0 top-20 mx-auto w-[90vw] max-w-5xl bg-white shadow-xl rounded-b-lg border-t-4 border-purple-600 mega-menu-dropdown"
                       onMouseEnter={handleDropdownMouseEnter}
                       onMouseLeave={handleMouseLeave}
                       role="menu"
                       aria-label={`${item.name} submenu`}
                     >
-                      <div className="p-8 grid grid-cols-3 gap-8">
+                      <div className="p-6 grid grid-cols-3 gap-6">
                         {item.sections.map((section) => (
                           <div key={section.title}>
                             <h3 
