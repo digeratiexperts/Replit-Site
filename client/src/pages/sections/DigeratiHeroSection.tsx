@@ -109,7 +109,7 @@ export const DigeratiHeroSection = (): JSX.Element => {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <button 
-                className="h-12 px-8 rounded-md bg-white text-purple-700 hover:bg-gray-100 hover:text-purple-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl inline-flex items-center justify-center gap-2 whitespace-nowrap text-base font-semibold"
+                className="h-12 px-8 rounded-md bg-white text-purple-700 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl inline-flex items-center justify-center gap-2 whitespace-nowrap text-base font-semibold"
                 data-testid="button-hero-start"
                 onClick={() => {
                   document.getElementById('assessment-form')?.scrollIntoView({ behavior: 'smooth' });
