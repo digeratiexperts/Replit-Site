@@ -4,7 +4,7 @@ hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
 
 [nix]
 channel = "stable-24_05"
-packages = ["psmisc"]
+packages = ["psmisc", "nsis"]
 
 [deployment]
 deploymentTarget = "autoscale"
@@ -22,6 +22,10 @@ externalPort = 8080
 [[ports]]
 localPort = 10000
 externalPort = 4200
+
+[[ports]]
+localPort = 32859
+externalPort = 8008
 
 [[ports]]
 localPort = 33327
@@ -58,10 +62,6 @@ externalPort = 6800
 [[ports]]
 localPort = 43707
 externalPort = 3000
-
-[[ports]]
-localPort = 45579
-externalPort = 8008
 
 [env]
 PORT = "5000"

@@ -60,9 +60,13 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
               const Icon = item.icon;
               const isActive = location === item.href;
               return (
-                <Link key={item.href} href={item.href}>
-                  <a
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                <Link 
+                  key={item.href} 
+                  href={item.href}
+                  asChild
+                >
+                  <button
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left ${
                       isActive
                         ? "bg-[#5034ff] text-white"
                         : "text-gray-300 hover:bg-white/10"
@@ -72,7 +76,7 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
                   >
                     <Icon className="h-5 w-5" />
                     <span className="text-sm font-medium">{item.label}</span>
-                  </a>
+                  </button>
                 </Link>
               );
             })}
