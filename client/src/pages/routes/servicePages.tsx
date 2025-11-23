@@ -1,163 +1,289 @@
 export const servicePageData = {
   'office-package': {
     title: "Office Package",
-    subtitle: "End-to-end IT management for small offices",
-    description: "Complete IT management designed for small offices that need reliability without hiring internal IT. We handle systems, devices, updates, security, backups, and day-to-day support so your team stays productive. This package removes the burden of managing technology and gives your office dependable performance, reduced downtime, and predictable monthly costs.",
+    subtitle: "Complete IT ownership for small offices—security built in",
+    description: "The Office Package is your complete IT solution for small offices (5-25 users) with no internal IT team. We own your day-to-day IT outcomes: helpdesk support, continuous maintenance, security baseline, backup, and vendor coordination. You get enterprise-level protection without the enterprise cost—all for one predictable monthly price.",
     features: [
-      { title: "Managed Helpdesk", description: "Full-service IT support with clear response and resolution pathways" },
-      { title: "Continuous Maintenance", description: "Updates, patching, hardening, and proactive system optimization" },
-      { title: "Security Best Practices", description: "Managed protection across devices, email, and cloud applications" },
-      { title: "Identity-Based Access", description: "Centralized identity and access management for users and apps" },
-      { title: "Baseline Backups", description: "Regular backups with health checks and basic restore testing" }
+      { title: "Managed Helpdesk & Support", description: "Zoho ticketing + remote/onsite support with response SLAs and vendor coordination" },
+      { title: "Core Security Baseline", description: "Endpoint EDR (Coro), email security (Mimecast), MFA enforcement, and basic cloud security" },
+      { title: "Identity & Access Management", description: "JumpCloud IAM, SSO, MFA, and automated provisioning/deprovisioning for users and apps" },
+      { title: "Continuous Maintenance", description: "Proactive patching, hardening, updates, and least-privilege enforcement" },
+      { title: "Cloud Backup & Recovery", description: "MSP360 backups with Wasabi storage, verified recovery testing, and restore readiness" },
+      { title: "Documentation & Visibility", description: "Hudu inventory, network and SaaS app maps, and 'known good config' snapshots" }
     ],
     benefits: [
-      "Predictable monthly costs",
-      "No internal IT staff needed",
-      "Reduced downtime and security incidents",
-      "Environment documentation and standardization",
-      "Vendor coordination handled for you",
-      "Monthly service summaries included"
+      "Predictable monthly costs with no surprises",
+      "Zero internal IT staff required",
+      "24/7 security baseline built into every plan",
+      "Vendor coordination handled—no more vendor juggling",
+      "Compliance optional: add modules only when needed",
+      "Monthly service summaries and quarterly business reviews available"
     ],
     gradientColors: "from-blue-600 via-purple-600 to-indigo-600"
   },
-  'managed-workplace': {
-    title: "Managed Workplace",
-    subtitle: "Complete employee digital experience management",
-    description: "We manage the entire employee digital experience: identity, apps, devices, communication, and lifecycle automation. Every employee becomes productive faster with standardized, secure tools—and you maintain consistent control across your entire organization.",
+  'managed-it-support': {
+    title: "Managed IT Support",
+    subtitle: "Fast, proactive help anchored to the DE stack",
+    description: "Managed IT Support is not generic helpdesk—it's support built on our proven stack (JumpCloud, Coro, MSP360). We handle remote troubleshooting, endpoint remediation, user onboarding, SaaS provisioning, and device basics. Support for everything you've sold with DE; out-of-scope items are escalated or handled via education.",
     features: [
-      { title: "Centralized Identity & Access", description: "Single identity lifecycle with role-based access and provisioning" },
-      { title: "Business App Management", description: "Licensing, provisioning, and access control for all business applications" },
-      { title: "Device & Mobile Management", description: "Standardized devices and mobile endpoints that meet security baselines" },
-      { title: "Communications Management", description: "Unified email, collaboration, voice, and meeting room technology" },
-      { title: "Lifecycle Automation", description: "Smooth onboarding and offboarding with HR alignment" }
+      { title: "Service Desk Coverage", description: "Fast response to user issues with clear resolution pathways and SLAs" },
+      { title: "Remote Troubleshooting", description: "Secure remote access for quick diagnosis and remediation of endpoint issues" },
+      { title: "User Lifecycle Support", description: "Onboarding/offboarding with IAM, device setup, and app provisioning" },
+      { title: "Password & Login Management", description: "Self-service resets via SSO, MFA issues resolved by our team" },
+      { title: "Basic Onsite Support", description: "Walk-in visits, printer/cabling/hardware basics per plan agreement" },
+      { title: "Repeat Issue Reduction", description: "Tracking and follow-up to reduce repeat incidents over time" }
     ],
     benefits: [
-      "New hires productive in one day, not a week",
-      "Consistent access control across all tools",
-      "Hybrid and remote work made seamless",
-      "Reduced license waste and software sprawl",
-      "Secure standardized environment",
-      "Automated user lifecycle workflows"
+      "First-response SLA: 15-minute response guarantee",
+      "Reduced repeat incident rate",
+      "Users guided toward solutions, not band-aids",
+      "Vendor issues resolved—we handle ISPs, SaaS vendors, hardware vendors",
+      "Stack-native support: we built these tools",
+      "Help + education: users learn safer behaviors"
+    ],
+    gradientColors: "from-indigo-600 via-blue-600 to-cyan-600"
+  },
+  'managed-workplace': {
+    title: "Managed Workplace",
+    subtitle: "End-to-end employee digital experience management",
+    description: "Managed Workplace is your digital employee lifecycle engine. We manage identity, apps, devices, email, voice, and workflow automation—everything employees need to work productively and securely. New hires productive in one day, not a week. Your environment stays standardized, secure, and compliant.",
+    features: [
+      { title: "Identity Lifecycle Management", description: "JumpCloud cloud directory with SSO, MFA, conditional access, and automated provisioning to all SaaS" },
+      { title: "Business App Management", description: "SaaS licensing (Pax8), app onboarding, role mapping, shadow IT discovery, and access reviews" },
+      { title: "Email & Collaboration", description: "M365 or Google Workspace admin, Teams/Drive structure, message hygiene, and retention policies" },
+      { title: "Voice & Unified Communications", description: "Teams Voice, Zoom UCaaS, or VoIP integration; conference room provisioning and device enrollment" },
+      { title: "Device & Mobile Management", description: "Windows/macOS baseline policies via JumpCloud; MDM for iOS/Android (Jamf integration available)" },
+      { title: "HR-to-IAM Workflows", description: "Onboarding automation: HR system → identity → device → SaaS app provisioning" }
+    ],
+    benefits: [
+      "New hires productive in one day with full app access",
+      "Consistent access control across all employee tools",
+      "Seamless hybrid and remote work enablement",
+      "Reduced license waste and SaaS sprawl",
+      "Zero-Trust identity posture at every login",
+      "Automated offboarding: revoked access in minutes, not hours"
     ],
     gradientColors: "from-emerald-600 via-teal-600 to-cyan-600"
   },
   'cloud-backup': {
     title: "Cloud Backup",
-    subtitle: "Baseline data protection and recovery",
-    description: "Secure cloud-based backup for laptops, servers, and business-critical data. Automated protection, continuous monitoring, and verified recovery ensure your information is never lost. Gain resilience against accidental deletion, hardware failure, and cyberattacks like ransomware.",
+    subtitle: "Baseline data protection with verified recovery",
+    description: "Cloud Backup is your minimum continuity layer. Automated encryption-at-rest and in-transit protection for endpoints, servers, and cloud data (M365/Google). We verify monthly that restores actually work—because a backup that doesn't restore is worthless.",
     features: [
-      { title: "Automated Encrypted Backups", description: "Continuous backup of endpoints, servers, and cloud data with encryption" },
-      { title: "Health Monitoring", description: "Automated monitoring with alerts when backup issues need attention" },
-      { title: "Verified Recovery Testing", description: "Regular restore verification to confirm backups actually work" },
-      { title: "Exception Reporting", description: "Clear reporting on backup health and any issues requiring attention" }
+      { title: "Automated Encrypted Backups", description: "MSP360 continuous backup of endpoints, servers, and M365/Google data with AES-256 encryption" },
+      { title: "Backup Health Monitoring", description: "Automated monitoring with alerts when backup jobs fail or fall behind" },
+      { title: "Verified Restore Testing", description: "Monthly restore verification to confirm backups are recoverable and complete" },
+      { title: "Wasabi Cloud Storage", description: "Cost-effective, secure cloud storage with 11 nines durability guarantee" },
+      { title: "Exception Reporting", description: "Clear visibility on backup health and any issues requiring attention" },
+      { title: "Ransomware Defense", description: "Immutable backup copies protect against ransomware encryption" }
     ],
     benefits: [
-      "Protection from ransomware and data loss",
-      "Accidental deletion recovery",
-      "Hardware failure protection",
-      "Backup health visibility",
-      "Monthly restore verification",
-      "Peace of mind with tested backups"
+      "Protection against ransomware and data loss",
+      "Accidental deletion recovery in minutes",
+      "Hardware failure doesn't mean business loss",
+      "Monthly proof that restores work",
+      "Compliance-grade encryption audit trail",
+      "Peace of mind: tested backups, not just 'set and forget'"
     ],
     gradientColors: "from-blue-600 via-cyan-600 to-teal-600"
   },
   'security-awareness': {
     title: "Security Awareness Training",
-    subtitle: "Human risk reduction through training",
-    description: "Your employees are your first line of defense. We train and test your team so people stop being the weakest link. Ongoing campaigns, phishing simulations, and targeted coaching create a security-aware culture.",
+    subtitle: "Turn staff into a security layer, not a liability",
+    description: "Security Awareness is human-risk hardening. Your employees are your first line of defense—or your biggest vulnerability. We train, test, and coach your team so people stop being the weakest link. Phishing simulations, targeted campaigns, and ongoing coaching reduce incidents and change culture.",
     features: [
-      { title: "Targeted Training Campaigns", description: "Ongoing training tailored to real threats your organization faces" },
-      { title: "Phishing Simulations", description: "Regular simulated phishing with coaching to improve security behavior" },
-      { title: "Security Culture Metrics", description: "Track awareness trends and identify teams needing additional support" },
-      { title: "Leadership Reporting", description: "Executive reporting on security culture and employee readiness" }
+      { title: "Video Training Campaigns", description: "Ninjio-based lessons on phishing, malware, data handling, and real threats your org faces" },
+      { title: "Phishing Simulations", description: "Regular simulated phishing attacks with automatic remedial training for repeat offenders" },
+      { title: "Risk Scoring & Metrics", description: "Department-level risk scoring, participation rates, and phish-failure trend analysis" },
+      { title: "Executive Reporting", description: "Board-ready reporting on security culture maturity and employee readiness" },
+      { title: "Compliance Integration", description: "Training logs stored for audits; maps to HIPAA, GDPR, FTC control requirements (with Compliance modules)" },
+      { title: "Behavioral Coaching", description: "Targeted follow-ups for high-risk users and departments" }
     ],
     benefits: [
       "Reduced phishing and social engineering incidents",
-      "Improved employee security behavior",
-      "Stronger security culture organization-wide",
-      "Compliance documentation for training",
-      "Measurable risk reduction",
-      "Targeted coaching for high-risk groups"
+      "Measurable shift in employee security behavior",
+      "Stronger security culture across the organization",
+      "Compliance evidence for audits and insurance",
+      "Reduced support tickets from malware/ransomware",
+      "Lower breach risk from insider mistakes"
     ],
     gradientColors: "from-amber-600 via-orange-600 to-red-600"
   },
   'co-managed-it': {
     title: "Co-Managed IT",
-    subtitle: "Extend your internal IT team with expertise",
-    description: "Already have IT staff? We partner with your team to fill skill gaps, provide 24/7 coverage, and bring specialized expertise where you need it most. Avoid burnout and tap into deep security and infrastructure knowledge.",
+    subtitle: "Augment your internal IT team with DE expertise and stack",
+    description: "Already have internal IT? Co-Managed IT partners with your team to fill skill gaps, provide 24/7 coverage, and add specialized muscle. You keep control; we provide stack, automation, security maturity, and Tier 2/3 escalation. Avoid burnout and tap into deep expertise.",
     features: [
-      { title: "Flexible Support Model", description: "Customize the level of support and coverage based on your priorities" },
-      { title: "24/7 Monitoring & Response", description: "Round-the-clock monitoring and alerting with rapid incident response" },
-      { title: "Specialized Expertise", description: "Access to security, compliance, infrastructure, and strategy specialists" },
-      { title: "Proactive Maintenance", description: "Scheduled maintenance, updates, and hardening delivered by expert teams" }
+      { title: "Shared Tooling Platform", description: "Access to JumpCloud, Coro, MSP360, and full visibility into your environment" },
+      { title: "Responsibility Matrix", description: "Clear SOW defining who owns onboarding, patching, vendor comms, and incidents" },
+      { title: "Tier 2/3 Escalation", description: "Expert escalation for complex issues, security incidents, and strategic decisions" },
+      { title: "24/7 Monitoring & Response", description: "After-hours and weekend coverage so your team doesn't burn out" },
+      { title: "Quarterly Posture Meetings", description: "Regular check-ins with your IT lead on stack optimization and roadmap" },
+      { title: "Specialized Expertise", description: "Security, compliance, infrastructure, and cloud experts available on demand" }
     ],
     benefits: [
-      "Fill critical skill gaps quickly",
-      "Extended coverage beyond your current staff",
-      "Reduced IT team burnout",
+      "Fill critical skill gaps without hiring full-time",
+      "Extended coverage beyond your current staff hours",
+      "Reduced IT team burnout and turnover",
       "Cost-effective expertise scaling",
-      "Strategic IT planning support"
+      "Strategic IT planning and technology roadmap alignment",
+      "Your IT team + DE stack = higher maturity without hiring"
     ],
     gradientColors: "from-purple-700 via-violet-700 to-indigo-700"
   },
   'threat-detection': {
     title: "Threat Detection & Response",
-    subtitle: "24/7 security monitoring and incident response",
-    description: "Advanced threat detection and rapid incident response to protect your business from cyber attacks 24/7/365. Our Security Operations Center monitors for threats continuously, and our experts respond immediately to any suspicious activity.",
+    subtitle: "24/7 security monitoring and real incident response",
+    description: "Threat Detection & Response is detection + triage + containment + guided recovery. We monitor endpoints, cloud apps, email, and network events 24/7 for threats. When we see something, we investigate, contain (isolate endpoints, reset credentials), and walk you through recovery. Not just alerts—real response.",
     features: [
-      { title: "24/7 SOC Monitoring", description: "Security Operations Center monitoring your environment around the clock" },
-      { title: "Advanced Endpoint Detection", description: "Sophisticated detection of threats and suspicious behavior on all devices" },
-      { title: "Rapid Incident Response", description: "Expert response team ready to investigate and contain threats immediately" },
-      { title: "Threat Intelligence Integration", description: "Latest threat intelligence feeds inform our detection strategies" }
+      { title: "24/7 Telemetry Monitoring", description: "Real-time monitoring of endpoints, cloud apps, email, and gateway security events" },
+      { title: "Advanced Endpoint Detection", description: "Coro.net EDR detects suspicious behavior, lateral movement, and advanced techniques" },
+      { title: "Automated Containment", description: "Safe automated actions like endpoint isolation, credential reset, and session termination" },
+      { title: "Incident Runbooks", description: "Documented response playbooks maintained in Hudu, customized to your environment" },
+      { title: "Monthly Threat Reports", description: "Trend analysis, incident summaries, and 'mean time to contain' metrics" },
+      { title: "Wazuh SIEM Integration", description: "Deeper log correlation and retention for complex organizations" }
     ],
     benefits: [
-      "Real-time threat detection and alerting",
+      "Real-time threat detection 24/7/365",
       "Minutes-to-respond incident response",
+      "Automated containment stops spread in seconds",
       "Forensic investigation and root cause analysis",
-      "Automated threat containment",
-      "Compliance and evidence reporting"
+      "Compliance-ready incident documentation",
+      "24/7 detection + real response, not 'good luck with alerts'"
     ],
     gradientColors: "from-red-700 via-rose-700 to-pink-700"
   },
-  'backup-disaster-recovery': {
-    title: "Backup & Disaster Recovery",
-    subtitle: "Guaranteed recovery with tested targets",
-    description: "Move beyond baseline backup to enterprise-grade disaster recovery. Guaranteed Recovery Time Objectives (RTO) and Recovery Point Objectives (RPO) with tested failover ensure you can restore your entire business fast.",
+  'security-operations': {
+    title: "Security Operations (SOC-as-a-Service)",
+    subtitle: "Full SOC without hiring a SOC team",
+    description: "Security Operations is Threat Detection & Response plus threat hunting, policy tuning, and continuous optimization. We run the security room. Includes detection, triage, response, plus proactive hunting, policy refinement, log correlation, and longer retention. Enterprise-grade security maturity.",
     features: [
-      { title: "Guaranteed RTO/RPO", description: "Committed recovery time and data loss targets backed by SLA" },
-      { title: "Tested Failover Plans", description: "Regular disaster recovery drills to confirm your systems can be restored" },
-      { title: "Multi-Site Redundancy", description: "Geographic redundancy and replication for maximum availability" },
-      { title: "Business Continuity Planning", description: "Expert guidance on recovery procedures and business continuity" }
+      { title: "Threat Hunting Cycles", description: "Proactive investigation for advanced threats, unusual patterns, and insider risk" },
+      { title: "Policy Tuning & Optimization", description: "Continuous refinement of EDR, email, cloud, and access control policies based on threats and trends" },
+      { title: "Log Correlation & Analytics", description: "Wazuh SIEM with deeper telemetry retention for pattern detection and forensics" },
+      { title: "Security Change Management", description: "Documented policy changes with rationale and testing before deployment" },
+      { title: "SOC Monthly Report", description: "Hunt findings, policy changes, incident trends, and audit-support packets" },
+      { title: "Escalation & IR Coordination", description: "Full incident response coordination and external comms when needed" }
     ],
     benefits: [
-      "Restore your business, not just your data",
+      "Proactive threat discovery before breaches happen",
+      "Continuously improving security posture",
+      "Reduced vulnerability dwell time",
+      "Stronger incident response and containment",
+      "Compliance evidence and audit readiness",
+      "Full SOC maturity without hiring SOC analysts"
+    ],
+    gradientColors: "from-purple-600 via-indigo-600 to-blue-600"
+  },
+  'backup-disaster-recovery': {
+    title: "Backup & Disaster Recovery (BCDR)",
+    subtitle: "Tested recovery with guaranteed targets—business won't stay down",
+    description: "BCDR is guaranteed continuity, not just 'we have backups.' Agreed RPO/RTO targets, image-based backups, scheduled restore tests, and DR runbooks. Your business comes back up on a timeline you define—not when backups finally work.",
+    features: [
+      { title: "Guaranteed RTO/RTO Targets", description: "Committed recovery time and data-loss objectives with SLA backing" },
+      { title: "Image-Based Backups", description: "MSP360 Server/VM features for full-system restore, not file-by-file recovery" },
+      { title: "Scheduled Restore Tests", description: "Regular failover drills to confirm your systems can actually be restored" },
+      { title: "DR Runbooks & Tabletop Exercises", description: "Documented recovery procedures with periodic team exercises" },
+      { title: "Priority Restore Paths", description: "Defined restore sequencing so critical systems come back first" },
+      { title: "Optional Warm Standby", description: "Cloud failover or secondary site options for maximum availability" }
+    ],
+    benefits: [
+      "Restore your entire business, not just files",
       "Predictable recovery with guaranteed targets",
       "Tested and verified recovery procedures",
       "Reduced downtime and business impact",
-      "Compliance-ready documentation",
-      "Peace of mind with proven recovery capabilities"
+      "Compliance-ready DR documentation",
+      "Peace of mind: proven recovery capabilities"
     ],
     gradientColors: "from-cyan-600 via-blue-600 to-indigo-600"
   },
-  'security-operations': {
-    title: "Security Operations",
-    subtitle: "Comprehensive security posture management",
-    description: "Go beyond detection to comprehensive security operations. Continuous vulnerability management, security configuration, hardening, and proactive threat hunting keep your environment secure and compliant.",
+  'vcio-strategy': {
+    title: "vCIO & Strategy",
+    subtitle: "Executive IT guidance aligned to business and compliance",
+    description: "vCIO & Strategy is where we become your IT leadership function. Quarterly Technology Business Reviews, risk registers, budget forecasting, vendor rationalization, and roadmap planning. We align technology to your business goals and compliance requirements.",
     features: [
-      { title: "Vulnerability Management", description: "Continuous scanning, prioritization, and remediation of security vulnerabilities" },
-      { title: "Security Configuration", description: "Standards-based hardening and configuration across all systems" },
-      { title: "Threat Hunting", description: "Proactive investigation for advanced threats and suspicious patterns" },
-      { title: "Security Posture Reporting", description: "Executive reporting on your security maturity and risk trends" }
+      { title: "Quarterly Technology Business Reviews", description: "Executive-level reviews of IT performance, spend, and strategic priorities" },
+      { title: "Risk Register & Prioritization", description: "Documented risks with prioritized mitigation roadmap" },
+      { title: "Budget Forecasting & Roadmap", description: "Multi-year technology budget and capital planning with business alignment" },
+      { title: "Vendor Rationalization", description: "Eliminate shadow IT, optimize vendor stack, reduce tool sprawl" },
+      { title: "Compliance Planning", description: "Roadmap for compliance modules and audit readiness aligned to your framework" },
+      { title: "Tech Points & Prevention Incentives", description: "Track and reward prevention behaviors that reduce risk and cost" }
     ],
     benefits: [
-      "Reduced vulnerability window",
-      "Consistent security standards",
-      "Advanced threat discovery",
-      "Measurable security improvements",
-      "Executive visibility on risk",
-      "Compliance evidence and documentation"
+      "Executive visibility into IT strategy and risk",
+      "Reduced technology spend through consolidation",
+      "Business-aligned IT roadmap",
+      "Proactive compliance planning",
+      "Reduced surprise costs and projects",
+      "IT becomes a strategic business partner, not a cost center"
     ],
-    gradientColors: "from-purple-600 via-indigo-600 to-blue-600"
+    gradientColors: "from-emerald-600 via-green-600 to-teal-600"
+  },
+  'data-encryption': {
+    title: "Data Encryption & Control",
+    subtitle: "Stop data leakage and risky browsing at the source",
+    description: "Data Encryption & Control uses browser-layer security (Atakama) to protect data even if endpoints are compromised. DLP policies, anti-phishing, DNS filtering, and secure browsing controls at the gateway. Data governance happens inside the browser—the last place hackers look.",
+    features: [
+      { title: "Browser-Layer DLP", description: "Stop mass downloads, clipboard theft, and data exfiltration at the browser boundary" },
+      { title: "Anti-Phishing & Anti-Malware", description: "In-browser threat detection and blocking before users click malicious links" },
+      { title: "DNS Filtering & Blacklist/Whitelist", description: "Block malicious domains at the DNS level; whitelist approved resources only" },
+      { title: "Secure Autofill & Password Protection", description: "Prevent credential theft through password masking and secure form handling" },
+      { title: "Data Activity Insights", description: "Monitoring and analytics of web and data activity for insider risk detection" },
+      { title: "Policy Enforcement & Compliance", description: "Enforce data handling policies with audit logs for compliance frameworks" }
+    ],
+    benefits: [
+      "Stop data leakage from careless employees",
+      "Protection even if endpoint malware compromises the device",
+      "Reduced risk of credential theft and phishing success",
+      "Compliance-ready audit trails for data handling",
+      "Default for healthcare, finance, and legal verticals",
+      "Works alongside endpoint security, not instead of it"
+    ],
+    gradientColors: "from-indigo-600 via-blue-600 to-cyan-600"
+  },
+  'compliance-reports': {
+    title: "Compliance & Risk Reports",
+    subtitle: "Audit-grade reporting and proof mapped to your framework",
+    description: "Compliance & Risk Reports is where DE becomes audit-ready. We map our stack to your framework (HIPAA, GDPR, FTC Safeguards, CIS, Cyber-Insurance), retain evidence (training logs, access reviews, baselines, incident trails), and produce board-ready compliance posture reports.",
+    features: [
+      { title: "Framework Mapping", description: "Control mapping of DE stack to HIPAA, GDPR, FTC, CIS, and insurance control sets" },
+      { title: "Evidence Retention", description: "Automated collection and storage of training logs, access reviews, configuration baselines, and incident trails" },
+      { title: "Risk Scoring & Gap Tracking", description: "Continuous risk assessment with gap identification and remediation tracking" },
+      { title: "Monthly Compliance Report", description: "Executive posture report showing compliance progress and remaining gaps" },
+      { title: "Audit Packet on Demand", description: "Fast-turnaround compliance evidence packets for auditors and insurance carriers" },
+      { title: "Board-Level Reporting", description: "Owner/board communication on compliance readiness and risk trends" }
+    ],
+    benefits: [
+      "Pass audits with comprehensive documented evidence",
+      "Faster audit cycles with pre-compiled packets",
+      "Reduced audit costs and surprise findings",
+      "Insurance premium justification and optimization",
+      "Regulatory confidence: proactive, not reactive",
+      "Clear roadmap to full compliance certification"
+    ],
+    gradientColors: "from-purple-600 via-violet-600 to-indigo-600"
+  },
+  'unified-security': {
+    title: "Unified Security Posture",
+    subtitle: "Comprehensive managed security—not a pile of tools",
+    description: "Unified Security Posture is DE's highest security promise: identity, endpoint, cloud, email, network, and incident response fully integrated and continuously governed. Single pane of glass. One cohesive security strategy, not a collection of disconnected tools.",
+    features: [
+      { title: "IAM Spine + Zero Trust", description: "JumpCloud Prime identity with Zero Trust enforcement across all access" },
+      { title: "Integrated Endpoint-Cloud-Email Security", description: "Coro.net unified threat detection across all surfaces aligned to policy" },
+      { title: "Security Awareness Tied to Risk", description: "Training + phishing simulations linked to actual threat trends and risk scores" },
+      { title: "Backup/BCDR Linked to IR", description: "Recovery procedures integrated with incident response playbooks" },
+      { title: "Drift Detection & Correction", description: "Continuous monitoring for configuration drift with automated correction" },
+      { title: "Central Unified Reporting", description: "Single dashboard showing control health, human risk, incidents, and recovery readiness" }
+    ],
+    benefits: [
+      "Single-pane security visibility across entire environment",
+      "Faster incident detection and response",
+      "Reduced 'blind spots' between tools",
+      "Coordinated security strategy, not siloed tactics",
+      "Measurable risk reduction over time",
+      "Compliance readiness score when modules active"
+    ],
+    gradientColors: "from-red-600 via-pink-600 to-rose-600"
   }
 };
 
