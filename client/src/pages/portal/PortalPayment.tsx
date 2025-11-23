@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import {
   Card,
@@ -35,6 +35,8 @@ export default function PortalPayment({
   const [selectedMethod, setSelectedMethod] = useState<
     "stripe" | "zelle" | "zoho" | null
   >(null);
+  const [zohoEmbedData, setZohoEmbedData] = useState<any>(null);
+  const zohoContainerRef = useRef<HTMLDivElement>(null);
 
   const handleStripeCheckout = async () => {
     setLoading(true);
@@ -63,6 +65,49 @@ export default function PortalPayment({
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Payment failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleZohoCheckout = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/portal/payment/zoho", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("portalToken")}`,
+        },
+        body: JSON.stringify({
+          invoiceId,
+          invoiceNumber,
+          amount: Math.round(parseFloat(amount) * 100),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to initialize Zoho checkout");
+      }
+
+      const data = await response.json();
+      setZohoEmbedData(data);
+
+      // Load Zoho checkout script if not already loaded
+      if (!(window as any).ZohoCheckout) {
+        const script = document.createElement("script");
+        script.src = "https://checkout.zoho.com/checkout.js";
+        script.async = true;
+        script.onload = () => {
+          // Script loaded, widget will be rendered
+          console.log("Zoho checkout script loaded");
+        };
+        document.head.appendChild(script);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Zoho checkout failed");
     } finally {
       setLoading(false);
     }
@@ -216,22 +261,76 @@ export default function PortalPayment({
 
           {/* Zoho Payments */}
           <Card
-            className="opacity-50 cursor-not-allowed"
+            className={`cursor-pointer transition-all ${
+              selectedMethod === "zoho"
+                ? "ring-2 ring-[#5034ff] border-[#5034ff]"
+                : "hover:border-[#5034ff]/50"
+            }`}
+            onClick={() => setSelectedMethod("zoho")}
             data-testid="card-zoho-method"
           >
             <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                  <CreditCard className="h-6 w-6 text-gray-400" />
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
+                    <CreditCard className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-semibold">Zoho Payments</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Pay with multiple payment methods
+                    </p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <h4 className="font-semibold text-gray-600 dark:text-gray-400">
-                    Zoho Payments
-                  </h4>
-                  <p className="text-sm text-gray-500 dark:text-gray-500">
-                    Coming soon
-                  </p>
-                </div>
+
+                {selectedMethod === "zoho" && (
+                  <div className="mt-4 space-y-3">
+                    {!zohoEmbedData && (
+                      <Button
+                        className="w-full bg-[#5034ff] hover:bg-[#5034ff]/90 text-white"
+                        onClick={handleZohoCheckout}
+                        disabled={loading}
+                        data-testid="button-zoho-pay"
+                      >
+                        {loading ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Initializing...
+                          </>
+                        ) : (
+                          "Proceed to Zoho Checkout"
+                        )}
+                      </Button>
+                    )}
+
+                    {zohoEmbedData && (
+                      <div
+                        ref={zohoContainerRef}
+                        data-testid="div-zoho-widget"
+                        className="p-4 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 min-h-96"
+                      >
+                        <div className="text-center text-gray-600 dark:text-gray-400 py-8">
+                          <p className="font-medium mb-2">Zoho Checkout Widget</p>
+                          <p className="text-sm">
+                            {zohoEmbedData.amount} USD - {zohoEmbedData.orderReference}
+                          </p>
+                          <p className="text-xs mt-4 text-gray-500">
+                            The payment widget would render here with Zoho's hosted checkout
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-900/30 rounded text-sm">
+                      <p className="text-blue-800 dark:text-blue-300">
+                        <strong>Amount:</strong> ${parseFloat(amount).toFixed(2)}
+                      </p>
+                      <p className="text-blue-800 dark:text-blue-300 mt-1">
+                        Reference: {invoiceNumber}
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

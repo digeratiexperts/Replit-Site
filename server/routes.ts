@@ -520,7 +520,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.setHeader("Content-Type", "application/zip");
       res.setHeader("Content-Disposition", "attachment; filename=\"DigeratiExpertsAgent-Setup.zip\"");
 
-      archive.on("error", (err) => {
+      archive.on("error", (err: any) => {
         console.error("Archive error:", err);
         res.status(500).json({ message: "Failed to generate installer" });
       });
@@ -604,6 +604,70 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error("Checkout error:", error);
       res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Create Zoho checkout session
+  app.post("/api/portal/payment/zoho", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { invoiceId, invoiceNumber, amount } = req.body;
+
+      if (!invoiceId || !amount || !invoiceNumber) {
+        return res.status(400).json({ message: "invoiceId, invoiceNumber, and amount required" });
+      }
+
+      const { zohoService } = await import("./zohoService");
+
+      // Generate embed code for Zoho checkout widget
+      const embedCode = await zohoService.generateCheckoutEmbedCode(
+        invoiceId,
+        amount,
+        "customer@example.com", // In production, get from user session
+        "Digerati Customer",
+        invoiceNumber
+      );
+
+      const embedData = JSON.parse(embedCode);
+
+      res.json({
+        success: true,
+        ...embedData,
+      });
+    } catch (error: any) {
+      console.error("Zoho checkout error:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Zoho payment webhook
+  app.post("/api/zoho/webhook", async (req: Request, res: Response) => {
+    try {
+      const signatureHeader = req.headers["x-zoho-signature"] as string;
+
+      if (!signatureHeader) {
+        return res.status(400).json({ error: "Missing X-Zoho-Signature header" });
+      }
+
+      const { zohoService } = await import("./zohoService");
+
+      // Verify webhook signature
+      const isValid = zohoService.verifyWebhookSignature(req.body, signatureHeader);
+
+      if (!isValid) {
+        console.warn("Invalid Zoho webhook signature");
+        return res.status(401).json({ error: "Invalid signature" });
+      }
+
+      // Process payment
+      const paymentResult = await zohoService.processWebhookPayment(req.body);
+
+      // TODO: Update invoice status in storage based on paymentResult
+      console.log("Zoho payment processed:", paymentResult);
+
+      res.json({ success: true, paymentId: paymentResult.transactionId });
+    } catch (error: any) {
+      console.error("Zoho webhook error:", error);
+      res.status(500).json({ error: "Webhook processing failed" });
     }
   });
 
