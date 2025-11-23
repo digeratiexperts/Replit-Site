@@ -152,24 +152,24 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
 
         {/* Compliance Section */}
         <div className="border-t border-white/10 py-8 px-4 md:px-8 lg:px-0">
-          <div className="bg-gradient-to-r from-[#5034ff]/10 to-[#5034ff]/5 rounded-lg p-6 mb-8 border border-[#5034ff]/20">
+          <div className="bg-white rounded-lg p-6 mb-8 shadow-lg">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
               <div className="flex items-start gap-3">
                 <Shield className="h-6 w-6 text-[#5034ff] mt-1 flex-shrink-0" />
                 <div>
-                  <h3 className="text-white font-semibold mb-1 flex items-center gap-2 [font-family:'Poppins',Helvetica]">
+                  <h3 className="text-[#030228] font-semibold mb-1 flex items-center gap-2 [font-family:'Poppins',Helvetica]">
                     COMPLIANCE READY
                   </h3>
-                  <p className="text-gray-300 text-sm [font-family:'Poppins',Helvetica] font-normal">
+                  <p className="text-gray-700 text-sm [font-family:'Poppins',Helvetica] font-normal">
                     Need SOC 2 or Security Documentation?
                   </p>
-                  <p className="text-gray-300 text-sm mt-1 [font-family:'Poppins',Helvetica] font-normal">
+                  <p className="text-gray-600 text-sm mt-1 [font-family:'Poppins',Helvetica] font-normal">
                     Request compliance documents for vendor onboarding and security reviews
                   </p>
                 </div>
               </div>
               <Button 
-                className="bg-white text-[#5034ff] hover:bg-gray-100 font-semibold px-6 py-2 shadow-lg flex items-center gap-2 [font-family:'Poppins',Helvetica]"
+                className="bg-[#5034ff] text-white hover:bg-[#4028dd] font-semibold px-6 py-2 shadow-lg flex items-center gap-2 [font-family:'Poppins',Helvetica] whitespace-nowrap"
                 data-testid="footer-request-docs"
               >
                 Request Docs
