@@ -121,7 +121,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                   >
                     <span>{item.name}</span>
                     {item.badge && (
-                      <span className="text-xs bg-[#5034ff]/20 text-[#5034ff] px-2 py-0.5 rounded">
+                      <span className="text-xs bg-white text-[#5034ff] px-2 py-0.5 rounded">
                         {item.badge}
                       </span>
                     )}
