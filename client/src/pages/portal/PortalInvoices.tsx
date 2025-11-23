@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PortalLayout } from "./PortalLayout";
-import { FileText, Download, Eye } from "lucide-react";
+import { FileText, Download, Eye, CreditCard } from "lucide-react";
+import { Link } from "wouter";
 
 interface Invoice {
   id: string;
@@ -164,6 +165,18 @@ export default function PortalInvoices() {
                             >
                               <Download className="h-4 w-4" />
                             </Button>
+                            {(invoice.status === "sent" || invoice.status === "overdue") && (
+                              <Link href={`/portal/invoices/${invoice.id}/pay`}>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0 text-[#5034ff] hover:bg-[#5034ff]/10"
+                                  data-testid={`button-pay-${invoice.id}`}
+                                >
+                                  <CreditCard className="h-4 w-4" />
+                                </Button>
+                              </Link>
+                            )}
                           </div>
                         </td>
                       </tr>

@@ -577,6 +577,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // --- Payment Routes ---
+  
+  // Create Stripe checkout session
+  app.post("/api/portal/payment/checkout", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { invoiceId, amount } = req.body;
+
+      if (!invoiceId || !amount) {
+        return res.status(400).json({ message: "invoiceId and amount required" });
+      }
+
+      // For now, using test price - in production, get from database
+      // This is a demo price ID - replace with real Stripe price ID
+      const testPriceId = "price_1QdLlVLfk0Z0pHE5bVJ0YIwJ";
+
+      const session = await (await import("./stripeService")).stripeService.createCheckoutSession(
+        "cus_test",
+        testPriceId,
+        invoiceId,
+        `${req.protocol}://${req.get("host")}/portal/invoices?paid=true`,
+        `${req.protocol}://${req.get("host")}/portal/invoices`
+      );
+
+      res.json({ url: session.url });
+    } catch (error: any) {
+      console.error("Checkout error:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   // (rest of your existing task, label, comment, and user routes remain unchanged…)
 
   return httpServer;
