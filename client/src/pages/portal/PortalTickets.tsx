@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { useLocation, Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -59,13 +60,17 @@ export default function PortalTickets() {
               Manage your support requests and track resolutions
             </p>
           </div>
-          <Button
-            className="bg-[#5034ff] hover:bg-[#5034ff]/90 text-white"
-            data-testid="button-create-ticket"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            New Ticket
-          </Button>
+          <Link href="/portal/tickets/create">
+            <a>
+              <Button
+                className="bg-[#5034ff] hover:bg-[#5034ff]/90 text-white"
+                data-testid="button-create-ticket"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                New Ticket
+              </Button>
+            </a>
+          </Link>
         </div>
 
         {/* Filters */}
@@ -119,11 +124,11 @@ export default function PortalTickets() {
             ) : filteredTickets.length > 0 ? (
               <div className="space-y-3">
                 {filteredTickets.map((ticket) => (
-                  <div
-                    key={ticket.id}
-                    className="flex items-center justify-between p-4 border rounded-lg dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer"
-                    data-testid={`ticket-row-${ticket.id}`}
-                  >
+                  <Link key={ticket.id} href={`/portal/tickets/${ticket.id}`}>
+                    <a
+                      className="flex items-center justify-between p-4 border rounded-lg dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer block"
+                      data-testid={`ticket-row-${ticket.id}`}
+                    >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <p className="font-medium text-gray-900 dark:text-white truncate">
@@ -156,7 +161,8 @@ export default function PortalTickets() {
                         {ticket.status}
                       </Badge>
                     </div>
-                  </div>
+                    </a>
+                  </Link>
                 ))}
               </div>
             ) : (

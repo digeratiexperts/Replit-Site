@@ -1,7 +1,7 @@
 import { useLocation, Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { LogOut, Menu, X, LayoutDashboard, Ticket, Package, FileText, BookOpen, Settings } from "lucide-react";
+import { LogOut, Menu, X, LayoutDashboard, Ticket, Package, FileText, BookOpen, Settings, Activity, GraduationCap } from "lucide-react";
 import { useState } from "react";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
 
@@ -16,6 +16,8 @@ const navItems = [
   { href: "/portal/services", label: "My Services", icon: Package },
   { href: "/portal/invoices", label: "Invoices", icon: FileText },
   { href: "/portal/kb", label: "Knowledge Base", icon: BookOpen },
+  { href: "/portal/status", label: "System Status", icon: Activity },
+  { href: "/portal/learning", label: "Learning", icon: GraduationCap },
   { href: "/portal/settings", label: "Settings", icon: Settings },
 ];
 

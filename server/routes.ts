@@ -324,6 +324,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Portal Ticket Detail
+  app.get("/api/portal/tickets/:id", async (req: Request, res: Response) => {
+    try {
+      const ticket = {
+        id: req.params.id,
+        ticketNumber: "#TK001",
+        subject: "Email not syncing",
+        description: "Outlook is not syncing emails from the Exchange server. Started this morning around 9 AM.",
+        status: "open",
+        priority: "high",
+        category: "Email",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        assignedTo: "Sarah Johnson",
+        comments: [
+          { id: "1", author: "Sarah Johnson", role: "Support Engineer", content: "I'm looking into your Exchange connectivity. Can you confirm if you have VPN enabled?", timestamp: new Date(Date.now() - 3600000).toISOString(), isInternal: false },
+          { id: "2", author: "You", role: "Client", content: "Yes, VPN is enabled. I'm working from home.", timestamp: new Date(Date.now() - 1800000).toISOString(), isInternal: false },
+        ]
+      };
+      res.json(ticket);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   // (rest of your existing task, label, comment, and user routes remain unchanged…)
 
   return httpServer;
