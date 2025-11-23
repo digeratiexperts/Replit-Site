@@ -4,6 +4,9 @@ import { registerRoutes } from "./routes";
 import { createServer as createViteServer } from "vite";
 import path from "path";
 import fs from "fs";
+import { runMigrations } from "stripe-replit-sync";
+import { getStripeSync } from "./stripeClient";
+import { WebhookHandlers } from "./webhookHandlers";
 
 const app = express();
 const server = createServer(app);
@@ -29,7 +32,78 @@ app.all("/api/health", (_req, res) => {
 // Backup simple health
 app.all("/healthz", (_req, res) => res.status(200).send("ok"));
 
-// --------- Basic parsers (after health so nothing delays it)
+// --------- Initialize Stripe on startup
+async function initStripe() {
+  const databaseUrl = process.env.DATABASE_URL;
+  if (!databaseUrl) {
+    log("⚠️ DATABASE_URL not set - Stripe integration will not work");
+    return;
+  }
+
+  try {
+    log("🔄 Initializing Stripe schema...");
+    await runMigrations({
+      databaseUrl,
+      schema: "stripe",
+    });
+    log("✅ Stripe schema ready");
+
+    const stripeSync = await getStripeSync();
+
+    log("🔄 Setting up managed webhook...");
+    const webhookBaseUrl = `https://${process.env.REPLIT_DOMAINS?.split(",")[0] || "localhost:5000"}`;
+    const { webhook, uuid } = await stripeSync.findOrCreateManagedWebhook(
+      `${webhookBaseUrl}/api/stripe/webhook`,
+      {
+        enabled_events: ["*"],
+        description: "Managed webhook for Stripe sync",
+      }
+    );
+    log(`✅ Webhook configured (UUID: ${uuid})`);
+
+    log("🔄 Syncing Stripe data...");
+    stripeSync.syncBackfill().then(() => {
+      log("✅ Stripe data synced");
+    }).catch((err) => {
+      console.error("Error syncing Stripe data:", err);
+    });
+  } catch (error) {
+    console.error("Failed to initialize Stripe:", error);
+  }
+}
+
+// Start Stripe init in background
+initStripe().catch(console.error);
+
+// --------- Stripe Webhook Route BEFORE JSON middleware
+app.post(
+  "/api/stripe/webhook/:uuid",
+  express.raw({ type: "application/json" }),
+  async (req, res) => {
+    const signature = req.headers["stripe-signature"];
+    if (!signature) {
+      return res.status(400).json({ error: "Missing stripe-signature" });
+    }
+
+    try {
+      const sig = Array.isArray(signature) ? signature[0] : signature;
+      if (!Buffer.isBuffer(req.body)) {
+        const errorMsg = "STRIPE WEBHOOK ERROR: req.body is not a Buffer. This means express.json() ran before this webhook route. FIX: Move this webhook route registration BEFORE app.use(express.json())";
+        console.error(errorMsg);
+        return res.status(500).json({ error: "Webhook processing error" });
+      }
+
+      const { uuid } = req.params;
+      await WebhookHandlers.processWebhook(req.body as Buffer, sig, uuid);
+      res.status(200).json({ received: true });
+    } catch (error: any) {
+      console.error("Webhook error:", error.message);
+      res.status(400).json({ error: "Webhook processing error" });
+    }
+  }
+);
+
+// --------- Basic parsers (after health and webhook so nothing delays them)
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

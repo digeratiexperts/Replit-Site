@@ -35,6 +35,7 @@ const PortalTicketDetail = lazy(() => import("@/pages/portal/PortalTicketDetail"
 const PortalCreateTicket = lazy(() => import("@/pages/portal/PortalCreateTicket"));
 const PortalServices = lazy(() => import("@/pages/portal/PortalServices"));
 const PortalInvoices = lazy(() => import("@/pages/portal/PortalInvoices"));
+const PortalPayment = lazy(() => import("@/pages/portal/PortalPayment"));
 const PortalKB = lazy(() => import("@/pages/portal/PortalKB"));
 const PortalStatus = lazy(() => import("@/pages/portal/PortalStatus"));
 const PortalLearning = lazy(() => import("@/pages/portal/PortalLearning"));
@@ -234,6 +235,22 @@ function Router() {
           <PortalInvoices />
         </Suspense>
       )} />
+      <Route path="/portal/invoices/:id/pay" component={({ params }) => {
+        const invoice = {
+          id: params.id || "",
+          invoiceNumber: "INV-2024-004",
+          amount: "2600",
+        };
+        return (
+          <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+            <PortalPayment
+              invoiceId={invoice.id}
+              invoiceNumber={invoice.invoiceNumber}
+              amount={invoice.amount}
+            />
+          </Suspense>
+        );
+      }} />
       <Route path="/portal/kb" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <PortalKB />
