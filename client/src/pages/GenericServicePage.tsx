@@ -87,7 +87,7 @@ export default function GenericServicePage({
             <Button 
               size="lg" 
               variant="outline" 
-              className="border-white text-white hover:bg-white hover:text-purple-600"
+              className="border-white text-purple-700 bg-white hover:bg-gray-100"
               data-testid="button-call"
             >
               <Phone className="mr-2 h-4 w-4" />
