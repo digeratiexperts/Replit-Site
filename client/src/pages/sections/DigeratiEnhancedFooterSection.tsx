@@ -180,44 +180,45 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
         </div>
 
         {/* Areas Served Section */}
-        <div className="border-t border-white/10 pt-8 pb-6 px-4 md:px-8 lg:px-0">
-          <h4 className="text-gray-300 text-sm font-semibold mb-4 uppercase tracking-wider [font-family:'Poppins',Helvetica]">
+        <div className="border-t border-white/10 pt-8 pb-8 px-4 md:px-8 lg:px-0">
+          <h4 className="text-white text-sm font-semibold mb-6 uppercase tracking-wider [font-family:'Poppins',Helvetica]">
             Serving Greater Phoenix
           </h4>
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap gap-3">
             {locations.map((location, index) => (
-              <div 
-                key={index} 
+              <a
+                key={index}
+                href="#"
                 className={`
-                  flex items-center gap-2 px-4 py-2 rounded-full 
+                  px-4 py-2 rounded-lg font-medium transition-all duration-300 text-sm [font-family:'Poppins',Helvetica]
                   ${location.primary 
-                    ? 'bg-[#5034ff]/20 border border-[#5034ff]/50 text-[#5034ff]' 
-                    : 'bg-white/10 border border-white/20 text-gray-300'}
-                  transition-all hover:bg-[#5034ff]/30 hover:border-[#5034ff]/70 hover:text-[#5034ff]
-                  [font-family:'Poppins',Helvetica]
+                    ? 'text-white hover:bg-[#5034ff]/20' 
+                    : 'text-gray-400 hover:text-white hover:bg-white/10'}
                 `}
                 data-testid={`footer-location-${location.name.toLowerCase()}`}
               >
-                <MapPin className="h-3 w-3" />
-                <span className="text-sm font-medium">{location.name}</span>
-              </div>
+                {location.name}
+              </a>
             ))}
           </div>
         </div>
 
         {/* Partner Badges Section */}
-        <div className="border-t border-white/10 pt-6 pb-4 px-4 md:px-8 lg:px-0">
+        <div className="border-t border-white/10 pt-8 pb-6 px-4 md:px-8 lg:px-0">
+          <h4 className="text-white text-sm font-semibold mb-6 uppercase tracking-wider [font-family:'Poppins',Helvetica]">
+            Certifications & Partnerships
+          </h4>
           <div className="flex flex-wrap items-center gap-6">
             {partners.map((partner, index) => (
               <div 
                 key={index}
-                className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg border border-white/20 [font-family:'Poppins',Helvetica]"
+                className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors [font-family:'Poppins',Helvetica]"
                 data-testid={`footer-partner-${index}`}
               >
                 {partner.verified && (
-                  <Shield className="h-4 w-4 text-[#5034ff]" />
+                  <Shield className="h-5 w-5 text-[#5034ff] flex-shrink-0" />
                 )}
-                <span className="text-gray-300 text-sm font-medium">{partner.name}</span>
+                <span className="text-sm font-medium">{partner.name}</span>
               </div>
             ))}
           </div>
