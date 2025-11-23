@@ -47,6 +47,8 @@ const PortalProcurementStore = lazy(() => import("@/pages/portal/PortalProcureme
 const PortalAdvancedForms = lazy(() => import("@/pages/portal/PortalAdvancedForms"));
 const PortalSatisfactionSurvey = lazy(() => import("@/pages/portal/PortalSatisfactionSurvey"));
 const PortalApprovals = lazy(() => import("@/pages/portal/PortalApprovals"));
+const AdminImportPage = lazy(() => import("@/pages/portal/AdminImport").then(m => ({ default: m.AdminImport })));
+const AdminAgentsPage = lazy(() => import("@/pages/portal/AdminAgents").then(m => ({ default: m.AdminAgents })));
 
 import { servicePageData, industryPageData, resourcePageData, supportPageData } from "@/pages/routes/servicePages";
 
@@ -309,6 +311,16 @@ function Router() {
       <Route path="/portal/approvals" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <PortalApprovals />
+        </Suspense>
+      )} />
+      <Route path="/portal/admin/import" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <AdminImportPage />
+        </Suspense>
+      )} />
+      <Route path="/portal/admin/agents" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <AdminAgentsPage />
         </Suspense>
       )} />
       

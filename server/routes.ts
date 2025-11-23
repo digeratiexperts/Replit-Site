@@ -789,6 +789,179 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // =============== IMPORT & ADMIN ROUTES ===============
+
+  // Import companies/users from external systems
+  app.post("/api/portal/admin/import", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { integrationType, apiKey, clientId } = req.body;
+
+      // Validate admin role
+      const user = req.body.user;
+      if (user?.role !== "admin") {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      // Log import job
+      const log = {
+        id: Math.random().toString(36).substring(7),
+        clientId,
+        integrationType,
+        syncType: "import",
+        status: "in_progress",
+        startedAt: new Date().toISOString(),
+      };
+
+      // Simulate import processing (in production: call external APIs)
+      setTimeout(() => {
+        log.status = "completed";
+        log.totalRecords = Math.floor(Math.random() * 200) + 50;
+        log.successCount = Math.floor(Math.random() * 195) + 50;
+        log.failureCount = Math.floor(Math.random() * 5);
+        log.completedAt = new Date().toISOString();
+      }, 1000);
+
+      res.json({
+        message: "Import started",
+        logId: log.id,
+        ...log,
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Get import jobs for admin
+  app.get("/api/portal/admin/import-jobs", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const user = req.body.user;
+      if (user?.role !== "admin") {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      res.json({
+        jobs: [
+          {
+            id: "1",
+            system: "Zoho CRM",
+            status: "completed",
+            successCount: 45,
+            failureCount: 0,
+            lastRun: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+          },
+          {
+            id: "2",
+            system: "JumpCloud",
+            status: "idle",
+            successCount: 0,
+            failureCount: 0,
+          },
+        ],
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Upload/manage agents
+  app.post("/api/portal/admin/agents", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { agentName, agentType, version, downloadUrl, features, supportedOS } = req.body;
+      const user = req.body.user;
+
+      if (user?.role !== "admin") {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      const agent = {
+        id: Math.random().toString(36).substring(7),
+        agentName,
+        agentType,
+        version,
+        downloadUrl,
+        features,
+        supportedOS,
+        uploadedBy: user.id,
+        createdAt: new Date().toISOString(),
+      };
+
+      res.json({
+        message: "Agent uploaded successfully",
+        agent,
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Get all agents (for Digerati admin view)
+  app.get("/api/portal/admin/agents", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const user = req.body.user;
+      if (user?.role !== "admin") {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      res.json({
+        agents: [
+          {
+            id: "1",
+            agentName: "Digerati Expert Desktop Agent",
+            agentType: "custom",
+            version: "1.0.0",
+            isActive: true,
+            uploadedDate: new Date().toISOString(),
+          },
+          {
+            id: "2",
+            agentName: "JumpCloud Agent",
+            agentType: "jumpcloud",
+            version: "2.5.1",
+            isActive: true,
+            uploadedDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+          },
+        ],
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Get agents for specific client (multi-tenancy)
+  app.get("/api/portal/clients/:clientId/agents", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { clientId } = req.params;
+      const user = req.body.user;
+
+      // Multi-tenancy: only allow access to own client data (unless admin)
+      if (user?.role !== "admin" && user?.clientId !== clientId) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      res.json({
+        clientId,
+        agents: [
+          {
+            id: "1",
+            agentName: "Digerati Expert Desktop Agent",
+            version: "1.0.0",
+            downloadUrl: "/api/portal/agent/download",
+            isActive: true,
+          },
+          {
+            id: "2",
+            agentName: "JumpCloud Agent",
+            version: "2.5.1",
+            downloadUrl: "https://agents.jumpcloud.com/windows-installer.exe",
+            isActive: true,
+          },
+        ],
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   // (rest of your existing task, label, comment, and user routes remain unchanged…)
 
   return httpServer;

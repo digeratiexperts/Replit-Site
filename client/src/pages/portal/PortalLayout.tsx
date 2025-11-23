@@ -1,7 +1,7 @@
 import { useLocation, Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { LogOut, Menu, X, LayoutDashboard, Ticket, Package, FileText, BookOpen, Settings, Activity, GraduationCap, MessageCircle, Download, Truck, ShoppingCart, ClipboardList, CheckSquare, FileStack } from "lucide-react";
+import { LogOut, Menu, X, LayoutDashboard, Ticket, Package, FileText, BookOpen, Settings, Activity, GraduationCap, MessageCircle, Download, Truck, ShoppingCart, ClipboardList, CheckSquare, FileStack, Upload, Users } from "lucide-react";
 import { useState } from "react";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
 
@@ -26,6 +26,11 @@ const navItems = [
   { href: "/portal/learning", label: "Learning", icon: GraduationCap },
   { href: "/portal/agent", label: "Desktop Agent", icon: Download },
   { href: "/portal/settings", label: "Settings", icon: Settings },
+];
+
+const adminItems = [
+  { href: "/portal/admin/import", label: "Data Import", icon: Upload },
+  { href: "/portal/admin/agents", label: "Manage Agents", icon: Users },
 ];
 
 export function PortalLayout({ children, title }: PortalLayoutProps) {
@@ -85,6 +90,39 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
                 </Link>
               );
             })}
+
+            {/* Admin Section */}
+            {user?.role === "admin" && (
+              <>
+                <div className="pt-4 mt-4 border-t border-white/10">
+                  <p className="text-xs uppercase text-gray-400 px-4 py-2 font-semibold">Administration</p>
+                  {adminItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = location === item.href;
+                    return (
+                      <Link 
+                        key={item.href} 
+                        href={item.href}
+                        asChild
+                      >
+                        <button
+                          className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left ${
+                            isActive
+                              ? "bg-[#5034ff] text-white"
+                              : "text-gray-300 hover:bg-white/10"
+                          }`}
+                          onClick={() => setSidebarOpen(false)}
+                          data-testid={`nav-admin-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+                        >
+                          <Icon className="h-5 w-5" />
+                          <span className="text-sm font-medium">{item.label}</span>
+                        </button>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </>
+            )}
           </nav>
 
           {/* User and Logout */}

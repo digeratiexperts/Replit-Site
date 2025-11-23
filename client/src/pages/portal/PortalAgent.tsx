@@ -3,6 +3,88 @@ import { Button } from "@/components/ui/button";
 import { PortalLayout } from "./PortalLayout";
 import { Download, Monitor, Clock, MessageSquare, Zap, Settings, AlertCircle } from "lucide-react";
 
+interface Agent {
+  name: string;
+  version: string;
+  downloadUrl: string;
+  description: string;
+  features: string[];
+  supportedOS: string[];
+}
+
+const agents: Agent[] = [
+  {
+    name: "Digerati Expert Desktop Agent",
+    version: "1.0.0",
+    downloadUrl: "/api/portal/agent/download",
+    description: "Our native desktop agent for quick support access",
+    features: [
+      "Quick Ticket Submission",
+      "Real-time Chat",
+      "System Monitoring",
+      "Auto-updates",
+    ],
+    supportedOS: ["Windows 10", "Windows 11"],
+  },
+  {
+    name: "JumpCloud Agent",
+    version: "2.5.1",
+    downloadUrl: "https://agents.jumpcloud.com/windows-installer.exe",
+    description: "JumpCloud device management and user authentication",
+    features: ["User Management", "MDM", "MFA", "System Inventory"],
+    supportedOS: ["Windows 10", "Windows 11", "macOS", "Linux"],
+  },
+  {
+    name: "Coro.net EDR Agent",
+    version: "3.2.0",
+    downloadUrl: "https://agents.coro.net/edr-windows.exe",
+    description: "Endpoint Detection and Response (EDR)",
+    features: [
+      "Endpoint Detection",
+      "Threat Response",
+      "Threat Hunting",
+      "Incident Response",
+    ],
+    supportedOS: ["Windows 10", "Windows 11"],
+  },
+  {
+    name: "BlackPoint Cyber Agent",
+    version: "1.8.5",
+    downloadUrl: "https://agents.blackpointcyber.com/bpcy-agent.exe",
+    description: "Behavioral analytics and anomaly detection",
+    features: [
+      "Behavioral Analysis",
+      "Anomaly Detection",
+      "Real-time Alerts",
+      "Threat Response",
+    ],
+    supportedOS: ["Windows 10", "Windows 11"],
+  },
+];
+
+const digeratiFeatures = [
+  {
+    icon: MessageSquare,
+    title: "Quick Ticket Submission",
+    description: "Submit support tickets directly from the system tray without opening a browser",
+  },
+  {
+    icon: Clock,
+    title: "Real-time Chat",
+    description: "Connect with support team instantly while working on your computer",
+  },
+  {
+    icon: Zap,
+    title: "Quick Access",
+    description: "One-click access to ticket status and support chat from anywhere on your desktop",
+  },
+  {
+    icon: AlertCircle,
+    title: "Instant Notifications",
+    description: "Get notified immediately when support responds to your tickets",
+  },
+];
+
 export default function PortalAgent() {
   const systemRequirements = [
     { label: "OS", value: "Windows 10/11" },
@@ -11,28 +93,7 @@ export default function PortalAgent() {
     { label: "Internet", value: "Required for live chat" },
   ];
 
-  const features = [
-    {
-      icon: MessageSquare,
-      title: "Quick Ticket Submission",
-      description: "Submit support tickets directly from the system tray without opening a browser",
-    },
-    {
-      icon: Clock,
-      title: "Real-time Chat",
-      description: "Connect with support team instantly while working on your computer",
-    },
-    {
-      icon: Zap,
-      title: "Quick Access",
-      description: "One-click access to ticket status and support chat from anywhere on your desktop",
-    },
-    {
-      icon: AlertCircle,
-      title: "Instant Notifications",
-      description: "Get notified immediately when support responds to your tickets",
-    },
-  ];
+  const features = digeratiFeatures;
 
   const handleDownload = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -158,11 +219,11 @@ export default function PortalAgent() {
           </CardContent>
         </Card>
 
-        {/* Features */}
+        {/* Digerati Agent Features */}
         <div>
-          <h3 className="text-lg font-bold mb-4">Agent Features</h3>
+          <h3 className="text-lg font-bold mb-4">Digerati Expert Agent Features</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {features.map((feature) => {
+            {digeratiFeatures.map((feature) => {
               const Icon = feature.icon;
               return (
                 <Card key={feature.title}>
@@ -269,6 +330,74 @@ export default function PortalAgent() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Third-Party Agents */}
+        <div>
+          <h3 className="text-lg font-bold mb-4">Additional Agents Available</h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            Download and install these recommended agents for device management, endpoint detection, and security monitoring.
+          </p>
+          <div className="space-y-3">
+            {agents.slice(1).map((agent) => (
+              <Card key={agent.name}>
+                <CardContent className="pt-6">
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="flex-1">
+                      <h4 className="font-semibold">{agent.name}</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                        {agent.description}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        v{agent.version}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 mb-4">
+                    <div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                        Features
+                      </p>
+                      <ul className="text-xs space-y-1">
+                        {agent.features.map((feature) => (
+                          <li key={feature} className="text-gray-700 dark:text-gray-300">
+                            • {feature}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                        Supported OS
+                      </p>
+                      <ul className="text-xs space-y-1">
+                        {agent.supportedOS.map((os) => (
+                          <li key={os} className="text-gray-700 dark:text-gray-300">
+                            • {os}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="w-full"
+                    data-testid={`button-download-agent-${agent.name}`}
+                  >
+                    <a href={agent.downloadUrl} target="_blank" rel="noopener noreferrer">
+                      <Download className="h-4 w-4 mr-2" />
+                      Download v{agent.version}
+                    </a>
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
 
         {/* Help */}
         <Card className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-900/30">

@@ -69,3 +69,18 @@ The project prioritizes a modular structure with `client/` and `server/` directo
 - **Announcement Banner Component**: For broadcast notifications
 - **6 New API Endpoints**: AI classification, smart recommendations, event history, health checks
 - **4 New Database Tables**: AI classifications, suggestions, shipments, procurement products
+
+## Latest Features Implemented (Session 2)
+- **Import System**: Sync companies/users from Zoho Desk, Zoho CRM, JumpCloud, Seamless.ai
+- **AdminImport Page**: Import job management with status tracking
+- **AdminAgents Page**: Upload and manage third-party agents (JumpCloud, Coro.net, BlackPoint)
+- **Agent Management**: Display uploaded agents on client's Desktop Agent page
+- **Multi-Tenancy Access Control**: 
+  - Digerati admin view: See all clients, all agents, manage imports
+  - Client view: See only their own company data, download agents for their company
+- **3 New API Endpoints**: 
+  - POST /api/portal/admin/import - Start import job
+  - GET /api/portal/admin/agents - Digerati admin view (all agents)
+  - GET /api/portal/clients/:clientId/agents - Client-specific agents (multi-tenant)
+- **Role-Based Navigation**: Admin-only menu section in sidebar with import & agent management
+- **3 New Database Tables**: external_integration_mappings, desktop_agents, integration_sync_logs

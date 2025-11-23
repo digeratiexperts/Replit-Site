@@ -648,6 +648,58 @@ export const insertPortalChatMessageSchema = createInsertSchema(portalChatMessag
   encryptedContent: true,
 });
 
+// External Integration Sync Tables
+export const externalIntegrationMappings = pgTable("external_integration_mappings", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clientId: varchar("client_id").notNull().references(() => portalClients.id, { onDelete: "cascade" }),
+  integrationType: text("integration_type").notNull(), // "zoho_desk", "zoho_crm", "jumpcloud", "seamless_ai"
+  externalId: text("external_id").notNull(), // ID from external system
+  externalType: text("external_type"), // "company", "user", "contact"
+  mappedPortalId: varchar("mapped_portal_id"), // ID of mapped portalUser or portalClient
+  mappedType: text("mapped_type"), // "user" or "client"
+  syncStatus: text("sync_status").default("active"), // active, archived, deleted
+  lastSyncedAt: timestamp("last_synced_at"),
+  externalData: jsonb("external_data"), // Store original external data
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Desktop Agents (JumpCloud, Coro.net, BlackPoint, etc.)
+export const desktopAgents = pgTable("desktop_agents", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clientId: varchar("client_id").notNull().references(() => portalClients.id, { onDelete: "cascade" }),
+  agentName: text("agent_name").notNull(), // "Digerati", "JumpCloud", "Coro", "BlackPoint"
+  agentType: text("agent_type").notNull(), // "jumpcloud", "coro", "blackpoint", "other"
+  downloadUrl: text("download_url"),
+  version: text("version"),
+  description: text("description"),
+  features: text("features").array(), // Array of feature descriptions
+  systemRequirements: jsonb("system_requirements"), // OS, RAM, disk, etc.
+  supportedOSes: text("supported_oses").array(), // Windows, Mac, Linux
+  installationGuide: text("installation_guide"),
+  isActive: boolean("is_active").default(true),
+  uploadedBy: varchar("uploaded_by").notNull().references(() => portalUsers.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Integration Sync Logs
+export const integrationSyncLogs = pgTable("integration_sync_logs", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clientId: varchar("client_id").references(() => portalClients.id, { onDelete: "set null" }),
+  integrationType: text("integration_type").notNull(),
+  syncType: text("sync_type"), // "import", "update", "delete"
+  totalRecords: integer("total_records"),
+  successCount: integer("success_count"),
+  failureCount: integer("failure_count"),
+  status: text("status"), // "in_progress", "completed", "failed"
+  errorMessage: text("error_message"),
+  syncDetails: jsonb("sync_details"),
+  startedAt: timestamp("started_at"),
+  completedAt: timestamp("completed_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export type PortalChatMessage = typeof portalChatMessages.$inferSelect;
 export type InsertPortalChatMessage = z.infer<typeof insertPortalChatMessageSchema>;
 
@@ -655,3 +707,7 @@ export type PortalTicketAIClassification = typeof portalTicketAIClassifications.
 export type PortalAISuggestion = typeof portalAISuggestions.$inferSelect;
 export type PortalShipment = typeof portalShipments.$inferSelect;
 export type PortalProcurementProduct = typeof portalProcurementProducts.$inferSelect;
+
+export type ExternalIntegrationMapping = typeof externalIntegrationMappings.$inferSelect;
+export type DesktopAgent = typeof desktopAgents.$inferSelect;
+export type IntegrationSyncLog = typeof integrationSyncLogs.$inferSelect;
