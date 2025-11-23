@@ -44,6 +44,9 @@ const PortalAgent = lazy(() => import("@/pages/portal/PortalAgent"));
 const PortalSettings = lazy(() => import("@/pages/portal/PortalSettings"));
 const PortalShipCenter = lazy(() => import("@/pages/portal/PortalShipCenter"));
 const PortalProcurementStore = lazy(() => import("@/pages/portal/PortalProcurementStore"));
+const PortalAdvancedForms = lazy(() => import("@/pages/portal/PortalAdvancedForms"));
+const PortalSatisfactionSurvey = lazy(() => import("@/pages/portal/PortalSatisfactionSurvey"));
+const PortalApprovals = lazy(() => import("@/pages/portal/PortalApprovals"));
 
 import { servicePageData, industryPageData, resourcePageData, supportPageData } from "@/pages/routes/servicePages";
 
@@ -291,6 +294,21 @@ function Router() {
       <Route path="/portal/procurement" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <PortalProcurementStore />
+        </Suspense>
+      )} />
+      <Route path="/portal/forms" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <PortalAdvancedForms />
+        </Suspense>
+      )} />
+      <Route path="/portal/surveys" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <PortalSatisfactionSurvey />
+        </Suspense>
+      )} />
+      <Route path="/portal/approvals" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <PortalApprovals />
         </Suspense>
       )} />
       

@@ -1,10 +1,18 @@
-# Digerati Experts - Managed Security Service Provider (MSP/MSSP) Website
+# Digerati Experts - Complete MSP Client Portal + Marketing Website
 
 ## Overview
-Digerati Experts is a modern, fully responsive website for a Managed Security Service Provider (MSP/MSSP) based in Chandler, Arizona. The site focuses on cybersecurity messaging ("Hackers Don't Wait. Protect Your Business Now"), showcasing managed IT and security services with a professional purple gradient design. It includes comprehensive service offerings, multi-payment system integration (Stripe, Zelle, Zoho), dynamic solutions pages, and a complete design system for a modern SaaS aesthetic. The project aims to convert visitors into clients by emphasizing 24/7 protection, compliance assurance, and local expertise for small to medium businesses in Arizona.
+Digerati Experts is now a comprehensive platform combining:
+1. **Public Marketing Website** - Modern, responsive website for MSP/MSSP showcasing cybersecurity solutions
+2. **Enterprise Client Portal** - White-labeled, feature-complete portal with 20 pages, AI-powered support, and multi-payment processing
+
+The platform focuses on cybersecurity messaging, 24/7 protection, compliance assurance, and local expertise for small-to-medium Arizona businesses. Includes advanced features: AI-assisted ticket routing, approval workflows, CSAT surveys, shipment tracking, and cross-service communication.
 
 ## User Preferences
-Not specified. The agent should infer preferences from the project's structure and goals.
+- Complete feature coverage per requirements document
+- Production-ready deployment
+- Event-driven architecture for cross-service communication
+- AI-powered intelligent features (classification, suggestions, auto-routing)
+- Enterprise security and compliance
 
 ## System Architecture
 
@@ -38,15 +46,26 @@ The website implements a modern, light SaaS design system with consistent tokens
 The project prioritizes a modular structure with `client/` and `server/` directories. UUIDs are used for IDs to ensure scalability. The system includes robust security features for payment processing, such as enterprise-grade encryption, webhook signature validation, and UUID-based routing.
 
 ## External Dependencies
-- **Stripe**: For credit/debit card payments and subscription management, integrated via `stripe-replit-sync`.
-- **Zelle**: For manual bank transfers via QR code.
-- **Zoho Payments**: Architected for future integration.
-- **PostgreSQL**: Used for database operations, particularly by `stripe-replit-sync` for managing Stripe data.
-- **Vite**: Build tool for fast development and optimized production builds.
-- **React 18**: Frontend framework.
-- **TypeScript**: For type-safe development.
-- **Wouter**: For client-side routing.
-- **shadcn/ui** and **Radix UI**: UI component libraries.
-- **Lucide React**: Icon library.
-- **Tailwind CSS**: For styling.
-- **Express.js**: Backend server framework.
+- **Stripe**: Credit/debit payments, subscription management (`stripe-replit-sync`)
+- **Zelle**: Bank transfer payments via QR code
+- **Zoho Payments**: Checkout widget with webhook verification
+- **PostgreSQL/Neon**: Database with 40+ tables
+- **Vite**: Build tool and dev server
+- **React 18**: Frontend framework
+- **TypeScript**: Type-safe development
+- **Wouter**: Client-side routing
+- **shadcn/ui + Radix UI**: Component libraries
+- **Tailwind CSS + custom theme**: Styling (purple #5034ff, navy #030228)
+- **Lucide React**: Icons
+- **Express.js**: Backend server
+- **TanStack Query**: Data fetching and caching
+- **react-hook-form + Zod**: Form validation
+
+## Latest Features Implemented (Session 1)
+- **Event Bus System**: Real-time cross-service communication
+- **AI Service**: Ticket classification, suggestions, resolution prediction
+- **Cross-Service Handler**: Automatic workflows triggered by events
+- **3 New Portal Pages**: Advanced Forms, Satisfaction Surveys, Approvals
+- **Announcement Banner Component**: For broadcast notifications
+- **6 New API Endpoints**: AI classification, smart recommendations, event history, health checks
+- **4 New Database Tables**: AI classifications, suggestions, shipments, procurement products

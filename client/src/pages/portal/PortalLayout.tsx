@@ -1,7 +1,7 @@
 import { useLocation, Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { LogOut, Menu, X, LayoutDashboard, Ticket, Package, FileText, BookOpen, Settings, Activity, GraduationCap, MessageCircle, Download, Truck, ShoppingCart } from "lucide-react";
+import { LogOut, Menu, X, LayoutDashboard, Ticket, Package, FileText, BookOpen, Settings, Activity, GraduationCap, MessageCircle, Download, Truck, ShoppingCart, ClipboardList, CheckSquare, FileStack } from "lucide-react";
 import { useState } from "react";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
 
@@ -14,6 +14,9 @@ const navItems = [
   { href: "/portal/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/portal/tickets", label: "Support Tickets", icon: Ticket },
   { href: "/portal/chat", label: "Live Chat", icon: MessageCircle },
+  { href: "/portal/forms", label: "Request Forms", icon: ClipboardList },
+  { href: "/portal/surveys", label: "Surveys", icon: CheckSquare },
+  { href: "/portal/approvals", label: "Approvals", icon: FileStack },
   { href: "/portal/services", label: "My Services", icon: Package },
   { href: "/portal/invoices", label: "Invoices", icon: FileText },
   { href: "/portal/ship-center", label: "Ship Center", icon: Truck },
