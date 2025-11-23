@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PortalLayout } from "./PortalLayout";
-import { Download, Windows, Clock, MessageSquare, Zap, Settings, AlertCircle } from "lucide-react";
+import { Download, Monitor, Clock, MessageSquare, Zap, Settings, AlertCircle } from "lucide-react";
 
 export default function PortalAgent() {
   const systemRequirements = [
@@ -34,7 +34,10 @@ export default function PortalAgent() {
     },
   ];
 
-  const handleDownload = async () => {
+  const handleDownload = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
     try {
       // Generate secure token for agent authentication
       const email = localStorage.getItem("userEmail") || "user@company.com";
@@ -55,7 +58,7 @@ export default function PortalAgent() {
         version: "1.0.0",
         token: token,
         email: email,
-        serverUrl: "http://localhost:5000",
+        serverUrl: window.location.origin,
         features: {
           quickTickets: true,
           liveChat: true,
@@ -72,10 +75,13 @@ export default function PortalAgent() {
       const link = document.createElement("a");
       link.href = url;
       link.download = "agent-config.json";
+      link.style.display = "none";
       document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+      setTimeout(() => {
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }, 100);
 
       alert("✓ Agent configuration downloaded successfully!\n\nIn production, this would be packaged into DigeratiExpertsAgent-Setup.exe.\n\nYour secure token is embedded in the configuration and will expire in 24 hours.");
     } catch (error) {
@@ -95,7 +101,7 @@ export default function PortalAgent() {
         {/* Hero Section */}
         <div className="bg-gradient-to-r from-[#5034ff]/10 to-blue-500/10 border border-[#5034ff]/20 rounded-lg p-8">
           <div className="flex items-center gap-4">
-            <Windows className="h-12 w-12 text-[#5034ff]" />
+            <Monitor className="h-12 w-12 text-[#5034ff]" />
             <div>
               <h2 className="text-2xl font-bold mb-1">Digerati Experts Desktop Agent</h2>
               <p className="text-gray-600 dark:text-gray-400">
