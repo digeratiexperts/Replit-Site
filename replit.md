@@ -109,6 +109,25 @@ The project prioritizes a modular structure with `client/` and `server/` directo
   - POST /api/security/csrf-token - Generate CSRF tokens
   - GET /api/security/events - Admin security event logs (admin only)
 
+## Latest Features Implemented (Session 7)
+- **DE Questionnaires & Calendar Page**: New portal page for important dates and assessments
+  - Beautiful calendar view with month navigation
+  - Event types: Deployments, Projects, TBRs, Cyber Assessments, Site Assessments, Risk Assessments, Questionnaires
+  - Color-coded event badges for visual identification
+  - Timeline view for chronological event listing
+  - Filter by status: All, Scheduled, In Progress, Completed
+  - Detailed event panel with descriptions and action buttons
+  - Interactive calendar grid with events displayed on dates
+  - Integrated at: /portal/questionnaires
+  - Sidebar navigation with Calendar icon
+- **Vendor Integration Credentials Stored**:
+  - ✅ Zoho (Client ID & Secret)
+  - ✅ JumpCloud (API Key)
+  - ✅ Coro.net (Client ID & Secret)
+  - ⏳ Pending: Griffin IT, Sherweb, Pax8, ClimbCS, BlackPoint, Seamless.ai
+  - 🔮 Future: Uplevel Systems, Cytracom, Galactic Advisors, Atakama
+- **VENDOR_SETUP_STATUS.md**: Tracking document for all vendor integration status
+
 ## Latest Features Implemented (Session 5+6)
 - **OpenAI Billing Control System**: Full admin control over OpenAI API usage
   - Enable/disable OpenAI integration anytime to manage billing

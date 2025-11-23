@@ -47,6 +47,7 @@ const PortalProcurementStore = lazy(() => import("@/pages/portal/PortalProcureme
 const PortalAdvancedForms = lazy(() => import("@/pages/portal/PortalAdvancedForms"));
 const PortalSatisfactionSurvey = lazy(() => import("@/pages/portal/PortalSatisfactionSurvey"));
 const PortalApprovals = lazy(() => import("@/pages/portal/PortalApprovals"));
+const PortalQuestionnaireCalendar = lazy(() => import("@/pages/portal/PortalQuestionnaireCalendar").then(m => ({ default: m.PortalQuestionnaireCalendar })));
 const AdminImportPage = lazy(() => import("@/pages/portal/AdminImport").then(m => ({ default: m.AdminImport })));
 const AdminAgentsPage = lazy(() => import("@/pages/portal/AdminAgents").then(m => ({ default: m.AdminAgents })));
 const AdminOpenAIPage = lazy(() => import("@/pages/portal/AdminOpenAI").then(m => ({ default: m.AdminOpenAI })));
@@ -312,6 +313,11 @@ function Router() {
       <Route path="/portal/approvals" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <PortalApprovals />
+        </Suspense>
+      )} />
+      <Route path="/portal/questionnaires" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <PortalQuestionnaireCalendar />
         </Suspense>
       )} />
       <Route path="/portal/admin/import" component={() => (
