@@ -39,12 +39,6 @@ export function MegaMenu() {
       name: 'Solutions',
       sections: [
         {
-          title: 'Overview',
-          items: [
-            { title: 'All Solutions', description: 'Browse all available solutions', icon: <Server className="h-5 w-5" />, url: '/solutions', badge: 'View All' },
-          ]
-        },
-        {
           title: 'ProActive Ecosystem',
           items: [
             { title: 'Office Package', description: 'Complete IT management for small offices', icon: <Server className="h-5 w-5" />, url: '/solutions/office-package' },
@@ -417,7 +411,7 @@ export function MegaMenu() {
                       role="menu"
                       aria-label={`${item.name} submenu`}
                     >
-                      <div className="p-6 grid grid-cols-3 gap-6">
+                      <div className="p-6 grid grid-cols-3 gap-6 relative">
                         {item.sections.map((section) => (
                           <div key={section.title}>
                             <h3 
@@ -475,6 +469,20 @@ export function MegaMenu() {
                             </ul>
                           </div>
                         ))}
+                        {/* All Solutions Link - Bottom Right */}
+                        {item.name === 'Solutions' && (
+                          <div className="absolute bottom-6 right-6">
+                            <a
+                              href="/solutions"
+                              className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium rounded-lg transition-all hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                              onClick={handleLinkClick}
+                              role="menuitem"
+                              aria-label="View all solutions"
+                            >
+                              View All
+                            </a>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}

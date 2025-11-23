@@ -1,4 +1,3 @@
-import { Link } from "wouter";
 import { PageTemplate } from "@/components/PageTemplate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -58,32 +57,32 @@ export default function SolutionsIndex() {
           <h2 className="text-3xl font-bold mb-8">Our Solutions</h2>
           <div className="grid md:grid-cols-2 gap-6">
             {solutions.map((solution) => (
-              <Link
+              <a
                 key={solution.key}
-                href={`/solutions/${solution.key}`}
+                href={`#/solutions/${solution.key}`}
+                className="block"
               >
-                <a>
-                  <Card className="h-full hover:shadow-lg hover:border-purple-300 transition-all cursor-pointer group">
-                    <CardHeader>
-                      <div className={`inline-block w-12 h-12 rounded-lg bg-gradient-to-br ${solution.gradientColors || 'from-purple-600 to-blue-600'} mb-4 opacity-20 group-hover:opacity-30 transition-opacity`} />
-                      <CardTitle>{solution.title}</CardTitle>
-                      <p className="text-sm text-gray-600 font-normal mt-2">{solution.subtitle}</p>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-700 line-clamp-2 mb-4">{solution.description}</p>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-purple-600 hover:text-purple-700 p-0"
-                        data-testid={`button-learn-more-${solution.key}`}
-                      >
-                        Learn More
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </a>
-              </Link>
+                <Card className="h-full hover:shadow-lg hover:border-purple-300 transition-all cursor-pointer group">
+                  <CardHeader>
+                    <div className={`inline-block w-12 h-12 rounded-lg bg-gradient-to-br ${solution.gradientColors || 'from-purple-600 to-blue-600'} mb-4 opacity-20 group-hover:opacity-30 transition-opacity`} />
+                    <CardTitle>{solution.title}</CardTitle>
+                    <p className="text-sm text-gray-600 font-normal mt-2">{solution.subtitle}</p>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-700 line-clamp-2 mb-4">{solution.description}</p>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-purple-600 hover:text-purple-700 p-0"
+                      data-testid={`button-learn-more-${solution.key}`}
+                      onClick={(e) => e.preventDefault()}
+                    >
+                      Learn More
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </CardContent>
+                </Card>
+              </a>
             ))}
           </div>
         </div>
