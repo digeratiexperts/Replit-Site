@@ -23,7 +23,7 @@ export default function PortalKB() {
     queryKey: ["/api/portal/kb"],
   });
 
-  const categories = [...new Set(articles.map((a) => a.category).filter(Boolean))];
+  const categories = Array.from(new Set(articles.map((a) => a.category).filter(Boolean)));
 
   const filteredArticles = articles.filter((article) => {
     const matchesSearch = article.title
