@@ -27,6 +27,14 @@ const Accessibility = lazy(() => import("@/pages/trust/Accessibility"));
 const SubmitTicket = lazy(() => import("@/pages/support/SubmitTicket"));
 const GenericServicePage = lazy(() => import("@/pages/GenericServicePage"));
 
+// Location pages
+const ChandlerAZ = lazy(() => import("@/pages/locations/ChandlerAZ"));
+const PhoenixAZ = lazy(() => import("@/pages/locations/PhoenixAZ"));
+const MesaAZ = lazy(() => import("@/pages/locations/MesaAZ"));
+const GilbertAZ = lazy(() => import("@/pages/locations/GilbertAZ"));
+const TempeAZ = lazy(() => import("@/pages/locations/TempeAZ"));
+const ScottsdalAZ = lazy(() => import("@/pages/locations/ScottsdalAZ"));
+
 // Portal pages
 const PortalLogin = lazy(() => import("@/pages/portal/PortalLogin"));
 const PortalDashboard = lazy(() => import("@/pages/portal/PortalDashboard"));
@@ -205,6 +213,38 @@ function Router() {
       <Route path="/trust/accessibility" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <Accessibility />
+        </Suspense>
+      )} />
+      
+      {/* Location Pages */}
+      <Route path="/locations/chandler-az" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <ChandlerAZ />
+        </Suspense>
+      )} />
+      <Route path="/locations/phoenix-az" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <PhoenixAZ />
+        </Suspense>
+      )} />
+      <Route path="/locations/mesa-az" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <MesaAZ />
+        </Suspense>
+      )} />
+      <Route path="/locations/gilbert-az" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <GilbertAZ />
+        </Suspense>
+      )} />
+      <Route path="/locations/tempe-az" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <TempeAZ />
+        </Suspense>
+      )} />
+      <Route path="/locations/scottsdale-az" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <ScottsdalAZ />
         </Suspense>
       )} />
       
