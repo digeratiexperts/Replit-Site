@@ -50,31 +50,25 @@ export default function PortalAgent() {
       if (!tokenResponse.ok) throw new Error("Failed to generate token");
       const { token } = await tokenResponse.json();
 
-      // Save token for agent use
-      localStorage.setItem("agentToken", token);
+      // Request installer package from backend
+      const installerResponse = await fetch("/api/portal/agent/download", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email,
+          token: token,
+          serverUrl: window.location.origin,
+        }),
+      });
 
-      // Create a mock installer configuration file with secure token
-      const agentConfig = {
-        version: "1.0.0",
-        token: token,
-        email: email,
-        serverUrl: window.location.origin,
-        features: {
-          quickTickets: true,
-          liveChat: true,
-          systemStatus: true,
-          autoNotifications: true,
-        },
-        timestamp: new Date().toISOString(),
-      };
+      if (!installerResponse.ok) throw new Error("Failed to generate installer");
 
-      // Create and download the config file
-      const configJson = JSON.stringify(agentConfig, null, 2);
-      const blob = new Blob([configJson], { type: "application/json" });
+      // Download the ZIP file
+      const blob = await installerResponse.blob();
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = "agent-config.json";
+      link.download = "DigeratiExpertsAgent-Setup.zip";
       link.style.display = "none";
       document.body.appendChild(link);
       link.click();
@@ -83,10 +77,10 @@ export default function PortalAgent() {
         URL.revokeObjectURL(url);
       }, 100);
 
-      alert("✓ Agent configuration downloaded successfully!\n\nIn production, this would be packaged into DigeratiExpertsAgent-Setup.exe.\n\nYour secure token is embedded in the configuration and will expire in 24 hours.");
+      alert("✓ Installer downloaded successfully!\n\nSteps to install:\n1. Extract the ZIP file\n2. Right-click 'install.bat' and select 'Run as administrator'\n3. Follow the installation prompts\n\nYour secure token is embedded in the installer and will expire in 24 hours.");
     } catch (error) {
-      console.error("Error generating agent token:", error);
-      alert("Failed to prepare agent download. Please try again.");
+      console.error("Error downloading agent:", error);
+      alert("Failed to download installer. Please try again.");
     }
   };
 
@@ -128,7 +122,7 @@ export default function PortalAgent() {
                 data-testid="button-download-agent"
               >
                 <Download className="h-5 w-5 mr-2" />
-                Download Agent (v1.0.0) - 45 MB
+                Download Installer (v1.0.0) - Windows
               </Button>
               <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
                 Safe & verified. No malware. HTTPS encrypted download.

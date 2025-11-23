@@ -6,6 +6,8 @@ import helmet from "helmet";
 import { chatRateLimiter, agentRateLimiter } from "./middleware/rateLimiter";
 import { authMiddleware, generateToken, type AuthenticatedRequest } from "./middleware/auth";
 import { insertPortalChatMessageSchema } from "@shared/schema";
+import archiver from "archiver";
+import { Readable } from "stream";
 import {
   insertWorkspaceSchema,
   insertProjectSchema,
@@ -402,6 +404,136 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ token, email });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Portal Agent Installer - Generate and download Windows installer
+  app.post("/api/portal/agent/download", [agentRateLimiter], async (req: Request, res: Response) => {
+    try {
+      const { email, token, serverUrl } = req.body;
+      
+      if (!email || !token) {
+        return res.status(400).json({ message: "Email and token required" });
+      }
+
+      // Build PowerShell installer script
+      const psScript = [
+        "# Digerati Experts Desktop Agent Installer",
+        "# Windows PowerShell Installation Script",
+        "# Run with: powershell -ExecutionPolicy Bypass -File install.ps1",
+        "",
+        "param(",
+        `    [string]$Token = "${token}",`,
+        `    [string]$Email = "${email}",`,
+        `    [string]$ServerUrl = "${serverUrl || 'http://localhost:5000'}"`,
+        ")",
+        "",
+        "$AppName = 'Digerati Experts Agent'",
+        "$InstallPath = '$env:ProgramFiles\\DigeratiExpertsAgent'",
+        "$DataPath = '$env:APPDATA\\DigeratiExpertsAgent'",
+        "$AppVersion = '1.0.0'",
+        "",
+        'Write-Host "===============================================" -ForegroundColor Cyan',
+        'Write-Host "Digerati Experts Desktop Agent v$AppVersion" -ForegroundColor Cyan',
+        'Write-Host "===============================================" -ForegroundColor Cyan',
+        'Write-Host ""',
+        "",
+        "$currentUser = [Security.Principal.WindowsIdentity]::GetCurrent()",
+        "$principal = New-Object Security.Principal.WindowsPrincipal($currentUser)",
+        "$isAdmin = $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)",
+        "",
+        "if (-not $isAdmin) {",
+        '    Write-Host "WARNING: Run as Administrator for full functionality" -ForegroundColor Yellow',
+        "    Write-Host \"\" ",
+        "}",
+        "",
+        'Write-Host "Creating directories..." -ForegroundColor Green',
+        "if (-not (Test-Path $InstallPath)) {",
+        "    New-Item -ItemType Directory -Force -Path $InstallPath | Out-Null",
+        "}",
+        "if (-not (Test-Path $DataPath)) {",
+        "    New-Item -ItemType Directory -Force -Path $DataPath | Out-Null",
+        "}",
+        "",
+        'Write-Host "Setting up configuration..." -ForegroundColor Green',
+        "$config = @{",
+        "    version = $AppVersion",
+        "    token = $Token",
+        "    email = $Email",
+        "    serverUrl = $ServerUrl",
+        "    installedAt = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'",
+        "} | ConvertTo-Json",
+        "",
+        "$configPath = \"$DataPath\\agent-config.json\"",
+        "$config | Out-File -FilePath $configPath -Encoding UTF8",
+        "",
+        'Write-Host "Installation complete!" -ForegroundColor Green',
+        'Write-Host "Config saved to: $configPath"',
+        'Write-Host "Token expires in 24 hours"',
+      ].join("\n");
+
+      // Build batch installer script
+      const batchScript = [
+        "@echo off",
+        "REM Digerati Experts Desktop Agent Installer",
+        "setlocal enabledelayedexpansion",
+        "echo.",
+        "echo Digerati Experts Desktop Agent Installer",
+        "echo.",
+        "where /q powershell",
+        "if errorlevel 1 (",
+        "    echo ERROR: PowerShell is required but not found.",
+        "    pause",
+        "    exit /b 1",
+        ")",
+        "powershell -NoProfile -ExecutionPolicy Bypass -File \"%~dp0install.ps1\"",
+        "if errorlevel 1 (",
+        "    echo Installation failed.",
+        "    pause",
+        "    exit /b 1",
+        ")",
+        "echo Installation completed successfully!",
+        "pause",
+      ].join("\n");
+
+      // Build README
+      const readme = [
+        "Digerati Experts Desktop Agent Installer",
+        "",
+        "Installation Instructions:",
+        "1. Extract this ZIP file to a folder on your computer",
+        "2. Right-click 'install.bat' and select 'Run as administrator'",
+        "3. Follow the on-screen prompts",
+        "",
+        "Features:",
+        "- Quick Ticket Submission",
+        "- Real-time Chat Support",
+        "- System Status Monitoring",
+        "- Instant Notifications",
+        "",
+        `Support: ${serverUrl || 'http://localhost:5000'}/portal`,
+      ].join("\n");
+
+      // Create ZIP archive
+      const archive = archiver("zip", { zlib: { level: 9 } });
+      
+      res.setHeader("Content-Type", "application/zip");
+      res.setHeader("Content-Disposition", "attachment; filename=\"DigeratiExpertsAgent-Setup.zip\"");
+
+      archive.on("error", (err) => {
+        console.error("Archive error:", err);
+        res.status(500).json({ message: "Failed to generate installer" });
+      });
+
+      archive.pipe(res);
+      archive.append(psScript, { name: "install.ps1" });
+      archive.append(batchScript, { name: "install.bat" });
+      archive.append(readme, { name: "README.txt" });
+      await archive.finalize();
+
+    } catch (error: any) {
+      console.error("Agent download error:", error);
+      res.status(500).json({ message: error.message || "Failed to generate installer" });
     }
   });
 
