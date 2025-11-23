@@ -49,6 +49,7 @@ const PortalSatisfactionSurvey = lazy(() => import("@/pages/portal/PortalSatisfa
 const PortalApprovals = lazy(() => import("@/pages/portal/PortalApprovals"));
 const AdminImportPage = lazy(() => import("@/pages/portal/AdminImport").then(m => ({ default: m.AdminImport })));
 const AdminAgentsPage = lazy(() => import("@/pages/portal/AdminAgents").then(m => ({ default: m.AdminAgents })));
+const AdminOpenAIPage = lazy(() => import("@/pages/portal/AdminOpenAI").then(m => ({ default: m.AdminOpenAI })));
 
 import { servicePageData, industryPageData, resourcePageData, supportPageData } from "@/pages/routes/servicePages";
 
@@ -321,6 +322,11 @@ function Router() {
       <Route path="/portal/admin/agents" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <AdminAgentsPage />
+        </Suspense>
+      )} />
+      <Route path="/portal/admin/openai" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <AdminOpenAIPage />
         </Suspense>
       )} />
       

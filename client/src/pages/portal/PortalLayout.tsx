@@ -31,6 +31,7 @@ const navItems = [
 const adminItems = [
   { href: "/portal/admin/import", label: "Data Import", icon: Upload },
   { href: "/portal/admin/agents", label: "Manage Agents", icon: Users },
+  { href: "/portal/admin/openai", label: "OpenAI Billing", icon: Settings },
 ];
 
 export function PortalLayout({ children, title }: PortalLayoutProps) {
