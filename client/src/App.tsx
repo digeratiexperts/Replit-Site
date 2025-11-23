@@ -8,6 +8,7 @@ import { lazy, Suspense } from "react";
 
 import { DigeratiHomepage } from "@/pages/DigeratiHomepage";
 
+const SolutionsIndex = lazy(() => import("@/pages/solutions/SolutionsIndex"));
 const ManagedITSupport = lazy(() => import("@/pages/solutions/ManagedITSupport"));
 const Healthcare = lazy(() => import("@/pages/industries/Healthcare"));
 const CaseStudies = lazy(() => import("@/pages/resources/CaseStudies"));
@@ -35,29 +36,14 @@ function Router() {
       <Route path="/" component={DigeratiHomepage} />
       
       {/* Solutions Pages */}
+      <Route path="/solutions" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <SolutionsIndex />
+        </Suspense>
+      )} />
       <Route path="/solutions/managed-it-support" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <ManagedITSupport />
-        </Suspense>
-      )} />
-      <Route path="/solutions/office-package" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
-          <GenericServicePage 
-            title="Office Package"
-            subtitle="Complete IT management for small offices"
-            description="Our Office Package provides comprehensive IT support and management for small businesses. Get enterprise-level IT without the enterprise cost."
-            features={[
-              { title: "Help Desk Support", description: "Unlimited support tickets with 15-minute response time" },
-              { title: "Proactive Monitoring", description: "24/7 monitoring of your critical systems" },
-              { title: "Regular Maintenance", description: "Scheduled updates and preventive maintenance" }
-            ]}
-            benefits={[
-              "Predictable monthly costs",
-              "No IT staff needed",
-              "Expert support when you need it",
-              "Regular system maintenance"
-            ]}
-          />
         </Suspense>
       )} />
       {Object.entries(servicePageData).map(([key, data]) => (

@@ -39,6 +39,12 @@ export function MegaMenu() {
       name: 'Solutions',
       sections: [
         {
+          title: 'Overview',
+          items: [
+            { title: 'All Solutions', description: 'Browse all available solutions', icon: <Server className="h-5 w-5" />, url: '/solutions', badge: 'View All' },
+          ]
+        },
+        {
           title: 'ProActive Ecosystem',
           items: [
             { title: 'Office Package', description: 'Complete IT management for small offices', icon: <Server className="h-5 w-5" />, url: '/solutions/office-package' },

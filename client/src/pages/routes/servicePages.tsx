@@ -1,92 +1,163 @@
 export const servicePageData = {
-  'managed-workplace': {
-    title: "Managed Workplace",
-    subtitle: "End-to-end workplace technology management",
-    description: "Transform your workplace with comprehensive technology management that ensures every employee has the tools they need to be productive and secure.",
+  'office-package': {
+    title: "Office Package",
+    subtitle: "End-to-end IT management for small offices",
+    description: "Complete IT management designed for small offices that need reliability without hiring internal IT. We handle systems, devices, updates, security, backups, and day-to-day support so your team stays productive. This package removes the burden of managing technology and gives your office dependable performance, reduced downtime, and predictable monthly costs.",
     features: [
-      { title: "Device Management", description: "Centralized management of all workplace devices and endpoints" },
-      { title: "Software Deployment", description: "Automated software distribution and updates" },
-      { title: "User Support", description: "Comprehensive end-user support and training" }
+      { title: "Managed Helpdesk", description: "Full-service IT support with clear response and resolution pathways" },
+      { title: "Continuous Maintenance", description: "Updates, patching, hardening, and proactive system optimization" },
+      { title: "Security Best Practices", description: "Managed protection across devices, email, and cloud applications" },
+      { title: "Identity-Based Access", description: "Centralized identity and access management for users and apps" },
+      { title: "Baseline Backups", description: "Regular backups with health checks and basic restore testing" }
     ],
     benefits: [
-      "Streamlined device deployment",
-      "Consistent user experience",
-      "Reduced IT overhead",
-      "Improved employee productivity",
-      "Enhanced security posture"
-    ]
+      "Predictable monthly costs",
+      "No internal IT staff needed",
+      "Reduced downtime and security incidents",
+      "Environment documentation and standardization",
+      "Vendor coordination handled for you",
+      "Monthly service summaries included"
+    ],
+    gradientColors: "from-blue-600 via-purple-600 to-indigo-600"
+  },
+  'managed-workplace': {
+    title: "Managed Workplace",
+    subtitle: "Complete employee digital experience management",
+    description: "We manage the entire employee digital experience: identity, apps, devices, communication, and lifecycle automation. Every employee becomes productive faster with standardized, secure tools—and you maintain consistent control across your entire organization.",
+    features: [
+      { title: "Centralized Identity & Access", description: "Single identity lifecycle with role-based access and provisioning" },
+      { title: "Business App Management", description: "Licensing, provisioning, and access control for all business applications" },
+      { title: "Device & Mobile Management", description: "Standardized devices and mobile endpoints that meet security baselines" },
+      { title: "Communications Management", description: "Unified email, collaboration, voice, and meeting room technology" },
+      { title: "Lifecycle Automation", description: "Smooth onboarding and offboarding with HR alignment" }
+    ],
+    benefits: [
+      "New hires productive in one day, not a week",
+      "Consistent access control across all tools",
+      "Hybrid and remote work made seamless",
+      "Reduced license waste and software sprawl",
+      "Secure standardized environment",
+      "Automated user lifecycle workflows"
+    ],
+    gradientColors: "from-emerald-600 via-teal-600 to-cyan-600"
   },
   'cloud-backup': {
     title: "Cloud Backup",
-    subtitle: "Secure cloud backup and recovery",
-    description: "Protect your critical business data with enterprise-grade cloud backup solutions. Automated, encrypted, and always available when you need it.",
+    subtitle: "Baseline data protection and recovery",
+    description: "Secure cloud-based backup for laptops, servers, and business-critical data. Automated protection, continuous monitoring, and verified recovery ensure your information is never lost. Gain resilience against accidental deletion, hardware failure, and cyberattacks like ransomware.",
     features: [
-      { title: "Automated Backups", description: "Set it and forget it - daily automated backups" },
-      { title: "Encrypted Storage", description: "Military-grade encryption for data at rest and in transit" },
-      { title: "Fast Recovery", description: "Quick file and system recovery when you need it" }
+      { title: "Automated Encrypted Backups", description: "Continuous backup of endpoints, servers, and cloud data with encryption" },
+      { title: "Health Monitoring", description: "Automated monitoring with alerts when backup issues need attention" },
+      { title: "Verified Recovery Testing", description: "Regular restore verification to confirm backups actually work" },
+      { title: "Exception Reporting", description: "Clear reporting on backup health and any issues requiring attention" }
     ],
     benefits: [
-      "Protection from ransomware",
-      "Disaster recovery ready",
-      "Compliance documentation",
-      "Unlimited storage",
-      "Point-in-time recovery"
+      "Protection from ransomware and data loss",
+      "Accidental deletion recovery",
+      "Hardware failure protection",
+      "Backup health visibility",
+      "Monthly restore verification",
+      "Peace of mind with tested backups"
     ],
     gradientColors: "from-blue-600 via-cyan-600 to-teal-600"
   },
   'security-awareness': {
     title: "Security Awareness Training",
-    subtitle: "Employee security training programs",
-    description: "Your employees are your first line of defense. Our comprehensive security awareness training turns your team into a human firewall.",
+    subtitle: "Human risk reduction through training",
+    description: "Your employees are your first line of defense. We train and test your team so people stop being the weakest link. Ongoing campaigns, phishing simulations, and targeted coaching create a security-aware culture.",
     features: [
-      { title: "Phishing Simulations", description: "Regular simulated phishing campaigns to test awareness" },
-      { title: "Interactive Training", description: "Engaging video content and interactive modules" },
-      { title: "Progress Tracking", description: "Detailed reporting on training completion and effectiveness" }
+      { title: "Targeted Training Campaigns", description: "Ongoing training tailored to real threats your organization faces" },
+      { title: "Phishing Simulations", description: "Regular simulated phishing with coaching to improve security behavior" },
+      { title: "Security Culture Metrics", description: "Track awareness trends and identify teams needing additional support" },
+      { title: "Leadership Reporting", description: "Executive reporting on security culture and employee readiness" }
     ],
     benefits: [
-      "Reduced security incidents",
-      "Compliance training documentation",
-      "Quarterly training updates",
-      "Custom training campaigns",
-      "Management dashboards"
+      "Reduced phishing and social engineering incidents",
+      "Improved employee security behavior",
+      "Stronger security culture organization-wide",
+      "Compliance documentation for training",
+      "Measurable risk reduction",
+      "Targeted coaching for high-risk groups"
     ],
     gradientColors: "from-amber-600 via-orange-600 to-red-600"
   },
   'co-managed-it': {
     title: "Co-Managed IT",
-    subtitle: "Augment your existing IT team",
-    description: "Already have IT staff? We partner with your team to fill skill gaps, provide 24/7 coverage, and bring specialized expertise where you need it most.",
+    subtitle: "Extend your internal IT team with expertise",
+    description: "Already have IT staff? We partner with your team to fill skill gaps, provide 24/7 coverage, and bring specialized expertise where you need it most. Avoid burnout and tap into deep security and infrastructure knowledge.",
     features: [
-      { title: "Flexible Support Model", description: "Customize the level of support based on your needs" },
-      { title: "24/7 Monitoring", description: "Round-the-clock monitoring and alerting" },
-      { title: "Specialized Expertise", description: "Access to security, compliance, and infrastructure experts" }
+      { title: "Flexible Support Model", description: "Customize the level of support and coverage based on your priorities" },
+      { title: "24/7 Monitoring & Response", description: "Round-the-clock monitoring and alerting with rapid incident response" },
+      { title: "Specialized Expertise", description: "Access to security, compliance, infrastructure, and strategy specialists" },
+      { title: "Proactive Maintenance", description: "Scheduled maintenance, updates, and hardening delivered by expert teams" }
     ],
     benefits: [
-      "Fill skill gaps",
-      "Extended coverage hours",
-      "Cost-effective scalability",
-      "Reduced burnout",
-      "Strategic IT planning"
+      "Fill critical skill gaps quickly",
+      "Extended coverage beyond your current staff",
+      "Reduced IT team burnout",
+      "Cost-effective expertise scaling",
+      "Strategic IT planning support"
     ],
     gradientColors: "from-purple-700 via-violet-700 to-indigo-700"
   },
   'threat-detection': {
     title: "Threat Detection & Response",
-    subtitle: "24/7 monitoring and incident response",
-    description: "Advanced threat detection and rapid incident response to protect your business from cyber attacks 24/7/365.",
+    subtitle: "24/7 security monitoring and incident response",
+    description: "Advanced threat detection and rapid incident response to protect your business from cyber attacks 24/7/365. Our Security Operations Center monitors for threats continuously, and our experts respond immediately to any suspicious activity.",
     features: [
-      { title: "24/7 SOC Monitoring", description: "Security Operations Center monitoring around the clock" },
-      { title: "Advanced EDR", description: "Endpoint Detection and Response on all devices" },
-      { title: "Incident Response", description: "Rapid response to security incidents" }
+      { title: "24/7 SOC Monitoring", description: "Security Operations Center monitoring your environment around the clock" },
+      { title: "Advanced Endpoint Detection", description: "Sophisticated detection of threats and suspicious behavior on all devices" },
+      { title: "Rapid Incident Response", description: "Expert response team ready to investigate and contain threats immediately" },
+      { title: "Threat Intelligence Integration", description: "Latest threat intelligence feeds inform our detection strategies" }
     ],
     benefits: [
-      "Real-time threat detection",
-      "Automated response actions",
-      "Forensic investigation",
-      "Threat intelligence",
-      "Compliance reporting"
+      "Real-time threat detection and alerting",
+      "Minutes-to-respond incident response",
+      "Forensic investigation and root cause analysis",
+      "Automated threat containment",
+      "Compliance and evidence reporting"
     ],
     gradientColors: "from-red-700 via-rose-700 to-pink-700"
+  },
+  'backup-disaster-recovery': {
+    title: "Backup & Disaster Recovery",
+    subtitle: "Guaranteed recovery with tested targets",
+    description: "Move beyond baseline backup to enterprise-grade disaster recovery. Guaranteed Recovery Time Objectives (RTO) and Recovery Point Objectives (RPO) with tested failover ensure you can restore your entire business fast.",
+    features: [
+      { title: "Guaranteed RTO/RPO", description: "Committed recovery time and data loss targets backed by SLA" },
+      { title: "Tested Failover Plans", description: "Regular disaster recovery drills to confirm your systems can be restored" },
+      { title: "Multi-Site Redundancy", description: "Geographic redundancy and replication for maximum availability" },
+      { title: "Business Continuity Planning", description: "Expert guidance on recovery procedures and business continuity" }
+    ],
+    benefits: [
+      "Restore your business, not just your data",
+      "Predictable recovery with guaranteed targets",
+      "Tested and verified recovery procedures",
+      "Reduced downtime and business impact",
+      "Compliance-ready documentation",
+      "Peace of mind with proven recovery capabilities"
+    ],
+    gradientColors: "from-cyan-600 via-blue-600 to-indigo-600"
+  },
+  'security-operations': {
+    title: "Security Operations",
+    subtitle: "Comprehensive security posture management",
+    description: "Go beyond detection to comprehensive security operations. Continuous vulnerability management, security configuration, hardening, and proactive threat hunting keep your environment secure and compliant.",
+    features: [
+      { title: "Vulnerability Management", description: "Continuous scanning, prioritization, and remediation of security vulnerabilities" },
+      { title: "Security Configuration", description: "Standards-based hardening and configuration across all systems" },
+      { title: "Threat Hunting", description: "Proactive investigation for advanced threats and suspicious patterns" },
+      { title: "Security Posture Reporting", description: "Executive reporting on your security maturity and risk trends" }
+    ],
+    benefits: [
+      "Reduced vulnerability window",
+      "Consistent security standards",
+      "Advanced threat discovery",
+      "Measurable security improvements",
+      "Executive visibility on risk",
+      "Compliance evidence and documentation"
+    ],
+    gradientColors: "from-purple-600 via-indigo-600 to-blue-600"
   }
 };
 
