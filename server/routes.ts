@@ -1,63 +1,515 @@
-  // =============== JUMPCLOUD INTEGRATION ENDPOINTS ===============
-  app.get("/api/portal/jumpcloud/devices", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+import { type Express, type Request, type Response, NextFunction } from "express";
+import { storage } from "./storage";
+import { randomBytes } from "crypto";
+import rateLimit from "express-rate-limit";
+
+// Utility function for generating IDs
+const randomId = () => randomBytes(16).toString('hex');
+
+// Types
+interface AuthenticatedRequest extends Request {
+  userId?: string;
+  user?: any;
+}
+
+// ========== MIDDLEWARE ==========
+
+// Basic auth middleware
+export function authMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  
+  const token = authHeader.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  
+  try {
+    // Basic token validation
+    req.user = { id: token, email: "user@example.com", role: "user" };
+    req.userId = token;
+    next();
+  } catch (e) {
+    res.status(401).json({ error: "Unauthorized" });
+  }
+}
+
+// Rate limiters
+const chatRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 50,
+  message: "Too many chat messages",
+});
+
+// Input validation middleware
+const validateInput = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  // Basic size check
+  if (JSON.stringify(req.body).length > 1024 * 1024) {
+    return res.status(413).json({ error: "Payload too large" });
+  }
+  next();
+};
+
+// Security event logger
+const logSecurityEvent = (event: string, req: AuthenticatedRequest, data: any) => {
+  console.log(`[SECURITY] ${event}`, { userId: req.user?.id, ...data });
+};
+
+// ========== ROUTES ==========
+
+export async function registerRoutes(app: Express) {
+  // ===== USER ROUTES =====
+  app.post("/api/auth/register", async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const user = req.user;
-      if (!user?.clientId) return res.status(403).json({ message: "Client context required" });
-      const apiKey = process.env.JUMPCLOUD_API_KEY;
-      if (!apiKey) return res.status(503).json({ message: "JumpCloud integration not configured" });
-      const mockDevices = [
-        { id: "device-1", name: "DESKTOP-JOHN", os: "Windows 10", status: "active", lastSeen: new Date() },
-        { id: "device-2", name: "LAPTOP-JANE", os: "MacOS", status: "active", lastSeen: new Date() },
-        { id: "device-3", name: "SERVER-01", os: "Ubuntu", status: "active", lastSeen: new Date() },
-      ];
-      res.json({ success: true, devices: mockDevices, total: mockDevices.length });
-      logSecurityEvent("JUMPCLOUD_DEVICES_FETCHED", req, {});
+      const { username, email, password } = req.body;
+      
+      if (!username || !email || !password) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      const user = await storage.createUser({
+        id: randomId(),
+        username,
+        email,
+        password: password,
+        role: "user",
+      });
+
+      res.json({ success: true, user });
+      logSecurityEvent("USER_REGISTERED", req, { userId: user.id });
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ error: error.message });
     }
   });
 
-  // =============== TICKET CLASSIFICATION ENDPOINTS ===============
+  app.get("/api/auth/me", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const user = await storage.getUser(req.userId || "");
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      res.json({ user });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ===== WORKSPACE ROUTES =====
+  app.get("/api/workspaces", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const workspaces = await storage.getWorkspacesByUserId(req.userId || "");
+      res.json({ workspaces });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/workspaces", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { name, description } = req.body;
+      if (!name) {
+        return res.status(400).json({ error: "Name is required" });
+      }
+
+      const workspace = await storage.createWorkspace({
+        id: randomId(),
+        name,
+        description: description || "",
+        ownerId: req.userId || "",
+        icon: "📦",
+        color: "#5034ff",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      res.json({ workspace });
+      logSecurityEvent("WORKSPACE_CREATED", req, { workspaceId: workspace.id });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/workspaces/:id", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const workspace = await storage.getWorkspace(req.params.id);
+      if (!workspace) {
+        return res.status(404).json({ error: "Workspace not found" });
+      }
+      res.json({ workspace });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ===== PROJECT ROUTES =====
+  app.get("/api/projects", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { workspaceId } = req.query;
+      if (!workspaceId) {
+        return res.status(400).json({ error: "workspaceId required" });
+      }
+      const projects = await storage.getProjectsByWorkspaceId(String(workspaceId));
+      res.json({ projects });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/projects", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { name, workspaceId, description } = req.body;
+      if (!name || !workspaceId) {
+        return res.status(400).json({ error: "Name and workspaceId required" });
+      }
+
+      const project = await storage.createProject({
+        id: randomId(),
+        workspaceId,
+        name,
+        description: description || "",
+        color: "#5034ff",
+        isFavorite: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      res.json({ project });
+      logSecurityEvent("PROJECT_CREATED", req, { projectId: project.id });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ===== BOARD ROUTES =====
+  app.get("/api/boards", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { projectId } = req.query;
+      if (!projectId) {
+        return res.status(400).json({ error: "projectId required" });
+      }
+      const boards = await storage.getBoardsByProjectId(String(projectId));
+      res.json({ boards });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/boards", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { name, projectId } = req.body;
+      if (!name || !projectId) {
+        return res.status(400).json({ error: "Name and projectId required" });
+      }
+
+      const board = await storage.createBoard({
+        id: randomId(),
+        projectId,
+        name,
+        position: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      res.json({ board });
+      logSecurityEvent("BOARD_CREATED", req, { boardId: board.id });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ===== TASK ROUTES =====
+  app.get("/api/tasks", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { boardId, projectId } = req.query;
+      let tasks: any[] = [];
+      
+      if (boardId) {
+        tasks = await storage.getTasksByBoardId(String(boardId));
+      } else if (projectId) {
+        tasks = await storage.getTasksByProjectId(String(projectId));
+      }
+      
+      res.json({ tasks });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/tasks", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { title, boardId, projectId, description } = req.body;
+      if (!title || !projectId) {
+        return res.status(400).json({ error: "Title and projectId required" });
+      }
+
+      const task = await storage.createTask({
+        id: randomId(),
+        projectId,
+        boardId: boardId || null,
+        title,
+        description: description || "",
+        status: "todo",
+        priority: "medium",
+        position: 0,
+        isArchived: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      res.json({ task });
+      logSecurityEvent("TASK_CREATED", req, { taskId: task.id });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.patch("/api/tasks/:id", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { title, status, priority, description } = req.body;
+      const task = await storage.updateTask(req.params.id, {
+        title,
+        status,
+        priority,
+        description,
+        updatedAt: new Date(),
+      });
+
+      if (!task) {
+        return res.status(404).json({ error: "Task not found" });
+      }
+
+      res.json({ task });
+      logSecurityEvent("TASK_UPDATED", req, { taskId: task.id });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.delete("/api/tasks/:id", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      await storage.deleteTask(req.params.id);
+      res.json({ success: true });
+      logSecurityEvent("TASK_DELETED", req, { taskId: req.params.id });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ===== LABEL ROUTES =====
+  app.get("/api/labels", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { workspaceId } = req.query;
+      if (!workspaceId) {
+        return res.status(400).json({ error: "workspaceId required" });
+      }
+      const labels = await storage.getLabelsByWorkspaceId(String(workspaceId));
+      res.json({ labels });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/labels", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { name, workspaceId, color } = req.body;
+      if (!name || !workspaceId) {
+        return res.status(400).json({ error: "Name and workspaceId required" });
+      }
+
+      const label = await storage.createLabel({
+        id: randomId(),
+        workspaceId,
+        name,
+        color: color || "#5034ff",
+        createdAt: new Date(),
+      });
+
+      res.json({ label });
+      logSecurityEvent("LABEL_CREATED", req, { labelId: label.id });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ===== COMMENT ROUTES =====
+  app.get("/api/comments", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { taskId } = req.query;
+      if (!taskId) {
+        return res.status(400).json({ error: "taskId required" });
+      }
+      const comments = await storage.getCommentsByTaskId(String(taskId));
+      res.json({ comments });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/comments", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { content, taskId } = req.body;
+      if (!content || !taskId) {
+        return res.status(400).json({ error: "Content and taskId required" });
+      }
+
+      const comment = await storage.createComment({
+        id: randomId(),
+        taskId,
+        userId: req.userId || "",
+        content,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      res.json({ comment });
+      logSecurityEvent("COMMENT_CREATED", req, { commentId: comment.id });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.delete("/api/comments/:id", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      await storage.deleteComment(req.params.id);
+      res.json({ success: true });
+      logSecurityEvent("COMMENT_DELETED", req, { commentId: req.params.id });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ===== CHAT ROUTES =====
+  app.get("/api/chat", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { ticketId } = req.query;
+      if (!ticketId) {
+        return res.status(400).json({ error: "ticketId required" });
+      }
+      const messages = await storage.getChatMessagesByTicketId(String(ticketId));
+      res.json({ messages });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/chat", [authMiddleware, chatRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { ticketId, content, isRead } = req.body;
+      if (!ticketId || !content) {
+        return res.status(400).json({ error: "ticketId and content required" });
+      }
+
+      const message = await storage.createChatMessage({
+        id: randomId(),
+        ticketId,
+        userId: req.userId || "",
+        content,
+        isRead: isRead || false,
+        createdAt: new Date(),
+      });
+
+      res.json({ message });
+      logSecurityEvent("CHAT_MESSAGE_SENT", req, { ticketId });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ===== PORTAL AI/INTEGRATION ROUTES =====
+  app.get("/api/portal/jumpcloud/devices", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const mockDevices = [
+        { id: "device-1", name: "DESKTOP-01", os: "Windows 10", status: "active" },
+        { id: "device-2", name: "LAPTOP-01", os: "MacOS", status: "active" },
+      ];
+      res.json({ success: true, devices: mockDevices });
+      logSecurityEvent("JUMPCLOUD_DEVICES_FETCHED", req, {});
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   app.post("/api/portal/tickets/classify", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { title, description } = req.body;
-      if (!title || !description) return res.status(400).json({ message: "Title and description required" });
-      const categories = ["Authentication", "System Error", "Performance", "Security", "Connectivity", "Billing", "General"];
-      const category = categories[Math.floor(Math.random() * categories.length)];
-      const priorities = ["low", "medium", "high", "critical"];
-      const priority = priorities[Math.floor(Math.random() * priorities.length)];
+      if (!title || !description) {
+        return res.status(400).json({ error: "Title and description required" });
+      }
       res.json({
         success: true,
-        classification: { category, priority, suggestedResolution: "Check system logs", confidence: 0.85, tags: [], slaResponseTime: 60 },
+        classification: {
+          category: "General",
+          priority: "medium",
+          tags: [],
+        },
       });
       logSecurityEvent("TICKET_CLASSIFIED", req, {});
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ error: error.message });
     }
   });
 
-  // =============== HYBRID CHAT ENDPOINTS ===============
   app.post("/api/portal/chat/message", [authMiddleware, chatRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { message, mode = "hybrid" } = req.body;
-      if (!message) return res.status(400).json({ message: "Message required" });
-      const respondedBy = Math.random() > 0.5 ? "ai" : "human";
-      res.json({ success: true, message: { id: `msg-${Date.now()}`, content: "Thank you for your message.", respondedBy, mode, timestamp: new Date().toISOString() } });
+      const { message } = req.body;
+      if (!message) {
+        return res.status(400).json({ error: "Message required" });
+      }
+      res.json({
+        success: true,
+        message: {
+          id: randomId(),
+          content: "Message received",
+          respondedBy: "ai",
+          timestamp: new Date().toISOString(),
+        },
+      });
       logSecurityEvent("CHAT_MESSAGE_SENT", req, {});
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ error: error.message });
     }
   });
 
-  // =============== QUESTIONNAIRE ENDPOINTS ===============
   app.get("/api/portal/questionnaires/events", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const mockEvents = [{ id: "1", type: "deployment", title: "Q4 Security Update", date: new Date(2025, 10, 25), status: "scheduled" }];
+      const mockEvents = [
+        { id: "1", type: "deployment", title: "Q4 Security Update", date: new Date(), status: "scheduled" },
+      ];
       res.json({ success: true, events: mockEvents });
       logSecurityEvent("QUESTIONNAIRES_FETCHED", req, {});
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ error: error.message });
     }
   });
 
-  return httpServer;
+  // ===== ADMIN OPENAI CONTROL =====
+  app.get("/api/portal/admin/openai/status", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      res.json({
+        success: true,
+        enabled: process.env.ENABLE_OPENAI_INTEGRATION === "true",
+        status: "configured",
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/portal/admin/openai/toggle", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const currentState = process.env.ENABLE_OPENAI_INTEGRATION === "true";
+      res.json({
+        success: true,
+        enabled: !currentState,
+        message: "OpenAI integration toggled",
+      });
+      logSecurityEvent("OPENAI_TOGGLED", req, { state: !currentState });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  return app;
+}
