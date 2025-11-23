@@ -1,232 +1,52 @@
 # Digerati Experts - Managed Security Service Provider (MSP/MSSP) Website
 
 ## Overview
-Digerati Experts is a modern, fully responsive website for a Managed Security Service Provider (MSP/MSSP) based in Chandler, Arizona. Built with React, TypeScript, and Tailwind CSS, the site features cybersecurity-focused messaging including "Hackers Don't Wait. Protect Your Business Now" as the hero headline, showcasing managed IT and security services with a professional purple gradient design.
+Digerati Experts is a modern, fully responsive website for a Managed Security Service Provider (MSP/MSSP) based in Chandler, Arizona. The site focuses on cybersecurity messaging ("Hackers Don't Wait. Protect Your Business Now"), showcasing managed IT and security services with a professional purple gradient design. It includes comprehensive service offerings, multi-payment system integration (Stripe, Zelle, Zoho), dynamic solutions pages, and a complete design system for a modern SaaS aesthetic. The project aims to convert visitors into clients by emphasizing 24/7 protection, compliance assurance, and local expertise for small to medium businesses in Arizona.
 
-## Recent Changes (November 2025)
-- **Major Pivot**: Transformed from generic digital agency to MSP/MSSP cybersecurity-focused website
-- Updated all content to reflect managed security services and IT support offerings
-- Added Chandler, Arizona location with updated phone number 325-480-9870
-- Implemented "Hackers Don't Wait. Protect Your Business Now" hero messaging
-- Created comprehensive services sections: Managed Security, Managed IT, Compliance & Governance
-- Added security-focused statistics and value propositions throughout
-- Updated testimonials to reflect Arizona business clients
-- Added pricing tiers: Basic IT ($165/user), Advanced Security ($245/user), Enterprise ($345/user)
-- Added emergency support hotline and 24/7 SOC monitoring emphasis
-- **Solutions Pages Implementation (November 23, 2025) - Complete**:
-  - **Canonical Alignment**: Updated all 11 solution pages with complete content from Digerati Experts' canonical business definitions (ProActive-first, security baseline, quadrant positioning, exclusions, deliverables, tool stack references)
-  - **All 11 Service Pages Now Available**:
-    - **ProActive Ecosystem**:
-      - Office Package: Complete IT ownership for small offices (5-25 users) with helpdesk, security baseline, IAM, backup
-      - Managed IT Support: Fast help anchored to the DE stack with service desk and endpoint remediation
-      - Managed Workplace: Digital employee lifecycle (identity, apps, devices, communications, automation)
-      - Cloud Backup: Baseline data protection with verified recovery (MSP360, Wasabi, monthly restore tests)
-      - Security Awareness: Human-risk hardening through training and phishing simulations
-    - **Business Solutions**:
-      - Co-Managed IT: Augment internal IT teams with DE expertise, 24/7 coverage, and Tier 2/3 escalation
-      - Threat Detection & Response: 24/7 SOC monitoring with detection, triage, containment, and guided recovery
-      - Security Operations: Full SOC-as-a-Service with threat hunting, policy tuning, and log correlation
-      - Backup & Disaster Recovery: Enterprise-grade with guaranteed RTO/RPO, tested failover, and DR runbooks
-    - **Enterprise**:
-      - vCIO & Strategy: Executive IT leadership with TBRs, risk registers, budget forecasting, and compliance planning
-      - Data Encryption & Control: Browser-layer DLP (Atakama) with anti-phishing, DNS filtering, and data activity insights
-      - Compliance & Risk Reports: Audit-ready framework mapping (HIPAA/GDPR/FTC), evidence retention, and compliance reporting
-      - Unified Security Posture: Comprehensive managed security with integrated IAM, endpoint, cloud, email, and network controls
-  - **Solutions Listing Page**: Created `/solutions` page with all solutions displayed in grid format with ProActive Philosophy section
-  - **MegaMenu Navigation**: Restored original structure with 3-column layout; added "View All" button in bottom right corner linking to full solutions page
-  - **Dynamic Routing**: App.tsx automatically creates routes for all solutions via `servicePageData` mapping—scalable and maintainable
-  - **Enhanced Design**: Each solution page includes title, subtitle, detailed description, feature breakdown (6 per page), benefits list, and gradient color scheme
-- **Latest Updates (November 2025)**:
-  - Implemented comprehensive mega menu navigation system with dropdown sections
-  - Added actual Digerati Experts company logo (webp format) to replace text branding in header and footer
-  - Created multi-level navigation structure matching live site at digerati-experts.com
-  - **Two-tier navigation system**: 
-    - Top utility bar (40px) with phone 325-480-9870 and Client Portal link
-    - Main navigation bar (80px → 64px on scroll) with logo, menu items, and CTA
-    - Utility bar disappears on scroll, giving menu items generous spacing
-    - Logo scales from 48px → 32px for optimal viewing
-  - Preserved "Get Protected Now" CTA button and Client Portal link
-  - Added interactive calculators (downtime cost and service estimator)
-  - Implemented testimonial carousel with navigation
-  - Added 7 new website sections including Industries We Serve, FAQ, Free Pen Test offer
-  - **Complete Design System Implementation**: Converted from dark theme to modern light SaaS style
-    - Created centralized design system (`client/src/lib/designSystem.ts`) with consistent tokens
-    - All sections now use light backgrounds (white, gray-50) alternating for visual rhythm
-    - Standardized typography: gray-900 headings, gray-600 body text with consistent sizing
-    - Unified card components: white backgrounds, gray-200 borders, purple-300 hover borders
-    - Service cards: rounded icons with purple-blue gradient backgrounds, consistent padding
-    - Maintained purple-600/blue-600 gradients for CTAs and interactive elements
-    - Consistent spacing system: py-16 md:py-20 lg:py-24 for sections, gap-6 md:gap-8 for grids
-    - Professional hover effects: shadow-xl, -translate-y-1, scale-110 for icons
-  - **SEO & Meta Optimization**:
-    - Added comprehensive SEO meta tags (title, description, keywords)
-    - Implemented Open Graph tags for Facebook/social media sharing
-    - Added Twitter card meta tags
-    - Configured favicon support (requires actual favicon files to be added)
-    - Updated page title to reflect MSP/MSSP focus and Chandler, AZ location
+## User Preferences
+Not specified. The agent should infer preferences from the project's structure and goals.
 
-## Business Information
+## System Architecture
 
-### Company Details
-- **Company Name**: Digerati Experts
-- **Type**: Managed Security Service Provider (MSP/MSSP)
-- **Location**: 3165 S Alma School Rd Suite 29, Chandler, AZ 85248
-- **Phone**: 325-480-9870
-- **Email**: info@digerati-experts.com
-- **Domain**: digerati-experts.com
-- **Office Hours**: Monday-Friday 7:00 AM - 6:00 PM MST
-- **24/7 Security Operations Center**: Always Active
+### UI/UX Decisions
+The website implements a modern, light SaaS design system with consistent tokens, typography, and spacing. It features purple-blue gradients for CTAs and interactive elements. A two-tier navigation system includes a top utility bar and a main navigation bar with a scaling logo and menu items that adjust on scroll. The design is fully responsive with a mobile-first approach, using professional typography and security-focused iconography.
 
-### Core Services
+### Technical Implementations
+**Frontend**: Built with React 18 and TypeScript, utilizing Wouter for hash-based routing, shadcn/ui with Radix UI primitives for components, and Lucide React for icons. Styling is managed with Tailwind CSS.
+**Backend**: Features an Express.js server with TypeScript.
+**Payment System**: Implements Stripe Checkout, Zelle QR codes, and a future-ready Zoho Payments architecture. Stripe integration uses a Replit connector with `stripe-replit-sync` for automatic webhook management and PostgreSQL schema creation.
+**Solutions Pages**: Dynamically generated from `servicePageData` in App.tsx, ensuring scalability and maintainability for the 11 detailed service pages.
+**Navigation**: A comprehensive mega menu navigation system provides multi-level access to solutions, industries, resources, and company information.
+**SEO & Meta Optimization**: Includes comprehensive SEO meta tags (title, description, keywords), Open Graph, and Twitter card meta tags.
 
-#### Managed Security Services
-- SOC-as-a-Service
-- Endpoint Detection & Response
-- Vulnerability Management
-- Incident Response
-- 24/7 Security Monitoring
+### Feature Specifications
+- **Mega Menu Navigation**: Solutions (ProActive Ecosystem, Business Solutions, Enterprise tiers), Industries, Resources, About sections, with a "Get Protected Now" CTA and Client Portal link.
+- **Hero Section**: Cybersecurity messaging with a free assessment form.
+- **Alert Banner**: For critical security alerts.
+- **Services Section**: Six core security services.
+- **How We Protect Your Business**: A 4-step process visualization.
+- **Interactive Calculators**: Downtime cost and service pricing estimators.
+- **Industries We Serve**: Targeted industry solutions.
+- **Pricing**: Three-tier transparent pricing model.
+- **Testimonials**: Client reviews carousel.
+- **FAQ Section**: Expandable questions and answers.
+- **Free Pen Test Offer**: $20,000 value security assessment.
+- **Contact**: Comprehensive contact form with office location.
+- **Footer**: Industry links, resources, and emergency hotline.
 
-#### Managed IT Services
-- Network Management
-- Help Desk Support
-- Cloud Migration
-- Backup & Disaster Recovery
+### System Design Choices
+The project prioritizes a modular structure with `client/` and `server/` directories. UUIDs are used for IDs to ensure scalability. The system includes robust security features for payment processing, such as enterprise-grade encryption, webhook signature validation, and UUID-based routing.
 
-#### Compliance & Governance
-- HIPAA Compliance
-- PCI DSS Compliance
-- NIST Framework
-- Security Audits
-
-### Key Differentiators
-- **Local Presence**: Based in Chandler, serving Phoenix metropolitan area
-- **Rapid Response**: 15-minute response time for critical incidents
-- **Certifications**: Team holds CISSP, CCSP, CEH, and Security+ certifications
-- **Track Record**: 500+ Arizona businesses protected, 99.9% uptime, 0 breaches
-- **24/7 Protection**: Round-the-clock Security Operations Center
-
-## Project Architecture
-
-### Frontend
-- **Framework**: React 18 with TypeScript
-- **Routing**: Wouter with hash-based navigation for smooth scrolling
-- **UI Components**: shadcn/ui with Radix UI primitives
-- **Icons**: Lucide React for consistent iconography
-- **Styling**: Tailwind CSS with custom purple-blue gradients
-- **Layout**: Fully responsive design with mobile-first approach
-
-### Backend (Currently Minimal)
-- **Server**: Express.js with TypeScript
-- **Database**: PostgreSQL available (not actively used for the landing page)
-- **Build Tool**: Vite for fast development and optimized builds
-
-## Key Features
-
-### Website Sections
-1. **Mega Menu Navigation**: Comprehensive dropdown navigation with Solutions, Industries, Resources, About sections
-   - Solutions: ProActive Ecosystem (Office, Business, Enterprise tiers)
-   - Industries: Healthcare, Law Firms, Accounting, Real Estate, Nonprofits
-   - Resources: Case Studies, Blog, Videos, Tools (Calculators, Checklists)
-   - About: Company information and client-focused content
-   - Includes "Get Protected Now" CTA and Client Portal link
-2. **Hero Section**: Cybersecurity-focused messaging with free assessment form
-3. **Alert Banner**: Critical security alerts for Arizona businesses
-4. **Services**: Six core security services with icons and descriptions
-5. **How We Protect Your Business**: 4-step process visualization
-6. **Interactive Calculators**: Downtime cost and service pricing estimators
-7. **Industries We Serve**: Targeted industry solutions
-8. **Pricing**: Three-tier transparent pricing model ($165-$345/user)
-9. **Testimonials**: Carousel with navigation for client reviews
-10. **FAQ Section**: Expandable questions and answers
-11. **Free Pen Test Offer**: $20,000 value security assessment
-12. **Contact**: Comprehensive contact form with Chandler office location
-13. **Footer**: Industry links, resources, and emergency hotline
-
-### Design Features
-- **Modern Gradients**: Purple to blue gradient themes throughout
-- **Security Icons**: Shield, lock, and security-focused iconography
-- **Responsive Design**: Mobile-first approach with breakpoint optimization
-- **Professional Typography**: Clean, readable fonts with proper hierarchy
-- **Trust Indicators**: Certifications, statistics, and client testimonials
-- **Urgency Elements**: Alert banners and security statistics
-
-## Project Structure
-```
-├── client/
-│   ├── public/          # Static assets
-│   └── src/
-│       ├── components/  # Reusable UI components (shadcn/ui)
-│       ├── hooks/       # Custom React hooks
-│       ├── lib/         # Utilities (API client, WebSocket, query client)
-│       ├── pages/       # Page components
-│       │   ├── DigeratiHomepage.tsx  # Main MSP/MSSP website
-│       │   └── Homepage.tsx          # Legacy component (unused)
-│       └── App.tsx      # Main application component
-├── server/
-│   ├── index.ts         # Server entry point
-│   ├── routes.ts        # API routes (unused for landing page)
-│   ├── storage.ts       # Database operations (unused)
-│   ├── db.ts            # Database connection
-│   └── vite.ts          # Vite dev server integration
-├── shared/
-│   └── schema.ts        # Database schema (unused for landing page)
-└── package.json         # Dependencies and scripts
-```
-
-## Development Workflow
-
-### Running the Application
-```bash
-npm run dev          # Start development server (port 5000)
-npm run build        # Build for production
-npm start            # Start production server
-```
-
-### Database Management (Currently Unused)
-```bash
-npm run db:push      # Push schema changes to database
-npm run check        # TypeScript type checking
-```
-
-### Environment Variables
-The application uses the following environment variables (automatically configured in Replit):
-- `DATABASE_URL`: PostgreSQL connection string
-- `PORT`: Server port (default: 5000)
-- `NODE_ENV`: Environment mode (development/production)
-
-## Content Strategy
-
-### Target Audience
-- Small to medium businesses in Arizona
-- Companies needing HIPAA, PCI DSS compliance
-- Organizations concerned about ransomware and cyber threats
-- Businesses looking to reduce IT costs while improving security
-
-### Key Messaging
-- **Primary**: "Hackers Don't Wait. Protect Your Business Now"
-- **Value Props**: 24/7 protection, reduced cyber liability, compliance assurance
-- **Urgency**: Statistics about breach costs and frequency
-- **Trust**: Local presence, certifications, client testimonials
-
-### SEO Optimization
-- **Title**: "Digerati Experts - Managed Security Service Provider | Chandler, AZ"
-- **Description**: "Arizona's trusted MSP/MSSP. Get 24/7 cybersecurity monitoring, managed IT services, and compliance support. Protect your business from hackers today."
-- **Keywords**: MSP, MSSP, managed security, cybersecurity, Chandler Arizona, IT support
-
-## Future Enhancements (Potential)
-- Client portal integration
-- Real-time threat dashboard
-- Security blog and resources section
-- Automated vulnerability assessment tool
-- Integration with ticketing system
-- Live chat support
-- Security training portal
-- API for client security metrics
-
-## Notes
-- The website is optimized for conversion with multiple CTAs and forms
-- Emergency support phone number is prominently displayed
-- Uses fear-based marketing balanced with solution-focused messaging
-- Backend infrastructure exists but is unused (could be leveraged for client portal)
-- All IDs use UUID format for future scalability
-- The application is ready for production deployment
+## External Dependencies
+- **Stripe**: For credit/debit card payments and subscription management, integrated via `stripe-replit-sync`.
+- **Zelle**: For manual bank transfers via QR code.
+- **Zoho Payments**: Architected for future integration.
+- **PostgreSQL**: Used for database operations, particularly by `stripe-replit-sync` for managing Stripe data.
+- **Vite**: Build tool for fast development and optimized production builds.
+- **React 18**: Frontend framework.
+- **TypeScript**: For type-safe development.
+- **Wouter**: For client-side routing.
+- **shadcn/ui** and **Radix UI**: UI component libraries.
+- **Lucide React**: Icon library.
+- **Tailwind CSS**: For styling.
+- **Express.js**: Backend server framework.
