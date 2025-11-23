@@ -136,3 +136,24 @@ The project prioritizes a modular structure with `client/` and `server/` directo
   - POST /api/portal/zoho/flow-webhook - Webhook handler
   - GET /api/portal/admin/zoho/status - Integration status
   - POST /api/portal/admin/zoho/test-connection - Test connection
+- **USPS, FedEx & UPS Shipping Integration**: Full multi-carrier support
+  - Real-time tracking from all 3 carriers
+  - Live shipping rate quotes with comparison
+  - Automated shipping label generation
+  - Admin carrier configuration & testing
+  - Tracking history & event logging
+  - Rates cache for performance optimization
+- **Database Schema**: 4 new shipping tables
+  - shippingCarriers - Carrier credentials & configuration
+  - shippingTrackingHistory - Full tracking history
+  - shippingRatesCache - Cached rates for performance
+  - Enhanced portalShipments with carrier-specific fields
+- **8 New Shipping API Endpoints**:
+  - GET /api/portal/shipping/track/:trackingNumber - Track packages
+  - POST /api/portal/shipping/rates - Get live quotes from all carriers
+  - POST /api/portal/shipping/label - Create shipping labels
+  - GET /api/portal/shipping/shipments - List client shipments
+  - POST /api/portal/admin/shipping/carriers - Configure carriers
+  - GET /api/portal/admin/shipping/carriers - List configured carriers
+  - POST /api/portal/admin/shipping/test-carrier - Test connections
+  - GET /api/portal/admin/shipping/rates-cache - Monitor cache

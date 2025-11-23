@@ -618,13 +618,61 @@ export const portalShipments = pgTable("portal_shipments", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   clientId: varchar("client_id").notNull().references(() => portalClients.id, { onDelete: "cascade" }),
   shipmentNumber: text("shipment_number").unique().notNull(),
+  carrier: text("carrier").notNull(), // "usps", "fedex", "ups"
+  service: text("service"), // e.g., "Priority Mail", "Next Day Air"
   status: text("status").default("pending"), // pending, processing, shipped, in_transit, delivered
   itemCount: integer("item_count"),
-  trackingNumber: text("tracking_number"),
+  weight: decimal("weight", { precision: 10, scale: 2 }), // in pounds
+  trackingNumber: text("tracking_number").unique(),
+  labelUrl: text("label_url"), // URL to shipping label
+  cost: decimal("cost", { precision: 10, scale: 2 }),
+  fromAddress: text("from_address"),
+  toAddress: text("to_address"),
   estimatedDelivery: timestamp("estimated_delivery"),
   deliveredAt: timestamp("delivered_at"),
+  lastTrackingUpdate: timestamp("last_tracking_update"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Shipping Carrier Configuration table
+export const shippingCarriers = pgTable("shipping_carriers", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  carrierName: text("carrier_name").notNull(), // "usps", "fedex", "ups"
+  accountId: text("account_id").notNull(),
+  apiKey: text("api_key").notNull(),
+  apiSecret: text("api_secret"), // For carriers that need it
+  isActive: boolean("is_active").default(true),
+  testMode: boolean("test_mode").default(false),
+  configuredBy: varchar("configured_by").notNull().references(() => portalUsers.id),
+  lastValidated: timestamp("last_validated"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Tracking history table
+export const shippingTrackingHistory = pgTable("shipping_tracking_history", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  shipmentId: varchar("shipment_id").notNull().references(() => portalShipments.id, { onDelete: "cascade" }),
+  status: text("status").notNull(), // picked_up, in_transit, out_for_delivery, delivered
+  location: text("location"),
+  description: text("description"),
+  timestamp: timestamp("timestamp").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Shipping rates cache table (for faster lookups)
+export const shippingRatesCache = pgTable("shipping_rates_cache", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  fromZip: text("from_zip").notNull(),
+  toZip: text("to_zip").notNull(),
+  weight: decimal("weight", { precision: 10, scale: 2 }).notNull(),
+  carrier: text("carrier").notNull(),
+  service: text("service").notNull(),
+  cost: decimal("cost", { precision: 10, scale: 2 }).notNull(),
+  estimatedDays: integer("estimated_days"),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // Procurement Products table - products from internal and partners
@@ -780,3 +828,8 @@ export type ZohoConfiguration = typeof zohoConfigurations.$inferSelect;
 export type ZohoIntegrationLog = typeof zohoIntegrationLogs.$inferSelect;
 export type ZohoTicketSync = typeof zohoTicketSync.$inferSelect;
 export type ZohoFlowTrigger = typeof zohoFlowTriggers.$inferSelect;
+
+export type PortalShipment = typeof portalShipments.$inferSelect;
+export type ShippingCarrier = typeof shippingCarriers.$inferSelect;
+export type ShippingTrackingHistory = typeof shippingTrackingHistory.$inferSelect;
+export type ShippingRatesCache = typeof shippingRatesCache.$inferSelect;
