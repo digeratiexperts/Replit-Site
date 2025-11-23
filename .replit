@@ -59,6 +59,10 @@ externalPort = 6800
 localPort = 43707
 externalPort = 3000
 
+[[ports]]
+localPort = 44691
+externalPort = 8008
+
 [env]
 PORT = "5000"
 
@@ -85,3 +89,12 @@ waitForPort = 5000
 
 [agent]
 integrations = ["javascript_database:1.0.0", "stripe:1.0.0", "javascript_openai_ai_integrations:1.0.0"]
+
+[userenv]
+
+[userenv.shared]
+ZOHO_CLIENT_ID = "1000.YSAZC0WPSR6912VXW4MJFTG76LTD0S"
+ZOHO_CLIENT_SECRET = "fd8352031f30b49d178332398166041d9b5c35f0fe"
+JUMPCLOUD_API_KEY = "jca_3zmVKcVUkdfVjUBqcWCVX7gz6AJC3DkbB4hL"
+CORO_CLIENT_ID = "d95432aaf81c4e1cb9639670515cf5d3"
+CORO_CLIENT_SECRET = "960352eb679447428403284ac1bedd47"
