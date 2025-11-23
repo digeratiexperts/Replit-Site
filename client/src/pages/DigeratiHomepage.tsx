@@ -1,5 +1,6 @@
 import { MegaMenu } from "@/components/MegaMenu";
 import { SimpleDivider } from "@/components/SimpleDivider";
+import { ZohoASAPWidget } from "@/components/ZohoASAPWidget";
 import { useState, useEffect } from "react";
 
 // Import all section components
@@ -49,6 +50,13 @@ export const DigeratiHomepage = (): JSX.Element => {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Zoho ASAP Widget */}
+      <ZohoASAPWidget 
+        isEnabled={true}
+        accountId={import.meta.env.VITE_ZOHO_ACCOUNT_ID}
+        portalId={import.meta.env.VITE_ZOHO_PORTAL_ID}
+      />
+
       {/* Navigation */}
       <MegaMenu />
 

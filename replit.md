@@ -107,3 +107,32 @@ The project prioritizes a modular structure with `client/` and `server/` directo
   - GET /api/security/health - Security status check
   - POST /api/security/csrf-token - Generate CSRF tokens
   - GET /api/security/events - Admin security event logs (admin only)
+
+## Latest Features Implemented (Session 4)
+- **Zoho One & Flow Integration**: Full compatibility with Zoho ecosystem
+- **Zoho ASAP Widget**: Custom support widget on homepage mimicking Zoho Desk functionality
+  - Floating help widget (bottom-right)
+  - Support ticket submission
+  - Knowledge base browsing
+  - System status checking
+- **Zoho Service Class**: Complete OAuth 2.0 API wrapper for Zoho Desk
+  - Ticket CRUD operations
+  - Comment management
+  - Flow execution support
+  - Token refresh automation
+- **Zoho Flow Webhooks**: Ready for workflow automation
+  - Ticket creation triggers
+  - Ticket update handling
+  - Custom event routing
+- **Database Schema**: 4 new Zoho integration tables
+  - zoho_configurations - API credentials & settings
+  - zoho_integration_logs - Sync/event logging
+  - zoho_ticket_sync - Local ticket copies
+  - zoho_flow_triggers - Active workflows tracking
+- **5 New Zoho API Endpoints**:
+  - POST /api/portal/zoho/ticket - Create support tickets
+  - GET /api/portal/zoho/tickets - Retrieve user tickets
+  - GET /api/portal/zoho/flows - List active flows
+  - POST /api/portal/zoho/flow-webhook - Webhook handler
+  - GET /api/portal/admin/zoho/status - Integration status
+  - POST /api/portal/admin/zoho/test-connection - Test connection

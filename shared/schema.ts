@@ -700,6 +700,70 @@ export const integrationSyncLogs = pgTable("integration_sync_logs", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// Zoho Integration Configuration Table
+export const zohoConfigurations = pgTable("zoho_configurations", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  accountId: text("account_id").notNull().unique(), // Zoho account/org ID
+  clientId: text("client_id").notNull(),
+  clientSecret: text("client_secret").notNull(),
+  refreshToken: text("refresh_token").notNull(),
+  accessToken: text("access_token"),
+  tokenExpiry: timestamp("token_expiry"),
+  region: text("region").default("us"), // us, eu, in, com
+  portalId: text("portal_id"), // Zoho Desk portal ID for ASAP
+  flowsEnabled: boolean("flows_enabled").default(false),
+  deskEnabled: boolean("desk_enabled").default(false),
+  crmEnabled: boolean("crm_enabled").default(false),
+  isActive: boolean("is_active").default(true),
+  configuredBy: varchar("configured_by").notNull().references(() => portalUsers.id),
+  lastSyncedAt: timestamp("last_synced_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Zoho Integration Logs
+export const zohoIntegrationLogs = pgTable("zoho_integration_logs", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  zohoConfigId: varchar("zoho_config_id").notNull().references(() => zohoConfigurations.id, { onDelete: "cascade" }),
+  eventType: text("event_type").notNull(), // "sync", "ticket_create", "flow_execute", "error"
+  eventDetails: jsonb("event_details"),
+  status: text("status").notNull(), // "success", "failed", "pending"
+  errorMessage: text("error_message"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Zoho Ticket Sync (local copy of Zoho Desk tickets)
+export const zohoTicketSync = pgTable("zoho_ticket_sync", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  zohoTicketId: text("zoho_ticket_id").notNull().unique(),
+  zohoConfigId: varchar("zoho_config_id").notNull().references(() => zohoConfigurations.id, { onDelete: "cascade" }),
+  localTicketId: varchar("local_ticket_id").references(() => portalTickets.id, { onDelete: "set null" }),
+  subject: text("subject").notNull(),
+  description: text("description"),
+  status: text("status"), // Open, On Hold, Pending Review, Closed
+  priority: text("priority"), // Low, Medium, High, Urgent
+  contactEmail: text("contact_email"),
+  lastSyncedAt: timestamp("last_synced_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Zoho Flow Triggers (track which flows are active)
+export const zohoFlowTriggers = pgTable("zoho_flow_triggers", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  zohoConfigId: varchar("zoho_config_id").notNull().references(() => zohoConfigurations.id, { onDelete: "cascade" }),
+  flowId: text("flow_id").notNull(),
+  flowName: text("flow_name").notNull(),
+  triggerType: text("trigger_type").notNull(), // "webhook", "schedule", "manual"
+  triggerEvent: text("trigger_event"), // "ticket_created", "ticket_updated", "form_submitted"
+  isActive: boolean("is_active").default(true),
+  webhookUrl: text("webhook_url"), // Our endpoint that Flow sends data to
+  lastExecutedAt: timestamp("last_executed_at"),
+  executionCount: integer("execution_count").default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 export type PortalChatMessage = typeof portalChatMessages.$inferSelect;
 export type InsertPortalChatMessage = z.infer<typeof insertPortalChatMessageSchema>;
 
@@ -711,3 +775,8 @@ export type PortalProcurementProduct = typeof portalProcurementProducts.$inferSe
 export type ExternalIntegrationMapping = typeof externalIntegrationMappings.$inferSelect;
 export type DesktopAgent = typeof desktopAgents.$inferSelect;
 export type IntegrationSyncLog = typeof integrationSyncLogs.$inferSelect;
+
+export type ZohoConfiguration = typeof zohoConfigurations.$inferSelect;
+export type ZohoIntegrationLog = typeof zohoIntegrationLogs.$inferSelect;
+export type ZohoTicketSync = typeof zohoTicketSync.$inferSelect;
+export type ZohoFlowTrigger = typeof zohoFlowTriggers.$inferSelect;
