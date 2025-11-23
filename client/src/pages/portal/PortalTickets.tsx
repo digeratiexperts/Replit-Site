@@ -24,7 +24,7 @@ export default function PortalTickets() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<string>("all");
 
-  const { data: tickets = [], isLoading } = useQuery<Ticket[]>({
+  const { data: tickets = [], isLoading, isError, error } = useQuery<Ticket[]>({
     queryKey: ["/api/portal/tickets"],
   });
 
@@ -52,6 +52,15 @@ export default function PortalTickets() {
   return (
     <PortalLayout title="Support Tickets">
       <div className="space-y-6">
+        {/* Error State */}
+        {isError && (
+          <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 rounded-lg">
+            <p className="text-sm text-red-800 dark:text-red-300">
+              Failed to load tickets: {error instanceof Error ? error.message : "Unknown error"}
+            </p>
+          </div>
+        )}
+
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div className="space-y-1">
@@ -61,15 +70,13 @@ export default function PortalTickets() {
             </p>
           </div>
           <Link href="/portal/tickets/create">
-            <a>
-              <Button
-                className="bg-[#5034ff] hover:bg-[#5034ff]/90 text-white"
-                data-testid="button-create-ticket"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                New Ticket
-              </Button>
-            </a>
+            <Button
+              className="bg-[#5034ff] hover:bg-[#5034ff]/90 text-white"
+              data-testid="button-create-ticket"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              New Ticket
+            </Button>
           </Link>
         </div>
 

@@ -24,6 +24,7 @@ export default function PortalCreateTicket() {
   });
   const [files, setFiles] = useState<File[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   const categories = [
     "Email",
@@ -39,12 +40,42 @@ export default function PortalCreateTicket() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
+    setError("");
 
-    // Simulate API call
-    setTimeout(() => {
-      setSubmitting(false);
+    try {
+      // Create FormData for multipart file upload
+      const formDataToSend = new FormData();
+      formDataToSend.append("subject", formData.subject);
+      formDataToSend.append("category", formData.category);
+      formDataToSend.append("priority", formData.priority);
+      formDataToSend.append("description", formData.description);
+      
+      // Add files
+      files.forEach((file) => {
+        formDataToSend.append("files", file);
+      });
+
+      const response = await fetch("/api/portal/tickets", {
+        method: "POST",
+        body: formDataToSend,
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("portalToken")}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create ticket");
+      }
+
+      // Reset form and navigate
+      setFormData({ subject: "", category: "", priority: "medium", description: "" });
+      setFiles([]);
       navigate("/portal/tickets");
-    }, 1000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create ticket. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,6 +87,18 @@ export default function PortalCreateTicket() {
   return (
     <PortalLayout title="Create Support Ticket">
       <div className="space-y-6 max-w-2xl">
+        {/* Error Message */}
+        {error && (
+          <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 rounded-lg">
+            <div className="flex gap-3">
+              <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-red-800 dark:text-red-300" data-testid="error-message">
+                {error}
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Back Button */}
         <Button
           variant="ghost"

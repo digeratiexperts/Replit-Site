@@ -15,13 +15,22 @@ interface Service {
 }
 
 export default function PortalServices() {
-  const { data: services = [], isLoading } = useQuery<Service[]>({
+  const { data: services = [], isLoading, isError, error } = useQuery<Service[]>({
     queryKey: ["/api/portal/services"],
   });
 
   return (
     <PortalLayout title="My Services">
       <div className="space-y-6">
+        {/* Error State */}
+        {isError && (
+          <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 rounded-lg">
+            <p className="text-sm text-red-800 dark:text-red-300">
+              Failed to load services: {error instanceof Error ? error.message : "Unknown error"}
+            </p>
+          </div>
+        )}
+
         {/* Header */}
         <div className="space-y-1">
           <h2 className="text-2xl font-bold">My Services</h2>

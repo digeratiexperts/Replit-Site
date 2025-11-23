@@ -16,13 +16,22 @@ interface DashboardStats {
 }
 
 export default function PortalDashboard() {
-  const { data: stats, isLoading } = useQuery<DashboardStats>({
+  const { data: stats, isLoading, isError, error } = useQuery<DashboardStats>({
     queryKey: ["/api/portal/dashboard"],
   });
 
   return (
     <PortalLayout title="Dashboard">
       <div className="space-y-6">
+        {/* Error State */}
+        {isError && (
+          <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 rounded-lg">
+            <p className="text-sm text-red-800 dark:text-red-300">
+              Failed to load dashboard: {error instanceof Error ? error.message : "Unknown error"}
+            </p>
+          </div>
+        )}
+
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card>

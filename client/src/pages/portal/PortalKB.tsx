@@ -19,7 +19,7 @@ export default function PortalKB() {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const { data: articles = [], isLoading } = useQuery<KBArticle[]>({
+  const { data: articles = [], isLoading, isError, error } = useQuery<KBArticle[]>({
     queryKey: ["/api/portal/kb"],
   });
 
@@ -37,6 +37,15 @@ export default function PortalKB() {
   return (
     <PortalLayout title="Knowledge Base">
       <div className="space-y-6">
+        {/* Error State */}
+        {isError && (
+          <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 rounded-lg">
+            <p className="text-sm text-red-800 dark:text-red-300">
+              Failed to load articles: {error instanceof Error ? error.message : "Unknown error"}
+            </p>
+          </div>
+        )}
+
         {/* Header */}
         <div className="space-y-1">
           <h2 className="text-2xl font-bold">Knowledge Base</h2>

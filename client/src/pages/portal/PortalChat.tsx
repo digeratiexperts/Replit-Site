@@ -30,8 +30,10 @@ export default function PortalChat() {
       setToken(authToken);
       const userId = localStorage.getItem("userId");
       
-      // Connect to secure WebSocket
-      const wsUrl = `ws://localhost:5000/api/ws?token=${authToken}&userId=${userId}`;
+      // Connect to secure WebSocket (use current domain)
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const host = window.location.host;
+      const wsUrl = `${protocol}//${host}/api/ws?token=${authToken}&userId=${userId}`;
       wsRef.current = new WebSocket(wsUrl);
 
       wsRef.current.onopen = () => {

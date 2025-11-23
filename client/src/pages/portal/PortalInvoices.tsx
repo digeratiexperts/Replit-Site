@@ -16,7 +16,7 @@ interface Invoice {
 }
 
 export default function PortalInvoices() {
-  const { data: invoices = [], isLoading } = useQuery<Invoice[]>({
+  const { data: invoices = [], isLoading, isError, error } = useQuery<Invoice[]>({
     queryKey: ["/api/portal/invoices"],
   });
 
@@ -36,6 +36,15 @@ export default function PortalInvoices() {
   return (
     <PortalLayout title="Invoices">
       <div className="space-y-6">
+        {/* Error State */}
+        {isError && (
+          <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 rounded-lg">
+            <p className="text-sm text-red-800 dark:text-red-300">
+              Failed to load invoices: {error instanceof Error ? error.message : "Unknown error"}
+            </p>
+          </div>
+        )}
+
         {/* Header */}
         <div className="space-y-1">
           <h2 className="text-2xl font-bold">Invoices</h2>
