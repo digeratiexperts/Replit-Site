@@ -43,6 +43,12 @@ const chatRateLimiter = rateLimit({
   message: "Too many chat messages",
 });
 
+const leadQuoteRateLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 3,
+  message: "Too many quote requests. Please try again later.",
+});
+
 // Input validation middleware
 const validateInput = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   // Basic size check
@@ -508,6 +514,66 @@ export async function registerRoutes(app: Express) {
       logSecurityEvent("OPENAI_TOGGLED", req, { state: !currentState });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ===== LEAD QUOTE FORM =====
+  app.post("/api/lead-quote", [leadQuoteRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { seats, enterpriseToggle, connectivity, devices, recommendedPlan, firstName, lastName, company, email, consent, source, pageUrl, timestamp } = req.body;
+      
+      // Corporate email validation
+      const domain = email.split('@')[1]?.toLowerCase();
+      const blockedDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'aol.com', 'msn.com', 'live.com'];
+      if (blockedDomains.includes(domain)) {
+        return res.status(400).json({ error: "Please use your company email address" });
+      }
+
+      // Basic spam prevention - honeypot check
+      const honeypot = req.body.website_url;
+      if (honeypot) {
+        logSecurityEvent("SPAM_DETECTED_HONEYPOT", req, { email });
+        return res.status(400).json({ error: "Invalid request" });
+      }
+
+      // Store lead
+      const leadData = {
+        id: randomId(),
+        seats,
+        enterpriseToggle,
+        connectivity,
+        devices,
+        recommendedPlan,
+        firstName,
+        lastName,
+        company,
+        email,
+        consent,
+        source,
+        pageUrl,
+        timestamp,
+        ipAddress: req.ip,
+        userAgent: req.headers['user-agent'],
+        createdAt: new Date(),
+      };
+
+      // Log the lead capture
+      console.log("[LEAD] Quote form submitted:", { email, company, recommendedPlan, timestamp });
+      logSecurityEvent("LEAD_QUOTE_SUBMITTED", req, { email, company, recommendedPlan });
+
+      // In production, this would:
+      // 1. Store in database
+      // 2. Send to CRM (Zoho)
+      // 3. Trigger email automation
+      // For now, we just confirm receipt
+      res.json({
+        success: true,
+        leadId: leadData.id,
+        message: "Quote request received successfully",
+      });
+    } catch (error: any) {
+      console.error("[ERROR] Lead quote submission failed:", error);
+      res.status(500).json({ error: "Failed to process quote request" });
     }
   });
 

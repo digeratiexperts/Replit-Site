@@ -89,3 +89,74 @@ The project follows a modular structure with `client/` and `server/` directories
 - Locations: 6 links ✅ (all have dedicated pages)
 
 **Status**: 100% link integrity - No remaining dead links
+
+## Session 9: Enterprise Lead Generation Form + Spam Security
+
+### Multi-Step Lead Quote Wizard Implemented ✅
+A sophisticated 3-step lead generation form with plan matching, corporate email validation, and comprehensive spam protection.
+
+**Components Created:**
+1. **`client/src/lib/emailValidator.ts`** - Corporate email validation utility
+   - Blocks 20+ personal email domains (Gmail, Yahoo, Outlook, etc.)
+   - Only accepts business/corporate emails
+   - Reusable validation function with error messages
+
+2. **`client/src/pages/LeadQuoteWizard.tsx`** - 3-step form component
+   - Step 1: User seat sizing (1-100 users + enterprise toggle)
+   - Step 2: Infrastructure needs (connectivity, devices)
+   - Step 3: Lead capture (email, name, company) + consent
+   - Plan matching logic determines best fit recommendation
+   - Progress indicator and step navigation
+   - Form state preservation between steps
+
+3. **`client/src/pages/QuoteConfirmation.tsx`** - Results page
+   - Shows personalized plan recommendation
+   - Displays 3 reasons why that plan is the best fit
+   - Dual CTAs: Schedule call + Email details
+   - Trust messaging about data privacy
+   - Marketing-focused confirmation for conversion tracking
+
+4. **`server/routes.ts`** - API endpoint `/api/lead-quote`
+   - POST endpoint with rate limiting (3 requests per 10 minutes)
+   - Corporate email validation on backend
+   - Honeypot spam detection
+   - Request logging for security audit trail
+   - Ready for CRM integration (Zoho, etc.)
+   - Lead data stored with timestamp, IP, user agent
+
+**Security Features:**
+✅ Corporate email validation (blocks personal domains)
+✅ Rate limiting (3 submissions per 10 minutes per IP)
+✅ Honeypot field for bot detection
+✅ Server-side email validation
+✅ Request payload size check
+✅ Security event logging
+✅ Consent requirement
+✅ Input sanitization via Zod schemas
+
+**Plan Matching Logic:**
+- Enterprise toggle or >100 users → Enterprise Plan
+- Needs connectivity + devices → Techtility Plan  
+- Needs connectivity only → Connectivity Plan
+- Needs devices only → Productivity Plan
+- Default → Productivity Plan
+
+**Routes Added:**
+- `/quote-wizard` - Multi-step form entry point
+- `/quote-confirmation` - Results/confirmation page with plan recommendation
+
+**Data Captured:**
+- Company size (seats)
+- Infrastructure needs (connectivity, devices)
+- Contact info (email, first/last name, company)
+- User consent for follow-up
+- Source tracking (header-instant-quote)
+- Timestamp, page URL, IP address, user agent
+
+**Next Steps (To Complete Lead Gen System):**
+1. Integrate form into homepage hero section (add "Get Instant Plan Match" CTA button)
+2. Connect to CRM/email automation (Zoho Desk/Flow for follow-up)
+3. Add Google reCAPTCHA v3 for additional bot protection
+4. Set up email automation for lead notifications
+5. Connect to CRM for lead scoring and nurture sequences
+6. Add analytics tracking for conversion monitoring

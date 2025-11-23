@@ -62,6 +62,8 @@ const PortalQuestionnaireCalendar = lazy(() => import("@/pages/portal/PortalQues
 const AdminImportPage = lazy(() => import("@/pages/portal/AdminImport").then(m => ({ default: m.AdminImport })));
 const AdminAgentsPage = lazy(() => import("@/pages/portal/AdminAgents").then(m => ({ default: m.AdminAgents })));
 const AdminOpenAIPage = lazy(() => import("@/pages/portal/AdminOpenAI").then(m => ({ default: m.AdminOpenAI })));
+const LeadQuoteWizard = lazy(() => import("@/pages/LeadQuoteWizard"));
+const QuoteConfirmation = lazy(() => import("@/pages/QuoteConfirmation"));
 
 import { servicePageData, industryPageData, resourcePageData, supportPageData } from "@/pages/routes/servicePages";
 
@@ -391,6 +393,18 @@ function Router() {
       <Route path="/portal/admin/openai" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <AdminOpenAIPage />
+        </Suspense>
+      )} />
+      
+      {/* Lead Quote */}
+      <Route path="/quote-wizard" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <LeadQuoteWizard />
+        </Suspense>
+      )} />
+      <Route path="/quote-confirmation" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <QuoteConfirmation />
         </Suspense>
       )} />
       
