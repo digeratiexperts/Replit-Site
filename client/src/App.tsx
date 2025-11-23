@@ -27,6 +27,15 @@ const Accessibility = lazy(() => import("@/pages/trust/Accessibility"));
 const SubmitTicket = lazy(() => import("@/pages/support/SubmitTicket"));
 const GenericServicePage = lazy(() => import("@/pages/GenericServicePage"));
 
+// Portal pages
+const PortalLogin = lazy(() => import("@/pages/portal/PortalLogin"));
+const PortalDashboard = lazy(() => import("@/pages/portal/PortalDashboard"));
+const PortalTickets = lazy(() => import("@/pages/portal/PortalTickets"));
+const PortalServices = lazy(() => import("@/pages/portal/PortalServices"));
+const PortalInvoices = lazy(() => import("@/pages/portal/PortalInvoices"));
+const PortalKB = lazy(() => import("@/pages/portal/PortalKB"));
+const PortalSettings = lazy(() => import("@/pages/portal/PortalSettings"));
+
 import { servicePageData, industryPageData, resourcePageData, supportPageData } from "@/pages/routes/servicePages";
 
 function Router() {
@@ -180,6 +189,43 @@ function Router() {
       <Route path="/trust/accessibility" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <Accessibility />
+        </Suspense>
+      )} />
+      
+      {/* Portal Pages */}
+      <Route path="/portal/login" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <PortalLogin />
+        </Suspense>
+      )} />
+      <Route path="/portal/dashboard" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <PortalDashboard />
+        </Suspense>
+      )} />
+      <Route path="/portal/tickets" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <PortalTickets />
+        </Suspense>
+      )} />
+      <Route path="/portal/services" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <PortalServices />
+        </Suspense>
+      )} />
+      <Route path="/portal/invoices" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <PortalInvoices />
+        </Suspense>
+      )} />
+      <Route path="/portal/kb" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <PortalKB />
+        </Suspense>
+      )} />
+      <Route path="/portal/settings" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <PortalSettings />
         </Suspense>
       )} />
       

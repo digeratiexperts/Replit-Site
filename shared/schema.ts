@@ -1,5 +1,5 @@
 import { sql, relations } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, boolean, integer, jsonb, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, boolean, integer, jsonb, pgEnum, decimal } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -8,6 +8,12 @@ export const taskPriorityEnum = pgEnum("task_priority", ["low", "medium", "high"
 export const taskStatusEnum = pgEnum("task_status", ["todo", "in_progress", "in_review", "done", "archived"]);
 export const memberRoleEnum = pgEnum("member_role", ["owner", "admin", "member", "viewer"]);
 export const viewTypeEnum = pgEnum("view_type", ["board", "list", "calendar", "timeline", "table"]);
+
+// Portal enums
+export const portalUserRoleEnum = pgEnum("portal_user_role", ["admin", "user", "viewer"]);
+export const ticketStatusEnum = pgEnum("ticket_status", ["open", "in_progress", "pending_client", "resolved", "closed"]);
+export const ticketPriorityEnum = pgEnum("ticket_priority", ["low", "medium", "high", "critical"]);
+export const invoiceStatusEnum = pgEnum("invoice_status", ["draft", "sent", "paid", "overdue", "cancelled"]);
 
 // Users table
 export const users = pgTable("users", {
@@ -143,6 +149,115 @@ export const activities = pgTable("activities", {
   action: text("action").notNull(),
   metadata: jsonb("metadata"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// =============== PORTAL TABLES ===============
+
+// Portal clients table
+export const portalClients = pgTable("portal_clients", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  companyName: text("company_name").notNull(),
+  contactEmail: text("contact_email").notNull(),
+  contactPhone: text("contact_phone"),
+  address: text("address"),
+  city: text("city"),
+  state: text("state"),
+  zipCode: text("zip_code"),
+  website: text("website"),
+  industry: text("industry"),
+  employeeCount: integer("employee_count"),
+  primaryContact: text("primary_contact"),
+  accountManager: text("account_manager"),
+  status: text("status").default("active"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Portal users table
+export const portalUsers = pgTable("portal_users", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clientId: varchar("client_id").notNull().references(() => portalClients.id, { onDelete: "cascade" }),
+  email: text("email").notNull().unique(),
+  password: text("password").notNull(),
+  fullName: text("full_name").notNull(),
+  role: portalUserRoleEnum("role").default("user"),
+  isActive: boolean("is_active").default(true),
+  lastLogin: timestamp("last_login"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Portal services table
+export const portalServices = pgTable("portal_services", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clientId: varchar("client_id").notNull().references(() => portalClients.id, { onDelete: "cascade" }),
+  serviceName: text("service_name").notNull(),
+  description: text("description"),
+  status: text("status").default("active"),
+  startDate: timestamp("start_date"),
+  endDate: timestamp("end_date"),
+  monthlyPrice: decimal("monthly_price", { precision: 10, scale: 2 }),
+  userCount: integer("user_count"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Portal support tickets table
+export const portalTickets = pgTable("portal_tickets", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clientId: varchar("client_id").notNull().references(() => portalClients.id, { onDelete: "cascade" }),
+  ticketNumber: text("ticket_number").unique().notNull(),
+  subject: text("subject").notNull(),
+  description: text("description").notNull(),
+  status: ticketStatusEnum("status").default("open"),
+  priority: ticketPriorityEnum("priority").default("medium"),
+  category: text("category"),
+  assignedTo: text("assigned_to"),
+  createdBy: varchar("created_by").notNull().references(() => portalUsers.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  resolvedAt: timestamp("resolved_at"),
+});
+
+// Portal ticket comments table
+export const portalTicketComments = pgTable("portal_ticket_comments", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  ticketId: varchar("ticket_id").notNull().references(() => portalTickets.id, { onDelete: "cascade" }),
+  userId: varchar("user_id").notNull().references(() => portalUsers.id),
+  content: text("content").notNull(),
+  isInternal: boolean("is_internal").default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Portal invoices table
+export const portalInvoices = pgTable("portal_invoices", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clientId: varchar("client_id").notNull().references(() => portalClients.id, { onDelete: "cascade" }),
+  invoiceNumber: text("invoice_number").unique().notNull(),
+  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  status: invoiceStatusEnum("status").default("draft"),
+  issueDate: timestamp("issue_date"),
+  dueDate: timestamp("due_date"),
+  paidDate: timestamp("paid_date"),
+  description: text("description"),
+  lineItems: jsonb("line_items"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Portal knowledge base articles table
+export const portalKBArticles = pgTable("portal_kb_articles", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: text("title").notNull(),
+  slug: text("slug").unique().notNull(),
+  content: text("content").notNull(),
+  category: text("category"),
+  tags: text("tags").array(),
+  views: integer("views").default(0),
+  isPublished: boolean("is_published").default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 // Relations
@@ -292,6 +407,59 @@ export const activitiesRelations = relations(activities, ({ one }) => ({
   }),
 }));
 
+// Portal relations
+export const portalClientsRelations = relations(portalClients, ({ many }) => ({
+  portalUsers: many(portalUsers),
+  services: many(portalServices),
+  tickets: many(portalTickets),
+  invoices: many(portalInvoices),
+}));
+
+export const portalUsersRelations = relations(portalUsers, ({ one, many }) => ({
+  client: one(portalClients, {
+    fields: [portalUsers.clientId],
+    references: [portalClients.id],
+  }),
+  ticketComments: many(portalTicketComments),
+}));
+
+export const portalServicesRelations = relations(portalServices, ({ one }) => ({
+  client: one(portalClients, {
+    fields: [portalServices.clientId],
+    references: [portalClients.id],
+  }),
+}));
+
+export const portalTicketsRelations = relations(portalTickets, ({ one, many }) => ({
+  client: one(portalClients, {
+    fields: [portalTickets.clientId],
+    references: [portalClients.id],
+  }),
+  createdBy: one(portalUsers, {
+    fields: [portalTickets.createdBy],
+    references: [portalUsers.id],
+  }),
+  comments: many(portalTicketComments),
+}));
+
+export const portalTicketCommentsRelations = relations(portalTicketComments, ({ one }) => ({
+  ticket: one(portalTickets, {
+    fields: [portalTicketComments.ticketId],
+    references: [portalTickets.id],
+  }),
+  user: one(portalUsers, {
+    fields: [portalTicketComments.userId],
+    references: [portalUsers.id],
+  }),
+}));
+
+export const portalInvoicesRelations = relations(portalInvoices, ({ one }) => ({
+  client: one(portalClients, {
+    fields: [portalInvoices.clientId],
+    references: [portalClients.id],
+  }),
+}));
+
 // Zod schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -338,7 +506,28 @@ export const insertCommentSchema = createInsertSchema(comments).omit({
 
 export const insertLabelSchema = createInsertSchema(labels).omit({
   id: true,
+});
+
+// Portal Zod schemas
+export const insertPortalUserSchema = createInsertSchema(portalUsers).omit({
+  id: true,
   createdAt: true,
+  updatedAt: true,
+  lastLogin: true,
+});
+
+export const insertPortalTicketSchema = createInsertSchema(portalTickets).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  resolvedAt: true,
+  ticketNumber: true,
+});
+
+export const insertPortalTicketCommentSchema = createInsertSchema(portalTicketComments).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
 });
 
 // TypeScript types
@@ -369,3 +558,18 @@ export type InsertComment = z.infer<typeof insertCommentSchema>;
 export type Attachment = typeof attachments.$inferSelect;
 
 export type Activity = typeof activities.$inferSelect;
+
+// Portal types
+export type PortalClient = typeof portalClients.$inferSelect;
+export type PortalUser = typeof portalUsers.$inferSelect;
+export type InsertPortalUser = z.infer<typeof insertPortalUserSchema>;
+
+export type PortalService = typeof portalServices.$inferSelect;
+export type PortalTicket = typeof portalTickets.$inferSelect;
+export type InsertPortalTicket = z.infer<typeof insertPortalTicketSchema>;
+
+export type PortalTicketComment = typeof portalTicketComments.$inferSelect;
+export type InsertPortalTicketComment = z.infer<typeof insertPortalTicketCommentSchema>;
+
+export type PortalInvoice = typeof portalInvoices.$inferSelect;
+export type PortalKBArticle = typeof portalKBArticles.$inferSelect;

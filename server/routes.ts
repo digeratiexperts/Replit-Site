@@ -203,6 +203,127 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // --- Portal Routes ---
+
+  // Portal Login
+  app.post("/api/portal/login", async (req: Request, res: Response) => {
+    try {
+      const { email, password } = req.body;
+      // Mock authentication - in production, validate against database
+      if (!email || !password) {
+        return res.status(400).json({ message: "Email and password required" });
+      }
+      
+      const user = {
+        id: "portal-user-1",
+        clientId: "client-1",
+        email,
+        fullName: "John Doe",
+        role: "admin",
+      };
+
+      res.json({
+        user,
+        token: "mock-jwt-token",
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Portal Dashboard
+  app.get("/api/portal/dashboard", async (req: Request, res: Response) => {
+    try {
+      const mockTickets = [
+        { id: "1", ticketNumber: "#TK001", subject: "Email not syncing", status: "open", priority: "high", createdAt: new Date().toISOString() },
+        { id: "2", ticketNumber: "#TK002", subject: "Password reset issue", status: "in_progress", priority: "medium", createdAt: new Date(Date.now() - 86400000).toISOString() },
+        { id: "3", ticketNumber: "#TK003", subject: "VPN connectivity", status: "resolved", priority: "critical", createdAt: new Date(Date.now() - 172800000).toISOString() },
+      ];
+
+      const mockServices = [
+        { id: "1", serviceName: "Managed IT Support", userCount: 25, status: "active", monthlyPrice: "1500" },
+        { id: "2", serviceName: "Cloud Backup", userCount: 25, status: "active", monthlyPrice: "300" },
+        { id: "3", serviceName: "Security Operations", userCount: 1, status: "active", monthlyPrice: "2000" },
+      ];
+
+      res.json({
+        openTickets: 5,
+        resolvedTickets: 42,
+        activeServices: 3,
+        pendingInvoices: 1,
+        recentTickets: mockTickets,
+        services: mockServices,
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Portal Tickets
+  app.get("/api/portal/tickets", async (req: Request, res: Response) => {
+    try {
+      const tickets = [
+        { id: "1", ticketNumber: "#TK001", subject: "Email not syncing", status: "open", priority: "high", category: "Email", createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+        { id: "2", ticketNumber: "#TK002", subject: "Password reset issue", status: "in_progress", priority: "medium", category: "Access", createdAt: new Date(Date.now() - 86400000).toISOString(), updatedAt: new Date().toISOString() },
+        { id: "3", ticketNumber: "#TK003", subject: "VPN connectivity", status: "resolved", priority: "critical", category: "Network", createdAt: new Date(Date.now() - 172800000).toISOString(), updatedAt: new Date().toISOString() },
+        { id: "4", ticketNumber: "#TK004", subject: "Microsoft Teams setup", status: "closed", priority: "low", category: "Software", createdAt: new Date(Date.now() - 259200000).toISOString(), updatedAt: new Date().toISOString() },
+        { id: "5", ticketNumber: "#TK005", subject: "Printer configuration", status: "pending_client", priority: "medium", category: "Hardware", createdAt: new Date(Date.now() - 345600000).toISOString(), updatedAt: new Date().toISOString() },
+      ];
+      res.json(tickets);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Portal Services
+  app.get("/api/portal/services", async (req: Request, res: Response) => {
+    try {
+      const services = [
+        { id: "1", serviceName: "Managed IT Support", description: "24/7 helpdesk and IT support", status: "active", monthlyPrice: "1500", userCount: 25, startDate: "2023-01-15" },
+        { id: "2", serviceName: "Cloud Backup & Disaster Recovery", description: "Automated cloud backup with recovery testing", status: "active", monthlyPrice: "300", userCount: 25, startDate: "2023-01-15" },
+        { id: "3", serviceName: "Security Operations Center", description: "24/7 SOC monitoring and threat detection", status: "active", monthlyPrice: "2000", userCount: 1, startDate: "2023-06-01" },
+        { id: "4", serviceName: "Managed Workplace", description: "Identity, apps, devices, and workspace management", status: "active", monthlyPrice: "800", userCount: 25, startDate: "2023-09-01" },
+      ];
+      res.json(services);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Portal Invoices
+  app.get("/api/portal/invoices", async (req: Request, res: Response) => {
+    try {
+      const invoices = [
+        { id: "1", invoiceNumber: "INV-2024-001", amount: "2600", status: "paid", issueDate: "2024-01-01", dueDate: "2024-01-31", description: "Monthly services" },
+        { id: "2", invoiceNumber: "INV-2024-002", amount: "2600", status: "paid", issueDate: "2024-02-01", dueDate: "2024-02-28", description: "Monthly services" },
+        { id: "3", invoiceNumber: "INV-2024-003", amount: "2600", status: "sent", issueDate: "2024-03-01", dueDate: "2024-03-31", description: "Monthly services" },
+        { id: "4", invoiceNumber: "INV-2024-004", amount: "2600", status: "overdue", issueDate: "2024-04-01", dueDate: "2024-04-30", description: "Monthly services" },
+      ];
+      res.json(invoices);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Portal Knowledge Base
+  app.get("/api/portal/kb", async (req: Request, res: Response) => {
+    try {
+      const articles = [
+        { id: "1", title: "Getting Started with Our Managed Services", slug: "getting-started", category: "General", tags: ["onboarding", "basics"], views: 145 },
+        { id: "2", title: "How to Reset Your Password", slug: "reset-password", category: "Access", tags: ["password", "account"], views: 892 },
+        { id: "3", title: "VPN Connection Guide", slug: "vpn-guide", category: "Network", tags: ["vpn", "remote-work"], views: 567 },
+        { id: "4", title: "Email Configuration for Outlook", slug: "email-outlook", category: "Email", tags: ["email", "outlook", "m365"], views: 734 },
+        { id: "5", title: "Microsoft Teams Best Practices", slug: "teams-best-practices", category: "Software", tags: ["teams", "collaboration"], views: 412 },
+        { id: "6", title: "Data Backup & Recovery", slug: "backup-recovery", category: "Backup", tags: ["backup", "disaster-recovery"], views: 289 },
+        { id: "7", title: "Security Awareness Training", slug: "security-training", category: "Security", tags: ["security", "training", "phishing"], views: 156 },
+        { id: "8", title: "Device Management Policies", slug: "device-policies", category: "Devices", tags: ["devices", "mobile", "policy"], views: 203 },
+      ];
+      res.json(articles);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   // (rest of your existing task, label, comment, and user routes remain unchanged…)
 
   return httpServer;
