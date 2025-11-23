@@ -215,7 +215,7 @@ export default function PortalDashboard() {
                 <a>
                   <Button
                     variant="outline"
-                    className="w-full border-[#5034ff]/30 hover:bg-[#5034ff]/10"
+                    className="w-full border-[#5034ff]/30 hover:bg-[#5034ff]/10 text-gray-900 dark:text-white hover:text-gray-900 dark:hover:text-white"
                     data-testid="button-new-ticket"
                   >
                     <Ticket className="h-4 w-4 mr-2" />
@@ -227,7 +227,7 @@ export default function PortalDashboard() {
                 <a>
                   <Button
                     variant="outline"
-                    className="w-full border-[#5034ff]/30 hover:bg-[#5034ff]/10"
+                    className="w-full border-[#5034ff]/30 hover:bg-[#5034ff]/10 text-gray-900 dark:text-white hover:text-gray-900 dark:hover:text-white"
                     data-testid="button-view-kb"
                   >
                     <FileText className="h-4 w-4 mr-2" />
@@ -239,7 +239,7 @@ export default function PortalDashboard() {
                 <a>
                   <Button
                     variant="outline"
-                    className="w-full border-[#5034ff]/30 hover:bg-[#5034ff]/10"
+                    className="w-full border-[#5034ff]/30 hover:bg-[#5034ff]/10 text-gray-900 dark:text-white hover:text-gray-900 dark:hover:text-white"
                     data-testid="button-view-invoices"
                   >
                     <FileText className="h-4 w-4 mr-2" />

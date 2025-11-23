@@ -50,14 +50,34 @@ export default function PortalAgent() {
       // Save token for agent use
       localStorage.setItem("agentToken", token);
 
-      // In production, this would download the actual .exe
-      // The exe would contain the token baked in or stored securely
-      const link = document.createElement("a");
-      link.href = "#";
-      link.download = "DigeratiExpertsAgent-Setup.exe";
-      link.click();
+      // Create a mock installer configuration file with secure token
+      const agentConfig = {
+        version: "1.0.0",
+        token: token,
+        email: email,
+        serverUrl: "http://localhost:5000",
+        features: {
+          quickTickets: true,
+          liveChat: true,
+          systemStatus: true,
+          autoNotifications: true,
+        },
+        timestamp: new Date().toISOString(),
+      };
 
-      alert("Agent setup token generated securely. The downloaded installer will use this token for authentication.");
+      // Create and download the config file
+      const configJson = JSON.stringify(agentConfig, null, 2);
+      const blob = new Blob([configJson], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "agent-config.json";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      alert("✓ Agent configuration downloaded successfully!\n\nIn production, this would be packaged into DigeratiExpertsAgent-Setup.exe.\n\nYour secure token is embedded in the configuration and will expire in 24 hours.");
     } catch (error) {
       console.error("Error generating agent token:", error);
       alert("Failed to prepare agent download. Please try again.");
