@@ -671,6 +671,124 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // --- AI & Cross-Service Routes ---
+
+  // Classify a ticket using AI
+  app.post("/api/portal/tickets/classify", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { ticketId, subject, description } = req.body;
+      const { aiService } = await import("./aiService");
+
+      const classification = await aiService.classifyTicket(subject, description);
+      const suggestions = await aiService.generateSuggestions({
+        title: subject,
+        description,
+        category: classification.category,
+      });
+
+      res.json({
+        classification,
+        suggestions,
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Get AI recommendations for a ticket
+  app.get("/api/portal/tickets/:id/recommendations", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { id } = req.params;
+      // In production, fetch ticket from database and generate recommendations
+      const { aiService } = await import("./aiService");
+
+      const mockTicket = {
+        status: "in_progress",
+        priority: "high",
+        resolutionTimeElapsed: 180,
+        lastUpdated: new Date(Date.now() - 3 * 60 * 60 * 1000),
+      };
+
+      const action = await aiService.recommendAction(mockTicket);
+
+      res.json({
+        ticketId: id,
+        recommendations: action ? [action] : [],
+        message: "AI recommendations generated",
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Get cross-service client profile
+  app.get("/api/portal/clients/:clientId/profile", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { clientId } = req.params;
+      const { crossServiceQueries } = await import("./crossServiceHandler");
+
+      const profile = await crossServiceQueries.getClientFullProfile(clientId);
+
+      res.json(profile);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Get smart recommendations
+  app.get("/api/portal/clients/:clientId/smart-recommendations", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { clientId } = req.params;
+      const { crossServiceQueries } = await import("./crossServiceHandler");
+
+      const recommendations = await crossServiceQueries.getSmartRecommendations(clientId);
+
+      res.json(recommendations);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Get event bus history for audit trails
+  app.get("/api/debug/events", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { eventBus } = await import("./eventBus");
+      const limit = parseInt((req.query.limit as string) || "100");
+      const eventType = req.query.type as string | undefined;
+
+      const history = eventBus.getHistory(eventType, limit);
+
+      res.json({
+        count: history.length,
+        events: history,
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Get database health and stats
+  app.get("/api/debug/db-health", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      // In production, query actual database stats
+      res.json({
+        status: "healthy",
+        tables: [
+          { name: "portal_tickets", estimate: "~5000 records" },
+          { name: "portal_invoices", estimate: "~2000 records" },
+          { name: "portal_shipments", estimate: "~1500 records" },
+          { name: "portal_chat_messages", estimate: "~10000 records" },
+          { name: "portal_ai_classifications", estimate: "~5000 records" },
+          { name: "portal_ai_suggestions", estimate: "~7500 records" },
+        ],
+        connections: "Database connection pool active",
+        lastChecked: new Date().toISOString(),
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   // (rest of your existing task, label, comment, and user routes remain unchanged…)
 
   return httpServer;

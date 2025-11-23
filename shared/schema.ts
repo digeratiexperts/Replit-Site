@@ -588,6 +588,59 @@ export const portalChatMessages = pgTable("portal_chat_messages", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+// AI Classification table - stores AI-determined ticket metadata
+export const portalTicketAIClassifications = pgTable("portal_ticket_ai_classifications", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  ticketId: varchar("ticket_id").notNull().references(() => portalTickets.id, { onDelete: "cascade" }),
+  category: text("category").notNull(),
+  suggestedPriority: text("suggested_priority"),
+  suggestedDepartment: text("suggested_department"),
+  confidence: decimal("confidence", { precision: 3, scale: 2 }),
+  appliedAt: timestamp("applied_at"),
+  isApplied: boolean("is_applied").default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// AI Suggestions table - stores AI-generated recommendations
+export const portalAISuggestions = pgTable("portal_ai_suggestions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  ticketId: varchar("ticket_id").notNull().references(() => portalTickets.id, { onDelete: "cascade" }),
+  suggestionType: text("suggestion_type").notNull(), // "resolution", "escalation", "info", "action"
+  content: text("content").notNull(),
+  source: text("source"), // where suggestion comes from
+  confidence: decimal("confidence", { precision: 3, scale: 2 }),
+  wasUseful: boolean("was_useful"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Shipments table - for Ship Center
+export const portalShipments = pgTable("portal_shipments", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clientId: varchar("client_id").notNull().references(() => portalClients.id, { onDelete: "cascade" }),
+  shipmentNumber: text("shipment_number").unique().notNull(),
+  status: text("status").default("pending"), // pending, processing, shipped, in_transit, delivered
+  itemCount: integer("item_count"),
+  trackingNumber: text("tracking_number"),
+  estimatedDelivery: timestamp("estimated_delivery"),
+  deliveredAt: timestamp("delivered_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Procurement Products table - products from internal and partners
+export const portalProcurementProducts = pgTable("portal_procurement_products", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  description: text("description"),
+  category: text("category"),
+  price: decimal("price", { precision: 10, scale: 2 }),
+  source: text("source").default("internal"), // "internal", "griffin-it", "sherweb", "pax8", "climbcs"
+  externalUrl: text("external_url"),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 export const insertPortalChatMessageSchema = createInsertSchema(portalChatMessages).omit({
   id: true,
   createdAt: true,
@@ -597,3 +650,8 @@ export const insertPortalChatMessageSchema = createInsertSchema(portalChatMessag
 
 export type PortalChatMessage = typeof portalChatMessages.$inferSelect;
 export type InsertPortalChatMessage = z.infer<typeof insertPortalChatMessageSchema>;
+
+export type PortalTicketAIClassification = typeof portalTicketAIClassifications.$inferSelect;
+export type PortalAISuggestion = typeof portalAISuggestions.$inferSelect;
+export type PortalShipment = typeof portalShipments.$inferSelect;
+export type PortalProcurementProduct = typeof portalProcurementProducts.$inferSelect;

@@ -7,9 +7,14 @@ import fs from "fs";
 import { runMigrations } from "stripe-replit-sync";
 import { getStripeSync } from "./stripeClient";
 import { WebhookHandlers } from "./webhookHandlers";
+import { setupCrossServiceHandlers } from "./crossServiceHandler";
+import { eventBus, EventTypes } from "./eventBus";
 
 const app = express();
 const server = createServer(app);
+
+// Initialize cross-service communication
+setupCrossServiceHandlers();
 
 // Simple logging utility
 const log = (message: string) => {
