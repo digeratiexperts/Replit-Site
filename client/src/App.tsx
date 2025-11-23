@@ -14,6 +14,9 @@ const Healthcare = lazy(() => import("@/pages/industries/Healthcare"));
 const CaseStudies = lazy(() => import("@/pages/resources/CaseStudies"));
 const MissionValues = lazy(() => import("@/pages/about/MissionValues"));
 const Team = lazy(() => import("@/pages/about/Team"));
+const Compliance = lazy(() => import("@/pages/about/Compliance"));
+const SupportPage = lazy(() => import("@/pages/about/Support"));
+const Insurance = lazy(() => import("@/pages/about/Insurance"));
 const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy"));
 const TermsOfUse = lazy(() => import("@/pages/legal/TermsOfUse"));
 const MSA = lazy(() => import("@/pages/legal/MSA"));
@@ -145,6 +148,21 @@ function Router() {
       <Route path="/about/team" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <Team />
+        </Suspense>
+      )} />
+      <Route path="/about/compliance" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <Compliance />
+        </Suspense>
+      )} />
+      <Route path="/about/support" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <SupportPage />
+        </Suspense>
+      )} />
+      <Route path="/about/insurance" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <Insurance />
         </Suspense>
       )} />
       
