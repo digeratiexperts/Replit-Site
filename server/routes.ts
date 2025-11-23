@@ -349,6 +349,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Portal Chat Messages
+  app.get("/api/portal/chat/messages", async (req: Request, res: Response) => {
+    try {
+      const messages = [
+        {
+          id: "1",
+          author: "Support Team",
+          role: "support",
+          content: "Hello! Welcome to our live chat support. How can we help you today?",
+          timestamp: new Date(Date.now() - 3600000).toISOString(),
+          isRead: true,
+        }
+      ];
+      res.json(messages);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Portal Chat Send Message
+  app.post("/api/portal/chat/messages", async (req: Request, res: Response) => {
+    try {
+      const { message } = req.body;
+      const newMessage = {
+        id: Date.now().toString(),
+        author: "You",
+        role: "client",
+        content: message,
+        timestamp: new Date().toISOString(),
+        isRead: true,
+      };
+      res.json(newMessage);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   // (rest of your existing task, label, comment, and user routes remain unchanged…)
 
   return httpServer;

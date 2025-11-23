@@ -38,6 +38,8 @@ const PortalInvoices = lazy(() => import("@/pages/portal/PortalInvoices"));
 const PortalKB = lazy(() => import("@/pages/portal/PortalKB"));
 const PortalStatus = lazy(() => import("@/pages/portal/PortalStatus"));
 const PortalLearning = lazy(() => import("@/pages/portal/PortalLearning"));
+const PortalChat = lazy(() => import("@/pages/portal/PortalChat"));
+const PortalAgent = lazy(() => import("@/pages/portal/PortalAgent"));
 const PortalSettings = lazy(() => import("@/pages/portal/PortalSettings"));
 
 import { servicePageData, industryPageData, resourcePageData, supportPageData } from "@/pages/routes/servicePages";
@@ -245,6 +247,16 @@ function Router() {
       <Route path="/portal/learning" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <PortalLearning />
+        </Suspense>
+      )} />
+      <Route path="/portal/chat" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <PortalChat />
+        </Suspense>
+      )} />
+      <Route path="/portal/agent" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <PortalAgent />
         </Suspense>
       )} />
       <Route path="/portal/settings" component={() => (
