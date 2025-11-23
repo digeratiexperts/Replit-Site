@@ -30,6 +30,7 @@ import {
 } from "./middleware/security";
 import { ZohoService } from "./services/zoho";
 import { ShippingManager, initializeShippingManager } from "./services/shipping";
+import { openaiConfig, withOpenAIGuard } from "./services/openai-config";
 import { insertPortalChatMessageSchema } from "@shared/schema";
 import archiver from "archiver";
 import { Readable } from "stream";
@@ -1506,6 +1507,113 @@ export async function registerRoutes(app: Express): Promise<Server> {
         oldest_entry: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
         newest_entry: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
       });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // =============== OPENAI INTEGRATION ENDPOINTS ===============
+
+  // Get OpenAI integration status
+  app.get("/api/portal/admin/openai/status", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const user = req.user;
+      if (user?.role !== "admin") {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      res.json({
+        status: openaiConfig.getStatus(),
+        message: openaiConfig.isEnabled() 
+          ? "OpenAI integration is enabled - API calls will be made and billed" 
+          : "OpenAI integration is disabled - no API calls will be made",
+      });
+
+      logSecurityEvent("OPENAI_STATUS_CHECK", req, { enabled: openaiConfig.isEnabled() });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Toggle OpenAI integration
+  app.post("/api/portal/admin/openai/toggle", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const user = req.user;
+      if (user?.role !== "admin") {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      const newState = openaiConfig.toggle();
+
+      res.json({
+        success: true,
+        enabled: newState,
+        message: newState 
+          ? "✅ OpenAI integration ENABLED - API calls will now be made and billed"
+          : "✅ OpenAI integration DISABLED - no API calls will be made",
+        status: openaiConfig.getStatus(),
+      });
+
+      logSecurityEvent("OPENAI_TOGGLED", req, { 
+        enabled: newState,
+        user: user?.username,
+      });
+
+      console.log(`[SECURITY] Admin ${user?.username} toggled OpenAI to ${newState}`);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Enable OpenAI integration
+  app.post("/api/portal/admin/openai/enable", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const user = req.user;
+      if (user?.role !== "admin") {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      const wasEnabled = openaiConfig.isEnabled();
+      openaiConfig.enable();
+
+      res.json({
+        success: true,
+        enabled: true,
+        wasAlreadyEnabled: wasEnabled,
+        message: wasEnabled 
+          ? "OpenAI integration was already enabled"
+          : "✅ OpenAI integration ENABLED - API calls will now be made and billed",
+        status: openaiConfig.getStatus(),
+      });
+
+      logSecurityEvent("OPENAI_ENABLED", req, { user: user?.username });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Disable OpenAI integration
+  app.post("/api/portal/admin/openai/disable", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const user = req.user;
+      if (user?.role !== "admin") {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+
+      const wasEnabled = openaiConfig.isEnabled();
+      openaiConfig.disable();
+
+      res.json({
+        success: true,
+        enabled: false,
+        wasAlreadyDisabled: !wasEnabled,
+        message: !wasEnabled 
+          ? "OpenAI integration was already disabled"
+          : "✅ OpenAI integration DISABLED - no further API calls will be made",
+        status: openaiConfig.getStatus(),
+      });
+
+      logSecurityEvent("OPENAI_DISABLED", req, { user: user?.username });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }

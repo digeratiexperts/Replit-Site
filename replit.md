@@ -49,6 +49,7 @@ The project prioritizes a modular structure with `client/` and `server/` directo
 - **Stripe**: Credit/debit payments, subscription management (`stripe-replit-sync`)
 - **Zelle**: Bank transfer payments via QR code
 - **Zoho Payments**: Checkout widget with webhook verification
+- **OpenAI**: AI-powered features with billing control (Replit AI Integrations)
 - **PostgreSQL/Neon**: Database with 40+ tables
 - **Vite**: Build tool and dev server
 - **React 18**: Frontend framework
@@ -107,6 +108,26 @@ The project prioritizes a modular structure with `client/` and `server/` directo
   - GET /api/security/health - Security status check
   - POST /api/security/csrf-token - Generate CSRF tokens
   - GET /api/security/events - Admin security event logs (admin only)
+
+## Latest Features Implemented (Session 5)
+- **OpenAI Billing Control System**: Full admin control over OpenAI API usage
+  - Enable/disable OpenAI integration anytime to manage billing
+  - Admin-only endpoints for toggling
+  - Environment variable support (ENABLE_OPENAI_INTEGRATION)
+  - Guard function for safe API calls
+  - Comprehensive audit logging
+  - 4 API endpoints for control
+- **OpenAI Configuration Service**: `server/services/openai-config.ts`
+  - `openaiConfig.isEnabled()` - Check current state
+  - `openaiConfig.enable()` / `.disable()` - Control state
+  - `openaiConfig.toggle()` - Switch state
+  - `withOpenAIGuard()` - Safe API call wrapper
+- **4 New OpenAI Control Endpoints**:
+  - GET /api/portal/admin/openai/status - Check status
+  - POST /api/portal/admin/openai/toggle - Toggle on/off
+  - POST /api/portal/admin/openai/enable - Enable explicitly
+  - POST /api/portal/admin/openai/disable - Disable explicitly
+- **Documentation**: OPENAI_BILLING_CONTROL.md with full setup and examples
 
 ## Latest Features Implemented (Session 4)
 - **Zoho One & Flow Integration**: Full compatibility with Zoho ecosystem
