@@ -1,34 +1,70 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PortalLayout } from "./PortalLayout";
-import { Send, AlertCircle } from "lucide-react";
+import { Send, AlertCircle, Wifi, WifiOff } from "lucide-react";
 
 interface ChatMessage {
   id: string;
-  author: string;
-  role: "client" | "support";
+  senderName: string;
+  senderRole: "client" | "support";
   content: string;
   timestamp: string;
   isRead: boolean;
 }
 
 export default function PortalChat() {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: "1",
-      author: "Support Team",
-      role: "support",
-      content: "Hello! Welcome to our live chat support. How can we help you today?",
-      timestamp: new Date(Date.now() - 3600000).toISOString(),
-      isRead: true,
-    },
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [messageText, setMessageText] = useState("");
   const [sending, setSending] = useState(false);
   const [connected, setConnected] = useState(true);
+  const [token, setToken] = useState<string>("");
+  const wsRef = useRef<WebSocket | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Initialize WebSocket connection with secure token
+  useEffect(() => {
+    const authToken = localStorage.getItem("authToken");
+    if (authToken) {
+      setToken(authToken);
+      const userId = localStorage.getItem("userId");
+      
+      // Connect to secure WebSocket
+      const wsUrl = `ws://localhost:5000/api/ws?token=${authToken}&userId=${userId}`;
+      wsRef.current = new WebSocket(wsUrl);
+
+      wsRef.current.onopen = () => {
+        setConnected(true);
+        console.log("WebSocket connected");
+      };
+
+      wsRef.current.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.type === "chat_message") {
+            setMessages((prev) => [...prev, data.data]);
+          }
+        } catch (error) {
+          console.error("Failed to parse WebSocket message:", error);
+        }
+      };
+
+      wsRef.current.onerror = () => {
+        setConnected(false);
+      };
+
+      wsRef.current.onclose = () => {
+        setConnected(false);
+      };
+
+      return () => {
+        if (wsRef.current) {
+          wsRef.current.close();
+        }
+      };
+    }
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -38,38 +74,36 @@ export default function PortalChat() {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = async (e: React.FormEvent) => {
+  const handleSendMessage = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!messageText.trim() || sending) return;
+    if (!messageText.trim() || sending || !connected) return;
 
     setSending(true);
-    const newMessage: ChatMessage = {
-      id: Date.now().toString(),
-      author: "You",
-      role: "client",
-      content: messageText,
-      timestamp: new Date().toISOString(),
-      isRead: true,
-    };
+    try {
+      const response = await fetch("/api/portal/chat/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          ticketId: "default-chat",
+          userId: localStorage.getItem("userId"),
+          senderName: "You",
+          senderRole: "client",
+          content: messageText,
+        }),
+      });
 
-    setMessages((prev) => [...prev, newMessage]);
-    setMessageText("");
+      if (!response.ok) throw new Error("Failed to send message");
 
-    // Simulate API call and support response
-    setTimeout(() => {
-      const supportResponse: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        author: "Support Agent",
-        role: "support",
-        content:
-          "Thanks for your message. Our support team has received it and will respond shortly. For urgent issues, please call (480) 519-5892.",
-        timestamp: new Date().toISOString(),
-        isRead: false,
-      };
-      setMessages((prev) => [...prev, supportResponse]);
+      setMessageText("");
+    } catch (error) {
+      console.error("Error sending message:", error);
+    } finally {
       setSending(false);
-    }, 1500);
-  };
+    }
+  }, [messageText, sending, connected, token]);
 
   return (
     <PortalLayout title="Live Chat Support">
@@ -103,19 +137,19 @@ export default function PortalChat() {
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex ${message.role === "client" ? "justify-end" : "justify-start"}`}
+                className={`flex ${message.senderRole === "client" ? "justify-end" : "justify-start"}`}
                 data-testid={`message-${message.id}`}
               >
                 <div
                   className={`max-w-xs px-4 py-2 rounded-lg ${
-                    message.role === "client"
+                    message.senderRole === "client"
                       ? "bg-[#5034ff] text-white rounded-br-none"
                       : "bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-gray-100 rounded-bl-none"
                   }`}
                 >
-                  <p className="text-sm font-medium mb-1">{message.author}</p>
+                  <p className="text-sm font-medium mb-1">{message.senderName}</p>
                   <p className="text-sm">{message.content}</p>
-                  <p className={`text-xs mt-1 ${message.role === "client" ? "text-blue-100" : "text-gray-500 dark:text-gray-400"}`}>
+                  <p className={`text-xs mt-1 ${message.senderRole === "client" ? "text-blue-100" : "text-gray-500 dark:text-gray-400"}`}>
                     {new Date(message.timestamp).toLocaleTimeString([], {
                       hour: "2-digit",
                       minute: "2-digit",

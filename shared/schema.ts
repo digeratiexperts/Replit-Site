@@ -573,3 +573,27 @@ export type InsertPortalTicketComment = z.infer<typeof insertPortalTicketComment
 
 export type PortalInvoice = typeof portalInvoices.$inferSelect;
 export type PortalKBArticle = typeof portalKBArticles.$inferSelect;
+
+// Chat messages table
+export const portalChatMessages = pgTable("portal_chat_messages", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  ticketId: varchar("ticket_id").references(() => portalTickets.id, { onDelete: "cascade" }),
+  userId: varchar("user_id").notNull().references(() => portalUsers.id, { onDelete: "cascade" }),
+  senderName: text("sender_name").notNull(),
+  senderRole: text("sender_role").notNull(), // "client" or "support"
+  content: text("content").notNull(),
+  encryptedContent: text("encrypted_content"), // For encryption at rest
+  isRead: boolean("is_read").default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const insertPortalChatMessageSchema = createInsertSchema(portalChatMessages).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  encryptedContent: true,
+});
+
+export type PortalChatMessage = typeof portalChatMessages.$inferSelect;
+export type InsertPortalChatMessage = z.infer<typeof insertPortalChatMessageSchema>;

@@ -34,6 +34,9 @@ export default function PortalLogin() {
 
       localStorage.setItem("portalUser", JSON.stringify(data.user));
       localStorage.setItem("portalToken", data.token);
+      localStorage.setItem("authToken", data.token);
+      localStorage.setItem("userId", data.user?.id || "portal-user");
+      localStorage.setItem("userEmail", email);
       navigate("/portal/dashboard");
     } catch (err) {
       setError("Connection error. Please try again.");

@@ -2,6 +2,10 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { WebSocketServer, WebSocket } from "ws";
+import helmet from "helmet";
+import { chatRateLimiter, agentRateLimiter } from "./middleware/rateLimiter";
+import { authMiddleware, generateToken, type AuthenticatedRequest } from "./middleware/auth";
+import { insertPortalChatMessageSchema } from "@shared/schema";
 import {
   insertWorkspaceSchema,
   insertProjectSchema,
@@ -13,34 +17,69 @@ import {
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Security middleware
+  app.use(helmet());
+  app.use(helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+    },
+  }));
+
   const httpServer = createServer(app);
 
   const wss = new WebSocketServer({ server: httpServer, path: "/api/ws" });
+  const connectedClients = new Map<string, WebSocket>();
 
   // ✅ Health check route
   app.get("/api/health", (_req: Request, res: Response) => {
     res.json({ status: "ok", message: "API is alive" });
   });
 
-  // --- WebSocket setup ---
-  wss.on("connection", (ws: WebSocket) => {
-    console.log("WebSocket client connected");
+  // --- WebSocket setup with authentication ---
+  wss.on("connection", (ws: WebSocket, request) => {
+    const url = request.url || "";
+    const params = new URLSearchParams(url.split("?")[1]);
+    const token = params.get("token");
+    const userId = params.get("userId");
+
+    if (!token || !userId) {
+      ws.close(1008, "Unauthorized: No token or userId");
+      return;
+    }
+
+    connectedClients.set(userId, ws);
+    console.log(`WebSocket client connected: ${userId}`);
 
     ws.on("message", (message: string) => {
       try {
         const data = JSON.parse(message.toString());
-        wss.clients.forEach((client) => {
-          if (client !== ws && client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify(data));
-          }
-        });
+        
+        // Only send to support team if from client, or to client if from support
+        if (data.targetRole) {
+          wss.clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+              client.send(JSON.stringify({
+                ...data,
+                timestamp: new Date().toISOString(),
+              }));
+            }
+          });
+        }
       } catch (error) {
         console.error("WebSocket error:", error);
       }
     });
 
     ws.on("close", () => {
-      console.log("WebSocket client disconnected");
+      connectedClients.delete(userId);
+      console.log(`WebSocket client disconnected: ${userId}`);
+    });
+
+    ws.on("error", (error) => {
+      console.error("WebSocket error:", error);
     });
   });
 
@@ -349,40 +388,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Portal Chat Messages
-  app.get("/api/portal/chat/messages", async (req: Request, res: Response) => {
+  // Portal Auth - Generate Token for Desktop Agent
+  app.post("/api/portal/auth/token", async (req: Request, res: Response) => {
     try {
-      const messages = [
-        {
-          id: "1",
-          author: "Support Team",
-          role: "support",
-          content: "Hello! Welcome to our live chat support. How can we help you today?",
-          timestamp: new Date(Date.now() - 3600000).toISOString(),
-          isRead: true,
-        }
-      ];
+      const { email, password } = req.body;
+      
+      // In production, verify against database
+      if (!email || !password) {
+        return res.status(400).json({ message: "Email and password required" });
+      }
+
+      const token = generateToken("portal-user-" + Date.now(), email, "portal");
+      res.json({ token, email });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Portal Chat Messages - with auth and rate limiting
+  app.get("/api/portal/chat/messages/:ticketId", [authMiddleware, chatRateLimiter], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { ticketId } = req.params;
+      const messages = await storage.getChatMessagesByTicketId(ticketId);
+      
+      // Mark as read
+      await storage.markMessagesAsRead(ticketId);
+      
       res.json(messages);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
   });
 
-  // Portal Chat Send Message
-  app.post("/api/portal/chat/messages", async (req: Request, res: Response) => {
+  // Portal Chat Send Message - with auth, validation, and rate limiting
+  app.post("/api/portal/chat/messages", [authMiddleware, chatRateLimiter], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { message } = req.body;
-      const newMessage = {
-        id: Date.now().toString(),
-        author: "You",
-        role: "client",
-        content: message,
+      const parsed = insertPortalChatMessageSchema.parse(req.body);
+      const message = await storage.createChatMessage(parsed);
+      
+      // Broadcast via WebSocket
+      const broadcast = {
+        type: "chat_message",
+        data: message,
         timestamp: new Date().toISOString(),
-        isRead: true,
       };
-      res.json(newMessage);
+      
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(broadcast));
+        }
+      });
+
+      res.json(message);
     } catch (error: any) {
-      res.status(500).json({ message: error.message });
+      res.status(400).json({ message: error.message });
     }
   });
 

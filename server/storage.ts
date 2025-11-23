@@ -10,6 +10,7 @@ import {
   workspaceMembers,
   taskLabels,
   activities,
+  portalChatMessages,
   type User,
   type InsertUser,
   type Workspace,
@@ -25,6 +26,8 @@ import {
   type InsertLabel,
   type Comment,
   type InsertComment,
+  type PortalChatMessage,
+  type InsertPortalChatMessage,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, desc, asc, sql } from "drizzle-orm";
@@ -74,6 +77,11 @@ export interface IStorage {
   getCommentsByTaskId(taskId: string): Promise<Comment[]>;
   createComment(comment: InsertComment): Promise<Comment>;
   deleteComment(id: string): Promise<void>;
+
+  // Portal Chat operations
+  getChatMessagesByTicketId(ticketId: string): Promise<PortalChatMessage[]>;
+  createChatMessage(message: InsertPortalChatMessage): Promise<PortalChatMessage>;
+  markMessagesAsRead(ticketId: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -320,6 +328,27 @@ export class DatabaseStorage implements IStorage {
 
   async deleteComment(id: string): Promise<void> {
     await db.delete(comments).where(eq(comments.id, id));
+  }
+
+  // Portal Chat operations
+  async getChatMessagesByTicketId(ticketId: string): Promise<PortalChatMessage[]> {
+    return await db
+      .select()
+      .from(portalChatMessages)
+      .where(eq(portalChatMessages.ticketId, ticketId))
+      .orderBy(asc(portalChatMessages.createdAt));
+  }
+
+  async createChatMessage(message: InsertPortalChatMessage): Promise<PortalChatMessage> {
+    const [created] = await db.insert(portalChatMessages).values(message).returning();
+    return created;
+  }
+
+  async markMessagesAsRead(ticketId: string): Promise<void> {
+    await db
+      .update(portalChatMessages)
+      .set({ isRead: true })
+      .where(eq(portalChatMessages.ticketId, ticketId));
   }
 }
 
