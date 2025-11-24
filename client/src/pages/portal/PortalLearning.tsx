@@ -10,7 +10,7 @@ export default function PortalLearning() {
       title: "Ecosystem & Pricing",
       description: "Learn about our complete service offerings and pricing tiers tailored to your business needs.",
       icon: Zap,
-      link: "https://digerati-experts.com/ecosystem-pricing/",
+      link: "https://digeratiexperts.com/ecosystem-pricing/",
       type: "Resource",
       color: "from-purple-500 to-indigo-500",
     },
@@ -18,7 +18,7 @@ export default function PortalLearning() {
       title: "Getting Started Guide",
       description: "A comprehensive guide to help you get the most out of your managed services on day one.",
       icon: BookOpen,
-      link: "https://digerati-experts.com/knowledge-base/getting-started",
+      link: "https://digeratiexperts.com/knowledge-base/getting-started",
       type: "Guide",
       color: "from-blue-500 to-cyan-500",
     },
@@ -26,7 +26,7 @@ export default function PortalLearning() {
       title: "Security Best Practices",
       description: "Learn how we protect your business and the best practices to ensure maximum security.",
       icon: FileText,
-      link: "https://digerati-experts.com/resources/security-best-practices",
+      link: "https://digeratiexperts.com/resources/security-best-practices",
       type: "Resource",
       color: "from-red-500 to-pink-500",
     },
@@ -34,7 +34,7 @@ export default function PortalLearning() {
       title: "Feature Tutorials",
       description: "Video tutorials on how to use common features and maximize productivity.",
       icon: Video,
-      link: "https://digerati-experts.com/resources/tutorials",
+      link: "https://digeratiexperts.com/resources/tutorials",
       type: "Tutorial",
       color: "from-green-500 to-emerald-500",
     },
@@ -177,7 +177,7 @@ export default function PortalLearning() {
                 Explore our complete ecosystem and pricing to discover which services are right for your business.
               </p>
               <a
-                href="https://digerati-experts.com/ecosystem-pricing/"
+                href="https://digeratiexperts.com/ecosystem-pricing/"
                 target="_blank"
                 rel="noopener noreferrer"
               >

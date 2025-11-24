@@ -129,7 +129,7 @@ export default function TrustCenter() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
-                  onClick={() => window.location.href = 'mailto:security@digerati-experts.com?subject=Security Documentation Request'}
+                  onClick={() => window.location.href = 'mailto:security@digeratiexperts.com?subject=Security Documentation Request'}
                   className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all shadow-md"
                   data-testid="button-request-docs"
                 >

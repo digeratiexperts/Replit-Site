@@ -119,7 +119,7 @@ export default function PortalLogin() {
 
             <div className="mt-6 pt-6 border-t border-white/10">
               <p className="text-xs text-gray-400 text-center">
-                Need help? Contact support@digerati-experts.com
+                Need help? Contact support@digeratiexperts.com
               </p>
             </div>
           </CardContent>

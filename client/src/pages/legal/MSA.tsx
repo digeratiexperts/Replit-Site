@@ -56,7 +56,7 @@ export default function MSA() {
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
               <Button 
                 className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
-                onClick={() => window.location.href = 'mailto:legal@digerati-experts.com?subject=MSA Request'}
+                onClick={() => window.location.href = 'mailto:legal@digeratiexperts.com?subject=MSA Request'}
                 data-testid="button-request-msa"
               >
                 <Mail className="h-5 w-5 mr-2" />
@@ -73,7 +73,7 @@ export default function MSA() {
 
             <div className="mt-12 bg-gray-50 p-6 rounded-lg">
               <h3 className="text-xl font-semibold text-gray-900 mb-3">Contact Legal Department</h3>
-              <p className="text-gray-700 mb-2"><strong>Email:</strong> legal@digerati-experts.com</p>
+              <p className="text-gray-700 mb-2"><strong>Email:</strong> legal@digeratiexperts.com</p>
               <p className="text-gray-700 mb-2"><strong>Phone:</strong> 325-480-9870</p>
               <p className="text-gray-700"><strong>Address:</strong> 3165 S Alma School Rd Suite 29, Chandler, AZ 85248</p>
             </div>

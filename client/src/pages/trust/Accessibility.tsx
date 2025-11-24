@@ -93,7 +93,7 @@ export default function Accessibility() {
             </p>
 
             <div className="bg-gray-50 p-6 rounded-lg mb-8">
-              <p className="text-gray-900 mb-2"><strong>Email:</strong> accessibility@digerati-experts.com</p>
+              <p className="text-gray-900 mb-2"><strong>Email:</strong> accessibility@digeratiexperts.com</p>
               <p className="text-gray-900 mb-2"><strong>Phone:</strong> 325-480-9870</p>
               <p className="text-gray-900 mb-2"><strong>Mail:</strong> 3165 S Alma School Rd Suite 29, Chandler, AZ 85248</p>
             </div>
@@ -130,7 +130,7 @@ export default function Accessibility() {
               </p>
               <Button 
                 className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
-                onClick={() => window.location.href = 'mailto:accessibility@digerati-experts.com?subject=Accessibility Feedback'}
+                onClick={() => window.location.href = 'mailto:accessibility@digeratiexperts.com?subject=Accessibility Feedback'}
                 data-testid="button-report-accessibility"
               >
                 <Mail className="h-5 w-5 mr-2" />

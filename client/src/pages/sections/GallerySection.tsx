@@ -10,7 +10,7 @@ const contactCards = [
   {
     icon: "/figmaAssets/background-3.svg",
     label: "EMAIL US",
-    value: "admin@digerati-experts.com",
+    value: "admin@digeratiexperts.com",
   },
 ];
 

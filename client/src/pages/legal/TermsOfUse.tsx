@@ -496,7 +496,7 @@ export default function TermsOfUse() {
               
               <div className="bg-white p-4 rounded-lg shadow-sm">
                 <p className="text-gray-900 font-semibold mb-2">Digerati Experts - Legal Department</p>
-                <p className="text-gray-700"><strong>Email:</strong> legal@digerati-experts.com</p>
+                <p className="text-gray-700"><strong>Email:</strong> legal@digeratiexperts.com</p>
                 <p className="text-gray-700"><strong>Phone:</strong> 325-480-9870</p>
                 <p className="text-gray-700"><strong>Address:</strong> 3165 S Alma School Rd Suite 29, Chandler, AZ 85248</p>
                 <p className="text-gray-700 mt-3"><strong>Office Hours:</strong> Monday-Friday 7:00 AM - 6:00 PM MST</p>

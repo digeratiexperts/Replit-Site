@@ -167,7 +167,7 @@ export default function PortalProcurementStore() {
         {/* Info Box */}
         <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-900/30 rounded-lg">
           <p className="text-sm text-blue-800 dark:text-blue-300">
-            <strong>Procurement Support:</strong> Need help finding the right product or service? Contact our procurement team at procurement@digerati-experts.com or use the support chat.
+            <strong>Procurement Support:</strong> Need help finding the right product or service? Contact our procurement team at procurement@digeratiexperts.com or use the support chat.
           </p>
         </div>
       </div>

@@ -73,7 +73,7 @@ export default function SLA() {
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
               <Button 
                 className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
-                onClick={() => window.location.href = 'mailto:legal@digerati-experts.com?subject=SLA Request'}
+                onClick={() => window.location.href = 'mailto:legal@digeratiexperts.com?subject=SLA Request'}
                 data-testid="button-request-sla"
               >
                 <Mail className="h-5 w-5 mr-2" />

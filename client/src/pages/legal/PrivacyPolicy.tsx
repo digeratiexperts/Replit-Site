@@ -43,7 +43,7 @@ export default function PrivacyPolicy() {
                 compliance support, and related technology services to businesses throughout Arizona and beyond.
               </p>
               <p className="text-gray-700 leading-relaxed mt-4">
-                This Privacy Policy applies to information collected through our website at digerati-experts.com, 
+                This Privacy Policy applies to information collected through our website at digeratiexperts.com, 
                 our client portal, and in the course of providing our managed services to clients.
               </p>
             </div>
@@ -289,7 +289,7 @@ export default function PrivacyPolicy() {
               </ul>
 
               <p className="text-gray-700 mb-4">
-                To exercise these rights, contact us at <strong>privacy@digerati-experts.com</strong> or call <strong>325-480-9870</strong>.
+                To exercise these rights, contact us at <strong>privacy@digeratiexperts.com</strong> or call <strong>325-480-9870</strong>.
               </p>
 
               <p className="text-gray-700">
@@ -368,7 +368,7 @@ export default function PrivacyPolicy() {
               
               <div className="bg-white p-4 rounded-lg shadow-sm">
                 <p className="text-gray-900 font-semibold mb-2">Digerati Experts - Privacy Team</p>
-                <p className="text-gray-700"><strong>Email:</strong> privacy@digerati-experts.com</p>
+                <p className="text-gray-700"><strong>Email:</strong> privacy@digeratiexperts.com</p>
                 <p className="text-gray-700"><strong>Phone:</strong> 325-480-9870</p>
                 <p className="text-gray-700"><strong>Address:</strong> 3165 S Alma School Rd Suite 29, Chandler, AZ 85248</p>
                 <p className="text-gray-700 mt-3"><strong>Office Hours:</strong> Monday-Friday 7:00 AM - 6:00 PM MST</p>
