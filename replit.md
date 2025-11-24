@@ -160,3 +160,111 @@ A sophisticated 3-step lead generation form with plan matching, corporate email 
 4. Set up email automation for lead notifications
 5. Connect to CRM for lead scoring and nurture sequences
 6. Add analytics tracking for conversion monitoring
+
+## Session 10: CyberPanel/OpenLiteSpeed Deployment & Subdomain Configuration
+
+### Issues Encountered & Fixed ✅
+
+**Problem 1: Main Site Showing CyberPanel Default Page (404)**
+- **Root Cause**: docRoot in vHost Conf pointed to non-existent folder (`/client/dist`)
+- **Solution**: Updated docRoot to actual build output location: `/home/digeratiexperts.com/public_html/dist/public`
+- **Key Learning**: vite outputs to `dist/public/`, NOT `dist/`
+
+**Problem 2: SPA Routing Broken (Portal Routes Returning 404)**
+- **Root Cause**: `.htaccess` rewrite rules not applied properly
+  - Wrong location (outside docRoot)
+  - Permissions blocked reads/writes in `dist/public` folder
+  - `.htaccess` files can disappear after `npm run build` (volatile build folder)
+- **Solution**: Created `.htaccess` in the actual docRoot with correct SPA rewrite rules:
+  ```apache
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+  ```
+- **Permissions Fixed**: Set `755` for folders, `644` for files, owned by `diger6692`
+
+**Problem 3: Portal Subdomain Showing 404**
+- **Root Cause**: Subdomain vHost had incorrect docRoot and missing SPA rewrites
+- **Solution**: 
+  - Configured subdomain vHost to use same docRoot as main domain
+  - Added same SPA rewrite rules
+  - Both domains now share same `dist/public` folder
+
+### CyberPanel/OpenLiteSpeed Deployment SOP
+
+**1. Build the project in Replit:**
+```bash
+npm run build
+```
+Creates `dist/public/index.html` and all assets.
+
+**2. Upload to CyberPanel:**
+Upload entire `dist/public/` folder contents to:
+```
+/home/digeratiexperts.com/public_html/dist/public/
+```
+
+**3. Configure Main Domain vHost Conf:**
+```
+docRoot                   /home/digeratiexperts.com/public_html/dist/public
+rewrite {
+  enable                  1
+  autoLoadHtaccess        1
+  rewriteRules {
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+    RewriteRule ^ /dist/public/index.html [L]
+  }
+}
+context /.well-known/acme-challenge {
+  rewrite { enable 0 }
+}
+```
+
+**4. Create `.htaccess` in docRoot:**
+Path: `/home/digeratiexperts.com/public_html/dist/public/.htaccess`
+```apache
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
+```
+
+**5. Fix Permissions:**
+```bash
+chmod 755 /home/digeratiexperts.com/public_html/dist/public
+chmod 644 /home/digeratiexperts.com/public_html/dist/public/*
+chown -R diger6692:diger6692 /home/digeratiexperts.com/public_html/dist/public
+```
+
+**6. Configure Portal Subdomain (if needed):**
+- Point subdomain docRoot to same main domain folder
+- Add same SPA rewrite rules
+- Both can share same built files
+
+**7. Restart OpenLiteSpeed:**
+```bash
+sudo systemctl restart lsws
+```
+
+### Key Takeaways for Future Deployments
+- **docRoot must match actual Vite build output** (`dist/public/`, NOT `dist/`)
+- **Build output is volatile** - recreated on each `npm run build`
+- **SPA rewrite rules must live in vHost Conf or inside docRoot/.htaccess**
+- **Permissions matter** - OpenLiteSpeed runs as `nobody`, needs read access to all files
+- **Restart required** - All vHost changes require `sudo systemctl restart lsws`
+- **Subdomains share build folder** - No need to duplicate files if using same build
+- **CyberPanel reinstall page** usually means docRoot is wrong or permissions are broken
+
+### Active Deployment Status ✅
+- Main domain (`digeratiexperts.com`): Working
+- Portal path (`digeratiexperts.com/portal/...`): Working
+- Portal subdomain (`portal.digeratiexperts.com`): Working
+- SPA routing: Working (all paths route to `index.html`)
+- SSL/TLS: Active on both domains
