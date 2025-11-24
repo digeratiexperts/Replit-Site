@@ -315,7 +315,7 @@ export function MegaMenu() {
 
             {/* Client Portal */}
             <a
-              href="https://portal.digerati-experts.com"
+              href="https://portal.digeratiexperts.com"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center text-white/90 hover:text-white text-sm font-medium transition-colors"
@@ -605,7 +605,7 @@ export function MegaMenu() {
                   325-480-9870
                 </a>
                 <a
-                  href="https://portal.digerati-experts.com"
+                  href="https://portal.digeratiexperts.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center text-gray-700 hover:text-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1"
