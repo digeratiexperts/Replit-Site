@@ -118,6 +118,12 @@ export default function PortalLogin() {
             </form>
 
             <div className="mt-6 pt-6 border-t border-white/10">
+              <p className="text-xs text-gray-400 text-center mb-3">
+                Don't have an account?{" "}
+                <a href="/portal/signup" className="text-[#5034ff] hover:underline" data-testid="link-signup">
+                  Sign Up
+                </a>
+              </p>
               <p className="text-xs text-gray-400 text-center">
                 Need help? Contact support@digeratiexperts.com
               </p>

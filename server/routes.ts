@@ -517,6 +517,117 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  // ===== PORTAL AUTHENTICATION =====
+  // In-memory user storage for demo (replace with database in production)
+  const portalUsers: Map<string, any> = new Map();
+  
+  // Admin credentials - CHANGE THESE IN PRODUCTION
+  const adminUser = {
+    id: "admin-001",
+    email: "admin@digeratiexperts.com",
+    username: "admin",
+    password: "Admin123!",
+    role: "admin",
+    fullName: "Administrator",
+  };
+  
+  // Initialize with admin user
+  portalUsers.set(adminUser.email, adminUser);
+  portalUsers.set(adminUser.username, adminUser);
+
+  // Portal Register Endpoint
+  app.post("/api/portal/register", [validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { email, username, password } = req.body;
+
+      if (!email || !username || !password) {
+        return res.status(400).json({ message: "Email, username, and password are required" });
+      }
+
+      // Check if user already exists
+      if (portalUsers.has(email) || portalUsers.has(username)) {
+        return res.status(400).json({ message: "Email or username already exists" });
+      }
+
+      // Validate password strength
+      if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+        return res.status(400).json({ 
+          message: "Password must be at least 8 characters with 1 uppercase letter and 1 number" 
+        });
+      }
+
+      // Create new user
+      const newUser = {
+        id: randomId(),
+        email,
+        username,
+        password, // In production: hash this with bcrypt
+        role: "user",
+        fullName: username,
+        createdAt: new Date(),
+      };
+
+      portalUsers.set(email, newUser);
+      portalUsers.set(username, newUser);
+
+      logSecurityEvent("PORTAL_USER_REGISTERED", req, { userId: newUser.id, email });
+
+      return res.json({
+        success: true,
+        message: "Account created successfully",
+        user: {
+          id: newUser.id,
+          email: newUser.email,
+          username: newUser.username,
+          fullName: newUser.fullName,
+          role: newUser.role,
+        },
+      });
+    } catch (error: any) {
+      console.error("[ERROR] Portal registration failed:", error);
+      res.status(500).json({ message: "Registration failed" });
+    }
+  });
+
+  // Portal Login Endpoint
+  app.post("/api/portal/login", [validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { email, password } = req.body;
+
+      if (!email || !password) {
+        return res.status(400).json({ message: "Email and password are required" });
+      }
+
+      // Find user
+      const user = portalUsers.get(email);
+
+      if (!user || user.password !== password) {
+        logSecurityEvent("PORTAL_LOGIN_FAILED", req, { email });
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+
+      // Generate simple token (in production: use JWT)
+      const token = `portal_${user.id}_${randomId()}`;
+
+      logSecurityEvent("PORTAL_USER_LOGIN", req, { userId: user.id, email, role: user.role });
+
+      return res.json({
+        success: true,
+        token,
+        user: {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          fullName: user.fullName,
+          role: user.role,
+        },
+      });
+    } catch (error: any) {
+      console.error("[ERROR] Portal login failed:", error);
+      res.status(500).json({ message: "Login failed" });
+    }
+  });
+
   // ===== LEAD QUOTE FORM =====
   app.post("/api/lead-quote", [leadQuoteRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {

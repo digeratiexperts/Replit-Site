@@ -40,6 +40,7 @@ const ScottsdalAZ = lazy(() => import("@/pages/locations/ScottsdalAZ"));
 
 // Portal pages
 const PortalLogin = lazy(() => import("@/pages/portal/PortalLogin"));
+const PortalSignup = lazy(() => import("@/pages/portal/PortalSignup"));
 const PortalDashboard = lazy(() => import("@/pages/portal/PortalDashboard"));
 const PortalTickets = lazy(() => import("@/pages/portal/PortalTickets"));
 const PortalTicketDetail = lazy(() => import("@/pages/portal/PortalTicketDetail"));
@@ -272,6 +273,11 @@ function Router() {
       <Route path="/portal/login" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <PortalLogin />
+        </Suspense>
+      )} />
+      <Route path="/portal/signup" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <PortalSignup />
         </Suspense>
       )} />
       <Route path="/portal/dashboard" component={() => (
