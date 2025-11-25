@@ -298,19 +298,20 @@ export function MegaMenu() {
       {/* Top Utility Bar */}
       <div 
         className={`fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-purple-900 to-blue-900 transition-all duration-300 ${
-          isScrolled ? 'h-0 overflow-hidden opacity-0' : 'h-10'
+          isScrolled ? 'h-0 overflow-hidden opacity-0' : 'h-auto md:h-10'
         }`}
       >
-        <div className="container mx-auto px-4 lg:px-8 h-full flex items-center justify-end">
-          <div className="flex items-center space-x-6">
+        <div className="container mx-auto px-4 lg:px-8 h-full flex flex-col md:flex-row items-center justify-end py-2 md:py-0">
+          <div className="flex items-center flex-wrap gap-2 md:gap-6 justify-center md:justify-end">
             {/* Phone Number */}
             <a
               href="tel:325-480-9870"
-              className="flex items-center text-white/90 hover:text-white text-sm font-medium transition-colors"
+              className="flex items-center text-white/90 hover:text-white text-xs md:text-sm font-medium transition-colors"
               data-testid="utility-phone"
             >
               <Phone className="h-3.5 w-3.5 mr-1.5" />
-              <span>325-480-9870</span>
+              <span className="hidden sm:inline">325-480-9870</span>
+              <span className="sm:hidden">Call</span>
             </a>
 
             {/* Client Portal */}
@@ -318,10 +319,11 @@ export function MegaMenu() {
               href="https://portal.digeratiexperts.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center text-white/90 hover:text-white text-sm font-medium transition-colors"
+              className="flex items-center text-white/90 hover:text-white text-xs md:text-sm font-medium transition-colors"
               data-testid="utility-portal"
             >
-              Client Portal
+              <span className="hidden sm:inline">Client Portal</span>
+              <span className="sm:hidden">Portal</span>
               <ExternalLink className="h-3 w-3 ml-1" />
             </a>
           </div>
@@ -547,42 +549,50 @@ export function MegaMenu() {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div 
-            className="lg:hidden bg-gray-900 border-t border-gray-800"
+            className="lg:hidden bg-gray-900 border-t border-gray-800 max-h-[calc(100vh-120px)] overflow-y-auto"
             role="dialog"
             aria-label="Mobile navigation menu"
           >
-            <div className="p-4 space-y-3">
+            <div className="p-4 space-y-2">
               {navItems.map((item) => (
                 <div key={item.name}>
                   {item.isSimple ? (
                     <a
                       href={item.href}
-                      className="block py-2 text-gray-700 hover:text-purple-600 font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2"
+                      className="block py-3 px-3 text-white hover:bg-purple-600/20 hover:text-yellow-300 font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500 rounded transition-colors text-base"
                       onClick={() => setMobileMenuOpen(false)}
+                      data-testid={`mobile-nav-${item.name.toLowerCase()}`}
                       aria-label={`Go to ${item.name}`}
                     >
                       {item.name}
                     </a>
                   ) : (
                     <details className="group">
-                      <summary className="flex items-center justify-between py-2 text-gray-700 hover:text-purple-600 font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2">
+                      <summary className="flex items-center justify-between py-3 px-3 text-white hover:bg-purple-600/20 hover:text-yellow-300 font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500 rounded transition-colors text-base"
+                        data-testid={`mobile-nav-${item.name.toLowerCase()}`}>
                         {item.name}
-                        <ChevronDown className="h-4 w-4 transition-transform group-open:rotate-180" aria-hidden="true" />
+                        <ChevronDown className="h-5 w-5 transition-transform group-open:rotate-180" aria-hidden="true" />
                       </summary>
                       {item.sections && (
-                        <div className="mt-2 ml-4 space-y-2">
+                        <div className="mt-1 ml-2 space-y-1 bg-gray-800/50 rounded p-2">
                           {item.sections.map((section) => (
                             <div key={section.title} className="mb-3">
-                              <h4 className="font-semibold text-purple-600 mb-2">{section.title}</h4>
+                              <h4 className="font-semibold text-yellow-300 mb-2 px-2 pt-1 text-sm">{section.title}</h4>
                               {section.items.map((subItem) => (
                                 <a
                                   key={subItem.title}
                                   href={subItem.url || '#'}
-                                  className="block py-1 text-sm text-gray-600 hover:text-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2"
+                                  className="block py-2 px-3 text-sm text-gray-200 hover:text-white hover:bg-purple-600/20 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded transition-colors"
                                   onClick={() => setMobileMenuOpen(false)}
+                                  data-testid={`mobile-submenu-${subItem.title.toLowerCase().replace(/\s+/g, '-')}`}
                                   aria-label={`${subItem.title}: ${subItem.description || ''}`}
                                 >
                                   {subItem.title}
+                                  {subItem.badge && (
+                                    <span className="ml-2 text-xs bg-purple-600 text-white px-2 py-0.5 rounded inline-block">
+                                      {subItem.badge}
+                                    </span>
+                                  )}
                                 </a>
                               ))}
                             </div>
@@ -595,31 +605,34 @@ export function MegaMenu() {
               ))}
               
               {/* Mobile Actions */}
-              <div className="pt-4 border-t space-y-3">
+              <div className="pt-4 mt-4 border-t border-gray-800 space-y-3">
                 <a
                   href="tel:325-480-9870"
-                  className="flex items-center text-purple-600 font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1"
+                  className="flex items-center text-yellow-300 font-semibold hover:text-yellow-200 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded px-3 py-2 transition-colors"
+                  data-testid="mobile-call"
                   aria-label="Call us at 325-480-9870"
                 >
-                  <Phone className="h-4 w-4 mr-2" aria-hidden="true" />
-                  325-480-9870
+                  <Phone className="h-5 w-5 mr-2" aria-hidden="true" />
+                  <span>325-480-9870</span>
                 </a>
                 <a
                   href="https://portal.digeratiexperts.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center text-gray-700 hover:text-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-1"
+                  className="flex items-center text-gray-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 rounded px-3 py-2 transition-colors"
+                  data-testid="mobile-portal"
                   aria-label="Access client portal (opens in new window)"
                 >
                   Client Portal
-                  <ExternalLink className="h-3 w-3 ml-1" aria-hidden="true" />
+                  <ExternalLink className="h-4 w-4 ml-2" aria-hidden="true" />
                 </a>
                 <Button
-                  className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                  className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all"
                   onClick={() => {
                     setMobileMenuOpen(false);
                     window.location.href = '#assessment';
                   }}
+                  data-testid="mobile-cta"
                   aria-label="Get protected now - Start your security assessment"
                 >
                   Get Protected Now
