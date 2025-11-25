@@ -106,9 +106,9 @@ export default function Team() {
         <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg p-8 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Ready to Work with Our Team?</h2>
           <p className="text-lg mb-6">Schedule a free consultation to meet the team that will protect your business.</p>
-          <button className="bg-white text-purple-700 hover:bg-gray-100 px-8 py-3 rounded-md font-semibold" data-testid="button-schedule">
+          <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center bg-white text-purple-700 hover:bg-gray-100 px-8 py-3 rounded-md font-semibold transition-all" data-testid="button-schedule">
             Schedule Consultation
-          </button>
+          </a>
         </div>
       </div>
     </PageTemplate>

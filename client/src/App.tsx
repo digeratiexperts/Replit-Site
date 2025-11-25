@@ -11,7 +11,14 @@ import { DigeratiHomepage } from "@/pages/DigeratiHomepage";
 const SolutionsIndex = lazy(() => import("@/pages/solutions/SolutionsIndex"));
 const ManagedITSupport = lazy(() => import("@/pages/solutions/ManagedITSupport"));
 const Healthcare = lazy(() => import("@/pages/industries/Healthcare"));
+const Accounting = lazy(() => import("@/pages/industries/Accounting"));
+const LawFirms = lazy(() => import("@/pages/industries/LawFirms"));
+const RealEstate = lazy(() => import("@/pages/industries/RealEstate"));
+const Nonprofits = lazy(() => import("@/pages/industries/Nonprofits"));
 const CaseStudies = lazy(() => import("@/pages/resources/CaseStudies"));
+const KnowledgeBase = lazy(() => import("@/pages/support/KnowledgeBase"));
+const RemoteSupport = lazy(() => import("@/pages/support/RemoteSupport"));
+const PayInvoice = lazy(() => import("@/pages/support/PayInvoice"));
 const MissionValues = lazy(() => import("@/pages/about/MissionValues"));
 const Team = lazy(() => import("@/pages/about/Team"));
 const Compliance = lazy(() => import("@/pages/about/Compliance"));
@@ -99,25 +106,24 @@ function Router() {
           <Healthcare />
         </Suspense>
       )} />
+      <Route path="/industries/accounting-finance" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <Accounting />
+        </Suspense>
+      )} />
       <Route path="/industries/law-firms" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
-          <GenericServicePage 
-            title="IT Solutions for Law Firms"
-            subtitle="Secure document management and compliance for legal practices"
-            description="Law firms handle sensitive client information and need secure, reliable IT systems that protect client confidentiality while meeting regulatory requirements."
-            features={[
-              { title: "Secure Document Management", description: "Encrypted storage and sharing of sensitive legal documents" },
-              { title: "Compliance Support", description: "Meet ABA and state bar IT security requirements" },
-              { title: "E-Discovery Ready", description: "Systems configured for litigation support and e-discovery" }
-            ]}
-            benefits={[
-              "Client privilege protection",
-              "Secure client communications",
-              "Audit trails and access logs",
-              "Disaster recovery planning"
-            ]}
-            gradientColors="from-slate-700 via-slate-800 to-gray-900"
-          />
+          <LawFirms />
+        </Suspense>
+      )} />
+      <Route path="/industries/real-estate" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <RealEstate />
+        </Suspense>
+      )} />
+      <Route path="/industries/nonprofits" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <Nonprofits />
         </Suspense>
       )} />
       {Object.entries(industryPageData).map(([key, data]) => (
@@ -173,6 +179,21 @@ function Router() {
       <Route path="/support/submit-ticket" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <SubmitTicket />
+        </Suspense>
+      )} />
+      <Route path="/support/knowledge-base" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <KnowledgeBase />
+        </Suspense>
+      )} />
+      <Route path="/support/remote-support" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <RemoteSupport />
+        </Suspense>
+      )} />
+      <Route path="/support/pay-invoice" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <PayInvoice />
         </Suspense>
       )} />
       {Object.entries(supportPageData).map(([key, data]) => (

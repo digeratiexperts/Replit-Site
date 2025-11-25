@@ -97,10 +97,10 @@ export default function CaseStudies() {
         <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg p-8 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Ready to Write Your Success Story?</h2>
           <p className="text-lg mb-6">Let's discuss how we can help your business achieve similar results.</p>
-          <button className="bg-white text-purple-700 hover:bg-gray-100 px-8 py-3 rounded-md font-semibold inline-flex items-center gap-2" data-testid="button-contact-us">
+          <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-white text-purple-700 hover:bg-gray-100 px-8 py-3 rounded-md font-semibold transition-all" data-testid="button-contact-us">
             Contact Us
             <ArrowRight className="h-4 w-4" />
-          </button>
+          </a>
         </div>
       </div>
     </PageTemplate>

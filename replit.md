@@ -9,6 +9,9 @@ Digerati Experts is a comprehensive platform integrating a public marketing webs
 - Event-driven architecture for cross-service communication
 - AI-powered intelligent features (classification, suggestions, auto-routing)
 - Enterprise security and compliance
+- All CTAs link to Zoho Bookings (https://meet.digerati-experts.com/)
+- Corporate email validation (no public email providers)
+- Domain: digeratiexperts.com (no hyphen)
 
 ## System Architecture
 
@@ -19,14 +22,14 @@ The platform features a modern, responsive SaaS design system with consistent to
 **Frontend**: Built with React 18 and TypeScript, using Wouter for routing, shadcn/ui with Radix UI for components, Lucide React for icons, and Tailwind CSS for styling.
 **Backend**: Utilizes an Express.js server with TypeScript.
 **Payment System**: Integrates Stripe Checkout, Zelle QR codes, and Zoho Payments architecture, with `stripe-replit-sync` for webhook management and PostgreSQL schema.
-**Content Management**: Solutions pages are dynamically generated from `servicePageData`.
-**Navigation**: Implements a comprehensive mega menu.
+**Content Management**: Solutions pages are dynamically generated from `servicePageData`; industry pages have custom comprehensive content.
+**Navigation**: Implements a comprehensive mega menu with mobile optimization (white text on dark background for visibility).
 **SEO**: Includes extensive SEO meta tags, Open Graph, and Twitter card meta tags.
 **Security**: Incorporates enterprise-grade protection against MITM attacks (HSTS, CSP, X-Frame-Options, secure cookies), multi-layer rate limiting, bot detection, input sanitization, CSRF protection, and duplicate request detection.
 **Deployment**: CyberPanel/OpenLiteSpeed for hosting, with specific configurations for SPA routing and subdomain management.
 
 ### Feature Specifications
-- **Navigation**: Mega menu with sections for Solutions, Industries, Resources, About, and CTAs.
+- **Navigation**: Mega menu with sections for Solutions, Industries, Resources, About, and CTAs - all linked to Zoho Bookings
 - **Key Sections**: Hero section with free assessment, alert banner, six core security services, a 4-step protection process, interactive calculators, industry-specific solutions, three-tier pricing, client testimonials, FAQ, free pen test offer, and a contact form.
 - **Client Portal**: Includes pages for Advanced Forms, Satisfaction Surveys, Approvals, Questionnaires & Calendar.
 - **Admin Features**: Import system for companies/users (Zoho Desk, Zoho CRM, JumpCloud, Seamless.ai), agent management (JumpCloud, Coro.net, BlackPoint), multi-tenancy access control, and OpenAI billing control.
@@ -36,13 +39,64 @@ The platform features a modern, responsive SaaS design system with consistent to
 - **Lead Generation**: A multi-step lead quote wizard with plan matching, corporate email validation, and spam protection measures (honeypot, rate limiting).
 - **Portal Authentication**: User registration and login with email/password validation, token-based authentication, and seeded admin user for testing.
 
+### Content Pages (NEW)
+**Solutions/Services Pages** (13 comprehensive pages):
+- Office Package, Managed IT Support, Managed Workplace, Cloud Backup, Security Awareness Training
+- Co-Managed IT, Threat Detection & Response, Security Operations (SOC), Backup & Disaster Recovery
+- vCIO & Strategy, Data Encryption & Control, Compliance & Risk Reports, Unified Security Posture
+
+**Industry Pages** (5 custom comprehensive pages):
+- Healthcare: HIPAA compliance, patient data protection, privacy requirements
+- Accounting & Finance: PCI DSS compliance, tax data protection, wire fraud prevention, IRS alignment
+- Law Firms: ABA compliance, attorney-client privilege, trust account security, wire fraud prevention
+- Real Estate: Wire fraud prevention, transaction security, TRID/RESPA compliance, ransomware protection
+- Nonprofits: Nonprofit pricing (20% discount), donor data protection, grant compliance, scalability
+
+**Resource Pages** (5 pages via resourcePageData):
+- Blog & News, Videos & Webinars, Security Checklist, Datasheets & Documentation
+- Case Studies: Phoenix Medical Practice (HIPAA), Law Firm (Downtime), CPA Firm (Insurance)
+
+**Support Pages** (5 pages):
+- Submit Ticket, Knowledge Base, Remote Support, Pay Invoice
+- Knowledge Base: FAQs organized by category (Getting Started, Troubleshooting, Security & Compliance)
+
+**About Pages** (5 pages):
+- Mission & Values: Company mission, 4 core values, competitive differentiators
+- Team: Leadership, Security Engineers, System Engineers, Support Team with certifications
+- Compliance: Audit-ready documentation, framework mapping, compliance evidence
+- Support: Company support resources
+- Insurance: Insurance information
+
+**Legal Pages** (7 pages):
+- Privacy Policy, Terms of Use, MSA, SLA, AUP, DPA, Sample SOW
+
+**Trust Pages** (3 pages):
+- Trust Center, Vulnerability Disclosure, Accessibility
+
+**Location Pages** (6 pages):
+- Chandler, Phoenix, Mesa, Gilbert, Tempe, Scottsdale
+
 ### System Design Choices
 The project follows a modular structure with `client/` and `server/` directories. UUIDs are used for IDs. Payment processing includes enterprise-grade encryption and webhook signature validation. AI services for ticket classification, priority detection, and hybrid AI/human chat are implemented with graceful fallback mechanisms and admin control over OpenAI usage. Role-based access control is applied to navigation and features. User storage for the portal is currently in-memory but designed for future PostgreSQL migration with bcrypt hashing and JWT tokens.
+
+## Recent Changes (Latest Session)
+- **Fixed all dead buttons and links**: Get Protected Now, Get Free Assessment, Explore More Services, Healthcare CTAs, footer location links, footer Request Docs button - all now link to Zoho Bookings (https://meet.digerati-experts.com/)
+- **Mobile menu optimization**: White text on dark background for visibility, proper spacing, scrollable overflow
+- **Industry pages completely rewritten with comprehensive content**:
+  - Accounting: PCI DSS, tax data, wire fraud prevention
+  - Law Firms: ABA compliance, privilege protection, trust account security
+  - Real Estate: Wire fraud prevention focus, TRID compliance, transaction security
+  - Nonprofits: Nonprofit pricing model, donor protection, grant compliance
+- **New support pages created**: Knowledge Base, Remote Support (feature-rich), Pay Invoice
+- **GenericServicePage CTA updated**: All consultation buttons now link to Zoho Bookings
+- **Case Studies CTA updated**: Links to Zoho Bookings
+- **Team page CTA updated**: Links to Zoho Bookings
 
 ## External Dependencies
 - **Stripe**: Credit/debit payments, subscription management (`stripe-replit-sync`)
 - **Zelle**: Bank transfer payments
 - **Zoho Payments**: Checkout widget
+- **Zoho Bookings**: Scheduling system (https://meet.digerati-experts.com/)
 - **OpenAI**: AI-powered features
 - **PostgreSQL/Neon**: Database
 - **Vite**: Build tool
@@ -60,3 +114,7 @@ The project follows a modular structure with `client/` and `server/` directories
 - **JumpCloud, Coro.net, BlackPoint**: Third-party agent management
 - **Seamless.ai**: Sales integration
 - **Griffin IT, Sherweb, Pax8, ClimbCS**: Procurement partners
+
+## Admin Credentials (Demo)
+- Email: admin@digeratiexperts.com
+- Password: Admin123!

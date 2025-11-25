@@ -76,23 +76,24 @@ export default function GenericServicePage({
           <h2 className="text-3xl font-bold mb-4">Ready to Learn More?</h2>
           <p className="text-lg mb-6">Contact us today to discuss how we can help your business.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
-              className="bg-white text-purple-700 hover:bg-gray-100"
+            <a 
+              href="https://meet.digerati-experts.com/" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center bg-white text-purple-700 hover:bg-gray-100 px-8 py-3 rounded-md font-semibold transition-all"
               data-testid="button-contact"
             >
               <ArrowRight className="mr-2 h-4 w-4" />
-              Contact Us
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="border-white text-purple-700 bg-white hover:bg-gray-100"
+              Schedule Consultation
+            </a>
+            <a 
+              href="tel:325-480-9870"
+              className="inline-flex items-center justify-center border-2 border-white bg-transparent text-white hover:bg-white hover:text-purple-700 px-8 py-3 rounded-md font-semibold transition-all"
               data-testid="button-call"
             >
               <Phone className="mr-2 h-4 w-4" />
-              Call (480) 519-5892
-            </Button>
+              Call 325-480-9870
+            </a>
           </div>
         </div>
       </div>
