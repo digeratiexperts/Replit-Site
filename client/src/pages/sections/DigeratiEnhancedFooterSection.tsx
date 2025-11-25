@@ -42,12 +42,12 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
   ];
 
   const locations = [
-    { name: "Chandler", primary: true },
-    { name: "Phoenix", primary: false },
-    { name: "Gilbert", primary: false },
-    { name: "Tempe", primary: false },
-    { name: "Mesa", primary: false },
-    { name: "Scottsdale", primary: false }
+    { name: "Chandler", href: "/locations/chandler-az", primary: true },
+    { name: "Phoenix", href: "/locations/phoenix-az", primary: false },
+    { name: "Gilbert", href: "/locations/gilbert-az", primary: false },
+    { name: "Tempe", href: "/locations/tempe-az", primary: false },
+    { name: "Mesa", href: "/locations/mesa-az", primary: false },
+    { name: "Scottsdale", href: "/locations/scottsdale-az", primary: false }
   ];
 
   const partners = [
@@ -168,13 +168,16 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                   </p>
                 </div>
               </div>
-              <Button 
-                className="bg-[#5034ff] text-white hover:bg-[#4028dd] font-semibold px-6 py-2 shadow-lg flex items-center gap-2 [font-family:'Poppins',Helvetica] whitespace-nowrap"
+              <a
+                href="https://meet.digerati-experts.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-[#5034ff] text-white hover:bg-[#4028dd] font-semibold px-6 py-2 shadow-lg rounded [font-family:'Poppins',Helvetica] whitespace-nowrap transition-all"
                 data-testid="footer-request-docs"
               >
                 Request Docs
                 <ArrowRight className="h-4 w-4" />
-              </Button>
+              </a>
             </div>
           </div>
         </div>
@@ -188,7 +191,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
             {locations.map((location, index) => (
               <a
                 key={index}
-                href="#"
+                href={location.href}
                 className={`
                   px-4 py-2 rounded-lg font-medium transition-all duration-300 text-sm [font-family:'Poppins',Helvetica]
                   ${location.primary 

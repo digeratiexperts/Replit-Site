@@ -515,17 +515,17 @@ export function MegaMenu() {
           {/* Right Side Actions */}
           <div className="flex items-center space-x-4">
             {/* Get Protected Now CTA */}
-            <Button
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-2 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 border border-purple-500/30"
+            <a
+              href="https://meet.digerati-experts.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-2 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 border border-purple-500/30"
               data-testid="nav-cta"
-              onClick={() => {
-                handleLinkClick();
-                window.location.href = '#assessment';
-              }}
-              aria-label="Get protected now - Start your security assessment"
+              onClick={handleLinkClick}
+              aria-label="Get protected now - Schedule a consultation"
             >
               Get Protected Now
-            </Button>
+            </a>
 
             {/* Mobile Menu Button */}
             <button
@@ -626,17 +626,17 @@ export function MegaMenu() {
                   Client Portal
                   <ExternalLink className="h-4 w-4 ml-2" aria-hidden="true" />
                 </a>
-                <Button
-                  className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    window.location.href = '#assessment';
-                  }}
+                <a
+                  href="https://meet.digerati-experts.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full inline-flex items-center justify-center bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all rounded"
+                  onClick={() => setMobileMenuOpen(false)}
                   data-testid="mobile-cta"
-                  aria-label="Get protected now - Start your security assessment"
+                  aria-label="Get protected now - Schedule a consultation"
                 >
                   Get Protected Now
-                </Button>
+                </a>
               </div>
             </div>
           </div>

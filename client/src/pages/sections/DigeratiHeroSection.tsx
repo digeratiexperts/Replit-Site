@@ -108,15 +108,16 @@ export const DigeratiHeroSection = (): JSX.Element => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <button 
+              <a 
+                href="https://meet.digerati-experts.com/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="h-12 px-8 rounded-md bg-white text-purple-700 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl inline-flex items-center justify-center gap-2 whitespace-nowrap text-base font-semibold"
                 data-testid="button-hero-start"
-                onClick={() => {
-                  document.getElementById('assessment-form')?.scrollIntoView({ behavior: 'smooth' });
-                }}
+                aria-label="Get free assessment - Schedule with our experts"
               >
                 Get Free Assessment <ArrowRight className="ml-2 h-5 w-5" />
-              </button>
+              </a>
               <a
                 href="tel:325-480-9870"
                 className="h-12 px-8 rounded-md border-2 border-white bg-transparent text-white hover:bg-white hover:text-purple-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-purple-600 transition-all duration-200 inline-flex items-center justify-center gap-2 whitespace-nowrap text-base font-semibold"

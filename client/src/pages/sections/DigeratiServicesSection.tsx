@@ -78,13 +78,13 @@ export const DigeratiServicesSection = (): JSX.Element => {
         </div>
 
         <div className="text-center mt-12">
-          <Button 
-            className={designSystem.components.button.primary}
-            size="lg"
+          <a 
+            href="/solutions"
+            className={`${designSystem.components.button.primary} inline-flex items-center justify-center`}
             data-testid="button-explore-services"
           >
             Explore More Services <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
+          </a>
         </div>
       </div>
     </section>
