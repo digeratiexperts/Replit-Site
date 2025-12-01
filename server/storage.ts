@@ -158,7 +158,7 @@ export class MemStorage implements IStorage {
       id: "admin-1",
       username: "admin@digerati-experts.com",
       email: "admin@digerati-experts.com",
-      password: "$2b$10$hashedpassword",
+      password: "$2b$10$GI4G0Wfv.JGucTnjjcLH6ebHF2FRZVCXF6DeWlaEK7OWZRranaeTm",
       fullName: "Admin User",
       avatar: null,
       createdAt: new Date(),

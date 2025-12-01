@@ -667,11 +667,12 @@ export async function registerRoutes(app: Express) {
   const portalUsers: Map<string, any> = new Map();
   
   // Admin credentials - CHANGE THESE IN PRODUCTION
+  // Password hash for "Admin123!" generated with bcrypt (12 rounds)
   const adminUser = {
     id: "admin-001",
     email: "admin@digeratiexperts.com",
     username: "admin",
-    password: "Admin123!",
+    password: "$2b$12$ZvvL.svaDsmMCVWaeav.nOFxG69gq986jpWrc4tpr/9n.RU1Y9f8G",
     role: "admin",
     fullName: "Administrator",
   };
@@ -701,12 +702,16 @@ export async function registerRoutes(app: Express) {
         });
       }
 
+      // Hash password with bcrypt
+      const bcrypt = await import('bcrypt');
+      const hashedPassword = await bcrypt.hash(password, 12);
+      
       // Create new user
       const newUser = {
         id: randomId(),
         email,
         username,
-        password, // In production: hash this with bcrypt
+        password: hashedPassword,
         role: "user",
         fullName: username,
         createdAt: new Date(),
@@ -746,13 +751,28 @@ export async function registerRoutes(app: Express) {
       // Find user
       const user = portalUsers.get(email);
 
-      if (!user || user.password !== password) {
+      if (!user) {
         logSecurityEvent("PORTAL_LOGIN_FAILED", req, { email });
         return res.status(401).json({ message: "Invalid email or password" });
       }
 
-      // Generate simple token (in production: use JWT)
-      const token = `portal_${user.id}_${randomId()}`;
+      // Compare password using bcrypt
+      const bcrypt = await import('bcrypt');
+      const passwordValid = await bcrypt.compare(password, user.password);
+      
+      if (!passwordValid) {
+        logSecurityEvent("PORTAL_LOGIN_FAILED", req, { email });
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+
+      // Generate JWT token
+      const jwt = await import('jsonwebtoken');
+      const JWT_SECRET = process.env.JWT_SECRET || "development-secret-key";
+      const token = jwt.default.sign(
+        { userId: user.id, email: user.email, role: user.role },
+        JWT_SECRET,
+        { expiresIn: '24h' }
+      );
 
       logSecurityEvent("PORTAL_USER_LOGIN", req, { userId: user.id, email, role: user.role });
 
