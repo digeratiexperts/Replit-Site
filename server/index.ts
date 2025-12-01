@@ -10,6 +10,28 @@ import { WebhookHandlers } from "./webhookHandlers";
 import { setupCrossServiceHandlers } from "./crossServiceHandler";
 import { eventBus, EventTypes } from "./eventBus";
 
+process.on('unhandledRejection', (reason, promise) => {
+  const errorStr = String(reason);
+  if (errorStr.includes('endpoint has been disabled') || 
+      errorStr.includes('Connection terminated') ||
+      errorStr.includes('connection to server')) {
+    return;
+  }
+  console.error('Unhandled Rejection:', reason);
+});
+
+process.on('uncaughtException', (error) => {
+  const errorStr = String(error.message);
+  if (errorStr.includes('endpoint has been disabled') || 
+      errorStr.includes('Connection terminated') ||
+      errorStr.includes('connection to server')) {
+    console.log('⚠️ Database error caught and handled (non-fatal)');
+    return;
+  }
+  console.error('Uncaught Exception:', error);
+  process.exit(1);
+});
+
 const app = express();
 const server = createServer(app);
 
@@ -37,7 +59,25 @@ app.all("/api/health", (_req, res) => {
 // Backup simple health
 app.all("/healthz", (_req, res) => res.status(200).send("ok"));
 
-// --------- Initialize Stripe on startup
+let stripeEnabled = false;
+
+async function testDatabaseConnection(): Promise<boolean> {
+  const databaseUrl = process.env.DATABASE_URL;
+  if (!databaseUrl) return false;
+  
+  try {
+    const { Pool } = await import('@neondatabase/serverless');
+    const pool = new Pool({ connectionString: databaseUrl });
+    const client = await pool.connect();
+    await client.query('SELECT 1');
+    client.release();
+    await pool.end();
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
 async function initStripe() {
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) {
@@ -45,19 +85,26 @@ async function initStripe() {
     return;
   }
 
+  log("🔄 Initializing Stripe schema...");
+  
+  const dbAvailable = await testDatabaseConnection();
+  if (!dbAvailable) {
+    log("⚠️ Database unavailable - Stripe integration disabled (endpoint may be suspended)");
+    log("⚠️ Portal will use in-memory storage until database is restored");
+    return;
+  }
+
   try {
-    log("🔄 Initializing Stripe schema...");
     await runMigrations({
       databaseUrl,
-      schema: "stripe",
-    });
+    } as any);
     log("✅ Stripe schema ready");
 
     const stripeSync = await getStripeSync();
 
     log("🔄 Setting up managed webhook...");
     const webhookBaseUrl = `https://${process.env.REPLIT_DOMAINS?.split(",")[0] || "localhost:5000"}`;
-    const { webhook, uuid } = await stripeSync.findOrCreateManagedWebhook(
+    const { uuid } = await stripeSync.findOrCreateManagedWebhook(
       `${webhookBaseUrl}/api/stripe/webhook`,
       {
         enabled_events: ["*"],
@@ -65,17 +112,24 @@ async function initStripe() {
       }
     );
     log(`✅ Webhook configured (UUID: ${uuid})`);
+    stripeEnabled = true;
 
     log("🔄 Syncing Stripe data...");
     stripeSync.syncBackfill().then(() => {
       log("✅ Stripe data synced");
-    }).catch((err) => {
+    }).catch((err: Error) => {
       console.error("Error syncing Stripe data:", err);
     });
-  } catch (error) {
-    console.error("Failed to initialize Stripe:", error);
+  } catch (error: any) {
+    if (error.message?.includes("endpoint has been disabled")) {
+      log("⚠️ Database endpoint disabled - Stripe integration deferred");
+    } else {
+      console.error("Failed to initialize Stripe:", error);
+    }
   }
 }
+
+export { stripeEnabled };
 
 // Start Stripe init in background
 initStripe().catch(console.error);

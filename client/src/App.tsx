@@ -16,6 +16,10 @@ const LawFirms = lazy(() => import("@/pages/industries/LawFirms"));
 const RealEstate = lazy(() => import("@/pages/industries/RealEstate"));
 const Nonprofits = lazy(() => import("@/pages/industries/Nonprofits"));
 const CaseStudies = lazy(() => import("@/pages/resources/CaseStudies"));
+const Blog = lazy(() => import("@/pages/resources/Blog"));
+const Videos = lazy(() => import("@/pages/resources/Videos"));
+const SecurityChecklist = lazy(() => import("@/pages/resources/SecurityChecklist"));
+const Datasheets = lazy(() => import("@/pages/resources/Datasheets"));
 const KnowledgeBase = lazy(() => import("@/pages/support/KnowledgeBase"));
 const RemoteSupport = lazy(() => import("@/pages/support/RemoteSupport"));
 const PayInvoice = lazy(() => import("@/pages/support/PayInvoice"));
@@ -138,6 +142,26 @@ function Router() {
       <Route path="/resources/case-studies" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <CaseStudies />
+        </Suspense>
+      )} />
+      <Route path="/resources/blog" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <Blog />
+        </Suspense>
+      )} />
+      <Route path="/resources/videos" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <Videos />
+        </Suspense>
+      )} />
+      <Route path="/resources/security-checklist" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <SecurityChecklist />
+        </Suspense>
+      )} />
+      <Route path="/resources/datasheets" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <Datasheets />
         </Suspense>
       )} />
       {Object.entries(resourcePageData).map(([key, data]) => (

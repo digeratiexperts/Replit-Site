@@ -517,6 +517,67 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  // ===== PORTAL TICKET ROUTES =====
+  app.get("/api/portal/tickets/:id", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { id } = req.params;
+      const ticket = await storage.getPortalTicket(id);
+      if (!ticket) {
+        return res.status(404).json({ error: "Ticket not found" });
+      }
+      
+      const comments = await storage.getPortalTicketComments(id);
+      
+      res.json({
+        ticket: {
+          ...ticket,
+          ticketNumber: `#TK${String(ticket.id).padStart(3, '0')}`,
+          comments: comments.map(c => ({
+            id: c.id,
+            author: c.authorName || "Support",
+            role: c.isInternal ? "Support Engineer" : "Client",
+            content: c.content,
+            timestamp: c.createdAt,
+            isInternal: c.isInternal,
+          })),
+        },
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/portal/tickets/:id/comments", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { id } = req.params;
+      const { content } = req.body;
+      
+      if (!content) {
+        return res.status(400).json({ error: "Content is required" });
+      }
+
+      const ticket = await storage.getPortalTicket(id);
+      if (!ticket) {
+        return res.status(404).json({ error: "Ticket not found" });
+      }
+
+      const comment = await storage.createPortalTicketComment({
+        id: randomId(),
+        ticketId: id,
+        content,
+        authorId: req.userId || "",
+        authorName: req.user?.fullName || "Client",
+        isInternal: false,
+        createdAt: new Date(),
+      });
+
+      res.json({ success: true, comment });
+      logSecurityEvent("TICKET_COMMENT_ADDED", req, { ticketId: id });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // ===== PORTAL AUTHENTICATION =====
   // In-memory user storage for demo (replace with database in production)
   const portalUsers: Map<string, any> = new Map();

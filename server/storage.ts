@@ -11,6 +11,8 @@ import {
   taskLabels,
   activities,
   portalChatMessages,
+  portalTickets,
+  portalTicketComments,
   type User,
   type InsertUser,
   type Workspace,
@@ -28,38 +30,35 @@ import {
   type InsertComment,
   type PortalChatMessage,
   type InsertPortalChatMessage,
+  type PortalTicket,
+  type PortalTicketComment,
 } from "@shared/schema";
-import { db } from "./db";
 import { eq, and, desc, asc, sql } from "drizzle-orm";
 
 export interface IStorage {
-  // User operations
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
 
-  // Workspace operations
   getWorkspace(id: string): Promise<Workspace | undefined>;
   getWorkspacesByUserId(userId: string): Promise<Workspace[]>;
   createWorkspace(workspace: InsertWorkspace): Promise<Workspace>;
   updateWorkspace(id: string, data: Partial<InsertWorkspace>): Promise<Workspace | undefined>;
   deleteWorkspace(id: string): Promise<void>;
 
-  // Project operations
   getProject(id: string): Promise<Project | undefined>;
   getProjectsByWorkspaceId(workspaceId: string): Promise<Project[]>;
   createProject(project: InsertProject): Promise<Project>;
   updateProject(id: string, data: Partial<InsertProject>): Promise<Project | undefined>;
   deleteProject(id: string): Promise<void>;
 
-  // Board operations
   getBoard(id: string): Promise<Board | undefined>;
   getBoardsByProjectId(projectId: string): Promise<Board[]>;
   createBoard(board: InsertBoard): Promise<Board>;
   updateBoard(id: string, data: Partial<InsertBoard>): Promise<Board | undefined>;
   deleteBoard(id: string): Promise<void>;
 
-  // Task operations
   getTask(id: string): Promise<Task | undefined>;
   getTasksByProjectId(projectId: string): Promise<Task[]>;
   getTasksByBoardId(boardId: string): Promise<Task[]>;
@@ -67,58 +66,549 @@ export interface IStorage {
   updateTask(id: string, data: UpdateTask): Promise<Task | undefined>;
   deleteTask(id: string): Promise<void>;
 
-  // Label operations
   getLabel(id: string): Promise<Label | undefined>;
   getLabelsByWorkspaceId(workspaceId: string): Promise<Label[]>;
   createLabel(label: InsertLabel): Promise<Label>;
   deleteLabel(id: string): Promise<void>;
 
-  // Comment operations
   getCommentsByTaskId(taskId: string): Promise<Comment[]>;
   createComment(comment: InsertComment): Promise<Comment>;
   deleteComment(id: string): Promise<void>;
 
-  // Portal Chat operations
   getChatMessagesByTicketId(ticketId: string): Promise<PortalChatMessage[]>;
   createChatMessage(message: InsertPortalChatMessage): Promise<PortalChatMessage>;
   markMessagesAsRead(ticketId: string): Promise<void>;
+
+  getPortalTicket(id: string): Promise<PortalTicket | undefined>;
+  getPortalTickets(userId?: string): Promise<PortalTicket[]>;
+  createPortalTicket(ticket: any): Promise<PortalTicket>;
+  updatePortalTicket(id: string, data: any): Promise<PortalTicket | undefined>;
+  getPortalTicketComments(ticketId: string): Promise<PortalTicketComment[]>;
+  createPortalTicketComment(comment: any): Promise<PortalTicketComment>;
+}
+
+function generateId(): string {
+  return crypto.randomUUID();
+}
+
+interface PortalClient {
+  id: string;
+  companyName: string;
+  contactEmail: string;
+  status: string;
+  createdAt: Date;
+}
+
+interface PortalUser {
+  id: string;
+  clientId: string;
+  email: string;
+  fullName: string;
+  role: string;
+  isActive: boolean;
+}
+
+interface MemPortalTicket {
+  id: string;
+  clientId: string;
+  ticketNumber: string;
+  subject: string;
+  description: string;
+  status: string;
+  priority: string;
+  category: string | null;
+  assignedTo: string | null;
+  createdBy: string;
+  createdAt: Date;
+  updatedAt: Date;
+  resolvedAt: Date | null;
+}
+
+interface MemPortalTicketComment {
+  id: string;
+  ticketId: string;
+  userId: string;
+  content: string;
+  isInternal: boolean;
+  authorName?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export class MemStorage implements IStorage {
+  private users: Map<string, User> = new Map();
+  private workspaces: Map<string, Workspace> = new Map();
+  private projects: Map<string, Project> = new Map();
+  private boards: Map<string, Board> = new Map();
+  private tasks: Map<string, Task> = new Map();
+  private labels: Map<string, Label> = new Map();
+  private comments: Map<string, Comment> = new Map();
+  private chatMessages: Map<string, PortalChatMessage> = new Map();
+  private portalClients: Map<string, PortalClient> = new Map();
+  private portalUsersMap: Map<string, PortalUser> = new Map();
+  private portalTicketsMap: Map<string, MemPortalTicket> = new Map();
+  private ticketComments: Map<string, MemPortalTicketComment> = new Map();
+
+  constructor() {
+    this.seedDemoData();
+  }
+
+  private seedDemoData() {
+    const adminUser: User = {
+      id: "admin-1",
+      username: "admin@digerati-experts.com",
+      email: "admin@digerati-experts.com",
+      password: "$2b$10$hashedpassword",
+      fullName: "Admin User",
+      avatar: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.users.set(adminUser.id, adminUser);
+
+    const demoClient: PortalClient = {
+      id: "client-1",
+      companyName: "Acme Corp",
+      contactEmail: "admin@acme.com",
+      status: "active",
+      createdAt: new Date(),
+    };
+    this.portalClients.set(demoClient.id, demoClient);
+
+    const portalUser: PortalUser = {
+      id: "portal-user-1",
+      clientId: "client-1",
+      email: "admin@digerati-experts.com",
+      fullName: "Admin User",
+      role: "admin",
+      isActive: true,
+    };
+    this.portalUsersMap.set(portalUser.id, portalUser);
+
+    const demoTicket: MemPortalTicket = {
+      id: "ticket-1",
+      clientId: "client-1",
+      ticketNumber: "TKT-001",
+      subject: "VPN Connection Issue",
+      description: "Unable to connect to company VPN from home office. Getting error 'Connection timeout' after entering credentials.",
+      status: "open",
+      priority: "high",
+      category: "network",
+      assignedTo: null,
+      createdBy: "portal-user-1",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      resolvedAt: null,
+    };
+    this.portalTicketsMap.set(demoTicket.id, demoTicket);
+
+    const demoTicket2: MemPortalTicket = {
+      id: "ticket-2",
+      clientId: "client-1",
+      ticketNumber: "TKT-002",
+      subject: "Email Configuration",
+      description: "Need help setting up Microsoft 365 email on new iPhone device",
+      status: "in_progress",
+      priority: "medium",
+      category: "email",
+      assignedTo: "tech-1",
+      createdBy: "portal-user-1",
+      createdAt: new Date(Date.now() - 86400000),
+      updatedAt: new Date(),
+      resolvedAt: null,
+    };
+    this.portalTicketsMap.set(demoTicket2.id, demoTicket2);
+
+    const demoTicket3: MemPortalTicket = {
+      id: "ticket-3",
+      clientId: "client-1",
+      ticketNumber: "TKT-003",
+      subject: "Slow Computer Performance",
+      description: "My workstation has been running very slowly for the past week",
+      status: "resolved",
+      priority: "low",
+      category: "hardware",
+      assignedTo: "tech-2",
+      createdBy: "portal-user-1",
+      createdAt: new Date(Date.now() - 172800000),
+      updatedAt: new Date(Date.now() - 86400000),
+      resolvedAt: new Date(Date.now() - 86400000),
+    };
+    this.portalTicketsMap.set(demoTicket3.id, demoTicket3);
+
+    const demoComment: MemPortalTicketComment = {
+      id: "comment-1",
+      ticketId: "ticket-1",
+      userId: "portal-user-1",
+      content: "I've tried restarting my router but the issue persists. The VPN client shows 'Authentication failed' message.",
+      isInternal: false,
+      authorName: "Admin User",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.ticketComments.set(demoComment.id, demoComment);
+
+    const supportComment: MemPortalTicketComment = {
+      id: "comment-2",
+      ticketId: "ticket-1",
+      userId: "support-1",
+      content: "Thank you for reporting this issue. I've reset your VPN credentials. Please try connecting again with the new password sent to your email.",
+      isInternal: false,
+      authorName: "Tech Support",
+      createdAt: new Date(Date.now() + 3600000),
+      updatedAt: new Date(Date.now() + 3600000),
+    };
+    this.ticketComments.set(supportComment.id, supportComment);
+  }
+
+  async getUser(id: string): Promise<User | undefined> {
+    return this.users.get(id);
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(u => u.username === username);
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(u => u.email === email);
+  }
+
+  async createUser(user: InsertUser): Promise<User> {
+    const newUser: User = {
+      id: generateId(),
+      ...user,
+      displayName: user.displayName || null,
+      role: user.role || "user",
+      avatarUrl: user.avatarUrl || null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.users.set(newUser.id, newUser);
+    return newUser;
+  }
+
+  async getWorkspace(id: string): Promise<Workspace | undefined> {
+    return this.workspaces.get(id);
+  }
+
+  async getWorkspacesByUserId(userId: string): Promise<Workspace[]> {
+    return Array.from(this.workspaces.values()).filter(w => w.ownerId === userId);
+  }
+
+  async createWorkspace(workspace: InsertWorkspace): Promise<Workspace> {
+    const newWorkspace: Workspace = {
+      id: generateId(),
+      ...workspace,
+      description: workspace.description || null,
+      icon: workspace.icon || null,
+      color: workspace.color || null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.workspaces.set(newWorkspace.id, newWorkspace);
+    return newWorkspace;
+  }
+
+  async updateWorkspace(id: string, data: Partial<InsertWorkspace>): Promise<Workspace | undefined> {
+    const workspace = this.workspaces.get(id);
+    if (!workspace) return undefined;
+    const updated = { ...workspace, ...data, updatedAt: new Date() };
+    this.workspaces.set(id, updated);
+    return updated;
+  }
+
+  async deleteWorkspace(id: string): Promise<void> {
+    this.workspaces.delete(id);
+  }
+
+  async getProject(id: string): Promise<Project | undefined> {
+    return this.projects.get(id);
+  }
+
+  async getProjectsByWorkspaceId(workspaceId: string): Promise<Project[]> {
+    return Array.from(this.projects.values()).filter(p => p.workspaceId === workspaceId);
+  }
+
+  async createProject(project: InsertProject): Promise<Project> {
+    const newProject: Project = {
+      id: generateId(),
+      ...project,
+      description: project.description || null,
+      icon: project.icon || null,
+      color: project.color || null,
+      isFavorite: project.isFavorite || false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.projects.set(newProject.id, newProject);
+    return newProject;
+  }
+
+  async updateProject(id: string, data: Partial<InsertProject>): Promise<Project | undefined> {
+    const project = this.projects.get(id);
+    if (!project) return undefined;
+    const updated = { ...project, ...data, updatedAt: new Date() };
+    this.projects.set(id, updated);
+    return updated;
+  }
+
+  async deleteProject(id: string): Promise<void> {
+    this.projects.delete(id);
+  }
+
+  async getBoard(id: string): Promise<Board | undefined> {
+    return this.boards.get(id);
+  }
+
+  async getBoardsByProjectId(projectId: string): Promise<Board[]> {
+    return Array.from(this.boards.values()).filter(b => b.projectId === projectId);
+  }
+
+  async createBoard(board: InsertBoard): Promise<Board> {
+    const newBoard: Board = {
+      id: generateId(),
+      ...board,
+      color: board.color || null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.boards.set(newBoard.id, newBoard);
+    return newBoard;
+  }
+
+  async updateBoard(id: string, data: Partial<InsertBoard>): Promise<Board | undefined> {
+    const board = this.boards.get(id);
+    if (!board) return undefined;
+    const updated = { ...board, ...data, updatedAt: new Date() };
+    this.boards.set(id, updated);
+    return updated;
+  }
+
+  async deleteBoard(id: string): Promise<void> {
+    this.boards.delete(id);
+  }
+
+  async getTask(id: string): Promise<Task | undefined> {
+    return this.tasks.get(id);
+  }
+
+  async getTasksByProjectId(projectId: string): Promise<Task[]> {
+    return Array.from(this.tasks.values()).filter(t => t.projectId === projectId && !t.isArchived);
+  }
+
+  async getTasksByBoardId(boardId: string): Promise<Task[]> {
+    return Array.from(this.tasks.values()).filter(t => t.boardId === boardId && !t.isArchived);
+  }
+
+  async createTask(task: InsertTask): Promise<Task> {
+    const newTask: Task = {
+      id: generateId(),
+      ...task,
+      description: task.description || null,
+      priority: task.priority || "medium",
+      status: task.status || "todo",
+      dueDate: task.dueDate || null,
+      position: task.position || 0,
+      isArchived: task.isArchived || false,
+      completedAt: null,
+      assigneeId: task.assigneeId || null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.tasks.set(newTask.id, newTask);
+    return newTask;
+  }
+
+  async updateTask(id: string, data: UpdateTask): Promise<Task | undefined> {
+    const task = this.tasks.get(id);
+    if (!task) return undefined;
+    const updated = { ...task, ...data, updatedAt: new Date() };
+    if (data.status === "done") {
+      updated.completedAt = new Date();
+    }
+    this.tasks.set(id, updated);
+    return updated;
+  }
+
+  async deleteTask(id: string): Promise<void> {
+    this.tasks.delete(id);
+  }
+
+  async getLabel(id: string): Promise<Label | undefined> {
+    return this.labels.get(id);
+  }
+
+  async getLabelsByWorkspaceId(workspaceId: string): Promise<Label[]> {
+    return Array.from(this.labels.values()).filter(l => l.workspaceId === workspaceId);
+  }
+
+  async createLabel(label: InsertLabel): Promise<Label> {
+    const newLabel: Label = {
+      id: generateId(),
+      ...label,
+      createdAt: new Date(),
+    };
+    this.labels.set(newLabel.id, newLabel);
+    return newLabel;
+  }
+
+  async deleteLabel(id: string): Promise<void> {
+    this.labels.delete(id);
+  }
+
+  async getCommentsByTaskId(taskId: string): Promise<Comment[]> {
+    return Array.from(this.comments.values()).filter(c => c.taskId === taskId);
+  }
+
+  async createComment(comment: InsertComment): Promise<Comment> {
+    const newComment: Comment = {
+      id: generateId(),
+      ...comment,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.comments.set(newComment.id, newComment);
+    return newComment;
+  }
+
+  async deleteComment(id: string): Promise<void> {
+    this.comments.delete(id);
+  }
+
+  async getChatMessagesByTicketId(ticketId: string): Promise<PortalChatMessage[]> {
+    return Array.from(this.chatMessages.values()).filter(m => m.ticketId === ticketId);
+  }
+
+  async createChatMessage(message: InsertPortalChatMessage): Promise<PortalChatMessage> {
+    const newMessage: PortalChatMessage = {
+      id: generateId(),
+      ...message,
+      isRead: message.isRead || false,
+      createdAt: new Date(),
+    };
+    this.chatMessages.set(newMessage.id, newMessage);
+    return newMessage;
+  }
+
+  async markMessagesAsRead(ticketId: string): Promise<void> {
+    this.chatMessages.forEach((msg, id) => {
+      if (msg.ticketId === ticketId) {
+        this.chatMessages.set(id, { ...msg, isRead: true });
+      }
+    });
+  }
+
+  async getPortalTicket(id: string): Promise<PortalTicket | undefined> {
+    const ticket = this.portalTicketsMap.get(id);
+    if (!ticket) return undefined;
+    return ticket as unknown as PortalTicket;
+  }
+
+  async getPortalTickets(userId?: string): Promise<PortalTicket[]> {
+    const tickets = Array.from(this.portalTicketsMap.values());
+    if (userId) {
+      return tickets.filter(t => t.createdBy === userId) as unknown as PortalTicket[];
+    }
+    return tickets as unknown as PortalTicket[];
+  }
+
+  async createPortalTicket(ticket: any): Promise<PortalTicket> {
+    const newTicket: MemPortalTicket = {
+      id: generateId(),
+      clientId: ticket.clientId || "client-1",
+      ticketNumber: `TKT-${String(this.portalTicketsMap.size + 1).padStart(3, '0')}`,
+      subject: ticket.subject,
+      description: ticket.description,
+      status: ticket.status || "open",
+      priority: ticket.priority || "medium",
+      category: ticket.category || "general",
+      createdBy: ticket.createdBy || ticket.userId || "portal-user-1",
+      assignedTo: ticket.assignedTo || null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      resolvedAt: null,
+    };
+    this.portalTicketsMap.set(newTicket.id, newTicket);
+    return newTicket as unknown as PortalTicket;
+  }
+
+  async updatePortalTicket(id: string, data: any): Promise<PortalTicket | undefined> {
+    const ticket = this.portalTicketsMap.get(id);
+    if (!ticket) return undefined;
+    const updated = { ...ticket, ...data, updatedAt: new Date() };
+    if (data.status === "resolved" && !ticket.resolvedAt) {
+      updated.resolvedAt = new Date();
+    }
+    this.portalTicketsMap.set(id, updated);
+    return updated as unknown as PortalTicket;
+  }
+
+  async getPortalTicketComments(ticketId: string): Promise<PortalTicketComment[]> {
+    const comments = Array.from(this.ticketComments.values())
+      .filter(c => c.ticketId === ticketId)
+      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+    return comments as unknown as PortalTicketComment[];
+  }
+
+  async createPortalTicketComment(comment: any): Promise<PortalTicketComment> {
+    const newComment: MemPortalTicketComment = {
+      id: generateId(),
+      ticketId: comment.ticketId,
+      userId: comment.authorId || comment.userId,
+      content: comment.content,
+      isInternal: comment.isInternal || false,
+      authorName: comment.authorName || "User",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.ticketComments.set(newComment.id, newComment);
+    return newComment as unknown as PortalTicketComment;
+  }
 }
 
 export class DatabaseStorage implements IStorage {
-  // User operations
+  private dbModule: any = null;
+
+  private async getDb() {
+    if (!this.dbModule) {
+      this.dbModule = await import("./db");
+    }
+    return this.dbModule.db;
+  }
+
   async getUser(id: string): Promise<User | undefined> {
+    const db = await this.getDb();
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user || undefined;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db
-      .select()
-      .from(users)
-      .where(eq(users.username, username));
+    const db = await this.getDb();
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const db = await this.getDb();
+    const [user] = await db.select().from(users).where(eq(users.email, email));
     return user || undefined;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
+    const db = await this.getDb();
     const [user] = await db.insert(users).values(insertUser).returning();
     return user;
   }
 
-  // Workspace operations
   async getWorkspace(id: string): Promise<Workspace | undefined> {
-    const [workspace] = await db
-      .select()
-      .from(workspaces)
-      .where(eq(workspaces.id, id));
+    const db = await this.getDb();
+    const [workspace] = await db.select().from(workspaces).where(eq(workspaces.id, id));
     return workspace || undefined;
   }
 
   async getWorkspacesByUserId(userId: string): Promise<Workspace[]> {
-    const ownedWorkspaces = await db
-      .select()
-      .from(workspaces)
-      .where(eq(workspaces.ownerId, userId));
-    
+    const db = await this.getDb();
+    const ownedWorkspaces = await db.select().from(workspaces).where(eq(workspaces.ownerId, userId));
     const memberWorkspaces = await db
       .select({
         id: workspaces.id,
@@ -135,27 +625,20 @@ export class DatabaseStorage implements IStorage {
       .where(eq(workspaceMembers.userId, userId));
     
     const allWorkspaces = [...ownedWorkspaces, ...memberWorkspaces];
-    const uniqueWorkspaces = Array.from(
-      new Map(allWorkspaces.map(w => [w.id, w])).values()
-    );
-    
+    const uniqueWorkspaces = Array.from(new Map(allWorkspaces.map(w => [w.id, w])).values());
     return uniqueWorkspaces.sort((a, b) => 
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
   }
 
   async createWorkspace(workspace: InsertWorkspace): Promise<Workspace> {
-    const [created] = await db
-      .insert(workspaces)
-      .values(workspace)
-      .returning();
+    const db = await this.getDb();
+    const [created] = await db.insert(workspaces).values(workspace).returning();
     return created;
   }
 
-  async updateWorkspace(
-    id: string,
-    data: Partial<InsertWorkspace>
-  ): Promise<Workspace | undefined> {
+  async updateWorkspace(id: string, data: Partial<InsertWorkspace>): Promise<Workspace | undefined> {
+    const db = await this.getDb();
     const [updated] = await db
       .update(workspaces)
       .set({ ...data, updatedAt: new Date() })
@@ -165,19 +648,18 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteWorkspace(id: string): Promise<void> {
+    const db = await this.getDb();
     await db.delete(workspaces).where(eq(workspaces.id, id));
   }
 
-  // Project operations
   async getProject(id: string): Promise<Project | undefined> {
-    const [project] = await db
-      .select()
-      .from(projects)
-      .where(eq(projects.id, id));
+    const db = await this.getDb();
+    const [project] = await db.select().from(projects).where(eq(projects.id, id));
     return project || undefined;
   }
 
   async getProjectsByWorkspaceId(workspaceId: string): Promise<Project[]> {
+    const db = await this.getDb();
     return await db
       .select()
       .from(projects)
@@ -186,14 +668,13 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createProject(project: InsertProject): Promise<Project> {
+    const db = await this.getDb();
     const [created] = await db.insert(projects).values(project).returning();
     return created;
   }
 
-  async updateProject(
-    id: string,
-    data: Partial<InsertProject>
-  ): Promise<Project | undefined> {
+  async updateProject(id: string, data: Partial<InsertProject>): Promise<Project | undefined> {
+    const db = await this.getDb();
     const [updated] = await db
       .update(projects)
       .set({ ...data, updatedAt: new Date() })
@@ -203,16 +684,18 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteProject(id: string): Promise<void> {
+    const db = await this.getDb();
     await db.delete(projects).where(eq(projects.id, id));
   }
 
-  // Board operations
   async getBoard(id: string): Promise<Board | undefined> {
+    const db = await this.getDb();
     const [board] = await db.select().from(boards).where(eq(boards.id, id));
     return board || undefined;
   }
 
   async getBoardsByProjectId(projectId: string): Promise<Board[]> {
+    const db = await this.getDb();
     return await db
       .select()
       .from(boards)
@@ -221,14 +704,13 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createBoard(board: InsertBoard): Promise<Board> {
+    const db = await this.getDb();
     const [created] = await db.insert(boards).values(board).returning();
     return created;
   }
 
-  async updateBoard(
-    id: string,
-    data: Partial<InsertBoard>
-  ): Promise<Board | undefined> {
+  async updateBoard(id: string, data: Partial<InsertBoard>): Promise<Board | undefined> {
+    const db = await this.getDb();
     const [updated] = await db
       .update(boards)
       .set({ ...data, updatedAt: new Date() })
@@ -238,16 +720,18 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteBoard(id: string): Promise<void> {
+    const db = await this.getDb();
     await db.delete(boards).where(eq(boards.id, id));
   }
 
-  // Task operations
   async getTask(id: string): Promise<Task | undefined> {
+    const db = await this.getDb();
     const [task] = await db.select().from(tasks).where(eq(tasks.id, id));
     return task || undefined;
   }
 
   async getTasksByProjectId(projectId: string): Promise<Task[]> {
+    const db = await this.getDb();
     return await db
       .select()
       .from(tasks)
@@ -256,6 +740,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getTasksByBoardId(boardId: string): Promise<Task[]> {
+    const db = await this.getDb();
     return await db
       .select()
       .from(tasks)
@@ -264,38 +749,36 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createTask(task: InsertTask): Promise<Task> {
+    const db = await this.getDb();
     const [created] = await db.insert(tasks).values(task).returning();
     return created;
   }
 
   async updateTask(id: string, data: UpdateTask): Promise<Task | undefined> {
+    const db = await this.getDb();
     const updateData: any = { ...data, updatedAt: new Date() };
-    
     if (data.status === "done") {
       updateData.completedAt = new Date();
     } else if (data.status && data.status !== "done") {
       updateData.completedAt = null;
     }
-
-    const [updated] = await db
-      .update(tasks)
-      .set(updateData)
-      .where(eq(tasks.id, id))
-      .returning();
+    const [updated] = await db.update(tasks).set(updateData).where(eq(tasks.id, id)).returning();
     return updated || undefined;
   }
 
   async deleteTask(id: string): Promise<void> {
+    const db = await this.getDb();
     await db.delete(tasks).where(eq(tasks.id, id));
   }
 
-  // Label operations
   async getLabel(id: string): Promise<Label | undefined> {
+    const db = await this.getDb();
     const [label] = await db.select().from(labels).where(eq(labels.id, id));
     return label || undefined;
   }
 
   async getLabelsByWorkspaceId(workspaceId: string): Promise<Label[]> {
+    const db = await this.getDb();
     return await db
       .select()
       .from(labels)
@@ -304,16 +787,18 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createLabel(label: InsertLabel): Promise<Label> {
+    const db = await this.getDb();
     const [created] = await db.insert(labels).values(label).returning();
     return created;
   }
 
   async deleteLabel(id: string): Promise<void> {
+    const db = await this.getDb();
     await db.delete(labels).where(eq(labels.id, id));
   }
 
-  // Comment operations
   async getCommentsByTaskId(taskId: string): Promise<Comment[]> {
+    const db = await this.getDb();
     return await db
       .select()
       .from(comments)
@@ -322,16 +807,18 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createComment(comment: InsertComment): Promise<Comment> {
+    const db = await this.getDb();
     const [created] = await db.insert(comments).values(comment).returning();
     return created;
   }
 
   async deleteComment(id: string): Promise<void> {
+    const db = await this.getDb();
     await db.delete(comments).where(eq(comments.id, id));
   }
 
-  // Portal Chat operations
   async getChatMessagesByTicketId(ticketId: string): Promise<PortalChatMessage[]> {
+    const db = await this.getDb();
     return await db
       .select()
       .from(portalChatMessages)
@@ -340,16 +827,108 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createChatMessage(message: InsertPortalChatMessage): Promise<PortalChatMessage> {
+    const db = await this.getDb();
     const [created] = await db.insert(portalChatMessages).values(message).returning();
     return created;
   }
 
   async markMessagesAsRead(ticketId: string): Promise<void> {
+    const db = await this.getDb();
     await db
       .update(portalChatMessages)
       .set({ isRead: true })
       .where(eq(portalChatMessages.ticketId, ticketId));
   }
+
+  async getPortalTicket(id: string): Promise<PortalTicket | undefined> {
+    const db = await this.getDb();
+    const [ticket] = await db.select().from(portalTickets).where(eq(portalTickets.id, id));
+    return ticket || undefined;
+  }
+
+  async getPortalTickets(userId?: string): Promise<PortalTicket[]> {
+    const db = await this.getDb();
+    if (userId) {
+      return await db.select().from(portalTickets).where(eq(portalTickets.userId, userId));
+    }
+    return await db.select().from(portalTickets);
+  }
+
+  async createPortalTicket(ticket: any): Promise<PortalTicket> {
+    const db = await this.getDb();
+    const [created] = await db.insert(portalTickets).values(ticket).returning();
+    return created;
+  }
+
+  async updatePortalTicket(id: string, data: any): Promise<PortalTicket | undefined> {
+    const db = await this.getDb();
+    const [updated] = await db
+      .update(portalTickets)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(portalTickets.id, id))
+      .returning();
+    return updated || undefined;
+  }
+
+  async getPortalTicketComments(ticketId: string): Promise<PortalTicketComment[]> {
+    const db = await this.getDb();
+    return await db
+      .select()
+      .from(portalTicketComments)
+      .where(eq(portalTicketComments.ticketId, ticketId))
+      .orderBy(asc(portalTicketComments.createdAt));
+  }
+
+  async createPortalTicketComment(comment: any): Promise<PortalTicketComment> {
+    const db = await this.getDb();
+    const [created] = await db.insert(portalTicketComments).values({
+      id: comment.id || crypto.randomUUID(),
+      ticketId: comment.ticketId,
+      userId: comment.authorId || comment.userId,
+      content: comment.content,
+      isInternal: comment.isInternal || false,
+      createdAt: comment.createdAt || new Date(),
+      updatedAt: new Date(),
+    }).returning();
+    return created;
+  }
 }
 
-export const storage = new DatabaseStorage();
+let storageInstance: IStorage;
+let dbAvailable = false;
+
+async function initializeStorage(): Promise<IStorage> {
+  try {
+    const { dbReady, initPromise } = await import("./db");
+    await initPromise;
+    
+    if (dbReady) {
+      dbAvailable = true;
+      console.log("✅ Database connected, using DatabaseStorage");
+      return new DatabaseStorage();
+    }
+  } catch (error) {
+    console.log("⚠️ Database module error:", (error as Error).message);
+  }
+  
+  console.log("⚠️ Using MemStorage fallback (database endpoint disabled)");
+  return new MemStorage();
+}
+
+const memStorageFallback = new MemStorage();
+storageInstance = memStorageFallback;
+
+initializeStorage().then(s => {
+  storageInstance = s;
+}).catch(() => {
+  console.log("⚠️ Storage initialization failed, using MemStorage");
+  storageInstance = memStorageFallback;
+});
+
+export const storage: IStorage = new Proxy({} as IStorage, {
+  get(_, prop) {
+    return (storageInstance as any)[prop]?.bind(storageInstance);
+  }
+});
+
+export { dbAvailable };

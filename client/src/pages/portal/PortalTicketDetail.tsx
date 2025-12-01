@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { useLocation } from "wouter";
+import { useLocation, useParams } from "wouter";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { PortalLayout } from "./PortalLayout";
-import { ArrowLeft, Send, MessageCircle, Clock, User, AlertCircle } from "lucide-react";
+import { ArrowLeft, Send, MessageCircle, Clock, User, AlertCircle, Loader2 } from "lucide-react";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 
 interface Comment {
   id: string;
@@ -31,59 +33,74 @@ interface Ticket {
   comments: Comment[];
 }
 
-const mockTicket: Ticket = {
-  id: "1",
-  ticketNumber: "#TK001",
-  subject: "Email not syncing",
-  description: "Outlook is not syncing emails from the Exchange server. Started this morning around 9 AM. Tried restarting the client but issue persists.",
-  status: "open",
-  priority: "high",
-  category: "Email",
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-  assignedTo: "Sarah Johnson",
-  comments: [
-    {
-      id: "1",
-      author: "Sarah Johnson",
-      role: "Support Engineer",
-      content: "Thanks for reporting this. I'm looking into your Exchange connectivity. Can you confirm if you have VPN enabled?",
-      timestamp: new Date(Date.now() - 3600000).toISOString(),
-      isInternal: false,
-    },
-    {
-      id: "2",
-      author: "You",
-      role: "Client",
-      content: "Yes, VPN is enabled. I'm currently working from home.",
-      timestamp: new Date(Date.now() - 1800000).toISOString(),
-      isInternal: false,
-    },
-    {
-      id: "3",
-      author: "Sarah Johnson",
-      role: "Support Engineer",
-      content: "Let me check your device configuration in our system.",
-      timestamp: new Date(Date.now() - 900000).toISOString(),
-      isInternal: true,
-    },
-  ],
-};
-
 export default function PortalTicketDetail() {
   const [, navigate] = useLocation();
-  const [ticket] = useState(mockTicket);
+  const params = useParams<{ id: string }>();
+  const ticketId = params.id;
   const [commentText, setCommentText] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+
+  const { data: ticketData, isLoading, error } = useQuery<{ ticket: Ticket }>({
+    queryKey: ['/api/portal/tickets', ticketId],
+    enabled: !!ticketId,
+  });
+
+  const ticket = ticketData?.ticket;
+
+  const addCommentMutation = useMutation({
+    mutationFn: async (content: string) => {
+      const response = await apiRequest('POST', `/api/portal/tickets/${ticketId}/comments`, { content });
+      return response.json();
+    },
+    onSuccess: () => {
+      setCommentText("");
+      queryClient.invalidateQueries({ queryKey: ['/api/portal/tickets', ticketId] });
+    },
+  });
 
   const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitting(true);
-    setTimeout(() => {
-      setCommentText("");
-      setSubmitting(false);
-    }, 1000);
+    if (!commentText.trim()) return;
+    addCommentMutation.mutate(commentText);
   };
+
+  if (isLoading) {
+    return (
+      <PortalLayout title="Ticket Details">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <Loader2 className="h-8 w-8 animate-spin text-[#5034ff]" />
+        </div>
+      </PortalLayout>
+    );
+  }
+
+  if (error || !ticket) {
+    return (
+      <PortalLayout title="Ticket Details">
+        <div className="space-y-6 max-w-4xl">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/portal/tickets")}
+            className="gap-2"
+            data-testid="button-back"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Tickets
+          </Button>
+          <Card className="bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-900/30">
+            <CardContent className="p-6 text-center">
+              <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+              <h2 className="text-xl font-semibold text-red-800 dark:text-red-300 mb-2">
+                Ticket Not Found
+              </h2>
+              <p className="text-red-600 dark:text-red-400">
+                The ticket you're looking for doesn't exist or you don't have permission to view it.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </PortalLayout>
+    );
+  }
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -243,12 +260,16 @@ export default function PortalTicketDetail() {
                 </div>
                 <Button
                   type="submit"
-                  disabled={!commentText || submitting}
+                  disabled={!commentText || addCommentMutation.isPending}
                   className="bg-[#5034ff] hover:bg-[#5034ff]/90 text-white"
                   data-testid="button-send-comment"
                 >
-                  <Send className="h-4 w-4 mr-2" />
-                  {submitting ? "Sending..." : "Send Comment"}
+                  {addCommentMutation.isPending ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <Send className="h-4 w-4 mr-2" />
+                  )}
+                  {addCommentMutation.isPending ? "Sending..." : "Send Comment"}
                 </Button>
               </form>
             </div>
