@@ -829,7 +829,6 @@ export type ZohoIntegrationLog = typeof zohoIntegrationLogs.$inferSelect;
 export type ZohoTicketSync = typeof zohoTicketSync.$inferSelect;
 export type ZohoFlowTrigger = typeof zohoFlowTriggers.$inferSelect;
 
-export type PortalShipment = typeof portalShipments.$inferSelect;
 export type ShippingCarrier = typeof shippingCarriers.$inferSelect;
 export type ShippingTrackingHistory = typeof shippingTrackingHistory.$inferSelect;
 export type ShippingRatesCache = typeof shippingRatesCache.$inferSelect;
