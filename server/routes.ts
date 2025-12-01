@@ -1,7 +1,12 @@
 import { type Express, type Request, type Response, NextFunction } from "express";
 import { storage } from "./storage";
-import { randomBytes } from "crypto";
+import { randomBytes, createHash } from "crypto";
 import rateLimit from "express-rate-limit";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+const JWT_SECRET = process.env.JWT_SECRET || randomBytes(32).toString('hex');
+const SALT_ROUNDS = 12;
 
 // Utility function for generating IDs
 const randomId = () => randomBytes(16).toString('hex');
@@ -12,28 +17,54 @@ interface AuthenticatedRequest extends Request {
   user?: any;
 }
 
+interface JWTPayload {
+  userId: string;
+  email: string;
+  role: string;
+  iat?: number;
+  exp?: number;
+}
+
 // ========== MIDDLEWARE ==========
 
-// Basic auth middleware
+// JWT-based auth middleware with proper validation
 export function authMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return res.status(401).json({ error: "Authentication required" });
   }
   
   const token = authHeader.split(" ")[1];
   if (!token) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return res.status(401).json({ error: "Invalid authorization header" });
   }
   
   try {
-    // Basic token validation
-    req.user = { id: token, email: "user@example.com", role: "user" };
-    req.userId = token;
+    const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
+    req.user = { id: decoded.userId, email: decoded.email, role: decoded.role };
+    req.userId = decoded.userId;
     next();
-  } catch (e) {
-    res.status(401).json({ error: "Unauthorized" });
+  } catch (e: any) {
+    if (e.name === 'TokenExpiredError') {
+      return res.status(401).json({ error: "Token expired" });
+    }
+    res.status(401).json({ error: "Invalid token" });
   }
+}
+
+// Generate JWT token
+function generateToken(userId: string, email: string, role: string = "user"): string {
+  return jwt.sign({ userId, email, role }, JWT_SECRET, { expiresIn: '24h' });
+}
+
+// Hash password securely
+async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, SALT_ROUNDS);
+}
+
+// Verify password
+async function verifyPassword(password: string, hash: string): Promise<boolean> {
+  return bcrypt.compare(password, hash);
 }
 
 // Rate limiters
@@ -66,37 +97,98 @@ const logSecurityEvent = (event: string, req: AuthenticatedRequest, data: any) =
 // ========== ROUTES ==========
 
 export async function registerRoutes(app: Express) {
-  // ===== USER ROUTES =====
+  // ===== AUTHENTICATION ROUTES =====
+  
+  // Register new user with hashed password
   app.post("/api/auth/register", async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { username, email, password } = req.body;
+      const { username, email, password, fullName } = req.body;
       
       if (!username || !email || !password) {
-        return res.status(400).json({ error: "Missing required fields" });
+        return res.status(400).json({ error: "Username, email, and password are required" });
+      }
+      
+      if (password.length < 8) {
+        return res.status(400).json({ error: "Password must be at least 8 characters" });
+      }
+      
+      // Check if user already exists
+      const existingUser = await storage.getUserByEmail(email);
+      if (existingUser) {
+        return res.status(409).json({ error: "Email already registered" });
+      }
+      
+      const existingUsername = await storage.getUserByUsername(username);
+      if (existingUsername) {
+        return res.status(409).json({ error: "Username already taken" });
       }
 
+      // Hash password before storing
+      const hashedPassword = await hashPassword(password);
+      
       const user = await storage.createUser({
-        id: randomId(),
         username,
         email,
-        password: password,
-        role: "user",
+        password: hashedPassword,
+        fullName: fullName || null,
       });
 
-      res.json({ success: true, user });
+      // Generate JWT token
+      const token = generateToken(user.id, user.email || "", "user");
+      
+      // Don't return password in response
+      const { password: _, ...safeUser } = user;
+      
+      res.json({ success: true, user: safeUser, token });
       logSecurityEvent("USER_REGISTERED", req, { userId: user.id });
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      console.error("Registration error:", error);
+      res.status(500).json({ error: "Registration failed" });
     }
   });
 
+  // Login with password verification
+  app.post("/api/auth/login", async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { email, password } = req.body;
+      
+      if (!email || !password) {
+        return res.status(400).json({ error: "Email and password are required" });
+      }
+      
+      const user = await storage.getUserByEmail(email);
+      if (!user) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+      
+      const isValidPassword = await verifyPassword(password, user.password);
+      if (!isValidPassword) {
+        logSecurityEvent("LOGIN_FAILED", req, { email });
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+      
+      const token = generateToken(user.id, user.email || "", "user");
+      
+      // Don't return password in response
+      const { password: _, ...safeUser } = user;
+      
+      res.json({ success: true, user: safeUser, token });
+      logSecurityEvent("USER_LOGIN", req, { userId: user.id });
+    } catch (error: any) {
+      console.error("Login error:", error);
+      res.status(500).json({ error: "Login failed" });
+    }
+  });
+
+  // Get current user
   app.get("/api/auth/me", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const user = await storage.getUser(req.userId || "");
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
-      res.json({ user });
+      const { password: _, ...safeUser } = user;
+      res.json({ user: safeUser });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -120,14 +212,11 @@ export async function registerRoutes(app: Express) {
       }
 
       const workspace = await storage.createWorkspace({
-        id: randomId(),
         name,
         description: description || "",
         ownerId: req.userId || "",
         icon: "📦",
         color: "#5034ff",
-        createdAt: new Date(),
-        updatedAt: new Date(),
       });
 
       res.json({ workspace });
@@ -171,14 +260,12 @@ export async function registerRoutes(app: Express) {
       }
 
       const project = await storage.createProject({
-        id: randomId(),
         workspaceId,
         name,
+        createdBy: req.userId || "",
         description: description || "",
         color: "#5034ff",
         isFavorite: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       });
 
       res.json({ project });
@@ -210,12 +297,9 @@ export async function registerRoutes(app: Express) {
       }
 
       const board = await storage.createBoard({
-        id: randomId(),
         projectId,
         name,
         position: 0,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       });
 
       res.json({ board });
@@ -251,17 +335,15 @@ export async function registerRoutes(app: Express) {
       }
 
       const task = await storage.createTask({
-        id: randomId(),
         projectId,
         boardId: boardId || null,
         title,
-        description: description || "",
+        description: description || null,
         status: "todo",
         priority: "medium",
         position: 0,
         isArchived: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdBy: req.userId || "",
       });
 
       res.json({ task });
@@ -279,7 +361,6 @@ export async function registerRoutes(app: Express) {
         status,
         priority,
         description,
-        updatedAt: new Date(),
       });
 
       if (!task) {
@@ -325,11 +406,9 @@ export async function registerRoutes(app: Express) {
       }
 
       const label = await storage.createLabel({
-        id: randomId(),
         workspaceId,
         name,
         color: color || "#5034ff",
-        createdAt: new Date(),
       });
 
       res.json({ label });
@@ -361,12 +440,9 @@ export async function registerRoutes(app: Express) {
       }
 
       const comment = await storage.createComment({
-        id: randomId(),
         taskId,
         userId: req.userId || "",
         content,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       });
 
       res.json({ comment });
@@ -408,12 +484,12 @@ export async function registerRoutes(app: Express) {
       }
 
       const message = await storage.createChatMessage({
-        id: randomId(),
         ticketId,
         userId: req.userId || "",
         content,
+        senderName: req.user?.fullName || "User",
+        senderRole: "client",
         isRead: isRead || false,
-        createdAt: new Date(),
       });
 
       res.json({ message });
@@ -443,12 +519,16 @@ export async function registerRoutes(app: Express) {
       if (!title || !description) {
         return res.status(400).json({ error: "Title and description required" });
       }
+      
+      const { classifyTicket } = await import("./openaiService");
+      const classification = await classifyTicket(title, description);
+      
       res.json({
         success: true,
         classification: {
-          category: "General",
-          priority: "medium",
-          tags: [],
+          category: classification.category,
+          priority: classification.priority,
+          tags: classification.suggestedTags,
         },
       });
       logSecurityEvent("TICKET_CLASSIFIED", req, {});
@@ -459,15 +539,19 @@ export async function registerRoutes(app: Express) {
 
   app.post("/api/portal/chat/message", [authMiddleware, chatRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { message } = req.body;
+      const { message, conversationHistory = [] } = req.body;
       if (!message) {
         return res.status(400).json({ error: "Message required" });
       }
+      
+      const { generateChatResponse } = await import("./openaiService");
+      const aiResponse = await generateChatResponse(message, conversationHistory);
+      
       res.json({
         success: true,
         message: {
           id: randomId(),
-          content: "Message received",
+          content: aiResponse,
           respondedBy: "ai",
           timestamp: new Date().toISOString(),
         },
@@ -534,7 +618,7 @@ export async function registerRoutes(app: Express) {
           ticketNumber: `#TK${String(ticket.id).padStart(3, '0')}`,
           comments: comments.map(c => ({
             id: c.id,
-            author: c.authorName || "Support",
+            author: c.userId === req.userId ? "You" : "Support",
             role: c.isInternal ? "Support Engineer" : "Client",
             content: c.content,
             timestamp: c.createdAt,

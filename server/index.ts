@@ -50,14 +50,34 @@ app.use((req, _res, next) => {
   next();
 });
 
-// --------- HEALTH MUST WIN (placed before everything else)
-app.all("/api/health", (_req, res) => {
+// --------- COMPREHENSIVE HEALTH CHECK
+app.all("/api/health", async (_req, res) => {
   const port = process.env.REPLIT_SERVER_PORT || process.env.PORT || "unknown";
-  res.status(200).json({ status: "ok", env: app.get("env"), port });
+  const dbAvailable = await testDatabaseConnection().catch(() => false);
+  const openaiConfigured = !!(process.env.AI_INTEGRATIONS_OPENAI_BASE_URL && process.env.AI_INTEGRATIONS_OPENAI_API_KEY);
+  
+  const health = {
+    status: "ok",
+    timestamp: new Date().toISOString(),
+    version: "1.0.0",
+    env: app.get("env"),
+    port,
+    services: {
+      database: dbAvailable ? "connected" : "fallback_memory",
+      stripe: stripeEnabled ? "enabled" : "disabled",
+      openai: openaiConfigured ? "configured" : "not_configured",
+    },
+    uptime: process.uptime(),
+  };
+  
+  res.status(200).json(health);
 });
 
-// Backup simple health
+// Backup simple health for load balancers
 app.all("/healthz", (_req, res) => res.status(200).send("ok"));
+
+// Readiness check for deployments
+app.all("/ready", (_req, res) => res.status(200).json({ ready: true }));
 
 let stripeEnabled = false;
 
