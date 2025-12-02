@@ -793,6 +793,29 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  // Portal Dashboard Stats
+  app.get("/api/portal/dashboard", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      // Return dashboard statistics for the authenticated user
+      const userId = req.userId;
+      
+      // For now, return placeholder stats - in production, these would come from database queries
+      const dashboardStats = {
+        openTickets: 0,
+        resolvedTickets: 0,
+        activeServices: 0,
+        pendingInvoices: 0,
+        recentTickets: [],
+        services: [],
+      };
+      
+      res.json(dashboardStats);
+    } catch (error: any) {
+      console.error("[ERROR] Dashboard fetch failed:", error);
+      res.status(500).json({ message: "Failed to load dashboard" });
+    }
+  });
+
   // ===== LEAD QUOTE FORM =====
   app.post("/api/lead-quote", [leadQuoteRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
