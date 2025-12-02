@@ -796,10 +796,6 @@ export async function registerRoutes(app: Express) {
   // Portal Dashboard Stats
   app.get("/api/portal/dashboard", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      // Return dashboard statistics for the authenticated user
-      const userId = req.userId;
-      
-      // For now, return placeholder stats - in production, these would come from database queries
       const dashboardStats = {
         openTickets: 0,
         resolvedTickets: 0,
@@ -813,6 +809,100 @@ export async function registerRoutes(app: Express) {
     } catch (error: any) {
       console.error("[ERROR] Dashboard fetch failed:", error);
       res.status(500).json({ message: "Failed to load dashboard" });
+    }
+  });
+
+  // Portal Knowledge Base Articles
+  app.get("/api/portal/kb", [authMiddleware], async (_req: AuthenticatedRequest, res: Response) => {
+    try {
+      const articles = [
+        {
+          id: "kb-001",
+          title: "Getting Started with VPN Access",
+          category: "VPN",
+          content: "Learn how to configure and connect to our VPN for secure remote access.",
+          excerpt: "Complete guide to setting up VPN access for remote work.",
+          readTime: "5 min",
+          updatedAt: "2025-01-15",
+        },
+        {
+          id: "kb-002", 
+          title: "Cytracom ControlOne Setup Guide",
+          category: "Phone System",
+          content: "Step-by-step instructions for configuring Cytracom ControlOne softphone.",
+          excerpt: "Set up your cloud phone system with Cytracom ControlOne.",
+          readTime: "8 min",
+          updatedAt: "2025-01-10",
+        },
+        {
+          id: "kb-003",
+          title: "Password Reset Procedures",
+          category: "Security",
+          content: "How to reset your password for various company systems.",
+          excerpt: "Self-service password reset instructions for all platforms.",
+          readTime: "3 min",
+          updatedAt: "2025-01-12",
+        },
+        {
+          id: "kb-004",
+          title: "Microsoft 365 Email Configuration",
+          category: "Email",
+          content: "Configure Microsoft 365 email on desktop and mobile devices.",
+          excerpt: "Email setup guide for Outlook, mobile apps, and web access.",
+          readTime: "6 min",
+          updatedAt: "2025-01-08",
+        },
+        {
+          id: "kb-005",
+          title: "Multi-Factor Authentication (MFA) Setup",
+          category: "Security",
+          content: "Enable and configure MFA for enhanced account security.",
+          excerpt: "Protect your accounts with two-factor authentication.",
+          readTime: "4 min",
+          updatedAt: "2025-01-14",
+        },
+        {
+          id: "kb-006",
+          title: "Remote Desktop Connection Guide",
+          category: "Remote Access",
+          content: "Connect to office computers remotely using RDP.",
+          excerpt: "Access your work desktop from anywhere securely.",
+          readTime: "5 min",
+          updatedAt: "2025-01-11",
+        },
+      ];
+      
+      res.json(articles);
+    } catch (error: any) {
+      console.error("[ERROR] KB fetch failed:", error);
+      res.status(500).json({ message: "Failed to load knowledge base" });
+    }
+  });
+
+  // Portal Services List
+  app.get("/api/portal/services", [authMiddleware], async (_req: AuthenticatedRequest, res: Response) => {
+    try {
+      const services = [
+        { id: "svc-001", serviceName: "Managed IT Support", status: "active", userCount: 25 },
+        { id: "svc-002", serviceName: "Cloud Backup", status: "active", userCount: 25 },
+        { id: "svc-003", serviceName: "Security Monitoring", status: "active", userCount: 25 },
+      ];
+      res.json(services);
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to load services" });
+    }
+  });
+
+  // Portal Invoices List
+  app.get("/api/portal/invoices", [authMiddleware], async (_req: AuthenticatedRequest, res: Response) => {
+    try {
+      const invoices = [
+        { id: "inv-001", invoiceNumber: "INV-2025-001", amount: 2499.00, status: "paid", dueDate: "2025-01-15", paidDate: "2025-01-10" },
+        { id: "inv-002", invoiceNumber: "INV-2025-002", amount: 2499.00, status: "pending", dueDate: "2025-02-15", paidDate: null },
+      ];
+      res.json(invoices);
+    } catch (error: any) {
+      res.status(500).json({ message: "Failed to load invoices" });
     }
   });
 

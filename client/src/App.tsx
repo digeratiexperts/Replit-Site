@@ -71,6 +71,8 @@ const PortalAdvancedForms = lazy(() => import("@/pages/portal/PortalAdvancedForm
 const PortalSatisfactionSurvey = lazy(() => import("@/pages/portal/PortalSatisfactionSurvey").then(m => ({ default: m.PortalSatisfactionSurvey })));
 const PortalApprovals = lazy(() => import("@/pages/portal/PortalApprovals").then(m => ({ default: m.PortalApprovals })));
 const PortalQuestionnaireCalendar = lazy(() => import("@/pages/portal/PortalQuestionnaireCalendar").then(m => ({ default: m.PortalQuestionnaireCalendar })));
+const PortalVPN = lazy(() => import("@/pages/portal/PortalVPN"));
+const PortalCytracom = lazy(() => import("@/pages/portal/PortalCytracom"));
 const AdminImportPage = lazy(() => import("@/pages/portal/AdminImport").then(m => ({ default: m.AdminImport })));
 const AdminAgentsPage = lazy(() => import("@/pages/portal/AdminAgents").then(m => ({ default: m.AdminAgents })));
 const AdminOpenAIPage = lazy(() => import("@/pages/portal/AdminOpenAI").then(m => ({ default: m.AdminOpenAI })));
@@ -424,6 +426,16 @@ function Router() {
       <Route path="/portal/approvals" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <PortalApprovals />
+        </Suspense>
+      )} />
+      <Route path="/portal/vpn" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <PortalVPN />
+        </Suspense>
+      )} />
+      <Route path="/portal/cytracom" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <PortalCytracom />
         </Suspense>
       )} />
       <Route path="/portal/questionnaires" component={() => (
