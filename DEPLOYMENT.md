@@ -102,10 +102,19 @@ npm run db:push
 Using PM2 (recommended):
 ```bash
 npm install -g pm2
-pm2 start npm --name "digerati" -- start
+
+# For production (after build):
+pm2 start "node dist/index.js" --name "digerati"
+
+# Or use the dev command for testing:
+pm2 start "npm run dev" --name "digerati-dev"
+
 pm2 save
 pm2 startup
 ```
+
+**Note:** If `npm run build` creates a `dist/` folder, use `node dist/index.js`. 
+Otherwise, use `npm run dev` or create a start script in package.json.
 
 ## OpenLiteSpeed Configuration
 

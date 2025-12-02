@@ -1,14 +1,17 @@
-import { Pool, neonConfig } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-serverless';
+import { Pool as NeonPool, neonConfig } from '@neondatabase/serverless';
+import { Pool as PgPool } from 'pg';
+import { drizzle as drizzleNeon } from 'drizzle-orm/neon-serverless';
+import { drizzle as drizzlePg } from 'drizzle-orm/node-postgres';
 import ws from "ws";
 import * as schema from "@shared/schema";
 
 neonConfig.webSocketConstructor = ws;
 
-let pool: Pool | null = null;
+let pool: NeonPool | PgPool | null = null;
 let db: any = null;
 let dbReady = false;
 let initAttempted = false;
+let dbType: 'neon' | 'postgresql' | 'memory' = 'memory';
 
 process.on('unhandledRejection', (reason) => {
   if (String(reason).includes('endpoint has been disabled') || 
@@ -19,6 +22,10 @@ process.on('unhandledRejection', (reason) => {
   }
 });
 
+function isNeonDatabase(url: string): boolean {
+  return url.includes('neon.tech') || url.includes('neon.com');
+}
+
 async function initDb(): Promise<boolean> {
   if (initAttempted) return dbReady;
   initAttempted = true;
@@ -27,11 +34,11 @@ async function initDb(): Promise<boolean> {
   
   if (!databaseUrl) {
     console.log("⚠️ DATABASE_URL not set - running in memory-only mode");
+    dbType = 'memory';
     return false;
   }
 
-  // Determine if this is a Neon database or standard PostgreSQL
-  const isNeonDb = databaseUrl.includes('neon.tech') || databaseUrl.includes('neon.com');
+  const isNeon = isNeonDatabase(databaseUrl);
   
   return new Promise((resolve) => {
     const timeout = setTimeout(() => {
@@ -40,18 +47,27 @@ async function initDb(): Promise<boolean> {
         pool.end().catch(() => {});
         pool = null;
       }
+      dbType = 'memory';
       resolve(false);
     }, 8000);
 
     try {
-      pool = new Pool({ 
-        connectionString: databaseUrl,
-        connectionTimeoutMillis: 5000,
-        max: 10,
-        idleTimeoutMillis: 30000,
-      });
+      if (isNeon) {
+        pool = new NeonPool({ 
+          connectionString: databaseUrl,
+          connectionTimeoutMillis: 5000,
+          max: 10,
+        });
+      } else {
+        pool = new PgPool({ 
+          connectionString: databaseUrl,
+          connectionTimeoutMillis: 5000,
+          max: 10,
+          idleTimeoutMillis: 30000,
+        });
+      }
       
-      pool.on('error', (err) => {
+      (pool as any).on('error', (err: Error) => {
         const errMsg = String(err.message);
         if (!errMsg.includes('endpoint has been disabled') && 
             !errMsg.includes('Connection terminated')) {
@@ -60,43 +76,50 @@ async function initDb(): Promise<boolean> {
       });
       
       pool.connect()
-        .then(client => {
+        .then((client: any) => {
           return client.query('SELECT 1').then(() => {
             client.release();
             clearTimeout(timeout);
-            db = drizzle({ client: pool as Pool, schema });
+            
+            if (isNeon) {
+              db = drizzleNeon({ client: pool as NeonPool, schema });
+              dbType = 'neon';
+            } else {
+              db = drizzlePg({ client: pool as PgPool, schema });
+              dbType = 'postgresql';
+            }
+            
             dbReady = true;
-            console.log(`✅ Database connected successfully (${isNeonDb ? 'Neon' : 'PostgreSQL'})`);
+            console.log(`✅ Database connected successfully (${dbType})`);
             resolve(true);
           });
         })
-        .catch((error) => {
+        .catch((error: Error) => {
           clearTimeout(timeout);
           console.log("⚠️ Database connection failed:", error.message);
           if (pool) {
             pool.end().catch(() => {});
             pool = null;
           }
+          dbType = 'memory';
           resolve(false);
         });
     } catch (error: any) {
       clearTimeout(timeout);
       console.log("⚠️ Database initialization error:", error.message);
+      dbType = 'memory';
       resolve(false);
     }
   });
 }
 
-// Export a function to get database connection status
 export function getDatabaseStatus(): { connected: boolean; type: string } {
-  const databaseUrl = process.env.DATABASE_URL || '';
-  const isNeonDb = databaseUrl.includes('neon.tech') || databaseUrl.includes('neon.com');
   return {
     connected: dbReady,
-    type: dbReady ? (isNeonDb ? 'neon' : 'postgresql') : 'memory'
+    type: dbType
   };
 }
 
 const initPromise = initDb();
 
-export { pool, db, dbReady, initPromise, initAttempted };
+export { pool, db, dbReady, initPromise, initAttempted, dbType };
