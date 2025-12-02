@@ -1,0 +1,47 @@
+
+[root@racknerd-17eee46 public_html]# pm2 logs digerati --lines 20
+[TAILING] Tailing last 20 lines for [digerati] process (change the value with --lines option)
+/root/.pm2/logs/digerati-error.log last 20 lines:
+1|digerati |     at listenInCluster (node:net:1965:12)
+1|digerati |     at doListen (node:net:2139:7)
+1|digerati |     at process.processTicksAndRejections (node:internal/process/task_queues:83:21) {
+1|digerati |   code: 'EADDRINUSE',
+1|digerati |   errno: -98,
+1|digerati |   syscall: 'listen',
+1|digerati |   address: '0.0.0.0',
+1|digerati |   port: 8080
+1|digerati | }
+1|digerati | Uncaught Exception: Error: listen EADDRINUSE: address already in use 0.0.0.0:8080
+1|digerati |     at Server.setupListenHandle [as _listen2] (node:net:1908:16)
+1|digerati |     at listenInCluster (node:net:1965:12)
+1|digerati |     at doListen (node:net:2139:7)
+1|digerati |     at process.processTicksAndRejections (node:internal/process/task_queues:83:21) {
+1|digerati |   code: 'EADDRINUSE',
+1|digerati |   errno: -98,
+1|digerati |   syscall: 'listen',
+1|digerati |   address: '0.0.0.0',
+1|digerati |   port: 8080
+1|digerati | }
+
+/root/.pm2/logs/digerati-out.log last 20 lines:
+1|digerati | [05:51:53] 🌐 Using port: 8080 (PORT=unset, REPLIT_SERVER_PORT=unset)
+1|digerati | ✅ Cross-service handlers initialized
+1|digerati | [05:51:54] ⚠️ DATABASE_URL not set - Stripe integration will not work
+1|digerati | ⚠️ DATABASE_URL not set - running in memory-only mode
+1|digerati | ⚠️ Using MemStorage fallback (database endpoint disabled)
+1|digerati | [05:51:54] ✨ Vite development server middleware attached
+1|digerati | [05:51:54] 🌐 Using port: 8080 (PORT=unset, REPLIT_SERVER_PORT=unset)
+1|digerati | ✅ Cross-service handlers initialized
+1|digerati | [05:51:55] ⚠️ DATABASE_URL not set - Stripe integration will not work
+1|digerati | ⚠️ DATABASE_URL not set - running in memory-only mode
+1|digerati | ⚠️ Using MemStorage fallback (database endpoint disabled)
+1|digerati | [05:51:55] ✨ Vite development server middleware attached
+1|digerati | [05:51:55] 🌐 Using port: 8080 (PORT=unset, REPLIT_SERVER_PORT=unset)
+1|digerati | ✅ Cross-service handlers initialized
+1|digerati | [05:51:56] ⚠️ DATABASE_URL not set - Stripe integration will not work
+1|digerati | ⚠️ DATABASE_URL not set - running in memory-only mode
+1|digerati | ⚠️ Using MemStorage fallback (database endpoint disabled)
+1|digerati | [05:51:56] ✨ Vite development server middleware attached
+1|digerati | [05:51:56] 🌐 Using port: 8080 (PORT=unset, REPLIT_SERVER_PORT=unset)
+1|digerati | [05:51:56] 🚀 Running on http://0.0.0.0:8080
+
