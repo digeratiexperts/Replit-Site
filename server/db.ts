@@ -12,7 +12,8 @@ let initAttempted = false;
 
 process.on('unhandledRejection', (reason) => {
   if (String(reason).includes('endpoint has been disabled') || 
-      String(reason).includes('Connection terminated')) {
+      String(reason).includes('Connection terminated') ||
+      String(reason).includes('connection to server')) {
     console.log('⚠️ Database connection error handled (non-fatal)');
     return;
   }
@@ -22,11 +23,16 @@ async function initDb(): Promise<boolean> {
   if (initAttempted) return dbReady;
   initAttempted = true;
   
-  if (!process.env.DATABASE_URL) {
+  const databaseUrl = process.env.DATABASE_URL;
+  
+  if (!databaseUrl) {
     console.log("⚠️ DATABASE_URL not set - running in memory-only mode");
     return false;
   }
 
+  // Determine if this is a Neon database or standard PostgreSQL
+  const isNeonDb = databaseUrl.includes('neon.tech') || databaseUrl.includes('neon.com');
+  
   return new Promise((resolve) => {
     const timeout = setTimeout(() => {
       console.log("⚠️ Database connection timeout - using in-memory storage");
@@ -39,13 +45,16 @@ async function initDb(): Promise<boolean> {
 
     try {
       pool = new Pool({ 
-        connectionString: process.env.DATABASE_URL,
+        connectionString: databaseUrl,
         connectionTimeoutMillis: 5000,
-        max: 1,
+        max: 10,
+        idleTimeoutMillis: 30000,
       });
       
       pool.on('error', (err) => {
-        if (!String(err.message).includes('endpoint has been disabled')) {
+        const errMsg = String(err.message);
+        if (!errMsg.includes('endpoint has been disabled') && 
+            !errMsg.includes('Connection terminated')) {
           console.log('⚠️ Database pool error:', err.message);
         }
       });
@@ -57,7 +66,7 @@ async function initDb(): Promise<boolean> {
             clearTimeout(timeout);
             db = drizzle({ client: pool as Pool, schema });
             dbReady = true;
-            console.log("✅ Database connected successfully");
+            console.log(`✅ Database connected successfully (${isNeonDb ? 'Neon' : 'PostgreSQL'})`);
             resolve(true);
           });
         })
@@ -76,6 +85,16 @@ async function initDb(): Promise<boolean> {
       resolve(false);
     }
   });
+}
+
+// Export a function to get database connection status
+export function getDatabaseStatus(): { connected: boolean; type: string } {
+  const databaseUrl = process.env.DATABASE_URL || '';
+  const isNeonDb = databaseUrl.includes('neon.tech') || databaseUrl.includes('neon.com');
+  return {
+    connected: dbReady,
+    type: dbReady ? (isNeonDb ? 'neon' : 'postgresql') : 'memory'
+  };
 }
 
 const initPromise = initDb();
