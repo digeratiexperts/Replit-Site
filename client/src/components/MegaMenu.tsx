@@ -513,13 +513,13 @@ export function MegaMenu() {
           </div>
 
           {/* Right Side Actions */}
-          <div className="flex items-center space-x-4">
-            {/* Get Protected Now CTA */}
+          <div className="flex items-center space-x-2 lg:space-x-4">
+            {/* Get Protected Now CTA - Hidden on mobile, shown in mobile menu instead */}
             <a
               href="https://meet.digerati-experts.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-2 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 border border-purple-500/30"
+              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-2 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 border border-purple-500/30"
               data-testid="nav-cta"
               onClick={handleLinkClick}
               aria-label="Get protected now - Schedule a consultation"
