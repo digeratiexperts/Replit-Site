@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { CheckCircle, Star } from "lucide-react";
+import { PortalLayout } from "./PortalLayout";
 
 interface SurveyResponse {
   rating: number;
@@ -74,71 +75,72 @@ export function PortalSatisfactionSurvey() {
     }, 3000);
   };
 
-  if (submitted) {
-    return (
-      <Card className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
-        <CardContent className="pt-6 text-center">
-          <CheckCircle className="mx-auto mb-2 text-green-600" size={40} />
-          <p className="text-green-700 dark:text-green-300 font-medium">
-            ✅ Thank you for your feedback!
-          </p>
-          <p className="text-sm text-green-600 dark:text-green-400 mt-1">
-            Your satisfaction rating helps us improve our service.
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
+  const renderContent = () => {
+    if (submitted) {
+      return (
+        <Card className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
+          <CardContent className="pt-6 text-center">
+            <CheckCircle className="mx-auto mb-2 text-green-600" size={40} />
+            <p className="text-green-700 dark:text-green-300 font-medium">
+              ✅ Thank you for your feedback!
+            </p>
+            <p className="text-sm text-green-600 dark:text-green-400 mt-1">
+              Your satisfaction rating helps us improve our service.
+            </p>
+          </CardContent>
+        </Card>
+      );
+    }
 
-  if (!selectedTicket) {
+    if (!selectedTicket) {
+      return (
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold">Customer Satisfaction Surveys</h2>
+          <p className="text-gray-600 dark:text-gray-400">
+            We'd love to know how we're doing! Please rate your recent ticket
+            experience.
+          </p>
+
+          <div className="space-y-3">
+            {recentTickets.map((ticket) => (
+              <Card
+                key={ticket.ticketId}
+                className="cursor-pointer hover:shadow-md transition-shadow"
+                onClick={() => setSelectedTicket(ticket)}
+                data-testid={`survey-ticket-${ticket.ticketId}`}
+              >
+                <CardContent className="pt-4 flex justify-between items-center">
+                  <div>
+                    <p className="font-medium">{ticket.ticketNumber}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {ticket.subject}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                      Completed {ticket.completedDate}
+                    </p>
+                  </div>
+                  <Button variant="outline" data-testid={`button-rate-${ticket.ticketId}`}>
+                    Rate Now
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold">Customer Satisfaction Surveys</h2>
-        <p className="text-gray-600 dark:text-gray-400">
-          We'd love to know how we're doing! Please rate your recent ticket
-          experience.
-        </p>
-
-        <div className="space-y-3">
-          {recentTickets.map((ticket) => (
-            <Card
-              key={ticket.ticketId}
-              className="cursor-pointer hover:shadow-md transition-shadow"
-              onClick={() => setSelectedTicket(ticket)}
-              data-testid={`survey-ticket-${ticket.ticketId}`}
-            >
-              <CardContent className="pt-4 flex justify-between items-center">
-                <div>
-                  <p className="font-medium">{ticket.ticketNumber}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {ticket.subject}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                    Completed {ticket.completedDate}
-                  </p>
-                </div>
-                <Button variant="outline" data-testid={`button-rate-${ticket.ticketId}`}>
-                  Rate Now
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+        <div>
+          <Button
+            variant="outline"
+            onClick={() => setSelectedTicket(null)}
+            data-testid="button-back-to-surveys"
+          >
+            ← Back to Tickets
+          </Button>
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-4">
-      <div>
-        <Button
-          variant="outline"
-          onClick={() => setSelectedTicket(null)}
-          data-testid="button-back-to-surveys"
-        >
-          ← Back to Tickets
-        </Button>
-      </div>
 
       <Card>
         <CardHeader>
@@ -222,5 +224,12 @@ export function PortalSatisfactionSurvey() {
         </CardContent>
       </Card>
     </div>
+    );
+  };
+
+  return (
+    <PortalLayout title="Surveys">
+      {renderContent()}
+    </PortalLayout>
   );
 }

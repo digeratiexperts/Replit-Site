@@ -9,6 +9,7 @@ import {
   User,
   DollarSign,
 } from "lucide-react";
+import { PortalLayout } from "./PortalLayout";
 
 interface ApprovalRequest {
   id: string;
@@ -114,21 +115,22 @@ export function PortalApprovals() {
     .filter((r) => r.amount)
     .reduce((sum, r) => sum + (r.amount || 0), 0);
 
-  if (selectedRequest) {
-    const approvalProgress = selectedRequest.approvers.filter(
-      (a) => a.status === "approved"
-    ).length;
-    const totalApprovers = selectedRequest.approvers.length;
+  const renderContent = () => {
+    if (selectedRequest) {
+      const approvalProgress = selectedRequest.approvers.filter(
+        (a) => a.status === "approved"
+      ).length;
+      const totalApprovers = selectedRequest.approvers.length;
 
-    return (
-      <div className="space-y-4">
-        <Button
-          variant="outline"
-          onClick={() => setSelectedRequest(null)}
-          data-testid="button-back-to-approvals"
-        >
-          ← Back to Approvals
-        </Button>
+      return (
+        <div className="space-y-4">
+          <Button
+            variant="outline"
+            onClick={() => setSelectedRequest(null)}
+            data-testid="button-back-to-approvals"
+          >
+            ← Back to Approvals
+          </Button>
 
         <Card>
           <CardHeader>
@@ -253,13 +255,13 @@ export function PortalApprovals() {
           </CardContent>
         </Card>
       </div>
-    );
-  }
+      );
+    }
 
-  return (
-    <div className="space-y-4">
-      <div>
-        <h2 className="text-2xl font-bold">Approval Requests</h2>
+    return (
+      <div className="space-y-4">
+        <div>
+          <h2 className="text-2xl font-bold">Approval Requests</h2>
         <p className="text-gray-600 dark:text-gray-400">
           Manage pending approvals and request workflows
         </p>
@@ -332,5 +334,12 @@ export function PortalApprovals() {
         ))}
       </div>
     </div>
+    );
+  };
+
+  return (
+    <PortalLayout title="Approvals">
+      {renderContent()}
+    </PortalLayout>
   );
 }

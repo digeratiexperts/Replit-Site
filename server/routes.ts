@@ -602,6 +602,55 @@ export async function registerRoutes(app: Express) {
   });
 
   // ===== PORTAL TICKET ROUTES =====
+  // Get all tickets for user
+  app.get("/api/portal/tickets", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const tickets = await storage.getPortalTickets(req.userId || "");
+      res.json({
+        tickets: tickets.map(t => ({
+          id: t.id,
+          ticketNumber: t.ticketNumber || `#TK${String(t.id).padStart(3, '0')}`,
+          subject: t.subject,
+          description: t.description,
+          status: t.status,
+          priority: t.priority,
+          category: t.category || "General",
+          createdAt: t.createdAt,
+          updatedAt: t.updatedAt,
+        })),
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Create new ticket
+  app.post("/api/portal/tickets", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { subject, description, priority, category } = req.body;
+      
+      if (!subject || !description) {
+        return res.status(400).json({ error: "Subject and description are required" });
+      }
+
+      const ticket = await storage.createPortalTicket({
+        userId: req.userId || "",
+        createdBy: req.userId || "",
+        subject,
+        description,
+        status: "open",
+        priority: priority || "medium",
+        category: category || "general",
+      });
+
+      res.json({ success: true, ticket });
+      logSecurityEvent("TICKET_CREATED", req, { ticketId: ticket.id });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get single ticket by ID
   app.get("/api/portal/tickets/:id", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { id } = req.params;
@@ -615,7 +664,7 @@ export async function registerRoutes(app: Express) {
       res.json({
         ticket: {
           ...ticket,
-          ticketNumber: `#TK${String(ticket.id).padStart(3, '0')}`,
+          ticketNumber: ticket.ticketNumber || `#TK${String(ticket.id).padStart(3, '0')}`,
           comments: comments.map(c => ({
             id: c.id,
             author: c.userId === req.userId ? "You" : "Support",

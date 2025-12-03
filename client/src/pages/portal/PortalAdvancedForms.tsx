@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle } from "lucide-react";
+import { PortalLayout } from "./PortalLayout";
 
 interface FormField {
   id: string;
@@ -157,58 +158,59 @@ export function PortalAdvancedForms() {
     }, 3000);
   };
 
-  if (submitted) {
-    return (
-      <Card className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
-        <CardContent className="pt-6 text-center">
-          <CheckCircle className="mx-auto mb-2 text-green-600" size={40} />
-          <p className="text-green-700 dark:text-green-300 font-medium">
-            ✅ Form submitted successfully!
-          </p>
-          <p className="text-sm text-green-600 dark:text-green-400 mt-1">
-            A ticket has been created and sent for processing.
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
+  const renderContent = () => {
+    if (submitted) {
+      return (
+        <Card className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
+          <CardContent className="pt-6 text-center">
+            <CheckCircle className="mx-auto mb-2 text-green-600" size={40} />
+            <p className="text-green-700 dark:text-green-300 font-medium">
+              ✅ Form submitted successfully!
+            </p>
+            <p className="text-sm text-green-600 dark:text-green-400 mt-1">
+              A ticket has been created and sent for processing.
+            </p>
+          </CardContent>
+        </Card>
+      );
+    }
 
-  if (!selectedTemplate) {
+    if (!selectedTemplate) {
+      return (
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold">Service Request Forms</h2>
+          <p className="text-gray-600 dark:text-gray-400">
+            Select a form template to submit your request
+          </p>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            {formTemplates.map((template) => (
+              <Card
+                key={template.id}
+                className="cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => setSelectedTemplate(template)}
+                data-testid={`form-template-${template.id}`}
+              >
+                <CardHeader>
+                  <CardTitle className="text-lg">{template.name}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    {template.description}
+                  </p>
+                  <Badge variant="outline">
+                    {template.fields.length} fields
+                  </Badge>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold">Service Request Forms</h2>
-        <p className="text-gray-600 dark:text-gray-400">
-          Select a form template to submit your request
-        </p>
-
-        <div className="grid gap-4 md:grid-cols-2">
-          {formTemplates.map((template) => (
-            <Card
-              key={template.id}
-              className="cursor-pointer hover:shadow-lg transition-shadow"
-              onClick={() => setSelectedTemplate(template)}
-              data-testid={`form-template-${template.id}`}
-            >
-              <CardHeader>
-                <CardTitle className="text-lg">{template.name}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                  {template.description}
-                </p>
-                <Badge variant="outline">
-                  {template.fields.length} fields
-                </Badge>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">{selectedTemplate.name}</h2>
         <Button
@@ -315,5 +317,12 @@ export function PortalAdvancedForms() {
         </CardContent>
       </Card>
     </div>
+    );
+  };
+
+  return (
+    <PortalLayout title="Request Forms">
+      {renderContent()}
+    </PortalLayout>
   );
 }
