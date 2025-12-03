@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { PortalLayout } from "./PortalLayout";
 import { FileText, Download, Eye, CreditCard } from "lucide-react";
 import { Link } from "wouter";
+import { portalGet } from "@/lib/portalApi";
 
 interface Invoice {
   id: string;
@@ -19,6 +20,7 @@ interface Invoice {
 export default function PortalInvoices() {
   const { data: invoices = [], isLoading, isError, error } = useQuery<Invoice[]>({
     queryKey: ["/api/portal/invoices"],
+    queryFn: () => portalGet<Invoice[]>("/api/portal/invoices"),
   });
 
   const getStatusColor = (status: string) => {

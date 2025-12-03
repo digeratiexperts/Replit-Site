@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { PortalLayout } from "./PortalLayout";
 import { Package, Users, DollarSign, Calendar } from "lucide-react";
+import { portalGet } from "@/lib/portalApi";
 
 interface Service {
   id: string;
@@ -17,6 +18,7 @@ interface Service {
 export default function PortalServices() {
   const { data: services = [], isLoading, isError, error } = useQuery<Service[]>({
     queryKey: ["/api/portal/services"],
+    queryFn: () => portalGet<Service[]>("/api/portal/services"),
   });
 
   return (

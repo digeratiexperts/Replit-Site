@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { AlertCircle, CheckCircle, Power, RefreshCw, Zap } from "lucide-react";
 import { PortalLayout } from "./PortalLayout";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { portalGet } from "@/lib/portalApi";
 
 interface OpenAIStatus {
   status: {
@@ -25,6 +26,7 @@ export function AdminOpenAI() {
   // Fetch OpenAI status
   const { data: statusData, isLoading: statusLoading, refetch } = useQuery<OpenAIStatus>({
     queryKey: ["/api/portal/admin/openai/status"],
+    queryFn: () => portalGet<OpenAIStatus>("/api/portal/admin/openai/status"),
   });
 
   const status = statusData?.status;

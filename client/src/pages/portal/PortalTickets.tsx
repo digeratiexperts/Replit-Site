@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { PortalLayout } from "./PortalLayout";
 import { Plus, Search, MessageSquare, Clock } from "lucide-react";
 import { queryClient } from "@/lib/queryClient";
+import { portalGet } from "@/lib/portalApi";
 
 interface Ticket {
   id: string;
@@ -20,13 +21,20 @@ interface Ticket {
   updatedAt: string;
 }
 
+interface TicketsResponse {
+  tickets: Ticket[];
+}
+
 export default function PortalTickets() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<string>("all");
 
-  const { data: tickets = [], isLoading, isError, error } = useQuery<Ticket[]>({
+  const { data, isLoading, isError, error } = useQuery<TicketsResponse>({
     queryKey: ["/api/portal/tickets"],
+    queryFn: () => portalGet<TicketsResponse>("/api/portal/tickets"),
   });
+  
+  const tickets = data?.tickets || [];
 
   const filteredTickets = tickets.filter((ticket) => {
     const matchesSearch =

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { PortalLayout } from "./PortalLayout";
 import { AlertCircle, CheckCircle2, Clock, Ticket, Package, FileText, TrendingUp, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
+import { portalGet } from "@/lib/portalApi";
 
 interface DashboardStats {
   openTickets: number;
@@ -18,6 +19,7 @@ interface DashboardStats {
 export default function PortalDashboard() {
   const { data: stats, isLoading, isError, error } = useQuery<DashboardStats>({
     queryKey: ["/api/portal/dashboard"],
+    queryFn: () => portalGet<DashboardStats>("/api/portal/dashboard"),
   });
 
   return (

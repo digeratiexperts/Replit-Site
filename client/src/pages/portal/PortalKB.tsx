@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { PortalLayout } from "./PortalLayout";
 import { Search, BookOpen, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { portalGet } from "@/lib/portalApi";
 
 interface KBArticle {
   id: string;
@@ -21,6 +22,7 @@ export default function PortalKB() {
 
   const { data: articles = [], isLoading, isError, error } = useQuery<KBArticle[]>({
     queryKey: ["/api/portal/kb"],
+    queryFn: () => portalGet<KBArticle[]>("/api/portal/kb"),
   });
 
   const categories = Array.from(new Set(articles.map((a) => a.category).filter(Boolean)));
