@@ -29,53 +29,57 @@ const threatInsights = [
 
 export const ContactSection = (): JSX.Element => {
   return (
-    <section className="flex flex-col w-full items-center gap-[66px] py-12">
+    <section className="flex flex-col w-full items-center gap-8 lg:gap-[66px] py-8 lg:py-12 px-4">
       <header className="flex flex-col max-w-[655px] items-center gap-4">
-        <h2 className="text-center [font-family:'Poppins',Helvetica] font-normal text-[#020029] text-[52px] tracking-[0] leading-[73px]">
+        <h2 className="text-center [font-family:'Poppins',Helvetica] font-normal text-[#020029] text-3xl sm:text-4xl lg:text-[52px] tracking-[0] leading-tight lg:leading-[73px]">
           Recent Threats &amp; Insights
         </h2>
 
-        <p className="text-center [font-family:'Poppins',Helvetica] font-normal text-[#020029bf] text-base tracking-[0] leading-[26.4px]">
+        <p className="text-center [font-family:'Poppins',Helvetica] font-normal text-[#020029bf] text-sm sm:text-base tracking-[0] leading-[26.4px]">
           Real-time updates, expert analysis, and actionable security news.
         </p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[23px] w-full max-w-[1201px] px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-[23px] w-full max-w-[1201px]">
         {threatInsights.map((insight) => (
           <Card
             key={insight.id}
-            className="bg-[#f0f3ff] rounded-[15.39px] border-[0.96px] border-solid border-[#0000001a] overflow-hidden h-[474px] flex flex-col"
+            className="bg-[#f0f3ff] rounded-[15.39px] border-[0.96px] border-solid border-[#0000001a] overflow-hidden flex flex-col"
+            data-testid={`insight-card-${insight.id}`}
           >
-            <CardContent className="p-0 flex flex-col h-full">
-              <div className="relative h-[268px] overflow-hidden">
+            <CardContent className="p-0 flex flex-col flex-1">
+              <div className="relative aspect-video sm:h-[268px] overflow-hidden">
                 <div
                   className="w-full h-full rounded-[15.39px_15.39px_0px_0px] bg-cover bg-center"
                   style={{ backgroundImage: `url(${insight.image})` }}
                 />
-                <Badge className="absolute bottom-[42px] right-[11px] bg-[#020029] rounded-[12.5px] h-[31px] px-[9.6px] flex items-center gap-[6.4px] hover:bg-[#020029]">
-                  <CalendarIcon className="w-[11.86px] h-[12.5px] text-[#6a1b9a]" />
-                  <span className="[font-family:'Inter',Helvetica] font-normal text-[#6a1b9a] text-[11.5px] tracking-[0] leading-[19.6px]">
+                <Badge className="absolute bottom-4 right-3 bg-[#020029] rounded-[12.5px] h-[31px] px-3 flex items-center gap-2 hover:bg-[#020029]">
+                  <CalendarIcon className="w-3 h-3 text-[#6a1b9a]" />
+                  <span className="[font-family:'Inter',Helvetica] font-normal text-[#6a1b9a] text-xs tracking-[0] leading-[19.6px]">
                     {insight.date}
                   </span>
                 </Badge>
               </div>
 
-              <div className="flex flex-col flex-1 px-5 pt-[21px] pb-5 justify-between">
+              <div className="flex flex-col flex-1 px-4 lg:px-5 pt-4 lg:pt-[21px] pb-4 lg:pb-5 justify-between">
                 <div className="flex flex-col gap-1">
-                  <h3 className="[font-family:'Poppins',Helvetica] font-medium text-[#020029] text-2xl tracking-[0] leading-[26px]">
+                  <h3 className="[font-family:'Poppins',Helvetica] font-medium text-[#020029] text-lg lg:text-2xl tracking-[0] leading-tight lg:leading-[26px]">
                     {insight.title}
                   </h3>
 
-                  <p className="[font-family:'Poppins',Helvetica] font-normal text-[#020029bf] text-base tracking-[0] leading-[26.4px]">
+                  <p className="[font-family:'Poppins',Helvetica] font-normal text-[#020029bf] text-sm lg:text-base tracking-[0] leading-[26.4px]">
                     {insight.description}
                   </p>
                 </div>
 
-                <button className="inline-flex items-center gap-2 mt-4 group cursor-pointer">
-                  <span className="[font-family:'Poppins',Helvetica] font-normal text-[#5034ff] text-base tracking-[-0.32px] leading-6 whitespace-nowrap">
+                <button 
+                  className="inline-flex items-center gap-2 mt-4 group cursor-pointer"
+                  data-testid={`btn-know-more-${insight.id}`}
+                >
+                  <span className="[font-family:'Poppins',Helvetica] font-normal text-[#5034ff] text-sm lg:text-base tracking-[-0.32px] leading-6 whitespace-nowrap">
                     Know More
                   </span>
-                  <ArrowRightIcon className="w-[22.63px] h-[22.63px] text-[#5034ff] group-hover:translate-x-1 transition-transform" />
+                  <ArrowRightIcon className="w-5 h-5 lg:w-[22.63px] lg:h-[22.63px] text-[#5034ff] group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
             </CardContent>
