@@ -562,6 +562,59 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  // In-memory chat message storage for persistence
+  const chatMessages: Map<string, any[]> = new Map();
+
+  // Live chat messages route (for PortalChat WebSocket fallback)
+  app.post("/api/portal/chat/messages", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { content, ticketId, senderName, senderRole } = req.body;
+      if (!content) {
+        return res.status(400).json({ error: "Message content required" });
+      }
+      
+      const chatId = ticketId || `user-${req.userId}`;
+      const message = {
+        id: randomId(),
+        ticketId: chatId,
+        userId: req.userId,
+        senderName: senderName || "User",
+        senderRole: senderRole || "client",
+        content,
+        timestamp: new Date().toISOString(),
+        isRead: false,
+      };
+      
+      // Store message in memory
+      if (!chatMessages.has(chatId)) {
+        chatMessages.set(chatId, []);
+      }
+      chatMessages.get(chatId)!.push(message);
+      
+      // Broadcast to WebSocket clients if available
+      if ((global as any).wsBroadcast) {
+        (global as any).wsBroadcast({ type: "chat_message", data: message });
+      }
+      
+      res.json({ success: true, message });
+      logSecurityEvent("LIVE_CHAT_MESSAGE", req, { ticketId: chatId });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get chat message history
+  app.get("/api/portal/chat/messages", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const ticketId = req.query.ticketId as string || `user-${req.userId}`;
+      const messages = chatMessages.get(ticketId) || [];
+      
+      res.json({ success: true, messages });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   app.get("/api/portal/questionnaires/events", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const mockEvents = [

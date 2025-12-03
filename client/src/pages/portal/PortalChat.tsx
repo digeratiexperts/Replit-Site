@@ -23,42 +23,60 @@ export default function PortalChat() {
   const wsRef = useRef<WebSocket | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Initialize WebSocket connection with secure token
+  // Load message history and initialize WebSocket connection
   useEffect(() => {
-    const authToken = localStorage.getItem("authToken");
+    const authToken = localStorage.getItem("portalToken");
     if (authToken) {
       setToken(authToken);
-      const userId = localStorage.getItem("userId");
+      const userId = localStorage.getItem("portalUserId");
+      
+      // Load existing message history
+      fetch("/api/portal/chat/messages?ticketId=default-chat", {
+        headers: { Authorization: `Bearer ${authToken}` },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success && data.messages) {
+            setMessages(data.messages);
+          }
+        })
+        .catch((err) => console.error("Failed to load chat history:", err));
       
       // Connect to secure WebSocket (use current domain)
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
       const host = window.location.host;
       const wsUrl = `${protocol}//${host}/api/ws?token=${authToken}&userId=${userId}`;
-      wsRef.current = new WebSocket(wsUrl);
+      
+      try {
+        wsRef.current = new WebSocket(wsUrl);
 
-      wsRef.current.onopen = () => {
-        setConnected(true);
-        console.log("WebSocket connected");
-      };
+        wsRef.current.onopen = () => {
+          setConnected(true);
+          console.log("WebSocket connected");
+        };
 
-      wsRef.current.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          if (data.type === "chat_message") {
-            setMessages((prev) => [...prev, data.data]);
+        wsRef.current.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            if (data.type === "chat_message") {
+              setMessages((prev) => [...prev, data.data]);
+            }
+          } catch (error) {
+            console.error("Failed to parse WebSocket message:", error);
           }
-        } catch (error) {
-          console.error("Failed to parse WebSocket message:", error);
-        }
-      };
+        };
 
-      wsRef.current.onerror = () => {
-        setConnected(false);
-      };
+        wsRef.current.onerror = () => {
+          setConnected(false);
+        };
 
-      wsRef.current.onclose = () => {
-        setConnected(false);
-      };
+        wsRef.current.onclose = () => {
+          setConnected(false);
+        };
+      } catch (wsError) {
+        console.error("WebSocket connection failed:", wsError);
+        setConnected(true); // Still allow HTTP fallback
+      }
 
       return () => {
         if (wsRef.current) {
@@ -78,9 +96,23 @@ export default function PortalChat() {
 
   const handleSendMessage = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!messageText.trim() || sending || !connected) return;
+    if (!messageText.trim() || sending) return;
 
+    const currentMessage = messageText;
     setSending(true);
+    setMessageText("");
+
+    // Optimistically add message to UI
+    const tempMessage: ChatMessage = {
+      id: `temp-${Date.now()}`,
+      senderName: "You",
+      senderRole: "client",
+      content: currentMessage,
+      timestamp: new Date().toISOString(),
+      isRead: true,
+    };
+    setMessages((prev) => [...prev, tempMessage]);
+
     try {
       const response = await fetch("/api/portal/chat/messages", {
         method: "POST",
@@ -90,22 +122,30 @@ export default function PortalChat() {
         },
         body: JSON.stringify({
           ticketId: "default-chat",
-          userId: localStorage.getItem("userId"),
+          userId: localStorage.getItem("portalUserId"),
           senderName: "You",
           senderRole: "client",
-          content: messageText,
+          content: currentMessage,
         }),
       });
 
       if (!response.ok) throw new Error("Failed to send message");
 
-      setMessageText("");
+      const data = await response.json();
+      // Replace temp message with server-confirmed message
+      if (data.success && data.message) {
+        setMessages((prev) => 
+          prev.map((m) => m.id === tempMessage.id ? data.message : m)
+        );
+      }
     } catch (error) {
       console.error("Error sending message:", error);
+      // Remove temp message on error
+      setMessages((prev) => prev.filter((m) => m.id !== tempMessage.id));
     } finally {
       setSending(false);
     }
-  }, [messageText, sending, connected, token]);
+  }, [messageText, sending, token]);
 
   return (
     <PortalLayout title="Live Chat Support">

@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { PortalLayout } from "./PortalLayout";
 import { ArrowLeft, Send, MessageCircle, Clock, User, AlertCircle, Loader2 } from "lucide-react";
-import { apiRequest, queryClient } from "@/lib/queryClient";
+import { queryClient } from "@/lib/queryClient";
+import { portalGet, portalPost } from "@/lib/portalApi";
 
 interface Comment {
   id: string;
@@ -41,6 +42,7 @@ export default function PortalTicketDetail() {
 
   const { data: ticketData, isLoading, error } = useQuery<{ ticket: Ticket }>({
     queryKey: ['/api/portal/tickets', ticketId],
+    queryFn: () => portalGet<{ ticket: Ticket }>(`/api/portal/tickets/${ticketId}`),
     enabled: !!ticketId,
   });
 
@@ -48,8 +50,7 @@ export default function PortalTicketDetail() {
 
   const addCommentMutation = useMutation({
     mutationFn: async (content: string) => {
-      const response = await apiRequest('POST', `/api/portal/tickets/${ticketId}/comments`, { content });
-      return response.json();
+      return portalPost<{ success: boolean }>(`/api/portal/tickets/${ticketId}/comments`, { content });
     },
     onSuccess: () => {
       setCommentText("");

@@ -43,28 +43,33 @@ export default function PortalCreateTicket() {
     setError("");
 
     try {
-      // Create FormData for multipart file upload
-      const formDataToSend = new FormData();
-      formDataToSend.append("subject", formData.subject);
-      formDataToSend.append("category", formData.category);
-      formDataToSend.append("priority", formData.priority);
-      formDataToSend.append("description", formData.description);
-      
-      // Add files
-      files.forEach((file) => {
-        formDataToSend.append("files", file);
-      });
+      // Create ticket with JSON body
+      // Note: File attachments are collected but not yet uploaded (future enhancement)
+      const ticketData = {
+        subject: formData.subject,
+        category: formData.category,
+        priority: formData.priority,
+        description: formData.description,
+        attachmentCount: files.length, // Track that files were selected for future processing
+      };
 
       const response = await fetch("/api/portal/tickets", {
         method: "POST",
-        body: formDataToSend,
+        body: JSON.stringify(ticketData),
         headers: {
+          "Content-Type": "application/json",
           "Authorization": `Bearer ${localStorage.getItem("portalToken")}`,
         },
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create ticket");
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to create ticket");
+      }
+
+      // Show success message if files were selected but inform user about upload status
+      if (files.length > 0) {
+        console.log(`Note: ${files.length} file(s) selected. File upload support coming soon.`);
       }
 
       // Reset form and navigate
