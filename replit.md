@@ -80,17 +80,49 @@ The platform features a modern, responsive SaaS design system with consistent to
 The project follows a modular structure with `client/` and `server/` directories. UUIDs are used for IDs. Payment processing includes enterprise-grade encryption and webhook signature validation. AI services for ticket classification, priority detection, and hybrid AI/human chat are implemented with graceful fallback mechanisms and admin control over OpenAI usage. Role-based access control is applied to navigation and features. User storage for the portal is currently in-memory but designed for future PostgreSQL migration with bcrypt hashing and JWT tokens.
 
 ## Recent Changes (Latest Session)
-- **Fixed all dead buttons and links**: Get Protected Now, Get Free Assessment, Explore More Services, Healthcare CTAs, footer location links, footer Request Docs button - all now link to Zoho Bookings (https://meet.digerati-experts.com/)
-- **Mobile menu optimization**: White text on dark background for visibility, proper spacing, scrollable overflow
-- **Industry pages completely rewritten with comprehensive content**:
-  - Accounting: PCI DSS, tax data, wire fraud prevention
-  - Law Firms: ABA compliance, privilege protection, trust account security
-  - Real Estate: Wire fraud prevention focus, TRID compliance, transaction security
-  - Nonprofits: Nonprofit pricing model, donor protection, grant compliance
-- **New support pages created**: Knowledge Base, Remote Support (feature-rich), Pay Invoice
-- **GenericServicePage CTA updated**: All consultation buttons now link to Zoho Bookings
-- **Case Studies CTA updated**: Links to Zoho Bookings
-- **Team page CTA updated**: Links to Zoho Bookings
+
+### Major Design Overhaul - Rubrik-Style Dark Theme
+Transformed the entire homepage from "WordPress feel" to modern, enterprise-grade design:
+
+**Hero Section Redesign:**
+- Dark gradient mesh background (#0a0118, #1a0a2e)
+- Animated floating particles and gradient orbs
+- Glassmorphism form card with backdrop blur
+- Dashboard mockup with natural overlap effect using CSS transforms
+- Fluid container width using CSS clamp() for responsive centering
+
+**MegaMenu Enhancement:**
+- Glass navigation with backdrop blur (`bg-[#0a0118]/95 backdrop-blur-xl`)
+- Scroll-activated darkening effect
+- Gradient hover underlines (cyan/purple)
+- Updated to cyan-400 accent colors
+
+**All Homepage Sections Modernized:**
+- **Services**: Glass cards with neon edge highlights, stagger animations
+- **How We Protect**: Vertical timeline with glowing connectors
+- **Industries**: Dark glass tiles with industry-specific gradient glyphs
+- **Pricing**: Glass panels with popular tier glow ring
+- **Testimonials**: Glass frames with floating gradient orbs
+- **FAQ**: Glass accordions with gradient chevrons
+- **CTA**: Mesh gradients with animated light sweep
+- **Footer**: Dark gradient with circuit overlay pattern
+
+**Design System Updates:**
+- Added dark theme tokens to `designSystem.ts`
+- Glass/glassmorphism utilities
+- Glow effect utilities (purple, cyan, combined)
+- Dark gradient and mesh background classes
+
+**Accessibility:**
+- All animations respect `prefers-reduced-motion`
+- Uses Framer Motion's `useReducedMotion` hook
+- Static fallbacks for users who prefer reduced motion
+
+### Previous Changes
+- Fixed all dead buttons and links to Zoho Bookings
+- Mobile menu optimization with white text on dark background
+- Industry pages rewritten with comprehensive content
+- New support pages: Knowledge Base, Remote Support, Pay Invoice
 
 ## External Dependencies
 - **Stripe**: Credit/debit payments, subscription management (`stripe-replit-sync`)
