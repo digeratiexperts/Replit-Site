@@ -305,14 +305,17 @@ export const ModernHeroSection = (): JSX.Element => {
             </div>
 
             {/* Right column - Form overlapping Dashboard */}
-            <div className="relative flex justify-center lg:justify-end w-full mt-6 lg:mt-8 xl:mt-10">
+            <div className="relative flex justify-center lg:justify-start w-full mt-6 lg:mt-0 overflow-visible">
               
-              {/* Dashboard Mockup - Background layer, positioned for natural overlap */}
+              {/* Dashboard Mockup - Uses transform for natural overlap behind form */}
               <motion.div
-                className="absolute top-6 left-[45%] lg:left-[48%] xl:left-[50%] w-[360px] lg:w-[420px] xl:w-[480px] 2xl:w-[520px] z-10 hidden lg:block"
-                initial={{ opacity: 0, x: 60 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.5 }}
+                className="absolute top-4 left-0 w-[340px] lg:w-[400px] xl:w-[460px] 2xl:w-[500px] z-10 hidden lg:block pointer-events-none"
+                style={{ 
+                  transform: 'translateX(clamp(140px, 12vw, 200px)) translateY(-8px)'
+                }}
+                initial={{ opacity: 0, x: 80, scale: 0.95 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                transition={{ duration: 0.9, delay: 0.5, ease: "easeOut" }}
               >
                 {/* Glow effect */}
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-indigo-600/10 to-cyan-600/20 blur-3xl scale-110" />
