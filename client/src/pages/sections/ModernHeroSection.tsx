@@ -309,16 +309,16 @@ export const ModernHeroSection = (): JSX.Element => {
             </div>
 
             {/* Right column - Layered Graphics + Form */}
-            <div className="lg:col-span-7 xl:col-span-7 relative min-h-[550px] lg:min-h-[580px]">
+            <div className="lg:col-span-7 xl:col-span-7 relative min-h-[500px] lg:min-h-[520px]">
               
-              {/* Background layer - Dashboard Mockup - positioned up and right */}
+              {/* Background layer - Dashboard Mockup - positioned up and far right */}
               <motion.div
-                className="absolute -top-8 right-0 w-full h-full flex items-start justify-end"
+                className="absolute -top-16 -right-8 w-full h-full flex items-start justify-end"
                 initial={{ opacity: 0, x: 100 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1, delay: 0.4 }}
               >
-                <div className="relative w-[95%] lg:w-[90%] xl:w-[88%]">
+                <div className="relative w-[100%] lg:w-[95%] xl:w-[92%]">
                   {/* Glow effect behind dashboard */}
                   <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-indigo-600/10 to-cyan-600/20 blur-3xl scale-110" />
                   
@@ -358,9 +358,9 @@ export const ModernHeroSection = (): JSX.Element => {
                 </div>
               </motion.div>
 
-              {/* Foreground layer - Form Card - positioned more to the right */}
+              {/* Foreground layer - Form Card - positioned far right */}
               <motion.div
-                className="relative z-20 lg:absolute lg:left-[15%] xl:left-[18%] lg:top-[5%] w-full lg:w-[360px] xl:w-[380px]"
+                className="relative z-20 lg:absolute lg:left-[35%] xl:left-[40%] lg:-top-[10%] w-full lg:w-[340px] xl:w-[360px]"
                 initial={{ opacity: 0, y: 50, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
