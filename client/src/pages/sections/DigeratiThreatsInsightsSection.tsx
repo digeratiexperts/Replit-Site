@@ -1,8 +1,11 @@
-import { Calendar, User, ArrowRight, AlertCircle, Shield, Lock } from "lucide-react";
+import { Calendar, User, ArrowRight, AlertCircle, Shield, Lock, Zap } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { motion, useReducedMotion } from "framer-motion";
 
 export const DigeratiThreatsInsightsSection = (): JSX.Element => {
+  const prefersReducedMotion = useReducedMotion();
+  
   const insights = [
     {
       category: "CISA Alert",
@@ -12,7 +15,8 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
       author: "Security Team",
       readTime: "3 min read",
       urgent: true,
-      icon: <AlertCircle className="h-5 w-5" />
+      icon: <AlertCircle className="h-5 w-5" />,
+      gradient: "from-red-500 to-orange-500"
     },
     {
       category: "Threat Analysis",
@@ -22,7 +26,8 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
       author: "James Wilson",
       readTime: "5 min read",
       urgent: true,
-      icon: <Shield className="h-5 w-5" />
+      icon: <Shield className="h-5 w-5" />,
+      gradient: "from-purple-500 to-pink-500"
     },
     {
       category: "Compliance Update",
@@ -32,89 +37,140 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
       author: "Compliance Team",
       readTime: "4 min read",
       urgent: false,
-      icon: <Lock className="h-5 w-5" />
+      icon: <Lock className="h-5 w-5" />,
+      gradient: "from-cyan-500 to-blue-500"
     }
   ];
 
   const categories = ["All", "CISA Alerts", "Ransomware", "Compliance", "Best Practices"];
 
   return (
-    <section className="py-20 bg-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <Badge className="mb-4 bg-red-100 text-red-700 hover:bg-red-200">
+    <section className="py-24 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0a0118, #0f0720)' }}>
+      {/* Background effects */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-red-600/5 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-purple-600/5 rounded-full blur-[150px]" />
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <motion.div 
+          className="text-center mb-12"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <Badge className="mb-4 bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30">
+            <Zap className="w-3 h-3 mr-1" />
             24/7 Security Response Team
           </Badge>
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Recent Threats & Insights
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Recent Threats & <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-purple-400 to-cyan-400">Insights</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
             Stay ahead of cyber threats with real-time alerts and expert analysis from our security team.
           </p>
-        </div>
+        </motion.div>
 
         {/* Category filters */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8">
+        <motion.div 
+          className="flex flex-wrap justify-center gap-2 mb-10"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+        >
           {categories.map((category, index) => (
             <button
               key={index}
-              className={`px-4 py-2 rounded-full transition-all duration-200 ${
+              className={`px-4 py-2 rounded-full transition-all duration-300 text-sm font-medium ${
                 index === 0
-                  ? "bg-purple-600 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-500/25"
+                  : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10"
               }`}
+              data-testid={`filter-${category.toLowerCase().replace(/\s+/g, '-')}`}
             >
               {category}
             </button>
           ))}
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {insights.map((insight, index) => (
-            <Card key={index} className="hover:shadow-xl transition-shadow duration-300 border-gray-200">
-              <CardHeader>
-                <div className="flex items-center justify-between mb-2">
-                  <Badge 
-                    variant={insight.urgent ? "destructive" : "secondary"}
-                    className={insight.urgent ? "bg-red-100 text-red-700" : ""}
-                  >
-                    {insight.category}
-                  </Badge>
-                  <span className="text-sm text-gray-500 flex items-center gap-1">
-                    <Calendar className="h-3 w-3" />
-                    {insight.date}
-                  </span>
-                </div>
-                <CardTitle className="text-xl line-clamp-2 hover:text-purple-600 transition-colors cursor-pointer">
-                  {insight.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-gray-600 mb-4 line-clamp-3">
-                  {insight.excerpt}
-                </CardDescription>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
-                    <User className="h-4 w-4" />
-                    <span>{insight.author}</span>
-                    <span>•</span>
-                    <span>{insight.readTime}</span>
+            <motion.div
+              key={index}
+              initial={prefersReducedMotion ? {} : { opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <Card 
+                className="group h-full bg-white/5 backdrop-blur-xl border-white/10 hover:border-white/20 transition-all duration-300 hover:bg-white/[0.07] overflow-hidden"
+                data-testid={`insight-card-${index}`}
+              >
+                {/* Gradient accent line */}
+                <div className={`h-1 bg-gradient-to-r ${insight.gradient}`} />
+                
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between mb-3">
+                    <Badge 
+                      className={`${
+                        insight.urgent 
+                          ? 'bg-red-500/20 text-red-400 border-red-500/30' 
+                          : 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30'
+                      } border`}
+                    >
+                      <span className="flex items-center gap-1">
+                        {insight.icon}
+                        {insight.category}
+                      </span>
+                    </Badge>
+                    <span className="text-xs text-gray-500 flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      {insight.date}
+                    </span>
                   </div>
-                  <button className="text-purple-600 hover:text-purple-700 font-semibold text-sm flex items-center gap-1 group">
-                    Know More
-                    <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </div>
-              </CardContent>
-            </Card>
+                  <CardTitle className="text-lg text-white line-clamp-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-purple-300 transition-all cursor-pointer">
+                    {insight.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-gray-400 mb-4 line-clamp-3">
+                    {insight.excerpt}
+                  </CardDescription>
+                  <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <User className="h-3.5 w-3.5" />
+                      <span>{insight.author}</span>
+                      <span>•</span>
+                      <span>{insight.readTime}</span>
+                    </div>
+                    <button className="text-purple-400 hover:text-purple-300 font-medium text-sm flex items-center gap-1 group/btn">
+                      Know More
+                      <ArrowRight className="h-3.5 w-3.5 group-hover/btn:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
         </div>
 
-        <div className="text-center">
-          <button className="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl font-semibold">
+        <motion.div 
+          className="text-center"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <button 
+            className="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-500 hover:to-indigo-500 transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 font-semibold inline-flex items-center gap-2 hover:scale-105"
+            data-testid="view-all-updates"
+          >
             View All Security Updates
+            <ArrowRight className="h-4 w-4" />
           </button>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

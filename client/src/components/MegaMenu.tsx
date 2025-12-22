@@ -313,8 +313,8 @@ export function MegaMenu() {
       <nav 
         className={`fixed left-0 right-0 z-50 mega-menu-container transition-all duration-300 ${
           isScrolled 
-            ? 'top-0 bg-[#050210]/98 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(139,92,246,0.25)]' 
-            : 'top-10 bg-[#0a0118]/95 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(139,92,246,0.15)]'
+            ? 'top-0 bg-[#050210] backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(139,92,246,0.25)]' 
+            : 'top-10 bg-[#0a0118] backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(139,92,246,0.15)]'
         }`}
         ref={menuContainerRef}
         role="navigation"

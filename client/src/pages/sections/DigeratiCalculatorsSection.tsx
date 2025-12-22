@@ -3,8 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
-import { useState, useEffect } from "react";
+import { ChevronRight, Calculator, DollarSign } from "lucide-react";
 
 interface CalculatorProps {
   employees: number;
@@ -38,42 +37,52 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
   return (
     <>
       {/* Downtime Calculator Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0f0720, #0a0118)' }}>
+        {/* Background effects */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-[120px]" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-600/10 rounded-full blur-[120px]" />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              What's Downtime Really Costing You?
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
+              <Calculator className="w-4 h-4 text-purple-400" />
+              <span className="text-sm text-gray-300">Cost Calculator</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              What's Downtime Really <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Costing You?</span>
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-400 max-w-2xl mx-auto">
               Quick estimate now. Open advanced to factor RTO/RPO and annual impact.
             </p>
           </div>
 
-          <Card className="max-w-3xl mx-auto">
+          <Card className="max-w-3xl mx-auto bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(139,92,246,0.15)]">
             <CardContent className="p-8">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="industry">Industry</Label>
+                  <Label htmlFor="industry" className="text-gray-300">Industry</Label>
                   <Select value={industry} onValueChange={setIndustry}>
-                    <SelectTrigger id="industry">
+                    <SelectTrigger id="industry" className="mt-2 bg-white/10 border-white/20 text-white [&>span]:text-white">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="2.0">Law Firm (2.0×)</SelectItem>
-                      <SelectItem value="1.8">CPA Firm (1.8×)</SelectItem>
-                      <SelectItem value="2.5">Medical Practice (2.5×)</SelectItem>
-                      <SelectItem value="1.6">General Office (1.6×)</SelectItem>
-                      <SelectItem value="1.6">Real Estate (1.6×)</SelectItem>
-                      <SelectItem value="2.2">Animal Hospital (2.2×)</SelectItem>
-                      <SelectItem value="1.7">Retail/Sales (1.7×)</SelectItem>
-                      <SelectItem value="2.0">Manufacturing (2.0×)</SelectItem>
-                      <SelectItem value="1.5">Nonprofit (1.5×)</SelectItem>
+                    <SelectContent className="bg-[#1a0a2e] border-white/20">
+                      <SelectItem value="2.0" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Law Firm (2.0×)</SelectItem>
+                      <SelectItem value="1.8" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">CPA Firm (1.8×)</SelectItem>
+                      <SelectItem value="2.5" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Medical Practice (2.5×)</SelectItem>
+                      <SelectItem value="1.6" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">General Office (1.6×)</SelectItem>
+                      <SelectItem value="1.6-re" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Real Estate (1.6×)</SelectItem>
+                      <SelectItem value="2.2" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Animal Hospital (2.2×)</SelectItem>
+                      <SelectItem value="1.7" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Retail/Sales (1.7×)</SelectItem>
+                      <SelectItem value="2.0-mf" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Manufacturing (2.0×)</SelectItem>
+                      <SelectItem value="1.5" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Nonprofit (1.5×)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div>
-                  <Label htmlFor="employees-affected">Employees Affected: {employees}</Label>
+                  <Label htmlFor="employees-affected" className="text-gray-300">Employees Affected: <span className="text-cyan-400 font-semibold">{employees}</span></Label>
                   <Slider 
                     id="employees-affected"
                     value={[employees]} 
@@ -81,12 +90,12 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                     max={100} 
                     min={1} 
                     step={1}
-                    className="mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2"
+                    className="mt-4 [&_[role=slider]]:bg-gradient-to-r [&_[role=slider]]:from-purple-500 [&_[role=slider]]:to-cyan-500 [&_[role=slider]]:border-0 [&_.range]:bg-gradient-to-r [&_.range]:from-purple-500 [&_.range]:to-cyan-500"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="hourly-wage">Avg Hourly Wage ($): {hourlyWage}</Label>
+                  <Label htmlFor="hourly-wage" className="text-gray-300">Avg Hourly Wage ($): <span className="text-cyan-400 font-semibold">{hourlyWage}</span></Label>
                   <Slider 
                     id="hourly-wage"
                     value={[hourlyWage]} 
@@ -94,12 +103,12 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                     max={200} 
                     min={15} 
                     step={5}
-                    className="mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2"
+                    className="mt-4 [&_[role=slider]]:bg-gradient-to-r [&_[role=slider]]:from-purple-500 [&_[role=slider]]:to-cyan-500 [&_[role=slider]]:border-0 [&_.range]:bg-gradient-to-r [&_.range]:from-purple-500 [&_.range]:to-cyan-500"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="downtime-hours">Expected Downtime (hours): {downtime}</Label>
+                  <Label htmlFor="downtime-hours" className="text-gray-300">Expected Downtime (hours): <span className="text-cyan-400 font-semibold">{downtime}</span></Label>
                   <Slider 
                     id="downtime-hours"
                     value={[downtime]} 
@@ -107,22 +116,22 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                     max={24} 
                     min={1} 
                     step={1}
-                    className="mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2"
+                    className="mt-4 [&_[role=slider]]:bg-gradient-to-r [&_[role=slider]]:from-purple-500 [&_[role=slider]]:to-cyan-500 [&_[role=slider]]:border-0 [&_.range]:bg-gradient-to-r [&_.range]:from-purple-500 [&_.range]:to-cyan-500"
                   />
                 </div>
               </div>
 
-              <div className="mt-8 p-6 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg">
+              <div className="mt-8 p-6 bg-gradient-to-r from-purple-500/10 via-transparent to-cyan-500/10 rounded-xl border border-white/10">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Per-Incident Cost</p>
-                    <p className="text-3xl font-bold text-purple-600">
+                    <p className="text-sm text-gray-400 mb-1">Per-Incident Cost</p>
+                    <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">
                       ${downtimeCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Annual Downtime Cost (4 incidents)</p>
-                    <p className="text-3xl font-bold text-purple-600">
+                    <p className="text-sm text-gray-400 mb-1">Annual Downtime Cost (4 incidents)</p>
+                    <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
                       ${(downtimeCost * 4).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
@@ -130,7 +139,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
               </div>
 
               <div className="mt-6 text-center">
-                <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg">
+                <Button className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-500 hover:to-indigo-500 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300">
                   Open Detailed Calculator <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
@@ -140,22 +149,32 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
       </section>
 
       {/* Service Cost Estimator Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0a0118, #0d0720)' }}>
+        {/* Background effects */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[150px] -translate-y-1/2" />
+          <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[150px] -translate-y-1/2" />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Estimate Your Service Cost Now
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
+              <DollarSign className="w-4 h-4 text-cyan-400" />
+              <span className="text-sm text-gray-300">Pricing Estimator</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Estimate Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">Service Cost</span> Now
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-400 max-w-2xl mx-auto">
               Get an instant quote based on your needs and team size.
             </p>
           </div>
 
-          <Card className="max-w-3xl mx-auto">
+          <Card className="max-w-3xl mx-auto bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(34,211,238,0.15)]">
             <CardContent className="p-8">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="service-employees">Number of Employees: {serviceEmployees}</Label>
+                  <Label htmlFor="service-employees" className="text-gray-300">Number of Employees: <span className="text-cyan-400 font-semibold">{serviceEmployees}</span></Label>
                   <Slider 
                     id="service-employees"
                     value={[serviceEmployees]} 
@@ -163,46 +182,43 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                     max={100} 
                     min={1} 
                     step={1}
-                    className="mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2"
+                    className="mt-4 [&_[role=slider]]:bg-gradient-to-r [&_[role=slider]]:from-cyan-500 [&_[role=slider]]:to-purple-500 [&_[role=slider]]:border-0 [&_.range]:bg-gradient-to-r [&_.range]:from-cyan-500 [&_.range]:to-purple-500"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="service-package">Service Package</Label>
+                  <Label htmlFor="service-package" className="text-gray-300">Service Package</Label>
                   <Select value={servicePackage} onValueChange={setServicePackage}>
-                    <SelectTrigger id="service-package">
+                    <SelectTrigger id="service-package" className="mt-2 bg-white/10 border-white/20 text-white [&>span]:text-white">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="165">Basic IT ($165/user)</SelectItem>
-                      <SelectItem value="245">Advanced Security ($245/user)</SelectItem>
-                      <SelectItem value="345">Enterprise ($345/user)</SelectItem>
+                    <SelectContent className="bg-[#1a0a2e] border-white/20">
+                      <SelectItem value="165" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Basic IT ($165/user)</SelectItem>
+                      <SelectItem value="265" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Managed IT ($265/user)</SelectItem>
+                      <SelectItem value="365" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Managed IT + Security ($365/user)</SelectItem>
+                      <SelectItem value="465" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Enterprise ($465/user)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
-              <div className="mt-8 p-6 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg">
+              <div className="mt-8 p-6 bg-gradient-to-r from-cyan-500/10 via-transparent to-purple-500/10 rounded-xl border border-white/10">
                 <div className="text-center">
-                  <p className="text-3xl font-bold text-purple-600 mb-2">
+                  <p className="text-sm text-gray-400 mb-2">Estimated Monthly Cost</p>
+                  <p className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400">
                     ${serviceCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </p>
-                  <p className="text-sm text-gray-600">
-                    Monthly Total • Per-Employee: ${servicePackage}
+                  <p className="text-sm text-gray-500 mt-2">
+                    Monthly Rate • Per Employee: ${servicePackage}
                   </p>
-                  <p className="text-sm text-gray-600 mt-2">
+                  <p className="text-sm text-green-400 mt-1">
                     Quarterly: ${(serviceCost * 3 * 0.9).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (10% discount)
                   </p>
-                  {serviceEmployees >= 5 && serviceCost === 1200 && (
-                    <p className="text-xs text-purple-600 mt-2">
-                      *$1,200/site minimum applied for 5+ users
-                    </p>
-                  )}
                 </div>
               </div>
 
               <div className="mt-6 text-center">
-                <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg">
+                <Button className="bg-gradient-to-r from-cyan-500 to-purple-600 text-white hover:from-cyan-400 hover:to-purple-500 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transition-all duration-300">
                   Open Detailed Estimator <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
@@ -211,51 +227,5 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
         </div>
       </section>
     </>
-  );
-};
-
-// Standalone version with internal state
-export const DigeratiCalculatorsSectionStandalone = (): JSX.Element => {
-  const [employees, setEmployees] = useState(10);
-  const [hourlyWage, setHourlyWage] = useState(50);
-  const [downtime, setDowntime] = useState(4);
-  const [industry, setIndustry] = useState("1.6");
-  const [downtimeCost, setDowntimeCost] = useState(0);
-  const [serviceEmployees, setServiceEmployees] = useState(10);
-  const [servicePackage, setServicePackage] = useState("165");
-  const [serviceCost, setServiceCost] = useState(0);
-
-  // Calculate downtime cost
-  useEffect(() => {
-    const cost = employees * hourlyWage * downtime * parseFloat(industry);
-    setDowntimeCost(cost);
-  }, [employees, hourlyWage, downtime, industry]);
-
-  // Calculate service cost
-  useEffect(() => {
-    const costPerUser = parseFloat(servicePackage);
-    const totalCost = serviceEmployees * costPerUser;
-    // Apply minimum for 5+ users
-    const finalCost = serviceEmployees >= 5 ? Math.max(totalCost, 1200) : totalCost;
-    setServiceCost(finalCost);
-  }, [serviceEmployees, servicePackage]);
-
-  return (
-    <DigeratiCalculatorsSection
-      employees={employees}
-      setEmployees={setEmployees}
-      hourlyWage={hourlyWage}
-      setHourlyWage={setHourlyWage}
-      downtime={downtime}
-      setDowntime={setDowntime}
-      industry={industry}
-      setIndustry={setIndustry}
-      downtimeCost={downtimeCost}
-      serviceEmployees={serviceEmployees}
-      setServiceEmployees={setServiceEmployees}
-      servicePackage={servicePackage}
-      setServicePackage={setServicePackage}
-      serviceCost={serviceCost}
-    />
   );
 };
