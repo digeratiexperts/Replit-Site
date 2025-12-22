@@ -308,18 +308,18 @@ export const ModernHeroSection = (): JSX.Element => {
               </motion.div>
             </div>
 
-            {/* Right column - Graphics + Form as unified element - moved up */}
+            {/* Right column - Graphics + Form as unified element - aligned with left */}
             <motion.div 
-              className="lg:col-span-7 xl:col-span-7 relative flex justify-end lg:-mt-16 xl:-mt-20"
+              className="lg:col-span-7 xl:col-span-7 relative"
               initial={{ opacity: 0, x: 60 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
             >
-              {/* Unified container - Dashboard behind, Form in front */}
-              <div className="relative w-full max-w-[750px] xl:max-w-[900px] 2xl:max-w-[1000px]">
+              {/* Single-cell grid overlay - both elements in same cell */}
+              <div className="grid grid-cols-1 grid-rows-1 w-full max-w-[800px] xl:max-w-[950px] 2xl:max-w-[1050px] ml-auto">
                 
-                {/* Dashboard Mockup - Background layer */}
-                <div className="relative">
+                {/* Dashboard Mockup - Background layer (row 1, col 1) */}
+                <div className="col-start-1 row-start-1 relative translate-x-[15%] translate-y-[8%]">
                   {/* Glow effect */}
                   <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-indigo-600/10 to-cyan-600/20 blur-3xl scale-110" />
                   
@@ -358,9 +358,9 @@ export const ModernHeroSection = (): JSX.Element => {
                   </motion.div>
                 </div>
 
-                {/* Form Card - Foreground layer, overlapping dashboard */}
+                {/* Form Card - Foreground layer (same cell, overlaps dashboard) */}
                 <motion.div
-                  className="absolute z-20 top-[15%] left-[5%] w-[320px] xl:w-[360px]"
+                  className="col-start-1 row-start-1 z-20 w-[320px] xl:w-[360px] self-start"
                   initial={{ opacity: 0, y: 30, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ duration: 0.8, delay: 0.5 }}
