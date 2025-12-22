@@ -309,11 +309,11 @@ export const ModernHeroSection = (): JSX.Element => {
             transition={{ duration: 0.8, delay: 0.3 }}
             id="assessment-form"
           >
-            {/* Dashboard Mockup - floats behind/beside form on wide screens */}
+            {/* Dashboard Mockup - floats behind form on wide screens */}
             <motion.div 
-              className="absolute -right-[40%] top-1/2 -translate-y-1/2 w-[500px] h-[400px] hidden 2xl:block opacity-80 z-0"
-              initial={{ opacity: 0, x: 100, rotateY: -15 }}
-              animate={{ opacity: 0.8, x: 0, rotateY: -15 }}
+              className="absolute -right-[15%] top-[60%] -translate-y-1/2 w-[420px] h-[340px] hidden xl:block opacity-60 z-0"
+              initial={{ opacity: 0, x: 60, rotateY: -10 }}
+              animate={{ opacity: 0.6, x: 0, rotateY: -10 }}
               transition={{ duration: 1, delay: 0.5 }}
               style={{ perspective: "1000px" }}
             >
