@@ -158,10 +158,10 @@ export const ModernHeroSection = (): JSX.Element => {
         <div className="max-w-none">
           
           {/* Main grid - Left content + Right form/graphic */}
-          <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-8 xl:gap-14 2xl:gap-20 items-start">
+          <div className="grid lg:grid-cols-12 gap-6 xl:gap-10 2xl:gap-12 items-start">
             
             {/* Left column - Badge, Headline, Description, Pills, CTAs, Stats */}
-            <div className="flex flex-col gap-5 max-w-[720px]">
+            <div className="lg:col-span-6 xl:col-span-7 flex flex-col gap-5 w-full">
               {/* Badge */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -305,11 +305,11 @@ export const ModernHeroSection = (): JSX.Element => {
             </div>
 
             {/* Right column - Form overlapping Dashboard */}
-            <div className="relative flex justify-end">
+            <div className="lg:col-span-6 xl:col-span-5 relative flex justify-end w-full">
               
               {/* Dashboard Mockup - Background layer */}
               <motion.div
-                className="absolute top-8 right-[-5vw] w-[500px] xl:w-[580px] z-10 hidden lg:block"
+                className="absolute top-8 right-[-48px] xl:right-[-72px] 2xl:right-[-96px] w-[480px] xl:w-[560px] z-10 hidden lg:block"
                 initial={{ opacity: 0, x: 60 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
@@ -354,7 +354,7 @@ export const ModernHeroSection = (): JSX.Element => {
 
               {/* Form Card - Foreground layer */}
               <motion.div
-                className="relative z-20 w-full max-w-[400px]"
+                className="relative z-20 w-full max-w-[420px]"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
