@@ -13,6 +13,12 @@ export const designSystem = {
       tertiary: 'bg-gray-100',
       dark: 'bg-gradient-to-b from-slate-900 via-slate-950 to-black',
       accent: 'bg-gradient-to-br from-purple-50 to-blue-50',
+      // Dark theme backgrounds
+      darkPrimary: 'bg-[#0a0118]',
+      darkSecondary: 'bg-[#0d0720]',
+      darkTertiary: 'bg-[#1a0a2e]',
+      darkGradient: 'bg-gradient-to-br from-[#07041a] via-[#0f0b2c] to-[#1a1143]',
+      darkMesh: 'bg-[radial-gradient(circle_at_20%_20%,rgba(139,92,246,0.15),transparent_50%),radial-gradient(circle_at_80%_80%,rgba(59,130,246,0.12),transparent_50%)]',
     },
     
     // Text Colors
@@ -22,6 +28,11 @@ export const designSystem = {
       tertiary: 'text-gray-500',
       light: 'text-white',
       accent: 'text-purple-600',
+      // Dark theme text
+      darkPrimary: 'text-white',
+      darkSecondary: 'text-gray-300',
+      darkMuted: 'text-gray-400',
+      darkAccent: 'text-cyan-400',
     },
     
     // Border Colors
@@ -29,6 +40,10 @@ export const designSystem = {
       default: 'border-gray-200',
       hover: 'border-purple-300',
       focus: 'border-purple-500',
+      // Dark theme borders
+      darkDefault: 'border-white/10',
+      darkHover: 'border-white/20',
+      darkAccent: 'border-purple-500/30',
     },
     
     // Gradients
@@ -37,7 +52,29 @@ export const designSystem = {
       primaryHover: 'hover:from-purple-700 hover:to-blue-700',
       accent: 'bg-gradient-to-br from-purple-50 to-blue-50',
       utility: 'bg-gradient-to-r from-purple-900 to-blue-900',
+      // Dark theme gradients
+      darkCyanPurple: 'bg-gradient-to-r from-cyan-400 to-purple-500',
+      darkPurpleBlue: 'bg-gradient-to-r from-purple-600 to-blue-600',
+      darkGlow: 'bg-gradient-to-br from-purple-600/20 via-transparent to-cyan-600/20',
+      neonAccent: 'bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500',
     },
+  },
+
+  // Glass/Glassmorphism effects
+  glass: {
+    card: 'bg-white/5 backdrop-blur-xl border border-white/10',
+    cardHover: 'hover:bg-white/10 hover:border-white/20',
+    surface: 'bg-[#0f0b28]/80 backdrop-blur-xl border border-white/10',
+    nav: 'bg-white/5 backdrop-blur-xl border-b border-white/10',
+    button: 'bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20',
+  },
+
+  // Glow effects
+  glow: {
+    purple: 'shadow-[0_0_30px_rgba(139,92,246,0.3)]',
+    cyan: 'shadow-[0_0_30px_rgba(34,211,238,0.3)]',
+    combined: 'shadow-[0_20px_60px_-25px_rgba(139,92,246,0.4),0_10px_40px_-20px_rgba(34,211,238,0.3)]',
+    intense: 'shadow-[0_30px_70px_-30px_rgba(139,92,246,0.45)]',
   },
 
   // Typography
