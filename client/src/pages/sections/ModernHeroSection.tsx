@@ -154,45 +154,41 @@ export const ModernHeroSection = (): JSX.Element => {
         className="relative z-10 w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 pt-24 pb-12 lg:pt-28 lg:pb-16"
         style={{ y, opacity }}
       >
-        {/* Two-row layout for cinematic feel - extra wide */}
+        {/* Single row layout - everything side by side */}
         <div className="max-w-[2000px] mx-auto">
           
-          {/* Top row - Headline spanning full width */}
-          <div className="mb-8 lg:mb-12">
-            {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-purple-500/30 bg-purple-500/10 backdrop-blur-sm mb-6"
-            >
-              <Sparkles className="w-4 h-4 text-purple-400" />
-              <span className="text-sm text-purple-300">Arizona's Trusted Cybersecurity Partner</span>
-            </motion.div>
-
-            {/* Headline - LARGE and cinematic */}
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold leading-[1.05] tracking-tight max-w-6xl"
-            >
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400">
-                Hackers Don't Wait.
-              </span>
-              <br />
-              <span className="text-white">
-                Protect Your Business{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Now.</span>
-              </span>
-            </motion.h1>
-          </div>
-
-          {/* Bottom row - Content left, Graphics + Form right */}
-          <div className="grid lg:grid-cols-[1fr_1.1fr] gap-6 xl:gap-10 2xl:gap-14 items-start">
+          {/* Main grid - Left content + Right form/graphic */}
+          <div className="grid lg:grid-cols-[1fr_1fr] gap-6 xl:gap-10 2xl:gap-14 items-start">
             
-            {/* Left column - Supporting content */}
-            <div className="flex flex-col gap-5 max-w-[640px]">
+            {/* Left column - Badge, Headline, Description, Pills, CTAs, Stats */}
+            <div className="flex flex-col gap-5">
+              {/* Badge */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-purple-500/30 bg-purple-500/10 backdrop-blur-sm w-fit"
+              >
+                <Sparkles className="w-4 h-4 text-purple-400" />
+                <span className="text-sm text-purple-300">Arizona's Trusted Cybersecurity Partner</span>
+              </motion.div>
+
+              {/* Headline */}
+              <motion.h1
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.1] tracking-tight"
+              >
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400">
+                  Hackers Don't Wait.
+                </span>
+                <br />
+                <span className="text-white">
+                  Protect Your Business{" "}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Now.</span>
+                </span>
+              </motion.h1>
               {/* Subheadline */}
               <motion.p
                 initial={{ opacity: 0, y: 30 }}
