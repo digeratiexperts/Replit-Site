@@ -154,11 +154,11 @@ export const ModernHeroSection = (): JSX.Element => {
         className="relative z-10 w-full px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 2xl:px-24 pt-28 pb-12 sm:pt-32 lg:pt-36 xl:pt-40 lg:pb-16 xl:pb-20"
         style={{ y, opacity }}
       >
-        {/* Single row layout - everything side by side */}
-        <div className="max-w-none">
+        {/* Centered container for wide screens */}
+        <div className="mx-auto max-w-[1400px] lg:max-w-[1500px] xl:max-w-[1600px] 2xl:max-w-[1760px]">
           
           {/* Main grid - Left content + Right form/graphic */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 xl:gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_minmax(420px,500px)] gap-8 lg:gap-10 xl:gap-12 items-start">
             
             {/* Left column - Badge, Headline, Description, Pills, CTAs, Stats */}
             <div className="flex flex-col gap-5 w-full">
@@ -309,7 +309,7 @@ export const ModernHeroSection = (): JSX.Element => {
               
               {/* Dashboard Mockup - Background layer */}
               <motion.div
-                className="absolute top-8 right-[-24px] lg:right-[-32px] xl:right-[-64px] 2xl:right-[-88px] w-[400px] lg:w-[460px] xl:w-[540px] 2xl:w-[580px] z-10 hidden lg:block"
+                className="absolute top-8 right-0 lg:right-4 xl:right-8 2xl:right-12 w-[380px] lg:w-[440px] xl:w-[500px] 2xl:w-[540px] z-10 hidden lg:block"
                 initial={{ opacity: 0, x: 60 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
@@ -354,7 +354,7 @@ export const ModernHeroSection = (): JSX.Element => {
 
               {/* Form Card - Foreground layer */}
               <motion.div
-                className="relative z-20 w-full max-w-[400px] lg:max-w-[380px] xl:max-w-[400px]"
+                className="relative z-20 w-full max-w-[400px] lg:max-w-[400px] xl:max-w-[420px]"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
