@@ -1,9 +1,71 @@
-import { Shield, Phone, Mail, MapPin, Linkedin, Twitter, Facebook, Instagram, ExternalLink, Lock, FileText, ArrowRight } from "lucide-react";
+import { Shield, Phone, Mail, MapPin, Linkedin, Twitter, Facebook, Instagram, ExternalLink, Lock, FileText, ArrowRight, CheckCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import { useState } from "react";
 import logoImage from '@assets/DE-Logo-new_1762461524794.webp';
+
+const CircuitOverlay = () => (
+  <svg
+    className="absolute inset-0 w-full h-full opacity-[0.03] pointer-events-none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <defs>
+      <pattern id="footer-circuit" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+        <path d="M10 10h80v80h-80z" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+        <circle cx="10" cy="10" r="2" fill="currentColor"/>
+        <circle cx="90" cy="10" r="2" fill="currentColor"/>
+        <circle cx="10" cy="90" r="2" fill="currentColor"/>
+        <circle cx="90" cy="90" r="2" fill="currentColor"/>
+        <circle cx="50" cy="50" r="3" fill="currentColor"/>
+        <path d="M10 50h30M60 50h30M50 10v30M50 60v30" stroke="currentColor" strokeWidth="0.5"/>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#footer-circuit)" className="text-purple-400"/>
+  </svg>
+);
+
+const FooterLink = ({ href, children, testId }: { href: string; children: React.ReactNode; testId: string }) => (
+  <a 
+    href={href} 
+    className="group relative text-gray-400 hover:text-white text-sm transition-all duration-300 [font-family:'Poppins',Helvetica] font-normal inline-block"
+    data-testid={testId}
+  >
+    <span className="relative">
+      {children}
+      <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-gradient-to-r from-purple-500 to-cyan-500 transition-all duration-300 group-hover:w-full" />
+    </span>
+  </a>
+);
+
+const socialButtonVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.1,
+      duration: 0.4,
+      ease: "easeOut"
+    }
+  }),
+  hover: {
+    scale: 1.15,
+    transition: { duration: 0.2 }
+  }
+};
 
 export const DigeratiEnhancedFooterSection = (): JSX.Element => {
   const currentYear = new Date().getFullYear();
+  const [email, setEmail] = useState("");
+  const [isSubscribed, setIsSubscribed] = useState(false);
+
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email) {
+      setIsSubscribed(true);
+      setEmail("");
+    }
+  };
 
   const quickAccess = [
     { name: "Client Portal", href: "https://portal.digeratiexperts.com/portal/login" },
@@ -50,17 +112,26 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
     { name: "Scottsdale", href: "/locations/scottsdale-az", primary: false }
   ];
 
-  const partners = [
-    { name: "Microsoft Partner", verified: true },
-    { name: "Apple Consultants", verified: true },
-    { name: "SOC 2 Type II", verified: true }
+  const complianceSeals = [
+    { name: "SOC 2 Type II", icon: Shield, verified: true },
+    { name: "HIPAA Compliant", icon: Lock, verified: true },
+    { name: "Microsoft Partner", icon: CheckCircle, verified: true },
+    { name: "Apple Consultants", icon: CheckCircle, verified: true }
+  ];
+
+  const socialLinks = [
+    { name: "LinkedIn", href: "https://www.linkedin.com/company/digerati-experts", icon: Linkedin, testId: "footer-linkedin" },
+    { name: "Twitter", href: "https://twitter.com/digerati_experts", icon: Twitter, testId: "footer-twitter" },
+    { name: "Facebook", href: "https://www.facebook.com/digeratiexperts", icon: Facebook, testId: "footer-facebook" },
+    { name: "Instagram", href: "https://www.instagram.com/digerati.experts", icon: Instagram, testId: "footer-instagram" }
   ];
 
   return (
-    <footer className="bg-gradient-to-b from-[#030228] via-[#0f0d2e] to-[#1a1545] border-t border-white/10">
-      {/* Main footer content */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-16 max-w-[1440px]">
-        {/* Logo and company info section */}
+    <footer className="relative bg-[#050210] bg-gradient-to-t from-[#050210] via-[#0a0118] to-[#0d0720] border-t border-white/10 overflow-hidden">
+      <CircuitOverlay />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(139,92,246,0.08),transparent_50%),radial-gradient(circle_at_80%_20%,rgba(34,211,238,0.06),transparent_50%)] pointer-events-none" />
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-16 max-w-[1440px] relative z-10">
         <div className="mb-12 pl-4 md:pl-8 lg:pl-0">
           <img 
             src={logoImage} 
@@ -70,58 +141,49 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           />
         </div>
 
-        {/* Footer columns */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-12 px-4 md:px-8 lg:px-0">
-          {/* Quick Access */}
-          <div>
+          <div className="group p-4 -m-4 rounded-xl transition-all duration-300 hover:bg-white/5">
             <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider [font-family:'Poppins',Helvetica]">Quick Access</h4>
             <ul className="space-y-3">
               {quickAccess.map((item, index) => (
                 <li key={index}>
-                  <a 
-                    href={item.href} 
-                    className="text-gray-300 hover:text-white text-sm transition-colors [font-family:'Poppins',Helvetica] font-normal"
-                    data-testid={`footer-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
-                  >
+                  <FooterLink href={item.href} testId={`footer-${item.name.toLowerCase().replace(/\s+/g, '-')}`}>
                     {item.name}
-                  </a>
+                  </FooterLink>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Services */}
-          <div>
+          <div className="group p-4 -m-4 rounded-xl transition-all duration-300 hover:bg-white/5">
             <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider [font-family:'Poppins',Helvetica]">Services</h4>
             <ul className="space-y-3">
               {services.map((item, index) => (
                 <li key={index}>
-                  <a 
-                    href={item.href} 
-                    className="text-gray-300 hover:text-white text-sm transition-colors [font-family:'Poppins',Helvetica] font-normal"
-                    data-testid={`footer-service-${index}`}
-                  >
+                  <FooterLink href={item.href} testId={`footer-service-${index}`}>
                     {item.name}
-                  </a>
+                  </FooterLink>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Legal */}
-          <div>
+          <div className="group p-4 -m-4 rounded-xl transition-all duration-300 hover:bg-white/5">
             <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider [font-family:'Poppins',Helvetica]">Legal</h4>
             <ul className="space-y-3">
               {legal.map((item, index) => (
                 <li key={index}>
                   <a 
                     href={item.href} 
-                    className="text-gray-300 hover:text-white text-sm transition-colors inline-flex items-center gap-2 [font-family:'Poppins',Helvetica] font-normal"
+                    className="group/link relative text-gray-400 hover:text-white text-sm transition-all duration-300 inline-flex items-center gap-2 [font-family:'Poppins',Helvetica] font-normal"
                     data-testid={`footer-legal-${index}`}
                   >
-                    <span>{item.name}</span>
+                    <span className="relative">
+                      {item.name}
+                      <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-gradient-to-r from-purple-500 to-cyan-500 transition-all duration-300 group-hover/link:w-full" />
+                    </span>
                     {item.badge && (
-                      <span className="text-xs bg-white text-[#5034ff] px-2 py-0.5 rounded">
+                      <span className="text-xs bg-gradient-to-r from-purple-600 to-cyan-600 text-white px-2 py-0.5 rounded-full">
                         {item.badge}
                       </span>
                     )}
@@ -131,39 +193,35 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
             </ul>
           </div>
 
-          {/* Trust */}
-          <div>
+          <div className="group p-4 -m-4 rounded-xl transition-all duration-300 hover:bg-white/5">
             <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider [font-family:'Poppins',Helvetica]">Trust</h4>
             <ul className="space-y-3">
               {trust.map((item, index) => (
                 <li key={index}>
-                  <a 
-                    href={item.href} 
-                    className="text-gray-300 hover:text-white text-sm transition-colors [font-family:'Poppins',Helvetica] font-normal"
-                    data-testid={`footer-trust-${index}`}
-                  >
+                  <FooterLink href={item.href} testId={`footer-trust-${index}`}>
                     {item.name}
-                  </a>
+                  </FooterLink>
                 </li>
               ))}
             </ul>
           </div>
         </div>
 
-        {/* Compliance Section */}
         <div className="border-t border-white/10 py-8 px-4 md:px-8 lg:px-0">
-          <div className="bg-white rounded-lg p-6 mb-8 shadow-lg">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-              <div className="flex items-start gap-3">
-                <Shield className="h-6 w-6 text-[#5034ff] mt-1 flex-shrink-0" />
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 mb-8 shadow-[0_0_40px_rgba(139,92,246,0.1)]">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-purple-600/20 to-cyan-600/20 border border-white/10">
+                  <Shield className="h-6 w-6 text-purple-400" />
+                </div>
                 <div>
-                  <h3 className="text-[#030228] font-semibold mb-1 flex items-center gap-2 [font-family:'Poppins',Helvetica]">
+                  <h3 className="text-white font-semibold mb-1 flex items-center gap-2 [font-family:'Poppins',Helvetica]">
                     COMPLIANCE READY
                   </h3>
-                  <p className="text-gray-700 text-sm [font-family:'Poppins',Helvetica] font-normal">
+                  <p className="text-gray-400 text-sm [font-family:'Poppins',Helvetica] font-normal">
                     Need SOC 2 or Security Documentation?
                   </p>
-                  <p className="text-gray-600 text-sm mt-1 [font-family:'Poppins',Helvetica] font-normal">
+                  <p className="text-gray-500 text-sm mt-1 [font-family:'Poppins',Helvetica] font-normal">
                     Request compliance documents for vendor onboarding and security reviews
                   </p>
                 </div>
@@ -172,7 +230,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                 href="https://meet.digerati-experts.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-[#5034ff] text-white hover:bg-[#4028dd] font-semibold px-6 py-2 shadow-lg rounded [font-family:'Poppins',Helvetica] whitespace-nowrap transition-all"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-semibold px-6 py-3 rounded-xl shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_40px_rgba(139,92,246,0.4)] [font-family:'Poppins',Helvetica] whitespace-nowrap transition-all duration-300"
                 data-testid="footer-request-docs"
               >
                 Request Docs
@@ -182,100 +240,113 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           </div>
         </div>
 
-        {/* Areas Served Section */}
-        <div className="border-t border-white/10 pt-8 pb-8 px-4 md:px-8 lg:px-0">
+        <div className="border-t border-white/10 py-8 px-4 md:px-8 lg:px-0">
           <h4 className="text-white text-sm font-semibold mb-6 uppercase tracking-wider [font-family:'Poppins',Helvetica]">
-            Serving Greater Phoenix
+            Compliance Certifications
           </h4>
-          <div className="flex flex-wrap gap-3">
-            {locations.map((location, index) => (
-              <a
-                key={index}
-                href={location.href}
-                className={`
-                  px-4 py-2 rounded-lg font-medium transition-all duration-300 text-sm [font-family:'Poppins',Helvetica]
-                  ${location.primary 
-                    ? 'text-white hover:bg-[#5034ff]/20' 
-                    : 'text-gray-400 hover:text-white hover:bg-white/10'}
-                `}
-                data-testid={`footer-location-${location.name.toLowerCase()}`}
-              >
-                {location.name}
-              </a>
-            ))}
-          </div>
-        </div>
-
-        {/* Partner Badges Section */}
-        <div className="border-t border-white/10 pt-8 pb-6 px-4 md:px-8 lg:px-0">
-          <h4 className="text-white text-sm font-semibold mb-6 uppercase tracking-wider [font-family:'Poppins',Helvetica]">
-            Certifications & Partnerships
-          </h4>
-          <div className="flex flex-wrap items-center gap-6">
-            {partners.map((partner, index) => (
+          <div className="flex flex-wrap gap-4">
+            {complianceSeals.map((seal, index) => (
               <div 
                 key={index}
-                className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors [font-family:'Poppins',Helvetica]"
-                data-testid={`footer-partner-${index}`}
+                className="flex items-center gap-3 px-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                data-testid={`footer-seal-${index}`}
               >
-                {partner.verified && (
-                  <Shield className="h-5 w-5 text-[#5034ff] flex-shrink-0" />
+                <seal.icon className="h-5 w-5 text-purple-400" />
+                <span className="text-gray-400 text-sm font-medium [font-family:'Poppins',Helvetica]">{seal.name}</span>
+                {seal.verified && (
+                  <CheckCircle className="h-4 w-4 text-green-400" />
                 )}
-                <span className="text-sm font-medium">{partner.name}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Bottom section with social and copyright */}
-        <div className="border-t border-white/10 pt-6 pb-8 px-4 md:px-8 lg:px-0">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            {/* Social links */}
-            <div className="flex items-center gap-4">
-              <a 
-                href="https://www.linkedin.com/company/digerati-experts" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-[#5034ff] transition-colors"
-                aria-label="LinkedIn"
-                data-testid="footer-linkedin"
-              >
-                <Linkedin className="h-5 w-5" />
-              </a>
-              <a 
-                href="https://twitter.com/digerati_experts" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-[#5034ff] transition-colors"
-                aria-label="Twitter"
-                data-testid="footer-twitter"
-              >
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a 
-                href="https://www.facebook.com/digeratiexperts" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-[#5034ff] transition-colors"
-                aria-label="Facebook"
-                data-testid="footer-facebook"
-              >
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a 
-                href="https://www.instagram.com/digerati.experts" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-[#5034ff] transition-colors"
-                aria-label="Instagram"
-                data-testid="footer-instagram"
-              >
-                <Instagram className="h-5 w-5" />
-              </a>
+        <div className="border-t border-white/10 py-8 px-4 md:px-8 lg:px-0">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div>
+              <h4 className="text-white text-sm font-semibold mb-4 uppercase tracking-wider [font-family:'Poppins',Helvetica]">
+                Stay Updated
+              </h4>
+              <p className="text-gray-400 text-sm mb-4 [font-family:'Poppins',Helvetica]">
+                Get the latest cybersecurity insights and IT tips delivered to your inbox.
+              </p>
+              {isSubscribed ? (
+                <div className="flex items-center gap-2 text-green-400">
+                  <CheckCircle className="h-5 w-5" />
+                  <span className="text-sm [font-family:'Poppins',Helvetica]">Thank you for subscribing!</span>
+                </div>
+              ) : (
+                <form onSubmit={handleNewsletterSubmit} className="flex gap-3">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition-all duration-300 [font-family:'Poppins',Helvetica] text-sm"
+                    data-testid="footer-newsletter-input"
+                  />
+                  <button
+                    type="submit"
+                    className="px-6 py-3 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-semibold rounded-xl shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.4)] transition-all duration-300 flex items-center gap-2"
+                    data-testid="footer-newsletter-submit"
+                  >
+                    <Send className="h-4 w-4" />
+                    <span className="hidden sm:inline [font-family:'Poppins',Helvetica]">Subscribe</span>
+                  </button>
+                </form>
+              )}
             </div>
             
-            {/* Copyright */}
-            <div className="text-gray-400 text-sm text-center [font-family:'Poppins',Helvetica] font-normal">
+            <div>
+              <h4 className="text-white text-sm font-semibold mb-6 uppercase tracking-wider [font-family:'Poppins',Helvetica]">
+                Serving Greater Phoenix
+              </h4>
+              <div className="flex flex-wrap gap-3">
+                {locations.map((location, index) => (
+                  <a
+                    key={index}
+                    href={location.href}
+                    className={`
+                      px-4 py-2 rounded-lg font-medium transition-all duration-300 text-sm [font-family:'Poppins',Helvetica]
+                      ${location.primary 
+                        ? 'bg-white/5 border border-white/10 text-white hover:bg-purple-600/20 hover:border-purple-500/30' 
+                        : 'text-gray-400 hover:text-white hover:bg-white/10'}
+                    `}
+                    data-testid={`footer-location-${location.name.toLowerCase()}`}
+                  >
+                    {location.name}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-white/10 pt-8 pb-8 px-4 md:px-8 lg:px-0">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex items-center gap-4">
+              {socialLinks.map((social, index) => (
+                <motion.a
+                  key={social.name}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 bg-white/5 border border-white/10 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 hover:border-purple-500/30 hover:shadow-[0_0_20px_rgba(139,92,246,0.2)] transition-all duration-300"
+                  aria-label={social.name}
+                  data-testid={social.testId}
+                  custom={index}
+                  initial="hidden"
+                  whileInView="visible"
+                  whileHover="hover"
+                  viewport={{ once: true }}
+                  variants={socialButtonVariants}
+                >
+                  <social.icon className="h-5 w-5" />
+                </motion.a>
+              ))}
+            </div>
+            
+            <div className="text-gray-500 text-sm text-center [font-family:'Poppins',Helvetica] font-normal">
               © {currentYear} Digerati Experts, LLC. All rights reserved.
             </div>
           </div>

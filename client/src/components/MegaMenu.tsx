@@ -146,7 +146,6 @@ export function MegaMenu() {
     }
   ];
 
-  // Explicitly close menu - used by keyboard, click outside, and link clicks
   const closeMenu = useCallback(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -155,25 +154,20 @@ export function MegaMenu() {
     setFocusedIndex(-1);
   }, []);
 
-  // Close mobile menu
   const closeMobileMenu = useCallback(() => {
     setMobileMenuOpen(false);
   }, []);
 
-  // Handle keyboard navigation
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    // Escape key closes menu
     if (event.key === 'Escape') {
       closeMenu();
       closeMobileMenu();
-      // Return focus to the button that opened the menu
       if (activeMenu && navButtonsRef.current.get(activeMenu)) {
         navButtonsRef.current.get(activeMenu)?.focus();
       }
       return;
     }
 
-    // Arrow key navigation for desktop menu
     if (!mobileMenuOpen && activeMenu) {
       const menuItems = navItems.filter(item => !item.isSimple);
       const currentIndex = menuItems.findIndex(item => item.name === activeMenu);
@@ -190,7 +184,6 @@ export function MegaMenu() {
     }
   }, [activeMenu, mobileMenuOpen, closeMenu, closeMobileMenu, navItems]);
 
-  // Handle mouse enter with timeout clear
   const handleMouseEnter = useCallback((name: string) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -198,21 +191,18 @@ export function MegaMenu() {
     setActiveMenu(name);
   }, []);
 
-  // Handle mouse leave with delay
   const handleMouseLeave = useCallback(() => {
     timeoutRef.current = setTimeout(() => {
       closeMenu();
     }, 150);
   }, [closeMenu]);
 
-  // Handle dropdown mouse enter
   const handleDropdownMouseEnter = useCallback(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
   }, []);
 
-  // Handle click on nav button
   const handleNavButtonClick = useCallback((name: string, event: React.MouseEvent) => {
     event.preventDefault();
     if (activeMenu === name) {
@@ -222,38 +212,30 @@ export function MegaMenu() {
     }
   }, [activeMenu, closeMenu]);
 
-  // Handle link click - close menu when navigating
   const handleLinkClick = useCallback(() => {
     closeMenu();
     closeMobileMenu();
   }, [closeMenu, closeMobileMenu]);
 
-  // Enhanced click outside handler
   useEffect(() => {
     if (!activeMenu) return;
     
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       
-      // Check if click is on a dropdown trigger button
       const isButtonClick = target.closest('button[data-menu-trigger]');
       if (isButtonClick) {
-        // Let the button's onClick handler manage the state
         return;
       }
       
-      // Check if click is inside a dropdown
       const isDropdownClick = target.closest('.mega-menu-dropdown');
       if (isDropdownClick) {
-        // Don't close if clicking inside dropdown
         return;
       }
       
-      // Close menu for any other click
       closeMenu();
     };
 
-    // Use a small delay to avoid immediate closure on open
     const timer = setTimeout(() => {
       document.addEventListener('click', handleClickOutside, true);
     }, 0);
@@ -264,7 +246,6 @@ export function MegaMenu() {
     };
   }, [activeMenu, closeMenu]);
 
-  // Keyboard event listener
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
     
@@ -273,7 +254,6 @@ export function MegaMenu() {
     };
   }, [handleKeyDown]);
 
-  // Scroll detection
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
@@ -284,7 +264,6 @@ export function MegaMenu() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {
@@ -297,7 +276,7 @@ export function MegaMenu() {
     <>
       {/* Top Utility Bar */}
       <div 
-        className={`fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-purple-900 to-blue-900 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-purple-900/90 to-blue-900/90 backdrop-blur-sm transition-all duration-300 ${
           isScrolled ? 'h-0 overflow-hidden opacity-0' : 'h-auto md:h-10'
         }`}
       >
@@ -306,7 +285,7 @@ export function MegaMenu() {
             {/* Phone Number */}
             <a
               href="tel:325-480-9870"
-              className="flex items-center text-white/90 hover:text-white text-xs md:text-sm font-medium transition-colors"
+              className="flex items-center text-white/90 hover:text-cyan-400 text-xs md:text-sm font-medium transition-colors"
               data-testid="utility-phone"
             >
               <Phone className="h-3.5 w-3.5 mr-1.5" />
@@ -319,7 +298,7 @@ export function MegaMenu() {
               href="https://portal.digeratiexperts.com/portal/login"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center text-white/90 hover:text-white text-xs md:text-sm font-medium transition-colors"
+              className="flex items-center text-white/90 hover:text-cyan-400 text-xs md:text-sm font-medium transition-colors"
               data-testid="utility-portal"
             >
               <span className="hidden sm:inline">Client Portal</span>
@@ -332,8 +311,10 @@ export function MegaMenu() {
 
       {/* Main Navigation */}
       <nav 
-        className={`fixed left-0 right-0 z-50 mega-menu-container bg-black/95 backdrop-blur-sm transition-all duration-300 ${
-          isScrolled ? 'top-0 shadow-lg' : 'top-10'
+        className={`fixed left-0 right-0 z-50 mega-menu-container transition-all duration-300 ${
+          isScrolled 
+            ? 'top-0 bg-[#050210]/98 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(139,92,246,0.25)]' 
+            : 'top-10 bg-[#0a0118]/95 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(139,92,246,0.15)]'
         }`}
         ref={menuContainerRef}
         role="navigation"
@@ -369,20 +350,21 @@ export function MegaMenu() {
                   {item.isSimple ? (
                     <a
                       href={item.href}
-                      className="px-3 py-2 text-white hover:text-yellow-300 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 rounded"
+                      className="group relative px-3 py-2 text-white hover:text-cyan-400 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-[#0a0118] rounded"
                       data-testid={`nav-${item.name.toLowerCase()}`}
                       onClick={handleLinkClick}
                       aria-label={`Go to ${item.name}`}
                     >
                       {item.name}
+                      <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-500 group-hover:w-full transition-all duration-300" />
                     </a>
                   ) : (
                     <button
                       ref={(el) => {
                         if (el) navButtonsRef.current.set(item.name, el);
                       }}
-                      className={`px-3 py-2 text-white hover:text-yellow-300 font-medium transition-colors flex items-center focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 rounded ${
-                        activeMenu === item.name ? 'text-yellow-300' : ''
+                      className={`group relative px-3 py-2 text-white hover:text-cyan-400 font-medium transition-colors flex items-center focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-[#0a0118] rounded ${
+                        activeMenu === item.name ? 'text-cyan-400' : ''
                       }`}
                       data-testid={`nav-${item.name.toLowerCase()}`}
                       data-menu-trigger="true"
@@ -398,6 +380,9 @@ export function MegaMenu() {
                         }`} 
                         aria-hidden="true"
                       />
+                      <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-500 transition-all duration-300 ${
+                        activeMenu === item.name ? 'w-full' : 'w-0 group-hover:w-full'
+                      }`} />
                     </button>
                   )}
 
@@ -407,7 +392,7 @@ export function MegaMenu() {
                       ref={(el) => {
                         if (el) dropdownRefs.current.set(item.name, el);
                       }}
-                      className="fixed left-0 right-0 top-20 mx-auto w-[90vw] max-w-5xl bg-white shadow-xl rounded-b-lg border-t-4 border-purple-600 mega-menu-dropdown"
+                      className="fixed left-0 right-0 top-20 mx-auto w-[90vw] max-w-5xl bg-[#0d0720]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-[0_20px_60px_rgba(139,92,246,0.3)] mega-menu-dropdown"
                       onMouseEnter={handleDropdownMouseEnter}
                       onMouseLeave={handleMouseLeave}
                       role="menu"
@@ -418,19 +403,19 @@ export function MegaMenu() {
                           <div key={section.title}>
                             <h3 
                               className={`font-bold text-lg mb-4 ${
-                                section.featured ? 'text-purple-600' : 'text-gray-900'
+                                section.featured ? 'text-cyan-400' : 'text-white'
                               }`}
                               id={`menu-section-${section.title.replace(/\s+/g, '-')}`}
                             >
                               {section.title}
                               {section.featured && (
-                                <span className="ml-2 text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded">
+                                <span className="ml-2 text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded border border-purple-500/30">
                                   Popular
                                 </span>
                               )}
                             </h3>
                             <ul 
-                              className="space-y-3"
+                              className="space-y-2"
                               role="menu"
                               aria-labelledby={`menu-section-${section.title.replace(/\s+/g, '-')}`}
                             >
@@ -438,29 +423,29 @@ export function MegaMenu() {
                                 <li key={subItem.title} role="none">
                                   <a
                                     href={subItem.url || '#'}
-                                    className="group flex items-start space-x-3 hover:bg-gray-50 p-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                    className="group/item flex items-start space-x-3 hover:bg-white/5 p-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-cyan-500 border border-transparent hover:border-white/10"
                                     onClick={handleLinkClick}
                                     role="menuitem"
                                     aria-label={`${subItem.title}: ${subItem.description || ''}`}
                                   >
                                     {subItem.icon && (
-                                      <span className="text-purple-600 mt-0.5" aria-hidden="true">
+                                      <span className="text-purple-400 group-hover/item:text-cyan-400 mt-0.5 transition-colors" aria-hidden="true">
                                         {subItem.icon}
                                       </span>
                                     )}
                                     <div className="flex-1">
                                       <div className="flex items-center">
-                                        <span className="font-medium text-gray-900 group-hover:text-purple-600">
+                                        <span className="font-medium text-gray-300 group-hover/item:text-white transition-colors">
                                           {subItem.title}
                                         </span>
                                         {subItem.badge && (
-                                          <span className="ml-2 text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded">
+                                          <span className="ml-2 text-xs bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-cyan-300 px-2 py-0.5 rounded border border-cyan-500/30">
                                             {subItem.badge}
                                           </span>
                                         )}
                                       </div>
                                       {subItem.description && (
-                                        <p className="text-sm text-gray-600 mt-1">
+                                        <p className="text-sm text-gray-500 group-hover/item:text-gray-400 mt-1 transition-colors">
                                           {subItem.description}
                                         </p>
                                       )}
@@ -475,17 +460,17 @@ export function MegaMenu() {
                         {/* Placeholder Box for Industries, Resources, and About */}
                         {(item.name === 'Industries' || item.name === 'Resources' || item.name === 'About') && (
                           <div 
-                            className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-dashed border-purple-300 rounded-lg p-6 flex flex-col items-center justify-center min-h-64 hover:border-purple-500 hover:from-purple-100 hover:to-blue-100 transition-all"
+                            className="bg-gradient-to-br from-purple-900/30 to-cyan-900/20 border border-white/10 rounded-xl p-6 flex flex-col items-center justify-center min-h-64 hover:border-purple-500/30 hover:from-purple-900/40 hover:to-cyan-900/30 transition-all"
                             data-testid={`menu-placeholder-${item.name.toLowerCase()}`}
                           >
                             <div className="text-center">
-                              <div className="w-16 h-16 mx-auto bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4 opacity-20">
+                              <div className="w-16 h-16 mx-auto bg-gradient-to-r from-purple-600 to-cyan-600 rounded-lg flex items-center justify-center mb-4 opacity-40">
                                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
                               </div>
-                              <p className="text-sm font-medium text-purple-900 mb-1">Video or PDF Content</p>
-                              <p className="text-xs text-gray-600">Coming soon</p>
+                              <p className="text-sm font-medium text-white/80 mb-1">Video or PDF Content</p>
+                              <p className="text-xs text-gray-500">Coming soon</p>
                             </div>
                           </div>
                         )}
@@ -495,7 +480,7 @@ export function MegaMenu() {
                           <div className="absolute bottom-6 right-6">
                             <a
                               href="/solutions"
-                              className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium rounded-lg transition-all hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                              className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-medium rounded-lg transition-all hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[#0d0720]"
                               onClick={handleLinkClick}
                               role="menuitem"
                               aria-label="View all solutions"
@@ -519,7 +504,7 @@ export function MegaMenu() {
               href="https://meet.digerati-experts.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-2 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 border border-purple-500/30"
+              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white px-6 py-2 rounded-lg font-semibold shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(34,211,238,0.4)] transition-all focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[#0a0118] border border-white/10"
               data-testid="nav-cta"
               onClick={handleLinkClick}
               aria-label="Get protected now - Schedule a consultation"
@@ -529,7 +514,7 @@ export function MegaMenu() {
 
             {/* Mobile Menu Button */}
             <button
-              className="lg:hidden p-2 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="lg:hidden p-2 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-400 border border-transparent hover:border-white/10 transition-all"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               data-testid="mobile-menu-toggle"
               aria-expanded={mobileMenuOpen}
@@ -549,7 +534,7 @@ export function MegaMenu() {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div 
-            className="lg:hidden bg-gray-900 border-t border-gray-800 max-h-[calc(100vh-120px)] overflow-y-auto"
+            className="lg:hidden bg-[#0d0720]/98 backdrop-blur-xl border-t border-white/10 max-h-[calc(100vh-120px)] overflow-y-auto"
             role="dialog"
             aria-label="Mobile navigation menu"
           >
@@ -559,7 +544,7 @@ export function MegaMenu() {
                   {item.isSimple ? (
                     <a
                       href={item.href}
-                      className="block py-3 px-3 text-white hover:bg-purple-600/20 hover:text-yellow-300 font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500 rounded transition-colors text-base"
+                      className="block py-3 px-3 text-white hover:bg-white/5 hover:text-cyan-400 font-semibold focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-lg transition-colors text-base border border-transparent hover:border-white/10"
                       onClick={() => setMobileMenuOpen(false)}
                       data-testid={`mobile-nav-${item.name.toLowerCase()}`}
                       aria-label={`Go to ${item.name}`}
@@ -568,28 +553,28 @@ export function MegaMenu() {
                     </a>
                   ) : (
                     <details className="group">
-                      <summary className="flex items-center justify-between py-3 px-3 text-white hover:bg-purple-600/20 hover:text-yellow-300 font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500 rounded transition-colors text-base"
+                      <summary className="flex items-center justify-between py-3 px-3 text-white hover:bg-white/5 hover:text-cyan-400 font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-lg transition-colors text-base border border-transparent hover:border-white/10"
                         data-testid={`mobile-nav-${item.name.toLowerCase()}`}>
                         {item.name}
                         <ChevronDown className="h-5 w-5 transition-transform group-open:rotate-180" aria-hidden="true" />
                       </summary>
                       {item.sections && (
-                        <div className="mt-1 ml-2 space-y-1 bg-gray-800/50 rounded p-2">
+                        <div className="mt-1 ml-2 space-y-1 bg-white/5 rounded-lg p-2 border border-white/5">
                           {item.sections.map((section) => (
                             <div key={section.title} className="mb-3">
-                              <h4 className="font-semibold text-yellow-300 mb-2 px-2 pt-1 text-sm">{section.title}</h4>
+                              <h4 className="font-semibold text-cyan-400 mb-2 px-2 pt-1 text-sm">{section.title}</h4>
                               {section.items.map((subItem) => (
                                 <a
                                   key={subItem.title}
                                   href={subItem.url || '#'}
-                                  className="block py-2 px-3 text-sm text-gray-200 hover:text-white hover:bg-purple-600/20 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded transition-colors"
+                                  className="block py-2 px-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-lg transition-colors border border-transparent hover:border-white/10"
                                   onClick={() => setMobileMenuOpen(false)}
                                   data-testid={`mobile-submenu-${subItem.title.toLowerCase().replace(/\s+/g, '-')}`}
                                   aria-label={`${subItem.title}: ${subItem.description || ''}`}
                                 >
                                   {subItem.title}
                                   {subItem.badge && (
-                                    <span className="ml-2 text-xs bg-purple-600 text-white px-2 py-0.5 rounded inline-block">
+                                    <span className="ml-2 text-xs bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-cyan-300 px-2 py-0.5 rounded border border-cyan-500/30 inline-block">
                                       {subItem.badge}
                                     </span>
                                   )}
@@ -605,10 +590,10 @@ export function MegaMenu() {
               ))}
               
               {/* Mobile Actions */}
-              <div className="pt-4 mt-4 border-t border-gray-800 space-y-3">
+              <div className="pt-4 mt-4 border-t border-white/10 space-y-3">
                 <a
                   href="tel:325-480-9870"
-                  className="flex items-center text-yellow-300 font-semibold hover:text-yellow-200 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded px-3 py-2 transition-colors"
+                  className="flex items-center text-cyan-400 font-semibold hover:text-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded px-3 py-2 transition-colors"
                   data-testid="mobile-call"
                   aria-label="Call us at 325-480-9870"
                 >
@@ -619,7 +604,7 @@ export function MegaMenu() {
                   href="https://portal.digeratiexperts.com/portal/login"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center text-gray-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 rounded px-3 py-2 transition-colors"
+                  className="flex items-center text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded px-3 py-2 transition-colors"
                   data-testid="mobile-portal"
                   aria-label="Access client portal (opens in new window)"
                 >
@@ -630,7 +615,7 @@ export function MegaMenu() {
                   href="https://meet.digerati-experts.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all rounded"
+                  className="w-full inline-flex items-center justify-center bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-semibold py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[#0d0720] transition-all rounded-lg shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(34,211,238,0.4)]"
                   onClick={() => setMobileMenuOpen(false)}
                   data-testid="mobile-cta"
                   aria-label="Get protected now - Schedule a consultation"
