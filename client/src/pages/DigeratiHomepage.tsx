@@ -4,7 +4,7 @@ import { ZohoASAPWidget } from "@/components/ZohoASAPWidget";
 import { useState, useEffect } from "react";
 
 // Import all section components
-import { DigeratiHeroSection } from "./sections/DigeratiHeroSection";
+import { ModernHeroSection } from "./sections/ModernHeroSection";
 import { DigeratiAlertBanner } from "./sections/DigeratiAlertBanner";
 import { DigeratiServicesSection } from "./sections/DigeratiServicesSection";
 import { DigeratiHowWeProtectSection } from "./sections/DigeratiHowWeProtectSection";
@@ -60,11 +60,11 @@ export const DigeratiHomepage = (): JSX.Element => {
       {/* Navigation */}
       <MegaMenu />
 
-      {/* Hero Section */}
-      <DigeratiHeroSection />
+      {/* Modern Hero Section */}
+      <ModernHeroSection />
 
-      {/* Why Choose Section (Alert Banner) - Seamless transition */}
-      <div className="-mt-16">
+      {/* Why Choose Section (Alert Banner) - Seamless transition from dark hero */}
+      <div className="bg-gradient-to-b from-[#0a0118] to-white pt-8">
         <DigeratiAlertBanner />
       </div>
 
