@@ -151,17 +151,17 @@ export const ModernHeroSection = (): JSX.Element => {
 
       {/* Main content - FULL WIDTH layout */}
       <motion.div 
-        className="relative z-10 w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 pt-24 pb-12 lg:pt-28 lg:pb-16"
+        className="relative z-10 w-full px-6 sm:px-10 lg:px-16 xl:px-20 2xl:px-24 pt-32 pb-16 lg:pt-40 lg:pb-20"
         style={{ y, opacity }}
       >
         {/* Single row layout - everything side by side */}
-        <div className="max-w-[2000px] mx-auto">
+        <div className="max-w-none">
           
           {/* Main grid - Left content + Right form/graphic */}
-          <div className="grid lg:grid-cols-[1fr_1fr] gap-6 xl:gap-10 2xl:gap-14 items-start">
+          <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-8 xl:gap-14 2xl:gap-20 items-start">
             
             {/* Left column - Badge, Headline, Description, Pills, CTAs, Stats */}
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-5 max-w-[720px]">
               {/* Badge */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -304,18 +304,62 @@ export const ModernHeroSection = (): JSX.Element => {
               </motion.div>
             </div>
 
-            {/* Right column - Form and Dashboard side by side */}
-            <div className="w-full">
-              <div className="flex items-start gap-6 xl:gap-8">
+            {/* Right column - Form overlapping Dashboard */}
+            <div className="relative flex justify-end">
+              
+              {/* Dashboard Mockup - Background layer */}
+              <motion.div
+                className="absolute top-8 right-[-5vw] w-[500px] xl:w-[580px] z-10 hidden lg:block"
+                initial={{ opacity: 0, x: 60 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+              >
+                {/* Glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-indigo-600/10 to-cyan-600/20 blur-3xl scale-110" />
                 
-                {/* Form Card */}
+                {/* Dashboard with 3D effect */}
                 <motion.div
-                  className="w-full max-w-[380px] flex-shrink-0"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.3 }}
-                  id="assessment-form"
+                  className="relative"
+                  style={{ 
+                    transform: "perspective(1200px) rotateY(-6deg) rotateX(2deg)",
+                    transformStyle: "preserve-3d"
+                  }}
+                  animate={{
+                    rotateY: [-6, -4, -6],
+                    rotateX: [2, 3, 2],
+                  }}
+                  transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
                 >
+                  <DashboardMockup className="w-full drop-shadow-2xl" />
+                </motion.div>
+
+                {/* Floating shield accent */}
+                <motion.div
+                  className="absolute -top-6 -left-2 w-20 h-24 z-30"
+                  animate={{ y: [0, -10, 0], rotate: [0, 3, 0] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <AnimatedShield className="w-full h-full drop-shadow-lg" />
+                </motion.div>
+
+                {/* Network nodes accent */}
+                <motion.div
+                  className="absolute bottom-0 -right-4 w-28 h-36 opacity-50"
+                  animate={{ y: [0, 6, 0] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                >
+                  <NetworkNodes className="w-full h-full" />
+                </motion.div>
+              </motion.div>
+
+              {/* Form Card - Foreground layer */}
+              <motion.div
+                className="relative z-20 w-full max-w-[400px]"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                id="assessment-form"
+              >
                 {/* Glassmorphism Form Card with enhanced shadow */}
                 <Card className="backdrop-blur-xl bg-white/95 dark:bg-gray-900/95 shadow-[0_20px_70px_-15px_rgba(139,92,246,0.4)] border-0 ring-1 ring-white/20">
                   <CardHeader className="pb-3">
@@ -436,52 +480,6 @@ export const ModernHeroSection = (): JSX.Element => {
                 </Card>
 
               </motion.div>
-
-                {/* Dashboard Mockup */}
-                <motion.div
-                  className="flex-1 min-w-[280px] relative hidden lg:block"
-                  initial={{ opacity: 0, x: 40 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.5 }}
-                >
-                  {/* Glow effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-indigo-600/10 to-cyan-600/20 blur-3xl scale-110" />
-                  
-                  {/* Dashboard with 3D effect */}
-                  <motion.div
-                    className="relative"
-                    style={{ 
-                      transform: "perspective(1200px) rotateY(-6deg) rotateX(2deg)",
-                      transformStyle: "preserve-3d"
-                    }}
-                    animate={{
-                      rotateY: [-6, -4, -6],
-                      rotateX: [2, 3, 2],
-                    }}
-                    transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-                  >
-                    <DashboardMockup className="w-full drop-shadow-2xl" />
-                  </motion.div>
-
-                  {/* Floating shield accent */}
-                  <motion.div
-                    className="absolute -top-6 -left-2 w-20 h-24 z-30"
-                    animate={{ y: [0, -10, 0], rotate: [0, 3, 0] }}
-                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                  >
-                    <AnimatedShield className="w-full h-full drop-shadow-lg" />
-                  </motion.div>
-
-                  {/* Network nodes accent */}
-                  <motion.div
-                    className="absolute bottom-0 -right-4 w-28 h-36 opacity-50"
-                    animate={{ y: [0, 6, 0] }}
-                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                  >
-                    <NetworkNodes className="w-full h-full" />
-                  </motion.div>
-                </motion.div>
-              </div>
             </div>
           </div>
         </div>
