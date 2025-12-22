@@ -309,16 +309,16 @@ export const ModernHeroSection = (): JSX.Element => {
             </div>
 
             {/* Right column - Layered Graphics + Form */}
-            <div className="lg:col-span-7 xl:col-span-7 relative min-h-[600px] lg:min-h-[650px]">
+            <div className="lg:col-span-7 xl:col-span-7 relative min-h-[550px] lg:min-h-[580px]">
               
-              {/* Background layer - Dashboard Mockup */}
+              {/* Background layer - Dashboard Mockup - positioned up and right */}
               <motion.div
-                className="absolute top-0 right-0 w-full h-full flex items-center justify-end"
+                className="absolute -top-8 right-0 w-full h-full flex items-start justify-end"
                 initial={{ opacity: 0, x: 100 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1, delay: 0.4 }}
               >
-                <div className="relative w-[90%] lg:w-[85%] xl:w-[80%]">
+                <div className="relative w-[95%] lg:w-[90%] xl:w-[88%]">
                   {/* Glow effect behind dashboard */}
                   <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-indigo-600/10 to-cyan-600/20 blur-3xl scale-110" />
                   
@@ -358,9 +358,9 @@ export const ModernHeroSection = (): JSX.Element => {
                 </div>
               </motion.div>
 
-              {/* Foreground layer - Form Card */}
+              {/* Foreground layer - Form Card - positioned more to the right */}
               <motion.div
-                className="relative z-20 lg:absolute lg:left-0 lg:top-1/2 lg:-translate-y-1/2 w-full lg:w-[380px] xl:w-[420px]"
+                className="relative z-20 lg:absolute lg:left-[15%] xl:left-[18%] lg:top-[5%] w-full lg:w-[360px] xl:w-[380px]"
                 initial={{ opacity: 0, y: 50, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
