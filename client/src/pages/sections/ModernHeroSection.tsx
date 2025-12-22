@@ -307,9 +307,9 @@ export const ModernHeroSection = (): JSX.Element => {
             {/* Right column - Form overlapping Dashboard */}
             <div className="relative flex justify-center lg:justify-end w-full mt-6 lg:mt-8 xl:mt-10">
               
-              {/* Dashboard Mockup - Background layer */}
+              {/* Dashboard Mockup - Background layer, positioned for natural overlap */}
               <motion.div
-                className="absolute top-8 right-0 lg:right-4 xl:right-8 2xl:right-12 w-[380px] lg:w-[440px] xl:w-[500px] 2xl:w-[540px] z-10 hidden lg:block"
+                className="absolute top-6 left-[45%] lg:left-[48%] xl:left-[50%] w-[360px] lg:w-[420px] xl:w-[480px] 2xl:w-[520px] z-10 hidden lg:block"
                 initial={{ opacity: 0, x: 60 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
