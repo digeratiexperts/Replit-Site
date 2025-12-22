@@ -188,11 +188,11 @@ export const ModernHeroSection = (): JSX.Element => {
             </motion.h1>
           </div>
 
-          {/* Bottom row - Content left, Graphics + Form right - wider gaps */}
-          <div className="grid lg:grid-cols-12 gap-8 lg:gap-16 xl:gap-24 2xl:gap-32 items-start">
+          {/* Bottom row - Content left, Graphics + Form right */}
+          <div className="grid lg:grid-cols-[1fr_1.1fr] gap-6 xl:gap-10 2xl:gap-14 items-start">
             
             {/* Left column - Supporting content */}
-            <div className="lg:col-span-5 xl:col-span-5 space-y-6">
+            <div className="flex flex-col gap-5 max-w-[640px]">
               {/* Subheadline */}
               <motion.p
                 initial={{ opacity: 0, y: 30 }}
@@ -309,12 +309,12 @@ export const ModernHeroSection = (): JSX.Element => {
             </div>
 
             {/* Right column - Form and Dashboard side by side */}
-            <div className="lg:col-span-7 xl:col-span-7">
-              <div className="flex flex-col lg:flex-row items-start gap-6 lg:gap-8">
+            <div className="w-full">
+              <div className="flex items-start gap-6 xl:gap-8">
                 
-                {/* Form Card - Left side of right column */}
+                {/* Form Card */}
                 <motion.div
-                  className="w-full lg:w-[340px] xl:w-[380px] flex-shrink-0"
+                  className="w-full max-w-[380px] flex-shrink-0"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.3 }}
@@ -441,9 +441,9 @@ export const ModernHeroSection = (): JSX.Element => {
 
               </motion.div>
 
-                {/* Dashboard Mockup - Right side of right column */}
+                {/* Dashboard Mockup */}
                 <motion.div
-                  className="flex-1 relative hidden lg:block"
+                  className="flex-1 min-w-[280px] relative hidden lg:block"
                   initial={{ opacity: 0, x: 40 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: 0.5 }}
