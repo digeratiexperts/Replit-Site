@@ -154,11 +154,11 @@ export const ModernHeroSection = (): JSX.Element => {
         className="relative z-10 w-full px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 2xl:px-24 pt-28 pb-12 sm:pt-32 lg:pt-36 xl:pt-40 lg:pb-16 xl:pb-20"
         style={{ y, opacity }}
       >
-        {/* Centered container for wide screens */}
-        <div className="mx-auto max-w-[1400px] lg:max-w-[1500px] xl:max-w-[1600px] 2xl:max-w-[1760px]">
+        {/* Fluid container - wide feel but never edge-to-edge */}
+        <div className="mx-auto w-[min(94vw,1680px)] 2xl:w-[min(92vw,1800px)]">
           
-          {/* Main grid - Left content + Right form/graphic */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_minmax(420px,500px)] gap-8 lg:gap-10 xl:gap-12 items-start">
+          {/* Main grid - Left content gets more space on wider screens */}
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.1fr)_minmax(400px,480px)] xl:grid-cols-[minmax(0,1.2fr)_minmax(420px,500px)] 2xl:grid-cols-[minmax(0,1.3fr)_minmax(440px,520px)] gap-8 lg:gap-10 xl:gap-12 items-start">
             
             {/* Left column - Badge, Headline, Description, Pills, CTAs, Stats */}
             <div className="flex flex-col gap-5 w-full">
