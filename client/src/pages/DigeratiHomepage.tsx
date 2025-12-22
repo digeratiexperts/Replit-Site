@@ -21,6 +21,7 @@ import { DigeratiCTASection } from "./sections/DigeratiCTASection";
 import { DigeratiNewsletterSection } from "./sections/DigeratiNewsletterSection";
 import { DigeratiContactSection } from "./sections/DigeratiContactSection";
 import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooterSection";
+import { LeadCaptureBand } from "./sections/LeadCaptureBand";
 
 export const DigeratiHomepage = (): JSX.Element => {
   // State for calculators - managed here as it's shared between calculator sections
@@ -62,6 +63,9 @@ export const DigeratiHomepage = (): JSX.Element => {
 
       {/* Modern Hero Section */}
       <ModernHeroSection />
+
+      {/* Lead Capture Form Band - Right after hero */}
+      <LeadCaptureBand />
 
       {/* Why Choose Section (Alert Banner) - Seamless transition from dark hero */}
       <div className="bg-gradient-to-b from-[#0a0118] to-white pt-8">

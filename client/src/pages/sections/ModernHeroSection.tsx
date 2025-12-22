@@ -1,35 +1,11 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { useToast } from "@/hooks/use-toast";
-import { ArrowRight, Phone, Sparkles, Shield, Zap, Clock, Loader2, CheckCircle, Building, FileCheck } from "lucide-react";
+import { ArrowRight, Phone, Sparkles, Shield, Zap, Clock, CheckCircle, Building, FileCheck } from "lucide-react";
 import { AnimatedShield, NetworkNodes, FloatingParticles, DashboardMockup } from "@/components/graphics";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-
-const assessmentFormSchema = z.object({
-  fullName: z.string()
-    .min(2, "Name must be at least 2 characters")
-    .max(50, "Name must be less than 50 characters"),
-  email: z.string()
-    .email("Please enter a valid email address"),
-  phone: z.string()
-    .regex(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/, "Please enter a valid phone number"),
-  company: z.string()
-    .min(2, "Company name must be at least 2 characters")
-    .max(100, "Company name must be less than 100 characters"),
-});
-
-type AssessmentFormData = z.infer<typeof assessmentFormSchema>;
 
 export const ModernHeroSection = (): JSX.Element => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -39,37 +15,10 @@ export const ModernHeroSection = (): JSX.Element => {
   const y = useTransform(scrollYProgress, [0, 1], [0, 150]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
-  const form = useForm<AssessmentFormData>({
-    resolver: zodResolver(assessmentFormSchema),
-    defaultValues: {
-      fullName: "",
-      email: "",
-      phone: "",
-      company: "",
-    },
-  });
-
-  const handleSubmit = async (data: AssessmentFormData) => {
-    setIsSubmitting(true);
-    
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      toast({
-        title: "Assessment Request Submitted!",
-        description: "We'll contact you within 24 hours to schedule your free assessment.",
-        variant: "default",
-      });
-      
-      form.reset();
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again later.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
+  const scrollToForm = () => {
+    const formSection = document.getElementById('assessment-form');
+    if (formSection) {
+      formSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -225,22 +174,17 @@ export const ModernHeroSection = (): JSX.Element => {
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="flex flex-col sm:flex-row gap-4 pt-2"
               >
-                <a 
-                  href="https://meet.digerati-experts.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Button 
+                  size="lg"
+                  onClick={scrollToForm}
                   data-testid="button-hero-cta-primary"
+                  className="relative group px-8 py-6 text-lg font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-0 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300"
                 >
-                  <Button 
-                    size="lg"
-                    className="relative group px-8 py-6 text-lg font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-0 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300"
-                  >
-                    <span className="relative z-10 flex items-center gap-2">
-                      Get Free Assessment
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </span>
-                  </Button>
-                </a>
+                  <span className="relative z-10 flex items-center gap-2">
+                    Get Free Assessment
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </Button>
                 
                 <a href="tel:325-480-9870" data-testid="button-hero-phone">
                   <Button 
@@ -304,42 +248,39 @@ export const ModernHeroSection = (): JSX.Element => {
               </motion.div>
             </div>
 
-            {/* Right column - Form overlapping Dashboard */}
-            <div className="relative flex justify-center lg:justify-start w-full mt-6 lg:mt-0 overflow-visible">
+            {/* Right column - Dashboard Visual */}
+            <div className="relative flex justify-center lg:justify-end w-full mt-8 lg:mt-0">
               
-              {/* Dashboard Mockup - Uses transform for natural overlap behind form */}
+              {/* Dashboard Mockup - Now the primary visual */}
               <motion.div
-                className="absolute top-4 left-0 w-[340px] lg:w-[400px] xl:w-[460px] 2xl:w-[500px] z-10 hidden lg:block pointer-events-none"
-                style={{ 
-                  transform: 'translateX(clamp(140px, 12vw, 200px)) translateY(-8px)'
-                }}
-                initial={{ opacity: 0, x: 80, scale: 0.95 }}
+                className="relative w-full max-w-[500px] lg:max-w-[550px] xl:max-w-[600px]"
+                initial={{ opacity: 0, x: 60, scale: 0.95 }}
                 animate={{ opacity: 1, x: 0, scale: 1 }}
                 transition={{ duration: 0.9, delay: 0.5, ease: "easeOut" }}
               >
                 {/* Glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-indigo-600/10 to-cyan-600/20 blur-3xl scale-110" />
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/30 via-indigo-600/15 to-cyan-600/30 blur-3xl scale-110" />
                 
                 {/* Dashboard with 3D effect */}
                 <motion.div
                   className="relative"
                   style={{ 
-                    transform: "perspective(1200px) rotateY(-6deg) rotateX(2deg)",
+                    transform: "perspective(1200px) rotateY(-8deg) rotateX(3deg)",
                     transformStyle: "preserve-3d"
                   }}
                   animate={{
-                    rotateY: [-6, -4, -6],
-                    rotateX: [2, 3, 2],
+                    rotateY: [-8, -5, -8],
+                    rotateX: [3, 4, 3],
                   }}
-                  transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+                  transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
                 >
                   <DashboardMockup className="w-full drop-shadow-2xl" />
                 </motion.div>
 
                 {/* Floating shield accent */}
                 <motion.div
-                  className="absolute -top-6 -left-2 w-20 h-24 z-30"
-                  animate={{ y: [0, -10, 0], rotate: [0, 3, 0] }}
+                  className="absolute -top-8 -left-4 w-24 h-28 z-30"
+                  animate={{ y: [0, -12, 0], rotate: [0, 5, 0] }}
                   transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 >
                   <AnimatedShield className="w-full h-full drop-shadow-lg" />
@@ -347,141 +288,12 @@ export const ModernHeroSection = (): JSX.Element => {
 
                 {/* Network nodes accent */}
                 <motion.div
-                  className="absolute bottom-0 -right-4 w-28 h-36 opacity-50"
-                  animate={{ y: [0, 6, 0] }}
+                  className="absolute bottom-4 -right-6 w-32 h-40 opacity-60"
+                  animate={{ y: [0, 8, 0] }}
                   transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
                 >
                   <NetworkNodes className="w-full h-full" />
                 </motion.div>
-              </motion.div>
-
-              {/* Form Card - Foreground layer */}
-              <motion.div
-                className="relative z-20 w-full max-w-[400px] lg:max-w-[400px] xl:max-w-[420px]"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                id="assessment-form"
-              >
-                {/* Glassmorphism Form Card with enhanced shadow */}
-                <Card className="backdrop-blur-xl bg-white/95 dark:bg-gray-900/95 shadow-[0_20px_70px_-15px_rgba(139,92,246,0.4)] border-0 ring-1 ring-white/20">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-xl xl:text-2xl bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                      Get Started Today
-                    </CardTitle>
-                    <CardDescription className="text-sm">
-                      Lock In 80% Off Your Cyber Risk Assessment — Act Now Before Hackers Do.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="pb-6">
-                    <Form {...form}>
-                      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-3">
-                        <FormField
-                          control={form.control}
-                          name="fullName"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-sm">Full Name *</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  placeholder="John Smith" 
-                                  data-testid="input-full-name"
-                                  className="h-10 focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200"
-                                  disabled={isSubmitting}
-                                  {...field} 
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="email"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-sm">Email Address *</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  type="email" 
-                                  placeholder="john@company.com" 
-                                  data-testid="input-email"
-                                  className="h-10 focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200"
-                                  disabled={isSubmitting}
-                                  {...field} 
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="phone"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-sm">Phone Number *</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  type="tel" 
-                                  placeholder="(480) 000-0000" 
-                                  data-testid="input-phone"
-                                  className="h-10 focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200"
-                                  disabled={isSubmitting}
-                                  {...field} 
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="company"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-sm">Company Name *</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  placeholder="Your Company Inc." 
-                                  data-testid="input-company"
-                                  className="h-10 focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200"
-                                  disabled={isSubmitting}
-                                  {...field} 
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <p className="text-xs text-gray-500 pt-1">
-                          Protected in compliance with our Privacy Policy.
-                        </p>
-                        
-                        <Button 
-                          className="w-full h-11 text-base bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl" 
-                          data-testid="button-submit"
-                          type="submit"
-                          disabled={isSubmitting}
-                        >
-                          {isSubmitting ? (
-                            <>
-                              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                              Submitting...
-                            </>
-                          ) : (
-                            "Get My Free Assessment"
-                          )}
-                        </Button>
-                      </form>
-                    </Form>
-                  </CardContent>
-                </Card>
-
               </motion.div>
             </div>
           </div>
