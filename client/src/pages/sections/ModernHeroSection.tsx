@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowRight, Phone, Sparkles, Shield, Zap, Clock, Loader2, CheckCircle, Building, FileCheck } from "lucide-react";
-import { AnimatedShield, NetworkNodes, FloatingParticles } from "@/components/graphics";
+import { AnimatedShield, NetworkNodes, FloatingParticles, DashboardMockup } from "@/components/graphics";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -309,13 +309,33 @@ export const ModernHeroSection = (): JSX.Element => {
             transition={{ duration: 0.8, delay: 0.3 }}
             id="assessment-form"
           >
+            {/* Dashboard Mockup - floats behind/beside form on wide screens */}
+            <motion.div 
+              className="absolute -right-[40%] top-1/2 -translate-y-1/2 w-[500px] h-[400px] hidden 2xl:block opacity-80 z-0"
+              initial={{ opacity: 0, x: 100, rotateY: -15 }}
+              animate={{ opacity: 0.8, x: 0, rotateY: -15 }}
+              transition={{ duration: 1, delay: 0.5 }}
+              style={{ perspective: "1000px" }}
+            >
+              <DashboardMockup className="w-full h-full" />
+            </motion.div>
+
             {/* Background graphics */}
-            <div className="absolute -top-10 -right-10 w-40 h-48 opacity-30 hidden lg:block">
+            <div className="absolute -top-10 -right-10 w-40 h-48 opacity-30 hidden lg:block 2xl:hidden">
               <AnimatedShield className="w-full h-full" />
             </div>
             <div className="absolute -bottom-20 -left-16 w-48 h-60 opacity-20 hidden lg:block">
               <NetworkNodes className="w-full h-full" />
             </div>
+            
+            {/* Animated shield on very wide screens - repositioned */}
+            <motion.div 
+              className="absolute -top-16 -right-20 w-32 h-40 hidden 2xl:block z-20"
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <AnimatedShield className="w-full h-full" />
+            </motion.div>
 
             {/* Glassmorphism Form Card */}
             <Card className="relative z-10 backdrop-blur-xl bg-white/95 dark:bg-gray-900/90 shadow-2xl border-0 ring-1 ring-white/20">
