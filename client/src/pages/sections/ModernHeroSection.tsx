@@ -305,7 +305,7 @@ export const ModernHeroSection = (): JSX.Element => {
             </div>
 
             {/* Right column - Form overlapping Dashboard */}
-            <div className="lg:col-span-6 xl:col-span-5 relative flex justify-end w-full">
+            <div className="lg:col-span-6 xl:col-span-5 relative flex justify-end w-full lg:mt-12 xl:mt-16">
               
               {/* Dashboard Mockup - Background layer */}
               <motion.div
