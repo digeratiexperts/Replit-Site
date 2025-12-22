@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink } from 'lucide-react';
+import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink, X, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import logoImage from '@assets/DE-Logo-new_1762461524794.webp';
 
@@ -338,8 +338,8 @@ export function MegaMenu() {
                 />
               </a>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-1 mega-menu-nav">
+            {/* Desktop Navigation - Only show at xl breakpoint and above */}
+            <div className="hidden xl:flex items-center space-x-1 mega-menu-nav">
               {navItems.map((item, index) => (
                 <div
                   key={item.name}
@@ -498,13 +498,13 @@ export function MegaMenu() {
           </div>
 
           {/* Right Side Actions */}
-          <div className="flex items-center space-x-2 lg:space-x-4">
-            {/* Get Protected Now CTA - Hidden on mobile, shown in mobile menu instead */}
+          <div className="flex items-center space-x-2 xl:space-x-4">
+            {/* Get Protected Now CTA - Hidden on tablet/mobile, shown in mobile menu instead */}
             <a
               href="https://meet.digerati-experts.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white px-6 py-2 rounded-lg font-semibold shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(34,211,238,0.4)] transition-all focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[#0a0118] border border-white/10"
+              className="hidden xl:inline-flex items-center justify-center bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white px-6 py-2 rounded-lg font-semibold shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(34,211,238,0.4)] transition-all focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[#0a0118] border border-white/10"
               data-testid="nav-cta"
               onClick={handleLinkClick}
               aria-label="Get protected now - Schedule a consultation"
@@ -512,74 +512,133 @@ export function MegaMenu() {
               Get Protected Now
             </a>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile/Tablet Menu Button - Shows below xl breakpoint */}
             <button
-              className="lg:hidden p-2 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-400 border border-transparent hover:border-white/10 transition-all"
+              className="xl:hidden relative p-2.5 rounded-xl bg-gradient-to-r from-purple-600/20 to-cyan-600/20 hover:from-purple-600/30 hover:to-cyan-600/30 focus:outline-none focus:ring-2 focus:ring-cyan-400 border border-white/10 hover:border-white/20 transition-all group"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               data-testid="mobile-menu-toggle"
               aria-expanded={mobileMenuOpen}
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             >
-              <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                {mobileMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
+              <div className="relative w-6 h-6 flex items-center justify-center">
+                {/* Animated hamburger icon */}
+                <span className={`absolute w-5 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full transform transition-all duration-300 ${mobileMenuOpen ? 'rotate-45' : '-translate-y-1.5'}`} />
+                <span className={`absolute w-5 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full transition-all duration-300 ${mobileMenuOpen ? 'opacity-0 scale-0' : 'opacity-100'}`} />
+                <span className={`absolute w-5 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full transform transition-all duration-300 ${mobileMenuOpen ? '-rotate-45' : 'translate-y-1.5'}`} />
+              </div>
+              {/* Glow effect on hover */}
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-500/0 to-purple-500/0 group-hover:from-cyan-500/10 group-hover:to-purple-500/10 transition-all duration-300" />
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
+        {/* Mobile/Tablet Menu - Premium Glassmorphism Slide-out */}
+        <div 
+          className={`xl:hidden fixed inset-0 z-40 transition-all duration-500 ${
+            mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          }`}
+          style={{ top: isScrolled ? '64px' : '104px' }}
+        >
+          {/* Backdrop with blur */}
           <div 
-            className="lg:hidden bg-[#0d0720]/98 backdrop-blur-xl border-t border-white/10 max-h-[calc(100vh-120px)] overflow-y-auto"
+            className={`absolute inset-0 bg-[#0a0118]/80 backdrop-blur-sm transition-opacity duration-300 ${
+              mobileMenuOpen ? 'opacity-100' : 'opacity-0'
+            }`}
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          
+          {/* Slide-out Panel */}
+          <div 
+            className={`absolute right-0 top-0 bottom-0 w-full max-w-md bg-gradient-to-b from-[#0d0720] via-[#0a0118] to-[#050210] border-l border-white/10 shadow-[0_0_60px_rgba(139,92,246,0.3)] transform transition-transform duration-500 ease-out ${
+              mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+            }`}
             role="dialog"
-            aria-label="Mobile navigation menu"
+            aria-label="Navigation menu"
           >
-            <div className="p-4 space-y-2">
-              {navItems.map((item) => (
-                <div key={item.name}>
+            {/* Decorative gradient orbs */}
+            <div className="absolute top-20 -left-20 w-40 h-40 bg-purple-600/20 rounded-full blur-[80px] pointer-events-none" />
+            <div className="absolute bottom-20 right-0 w-60 h-60 bg-cyan-600/15 rounded-full blur-[100px] pointer-events-none" />
+            
+            <div className="relative h-full overflow-y-auto p-6 space-y-2">
+              {/* Menu Header */}
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
+                <span className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
+                  Menu
+                </span>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all"
+                  aria-label="Close menu"
+                  data-testid="mobile-menu-close"
+                >
+                  <X className="w-5 h-5 text-gray-400" />
+                </button>
+              </div>
+
+              {/* Navigation Items */}
+              {navItems.map((item, index) => (
+                <div 
+                  key={item.name}
+                  className="transform transition-all duration-300"
+                  style={{ 
+                    transitionDelay: mobileMenuOpen ? `${index * 50}ms` : '0ms',
+                    opacity: mobileMenuOpen ? 1 : 0,
+                    transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(20px)'
+                  }}
+                >
                   {item.isSimple ? (
                     <a
                       href={item.href}
-                      className="block py-3 px-3 text-white hover:bg-white/5 hover:text-cyan-400 font-semibold focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-lg transition-colors text-base border border-transparent hover:border-white/10"
+                      className="group flex items-center justify-between py-4 px-4 text-white hover:text-cyan-400 font-semibold focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-xl transition-all text-lg bg-white/0 hover:bg-white/5 border border-transparent hover:border-white/10"
                       onClick={() => setMobileMenuOpen(false)}
                       data-testid={`mobile-nav-${item.name.toLowerCase()}`}
                       aria-label={`Go to ${item.name}`}
                     >
                       {item.name}
+                      <ArrowRight className="w-5 h-5 text-gray-600 group-hover:text-cyan-400 transform group-hover:translate-x-1 transition-all" />
                     </a>
                   ) : (
                     <details className="group">
-                      <summary className="flex items-center justify-between py-3 px-3 text-white hover:bg-white/5 hover:text-cyan-400 font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-lg transition-colors text-base border border-transparent hover:border-white/10"
-                        data-testid={`mobile-nav-${item.name.toLowerCase()}`}>
-                        {item.name}
-                        <ChevronDown className="h-5 w-5 transition-transform group-open:rotate-180" aria-hidden="true" />
+                      <summary 
+                        className="flex items-center justify-between py-4 px-4 text-white hover:text-cyan-400 font-semibold cursor-pointer focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-xl transition-all text-lg bg-white/0 hover:bg-white/5 border border-transparent hover:border-white/10 list-none [&::-webkit-details-marker]:hidden"
+                        data-testid={`mobile-nav-${item.name.toLowerCase()}`}
+                      >
+                        <span className="flex items-center gap-3">
+                          {item.name}
+                        </span>
+                        <ChevronDown className="h-5 w-5 text-gray-500 transition-transform duration-300 group-open:rotate-180 group-open:text-cyan-400" aria-hidden="true" />
                       </summary>
                       {item.sections && (
-                        <div className="mt-1 ml-2 space-y-1 bg-white/5 rounded-lg p-2 border border-white/5">
+                        <div className="mt-2 ml-2 space-y-1 bg-gradient-to-br from-white/5 to-white/0 rounded-xl p-3 border border-white/5 backdrop-blur-sm">
                           {item.sections.map((section) => (
-                            <div key={section.title} className="mb-3">
-                              <h4 className="font-semibold text-cyan-400 mb-2 px-2 pt-1 text-sm">{section.title}</h4>
-                              {section.items.map((subItem) => (
-                                <a
-                                  key={subItem.title}
-                                  href={subItem.url || '#'}
-                                  className="block py-2 px-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-lg transition-colors border border-transparent hover:border-white/10"
-                                  onClick={() => setMobileMenuOpen(false)}
-                                  data-testid={`mobile-submenu-${subItem.title.toLowerCase().replace(/\s+/g, '-')}`}
-                                  aria-label={`${subItem.title}: ${subItem.description || ''}`}
-                                >
-                                  {subItem.title}
-                                  {subItem.badge && (
-                                    <span className="ml-2 text-xs bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-cyan-300 px-2 py-0.5 rounded border border-cyan-500/30 inline-block">
-                                      {subItem.badge}
-                                    </span>
-                                  )}
-                                </a>
-                              ))}
+                            <div key={section.title} className="mb-4 last:mb-0">
+                              <h4 className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 mb-3 px-2 pt-1 text-sm uppercase tracking-wider">
+                                {section.title}
+                              </h4>
+                              <div className="space-y-1">
+                                {section.items.map((subItem) => (
+                                  <a
+                                    key={subItem.title}
+                                    href={subItem.url || '#'}
+                                    className="group/item flex items-center gap-3 py-2.5 px-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-lg transition-all border border-transparent hover:border-white/10"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    data-testid={`mobile-submenu-${subItem.title.toLowerCase().replace(/\s+/g, '-')}`}
+                                    aria-label={`${subItem.title}: ${subItem.description || ''}`}
+                                  >
+                                    {subItem.icon && (
+                                      <span className="text-purple-400 group-hover/item:text-cyan-400 transition-colors">
+                                        {subItem.icon}
+                                      </span>
+                                    )}
+                                    <span className="flex-1">{subItem.title}</span>
+                                    {subItem.badge && (
+                                      <span className="text-xs bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-cyan-300 px-2 py-0.5 rounded-full border border-cyan-500/30">
+                                        {subItem.badge}
+                                      </span>
+                                    )}
+                                  </a>
+                                ))}
+                              </div>
                             </div>
                           ))}
                         </div>
@@ -589,43 +648,85 @@ export function MegaMenu() {
                 </div>
               ))}
               
-              {/* Mobile Actions */}
-              <div className="pt-4 mt-4 border-t border-white/10 space-y-3">
+              {/* Divider with gradient */}
+              <div className="py-4">
+                <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              </div>
+              
+              {/* Contact Actions */}
+              <div 
+                className="space-y-3 transform transition-all duration-300"
+                style={{ 
+                  transitionDelay: mobileMenuOpen ? `${navItems.length * 50}ms` : '0ms',
+                  opacity: mobileMenuOpen ? 1 : 0,
+                  transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(20px)'
+                }}
+              >
                 <a
                   href="tel:325-480-9870"
-                  className="flex items-center text-cyan-400 font-semibold hover:text-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded px-3 py-2 transition-colors"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/20 hover:border-cyan-500/40 transition-all group"
                   data-testid="mobile-call"
                   aria-label="Call us at 325-480-9870"
                 >
-                  <Phone className="h-5 w-5 mr-2" aria-hidden="true" />
-                  <span>325-480-9870</span>
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500/20 to-cyan-500/10 flex items-center justify-center border border-cyan-500/20">
+                    <Phone className="h-5 w-5 text-cyan-400" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <div className="text-sm text-gray-400">Call Us</div>
+                    <div className="font-semibold text-white group-hover:text-cyan-400 transition-colors">325-480-9870</div>
+                  </div>
                 </a>
+                
                 <a
                   href="https://portal.digeratiexperts.com/portal/login"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded px-3 py-2 transition-colors"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all group"
                   data-testid="mobile-portal"
                   aria-label="Access client portal (opens in new window)"
                 >
-                  Client Portal
-                  <ExternalLink className="h-4 w-4 ml-2" aria-hidden="true" />
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/20 to-purple-500/10 flex items-center justify-center border border-purple-500/20">
+                    <ExternalLink className="h-5 w-5 text-purple-400" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <div className="text-sm text-gray-400">Existing Client?</div>
+                    <div className="font-semibold text-white group-hover:text-purple-400 transition-colors">Client Portal</div>
+                  </div>
                 </a>
+              </div>
+              
+              {/* CTA Button */}
+              <div 
+                className="pt-4 transform transition-all duration-300"
+                style={{ 
+                  transitionDelay: mobileMenuOpen ? `${(navItems.length + 1) * 50}ms` : '0ms',
+                  opacity: mobileMenuOpen ? 1 : 0,
+                  transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(20px)'
+                }}
+              >
                 <a
                   href="https://meet.digerati-experts.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-semibold py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[#0d0720] transition-all rounded-lg shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(34,211,238,0.4)]"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-bold py-4 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[#0d0720] transition-all rounded-xl shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_40px_rgba(34,211,238,0.4)] text-lg"
                   onClick={() => setMobileMenuOpen(false)}
                   data-testid="mobile-cta"
                   aria-label="Get protected now - Schedule a consultation"
                 >
                   Get Protected Now
+                  <ArrowRight className="w-5 h-5" />
                 </a>
+              </div>
+              
+              {/* Bottom Branding */}
+              <div className="pt-8 pb-4 text-center">
+                <p className="text-xs text-gray-600">
+                  Digerati Experts • Arizona's MSP Leader
+                </p>
               </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </nav>
     </>
