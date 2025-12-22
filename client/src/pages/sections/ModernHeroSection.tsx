@@ -1,11 +1,34 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Phone, Sparkles, Shield, Zap, Clock, CheckCircle, Building, FileCheck } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useToast } from "@/hooks/use-toast";
+import { ArrowRight, Phone, Sparkles, Shield, Zap, Clock, CheckCircle, Building, FileCheck, Loader2 } from "lucide-react";
 import { AnimatedShield, NetworkNodes, FloatingParticles, DashboardMockup } from "@/components/graphics";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+const assessmentFormSchema = z.object({
+  fullName: z.string()
+    .min(2, "Name must be at least 2 characters")
+    .max(50, "Name must be less than 50 characters"),
+  email: z.string()
+    .email("Please enter a valid email address"),
+  phone: z.string()
+    .regex(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/, "Please enter a valid phone number"),
+  company: z.string()
+    .min(2, "Company name must be at least 2 characters")
+    .max(100, "Company name must be less than 100 characters"),
+});
+
+type AssessmentFormData = z.infer<typeof assessmentFormSchema>;
 
 export const ModernHeroSection = (): JSX.Element => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -15,10 +38,37 @@ export const ModernHeroSection = (): JSX.Element => {
   const y = useTransform(scrollYProgress, [0, 1], [0, 150]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
-  const scrollToForm = () => {
-    const formSection = document.getElementById('assessment-form');
-    if (formSection) {
-      formSection.scrollIntoView({ behavior: 'smooth' });
+  const form = useForm<AssessmentFormData>({
+    resolver: zodResolver(assessmentFormSchema),
+    defaultValues: {
+      fullName: "",
+      email: "",
+      phone: "",
+      company: "",
+    },
+  });
+
+  const handleSubmit = async (data: AssessmentFormData) => {
+    setIsSubmitting(true);
+    
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      toast({
+        title: "Assessment Request Submitted!",
+        description: "We'll contact you within 24 hours to schedule your free assessment.",
+        variant: "default",
+      });
+      
+      form.reset();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -34,6 +84,8 @@ export const ModernHeroSection = (): JSX.Element => {
     { icon: Building, text: "Built for Small Businesses", color: "text-purple-400" },
     { icon: FileCheck, text: "Easy-to-Read Risk Reports", color: "text-yellow-400" },
   ];
+
+  const trustBadges = ["SOC 2 Type II", "Microsoft Partner", "Apple Consultants"];
 
   return (
     <section 
@@ -106,29 +158,25 @@ export const ModernHeroSection = (): JSX.Element => {
         {/* Fluid container - wide feel but never edge-to-edge */}
         <div className="mx-auto w-[min(94vw,1680px)] 2xl:w-[min(92vw,1800px)]">
           
-          {/* Main grid - Left content gets more space on wider screens */}
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.1fr)_minmax(400px,480px)] xl:grid-cols-[minmax(0,1.2fr)_minmax(420px,500px)] 2xl:grid-cols-[minmax(0,1.3fr)_minmax(440px,520px)] gap-8 lg:gap-10 xl:gap-12 items-start">
+          {/* Main grid - Form on left, Dashboard on right */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
             
-            {/* Left column - Badge, Headline, Description, Pills, CTAs, Stats */}
-            <div className="flex flex-col gap-5 w-full">
+            {/* Left column - Vertical Form with integrated info */}
+            <motion.div 
+              className="flex flex-col gap-6 w-full"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              id="assessment-form"
+            >
               {/* Badge */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-purple-500/30 bg-purple-500/10 backdrop-blur-sm w-fit"
-              >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-purple-500/30 bg-purple-500/10 backdrop-blur-sm w-fit">
                 <Sparkles className="w-4 h-4 text-purple-400" />
                 <span className="text-sm text-purple-300">Arizona's Trusted Cybersecurity Partner</span>
-              </motion.div>
+              </div>
 
               {/* Headline */}
-              <motion.h1
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.1] tracking-tight"
-              >
+              <h1 className="text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-bold leading-[1.1] tracking-tight">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400">
                   Hackers Don't Wait.
                 </span>
@@ -137,25 +185,16 @@ export const ModernHeroSection = (): JSX.Element => {
                   Protect Your Business{" "}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Now.</span>
                 </span>
-              </motion.h1>
-              {/* Subheadline */}
-              <motion.p
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-lg sm:text-xl xl:text-2xl text-gray-300 leading-relaxed"
-              >
-                Enterprise-grade cybersecurity for small businesses. Get 24/7 protection, 
-                cut cyber liability, and pass compliance checks — all without hiring in-house IT.
-              </motion.p>
+              </h1>
 
-              {/* Feature pills */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.25 }}
-                className="grid grid-cols-2 gap-3"
-              >
+              {/* Subheadline */}
+              <p className="text-lg text-gray-300 leading-relaxed max-w-xl">
+                Enterprise-grade cybersecurity for small businesses. Get 24/7 protection, 
+                cut cyber liability, and pass compliance checks.
+              </p>
+
+              {/* Feature pills - 2x2 grid */}
+              <div className="grid grid-cols-2 gap-3">
                 {features.map((feature) => (
                   <div 
                     key={feature.text}
@@ -165,55 +204,155 @@ export const ModernHeroSection = (): JSX.Element => {
                     <span className="text-xs text-gray-300 leading-tight">{feature.text}</span>
                   </div>
                 ))}
-              </motion.div>
+              </div>
 
-              {/* CTA Buttons */}
+              {/* Form Card - Glassmorphism */}
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                className="relative"
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="flex flex-col sm:flex-row gap-4 pt-2"
+                transition={{ duration: 0.6, delay: 0.2 }}
               >
-                <Button 
-                  size="lg"
-                  onClick={scrollToForm}
-                  data-testid="button-hero-cta-primary"
-                  className="relative group px-8 py-6 text-lg font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-0 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300"
-                >
-                  <span className="relative z-10 flex items-center gap-2">
-                    Get Free Assessment
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </span>
-                </Button>
+                {/* Glow effect */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 via-transparent to-cyan-600/20 blur-2xl" />
                 
-                <a href="tel:325-480-9870" data-testid="button-hero-phone">
-                  <Button 
-                    variant="outline" 
-                    size="lg"
-                    className="px-8 py-6 text-lg font-semibold border-white/20 bg-white/5 backdrop-blur-sm hover:bg-white/10 hover:border-white/30 text-white transition-all duration-300"
-                  >
-                    <Phone className="w-5 h-5 mr-2" />
-                    325-480-9870
-                  </Button>
-                </a>
+                <div className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6">
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+                      {/* Form fields in 2x2 grid */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="fullName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm text-gray-300">Full Name</FormLabel>
+                              <FormControl>
+                                <Input 
+                                  placeholder="John Smith" 
+                                  data-testid="input-hero-full-name"
+                                  className="h-11 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-500"
+                                  disabled={isSubmitting}
+                                  {...field} 
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <FormField
+                          control={form.control}
+                          name="email"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm text-gray-300">Email Address</FormLabel>
+                              <FormControl>
+                                <Input 
+                                  type="email" 
+                                  placeholder="john@company.com" 
+                                  data-testid="input-hero-email"
+                                  className="h-11 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-500"
+                                  disabled={isSubmitting}
+                                  {...field} 
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <FormField
+                          control={form.control}
+                          name="phone"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm text-gray-300">Phone Number</FormLabel>
+                              <FormControl>
+                                <Input 
+                                  type="tel" 
+                                  placeholder="(480) 000-0000" 
+                                  data-testid="input-hero-phone"
+                                  className="h-11 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-500"
+                                  disabled={isSubmitting}
+                                  {...field} 
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <FormField
+                          control={form.control}
+                          name="company"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm text-gray-300">Company Name</FormLabel>
+                              <FormControl>
+                                <Input 
+                                  placeholder="Your Company Inc." 
+                                  data-testid="input-hero-company"
+                                  className="h-11 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-500"
+                                  disabled={isSubmitting}
+                                  {...field} 
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      {/* CTA Buttons row */}
+                      <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                        <Button 
+                          type="submit"
+                          size="lg"
+                          data-testid="button-hero-submit"
+                          disabled={isSubmitting}
+                          className="flex-1 h-12 text-base font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-0 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300"
+                        >
+                          {isSubmitting ? (
+                            <>
+                              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                              Submitting...
+                            </>
+                          ) : (
+                            <>
+                              Get Free Assessment
+                              <ArrowRight className="w-5 h-5 ml-2" />
+                            </>
+                          )}
+                        </Button>
+                        
+                        <a href="tel:325-480-9870" data-testid="button-hero-phone" className="sm:flex-shrink-0">
+                          <Button 
+                            type="button"
+                            variant="outline" 
+                            size="lg"
+                            className="w-full sm:w-auto h-12 px-6 text-base font-semibold border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30 text-white transition-all duration-300"
+                          >
+                            <Phone className="w-5 h-5 mr-2" />
+                            325-480-9870
+                          </Button>
+                        </a>
+                      </div>
+                    </form>
+                  </Form>
+                </div>
               </motion.div>
 
               {/* Stats row */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="flex flex-wrap gap-4 pt-4"
-              >
-                {stats.map((stat) => (
+              <div className="flex flex-wrap gap-3">
+                {stats.map((stat, index) => (
                   <motion.div
                     key={stat.label}
                     data-testid={`stat-card-${stat.label.toLowerCase().replace(/\s+/g, '-')}`}
                     className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10"
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.5 + stat.delay, duration: 0.4 }}
-                    whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.1)" }}
+                    transition={{ delay: 0.4 + index * 0.1, duration: 0.4 }}
                   >
                     <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/20 to-indigo-500/20 flex items-center justify-center">
                       <stat.icon className="w-5 h-5 text-purple-400" />
@@ -224,18 +363,18 @@ export const ModernHeroSection = (): JSX.Element => {
                     </div>
                   </motion.div>
                 ))}
-              </motion.div>
+              </div>
 
               {/* Trust badges */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.8, duration: 0.6 }}
-                className="flex flex-wrap items-center gap-4 pt-2"
+                transition={{ delay: 0.7, duration: 0.6 }}
+                className="flex flex-wrap items-center gap-3"
               >
                 <span className="text-sm text-gray-500">Trusted by:</span>
-                <div className="flex flex-wrap items-center gap-3" data-testid="trust-badges-container">
-                  {["SOC 2 Type II", "Microsoft Partner", "Apple Consultants"].map((badge) => (
+                <div className="flex flex-wrap items-center gap-2" data-testid="trust-badges-container">
+                  {trustBadges.map((badge) => (
                     <div 
                       key={badge}
                       data-testid={`trust-badge-${badge.toLowerCase().replace(/\s+/g, '-')}`}
@@ -246,12 +385,12 @@ export const ModernHeroSection = (): JSX.Element => {
                   ))}
                 </div>
               </motion.div>
-            </div>
+            </motion.div>
 
             {/* Right column - Dashboard Visual */}
             <div className="relative flex justify-center lg:justify-end w-full mt-8 lg:mt-0">
               
-              {/* Dashboard Mockup - Now the primary visual */}
+              {/* Dashboard Mockup - Primary visual */}
               <motion.div
                 className="relative w-full max-w-[500px] lg:max-w-[550px] xl:max-w-[600px]"
                 initial={{ opacity: 0, x: 60, scale: 0.95 }}
