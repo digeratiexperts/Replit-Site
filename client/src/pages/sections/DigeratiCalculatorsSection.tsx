@@ -64,19 +64,19 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                 <div>
                   <Label htmlFor="industry" className="text-gray-300">Industry</Label>
                   <Select value={industry} onValueChange={setIndustry}>
-                    <SelectTrigger id="industry" className="mt-2 bg-white/10 border-white/20 text-white [&>span]:text-white">
+                    <SelectTrigger id="industry" className="mt-2 bg-white/10 border-white/20 text-white [&>span]:text-white" data-testid="select-industry">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-[#1a0a2e] border-white/20">
-                      <SelectItem value="2.0" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Law Firm (2.0×)</SelectItem>
-                      <SelectItem value="1.8" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">CPA Firm (1.8×)</SelectItem>
-                      <SelectItem value="2.5" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Medical Practice (2.5×)</SelectItem>
-                      <SelectItem value="1.6" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">General Office (1.6×)</SelectItem>
-                      <SelectItem value="1.6-re" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Real Estate (1.6×)</SelectItem>
-                      <SelectItem value="2.2" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Animal Hospital (2.2×)</SelectItem>
-                      <SelectItem value="1.7" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Retail/Sales (1.7×)</SelectItem>
-                      <SelectItem value="2.0-mf" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Manufacturing (2.0×)</SelectItem>
-                      <SelectItem value="1.5" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Nonprofit (1.5×)</SelectItem>
+                      <SelectItem value="law-firm" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white" data-testid="option-law-firm">Law Firm (2.0×)</SelectItem>
+                      <SelectItem value="cpa-firm" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white" data-testid="option-cpa-firm">CPA Firm (1.8×)</SelectItem>
+                      <SelectItem value="medical" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white" data-testid="option-medical">Medical Practice (2.5×)</SelectItem>
+                      <SelectItem value="general-office" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white" data-testid="option-general-office">General Office (1.6×)</SelectItem>
+                      <SelectItem value="real-estate" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white" data-testid="option-real-estate">Real Estate (1.6×)</SelectItem>
+                      <SelectItem value="animal-hospital" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white" data-testid="option-animal-hospital">Animal Hospital (2.2×)</SelectItem>
+                      <SelectItem value="retail" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white" data-testid="option-retail">Retail/Sales (1.7×)</SelectItem>
+                      <SelectItem value="manufacturing" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white" data-testid="option-manufacturing">Manufacturing (2.0×)</SelectItem>
+                      <SelectItem value="nonprofit" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white" data-testid="option-nonprofit">Nonprofit (1.5×)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -91,6 +91,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                     min={1} 
                     step={1}
                     className="mt-4 [&_[role=slider]]:bg-gradient-to-r [&_[role=slider]]:from-purple-500 [&_[role=slider]]:to-cyan-500 [&_[role=slider]]:border-0 [&_.range]:bg-gradient-to-r [&_.range]:from-purple-500 [&_.range]:to-cyan-500"
+                    data-testid="slider-employees-affected"
                   />
                 </div>
 
@@ -104,6 +105,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                     min={15} 
                     step={5}
                     className="mt-4 [&_[role=slider]]:bg-gradient-to-r [&_[role=slider]]:from-purple-500 [&_[role=slider]]:to-cyan-500 [&_[role=slider]]:border-0 [&_.range]:bg-gradient-to-r [&_.range]:from-purple-500 [&_.range]:to-cyan-500"
+                    data-testid="slider-hourly-wage"
                   />
                 </div>
 
@@ -117,6 +119,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                     min={1} 
                     step={1}
                     className="mt-4 [&_[role=slider]]:bg-gradient-to-r [&_[role=slider]]:from-purple-500 [&_[role=slider]]:to-cyan-500 [&_[role=slider]]:border-0 [&_.range]:bg-gradient-to-r [&_.range]:from-purple-500 [&_.range]:to-cyan-500"
+                    data-testid="slider-downtime-hours"
                   />
                 </div>
               </div>
@@ -139,7 +142,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
               </div>
 
               <div className="mt-6 text-center">
-                <Button className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-500 hover:to-indigo-500 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300">
+                <Button className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-500 hover:to-indigo-500 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300" data-testid="button-open-detailed-calculator">
                   Open Detailed Calculator <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
@@ -183,20 +186,21 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                     min={1} 
                     step={1}
                     className="mt-4 [&_[role=slider]]:bg-gradient-to-r [&_[role=slider]]:from-cyan-500 [&_[role=slider]]:to-purple-500 [&_[role=slider]]:border-0 [&_.range]:bg-gradient-to-r [&_.range]:from-cyan-500 [&_.range]:to-purple-500"
+                    data-testid="slider-service-employees"
                   />
                 </div>
 
                 <div>
                   <Label htmlFor="service-package" className="text-gray-300">Service Package</Label>
                   <Select value={servicePackage} onValueChange={setServicePackage}>
-                    <SelectTrigger id="service-package" className="mt-2 bg-white/10 border-white/20 text-white [&>span]:text-white">
+                    <SelectTrigger id="service-package" className="mt-2 bg-white/10 border-white/20 text-white [&>span]:text-white" data-testid="select-service-package">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-[#1a0a2e] border-white/20">
-                      <SelectItem value="165" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Basic IT ($165/user)</SelectItem>
-                      <SelectItem value="265" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Managed IT ($265/user)</SelectItem>
-                      <SelectItem value="365" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Managed IT + Security ($365/user)</SelectItem>
-                      <SelectItem value="465" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Enterprise ($465/user)</SelectItem>
+                      <SelectItem value="165" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white" data-testid="option-basic-it">Basic IT ($165/user)</SelectItem>
+                      <SelectItem value="265" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white" data-testid="option-managed-it">Managed IT ($265/user)</SelectItem>
+                      <SelectItem value="365" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white" data-testid="option-managed-security">Managed IT + Security ($365/user)</SelectItem>
+                      <SelectItem value="465" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white" data-testid="option-enterprise">Enterprise ($465/user)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -218,7 +222,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
               </div>
 
               <div className="mt-6 text-center">
-                <Button className="bg-gradient-to-r from-cyan-500 to-purple-600 text-white hover:from-cyan-400 hover:to-purple-500 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transition-all duration-300">
+                <Button className="bg-gradient-to-r from-cyan-500 to-purple-600 text-white hover:from-cyan-400 hover:to-purple-500 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transition-all duration-300" data-testid="button-open-detailed-estimator">
                   Open Detailed Estimator <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>

@@ -22,20 +22,34 @@ import { DigeratiNewsletterSection } from "./sections/DigeratiNewsletterSection"
 import { DigeratiContactSection } from "./sections/DigeratiContactSection";
 import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooterSection";
 
+// Industry multiplier lookup table - maps unique keys to exact multiplier values
+const industryMultipliers: Record<string, number> = {
+  'law-firm': 2.0,
+  'cpa-firm': 1.8,
+  'medical': 2.5,
+  'general-office': 1.6,
+  'real-estate': 1.6,
+  'animal-hospital': 2.2,
+  'retail': 1.7,
+  'manufacturing': 2.0,
+  'nonprofit': 1.5,
+};
+
 export const DigeratiHomepage = (): JSX.Element => {
   // State for calculators - managed here as it's shared between calculator sections
   const [employees, setEmployees] = useState(10);
   const [hourlyWage, setHourlyWage] = useState(50);
   const [downtime, setDowntime] = useState(4);
-  const [industry, setIndustry] = useState("1.6");
+  const [industry, setIndustry] = useState("general-office");
   const [downtimeCost, setDowntimeCost] = useState(0);
   const [serviceEmployees, setServiceEmployees] = useState(10);
   const [servicePackage, setServicePackage] = useState("165");
   const [serviceCost, setServiceCost] = useState(0);
 
-  // Calculate downtime cost
+  // Calculate downtime cost using lookup table
   useEffect(() => {
-    const cost = employees * hourlyWage * downtime * parseFloat(industry);
+    const multiplier = industryMultipliers[industry] || 1.6;
+    const cost = employees * hourlyWage * downtime * multiplier;
     setDowntimeCost(cost);
   }, [employees, hourlyWage, downtime, industry]);
 
