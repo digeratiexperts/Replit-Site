@@ -149,13 +149,13 @@ export const ModernHeroSection = (): JSX.Element => {
         <FloatingParticles count={30} />
       </div>
 
-      {/* Main content - WIDE layout */}
+      {/* Main content - FULL WIDTH layout */}
       <motion.div 
-        className="relative z-10 w-full px-6 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 pt-28 pb-16 lg:pt-32 lg:pb-20"
+        className="relative z-10 w-full px-4 sm:px-6 lg:px-10 xl:px-12 2xl:px-16 pt-24 pb-12 lg:pt-28 lg:pb-16"
         style={{ y, opacity }}
       >
-        {/* Two-row layout for cinematic feel */}
-        <div className="max-w-[1800px] mx-auto">
+        {/* Two-row layout for cinematic feel - extra wide */}
+        <div className="max-w-[2000px] mx-auto">
           
           {/* Top row - Headline spanning full width */}
           <div className="mb-8 lg:mb-12">
@@ -188,8 +188,8 @@ export const ModernHeroSection = (): JSX.Element => {
             </motion.h1>
           </div>
 
-          {/* Bottom row - Content left, Graphics + Form right */}
-          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-16 items-start">
+          {/* Bottom row - Content left, Graphics + Form right - wider gaps */}
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-16 xl:gap-24 2xl:gap-32 items-start">
             
             {/* Left column - Supporting content */}
             <div className="lg:col-span-5 xl:col-span-5 space-y-6">
@@ -308,15 +308,15 @@ export const ModernHeroSection = (): JSX.Element => {
               </motion.div>
             </div>
 
-            {/* Right column - Graphics + Form as unified element */}
+            {/* Right column - Graphics + Form as unified element - moved up */}
             <motion.div 
-              className="lg:col-span-7 xl:col-span-7 relative flex justify-end"
+              className="lg:col-span-7 xl:col-span-7 relative flex justify-end lg:-mt-16 xl:-mt-20"
               initial={{ opacity: 0, x: 60 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
             >
               {/* Unified container - Dashboard behind, Form in front */}
-              <div className="relative w-full max-w-[700px] xl:max-w-[800px]">
+              <div className="relative w-full max-w-[750px] xl:max-w-[900px] 2xl:max-w-[1000px]">
                 
                 {/* Dashboard Mockup - Background layer */}
                 <div className="relative">
