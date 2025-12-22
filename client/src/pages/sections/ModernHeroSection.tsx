@@ -151,17 +151,17 @@ export const ModernHeroSection = (): JSX.Element => {
 
       {/* Main content - FULL WIDTH layout */}
       <motion.div 
-        className="relative z-10 w-full px-6 sm:px-10 lg:px-16 xl:px-20 2xl:px-24 pt-32 pb-16 lg:pt-40 lg:pb-20"
+        className="relative z-10 w-full px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 2xl:px-24 pt-28 pb-12 sm:pt-32 lg:pt-36 xl:pt-40 lg:pb-16 xl:pb-20"
         style={{ y, opacity }}
       >
         {/* Single row layout - everything side by side */}
         <div className="max-w-none">
           
           {/* Main grid - Left content + Right form/graphic */}
-          <div className="grid lg:grid-cols-12 gap-6 xl:gap-10 2xl:gap-12 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 md:gap-6 lg:gap-8 xl:gap-10 2xl:gap-12 items-start">
             
             {/* Left column - Badge, Headline, Description, Pills, CTAs, Stats */}
-            <div className="lg:col-span-6 xl:col-span-7 flex flex-col gap-5 w-full">
+            <div className="md:col-span-1 lg:col-span-6 xl:col-span-7 flex flex-col gap-5 w-full lg:pt-4">
               {/* Badge */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -305,11 +305,11 @@ export const ModernHeroSection = (): JSX.Element => {
             </div>
 
             {/* Right column - Form overlapping Dashboard */}
-            <div className="lg:col-span-6 xl:col-span-5 relative flex justify-end w-full lg:mt-12 xl:mt-16">
+            <div className="md:col-span-1 lg:col-span-6 xl:col-span-5 relative flex justify-center md:justify-end w-full mt-4 md:mt-0 lg:mt-6 xl:mt-10">
               
               {/* Dashboard Mockup - Background layer */}
               <motion.div
-                className="absolute top-8 right-[-48px] xl:right-[-72px] 2xl:right-[-96px] w-[480px] xl:w-[560px] z-10 hidden lg:block"
+                className="absolute top-8 right-[-24px] lg:right-[-32px] xl:right-[-64px] 2xl:right-[-88px] w-[400px] lg:w-[460px] xl:w-[540px] 2xl:w-[580px] z-10 hidden lg:block"
                 initial={{ opacity: 0, x: 60 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
@@ -354,7 +354,7 @@ export const ModernHeroSection = (): JSX.Element => {
 
               {/* Form Card - Foreground layer */}
               <motion.div
-                className="relative z-20 w-full max-w-[420px]"
+                className="relative z-20 w-full max-w-[400px] md:max-w-[380px] lg:max-w-[400px] xl:max-w-[420px]"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
