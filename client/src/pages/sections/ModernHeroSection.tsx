@@ -277,6 +277,21 @@ export const ModernHeroSection = (): JSX.Element => {
                 ))}
               </div>
 
+              {/* Trust Badges - Subtle credibility row ABOVE the form */}
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-400">
+                <span className="text-gray-500">Trusted by:</span>
+                {trustBadges.map((badge) => (
+                  <span 
+                    key={badge.name}
+                    className="flex items-center gap-1.5"
+                    data-testid={`trust-badge-${badge.name.toLowerCase().replace(/\s+/g, '-')}`}
+                  >
+                    <badge.icon className="w-4 h-4 text-gray-500" />
+                    <span className="text-gray-400">{badge.name}</span>
+                  </span>
+                ))}
+              </div>
+
               {/* Form Card - Glassmorphism - STEP 1: Just Name + Email */}
               <motion.div
                 className="relative"
@@ -284,13 +299,13 @@ export const ModernHeroSection = (): JSX.Element => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                {/* Glow effect */}
-                <div className="absolute -inset-2 bg-gradient-to-r from-purple-600/30 via-transparent to-cyan-600/30 blur-3xl" />
+                {/* Subtle glow effect - reduced intensity */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/15 via-transparent to-cyan-600/15 blur-2xl" />
                 
-                {/* Form container - More defined with stronger styling */}
-                <div className="relative backdrop-blur-xl bg-[#1a0a2e]/80 border-2 border-purple-500/30 rounded-2xl p-6 shadow-[0_8px_32px_rgba(139,92,246,0.25),0_0_0_1px_rgba(255,255,255,0.05)]">
+                {/* Form container - Softer styling */}
+                <div className="relative backdrop-blur-xl bg-[#1a0a2e]/70 border border-white/10 rounded-2xl p-6 shadow-[0_4px_24px_rgba(0,0,0,0.3)]">
                   <Form {...step1Form}>
-                    <form onSubmit={step1Form.handleSubmit(handleStep1Submit)} className="space-y-5">
+                    <form onSubmit={step1Form.handleSubmit(handleStep1Submit)} className="space-y-4">
                       {/* Form fields - Just Name + Email */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <FormField
@@ -335,110 +350,73 @@ export const ModernHeroSection = (): JSX.Element => {
                         />
                       </div>
 
-                      {/* Trust Badges - Featured Credential Bar */}
-                      <div className="relative py-4 px-5 rounded-xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/50 shadow-inner">
-                        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-transparent to-purple-500/5 rounded-xl" />
-                        <div className="relative flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-                          {trustBadges.map((badge, index) => (
-                            <div 
-                              key={badge.name}
-                              className="flex items-center gap-3"
-                              data-testid={`trust-badge-${badge.name.toLowerCase().replace(/\s+/g, '-')}`}
-                            >
-                              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500/20 to-purple-500/20 flex items-center justify-center border border-cyan-500/30">
-                                <badge.icon className="w-5 h-5 text-cyan-400" />
-                              </div>
-                              <span className="text-sm text-gray-200 font-medium">{badge.name}</span>
-                              {index < trustBadges.length - 1 && (
-                                <div className="hidden sm:block w-px h-8 bg-gradient-to-b from-transparent via-gray-600 to-transparent ml-2" />
-                              )}
-                            </div>
-                          ))}
+                      {/* Primary CTA Button - centered icon */}
+                      <Button 
+                        type="submit"
+                        size="lg"
+                        data-testid="button-hero-submit"
+                        disabled={isSubmitting}
+                        className="w-full h-14 text-lg font-bold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-0 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300 justify-center gap-2"
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <Loader2 className="h-5 w-5 animate-spin" />
+                            Submitting...
+                          </>
+                        ) : (
+                          <>
+                            Get Free Assessment
+                            <ArrowRight className="w-5 h-5" />
+                          </>
+                        )}
+                      </Button>
+
+                      {/* Reassurance microcopy - pulled closer to CTA */}
+                      <div className="flex items-center justify-center gap-4 text-gray-400">
+                        <div className="flex items-center gap-1.5">
+                          <Check className="w-3.5 h-3.5 text-green-500" />
+                          <span className="text-xs">No obligation</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Check className="w-3.5 h-3.5 text-green-500" />
+                          <span className="text-xs">Results in 24-48hrs</span>
+                        </div>
+                        <div className="hidden sm:flex items-center gap-1.5">
+                          <Check className="w-3.5 h-3.5 text-green-500" />
+                          <span className="text-xs">No credit card</span>
                         </div>
                       </div>
 
-                      {/* CTA Buttons row */}
-                      <div className="flex flex-col sm:flex-row gap-3 pt-1">
-                        <Button 
-                          type="submit"
-                          size="lg"
-                          data-testid="button-hero-submit"
-                          disabled={isSubmitting}
-                          className="flex-1 h-14 text-lg font-bold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-0 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300"
+                      {/* Phone as text link - secondary option */}
+                      <p className="text-center text-sm text-gray-500">
+                        Prefer to call?{" "}
+                        <a 
+                          href="tel:325-480-9870" 
+                          data-testid="link-hero-phone"
+                          className="text-cyan-400 hover:text-cyan-300 transition-colors"
                         >
-                          {isSubmitting ? (
-                            <>
-                              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                              Submitting...
-                            </>
-                          ) : (
-                            <>
-                              Get Free Assessment
-                              <ArrowRight className="w-5 h-5 ml-2" />
-                            </>
-                          )}
-                        </Button>
-                        
-                        <a href="tel:325-480-9870" data-testid="button-hero-phone" className="sm:flex-shrink-0">
-                          <Button 
-                            type="button"
-                            variant="outline" 
-                            size="lg"
-                            className="w-full sm:w-auto h-14 px-6 text-base font-semibold border-2 border-cyan-500/40 bg-cyan-500/10 hover:bg-cyan-500/20 hover:border-cyan-400/60 text-white transition-all duration-300 group"
-                          >
-                            <div className="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center mr-3 group-hover:bg-cyan-500/30 transition-colors">
-                              <Phone className="w-4 h-4 text-cyan-400" />
-                            </div>
-                            325-480-9870
-                          </Button>
+                          325-480-9870
                         </a>
-                      </div>
-
-                      {/* Reassurance microcopy - Enhanced */}
-                      <div className="flex items-center justify-center gap-4 pt-2">
-                        <div className="flex items-center gap-1.5 text-gray-400">
-                          <CheckCircle className="w-4 h-4 text-green-400" />
-                          <span className="text-sm">No obligation</span>
-                        </div>
-                        <div className="flex items-center gap-1.5 text-gray-400">
-                          <CheckCircle className="w-4 h-4 text-green-400" />
-                          <span className="text-sm">Results in 24-48hrs</span>
-                        </div>
-                        <div className="hidden sm:flex items-center gap-1.5 text-gray-400">
-                          <CheckCircle className="w-4 h-4 text-green-400" />
-                          <span className="text-sm">No credit card</span>
-                        </div>
-                      </div>
+                      </p>
                     </form>
                   </Form>
                 </div>
               </motion.div>
 
-              {/* Enhanced Stats row - Premium contained boxes */}
-              <div className="grid grid-cols-3 gap-4">
+              {/* Stats row - compact, subtle styling */}
+              <div className="grid grid-cols-3 gap-3 mt-6">
                 {stats.map((stat, index) => (
                   <motion.div
                     key={stat.label}
                     data-testid={`stat-card-${stat.label.toLowerCase().replace(/\s+/g, '-')}`}
-                    className="relative flex flex-col items-center text-center p-5 rounded-2xl bg-gradient-to-br from-[#1a0a2e]/90 to-[#0f0720]/90 backdrop-blur-sm border border-purple-500/25 overflow-hidden shadow-lg shadow-purple-900/30"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.4 + index * 0.1, duration: 0.4 }}
+                    className="flex flex-col items-center text-center p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 + index * 0.1, duration: 0.3 }}
                   >
-                    {/* Background gradient glow */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-purple-600/15 via-transparent to-cyan-600/10" />
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-12 bg-cyan-500/20 blur-2xl" />
-                    
-                    <div className="relative z-10">
-                      {/* Icon with colored circle background */}
-                      <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-500/40">
-                        <stat.icon className="w-7 h-7 text-white" />
-                      </div>
-                      {/* Large bold stat number */}
-                      <div className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight drop-shadow-lg">{stat.value}</div>
-                      {/* Label with better contrast */}
-                      <div className="text-sm text-gray-300 mt-1 font-medium">{stat.label}</div>
-                    </div>
+                    <stat.icon className="w-5 h-5 text-purple-400 mb-2" />
+                    <div className="text-2xl font-bold text-white">{stat.value}</div>
+                    <div className="text-xs text-gray-400 mt-0.5">{stat.label}</div>
                   </motion.div>
                 ))}
               </div>
