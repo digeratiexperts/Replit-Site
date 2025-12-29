@@ -63,7 +63,7 @@ export const DigeratiHomepage = (): JSX.Element => {
   }, [serviceEmployees, servicePackage]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#050312]">
       {/* Zoho ASAP Widget */}
       <ZohoASAPWidget 
         isEnabled={true}
@@ -77,93 +77,65 @@ export const DigeratiHomepage = (): JSX.Element => {
       {/* Modern Hero Section - Includes integrated lead capture form */}
       <ModernHeroSection />
 
-      {/* Why Choose Section (Alert Banner) - Seamless transition from dark hero */}
-      <div className="bg-gradient-to-b from-[#0a0118] to-white pt-8">
-        <DigeratiAlertBanner />
-      </div>
+      {/* Value Proof / Alert Banner Section */}
+      <DigeratiAlertBanner />
 
       {/* Services Section */}
       <DigeratiServicesSection />
 
       {/* How We Protect Your Business Section */}
-      <div className="bg-gradient-to-b from-white to-gray-50">
-        <DigeratiHowWeProtectSection />
-      </div>
+      <DigeratiHowWeProtectSection />
 
       {/* Calculators Section */}
-      <div className="bg-gray-50">
-        <DigeratiCalculatorsSection
-          employees={employees}
-          setEmployees={setEmployees}
-          hourlyWage={hourlyWage}
-          setHourlyWage={setHourlyWage}
-          downtime={downtime}
-          setDowntime={setDowntime}
-          industry={industry}
-          setIndustry={setIndustry}
-          downtimeCost={downtimeCost}
-          serviceEmployees={serviceEmployees}
-          setServiceEmployees={setServiceEmployees}
-          servicePackage={servicePackage}
-          setServicePackage={setServicePackage}
-          serviceCost={serviceCost}
-        />
-      </div>
+      <DigeratiCalculatorsSection
+        employees={employees}
+        setEmployees={setEmployees}
+        hourlyWage={hourlyWage}
+        setHourlyWage={setHourlyWage}
+        downtime={downtime}
+        setDowntime={setDowntime}
+        industry={industry}
+        setIndustry={setIndustry}
+        downtimeCost={downtimeCost}
+        serviceEmployees={serviceEmployees}
+        setServiceEmployees={setServiceEmployees}
+        servicePackage={servicePackage}
+        setServicePackage={setServicePackage}
+        serviceCost={serviceCost}
+      />
 
       {/* What We Tackle Section */}
-      <div className="bg-gradient-to-b from-gray-50 to-white">
-        <DigeratiWhatWeTackleSection />
-      </div>
-
-      {/* Recent Threats & Insights Section */}
-      <div className="bg-white">
-        <DigeratiThreatsInsightsSection />
-      </div>
+      <DigeratiWhatWeTackleSection />
 
       {/* Industries Section */}
-      <div className="bg-gradient-to-b from-white to-gray-50">
-        <DigeratiIndustriesSection />
-      </div>
+      <DigeratiIndustriesSection />
 
       {/* Pricing Section */}
-      <div className="bg-gray-50">
-        <DigeratiPricingSection />
-      </div>
-
-      {/* We Exist to Protect Section */}
-      <div className="bg-gradient-to-b from-gray-50 to-white">
-        <DigeratiProtectEnableSection />
-      </div>
+      <DigeratiPricingSection />
 
       {/* Testimonials Section */}
-      <div className="bg-white">
-        <DigeratiTestimonialsSection />
-      </div>
+      <DigeratiTestimonialsSection />
+
+      {/* Recent Threats & Insights Section */}
+      <DigeratiThreatsInsightsSection />
 
       {/* AI Assistance Section */}
-      <div className="bg-gradient-to-b from-white to-gray-50">
-        <DigeratiAIAssistanceSection />
-      </div>
+      <DigeratiAIAssistanceSection />
+
+      {/* We Exist to Protect Section */}
+      <DigeratiProtectEnableSection />
 
       {/* CTA Section */}
-      <div className="bg-gray-50">
-        <DigeratiCTASection />
-      </div>
+      <DigeratiCTASection />
 
       {/* FAQ Section */}
-      <div className="bg-gradient-to-b from-gray-50 to-white">
-        <DigeratiFAQSection />
-      </div>
+      <DigeratiFAQSection />
 
       {/* Newsletter Section */}
-      <div className="bg-white">
-        <DigeratiNewsletterSection />
-      </div>
+      <DigeratiNewsletterSection />
 
       {/* Contact Section */}
-      <div className="bg-gradient-to-b from-white to-gray-50">
-        <DigeratiContactSection />
-      </div>
+      <DigeratiContactSection />
 
       {/* Enhanced Footer */}
       <DigeratiEnhancedFooterSection />

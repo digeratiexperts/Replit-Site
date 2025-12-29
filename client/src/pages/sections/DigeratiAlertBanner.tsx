@@ -1,65 +1,119 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Users, Activity } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
 
 export const DigeratiAlertBanner = (): JSX.Element => {
+  const prefersReducedMotion = useReducedMotion();
+
+  const features = [
+    {
+      icon: Shield,
+      title: "Security-First Operations",
+      description: "Every system, endpoint, and user is protected - by design, not by reaction.",
+      gradient: "from-purple-500 to-violet-600",
+      testId: "card-security-first"
+    },
+    {
+      icon: Users,
+      title: "Co-Managed or Fully Managed",
+      description: "We support your internal IT or serve as your outsourced technology team.",
+      gradient: "from-blue-500 to-cyan-500",
+      testId: "card-co-managed"
+    },
+    {
+      icon: Activity,
+      title: "Executive-Level Transparency",
+      description: "Reports, KPIs, and compliance insights that make sense - and drive decisions.",
+      gradient: "from-cyan-400 to-teal-500",
+      testId: "card-transparency"
+    }
+  ];
+
+  const containerVariants = prefersReducedMotion ? undefined : {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const cardVariants = prefersReducedMotion ? undefined : {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  };
+
   return (
-    <section className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+    <section 
+      className="py-20 relative overflow-hidden"
+      style={{
+        background: `linear-gradient(to bottom, #0a0118, #0d0720)`
+      }}
+    >
+      {/* Background effects */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/3 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 right-1/3 w-[500px] h-[500px] bg-cyan-600/8 rounded-full blur-[150px]" />
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <motion.div 
+          className="text-center mb-12 md:mb-16"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
             We Exist to Protect and Enable Your Business
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
             If you're like most business leaders, you don't want another vendor — you want a security-first partner who proactively reduces risk, improves uptime, and keeps your team moving.
           </p>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto mt-4">
+          <p className="text-lg text-gray-400 max-w-3xl mx-auto mt-4">
             Digerati Experts brings managed IT, cybersecurity, and compliance together in one streamlined operation – built for results, not noise.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          <Card className="border-2 border-gray-200 hover:border-purple-600 transition-all duration-300 group shadow-md hover:shadow-xl">
-            <CardHeader>
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Shield className="h-6 w-6 text-white" />
+        <motion.div 
+          className="grid md:grid-cols-3 gap-6 md:gap-8"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          {features.map((feature) => (
+            <motion.div
+              key={feature.title}
+              variants={cardVariants}
+              data-testid={feature.testId}
+              className="group relative"
+            >
+              {/* Glow effect on hover */}
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600/30 to-cyan-600/30 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              {/* Card */}
+              <div className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 h-full hover:border-purple-500/40 transition-all duration-300">
+                {/* Icon */}
+                <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                  <feature.icon className="h-7 w-7 text-white" />
+                </div>
+                
+                {/* Content */}
+                <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
+                <p className="text-gray-400 leading-relaxed">{feature.description}</p>
               </div>
-              <CardTitle>Security-First Operations</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">
-                Every system, endpoint, and user is protected - by design, not by reaction.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-2 border-gray-200 hover:border-purple-600 transition-all duration-300 group shadow-md hover:shadow-xl">
-            <CardHeader>
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Users className="h-6 w-6 text-white" />
-              </div>
-              <CardTitle>Co-Managed or Fully Managed</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">
-                We support your internal IT or serve as your outsourced technology team.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-2 border-gray-200 hover:border-purple-600 transition-all duration-300 group shadow-md hover:shadow-xl">
-            <CardHeader>
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Activity className="h-6 w-6 text-white" />
-              </div>
-              <CardTitle>Executive-Level Transparency</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">
-                Reports, KPIs, and compliance insights that make sense - and drive decisions.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
     </section>
   );

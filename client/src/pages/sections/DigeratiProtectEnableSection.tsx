@@ -1,120 +1,184 @@
-import { Shield, Users, BarChart, Lock, Code, Eye } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { Shield, Users, BarChart, Lock, Code, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { motion, useReducedMotion } from "framer-motion";
 
 export const DigeratiProtectEnableSection = (): JSX.Element => {
+  const prefersReducedMotion = useReducedMotion();
+  
   const features = [
     {
       title: "Security-First Operations",
       description: "Every system, endpoint, and user is protected - by design, not by reaction.",
-      icon: <Shield className="h-12 w-12" />,
-      color: "from-purple-600 to-blue-600",
-      bgImage: "/api/placeholder/400/300"
+      icon: Shield,
+      gradient: "from-purple-500 to-violet-600"
     },
     {
       title: "Co-Managed or Fully Managed",
       description: "We support your internal IT or serve as your outsourced technology team.",
-      icon: <Users className="h-12 w-12" />,
-      color: "from-blue-500 to-cyan-500",
-      bgImage: "/api/placeholder/400/300"
+      icon: Users,
+      gradient: "from-blue-500 to-cyan-500"
     },
     {
       title: "Executive-Level Transparency",
       description: "Reports, KPIs, and compliance insights that make sense - and drive decisions.",
-      icon: <BarChart className="h-12 w-12" />,
-      color: "from-indigo-500 to-purple-500",
-      bgImage: "/api/placeholder/400/300"
+      icon: BarChart,
+      gradient: "from-cyan-400 to-teal-500"
     }
   ];
 
+  const additionalFeatures = [
+    {
+      icon: Lock,
+      title: "Security by Design",
+      description: "Every solution we implement has security built into its foundation, not added as an afterthought.",
+      gradient: "from-purple-500 to-indigo-600"
+    },
+    {
+      icon: Code,
+      title: "Technology Excellence",
+      description: "We leverage cutting-edge tools and platforms to deliver enterprise-grade solutions to businesses of all sizes.",
+      gradient: "from-cyan-500 to-blue-600"
+    }
+  ];
+
+  const containerVariants = prefersReducedMotion ? undefined : {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const cardVariants = prefersReducedMotion ? undefined : {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  };
+
   return (
-    <section className="py-20 bg-white relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-100 rounded-full opacity-30 blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-100 rounded-full opacity-30 blur-3xl"></div>
+    <section 
+      className="py-20 relative overflow-hidden"
+      style={{
+        background: `linear-gradient(to bottom, #0d0720, #0a0118)`
+      }}
+    >
+      {/* Background effects */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-600/8 rounded-full blur-[150px]" />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-3xl mx-auto text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6">
+        <motion.div 
+          className="max-w-3xl mx-auto text-center mb-12 md:mb-16"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
             We Exist to Protect and Enable Your Business
           </h2>
-          <p className="text-xl text-gray-600">
+          <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
             If you're like most business leaders, you don't want another vendor — you want a security-first partner 
             who proactively reduces risk, improves uptime, and keeps your team moving. Digerati Experts brings 
             managed IT, cybersecurity, and compliance together in one streamlined operation — built for results, not noise.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-8 mt-16">
-          {features.map((feature, index) => (
-            <div key={index} className="group">
-              <Card className="relative h-full bg-white backdrop-blur-sm border-gray-200 overflow-hidden hover:border-purple-300 hover:shadow-xl transition-all duration-300 hover:scale-105">
-                {/* Background image with overlay */}
-                <div className="absolute inset-0 opacity-20">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${feature.color}`}></div>
+        <motion.div 
+          className="grid lg:grid-cols-3 gap-6 md:gap-8 mb-12"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          {features.map((feature) => (
+            <motion.div
+              key={feature.title}
+              variants={cardVariants}
+              className="group relative"
+              data-testid={`card-${feature.title.toLowerCase().replace(/\s+/g, '-')}`}
+            >
+              {/* Glow effect on hover */}
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600/30 to-cyan-600/30 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              {/* Card */}
+              <div className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 h-full hover:border-purple-500/40 transition-all duration-300 group-hover:scale-[1.02]">
+                {/* Icon */}
+                <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                  <feature.icon className="h-7 w-7 text-white" />
                 </div>
                 
-                {/* Content */}
-                <div className="relative p-8">
-                  {/* Icon */}
-                  <div className={`inline-flex p-4 rounded-lg bg-gradient-to-br ${feature.color} text-white mb-6 shadow-lg`}>
-                    {feature.icon}
-                  </div>
-                  
-                  {/* Title */}
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                    {feature.title}
-                  </h3>
-                  
-                  {/* Description */}
-                  <p className="text-gray-600 leading-relaxed">
+                {/* Title */}
+                <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
+                  {feature.title}
+                </h3>
+                
+                {/* Description */}
+                <p className="text-gray-400 leading-relaxed">
+                  {feature.description}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Additional features grid */}
+        <motion.div 
+          className="grid md:grid-cols-2 gap-6 mb-12"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+        >
+          {additionalFeatures.map((feature) => (
+            <div 
+              key={feature.title}
+              className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-6 hover:border-purple-500/40 hover:bg-white/[0.08] transition-all duration-300"
+            >
+              <div className="flex items-start gap-4">
+                <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${feature.gradient} flex items-center justify-center flex-shrink-0`}>
+                  <feature.icon className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h4 className="text-lg font-semibold text-white mb-2">{feature.title}</h4>
+                  <p className="text-gray-400 text-sm leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
-
-                {/* Hover effect - corner accent */}
-                <div className="absolute bottom-0 right-0 w-24 h-24 bg-gradient-to-tl from-purple-50 to-transparent transform translate-x-12 translate-y-12 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-300"></div>
-              </Card>
+              </div>
             </div>
           ))}
-        </div>
+        </motion.div>
 
-        {/* Additional features grid */}
-        <div className="grid md:grid-cols-2 gap-6 mt-12">
-          <div className="bg-white backdrop-blur-sm rounded-lg p-6 border border-gray-200 hover:border-purple-300 hover:shadow-lg transition-all duration-300">
-            <div className="flex items-start gap-4">
-              <Lock className="h-8 w-8 text-purple-600 flex-shrink-0" />
-              <div>
-                <h4 className="text-lg font-semibold text-gray-900 mb-2">Security by Design</h4>
-                <p className="text-gray-600 text-sm">
-                  Every solution we implement has security built into its foundation, not added as an afterthought.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white backdrop-blur-sm rounded-lg p-6 border border-gray-200 hover:border-purple-300 hover:shadow-lg transition-all duration-300">
-            <div className="flex items-start gap-4">
-              <Code className="h-8 w-8 text-blue-600 flex-shrink-0" />
-              <div>
-                <h4 className="text-lg font-semibold text-gray-900 mb-2">Technology Excellence</h4>
-                <p className="text-gray-600 text-sm">
-                  We leverage cutting-edge tools and platforms to deliver enterprise-grade solutions to businesses of all sizes.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="text-center mt-12">
-          <button 
-            className="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl font-semibold"
-            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            Partner With Us
-          </button>
-        </div>
+        <motion.div 
+          className="text-center"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+            <Button 
+              size="lg"
+              className="h-14 px-8 text-lg font-bold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-0 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300"
+              data-testid="button-partner-with-us"
+            >
+              Partner With Us
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </a>
+        </motion.div>
       </div>
     </section>
   );
