@@ -285,11 +285,12 @@ export const ModernHeroSection = (): JSX.Element => {
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
                 {/* Glow effect */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 via-transparent to-cyan-600/20 blur-2xl" />
+                <div className="absolute -inset-2 bg-gradient-to-r from-purple-600/30 via-transparent to-cyan-600/30 blur-3xl" />
                 
-                <div className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6">
+                {/* Form container - More defined with stronger styling */}
+                <div className="relative backdrop-blur-xl bg-[#1a0a2e]/80 border-2 border-purple-500/30 rounded-2xl p-6 shadow-[0_8px_32px_rgba(139,92,246,0.25),0_0_0_1px_rgba(255,255,255,0.05)]">
                   <Form {...step1Form}>
-                    <form onSubmit={step1Form.handleSubmit(handleStep1Submit)} className="space-y-4">
+                    <form onSubmit={step1Form.handleSubmit(handleStep1Submit)} className="space-y-5">
                       {/* Form fields - Just Name + Email */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <FormField
@@ -297,12 +298,12 @@ export const ModernHeroSection = (): JSX.Element => {
                           name="fullName"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-sm text-gray-300">Full Name</FormLabel>
+                              <FormLabel className="text-sm text-gray-300 font-medium">Full Name</FormLabel>
                               <FormControl>
                                 <Input 
                                   placeholder="John Smith" 
                                   data-testid="input-hero-full-name"
-                                  className="h-11 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-500"
+                                  className="h-12 bg-white/10 border-white/25 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-400 text-base"
                                   disabled={isSubmitting}
                                   {...field} 
                                 />
@@ -317,13 +318,13 @@ export const ModernHeroSection = (): JSX.Element => {
                           name="email"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-sm text-gray-300">Work Email</FormLabel>
+                              <FormLabel className="text-sm text-gray-300 font-medium">Work Email</FormLabel>
                               <FormControl>
                                 <Input 
                                   type="email" 
                                   placeholder="john@company.com" 
                                   data-testid="input-hero-email"
-                                  className="h-11 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-500"
+                                  className="h-12 bg-white/10 border-white/25 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-400 text-base"
                                   disabled={isSubmitting}
                                   {...field} 
                                 />
@@ -334,21 +335,26 @@ export const ModernHeroSection = (): JSX.Element => {
                         />
                       </div>
 
-                      {/* Trust Badges - Inside form container */}
-                      <div className="flex flex-wrap items-center justify-center gap-3 py-3 px-4 rounded-xl bg-white/5 border border-white/10">
-                        {trustBadges.map((badge, index) => (
-                          <div 
-                            key={badge.name}
-                            className="flex items-center gap-2"
-                            data-testid={`trust-badge-${badge.name.toLowerCase().replace(/\s+/g, '-')}`}
-                          >
-                            <badge.icon className="w-5 h-5 text-cyan-400" />
-                            <span className="text-xs sm:text-sm text-gray-300 font-medium">{badge.name}</span>
-                            {index < trustBadges.length - 1 && (
-                              <div className="hidden sm:block w-px h-4 bg-white/20 ml-2" />
-                            )}
-                          </div>
-                        ))}
+                      {/* Trust Badges - Featured Credential Bar */}
+                      <div className="relative py-4 px-5 rounded-xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/50 shadow-inner">
+                        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-transparent to-purple-500/5 rounded-xl" />
+                        <div className="relative flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+                          {trustBadges.map((badge, index) => (
+                            <div 
+                              key={badge.name}
+                              className="flex items-center gap-3"
+                              data-testid={`trust-badge-${badge.name.toLowerCase().replace(/\s+/g, '-')}`}
+                            >
+                              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500/20 to-purple-500/20 flex items-center justify-center border border-cyan-500/30">
+                                <badge.icon className="w-5 h-5 text-cyan-400" />
+                              </div>
+                              <span className="text-sm text-gray-200 font-medium">{badge.name}</span>
+                              {index < trustBadges.length - 1 && (
+                                <div className="hidden sm:block w-px h-8 bg-gradient-to-b from-transparent via-gray-600 to-transparent ml-2" />
+                              )}
+                            </div>
+                          ))}
+                        </div>
                       </div>
 
                       {/* CTA Buttons row */}
@@ -358,7 +364,7 @@ export const ModernHeroSection = (): JSX.Element => {
                           size="lg"
                           data-testid="button-hero-submit"
                           disabled={isSubmitting}
-                          className="flex-1 h-12 text-base font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-0 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300"
+                          className="flex-1 h-14 text-lg font-bold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-0 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300"
                         >
                           {isSubmitting ? (
                             <>
@@ -378,43 +384,60 @@ export const ModernHeroSection = (): JSX.Element => {
                             type="button"
                             variant="outline" 
                             size="lg"
-                            className="w-full sm:w-auto h-12 px-6 text-base font-semibold border-white/20 bg-white/5 hover:bg-white/10 hover:border-white/30 text-white transition-all duration-300"
+                            className="w-full sm:w-auto h-14 px-6 text-base font-semibold border-2 border-cyan-500/40 bg-cyan-500/10 hover:bg-cyan-500/20 hover:border-cyan-400/60 text-white transition-all duration-300 group"
                           >
-                            <Phone className="w-5 h-5 mr-2" />
+                            <div className="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center mr-3 group-hover:bg-cyan-500/30 transition-colors">
+                              <Phone className="w-4 h-4 text-cyan-400" />
+                            </div>
                             325-480-9870
                           </Button>
                         </a>
                       </div>
 
-                      {/* Reassurance microcopy */}
-                      <p className="text-center text-xs text-gray-500 pt-1">
-                        No obligation • Results in 24-48 hours • No credit card required
-                      </p>
+                      {/* Reassurance microcopy - Enhanced */}
+                      <div className="flex items-center justify-center gap-4 pt-2">
+                        <div className="flex items-center gap-1.5 text-gray-400">
+                          <CheckCircle className="w-4 h-4 text-green-400" />
+                          <span className="text-sm">No obligation</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-gray-400">
+                          <CheckCircle className="w-4 h-4 text-green-400" />
+                          <span className="text-sm">Results in 24-48hrs</span>
+                        </div>
+                        <div className="hidden sm:flex items-center gap-1.5 text-gray-400">
+                          <CheckCircle className="w-4 h-4 text-green-400" />
+                          <span className="text-sm">No credit card</span>
+                        </div>
+                      </div>
                     </form>
                   </Form>
                 </div>
               </motion.div>
 
-              {/* Enhanced Stats row - Contained boxes with icons */}
-              <div className="grid grid-cols-3 gap-3">
+              {/* Enhanced Stats row - Premium contained boxes */}
+              <div className="grid grid-cols-3 gap-4">
                 {stats.map((stat, index) => (
                   <motion.div
                     key={stat.label}
                     data-testid={`stat-card-${stat.label.toLowerCase().replace(/\s+/g, '-')}`}
-                    className="relative flex flex-col items-center text-center p-4 rounded-xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border border-white/15 overflow-hidden"
+                    className="relative flex flex-col items-center text-center p-5 rounded-2xl bg-gradient-to-br from-[#1a0a2e]/90 to-[#0f0720]/90 backdrop-blur-sm border border-purple-500/25 overflow-hidden shadow-lg shadow-purple-900/30"
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.4 + index * 0.1, duration: 0.4 }}
                   >
-                    {/* Background glow */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent opacity-50" />
+                    {/* Background gradient glow */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-600/15 via-transparent to-cyan-600/10" />
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-12 bg-cyan-500/20 blur-2xl" />
                     
                     <div className="relative z-10">
-                      <div className="w-12 h-12 mx-auto mb-2 rounded-xl bg-gradient-to-br from-purple-500/30 to-indigo-500/30 flex items-center justify-center border border-purple-500/20">
-                        <stat.icon className="w-6 h-6 text-cyan-400" />
+                      {/* Icon with colored circle background */}
+                      <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-500/40">
+                        <stat.icon className="w-7 h-7 text-white" />
                       </div>
-                      <div className="text-2xl sm:text-3xl font-bold text-white tracking-tight">{stat.value}</div>
-                      <div className="text-xs text-gray-400 mt-0.5">{stat.label}</div>
+                      {/* Large bold stat number */}
+                      <div className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight drop-shadow-lg">{stat.value}</div>
+                      {/* Label with better contrast */}
+                      <div className="text-sm text-gray-300 mt-1 font-medium">{stat.label}</div>
                     </div>
                   </motion.div>
                 ))}
