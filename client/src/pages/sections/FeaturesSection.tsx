@@ -53,11 +53,11 @@ export const FeaturesSection = (): JSX.Element => {
   return (
     <section className="flex flex-col w-full max-w-[1200px] mx-auto items-start gap-[66px] px-4">
       <header className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 w-full">
-        <h2 className="flex items-center justify-center flex-1 [font-family:'Poppins',Helvetica] font-normal text-[#020029] text-[52px] tracking-[0] leading-[73px]">
+        <h2 className="flex items-center justify-center flex-1 font-normal text-[#020029] text-[52px] tracking-[0] leading-[73px]">
           What We Provide
         </h2>
 
-        <p className="flex items-center justify-center lg:w-[448px] [font-family:'Poppins',Helvetica] font-normal text-[#020029bf] text-base tracking-[0] leading-[26.4px]">
+        <p className="flex items-center justify-center lg:w-[448px] font-normal text-[#020029bf] text-base tracking-[0] leading-[26.4px]">
           Our comprehensive suite of security services is designed to protect
           your business at every level, from endpoints to cloud infrastructure.
         </p>
@@ -85,11 +85,11 @@ export const FeaturesSection = (): JSX.Element => {
                   <div
                     className={`flex flex-col items-start justify-center gap-4 px-5 ${card.imagePosition === "top" ? "py-5 h-[188px]" : "py-5 h-[188px]"}`}
                   >
-                    <h3 className="[font-family:'Poppins',Helvetica] font-medium text-[#020029] text-2xl tracking-[0] leading-[26px]">
+                    <h3 className="font-medium text-[#020029] text-2xl tracking-[0] leading-[26px]">
                       {card.title}
                     </h3>
 
-                    <p className="[font-family:'Poppins',Helvetica] font-normal text-[#020029bf] text-base tracking-[0] leading-[26.4px]">
+                    <p className="font-normal text-[#020029bf] text-base tracking-[0] leading-[26.4px]">
                       {card.description}
                     </p>
                   </div>
@@ -112,7 +112,7 @@ export const FeaturesSection = (): JSX.Element => {
           variant="outline"
           className="h-auto inline-flex items-center justify-center gap-2 pl-4 pr-2 py-2 bg-white rounded-[100px] border border-solid border-[#5034ff] hover:bg-[#5034ff]/5"
         >
-          <span className="[font-family:'Poppins',Helvetica] font-normal text-[#5034ff] text-base tracking-[-0.32px] leading-6 whitespace-nowrap">
+          <span className="font-normal text-[#5034ff] text-base tracking-[-0.32px] leading-6 whitespace-nowrap">
             Explore More
           </span>
           <ArrowRightIcon className="w-[22.63px] h-[22.63px] text-[#5034ff]" />

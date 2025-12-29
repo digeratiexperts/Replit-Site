@@ -27,7 +27,7 @@ const CircuitOverlay = () => (
 const FooterLink = ({ href, children, testId }: { href: string; children: React.ReactNode; testId: string }) => (
   <a 
     href={href} 
-    className="group relative text-gray-400 hover:text-white text-sm transition-all duration-300 [font-family:'Poppins',Helvetica] font-normal inline-block"
+    className="group relative text-gray-400 hover:text-white text-sm transition-all duration-300 inline-block"
     data-testid={testId}
   >
     <span className="relative">
@@ -143,7 +143,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-12 px-4 md:px-8 lg:px-0">
           <div className="group p-4 -m-4 rounded-xl transition-all duration-300 hover:bg-white/5">
-            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider [font-family:'Poppins',Helvetica]">Quick Access</h4>
+            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider ">Quick Access</h4>
             <ul className="space-y-3">
               {quickAccess.map((item, index) => (
                 <li key={index}>
@@ -156,7 +156,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           </div>
 
           <div className="group p-4 -m-4 rounded-xl transition-all duration-300 hover:bg-white/5">
-            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider [font-family:'Poppins',Helvetica]">Services</h4>
+            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider ">Services</h4>
             <ul className="space-y-3">
               {services.map((item, index) => (
                 <li key={index}>
@@ -169,13 +169,13 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           </div>
 
           <div className="group p-4 -m-4 rounded-xl transition-all duration-300 hover:bg-white/5">
-            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider [font-family:'Poppins',Helvetica]">Legal</h4>
+            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider ">Legal</h4>
             <ul className="space-y-3">
               {legal.map((item, index) => (
                 <li key={index}>
                   <a 
                     href={item.href} 
-                    className="group/link relative text-gray-400 hover:text-white text-sm transition-all duration-300 inline-flex items-center gap-2 [font-family:'Poppins',Helvetica] font-normal"
+                    className="group/link relative text-gray-400 hover:text-white text-sm transition-all duration-300 inline-flex items-center gap-2 font-normal"
                     data-testid={`footer-legal-${index}`}
                   >
                     <span className="relative">
@@ -194,7 +194,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           </div>
 
           <div className="group p-4 -m-4 rounded-xl transition-all duration-300 hover:bg-white/5">
-            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider [font-family:'Poppins',Helvetica]">Trust</h4>
+            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider ">Trust</h4>
             <ul className="space-y-3">
               {trust.map((item, index) => (
                 <li key={index}>
@@ -215,13 +215,13 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                   <Shield className="h-6 w-6 text-purple-400" />
                 </div>
                 <div>
-                  <h3 className="text-white font-semibold mb-1 flex items-center gap-2 [font-family:'Poppins',Helvetica]">
+                  <h3 className="text-white font-semibold mb-1 flex items-center gap-2 ">
                     COMPLIANCE READY
                   </h3>
-                  <p className="text-gray-400 text-sm [font-family:'Poppins',Helvetica] font-normal">
+                  <p className="text-gray-400 text-sm font-normal">
                     Need SOC 2 or Security Documentation?
                   </p>
-                  <p className="text-gray-500 text-sm mt-1 [font-family:'Poppins',Helvetica] font-normal">
+                  <p className="text-gray-500 text-sm mt-1 font-normal">
                     Request compliance documents for vendor onboarding and security reviews
                   </p>
                 </div>
@@ -230,7 +230,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                 href="https://meet.digerati-experts.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-semibold px-6 py-3 rounded-xl shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_40px_rgba(139,92,246,0.4)] [font-family:'Poppins',Helvetica] whitespace-nowrap transition-all duration-300"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-semibold px-6 py-3 rounded-xl shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_40px_rgba(139,92,246,0.4)] whitespace-nowrap transition-all duration-300"
                 data-testid="footer-request-docs"
               >
                 Request Docs
@@ -241,7 +241,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
         </div>
 
         <div className="border-t border-white/10 py-8 px-4 md:px-8 lg:px-0">
-          <h4 className="text-white text-sm font-semibold mb-6 uppercase tracking-wider [font-family:'Poppins',Helvetica]">
+          <h4 className="text-white text-sm font-semibold mb-6 uppercase tracking-wider ">
             Compliance Certifications
           </h4>
           <div className="flex flex-wrap gap-4">
@@ -252,7 +252,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                 data-testid={`footer-seal-${index}`}
               >
                 <seal.icon className="h-5 w-5 text-purple-400" />
-                <span className="text-gray-400 text-sm font-medium [font-family:'Poppins',Helvetica]">{seal.name}</span>
+                <span className="text-gray-400 text-sm font-medium ">{seal.name}</span>
                 {seal.verified && (
                   <CheckCircle className="h-4 w-4 text-green-400" />
                 )}
@@ -264,16 +264,16 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
         <div className="border-t border-white/10 py-8 px-4 md:px-8 lg:px-0">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div>
-              <h4 className="text-white text-sm font-semibold mb-4 uppercase tracking-wider [font-family:'Poppins',Helvetica]">
+              <h4 className="text-white text-sm font-semibold mb-4 uppercase tracking-wider ">
                 Stay Updated
               </h4>
-              <p className="text-gray-400 text-sm mb-4 [font-family:'Poppins',Helvetica]">
+              <p className="text-gray-400 text-sm mb-4 ">
                 Get the latest cybersecurity insights and IT tips delivered to your inbox.
               </p>
               {isSubscribed ? (
                 <div className="flex items-center gap-2 text-green-400">
                   <CheckCircle className="h-5 w-5" />
-                  <span className="text-sm [font-family:'Poppins',Helvetica]">Thank you for subscribing!</span>
+                  <span className="text-sm ">Thank you for subscribing!</span>
                 </div>
               ) : (
                 <form onSubmit={handleNewsletterSubmit} className="flex gap-3">
@@ -282,7 +282,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
-                    className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition-all duration-300 [font-family:'Poppins',Helvetica] text-sm"
+                    className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition-all duration-300 text-sm"
                     data-testid="footer-newsletter-input"
                   />
                   <button
@@ -291,14 +291,14 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                     data-testid="footer-newsletter-submit"
                   >
                     <Send className="h-4 w-4" />
-                    <span className="hidden sm:inline [font-family:'Poppins',Helvetica]">Subscribe</span>
+                    <span className="hidden sm:inline ">Subscribe</span>
                   </button>
                 </form>
               )}
             </div>
             
             <div>
-              <h4 className="text-white text-sm font-semibold mb-6 uppercase tracking-wider [font-family:'Poppins',Helvetica]">
+              <h4 className="text-white text-sm font-semibold mb-6 uppercase tracking-wider ">
                 Serving Greater Phoenix
               </h4>
               <div className="flex flex-wrap gap-3">
@@ -307,7 +307,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                     key={index}
                     href={location.href}
                     className={`
-                      px-4 py-2 rounded-lg font-medium transition-all duration-300 text-sm [font-family:'Poppins',Helvetica]
+                      px-4 py-2 rounded-lg font-medium transition-all duration-300 text-sm 
                       ${location.primary 
                         ? 'bg-white/5 border border-white/10 text-white hover:bg-purple-600/20 hover:border-purple-500/30' 
                         : 'text-gray-400 hover:text-white hover:bg-white/10'}
@@ -346,7 +346,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
               ))}
             </div>
             
-            <div className="text-gray-500 text-sm text-center [font-family:'Poppins',Helvetica] font-normal">
+            <div className="text-gray-500 text-sm text-center font-normal">
               © {currentYear} Digerati Experts, LLC. All rights reserved.
             </div>
           </div>

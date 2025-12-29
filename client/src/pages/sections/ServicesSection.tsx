@@ -38,7 +38,7 @@ export const ServicesSection = (): JSX.Element => {
   return (
     <section className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-[104px] px-4 md:px-8 lg:px-[120px] py-8 md:py-12 lg:py-16">
       <div className="flex flex-col w-full lg:max-w-[610px] items-start gap-8">
-        <h2 className="[font-family:'Poppins',Helvetica] font-normal text-3xl md:text-4xl lg:text-5xl xl:text-6xl tracking-[0] leading-tight md:leading-[72px]">
+        <h2 className="font-normal text-3xl md:text-4xl lg:text-5xl xl:text-6xl tracking-[0] leading-tight md:leading-[72px]">
           <span className="font-bold text-[#ffc107]">
             Hackers Don&apos;t Wait.
           </span>
@@ -49,7 +49,7 @@ export const ServicesSection = (): JSX.Element => {
         </h2>
 
         <div className="flex flex-col items-start gap-5 w-full">
-          <p className="[font-family:'Poppins',Helvetica] font-normal text-[#ffffffbf] text-base tracking-[0] leading-[26.4px]">
+          <p className="font-normal text-[#ffffffbf] text-base tracking-[0] leading-[26.4px]">
             Get 24/7 protection, cut cyber liability, and pass compliance checks
             — all without hiring in-house IT
           </p>
@@ -63,10 +63,10 @@ export const ServicesSection = (): JSX.Element => {
                   src={feature.icon}
                 />
                 <div className="flex flex-col gap-0">
-                  <h3 className="[font-family:'Poppins',Helvetica] font-medium text-white text-xl tracking-[0] leading-[26px]">
+                  <h3 className="font-medium text-white text-xl tracking-[0] leading-[26px]">
                     {feature.title}
                   </h3>
-                  <p className="[font-family:'Poppins',Helvetica] font-normal text-[#ffffffbf] text-base tracking-[0] leading-[26.4px]">
+                  <p className="font-normal text-[#ffffffbf] text-base tracking-[0] leading-[26.4px]">
                     {feature.description}
                   </p>
                 </div>
@@ -80,10 +80,10 @@ export const ServicesSection = (): JSX.Element => {
         <CardContent className="p-[30px]">
           <div className="flex flex-col items-start gap-6">
             <div className="flex flex-col items-center gap-2 w-full">
-              <h3 className="[font-family:'Poppins',Helvetica] font-medium text-[#020029] text-[28px] text-center tracking-[1.00px] leading-[33.6px]">
+              <h3 className="font-medium text-[#020029] text-[28px] text-center tracking-[1.00px] leading-[33.6px]">
                 Get Started Today
               </h3>
-              <p className="[font-family:'Poppins',Helvetica] font-normal text-[#020029] text-base text-center tracking-[0] leading-[normal]">
+              <p className="font-normal text-[#020029] text-base text-center tracking-[0] leading-[normal]">
                 Lock In 80% Off Your Cyber Risk Assessment — Act Now to Identify
                 Vulnerabilities Before Hackers Do.
               </p>
@@ -95,7 +95,7 @@ export const ServicesSection = (): JSX.Element => {
                   <div key={index} className="flex flex-col gap-[3px] w-full">
                     <Label
                       htmlFor={field.name}
-                      className="[font-family:'Poppins',Helvetica] font-normal text-[#020029] text-base tracking-[0] leading-[27.2px]"
+                      className="font-normal text-[#020029] text-base tracking-[0] leading-[27.2px]"
                     >
                       {field.label}
                     </Label>
@@ -110,7 +110,7 @@ export const ServicesSection = (): JSX.Element => {
 
               <div className="flex flex-col items-center gap-4 w-full">
                 <Button className="w-full h-auto bg-[#5034ff] rounded-[100px] border border-solid px-4 py-2 hover:bg-[#5034ff]/90">
-                  <span className="[font-family:'Poppins',Helvetica] font-normal text-white text-base tracking-[-0.05px] leading-6">
+                  <span className="font-normal text-white text-base tracking-[-0.05px] leading-6">
                     Get My Risk Assessment
                   </span>
                   <img
@@ -120,7 +120,7 @@ export const ServicesSection = (): JSX.Element => {
                   />
                 </Button>
 
-                <p className="[font-family:'Poppins',Helvetica] font-normal text-[#020029bf] text-xs text-center tracking-[0] leading-[normal] max-w-[352px]">
+                <p className="font-normal text-[#020029bf] text-xs text-center tracking-[0] leading-[normal] max-w-[352px]">
                   All information submitted is protected and handled in
                   compliance with our Privacy Policy.
                 </p>

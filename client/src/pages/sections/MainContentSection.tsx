@@ -57,11 +57,11 @@ export const MainContentSection = (): JSX.Element => {
       <div className="flex flex-col items-start gap-12 md:gap-16 lg:gap-[100px] relative self-stretch w-full flex-[0_0_auto]">
         <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-[125px] relative self-stretch w-full flex-[0_0_auto]">
           <div className="inline-flex flex-col items-start justify-center gap-[19px] relative flex-[0_0_auto] w-full lg:w-auto">
-            <div className="relative flex items-center justify-center self-stretch h-6 mt-[-1.00px] [font-family:'Poppins',Helvetica] font-normal text-white text-lg md:text-xl tracking-[-0.70px] leading-6">
+            <div className="relative flex items-center justify-center self-stretch h-6 mt-[-1.00px] font-normal text-white text-lg md:text-xl tracking-[-0.70px] leading-6">
               FREQUENTLY ASKED QUESTIONS
             </div>
 
-            <div className="relative flex items-center justify-center w-full lg:w-[465px] [font-family:'Poppins',Helvetica] font-normal text-white text-3xl md:text-4xl lg:text-[52px] tracking-[0] leading-tight md:leading-[73px]">
+            <div className="relative flex items-center justify-center w-full lg:w-[465px] font-normal text-white text-3xl md:text-4xl lg:text-[52px] tracking-[0] leading-tight md:leading-[73px]">
               Find answers to common queries about us.
             </div>
           </div>
@@ -80,13 +80,13 @@ export const MainContentSection = (): JSX.Element => {
                   className="border-b border-[#ffd75a] mb-[10px]"
                 >
                   <AccordionTrigger className="flex items-center justify-between py-[20px] px-2.5 hover:no-underline [&[data-state=open]>svg]:rotate-180">
-                    <span className="[font-family:'Poppins',Helvetica] font-medium text-white text-[28px] tracking-[0] leading-[33.6px] text-left">
+                    <span className="font-medium text-white text-[28px] tracking-[0] leading-[33.6px] text-left">
                       {faq.question}
                     </span>
                   </AccordionTrigger>
                   {faq.answer && (
                     <AccordionContent className="px-2.5 pb-[20px]">
-                      <div className="[font-family:'Poppins',Helvetica] font-normal text-white text-xl tracking-[0] leading-7">
+                      <div className="font-normal text-white text-xl tracking-[0] leading-7">
                         {faq.answer}
                       </div>
                     </AccordionContent>
@@ -125,7 +125,7 @@ export const MainContentSection = (): JSX.Element => {
               <Card className="bg-[#f0f3ff] rounded-xl border border-solid border-[#333333] backdrop-blur-2xl backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(40px)_brightness(100%)]">
                 <CardContent className="p-[35px]">
                   <div className="flex items-center justify-between mb-[20px]">
-                    <div className="[font-family:'Inter',Helvetica] font-medium text-[#020029] text-[19px] tracking-[0] leading-[28.5px]">
+                    <div className="font-medium text-[#020029] text-[19px] tracking-[0] leading-[28.5px]">
                       5 - StarIcon Rating
                     </div>
                     <div className="flex gap-1">
@@ -150,10 +150,10 @@ export const MainContentSection = (): JSX.Element => {
                       />
                     </Avatar>
                     <div className="flex flex-col gap-[0.5px]">
-                      <div className="[font-family:'Poppins',Helvetica] font-medium text-[#020029] text-[17px] leading-[25.5px] tracking-[0]">
+                      <div className="font-medium text-[#020029] text-[17px] leading-[25.5px] tracking-[0]">
                         {testimonialData.customerName}
                       </div>
-                      <div className="[font-family:'Poppins',Helvetica] font-normal text-[#02002940] text-[15px] tracking-[0] leading-[22.5px]">
+                      <div className="font-normal text-[#02002940] text-[15px] tracking-[0] leading-[22.5px]">
                         {testimonialData.customerRole}
                       </div>
                     </div>

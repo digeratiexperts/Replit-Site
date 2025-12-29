@@ -47,11 +47,11 @@ export const FooterSection = (): JSX.Element => {
 
       <div className="relative flex flex-col w-full max-w-[1200px] mx-auto items-start gap-10 lg:gap-16 pt-20 sm:pt-32 lg:pt-[242px] pb-16 lg:pb-[101px] px-4 sm:px-6 lg:px-4">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between w-full gap-6 lg:gap-8">
-          <h2 className="flex-1 max-w-full lg:max-w-[599px] [font-family:'Poppins',Helvetica] font-normal text-white text-3xl sm:text-4xl lg:text-[52px] tracking-[0] leading-tight lg:leading-[73px]">
+          <h2 className="flex-1 max-w-full lg:max-w-[599px] font-normal text-white text-3xl sm:text-4xl lg:text-[52px] tracking-[0] leading-tight lg:leading-[73px]">
             We Exist to Protect and Enable Your Business
           </h2>
 
-          <p className="flex-1 max-w-full lg:max-w-[516px] [font-family:'Poppins',Helvetica] font-normal text-[#ffffffbf] text-sm sm:text-base tracking-[0] leading-[26.4px]">
+          <p className="flex-1 max-w-full lg:max-w-[516px] font-normal text-[#ffffffbf] text-sm sm:text-base tracking-[0] leading-[26.4px]">
             If you&apos;re like most business leaders, you don&apos;t want
             another vendor — you want a security-first partner who proactively
             reduces risk, improves uptime, and keeps your team moving.
@@ -80,12 +80,12 @@ export const FooterSection = (): JSX.Element => {
                 <CardContent className="flex items-center justify-center h-full p-6 lg:p-[27px]">
                   <div className="flex flex-col lg:flex-row items-center lg:items-center justify-center gap-4 lg:gap-[35px] text-center lg:text-left">
                     <h3
-                      className={`w-full lg:w-[220px] [font-family:'Poppins',Helvetica] font-medium ${row.textColor} text-xl sm:text-2xl lg:text-[32px] tracking-[0] leading-normal`}
+                      className={`w-full lg:w-[220px] font-medium ${row.textColor} text-xl sm:text-2xl lg:text-[32px] tracking-[0] leading-normal`}
                     >
                       {row.title}
                     </h3>
                     <p
-                      className={`w-full lg:w-[322px] [font-family:'Poppins',Helvetica] font-normal ${row.descriptionColor} text-sm sm:text-base tracking-[0] leading-[26.4px]`}
+                      className={`w-full lg:w-[322px] font-normal ${row.descriptionColor} text-sm sm:text-base tracking-[0] leading-[26.4px]`}
                     >
                       {row.description}
                     </p>

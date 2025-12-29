@@ -35,11 +35,11 @@ export const CallToActionSection = (): JSX.Element => {
             </div>
 
             <div className="flex flex-col items-center gap-4 w-full max-w-[705px] px-4">
-              <h2 className="[font-family:'Poppins',Helvetica] font-normal text-white text-3xl sm:text-4xl lg:text-[52px] text-center tracking-[0] leading-tight lg:leading-[73px]">
+              <h2 className="font-normal text-white text-3xl sm:text-4xl lg:text-[52px] text-center tracking-[0] leading-tight lg:leading-[73px]">
                 Subscribe to Our Newsletter &amp; Stay Secure
               </h2>
 
-              <p className="[font-family:'Poppins',Helvetica] font-normal text-[#ffffffbf] text-sm sm:text-base text-center tracking-[0] leading-[26.4px] w-full max-w-[374px]">
+              <p className="font-normal text-[#ffffffbf] text-sm sm:text-base text-center tracking-[0] leading-[26.4px] w-full max-w-[374px]">
                 Enter your email to receive expert updates and personalized
                 security advice.
               </p>
@@ -61,7 +61,7 @@ export const CallToActionSection = (): JSX.Element => {
                     className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 sm:pl-4 sm:pr-2 py-2 bg-[#5034ff] rounded-full sm:rounded-[100px] border border-solid h-10 sm:h-12 hover:bg-[#5034ff]/90"
                     data-testid="newsletter-submit"
                   >
-                    <span className="[font-family:'Poppins',Helvetica] font-normal text-white text-sm sm:text-base tracking-[-0.32px] leading-6 whitespace-nowrap">
+                    <span className="font-normal text-white text-sm sm:text-base tracking-[-0.32px] leading-6 whitespace-nowrap">
                       Sign-up
                     </span>
                     <img

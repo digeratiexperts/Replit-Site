@@ -67,7 +67,7 @@ export const BlogSection = (): JSX.Element => {
       <div className="absolute inset-0 bg-[url(/figmaAssets/frame-2131330643.svg)] bg-cover bg-[50%_50%]" />
 
       <div className="relative max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-20 py-8 lg:py-[46px]">
-        <div className="text-center text-slate-400 text-xs sm:text-sm [font-family:'Inter',Helvetica] font-normal tracking-[0] leading-[23.8px] mb-10 lg:mb-20">
+        <div className="text-center text-slate-400 text-xs sm:text-sm font-normal tracking-[0] leading-[23.8px] mb-10 lg:mb-20">
           © 2025 Digerati Experts, LLC. All rights reserved.
         </div>
 
@@ -80,7 +80,7 @@ export const BlogSection = (): JSX.Element => {
 
         <div className="flex flex-col gap-8 lg:gap-14 mb-10 lg:mb-[72px]">
           <section className="flex flex-col gap-4 lg:gap-[23px]">
-            <h2 className="[font-family:'Inter',Helvetica] font-bold text-violet-400 text-xs sm:text-[15px] tracking-[1.50px] leading-[25.5px] text-center lg:text-left">
+            <h2 className="font-bold text-violet-400 text-xs sm:text-[15px] tracking-[1.50px] leading-[25.5px] text-center lg:text-left">
               SERVING GREATER PHOENIX
             </h2>
 
@@ -96,7 +96,7 @@ export const BlogSection = (): JSX.Element => {
                       alt="Location"
                       src={city.icon}
                     />
-                    <div className="[font-family:'Inter',Helvetica] font-normal text-[#e5e9f0] text-sm lg:text-[19.1px] leading-normal lg:leading-[32.5px] tracking-[0] whitespace-nowrap">
+                    <div className="font-normal text-[#e5e9f0] text-sm lg:text-[19.1px] leading-normal lg:leading-[32.5px] tracking-[0] whitespace-nowrap">
                       {city.name}
                     </div>
                   </CardContent>
@@ -118,7 +118,7 @@ export const BlogSection = (): JSX.Element => {
                       alt="Certification"
                       src={cert.icon}
                     />
-                    <div className="[font-family:'Inter',Helvetica] font-bold text-[#e5e9f0] text-xs lg:text-sm tracking-[0] leading-[23.8px] whitespace-nowrap">
+                    <div className="font-bold text-[#e5e9f0] text-xs lg:text-sm tracking-[0] leading-[23.8px] whitespace-nowrap">
                       {cert.text}
                     </div>
                   </CardContent>
@@ -142,7 +142,7 @@ export const BlogSection = (): JSX.Element => {
                     className={`${link.bgClass} border-0 backdrop-blur-[2px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(2px)_brightness(100%)]`}
                   >
                     <CardContent className="flex w-10 h-10 lg:w-[50px] lg:h-[50px] items-center justify-center p-4 lg:p-6">
-                      <div className="[font-family:'Inter',Helvetica] font-bold text-[#e5e9f0] text-sm lg:text-base text-center tracking-[0] leading-[27.2px] whitespace-nowrap">
+                      <div className="font-bold text-[#e5e9f0] text-sm lg:text-base text-center tracking-[0] leading-[27.2px] whitespace-nowrap">
                         {link.text}
                       </div>
                     </CardContent>
@@ -165,16 +165,16 @@ export const BlogSection = (): JSX.Element => {
                     alt="Svg"
                     src="/figmaAssets/svg-7.svg"
                   />
-                  <span className="[font-family:'Poppins',Helvetica] font-bold text-white text-xs tracking-[1.00px] leading-[20.4px]">
+                  <span className="font-bold text-white text-xs tracking-[1.00px] leading-[20.4px]">
                     COMPLIANCE READY
                   </span>
                 </Badge>
 
-                <h3 className="[font-family:'Poppins',Helvetica] font-bold text-white text-lg lg:text-xl tracking-[-0.70px] leading-[26px]">
+                <h3 className="font-bold text-white text-lg lg:text-xl tracking-[-0.70px] leading-[26px]">
                   Need SOC 2 or Security Documentation?
                 </h3>
 
-                <p className="[font-family:'Poppins',Helvetica] font-normal text-slate-300 text-sm lg:text-[15px] tracking-[0] leading-[25.5px]">
+                <p className="font-normal text-slate-300 text-sm lg:text-[15px] tracking-[0] leading-[25.5px]">
                   Request compliance documents for vendor onboarding and
                   security reviews
                 </p>
@@ -184,7 +184,7 @@ export const BlogSection = (): JSX.Element => {
                 className="h-auto inline-flex items-center justify-center gap-2 px-4 pr-2 py-2 bg-white rounded-[100px] border border-solid border-[#5034ff] hover:bg-white/90"
                 data-testid="btn-request-docs"
               >
-                <span className="[font-family:'Poppins',Helvetica] font-normal text-[#5034ff] text-sm lg:text-base tracking-[-0.32px] leading-6 whitespace-nowrap">
+                <span className="font-normal text-[#5034ff] text-sm lg:text-base tracking-[-0.32px] leading-6 whitespace-nowrap">
                   Request Docs
                 </span>
                 <img
@@ -199,7 +199,7 @@ export const BlogSection = (): JSX.Element => {
 
         <nav className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           <div className="flex flex-col gap-4 lg:gap-[22px]">
-            <h3 className="[font-family:'Poppins',Helvetica] font-medium text-[#ffffffbf] text-lg lg:text-xl tracking-[0] leading-[26px]">
+            <h3 className="font-medium text-[#ffffffbf] text-lg lg:text-xl tracking-[0] leading-[26px]">
               Quick Access
             </h3>
             <ul className="flex flex-col gap-2 lg:gap-[13px]">
@@ -207,7 +207,7 @@ export const BlogSection = (): JSX.Element => {
                 <li key={index}>
                   <a
                     href="#"
-                    className="[font-family:'Poppins',Helvetica] font-normal text-[#ffffffbf] text-sm lg:text-base tracking-[0] leading-[26.4px] hover:text-white transition-colors"
+                    className="font-normal text-[#ffffffbf] text-sm lg:text-base tracking-[0] leading-[26.4px] hover:text-white transition-colors"
                     data-testid={`link-quick-${index}`}
                   >
                     {link}
@@ -218,7 +218,7 @@ export const BlogSection = (): JSX.Element => {
           </div>
 
           <div className="flex flex-col gap-4 lg:gap-[22px]">
-            <h3 className="[font-family:'Poppins',Helvetica] font-medium text-[#ffffffbf] text-lg lg:text-xl tracking-[0] leading-[26px]">
+            <h3 className="font-medium text-[#ffffffbf] text-lg lg:text-xl tracking-[0] leading-[26px]">
               Services
             </h3>
             <ul className="flex flex-col gap-2 lg:gap-[13px]">
@@ -226,7 +226,7 @@ export const BlogSection = (): JSX.Element => {
                 <li key={index}>
                   <a
                     href="#"
-                    className="[font-family:'Poppins',Helvetica] font-normal text-[#ffffffbf] text-sm lg:text-base tracking-[0] leading-[26.4px] hover:text-white transition-colors"
+                    className="font-normal text-[#ffffffbf] text-sm lg:text-base tracking-[0] leading-[26.4px] hover:text-white transition-colors"
                     data-testid={`link-service-${index}`}
                   >
                     {link}
@@ -237,7 +237,7 @@ export const BlogSection = (): JSX.Element => {
           </div>
 
           <div className="flex flex-col gap-4 lg:gap-[22px]">
-            <h3 className="[font-family:'Poppins',Helvetica] font-medium text-[#ffffffbf] text-lg lg:text-xl tracking-[0] leading-[26px]">
+            <h3 className="font-medium text-[#ffffffbf] text-lg lg:text-xl tracking-[0] leading-[26px]">
               Legal
             </h3>
             <ul className="flex flex-col gap-2 lg:gap-[13px]">
@@ -245,14 +245,14 @@ export const BlogSection = (): JSX.Element => {
                 <li key={index} className="flex items-center gap-2 lg:gap-4 flex-wrap">
                   <a
                     href="#"
-                    className="[font-family:'Poppins',Helvetica] font-normal text-[#ffffffbf] text-sm lg:text-base tracking-[0] leading-[26.4px] hover:text-white transition-colors"
+                    className="font-normal text-[#ffffffbf] text-sm lg:text-base tracking-[0] leading-[26.4px] hover:text-white transition-colors"
                     data-testid={`link-legal-${index}`}
                   >
                     {link.name}
                   </a>
                   {link.version && (
                     <Badge className="h-auto bg-[#5034ff26] rounded-lg border border-solid border-[#5034ff4c] px-2 lg:px-[11px] py-1 lg:py-1.5 hover:bg-[#5034ff26]">
-                      <span className="[font-family:'Inter',Helvetica] font-bold text-[#5034ff] text-[10px] lg:text-[11px] tracking-[0] leading-[18.7px]">
+                      <span className="font-bold text-[#5034ff] text-[10px] lg:text-[11px] tracking-[0] leading-[18.7px]">
                         {link.version}
                       </span>
                     </Badge>
@@ -263,7 +263,7 @@ export const BlogSection = (): JSX.Element => {
           </div>
 
           <div className="flex flex-col gap-4 lg:gap-[22px]">
-            <h3 className="[font-family:'Poppins',Helvetica] font-medium text-[#ffffffbf] text-lg lg:text-xl tracking-[0] leading-[26px]">
+            <h3 className="font-medium text-[#ffffffbf] text-lg lg:text-xl tracking-[0] leading-[26px]">
               Trust
             </h3>
             <ul className="flex flex-col gap-2 lg:gap-[13px]">
@@ -271,7 +271,7 @@ export const BlogSection = (): JSX.Element => {
                 <li key={index}>
                   <a
                     href="#"
-                    className="[font-family:'Poppins',Helvetica] font-normal text-[#ffffffbf] text-sm lg:text-base tracking-[0] leading-[26.4px] hover:text-white transition-colors"
+                    className="font-normal text-[#ffffffbf] text-sm lg:text-base tracking-[0] leading-[26.4px] hover:text-white transition-colors"
                     data-testid={`link-trust-${index}`}
                   >
                     {link}

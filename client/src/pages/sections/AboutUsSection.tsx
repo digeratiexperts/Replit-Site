@@ -15,11 +15,11 @@ export const AboutUsSection = (): JSX.Element => {
       <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-24 max-w-[1468px] w-full">
         <div className="flex flex-col w-full lg:w-[409.29px] items-center lg:items-start gap-8 lg:gap-[60px]">
           <div className="flex flex-col items-center lg:items-start gap-4 w-full text-center lg:text-left">
-            <h2 className="[font-family:'Poppins',Helvetica] font-normal text-[#020029] text-3xl sm:text-4xl lg:text-[52px] tracking-[0] leading-tight lg:leading-[73px]">
+            <h2 className="font-normal text-[#020029] text-3xl sm:text-4xl lg:text-[52px] tracking-[0] leading-tight lg:leading-[73px]">
               Get a $20,000 Pen Test – Free
             </h2>
 
-            <p className="[font-family:'Poppins',Helvetica] font-normal text-[#020029bf] text-sm sm:text-base tracking-[0] leading-[26.4px]">
+            <p className="font-normal text-[#020029bf] text-sm sm:text-base tracking-[0] leading-[26.4px]">
               Discover vulnerabilities before attackers do
               <br />– without paying a cent.
             </p>
@@ -32,7 +32,7 @@ export const AboutUsSection = (): JSX.Element => {
               src="/figmaAssets/frame-2131330691.svg"
             />
 
-            <p className="[font-family:'Poppins',Helvetica] font-normal text-[#020029bf] text-sm sm:text-base tracking-[0] leading-[26.4px] text-center lg:text-left">
+            <p className="font-normal text-[#020029bf] text-sm sm:text-base tracking-[0] leading-[26.4px] text-center lg:text-left">
               Trusted by 100+ Arizona
               <br />
               Businesses.
@@ -48,27 +48,27 @@ export const AboutUsSection = (): JSX.Element => {
                   <div className="flex flex-col items-start gap-4 sm:gap-[30px] w-full">
                     <Input
                       placeholder="Full Name"
-                      className="h-[50px] border-[#0000001f] rounded-[25px] border border-solid shadow-[inset_0px_1px_1px_#00000013] backdrop-blur-[15px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(15px)_brightness(100%)] bg-transparent [font-family:'Inter',Helvetica] font-normal text-[#c5c5c5] text-[13px] tracking-[0] leading-[normal] placeholder:text-[#c5c5c5]"
+                      className="h-[50px] border-[#0000001f] rounded-[25px] border border-solid shadow-[inset_0px_1px_1px_#00000013] backdrop-blur-[15px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(15px)_brightness(100%)] bg-transparent font-normal text-[#c5c5c5] text-[13px] tracking-[0] leading-[normal] placeholder:text-[#c5c5c5]"
                       data-testid="input-fullname"
                     />
 
                     <Input
                       placeholder="Company"
-                      className="h-[50px] border-[#0000001f] rounded-[25px] border border-solid shadow-[inset_0px_1px_1px_#00000013] backdrop-blur-[15px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(15px)_brightness(100%)] bg-transparent [font-family:'Inter',Helvetica] font-normal text-[#c5c5c5] text-[13px] tracking-[0] leading-[normal] placeholder:text-[#c5c5c5]"
+                      className="h-[50px] border-[#0000001f] rounded-[25px] border border-solid shadow-[inset_0px_1px_1px_#00000013] backdrop-blur-[15px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(15px)_brightness(100%)] bg-transparent font-normal text-[#c5c5c5] text-[13px] tracking-[0] leading-[normal] placeholder:text-[#c5c5c5]"
                       data-testid="input-company"
                     />
 
                     <Input
                       placeholder="Email"
                       type="email"
-                      className="h-[50px] border-[#0000001f] rounded-[25px] border border-solid shadow-[inset_0px_1px_1px_#00000013] backdrop-blur-[15px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(15px)_brightness(100%)] bg-transparent [font-family:'Inter',Helvetica] font-normal text-[#c5c5c5] text-[13px] tracking-[0] leading-[normal] placeholder:text-[#c5c5c5]"
+                      className="h-[50px] border-[#0000001f] rounded-[25px] border border-solid shadow-[inset_0px_1px_1px_#00000013] backdrop-blur-[15px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(15px)_brightness(100%)] bg-transparent font-normal text-[#c5c5c5] text-[13px] tracking-[0] leading-[normal] placeholder:text-[#c5c5c5]"
                       data-testid="input-email"
                     />
 
                     <Input
                       placeholder="Phone (optional)"
                       type="tel"
-                      className="h-[50px] border-[#0000001f] rounded-[25px] border border-solid shadow-[inset_0px_1px_1px_#00000013] backdrop-blur-[15px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(15px)_brightness(100%)] bg-transparent [font-family:'Inter',Helvetica] font-normal text-[#c5c5c5] text-[13px] tracking-[0] leading-[normal] placeholder:text-[#c5c5c5]"
+                      className="h-[50px] border-[#0000001f] rounded-[25px] border border-solid shadow-[inset_0px_1px_1px_#00000013] backdrop-blur-[15px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(15px)_brightness(100%)] bg-transparent font-normal text-[#c5c5c5] text-[13px] tracking-[0] leading-[normal] placeholder:text-[#c5c5c5]"
                       data-testid="input-phone"
                     />
                   </div>
@@ -77,7 +77,7 @@ export const AboutUsSection = (): JSX.Element => {
                     className="h-12 w-full bg-[#5034ff] rounded-[100px] border border-solid hover:bg-[#5034ff]/90 px-4 py-2 gap-2"
                     data-testid="btn-schedule-meeting"
                   >
-                    <span className="[font-family:'Poppins',Helvetica] font-normal text-white text-sm sm:text-base tracking-[-0.32px] leading-6 whitespace-nowrap">
+                    <span className="font-normal text-white text-sm sm:text-base tracking-[-0.32px] leading-6 whitespace-nowrap">
                       Schedule My 26-minute Meeting
                     </span>
 
@@ -95,7 +95,7 @@ export const AboutUsSection = (): JSX.Element => {
                       key={index}
                       className="relative w-[149px] h-[19px] [background:url(../figmaAssets/item-2.png)_50%_50%_/_cover]"
                     >
-                      <div className="absolute top-[-3px] left-[31px] h-6 flex items-center justify-center [font-family:'Poppins',Helvetica] font-normal text-[#020029bf] text-sm tracking-[0] leading-[23.8px] whitespace-nowrap">
+                      <div className="absolute top-[-3px] left-[31px] h-6 flex items-center justify-center font-normal text-[#020029bf] text-sm tracking-[0] leading-[23.8px] whitespace-nowrap">
                         {item}
                       </div>
                     </div>
@@ -103,7 +103,7 @@ export const AboutUsSection = (): JSX.Element => {
                 </div>
               </div>
 
-              <p className="w-full lg:w-[455px] [font-family:'Poppins',Helvetica] font-normal text-[#020029bf] text-xs sm:text-sm tracking-[0] leading-[23.8px] text-center lg:text-right">
+              <p className="w-full lg:w-[455px] font-normal text-[#020029bf] text-xs sm:text-sm tracking-[0] leading-[23.8px] text-center lg:text-right">
                 All information submitted is protected and handled in compliance
                 with our Privacy Policy.
               </p>

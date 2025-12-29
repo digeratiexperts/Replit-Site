@@ -31,11 +31,11 @@ export const ContactSection = (): JSX.Element => {
   return (
     <section className="flex flex-col w-full items-center gap-8 lg:gap-[66px] py-8 lg:py-12 px-4">
       <header className="flex flex-col max-w-[655px] items-center gap-4">
-        <h2 className="text-center [font-family:'Poppins',Helvetica] font-normal text-[#020029] text-3xl sm:text-4xl lg:text-[52px] tracking-[0] leading-tight lg:leading-[73px]">
+        <h2 className="text-center font-normal text-[#020029] text-3xl sm:text-4xl lg:text-[52px] tracking-[0] leading-tight lg:leading-[73px]">
           Recent Threats &amp; Insights
         </h2>
 
-        <p className="text-center [font-family:'Poppins',Helvetica] font-normal text-[#020029bf] text-sm sm:text-base tracking-[0] leading-[26.4px]">
+        <p className="text-center font-normal text-[#020029bf] text-sm sm:text-base tracking-[0] leading-[26.4px]">
           Real-time updates, expert analysis, and actionable security news.
         </p>
       </header>
@@ -55,7 +55,7 @@ export const ContactSection = (): JSX.Element => {
                 />
                 <Badge className="absolute bottom-4 right-3 bg-[#020029] rounded-[12.5px] h-[31px] px-3 flex items-center gap-2 hover:bg-[#020029]">
                   <CalendarIcon className="w-3 h-3 text-[#6a1b9a]" />
-                  <span className="[font-family:'Inter',Helvetica] font-normal text-[#6a1b9a] text-xs tracking-[0] leading-[19.6px]">
+                  <span className="font-normal text-[#6a1b9a] text-xs tracking-[0] leading-[19.6px]">
                     {insight.date}
                   </span>
                 </Badge>
@@ -63,11 +63,11 @@ export const ContactSection = (): JSX.Element => {
 
               <div className="flex flex-col flex-1 px-4 lg:px-5 pt-4 lg:pt-[21px] pb-4 lg:pb-5 justify-between">
                 <div className="flex flex-col gap-1">
-                  <h3 className="[font-family:'Poppins',Helvetica] font-medium text-[#020029] text-lg lg:text-2xl tracking-[0] leading-tight lg:leading-[26px]">
+                  <h3 className="font-medium text-[#020029] text-lg lg:text-2xl tracking-[0] leading-tight lg:leading-[26px]">
                     {insight.title}
                   </h3>
 
-                  <p className="[font-family:'Poppins',Helvetica] font-normal text-[#020029bf] text-sm lg:text-base tracking-[0] leading-[26.4px]">
+                  <p className="font-normal text-[#020029bf] text-sm lg:text-base tracking-[0] leading-[26.4px]">
                     {insight.description}
                   </p>
                 </div>
@@ -76,7 +76,7 @@ export const ContactSection = (): JSX.Element => {
                   className="inline-flex items-center gap-2 mt-4 group cursor-pointer"
                   data-testid={`btn-know-more-${insight.id}`}
                 >
-                  <span className="[font-family:'Poppins',Helvetica] font-normal text-[#5034ff] text-sm lg:text-base tracking-[-0.32px] leading-6 whitespace-nowrap">
+                  <span className="font-normal text-[#5034ff] text-sm lg:text-base tracking-[-0.32px] leading-6 whitespace-nowrap">
                     Know More
                   </span>
                   <ArrowRightIcon className="w-5 h-5 lg:w-[22.63px] lg:h-[22.63px] text-[#5034ff] group-hover:translate-x-1 transition-transform" />

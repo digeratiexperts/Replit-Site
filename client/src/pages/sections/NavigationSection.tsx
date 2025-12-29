@@ -21,11 +21,11 @@ export const NavigationSection = (): JSX.Element => {
         <div className="flex flex-col flex-1 items-center lg:items-start gap-8">
           <div className="inline-flex flex-col items-center lg:items-start gap-8 lg:gap-[45px] w-full">
             <div className="flex flex-col items-center lg:items-start gap-3 w-full">
-              <h2 className="[font-family:'Poppins',Helvetica] font-normal text-[#020029] text-2xl md:text-[32px] tracking-[0] leading-normal text-center lg:text-left">
+              <h2 className="font-normal text-[#020029] text-2xl md:text-[32px] tracking-[0] leading-normal text-center lg:text-left">
                 Elite Cyber Partnerships, Backed by Experience
               </h2>
 
-              <p className="[font-family:'Inter',Helvetica] font-normal text-[#020029] text-sm md:text-base tracking-[0] leading-6 text-center lg:text-left">
+              <p className="font-normal text-[#020029] text-sm md:text-base tracking-[0] leading-6 text-center lg:text-left">
                 At Digerati Experts, we don&apos;t just connect you with
                 technology — we bring you the strategic advantage of working
                 with the industry&#39;s most trusted cybersecurity vendors.
@@ -35,11 +35,11 @@ export const NavigationSection = (): JSX.Element => {
             </div>
 
             <div className="flex flex-col items-center lg:items-start gap-4 w-full">
-              <h3 className="[font-family:'Poppins',Helvetica] font-normal text-[#020029] text-2xl md:text-[32px] tracking-[0] leading-normal text-center lg:text-left">
+              <h3 className="font-normal text-[#020029] text-2xl md:text-[32px] tracking-[0] leading-normal text-center lg:text-left">
                 Strategic Vendors. Proven Results.
               </h3>
 
-              <p className="[font-family:'Inter',Helvetica] font-normal text-[#020029] text-sm md:text-base tracking-[0] leading-6 text-center lg:text-left">
+              <p className="font-normal text-[#020029] text-sm md:text-base tracking-[0] leading-6 text-center lg:text-left">
                 Backed by 20+ years of expertise, Digerati Experts partners with
                 top-tier vendors across every area of cybersecurity. More than
                 just a distributor, we empower our clients and partners through

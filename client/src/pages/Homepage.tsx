@@ -66,7 +66,7 @@ export const Homepage = (): JSX.Element => {
                   alt={`Contact icon ${index}`}
                   src={info.icon}
                 />
-                <div className="[font-family:'Poppins',Helvetica] font-normal text-white text-sm leading-[26px] whitespace-nowrap">
+                <div className="font-normal text-white text-sm leading-[26px] whitespace-nowrap">
                   {info.text}
                 </div>
               </div>
@@ -89,7 +89,7 @@ export const Homepage = (): JSX.Element => {
                     data-testid={`nav-link-${item.label.toLowerCase()}`}
                     className="inline-flex items-center gap-1 bg-transparent border-none cursor-pointer hover:opacity-80 transition-opacity"
                   >
-                    <span className="[font-family:'Poppins',Helvetica] font-normal text-white text-sm lg:text-base text-center leading-[24.8px] whitespace-nowrap">
+                    <span className="font-normal text-white text-sm lg:text-base text-center leading-[24.8px] whitespace-nowrap">
                       {item.label}
                     </span>
                     <ChevronDownIcon className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
@@ -104,7 +104,7 @@ export const Homepage = (): JSX.Element => {
                 data-testid="button-emergency-support"
                 className="w-full sm:w-auto h-12 px-4 py-2 bg-white rounded-[100px] gap-2 hover:bg-white/90"
               >
-                <span className="[font-family:'Poppins',Helvetica] font-normal text-[#5034ff] text-base tracking-[-0.32px] leading-6">
+                <span className="font-normal text-[#5034ff] text-base tracking-[-0.32px] leading-6">
                   Emergency Support
                 </span>
                 <img
@@ -117,7 +117,7 @@ export const Homepage = (): JSX.Element => {
               <Button 
                 data-testid="button-book-meeting"
                 className="w-full sm:w-auto h-auto px-4 py-2 bg-[#5034ff] rounded-[100px] gap-2 border border-solid hover:bg-[#5034ff]/90">
-                <span className="[font-family:'Poppins',Helvetica] font-normal text-white text-base tracking-[-0.32px] leading-6">
+                <span className="font-normal text-white text-base tracking-[-0.32px] leading-6">
                   Book a Meeting
                 </span>
                 <img
@@ -145,7 +145,7 @@ export const Homepage = (): JSX.Element => {
         </section>
 
         <section className="relative w-full max-w-[1440px] mx-auto flex flex-col items-center gap-2 py-8">
-          <p className="[font-family:'Poppins',Helvetica] font-normal text-[#020029bf] text-base text-center leading-[26.4px]">
+          <p className="font-normal text-[#020029bf] text-base text-center leading-[26.4px]">
             Strategic Vendors. Proven Results.
           </p>
           {vendorLogos.map((logo, index) => (
@@ -170,7 +170,7 @@ export const Homepage = (): JSX.Element => {
           }}
         >
           <div className="flex flex-col items-center gap-2 w-full">
-            <p className="w-full [font-family:'Poppins',Helvetica] font-normal text-[#ffffffbf] text-base text-center leading-[26.4px]">
+            <p className="w-full font-normal text-[#ffffffbf] text-base text-center leading-[26.4px]">
               Proudly Protecting Businesses Since [Year]
             </p>
             <div className="w-full overflow-hidden">
