@@ -18,6 +18,13 @@ Digerati Experts is a comprehensive platform integrating a public marketing webs
 ### UI/UX Decisions
 The platform features a modern, responsive SaaS design system with consistent tokens, typography, and a purple-blue gradient color scheme for interactive elements. It utilizes a two-tier navigation system and a mobile-first approach.
 
+**Typography System (Standardized):**
+- **Headings**: Space Grotesk - geometric, techy, cybersecurity-appropriate
+- **Body Text**: Inter - excellent readability, clean, professional
+- **Stats/Numbers**: Oxanium (optional) - futuristic tech feel for metrics
+- Font smoothing and OpenType features enabled for optimal rendering
+- CSS base layer applies fonts automatically to h1-h6 and body
+
 ### Technical Implementations
 **Frontend**: Built with React 18 and TypeScript, using Wouter for routing, shadcn/ui with Radix UI for components, Lucide React for icons, and Tailwind CSS for styling.
 **Backend**: Utilizes an Express.js server with TypeScript.
