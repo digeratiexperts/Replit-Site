@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { motion, useReducedMotion } from "framer-motion";
 
-// Import team/business images
 import teamMeetingImg from "@assets/business-colleagues-working-office_1767027918693.png";
 
 export const DigeratiAIAssistanceSection = (): JSX.Element => {
@@ -19,11 +18,11 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
-      {/* Background decoration */}
+    <section className="py-20 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0d0720, #0a0118)' }}>
+      {/* Background decoration - dark theme */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-purple-200/40 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-200/40 rounded-full blur-[120px]" />
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-purple-600/15 rounded-full blur-[120px]" />
+        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-cyan-600/10 rounded-full blur-[120px]" />
         
         {/* Subtle grid pattern */}
         <div className="absolute inset-0 opacity-[0.03]" style={{
@@ -44,10 +43,10 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
           >
             <div className="relative">
               {/* Decorative elements */}
-              <div className="absolute -inset-4 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-3xl blur-2xl" />
+              <div className="absolute -inset-4 bg-gradient-to-br from-purple-500/20 to-cyan-500/20 rounded-3xl blur-2xl" />
               
               {/* Main image */}
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-purple-200/50">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10">
                 <img 
                   src={teamMeetingImg} 
                   alt="Expert team collaboration" 
@@ -55,7 +54,7 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
                 />
                 
                 {/* Overlay with stats */}
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6">
                   <div className="flex gap-6">
                     <div className="text-center">
                       <div className="text-2xl font-bold text-white">0.3s</div>
@@ -74,14 +73,14 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
               </div>
 
               {/* Floating AI badge */}
-              <div className="absolute -top-4 -right-4 bg-white rounded-xl p-3 shadow-xl border border-purple-100">
+              <div className="absolute -top-4 -right-4 bg-[#1a0a2e]/90 backdrop-blur-sm rounded-xl p-3 shadow-xl border border-purple-500/30">
                 <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center">
                     <Bot className="h-5 w-5 text-white" />
                   </div>
                   <div>
-                    <div className="text-xs text-gray-500">AI Status</div>
-                    <div className="text-sm font-semibold text-green-600 flex items-center gap-1">
+                    <div className="text-xs text-gray-400">AI Status</div>
+                    <div className="text-sm font-semibold text-green-400 flex items-center gap-1">
                       <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                       Active
                     </div>
@@ -100,14 +99,14 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div className="mb-6">
-              <Badge className="bg-purple-100 text-purple-700 border border-purple-200 hover:bg-purple-200 mb-4">
+              <Badge className="bg-purple-500/20 text-purple-300 border border-purple-500/30 hover:bg-purple-500/30 mb-4">
                 <Sparkles className="h-3 w-3 mr-1" />
                 AI-Powered Protection
               </Badge>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-gray-900">
-                Expert Assistance <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">Using AI</span>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-white">
+                Expert Assistance <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Using AI</span>
               </h2>
-              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+              <p className="text-lg text-gray-300 mb-6 leading-relaxed">
                 Our AI-powered security platform works 24/7 to predict, prevent, and respond to threats 
                 before they impact your business. Think of it as your tireless digital security expert.
               </p>
@@ -115,17 +114,17 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
 
             <div className="space-y-3 mb-8">
               {aiFeatures.map((feature, index) => (
-                <div key={index} className="flex items-start gap-3 text-gray-700">
-                  <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                <div key={index} className="flex items-start gap-3 text-gray-200">
+                  <CheckCircle className="h-5 w-5 text-cyan-400 mt-0.5 flex-shrink-0" />
                   <span>{feature}</span>
                 </div>
               ))}
             </div>
 
             {/* Feature highlights */}
-            <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-6 border border-purple-100 mb-8">
-              <h3 className="text-gray-900 font-semibold mb-2">Smarter Security, Better Results</h3>
-              <p className="text-gray-600 text-sm">
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 mb-8">
+              <h3 className="text-white font-semibold mb-2">Smarter Security, Better Results</h3>
+              <p className="text-gray-300 text-sm">
                 Our AI reduces false positives by 85% and identifies real threats 3x faster than traditional methods.
               </p>
             </div>
@@ -134,7 +133,7 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
               <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
                 <Button 
                   size="lg"
-                  className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg"
+                  className="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white shadow-lg shadow-purple-500/25"
                   data-testid="button-ai-action"
                 >
                   See AI in Action
@@ -144,7 +143,7 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
               <Button 
                 size="lg"
                 variant="outline"
-                className="border-gray-300 text-gray-700 hover:bg-gray-50"
+                className="border-white/20 text-white hover:bg-white/10 hover:border-white/30"
                 data-testid="button-ai-learn-more"
               >
                 Learn More

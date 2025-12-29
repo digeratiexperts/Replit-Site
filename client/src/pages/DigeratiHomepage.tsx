@@ -12,7 +12,6 @@ import { DigeratiCalculatorsSection } from "./sections/DigeratiCalculatorsSectio
 import { DigeratiWhatWeTackleSection } from "./sections/DigeratiWhatWeTackleSection";
 import { DigeratiThreatsInsightsSection } from "./sections/DigeratiThreatsInsightsSection";
 import { DigeratiAIAssistanceSection } from "./sections/DigeratiAIAssistanceSection";
-import { DigeratiProtectEnableSection } from "./sections/DigeratiProtectEnableSection";
 import { DigeratiIndustriesSection } from "./sections/DigeratiIndustriesSection";
 import { DigeratiPricingSection } from "./sections/DigeratiPricingSection";
 import { DigeratiTestimonialsSection } from "./sections/DigeratiTestimonialsSection";
@@ -121,9 +120,6 @@ export const DigeratiHomepage = (): JSX.Element => {
 
       {/* AI Assistance Section */}
       <DigeratiAIAssistanceSection />
-
-      {/* We Exist to Protect Section */}
-      <DigeratiProtectEnableSection />
 
       {/* CTA Section */}
       <DigeratiCTASection />

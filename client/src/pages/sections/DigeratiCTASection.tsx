@@ -104,9 +104,18 @@ export const DigeratiCTASection = (): JSX.Element => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-lg md:text-xl text-gray-300 leading-relaxed mb-8"
+          className="text-lg md:text-xl text-gray-300 leading-relaxed mb-2"
         >
           Discover vulnerabilities before attackers do – without paying a cent.
+        </motion.p>
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="text-sm text-gray-400 mb-6"
+        >
+          *With qualifying managed services package. Limited availability.
         </motion.p>
         
         {/* Stars */}

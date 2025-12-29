@@ -253,7 +253,7 @@ export const ModernHeroSection = (): JSX.Element => {
                 </span>
                 <br />
                 <span className="text-white">
-                  Secure Your Arizona Business Now.
+                  Protect Arizona Businesses 24/7.
                 </span>
               </h1>
 
