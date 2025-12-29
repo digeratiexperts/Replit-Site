@@ -534,14 +534,17 @@ export function MegaMenu() {
 
         {/* Mobile/Tablet Menu - Premium Glassmorphism Slide-out */}
         <div 
-          className={`xl:hidden fixed inset-0 z-40 transition-all duration-500 ${
+          className={`xl:hidden fixed left-0 right-0 z-40 transition-all duration-500 ${
             mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
           }`}
-          style={{ top: isScrolled ? '64px' : '104px' }}
+          style={{ 
+            top: isScrolled ? '64px' : '104px',
+            height: isScrolled ? 'calc(100dvh - 64px)' : 'calc(100dvh - 104px)'
+          }}
         >
           {/* Backdrop with blur */}
           <div 
-            className={`absolute inset-0 bg-[#0a0118]/80 backdrop-blur-sm transition-opacity duration-300 ${
+            className={`absolute inset-0 bg-[#0a0118]/90 backdrop-blur-md transition-opacity duration-300 ${
               mobileMenuOpen ? 'opacity-100' : 'opacity-0'
             }`}
             onClick={() => setMobileMenuOpen(false)}
@@ -549,7 +552,7 @@ export function MegaMenu() {
           
           {/* Slide-out Panel */}
           <div 
-            className={`absolute right-0 top-0 bottom-0 w-full max-w-md bg-gradient-to-b from-[#0d0720] via-[#0a0118] to-[#050210] border-l border-white/10 shadow-[0_0_60px_rgba(139,92,246,0.3)] transform transition-transform duration-500 ease-out ${
+            className={`absolute right-0 top-0 h-full w-full max-w-md bg-gradient-to-b from-[#0d0720] via-[#0a0118] to-[#050210] border-l border-white/10 shadow-[0_0_60px_rgba(139,92,246,0.3)] transform transition-transform duration-500 ease-out overflow-hidden ${
               mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
             }`}
             role="dialog"
@@ -559,7 +562,7 @@ export function MegaMenu() {
             <div className="absolute top-20 -left-20 w-40 h-40 bg-purple-600/20 rounded-full blur-[80px] pointer-events-none" />
             <div className="absolute bottom-20 right-0 w-60 h-60 bg-cyan-600/15 rounded-full blur-[100px] pointer-events-none" />
             
-            <div className="relative h-full overflow-y-auto p-6 space-y-2">
+            <div className="relative h-full overflow-y-auto overscroll-contain p-6 pb-24 space-y-2">
               {/* Menu Header */}
               <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
                 <span className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">

@@ -37,7 +37,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
   return (
     <>
       {/* Downtime Calculator Section */}
-      <section className="py-20 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0f0720, #0a0118)' }}>
+      <section className="py-20 relative overflow-visible" style={{ background: 'linear-gradient(to bottom, #0f0720, #0a0118)' }}>
         {/* Background effects */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-[120px]" />
@@ -58,8 +58,8 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
             </p>
           </div>
 
-          <Card className="max-w-3xl mx-auto bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(139,92,246,0.15)]">
-            <CardContent className="p-8">
+          <Card className="w-full max-w-3xl mx-auto bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(139,92,246,0.15)]">
+            <CardContent className="p-4 sm:p-6 md:p-8">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <Label htmlFor="industry" className="text-gray-300">Industry</Label>
@@ -152,7 +152,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
       </section>
 
       {/* Service Cost Estimator Section */}
-      <section className="py-20 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0a0118, #0d0720)' }}>
+      <section className="py-20 relative overflow-visible" style={{ background: 'linear-gradient(to bottom, #0a0118, #0d0720)' }}>
         {/* Background effects */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[150px] -translate-y-1/2" />
@@ -173,8 +173,8 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
             </p>
           </div>
 
-          <Card className="max-w-3xl mx-auto bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(34,211,238,0.15)]">
-            <CardContent className="p-8">
+          <Card className="w-full max-w-3xl mx-auto bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(34,211,238,0.15)]">
+            <CardContent className="p-4 sm:p-6 md:p-8">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <Label htmlFor="service-employees" className="text-gray-300">Number of Employees: <span className="text-cyan-400 font-semibold">{serviceEmployees}</span></Label>
