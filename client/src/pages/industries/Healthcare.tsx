@@ -1,100 +1,274 @@
 import { PageTemplate } from "@/components/PageTemplate";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Shield, Lock, FileCheck, CheckCircle, Phone } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Shield, Lock, FileCheck, CheckCircle, Phone, Heart, Activity, Stethoscope, AlertTriangle } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
 
 export default function Healthcare() {
+  const prefersReducedMotion = useReducedMotion() ?? false;
+  
+  const metrics = [
+    { label: "HIPAA Compliance", value: "100%", icon: Shield, color: "from-blue-500 to-cyan-500" },
+    { label: "Data Encryption", value: "256-bit", icon: Lock, color: "from-cyan-500 to-teal-500" },
+    { label: "System Uptime", value: "99.95%", icon: Activity, color: "from-teal-500 to-green-500" },
+    { label: "Healthcare Clients", value: "25+", icon: Heart, color: "from-green-500 to-emerald-500" }
+  ];
+
+  const challenges = [
+    { 
+      icon: Shield, 
+      title: "HIPAA Compliance", 
+      description: "Maintain full HIPAA compliance with our comprehensive security solutions and documentation.",
+      color: "text-blue-600"
+    },
+    { 
+      icon: Lock, 
+      title: "Patient Data Security", 
+      description: "Protect sensitive patient data with enterprise-grade encryption and access controls.",
+      color: "text-cyan-600"
+    },
+    { 
+      icon: FileCheck, 
+      title: "Audit-Ready Documentation", 
+      description: "Always audit-ready with comprehensive documentation and compliance reporting.",
+      color: "text-teal-600"
+    }
+  ];
+
+  const complianceFeatures = [
+    "Business Associate Agreements (BAA)",
+    "Encrypted Email Solutions",
+    "Secure File Sharing",
+    "Access Controls & Audit Logs",
+    "Backup & Disaster Recovery",
+    "Risk Assessment & Analysis",
+    "Security Awareness Training",
+    "Incident Response Planning",
+    "Regular Security Updates",
+    "Compliance Documentation"
+  ];
+
   return (
     <PageTemplate
       title="IT Solutions for Healthcare"
       subtitle="HIPAA-compliant IT solutions designed to protect patient data and ensure regulatory compliance."
       gradientColors="from-blue-600 via-cyan-600 to-teal-600"
+      icon={<Stethoscope className="w-10 h-10 text-white" />}
+      breadcrumbs={[{ label: "Industries", href: "/" }, { label: "Healthcare" }]}
     >
-      <div className="space-y-12">
+      <div className="space-y-16">
+        {/* Metrics Dashboard */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {metrics.map((metric, idx) => {
+            const Icon = metric.icon;
+            return (
+              <motion.div
+                key={idx}
+                initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1, duration: 0.5 }}
+                className="group relative"
+              >
+                <div className={`absolute inset-0 bg-gradient-to-r ${metric.color} rounded-xl blur opacity-0 group-hover:opacity-20 transition-all duration-300`} />
+                <Card className="relative bg-white border-2 border-gray-100 hover:border-blue-200 hover:shadow-lg transition-all">
+                  <CardContent className="pt-6">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${metric.color} flex items-center justify-center`}>
+                        <Icon className="h-5 w-5 text-white" />
+                      </div>
+                      <Badge variant="outline" className="text-xs">Key Metric</Badge>
+                    </div>
+                    <p className="text-3xl font-bold text-gray-900">{metric.value}</p>
+                    <p className="text-sm text-gray-600 mt-1">{metric.label}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Risk Alert */}
+        <motion.div 
+          className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-8"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="flex gap-4">
+            <AlertTriangle className="h-8 w-8 text-amber-600 flex-shrink-0 mt-1" />
+            <div>
+              <h3 className="text-2xl font-bold text-amber-900 mb-3">Healthcare Data at Risk</h3>
+              <p className="text-amber-800 mb-4">
+                Healthcare organizations are prime targets for cyberattacks. Patient data is 10x more valuable than credit card data on the dark web.
+              </p>
+              <div className="grid md:grid-cols-2 gap-2 text-amber-800">
+                {[
+                  "HIPAA violations average $1.5M+ in fines",
+                  "Ransomware attacks on healthcare up 94%",
+                  "Patient data breaches destroy trust",
+                  "Compliance failures risk license suspension"
+                ].map((item, idx) => (
+                  <div key={idx} className="flex gap-2">
+                    <span className="text-amber-600 font-bold">●</span>
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
         {/* Key Challenges */}
         <div>
-          <h2 className="text-3xl font-bold mb-8">Healthcare IT Challenges We Solve</h2>
+          <motion.h2 
+            className="text-3xl font-bold mb-8 flex items-center gap-3"
+            initial={prefersReducedMotion ? {} : { opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
+              <Shield className="w-5 h-5 text-white" />
+            </div>
+            Healthcare IT Challenges We Solve
+          </motion.h2>
           <div className="grid md:grid-cols-3 gap-6">
-            <Card>
-              <CardHeader>
-                <Shield className="h-10 w-10 text-blue-600 mb-2" />
-                <CardTitle>HIPAA Compliance</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Maintain full HIPAA compliance with our comprehensive security solutions and documentation.</p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <Lock className="h-10 w-10 text-blue-600 mb-2" />
-                <CardTitle>Data Security</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Protect sensitive patient data with enterprise-grade encryption and access controls.</p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <FileCheck className="h-10 w-10 text-blue-600 mb-2" />
-                <CardTitle>Audit-Ready Documentation</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Always audit-ready with comprehensive documentation and compliance reporting.</p>
-              </CardContent>
-            </Card>
+            {challenges.map((item, idx) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  key={idx}
+                  initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1, duration: 0.5 }}
+                >
+                  <Card className="group h-full bg-white border-2 border-gray-100 hover:border-blue-200 hover:shadow-xl transition-all duration-300">
+                    <CardHeader>
+                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <Icon className={`h-7 w-7 ${item.color}`} />
+                      </div>
+                      <CardTitle className="text-xl">{item.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-gray-600 leading-relaxed">{item.description}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
 
         {/* HIPAA Compliance Features */}
-        <div className="bg-gray-50 rounded-lg p-8">
-          <h2 className="text-3xl font-bold mb-6">HIPAA Compliance Features</h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            {[
-              "Business Associate Agreements (BAA)",
-              "Encrypted Email Solutions",
-              "Secure File Sharing",
-              "Access Controls & Audit Logs",
-              "Backup & Disaster Recovery",
-              "Risk Assessment & Analysis",
-              "Security Awareness Training",
-              "Incident Response Planning",
-              "Regular Security Updates",
-              "Compliance Documentation"
-            ].map((item, index) => (
-              <div key={index} className="flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-green-600 mt-1 flex-shrink-0" />
-                <span className="text-gray-700">{item}</span>
+        <motion.div 
+          className="relative bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-8 md:p-12 overflow-hidden"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-blue-200/30 to-transparent rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-cyan-200/30 to-transparent rounded-full blur-3xl" />
+          
+          <div className="relative">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
+                <FileCheck className="w-5 h-5 text-white" />
               </div>
-            ))}
+              <h2 className="text-3xl font-bold text-gray-900">HIPAA Compliance Features</h2>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-4">
+              {complianceFeatures.map((item, index) => (
+                <motion.div 
+                  key={index} 
+                  className="flex items-center gap-3 p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-100 hover:border-blue-200 hover:shadow-md transition-all duration-300"
+                  initial={prefersReducedMotion ? {} : { opacity: 0, x: -10 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.05, duration: 0.3 }}
+                >
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+                    <CheckCircle className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="text-gray-700 font-medium">{item}</span>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
+        </motion.div>
+
+        {/* Success Metrics */}
+        <motion.div 
+          className="grid md:grid-cols-3 gap-6 bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-600 rounded-2xl p-8 text-white"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
+            <p className="text-4xl font-bold mb-2">25+</p>
+            <p className="text-blue-100">Healthcare Clients</p>
+          </div>
+          <div className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
+            <p className="text-4xl font-bold mb-2">0</p>
+            <p className="text-blue-100">HIPAA Violations</p>
+          </div>
+          <div className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
+            <p className="text-4xl font-bold mb-2">100%</p>
+            <p className="text-blue-100">Audit Pass Rate</p>
+          </div>
+        </motion.div>
 
         {/* CTA */}
-        <div className="bg-gradient-to-r from-blue-600 to-teal-600 rounded-lg p-8 text-center text-white">
-          <h2 className="text-3xl font-bold mb-4">Protect Your Patient Data</h2>
-          <p className="text-lg mb-6">Get a free HIPAA compliance assessment for your practice.</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
-              href="https://meet.digerati-experts.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center h-10 px-8 rounded-md bg-white text-blue-700 hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 transition-all duration-200 font-semibold"
-              data-testid="button-get-assessment"
-            >
-              Get Free Assessment
-            </a>
-            <a 
-              href="tel:325-480-9870"
-              className="inline-flex items-center justify-center h-10 px-8 rounded-md border-2 border-white text-white hover:bg-white hover:text-blue-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 transition-all duration-200 font-semibold"
-              data-testid="button-call-now"
-            >
-              <Phone className="mr-2 h-4 w-4" />
-              Call 325-480-9870
-            </a>
+        <motion.div 
+          className="relative rounded-2xl overflow-hidden"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-600" />
+          <div className="absolute inset-0 opacity-20">
+            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="healthcare-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5" />
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#healthcare-grid)" />
+            </svg>
           </div>
-        </div>
+          
+          <div className="relative p-8 md:p-12 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Protect Your Patient Data</h2>
+            <p className="text-lg md:text-xl mb-8 text-white/90 max-w-2xl mx-auto">
+              Get a free HIPAA compliance assessment for your practice.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a 
+                href="https://meet.digerati-experts.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center justify-center bg-white text-blue-700 hover:bg-blue-50 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
+                data-testid="button-get-assessment"
+              >
+                Get Free Assessment
+              </a>
+              <a 
+                href="tel:325-480-9870"
+                className="inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-blue-600 px-8 py-4 rounded-xl font-semibold transition-all"
+                data-testid="button-call-now"
+              >
+                <Phone className="mr-2 h-5 w-5" />
+                Call 325-480-9870
+              </a>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </PageTemplate>
   );

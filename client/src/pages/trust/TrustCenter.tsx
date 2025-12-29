@@ -1,153 +1,261 @@
-import { MegaMenu } from "@/components/MegaMenu";
-import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
-import { Shield, Lock, FileCheck, Award, Eye, Server } from "lucide-react";
+import { PageTemplate } from "@/components/PageTemplate";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Shield, Lock, FileCheck, Award, Eye, Server, CheckCircle, Mail, Phone } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
 
 export default function TrustCenter() {
+  const prefersReducedMotion = useReducedMotion() ?? false;
+  
+  const certifications = [
+    { icon: Award, title: "SOC 2 Type II", desc: "Independently audited security controls for Service Organization Control", status: "Certified", gradient: "from-purple-500 to-indigo-600" },
+    { icon: FileCheck, title: "HIPAA Compliant", desc: "Business Associate Agreements available for healthcare clients", status: "Compliant", gradient: "from-indigo-500 to-blue-600" },
+    { icon: Lock, title: "PCI DSS", desc: "Payment Card Industry Data Security Standard compliance", status: "Compliant", gradient: "from-blue-500 to-cyan-600" }
+  ];
+
+  const technicalControls = [
+    "AES-256 encryption at rest",
+    "TLS 1.3 encryption in transit",
+    "Multi-factor authentication (MFA)",
+    "24/7 Security Operations Center",
+    "Intrusion detection/prevention",
+    "Regular vulnerability scanning"
+  ];
+
+  const adminControls = [
+    "Background checks for all staff",
+    "Security awareness training",
+    "Incident response procedures",
+    "Annual penetration testing",
+    "Third-party security audits",
+    "NIST Cybersecurity Framework alignment"
+  ];
+
   return (
-    <div className="min-h-screen bg-white">
-      <MegaMenu />
-      
-      <section className="bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 text-white py-20">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl">
-            <div className="flex items-center gap-3 mb-6">
-              <Shield className="h-12 w-12 text-purple-400" />
-              <h1 className="text-4xl md:text-5xl font-bold">Trust Center</h1>
-            </div>
-            <p className="text-xl text-gray-300">
-              Security, Compliance, and Privacy Information
-            </p>
-          </div>
+    <PageTemplate
+      title="Trust Center"
+      subtitle="Security, Compliance, and Privacy Information"
+      icon={<Shield className="w-10 h-10 text-white" />}
+      gradientColors="from-slate-700 via-slate-800 to-slate-900"
+      breadcrumbs={[{ label: "Trust", href: "/" }, { label: "Trust Center" }]}
+    >
+      <div className="space-y-16">
+        {/* Intro */}
+        <motion.p 
+          className="text-xl text-gray-700 text-center max-w-3xl mx-auto leading-relaxed"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          Digerati Experts is committed to maintaining the highest standards of security, compliance, 
+          and privacy. Our Trust Center provides transparency into our security practices and certifications.
+        </motion.p>
+
+        {/* Security Certifications */}
+        <div className="grid md:grid-cols-3 gap-6">
+          {certifications.map((cert, idx) => {
+            const Icon = cert.icon;
+            return (
+              <motion.div
+                key={idx}
+                initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1, duration: 0.5 }}
+              >
+                <Card className="group h-full bg-white border-2 border-gray-100 hover:border-purple-200 hover:shadow-xl transition-all duration-300 overflow-hidden">
+                  <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl ${cert.gradient} opacity-5 rounded-bl-full`} />
+                  <CardHeader>
+                    <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${cert.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                      <Icon className="h-7 w-7 text-white" />
+                    </div>
+                    <CardTitle className="text-xl text-gray-900">{cert.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 mb-4 leading-relaxed">{cert.desc}</p>
+                    <Badge className="bg-green-100 text-green-700 border-green-200">
+                      <CheckCircle className="w-3 h-3 mr-1" />
+                      {cert.status}
+                    </Badge>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
         </div>
-      </section>
 
-      <section className="py-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-          <div className="prose prose-lg max-w-none">
-            <p className="text-lg text-gray-700 mb-12 text-center max-w-3xl mx-auto">
-              Digerati Experts is committed to maintaining the highest standards of security, compliance, 
-              and privacy. Our Trust Center provides transparency into our security practices and certifications.
-            </p>
-
-            {/* Security Certifications */}
-            <div className="grid md:grid-cols-3 gap-8 mb-12">
-              <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-xl transition-all">
-                <Award className="h-12 w-12 text-purple-600 mb-4" />
-                <h3 className="text-xl font-bold text-gray-900 mb-2">SOC 2 Type II</h3>
-                <p className="text-gray-700 mb-3">
-                  Independently audited security controls for Service Organization Control
-                </p>
-                <span className="text-sm text-green-600 font-semibold">✓ Certified</span>
+        {/* Security Practices */}
+        <motion.div 
+          className="relative bg-gradient-to-br from-gray-50 to-purple-50/50 rounded-2xl p-8 md:p-12 overflow-hidden"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-200/30 to-transparent rounded-full blur-3xl" />
+          
+          <div className="relative">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
+                <Lock className="w-6 h-6 text-white" />
               </div>
-
-              <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-xl transition-all">
-                <FileCheck className="h-12 w-12 text-purple-600 mb-4" />
-                <h3 className="text-xl font-bold text-gray-900 mb-2">HIPAA Compliant</h3>
-                <p className="text-gray-700 mb-3">
-                  Business Associate Agreements available for healthcare clients
-                </p>
-                <span className="text-sm text-green-600 font-semibold">✓ Compliant</span>
-              </div>
-
-              <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-xl transition-all">
-                <Lock className="h-12 w-12 text-purple-600 mb-4" />
-                <h3 className="text-xl font-bold text-gray-900 mb-2">PCI DSS</h3>
-                <p className="text-gray-700 mb-3">
-                  Payment Card Industry Data Security Standard compliance
-                </p>
-                <span className="text-sm text-green-600 font-semibold">✓ Compliant</span>
-              </div>
+              <h2 className="text-3xl font-bold text-gray-900">Our Security Practices</h2>
             </div>
-
-            {/* Security Practices */}
-            <div className="bg-gray-50 rounded-xl p-8 mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <Lock className="h-8 w-8 text-purple-600" />
-                Our Security Practices
-              </h2>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Technical Controls</h3>
-                  <ul className="list-disc pl-6 text-gray-700 space-y-1 text-sm">
-                    <li>AES-256 encryption at rest</li>
-                    <li>TLS 1.3 encryption in transit</li>
-                    <li>Multi-factor authentication (MFA)</li>
-                    <li>24/7 Security Operations Center</li>
-                    <li>Intrusion detection/prevention</li>
-                    <li>Regular vulnerability scanning</li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Administrative Controls</h3>
-                  <ul className="list-disc pl-6 text-gray-700 space-y-1 text-sm">
-                    <li>Background checks for all staff</li>
-                    <li>Security awareness training</li>
-                    <li>Incident response procedures</li>
-                    <li>Annual penetration testing</li>
-                    <li>Third-party security audits</li>
-                    <li>NIST Cybersecurity Framework alignment</li>
-                  </ul>
+            
+            <div className="grid md:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <Shield className="w-5 h-5 text-purple-600" />
+                  Technical Controls
+                </h3>
+                <div className="space-y-3">
+                  {technicalControls.map((control, idx) => (
+                    <motion.div 
+                      key={idx}
+                      className="flex items-center gap-3 p-3 bg-white/80 rounded-lg border border-gray-100"
+                      initial={prefersReducedMotion ? {} : { opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: idx * 0.05, duration: 0.3 }}
+                    >
+                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+                      <span className="text-gray-700">{control}</span>
+                    </motion.div>
+                  ))}
                 </div>
               </div>
-            </div>
-
-            {/* Infrastructure Security */}
-            <div className="bg-blue-50 border-l-4 border-blue-500 rounded p-8 mb-12">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-3">
-                <Server className="h-7 w-7 text-blue-600" />
-                Infrastructure Security
-              </h2>
-              <ul className="list-disc pl-6 text-gray-700 space-y-2">
-                <li><strong>Data Centers:</strong> Tier III/IV facilities with physical security, redundant power, climate control</li>
-                <li><strong>Network Security:</strong> Next-generation firewalls, DDoS protection, network segmentation</li>
-                <li><strong>Access Controls:</strong> Role-based access control (RBAC), principle of least privilege</li>
-                <li><strong>Monitoring:</strong> Real-time security information and event management (SIEM)</li>
-                <li><strong>Backups:</strong> Encrypted, geographically distributed, tested regularly</li>
-              </ul>
-            </div>
-
-            {/* Privacy & Compliance */}
-            <div className="bg-purple-50 border-l-4 border-purple-500 rounded p-8 mb-12">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-3">
-                <Eye className="h-7 w-7 text-purple-600" />
-                Privacy & Data Protection
-              </h2>
-              <ul className="list-disc pl-6 text-gray-700 space-y-2">
-                <li><strong>Privacy Policy:</strong> Comprehensive privacy practices aligned with Arizona data breach laws</li>
-                <li><strong>Data Minimization:</strong> We collect only data necessary for service delivery</li>
-                <li><strong>Data Retention:</strong> Clear retention schedules and secure deletion procedures</li>
-                <li><strong>Client Rights:</strong> Access, correction, deletion, and portability rights</li>
-                <li><strong>No Data Selling:</strong> We never sell client data to third parties</li>
-              </ul>
-            </div>
-
-            {/* Request Information */}
-            <div className="bg-gradient-to-r from-purple-100 to-blue-100 rounded-xl p-8 text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Need Security Documentation?</h2>
-              <p className="text-gray-700 mb-6">
-                Request our SOC 2 report, security questionnaires, or compliance documentation for vendor onboarding.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button
-                  onClick={() => window.location.href = 'mailto:security@digeratiexperts.com?subject=Security Documentation Request'}
-                  className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all shadow-md"
-                  data-testid="button-request-docs"
-                >
-                  Request Documentation
-                </button>
-                <button
-                  onClick={() => window.location.href = 'tel:325-480-9870'}
-                  className="border-2 border-purple-600 text-purple-600 px-6 py-3 rounded-lg hover:bg-purple-50 transition-all"
-                >
-                  Call 325-480-9870
-                </button>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <FileCheck className="w-5 h-5 text-purple-600" />
+                  Administrative Controls
+                </h3>
+                <div className="space-y-3">
+                  {adminControls.map((control, idx) => (
+                    <motion.div 
+                      key={idx}
+                      className="flex items-center gap-3 p-3 bg-white/80 rounded-lg border border-gray-100"
+                      initial={prefersReducedMotion ? {} : { opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: idx * 0.05, duration: 0.3 }}
+                    >
+                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+                      <span className="text-gray-700">{control}</span>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </motion.div>
 
-      <DigeratiEnhancedFooterSection />
-    </div>
+        {/* Infrastructure Security */}
+        <motion.div 
+          className="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-xl p-8"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
+              <Server className="w-5 h-5 text-white" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900">Infrastructure Security</h2>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            {[
+              { label: "Data Centers", value: "Tier III/IV facilities with physical security, redundant power, climate control" },
+              { label: "Network Security", value: "Next-generation firewalls, DDoS protection, network segmentation" },
+              { label: "Access Controls", value: "Role-based access control (RBAC), principle of least privilege" },
+              { label: "Monitoring", value: "Real-time security information and event management (SIEM)" },
+              { label: "Backups", value: "Encrypted, geographically distributed, tested regularly" }
+            ].map((item, idx) => (
+              <div key={idx} className="p-4 bg-white/80 rounded-lg">
+                <span className="font-semibold text-gray-900">{item.label}:</span>{" "}
+                <span className="text-gray-700">{item.value}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Privacy & Data Protection */}
+        <motion.div 
+          className="bg-gradient-to-r from-purple-50 to-indigo-50 border-l-4 border-purple-500 rounded-xl p-8"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
+              <Eye className="w-5 h-5 text-white" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900">Privacy & Data Protection</h2>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            {[
+              { label: "Privacy Policy", value: "Comprehensive privacy practices aligned with Arizona data breach laws" },
+              { label: "Data Minimization", value: "We collect only data necessary for service delivery" },
+              { label: "Data Retention", value: "Clear retention schedules and secure deletion procedures" },
+              { label: "Client Rights", value: "Access, correction, deletion, and portability rights" },
+              { label: "No Data Selling", value: "We never sell client data to third parties" }
+            ].map((item, idx) => (
+              <div key={idx} className="p-4 bg-white/80 rounded-lg">
+                <span className="font-semibold text-gray-900">{item.label}:</span>{" "}
+                <span className="text-gray-700">{item.value}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* CTA */}
+        <motion.div 
+          className="relative rounded-2xl overflow-hidden"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600" />
+          <div className="absolute inset-0 opacity-20">
+            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="trust-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5" />
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#trust-grid)" />
+            </svg>
+          </div>
+          
+          <div className="relative p-8 md:p-12 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Need Security Documentation?</h2>
+            <p className="text-lg md:text-xl mb-8 text-white/90 max-w-2xl mx-auto">
+              Request our SOC 2 report, security questionnaires, or compliance documentation for vendor onboarding.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a 
+                href="mailto:security@digeratiexperts.com?subject=Security Documentation Request"
+                className="group inline-flex items-center justify-center bg-white text-purple-700 hover:bg-purple-50 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
+                data-testid="button-request-docs"
+              >
+                <Mail className="mr-2 h-5 w-5" />
+                Request Documentation
+              </a>
+              <a 
+                href="tel:325-480-9870"
+                className="inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-purple-700 px-8 py-4 rounded-xl font-semibold transition-all"
+                data-testid="button-call-trust"
+              >
+                <Phone className="mr-2 h-5 w-5" />
+                Call 325-480-9870
+              </a>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </PageTemplate>
   );
 }
