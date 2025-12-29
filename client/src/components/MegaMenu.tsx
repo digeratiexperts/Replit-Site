@@ -37,6 +37,7 @@ export function MegaMenu() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const menuContainerRef = useRef<HTMLDivElement>(null);
   const navButtonsRef = useRef<Map<string, HTMLButtonElement>>(new Map());
@@ -477,8 +478,14 @@ export function MegaMenu() {
                                 className="space-y-1"
                                 role="menu"
                                 aria-labelledby={`menu-section-${section.title.replace(/\s+/g, '-')}`}
+                                onMouseLeave={() => setHoveredItem(null)}
                               >
-                                {section.items.map((subItem, itemIdx) => (
+                                {section.items.map((subItem, itemIdx) => {
+                                  const itemKey = `${section.title}-${subItem.title}`;
+                                  const isHovered = hoveredItem === itemKey;
+                                  const hasHoveredSibling = hoveredItem !== null && !isHovered;
+                                  
+                                  return (
                                   <motion.li 
                                     key={subItem.title} 
                                     role="none"
@@ -489,19 +496,30 @@ export function MegaMenu() {
                                   >
                                     <a
                                       href={subItem.url || '#'}
-                                      className="group/item flex items-start gap-3 p-2.5 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 border border-transparent hover:border-white/10 hover:bg-gradient-to-r hover:from-white/5 hover:to-white/[0.02]"
+                                      className={`group/item flex items-start gap-3 p-2.5 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 border ${
+                                        isHovered 
+                                          ? 'bg-gradient-to-r from-purple-600/30 to-cyan-600/20 border-purple-500/40 shadow-[0_0_15px_rgba(139,92,246,0.3)]' 
+                                          : hasHoveredSibling
+                                          ? 'border-transparent opacity-50'
+                                          : 'border-transparent hover:border-white/10 hover:bg-gradient-to-r hover:from-white/5 hover:to-white/[0.02]'
+                                      }`}
                                       onClick={handleLinkClick}
+                                      onMouseEnter={() => setHoveredItem(itemKey)}
                                       role="menuitem"
                                       aria-label={`${subItem.title}: ${subItem.description || ''}`}
                                     >
                                       {subItem.icon && (
-                                        <span className="text-purple-400 group-hover/item:text-cyan-400 mt-0.5 transition-colors flex-shrink-0" aria-hidden="true">
+                                        <span className={`mt-0.5 transition-colors flex-shrink-0 ${
+                                          isHovered ? 'text-cyan-400' : hasHoveredSibling ? 'text-purple-400/50' : 'text-purple-400 group-hover/item:text-cyan-400'
+                                        }`} aria-hidden="true">
                                           {subItem.icon}
                                         </span>
                                       )}
                                       <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 flex-wrap">
-                                          <span className="font-medium text-gray-200 group-hover/item:text-white transition-colors text-sm">
+                                          <span className={`font-medium transition-colors text-sm ${
+                                            isHovered ? 'text-white' : hasHoveredSibling ? 'text-gray-400' : 'text-gray-200 group-hover/item:text-white'
+                                          }`}>
                                             {subItem.title}
                                           </span>
                                           {subItem.badge && (
@@ -529,7 +547,8 @@ export function MegaMenu() {
                                       </div>
                                     </a>
                                   </motion.li>
-                                ))}
+                                  );
+                                })}
                               </ul>
                               
                               {/* View All Link */}
