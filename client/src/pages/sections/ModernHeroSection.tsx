@@ -589,12 +589,12 @@ export const ModernHeroSection = (): JSX.Element => {
                                 <SelectValue placeholder="Select range" />
                               </SelectTrigger>
                             </FormControl>
-                            <SelectContent className="bg-[#1a0a2e] border-white/20">
-                              <SelectItem value="1-10">1-10 devices</SelectItem>
-                              <SelectItem value="11-25">11-25 devices</SelectItem>
-                              <SelectItem value="26-50">26-50 devices</SelectItem>
-                              <SelectItem value="51-100">51-100 devices</SelectItem>
-                              <SelectItem value="100+">100+ devices</SelectItem>
+                            <SelectContent className="bg-[#1a0a2e] border-white/20 text-white">
+                              <SelectItem value="1-10" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">1-10 devices</SelectItem>
+                              <SelectItem value="11-25" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">11-25 devices</SelectItem>
+                              <SelectItem value="26-50" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">26-50 devices</SelectItem>
+                              <SelectItem value="51-100" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">51-100 devices</SelectItem>
+                              <SelectItem value="100+" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">100+ devices</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -615,10 +615,10 @@ export const ModernHeroSection = (): JSX.Element => {
                                 <SelectValue placeholder="Select option" />
                               </SelectTrigger>
                             </FormControl>
-                            <SelectContent className="bg-[#1a0a2e] border-white/20">
-                              <SelectItem value="no">No, managing internally</SelectItem>
-                              <SelectItem value="yes-happy">Yes, but exploring options</SelectItem>
-                              <SelectItem value="yes-switching">Yes, looking to switch</SelectItem>
+                            <SelectContent className="bg-[#1a0a2e] border-white/20 text-white">
+                              <SelectItem value="no" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">No, managing internally</SelectItem>
+                              <SelectItem value="yes-happy" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Yes, but exploring options</SelectItem>
+                              <SelectItem value="yes-switching" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Yes, looking to switch</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -639,12 +639,12 @@ export const ModernHeroSection = (): JSX.Element => {
                                 <SelectValue placeholder="Select concern" />
                               </SelectTrigger>
                             </FormControl>
-                            <SelectContent className="bg-[#1a0a2e] border-white/20">
-                              <SelectItem value="compliance">Compliance requirements</SelectItem>
-                              <SelectItem value="insurance">Cyber insurance requirements</SelectItem>
-                              <SelectItem value="breach">Recent breach or threat</SelectItem>
-                              <SelectItem value="protection">General protection</SelectItem>
-                              <SelectItem value="other">Other</SelectItem>
+                            <SelectContent className="bg-[#1a0a2e] border-white/20 text-white">
+                              <SelectItem value="compliance" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Compliance requirements</SelectItem>
+                              <SelectItem value="insurance" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Cyber insurance requirements</SelectItem>
+                              <SelectItem value="breach" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Recent breach or threat</SelectItem>
+                              <SelectItem value="protection" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">General protection</SelectItem>
+                              <SelectItem value="other" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Other</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
