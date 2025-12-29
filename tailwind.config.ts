@@ -8,15 +8,13 @@ module.exports = {
     extend: {
       fontFamily: {
         "paragraph-2": "var(--paragraph-2-font-family)",
-        sans: [
-          "ui-sans-serif",
-          "system-ui",
-          "sans-serif",
-          '"Apple Color Emoji"',
-          '"Segoe UI Emoji"',
-          '"Segoe UI Symbol"',
-          '"Noto Color Emoji"',
-        ],
+        // Primary font system - Space Grotesk for headings, Inter for body
+        heading: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
+        sans: ['"Inter"', 'system-ui', 'sans-serif'],
+        body: ['"Inter"', 'system-ui', 'sans-serif'],
+        mono: ['"Oxanium"', '"JetBrains Mono"', 'monospace'],
+        // Legacy support
+        poppins: ['"Poppins"', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
