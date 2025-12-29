@@ -143,7 +143,7 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
               <Button 
                 size="lg"
                 variant="outline"
-                className="border-white/20 text-white hover:bg-white/10 hover:border-white/30"
+                className="border-white/30 text-white bg-transparent hover:bg-white/10 hover:border-white/40"
                 data-testid="button-ai-learn-more"
               >
                 Learn More
