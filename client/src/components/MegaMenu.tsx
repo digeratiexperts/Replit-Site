@@ -135,7 +135,7 @@ export function MegaMenu() {
         {
           title: 'Tools',
           items: [
-            { title: 'Downtime Calculator', description: 'See what downtime really costs', icon: <BarChart3 className="h-5 w-5" />, url: '#calculators' },
+            { title: 'Downtime Calculator', description: 'See what downtime really costs', icon: <BarChart3 className="h-5 w-5" />, url: '/resources/downtime-calculator' },
             { title: 'Security Checklist', description: 'Assess your security posture', icon: <ClipboardCheck className="h-5 w-5" />, url: '/resources/security-checklist' },
             { title: 'Datasheets', description: 'Technical specifications', icon: <FileCheck className="h-5 w-5" />, url: '/resources/datasheets' },
           ]

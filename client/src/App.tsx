@@ -20,6 +20,7 @@ const Blog = lazy(() => import("@/pages/resources/Blog"));
 const Videos = lazy(() => import("@/pages/resources/Videos"));
 const SecurityChecklist = lazy(() => import("@/pages/resources/SecurityChecklist"));
 const Datasheets = lazy(() => import("@/pages/resources/Datasheets"));
+const DowntimeCalculator = lazy(() => import("@/pages/resources/DowntimeCalculator"));
 const KnowledgeBase = lazy(() => import("@/pages/support/KnowledgeBase"));
 const RemoteSupport = lazy(() => import("@/pages/support/RemoteSupport"));
 const PayInvoice = lazy(() => import("@/pages/support/PayInvoice"));
@@ -165,6 +166,11 @@ function Router() {
       <Route path="/resources/datasheets" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <Datasheets />
+        </Suspense>
+      )} />
+      <Route path="/resources/downtime-calculator" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <DowntimeCalculator />
         </Suspense>
       )} />
       {Object.entries(resourcePageData).map(([key, data]) => (
