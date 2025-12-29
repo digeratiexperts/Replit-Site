@@ -253,8 +253,7 @@ export const ModernHeroSection = (): JSX.Element => {
                 </span>
                 <br />
                 <span className="text-white">
-                  Protect Your Business{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Now.</span>
+                  Arizona Businesses Shouldn't Either.
                 </span>
               </h1>
 
