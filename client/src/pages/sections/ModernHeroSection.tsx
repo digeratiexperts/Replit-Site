@@ -253,7 +253,7 @@ export const ModernHeroSection = (): JSX.Element => {
                 </span>
                 <br />
                 <span className="text-white">
-                  Arizona Businesses Shouldn't Either.
+                  Secure Your Arizona Business Now.
                 </span>
               </h1>
 
