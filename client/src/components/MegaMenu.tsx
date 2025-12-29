@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink, X, ArrowRight } from 'lucide-react';
+import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink, X, ArrowRight, Monitor, Cloud, Lock, Zap, HeadphonesIcon, Building, BarChart3, ClipboardCheck, Layers, TrendingUp, Star, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import logoImage from '@assets/DE-Logo-new_1762461524794.webp';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface MegaMenuItem {
   title: string;
@@ -9,12 +10,14 @@ interface MegaMenuItem {
   url?: string;
   description?: string;
   badge?: string;
+  price?: string;
 }
 
 interface MegaMenuSection {
   title: string;
   items: MegaMenuItem[];
   featured?: boolean;
+  viewAllUrl?: string;
 }
 
 interface NavItem {
@@ -22,6 +25,11 @@ interface NavItem {
   sections?: MegaMenuSection[];
   href?: string;
   isSimple?: boolean;
+  featuredPanel?: {
+    title: string;
+    stats: { value: string; label: string }[];
+    cta: { text: string; url: string };
+  };
 }
 
 export function MegaMenu() {
@@ -37,34 +45,52 @@ export function MegaMenu() {
   const navItems: NavItem[] = [
     {
       name: 'Solutions',
+      featuredPanel: {
+        title: 'Why Digerati?',
+        stats: [
+          { value: '99.9%', label: 'Uptime SLA' },
+          { value: '<15min', label: 'Response Time' },
+          { value: '$50K+', label: 'Avg. Savings' },
+        ],
+        cta: { text: 'Get Free Assessment', url: 'https://meet.digerati-experts.com/' }
+      },
       sections: [
         {
-          title: 'ProActive Ecosystem',
-          items: [
-            { title: 'Office Package', description: 'Complete IT management for small offices', icon: <Server className="h-5 w-5" />, url: '/solutions/office-package' },
-            { title: 'Managed IT Support', description: 'Full-service IT support and maintenance', icon: <Shield className="h-5 w-5" />, url: '/solutions/managed-it-support' },
-            { title: 'Managed Workplace', description: 'End-to-end workplace technology management', icon: <Users className="h-5 w-5" />, url: '/solutions/managed-workplace' },
-            { title: 'Cloud Backup', description: 'Secure cloud backup and recovery', icon: <FileCheck className="h-5 w-5" />, url: '/solutions/cloud-backup' },
-            { title: 'Security Awareness', description: 'Employee security training programs', icon: <Shield className="h-5 w-5" />, url: '/solutions/security-awareness' },
-          ]
-        },
-        {
-          title: 'Business Solutions',
+          title: 'Most Popular',
           featured: true,
+          viewAllUrl: '/solutions',
           items: [
-            { title: 'Co-Managed IT', description: 'Augment your existing IT team', badge: 'Popular', url: '/solutions/co-managed-it' },
-            { title: 'Threat Detection & Response', description: '24/7 monitoring and incident response', url: '/solutions/threat-detection' },
-            { title: 'Security Operations', description: 'Full SOC-as-a-Service', url: '/solutions/security-operations' },
-            { title: 'Backup & Disaster Recovery', description: 'Complete business continuity', url: '/solutions/backup-disaster-recovery' },
+            { title: 'Office Package', description: 'Everything your office needs in one plan', icon: <Monitor className="h-5 w-5" />, url: '/solutions/office-package', badge: 'Best Value', price: 'From $99/mo' },
+            { title: 'Co-Managed IT', description: 'Extend your IT team without hiring', icon: <Users className="h-5 w-5" />, url: '/solutions/co-managed-it', badge: 'Popular', price: 'Custom' },
           ]
         },
         {
-          title: 'Enterprise',
+          title: 'Managed Services',
+          viewAllUrl: '/solutions',
           items: [
-            { title: 'vCIO & Strategy', description: 'Strategic IT planning and guidance', badge: 'Best for Compliance', url: '/solutions/vcio-strategy' },
-            { title: 'Data Encryption & Control', description: 'Advanced data protection', url: '/solutions/data-encryption' },
-            { title: 'Compliance & Risk Reports', description: 'Audit-ready documentation', url: '/solutions/compliance-reports' },
-            { title: 'Unified Security Posture', description: 'Comprehensive security management', url: '/solutions/unified-security' },
+            { title: 'Managed IT Support', description: 'End recurring IT headaches for good', icon: <HeadphonesIcon className="h-5 w-5" />, url: '/solutions/managed-it-support' },
+            { title: 'Managed Workplace', description: 'Focus on work, not technology', icon: <Building className="h-5 w-5" />, url: '/solutions/managed-workplace' },
+            { title: 'Cloud Backup', description: 'Never lose critical business data', icon: <Cloud className="h-5 w-5" />, url: '/solutions/cloud-backup' },
+            { title: 'Security Training', description: 'Turn staff into security assets', icon: <Shield className="h-5 w-5" />, url: '/solutions/security-awareness' },
+          ]
+        },
+        {
+          title: 'Security Solutions',
+          viewAllUrl: '/solutions',
+          items: [
+            { title: 'Threat Detection', description: 'Stop attacks before damage occurs', icon: <Zap className="h-5 w-5" />, url: '/solutions/threat-detection' },
+            { title: 'Security Operations', description: '24/7 expert eyes on your systems', icon: <Lock className="h-5 w-5" />, url: '/solutions/security-operations' },
+            { title: 'Backup & DR', description: 'Recover in hours, not weeks', icon: <Server className="h-5 w-5" />, url: '/solutions/backup-disaster-recovery' },
+          ]
+        },
+        {
+          title: 'Enterprise & Compliance',
+          viewAllUrl: '/solutions',
+          items: [
+            { title: 'vCIO & Strategy', description: 'Executive IT guidance on demand', icon: <BarChart3 className="h-5 w-5" />, url: '/solutions/vcio-strategy', badge: 'For Compliance' },
+            { title: 'Data Encryption', description: 'Protect sensitive information', icon: <Lock className="h-5 w-5" />, url: '/solutions/data-encryption' },
+            { title: 'Compliance Reports', description: 'Pass audits with confidence', icon: <ClipboardCheck className="h-5 w-5" />, url: '/solutions/compliance-reports' },
+            { title: 'Unified Security', description: 'Complete security visibility', icon: <Layers className="h-5 w-5" />, url: '/solutions/unified-security' },
           ]
         }
       ]
@@ -74,20 +100,21 @@ export function MegaMenu() {
       sections: [
         {
           title: 'Industries We Serve',
+          viewAllUrl: '/industries',
           items: [
-            { title: 'Healthcare', description: 'HIPAA-compliant IT solutions', icon: <Shield className="h-5 w-5" />, url: '/industries/healthcare' },
-            { title: 'Law Firms', description: 'Secure document management', icon: <FileCheck className="h-5 w-5" />, url: '/industries/law-firms' },
-            { title: 'Accounting & Finance', description: 'PCI DSS compliance support', icon: <Server className="h-5 w-5" />, url: '/industries/accounting-finance' },
-            { title: 'Real Estate', description: 'Transaction security solutions', icon: <Users className="h-5 w-5" />, url: '/industries/real-estate' },
-            { title: 'Nonprofits', description: 'Cost-effective IT management', icon: <Shield className="h-5 w-5" />, url: '/industries/nonprofits' },
+            { title: 'Healthcare', description: 'HIPAA compliance made simple', icon: <Shield className="h-5 w-5" />, url: '/industries/healthcare' },
+            { title: 'Law Firms', description: 'Protect client confidentiality', icon: <FileCheck className="h-5 w-5" />, url: '/industries/law-firms' },
+            { title: 'Accounting', description: 'Secure tax & financial data', icon: <Server className="h-5 w-5" />, url: '/industries/accounting-finance' },
+            { title: 'Real Estate', description: 'Prevent wire fraud attacks', icon: <Building className="h-5 w-5" />, url: '/industries/real-estate' },
+            { title: 'Nonprofits', description: 'Affordable IT for your mission', icon: <Users className="h-5 w-5" />, url: '/industries/nonprofits' },
           ]
         },
         {
           title: 'Why Digerati',
           items: [
-            { title: 'Audit-Ready Docs', description: 'Complete compliance documentation', url: '/about/compliance' },
-            { title: 'Rapid Response', description: '15-minute response time guarantee', url: '/about/support' },
-            { title: 'Insurance Aligned', description: 'Meets carrier requirements', url: '/about/insurance' },
+            { title: 'Audit-Ready Docs', description: 'Complete compliance evidence', icon: <ClipboardCheck className="h-5 w-5" />, url: '/about/compliance' },
+            { title: '15-Min Response', description: 'Guaranteed response time', icon: <Zap className="h-5 w-5" />, url: '/about/support' },
+            { title: 'Insurance Aligned', description: 'Meet carrier requirements', icon: <Shield className="h-5 w-5" />, url: '/about/insurance' },
           ]
         }
       ]
@@ -97,18 +124,19 @@ export function MegaMenu() {
       sections: [
         {
           title: 'Learn',
+          viewAllUrl: '/resources',
           items: [
-            { title: 'Case Studies', description: 'Real-world success stories', url: '/resources/case-studies' },
-            { title: 'Blog & News', description: 'Latest security insights', url: '/resources/blog' },
-            { title: 'Videos & Webinars', description: 'Educational content library', url: '/resources/videos' },
+            { title: 'Case Studies', description: 'Real Arizona success stories', icon: <TrendingUp className="h-5 w-5" />, url: '/resources/case-studies' },
+            { title: 'Blog & News', description: 'Latest security insights', icon: <FileCheck className="h-5 w-5" />, url: '/resources/blog' },
+            { title: 'Videos & Webinars', description: 'Educational content library', icon: <Monitor className="h-5 w-5" />, url: '/resources/videos' },
           ]
         },
         {
           title: 'Tools',
           items: [
-            { title: 'Downtime Calculator', description: 'Calculate your downtime costs', url: '#calculators' },
-            { title: 'Security Checklist', description: 'Complete security assessment', url: '/resources/security-checklist' },
-            { title: 'Datasheets', description: 'Technical specifications', url: '/resources/datasheets' },
+            { title: 'Downtime Calculator', description: 'See what downtime really costs', icon: <BarChart3 className="h-5 w-5" />, url: '#calculators' },
+            { title: 'Security Checklist', description: 'Assess your security posture', icon: <ClipboardCheck className="h-5 w-5" />, url: '/resources/security-checklist' },
+            { title: 'Datasheets', description: 'Technical specifications', icon: <FileCheck className="h-5 w-5" />, url: '/resources/datasheets' },
           ]
         }
       ]
@@ -124,17 +152,18 @@ export function MegaMenu() {
         {
           title: 'Is This You?',
           items: [
-            { title: 'Frustrated with IT?', description: 'Slow response and recurring issues' },
-            { title: 'Worried about Security?', description: 'Concerned about ransomware and breaches' },
-            { title: 'Need Compliance?', description: 'HIPAA, SOC 2, or FTC requirements' },
+            { title: 'Frustrated with IT?', description: 'Slow response and recurring issues', icon: <Zap className="h-5 w-5" /> },
+            { title: 'Worried about Security?', description: 'Concerned about ransomware', icon: <Shield className="h-5 w-5" /> },
+            { title: 'Need Compliance?', description: 'HIPAA, SOC 2, or FTC needs', icon: <ClipboardCheck className="h-5 w-5" /> },
           ]
         },
         {
           title: 'Company',
+          viewAllUrl: '/about',
           items: [
-            { title: 'Mission & Values', description: 'Our commitment to partnership', url: '/about/mission-values' },
-            { title: 'Case Studies', description: 'Arizona business success stories', url: '/resources/case-studies' },
-            { title: 'Meet The Experts', description: 'Our certified Chandler team', url: '/about/team' },
+            { title: 'Mission & Values', description: 'Our commitment to partnership', icon: <Star className="h-5 w-5" />, url: '/about/mission-values' },
+            { title: 'Case Studies', description: 'Arizona business success stories', icon: <TrendingUp className="h-5 w-5" />, url: '/resources/case-studies' },
+            { title: 'Meet The Experts', description: 'Our certified Chandler team', icon: <Users className="h-5 w-5" />, url: '/about/team' },
           ]
         }
       ]
@@ -272,6 +301,15 @@ export function MegaMenu() {
     };
   }, []);
 
+  const itemVariants = {
+    hidden: { opacity: 0, y: 8 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.03, duration: 0.2, ease: 'easeOut' }
+    })
+  };
+
   return (
     <>
       {/* Top Utility Bar */}
@@ -282,7 +320,6 @@ export function MegaMenu() {
       >
         <div className="container mx-auto px-4 lg:px-8 h-full flex flex-col md:flex-row items-center justify-end py-2 md:py-0">
           <div className="flex items-center flex-wrap gap-2 md:gap-6 justify-center md:justify-end">
-            {/* Phone Number */}
             <a
               href="tel:325-480-9870"
               className="flex items-center text-white/90 hover:text-cyan-400 text-xs md:text-sm font-medium transition-colors"
@@ -293,7 +330,6 @@ export function MegaMenu() {
               <span className="sm:hidden">Call</span>
             </a>
 
-            {/* Client Portal */}
             <a
               href="https://portal.digeratiexperts.com/portal/login"
               target="_blank"
@@ -387,111 +423,188 @@ export function MegaMenu() {
                   )}
 
                   {/* Mega Menu Dropdown */}
-                  {item.sections && activeMenu === item.name && (
-                    <div
-                      ref={(el) => {
-                        if (el) dropdownRefs.current.set(item.name, el);
-                      }}
-                      className="fixed left-0 right-0 top-20 mx-auto w-[90vw] max-w-5xl bg-[#0d0720]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-[0_20px_60px_rgba(139,92,246,0.3)] mega-menu-dropdown"
-                      onMouseEnter={handleDropdownMouseEnter}
-                      onMouseLeave={handleMouseLeave}
-                      role="menu"
-                      aria-label={`${item.name} submenu`}
-                    >
-                      <div className="p-6 grid grid-cols-3 gap-6 relative">
-                        {item.sections.map((section) => (
-                          <div key={section.title}>
-                            <h3 
-                              className={`font-bold text-lg mb-4 ${
-                                section.featured ? 'text-cyan-400' : 'text-white'
-                              }`}
-                              id={`menu-section-${section.title.replace(/\s+/g, '-')}`}
+                  <AnimatePresence>
+                    {item.sections && activeMenu === item.name && (
+                      <motion.div
+                        ref={(el) => {
+                          if (el) dropdownRefs.current.set(item.name, el);
+                        }}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className={`fixed left-0 right-0 top-20 mx-auto ${
+                          item.name === 'Solutions' ? 'w-[95vw] max-w-6xl' : 'w-[90vw] max-w-5xl'
+                        } bg-[#0a0118] backdrop-blur-xl border border-white/15 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.6),0_0_40px_rgba(139,92,246,0.2)] mega-menu-dropdown`}
+                        onMouseEnter={handleDropdownMouseEnter}
+                        onMouseLeave={handleMouseLeave}
+                        role="menu"
+                        aria-label={`${item.name} submenu`}
+                      >
+                        <div className={`p-6 grid gap-6 relative ${
+                          item.name === 'Solutions' ? 'grid-cols-5' : 'grid-cols-3'
+                        }`}>
+                          {item.sections.map((section, sectionIdx) => (
+                            <motion.div 
+                              key={section.title}
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: sectionIdx * 0.05 }}
                             >
-                              {section.title}
-                              {section.featured && (
-                                <span className="ml-2 text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded border border-purple-500/30">
-                                  Popular
-                                </span>
-                              )}
-                            </h3>
-                            <ul 
-                              className="space-y-2"
-                              role="menu"
-                              aria-labelledby={`menu-section-${section.title.replace(/\s+/g, '-')}`}
-                            >
-                              {section.items.map((subItem) => (
-                                <li key={subItem.title} role="none">
-                                  <a
-                                    href={subItem.url || '#'}
-                                    className="group/item flex items-start space-x-3 hover:bg-white/5 p-2 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-cyan-500 border border-transparent hover:border-white/10"
-                                    onClick={handleLinkClick}
-                                    role="menuitem"
-                                    aria-label={`${subItem.title}: ${subItem.description || ''}`}
+                              {/* Section Header */}
+                              <div className="mb-4">
+                                <h3 
+                                  className={`font-bold text-sm uppercase tracking-wider flex items-center gap-2 ${
+                                    section.featured ? 'text-cyan-400' : 'text-gray-400'
+                                  }`}
+                                  id={`menu-section-${section.title.replace(/\s+/g, '-')}`}
+                                >
+                                  {section.title}
+                                  {section.featured && (
+                                    <span className="text-[10px] bg-gradient-to-r from-cyan-500 to-purple-600 text-white px-2 py-0.5 rounded-full font-medium normal-case tracking-normal">
+                                      ★ Top Picks
+                                    </span>
+                                  )}
+                                </h3>
+                                <div className={`h-px mt-2 ${
+                                  section.featured 
+                                    ? 'bg-gradient-to-r from-cyan-500/50 to-purple-500/50' 
+                                    : 'bg-white/10'
+                                }`} />
+                              </div>
+                              
+                              <ul 
+                                className="space-y-1"
+                                role="menu"
+                                aria-labelledby={`menu-section-${section.title.replace(/\s+/g, '-')}`}
+                              >
+                                {section.items.map((subItem, itemIdx) => (
+                                  <motion.li 
+                                    key={subItem.title} 
+                                    role="none"
+                                    custom={sectionIdx * section.items.length + itemIdx}
+                                    variants={itemVariants}
+                                    initial="hidden"
+                                    animate="visible"
                                   >
-                                    {subItem.icon && (
-                                      <span className="text-purple-400 group-hover/item:text-cyan-400 mt-0.5 transition-colors" aria-hidden="true">
-                                        {subItem.icon}
-                                      </span>
-                                    )}
-                                    <div className="flex-1">
-                                      <div className="flex items-center">
-                                        <span className="font-medium text-gray-300 group-hover/item:text-white transition-colors">
-                                          {subItem.title}
+                                    <a
+                                      href={subItem.url || '#'}
+                                      className="group/item flex items-start gap-3 p-2.5 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 border border-transparent hover:border-white/10 hover:bg-gradient-to-r hover:from-white/5 hover:to-white/[0.02]"
+                                      onClick={handleLinkClick}
+                                      role="menuitem"
+                                      aria-label={`${subItem.title}: ${subItem.description || ''}`}
+                                    >
+                                      {subItem.icon && (
+                                        <span className="text-purple-400 group-hover/item:text-cyan-400 mt-0.5 transition-colors flex-shrink-0" aria-hidden="true">
+                                          {subItem.icon}
                                         </span>
-                                        {subItem.badge && (
-                                          <span className="ml-2 text-xs bg-gradient-to-r from-cyan-500/20 to-purple-500/20 text-cyan-300 px-2 py-0.5 rounded border border-cyan-500/30">
-                                            {subItem.badge}
+                                      )}
+                                      <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                          <span className="font-medium text-gray-200 group-hover/item:text-white transition-colors text-sm">
+                                            {subItem.title}
                                           </span>
+                                          {subItem.badge && (
+                                            <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
+                                              subItem.badge === 'Popular' 
+                                                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
+                                                : subItem.badge === 'Best Value'
+                                                ? 'bg-green-500/20 text-green-300 border border-green-500/30'
+                                                : 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                                            }`}>
+                                              {subItem.badge}
+                                            </span>
+                                          )}
+                                        </div>
+                                        {subItem.description && (
+                                          <p className="text-xs text-gray-500 group-hover/item:text-gray-400 mt-0.5 transition-colors leading-relaxed">
+                                            {subItem.description}
+                                          </p>
+                                        )}
+                                        {subItem.price && (
+                                          <p className="text-[10px] text-cyan-400/70 mt-1 font-medium">
+                                            {subItem.price}
+                                          </p>
                                         )}
                                       </div>
-                                      {subItem.description && (
-                                        <p className="text-sm text-gray-500 group-hover/item:text-gray-400 mt-1 transition-colors">
-                                          {subItem.description}
-                                        </p>
-                                      )}
-                                    </div>
-                                  </a>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        ))}
-                        
-                        {/* Placeholder Box for Industries, Resources, and About */}
-                        {(item.name === 'Industries' || item.name === 'Resources' || item.name === 'About') && (
-                          <div 
-                            className="bg-gradient-to-br from-purple-900/30 to-cyan-900/20 border border-white/10 rounded-xl p-6 flex flex-col items-center justify-center min-h-64 hover:border-purple-500/30 hover:from-purple-900/40 hover:to-cyan-900/30 transition-all"
-                            data-testid={`menu-placeholder-${item.name.toLowerCase()}`}
-                          >
-                            <div className="text-center">
-                              <div className="w-16 h-16 mx-auto bg-gradient-to-r from-purple-600 to-cyan-600 rounded-lg flex items-center justify-center mb-4 opacity-40">
-                                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                              </div>
-                              <p className="text-sm font-medium text-white/80 mb-1">Video or PDF Content</p>
-                              <p className="text-xs text-gray-500">Coming soon</p>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* All Solutions Link - Bottom Right */}
-                        {item.name === 'Solutions' && (
-                          <div className="absolute bottom-6 right-6">
-                            <a
-                              href="/solutions"
-                              className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-medium rounded-lg transition-all hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[#0d0720]"
-                              onClick={handleLinkClick}
-                              role="menuitem"
-                              aria-label="View all solutions"
+                                    </a>
+                                  </motion.li>
+                                ))}
+                              </ul>
+                              
+                              {/* View All Link */}
+                              {section.viewAllUrl && (
+                                <a
+                                  href={section.viewAllUrl}
+                                  className="inline-flex items-center gap-1 mt-3 px-2 text-xs text-gray-500 hover:text-cyan-400 transition-colors group/view"
+                                  onClick={handleLinkClick}
+                                >
+                                  View all
+                                  <ArrowRight className="w-3 h-3 group-hover/view:translate-x-0.5 transition-transform" />
+                                </a>
+                              )}
+                            </motion.div>
+                          ))}
+                          
+                          {/* Featured Panel for Solutions */}
+                          {item.featuredPanel && (
+                            <motion.div 
+                              className="bg-gradient-to-br from-purple-900/40 via-indigo-900/30 to-cyan-900/20 border border-white/10 rounded-xl p-5 flex flex-col justify-between min-h-64"
+                              initial={{ opacity: 0, scale: 0.95 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: 0.15 }}
                             >
-                              View All
-                            </a>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
+                              <div>
+                                <h4 className="font-bold text-white mb-4 flex items-center gap-2">
+                                  <CheckCircle className="w-5 h-5 text-cyan-400" />
+                                  {item.featuredPanel.title}
+                                </h4>
+                                <div className="space-y-3">
+                                  {item.featuredPanel.stats.map((stat, idx) => (
+                                    <div key={idx} className="flex items-center justify-between py-2 border-b border-white/5">
+                                      <span className="text-gray-400 text-sm">{stat.label}</span>
+                                      <span className="text-cyan-400 font-bold">{stat.value}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                              <a
+                                href={item.featuredPanel.cta.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="mt-4 w-full inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white text-sm font-semibold rounded-lg transition-all hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                onClick={handleLinkClick}
+                              >
+                                {item.featuredPanel.cta.text}
+                                <ArrowRight className="w-4 h-4 ml-2" />
+                              </a>
+                            </motion.div>
+                          )}
+                          
+                          {/* Placeholder Box for Industries, Resources, and About */}
+                          {(item.name === 'Industries' || item.name === 'Resources' || item.name === 'About') && (
+                            <motion.div 
+                              className="bg-gradient-to-br from-purple-900/30 to-cyan-900/20 border border-white/10 rounded-xl p-6 flex flex-col items-center justify-center min-h-64"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.2 }}
+                              data-testid={`menu-placeholder-${item.name.toLowerCase()}`}
+                            >
+                              <div className="text-center">
+                                <div className="w-16 h-16 mx-auto bg-gradient-to-r from-purple-600/30 to-cyan-600/30 rounded-lg flex items-center justify-center mb-4">
+                                  <svg className="w-8 h-8 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                  </svg>
+                                </div>
+                                <p className="text-sm font-medium text-white/60 mb-1">Video or Case Study</p>
+                                <p className="text-xs text-gray-500">Coming soon</p>
+                              </div>
+                            </motion.div>
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               ))}
             </div>
@@ -499,7 +612,6 @@ export function MegaMenu() {
 
           {/* Right Side Actions */}
           <div className="flex items-center space-x-2 xl:space-x-4">
-            {/* Get Protected Now CTA - Hidden on tablet/mobile, shown in mobile menu instead */}
             <a
               href="https://meet.digerati-experts.com/"
               target="_blank"
@@ -512,7 +624,7 @@ export function MegaMenu() {
               Get Protected Now
             </a>
 
-            {/* Mobile/Tablet Menu Button - Shows below xl breakpoint */}
+            {/* Mobile/Tablet Menu Button */}
             <button
               className="xl:hidden relative p-2.5 rounded-xl bg-gradient-to-r from-purple-600/20 to-cyan-600/20 hover:from-purple-600/30 hover:to-cyan-600/30 focus:outline-none focus:ring-2 focus:ring-cyan-400 border border-white/10 hover:border-white/20 transition-all group"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -521,12 +633,10 @@ export function MegaMenu() {
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             >
               <div className="relative w-6 h-6 flex items-center justify-center">
-                {/* Animated hamburger icon */}
                 <span className={`absolute w-5 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full transform transition-all duration-300 ${mobileMenuOpen ? 'rotate-45' : '-translate-y-1.5'}`} />
                 <span className={`absolute w-5 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full transition-all duration-300 ${mobileMenuOpen ? 'opacity-0 scale-0' : 'opacity-100'}`} />
                 <span className={`absolute w-5 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full transform transition-all duration-300 ${mobileMenuOpen ? '-rotate-45' : 'translate-y-1.5'}`} />
               </div>
-              {/* Glow effect on hover */}
               <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-500/0 to-purple-500/0 group-hover:from-cyan-500/10 group-hover:to-purple-500/10 transition-all duration-300" />
             </button>
           </div>
@@ -544,7 +654,7 @@ export function MegaMenu() {
         >
           {/* Backdrop with blur */}
           <div 
-            className={`absolute inset-0 bg-[#0a0118]/90 backdrop-blur-md transition-opacity duration-300 ${
+            className={`absolute inset-0 bg-[#0a0118]/95 backdrop-blur-md transition-opacity duration-300 ${
               mobileMenuOpen ? 'opacity-100' : 'opacity-0'
             }`}
             onClick={() => setMobileMenuOpen(false)}
