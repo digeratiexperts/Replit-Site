@@ -1,5 +1,13 @@
-import { Briefcase, Calculator, Stethoscope, Home, Heart } from "lucide-react";
+import { Briefcase, Calculator, Stethoscope, Home, Heart, ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+
+// Import industry images from attached assets
+import lawBooksImg from "@assets/Rectangle-152058_1767027918697.png";
+import lawScalesImg from "@assets/Rectangle-152058-1_1767027918697.png";
+import healthcareImg from "@assets/Rectangle-152058-2_1767027918698.png";
+import realEstateImg from "@assets/Rectangle-152058-3_1767027918698.png";
+import animalHospitalImg from "@assets/Rectangle-152058-4_1767027918698.png";
 
 export const DigeratiIndustriesSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -8,46 +16,51 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
       icon: Briefcase, 
       name: "Law Firms", 
       testId: "industry-law",
-      color: "purple",
+      slug: "law-firms",
+      description: "Protect client privilege and meet ABA compliance requirements",
+      image: lawScalesImg,
       gradient: "from-purple-500 to-violet-600",
-      glowColor: "rgba(139,92,246,0.3)",
-      glyphGradient: "radial-gradient(circle_at_100%_0%,rgba(139,92,246,0.25),transparent_60%)"
+      glowColor: "rgba(139,92,246,0.4)"
     },
     { 
       icon: Calculator, 
       name: "CPA Firms", 
       testId: "industry-cpa",
-      color: "blue",
+      slug: "accounting-finance",
+      description: "Secure tax data and ensure IRS/FTC compliance",
+      image: lawBooksImg,
       gradient: "from-blue-500 to-cyan-500",
-      glowColor: "rgba(59,130,246,0.3)",
-      glyphGradient: "radial-gradient(circle_at_100%_0%,rgba(59,130,246,0.25),transparent_60%)"
+      glowColor: "rgba(59,130,246,0.4)"
     },
     { 
       icon: Stethoscope, 
-      name: "Medical\nPractices", 
+      name: "Medical Practices", 
       testId: "industry-medical",
-      color: "cyan",
+      slug: "healthcare",
+      description: "HIPAA compliance and patient data protection",
+      image: healthcareImg,
       gradient: "from-cyan-400 to-teal-500",
-      glowColor: "rgba(34,211,238,0.3)",
-      glyphGradient: "radial-gradient(circle_at_100%_0%,rgba(34,211,238,0.25),transparent_60%)"
+      glowColor: "rgba(34,211,238,0.4)"
     },
     { 
       icon: Home, 
-      name: "Real Estate\nFirms", 
+      name: "Real Estate Firms", 
       testId: "industry-realestate",
-      color: "emerald",
+      slug: "real-estate",
+      description: "Wire fraud prevention and transaction security",
+      image: realEstateImg,
       gradient: "from-emerald-500 to-green-500",
-      glowColor: "rgba(16,185,129,0.3)",
-      glyphGradient: "radial-gradient(circle_at_100%_0%,rgba(16,185,129,0.25),transparent_60%)"
+      glowColor: "rgba(16,185,129,0.4)"
     },
     { 
       icon: Heart, 
-      name: "Animal\nHospitals", 
+      name: "Animal Hospitals", 
       testId: "industry-animal",
-      color: "pink",
+      slug: "nonprofits",
+      description: "Veterinary practice and client data protection",
+      image: animalHospitalImg,
       gradient: "from-pink-500 to-rose-500",
-      glowColor: "rgba(236,72,153,0.3)",
-      glyphGradient: "radial-gradient(circle_at_100%_0%,rgba(236,72,153,0.25),transparent_60%)"
+      glowColor: "rgba(236,72,153,0.4)"
     }
   ];
 
@@ -117,59 +130,74 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
         </motion.div>
 
         <motion.div 
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
         >
-          {industries.map((industry, index) => {
-            const Icon = industry.icon;
-            return (
-              <motion.div 
-                key={index} 
-                className="group cursor-pointer"
-                data-testid={industry.testId}
-                variants={cardVariants}
-                whileHover={{ 
-                  y: -8,
-                  transition: { type: "spring", stiffness: 300, damping: 20 }
-                }}
-              >
+          {industries.map((industry) => (
+            <motion.a 
+              key={industry.testId}
+              href={`/industries/${industry.slug}`}
+              className="group relative block"
+              data-testid={industry.testId}
+              variants={cardVariants}
+            >
+              {/* Glow effect */}
+              <div 
+                className="absolute -inset-0.5 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{ background: industry.glowColor }}
+              />
+              
+              {/* Card */}
+              <div className="relative overflow-hidden rounded-2xl h-64 sm:h-72">
+                {/* Background Image */}
                 <div 
-                  className="relative bg-[#0f0b28]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-6 text-center transition-all duration-300 hover:border-white/20 overflow-hidden h-full"
-                  style={{
-                    boxShadow: `0 4px 20px rgba(0,0,0,0.3)`,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = `0 8px 40px ${industry.glowColor}`;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = `0 4px 20px rgba(0,0,0,0.3)`;
-                  }}
-                >
-                  <div 
-                    className="absolute inset-0 opacity-60 transition-opacity duration-300 group-hover:opacity-100"
-                    style={{ background: industry.glyphGradient }}
-                  />
-                  
-                  <div className="relative z-10">
-                    <div 
-                      className={`w-16 h-16 mx-auto mb-4 bg-gradient-to-br ${industry.gradient} rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110`}
-                      style={{
-                        boxShadow: `0 4px 15px ${industry.glowColor}`
-                      }}
-                    >
-                      <Icon className="h-8 w-8 text-white" />
-                    </div>
-                    <h3 className="text-base md:text-lg font-bold text-white whitespace-pre-line leading-tight">
-                      {industry.name}
-                    </h3>
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                  style={{ backgroundImage: `url(${industry.image})` }}
+                />
+                
+                {/* Gradient Overlay */}
+                <div className={`absolute inset-0 bg-gradient-to-t ${industry.gradient} opacity-60 mix-blend-multiply`} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                
+                {/* Content */}
+                <div className="absolute inset-0 p-5 flex flex-col justify-end">
+                  {/* Icon */}
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${industry.gradient} flex items-center justify-center mb-3 shadow-lg transition-transform duration-300 group-hover:scale-110`}>
+                    <industry.icon className="h-6 w-6 text-white" />
                   </div>
+                  
+                  <h3 className="text-xl font-bold text-white mb-2">
+                    {industry.name}
+                  </h3>
+                  <p className="text-gray-200 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    {industry.description}
+                  </p>
                 </div>
-              </motion.div>
-            );
-          })}
+              </div>
+            </motion.a>
+          ))}
+        </motion.div>
+
+        <motion.div 
+          className="text-center mt-12"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+            <Button 
+              size="lg"
+              className="h-14 px-8 text-lg font-bold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-0 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300"
+              data-testid="button-industries-cta"
+            >
+              Get Industry-Specific Protection
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </a>
         </motion.div>
       </div>
     </section>

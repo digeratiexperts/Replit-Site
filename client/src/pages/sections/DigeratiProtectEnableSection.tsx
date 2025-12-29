@@ -2,6 +2,11 @@ import { Shield, Users, BarChart, Lock, Code, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, useReducedMotion } from "framer-motion";
 
+// Import images
+import techWorkImg from "@assets/Rectangle-152059_1767027918698.png";
+import securityImg from "@assets/Rectangle-152059-1_1767027918699.png";
+import codeImg from "@assets/Rectangle-152059-2_1767027918699.png";
+
 export const DigeratiProtectEnableSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
   
@@ -10,18 +15,21 @@ export const DigeratiProtectEnableSection = (): JSX.Element => {
       title: "Security-First Operations",
       description: "Every system, endpoint, and user is protected - by design, not by reaction.",
       icon: Shield,
-      gradient: "from-purple-500 to-violet-600"
+      image: securityImg,
+      gradient: "from-purple-600 to-blue-600"
     },
     {
       title: "Co-Managed or Fully Managed",
       description: "We support your internal IT or serve as your outsourced technology team.",
       icon: Users,
+      image: techWorkImg,
       gradient: "from-blue-500 to-cyan-500"
     },
     {
       title: "Executive-Level Transparency",
       description: "Reports, KPIs, and compliance insights that make sense - and drive decisions.",
       icon: BarChart,
+      image: codeImg,
       gradient: "from-cyan-400 to-teal-500"
     }
   ];
@@ -65,16 +73,11 @@ export const DigeratiProtectEnableSection = (): JSX.Element => {
   };
 
   return (
-    <section 
-      className="py-20 relative overflow-hidden"
-      style={{
-        background: `linear-gradient(to bottom, #0d0720, #0a0118)`
-      }}
-    >
-      {/* Background effects */}
+    <section className="py-20 bg-white relative overflow-hidden">
+      {/* Background decoration */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-[150px]" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-600/8 rounded-full blur-[150px]" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-100/50 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-100/50 rounded-full blur-[150px]" />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -85,13 +88,12 @@ export const DigeratiProtectEnableSection = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
-            We Exist to Protect and Enable Your Business
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6 text-gray-900">
+            We Exist to <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">Protect and Enable</span> Your Business
           </h2>
-          <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
+          <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
             If you're like most business leaders, you don't want another vendor — you want a security-first partner 
-            who proactively reduces risk, improves uptime, and keeps your team moving. Digerati Experts brings 
-            managed IT, cybersecurity, and compliance together in one streamlined operation — built for results, not noise.
+            who proactively reduces risk, improves uptime, and keeps your team moving.
           </p>
         </motion.div>
 
@@ -109,25 +111,33 @@ export const DigeratiProtectEnableSection = (): JSX.Element => {
               className="group relative"
               data-testid={`card-${feature.title.toLowerCase().replace(/\s+/g, '-')}`}
             >
-              {/* Glow effect on hover */}
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600/30 to-cyan-600/30 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
-              {/* Card */}
-              <div className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 h-full hover:border-purple-500/40 transition-all duration-300 group-hover:scale-[1.02]">
-                {/* Icon */}
-                <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-                  <feature.icon className="h-7 w-7 text-white" />
+              {/* Card with image */}
+              <div className="relative overflow-hidden rounded-2xl h-80 shadow-xl hover:shadow-2xl transition-shadow duration-300">
+                {/* Background Image */}
+                <div 
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                  style={{ backgroundImage: `url(${feature.image})` }}
+                />
+                
+                {/* Gradient Overlay */}
+                <div className={`absolute inset-0 bg-gradient-to-t ${feature.gradient} opacity-70 mix-blend-multiply`} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                
+                {/* Content */}
+                <div className="absolute inset-0 p-6 flex flex-col justify-end">
+                  {/* Icon */}
+                  <div className={`w-14 h-14 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-4 border border-white/30`}>
+                    <feature.icon className="h-7 w-7 text-white" />
+                  </div>
+                  
+                  <h3 className="text-2xl font-bold text-white mb-3">
+                    {feature.title}
+                  </h3>
+                  
+                  <p className="text-gray-200 leading-relaxed">
+                    {feature.description}
+                  </p>
                 </div>
-                
-                {/* Title */}
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
-                  {feature.title}
-                </h3>
-                
-                {/* Description */}
-                <p className="text-gray-400 leading-relaxed">
-                  {feature.description}
-                </p>
               </div>
             </motion.div>
           ))}
@@ -144,15 +154,15 @@ export const DigeratiProtectEnableSection = (): JSX.Element => {
           {additionalFeatures.map((feature) => (
             <div 
               key={feature.title}
-              className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-6 hover:border-purple-500/40 hover:bg-white/[0.08] transition-all duration-300"
+              className="bg-gray-50 border border-gray-200 rounded-xl p-6 hover:border-purple-300 hover:shadow-lg transition-all duration-300"
             >
               <div className="flex items-start gap-4">
                 <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${feature.gradient} flex items-center justify-center flex-shrink-0`}>
                   <feature.icon className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-white mb-2">{feature.title}</h4>
-                  <p className="text-gray-400 text-sm leading-relaxed">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h4>
+                  <p className="text-gray-600 text-sm leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
@@ -171,7 +181,7 @@ export const DigeratiProtectEnableSection = (): JSX.Element => {
           <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
             <Button 
               size="lg"
-              className="h-14 px-8 text-lg font-bold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-0 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300"
+              className="h-14 px-8 text-lg font-bold bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
               data-testid="button-partner-with-us"
             >
               Partner With Us
