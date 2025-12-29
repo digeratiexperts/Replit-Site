@@ -277,17 +277,17 @@ export const ModernHeroSection = (): JSX.Element => {
                 ))}
               </div>
 
-              {/* Trust Badges - Subtle credibility row ABOVE the form */}
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-400">
-                <span className="text-gray-500">Trusted by:</span>
+              {/* Trust Badges - Credibility row ABOVE the form */}
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+                <span className="text-gray-300 font-medium">Trusted by:</span>
                 {trustBadges.map((badge) => (
                   <span 
                     key={badge.name}
                     className="flex items-center gap-1.5"
                     data-testid={`trust-badge-${badge.name.toLowerCase().replace(/\s+/g, '-')}`}
                   >
-                    <badge.icon className="w-4 h-4 text-gray-500" />
-                    <span className="text-gray-400">{badge.name}</span>
+                    <badge.icon className="w-4 h-4 text-gray-400" />
+                    <span className="text-gray-300">{badge.name}</span>
                   </span>
                 ))}
               </div>
@@ -318,7 +318,7 @@ export const ModernHeroSection = (): JSX.Element => {
                                 <Input 
                                   placeholder="John Smith" 
                                   data-testid="input-hero-full-name"
-                                  className="h-12 bg-white/10 border-white/25 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-400 text-base"
+                                  className="h-12 bg-white/10 border-white/30 text-white placeholder:text-gray-400 focus-visible:ring-purple-500 focus-visible:border-purple-400 text-base"
                                   disabled={isSubmitting}
                                   {...field} 
                                 />
@@ -339,7 +339,7 @@ export const ModernHeroSection = (): JSX.Element => {
                                   type="email" 
                                   placeholder="john@company.com" 
                                   data-testid="input-hero-email"
-                                  className="h-12 bg-white/10 border-white/25 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-400 text-base"
+                                  className="h-12 bg-white/10 border-white/30 text-white placeholder:text-gray-400 focus-visible:ring-purple-500 focus-visible:border-purple-400 text-base"
                                   disabled={isSubmitting}
                                   {...field} 
                                 />
@@ -372,18 +372,18 @@ export const ModernHeroSection = (): JSX.Element => {
                       </Button>
 
                       {/* Reassurance microcopy - pulled closer to CTA */}
-                      <div className="flex items-center justify-center gap-4 text-gray-400">
+                      <div className="flex items-center justify-center gap-5 text-gray-300">
                         <div className="flex items-center gap-1.5">
-                          <Check className="w-3.5 h-3.5 text-green-500" />
-                          <span className="text-xs">No obligation</span>
+                          <Check className="w-4 h-4 text-green-400" />
+                          <span className="text-sm">No obligation</span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <Check className="w-3.5 h-3.5 text-green-500" />
-                          <span className="text-xs">Results in 24-48hrs</span>
+                          <Check className="w-4 h-4 text-green-400" />
+                          <span className="text-sm">Results in 24-48hrs</span>
                         </div>
                         <div className="hidden sm:flex items-center gap-1.5">
-                          <Check className="w-3.5 h-3.5 text-green-500" />
-                          <span className="text-xs">No credit card</span>
+                          <Check className="w-4 h-4 text-green-400" />
+                          <span className="text-sm">No credit card</span>
                         </div>
                       </div>
 
@@ -416,7 +416,7 @@ export const ModernHeroSection = (): JSX.Element => {
                   >
                     <stat.icon className="w-5 h-5 text-purple-400 mb-2" />
                     <div className="text-2xl font-bold text-white">{stat.value}</div>
-                    <div className="text-xs text-gray-400 mt-0.5">{stat.label}</div>
+                    <div className="text-xs text-gray-300 mt-0.5">{stat.label}</div>
                   </motion.div>
                 ))}
               </div>
