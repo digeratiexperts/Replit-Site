@@ -125,6 +125,29 @@ Transformed the entire homepage from "WordPress feel" to modern, enterprise-grad
 - Uses Framer Motion's `useReducedMotion` hook
 - Static fallbacks for users who prefer reduced motion
 
+### Complete Dark Theme Conversion (All 50+ Pages)
+Converted all public-facing pages to enterprise-grade dark theme:
+
+**Implementation Pattern:**
+- Cards: `bg-white/5 backdrop-blur-sm border border-white/10`
+- Hover states: `hover:border-purple-500/30 hover:bg-white/[0.08]`
+- Headings: `text-white`
+- Body text: `text-gray-300` or `text-gray-400`
+- Icons: Changed from `*-600` to `*-400` variants for visibility
+- Alert boxes: Colored backgrounds with `/10` opacity (e.g., `bg-red-500/10 border-red-500/30`)
+
+**Pages Updated:**
+- **PageTemplate**: Default variant changed to "dark", cascading to all consumers
+- **GenericServicePage**: Full dark theme conversion (covers ~20+ solutions/resources pages)
+- **SolutionsIndex & ManagedITSupport**: Explicit dark variant with glassmorphism cards
+- **Industry pages** (5): Healthcare, Accounting, LawFirms, RealEstate, Nonprofits
+- **About pages** (5): MissionValues, Team, Compliance, Support, Insurance
+- **Support pages** (4): SubmitTicket, KnowledgeBase, RemoteSupport, PayInvoice
+- **Legal pages** (7): PrivacyPolicy, TermsOfUse, MSA, SLA, AUP, DPA, SampleSOW
+- **Trust pages** (3): TrustCenter, VulnerabilityDisclosure, Accessibility
+- **Resource pages** (6): CaseStudies, Blog, Videos, SecurityChecklist, Datasheets, DowntimeCalculator
+- **Location pages** (6): Chandler, Phoenix, Mesa, Gilbert, Tempe, Scottsdale (already dark)
+
 ### Previous Changes
 - Fixed all dead buttons and links to Zoho Bookings
 - Mobile menu optimization with white text on dark background
