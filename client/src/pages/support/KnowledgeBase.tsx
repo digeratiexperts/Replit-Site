@@ -55,14 +55,14 @@ export default function KnowledgeBase() {
         <div className="max-w-2xl mx-auto w-full">
           <div className="relative group">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-blue-400 rounded-xl blur opacity-0 group-hover:opacity-20 transition-all" />
-            <div className="relative flex items-center bg-white/80 backdrop-blur-sm rounded-xl border-2 border-white/50 group-hover:border-purple-200 transition-all">
+            <div className="relative flex items-center bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 group-hover:border-purple-400/50 transition-all">
               <Search className="absolute left-4 h-5 w-5 text-gray-400" />
               <Input
                 type="text"
                 placeholder="Search knowledge base..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12 pr-4 py-3 text-lg border-0 bg-transparent placeholder-gray-400"
+                className="pl-12 pr-4 py-3 text-lg border-0 bg-transparent text-white placeholder:text-gray-500"
                 data-testid="input-search-kb"
               />
             </div>
@@ -79,23 +79,23 @@ export default function KnowledgeBase() {
                   <div className={`p-3 rounded-lg bg-gradient-to-r ${cat.color}`}>
                     <Icon className="h-6 w-6 text-white" />
                   </div>
-                  <h2 className="text-2xl font-bold">{cat.category}</h2>
-                  <Badge variant="outline" className="ml-auto">{cat.articles.length} articles</Badge>
+                  <h2 className="text-2xl font-bold text-white">{cat.category}</h2>
+                  <Badge variant="outline" className="ml-auto border-white/20 text-gray-300">{cat.articles.length} articles</Badge>
                 </div>
                 <div className="grid md:grid-cols-2 gap-4">
                   {cat.articles.map((article, i) => (
                     <div key={i} className="group cursor-pointer">
-                      <Card className="h-full bg-white hover:shadow-lg transition-all border-2 border-white/50 group-hover:border-purple-200">
+                      <Card className="h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-400/50 transition-all">
                         <CardHeader>
                           <div className="flex items-start justify-between mb-2">
-                            <CardTitle className="text-lg group-hover:text-purple-600 transition-colors">{article.title}</CardTitle>
-                            <Eye className="h-4 w-4 text-gray-400 group-hover:text-purple-600" />
+                            <CardTitle className="text-lg text-white group-hover:text-purple-400 transition-colors">{article.title}</CardTitle>
+                            <Eye className="h-4 w-4 text-gray-400 group-hover:text-purple-400" />
                           </div>
                         </CardHeader>
                         <CardContent>
                           <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-500">{article.views} views</span>
-                            <Badge variant="secondary" className="text-xs">{article.difficulty}</Badge>
+                            <span className="text-sm text-gray-400">{article.views} views</span>
+                            <Badge variant="secondary" className="text-xs bg-white/10 text-gray-300">{article.difficulty}</Badge>
                           </div>
                         </CardContent>
                       </Card>
@@ -108,8 +108,8 @@ export default function KnowledgeBase() {
         </div>
 
         {/* Quick Resources */}
-        <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-12 border border-purple-100/50">
-          <h2 className="text-2xl font-bold mb-8 text-center">Quick Resources</h2>
+        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-12 border border-white/10">
+          <h2 className="text-2xl font-bold mb-8 text-center text-white">Quick Resources</h2>
           <div className="grid md:grid-cols-3 gap-6">
             {[
               { icon: Video, title: "Video Tutorials", desc: "Step-by-step guides", color: "from-red-500 to-pink-500", cta: "Watch Videos" },
@@ -119,14 +119,14 @@ export default function KnowledgeBase() {
               const Icon = resource.icon;
               return (
                 <div key={idx} className="group">
-                  <Card className="h-full bg-white group-hover:shadow-lg transition-all border-2 border-white/50 group-hover:border-purple-200">
+                  <Card className="h-full bg-white/5 backdrop-blur-sm border border-white/10 group-hover:border-purple-400/50 transition-all">
                     <CardContent className="pt-6">
                       <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${resource.color} text-white flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                         <Icon className="h-6 w-6" />
                       </div>
-                      <h3 className="font-semibold mb-2 text-gray-900">{resource.title}</h3>
-                      <p className="text-gray-600 text-sm mb-4">{resource.desc}</p>
-                      <Button variant="outline" size="sm" className="w-full" data-testid={`button-${resource.title.toLowerCase()}`}>
+                      <h3 className="font-semibold mb-2 text-white">{resource.title}</h3>
+                      <p className="text-gray-400 text-sm mb-4">{resource.desc}</p>
+                      <Button variant="outline" size="sm" className="w-full border-white/20 text-gray-300 hover:bg-white/10" data-testid={`button-${resource.title.toLowerCase()}`}>
                         {resource.cta}
                       </Button>
                     </CardContent>

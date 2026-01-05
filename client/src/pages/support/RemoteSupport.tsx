@@ -19,8 +19,8 @@ export default function RemoteSupport() {
       <div className="space-y-16">
         {/* How It Works */}
         <div className="text-center max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold mb-6">How Remote Support Works</h2>
-          <p className="text-xl text-gray-700 leading-relaxed">
+          <h2 className="text-3xl font-bold mb-6 text-white">How Remote Support Works</h2>
+          <p className="text-xl text-gray-300 leading-relaxed">
             When issues arise, our MSP technicians can securely access your systems to diagnose and resolve problems in minutes. No downtime, no delays.
           </p>
         </div>
@@ -32,19 +32,19 @@ export default function RemoteSupport() {
             return (
               <div key={idx} className="group relative">
                 <div className={`absolute inset-0 bg-gradient-to-r ${feature.color} rounded-xl blur opacity-0 group-hover:opacity-15 transition-all`} />
-                <Card className="relative bg-white hover:shadow-lg transition-all border-2 border-white/50 group-hover:border-blue-200 h-full">
+                <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:border-blue-400/50 transition-all h-full">
                   <CardHeader>
                     <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${feature.color} text-white flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
                       <Icon className="h-6 w-6" />
                     </div>
-                    <CardTitle>{feature.title}</CardTitle>
+                    <CardTitle className="text-white">{feature.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-3">
                       {feature.points.map((point, i) => (
                         <li key={i} className="flex items-start gap-2">
-                          <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                          <span className="text-gray-700">{point}</span>
+                          <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0 mt-0.5" />
+                          <span className="text-gray-300">{point}</span>
                         </li>
                       ))}
                     </ul>
@@ -56,8 +56,8 @@ export default function RemoteSupport() {
         </div>
 
         {/* Connection Process */}
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-8 border border-blue-100/50">
-          <h3 className="text-2xl font-bold mb-8 text-center">Simple 3-Step Process</h3>
+        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10">
+          <h3 className="text-2xl font-bold mb-8 text-center text-white">Simple 3-Step Process</h3>
           <div className="grid md:grid-cols-3 gap-6">
             {[
               { step: 1, title: "Request Support", desc: "Submit ticket or call our MSP team", time: "< 1 min" },
@@ -68,14 +68,14 @@ export default function RemoteSupport() {
                 {idx < 2 && (
                   <div className="hidden md:block absolute top-12 left-[60%] w-[40%] h-1 bg-gradient-to-r from-blue-400 to-transparent" />
                 )}
-                <Card className="text-center">
+                <Card className="text-center bg-white/5 backdrop-blur-sm border border-white/10">
                   <CardContent className="pt-6">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white flex items-center justify-center font-bold mx-auto mb-4">
                       {process.step}
                     </div>
-                    <h4 className="font-semibold text-lg mb-2">{process.title}</h4>
-                    <p className="text-gray-600 text-sm mb-2">{process.desc}</p>
-                    <p className="text-blue-600 font-medium text-sm">{process.time}</p>
+                    <h4 className="font-semibold text-lg mb-2 text-white">{process.title}</h4>
+                    <p className="text-gray-400 text-sm mb-2">{process.desc}</p>
+                    <p className="text-blue-400 font-medium text-sm">{process.time}</p>
                   </CardContent>
                 </Card>
               </div>

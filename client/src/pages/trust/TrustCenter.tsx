@@ -42,7 +42,7 @@ export default function TrustCenter() {
       <div className="space-y-16">
         {/* Intro */}
         <motion.p 
-          className="text-xl text-gray-700 text-center max-w-3xl mx-auto leading-relaxed"
+          className="text-xl text-gray-300 text-center max-w-3xl mx-auto leading-relaxed"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -64,17 +64,17 @@ export default function TrustCenter() {
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1, duration: 0.5 }}
               >
-                <Card className="group h-full bg-white border-2 border-gray-100 hover:border-purple-200 hover:shadow-xl transition-all duration-300 overflow-hidden">
-                  <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl ${cert.gradient} opacity-5 rounded-bl-full`} />
+                <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 hover:shadow-xl transition-all duration-300 overflow-hidden">
+                  <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl ${cert.gradient} opacity-10 rounded-bl-full`} />
                   <CardHeader>
                     <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${cert.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                       <Icon className="h-7 w-7 text-white" />
                     </div>
-                    <CardTitle className="text-xl text-gray-900">{cert.title}</CardTitle>
+                    <CardTitle className="text-xl text-white">{cert.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600 mb-4 leading-relaxed">{cert.desc}</p>
-                    <Badge className="bg-green-100 text-green-700 border-green-200">
+                    <p className="text-gray-400 mb-4 leading-relaxed">{cert.desc}</p>
+                    <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
                       <CheckCircle className="w-3 h-3 mr-1" />
                       {cert.status}
                     </Badge>
@@ -87,61 +87,61 @@ export default function TrustCenter() {
 
         {/* Security Practices */}
         <motion.div 
-          className="relative bg-gradient-to-br from-gray-50 to-purple-50/50 rounded-2xl p-8 md:p-12 overflow-hidden"
+          className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 md:p-12 overflow-hidden"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-200/30 to-transparent rounded-full blur-3xl" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-500/20 to-transparent rounded-full blur-3xl" />
           
           <div className="relative">
             <div className="flex items-center gap-3 mb-8">
               <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
                 <Lock className="w-6 h-6 text-white" />
               </div>
-              <h2 className="text-3xl font-bold text-gray-900">Our Security Practices</h2>
+              <h2 className="text-3xl font-bold text-white">Our Security Practices</h2>
             </div>
             
             <div className="grid md:grid-cols-2 gap-8">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-purple-600" />
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <Shield className="w-5 h-5 text-purple-400" />
                   Technical Controls
                 </h3>
                 <div className="space-y-3">
                   {technicalControls.map((control, idx) => (
                     <motion.div 
                       key={idx}
-                      className="flex items-center gap-3 p-3 bg-white/80 rounded-lg border border-gray-100"
+                      className="flex items-center gap-3 p-3 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10"
                       initial={prefersReducedMotion ? {} : { opacity: 0, x: -10 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: idx * 0.05, duration: 0.3 }}
                     >
-                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-                      <span className="text-gray-700">{control}</span>
+                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                      <span className="text-gray-300">{control}</span>
                     </motion.div>
                   ))}
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <FileCheck className="w-5 h-5 text-purple-600" />
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <FileCheck className="w-5 h-5 text-purple-400" />
                   Administrative Controls
                 </h3>
                 <div className="space-y-3">
                   {adminControls.map((control, idx) => (
                     <motion.div 
                       key={idx}
-                      className="flex items-center gap-3 p-3 bg-white/80 rounded-lg border border-gray-100"
+                      className="flex items-center gap-3 p-3 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10"
                       initial={prefersReducedMotion ? {} : { opacity: 0, x: -10 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: idx * 0.05, duration: 0.3 }}
                     >
-                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-                      <span className="text-gray-700">{control}</span>
+                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                      <span className="text-gray-300">{control}</span>
                     </motion.div>
                   ))}
                 </div>
@@ -152,7 +152,7 @@ export default function TrustCenter() {
 
         {/* Infrastructure Security */}
         <motion.div 
-          className="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-xl p-8"
+          className="bg-white/5 backdrop-blur-sm border-l-4 border-blue-500 border border-white/10 rounded-xl p-8"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -162,7 +162,7 @@ export default function TrustCenter() {
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
               <Server className="w-5 h-5 text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">Infrastructure Security</h2>
+            <h2 className="text-2xl font-bold text-white">Infrastructure Security</h2>
           </div>
           <div className="grid md:grid-cols-2 gap-4">
             {[
@@ -172,9 +172,9 @@ export default function TrustCenter() {
               { label: "Monitoring", value: "Real-time security information and event management (SIEM)" },
               { label: "Backups", value: "Encrypted, geographically distributed, tested regularly" }
             ].map((item, idx) => (
-              <div key={idx} className="p-4 bg-white/80 rounded-lg">
-                <span className="font-semibold text-gray-900">{item.label}:</span>{" "}
-                <span className="text-gray-700">{item.value}</span>
+              <div key={idx} className="p-4 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
+                <span className="font-semibold text-white">{item.label}:</span>{" "}
+                <span className="text-gray-300">{item.value}</span>
               </div>
             ))}
           </div>
@@ -182,7 +182,7 @@ export default function TrustCenter() {
 
         {/* Privacy & Data Protection */}
         <motion.div 
-          className="bg-gradient-to-r from-purple-50 to-indigo-50 border-l-4 border-purple-500 rounded-xl p-8"
+          className="bg-white/5 backdrop-blur-sm border-l-4 border-purple-500 border border-white/10 rounded-xl p-8"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -192,7 +192,7 @@ export default function TrustCenter() {
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
               <Eye className="w-5 h-5 text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">Privacy & Data Protection</h2>
+            <h2 className="text-2xl font-bold text-white">Privacy & Data Protection</h2>
           </div>
           <div className="grid md:grid-cols-2 gap-4">
             {[
@@ -202,9 +202,9 @@ export default function TrustCenter() {
               { label: "Client Rights", value: "Access, correction, deletion, and portability rights" },
               { label: "No Data Selling", value: "We never sell client data to third parties" }
             ].map((item, idx) => (
-              <div key={idx} className="p-4 bg-white/80 rounded-lg">
-                <span className="font-semibold text-gray-900">{item.label}:</span>{" "}
-                <span className="text-gray-700">{item.value}</span>
+              <div key={idx} className="p-4 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
+                <span className="font-semibold text-white">{item.label}:</span>{" "}
+                <span className="text-gray-300">{item.value}</span>
               </div>
             ))}
           </div>

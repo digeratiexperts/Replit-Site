@@ -33,18 +33,18 @@ const FeatureCard = ({
     viewport={{ once: true }}
     transition={{ delay: index * 0.1, duration: 0.5 }}
   >
-    <Card className="group h-full bg-white border border-gray-200 hover:border-purple-300 hover:shadow-xl transition-all duration-300 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+    <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/30 hover:bg-white/[0.08] transition-all duration-300 overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       <CardHeader className="relative">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-600 to-cyan-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
           {feature.icon || <Sparkles className="w-6 h-6 text-white" />}
         </div>
-        <CardTitle className="text-xl font-semibold text-gray-900 group-hover:text-purple-700 transition-colors">
+        <CardTitle className="text-xl font-semibold text-white group-hover:text-purple-300 transition-colors">
           {feature.title}
         </CardTitle>
       </CardHeader>
       <CardContent className="relative">
-        <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+        <p className="text-gray-400 leading-relaxed">{feature.description}</p>
       </CardContent>
     </Card>
   </motion.div>
@@ -65,6 +65,7 @@ export default function GenericServicePage({
       title={title}
       subtitle={subtitle}
       gradientColors={gradientColors}
+      variant="dark"
     >
       <div className="space-y-16">
         {/* Description with visual accent */}
@@ -75,8 +76,8 @@ export default function GenericServicePage({
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-600 to-indigo-600 rounded-full" />
-          <p className="text-xl text-gray-700 leading-relaxed pl-6 max-w-4xl">
+          <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-500 to-cyan-500 rounded-full" />
+          <p className="text-xl text-gray-300 leading-relaxed pl-6 max-w-4xl">
             {description}
           </p>
         </motion.div>
@@ -91,10 +92,10 @@ export default function GenericServicePage({
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-600 to-cyan-500 flex items-center justify-center">
                 <Zap className="w-5 h-5 text-white" />
               </div>
-              <h2 className="text-3xl font-bold text-gray-900">Key Features</h2>
+              <h2 className="text-3xl font-bold text-white">Key Features</h2>
             </motion.div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {features.map((feature, index) => (
@@ -112,38 +113,38 @@ export default function GenericServicePage({
         {/* Benefits Section */}
         {benefits.length > 0 && (
           <motion.div 
-            className="relative bg-gradient-to-br from-gray-50 to-purple-50/50 rounded-2xl p-8 md:p-12 overflow-hidden"
+            className="relative bg-white/5 backdrop-blur-sm rounded-2xl p-8 md:p-12 overflow-hidden border border-white/10"
             initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
             {/* Decorative elements */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-200/30 to-transparent rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-indigo-200/30 to-transparent rounded-full blur-3xl" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-500/10 to-transparent rounded-full blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-cyan-500/10 to-transparent rounded-full blur-3xl" />
             
             <div className="relative">
               <div className="flex items-center gap-3 mb-8">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center">
                   <CheckCircle className="w-5 h-5 text-white" />
                 </div>
-                <h2 className="text-3xl font-bold text-gray-900">What You Get</h2>
+                <h2 className="text-3xl font-bold text-white">What You Get</h2>
               </div>
               
               <div className="grid md:grid-cols-2 gap-4">
                 {benefits.map((benefit, index) => (
                   <motion.div 
                     key={index} 
-                    className="flex items-start gap-3 p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-100 hover:border-green-200 hover:shadow-md transition-all duration-300"
+                    className="flex items-start gap-3 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:border-emerald-500/30 hover:bg-white/[0.08] transition-all duration-300"
                     initial={prefersReducedMotion ? {} : { opacity: 0, x: -10 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.05, duration: 0.3 }}
                   >
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center">
                       <CheckCircle className="h-4 w-4 text-white" />
                     </div>
-                    <span className="text-gray-700 font-medium">{benefit}</span>
+                    <span className="text-gray-300 font-medium">{benefit}</span>
                   </motion.div>
                 ))}
               </div>
@@ -160,7 +161,7 @@ export default function GenericServicePage({
           transition={{ duration: 0.5 }}
         >
           {/* Gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600" />
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-600" />
           
           {/* Mesh overlay */}
           <div className="absolute inset-0 opacity-30">

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 export default function MSA() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-slate-900">
       <MegaMenu />
       
       <section className="bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 text-white py-20">
@@ -24,15 +24,15 @@ export default function MSA() {
 
       <section className="py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-          <div className="prose prose-lg max-w-none">
-            <p className="text-lg text-gray-700 mb-6">
+          <div className="prose prose-lg prose-invert max-w-none">
+            <p className="text-lg text-gray-300 mb-6">
               Our Master Service Agreement (MSA) establishes the comprehensive terms and conditions governing 
               the provision of managed IT and security services by Digerati Experts to our clients.
             </p>
 
-            <div className="bg-purple-50 border-l-4 border-purple-500 p-6 rounded mb-8">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">What's Included in Our MSA:</h3>
-              <ul className="list-disc pl-6 text-gray-700 space-y-2">
+            <div className="bg-purple-500/10 backdrop-blur-sm border border-purple-500/30 border-l-4 border-l-purple-500 p-6 rounded mb-8">
+              <h3 className="text-xl font-semibold text-white mb-3">What's Included in Our MSA:</h3>
+              <ul className="list-disc pl-6 text-gray-300 space-y-2">
                 <li>Scope of managed IT and security services</li>
                 <li>Service level agreements (SLAs) and response times</li>
                 <li>Client and service provider responsibilities</li>
@@ -46,8 +46,8 @@ export default function MSA() {
               </ul>
             </div>
 
-            <h2 className="text-2xl font-bold text-gray-900 mb-4 mt-8">Request Our MSA</h2>
-            <p className="text-gray-700 mb-6">
+            <h2 className="text-2xl font-bold text-white mb-4 mt-8">Request Our MSA</h2>
+            <p className="text-gray-300 mb-6">
               To review our Master Service Agreement or discuss custom terms for your organization, 
               please contact our team. We'll provide a copy and schedule a consultation to address 
               your specific requirements.
@@ -64,6 +64,7 @@ export default function MSA() {
               </Button>
               <Button 
                 variant="outline"
+                className="border-white/20 text-white hover:bg-white/10"
                 onClick={() => window.location.href = 'tel:325-480-9870'}
                 data-testid="button-call-legal"
               >
@@ -71,11 +72,11 @@ export default function MSA() {
               </Button>
             </div>
 
-            <div className="mt-12 bg-gray-50 p-6 rounded-lg">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Contact Legal Department</h3>
-              <p className="text-gray-700 mb-2"><strong>Email:</strong> legal@digeratiexperts.com</p>
-              <p className="text-gray-700 mb-2"><strong>Phone:</strong> 325-480-9870</p>
-              <p className="text-gray-700"><strong>Address:</strong> 3165 S Alma School Rd Suite 29, Chandler, AZ 85248</p>
+            <div className="mt-12 bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-lg">
+              <h3 className="text-xl font-semibold text-white mb-3">Contact Legal Department</h3>
+              <p className="text-gray-300 mb-2"><strong className="text-white">Email:</strong> legal@digeratiexperts.com</p>
+              <p className="text-gray-300 mb-2"><strong className="text-white">Phone:</strong> 325-480-9870</p>
+              <p className="text-gray-300"><strong className="text-white">Address:</strong> 3165 S Alma School Rd Suite 29, Chandler, AZ 85248</p>
             </div>
           </div>
         </div>

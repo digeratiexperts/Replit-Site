@@ -84,7 +84,7 @@ export default function Team() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <p className="text-xl text-gray-700 leading-relaxed">
+          <p className="text-xl text-gray-300 leading-relaxed">
             Our team brings together decades of experience in IT management, cybersecurity, and business technology. 
             We're passionate about protecting Arizona businesses and helping them succeed with technology.
           </p>
@@ -102,18 +102,18 @@ export default function Team() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1, duration: 0.5 }}
               >
-                <Card className="group h-full bg-white border-2 border-gray-100 hover:border-purple-200 hover:shadow-xl transition-all duration-300 overflow-hidden">
-                  <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${group.gradient} opacity-5 rounded-bl-full`} />
+                <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 hover:bg-white/10 transition-all duration-300 overflow-hidden">
+                  <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${group.gradient} opacity-10 rounded-bl-full`} />
                   <CardHeader>
                     <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${group.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                       <Icon className="h-7 w-7 text-white" />
                     </div>
-                    <CardTitle className="text-2xl flex items-center gap-2 text-gray-900">
+                    <CardTitle className="text-2xl flex items-center gap-2 text-white">
                       {group.name}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600 mb-4 leading-relaxed">{group.description}</p>
+                    <p className="text-gray-400 mb-4 leading-relaxed">{group.description}</p>
                     <div className="flex flex-wrap gap-2">
                       {group.certifications.map((cert, idx) => (
                         <Badge 
@@ -154,40 +154,40 @@ export default function Team() {
 
         {/* Certifications & Partnerships */}
         <motion.div 
-          className="relative bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-8 md:p-12 overflow-hidden"
+          className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 md:p-12 overflow-hidden"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-200/30 to-transparent rounded-full blur-3xl" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-500/20 to-transparent rounded-full blur-3xl" />
           
           <div className="relative">
             <div className="flex items-center gap-3 mb-8">
               <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
                 <Award className="w-6 h-6 text-white" />
               </div>
-              <h2 className="text-3xl font-bold text-gray-900">Our Certifications & Partnerships</h2>
+              <h2 className="text-3xl font-bold text-white">Our Certifications & Partnerships</h2>
             </div>
             
             <div className="grid md:grid-cols-3 gap-8">
               {certCategories.map((category, catIdx) => (
                 <motion.div 
                   key={catIdx}
-                  className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-gray-100"
+                  className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-purple-500/50 hover:bg-white/10 transition-all duration-300"
                   initial={prefersReducedMotion ? {} : { opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: catIdx * 0.1, duration: 0.3 }}
                 >
-                  <h3 className="font-bold text-lg mb-4 text-gray-900 flex items-center gap-2">
-                    <Star className="w-5 h-5 text-purple-600" />
+                  <h3 className="font-bold text-lg mb-4 text-white flex items-center gap-2">
+                    <Star className="w-5 h-5 text-purple-400" />
                     {category.title}
                   </h3>
                   <ul className="space-y-3">
                     {category.items.map((item, idx) => (
-                      <li key={idx} className="flex gap-2 text-sm text-gray-700">
-                        <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                      <li key={idx} className="flex gap-2 text-sm text-gray-300">
+                        <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" />
                         <span>{item}</span>
                       </li>
                     ))}

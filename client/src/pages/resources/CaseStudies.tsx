@@ -20,7 +20,7 @@ export default function CaseStudies() {
       ],
       icon: Shield,
       gradient: "from-green-500 to-emerald-600",
-      bgGradient: "from-green-50 to-emerald-50"
+      bgGradient: "from-green-500/20 to-emerald-500/20"
     },
     {
       industry: "Law Firm",
@@ -34,7 +34,7 @@ export default function CaseStudies() {
       ],
       icon: TrendingUp,
       gradient: "from-blue-500 to-indigo-600",
-      bgGradient: "from-blue-50 to-indigo-50"
+      bgGradient: "from-blue-500/20 to-indigo-500/20"
     },
     {
       industry: "Accounting",
@@ -48,7 +48,7 @@ export default function CaseStudies() {
       ],
       icon: FileText,
       gradient: "from-purple-500 to-indigo-600",
-      bgGradient: "from-purple-50 to-indigo-50"
+      bgGradient: "from-purple-500/20 to-indigo-500/20"
     }
   ];
 
@@ -95,8 +95,8 @@ export default function CaseStudies() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1, duration: 0.5 }}
               >
-                <Card className="overflow-hidden border-2 border-gray-100 hover:border-purple-200 hover:shadow-xl transition-all duration-300">
-                  <CardHeader className={`bg-gradient-to-r ${study.bgGradient} border-b border-gray-100`}>
+                <Card className="overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 hover:border-[#5034ff]/50 hover:shadow-xl transition-all duration-300">
+                  <CardHeader className={`bg-gradient-to-r ${study.bgGradient} border-b border-white/10`}>
                     <div className="flex items-start justify-between">
                       <div className="flex items-start gap-4">
                         <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${study.gradient} flex items-center justify-center flex-shrink-0`}>
@@ -106,7 +106,7 @@ export default function CaseStudies() {
                           <Badge className={`mb-2 bg-gradient-to-r ${study.gradient} text-white border-0`}>
                             {study.industry}
                           </Badge>
-                          <CardTitle className="text-2xl text-gray-900">{study.title}</CardTitle>
+                          <CardTitle className="text-2xl text-white">{study.title}</CardTitle>
                         </div>
                       </div>
                     </div>
@@ -116,38 +116,38 @@ export default function CaseStudies() {
                       {/* Challenge */}
                       <div className="space-y-3">
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center">
-                            <Zap className="w-4 h-4 text-red-600" />
+                          <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center">
+                            <Zap className="w-4 h-4 text-red-400" />
                           </div>
-                          <h4 className="font-semibold text-lg text-gray-900">The Challenge</h4>
+                          <h4 className="font-semibold text-lg text-white">The Challenge</h4>
                         </div>
-                        <p className="text-gray-600 leading-relaxed">{study.challenge}</p>
+                        <p className="text-gray-400 leading-relaxed">{study.challenge}</p>
                       </div>
                       
                       {/* Solution */}
                       <div className="space-y-3">
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
-                            <Target className="w-4 h-4 text-blue-600" />
+                          <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                            <Target className="w-4 h-4 text-blue-400" />
                           </div>
-                          <h4 className="font-semibold text-lg text-gray-900">Our Solution</h4>
+                          <h4 className="font-semibold text-lg text-white">Our Solution</h4>
                         </div>
-                        <p className="text-gray-600 leading-relaxed">{study.solution}</p>
+                        <p className="text-gray-400 leading-relaxed">{study.solution}</p>
                       </div>
                       
                       {/* Results */}
                       <div className="space-y-3">
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
-                            <CheckCircle className="w-4 h-4 text-green-600" />
+                          <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
+                            <CheckCircle className="w-4 h-4 text-green-400" />
                           </div>
-                          <h4 className="font-semibold text-lg text-gray-900">Results</h4>
+                          <h4 className="font-semibold text-lg text-white">Results</h4>
                         </div>
                         <ul className="space-y-2">
                           {study.results.map((result, idx) => (
                             <li key={idx} className="flex items-start gap-2">
-                              <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-1" />
-                              <span className="text-gray-700 text-sm">{result}</span>
+                              <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0 mt-1" />
+                              <span className="text-gray-300 text-sm">{result}</span>
                             </li>
                           ))}
                         </ul>

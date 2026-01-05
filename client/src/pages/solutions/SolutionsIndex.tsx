@@ -24,22 +24,23 @@ const SolutionsIndex = () => {
     <PageTemplate
       title="All Solutions"
       subtitle="Comprehensive IT and security solutions for Arizona businesses"
+      variant="dark"
     >
       <div className="space-y-12">
-        <p className="text-xl text-gray-700 text-center max-w-2xl mx-auto">
+        <p className="text-xl text-gray-300 text-center max-w-2xl mx-auto">
           Explore our complete portfolio of managed IT, security, compliance, and strategic services designed to protect your business.
         </p>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {solutions.map((solution) => (
             <Link key={solution.key} href={`/solutions/${solution.key}`}>
-              <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
+              <Card className="h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/30 hover:bg-white/[0.08] transition-all duration-300 cursor-pointer">
                 <CardHeader>
                   <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${solution.color} mb-4`} />
-                  <CardTitle>{solution.title}</CardTitle>
+                  <CardTitle className="text-white">{solution.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center text-purple-600">
+                  <div className="flex items-center text-purple-400">
                     Learn more <ArrowRight className="ml-2 h-4 w-4" />
                   </div>
                 </CardContent>

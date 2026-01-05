@@ -59,8 +59,8 @@ export default function MissionValues() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-600 mb-6">
             <Zap className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-3xl font-bold mb-6 text-gray-900">Our Mission</h2>
-          <p className="text-xl text-gray-700 leading-relaxed">
+          <h2 className="text-3xl font-bold mb-6 text-white">Our Mission</h2>
+          <p className="text-xl text-gray-300 leading-relaxed">
             To empower small and medium-sized businesses in Arizona with enterprise-grade IT security and support, 
             making advanced cybersecurity accessible and affordable for organizations of all sizes.
           </p>
@@ -69,7 +69,7 @@ export default function MissionValues() {
         {/* Core Values */}
         <div>
           <motion.h2 
-            className="text-3xl font-bold text-center mb-10 text-gray-900"
+            className="text-3xl font-bold text-center mb-10 text-white"
             initial={prefersReducedMotion ? {} : { opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -88,16 +88,16 @@ export default function MissionValues() {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1, duration: 0.5 }}
                 >
-                  <Card className="group h-full bg-white border-2 border-gray-100 hover:border-purple-200 hover:shadow-xl transition-all duration-300 overflow-hidden">
-                    <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${value.gradient} opacity-5 rounded-bl-full`} />
+                  <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 hover:bg-white/10 transition-all duration-300 overflow-hidden">
+                    <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${value.gradient} opacity-10 rounded-bl-full`} />
                     <CardHeader>
                       <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${value.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                         <Icon className="h-7 w-7 text-white" />
                       </div>
-                      <CardTitle className="text-2xl text-gray-900">{value.title}</CardTitle>
+                      <CardTitle className="text-2xl text-white">{value.title}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-gray-600 leading-relaxed">{value.description}</p>
+                      <p className="text-gray-400 leading-relaxed">{value.description}</p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -108,24 +108,24 @@ export default function MissionValues() {
 
         {/* What Sets Us Apart */}
         <motion.div 
-          className="relative bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-8 md:p-12 overflow-hidden"
+          className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 md:p-12 overflow-hidden"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-200/30 to-transparent rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-indigo-200/30 to-transparent rounded-full blur-3xl" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-500/20 to-transparent rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-indigo-500/20 to-transparent rounded-full blur-3xl" />
           
           <div className="relative">
-            <h2 className="text-3xl font-bold mb-8 text-gray-900">What Sets Us Apart</h2>
+            <h2 className="text-3xl font-bold mb-8 text-white">What Sets Us Apart</h2>
             <div className="grid md:grid-cols-2 gap-6">
               {differentiators.map((item, index) => {
                 const Icon = item.icon;
                 return (
                   <motion.div 
                     key={index}
-                    className="flex gap-4 p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-100 hover:border-purple-200 hover:shadow-md transition-all duration-300"
+                    className="flex gap-4 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:border-purple-500/50 hover:bg-white/10 transition-all duration-300"
                     initial={prefersReducedMotion ? {} : { opacity: 0, x: -10 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
@@ -135,8 +135,8 @@ export default function MissionValues() {
                       <Icon className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-gray-900 mb-1">{item.title}</h3>
-                      <p className="text-gray-600 text-sm leading-relaxed">{item.desc}</p>
+                      <h3 className="font-bold text-white mb-1">{item.title}</h3>
+                      <p className="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
                     </div>
                   </motion.div>
                 );

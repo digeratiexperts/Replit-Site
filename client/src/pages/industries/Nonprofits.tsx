@@ -25,11 +25,11 @@ export default function Nonprofits() {
             return (
               <div key={idx} className="relative group">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-400 rounded-xl blur opacity-0 group-hover:opacity-20 transition-all" />
-                <Card className="relative bg-white/80 backdrop-blur-sm border border-white/20 hover:shadow-lg transition-all">
+                <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:shadow-lg transition-all">
                   <CardContent className="pt-6">
                     <Icon className={`h-6 w-6 ${item.color} mb-3`} />
-                    <p className="text-3xl font-bold text-gray-900">{item.value}</p>
-                    <p className="text-sm text-gray-600 mt-2">{item.metric}</p>
+                    <p className="text-3xl font-bold text-white">{item.value}</p>
+                    <p className="text-sm text-gray-400 mt-2">{item.metric}</p>
                   </CardContent>
                 </Card>
               </div>
@@ -38,12 +38,12 @@ export default function Nonprofits() {
         </div>
 
         {/* Why Nonprofits Struggle */}
-        <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-8">
+        <div className="bg-purple-500/10 backdrop-blur-sm border border-purple-500/30 rounded-xl p-8">
           <div className="flex gap-4">
-            <Target className="h-8 w-8 text-purple-600 flex-shrink-0 mt-1" />
+            <Target className="h-8 w-8 text-purple-400 flex-shrink-0 mt-1" />
             <div>
-              <h3 className="text-2xl font-bold text-purple-900 mb-3">Nonprofit IT Challenges</h3>
-              <div className="space-y-2 text-purple-800">
+              <h3 className="text-2xl font-bold text-white mb-3">Nonprofit IT Challenges</h3>
+              <div className="space-y-2 text-purple-200">
                 {[
                   "Limited IT budgets—every dollar matters for mission",
                   "Volunteer staff with limited technical expertise",
@@ -52,7 +52,7 @@ export default function Nonprofits() {
                   "Rapid growth strains IT infrastructure"
                 ].map((item, idx) => (
                   <div key={idx} className="flex gap-2">
-                    <span className="text-purple-600 font-bold">•</span>
+                    <span className="text-purple-400 font-bold">•</span>
                     <span>{item}</span>
                   </div>
                 ))}
@@ -63,7 +63,7 @@ export default function Nonprofits() {
 
         {/* Mission-Focused Services */}
         <div className="space-y-6">
-          <h2 className="text-3xl font-bold">Nonprofit-Specific IT Services</h2>
+          <h2 className="text-3xl font-bold text-white">Nonprofit-Specific IT Services</h2>
           <div className="grid md:grid-cols-2 gap-6">
             {[
               { 
@@ -95,17 +95,17 @@ export default function Nonprofits() {
               return (
                 <div key={idx} className="group relative">
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-400 rounded-xl blur opacity-0 group-hover:opacity-15 transition-all" />
-                  <Card className="relative bg-white hover:shadow-lg transition-all border-2 border-white/50 group-hover:border-purple-200">
+                  <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:shadow-lg transition-all group-hover:border-purple-400/50">
                     <CardHeader>
-                      <Icon className="h-10 w-10 text-purple-600 mb-2 group-hover:scale-110 transition-transform" />
-                      <CardTitle>{service.title}</CardTitle>
-                      <p className="text-sm text-gray-600 mt-1">{service.desc}</p>
+                      <Icon className="h-10 w-10 text-purple-400 mb-2 group-hover:scale-110 transition-transform" />
+                      <CardTitle className="text-white">{service.title}</CardTitle>
+                      <p className="text-sm text-gray-400 mt-1">{service.desc}</p>
                     </CardHeader>
                     <CardContent>
                       <ul className="space-y-2">
                         {service.features.map((f, i) => (
-                          <li key={i} className="flex gap-2 text-sm text-gray-700">
-                            <CheckCircle className="h-4 w-4 text-purple-600 flex-shrink-0 mt-0.5" />
+                          <li key={i} className="flex gap-2 text-sm text-gray-300">
+                            <CheckCircle className="h-4 w-4 text-purple-400 flex-shrink-0 mt-0.5" />
                             {f}
                           </li>
                         ))}
@@ -119,8 +119,8 @@ export default function Nonprofits() {
         </div>
 
         {/* Supported Programs */}
-        <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-8 border border-purple-100/50">
-          <h3 className="text-2xl font-bold mb-8 text-center">Nonprofit Programs We Support</h3>
+        <div className="bg-purple-500/10 backdrop-blur-sm rounded-xl p-8 border border-purple-500/20">
+          <h3 className="text-2xl font-bold mb-8 text-center text-white">Nonprofit Programs We Support</h3>
           <div className="grid md:grid-cols-3 gap-4">
             {[
               "Microsoft Nonprofit Grants",
@@ -130,9 +130,9 @@ export default function Nonprofits() {
               "Neon CRM Integration",
               "QuickBooks Nonprofit Pricing"
             ].map((prog, idx) => (
-              <div key={idx} className="flex items-center gap-3 p-3 bg-white/70 rounded-lg">
-                <CheckCircle className="h-5 w-5 text-purple-600 flex-shrink-0" />
-                <span className="text-gray-700 font-medium">{prog}</span>
+              <div key={idx} className="flex items-center gap-3 p-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg hover:bg-white/10 transition-all">
+                <CheckCircle className="h-5 w-5 text-purple-400 flex-shrink-0" />
+                <span className="text-gray-300 font-medium">{prog}</span>
               </div>
             ))}
           </div>

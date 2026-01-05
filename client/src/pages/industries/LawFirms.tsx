@@ -20,16 +20,16 @@ export default function LawFirms() {
       <div className="space-y-16">
         {/* Risk Assessment Cards */}
         <div>
-          <h2 className="text-2xl font-bold mb-6">Security Risk Assessment</h2>
+          <h2 className="text-2xl font-bold mb-6 text-white">Security Risk Assessment</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {riskFactors.map((item, idx) => {
               const Icon = item.icon;
-              const severity = item.severity === "Critical" ? "bg-red-100 text-red-700 border-red-200" : "bg-amber-100 text-amber-700 border-amber-200";
+              const severity = item.severity === "Critical" ? "bg-red-500/20 text-red-400 border-red-500/30" : "bg-amber-500/20 text-amber-400 border-amber-500/30";
               return (
-                <Card key={idx} className="border-2 hover:shadow-lg transition-all">
+                <Card key={idx} className="bg-white/5 backdrop-blur-sm border-white/10 hover:shadow-lg transition-all">
                   <CardContent className="pt-6">
-                    <Icon className="h-8 w-8 text-indigo-600 mb-3" />
-                    <h3 className="font-semibold text-gray-900 mb-2">{item.factor}</h3>
+                    <Icon className="h-8 w-8 text-indigo-400 mb-3" />
+                    <h3 className="font-semibold text-white mb-2">{item.factor}</h3>
                     <Badge className={`${severity} border`}>{item.severity}</Badge>
                   </CardContent>
                 </Card>
@@ -39,12 +39,12 @@ export default function LawFirms() {
         </div>
 
         {/* Critical Risks */}
-        <div className="bg-gradient-to-r from-red-50 to-rose-50 border border-red-200 rounded-xl p-8">
+        <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-8">
           <div className="flex gap-4">
-            <AlertCircle className="h-8 w-8 text-red-600 flex-shrink-0 mt-1" />
+            <AlertCircle className="h-8 w-8 text-red-400 flex-shrink-0 mt-1" />
             <div>
-              <h3 className="text-2xl font-bold text-red-900 mb-3">Critical Compliance Risks</h3>
-              <div className="space-y-2 text-red-800">
+              <h3 className="text-2xl font-bold text-white mb-3">Critical Compliance Risks</h3>
+              <div className="space-y-2 text-red-300">
                 {[
                   "Attorney-client privilege breach = malpractice liability + regulatory action",
                   "Ransomware targeting law firms for case files and settlement amounts",
@@ -63,7 +63,7 @@ export default function LawFirms() {
 
         {/* Legal-Specific Services */}
         <div className="space-y-6">
-          <h2 className="text-3xl font-bold">Legal-Focused Security Services</h2>
+          <h2 className="text-3xl font-bold text-white">Legal-Focused Security Services</h2>
           <div className="grid md:grid-cols-2 gap-6">
             {[
               { 
@@ -95,17 +95,17 @@ export default function LawFirms() {
               return (
                 <div key={idx} className="group relative">
                   <div className="absolute inset-0 bg-gradient-to-r from-indigo-400 to-blue-400 rounded-xl blur opacity-0 group-hover:opacity-15 transition-all" />
-                  <Card className="relative bg-white hover:shadow-lg transition-all border-2 border-white/50 group-hover:border-indigo-200">
+                  <Card className="relative bg-white/5 backdrop-blur-sm hover:shadow-lg transition-all border border-white/10 group-hover:border-indigo-500/30">
                     <CardHeader>
-                      <Icon className="h-10 w-10 text-indigo-600 mb-2 group-hover:scale-110 transition-transform" />
-                      <CardTitle>{service.title}</CardTitle>
-                      <p className="text-sm text-gray-600 mt-1">{service.desc}</p>
+                      <Icon className="h-10 w-10 text-indigo-400 mb-2 group-hover:scale-110 transition-transform" />
+                      <CardTitle className="text-white">{service.title}</CardTitle>
+                      <p className="text-sm text-gray-400 mt-1">{service.desc}</p>
                     </CardHeader>
                     <CardContent>
                       <ul className="space-y-2">
                         {service.features.map((f, i) => (
-                          <li key={i} className="flex gap-2 text-sm text-gray-700">
-                            <CheckCircle className="h-4 w-4 text-indigo-600 flex-shrink-0 mt-0.5" />
+                          <li key={i} className="flex gap-2 text-sm text-gray-300">
+                            <CheckCircle className="h-4 w-4 text-indigo-400 flex-shrink-0 mt-0.5" />
                             {f}
                           </li>
                         ))}
@@ -119,8 +119,8 @@ export default function LawFirms() {
         </div>
 
         {/* Compliance Dashboard */}
-        <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-8 border border-indigo-100/50">
-          <h3 className="text-2xl font-bold mb-8 text-center">ABA Compliance Checklist</h3>
+        <div className="bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-8">
+          <h3 className="text-2xl font-bold mb-8 text-center text-white">ABA Compliance Checklist</h3>
           <div className="grid md:grid-cols-2 gap-6">
             {[
               "Cybersecurity incident response plan",
@@ -130,9 +130,9 @@ export default function LawFirms() {
               "Vendor risk management",
               "Encryption for sensitive documents"
             ].map((item, idx) => (
-              <div key={idx} className="flex gap-3 p-3 bg-white/70 rounded-lg">
-                <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0" />
-                <span className="text-gray-700">{item}</span>
+              <div key={idx} className="flex gap-3 p-3 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
+                <CheckCircle className="h-6 w-6 text-green-400 flex-shrink-0" />
+                <span className="text-gray-300">{item}</span>
               </div>
             ))}
           </div>

@@ -48,8 +48,8 @@ export default function Accessibility() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl font-bold mb-6 text-gray-900">Our Commitment</h2>
-          <p className="text-xl text-gray-700 leading-relaxed">
+          <h2 className="text-3xl font-bold mb-6 text-white">Our Commitment</h2>
+          <p className="text-xl text-gray-300 leading-relaxed">
             Digerati Experts is committed to ensuring digital accessibility for people with disabilities. 
             We are continually improving the user experience for everyone and applying the relevant 
             accessibility standards.
@@ -58,7 +58,7 @@ export default function Accessibility() {
 
         {/* Conformance Status */}
         <motion.div 
-          className="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-xl p-8"
+          className="bg-white/5 backdrop-blur-sm border-l-4 border-blue-500 border border-white/10 rounded-xl p-8"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -68,13 +68,13 @@ export default function Accessibility() {
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
               <CheckCircle className="w-5 h-5 text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">Conformance Status</h2>
+            <h2 className="text-2xl font-bold text-white">Conformance Status</h2>
           </div>
-          <p className="text-gray-700 mb-4">
-            We are working toward conformance with the <strong>Web Content Accessibility Guidelines (WCAG) 2.1 
+          <p className="text-gray-300 mb-4">
+            We are working toward conformance with the <strong className="text-white">Web Content Accessibility Guidelines (WCAG) 2.1 
             Level AA</strong>. These guidelines explain how to make web content more accessible to people with disabilities.
           </p>
-          <p className="text-gray-700 mb-4">
+          <p className="text-gray-300 mb-4">
             Conformance with these guidelines helps us ensure our website is accessible to people who are:
           </p>
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4 mt-6">
@@ -83,7 +83,7 @@ export default function Accessibility() {
               return (
                 <motion.div 
                   key={idx}
-                  className="flex flex-col items-center p-4 bg-white/80 rounded-xl border border-blue-100 text-center"
+                  className="flex flex-col items-center p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 text-center"
                   initial={prefersReducedMotion ? {} : { opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -92,7 +92,7 @@ export default function Accessibility() {
                   <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${user.color} flex items-center justify-center mb-2`}>
                     <Icon className="w-5 h-5 text-white" />
                   </div>
-                  <span className="text-sm text-gray-700">{user.text}</span>
+                  <span className="text-sm text-gray-300">{user.text}</span>
                 </motion.div>
               );
             })}
@@ -101,35 +101,35 @@ export default function Accessibility() {
 
         {/* Accessibility Features */}
         <motion.div 
-          className="relative bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-8 md:p-12 overflow-hidden"
+          className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 md:p-12 overflow-hidden"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-200/30 to-transparent rounded-full blur-3xl" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-500/20 to-transparent rounded-full blur-3xl" />
           
           <div className="relative">
             <div className="flex items-center gap-3 mb-8">
               <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
                 <Eye className="w-6 h-6 text-white" />
               </div>
-              <h2 className="text-3xl font-bold text-gray-900">Accessibility Features</h2>
+              <h2 className="text-3xl font-bold text-white">Accessibility Features</h2>
             </div>
             
-            <p className="text-gray-700 mb-6">Our website includes the following accessibility features:</p>
+            <p className="text-gray-300 mb-6">Our website includes the following accessibility features:</p>
             <div className="grid md:grid-cols-2 gap-4">
               {accessibilityFeatures.map((feature, idx) => (
                 <motion.div 
                   key={idx}
-                  className="flex items-center gap-3 p-4 bg-white/80 rounded-xl border border-purple-100"
+                  className="flex items-center gap-3 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10"
                   initial={prefersReducedMotion ? {} : { opacity: 0, x: -10 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.05, duration: 0.3 }}
                 >
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-                  <span className="text-gray-700">{feature}</span>
+                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                  <span className="text-gray-300">{feature}</span>
                 </motion.div>
               ))}
             </div>
@@ -143,17 +143,17 @@ export default function Accessibility() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">Compatible Assistive Technologies</h2>
+          <h2 className="text-3xl font-bold text-center mb-8 text-white">Compatible Assistive Technologies</h2>
           <div className="grid md:grid-cols-4 gap-6">
             {assistiveTech.map((tech, idx) => {
               const Icon = tech.icon;
               return (
-                <Card key={idx} className="group bg-white border-2 border-gray-100 hover:border-purple-200 hover:shadow-xl transition-all duration-300 text-center">
+                <Card key={idx} className="group bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 hover:shadow-xl transition-all duration-300 text-center">
                   <CardContent className="pt-6">
                     <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                       <Icon className="h-7 w-7 text-white" />
                     </div>
-                    <p className="text-gray-700 text-sm">{tech.name}</p>
+                    <p className="text-gray-300 text-sm">{tech.name}</p>
                   </CardContent>
                 </Card>
               );
@@ -163,14 +163,14 @@ export default function Accessibility() {
 
         {/* Known Limitations */}
         <motion.div 
-          className="bg-gradient-to-r from-amber-50 to-orange-50 border-l-4 border-amber-500 rounded-xl p-8"
+          className="bg-white/5 backdrop-blur-sm border-l-4 border-amber-500 border border-white/10 rounded-xl p-8"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Known Limitations</h2>
-          <p className="text-gray-700 mb-4">
+          <h2 className="text-2xl font-bold text-white mb-4">Known Limitations</h2>
+          <p className="text-gray-300 mb-4">
             Despite our best efforts, some content may not yet be fully accessible. We are actively 
             working to address these limitations:
           </p>
@@ -180,8 +180,8 @@ export default function Accessibility() {
               "Older PDF documents may not be fully accessible (we're working to remediate these)",
               "Some complex interactive elements are being enhanced for better screen reader support"
             ].map((item, idx) => (
-              <li key={idx} className="flex items-start gap-3 text-gray-700">
-                <span className="text-amber-600 mt-1">•</span>
+              <li key={idx} className="flex items-start gap-3 text-gray-300">
+                <span className="text-amber-500 mt-1">•</span>
                 <span>{item}</span>
               </li>
             ))}
@@ -190,32 +190,32 @@ export default function Accessibility() {
 
         {/* Contact Info */}
         <motion.div 
-          className="bg-gradient-to-br from-gray-50 to-purple-50/50 rounded-xl p-8"
+          className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-8"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Feedback and Support</h2>
-          <p className="text-gray-700 mb-6">
+          <h2 className="text-2xl font-bold text-white mb-6">Feedback and Support</h2>
+          <p className="text-gray-300 mb-6">
             We welcome your feedback on the accessibility of our website. If you encounter accessibility 
             barriers or have suggestions for improvement, please let us know:
           </p>
           <div className="grid md:grid-cols-3 gap-4">
-            <div className="flex items-center gap-3 p-4 bg-white rounded-xl border border-gray-100">
-              <Mail className="w-5 h-5 text-purple-600" />
-              <span className="text-gray-700">accessibility@digeratiexperts.com</span>
+            <div className="flex items-center gap-3 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
+              <Mail className="w-5 h-5 text-purple-400" />
+              <span className="text-gray-300">accessibility@digeratiexperts.com</span>
             </div>
-            <div className="flex items-center gap-3 p-4 bg-white rounded-xl border border-gray-100">
-              <Phone className="w-5 h-5 text-purple-600" />
-              <span className="text-gray-700">325-480-9870</span>
+            <div className="flex items-center gap-3 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
+              <Phone className="w-5 h-5 text-purple-400" />
+              <span className="text-gray-300">325-480-9870</span>
             </div>
-            <div className="flex items-center gap-3 p-4 bg-white rounded-xl border border-gray-100">
-              <MapPin className="w-5 h-5 text-purple-600" />
-              <span className="text-gray-700 text-sm">3165 S Alma School Rd Suite 29, Chandler, AZ 85248</span>
+            <div className="flex items-center gap-3 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
+              <MapPin className="w-5 h-5 text-purple-400" />
+              <span className="text-gray-300 text-sm">3165 S Alma School Rd Suite 29, Chandler, AZ 85248</span>
             </div>
           </div>
-          <p className="text-gray-600 mt-6 text-sm">
+          <p className="text-gray-400 mt-6 text-sm">
             We aim to respond to accessibility feedback within 2 business days.
           </p>
         </motion.div>
@@ -257,8 +257,8 @@ export default function Accessibility() {
         </motion.div>
 
         {/* Last Updated */}
-        <div className="text-center pt-8 border-t border-gray-200">
-          <p className="text-gray-500 text-sm">
+        <div className="text-center pt-8 border-t border-white/10">
+          <p className="text-gray-400 text-sm">
             This accessibility statement was last updated on November 6, 2025.
           </p>
         </div>

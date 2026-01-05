@@ -84,7 +84,7 @@ export const PageTemplate = ({
   gradientColors = "from-purple-600 via-indigo-600 to-blue-600",
   icon,
   breadcrumbs,
-  variant = "default"
+  variant = "dark"
 }: PageTemplateProps): JSX.Element => {
   const prefersReducedMotion = useReducedMotion() ?? false;
   
@@ -92,13 +92,13 @@ export const PageTemplate = ({
     ? "bg-[#0a0118]" 
     : variant === "light" 
       ? "bg-gray-50" 
-      : "bg-white";
+      : "bg-[#0a0118]";
   
   const contentBgClass = variant === "dark"
     ? "bg-[#0d0720]"
     : variant === "light"
       ? "bg-white"
-      : "bg-gray-50";
+      : "bg-[#0d0720]";
   
   const textClass = variant === "dark" ? "text-white" : "text-gray-900";
   const subtextClass = variant === "dark" ? "text-gray-400" : "text-gray-600";
