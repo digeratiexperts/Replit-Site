@@ -80,6 +80,7 @@ const AdminOpenAIPage = lazy(() => import("@/pages/portal/AdminOpenAI").then(m =
 const LeadQuoteWizard = lazy(() => import("@/pages/LeadQuoteWizard"));
 const QuoteConfirmation = lazy(() => import("@/pages/QuoteConfirmation"));
 const ThankYouSuccess = lazy(() => import("@/pages/ThankYouSuccess"));
+const SalesProcess = lazy(() => import("@/pages/portal/SalesProcess"));
 
 import { servicePageData, industryPageData, resourcePageData, supportPageData } from "@/pages/routes/servicePages";
 
@@ -463,6 +464,11 @@ function Router() {
       <Route path="/portal/admin/openai" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <AdminOpenAIPage />
+        </Suspense>
+      )} />
+      <Route path="/portal/sales-process" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <SalesProcess />
         </Suspense>
       )} />
       
