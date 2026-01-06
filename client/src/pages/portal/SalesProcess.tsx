@@ -1,5 +1,120 @@
 import { useState, useMemo } from 'react';
-import { Search, ChevronDown, X, Zap, Target, Users, Shield, CheckCircle, Clock, FileText, Video, Building2, Calendar, BarChart3, ShieldCheck } from 'lucide-react';
+import { Search, ChevronDown, ChevronRight, X, Zap, Target, Users, Shield, CheckCircle, Clock, FileText, Video, Building2, Calendar, BarChart3, ShieldCheck, MessageSquare, Phone, DollarSign, Briefcase, AlertTriangle, UserCheck, Key } from 'lucide-react';
+
+// Prospect & Client Q&A Data
+const qaCategories = [
+  {
+    id: 'positioning',
+    title: 'Positioning',
+    icon: Target,
+    color: 'cyan',
+    items: [
+      { q: 'What do you guys do?', a: 'We help small businesses understand their real cyber risk, put the right security controls in place, and be able to prove what happened when something goes wrong. We deliver this through managed security, identity and access management, cloud systems, backup and recovery, and right-sized IT operations built around how your business actually works.' },
+      { q: 'Who do you work with?', a: 'CPAs/accountants, dental & medical, insurance agencies, veterinary clinics, real estate brokerages—and local SMBs in a ~30-mile radius that need real IT without enterprise overhead.' },
+      { q: 'Why do this now?', a: 'Usually one of three triggers: cyber insurance requirements, email/M365 account takeovers, or liability—being able to produce logs, timelines, and proof if there\'s a dispute or investigation.' },
+      { q: 'How long have you been doing this?', a: 'I\'ve been doing IT since 2007. Digerati Experts is built around security-first support—controls, evidence, and operational ownership, not just break-fix.' },
+      { q: 'Do you do IT and cyber, or just cyber?', a: 'We do both—security-first IT. We can fully manage IT, or do co-managed security while your current IT handles day-to-day support.' }
+    ]
+  },
+  {
+    id: 'first-step',
+    title: 'The First Step (CTA)',
+    icon: Phone,
+    color: 'orange',
+    items: [
+      { q: 'What\'s the first step?', a: 'A quick FTA (First Time Appointment)—15–30 minutes. I\'ll ask a few focused questions and give you a plain-English Security Reality Snapshot: what\'s solid, what\'s missing, and what matters.' },
+      { q: 'If we\'re too busy for an FTA…', a: 'No problem—let\'s do coffee/lunch as the low-pressure version of the same conversation. Same questions, no pressure; if I spot something important I\'ll tell you straight.' },
+      { q: 'What happens after the FTA?', a: 'If we find meaningful exposure: either a scoped fix (M365 hardening/backups/logging), a paid assessment for bigger environments, or onboarding + stabilization leading into monthly services.' }
+    ]
+  },
+  {
+    id: 'differentiators',
+    title: 'Differentiators',
+    icon: Shield,
+    color: 'violet',
+    items: [
+      { q: 'How are you different than other MSPs?', a: 'Most MSPs keep things running. We build controls + evidence so you can respond and prove what happened—insurance, legal, and regulatory defensibility.' },
+      { q: 'Do you install tools right away?', a: 'No. We understand the environment first, then design what\'s right-sized. Less bloat, fewer surprises, and controls that match how your business actually operates.' },
+      { q: 'How do you handle risk when clients decline protections?', a: 'We make tradeoffs explicit. If something important is declined, we document it as risk acceptance so nobody is surprised later and accountability is clear.' }
+    ]
+  },
+  {
+    id: 'pricing',
+    title: 'Pricing',
+    icon: DollarSign,
+    color: 'emerald',
+    items: [
+      { q: 'How much do you cost?', a: 'Most clients invest low four figures to get started for onboarding and stabilization, then a few hundred to a few thousand per month depending on users, risk, and what you actually need.' },
+      { q: 'What\'s your minimum?', a: 'Generally: 5–30 users is ideal. Minimum monthly is typically $500/month, and onboarding starts around $1,500 depending on cleanup and access complexity.' },
+      { q: 'If we push you for per-user pricing…', a: 'We don\'t lead with per-user "cheapest plan" pricing. We build a program around your environment and minimum standards so it actually reduces incidents.' }
+    ]
+  },
+  {
+    id: 'operations',
+    title: 'Operations & Support',
+    icon: Briefcase,
+    color: 'blue',
+    items: [
+      { q: 'What\'s included monthly vs what\'s extra?', a: 'Monthly includes IT support + security requests, problems, and incidents—and support for anything we sold you. Out-of-scope work is handled through paid helpdesk support.' },
+      { q: 'Do you support things you didn\'t sell?', a: 'Yes—within reason. We support the environment, but user education and troubleshooting on products we didn\'t sell can be billable. We\'ll be clear up front.' },
+      { q: 'How fast are your SLAs?', a: 'Security-impacting issues and lockouts get priority. Exact response targets are documented in the agreement so there\'s no ambiguity.' },
+      { q: 'How big is your team?', a: 'We operate lean and accountable with a vetted bench for coverage. Clients are not dependent on a single point of failure.' },
+      { q: 'What are TechPoints?', a: 'TechPoints are credits your company or users can earn and apply toward paid-helpdesk time when needed. If TechPoints are available, we use them first to reduce or eliminate that cost.' }
+    ]
+  },
+  {
+    id: 'security-snapshot',
+    title: 'Security Reality Snapshot',
+    icon: ShieldCheck,
+    color: 'amber',
+    items: [
+      { q: 'Identity / takeover', a: 'Is MFA enforced everywhere, and do you have separate admin accounts?' },
+      { q: 'Backups', a: 'When was your last successful restore test—proof, not assumptions?' },
+      { q: 'Incident response', a: 'If a mailbox is compromised today, what are the first 5 actions and who executes them?' },
+      { q: 'Evidence / logging', a: 'Could you produce logs and an incident timeline if you had to defend yourself?' },
+      { q: 'Offboarding', a: 'If someone leaves today, can you prove they lose access everywhere within 15 minutes?' }
+    ]
+  },
+  {
+    id: 'continuity',
+    title: 'Continuity & Transition',
+    icon: Key,
+    color: 'teal',
+    items: [
+      { q: 'What happens if you\'re unavailable, sick, or something happens to you?', a: 'You won\'t be stuck. We ensure you retain owner-level access and we maintain a transferable handoff package—system inventory, credentials structure, and restore procedures—so another provider can take over quickly if needed.' },
+      { q: 'Do you hold our passwords?', a: 'We manage credentials securely, but you always retain owner access. Nothing is designed to be dependent on one person.' },
+      { q: 'Can we leave anytime and still get our stuff?', a: 'Yes. Your access and documentation are structured for clean transition. We provide a standard export and handoff package during the transition window.' },
+      { q: 'Do you offer credential escrow / break-glass?', a: 'Yes. We can set up a client-controlled escrow for emergency admin access and critical restore instructions—so you have continuity without compromising security.' },
+      { q: 'Will you help us transition if we switch?', a: 'Yes. We support an orderly transition and provide the handoff package and reasonable assistance per the agreement.' },
+      { q: 'What are client-owned access requirements?', a: 'We require that you have an owner/admin account for core systems (M365/domain/DNS/firewall/backups). That prevents hostage risk and protects you long-term.' }
+    ]
+  },
+  {
+    id: 'objections',
+    title: 'Objection Handlers',
+    icon: AlertTriangle,
+    color: 'rose',
+    items: [
+      { q: 'We already have IT.', a: 'Totally fine—this isn\'t a rip-and-replace. It\'s a second opinion focused on identity, backups, and evidence. If your provider can prove it, great. If not, you\'ll know exactly what to fix.' },
+      { q: 'We\'re under contract.', a: 'Understood. We can still do a quick reality snapshot and plan timing. The goal is clarity, not disruption.' },
+      { q: 'Just send info.', a: 'Happy to—but it\'ll be more relevant after a 15-minute FTA so I\'m not sending generic brochures. When\'s good for a quick slot?' },
+      { q: 'We\'re too busy.', a: 'That\'s exactly why we keep the first step short. 15 minutes now saves hours later. If not, we can do coffee as the low-pressure version.' },
+      { q: 'Price is the main thing.', a: 'If you\'re shopping for the cheapest IT, we\'re probably not the right fit. If you want clarity, risk reduction, and a provider that owns outcomes, we\'re usually very reasonable.' },
+      { q: 'What if a client won\'t cooperate with security standards?', a: 'If baseline standards (like MFA, restore testing, and access hygiene) are refused, we document the risk and may limit scope—or decline engagement—because we won\'t silently own unmanaged risk.' }
+    ]
+  },
+  {
+    id: 'call-script',
+    title: 'Outbound Call Script',
+    icon: Phone,
+    color: 'indigo',
+    items: [
+      { q: 'Opener (30-45 sec)', a: '"Hi — this is Joe with Digerati Experts. We help small businesses reduce cyber risk and be able to prove what happened if something goes wrong. Quick question: who owns IT and security decisions on your side?"' },
+      { q: 'Value + Ask', a: '"I\'m not calling to sell a bundle. I\'m offering a 15-minute FTA where I ask a few focused questions and give you a Security Reality Snapshot. If I don\'t find anything meaningful, I\'ll tell you and we\'ll leave it there. Want to do that this week?"' },
+      { q: 'Fallback', a: '"If you\'d rather keep it informal, we can do coffee/lunch and I\'ll run the same questions—no pressure."' }
+    ]
+  }
+];
 
 interface CardData {
   id: string;
@@ -510,6 +625,36 @@ export default function SalesProcess() {
   const [activeReviewCard, setActiveReviewCard] = useState<string | null>(null);
   const [drawerCard, setDrawerCard] = useState<CardData | null>(null);
   const [drawerReviewCard, setDrawerReviewCard] = useState<ReviewCardData | null>(null);
+  const [showQA, setShowQA] = useState(false);
+  const [expandedQACategories, setExpandedQACategories] = useState<string[]>([]);
+  const [expandedQAItems, setExpandedQAItems] = useState<string[]>([]);
+
+  const toggleQACategory = (id: string) => {
+    setExpandedQACategories(prev => 
+      prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
+    );
+  };
+
+  const toggleQAItem = (id: string) => {
+    setExpandedQAItems(prev => 
+      prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
+    );
+  };
+
+  const getColorClasses = (color: string) => {
+    const colorMap: Record<string, { border: string; bg: string; text: string; hoverBg: string }> = {
+      cyan: { border: 'border-cyan-500/40', bg: 'bg-cyan-500/10', text: 'text-cyan-400', hoverBg: 'hover:bg-cyan-500/15' },
+      orange: { border: 'border-orange-500/40', bg: 'bg-orange-500/10', text: 'text-orange-400', hoverBg: 'hover:bg-orange-500/15' },
+      violet: { border: 'border-violet-500/40', bg: 'bg-violet-500/10', text: 'text-violet-400', hoverBg: 'hover:bg-violet-500/15' },
+      emerald: { border: 'border-emerald-500/40', bg: 'bg-emerald-500/10', text: 'text-emerald-400', hoverBg: 'hover:bg-emerald-500/15' },
+      blue: { border: 'border-blue-500/40', bg: 'bg-blue-500/10', text: 'text-blue-400', hoverBg: 'hover:bg-blue-500/15' },
+      amber: { border: 'border-amber-500/40', bg: 'bg-amber-500/10', text: 'text-amber-400', hoverBg: 'hover:bg-amber-500/15' },
+      teal: { border: 'border-teal-500/40', bg: 'bg-teal-500/10', text: 'text-teal-400', hoverBg: 'hover:bg-teal-500/15' },
+      rose: { border: 'border-rose-500/40', bg: 'bg-rose-500/10', text: 'text-rose-400', hoverBg: 'hover:bg-rose-500/15' },
+      indigo: { border: 'border-indigo-500/40', bg: 'bg-indigo-500/10', text: 'text-indigo-400', hoverBg: 'hover:bg-indigo-500/15' }
+    };
+    return colorMap[color] || colorMap.cyan;
+  };
 
   const trackCards = activeTab === 'ecosystem' ? ecosystemCards : cyberCards;
 
@@ -640,6 +785,21 @@ export default function SalesProcess() {
                 />
               </div>
 
+              {/* Prospect/Client Q&A Button */}
+              <button
+                onClick={() => setShowQA(!showQA)}
+                className={`inline-flex items-center gap-2.5 px-4 py-3 rounded-full border font-black text-sm transition-all ${
+                  showQA 
+                    ? 'border-cyan-500/70 bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 text-white shadow-lg shadow-cyan-500/15' 
+                    : 'border-white/10 bg-black/30 text-white/80 hover:border-cyan-500/35'
+                }`}
+                data-testid="toggle-qa"
+              >
+                <MessageSquare className={`w-4 h-4 ${showQA ? 'text-cyan-400' : ''}`} />
+                Prospect/Client Q&A
+                <ChevronDown className={`w-4 h-4 transition-transform ${showQA ? 'rotate-180' : ''}`} />
+              </button>
+
               {/* View Toggles */}
               <div className="flex gap-2.5 flex-wrap">
                 <button
@@ -702,6 +862,102 @@ export default function SalesProcess() {
               ))}
             </div>
           </header>
+
+          {/* Prospect/Client Q&A Dropdown Panel */}
+          {showQA && (
+            <section 
+              className="px-5 py-5 border-b border-cyan-500/20" 
+              style={{ background: 'linear-gradient(180deg, rgba(6,182,212,0.06) 0%, rgba(0,0,0,0.15) 100%)' }}
+              data-testid="section-qa"
+            >
+              <div className="flex items-center justify-between gap-4 mb-4">
+                <div>
+                  <div className="text-xs text-cyan-400 uppercase tracking-[0.16em] font-black mb-1">Phone-Ready Reference</div>
+                  <div className="text-lg font-black text-white">Prospect & Client Q&A</div>
+                </div>
+                <button 
+                  onClick={() => setShowQA(false)}
+                  className="w-10 h-10 rounded-xl border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 grid place-items-center transition-transform hover:bg-cyan-500/20"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <p className="text-cyan-200/60 text-sm font-medium mb-5 max-w-3xl">
+                Use these verbatim answers during prospect calls and client conversations. Click categories to expand.
+              </p>
+
+              {/* Q&A Categories */}
+              <div className="grid gap-3">
+                {qaCategories.map(category => {
+                  const colors = getColorClasses(category.color);
+                  const Icon = category.icon;
+                  const isExpanded = expandedQACategories.includes(category.id);
+                  
+                  return (
+                    <div 
+                      key={category.id}
+                      className={`rounded-2xl border ${colors.border} overflow-hidden transition-all`}
+                      style={{ background: 'rgba(0,0,0,0.25)' }}
+                    >
+                      <button
+                        onClick={() => toggleQACategory(category.id)}
+                        className={`w-full flex items-center justify-between gap-3 px-4 py-3.5 ${colors.hoverBg} transition-all`}
+                        data-testid={`qa-category-${category.id}`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={`w-9 h-9 rounded-xl ${colors.bg} ${colors.border} border grid place-items-center`}>
+                            <Icon className={`w-4 h-4 ${colors.text}`} />
+                          </div>
+                          <span className="font-black text-white">{category.title}</span>
+                          <span className={`px-2 py-1 rounded-full text-xs font-bold ${colors.bg} ${colors.text}`}>
+                            {category.items.length}
+                          </span>
+                        </div>
+                        <ChevronRight className={`w-5 h-5 text-white/60 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                      </button>
+
+                      {isExpanded && (
+                        <div className="px-4 pb-4 space-y-2">
+                          {category.items.map((item, idx) => {
+                            const itemId = `${category.id}-${idx}`;
+                            const isItemExpanded = expandedQAItems.includes(itemId);
+                            
+                            return (
+                              <div 
+                                key={idx}
+                                className={`rounded-xl border ${colors.border} overflow-hidden`}
+                                style={{ background: 'rgba(0,0,0,0.3)' }}
+                              >
+                                <button
+                                  onClick={() => toggleQAItem(itemId)}
+                                  className={`w-full flex items-center justify-between gap-3 px-4 py-3 text-left ${colors.hoverBg} transition-all`}
+                                  data-testid={`qa-item-${itemId}`}
+                                >
+                                  <span className={`font-bold text-sm ${colors.text}`}>Q: {item.q}</span>
+                                  <ChevronDown className={`w-4 h-4 flex-shrink-0 text-white/40 transition-transform ${isItemExpanded ? 'rotate-180' : ''}`} />
+                                </button>
+                                
+                                {isItemExpanded && (
+                                  <div className="px-4 pb-4">
+                                    <div className="p-3.5 rounded-lg bg-white/5 border border-white/10">
+                                      <p className="text-white/85 text-sm font-medium leading-relaxed">
+                                        <span className="text-white/50 font-bold">A:</span> {item.a}
+                                      </p>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
 
           {/* Lead Generation Section - ORANGE THEME */}
           {showLeadGen && (
