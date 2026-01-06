@@ -646,24 +646,24 @@ export default function SalesProcess() {
                   onClick={() => setShowLeadGen(!showLeadGen)}
                   className={`inline-flex items-center gap-2.5 px-3.5 py-3 rounded-full border font-black text-sm transition-all ${
                     showLeadGen 
-                      ? 'border-amber-500/70 bg-gradient-to-br from-amber-500/20 to-amber-500/5 text-white shadow-lg shadow-amber-500/15' 
-                      : 'border-white/10 bg-black/30 text-white/80 hover:border-amber-500/35'
+                      ? 'border-orange-500/70 bg-gradient-to-br from-orange-500/20 to-orange-500/5 text-white shadow-lg shadow-orange-500/15' 
+                      : 'border-white/10 bg-black/30 text-white/80 hover:border-orange-500/35'
                   }`}
                   data-testid="toggle-lead-gen"
                 >
-                  <span className={`w-2.5 h-2.5 rounded-full border ${showLeadGen ? 'bg-amber-400 border-amber-500/75 shadow-amber-500/40 shadow-sm' : 'bg-white/25 border-white/20'}`} />
+                  <span className={`w-2.5 h-2.5 rounded-full border ${showLeadGen ? 'bg-orange-400 border-orange-500/75 shadow-orange-500/40 shadow-sm' : 'bg-white/25 border-white/20'}`} />
                   Lead Gen
                 </button>
                 <button
                   onClick={() => setShowTrack(!showTrack)}
                   className={`inline-flex items-center gap-2.5 px-3.5 py-3 rounded-full border font-black text-sm transition-all ${
                     showTrack 
-                      ? 'border-amber-500/70 bg-gradient-to-br from-amber-500/20 to-amber-500/5 text-white shadow-lg shadow-amber-500/15' 
-                      : 'border-white/10 bg-black/30 text-white/80 hover:border-amber-500/35'
+                      ? 'border-violet-500/70 bg-gradient-to-br from-violet-500/20 to-violet-500/5 text-white shadow-lg shadow-violet-500/15' 
+                      : 'border-white/10 bg-black/30 text-white/80 hover:border-violet-500/35'
                   }`}
                   data-testid="toggle-track"
                 >
-                  <span className={`w-2.5 h-2.5 rounded-full border ${showTrack ? 'bg-amber-400 border-amber-500/75 shadow-amber-500/40 shadow-sm' : 'bg-white/25 border-white/20'}`} />
+                  <span className={`w-2.5 h-2.5 rounded-full border ${showTrack ? 'bg-violet-400 border-violet-500/75 shadow-violet-500/40 shadow-sm' : 'bg-white/25 border-white/20'}`} />
                   Track
                 </button>
                 <button
@@ -703,33 +703,37 @@ export default function SalesProcess() {
             </div>
           </header>
 
-          {/* Lead Generation Section */}
+          {/* Lead Generation Section - ORANGE THEME */}
           {showLeadGen && (
-            <section className="px-5 py-5 border-b border-white/10 bg-black/5" data-testid="section-lead-gen">
+            <section 
+              className="px-5 py-5 border-b border-orange-500/20" 
+              style={{ background: 'linear-gradient(180deg, rgba(249,115,22,0.08) 0%, rgba(0,0,0,0.15) 100%)' }}
+              data-testid="section-lead-gen"
+            >
               <div className="flex items-center justify-between gap-4 mb-4 cursor-pointer" onClick={() => setShowLeadGen(!showLeadGen)}>
                 <div>
-                  <div className="text-xs text-amber-400 uppercase tracking-[0.16em] font-black mb-1">Lead Generation</div>
+                  <div className="text-xs text-orange-400 uppercase tracking-[0.16em] font-black mb-1">Lead Generation</div>
                   <div className="text-lg font-black text-white">3 Sources of Leads</div>
                 </div>
-                <button className="w-10 h-10 rounded-xl border border-white/15 bg-black/30 text-white grid place-items-center transition-transform">
+                <button className="w-10 h-10 rounded-xl border border-orange-500/30 bg-orange-500/10 text-orange-400 grid place-items-center transition-transform hover:bg-orange-500/20">
                   <ChevronDown className="w-5 h-5" />
                 </button>
               </div>
 
               {/* Lead Gen Progress */}
-              <div className="p-4 rounded-2xl border border-white/10 bg-black/25 mb-4">
+              <div className="p-4 rounded-2xl border border-orange-500/25 bg-gradient-to-r from-orange-500/10 to-orange-600/5 mb-4">
                 <div className="flex justify-between items-baseline gap-4 mb-2.5">
-                  <div className="text-xs text-white/60 font-extrabold uppercase tracking-widest">Lead Gen Progress</div>
-                  <div className="text-xs text-white/60 font-extrabold">
+                  <div className="text-xs text-orange-300/80 font-extrabold uppercase tracking-widest">Lead Gen Progress</div>
+                  <div className="text-xs text-orange-300/80 font-extrabold">
                     Step {leadGenCards.findIndex(c => c.id === activeLeadCard) + 1} / {leadGenCards.length}
                   </div>
                 </div>
-                <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                <div className="h-2.5 rounded-full bg-black/40 overflow-hidden">
                   <div 
                     className="h-full rounded-full transition-all duration-500"
                     style={{ 
                       width: `${leadProgress}%`,
-                      background: 'linear-gradient(90deg, #ffb800, #5aa7ff)'
+                      background: 'linear-gradient(90deg, #f97316, #fb923c, #fdba74)'
                     }}
                   />
                 </div>
@@ -737,7 +741,7 @@ export default function SalesProcess() {
 
               {/* Lead Gen Timeline */}
               <div className="relative flex gap-5 overflow-x-auto pb-5 pt-5 px-1 scroll-smooth" style={{ scrollSnapType: 'x mandatory' }}>
-                <div className="absolute left-2.5 right-2.5 top-2.5 h-[3px] rounded-full bg-gradient-to-r from-amber-500/65 via-blue-400/55 to-emerald-400/55 opacity-25 pointer-events-none" />
+                <div className="absolute left-2.5 right-2.5 top-2.5 h-[3px] rounded-full bg-gradient-to-r from-orange-500/50 via-orange-400/40 to-orange-300/30 pointer-events-none" />
                 
                 {filteredLeadCards.map(card => (
                   <article
@@ -745,29 +749,29 @@ export default function SalesProcess() {
                     onClick={() => openDrawer(card)}
                     className={`flex-shrink-0 w-[340px] max-w-[380px] rounded-[22px] border p-5 cursor-pointer transition-all duration-300 ${
                       activeLeadCard === card.id
-                        ? 'border-amber-500/75 bg-gradient-to-br from-amber-500/15 to-amber-500/5 shadow-2xl shadow-amber-500/15 -translate-y-0.5'
-                        : 'border-white/15 bg-gradient-to-b from-white/[0.06] to-white/[0.02] hover:border-amber-500/45 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/50'
+                        ? 'border-orange-500 bg-gradient-to-br from-orange-500/20 to-orange-600/10 shadow-2xl shadow-orange-500/25 -translate-y-1'
+                        : 'border-orange-500/25 bg-gradient-to-b from-orange-500/8 to-black/20 hover:border-orange-400 hover:-translate-y-1 hover:shadow-2xl hover:shadow-orange-500/20'
                     }`}
                     style={{ scrollSnapAlign: 'start', boxShadow: '0 18px 55px rgba(0,0,0,.45)' }}
                     data-testid={`card-${card.id}`}
                   >
                     <div className="flex justify-between items-start gap-3 mb-3">
                       <h3 className="font-black text-base text-white leading-tight">{card.title}</h3>
-                      <span className="flex-shrink-0 px-3 py-2 rounded-full border border-amber-500/45 bg-amber-500/10 text-amber-400 font-black text-xs tracking-wide">
+                      <span className="flex-shrink-0 px-3 py-2 rounded-full border border-orange-400/60 bg-orange-500/20 text-orange-300 font-black text-xs tracking-wide">
                         {card.badge}
                       </span>
                     </div>
                     
                     <ul className="list-disc pl-5 text-white/80 text-sm font-semibold leading-relaxed mb-3">
                       {card.items.map((item, i) => (
-                        <li key={i} className="mb-2 marker:text-amber-400">{item}</li>
+                        <li key={i} className="mb-2 marker:text-orange-400">{item}</li>
                       ))}
                     </ul>
 
                     <div className="grid gap-2.5 mt-3">
                       {card.meta.map((m, i) => (
-                        <div key={i} className="flex justify-between items-center gap-3 px-3.5 py-3 rounded-xl border border-white/12 bg-black/30 text-sm font-bold text-white/80">
-                          <span className="text-amber-400 font-black">{m.label}</span>
+                        <div key={i} className="flex justify-between items-center gap-3 px-3.5 py-3 rounded-xl border border-orange-500/20 bg-black/40 text-sm font-bold text-white/80">
+                          <span className="text-orange-400 font-black">{m.label}</span>
                           <span className="flex items-center gap-2">
                             {m.label === 'Meeting Type' && getMeetingIcon(m.value)}
                             {m.value}
@@ -777,7 +781,7 @@ export default function SalesProcess() {
                     </div>
 
                     <button 
-                      className="mt-4 w-full py-3.5 rounded-xl border border-white/15 bg-black/35 text-white font-black transition-all hover:-translate-y-0.5 hover:border-amber-500/55 hover:bg-amber-500/10"
+                      className="mt-4 w-full py-3.5 rounded-xl border border-orange-500/40 bg-orange-500/10 text-orange-300 font-black transition-all hover:-translate-y-0.5 hover:border-orange-400 hover:bg-orange-500/20"
                       data-testid={`button-details-${card.id}`}
                     >
                       View Details
@@ -788,35 +792,39 @@ export default function SalesProcess() {
             </section>
           )}
 
-          {/* Sales Track Section */}
+          {/* Sales Track Section - PURPLE THEME */}
           {showTrack && (
-            <section className="px-5 py-5" data-testid="section-track">
+            <section 
+              className="px-5 py-5 border-b border-violet-500/20" 
+              style={{ background: 'linear-gradient(180deg, rgba(139,92,246,0.08) 0%, rgba(0,0,0,0.15) 100%)' }}
+              data-testid="section-track"
+            >
               <div className="flex items-center justify-between gap-4 mb-4 cursor-pointer" onClick={() => setShowTrack(!showTrack)}>
                 <div>
-                  <div className="text-xs text-amber-400 uppercase tracking-[0.16em] font-black mb-1">Sales Process Track</div>
+                  <div className="text-xs text-violet-400 uppercase tracking-[0.16em] font-black mb-1">Sales Process Track</div>
                   <div className="text-lg font-black text-white">
                     {activeTab === 'ecosystem' ? 'ProActive Ecosystem' : 'Cybersecurity Track'}
                   </div>
                 </div>
-                <button className="w-10 h-10 rounded-xl border border-white/15 bg-black/30 text-white grid place-items-center transition-transform">
+                <button className="w-10 h-10 rounded-xl border border-violet-500/30 bg-violet-500/10 text-violet-400 grid place-items-center transition-transform hover:bg-violet-500/20">
                   <ChevronDown className="w-5 h-5" />
                 </button>
               </div>
 
               {/* Track Progress */}
-              <div className="p-4 rounded-2xl border border-white/10 bg-black/25 mb-4">
+              <div className="p-4 rounded-2xl border border-violet-500/25 bg-gradient-to-r from-violet-500/10 to-purple-600/5 mb-4">
                 <div className="flex justify-between items-baseline gap-4 mb-2.5">
-                  <div className="text-xs text-white/60 font-extrabold uppercase tracking-widest">Track Progress</div>
-                  <div className="text-xs text-white/60 font-extrabold">
+                  <div className="text-xs text-violet-300/80 font-extrabold uppercase tracking-widest">Track Progress</div>
+                  <div className="text-xs text-violet-300/80 font-extrabold">
                     Step {trackCards.findIndex(c => c.id === activeTrackCard) + 1} / {trackCards.length}
                   </div>
                 </div>
-                <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                <div className="h-2.5 rounded-full bg-black/40 overflow-hidden">
                   <div 
                     className="h-full rounded-full transition-all duration-500"
                     style={{ 
                       width: `${trackProgress}%`,
-                      background: 'linear-gradient(90deg, #ffb800, #5aa7ff)'
+                      background: 'linear-gradient(90deg, #8b5cf6, #a78bfa, #c4b5fd)'
                     }}
                   />
                 </div>
@@ -824,7 +832,7 @@ export default function SalesProcess() {
 
               {/* Row Header */}
               <div className="mb-4 px-1.5">
-                <div className="text-xs text-amber-400 uppercase tracking-[0.15em] font-extrabold mb-2">
+                <div className="text-xs text-violet-400 uppercase tracking-[0.15em] font-extrabold mb-2">
                   {activeTab === 'ecosystem' ? 'Sales Process' : 'Cybersecurity Track'}
                 </div>
                 <div className="text-xl font-extrabold text-white leading-snug">
@@ -837,7 +845,7 @@ export default function SalesProcess() {
 
               {/* Track Timeline */}
               <div className="relative flex gap-5 overflow-x-auto pb-5 pt-8 px-1 scroll-smooth" style={{ scrollSnapType: 'x mandatory' }}>
-                <div className="absolute left-4 right-4 top-5 h-[3px] rounded-full bg-gradient-to-r from-amber-500/65 via-blue-400/55 to-emerald-400/55 opacity-22 pointer-events-none" />
+                <div className="absolute left-4 right-4 top-5 h-[3px] rounded-full bg-gradient-to-r from-violet-500/50 via-purple-400/40 to-fuchsia-400/30 pointer-events-none" />
                 
                 {filteredTrackCards.map(card => (
                   <article
@@ -845,29 +853,29 @@ export default function SalesProcess() {
                     onClick={() => openDrawer(card)}
                     className={`flex-shrink-0 w-[360px] max-w-[390px] rounded-[20px] border p-5 cursor-pointer transition-all duration-300 backdrop-blur-[18px] overflow-hidden ${
                       activeTrackCard === card.id
-                        ? 'border-amber-500 bg-gradient-to-br from-amber-500/15 to-amber-500/5 shadow-2xl shadow-amber-500/25 -translate-y-1 scale-[1.01]'
-                        : 'border-white/15 bg-gradient-to-br from-white/[0.12] to-white/[0.04] hover:border-amber-500/45 hover:-translate-y-1.5 hover:scale-[1.01] hover:shadow-2xl hover:shadow-amber-500/20'
+                        ? 'border-violet-500 bg-gradient-to-br from-violet-500/20 to-purple-600/10 shadow-2xl shadow-violet-500/25 -translate-y-1 scale-[1.01]'
+                        : 'border-violet-500/25 bg-gradient-to-br from-violet-500/8 to-black/20 hover:border-violet-400 hover:-translate-y-1.5 hover:scale-[1.01] hover:shadow-2xl hover:shadow-violet-500/20'
                     }`}
                     style={{ scrollSnapAlign: 'start', boxShadow: '0 20px 60px rgba(0,0,0,.40)' }}
                     data-testid={`card-${card.id}`}
                   >
                     <div className="flex justify-between items-start gap-3 mb-3.5">
                       <h3 className="font-black text-base text-white leading-tight">{card.title}</h3>
-                      <span className="flex-shrink-0 px-3.5 py-2 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-400 font-black text-xs tracking-wide">
+                      <span className="flex-shrink-0 px-3.5 py-2 rounded-full border border-violet-400/60 bg-violet-500/20 text-violet-300 font-black text-xs tracking-wide">
                         {card.badge}
                       </span>
                     </div>
                     
                     <ul className="list-disc pl-5 text-white/80 text-sm font-medium leading-relaxed mb-3.5">
                       {card.items.map((item, i) => (
-                        <li key={i} className="mb-2 marker:text-amber-400">{item}</li>
+                        <li key={i} className="mb-2 marker:text-violet-400">{item}</li>
                       ))}
                     </ul>
 
                     <div className="grid gap-3 mt-3.5">
                       {card.meta.map((m, i) => (
-                        <div key={i} className="flex justify-between items-center gap-3 px-3.5 py-3 rounded-xl border border-white/15 bg-black/25 text-sm font-semibold text-white/80">
-                          <span className="text-amber-400 font-extrabold">{m.label}</span>
+                        <div key={i} className="flex justify-between items-center gap-3 px-3.5 py-3 rounded-xl border border-violet-500/20 bg-black/40 text-sm font-semibold text-white/80">
+                          <span className="text-violet-400 font-extrabold">{m.label}</span>
                           <span className="flex items-center gap-2 text-right">
                             {m.label === 'Meeting Type' && getMeetingIcon(m.value)}
                             <span className="max-w-[160px] truncate">{m.value}</span>
@@ -877,7 +885,7 @@ export default function SalesProcess() {
                     </div>
 
                     <button 
-                      className="mt-4 w-full py-3.5 rounded-xl border border-white/15 bg-black/30 text-white font-extrabold transition-all hover:-translate-y-0.5 hover:border-amber-500 hover:bg-amber-500/10"
+                      className="mt-4 w-full py-3.5 rounded-xl border border-violet-500/40 bg-violet-500/10 text-violet-300 font-extrabold transition-all hover:-translate-y-0.5 hover:border-violet-400 hover:bg-violet-500/20"
                       data-testid={`button-details-${card.id}`}
                     >
                       View Details
@@ -888,20 +896,24 @@ export default function SalesProcess() {
             </section>
           )}
 
-          {/* TBR / SBR Reviews Section */}
+          {/* TBR / SBR Reviews Section - EMERALD/TEAL THEME */}
           {showReviews && (
-            <section className="px-5 py-5 border-t border-white/10" data-testid="section-reviews">
+            <section 
+              className="px-5 py-5" 
+              style={{ background: 'linear-gradient(180deg, rgba(16,185,129,0.08) 0%, rgba(0,0,0,0.15) 100%)' }}
+              data-testid="section-reviews"
+            >
               <div className="flex items-center justify-between gap-4 mb-4 cursor-pointer" onClick={() => setShowReviews(!showReviews)}>
                 <div>
                   <div className="text-xs text-emerald-400 uppercase tracking-[0.16em] font-black mb-1">Business Reviews</div>
                   <div className="text-lg font-black text-white">TBR & SBR — 1–2 Reviews Per Year</div>
                 </div>
-                <button className="w-10 h-10 rounded-xl border border-white/15 bg-black/30 text-white grid place-items-center transition-transform">
+                <button className="w-10 h-10 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 grid place-items-center transition-transform hover:bg-emerald-500/20">
                   <ChevronDown className="w-5 h-5" />
                 </button>
               </div>
 
-              <p className="text-white/70 text-sm font-medium mb-5 max-w-3xl">
+              <p className="text-emerald-200/70 text-sm font-medium mb-5 max-w-3xl">
                 Scheduled strategic reviews to ensure ongoing alignment between technology investments, security posture, and business objectives.
               </p>
 
@@ -975,17 +987,27 @@ export default function SalesProcess() {
             </section>
           )}
 
-          {/* Detail Drawer */}
+          {/* Detail Drawer - Color based on scope */}
           {drawerCard && (
-            <div className="mx-5 mb-6 rounded-[20px] border border-amber-500/45 p-5 backdrop-blur-[18px]"
+            <div className={`mx-5 mb-6 rounded-[20px] border p-5 backdrop-blur-[18px] ${
+              drawerCard.scope === 'lead' 
+                ? 'border-orange-500/45' 
+                : 'border-violet-500/45'
+            }`}
                  style={{ 
-                   background: 'linear-gradient(180deg, rgba(255,184,0,.14), rgba(0,0,0,.22))',
+                   background: drawerCard.scope === 'lead'
+                     ? 'linear-gradient(180deg, rgba(249,115,22,.14), rgba(0,0,0,.22))'
+                     : 'linear-gradient(180deg, rgba(139,92,246,.14), rgba(0,0,0,.22))',
                    boxShadow: '0 26px 90px rgba(0,0,0,.65)'
                  }}
                  data-testid="drawer-detail"
             >
               <div className="flex justify-between items-center gap-4 mb-4">
-                <span className="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-amber-500/55 bg-amber-500/15 text-white font-black text-xs uppercase tracking-wider">
+                <span className={`inline-flex items-center gap-2 px-3 py-2 rounded-full border font-black text-xs uppercase tracking-wider ${
+                  drawerCard.scope === 'lead'
+                    ? 'border-orange-500/55 bg-orange-500/15 text-orange-300'
+                    : 'border-violet-500/55 bg-violet-500/15 text-violet-300'
+                }`}>
                   {drawerCard.phase}
                 </span>
                 <button 
@@ -1002,13 +1024,13 @@ export default function SalesProcess() {
               <div className="text-white/80 font-semibold leading-relaxed text-[15px]">
                 {drawerCard.meta.find(m => m.label === 'Meeting Type') && (
                   <p className="mb-3 flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-amber-400" />
-                    <b className="text-amber-400">Meeting Type:</b> {drawerCard.meta.find(m => m.label === 'Meeting Type')?.value}
+                    <Calendar className={`w-4 h-4 ${drawerCard.scope === 'lead' ? 'text-orange-400' : 'text-violet-400'}`} />
+                    <b className={drawerCard.scope === 'lead' ? 'text-orange-400' : 'text-violet-400'}>Meeting Type:</b> {drawerCard.meta.find(m => m.label === 'Meeting Type')?.value}
                   </p>
                 )}
                 
                 {drawerCard.details.title && (
-                  <p className="mb-2"><b className="text-amber-400">{drawerCard.details.title}:</b></p>
+                  <p className="mb-2"><b className={drawerCard.scope === 'lead' ? 'text-orange-400' : 'text-violet-400'}>{drawerCard.details.title}:</b></p>
                 )}
                 
                 <ul className="list-disc pl-6 space-y-2">
