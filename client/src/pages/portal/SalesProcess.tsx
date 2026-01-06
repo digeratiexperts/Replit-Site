@@ -10,9 +10,9 @@ const qaCategories = [
     color: 'cyan',
     items: [
       { q: 'What do you guys do?', a: 'We help small businesses understand their real cyber risk, put the right security controls in place, and be able to prove what happened when something goes wrong. We deliver this through managed security, identity and access management, cloud systems, backup and recovery, and right-sized IT operations built around how your business actually works.' },
-      { q: 'Who do you work with?', a: 'CPAs/accountants, dental & medical, insurance agencies, veterinary clinics, real estate brokerages—and local SMBs in a ~30-mile radius that need real IT without enterprise overhead.' },
+      { q: 'Who do you work with?', a: 'Small businesses with 5–30 users who need real IT and security without enterprise overhead—typically local SMBs in a ~30-mile radius that want clarity, accountability, and controls that actually work.' },
       { q: 'Why do this now?', a: 'Usually one of three triggers: cyber insurance requirements, email/M365 account takeovers, or liability—being able to produce logs, timelines, and proof if there\'s a dispute or investigation.' },
-      { q: 'How long have you been doing this?', a: 'I\'ve been doing IT since 2007. Digerati Experts is built around security-first support—controls, evidence, and operational ownership, not just break-fix.' },
+      { q: 'How long have you been doing this?', a: 'I\'ve been doing IT since 2007—17+ years across infrastructure, cloud, and security. Digerati Experts exists because I saw too many businesses get burned by reactive IT. Everything we do is built around security-first principles: controls, evidence, and operational ownership—not just keeping things running until something breaks.' },
       { q: 'Do you do IT and cyber, or just cyber?', a: 'We do both—security-first IT. We can fully manage IT, or do co-managed security while your current IT handles day-to-day support.' }
     ]
   },
@@ -24,7 +24,7 @@ const qaCategories = [
     items: [
       { q: 'What\'s the first step?', a: 'A quick FTA (First Time Appointment)—15–30 minutes. I\'ll ask a few focused questions and give you a plain-English Security Reality Snapshot: what\'s solid, what\'s missing, and what matters.' },
       { q: 'If we\'re too busy for an FTA…', a: 'No problem—let\'s do coffee/lunch as the low-pressure version of the same conversation. Same questions, no pressure; if I spot something important I\'ll tell you straight.' },
-      { q: 'What happens after the FTA?', a: 'If we find meaningful exposure: either a scoped fix (M365 hardening/backups/logging), a paid assessment for bigger environments, or onboarding + stabilization leading into monthly services.' }
+      { q: 'What happens after the FTA?', a: 'If we find meaningful exposure: either a scoped fix (M365 hardening/backups/logging), a paid assessment for bigger environments, or onboarding + stabilization leading into monthly services. Onboarding is a paid engagement—typically a few thousand dollars—where we get access, document systems, deploy baseline controls, and stabilize. After that, you move into predictable monthly services.' }
     ]
   },
   {
@@ -44,7 +44,7 @@ const qaCategories = [
     icon: DollarSign,
     color: 'emerald',
     items: [
-      { q: 'How much do you cost?', a: 'Most clients invest low four figures to get started for onboarding and stabilization, then a few hundred to a few thousand per month depending on users, risk, and what you actually need.' },
+      { q: 'How much do you cost?', a: 'Most clients invest a few thousand dollars to get started for onboarding and stabilization, then a few hundred to a few thousand per month depending on users, risk, and what you actually need.' },
       { q: 'What\'s your minimum?', a: 'Generally: 5–30 users is ideal. Minimum monthly is typically $500/month, and onboarding starts around $1,500 depending on cleanup and access complexity.' },
       { q: 'If we push you for per-user pricing…', a: 'We don\'t lead with per-user "cheapest plan" pricing. We build a program around your environment and minimum standards so it actually reduces incidents.' }
     ]
@@ -55,7 +55,7 @@ const qaCategories = [
     icon: Briefcase,
     color: 'blue',
     items: [
-      { q: 'What\'s included monthly vs what\'s extra?', a: 'Monthly includes IT support + security requests, problems, and incidents—and support for anything we sold you. Out-of-scope work is handled through paid helpdesk support.' },
+      { q: 'What\'s included monthly vs what\'s extra?', a: 'Monthly includes IT support + security requests, problems, and incidents—and support for anything we sold you. Out-of-scope work is handled through paid helpdesk support. If you have TechPoints available (credits your company or users can earn), we apply those first to reduce or eliminate that cost.' },
       { q: 'Do you support things you didn\'t sell?', a: 'Yes—within reason. We support the environment, but user education and troubleshooting on products we didn\'t sell can be billable. We\'ll be clear up front.' },
       { q: 'How fast are your SLAs?', a: 'Security-impacting issues and lockouts get priority. Exact response targets are documented in the agreement so there\'s no ambiguity.' },
       { q: 'How big is your team?', a: 'We operate lean and accountable with a vetted bench for coverage. Clients are not dependent on a single point of failure.' },
@@ -81,12 +81,12 @@ const qaCategories = [
     icon: Key,
     color: 'teal',
     items: [
-      { q: 'What happens if you\'re unavailable, sick, or something happens to you?', a: 'You won\'t be stuck. We ensure you retain owner-level access and we maintain a transferable handoff package—system inventory, credentials structure, and restore procedures—so another provider can take over quickly if needed.' },
+      { q: 'What happens if you\'re unavailable, sick, or something happens to you?', a: 'You won\'t be stuck. We maintain a Continuity Pack for every client: system inventory, credentials structure (you always retain owner-level access), restore procedures, and vendor contacts. If something happens to me, another provider can pick up the Pack and take over quickly. You\'re never locked out or dependent on one person.' },
       { q: 'Do you hold our passwords?', a: 'We manage credentials securely, but you always retain owner access. Nothing is designed to be dependent on one person.' },
       { q: 'Can we leave anytime and still get our stuff?', a: 'Yes. Your access and documentation are structured for clean transition. We provide a standard export and handoff package during the transition window.' },
       { q: 'Do you offer credential escrow / break-glass?', a: 'Yes. We can set up a client-controlled escrow for emergency admin access and critical restore instructions—so you have continuity without compromising security.' },
-      { q: 'Will you help us transition if we switch?', a: 'Yes. We support an orderly transition and provide the handoff package and reasonable assistance per the agreement.' },
-      { q: 'What are client-owned access requirements?', a: 'We require that you have an owner/admin account for core systems (M365/domain/DNS/firewall/backups). That prevents hostage risk and protects you long-term.' }
+      { q: 'Will you help us transition if we switch?', a: 'Yes. We support an orderly transition with a defined handoff period. You get the Continuity Pack, credential exports, and reasonable assistance transferring to a new provider—no games, no lockouts. We want clean exits because our reputation depends on it.' },
+      { q: 'What are client-owned access requirements?', a: 'We require that you maintain an owner/admin account for all core systems—M365, domain registrar, DNS, firewall, backups, and any critical SaaS. This explicitly prevents hostage risk: you can always access, audit, or transfer your systems without relying on us. We manage day-to-day, but you own the keys.' }
     ]
   },
   {
