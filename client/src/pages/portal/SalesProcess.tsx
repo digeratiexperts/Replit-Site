@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Search, ChevronDown, X, Zap, Target, Users, Shield, CheckCircle, Clock, FileText, Video, Building2, Calendar } from 'lucide-react';
+import { Search, ChevronDown, X, Zap, Target, Users, Shield, CheckCircle, Clock, FileText, Video, Building2, Calendar, BarChart3, ShieldCheck } from 'lucide-react';
 
 interface CardData {
   id: string;
@@ -258,6 +258,82 @@ const ecosystemCards: CardData[] = [
   }
 ];
 
+interface ReviewCardData {
+  id: string;
+  title: string;
+  badge: string;
+  type: 'tbr' | 'sbr';
+  frequency: string;
+  keywords: string;
+  items: string[];
+  meta: { label: string; value: string }[];
+  details: { title?: string; content: string[] };
+}
+
+const reviewCards: ReviewCardData[] = [
+  {
+    id: 'tbr-1',
+    title: 'Technology Business Review',
+    badge: 'TBR',
+    type: 'tbr',
+    frequency: '1–2 per year',
+    keywords: 'tbr technology business review quarterly annual roadmap budget planning virtual',
+    items: [
+      'Review IT roadmap progress + alignment',
+      'Budget planning + upcoming initiatives',
+      'Technology lifecycle + refresh planning',
+      'Strategic IT recommendations'
+    ],
+    meta: [
+      { label: 'Frequency', value: '1–2 per year' },
+      { label: 'Duration', value: '60–90 minutes' },
+      { label: 'Attendees', value: 'Executive + IT stakeholders' },
+      { label: 'Meeting Type', value: 'Virtual (default) or In-office' }
+    ],
+    details: {
+      title: 'TBR Agenda',
+      content: [
+        'Roadmap review: completed milestones + upcoming projects',
+        'Budget alignment: actual vs. planned spend',
+        'Technology health: infrastructure, security, compliance status',
+        'Strategic initiatives: new capabilities, optimizations, modernization',
+        'Action items + next quarter priorities'
+      ]
+    }
+  },
+  {
+    id: 'sbr-1',
+    title: 'Security Business Review',
+    badge: 'SBR',
+    type: 'sbr',
+    frequency: '1–2 per year',
+    keywords: 'sbr security business review quarterly annual compliance risk posture virtual',
+    items: [
+      'Security posture + risk assessment',
+      'Compliance status + audit readiness',
+      'Threat landscape + incident review',
+      'Security roadmap + recommendations'
+    ],
+    meta: [
+      { label: 'Frequency', value: '1–2 per year' },
+      { label: 'Duration', value: '60–90 minutes' },
+      { label: 'Attendees', value: 'Executive + Security stakeholders' },
+      { label: 'Meeting Type', value: 'Virtual (default) or In-office' }
+    ],
+    details: {
+      title: 'SBR Agenda',
+      content: [
+        'Security posture: current state + improvements since last review',
+        'Incident summary: threats blocked, alerts handled, response times',
+        'Compliance status: framework alignment, audit findings, remediation',
+        'Risk assessment: new vulnerabilities, emerging threats, exposure gaps',
+        'Insurance requirements: cyber liability evidence + documentation',
+        'Security roadmap: upcoming controls, training, enhancements'
+      ]
+    }
+  }
+];
+
 const cyberCards: CardData[] = [
   {
     id: 'cyber-0',
@@ -428,9 +504,12 @@ export default function SalesProcess() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showLeadGen, setShowLeadGen] = useState(true);
   const [showTrack, setShowTrack] = useState(true);
+  const [showReviews, setShowReviews] = useState(true);
   const [activeLeadCard, setActiveLeadCard] = useState<string>(leadGenCards[0].id);
   const [activeTrackCard, setActiveTrackCard] = useState<string>(ecosystemCards[0].id);
+  const [activeReviewCard, setActiveReviewCard] = useState<string | null>(null);
   const [drawerCard, setDrawerCard] = useState<CardData | null>(null);
+  const [drawerReviewCard, setDrawerReviewCard] = useState<ReviewCardData | null>(null);
 
   const trackCards = activeTab === 'ecosystem' ? ecosystemCards : cyberCards;
 
@@ -448,6 +527,16 @@ export default function SalesProcess() {
     if (!searchQuery) return trackCards;
     const q = searchQuery.toLowerCase();
     return trackCards.filter(card =>
+      card.title.toLowerCase().includes(q) ||
+      card.keywords.toLowerCase().includes(q) ||
+      card.items.some(item => item.toLowerCase().includes(q))
+    );
+  }, [searchQuery, trackCards]);
+
+  const filteredReviewCards = useMemo(() => {
+    if (!searchQuery) return reviewCards;
+    const q = searchQuery.toLowerCase();
+    return reviewCards.filter(card =>
       card.title.toLowerCase().includes(q) ||
       card.keywords.toLowerCase().includes(q) ||
       card.items.some(item => item.toLowerCase().includes(q))
@@ -477,6 +566,13 @@ export default function SalesProcess() {
       setActiveTrackCard(card.id);
     }
     setDrawerCard(card);
+    setDrawerReviewCard(null);
+  };
+
+  const openReviewDrawer = (card: ReviewCardData) => {
+    setActiveReviewCard(card.id);
+    setDrawerReviewCard(card);
+    setDrawerCard(null);
   };
 
   const getMeetingIcon = (meetingType: string) => {
@@ -520,7 +616,8 @@ export default function SalesProcess() {
               {[
                 { value: '7', label: 'Sales Stages' },
                 { value: '3', label: 'Lead Sources' },
-                { value: '2', label: 'Tracks' }
+                { value: '2', label: 'Tracks' },
+                { value: '2', label: 'Reviews/Year' }
               ].map((stat, i) => (
                 <div key={i} className="flex gap-3 items-baseline px-3.5 py-3 rounded-2xl border border-white/10 bg-black/25 backdrop-blur-sm">
                   <span className="text-2xl font-black text-amber-400">{stat.value}</span>
@@ -568,6 +665,18 @@ export default function SalesProcess() {
                 >
                   <span className={`w-2.5 h-2.5 rounded-full border ${showTrack ? 'bg-amber-400 border-amber-500/75 shadow-amber-500/40 shadow-sm' : 'bg-white/25 border-white/20'}`} />
                   Track
+                </button>
+                <button
+                  onClick={() => setShowReviews(!showReviews)}
+                  className={`inline-flex items-center gap-2.5 px-3.5 py-3 rounded-full border font-black text-sm transition-all ${
+                    showReviews 
+                      ? 'border-emerald-500/70 bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 text-white shadow-lg shadow-emerald-500/15' 
+                      : 'border-white/10 bg-black/30 text-white/80 hover:border-emerald-500/35'
+                  }`}
+                  data-testid="toggle-reviews"
+                >
+                  <span className={`w-2.5 h-2.5 rounded-full border ${showReviews ? 'bg-emerald-400 border-emerald-500/75 shadow-emerald-500/40 shadow-sm' : 'bg-white/25 border-white/20'}`} />
+                  TBR / SBR
                 </button>
               </div>
             </div>
@@ -779,6 +888,93 @@ export default function SalesProcess() {
             </section>
           )}
 
+          {/* TBR / SBR Reviews Section */}
+          {showReviews && (
+            <section className="px-5 py-5 border-t border-white/10" data-testid="section-reviews">
+              <div className="flex items-center justify-between gap-4 mb-4 cursor-pointer" onClick={() => setShowReviews(!showReviews)}>
+                <div>
+                  <div className="text-xs text-emerald-400 uppercase tracking-[0.16em] font-black mb-1">Business Reviews</div>
+                  <div className="text-lg font-black text-white">TBR & SBR — 1–2 Reviews Per Year</div>
+                </div>
+                <button className="w-10 h-10 rounded-xl border border-white/15 bg-black/30 text-white grid place-items-center transition-transform">
+                  <ChevronDown className="w-5 h-5" />
+                </button>
+              </div>
+
+              <p className="text-white/70 text-sm font-medium mb-5 max-w-3xl">
+                Scheduled strategic reviews to ensure ongoing alignment between technology investments, security posture, and business objectives.
+              </p>
+
+              {/* Reviews Timeline */}
+              <div className="grid md:grid-cols-2 gap-5">
+                {filteredReviewCards.map(card => (
+                  <article
+                    key={card.id}
+                    onClick={() => openReviewDrawer(card)}
+                    className={`rounded-[20px] border p-5 cursor-pointer transition-all duration-300 backdrop-blur-[18px] overflow-hidden ${
+                      activeReviewCard === card.id
+                        ? 'border-emerald-500 bg-gradient-to-br from-emerald-500/15 to-emerald-500/5 shadow-2xl shadow-emerald-500/25 -translate-y-1'
+                        : 'border-white/15 bg-gradient-to-br from-white/[0.10] to-white/[0.03] hover:border-emerald-500/45 hover:-translate-y-1 hover:shadow-2xl hover:shadow-emerald-500/15'
+                    }`}
+                    style={{ boxShadow: '0 18px 55px rgba(0,0,0,.40)' }}
+                    data-testid={`card-${card.id}`}
+                  >
+                    <div className="flex justify-between items-start gap-3 mb-3.5">
+                      <div className="flex items-center gap-3">
+                        {card.type === 'tbr' ? (
+                          <div className="w-10 h-10 rounded-xl border border-blue-500/40 bg-blue-500/15 grid place-items-center">
+                            <BarChart3 className="w-5 h-5 text-blue-400" />
+                          </div>
+                        ) : (
+                          <div className="w-10 h-10 rounded-xl border border-emerald-500/40 bg-emerald-500/15 grid place-items-center">
+                            <ShieldCheck className="w-5 h-5 text-emerald-400" />
+                          </div>
+                        )}
+                        <h3 className="font-black text-base text-white leading-tight">{card.title}</h3>
+                      </div>
+                      <span className={`flex-shrink-0 px-3.5 py-2 rounded-full border font-black text-xs tracking-wide ${
+                        card.type === 'tbr' 
+                          ? 'border-blue-500/45 bg-blue-500/15 text-blue-400'
+                          : 'border-emerald-500/45 bg-emerald-500/15 text-emerald-400'
+                      }`}>
+                        {card.badge}
+                      </span>
+                    </div>
+                    
+                    <ul className="list-disc pl-5 text-white/80 text-sm font-medium leading-relaxed mb-3.5">
+                      {card.items.map((item, i) => (
+                        <li key={i} className={`mb-2 ${card.type === 'tbr' ? 'marker:text-blue-400' : 'marker:text-emerald-400'}`}>{item}</li>
+                      ))}
+                    </ul>
+
+                    <div className="grid gap-2.5 mt-3.5">
+                      {card.meta.map((m, i) => (
+                        <div key={i} className="flex justify-between items-center gap-3 px-3.5 py-2.5 rounded-xl border border-white/12 bg-black/25 text-sm font-semibold text-white/80">
+                          <span className={`font-extrabold ${card.type === 'tbr' ? 'text-blue-400' : 'text-emerald-400'}`}>{m.label}</span>
+                          <span className="flex items-center gap-2 text-right">
+                            {m.label === 'Meeting Type' && getMeetingIcon(m.value)}
+                            <span className="max-w-[180px] truncate">{m.value}</span>
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <button 
+                      className={`mt-4 w-full py-3.5 rounded-xl border border-white/15 bg-black/30 text-white font-extrabold transition-all hover:-translate-y-0.5 ${
+                        card.type === 'tbr' 
+                          ? 'hover:border-blue-500 hover:bg-blue-500/10'
+                          : 'hover:border-emerald-500 hover:bg-emerald-500/10'
+                      }`}
+                      data-testid={`button-details-${card.id}`}
+                    >
+                      View Details
+                    </button>
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
+
           {/* Detail Drawer */}
           {drawerCard && (
             <div className="mx-5 mb-6 rounded-[20px] border border-amber-500/45 p-5 backdrop-blur-[18px]"
@@ -817,6 +1013,69 @@ export default function SalesProcess() {
                 
                 <ul className="list-disc pl-6 space-y-2">
                   {drawerCard.details.content.map((item, i) => (
+                    <li key={i}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+
+          {/* Review Detail Drawer */}
+          {drawerReviewCard && (
+            <div className={`mx-5 mb-6 rounded-[20px] border p-5 backdrop-blur-[18px] ${
+              drawerReviewCard.type === 'tbr' 
+                ? 'border-blue-500/45'
+                : 'border-emerald-500/45'
+            }`}
+                 style={{ 
+                   background: drawerReviewCard.type === 'tbr'
+                     ? 'linear-gradient(180deg, rgba(59,130,246,.14), rgba(0,0,0,.22))'
+                     : 'linear-gradient(180deg, rgba(16,185,129,.14), rgba(0,0,0,.22))',
+                   boxShadow: '0 26px 90px rgba(0,0,0,.65)'
+                 }}
+                 data-testid="drawer-review-detail"
+            >
+              <div className="flex justify-between items-center gap-4 mb-4">
+                <div className="flex items-center gap-3">
+                  {drawerReviewCard.type === 'tbr' ? (
+                    <div className="w-10 h-10 rounded-xl border border-blue-500/40 bg-blue-500/15 grid place-items-center">
+                      <BarChart3 className="w-5 h-5 text-blue-400" />
+                    </div>
+                  ) : (
+                    <div className="w-10 h-10 rounded-xl border border-emerald-500/40 bg-emerald-500/15 grid place-items-center">
+                      <ShieldCheck className="w-5 h-5 text-emerald-400" />
+                    </div>
+                  )}
+                  <span className={`inline-flex items-center gap-2 px-3 py-2 rounded-full border font-black text-xs uppercase tracking-wider ${
+                    drawerReviewCard.type === 'tbr'
+                      ? 'border-blue-500/55 bg-blue-500/15 text-white'
+                      : 'border-emerald-500/55 bg-emerald-500/15 text-white'
+                  }`}>
+                    {drawerReviewCard.badge} — {drawerReviewCard.frequency}
+                  </span>
+                </div>
+                <button 
+                  onClick={() => setDrawerReviewCard(null)}
+                  className="w-10 h-10 rounded-xl border border-white/20 bg-black/30 text-white text-xl font-black grid place-items-center hover:border-white/40"
+                  data-testid="button-close-review-drawer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              
+              <h3 className="text-2xl font-black text-white mb-3">{drawerReviewCard.title}</h3>
+              
+              <div className="text-white/80 font-semibold leading-relaxed text-[15px]">
+                {drawerReviewCard.details.title && (
+                  <p className="mb-3">
+                    <b className={drawerReviewCard.type === 'tbr' ? 'text-blue-400' : 'text-emerald-400'}>
+                      {drawerReviewCard.details.title}:
+                    </b>
+                  </p>
+                )}
+                
+                <ul className="list-disc pl-6 space-y-2">
+                  {drawerReviewCard.details.content.map((item, i) => (
                     <li key={i}>{item}</li>
                   ))}
                 </ul>
