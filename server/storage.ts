@@ -175,6 +175,33 @@ export class MemStorage implements IStorage {
     };
     this.portalClients.set(demoClient.id, demoClient);
 
+    const demoClient2: PortalClient = {
+      id: "client-2",
+      companyName: "Phoenix Medical Group",
+      contactEmail: "it@phoenixmedical.com",
+      status: "active",
+      createdAt: new Date(),
+    };
+    this.portalClients.set(demoClient2.id, demoClient2);
+
+    const demoClient3: PortalClient = {
+      id: "client-3",
+      companyName: "Desert Law Partners",
+      contactEmail: "admin@desertlaw.com",
+      status: "active",
+      createdAt: new Date(),
+    };
+    this.portalClients.set(demoClient3.id, demoClient3);
+
+    const demoClient4: PortalClient = {
+      id: "client-4",
+      companyName: "Scottsdale Realty",
+      contactEmail: "tech@scottsdalereal.com",
+      status: "active",
+      createdAt: new Date(),
+    };
+    this.portalClients.set(demoClient4.id, demoClient4);
+
     const portalUser: PortalUser = {
       id: "portal-user-1",
       clientId: "client-1",
