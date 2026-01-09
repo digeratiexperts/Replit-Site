@@ -48,3 +48,51 @@ The project follows a modular structure (`client/` and `server/`), using UUIDs f
 - **USPS, FedEx, UPS**: Shipping services
 - **JumpCloud, Coro.net, BlackPoint**: Third-party agent management
 - **Seamless.ai**: Sales integration
+
+## CyberPanel/OpenLiteSpeed Deployment Configuration
+
+When deploying the Replit app to digeratiexperts.com via CyberPanel reverse proxy, follow these steps to avoid 404 errors:
+
+### Step 1: Create External Application
+In OpenLiteSpeed WebAdmin (`https://your-server:7080`):
+1. Go to **Server Configuration > External App > Add**
+2. Type: **Web Server**
+3. Configure:
+   - **Name**: `replit_app`
+   - **Address**: Your Replit deployment URL (e.g., `your-app.replit.app:443`)
+   - **Max Connections**: 100
+
+### Step 2: Add Rewrite Rules for SPA
+In your vhost configuration, add these rewrite rules to handle React client-side routing:
+
+```apache
+RewriteEngine On
+
+# Preserve well-known paths (SSL cert renewal)
+RewriteCond %{REQUEST_URI} !^/\.well-known
+
+# Forward all requests to Replit
+RewriteRule ^(.*)$ HTTPS://replit_app/$1 [P,L]
+```
+
+### Step 3: SSL Listener Mapping
+Edit `/usr/local/lsws/conf/httpd_config.conf` and verify:
+
+```apache
+listener SSL {
+  address *:443
+  secure 1
+  map digeratiexperts.com digeratiexperts.com
+}
+```
+
+### Step 4: Restart LiteSpeed
+```bash
+systemctl restart lsws
+```
+
+### Troubleshooting 404 Errors
+- Verify the external app address matches your Replit deployment URL
+- Check `/usr/local/lsws/logs/error.log` for configuration issues
+- Test vhost config: `/usr/local/lsws/bin/lswsctrl configtest`
+- Ensure SSL certificates are properly configured in CyberPanel
