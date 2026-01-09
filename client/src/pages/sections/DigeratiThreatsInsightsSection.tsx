@@ -1,4 +1,5 @@
 import { Calendar, User, ArrowRight, AlertCircle, Shield, Lock, Zap } from "lucide-react";
+import { Link } from "wouter";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion, useReducedMotion } from "framer-motion";
@@ -9,36 +10,39 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
   const insights = [
     {
       category: "CISA Alert",
-      date: "March 5, 2025",
-      title: "New CISA Alert: Patch These 5 Vulnerabilities Now",
-      excerpt: "New security flaws are actively being exploited in the wild. Critical patches required for Microsoft Exchange and VMware systems.",
+      date: "January 7, 2026",
+      title: "KEV Added: HPE OneView Remote Code Execution (CVE-2025-37164)",
+      excerpt: "CISA added an HPE OneView code injection/RCE issue to the Known Exploited Vulnerabilities catalog. Apply vendor mitigations and patch per guidance.",
       author: "Security Team",
       readTime: "3 min read",
       urgent: true,
       icon: <AlertCircle className="h-5 w-5" />,
-      gradient: "from-red-500 to-orange-500"
+      gradient: "from-red-500 to-orange-500",
+      slug: "kev-hpe-oneview-cve-2025-37164"
     },
     {
       category: "Threat Analysis",
-      date: "March 4, 2025",
-      title: "Ransomware Groups Targeting Arizona Healthcare",
-      excerpt: "BlackCat ransomware group increases attacks on regional healthcare providers. Learn how to protect your medical practice.",
-      author: "James Wilson",
+      date: "December 5, 2025",
+      title: "Active Exploitation: React Server Components RCE Added to KEV",
+      excerpt: "CISA KEV lists an RCE risk tied to React Server Components endpoints (CVE-2025-55182). Prioritize exposure review and patch immediately.",
+      author: "Security Team",
       readTime: "5 min read",
       urgent: true,
       icon: <Shield className="h-5 w-5" />,
-      gradient: "from-purple-500 to-pink-500"
+      gradient: "from-purple-500 to-pink-500",
+      slug: "kev-react-server-components-cve-2025-55182"
     },
     {
       category: "Compliance Update",
-      date: "March 3, 2025",
-      title: "HIPAA Penalties Increase 40% in 2025",
-      excerpt: "OCR announces stricter enforcement and higher fines for HIPAA violations. Ensure your compliance program is up to date.",
+      date: "December 16, 2025",
+      title: "HIPAA Enforcement: OCR Settlement Includes $112,500 Payment",
+      excerpt: "HHS OCR announced a HIPAA Right of Access enforcement action resolved via settlement. Verify your access request workflows are compliant.",
       author: "Compliance Team",
       readTime: "4 min read",
       urgent: false,
       icon: <Lock className="h-5 w-5" />,
-      gradient: "from-cyan-500 to-blue-500"
+      gradient: "from-cyan-500 to-blue-500",
+      slug: "hhs-ocr-right-of-access-concentra-2025-12-16"
     }
   ];
 
@@ -163,13 +167,14 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <button 
+          <Link 
+            href="/resources/security-updates"
             className="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-500 hover:to-indigo-500 transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 font-semibold inline-flex items-center gap-2 hover:scale-105"
             data-testid="view-all-updates"
           >
             View All Security Updates
             <ArrowRight className="h-4 w-4" />
-          </button>
+          </Link>
         </motion.div>
       </div>
     </section>

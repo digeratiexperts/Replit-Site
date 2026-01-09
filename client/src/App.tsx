@@ -17,6 +17,7 @@ const RealEstate = lazy(() => import("@/pages/industries/RealEstate"));
 const Nonprofits = lazy(() => import("@/pages/industries/Nonprofits"));
 const CaseStudies = lazy(() => import("@/pages/resources/CaseStudies"));
 const Blog = lazy(() => import("@/pages/resources/Blog"));
+const SecurityUpdates = lazy(() => import("@/pages/resources/SecurityUpdates"));
 const Videos = lazy(() => import("@/pages/resources/Videos"));
 const SecurityChecklist = lazy(() => import("@/pages/resources/SecurityChecklist"));
 const Datasheets = lazy(() => import("@/pages/resources/Datasheets"));
@@ -152,6 +153,11 @@ function Router() {
       <Route path="/resources/blog" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <Blog />
+        </Suspense>
+      )} />
+      <Route path="/resources/security-updates" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <SecurityUpdates />
         </Suspense>
       )} />
       <Route path="/resources/videos" component={() => (
