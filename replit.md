@@ -1,7 +1,7 @@
 # Digerati Experts - Complete MSP Client Portal + Marketing Website
 
 ## Overview
-Digerati Experts is a comprehensive platform integrating a public marketing website and an enterprise client portal. It showcases cybersecurity solutions, 24/7 protection, and compliance assurance for small-to-medium Arizona businesses. The platform includes features like AI-assisted ticket routing, approval workflows, CSAT surveys, shipment tracking, and cross-service communication, aiming to drive business growth and market leadership in the MSP/MSSP sector.
+Digerati Experts is a comprehensive platform integrating a public marketing website and an enterprise client portal. It showcases cybersecurity solutions, 24/7 protection, and compliance assurance for small-to-medium Arizona businesses. The platform includes features like AI-assisted ticket routing, approval workflows, CSAT surveys, shipment tracking, and cross-service communication, aiming to drive business growth and market leadership in the MSP/MSSP sector. The project emphasizes security-first IT, continuity planning, client-owned access, and a credit-based helpdesk system, targeting SMBs needing enterprise-grade IT without overhead.
 
 ## User Preferences
 - Complete feature coverage per requirements document
@@ -16,149 +16,22 @@ Digerati Experts is a comprehensive platform integrating a public marketing webs
 ## System Architecture
 
 ### UI/UX Decisions
-The platform features a modern, responsive SaaS design system with consistent tokens, typography, and a purple-blue gradient color scheme for interactive elements. It utilizes a two-tier navigation system and a mobile-first approach.
-
-**Typography System (Standardized):**
-- **Headings**: Space Grotesk - geometric, techy, cybersecurity-appropriate
-- **Body Text**: Inter - excellent readability, clean, professional
-- **Stats/Numbers**: Oxanium (optional) - futuristic tech feel for metrics
-- Font smoothing and OpenType features enabled for optimal rendering
-- CSS base layer applies fonts automatically to h1-h6 and body
+The platform features a modern, responsive SaaS design system with consistent tokens, typography, and a purple-blue gradient color scheme, utilizing a two-tier navigation and a mobile-first approach. Typography uses Space Grotesk for headings, Inter for body text, and optionally Oxanium for numbers. The design incorporates a dark theme with glassmorphism elements, animated particles, and glow effects, ensuring accessibility with `prefers-reduced-motion` support.
 
 ### Technical Implementations
-**Frontend**: Built with React 18 and TypeScript, using Wouter for routing, shadcn/ui with Radix UI for components, Lucide React for icons, and Tailwind CSS for styling.
-**Backend**: Utilizes an Express.js server with TypeScript.
-**Payment System**: Integrates Stripe Checkout, Zelle QR codes, and Zoho Payments architecture, with `stripe-replit-sync` for webhook management and PostgreSQL schema.
-**Content Management**: Solutions pages are dynamically generated from `servicePageData`; industry pages have custom comprehensive content.
-**Navigation**: Implements a comprehensive mega menu with mobile optimization (white text on dark background for visibility).
-**SEO**: Includes extensive SEO meta tags, Open Graph, and Twitter card meta tags.
-**Security**: Incorporates enterprise-grade protection against MITM attacks (HSTS, CSP, X-Frame-Options, secure cookies), multi-layer rate limiting, bot detection, input sanitization, CSRF protection, and duplicate request detection.
-**Deployment**: CyberPanel/OpenLiteSpeed for hosting, with specific configurations for SPA routing and subdomain management.
+The frontend is built with React 18 and TypeScript, using Wouter for routing, shadcn/ui with Radix UI for components, Lucide React for icons, and Tailwind CSS for styling. The backend uses an Express.js server with TypeScript. Payment processing integrates Stripe Checkout, Zelle, and Zoho Payments, supported by `stripe-replit-sync` and a PostgreSQL schema. Content is dynamically generated or custom-authored for solutions and industry pages. SEO is comprehensive, including meta tags, Open Graph, and Twitter cards. Security features include HSTS, CSP, X-Frame-Options, secure cookies, rate limiting, bot detection, input sanitization, and CSRF protection. The platform is hosted on CyberPanel/OpenLiteSpeed.
 
 ### Feature Specifications
-- **Navigation**: Mega menu with sections for Solutions, Industries, Resources, About, and CTAs - all linked to Zoho Bookings
-- **Key Sections**: Hero section with free assessment, alert banner, six core security services, a 4-step protection process, interactive calculators, industry-specific solutions, three-tier pricing, client testimonials, FAQ, free pen test offer, and a contact form.
-- **Client Portal**: Includes pages for Advanced Forms, Satisfaction Surveys, Approvals, Questionnaires & Calendar.
-- **Admin Features**: Import system for companies/users (Zoho Desk, Zoho CRM, JumpCloud, Seamless.ai), agent management (JumpCloud, Coro.net, BlackPoint), multi-tenancy access control, and OpenAI billing control.
-- **Zoho Integration**: Zoho ASAP widget for support, Zoho Service Class for API interaction, and Zoho Flow webhooks.
-- **Shipping Integration**: Real-time tracking, rate quotes, and label generation for USPS, FedEx, and UPS.
-- **Local SEO**: Dedicated location pages for Chandler, Phoenix, Mesa, Gilbert, Tempe, Scottsdale.
-- **Lead Generation**: A multi-step lead quote wizard with plan matching, corporate email validation, and spam protection measures (honeypot, rate limiting).
-- **Portal Authentication**: User registration and login with email/password validation, token-based authentication, and seeded admin user for testing.
-
-### Content Pages (NEW)
-**Solutions/Services Pages** (13 comprehensive pages):
-- Office Package, Managed IT Support, Managed Workplace, Cloud Backup, Security Awareness Training
-- Co-Managed IT, Threat Detection & Response, Security Operations (SOC), Backup & Disaster Recovery
-- vCIO & Strategy, Data Encryption & Control, Compliance & Risk Reports, Unified Security Posture
-
-**Industry Pages** (5 custom comprehensive pages):
-- Healthcare: HIPAA compliance, patient data protection, privacy requirements
-- Accounting & Finance: PCI DSS compliance, tax data protection, wire fraud prevention, IRS alignment
-- Law Firms: ABA compliance, attorney-client privilege, trust account security, wire fraud prevention
-- Real Estate: Wire fraud prevention, transaction security, TRID/RESPA compliance, ransomware protection
-- Nonprofits: Nonprofit pricing (20% discount), donor data protection, grant compliance, scalability
-
-**Resource Pages** (5 pages via resourcePageData):
-- Blog & News, Videos & Webinars, Security Checklist, Datasheets & Documentation
-- Case Studies: Phoenix Medical Practice (HIPAA), Law Firm (Downtime), CPA Firm (Insurance)
-
-**Support Pages** (5 pages):
-- Submit Ticket, Knowledge Base, Remote Support, Pay Invoice
-- Knowledge Base: FAQs organized by category (Getting Started, Troubleshooting, Security & Compliance)
-
-**About Pages** (5 pages):
-- Mission & Values: Company mission, 4 core values, competitive differentiators
-- Team: Leadership, Security Engineers, System Engineers, Support Team with certifications
-- Compliance: Audit-ready documentation, framework mapping, compliance evidence
-- Support: Company support resources
-- Insurance: Insurance information
-
-**Legal Pages** (7 pages):
-- Privacy Policy, Terms of Use, MSA, SLA, AUP, DPA, Sample SOW
-
-**Trust Pages** (3 pages):
-- Trust Center, Vulnerability Disclosure, Accessibility
-
-**Location Pages** (6 pages):
-- Chandler, Phoenix, Mesa, Gilbert, Tempe, Scottsdale
+Key features include a mega menu navigation, a hero section with a free assessment, core security services, a 4-step protection process, interactive calculators, industry-specific solutions, three-tier pricing, testimonials, FAQ, and a contact form. The client portal offers advanced forms, satisfaction surveys, approvals, questionnaires, and a calendar. Admin features include import systems for companies/users, agent management, multi-tenancy access control, and OpenAI billing control. Integrations with Zoho ASAP, Zoho Service Class, and Zoho Flow are present. Shipping integration supports real-time tracking, rate quotes, and label generation for USPS, FedEx, and UPS. Local SEO is addressed with dedicated location pages. Lead generation includes a multi-step quote wizard, corporate email validation, and spam protection. Portal authentication uses email/password validation, token-based authentication, and a seeded admin user.
 
 ### System Design Choices
-The project follows a modular structure with `client/` and `server/` directories. UUIDs are used for IDs. Payment processing includes enterprise-grade encryption and webhook signature validation. AI services for ticket classification, priority detection, and hybrid AI/human chat are implemented with graceful fallback mechanisms and admin control over OpenAI usage. Role-based access control is applied to navigation and features. User storage for the portal is currently in-memory but designed for future PostgreSQL migration with bcrypt hashing and JWT tokens.
-
-## Recent Changes (Latest Session)
-
-### Major Design Overhaul - Rubrik-Style Dark Theme
-Transformed the entire homepage from "WordPress feel" to modern, enterprise-grade design:
-
-**Hero Section Redesign:**
-- Dark gradient mesh background (#0a0118, #1a0a2e)
-- Animated floating particles and gradient orbs
-- Glassmorphism form card with backdrop blur
-- Dashboard mockup with natural overlap effect using CSS transforms
-- Fluid container width using CSS clamp() for responsive centering
-
-**MegaMenu Enhancement:**
-- Glass navigation with backdrop blur (`bg-[#0a0118]/95 backdrop-blur-xl`)
-- Scroll-activated darkening effect
-- Gradient hover underlines (cyan/purple)
-- Updated to cyan-400 accent colors
-
-**All Homepage Sections Modernized:**
-- **Services**: Glass cards with neon edge highlights, stagger animations
-- **How We Protect**: Vertical timeline with glowing connectors
-- **Industries**: Dark glass tiles with industry-specific gradient glyphs
-- **Pricing**: Glass panels with popular tier glow ring
-- **Testimonials**: Glass frames with floating gradient orbs
-- **FAQ**: Glass accordions with gradient chevrons
-- **CTA**: Mesh gradients with animated light sweep
-- **Footer**: Dark gradient with circuit overlay pattern
-
-**Design System Updates:**
-- Added dark theme tokens to `designSystem.ts`
-- Glass/glassmorphism utilities
-- Glow effect utilities (purple, cyan, combined)
-- Dark gradient and mesh background classes
-
-**Accessibility:**
-- All animations respect `prefers-reduced-motion`
-- Uses Framer Motion's `useReducedMotion` hook
-- Static fallbacks for users who prefer reduced motion
-
-### Complete Dark Theme Conversion (All 50+ Pages)
-Converted all public-facing pages to enterprise-grade dark theme:
-
-**Implementation Pattern:**
-- Cards: `bg-white/5 backdrop-blur-sm border border-white/10`
-- Hover states: `hover:border-purple-500/30 hover:bg-white/[0.08]`
-- Headings: `text-white`
-- Body text: `text-gray-300` or `text-gray-400`
-- Icons: Changed from `*-600` to `*-400` variants for visibility
-- Alert boxes: Colored backgrounds with `/10` opacity (e.g., `bg-red-500/10 border-red-500/30`)
-
-**Pages Updated:**
-- **PageTemplate**: Default variant changed to "dark", cascading to all consumers
-- **GenericServicePage**: Full dark theme conversion (covers ~20+ solutions/resources pages)
-- **SolutionsIndex & ManagedITSupport**: Explicit dark variant with glassmorphism cards
-- **Industry pages** (5): Healthcare, Accounting, LawFirms, RealEstate, Nonprofits
-- **About pages** (5): MissionValues, Team, Compliance, Support, Insurance
-- **Support pages** (4): SubmitTicket, KnowledgeBase, RemoteSupport, PayInvoice
-- **Legal pages** (7): PrivacyPolicy, TermsOfUse, MSA, SLA, AUP, DPA, SampleSOW
-- **Trust pages** (3): TrustCenter, VulnerabilityDisclosure, Accessibility
-- **Resource pages** (6): CaseStudies, Blog, Videos, SecurityChecklist, Datasheets, DowntimeCalculator
-- **Location pages** (6): Chandler, Phoenix, Mesa, Gilbert, Tempe, Scottsdale (already dark)
-
-### Previous Changes
-- Fixed all dead buttons and links to Zoho Bookings
-- Mobile menu optimization with white text on dark background
-- Industry pages rewritten with comprehensive content
-- New support pages: Knowledge Base, Remote Support, Pay Invoice
+The project follows a modular structure (`client/` and `server/`), using UUIDs for IDs. Payment processing includes enterprise-grade encryption and webhook signature validation. AI services for ticket classification and priority detection are implemented with graceful fallback. Role-based access control manages navigation and features. User storage is in-memory, designed for future PostgreSQL migration, using bcrypt hashing and JWT tokens.
 
 ## External Dependencies
-- **Stripe**: Credit/debit payments, subscription management (`stripe-replit-sync`)
+- **Stripe**: Payments and subscription management (`stripe-replit-sync`)
 - **Zelle**: Bank transfer payments
 - **Zoho Payments**: Checkout widget
-- **Zoho Bookings**: Scheduling system (https://meet.digerati-experts.com/)
+- **Zoho Bookings**: Scheduling system
 - **OpenAI**: AI-powered features
 - **PostgreSQL/Neon**: Database
 - **Vite**: Build tool
@@ -175,8 +48,3 @@ Converted all public-facing pages to enterprise-grade dark theme:
 - **USPS, FedEx, UPS**: Shipping services
 - **JumpCloud, Coro.net, BlackPoint**: Third-party agent management
 - **Seamless.ai**: Sales integration
-- **Griffin IT, Sherweb, Pax8, ClimbCS**: Procurement partners
-
-## Admin Credentials (Demo)
-- Email: admin@digeratiexperts.com
-- Password: Admin123!
