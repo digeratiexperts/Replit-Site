@@ -53,7 +53,7 @@ export const TestimonialsSection = (): JSX.Element => {
         {industries.map((industry, index) => (
           <Card
             key={index}
-            className="rounded-2xl overflow-hidden border-[0.63px] border-solid border-[#0000001f] h-[377px] hover:shadow-lg transition-shadow cursor-pointer"
+            className="rounded-2xl overflow-hidden border-[0.63px] border-solid border-[#0000001f] h-[377px] transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-purple-500/10 hover:-translate-y-1 hover:border-purple-300/30"
           >
             <CardContent className="p-0 h-full flex flex-col">
               <img
