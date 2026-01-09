@@ -45,56 +45,56 @@ const getPlanMatch = (data: {
   connectivity: string;
   devices: string;
 }): { plan: string; reasons: string[] } => {
-  if (data.enterpriseToggle || data.seats > 100) {
+  if (data.enterpriseToggle || data.seats > 30) {
     return {
-      plan: 'Enterprise Plan',
+      plan: 'Enterprise',
       reasons: [
-        'Your organization requires custom scaling and dedicated support',
-        'Enterprise-grade security and compliance controls',
-        'Direct executive access and strategic guidance'
+        'Full compliance modules (HIPAA, GDPR, FTC Safeguards)',
+        'Penetration testing, DR runbooks, and privileged access controls',
+        'AI & Cloud Automation + vCIO strategic guidance'
       ]
     };
   }
 
   if (data.connectivity === 'yes' && data.devices === 'yes') {
     return {
-      plan: 'Techtility Plan',
+      plan: 'Business',
       reasons: [
-        'Complete ecosystem covering connectivity, devices, and productivity',
-        'Integrated security across all infrastructure layers',
-        'Unified management for optimal efficiency'
+        'SOC / MDR monitoring and 24/7 threat response',
+        'SMART HR workflows + Security Awareness Training',
+        'vCIO + Technology Business Reviews + Cyber Insurance Readiness'
       ]
     };
   }
 
   if (data.connectivity === 'yes') {
     return {
-      plan: 'Connectivity Plan',
+      plan: 'Business',
       reasons: [
-        'Secure network infrastructure and cloud connectivity',
-        'Advanced security awareness and threat detection',
-        'Optimized for hybrid and remote work'
+        'SOC / MDR monitoring for continuous protection',
+        'Advanced identity controls + conditional access',
+        'Cyber insurance readiness and quarterly risk reviews'
       ]
     };
   }
 
   if (data.devices === 'yes') {
     return {
-      plan: 'Productivity Plan',
+      plan: 'Office',
       reasons: [
-        'End-to-end device and endpoint management',
-        'User productivity and support focus',
-        'Perfect for office-based environments'
+        'Email + Calendar + Team Chat with MFA + SSO',
+        'Endpoint Security (EDR) + Email Protection',
+        'Managed Network + Service Desk + Backup Strategy'
       ]
     };
   }
 
   return {
-    plan: 'Productivity Plan',
+    plan: 'Office',
     reasons: [
-      'Complete user support and device management',
-      'Essential security baseline for your organization',
-      'Flexible scaling as your needs grow'
+      'Security-first IT with MFA, SSO, and Password Manager',
+      'Endpoint Security (EDR) + Email Protection',
+      'Service Desk + Managed Network + Backup Strategy'
     ]
   };
 };

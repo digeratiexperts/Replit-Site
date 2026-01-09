@@ -14,11 +14,11 @@ export const DigeratiFAQSection = (): JSX.Element => {
   const faqs: FAQ[] = [
     {
       question: "What is your best service?",
-      answer: "Our most comprehensive service is the Enterprise package, which includes zero-trust networking, incident response, compliance support, and disaster recovery testing. However, most businesses find our Advanced Security package provides the perfect balance of protection and value."
+      answer: "Our most comprehensive service is the Enterprise package, which includes full compliance modules (HIPAA, GDPR), penetration testing, disaster recovery runbooks, and privileged access controls. However, most businesses find our Business package provides the perfect balance of SOC/MDR protection, SMART HR, and vCIO advisory at a great value."
     },
     {
       question: "How do I choose the right plan for my business?",
-      answer: "Evaluate your business size, needs, and goals. Our Basic plan is great for small businesses, while Advanced Security and Enterprise are designed for larger teams and advanced requirements. We offer a free consultation to help you choose."
+      answer: "Evaluate your business size, needs, and goals. Our Office package is ideal for small teams (5-30 users) who need security-first IT basics. Business adds SOC/MDR monitoring and SMART HR. Enterprise is designed for organizations with compliance requirements. We offer a free FTA (First Time Appointment) to help you choose."
     },
     {
       question: "Can I customize the solutions?",

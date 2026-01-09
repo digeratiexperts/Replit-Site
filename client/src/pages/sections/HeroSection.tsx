@@ -46,7 +46,7 @@ const rightCardInputs = [
   {
     id: "servicePackage",
     label: "Service Package",
-    value: "Basic IT (ladder pricing)",
+    value: "Office ($165/user)",
   },
   {
     id: "devices",

@@ -6,38 +6,38 @@ export const DigeratiServicesSection = (): JSX.Element => {
   const services = [
     {
       icon: Eye,
-      title: "24/7 Threat Monitoring & Response",
-      description: "We detect and stop threats before they escalate. Real-time MDR for continuous protection.",
+      title: "SOC / MDR Monitoring + Response",
+      description: "24/7 Security Operations Center with real-time threat detection, investigation, and response.",
       testId: "card-threat-monitoring"
     },
     {
       icon: ShieldCheck,
-      title: "Endpoint Protection (EDR/XDR)",
-      description: "Advanced endpoint detection and response to secure all devices in your network.",
+      title: "Endpoint Security (EDR)",
+      description: "Advanced endpoint detection and response protecting all devices in your environment.",
       testId: "card-endpoint"
     },
     {
       icon: UserCheck,
-      title: "User Access & MFA Enforcement",
-      description: "Multi-factor authentication and access control to prevent unauthorized entry.",
+      title: "SMART Identity (MFA + SSO)",
+      description: "Multi-factor authentication, single sign-on, password management, and conditional access policies.",
       testId: "card-mfa"
     },
     {
       icon: KeyRound,
-      title: "Identity & Access Management",
-      description: "Comprehensive IAM solutions to manage user identities and permissions.",
+      title: "Privileged Access Controls",
+      description: "Admin controls, access reviews, audit logs, and device trust for enterprise security.",
       testId: "card-identity"
     },
     {
       icon: Cloud,
-      title: "Cloud Security Hardening",
-      description: "Secure your cloud infrastructure with best-practice configurations and monitoring.",
+      title: "Backup & Disaster Recovery",
+      description: "Backup strategy with restore testing, DR runbooks, and off-site backup for business continuity.",
       testId: "card-cloud"
     },
     {
       icon: AlertCircle,
-      title: "Phishing & Email Security",
-      description: "Advanced email protection against phishing, spam, and malicious attachments.",
+      title: "Email Protection (Anti-Phishing)",
+      description: "Advanced email filtering, content controls, and protection against phishing and malicious attachments.",
       testId: "card-phishing"
     }
   ];

@@ -22,10 +22,9 @@ const industryMultipliers: Record<string, { name: string; multiplier: number }> 
 };
 
 const servicePackages: Record<string, { name: string; price: number }> = {
-  '165': { name: 'Basic IT Support', price: 165 },
-  '265': { name: 'Managed IT', price: 265 },
-  '365': { name: 'Managed IT + Security', price: 365 },
-  '465': { name: 'Enterprise Security', price: 465 },
+  '165': { name: 'Office', price: 165 },
+  '245': { name: 'Business', price: 245 },
+  '345': { name: 'Enterprise', price: 345 },
 };
 
 export default function DowntimeCalculator() {
@@ -45,7 +44,7 @@ export default function DowntimeCalculator() {
 
   // Service calculator state
   const [serviceEmployees, setServiceEmployees] = useState('10');
-  const [servicePackage, setServicePackage] = useState('265');
+  const [servicePackage, setServicePackage] = useState('245');
   const [includeBackup, setIncludeBackup] = useState(false);
   const [showServiceResults, setShowServiceResults] = useState(false);
   const [serviceResult, setServiceResult] = useState({ monthly: 0, quarterly: 0, annual: 0 });
@@ -71,7 +70,7 @@ export default function DowntimeCalculator() {
 
   const calculateService = () => {
     const emp = parseFloat(serviceEmployees) || 0;
-    const price = servicePackages[servicePackage]?.price || 265;
+    const price = servicePackages[servicePackage]?.price || 245;
     const backupAddon = includeBackup ? 25 : 0;
 
     const monthly = emp * (price + backupAddon);

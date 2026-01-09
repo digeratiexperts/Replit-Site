@@ -6,28 +6,29 @@ export const DigeratiPricingSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
   const pricingPlans = [
     {
-      name: "Basic IT",
+      name: "Office",
       price: 165,
       isPopular: false,
       features: [
-        "Corporate Antivirus included",
-        "Core Monitoring (health & performance)",
-        "Service Desk & OS patching",
-        "Workstation backup",
-        "Microsoft 365 / Google admin",
-        "Asset inventory & reporting"
+        "Email + Calendar + Team Chat",
+        "MFA + SSO + Password Manager",
+        "Endpoint Security (EDR)",
+        "Email Protection (Anti-Phishing)",
+        "Managed Network + Internet",
+        "Service Desk + Backup Strategy"
       ]
     },
     {
-      name: "Advanced Security",
+      name: "Business",
       price: 245,
       isPopular: true,
       features: [
-        "Everything in Basic IT",
-        "Advanced endpoint defense",
-        "Email + SaaS threat protection",
-        "Security awareness training",
-        "Quarterly risk reviews"
+        "Everything in Office",
+        "SOC / MDR Monitoring + Response",
+        "SMART HR + Onboarding Workflows",
+        "Security Awareness Training",
+        "vCIO + Technology Business Reviews",
+        "Cyber Insurance Readiness"
       ]
     },
     {
@@ -35,12 +36,12 @@ export const DigeratiPricingSection = (): JSX.Element => {
       price: 345,
       isPopular: false,
       features: [
-        "Everything in Advanced Security",
-        "Zero-trust networking",
-        "Incident response & forensics",
-        "Compliance evidence packs (HIPAA/SOC2)",
-        "Priority response SLAs",
-        "Disaster recovery testing"
+        "Everything in Business",
+        "HIPAA / GDPR Compliance Modules",
+        "Penetration Testing (scoped)",
+        "Disaster Recovery Runbooks",
+        "Privileged Access + Audit Logs",
+        "AI & Cloud Automation"
       ]
     }
   ];
@@ -133,7 +134,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                 {plan.features.map((feature, featureIndex) => (
                   <li key={featureIndex} className="flex items-start">
                     <CheckCircle className="h-5 w-5 text-cyan-400 mr-2 flex-shrink-0 mt-0.5" />
-                    <span className={`text-sm text-gray-300 ${featureIndex === 0 && plan.name !== "Basic IT" ? 'font-semibold text-white' : ''}`}>
+                    <span className={`text-sm text-gray-300 ${featureIndex === 0 && plan.name !== "Office" ? 'font-semibold text-white' : ''}`}>
                       {feature}
                     </span>
                   </li>
