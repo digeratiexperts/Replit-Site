@@ -54,7 +54,7 @@ export const ModernHeroSection = (): JSX.Element => {
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 150]);
-  const opacity = useTransform(scrollYProgress, isMobile ? [0, 0.9] : [0, 0.5], [1, 0]);
+  const opacity = useTransform(scrollYProgress, isMobile ? [0, 1] : [0, 0.85], [1, 0]);
 
   // Step 1 form
   const step1Form = useForm<Step1Data>({
