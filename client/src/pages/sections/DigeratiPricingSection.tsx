@@ -181,18 +181,24 @@ export const DigeratiPricingSection = (): JSX.Element => {
           transition={{ delay: 0.8, duration: 0.5 }}
         >
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
-              className="bg-gradient-to-r from-purple-600 to-cyan-500 text-white hover:from-purple-500 hover:to-cyan-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0b2c] transition-all duration-200 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/40"
-            >
-              Book a 15-Minute Intro Call
-            </Button>
-            <Button 
-              size="lg" 
-              className="bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 hover:border-white/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0b2c] transition-all duration-200"
-            >
-              See Full Pricing & Packages
-            </Button>
+            <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-purple-600 to-cyan-500 text-white hover:from-purple-500 hover:to-cyan-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0b2c] transition-all duration-200 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/40"
+                data-testid="button-book-intro-call"
+              >
+                Book a 15-Minute Intro Call
+              </Button>
+            </a>
+            <a href="/lead-quote-wizard">
+              <Button 
+                size="lg" 
+                className="bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 hover:border-white/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0b2c] transition-all duration-200"
+                data-testid="button-see-pricing"
+              >
+                See Full Pricing & Packages
+              </Button>
+            </a>
           </div>
         </motion.div>
       </div>
