@@ -359,6 +359,18 @@ button, [role="button"], a {
   color: white;
 }
 
+/* Preserve gradient text on selection */
+.bg-clip-text::selection {
+  background-color: transparent;
+  -webkit-text-fill-color: inherit;
+}
+
+/* Ensure gradient text doesn't lose color on hover */
+.text-transparent.bg-clip-text {
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
 /* Skeleton loading animation */
 @keyframes skeleton-pulse {
   0%, 100% {
