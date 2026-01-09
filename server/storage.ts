@@ -85,6 +85,10 @@ export interface IStorage {
   updatePortalTicket(id: string, data: any): Promise<PortalTicket | undefined>;
   getPortalTicketComments(ticketId: string): Promise<PortalTicketComment[]>;
   createPortalTicketComment(comment: any): Promise<PortalTicketComment>;
+
+  getTenantFilesByClientId(clientId: string): Promise<any[]>;
+  createTenantFile(data: { clientId: string; fileName: string; fileType: string; category: string; description: string; fileUrl: string; uploadedBy: string }): Promise<any>;
+  deleteTenantFile(id: string): Promise<boolean>;
 }
 
 function generateId(): string {
@@ -135,6 +139,18 @@ interface MemPortalTicketComment {
   updatedAt: Date;
 }
 
+interface TenantFile {
+  id: string;
+  clientId: string;
+  fileName: string;
+  fileType: string;
+  category: string;
+  description: string;
+  fileUrl: string;
+  uploadedBy: string;
+  createdAt: Date;
+}
+
 export class MemStorage implements IStorage {
   private users: Map<string, User> = new Map();
   private workspaces: Map<string, Workspace> = new Map();
@@ -148,6 +164,7 @@ export class MemStorage implements IStorage {
   private portalUsersMap: Map<string, PortalUser> = new Map();
   private portalTicketsMap: Map<string, MemPortalTicket> = new Map();
   private ticketComments: Map<string, MemPortalTicketComment> = new Map();
+  private tenantFiles: Map<string, TenantFile> = new Map();
 
   constructor() {
     this.seedDemoData();
@@ -592,6 +609,30 @@ export class MemStorage implements IStorage {
     this.ticketComments.set(newComment.id, newComment);
     return newComment as unknown as PortalTicketComment;
   }
+
+  async getTenantFilesByClientId(clientId: string): Promise<TenantFile[]> {
+    return Array.from(this.tenantFiles.values()).filter(f => f.clientId === clientId);
+  }
+
+  async createTenantFile(data: { clientId: string; fileName: string; fileType: string; category: string; description: string; fileUrl: string; uploadedBy: string }): Promise<TenantFile> {
+    const newFile: TenantFile = {
+      id: generateId(),
+      clientId: data.clientId,
+      fileName: data.fileName,
+      fileType: data.fileType,
+      category: data.category,
+      description: data.description,
+      fileUrl: data.fileUrl,
+      uploadedBy: data.uploadedBy,
+      createdAt: new Date(),
+    };
+    this.tenantFiles.set(newFile.id, newFile);
+    return newFile;
+  }
+
+  async deleteTenantFile(id: string): Promise<boolean> {
+    return this.tenantFiles.delete(id);
+  }
 }
 
 export class DatabaseStorage implements IStorage {
@@ -919,6 +960,32 @@ export class DatabaseStorage implements IStorage {
       updatedAt: new Date(),
     }).returning();
     return created;
+  }
+
+  private tenantFilesCache: Map<string, any> = new Map();
+
+  async getTenantFilesByClientId(clientId: string): Promise<any[]> {
+    return Array.from(this.tenantFilesCache.values()).filter(f => f.clientId === clientId);
+  }
+
+  async createTenantFile(data: { clientId: string; fileName: string; fileType: string; category: string; description: string; fileUrl: string; uploadedBy: string }): Promise<any> {
+    const newFile = {
+      id: crypto.randomUUID(),
+      clientId: data.clientId,
+      fileName: data.fileName,
+      fileType: data.fileType,
+      category: data.category,
+      description: data.description,
+      fileUrl: data.fileUrl,
+      uploadedBy: data.uploadedBy,
+      createdAt: new Date(),
+    };
+    this.tenantFilesCache.set(newFile.id, newFile);
+    return newFile;
+  }
+
+  async deleteTenantFile(id: string): Promise<boolean> {
+    return this.tenantFilesCache.delete(id);
   }
 }
 

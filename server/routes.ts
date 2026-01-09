@@ -4,6 +4,7 @@ import { randomBytes, createHash } from "crypto";
 import rateLimit from "express-rate-limit";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { registerObjectStorageRoutes, ObjectStorageService } from "./replit_integrations/object_storage";
 
 const JWT_SECRET = process.env.JWT_SECRET || randomBytes(32).toString('hex');
 const SALT_ROUNDS = 12;
@@ -97,6 +98,9 @@ const logSecurityEvent = (event: string, req: AuthenticatedRequest, data: any) =
 // ========== ROUTES ==========
 
 export async function registerRoutes(app: Express) {
+  // Register object storage routes for file uploads
+  registerObjectStorageRoutes(app);
+  
   // ===== AUTHENTICATION ROUTES =====
   
   // Register new user with hashed password
@@ -1240,20 +1244,142 @@ export async function registerRoutes(app: Express) {
         return res.status(404).json({ error: "Company not found" });
       }
       
-      // Return files specific to user's company
-      const files = [
-        {
-          id: "file-001",
-          fileName: "JumpCloud Agent.msi",
-          fileType: "agent",
-          category: "agents",
-          description: "Desktop agent for secure access",
-          fileUrl: "/downloads/agents/jumpcloud-" + company.id + ".msi",
-          createdAt: new Date(),
-        },
-      ];
+      // Get tenant files from storage
+      const tenantFiles = await storage.getTenantFilesByClientId(user.clientId);
       
-      res.json({ files, companyName: company.companyName });
+      res.json({ files: tenantFiles, companyName: company.companyName });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Upload file for a tenant (admin only)
+  app.post("/api/portal/admin/companies/:id/files", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      
+      const company = portalClients.get(req.params.id);
+      if (!company) {
+        return res.status(404).json({ error: "Company not found" });
+      }
+      
+      const { fileName, fileType, category, description, objectPath } = req.body;
+      
+      if (!fileName || !objectPath) {
+        return res.status(400).json({ error: "fileName and objectPath are required" });
+      }
+      
+      const tenantFile = await storage.createTenantFile({
+        clientId: req.params.id,
+        fileName,
+        fileType: fileType || "document",
+        category: category || "general",
+        description: description || "",
+        fileUrl: objectPath,
+        uploadedBy: req.userId || "",
+      });
+      
+      res.json({ success: true, file: tenantFile });
+      logSecurityEvent("TENANT_FILE_UPLOADED", req, { companyId: req.params.id, fileName });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Delete tenant file (admin only)
+  app.delete("/api/portal/admin/companies/:companyId/files/:fileId", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      
+      const deleted = await storage.deleteTenantFile(req.params.fileId);
+      if (!deleted) {
+        return res.status(404).json({ error: "File not found" });
+      }
+      
+      res.json({ success: true });
+      logSecurityEvent("TENANT_FILE_DELETED", req, { companyId: req.params.companyId, fileId: req.params.fileId });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get company metrics/stats (admin only)
+  app.get("/api/portal/admin/companies/:id/metrics", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      
+      const companyId = req.params.id;
+      const company = portalClients.get(companyId);
+      if (!company) {
+        return res.status(404).json({ error: "Company not found" });
+      }
+      
+      // Calculate metrics from portal data
+      const allTickets = Array.from(portalTickets.values()).filter(t => t.clientId === companyId);
+      const openTickets = allTickets.filter(t => t.status === "open").length;
+      const resolvedTickets = allTickets.filter(t => t.status === "resolved").length;
+      const inProgressTickets = allTickets.filter(t => t.status === "in_progress").length;
+      
+      const users = Array.from(portalUsers.values()).filter(u => u.clientId === companyId);
+      const tenantFiles = await storage.getTenantFilesByClientId(companyId);
+      
+      // Mock service and invoice data
+      const metrics = {
+        company: {
+          id: company.id,
+          name: company.companyName,
+          status: company.status,
+          createdAt: company.createdAt,
+        },
+        tickets: {
+          total: allTickets.length,
+          open: openTickets,
+          inProgress: inProgressTickets,
+          resolved: resolvedTickets,
+          avgResolutionTime: "4.2 hours",
+        },
+        users: {
+          total: users.length,
+          activeUsers: users.filter(u => u.isActive).length,
+          admins: users.filter(u => u.role === "admin").length,
+        },
+        files: {
+          total: tenantFiles.length,
+          agents: tenantFiles.filter(f => f.category === "agents").length,
+          documents: tenantFiles.filter(f => f.category === "documents").length,
+        },
+        services: {
+          activeServices: 3,
+          monthlyValue: "$1,250.00",
+          tier: "Business",
+        },
+        billing: {
+          pendingInvoices: 1,
+          totalOwed: "$450.00",
+          lastPayment: "2024-12-15",
+        },
+        activity: {
+          lastLogin: new Date().toISOString(),
+          ticketsThisMonth: allTickets.filter(t => {
+            const ticketDate = new Date(t.createdAt);
+            const now = new Date();
+            return ticketDate.getMonth() === now.getMonth() && ticketDate.getFullYear() === now.getFullYear();
+          }).length,
+          filesUploadedThisMonth: tenantFiles.filter(f => {
+            const fileDate = new Date(f.createdAt);
+            const now = new Date();
+            return fileDate.getMonth() === now.getMonth() && fileDate.getFullYear() === now.getFullYear();
+          }).length,
+        },
+      };
+      
+      res.json(metrics);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

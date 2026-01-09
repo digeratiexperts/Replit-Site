@@ -1,15 +1,18 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Building2, Users, Plus, Eye, Edit2, Loader, Search, ArrowRight, Building } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+import { Building2, Users, Plus, Eye, Loader, Search, ArrowRight, Building, FileText, Upload, Trash2, BarChart3, Ticket, DollarSign, Activity, Clock } from "lucide-react";
 import { portalGet } from "@/lib/portalApi";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useUpload } from "@/hooks/use-upload";
 
 interface Company {
   id: string;
@@ -39,11 +42,49 @@ interface CompanyDetail {
   }>;
 }
 
+interface TenantFile {
+  id: string;
+  fileName: string;
+  fileType: string;
+  category: string;
+  description: string;
+  fileUrl: string;
+  createdAt: string;
+}
+
+interface CompanyMetrics {
+  company: { id: string; name: string; status: string; createdAt: string };
+  tickets: { total: number; open: number; inProgress: number; resolved: number; avgResolutionTime: string };
+  users: { total: number; activeUsers: number; admins: number };
+  files: { total: number; agents: number; documents: number };
+  services: { activeServices: number; monthlyValue: string; tier: string };
+  billing: { pendingInvoices: number; totalOwed: string; lastPayment: string };
+  activity: { lastLogin: string; ticketsThisMonth: number; filesUploadedThisMonth: number };
+}
+
 export function AdminCompanies() {
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
+  const [detailTab, setDetailTab] = useState("overview");
+  const [newFile, setNewFile] = useState({ fileName: "", category: "documents", description: "" });
+  const { uploadFile, isUploading, progress } = useUpload({
+    onSuccess: (response) => {
+      if (selectedCompanyId) {
+        uploadFileMutation.mutate({
+          companyId: selectedCompanyId,
+          fileName: newFile.fileName || "Uploaded File",
+          category: newFile.category,
+          description: newFile.description,
+          objectPath: response.objectPath,
+        });
+      }
+    },
+    onError: (error) => {
+      toast({ title: "Upload Failed", description: error.message, variant: "destructive" });
+    },
+  });
   const [newCompany, setNewCompany] = useState({
     companyName: "",
     contactEmail: "",
@@ -61,6 +102,45 @@ export function AdminCompanies() {
     queryKey: ["/api/portal/admin/companies", selectedCompanyId],
     queryFn: () => portalGet<CompanyDetail>(`/api/portal/admin/companies/${selectedCompanyId}`),
     enabled: !!selectedCompanyId,
+  });
+
+  const { data: companyFiles, isLoading: filesLoading } = useQuery<{ files: TenantFile[] }>({
+    queryKey: ["/api/portal/admin/companies", selectedCompanyId, "files"],
+    queryFn: () => portalGet<{ files: TenantFile[] }>(`/api/portal/admin/companies/${selectedCompanyId}/files`),
+    enabled: !!selectedCompanyId && detailTab === "files",
+  });
+
+  const { data: companyMetrics, isLoading: metricsLoading } = useQuery<CompanyMetrics>({
+    queryKey: ["/api/portal/admin/companies", selectedCompanyId, "metrics"],
+    queryFn: () => portalGet<CompanyMetrics>(`/api/portal/admin/companies/${selectedCompanyId}/metrics`),
+    enabled: !!selectedCompanyId && detailTab === "metrics",
+  });
+
+  const uploadFileMutation = useMutation({
+    mutationFn: async (data: { companyId: string; fileName: string; category: string; description: string; objectPath: string }) => {
+      return await apiRequest(`/api/portal/admin/companies/${data.companyId}/files`, "POST", data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/portal/admin/companies", selectedCompanyId, "files"] });
+      setNewFile({ fileName: "", category: "documents", description: "" });
+      toast({ title: "Success", description: "File uploaded successfully" });
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error.message || "Failed to save file", variant: "destructive" });
+    },
+  });
+
+  const deleteFileMutation = useMutation({
+    mutationFn: async (fileId: string) => {
+      return await apiRequest(`/api/portal/admin/companies/${selectedCompanyId}/files/${fileId}`, "DELETE");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/portal/admin/companies", selectedCompanyId, "files"] });
+      toast({ title: "Success", description: "File deleted successfully" });
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error.message || "Failed to delete file", variant: "destructive" });
+    },
   });
 
   const createCompanyMutation = useMutation({
@@ -279,88 +359,348 @@ export function AdminCompanies() {
         </div>
       )}
 
-      <Dialog open={!!selectedCompanyId} onOpenChange={() => setSelectedCompanyId(null)}>
-        <DialogContent className="sm:max-w-[600px]">
+      <Dialog open={!!selectedCompanyId} onOpenChange={() => { setSelectedCompanyId(null); setDetailTab("overview"); }}>
+        <DialogContent className="sm:max-w-[700px] max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Building2 className="w-5 h-5" />
               {companyDetail?.company.companyName || "Company Details"}
             </DialogTitle>
           </DialogHeader>
-          {detailLoading ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader className="w-6 h-6 animate-spin text-primary" />
-            </div>
-          ) : companyDetail ? (
-            <div className="space-y-6">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Contact Email</p>
-                  <p className="text-slate-900 dark:text-white">{companyDetail.company.contactEmail}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Phone</p>
-                  <p className="text-slate-900 dark:text-white">{companyDetail.company.contactPhone || "—"}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Industry</p>
-                  <p className="text-slate-900 dark:text-white">{companyDetail.company.industry || "—"}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Primary Contact</p>
-                  <p className="text-slate-900 dark:text-white">{companyDetail.company.primaryContact || "—"}</p>
-                </div>
-              </div>
+          
+          <Tabs value={detailTab} onValueChange={setDetailTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="overview" data-testid="tab-overview">
+                <Users className="w-4 h-4 mr-2" />
+                Overview
+              </TabsTrigger>
+              <TabsTrigger value="files" data-testid="tab-files">
+                <FileText className="w-4 h-4 mr-2" />
+                Files
+              </TabsTrigger>
+              <TabsTrigger value="metrics" data-testid="tab-metrics">
+                <BarChart3 className="w-4 h-4 mr-2" />
+                Metrics
+              </TabsTrigger>
+            </TabsList>
 
-              <div>
-                <h4 className="font-medium mb-3 flex items-center gap-2">
-                  <Users className="w-4 h-4" />
-                  Users ({companyDetail.users.length})
-                </h4>
-                <div className="space-y-2">
-                  {companyDetail.users.map((user) => (
-                    <div 
-                      key={user.id} 
-                      className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-800"
-                      data-testid={`user-row-${user.id}`}
-                    >
+            <TabsContent value="overview" className="mt-4">
+              {detailLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader className="w-6 h-6 animate-spin text-primary" />
+                </div>
+              ) : companyDetail ? (
+                <div className="space-y-6">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                      <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Contact Email</p>
+                      <p className="text-slate-900 dark:text-white">{companyDetail.company.contactEmail}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Phone</p>
+                      <p className="text-slate-900 dark:text-white">{companyDetail.company.contactPhone || "—"}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Industry</p>
+                      <p className="text-slate-900 dark:text-white">{companyDetail.company.industry || "—"}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Primary Contact</p>
+                      <p className="text-slate-900 dark:text-white">{companyDetail.company.primaryContact || "—"}</p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="font-medium mb-3 flex items-center gap-2">
+                      <Users className="w-4 h-4" />
+                      Users ({companyDetail.users.length})
+                    </h4>
+                    <div className="space-y-2 max-h-48 overflow-y-auto">
+                      {companyDetail.users.map((user) => (
+                        <div 
+                          key={user.id} 
+                          className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-800"
+                          data-testid={`user-row-${user.id}`}
+                        >
+                          <div>
+                            <p className="font-medium text-slate-900 dark:text-white">{user.fullName}</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{user.email}</p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline">{user.role}</Badge>
+                            <Badge variant={user.isActive ? "default" : "secondary"}>
+                              {user.isActive ? "Active" : "Inactive"}
+                            </Badge>
+                          </div>
+                        </div>
+                      ))}
+                      {companyDetail.users.length === 0 && (
+                        <p className="text-center py-4 text-slate-500 dark:text-slate-400">No users yet</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+            </TabsContent>
+
+            <TabsContent value="files" className="mt-4">
+              <div className="space-y-4">
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm flex items-center gap-2">
+                      <Upload className="w-4 h-4" />
+                      Upload New File
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="grid gap-3 sm:grid-cols-2">
                       <div>
-                        <p className="font-medium text-slate-900 dark:text-white">{user.fullName}</p>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">{user.email}</p>
+                        <Label htmlFor="fileName">File Name</Label>
+                        <Input
+                          id="fileName"
+                          value={newFile.fileName}
+                          onChange={(e) => setNewFile({ ...newFile, fileName: e.target.value })}
+                          placeholder="JumpCloud Agent.msi"
+                          data-testid="input-file-name"
+                        />
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline">{user.role}</Badge>
-                        <Badge variant={user.isActive ? "default" : "secondary"}>
-                          {user.isActive ? "Active" : "Inactive"}
-                        </Badge>
+                      <div>
+                        <Label htmlFor="category">Category</Label>
+                        <select
+                          id="category"
+                          value={newFile.category}
+                          onChange={(e) => setNewFile({ ...newFile, category: e.target.value })}
+                          className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
+                          data-testid="select-category"
+                        >
+                          <option value="documents">Documents</option>
+                          <option value="agents">Agents/Software</option>
+                          <option value="configs">Configurations</option>
+                          <option value="other">Other</option>
+                        </select>
                       </div>
                     </div>
-                  ))}
-                  {companyDetail.users.length === 0 && (
-                    <p className="text-center py-4 text-slate-500 dark:text-slate-400">No users yet</p>
+                    <div>
+                      <Label htmlFor="description">Description</Label>
+                      <Input
+                        id="description"
+                        value={newFile.description}
+                        onChange={(e) => setNewFile({ ...newFile, description: e.target.value })}
+                        placeholder="Custom agent for secure access"
+                        data-testid="input-file-description"
+                      />
+                    </div>
+                    <div>
+                      <input
+                        type="file"
+                        id="fileUpload"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            if (!newFile.fileName) setNewFile(prev => ({ ...prev, fileName: file.name }));
+                            uploadFile(file);
+                          }
+                        }}
+                        data-testid="input-file-upload"
+                      />
+                      <Button
+                        onClick={() => document.getElementById('fileUpload')?.click()}
+                        disabled={isUploading || uploadFileMutation.isPending}
+                        className="w-full"
+                        data-testid="button-upload-file"
+                      >
+                        {isUploading || uploadFileMutation.isPending ? (
+                          <>
+                            <Loader className="w-4 h-4 mr-2 animate-spin" />
+                            {isUploading ? `Uploading... ${progress}%` : "Saving..."}
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="w-4 h-4 mr-2" />
+                            Choose & Upload File
+                          </>
+                        )}
+                      </Button>
+                      {isUploading && (
+                        <Progress value={progress} className="mt-2" />
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <div>
+                  <h4 className="font-medium mb-3 flex items-center gap-2">
+                    <FileText className="w-4 h-4" />
+                    Tenant Files
+                  </h4>
+                  {filesLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader className="w-6 h-6 animate-spin text-primary" />
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {(companyFiles?.files || []).map((file) => (
+                        <div 
+                          key={file.id}
+                          className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-800"
+                          data-testid={`file-row-${file.id}`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <FileText className="w-5 h-5 text-primary" />
+                            <div>
+                              <p className="font-medium text-slate-900 dark:text-white">{file.fileName}</p>
+                              <p className="text-sm text-slate-500 dark:text-slate-400">
+                                {file.category} • {file.description || "No description"}
+                              </p>
+                            </div>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => deleteFileMutation.mutate(file.id)}
+                            disabled={deleteFileMutation.isPending}
+                            data-testid={`button-delete-file-${file.id}`}
+                          >
+                            <Trash2 className="w-4 h-4 text-red-500" />
+                          </Button>
+                        </div>
+                      ))}
+                      {(!companyFiles?.files || companyFiles.files.length === 0) && (
+                        <p className="text-center py-8 text-slate-500 dark:text-slate-400">No files uploaded yet</p>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>
+            </TabsContent>
 
-              <div className="flex gap-2">
-                <Button 
-                  className="flex-1"
-                  onClick={() => {
-                    setSelectedCompanyId(null);
-                    impersonateMutation.mutate(companyDetail.company.id);
-                  }}
-                  disabled={impersonateMutation.isPending}
-                  data-testid="button-view-portal-detail"
-                >
-                  <ArrowRight className="w-4 h-4 mr-2" />
-                  View Company Portal
-                </Button>
-                <Button variant="outline" onClick={() => setSelectedCompanyId(null)} data-testid="button-close-detail">
-                  Close
-                </Button>
-              </div>
-            </div>
-          ) : null}
+            <TabsContent value="metrics" className="mt-4">
+              {metricsLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader className="w-6 h-6 animate-spin text-primary" />
+                </div>
+              ) : companyMetrics ? (
+                <div className="space-y-4">
+                  <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
+                    <Card>
+                      <CardContent className="pt-4">
+                        <div className="flex items-center gap-2">
+                          <Ticket className="w-4 h-4 text-orange-500" />
+                          <span className="text-sm text-slate-500">Open Tickets</span>
+                        </div>
+                        <p className="text-2xl font-bold mt-1">{companyMetrics.tickets.open}</p>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="pt-4">
+                        <div className="flex items-center gap-2">
+                          <Users className="w-4 h-4 text-blue-500" />
+                          <span className="text-sm text-slate-500">Active Users</span>
+                        </div>
+                        <p className="text-2xl font-bold mt-1">{companyMetrics.users.activeUsers}</p>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="pt-4">
+                        <div className="flex items-center gap-2">
+                          <DollarSign className="w-4 h-4 text-green-500" />
+                          <span className="text-sm text-slate-500">Monthly Value</span>
+                        </div>
+                        <p className="text-2xl font-bold mt-1">{companyMetrics.services.monthlyValue}</p>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="pt-4">
+                        <div className="flex items-center gap-2">
+                          <FileText className="w-4 h-4 text-purple-500" />
+                          <span className="text-sm text-slate-500">Files</span>
+                        </div>
+                        <p className="text-2xl font-bold mt-1">{companyMetrics.files.total}</p>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <Card>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm flex items-center gap-2">
+                          <Ticket className="w-4 h-4" />
+                          Ticket Summary
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-slate-500">Total Tickets</span>
+                          <span className="font-medium">{companyMetrics.tickets.total}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-slate-500">In Progress</span>
+                          <span className="font-medium">{companyMetrics.tickets.inProgress}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-slate-500">Resolved</span>
+                          <span className="font-medium text-green-600">{companyMetrics.tickets.resolved}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-slate-500">Avg. Resolution</span>
+                          <span className="font-medium">{companyMetrics.tickets.avgResolutionTime}</span>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm flex items-center gap-2">
+                          <Activity className="w-4 h-4" />
+                          Recent Activity
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-slate-500">Service Tier</span>
+                          <Badge>{companyMetrics.services.tier}</Badge>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-slate-500">Active Services</span>
+                          <span className="font-medium">{companyMetrics.services.activeServices}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-slate-500">Tickets This Month</span>
+                          <span className="font-medium">{companyMetrics.activity.ticketsThisMonth}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-slate-500">Pending Invoices</span>
+                          <span className="font-medium text-red-600">{companyMetrics.billing.pendingInvoices}</span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-center py-8 text-slate-500">No metrics available</p>
+              )}
+            </TabsContent>
+          </Tabs>
+
+          <div className="flex gap-2 mt-4 pt-4 border-t">
+            <Button 
+              className="flex-1"
+              onClick={() => {
+                setSelectedCompanyId(null);
+                setDetailTab("overview");
+                if (companyDetail) impersonateMutation.mutate(companyDetail.company.id);
+              }}
+              disabled={impersonateMutation.isPending}
+              data-testid="button-view-portal-detail"
+            >
+              <ArrowRight className="w-4 h-4 mr-2" />
+              View Company Portal
+            </Button>
+            <Button variant="outline" onClick={() => { setSelectedCompanyId(null); setDetailTab("overview"); }} data-testid="button-close-detail">
+              Close
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

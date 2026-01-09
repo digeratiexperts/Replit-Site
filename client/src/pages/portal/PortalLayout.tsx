@@ -19,6 +19,7 @@ const navItems = [
   { href: "/portal/surveys", label: "Surveys", icon: CheckSquare },
   { href: "/portal/approvals", label: "Approvals", icon: FileStack },
   { href: "/portal/services", label: "My Services", icon: Package },
+  { href: "/portal/files", label: "Files & Downloads", icon: FileText },
   { href: "/portal/invoices", label: "Invoices", icon: FileText },
   { href: "/portal/vpn", label: "VPN Access", icon: Shield },
   { href: "/portal/cytracom", label: "ControlOne Phone", icon: Phone },
