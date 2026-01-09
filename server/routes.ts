@@ -1008,6 +1008,257 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  // ===== ADMIN TENANT MANAGEMENT =====
+  
+  // List all companies (admin only)
+  app.get("/api/portal/admin/companies", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      
+      const companies = Array.from(portalClients.values()).map(client => ({
+        id: client.id,
+        companyName: client.companyName,
+        contactEmail: client.contactEmail,
+        status: client.status || "active",
+        userCount: Array.from(portalUsers.values()).filter(u => u.clientId === client.id).length,
+        createdAt: client.createdAt,
+      }));
+      
+      res.json({ companies });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get company details with users (admin only)
+  app.get("/api/portal/admin/companies/:id", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      
+      const company = portalClients.get(req.params.id);
+      if (!company) {
+        return res.status(404).json({ error: "Company not found" });
+      }
+      
+      const users = Array.from(portalUsers.values())
+        .filter(u => u.clientId === req.params.id)
+        .map(u => ({
+          id: u.id,
+          email: u.email,
+          fullName: u.fullName,
+          role: u.role,
+          isActive: u.isActive,
+        }));
+      
+      res.json({ company, users });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Create new company (admin only)
+  app.post("/api/portal/admin/companies", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      
+      const { companyName, contactEmail, contactPhone, industry, primaryContact } = req.body;
+      
+      if (!companyName || !contactEmail) {
+        return res.status(400).json({ error: "Company name and contact email are required" });
+      }
+      
+      const newCompany = {
+        id: randomId(),
+        companyName,
+        contactEmail,
+        contactPhone: contactPhone || null,
+        industry: industry || null,
+        primaryContact: primaryContact || null,
+        status: "active",
+        createdAt: new Date(),
+      };
+      
+      portalClients.set(newCompany.id, newCompany);
+      
+      res.json({ success: true, company: newCompany });
+      logSecurityEvent("COMPANY_CREATED", req, { companyId: newCompany.id, companyName });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Update company (admin only)
+  app.put("/api/portal/admin/companies/:id", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      
+      const company = portalClients.get(req.params.id);
+      if (!company) {
+        return res.status(404).json({ error: "Company not found" });
+      }
+      
+      const { companyName, contactEmail, contactPhone, industry, primaryContact, status } = req.body;
+      
+      const updatedCompany = {
+        ...company,
+        companyName: companyName || company.companyName,
+        contactEmail: contactEmail || company.contactEmail,
+        contactPhone: contactPhone !== undefined ? contactPhone : company.contactPhone,
+        industry: industry !== undefined ? industry : company.industry,
+        primaryContact: primaryContact !== undefined ? primaryContact : company.primaryContact,
+        status: status || company.status,
+      };
+      
+      portalClients.set(req.params.id, updatedCompany);
+      
+      res.json({ success: true, company: updatedCompany });
+      logSecurityEvent("COMPANY_UPDATED", req, { companyId: req.params.id });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Admin impersonation - switch to view a company's portal
+  app.post("/api/portal/admin/impersonate", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      
+      const { companyId } = req.body;
+      
+      if (!companyId) {
+        return res.status(400).json({ error: "Company ID required" });
+      }
+      
+      const company = portalClients.get(companyId);
+      if (!company) {
+        return res.status(404).json({ error: "Company not found" });
+      }
+      
+      // Generate a special token that includes the impersonated company ID
+      const impersonationToken = jwt.sign(
+        { 
+          userId: req.userId, 
+          email: req.user?.email, 
+          role: "admin",
+          impersonatingCompanyId: companyId,
+          impersonatingCompanyName: company.companyName,
+        }, 
+        JWT_SECRET, 
+        { expiresIn: '4h' }
+      );
+      
+      res.json({ 
+        success: true, 
+        token: impersonationToken,
+        company: {
+          id: company.id,
+          companyName: company.companyName,
+        }
+      });
+      logSecurityEvent("ADMIN_IMPERSONATION_START", req, { companyId, companyName: company.companyName });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Stop impersonation - return to admin view
+  app.post("/api/portal/admin/stop-impersonation", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      
+      // Generate a regular admin token without impersonation
+      const adminToken = jwt.sign(
+        { 
+          userId: req.userId, 
+          email: req.user?.email, 
+          role: "admin",
+        }, 
+        JWT_SECRET, 
+        { expiresIn: '24h' }
+      );
+      
+      res.json({ success: true, token: adminToken });
+      logSecurityEvent("ADMIN_IMPERSONATION_STOP", req, {});
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get tenant-specific files for a company (admin only)
+  app.get("/api/portal/admin/companies/:id/files", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      
+      const company = portalClients.get(req.params.id);
+      if (!company) {
+        return res.status(404).json({ error: "Company not found" });
+      }
+      
+      // For now, return sample files - in production this would query the database
+      const files = [
+        {
+          id: "file-001",
+          fileName: "JumpCloud Agent - " + company.companyName + ".msi",
+          fileType: "agent",
+          category: "agents",
+          description: "Custom JumpCloud agent for " + company.companyName,
+          fileUrl: "/downloads/agents/jumpcloud-" + company.id + ".msi",
+          createdAt: new Date(),
+        },
+      ];
+      
+      res.json({ files });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get files for current user's company (regular users)
+  app.get("/api/portal/my-files", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const user = portalUsers.get(req.user?.email || "");
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      
+      const company = portalClients.get(user.clientId);
+      if (!company) {
+        return res.status(404).json({ error: "Company not found" });
+      }
+      
+      // Return files specific to user's company
+      const files = [
+        {
+          id: "file-001",
+          fileName: "JumpCloud Agent.msi",
+          fileType: "agent",
+          category: "agents",
+          description: "Desktop agent for secure access",
+          fileUrl: "/downloads/agents/jumpcloud-" + company.id + ".msi",
+          createdAt: new Date(),
+        },
+      ];
+      
+      res.json({ files, companyName: company.companyName });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // ===== LEAD QUOTE FORM =====
   app.post("/api/lead-quote", [leadQuoteRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {

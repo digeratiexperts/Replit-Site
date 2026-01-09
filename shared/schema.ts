@@ -832,3 +832,40 @@ export type ZohoFlowTrigger = typeof zohoFlowTriggers.$inferSelect;
 export type ShippingCarrier = typeof shippingCarriers.$inferSelect;
 export type ShippingTrackingHistory = typeof shippingTrackingHistory.$inferSelect;
 export type ShippingRatesCache = typeof shippingRatesCache.$inferSelect;
+
+// =============== MULTI-TENANCY TABLES ===============
+
+// Tenant-specific files/documents
+export const portalTenantFiles = pgTable("portal_tenant_files", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clientId: varchar("client_id").notNull().references(() => portalClients.id, { onDelete: "cascade" }),
+  fileName: text("file_name").notNull(),
+  fileType: text("file_type").notNull(), // "document", "agent", "guide", "policy", "other"
+  fileUrl: text("file_url").notNull(),
+  fileSize: integer("file_size"),
+  mimeType: text("mime_type"),
+  description: text("description"),
+  category: text("category"), // "agents", "policies", "documentation", "onboarding"
+  isPublic: boolean("is_public").default(true), // visible to client users
+  uploadedBy: varchar("uploaded_by").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Insert schema for tenant files
+export const insertPortalTenantFileSchema = createInsertSchema(portalTenantFiles).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+// Insert schema for portal clients
+export const insertPortalClientSchema = createInsertSchema(portalClients).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type PortalTenantFile = typeof portalTenantFiles.$inferSelect;
+export type InsertPortalTenantFile = z.infer<typeof insertPortalTenantFileSchema>;
+export type InsertPortalClient = z.infer<typeof insertPortalClientSchema>;

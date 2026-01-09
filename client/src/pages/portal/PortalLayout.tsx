@@ -1,7 +1,7 @@
 import { useLocation, Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { LogOut, Menu, X, LayoutDashboard, Ticket, Package, FileText, BookOpen, Settings, Activity, GraduationCap, MessageCircle, Download, Truck, ShoppingCart, ClipboardList, CheckSquare, FileStack, Upload, Users, Calendar, Shield, Phone } from "lucide-react";
+import { LogOut, Menu, X, LayoutDashboard, Ticket, Package, FileText, BookOpen, Settings, Activity, GraduationCap, MessageCircle, Download, Truck, ShoppingCart, ClipboardList, CheckSquare, FileStack, Upload, Users, Calendar, Shield, Phone, Building2, AlertTriangle } from "lucide-react";
 import { useState } from "react";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
 
@@ -32,6 +32,7 @@ const navItems = [
 ];
 
 const adminItems = [
+  { href: "/portal/admin/companies", label: "Companies", icon: Building2 },
   { href: "/portal/admin/import", label: "Data Import", icon: Upload },
   { href: "/portal/admin/agents", label: "Manage Agents", icon: Users },
   { href: "/portal/admin/openai", label: "OpenAI Billing", icon: Settings },
@@ -43,6 +44,30 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
   const user = localStorage.getItem("portalUser")
     ? JSON.parse(localStorage.getItem("portalUser")!)
     : null;
+  const impersonatingCompany = localStorage.getItem("impersonatingCompany")
+    ? JSON.parse(localStorage.getItem("impersonatingCompany")!)
+    : null;
+
+  const handleStopImpersonation = async () => {
+    try {
+      const token = localStorage.getItem("portalToken");
+      const response = await fetch("/api/portal/admin/stop-impersonation", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("portalToken", data.token);
+        localStorage.removeItem("impersonatingCompany");
+        window.location.href = "/portal/admin/companies";
+      }
+    } catch (error) {
+      console.error("Failed to stop impersonation:", error);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("portalUser");
@@ -151,6 +176,27 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Impersonation Banner */}
+        {impersonatingCompany && (
+          <div className="bg-amber-500 text-amber-900 px-4 py-2 flex items-center justify-between" data-testid="banner-impersonation">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4" />
+              <span className="text-sm font-medium">
+                Viewing as: <strong>{impersonatingCompany.companyName}</strong>
+              </span>
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleStopImpersonation}
+              className="bg-white/20 border-amber-700 text-amber-900 hover:bg-white/30"
+              data-testid="button-stop-impersonation"
+            >
+              Exit View
+            </Button>
+          </div>
+        )}
+
         {/* Header */}
         <header className="bg-white dark:bg-slate-900 border-b dark:border-slate-800 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
