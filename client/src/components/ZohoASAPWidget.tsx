@@ -234,18 +234,18 @@ export const ZohoASAPWidget = ({
                   </p>
                   <div className="space-y-2">
                     {[
-                      "Getting Started",
-                      "Security Best Practices",
-                      "Troubleshooting",
-                      "Account Management",
+                      { title: "Getting Started", url: "/support/knowledge-base" },
+                      { title: "Security Best Practices", url: "/resources/security-checklist" },
+                      { title: "Troubleshooting", url: "/support/knowledge-base" },
+                      { title: "Account Management", url: "/portal/settings" },
                     ].map((article) => (
                       <a
-                        key={article}
-                        href="#"
+                        key={article.title}
+                        href={article.url}
                         className="block p-2 text-sm text-purple-600 hover:bg-purple-50 rounded transition-colors"
-                        data-testid={`link-kb-${article.toLowerCase().replace(/\s+/g, "-")}`}
+                        data-testid={`link-kb-${article.title.toLowerCase().replace(/\s+/g, "-")}`}
                       >
-                        → {article}
+                        → {article.title}
                       </a>
                     ))}
                   </div>
@@ -296,7 +296,9 @@ export const ZohoASAPWidget = ({
               <p className="text-xs text-gray-500">
                 Powered by{" "}
                 <a
-                  href="#"
+                  href="https://www.zoho.com/desk/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-purple-600 hover:underline"
                   data-testid="link-zoho-powered"
                 >

@@ -144,13 +144,15 @@ export const DigeratiContactSection = (): JSX.Element => {
               <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Connect With Us</h3>
               <div className="flex gap-3">
                 {[
-                  { icon: Linkedin, testId: "social-linkedin" },
-                  { icon: Facebook, testId: "social-facebook" },
-                  { icon: Twitter, testId: "social-twitter" },
+                  { icon: Linkedin, testId: "social-linkedin", href: "https://www.linkedin.com/company/digerati-experts" },
+                  { icon: Facebook, testId: "social-facebook", href: "https://www.facebook.com/digeratiexperts" },
+                  { icon: Twitter, testId: "social-twitter", href: "https://twitter.com/digeratiexperts" },
                 ].map((social) => (
                   <a 
                     key={social.testId}
-                    href="#" 
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     data-testid={social.testId}
                     className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-purple-500/20 hover:border-purple-500/40 transition-all duration-300"
                   >

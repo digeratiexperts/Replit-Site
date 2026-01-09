@@ -186,11 +186,12 @@ export const HeroSection = (): JSX.Element => {
               incident frequency.
             </p>
 
-            <button 
+            <a 
+              href="/resources/downtime-calculator"
               data-testid="link-detailed-calculator"
               className="text-[#5034ff] font-normal text-base tracking-[-0.32px] leading-6 bg-transparent border-0 cursor-pointer hover:underline">
               Open Detailed Calculator →
-            </button>
+            </a>
           </CardContent>
         </Card>
 

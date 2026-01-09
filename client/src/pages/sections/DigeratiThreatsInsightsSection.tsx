@@ -149,10 +149,13 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
                       <span>•</span>
                       <span>{insight.readTime}</span>
                     </div>
-                    <button className="text-purple-400 hover:text-purple-300 font-medium text-sm flex items-center gap-1 group/btn">
+                    <Link 
+                      href="/resources/security-updates"
+                      className="text-purple-400 hover:text-purple-300 font-medium text-sm flex items-center gap-1 group/btn"
+                    >
                       Know More
                       <ArrowRight className="h-3.5 w-3.5 group-hover/btn:translate-x-1 transition-transform" />
-                    </button>
+                    </Link>
                   </div>
                 </CardContent>
               </Card>

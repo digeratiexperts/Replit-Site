@@ -18,33 +18,33 @@ export const DigeratiFooterSection = (): JSX.Element => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Services</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1">Managed Security</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1">Managed IT</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1">Compliance Services</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1">Incident Response</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1">Security Training</a></li>
+              <li><a href="/solutions/managed-security" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1">Managed Security</a></li>
+              <li><a href="/solutions/managed-it-support" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1">Managed IT</a></li>
+              <li><a href="/solutions/compliance-services" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1">Compliance Services</a></li>
+              <li><a href="/solutions/incident-response" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1">Incident Response</a></li>
+              <li><a href="/solutions/security-awareness-training" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1">Security Training</a></li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-lg font-semibold mb-4">Industries</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Healthcare</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Financial Services</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Legal</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Manufacturing</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Real Estate</a></li>
+              <li><a href="/industries/healthcare" className="text-gray-400 hover:text-white transition-colors">Healthcare</a></li>
+              <li><a href="/industries/accounting" className="text-gray-400 hover:text-white transition-colors">Financial Services</a></li>
+              <li><a href="/industries/law-firms" className="text-gray-400 hover:text-white transition-colors">Legal</a></li>
+              <li><a href="/industries/manufacturing" className="text-gray-400 hover:text-white transition-colors">Manufacturing</a></li>
+              <li><a href="/industries/real-estate" className="text-gray-400 hover:text-white transition-colors">Real Estate</a></li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-lg font-semibold mb-4">Resources</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Security Blog</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Threat Intelligence</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Case Studies</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Terms of Service</a></li>
+              <li><a href="/resources/blog" className="text-gray-400 hover:text-white transition-colors">Security Blog</a></li>
+              <li><a href="/resources/security-updates" className="text-gray-400 hover:text-white transition-colors">Threat Intelligence</a></li>
+              <li><a href="/resources/case-studies" className="text-gray-400 hover:text-white transition-colors">Case Studies</a></li>
+              <li><a href="/legal/privacy-policy" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
+              <li><a href="/legal/terms-of-use" className="text-gray-400 hover:text-white transition-colors">Terms of Service</a></li>
             </ul>
           </div>
         </div>

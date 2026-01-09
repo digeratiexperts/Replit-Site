@@ -26,39 +26,39 @@ const socialLinks = [
 ];
 
 const quickAccessLinks = [
-  "Client Portal",
-  "Submit Ticket",
-  "Remote Support",
-  "Pay Invoice",
-  "Knowledge Base",
-  "System Status",
+  { name: "Client Portal", url: "/portal" },
+  { name: "Submit Ticket", url: "/support/submit-ticket" },
+  { name: "Remote Support", url: "/support/remote-support" },
+  { name: "Pay Invoice", url: "/support/pay-invoice" },
+  { name: "Knowledge Base", url: "/support/knowledge-base" },
+  { name: "System Status", url: "/trust/trust-center" },
 ];
 
 const servicesLinks = [
-  "Managed IT",
-  "Cybersecurity",
-  "Compliance & Risk",
-  "Backup & DR",
-  "Networking",
-  "UCaaS & VoIP",
+  { name: "Managed IT", url: "/solutions/managed-it-support" },
+  { name: "Cybersecurity", url: "/solutions/managed-security" },
+  { name: "Compliance & Risk", url: "/solutions/compliance-services" },
+  { name: "Backup & DR", url: "/solutions/backup-disaster-recovery" },
+  { name: "Networking", url: "/solutions/network-infrastructure" },
+  { name: "UCaaS & VoIP", url: "/solutions/ucaas-voip" },
 ];
 
 const legalLinks = [
-  { name: "MSA", version: "v2025.1" },
-  { name: "SLA", version: "v2025.1" },
-  { name: "AUP", version: "v2025.1" },
-  { name: "DPA", version: "v2025.1" },
-  { name: "Privacy Policy", version: null },
-  { name: "Terms of Use", version: null },
-  { name: "Sample SOW", version: null },
+  { name: "MSA", version: "v2025.1", url: "/legal/msa" },
+  { name: "SLA", version: "v2025.1", url: "/legal/sla" },
+  { name: "AUP", version: "v2025.1", url: "/legal/aup" },
+  { name: "DPA", version: "v2025.1", url: "/legal/dpa" },
+  { name: "Privacy Policy", version: null, url: "/legal/privacy-policy" },
+  { name: "Terms of Use", version: null, url: "/legal/terms-of-use" },
+  { name: "Sample SOW", version: null, url: "/legal/sample-sow" },
 ];
 
 const trustLinks = [
-  "Trust Center",
-  "Status Page",
-  "Vulnerability Disclosure",
-  "security.txt",
-  "Accessibility",
+  { name: "Trust Center", url: "/trust/trust-center" },
+  { name: "Status Page", url: "/trust/trust-center" },
+  { name: "Vulnerability Disclosure", url: "/trust/vulnerability-disclosure" },
+  { name: "security.txt", url: "/.well-known/security.txt" },
+  { name: "Accessibility", url: "/trust/accessibility" },
 ];
 
 export const BlogSection = (): JSX.Element => {
@@ -206,11 +206,11 @@ export const BlogSection = (): JSX.Element => {
               {quickAccessLinks.map((link, index) => (
                 <li key={index}>
                   <a
-                    href="#"
+                    href={link.url}
                     className="font-normal text-[#ffffffbf] text-sm lg:text-base tracking-[0] leading-[26.4px] hover:text-white transition-colors"
                     data-testid={`link-quick-${index}`}
                   >
-                    {link}
+                    {link.name}
                   </a>
                 </li>
               ))}
@@ -225,11 +225,11 @@ export const BlogSection = (): JSX.Element => {
               {servicesLinks.map((link, index) => (
                 <li key={index}>
                   <a
-                    href="#"
+                    href={link.url}
                     className="font-normal text-[#ffffffbf] text-sm lg:text-base tracking-[0] leading-[26.4px] hover:text-white transition-colors"
                     data-testid={`link-service-${index}`}
                   >
-                    {link}
+                    {link.name}
                   </a>
                 </li>
               ))}
@@ -244,7 +244,7 @@ export const BlogSection = (): JSX.Element => {
               {legalLinks.map((link, index) => (
                 <li key={index} className="flex items-center gap-2 lg:gap-4 flex-wrap">
                   <a
-                    href="#"
+                    href={link.url}
                     className="font-normal text-[#ffffffbf] text-sm lg:text-base tracking-[0] leading-[26.4px] hover:text-white transition-colors"
                     data-testid={`link-legal-${index}`}
                   >
@@ -270,11 +270,11 @@ export const BlogSection = (): JSX.Element => {
               {trustLinks.map((link, index) => (
                 <li key={index}>
                   <a
-                    href="#"
+                    href={link.url}
                     className="font-normal text-[#ffffffbf] text-sm lg:text-base tracking-[0] leading-[26.4px] hover:text-white transition-colors"
                     data-testid={`link-trust-${index}`}
                   >
-                    {link}
+                    {link.name}
                   </a>
                 </li>
               ))}

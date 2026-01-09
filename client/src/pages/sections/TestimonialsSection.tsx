@@ -5,31 +5,31 @@ const industries = [
   {
     title: "Law Firms",
     description:
-      "Lorem ipsum dolor sit amet consectetur. Eget aliquam tellus tempor nibh.",
+      "Protecting client confidentiality with secure document management and compliance-ready infrastructure.",
     image: "/figmaAssets/rectangle-152058-2.svg",
   },
   {
     title: "CPA Firms",
     description:
-      "Lorem ipsum dolor sit amet consectetur. Eget aliquam tellus tempor nibh.",
+      "Secure financial data handling with SOC compliance support and encrypted communications.",
     image: "/figmaAssets/rectangle-152058-4.svg",
   },
   {
     title: "Medical Practices",
     description:
-      "Lorem ipsum dolor sit amet consectetur. Eget aliquam tellus tempor nibh.",
+      "HIPAA-compliant IT solutions with 24/7 monitoring to protect patient data and ensure uptime.",
     image: "/figmaAssets/rectangle-152058-1.svg",
   },
   {
     title: "Real Estate Firms",
     description:
-      "Lorem ipsum dolor sit amet consectetur. Eget aliquam tellus tempor nibh.",
+      "Protecting transactions with wire fraud prevention and secure mobile access for agents.",
     image: "/figmaAssets/rectangle-152058-3.svg",
   },
   {
     title: "Animal Hospitals",
     description:
-      "Lorem ipsum dolor sit amet consectetur. Eget aliquam tellus tempor nibh.",
+      "Reliable systems for veterinary practices with secure patient records and scheduling uptime.",
     image: "/figmaAssets/rectangle-152058.svg",
   },
 ];
@@ -43,9 +43,9 @@ export const TestimonialsSection = (): JSX.Element => {
         </h2>
 
         <p className="flex items-center justify-center w-full md:w-[448px] font-normal text-[#020029bf] text-base tracking-[0] leading-[26.4px]">
-          Lorem ipsum dolor sit amet consectetur. Suspendisse ullamcorper
-          commodo integer dolor id arcu ac. Aenean amet tellus leo laoreet
-          bibendum urna.
+          Digerati Experts provides tailored IT and cybersecurity solutions for
+          Arizona businesses across diverse industries, each with unique
+          compliance and security needs.
         </p>
       </header>
 
