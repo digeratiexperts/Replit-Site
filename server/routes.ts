@@ -1212,20 +1212,10 @@ export async function registerRoutes(app: Express) {
         return res.status(404).json({ error: "Company not found" });
       }
       
-      // For now, return sample files - in production this would query the database
-      const files = [
-        {
-          id: "file-001",
-          fileName: "JumpCloud Agent - " + company.companyName + ".msi",
-          fileType: "agent",
-          category: "agents",
-          description: "Custom JumpCloud agent for " + company.companyName,
-          fileUrl: "/downloads/agents/jumpcloud-" + company.id + ".msi",
-          createdAt: new Date(),
-        },
-      ];
+      // Get tenant files from storage - scoped to this company
+      const tenantFiles = await storage.getTenantFilesByClientId(req.params.id);
       
-      res.json({ files });
+      res.json({ files: tenantFiles });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
