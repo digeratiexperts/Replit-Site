@@ -769,8 +769,18 @@ export async function registerRoutes(app: Express) {
   });
 
   // ===== PORTAL AUTHENTICATION =====
-  // In-memory user storage for demo (replace with database in production)
+  // In-memory user and client storage for demo (replace with database in production)
   const portalUsers: Map<string, any> = new Map();
+  const portalClients: Map<string, any> = new Map();
+  
+  // Demo companies - Password: ClientDemo1!
+  const demoCompanies = [
+    { id: "client-1", companyName: "Acme Corp", contactEmail: "admin@acme.com", contactPhone: "(480) 555-1001", industry: "Manufacturing", primaryContact: "John Smith", status: "active", createdAt: new Date() },
+    { id: "client-2", companyName: "Phoenix Medical Group", contactEmail: "it@phoenixmedical.com", contactPhone: "(480) 555-1002", industry: "Healthcare", primaryContact: "Sarah Jones", status: "active", createdAt: new Date() },
+    { id: "client-3", companyName: "Desert Law Partners", contactEmail: "admin@desertlaw.com", contactPhone: "(480) 555-1003", industry: "Legal", primaryContact: "Mike Davis", status: "active", createdAt: new Date() },
+    { id: "client-4", companyName: "Scottsdale Realty", contactEmail: "tech@scottsdalereal.com", contactPhone: "(480) 555-1004", industry: "Real Estate", primaryContact: "Lisa Wilson", status: "active", createdAt: new Date() },
+  ];
+  demoCompanies.forEach(c => portalClients.set(c.id, c));
   
   // Admin credentials - CHANGE THESE IN PRODUCTION
   // Password hash for "Admin123!" generated with bcrypt (12 rounds)
@@ -781,11 +791,39 @@ export async function registerRoutes(app: Express) {
     password: "$2b$12$ZvvL.svaDsmMCVWaeav.nOFxG69gq986jpWrc4tpr/9n.RU1Y9f8G",
     role: "admin",
     fullName: "Administrator",
+    clientId: null,
   };
   
-  // Initialize with admin user
+  // Demo client users - Password: ClientDemo1! (hash: $2b$12$ZvvL.svaDsmMCVWaeav.nOFxG69gq986jpWrc4tpr/9n.RU1Y9f8G)
+  const demoUser1 = {
+    id: "user-001",
+    email: "john.smith@acme.com",
+    username: "johnsmith",
+    password: "$2b$12$ZvvL.svaDsmMCVWaeav.nOFxG69gq986jpWrc4tpr/9n.RU1Y9f8G",
+    role: "user",
+    fullName: "John Smith",
+    clientId: "client-1",
+    isActive: true,
+  };
+  
+  const demoUser2 = {
+    id: "user-002",
+    email: "sarah.jones@phoenixmedical.com",
+    username: "sarahjones",
+    password: "$2b$12$ZvvL.svaDsmMCVWaeav.nOFxG69gq986jpWrc4tpr/9n.RU1Y9f8G",
+    role: "user",
+    fullName: "Sarah Jones",
+    clientId: "client-2",
+    isActive: true,
+  };
+  
+  // Initialize with admin and demo users
   portalUsers.set(adminUser.email, adminUser);
   portalUsers.set(adminUser.username, adminUser);
+  portalUsers.set(demoUser1.email, demoUser1);
+  portalUsers.set(demoUser1.username, demoUser1);
+  portalUsers.set(demoUser2.email, demoUser2);
+  portalUsers.set(demoUser2.username, demoUser2);
 
   // Portal Register Endpoint
   app.post("/api/portal/register", [validateInput], async (req: AuthenticatedRequest, res: Response) => {
@@ -1310,11 +1348,12 @@ export async function registerRoutes(app: Express) {
         return res.status(404).json({ error: "Company not found" });
       }
       
-      // Calculate metrics from portal data
-      const allTickets = Array.from(portalTickets.values()).filter(t => t.clientId === companyId);
-      const openTickets = allTickets.filter(t => t.status === "open").length;
-      const resolvedTickets = allTickets.filter(t => t.status === "resolved").length;
-      const inProgressTickets = allTickets.filter(t => t.status === "in_progress").length;
+      // Calculate metrics from portal data - get tickets from storage
+      const allStoredTickets = await storage.getPortalTickets();
+      const allTickets = allStoredTickets.filter((t: any) => t.clientId === companyId);
+      const openTickets = allTickets.filter((t: any) => t.status === "open").length;
+      const resolvedTickets = allTickets.filter((t: any) => t.status === "resolved").length;
+      const inProgressTickets = allTickets.filter((t: any) => t.status === "in_progress").length;
       
       const users = Array.from(portalUsers.values()).filter(u => u.clientId === companyId);
       const tenantFiles = await storage.getTenantFilesByClientId(companyId);
@@ -1356,7 +1395,7 @@ export async function registerRoutes(app: Express) {
         },
         activity: {
           lastLogin: new Date().toISOString(),
-          ticketsThisMonth: allTickets.filter(t => {
+          ticketsThisMonth: allTickets.filter((t: any) => {
             const ticketDate = new Date(t.createdAt);
             const now = new Date();
             return ticketDate.getMonth() === now.getMonth() && ticketDate.getFullYear() === now.getFullYear();
