@@ -27,11 +27,51 @@ Key features include a mega menu navigation, a hero section with a free assessme
 ### System Design Choices
 The project follows a modular structure (`client/` and `server/`), using UUIDs for IDs. Payment processing includes enterprise-grade encryption and webhook signature validation. AI services for ticket classification and priority detection are implemented with graceful fallback. Role-based access control manages navigation and features. User storage is in-memory, designed for future PostgreSQL migration, using bcrypt hashing and JWT tokens.
 
+## Zoho One API Integration
+
+### Credentials (stored as secrets)
+- `ZOHO_CLIENT_ID_API` - OAuth client ID
+- `ZOHO_CLIENT_SECRET_API` - OAuth client secret  
+- `ZOHO_REFRESH_TOKEN` - Permanent refresh token (never expires)
+
+### API Endpoints
+| Endpoint | Description | Auth Required |
+|----------|-------------|---------------|
+| `GET /api/zoho/status` | Check Zoho connection status | No |
+| `GET /api/zoho/desk/tickets` | Get all support tickets | Admin |
+| `GET /api/zoho/desk/tickets/:id` | Get ticket by ID | Yes |
+| `POST /api/zoho/desk/tickets` | Create new ticket | Yes |
+| `GET /api/zoho/desk/my-tickets` | Get logged-in user's tickets | Yes |
+| `GET /api/zoho/desk/departments` | Get Desk departments | Yes |
+| `GET /api/zoho/crm/accounts` | Get CRM companies | Admin |
+| `GET /api/zoho/crm/accounts/:id` | Get company by ID | Yes |
+| `GET /api/zoho/crm/contacts` | Get CRM contacts | Admin |
+| `GET /api/zoho/crm/deals` | Get CRM deals | Admin |
+| `GET /api/zoho/billing/subscriptions` | Get all subscriptions | Admin |
+| `GET /api/zoho/billing/my-subscription` | Get user's subscription | Yes |
+| `GET /api/zoho/billing/invoices` | Get all invoices | Admin |
+| `GET /api/zoho/billing/my-invoices` | Get user's invoices | Yes |
+| `GET /api/zoho/billing/plans` | Get billing plans | Yes |
+
+### Scopes Configured
+- `Desk.tickets.ALL` - Full ticket access
+- `Desk.contacts.ALL` - Full contact access
+- `ZohoCRM.modules.ALL` - Full CRM access
+- `ZohoSubscriptions.subscriptions.READ` - Read subscriptions
+- `aaaserver.profile.READ` - Required for self-client
+
+### Service Files
+- `server/zoho/zohoClient.ts` - Token management
+- `server/zoho/zohoDesk.ts` - Desk API service
+- `server/zoho/zohoCRM.ts` - CRM API service
+- `server/zoho/zohoBilling.ts` - Billing API service
+
 ## External Dependencies
 - **Stripe**: Payments and subscription management (`stripe-replit-sync`)
 - **Zelle**: Bank transfer payments
 - **Zoho Payments**: Checkout widget
 - **Zoho Bookings**: Scheduling system
+- **Zoho One APIs**: Desk, CRM, Billing (see above)
 - **OpenAI**: AI-powered features
 - **PostgreSQL/Neon**: Database
 - **Vite**: Build tool
