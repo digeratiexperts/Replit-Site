@@ -5,6 +5,7 @@ import rateLimit from "express-rate-limit";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { registerObjectStorageRoutes, ObjectStorageService } from "./replit_integrations/object_storage";
+import { zohoClient, zohoDeskService, zohoCRMService, zohoBillingService } from "./zoho";
 
 const JWT_SECRET = process.env.JWT_SECRET || randomBytes(32).toString('hex');
 const SALT_ROUNDS = 12;
@@ -1471,6 +1472,259 @@ export async function registerRoutes(app: Express) {
     } catch (error: any) {
       console.error("[ERROR] Lead quote submission failed:", error);
       res.status(500).json({ error: "Failed to process quote request" });
+    }
+  });
+
+  // ========== ZOHO API ROUTES ==========
+
+  // Check Zoho connection status
+  app.get("/api/zoho/status", async (req: Request, res: Response) => {
+    try {
+      const isConfigured = zohoClient.isConfigured();
+      if (!isConfigured) {
+        return res.json({ connected: false, message: "Zoho API not configured" });
+      }
+      
+      await zohoClient.getAccessToken();
+      res.json({ connected: true, message: "Zoho API connected" });
+    } catch (error: any) {
+      res.json({ connected: false, message: error.message });
+    }
+  });
+
+  // ========== ZOHO DESK ROUTES ==========
+
+  // Get all tickets (admin)
+  app.get("/api/zoho/desk/tickets", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      
+      const { status, limit, from } = req.query;
+      const result = await zohoDeskService.getTickets({
+        status: status as string,
+        limit: limit ? parseInt(limit as string) : undefined,
+        from: from ? parseInt(from as string) : undefined,
+      });
+      
+      res.json(result);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get ticket by ID
+  app.get("/api/zoho/desk/tickets/:id", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const ticket = await zohoDeskService.getTicketById(req.params.id);
+      if (!ticket) {
+        return res.status(404).json({ error: "Ticket not found" });
+      }
+      res.json(ticket);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Create ticket
+  app.post("/api/zoho/desk/tickets", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { subject, description, priority } = req.body;
+      
+      if (!subject || !description) {
+        return res.status(400).json({ error: "Subject and description required" });
+      }
+      
+      const ticket = await zohoDeskService.createTicket({
+        subject,
+        description,
+        email: req.user?.email,
+        priority: priority || "Medium",
+      });
+      
+      res.json(ticket);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get my tickets (for logged in user)
+  app.get("/api/zoho/desk/my-tickets", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const contact = await zohoDeskService.getContactByEmail(req.user?.email);
+      if (!contact) {
+        return res.json({ tickets: [], count: 0 });
+      }
+      
+      const tickets = await zohoDeskService.getTicketsByContact(contact.id);
+      res.json({ tickets, count: tickets.length });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get Desk departments
+  app.get("/api/zoho/desk/departments", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const departments = await zohoDeskService.getDepartments();
+      res.json({ departments });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ========== ZOHO CRM ROUTES ==========
+
+  // Get CRM accounts (companies)
+  app.get("/api/zoho/crm/accounts", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      
+      const { page, per_page } = req.query;
+      const result = await zohoCRMService.getAccounts({
+        page: page ? parseInt(page as string) : undefined,
+        per_page: per_page ? parseInt(per_page as string) : undefined,
+      });
+      
+      res.json(result);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get CRM account by ID
+  app.get("/api/zoho/crm/accounts/:id", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const account = await zohoCRMService.getAccountById(req.params.id);
+      if (!account) {
+        return res.status(404).json({ error: "Account not found" });
+      }
+      res.json(account);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get CRM contacts
+  app.get("/api/zoho/crm/contacts", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      
+      const { page, per_page } = req.query;
+      const result = await zohoCRMService.getContacts({
+        page: page ? parseInt(page as string) : undefined,
+        per_page: per_page ? parseInt(per_page as string) : undefined,
+      });
+      
+      res.json(result);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get CRM deals
+  app.get("/api/zoho/crm/deals", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      
+      const { page, per_page } = req.query;
+      const result = await zohoCRMService.getDeals({
+        page: page ? parseInt(page as string) : undefined,
+        per_page: per_page ? parseInt(per_page as string) : undefined,
+      });
+      
+      res.json(result);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ========== ZOHO BILLING ROUTES ==========
+
+  // Get subscriptions
+  app.get("/api/zoho/billing/subscriptions", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      
+      const { status, page, per_page } = req.query;
+      const result = await zohoBillingService.getSubscriptions({
+        status: status as string,
+        page: page ? parseInt(page as string) : undefined,
+        per_page: per_page ? parseInt(per_page as string) : undefined,
+      });
+      
+      res.json(result);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get my subscription (for logged in user)
+  app.get("/api/zoho/billing/my-subscription", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const customer = await zohoBillingService.getCustomerByEmail(req.user?.email);
+      if (!customer) {
+        return res.json({ subscriptions: [], customer: null });
+      }
+      
+      const subscriptions = await zohoBillingService.getSubscriptionsByCustomer(customer.customer_id);
+      res.json({ subscriptions, customer });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get invoices
+  app.get("/api/zoho/billing/invoices", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      
+      const { status, page, per_page } = req.query;
+      const result = await zohoBillingService.getInvoices({
+        status: status as string,
+        page: page ? parseInt(page as string) : undefined,
+        per_page: per_page ? parseInt(per_page as string) : undefined,
+      });
+      
+      res.json(result);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get my invoices (for logged in user)
+  app.get("/api/zoho/billing/my-invoices", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const customer = await zohoBillingService.getCustomerByEmail(req.user?.email);
+      if (!customer) {
+        return res.json({ invoices: [] });
+      }
+      
+      const invoices = await zohoBillingService.getInvoicesByCustomer(customer.customer_id);
+      res.json({ invoices });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get billing plans
+  app.get("/api/zoho/billing/plans", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const plans = await zohoBillingService.getPlans();
+      res.json({ plans });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
     }
   });
 
