@@ -171,7 +171,7 @@ export const Homepage = (): JSX.Element => {
         >
           <div className="flex flex-col items-center gap-2 w-full">
             <p className="w-full font-normal text-[#ffffffbf] text-base text-center leading-[26.4px]">
-              Proudly Protecting Businesses Since [Year]
+              Proudly Protecting Businesses Since 2019
             </p>
             <div className="w-full overflow-hidden">
               {vendorLogosAbout.map((logo, index) => (

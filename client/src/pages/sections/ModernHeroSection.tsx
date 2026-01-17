@@ -259,8 +259,8 @@ export const ModernHeroSection = (): JSX.Element => {
 
               {/* Subheadline */}
               <p className="text-lg text-gray-300 leading-relaxed max-w-xl">
-                Enterprise-grade cybersecurity for small businesses. Get 24/7 protection, 
-                cut cyber liability, and pass compliance checks.
+                IT and cybersecurity for Arizona law firms, medical practices, CPAs, and professional services. 
+                Flat-rate pricing, compliance-ready, and backed by 24/7 monitoring.
               </p>
 
               {/* Feature pills - 2x2 grid */}
