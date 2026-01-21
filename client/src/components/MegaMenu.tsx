@@ -471,8 +471,10 @@ export function MegaMenu() {
                         role="menu"
                         aria-label={`${item.name} submenu`}
                       >
-                        <div className={`p-6 grid gap-6 relative ${
-                          item.name === 'Solutions' ? 'grid-cols-5' : 'grid-cols-3'
+                        <div className={`p-6 relative ${
+                          item.name === 'Solutions' 
+                            ? 'grid grid-cols-[1fr_1.1fr_1.1fr_1.1fr_1fr] gap-4' 
+                            : 'grid grid-cols-3 gap-6'
                         }`}>
                           {item.sections.map((section, sectionIdx) => (
                             <motion.div 
@@ -480,25 +482,28 @@ export function MegaMenu() {
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: sectionIdx * 0.05 }}
+                              className="min-w-0"
                             >
                               {/* Section Header */}
-                              <div className="mb-4">
-                                <h3 
-                                  className={`font-bold text-sm uppercase tracking-wider flex items-center gap-2 ${
-                                    section.featured ? 'text-violet-400' : 'text-gray-400'
-                                  }`}
-                                  id={`menu-section-${section.title.replace(/\s+/g, '-')}`}
-                                >
-                                  {section.title}
+                              <div className="mb-3">
+                                <div className="flex items-center justify-between gap-2 mb-1">
+                                  <h3 
+                                    className={`font-bold text-xs uppercase tracking-wider whitespace-nowrap ${
+                                      section.featured ? 'text-violet-400' : 'text-gray-400'
+                                    }`}
+                                    id={`menu-section-${section.title.replace(/\s+/g, '-')}`}
+                                  >
+                                    {section.title}
+                                  </h3>
                                   {section.featured && (
-                                    <span className="text-[10px] bg-violet-600 text-white px-2 py-0.5 rounded-full font-medium normal-case tracking-normal">
-                                      ★ Top Picks
+                                    <span className="text-[9px] bg-violet-600/80 text-white px-1.5 py-0.5 rounded font-medium whitespace-nowrap">
+                                      ★ Top
                                     </span>
                                   )}
-                                </h3>
-                                <div className={`h-px mt-2 ${
+                                </div>
+                                <div className={`h-px ${
                                   section.featured 
-                                    ? 'bg-gradient-to-r from-violet-500/50 to-purple-500/50' 
+                                    ? 'bg-gradient-to-r from-violet-500/50 to-transparent' 
                                     : 'bg-white/10'
                                 }`} />
                               </div>
@@ -525,7 +530,7 @@ export function MegaMenu() {
                                   >
                                     <a
                                       href={subItem.url || '#'}
-                                      className={`group/item flex items-start gap-3 p-2.5 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500 border ${
+                                      className={`group/item flex items-start gap-2 p-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500 border ${
                                         isHovered 
                                           ? 'bg-violet-600/20 border-violet-500/40 shadow-[0_0_15px_rgba(139,92,246,0.3)]' 
                                           : hasHoveredSibling
@@ -545,14 +550,14 @@ export function MegaMenu() {
                                         </span>
                                       )}
                                       <div className="flex-1 min-w-0">
-                                        <div className="flex items-center gap-2 flex-wrap">
-                                          <span className={`font-medium transition-colors text-sm ${
+                                        <div className="flex items-center gap-1.5 flex-wrap">
+                                          <span className={`font-medium transition-colors text-[13px] leading-tight ${
                                             isHovered ? 'text-white' : hasHoveredSibling ? 'text-gray-400' : 'text-gray-200 group-hover/item:text-white'
                                           }`}>
                                             {subItem.title}
                                           </span>
                                           {subItem.badge && (
-                                            <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
+                                            <span className={`text-[9px] px-1 py-0.5 rounded font-medium ${
                                               subItem.badge === 'Popular' 
                                                 ? 'bg-violet-500/20 text-violet-300 border border-violet-500/30'
                                                 : subItem.badge === 'Best Value'
@@ -564,12 +569,12 @@ export function MegaMenu() {
                                           )}
                                         </div>
                                         {subItem.description && (
-                                          <p className="text-xs text-gray-500 group-hover/item:text-gray-400 mt-0.5 transition-colors leading-relaxed">
+                                          <p className="text-[11px] text-gray-500 group-hover/item:text-gray-400 mt-0.5 transition-colors leading-snug line-clamp-2">
                                             {subItem.description}
                                           </p>
                                         )}
                                         {subItem.price && (
-                                          <p className="text-[10px] text-violet-400/70 mt-1 font-medium">
+                                          <p className="text-[10px] text-violet-400/70 mt-0.5 font-medium">
                                             {subItem.price}
                                           </p>
                                         )}
@@ -597,21 +602,21 @@ export function MegaMenu() {
                           {/* Featured Panel for Solutions */}
                           {item.featuredPanel && (
                             <motion.div 
-                              className="bg-gradient-to-br from-purple-900/40 via-indigo-900/30 to-violet-900/20 border border-white/10 rounded-xl p-5 flex flex-col justify-between min-h-64"
+                              className="bg-gradient-to-br from-violet-900/30 to-purple-900/20 border border-violet-500/20 rounded-xl p-4 flex flex-col justify-between"
                               initial={{ opacity: 0, scale: 0.95 }}
                               animate={{ opacity: 1, scale: 1 }}
                               transition={{ delay: 0.15 }}
                             >
                               <div>
-                                <h4 className="font-bold text-white mb-4 flex items-center gap-2">
-                                  <CheckCircle className="w-5 h-5 text-emerald-500" />
+                                <h4 className="font-bold text-white text-sm mb-3 flex items-center gap-2">
+                                  <CheckCircle className="w-4 h-4 text-emerald-500" />
                                   {item.featuredPanel.title}
                                 </h4>
-                                <div className="space-y-3">
+                                <div className="space-y-2">
                                   {item.featuredPanel.stats.map((stat, idx) => (
-                                    <div key={idx} className="flex items-center justify-between py-2 border-b border-white/5">
-                                      <span className="text-gray-400 text-sm">{stat.label}</span>
-                                      <span className="text-violet-400 font-bold">{stat.value}</span>
+                                    <div key={idx} className="flex items-center justify-between py-1.5 border-b border-white/5 last:border-0">
+                                      <span className="text-gray-400 text-xs">{stat.label}</span>
+                                      <span className="text-violet-400 font-bold text-sm">{stat.value}</span>
                                     </div>
                                   ))}
                                 </div>
@@ -620,11 +625,11 @@ export function MegaMenu() {
                                 href={item.featuredPanel.cta.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="mt-4 w-full inline-flex items-center justify-center px-4 py-2.5 bg-violet-600 hover:bg-violet-500 text-white text-sm font-semibold rounded-lg transition-all hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] focus:outline-none focus:ring-2 focus:ring-violet-500"
+                                className="mt-3 w-full inline-flex items-center justify-center px-3 py-2 bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold rounded-lg transition-all hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] focus:outline-none focus:ring-2 focus:ring-violet-500"
                                 onClick={handleLinkClick}
                               >
                                 {item.featuredPanel.cta.text}
-                                <ArrowRight className="w-4 h-4 ml-2" />
+                                <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
                               </a>
                             </motion.div>
                           )}
