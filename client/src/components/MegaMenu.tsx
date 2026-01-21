@@ -61,7 +61,7 @@ export function MegaMenu() {
           featured: true,
           viewAllUrl: '/solutions',
           items: [
-            { title: 'Office Package', description: 'Everything your office needs', icon: <Monitor className="h-5 w-5" />, url: '/solutions/office-package', badge: 'Best Value' },
+            { title: 'ProActive Ecosystem', description: 'Everything your office needs', icon: <Monitor className="h-5 w-5" />, url: '/solutions/office-package', badge: 'Best Value' },
             { title: 'Co-Managed IT', description: 'Extend your IT team', icon: <Users className="h-5 w-5" />, url: '/solutions/co-managed-it', badge: 'Popular' },
             { title: 'Managed IT Support', description: 'End recurring IT headaches', icon: <HeadphonesIcon className="h-5 w-5" />, url: '/solutions/managed-it-support' },
           ]
