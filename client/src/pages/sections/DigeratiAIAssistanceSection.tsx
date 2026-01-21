@@ -71,9 +71,9 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
                     <Bot className="h-5 w-5 text-white" />
                   </div>
                   <div>
-                    <div className="text-xs text-gray-400">AI Status</div>
-                    <div className="text-sm font-semibold text-green-400 flex items-center gap-1">
-                      <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                    <div className="text-sm text-gray-400">AI Status</div>
+                    <div className="text-base font-semibold text-emerald-400 flex items-center gap-1">
+                      <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
                       Active
                     </div>
                   </div>
@@ -116,7 +116,7 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
             {/* Feature highlights */}
             <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 mb-8">
               <h3 className="text-white font-semibold mb-2">Smarter Security, Better Results</h3>
-              <p className="text-gray-300 text-sm">
+              <p className="text-gray-300 text-base">
                 Our AI reduces false positives by 85% and identifies real threats 3x faster than traditional methods.
               </p>
             </div>

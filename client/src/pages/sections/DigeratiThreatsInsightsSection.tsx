@@ -119,7 +119,7 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
                       className={`${
                         insight.urgent 
                           ? 'bg-red-500/20 text-red-400 border-red-500/30' 
-                          : 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30'
+                          : 'bg-violet-500/20 text-violet-400 border-violet-500/30'
                       } border`}
                     >
                       <span className="flex items-center gap-1">

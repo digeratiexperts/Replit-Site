@@ -183,7 +183,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                       }}
                     />
                   ))}
-                  <span className="ml-2 text-sm text-gray-400">5-Star Rating</span>
+                  <span className="ml-2 text-base text-gray-400">5-Star Rating</span>
                 </div>
                 
                 <div className="relative min-h-[120px]">
@@ -214,7 +214,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                           <div className="font-semibold text-white" data-testid="testimonial-author">
                             {testimonials[currentTestimonial].author}
                           </div>
-                          <div className="text-sm text-gray-400" data-testid="testimonial-role">
+                          <div className="text-base text-gray-400" data-testid="testimonial-role">
                             {testimonials[currentTestimonial].role}
                           </div>
                         </div>

@@ -127,7 +127,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                   <span className="text-5xl font-bold text-purple-600">
                     ${plan.price}
                   </span>
-                  <span className="text-[#718096] ml-2 text-sm">per user avg</span>
+                  <span className="text-[#718096] ml-2 text-base">per user avg</span>
                 </div>
               </div>
 
@@ -135,7 +135,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                 {plan.features.map((feature, featureIndex) => (
                   <li key={featureIndex} className="flex items-start">
                     <CheckCircle className="h-5 w-5 text-purple-600 mr-2 flex-shrink-0 mt-0.5" />
-                    <span className={`text-sm text-[#4A5568] ${featureIndex === 0 && plan.name !== "Office" ? 'font-semibold text-[#1A202C]' : ''}`}>
+                    <span className={`text-base text-[#4A5568] ${featureIndex === 0 && plan.name !== "Office" ? 'font-semibold text-[#1A202C]' : ''}`}>
                       {feature}
                     </span>
                   </li>

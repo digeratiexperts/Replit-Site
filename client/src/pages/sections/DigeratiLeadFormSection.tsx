@@ -217,7 +217,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                   {benefits.map((benefit) => (
                     <div key={benefit.text} className="flex items-center gap-2">
                       <benefit.icon className="w-4 h-4 text-purple-600" />
-                      <span className="text-sm text-[#4A5568]">{benefit.text}</span>
+                      <span className="text-base text-[#4A5568]">{benefit.text}</span>
                     </div>
                   ))}
                 </div>
@@ -226,7 +226,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
           </motion.div>
 
           <motion.p 
-            className="text-center text-sm text-[#718096] mt-6"
+            className="text-center text-base text-[#718096] mt-6"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}

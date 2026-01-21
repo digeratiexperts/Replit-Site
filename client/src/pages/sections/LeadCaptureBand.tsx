@@ -96,13 +96,13 @@ export const LeadCaptureBand = (): JSX.Element => {
             transition={{ duration: 0.6 }}
             className="space-y-6"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-purple-600/20 to-cyan-600/20 border border-purple-500/30">
-              <span className="text-cyan-400 text-sm font-medium">Limited Time Offer</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-600/20 border border-violet-500/30">
+              <span className="text-violet-400 text-base font-medium">Limited Time Offer</span>
             </div>
             
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
               Get Your{" "}
-              <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-violet-300 via-purple-300 to-fuchsia-300 bg-clip-text text-transparent">
                 Free Assessment
               </span>
             </h2>
@@ -124,7 +124,7 @@ export const LeadCaptureBand = (): JSX.Element => {
                   <div className={`p-2 rounded-lg bg-white/5 ${benefit.color}`}>
                     <benefit.icon className="w-4 h-4" />
                   </div>
-                  <span className="text-gray-300 text-sm">{benefit.text}</span>
+                  <span className="text-gray-300 text-base">{benefit.text}</span>
                 </motion.div>
               ))}
             </div>

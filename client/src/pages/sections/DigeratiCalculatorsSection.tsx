@@ -46,7 +46,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
               <Calculator className="w-4 h-4 text-violet-400" />
-              <span className="text-sm text-white/60">Cost Calculator</span>
+              <span className="text-base text-white/60">Cost Calculator</span>
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
               What's Downtime Really <span className="text-violet-400">Costing You?</span>
@@ -159,7 +159,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
               <DollarSign className="w-4 h-4 text-violet-400" />
-              <span className="text-sm text-white/60">Pricing Estimator</span>
+              <span className="text-base text-white/60">Pricing Estimator</span>
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
               Estimate Your <span className="text-violet-400">Service Cost</span> Now

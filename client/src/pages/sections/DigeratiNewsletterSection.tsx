@@ -125,16 +125,16 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
               {benefits.map((benefit) => (
                 <div key={benefit.label} className="flex items-center justify-center gap-2 text-gray-700">
                   <benefit.icon className={`h-5 w-5 ${benefit.color}`} />
-                  <span className="text-sm">{benefit.label}</span>
+                  <span className="text-base">{benefit.label}</span>
                 </div>
               ))}
             </div>
 
             {/* Trust indicator */}
-            <p className="text-sm text-gray-500">
+            <p className="text-base text-gray-500">
               Join 5,000+ business leaders getting monthly security insights.
               <br />
-              <span className="text-xs text-gray-400">Unsubscribe anytime. We respect your privacy.</span>
+              <span className="text-sm text-gray-400">Unsubscribe anytime. We respect your privacy.</span>
             </p>
           </motion.div>
         </div>

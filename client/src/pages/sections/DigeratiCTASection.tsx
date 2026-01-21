@@ -151,8 +151,8 @@ export const DigeratiCTASection = (): JSX.Element => {
                   className="flex items-center gap-2 px-5 py-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full transition-all duration-300 hover:bg-white/10"
                   data-testid={`badge-${badge.name.toLowerCase().replace(/\s+/g, '-')}`}
                 >
-                  <IconComponent className="h-4 w-4 text-cyan-400" />
-                  <span className="text-sm font-medium text-gray-300">{badge.name}</span>
+                  <IconComponent className="h-4 w-4 text-violet-400" />
+                  <span className="text-base font-medium text-gray-300">{badge.name}</span>
                 </motion.div>
               );
             })}

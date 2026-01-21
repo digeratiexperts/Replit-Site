@@ -131,12 +131,12 @@ export const DigeratiServicesSection = (): JSX.Element => {
                 <h3 className="text-xl font-semibold text-white mb-3">
                   {service.title}
                 </h3>
-                <p className="text-white/60 leading-relaxed line-clamp-2 mb-4">
+                <p className="text-base text-white/70 leading-relaxed line-clamp-2 mb-4">
                   {service.description}
                 </p>
                 <a 
                   href={service.link}
-                  className="inline-flex items-center text-violet-400 hover:text-violet-300 font-medium text-sm transition-colors"
+                  className="inline-flex items-center text-violet-400 hover:text-violet-300 font-medium text-base transition-colors"
                   data-testid={`link-${service.testId}`}
                 >
                   Learn More <ArrowRight className="ml-1 h-4 w-4" />

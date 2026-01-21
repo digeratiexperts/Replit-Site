@@ -122,7 +122,7 @@ export const ModernHeroSection = (): JSX.Element => {
                 {features.map((feature) => (
                   <div key={feature.text} className="flex items-center gap-2">
                     <feature.icon className="h-4 w-4 text-violet-400" />
-                    <span className="text-sm text-white/70">{feature.text}</span>
+                    <span className="text-base text-white/70">{feature.text}</span>
                   </div>
                 ))}
               </div>

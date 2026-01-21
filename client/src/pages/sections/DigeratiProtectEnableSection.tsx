@@ -162,7 +162,7 @@ export const DigeratiProtectEnableSection = (): JSX.Element => {
                 </div>
                 <div>
                   <h4 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h4>
-                  <p className="text-gray-600 text-sm leading-relaxed">
+                  <p className="text-gray-600 text-base leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
