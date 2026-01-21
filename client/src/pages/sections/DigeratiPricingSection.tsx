@@ -190,7 +190,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                 Book a 15-Minute Intro Call
               </Button>
             </a>
-            <a href="/lead-quote-wizard">
+            <a href="/quote-wizard">
               <Button 
                 size="lg" 
                 className="bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 hover:border-white/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0b2c] transition-all duration-200"

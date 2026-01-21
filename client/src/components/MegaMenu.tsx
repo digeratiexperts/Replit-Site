@@ -101,7 +101,6 @@ export function MegaMenu() {
       sections: [
         {
           title: 'Industries We Serve',
-          viewAllUrl: '/industries',
           items: [
             { title: 'Healthcare', description: 'HIPAA compliance made simple', icon: <Shield className="h-5 w-5" />, url: '/industries/healthcare' },
             { title: 'Law Firms', description: 'Protect client confidentiality', icon: <FileCheck className="h-5 w-5" />, url: '/industries/law-firms' },
@@ -125,7 +124,6 @@ export function MegaMenu() {
       sections: [
         {
           title: 'Learn',
-          viewAllUrl: '/resources',
           items: [
             { title: 'Case Studies', description: 'Real Arizona success stories', icon: <TrendingUp className="h-5 w-5" />, url: '/resources/case-studies' },
             { title: 'Blog & News', description: 'Latest security insights', icon: <FileCheck className="h-5 w-5" />, url: '/resources/blog' },
@@ -160,7 +158,6 @@ export function MegaMenu() {
         },
         {
           title: 'Company',
-          viewAllUrl: '/about',
           items: [
             { title: 'Mission & Values', description: 'Our commitment to partnership', icon: <Star className="h-5 w-5" />, url: '/about/mission-values' },
             { title: 'Case Studies', description: 'Arizona business success stories', icon: <TrendingUp className="h-5 w-5" />, url: '/resources/case-studies' },
