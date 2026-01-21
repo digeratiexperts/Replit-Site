@@ -10,6 +10,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
       name: "Office",
       price: 165,
       isPopular: false,
+      learnMoreUrl: "/solutions/managed-it-support",
       features: [
         "Email + Calendar + Team Chat",
         "MFA + SSO + Password Manager",
@@ -23,6 +24,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
       name: "Business",
       price: 245,
       isPopular: true,
+      learnMoreUrl: "/solutions/security-operations",
       features: [
         "Everything in Office",
         "SOC / MDR Monitoring + Response",
@@ -36,6 +38,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
       name: "Enterprise",
       price: 345,
       isPopular: false,
+      learnMoreUrl: "/solutions/compliance-reports",
       features: [
         "Everything in Business",
         "HIPAA / GDPR Compliance Modules",
@@ -143,18 +146,24 @@ export const DigeratiPricingSection = (): JSX.Element => {
               </ul>
 
               <div className="space-y-3">
-                <Button 
-                  className="w-full border-2 border-purple-600 text-purple-600 bg-transparent hover:bg-purple-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 transition-all duration-200" 
-                  variant="outline"
-                >
-                  Learn More
-                </Button>
-                <Button 
-                  className="w-full border-2 border-purple-600 text-purple-600 bg-transparent hover:bg-purple-50 font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
-                  variant="outline"
-                >
-                  Book a Strategy Call
-                </Button>
+                <a href={plan.learnMoreUrl}>
+                  <Button 
+                    className="w-full border-2 border-purple-600 text-purple-600 bg-transparent hover:bg-purple-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 transition-all duration-200" 
+                    variant="outline"
+                    data-testid={`button-learn-more-${plan.name.toLowerCase()}`}
+                  >
+                    Learn More
+                  </Button>
+                </a>
+                <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                  <Button 
+                    className="w-full border-2 border-purple-600 text-purple-600 bg-transparent hover:bg-purple-50 font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
+                    variant="outline"
+                    data-testid={`button-strategy-call-${plan.name.toLowerCase()}`}
+                  >
+                    Book a Strategy Call
+                  </Button>
+                </a>
               </div>
             </motion.div>
           ))}

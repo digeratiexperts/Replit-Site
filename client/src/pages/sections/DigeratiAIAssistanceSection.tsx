@@ -133,14 +133,16 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </a>
-              <Button 
-                size="lg"
-                variant="outline"
-                className="border-2 border-white/50 text-white bg-transparent hover:bg-white/10 hover:border-white"
-                data-testid="button-ai-learn-more"
-              >
-                Learn More
-              </Button>
+              <a href="/solutions/security-operations">
+                <Button 
+                  size="lg"
+                  variant="outline"
+                  className="border-2 border-white/50 text-white bg-transparent hover:bg-white/10 hover:border-white"
+                  data-testid="button-ai-learn-more"
+                >
+                  Learn More
+                </Button>
+              </a>
             </div>
           </motion.div>
         </div>
