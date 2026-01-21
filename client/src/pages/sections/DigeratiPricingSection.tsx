@@ -72,14 +72,11 @@ export const DigeratiPricingSection = (): JSX.Element => {
   return (
     <section 
       id="pricing" 
-      className="relative py-[80px] pt-32 pb-32 overflow-hidden"
-      style={{ 
-        background: 'linear-gradient(135deg, #2D3748 0%, #1A202C 50%, #171923 100%)'
-      }}
+      className="relative py-20 pt-28 pb-28 overflow-hidden bg-[#0a0a0a]"
     >
-      {/* Wave transitions for visual flow */}
-      <WaveDivider position="top" toColor="#0a0a0a" height={60} />
-      <WaveDivider position="bottom" toColor="#0a0a0a" height={60} flip />
+      {/* Subtle violet accent glow */}
+      <div className="absolute inset-0 pointer-events-none"
+           style={{ background: "radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.06) 0%, transparent 60%)" }} />
       
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 

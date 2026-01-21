@@ -49,12 +49,10 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
   const categories = ["All", "CISA Alerts", "Ransomware", "Compliance", "Best Practices"];
 
   return (
-    <section className="py-24 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0a0118, #0f0720)' }}>
-      {/* Background effects */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-red-600/5 rounded-full blur-[150px]" />
-        <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-purple-600/5 rounded-full blur-[150px]" />
-      </div>
+    <section className="py-24 relative overflow-hidden bg-[#0a0a0a]">
+      {/* Subtle violet accent glow */}
+      <div className="absolute inset-0 pointer-events-none"
+           style={{ background: "radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.06) 0%, transparent 60%)" }} />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div 

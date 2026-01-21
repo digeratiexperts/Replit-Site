@@ -45,13 +45,10 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
   ];
 
   return (
-    <section className="py-24 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0d0720, #0a0118)' }}>
-      {/* Pattern overlay for visual texture */}
-      <PatternOverlay variant="grid" opacity={0.02} />
-      
-      {/* Background glow effects */}
-      <GlowOrb color="rgba(139, 92, 246, 0.08)" size={600} top="25%" left="0" animate />
-      <GlowOrb color="rgba(34, 211, 238, 0.06)" size={600} bottom="25%" right="0" animate />
+    <section className="py-24 relative overflow-hidden bg-[#0a0a0a]">
+      {/* Subtle violet accent glow */}
+      <div className="absolute inset-0 pointer-events-none"
+           style={{ background: "radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.06) 0%, transparent 60%)" }} />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div 

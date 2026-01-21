@@ -65,7 +65,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                     <SelectTrigger id="industry" className="mt-2 bg-white/10 border-white/20 text-white [&>span]:text-white" data-testid="select-industry">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-[#1a0a2e] border-white/20">
+                    <SelectContent className="bg-[#0a0a0a] border-white/20">
                       <SelectItem value="law-firm" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white" data-testid="option-law-firm">Law Firm (2.0×)</SelectItem>
                       <SelectItem value="cpa-firm" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white" data-testid="option-cpa-firm">CPA Firm (1.8×)</SelectItem>
                       <SelectItem value="medical" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white" data-testid="option-medical">Medical Practice (2.5×)</SelectItem>
@@ -192,7 +192,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                     <SelectTrigger id="service-package" className="mt-2 bg-white/10 border-white/20 text-white [&>span]:text-white" data-testid="select-service-package">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-[#1a0a2e] border-white/20">
+                    <SelectContent className="bg-[#0a0a0a] border-white/20">
                       <SelectItem value="165" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white" data-testid="option-office">Office ($165/user)</SelectItem>
                       <SelectItem value="245" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white" data-testid="option-business">Business ($245/user)</SelectItem>
                       <SelectItem value="345" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white" data-testid="option-enterprise">Enterprise ($345/user)</SelectItem>

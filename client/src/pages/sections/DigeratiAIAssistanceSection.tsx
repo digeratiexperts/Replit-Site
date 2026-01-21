@@ -18,18 +18,10 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
   ];
 
   return (
-    <section className="py-[60px] relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0d0720, #0a0118)' }}>
-      {/* Background decoration - dark theme */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-purple-600/15 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-cyan-600/10 rounded-full blur-[120px]" />
-        
-        {/* Subtle grid pattern */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: `linear-gradient(rgba(139,92,246,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,0.5) 1px, transparent 1px)`,
-          backgroundSize: '40px 40px'
-        }} />
-      </div>
+    <section className="py-20 relative overflow-hidden bg-[#0a0a0a]">
+      {/* Subtle violet accent glow */}
+      <div className="absolute inset-0 pointer-events-none"
+           style={{ background: "radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.06) 0%, transparent 60%)" }} />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -43,7 +35,7 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
           >
             <div className="relative">
               {/* Decorative elements */}
-              <div className="absolute -inset-4 bg-gradient-to-br from-purple-500/20 to-cyan-500/20 rounded-3xl blur-2xl" />
+              <div className="absolute -inset-4 bg-violet-500/15 rounded-3xl blur-2xl" />
               
               {/* Main image */}
               <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10">
@@ -73,9 +65,9 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
               </div>
 
               {/* Floating AI badge */}
-              <div className="absolute -top-4 -right-4 bg-[#1a0a2e]/90 backdrop-blur-sm rounded-xl p-3 shadow-xl border border-purple-500/30">
+              <div className="absolute -top-4 -right-4 bg-white/5 backdrop-blur-sm rounded-xl p-3 shadow-xl border border-white/10">
                 <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-lg bg-violet-500/20 border border-violet-500/30 flex items-center justify-center">
                     <Bot className="h-5 w-5 text-white" />
                   </div>
                   <div>
@@ -104,7 +96,7 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
                 AI-Powered Protection
               </Badge>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-white">
-                Expert Assistance <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Using AI</span>
+                Expert Assistance <span className="text-violet-400">Using AI</span>
               </h2>
               <p className="text-lg text-gray-300 mb-6 leading-relaxed">
                 Our AI-powered security platform works 24/7 to predict, prevent, and respond to threats 
@@ -115,7 +107,7 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
             <div className="space-y-3 mb-8">
               {aiFeatures.map((feature, index) => (
                 <div key={index} className="flex items-start gap-3 text-gray-200">
-                  <CheckCircle className="h-5 w-5 text-cyan-400 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="h-5 w-5 text-emerald-500 mt-0.5 flex-shrink-0" />
                   <span>{feature}</span>
                 </div>
               ))}

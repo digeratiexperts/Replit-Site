@@ -168,8 +168,8 @@ export const DigeratiContactSection = (): JSX.Element => {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div className="relative">
-              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 via-transparent to-cyan-600/20 blur-xl" />
-              <div className="relative backdrop-blur-xl bg-[#1a0a2e]/80 border border-purple-500/30 rounded-2xl p-6 md:p-8 shadow-[0_8px_32px_rgba(139,92,246,0.2)]">
+              <div className="absolute -inset-1 bg-violet-500/10 blur-xl rounded-2xl" />
+              <div className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 shadow-[0_8px_32px_rgba(139,92,246,0.15)]">
                 <h3 className="text-2xl font-bold text-white mb-2">Get in Touch</h3>
                 <p className="text-gray-400 mb-6">Fill out the form for a free consultation</p>
 
@@ -278,7 +278,7 @@ export const DigeratiContactSection = (): JSX.Element => {
                                 <SelectValue placeholder="Select a service" />
                               </SelectTrigger>
                             </FormControl>
-                            <SelectContent className="bg-[#1a0a2e] border-white/20">
+                            <SelectContent className="bg-[#0a0a0a] border-white/20">
                               <SelectItem value="managed-security" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Managed Security Services</SelectItem>
                               <SelectItem value="managed-it" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Managed IT Services</SelectItem>
                               <SelectItem value="compliance" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Compliance & Governance</SelectItem>
