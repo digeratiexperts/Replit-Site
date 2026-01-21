@@ -89,7 +89,7 @@ export default function QuoteConfirmation() {
             <Calendar className="mr-2 h-5 w-5" />
             Schedule 15-Minute Fit Call
           </Button>
-          <Button size="lg" variant="outline" className="h-12" data-testid="button-email-details">
+          <Button size="lg" variant="outline" className="h-12 border-purple-300 text-purple-700 hover:bg-purple-50 hover:text-purple-800" data-testid="button-email-details">
             <Mail className="mr-2 h-5 w-5" />
             Email Me These Details
           </Button>
@@ -98,7 +98,7 @@ export default function QuoteConfirmation() {
         {/* Footer CTA */}
         <div className="text-center">
           <p className="text-gray-600 mb-4">Questions before we reach out?</p>
-          <Button variant="outline" onClick={() => setLocation('/contact')}>
+          <Button variant="outline" className="border-purple-300 text-purple-700 hover:bg-purple-50 hover:text-purple-800" onClick={() => setLocation('/contact')}>
             Contact Us Now <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
