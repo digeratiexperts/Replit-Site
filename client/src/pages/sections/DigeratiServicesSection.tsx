@@ -1,9 +1,21 @@
 import { Eye, ShieldCheck, UserCheck, KeyRound, Cloud, AlertCircle, ArrowRight } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Link } from "wouter";
+import { useRef } from "react";
 
 export const DigeratiServicesSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-8%", "8%"]);
+  const floatingY1 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 40, prefersReducedMotion ? 0 : -40]);
+  const floatingY2 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : -25, prefersReducedMotion ? 0 : 25]);
+
   const services = [
     {
       icon: Eye,
@@ -85,17 +97,34 @@ export const DigeratiServicesSection = (): JSX.Element => {
 
   return (
     <section 
+      ref={sectionRef}
       id="services" 
       className="relative py-24 bg-[#0a0a0a] overflow-hidden"
     >
-      {/* Gradient orbs */}
-      <div 
+      {/* Parallax gradient orbs */}
+      <motion.div 
         className="absolute top-20 left-0 w-[600px] h-[600px] pointer-events-none opacity-40"
-        style={{ background: "radial-gradient(circle at 0% 30%, rgba(139, 92, 246, 0.15) 0%, transparent 50%)" }}
+        style={{ 
+          y: backgroundY,
+          background: "radial-gradient(circle at 0% 30%, rgba(139, 92, 246, 0.15) 0%, transparent 50%)" 
+        }}
       />
-      <div 
+      <motion.div 
         className="absolute bottom-20 right-0 w-[500px] h-[500px] pointer-events-none opacity-30"
-        style={{ background: "radial-gradient(circle at 100% 70%, rgba(192, 38, 211, 0.12) 0%, transparent 50%)" }}
+        style={{ 
+          y: floatingY2,
+          background: "radial-gradient(circle at 100% 70%, rgba(192, 38, 211, 0.12) 0%, transparent 50%)" 
+        }}
+      />
+      
+      {/* Floating decorative elements */}
+      <motion.div 
+        className="absolute top-40 right-20 w-6 h-6 rounded-full border border-violet-500/20 pointer-events-none hidden lg:block"
+        style={{ y: floatingY1 }}
+      />
+      <motion.div 
+        className="absolute bottom-40 left-16 w-4 h-4 rounded-lg bg-purple-500/15 rotate-45 pointer-events-none hidden lg:block"
+        style={{ y: floatingY2 }}
       />
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

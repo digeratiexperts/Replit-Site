@@ -1,6 +1,7 @@
 import { Briefcase, Calculator, Stethoscope, Home, Heart, ArrowRight } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { useRef } from "react";
 
 // Import industry images from attached assets
 import lawBooksImg from "@assets/Rectangle-152058_1767027918697.png";
@@ -11,6 +12,17 @@ import animalHospitalImg from "@assets/Rectangle-152058-4_1767027918698.png";
 
 export const DigeratiIndustriesSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-8%", "8%"]);
+  const floatingY1 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 35, prefersReducedMotion ? 0 : -35]);
+  const floatingY2 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : -25, prefersReducedMotion ? 0 : 25]);
+
   const industries = [
     { 
       icon: Briefcase, 
@@ -94,12 +106,37 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
 
   return (
     <section 
+      ref={sectionRef}
       className="py-16 md:py-20 lg:py-24 bg-[#0a0a0a] relative overflow-hidden"
     >
-      {/* Subtle purple accent */}
-      <div 
+      {/* Parallax background accents */}
+      <motion.div 
         className="absolute top-0 left-1/3 w-[600px] h-[600px] pointer-events-none"
-        style={{ background: "radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, transparent 60%)" }}
+        style={{ 
+          y: backgroundY,
+          background: "radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 60%)" 
+        }}
+      />
+      <motion.div 
+        className="absolute bottom-0 right-1/4 w-[400px] h-[400px] pointer-events-none opacity-50"
+        style={{ 
+          y: floatingY2,
+          background: "radial-gradient(circle, rgba(168, 85, 247, 0.06) 0%, transparent 60%)" 
+        }}
+      />
+      
+      {/* Floating decorative elements */}
+      <motion.div 
+        className="absolute top-24 right-12 w-6 h-6 rounded-full border border-violet-500/15 pointer-events-none hidden lg:block"
+        style={{ y: floatingY1 }}
+      />
+      <motion.div 
+        className="absolute bottom-32 left-16 w-4 h-4 rounded-lg bg-purple-500/10 rotate-45 pointer-events-none hidden lg:block"
+        style={{ y: floatingY2 }}
+      />
+      <motion.div 
+        className="absolute top-1/2 left-8 w-3 h-3 rounded-full bg-fuchsia-500/15 pointer-events-none hidden lg:block"
+        style={{ y: floatingY1 }}
       />
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -110,10 +147,14 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
           viewport={{ once: true, margin: "-100px" }}
           variants={titleVariants}
         >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6">
+            <Briefcase className="w-4 h-4 text-violet-400" />
+            <span className="text-sm font-medium text-violet-300">Specialized Solutions</span>
+          </div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-white">
-            Industries We Serve
+            Industries We <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">Serve</span>
           </h2>
-          <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-white/60 leading-relaxed max-w-3xl mx-auto">
             Specialized cybersecurity solutions for Arizona's essential sectors
           </p>
         </motion.div>
@@ -173,7 +214,7 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
           <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
             <Button 
               size="lg"
-              className="h-14 px-8 text-lg font-bold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-0 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300"
+              className="h-14 px-8 text-lg font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 hover:from-violet-500 hover:via-purple-500 hover:to-fuchsia-500 border-0 shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all duration-300"
               data-testid="button-industries-cta"
             >
               Get Industry-Specific Protection

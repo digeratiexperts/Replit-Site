@@ -54,8 +54,11 @@ export const ModernHeroSection = (): JSX.Element => {
     offset: ["start start", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 60]);
-  // Keep opacity at 1 - no scroll-based fade effect
+  const y = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 80]);
+  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["0%", "30%"]);
+  const floatingY1 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -100]);
+  const floatingY2 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -60]);
+  const floatingY3 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -40]);
   const opacity = 1;
 
   const features = [
@@ -71,16 +74,44 @@ export const ModernHeroSection = (): JSX.Element => {
       id="home" 
       className="relative min-h-screen overflow-hidden"
     >
-      {/* Clean black background with subtle purple glow */}
+      {/* Clean black background with parallax purple glows */}
       <div className="absolute inset-0 bg-black">
-        {/* Single subtle accent - top right corner only */}
-        <div 
-          className="absolute top-0 right-0 w-[600px] h-[600px] -z-10 pointer-events-none"
+        {/* Main accent - top right corner with parallax */}
+        <motion.div 
+          className="absolute top-0 right-0 w-[700px] h-[700px] -z-10 pointer-events-none"
+          data-testid="hero-parallax-orb-1"
           style={{
-            background: "radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.08) 0%, transparent 50%)",
+            y: backgroundY,
+            background: "radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.12) 0%, transparent 50%)",
+          }}
+        />
+        {/* Secondary accent - bottom left with parallax */}
+        <motion.div 
+          className="absolute bottom-0 left-0 w-[500px] h-[500px] -z-10 pointer-events-none"
+          data-testid="hero-parallax-orb-2"
+          style={{
+            y: floatingY3,
+            background: "radial-gradient(circle at 0% 100%, rgba(168, 85, 247, 0.08) 0%, transparent 50%)",
           }}
         />
       </div>
+
+      {/* Floating decorative elements with parallax */}
+      <motion.div 
+        className="absolute top-32 right-20 w-4 h-4 rounded-full bg-violet-500/20 pointer-events-none hidden lg:block"
+        style={{ y: floatingY1 }}
+        data-testid="hero-floating-element-1"
+      />
+      <motion.div 
+        className="absolute top-48 right-40 w-2 h-2 rounded-full bg-purple-400/30 pointer-events-none hidden lg:block"
+        style={{ y: floatingY2 }}
+        data-testid="hero-floating-element-2"
+      />
+      <motion.div 
+        className="absolute bottom-32 left-20 w-3 h-3 rounded-full bg-fuchsia-500/20 pointer-events-none hidden lg:block"
+        style={{ y: floatingY3 }}
+        data-testid="hero-floating-element-3"
+      />
 
       {/* Main content */}
       <motion.div 

@@ -203,7 +203,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
             Trusted by <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">100+ Arizona</span> Businesses
           </h2>
           
-          <div className="flex items-center justify-center gap-1 mb-4">
+          <div className="flex items-center justify-center gap-1 mb-4" role="img" aria-label="5 star rating">
             {[...Array(5)].map((_, i) => (
               <Star 
                 key={i} 
@@ -212,6 +212,8 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                   color: '#fbbf24',
                   filter: 'drop-shadow(0 0 6px rgba(251, 191, 36, 0.6))'
                 }}
+                aria-hidden="true"
+                data-testid={`star-rating-${i}`}
               />
             ))}
             <span className="ml-3 text-lg font-semibold text-amber-400">5.0</span>
@@ -243,7 +245,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
             <Card className="relative bg-[#111111]/90 backdrop-blur-xl border-0 rounded-3xl overflow-hidden">
               <CardContent className="p-8 md:p-12">
                 {/* Stars row */}
-                <div className="flex items-center justify-center gap-1 mb-8">
+                <div className="flex items-center justify-center gap-1 mb-8" role="img" aria-label="5 star rating">
                   {[...Array(5)].map((_, i) => (
                     <Star 
                       key={i} 
@@ -252,6 +254,8 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                         color: '#fbbf24',
                         filter: 'drop-shadow(0 0 4px rgba(251, 191, 36, 0.5))'
                       }}
+                      aria-hidden="true"
+                      data-testid={`testimonial-star-${i}`}
                     />
                   ))}
                   <span className="ml-3 text-sm font-medium text-white/60">5-Star Rating</span>

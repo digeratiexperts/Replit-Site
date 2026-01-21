@@ -4,7 +4,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { PremiumSlider } from "@/components/ui/premium-slider";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, DollarSign, TrendingDown, Building2 } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 interface CalculatorProps {
   employees: number;
@@ -25,6 +26,18 @@ interface CalculatorProps {
 
 export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  const backgroundY1 = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-10%", "10%"]);
+  const backgroundY2 = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["5%", "-5%"]);
+  const floatingY1 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 30, prefersReducedMotion ? 0 : -30]);
+  const floatingY2 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : -20, prefersReducedMotion ? 0 : 20]);
+
   const {
     employees, setEmployees,
     hourlyWage, setHourlyWage,
@@ -39,12 +52,32 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
   return (
     <>
       {/* Downtime Calculator Section */}
-      <section id="calculators" className="py-24 relative overflow-visible bg-[#0a0a0a]">
-        {/* Gradient accent orbs */}
-        <div className="absolute top-20 right-0 w-[600px] h-[600px] pointer-events-none opacity-40"
-             style={{ background: "radial-gradient(circle at 100% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%)" }} />
-        <div className="absolute bottom-20 left-0 w-[400px] h-[400px] pointer-events-none opacity-30"
-             style={{ background: "radial-gradient(circle at 0% 80%, rgba(168, 85, 247, 0.12) 0%, transparent 50%)" }} />
+      <section ref={sectionRef} id="calculators" className="py-24 relative overflow-visible bg-[#0a0a0a]">
+        {/* Parallax gradient accent orbs */}
+        <motion.div 
+          className="absolute top-20 right-0 w-[600px] h-[600px] pointer-events-none opacity-40"
+          style={{ 
+            y: backgroundY1,
+            background: "radial-gradient(circle at 100% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%)" 
+          }} 
+        />
+        <motion.div 
+          className="absolute bottom-20 left-0 w-[400px] h-[400px] pointer-events-none opacity-30"
+          style={{ 
+            y: backgroundY2,
+            background: "radial-gradient(circle at 0% 80%, rgba(168, 85, 247, 0.12) 0%, transparent 50%)" 
+          }} 
+        />
+        
+        {/* Floating decorative elements */}
+        <motion.div 
+          className="absolute top-32 left-16 w-5 h-5 rounded-full border border-violet-500/20 pointer-events-none hidden lg:block"
+          style={{ y: floatingY1 }}
+        />
+        <motion.div 
+          className="absolute bottom-40 right-20 w-4 h-4 rounded-lg bg-purple-500/15 rotate-45 pointer-events-none hidden lg:block"
+          style={{ y: floatingY2 }}
+        />
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div 

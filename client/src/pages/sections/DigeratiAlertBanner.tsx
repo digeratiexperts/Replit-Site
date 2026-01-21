@@ -1,9 +1,20 @@
 import { Shield, Users, Activity, ArrowRight, Phone } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { useRef } from "react";
 
 export const DigeratiAlertBanner = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-5%", "5%"]);
+  const floatingY1 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 30, prefersReducedMotion ? 0 : -30]);
+  const floatingY2 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : -20, prefersReducedMotion ? 0 : 20]);
 
   const features = [
     {
@@ -51,15 +62,33 @@ export const DigeratiAlertBanner = (): JSX.Element => {
 
   return (
     <section 
+      ref={sectionRef}
       className="py-20 relative overflow-hidden"
       style={{
         background: 'linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 50%, #E2E8F0 100%)'
       }}
     >
-      {/* Subtle purple glow */}
-      <div 
+      {/* Parallax background elements */}
+      <motion.div 
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] pointer-events-none"
-        style={{ background: "radial-gradient(ellipse, rgba(139, 92, 246, 0.08) 0%, transparent 60%)" }}
+        style={{ 
+          y: backgroundY,
+          background: "radial-gradient(ellipse, rgba(139, 92, 246, 0.1) 0%, transparent 60%)" 
+        }}
+      />
+      
+      {/* Floating decorative elements */}
+      <motion.div 
+        className="absolute top-20 left-10 w-16 h-16 rounded-full border-2 border-violet-300/20 pointer-events-none hidden lg:block"
+        style={{ y: floatingY1 }}
+      />
+      <motion.div 
+        className="absolute bottom-32 right-16 w-8 h-8 rounded-lg bg-violet-400/10 rotate-45 pointer-events-none hidden lg:block"
+        style={{ y: floatingY2 }}
+      />
+      <motion.div 
+        className="absolute top-1/2 right-8 w-4 h-4 rounded-full bg-purple-400/15 pointer-events-none hidden lg:block"
+        style={{ y: floatingY1 }}
       />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

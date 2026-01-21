@@ -1,7 +1,19 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 export const DigeratiHowWeProtectSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-5%", "5%"]);
+  const floatingY1 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 25, prefersReducedMotion ? 0 : -25]);
+  const floatingY2 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : -20, prefersReducedMotion ? 0 : 20]);
+  const timelineScale = useTransform(scrollYProgress, [0.2, 0.5], prefersReducedMotion ? [1, 1] : [0.98, 1]);
   
   const steps = [
     {
@@ -55,15 +67,37 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
 
   return (
     <section 
+      ref={sectionRef}
       className="py-20 relative overflow-hidden"
       style={{
         background: 'linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 50%, #E2E8F0 100%)'
       }}
     >
-      {/* Subtle purple glow */}
-      <div 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] pointer-events-none"
-        style={{ background: "radial-gradient(ellipse, rgba(139, 92, 246, 0.06) 0%, transparent 60%)" }}
+      {/* Parallax background elements */}
+      <motion.div 
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] pointer-events-none"
+        style={{ 
+          y: backgroundY,
+          background: "radial-gradient(ellipse, rgba(139, 92, 246, 0.08) 0%, transparent 60%)" 
+        }}
+      />
+      
+      {/* Floating decorative elements */}
+      <motion.div 
+        className="absolute top-24 right-16 w-20 h-20 rounded-full border-2 border-violet-300/20 pointer-events-none hidden lg:block"
+        style={{ y: floatingY1 }}
+      />
+      <motion.div 
+        className="absolute bottom-32 left-12 w-6 h-6 rounded-lg bg-purple-400/15 rotate-45 pointer-events-none hidden lg:block"
+        style={{ y: floatingY2 }}
+      />
+      <motion.div 
+        className="absolute top-1/3 left-8 w-3 h-3 rounded-full bg-violet-400/20 pointer-events-none hidden lg:block"
+        style={{ y: floatingY1 }}
+      />
+      <motion.div 
+        className="absolute bottom-1/4 right-24 w-10 h-10 rounded-full border border-fuchsia-300/15 pointer-events-none hidden lg:block"
+        style={{ y: floatingY2 }}
       />
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -74,8 +108,11 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-100 border border-violet-200 mb-6">
+            <span className="text-sm font-medium text-violet-700">Our Process</span>
+          </div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-4">
-            How We Protect Your Business
+            How We <span className="bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 bg-clip-text text-transparent">Protect</span> Your Business
           </h2>
           <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
             Our proven 4-step process ensures your business stays secure and compliant
@@ -88,6 +125,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
+          style={{ scale: timelineScale }}
         >
           {/* Vertical Timeline Line */}
           <div className="absolute left-8 md:left-12 top-0 bottom-0 w-1 bg-gradient-to-b from-violet-500 via-purple-500 to-fuchsia-500 rounded-full shadow-lg shadow-violet-500/30" />
