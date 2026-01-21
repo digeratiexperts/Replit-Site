@@ -39,13 +39,13 @@ export const DigeratiProtectEnableSection = (): JSX.Element => {
       icon: Lock,
       title: "Security by Design",
       description: "Every solution we implement has security built into its foundation, not added as an afterthought.",
-      gradient: "from-purple-500 to-indigo-600"
+      gradient: "from-violet-500 to-purple-600"
     },
     {
       icon: Code,
       title: "Technology Excellence",
       description: "We leverage cutting-edge tools and platforms to deliver enterprise-grade solutions to businesses of all sizes.",
-      gradient: "from-fuchsia-500 to-violet-600"
+      gradient: "from-purple-500 to-fuchsia-600"
     }
   ];
 
@@ -77,7 +77,7 @@ export const DigeratiProtectEnableSection = (): JSX.Element => {
       {/* Background decoration */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-100/50 rounded-full blur-[150px]" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-100/50 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-fuchsia-100/50 rounded-full blur-[150px]" />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -89,7 +89,7 @@ export const DigeratiProtectEnableSection = (): JSX.Element => {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6 text-gray-900">
-            We Exist to <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">Protect and Enable</span> Your Business
+            We Exist to <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">Protect and Enable</span> Your Business
           </h2>
           <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
             If you're like most business leaders, you don't want another vendor — you want a security-first partner 

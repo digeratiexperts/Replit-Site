@@ -26,9 +26,9 @@ export default function Accessibility() {
 
   const supportedUsers = [
     { icon: Eye, text: "Blind or have low vision", color: "from-violet-500 to-purple-600" },
-    { icon: Ear, text: "Deaf or have hearing loss", color: "from-purple-500 to-indigo-600" },
-    { icon: Hand, text: "Living with mobility impairments", color: "from-green-500 to-emerald-600" },
-    { icon: Brain, text: "Living with cognitive disabilities", color: "from-amber-500 to-orange-600" }
+    { icon: Ear, text: "Deaf or have hearing loss", color: "from-purple-500 to-fuchsia-600" },
+    { icon: Hand, text: "Living with mobility impairments", color: "from-fuchsia-500 to-pink-600" },
+    { icon: Brain, text: "Living with cognitive disabilities", color: "from-purple-600 to-violet-600" }
   ];
 
   return (
@@ -111,7 +111,7 @@ export default function Accessibility() {
           
           <div className="relative">
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center">
                 <Eye className="w-6 h-6 text-white" />
               </div>
               <h2 className="text-3xl font-bold text-white">Accessibility Features</h2>
@@ -128,7 +128,7 @@ export default function Accessibility() {
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.05, duration: 0.3 }}
                 >
-                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                  <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
                   <span className="text-gray-300">{feature}</span>
                 </motion.div>
               ))}
@@ -150,7 +150,7 @@ export default function Accessibility() {
               return (
                 <Card key={idx} className="group bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 hover:shadow-xl transition-all duration-300 text-center">
                   <CardContent className="pt-6">
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                       <Icon className="h-7 w-7 text-white" />
                     </div>
                     <p className="text-gray-300 text-sm">{tech.name}</p>
@@ -228,7 +228,7 @@ export default function Accessibility() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600" />
+          <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600" />
           <div className="absolute inset-0 opacity-20">
             <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
               <defs>

@@ -8,9 +8,9 @@ export default function TrustCenter() {
   const prefersReducedMotion = useReducedMotion() ?? false;
   
   const certifications = [
-    { icon: Award, title: "SOC 2 Type II", desc: "Independently audited security controls for Service Organization Control", status: "Certified", gradient: "from-purple-500 to-indigo-600" },
-    { icon: FileCheck, title: "HIPAA Compliant", desc: "Business Associate Agreements available for healthcare clients", status: "Compliant", gradient: "from-indigo-500 to-blue-600" },
-    { icon: Lock, title: "PCI DSS", desc: "Payment Card Industry Data Security Standard compliance", status: "Compliant", gradient: "from-violet-500 to-purple-600" }
+    { icon: Award, title: "SOC 2 Type II", desc: "Independently audited security controls for Service Organization Control", status: "Certified", gradient: "from-violet-500 to-purple-600" },
+    { icon: FileCheck, title: "HIPAA Compliant", desc: "Business Associate Agreements available for healthcare clients", status: "Compliant", gradient: "from-purple-500 to-fuchsia-600" },
+    { icon: Lock, title: "PCI DSS", desc: "Payment Card Industry Data Security Standard compliance", status: "Compliant", gradient: "from-fuchsia-500 to-pink-600" }
   ];
 
   const technicalControls = [
@@ -74,7 +74,7 @@ export default function TrustCenter() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-gray-400 mb-4 leading-relaxed">{cert.desc}</p>
-                    <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+                    <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
                       <CheckCircle className="w-3 h-3 mr-1" />
                       {cert.status}
                     </Badge>
@@ -97,7 +97,7 @@ export default function TrustCenter() {
           
           <div className="relative">
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center">
                 <Lock className="w-6 h-6 text-white" />
               </div>
               <h2 className="text-3xl font-bold text-white">Our Security Practices</h2>
@@ -119,7 +119,7 @@ export default function TrustCenter() {
                       viewport={{ once: true }}
                       transition={{ delay: idx * 0.05, duration: 0.3 }}
                     >
-                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                      <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
                       <span className="text-gray-300">{control}</span>
                     </motion.div>
                   ))}
@@ -140,7 +140,7 @@ export default function TrustCenter() {
                       viewport={{ once: true }}
                       transition={{ delay: idx * 0.05, duration: 0.3 }}
                     >
-                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                      <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
                       <span className="text-gray-300">{control}</span>
                     </motion.div>
                   ))}
@@ -159,7 +159,7 @@ export default function TrustCenter() {
           transition={{ duration: 0.5 }}
         >
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center">
               <Server className="w-5 h-5 text-white" />
             </div>
             <h2 className="text-2xl font-bold text-white">Infrastructure Security</h2>
@@ -189,7 +189,7 @@ export default function TrustCenter() {
           transition={{ duration: 0.5 }}
         >
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center">
               <Eye className="w-5 h-5 text-white" />
             </div>
             <h2 className="text-2xl font-bold text-white">Privacy & Data Protection</h2>
@@ -218,7 +218,7 @@ export default function TrustCenter() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600" />
+          <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600" />
           <div className="absolute inset-0 opacity-20">
             <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
               <defs>
