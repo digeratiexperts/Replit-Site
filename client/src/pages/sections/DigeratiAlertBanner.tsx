@@ -50,7 +50,10 @@ export const DigeratiAlertBanner = (): JSX.Element => {
 
   return (
     <section 
-      className="py-20 relative overflow-hidden bg-[#0a0a0a]"
+      className="py-20 relative overflow-hidden"
+      style={{
+        background: 'linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 50%, #E2E8F0 100%)'
+      }}
     >
       {/* Subtle purple glow */}
       <div 
@@ -66,13 +69,13 @@ export const DigeratiAlertBanner = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-white">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-gray-900">
             We Exist to Protect and Enable Your Business
           </h2>
-          <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
             If you're like most business leaders, you don't want another vendor — you want a security-first partner who proactively reduces risk, improves uptime, and keeps your team moving.
           </p>
-          <p className="text-lg text-gray-400 max-w-3xl mx-auto mt-4">
+          <p className="text-lg text-gray-500 max-w-3xl mx-auto mt-4">
             Digerati Experts brings managed IT, cybersecurity, and compliance together in one streamlined operation – built for results, not noise.
           </p>
         </motion.div>
@@ -92,15 +95,15 @@ export const DigeratiAlertBanner = (): JSX.Element => {
               className="group relative"
             >
               {/* Card */}
-              <div className="relative bg-white/[0.03] border border-white/10 rounded-2xl p-6 h-full hover:border-violet-500/30 hover:bg-white/[0.05] transition-all duration-300">
+              <div className="relative bg-white border border-gray-200 rounded-2xl p-6 h-full shadow-sm hover:border-violet-300 hover:shadow-lg hover:shadow-violet-500/10 transition-all duration-300">
                 {/* Icon */}
-                <div className="w-12 h-12 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center mb-5">
-                  <feature.icon className="h-6 w-6 text-violet-400" />
+                <div className="w-12 h-12 rounded-xl bg-violet-100 border border-violet-200 flex items-center justify-center mb-5">
+                  <feature.icon className="h-6 w-6 text-violet-600" />
                 </div>
                 
                 {/* Content */}
-                <h3 className="text-xl font-semibold text-white mb-3">{feature.title}</h3>
-                <p className="text-white/60 leading-relaxed">{feature.description}</p>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
               </div>
             </motion.div>
           ))}

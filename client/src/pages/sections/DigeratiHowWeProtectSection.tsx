@@ -55,12 +55,15 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
 
   return (
     <section 
-      className="py-20 relative overflow-hidden bg-[#0a0a0a]"
+      className="py-20 relative overflow-hidden"
+      style={{
+        background: 'linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 50%, #E2E8F0 100%)'
+      }}
     >
       {/* Subtle purple glow */}
       <div 
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] pointer-events-none"
-        style={{ background: "radial-gradient(ellipse, rgba(139, 92, 246, 0.08) 0%, transparent 60%)" }}
+        style={{ background: "radial-gradient(ellipse, rgba(139, 92, 246, 0.06) 0%, transparent 60%)" }}
       />
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -71,10 +74,10 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-4">
             How We Protect Your Business
           </h2>
-          <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
             Our proven 4-step process ensures your business stays secure and compliant
           </p>
         </motion.div>
@@ -87,7 +90,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
           viewport={{ once: true, margin: "-100px" }}
         >
           {/* Vertical Timeline Line */}
-          <div className="absolute left-8 md:left-12 top-0 bottom-0 w-1 bg-gradient-to-b from-violet-500 via-purple-500 to-fuchsia-500 rounded-full" />
+          <div className="absolute left-8 md:left-12 top-0 bottom-0 w-1 bg-gradient-to-b from-violet-500 via-purple-500 to-fuchsia-500 rounded-full shadow-lg shadow-violet-500/30" />
 
           {/* Timeline Steps */}
           <div className="space-y-8 md:space-y-12">
@@ -104,9 +107,9 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
                     className="w-16 h-16 md:w-24 md:h-24 rounded-full flex items-center justify-center relative"
                   >
                     {/* Gradient Border */}
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 p-[2px]">
-                      <div className="w-full h-full rounded-full bg-[#0a0a0a] flex items-center justify-center">
-                        <span className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 p-[2px] shadow-lg shadow-violet-500/30">
+                      <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+                        <span className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 bg-clip-text text-transparent">
                           {step.number}
                         </span>
                       </div>
@@ -116,14 +119,14 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
 
                 {/* Step Card */}
                 <motion.div 
-                  className="flex-1 bg-white/[0.03] border border-white/10 rounded-xl p-6 md:p-8 transition-all duration-300 hover:border-violet-500/30 hover:bg-white/[0.05] group"
+                  className="flex-1 bg-white border border-gray-200 rounded-xl p-6 md:p-8 shadow-sm transition-all duration-300 hover:border-violet-300 hover:shadow-lg hover:shadow-violet-500/10 group"
                   whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <h3 className="text-xl md:text-2xl font-bold text-white mb-3 group-hover:text-violet-400 transition-all duration-300">
+                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 group-hover:text-violet-600 transition-all duration-300">
                     {step.title}
                   </h3>
-                  <p className="text-white/60 leading-relaxed">
+                  <p className="text-gray-600 leading-relaxed">
                     {step.description}
                   </p>
                 </motion.div>
