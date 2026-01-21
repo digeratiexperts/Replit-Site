@@ -373,7 +373,7 @@ export function MegaMenu() {
               </a>
 
             {/* Desktop Navigation - Only show at xl breakpoint and above */}
-            <div className="hidden xl:flex items-center space-x-1 mega-menu-nav">
+            <div className="hidden lg:flex items-center space-x-1 mega-menu-nav">
               {navItems.map((item, index) => (
                 <div
                   key={item.name}
@@ -627,12 +627,12 @@ export function MegaMenu() {
           </div>
 
           {/* Right Side Actions */}
-          <div className="flex items-center space-x-2 xl:space-x-4">
+          <div className="flex items-center space-x-2 lg:space-x-4">
             <a
               href="https://meet.digerati-experts.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden xl:inline-flex items-center justify-center bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white px-6 py-2 rounded-lg font-semibold shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(34,211,238,0.4)] transition-all focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[#0a0118] border border-white/10"
+              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white px-4 lg:px-6 py-2 rounded-lg text-sm xl:text-base font-semibold shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(34,211,238,0.4)] transition-all focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-[#0a0118] border border-white/10"
               data-testid="nav-cta"
               onClick={handleLinkClick}
               aria-label="Get protected now - Schedule a consultation"
@@ -642,7 +642,7 @@ export function MegaMenu() {
 
             {/* Mobile/Tablet Menu Button */}
             <button
-              className="xl:hidden relative p-2.5 rounded-xl bg-gradient-to-r from-purple-600/20 to-cyan-600/20 hover:from-purple-600/30 hover:to-cyan-600/30 focus:outline-none focus:ring-2 focus:ring-cyan-400 border border-white/10 hover:border-white/20 transition-all group"
+              className="lg:hidden relative p-2.5 rounded-xl bg-gradient-to-r from-purple-600/20 to-cyan-600/20 hover:from-purple-600/30 hover:to-cyan-600/30 focus:outline-none focus:ring-2 focus:ring-cyan-400 border border-white/10 hover:border-white/20 transition-all group"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               data-testid="mobile-menu-toggle"
               aria-expanded={mobileMenuOpen}
@@ -660,7 +660,7 @@ export function MegaMenu() {
 
         {/* Mobile/Tablet Menu - Premium Glassmorphism Slide-out */}
         <div 
-          className={`xl:hidden fixed left-0 right-0 z-40 transition-all duration-500 ${
+          className={`lg:hidden fixed left-0 right-0 z-40 transition-all duration-500 ${
             mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
           }`}
           style={{ 

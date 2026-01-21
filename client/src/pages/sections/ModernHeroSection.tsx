@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Shield, Zap, Clock, CheckCircle, Building, FileCheck, ShieldCheck, Award, Apple, Check, Loader2 } from "lucide-react";
+import { ArrowRight, Shield, Zap, Clock, CheckCircle, Building, FileCheck, ShieldCheck, Award, Apple, Check, Loader2 } from "lucide-react";
 import { AnimatedShield, NetworkNodes, FloatingParticles, DashboardMockup } from "@/components/graphics";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -62,7 +62,8 @@ export const ModernHeroSection = (): JSX.Element => {
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 150]);
-  const opacity = useTransform(scrollYProgress, isMobile ? [0, 1] : [0, 0.85], [1, 0]);
+  // Keep opacity at 1 - no scroll-based fade effect
+  const opacity = 1;
 
   const stats = [
     { icon: Shield, value: "99.9%", label: "Uptime SLA", delay: 0 },
@@ -96,9 +97,9 @@ export const ModernHeroSection = (): JSX.Element => {
       id="home" 
       className="relative min-h-screen overflow-hidden"
     >
-      {/* Lighter gradient background - more inviting */}
+      {/* Lighter gradient background - more inviting and visible */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1a1035] via-[#2d1f4e] to-[#1a1035]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1f1445] via-[#362560] to-[#1f1445]" />
         
         {/* Large gradient orbs */}
         <motion.div
@@ -171,10 +172,10 @@ export const ModernHeroSection = (): JSX.Element => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              {/* Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-purple-500/30 bg-purple-500/10 backdrop-blur-sm w-fit">
-                <Sparkles className="w-4 h-4 text-purple-400" />
-                <span className="text-sm text-purple-300">Arizona's Trusted Cybersecurity Partner</span>
+              {/* Trust Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 backdrop-blur-sm w-fit">
+                <ShieldCheck className="w-4 h-4 text-cyan-400" />
+                <span className="text-sm text-cyan-300">SOC 2 Compliant | Serving Arizona businesses since 2019</span>
               </div>
 
               {/* Headline */}
@@ -243,7 +244,7 @@ export const ModernHeroSection = (): JSX.Element => {
                               <Input 
                                 placeholder="John Smith" 
                                 data-testid="input-hero-full-name"
-                                className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus-visible:ring-purple-500 h-12"
+                                className="bg-slate-800 border-slate-600 text-white placeholder:text-gray-400 focus-visible:ring-purple-500 h-12"
                                 disabled={isSubmitting}
                                 {...field} 
                               />
@@ -264,7 +265,7 @@ export const ModernHeroSection = (): JSX.Element => {
                                 type="email" 
                                 placeholder="john@company.com" 
                                 data-testid="input-hero-email"
-                                className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus-visible:ring-purple-500 h-12"
+                                className="bg-slate-800 border-slate-600 text-white placeholder:text-gray-400 focus-visible:ring-purple-500 h-12"
                                 disabled={isSubmitting}
                                 {...field} 
                               />
