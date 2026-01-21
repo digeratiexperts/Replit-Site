@@ -53,7 +53,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
 
   return (
     <section 
-      className="py-[60px] bg-[#F7FAFC] relative overflow-hidden"
+      className="py-10 bg-[#F7FAFC] relative overflow-hidden"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 

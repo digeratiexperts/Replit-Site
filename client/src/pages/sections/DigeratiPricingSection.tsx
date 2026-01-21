@@ -71,7 +71,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
   return (
     <section 
       id="pricing" 
-      className="relative py-[60px] bg-[#F7FAFC] overflow-hidden"
+      className="relative py-[60px] bg-[#2D3748] overflow-hidden"
     >
       
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
@@ -82,12 +82,12 @@ export const DigeratiPricingSection = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-[#1A202C]">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-white">
             ProActive Ecosystem Pricing
           </h2>
-          <p className="text-lg md:text-xl text-[#4A5568] leading-relaxed max-w-3xl mx-auto">
-            Clear, predictable, and compliance-ready. Packages start at <span className="font-bold text-purple-600">$165 per user/month</span>. 
-            A <span className="font-bold text-purple-600">$1,200/site minimum</span> applies for offices with 5+ users.
+          <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
+            Clear, predictable, and compliance-ready. Packages start at <span className="font-bold text-cyan-400">$165 per user/month</span>. 
+            A <span className="font-bold text-cyan-400">$1,200/site minimum</span> applies for offices with 5+ users.
           </p>
         </motion.div>
 
@@ -157,7 +157,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
         </motion.div>
 
         <motion.div 
-          className="mt-8 text-center text-sm text-[#718096]"
+          className="mt-8 text-center text-sm text-gray-400"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -178,7 +178,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
             <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
               <Button 
                 size="lg" 
-                className="border-2 border-purple-600 text-purple-600 bg-transparent hover:bg-purple-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 transition-all duration-200"
+                className="border-2 border-white/40 text-white bg-transparent hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 transition-all duration-200"
                 variant="outline"
                 data-testid="button-book-intro-call"
               >
@@ -188,7 +188,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
             <a href="/quote-wizard">
               <Button 
                 size="lg" 
-                className="border-2 border-purple-600 text-purple-600 bg-transparent hover:bg-purple-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 transition-all duration-200"
+                className="border-2 border-white/40 text-white bg-transparent hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 transition-all duration-200"
                 variant="outline"
                 data-testid="button-see-pricing"
               >

@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Phone, Sparkles, Shield, Zap, Clock, CheckCircle, Building, FileCheck, ShieldCheck, Award, Apple, Check } from "lucide-react";
+import { ArrowRight, Sparkles, Shield, Zap, Clock, CheckCircle, Building, FileCheck, ShieldCheck, Award, Apple, Check } from "lucide-react";
 import { AnimatedShield, NetworkNodes, FloatingParticles, DashboardMockup } from "@/components/graphics";
 
 export const ModernHeroSection = (): JSX.Element => {
@@ -43,10 +43,10 @@ export const ModernHeroSection = (): JSX.Element => {
     { name: "Apple Consultants", icon: Apple },
   ];
 
-  const handleScrollToForm = () => {
-    const formElement = document.getElementById('assessment-form');
-    if (formElement) {
-      formElement.scrollIntoView({ behavior: 'smooth' });
+  const handleScrollToCalculator = () => {
+    const calculatorElement = document.getElementById('calculators');
+    if (calculatorElement) {
+      calculatorElement.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -56,9 +56,9 @@ export const ModernHeroSection = (): JSX.Element => {
       id="home" 
       className="relative min-h-screen overflow-hidden"
     >
-      {/* Animated gradient mesh background */}
+      {/* Lighter gradient background - more inviting */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0118] via-[#1a0a2e] to-[#0f0720]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1a1035] via-[#2d1f4e] to-[#1a1035]" />
         
         {/* Large gradient orbs */}
         <motion.div
@@ -182,7 +182,7 @@ export const ModernHeroSection = (): JSX.Element => {
                 ))}
               </div>
 
-              {/* CTA Buttons */}
+              {/* CTA Button - Single Primary Action */}
               <motion.div
                 className="flex flex-col sm:flex-row gap-4 mt-2"
                 initial={{ opacity: 0, y: 20 }}
@@ -191,22 +191,12 @@ export const ModernHeroSection = (): JSX.Element => {
               >
                 <Button 
                   size="lg"
-                  data-testid="button-hero-assessment"
-                  onClick={handleScrollToForm}
-                  className="h-14 px-8 text-lg font-bold bg-purple-600 hover:bg-purple-700 text-white border-0 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300 justify-center gap-2"
+                  data-testid="button-hero-risk-level"
+                  onClick={handleScrollToCalculator}
+                  className="h-16 px-10 text-xl font-bold bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white border-0 shadow-xl shadow-orange-500/30 hover:shadow-orange-500/50 transition-all duration-300 justify-center gap-3"
                 >
-                  Get Free Assessment
-                  <ArrowRight className="w-5 h-5" />
-                </Button>
-                <Button 
-                  size="lg"
-                  variant="outline"
-                  data-testid="button-hero-call"
-                  className="h-14 px-8 text-lg font-medium border-2 border-white/30 text-white bg-transparent hover:bg-white/10 hover:border-white/50 transition-all duration-300 gap-2"
-                  onClick={() => window.location.href = 'tel:325-480-9870'}
-                >
-                  <Phone className="w-5 h-5" />
-                  Call 325-480-9870
+                  See Your Risk Level
+                  <ArrowRight className="w-6 h-6" />
                 </Button>
               </motion.div>
 
