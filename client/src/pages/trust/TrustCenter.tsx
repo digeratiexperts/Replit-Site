@@ -106,7 +106,7 @@ export default function TrustCenter() {
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-purple-400" />
+                  <Shield className="w-5 h-5 text-violet-400" />
                   Technical Controls
                 </h3>
                 <div className="space-y-3">
@@ -127,7 +127,7 @@ export default function TrustCenter() {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                  <FileCheck className="w-5 h-5 text-purple-400" />
+                  <FileCheck className="w-5 h-5 text-violet-400" />
                   Administrative Controls
                 </h3>
                 <div className="space-y-3">
