@@ -59,11 +59,9 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
         background: 'linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 50%, #E2E8F0 100%)'
       }}
     >
-      {/* Diagonal clip from dark section above */}
-      <DiagonalDivider position="top" toColor="#0a0a0a" height={80} angle="right" />
-      
-      {/* Diagonal clip to dark section below */}
-      <DiagonalDivider position="bottom" toColor="#0a0a0a" height={80} angle="left" />
+      {/* Diagonal transitions with violet accent */}
+      <DiagonalDivider position="top" toColor="#0a0a0a" height={100} angle="right" />
+      <DiagonalDivider position="bottom" toColor="#0a0a0a" height={100} angle="right" />
       
       {/* Subtle pattern overlay for texture */}
       <PatternOverlay variant="dots" opacity={0.03} />

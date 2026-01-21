@@ -90,21 +90,29 @@ interface DiagonalDividerProps {
   toColor?: string;
   height?: number;
   angle?: "left" | "right";
+  accent?: boolean;
 }
 
 export const DiagonalDivider = ({ 
   position = "bottom",
-  toColor = "#F7FAFC",
+  toColor = "#0a0a0a",
   height = 100,
-  angle = "left"
+  angle = "left",
+  accent = true
 }: DiagonalDividerProps) => {
-  const points = angle === "left" 
+  // Main diagonal fill
+  const mainPoints = angle === "left" 
     ? "0,0 100,100 0,100" 
     : "0,100 100,0 100,100";
   
+  // Thin accent stripe offset (creates the cool line effect)
+  const stripePoints = angle === "left"
+    ? "0,0 100,96 100,100 0,4"
+    : "0,96 100,0 100,4 0,100";
+  
   return (
     <div 
-      className={`absolute left-0 right-0 overflow-hidden pointer-events-none z-0 ${position === "top" ? "top-0" : "bottom-0"}`}
+      className={`absolute left-0 right-0 overflow-hidden pointer-events-none z-10 ${position === "top" ? "top-0" : "bottom-0"}`}
       style={{ height: `${height}px` }}
     >
       <svg
@@ -112,7 +120,25 @@ export const DiagonalDivider = ({
         preserveAspectRatio="none"
         className="absolute w-full h-full"
       >
-        <polygon points={points} fill={toColor} />
+        {/* Define gradient for accent stripe */}
+        <defs>
+          <linearGradient id={`diagonalAccent-${position}-${angle}`} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="rgba(139, 92, 246, 0)" />
+            <stop offset="30%" stopColor="rgba(139, 92, 246, 0.5)" />
+            <stop offset="50%" stopColor="rgba(139, 92, 246, 0.7)" />
+            <stop offset="70%" stopColor="rgba(139, 92, 246, 0.5)" />
+            <stop offset="100%" stopColor="rgba(139, 92, 246, 0)" />
+          </linearGradient>
+        </defs>
+        {/* Main fill */}
+        <polygon points={mainPoints} fill={toColor} />
+        {/* Accent stripe */}
+        {accent && (
+          <polygon 
+            points={stripePoints} 
+            fill={`url(#diagonalAccent-${position}-${angle})`}
+          />
+        )}
       </svg>
     </div>
   );
