@@ -3,6 +3,7 @@ import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooterSection";
 import { Button } from "@/components/ui/button";
 import { Headphones, Wifi, Monitor, Activity, RefreshCw, Shield, ArrowRight } from "lucide-react";
+import { FloatingParticles } from "@/components/graphics";
 
 const ProActiveEcosystemPricing = () => {
   const prefersReducedMotion = useReducedMotion();
@@ -87,30 +88,81 @@ const ProActiveEcosystemPricing = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#050312]">
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Animated background matching site style */}
+      <div className="fixed inset-0 bg-gradient-to-br from-[#0a0118] via-[#0d0720] to-[#050312]">
+        {/* Large animated gradient orbs */}
+        <motion.div
+          className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full"
+          style={{
+            background: "radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, rgba(139, 92, 246, 0) 60%)",
+          }}
+          animate={prefersReducedMotion ? {} : {
+            scale: [1, 1.15, 1],
+            x: [0, 50, 0],
+            y: [0, 30, 0],
+          }}
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-[-10%] left-[-15%] w-[700px] h-[700px] rounded-full"
+          style={{
+            background: "radial-gradient(circle, rgba(34, 211, 238, 0.2) 0%, rgba(34, 211, 238, 0) 60%)",
+          }}
+          animate={prefersReducedMotion ? {} : {
+            scale: [1.1, 1, 1.1],
+            x: [0, -40, 0],
+            y: [0, -50, 0],
+          }}
+          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute top-[30%] left-[60%] w-[500px] h-[500px] rounded-full"
+          style={{
+            background: "radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, rgba(236, 72, 153, 0) 60%)",
+          }}
+          animate={prefersReducedMotion ? {} : {
+            scale: [1, 1.2, 1],
+            x: [0, 80, 0],
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+        />
+        
+        {/* Grid overlay */}
+        <div 
+          className="absolute inset-0 opacity-[0.07]"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px)
+            `,
+            backgroundSize: "60px 60px",
+          }}
+        />
+        
+        {/* Floating particles */}
+        <FloatingParticles count={25} />
+      </div>
+      
       <MegaMenu />
       
-      <main className="pt-24 pb-16">
+      <main className="relative z-10 pt-24 pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            className="rounded-3xl p-6 sm:p-8 lg:p-10 border border-white/10 relative overflow-hidden"
+            className="rounded-3xl p-6 sm:p-8 lg:p-10 border border-white/10 relative overflow-hidden backdrop-blur-xl"
             style={{
-              background: `
-                radial-gradient(900px 420px at 12% 8%, rgba(39,202,242,0.18), transparent 55%),
-                radial-gradient(900px 420px at 88% 18%, rgba(179,0,255,0.16), transparent 55%),
-                radial-gradient(900px 420px at 70% 92%, rgba(0,86,245,0.14), transparent 55%),
-                linear-gradient(135deg, rgba(7,8,19,0.92), rgba(7,8,19,0.70))
-              `,
-              boxShadow: '0 18px 60px rgba(0,0,0,0.35)'
+              background: 'linear-gradient(135deg, rgba(15, 15, 35, 0.85), rgba(10, 10, 25, 0.9))',
+              boxShadow: '0 25px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)'
             }}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
+            {/* Gradient border glow */}
             <div 
-              className="absolute -inset-0.5 rounded-3xl opacity-30 blur-xl pointer-events-none"
+              className="absolute -inset-[1px] rounded-3xl opacity-40 blur-sm pointer-events-none"
               style={{
-                background: 'linear-gradient(90deg, rgba(39,202,242,0.45), rgba(0,86,245,0.35), rgba(179,0,255,0.40), rgba(206,15,181,0.35))'
+                background: 'linear-gradient(135deg, rgba(34,211,238,0.5), rgba(139,92,246,0.5), rgba(236,72,153,0.5))'
               }}
             />
 
