@@ -281,7 +281,7 @@ export const ModernHeroSection = (): JSX.Element => {
                       size="lg"
                       data-testid="button-hero-submit"
                       disabled={isSubmitting}
-                      className="w-full sm:w-auto h-14 px-10 text-lg font-bold bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white border-0 shadow-xl shadow-orange-500/30 hover:shadow-orange-500/50 transition-all duration-300"
+                      className="w-full sm:w-auto h-14 px-10 text-lg font-bold bg-white hover:bg-gray-100 text-purple-700 border-0 shadow-xl shadow-white/20 hover:shadow-white/40 transition-all duration-300"
                     >
                       {isSubmitting ? (
                         <>
@@ -300,24 +300,30 @@ export const ModernHeroSection = (): JSX.Element => {
               </motion.div>
 
               {/* Reassurance microcopy */}
-              <div className="flex flex-wrap items-center gap-5 text-gray-300 mt-4">
-                <div className="flex items-center gap-1.5">
-                  <Check className="w-4 h-4 text-green-400" />
-                  <span className="text-sm">No obligation</span>
+              <div className="flex flex-wrap items-center gap-6 mt-5">
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
+                    <Check className="w-3 h-3 text-green-400" />
+                  </div>
+                  <span className="text-sm text-white/90 font-medium">No obligation</span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <Check className="w-4 h-4 text-green-400" />
-                  <span className="text-sm">Results in 24-48hrs</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
+                    <Check className="w-3 h-3 text-green-400" />
+                  </div>
+                  <span className="text-sm text-white/90 font-medium">Results in 24-48hrs</span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <Check className="w-4 h-4 text-green-400" />
-                  <span className="text-sm">No credit card</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
+                    <Check className="w-3 h-3 text-green-400" />
+                  </div>
+                  <span className="text-sm text-white/90 font-medium">No credit card</span>
                 </div>
               </div>
               
               {/* Phone alternative */}
-              <div className="text-gray-400 text-sm mt-3">
-                Prefer to call? <a href="tel:325-480-9870" className="text-cyan-400 hover:text-cyan-300 transition-colors" data-testid="link-hero-phone">325-480-9870</a>
+              <div className="text-white/80 text-sm mt-4">
+                Prefer to call? <a href="tel:325-480-9870" className="text-cyan-300 hover:text-cyan-200 font-semibold transition-colors" data-testid="link-hero-phone">325-480-9870</a>
               </div>
             </motion.div>
 
