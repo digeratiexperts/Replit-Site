@@ -19,6 +19,7 @@ import { DigeratiTestimonialsSection } from "./sections/DigeratiTestimonialsSect
 import { DigeratiFAQSection } from "./sections/DigeratiFAQSection";
 import { DigeratiCTASection } from "./sections/DigeratiCTASection";
 import { DigeratiNewsletterSection } from "./sections/DigeratiNewsletterSection";
+import { PremiumCTASection } from "@/components/PremiumCTASection";
 import { DigeratiContactSection } from "./sections/DigeratiContactSection";
 import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooterSection";
 
@@ -112,6 +113,12 @@ export const DigeratiHomepage = (): JSX.Element => {
 
       {/* Industries Section */}
       <DigeratiIndustriesSection />
+
+      {/* Premium CTA Section */}
+      <PremiumCTASection 
+        headline="Ready to Secure Your Business?"
+        subheadline="Get enterprise-grade protection tailored for Arizona businesses. Let's discuss your security needs."
+      />
 
       {/* Pricing Section */}
       <DigeratiPricingSection />

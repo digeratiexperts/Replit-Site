@@ -1,0 +1,120 @@
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowRight, Phone } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+interface PremiumCTASectionProps {
+  headline?: string;
+  subheadline?: string;
+  primaryButtonText?: string;
+  primaryButtonHref?: string;
+  showPhoneButton?: boolean;
+  phoneNumber?: string;
+}
+
+export function PremiumCTASection({
+  headline = "Ready to Learn More?",
+  subheadline = "Contact us today to discuss how we can help protect and enable your business.",
+  primaryButtonText = "Schedule Consultation",
+  primaryButtonHref = "https://meet.digerati-experts.com/",
+  showPhoneButton = true,
+  phoneNumber = "325-480-9870",
+}: PremiumCTASectionProps) {
+  const prefersReducedMotion = useReducedMotion();
+
+  return (
+    <section className="py-16 md:py-20 px-4 bg-[#0a0a0a]">
+      <div className="max-w-5xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="relative rounded-3xl overflow-hidden"
+        >
+          {/* Gradient Background */}
+          <div 
+            className="absolute inset-0"
+            style={{
+              background: "linear-gradient(135deg, #7c3aed 0%, #a855f7 35%, #c026d3 70%, #a855f7 100%)",
+            }}
+          />
+          
+          {/* Grid Pattern Overlay */}
+          <div 
+            className="absolute inset-0 opacity-20"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+              `,
+              backgroundSize: "40px 40px",
+            }}
+          />
+          
+          {/* Glow Effects */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-fuchsia-500/30 rounded-full blur-3xl" />
+          
+          {/* Content */}
+          <div className="relative z-10 px-8 py-12 md:px-16 md:py-16 text-center">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4"
+            >
+              {headline}
+            </motion.h2>
+            
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-8"
+            >
+              {subheadline}
+            </motion.p>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            >
+              <a href={primaryButtonHref} target="_blank" rel="noopener noreferrer">
+                <Button 
+                  size="lg"
+                  className="h-14 px-8 bg-white text-violet-700 hover:bg-white/90 font-semibold text-base rounded-full shadow-lg shadow-black/20"
+                  data-testid="button-premium-cta-primary"
+                >
+                  <ArrowRight className="mr-2 h-5 w-5" />
+                  {primaryButtonText}
+                </Button>
+              </a>
+              
+              {showPhoneButton && (
+                <a href={`tel:${phoneNumber}`}>
+                  <Button 
+                    variant="outline"
+                    size="lg"
+                    className="h-14 px-8 bg-transparent border-2 border-white/40 text-white hover:bg-white/10 hover:border-white/60 font-semibold text-base rounded-full"
+                    data-testid="button-premium-cta-phone"
+                  >
+                    <Phone className="mr-2 h-5 w-5" />
+                    Call {phoneNumber}
+                  </Button>
+                </a>
+              )}
+            </motion.div>
+          </div>
+          
+          {/* Border Glow */}
+          <div className="absolute inset-0 rounded-3xl border border-white/20 pointer-events-none" />
+        </motion.div>
+      </div>
+    </section>
+  );
+}
