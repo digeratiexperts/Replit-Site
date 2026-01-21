@@ -6,6 +6,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import { lazy, Suspense } from "react";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { ScrollProgress } from "@/components/ScrollProgress";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { PageLoadingSkeleton } from "@/components/LoadingSkeleton";
+import { AnnouncerProvider } from "@/components/AccessibleAnnouncer";
 import { useGlobalShortcuts } from "@/hooks/useKeyboardShortcuts";
 
 import { DigeratiHomepage } from "@/pages/DigeratiHomepage";
@@ -98,18 +102,18 @@ function Router() {
       
       {/* Solutions Pages */}
       <Route path="/solutions" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <SolutionsIndex />
         </Suspense>
       )} />
       <Route path="/solutions/managed-it-support" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <ManagedITSupport />
         </Suspense>
       )} />
       {Object.entries(servicePageData).map(([key, data]) => (
         <Route key={key} path={`/solutions/${key}`} component={() => (
-          <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <Suspense fallback={<PageLoadingSkeleton />}>
             <GenericServicePage {...data} />
           </Suspense>
         )} />
@@ -117,33 +121,33 @@ function Router() {
       
       {/* Industries Pages */}
       <Route path="/industries/healthcare" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <Healthcare />
         </Suspense>
       )} />
       <Route path="/industries/accounting-finance" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <Accounting />
         </Suspense>
       )} />
       <Route path="/industries/law-firms" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <LawFirms />
         </Suspense>
       )} />
       <Route path="/industries/real-estate" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <RealEstate />
         </Suspense>
       )} />
       <Route path="/industries/nonprofits" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <Nonprofits />
         </Suspense>
       )} />
       {Object.entries(industryPageData).map(([key, data]) => (
         <Route key={key} path={`/industries/${key}`} component={() => (
-          <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <Suspense fallback={<PageLoadingSkeleton />}>
             <GenericServicePage {...data} />
           </Suspense>
         )} />
@@ -151,43 +155,43 @@ function Router() {
       
       {/* Resources Pages */}
       <Route path="/resources/case-studies" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <CaseStudies />
         </Suspense>
       )} />
       <Route path="/resources/blog" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <Blog />
         </Suspense>
       )} />
       <Route path="/resources/security-updates" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <SecurityUpdates />
         </Suspense>
       )} />
       <Route path="/resources/videos" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <Videos />
         </Suspense>
       )} />
       <Route path="/resources/security-checklist" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <SecurityChecklist />
         </Suspense>
       )} />
       <Route path="/resources/datasheets" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <Datasheets />
         </Suspense>
       )} />
       <Route path="/resources/downtime-calculator" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <DowntimeCalculator />
         </Suspense>
       )} />
       {Object.entries(resourcePageData).map(([key, data]) => (
         <Route key={key} path={`/resources/${key}`} component={() => (
-          <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <Suspense fallback={<PageLoadingSkeleton />}>
             <GenericServicePage {...data} />
           </Suspense>
         )} />
@@ -195,55 +199,55 @@ function Router() {
       
       {/* About Pages */}
       <Route path="/about/mission-values" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <MissionValues />
         </Suspense>
       )} />
       <Route path="/about/team" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <Team />
         </Suspense>
       )} />
       <Route path="/about/compliance" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <Compliance />
         </Suspense>
       )} />
       <Route path="/about/support" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <SupportPage />
         </Suspense>
       )} />
       <Route path="/about/insurance" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <Insurance />
         </Suspense>
       )} />
       
       {/* Support Pages */}
       <Route path="/support/submit-ticket" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <SubmitTicket />
         </Suspense>
       )} />
       <Route path="/support/knowledge-base" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <KnowledgeBase />
         </Suspense>
       )} />
       <Route path="/support/remote-support" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <RemoteSupport />
         </Suspense>
       )} />
       <Route path="/support/pay-invoice" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PayInvoice />
         </Suspense>
       )} />
       {Object.entries(supportPageData).map(([key, data]) => (
         <Route key={key} path={`/support/${key}`} component={() => (
-          <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <Suspense fallback={<PageLoadingSkeleton />}>
             <GenericServicePage {...data} />
           </Suspense>
         )} />
@@ -251,133 +255,133 @@ function Router() {
       
       {/* Legal Pages */}
       <Route path="/legal/privacy-policy" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PrivacyPolicy />
         </Suspense>
       )} />
       <Route path="/legal/terms-of-use" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <TermsOfUse />
         </Suspense>
       )} />
       <Route path="/legal/msa" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <MSA />
         </Suspense>
       )} />
       <Route path="/legal/sla" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <SLA />
         </Suspense>
       )} />
       <Route path="/legal/aup" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <AUP />
         </Suspense>
       )} />
       <Route path="/legal/dpa" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <DPA />
         </Suspense>
       )} />
       <Route path="/legal/sample-sow" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <SampleSOW />
         </Suspense>
       )} />
       
       {/* Trust Pages */}
       <Route path="/trust/trust-center" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <TrustCenter />
         </Suspense>
       )} />
       <Route path="/trust/vulnerability-disclosure" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <VulnerabilityDisclosure />
         </Suspense>
       )} />
       <Route path="/trust/accessibility" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <Accessibility />
         </Suspense>
       )} />
       
       {/* Location Pages */}
       <Route path="/locations/chandler-az" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <ChandlerAZ />
         </Suspense>
       )} />
       <Route path="/locations/phoenix-az" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PhoenixAZ />
         </Suspense>
       )} />
       <Route path="/locations/mesa-az" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <MesaAZ />
         </Suspense>
       )} />
       <Route path="/locations/gilbert-az" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <GilbertAZ />
         </Suspense>
       )} />
       <Route path="/locations/tempe-az" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <TempeAZ />
         </Suspense>
       )} />
       <Route path="/locations/scottsdale-az" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <ScottsdalAZ />
         </Suspense>
       )} />
       
       {/* Portal Pages */}
       <Route path="/portal/login" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalLogin />
         </Suspense>
       )} />
       <Route path="/portal/signup" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalSignup />
         </Suspense>
       )} />
       <Route path="/portal/dashboard" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalDashboard />
         </Suspense>
       )} />
       <Route path="/portal/tickets" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalTickets />
         </Suspense>
       )} />
       <Route path="/portal/tickets/create" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalCreateTicket />
         </Suspense>
       )} />
       <Route path="/portal/tickets/:id" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalTicketDetail />
         </Suspense>
       )} />
       <Route path="/portal/services" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalServices />
         </Suspense>
       )} />
       <Route path="/portal/files" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalFiles />
         </Suspense>
       )} />
       <Route path="/portal/invoices" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalInvoices />
         </Suspense>
       )} />
@@ -388,7 +392,7 @@ function Router() {
           amount: "2600",
         };
         return (
-          <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <Suspense fallback={<PageLoadingSkeleton />}>
             <PortalPayment
               invoiceId={invoice.id}
               invoiceNumber={invoice.invoiceNumber}
@@ -398,121 +402,121 @@ function Router() {
         );
       }} />
       <Route path="/portal/kb" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalKB />
         </Suspense>
       )} />
       <Route path="/portal/status" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalStatus />
         </Suspense>
       )} />
       <Route path="/portal/learning" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalLearning />
         </Suspense>
       )} />
       <Route path="/portal/chat" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalChat />
         </Suspense>
       )} />
       <Route path="/portal/agent" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalAgent />
         </Suspense>
       )} />
       <Route path="/portal/settings" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalSettings />
         </Suspense>
       )} />
       <Route path="/portal/ship-center" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalShipCenter />
         </Suspense>
       )} />
       <Route path="/portal/procurement" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalProcurementStore />
         </Suspense>
       )} />
       <Route path="/portal/forms" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalAdvancedForms />
         </Suspense>
       )} />
       <Route path="/portal/surveys" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalSatisfactionSurvey />
         </Suspense>
       )} />
       <Route path="/portal/approvals" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalApprovals />
         </Suspense>
       )} />
       <Route path="/portal/vpn" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalVPN />
         </Suspense>
       )} />
       <Route path="/portal/cytracom" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalCytracom />
         </Suspense>
       )} />
       <Route path="/portal/questionnaires" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalQuestionnaireCalendar />
         </Suspense>
       )} />
       <Route path="/portal/admin/import" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <AdminImportPage />
         </Suspense>
       )} />
       <Route path="/portal/admin/agents" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <AdminAgentsPage />
         </Suspense>
       )} />
       <Route path="/portal/admin/openai" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <AdminOpenAIPage />
         </Suspense>
       )} />
       <Route path="/portal/admin/companies" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <AdminCompaniesPage />
         </Suspense>
       )} />
       <Route path="/portal/sales-process" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <SalesProcess />
         </Suspense>
       )} />
       
       {/* Lead Quote */}
       <Route path="/quote-wizard" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <LeadQuoteWizard />
         </Suspense>
       )} />
       <Route path="/quote-confirmation" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <QuoteConfirmation />
         </Suspense>
       )} />
       <Route path="/thank-you-success-page" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <ThankYouSuccess />
         </Suspense>
       )} />
       
       {/* ProActive Ecosystem Pricing */}
       <Route path="/proactive-ecosystem-pricing" component={() => (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+        <Suspense fallback={<PageLoadingSkeleton />}>
           <ProActiveEcosystemPricing />
         </Suspense>
       )} />
@@ -527,26 +531,29 @@ function AppContent() {
   useGlobalShortcuts();
   
   return (
-    <>
+    <AnnouncerProvider>
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
+      <ScrollProgress />
       <div id="main-content">
         <Router />
       </div>
       <ScrollToTop />
-    </>
+    </AnnouncerProvider>
   );
 }
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <AppContent />
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <AppContent />
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 
