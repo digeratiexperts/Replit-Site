@@ -120,16 +120,16 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
   ];
 
   const socialLinks = [
-    { name: "LinkedIn", href: "https://www.linkedin.com/company/digerati-experts", icon: Linkedin, testId: "footer-linkedin" },
-    { name: "Twitter", href: "https://twitter.com/digerati_experts", icon: Twitter, testId: "footer-twitter" },
-    { name: "Facebook", href: "https://www.facebook.com/digeratiexperts", icon: Facebook, testId: "footer-facebook" },
-    { name: "Instagram", href: "https://www.instagram.com/digerati.experts", icon: Instagram, testId: "footer-instagram" }
+    { name: "LinkedIn", href: "https://www.linkedin.com/company/digerati-experts", icon: Linkedin, testId: "footer-linkedin", color: "hover:bg-[#0077B5] hover:border-[#0077B5]" },
+    { name: "Twitter", href: "https://twitter.com/digerati_experts", icon: Twitter, testId: "footer-twitter", color: "hover:bg-[#1DA1F2] hover:border-[#1DA1F2]" },
+    { name: "Facebook", href: "https://www.facebook.com/digeratiexperts", icon: Facebook, testId: "footer-facebook", color: "hover:bg-[#1877F2] hover:border-[#1877F2]" },
+    { name: "Instagram", href: "https://www.instagram.com/digerati.experts", icon: Instagram, testId: "footer-instagram", color: "hover:bg-gradient-to-br hover:from-[#833AB4] hover:via-[#FD1D1D] hover:to-[#FCAF45] hover:border-[#833AB4]" }
   ];
 
   return (
-    <footer className="relative bg-[#0a0a0a] border-t border-white/10 overflow-hidden">
+    <footer className="relative bg-[#0f0f0f] border-t border-violet-500/20 overflow-hidden">
       <CircuitOverlay />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(139,92,246,0.06),transparent_50%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.08),transparent_50%)] pointer-events-none" />
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-16 max-w-[1440px] relative z-10">
         <div className="mb-12 pl-4 md:pl-8 lg:pl-0">
@@ -180,10 +180,10 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                   >
                     <span className="relative">
                       {item.name}
-                      <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-gradient-to-r from-purple-500 to-cyan-500 transition-all duration-300 group-hover/link:w-full" />
+                      <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-violet-500 transition-all duration-300 group-hover/link:w-full" />
                     </span>
                     {item.badge && (
-                      <span className="text-xs bg-gradient-to-r from-purple-600 to-cyan-600 text-white px-2 py-0.5 rounded-full">
+                      <span className="text-xs bg-violet-600 text-white px-2 py-0.5 rounded-full">
                         {item.badge}
                       </span>
                     )}
@@ -211,8 +211,8 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 mb-8 shadow-[0_0_40px_rgba(139,92,246,0.1)]">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
               <div className="flex items-start gap-4">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-purple-600/20 to-cyan-600/20 border border-white/10">
-                  <Shield className="h-6 w-6 text-purple-400" />
+                <div className="p-3 rounded-xl bg-violet-500/10 border border-violet-500/20">
+                  <Shield className="h-6 w-6 text-violet-400" />
                 </div>
                 <div>
                   <h3 className="text-white font-semibold mb-1 flex items-center gap-2 ">
@@ -230,7 +230,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                 href="https://meet.digerati-experts.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-semibold px-6 py-3 rounded-xl shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_40px_rgba(139,92,246,0.4)] whitespace-nowrap transition-all duration-300"
+                className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-semibold px-6 py-3 rounded-xl shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_40px_rgba(139,92,246,0.4)] whitespace-nowrap transition-all duration-300"
                 data-testid="footer-request-docs"
               >
                 Request Docs
@@ -287,7 +287,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                   />
                   <button
                     type="submit"
-                    className="px-6 py-3 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-semibold rounded-xl shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.4)] transition-all duration-300 flex items-center gap-2"
+                    className="px-6 py-3 bg-violet-600 hover:bg-violet-500 text-white font-semibold rounded-xl shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.4)] transition-all duration-300 flex items-center gap-2"
                     data-testid="footer-newsletter-submit"
                   >
                     <Send className="h-4 w-4" />
@@ -331,7 +331,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 bg-white/5 border border-white/10 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 hover:border-purple-500/30 hover:shadow-[0_0_20px_rgba(139,92,246,0.2)] transition-all duration-300"
+                  className={`p-3 bg-white/5 border border-white/10 rounded-xl text-gray-400 hover:text-white transition-all duration-300 ${social.color}`}
                   aria-label={social.name}
                   data-testid={social.testId}
                   custom={index}

@@ -77,8 +77,6 @@ export const DigeratiFAQSection = (): JSX.Element => {
         background: 'linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 50%, #E2E8F0 100%)'
       }}
     >
-      {/* Subtle diagonal transition with violet accent */}
-      <DiagonalDivider position="bottom" toColor="#0a0a0a" height={50} angle="left" />
       
       {/* Pattern overlay */}
       <PatternOverlay variant="dots" opacity={0.025} />
