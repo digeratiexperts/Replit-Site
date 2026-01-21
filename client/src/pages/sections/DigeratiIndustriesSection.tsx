@@ -1,7 +1,6 @@
 import { Briefcase, Calculator, Stethoscope, Home, Heart, ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { PatternOverlay, GlowOrb } from "@/components/SectionPatterns";
 
 // Import industry images from attached assets
 import lawBooksImg from "@assets/Rectangle-152058_1767027918697.png";
@@ -19,9 +18,7 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
       testId: "industry-law",
       slug: "law-firms",
       description: "Protect client privilege and meet ABA compliance requirements",
-      image: lawScalesImg,
-      gradient: "from-purple-500 to-violet-600",
-      glowColor: "rgba(139,92,246,0.4)"
+      image: lawScalesImg
     },
     { 
       icon: Calculator, 
@@ -29,9 +26,7 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
       testId: "industry-cpa",
       slug: "accounting-finance",
       description: "Secure tax data and ensure IRS/FTC compliance",
-      image: lawBooksImg,
-      gradient: "from-blue-500 to-cyan-500",
-      glowColor: "rgba(59,130,246,0.4)"
+      image: lawBooksImg
     },
     { 
       icon: Stethoscope, 
@@ -39,9 +34,7 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
       testId: "industry-medical",
       slug: "healthcare",
       description: "HIPAA compliance and patient data protection",
-      image: healthcareImg,
-      gradient: "from-cyan-400 to-teal-500",
-      glowColor: "rgba(34,211,238,0.4)"
+      image: healthcareImg
     },
     { 
       icon: Home, 
@@ -49,9 +42,7 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
       testId: "industry-realestate",
       slug: "real-estate",
       description: "Wire fraud prevention and transaction security",
-      image: realEstateImg,
-      gradient: "from-emerald-500 to-green-500",
-      glowColor: "rgba(16,185,129,0.4)"
+      image: realEstateImg
     },
     { 
       icon: Heart, 
@@ -59,9 +50,7 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
       testId: "industry-animal",
       slug: "nonprofits",
       description: "Veterinary practice and client data protection",
-      image: animalHospitalImg,
-      gradient: "from-pink-500 to-rose-500",
-      glowColor: "rgba(236,72,153,0.4)"
+      image: animalHospitalImg
     }
   ];
 
@@ -105,21 +94,13 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
 
   return (
     <section 
-      className="py-16 md:py-20 lg:py-24 bg-[#0d0720] relative overflow-hidden"
-      style={{
-        background: `
-          radial-gradient(circle_at_70%_30%,rgba(59,130,246,0.12),transparent_50%),
-          radial-gradient(circle_at_20%_80%,rgba(139,92,246,0.08),transparent_50%),
-          #0d0720
-        `
-      }}
+      className="py-16 md:py-20 lg:py-24 bg-[#0a0a0a] relative overflow-hidden"
     >
-      {/* Pattern overlay for visual texture */}
-      <PatternOverlay variant="dots" opacity={0.015} />
-      
-      {/* Accent glows */}
-      <GlowOrb color="rgba(59, 130, 246, 0.1)" size={500} top="10%" right="10%" animate />
-      <GlowOrb color="rgba(139, 92, 246, 0.08)" size={500} bottom="10%" left="10%" animate />
+      {/* Subtle purple accent */}
+      <div 
+        className="absolute top-0 left-1/3 w-[600px] h-[600px] pointer-events-none"
+        style={{ background: "radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, transparent 60%)" }}
+      />
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div 
@@ -129,7 +110,7 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
           viewport={{ once: true, margin: "-100px" }}
           variants={titleVariants}
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-white">
             Industries We Serve
           </h2>
           <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
@@ -152,29 +133,22 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
               data-testid={industry.testId}
               variants={cardVariants}
             >
-              {/* Glow effect */}
-              <div 
-                className="absolute -inset-0.5 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{ background: industry.glowColor }}
-              />
-              
-              {/* Card */}
-              <div className="relative overflow-hidden rounded-2xl h-64 sm:h-72">
+                {/* Card */}
+              <div className="relative overflow-hidden rounded-2xl h-64 sm:h-72 border border-white/10 hover:border-violet-500/30 transition-all duration-300">
                 {/* Background Image */}
                 <div 
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
                   style={{ backgroundImage: `url(${industry.image})` }}
                 />
                 
                 {/* Gradient Overlay */}
-                <div className={`absolute inset-0 bg-gradient-to-t ${industry.gradient} opacity-60 mix-blend-multiply`} />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
                 
                 {/* Content */}
                 <div className="absolute inset-0 p-5 flex flex-col justify-end">
                   {/* Icon */}
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${industry.gradient} flex items-center justify-center mb-3 shadow-lg transition-transform duration-300 group-hover:scale-110`}>
-                    <industry.icon className="h-6 w-6 text-white" />
+                  <div className="w-12 h-12 rounded-xl bg-violet-500/20 border border-violet-500/30 flex items-center justify-center mb-3">
+                    <industry.icon className="h-6 w-6 text-violet-400" />
                   </div>
                   
                   <h3 className="text-xl font-bold text-white mb-2">

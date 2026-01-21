@@ -1,6 +1,5 @@
 import { Shield, Users, Activity } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
-import { PatternOverlay, GlowOrb } from "@/components/SectionPatterns";
 
 export const DigeratiAlertBanner = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -10,21 +9,18 @@ export const DigeratiAlertBanner = (): JSX.Element => {
       icon: Shield,
       title: "Security-First Operations",
       description: "Every system, endpoint, and user is protected - by design, not by reaction.",
-      gradient: "from-purple-500 to-violet-600",
       testId: "card-security-first"
     },
     {
       icon: Users,
       title: "Co-Managed or Fully Managed",
       description: "We support your internal IT or serve as your outsourced technology team.",
-      gradient: "from-blue-500 to-cyan-500",
       testId: "card-co-managed"
     },
     {
       icon: Activity,
       title: "Executive-Level Transparency",
       description: "Reports, KPIs, and compliance insights that make sense - and drive decisions.",
-      gradient: "from-cyan-400 to-teal-500",
       testId: "card-transparency"
     }
   ];
@@ -54,17 +50,13 @@ export const DigeratiAlertBanner = (): JSX.Element => {
 
   return (
     <section 
-      className="py-20 relative overflow-hidden"
-      style={{
-        background: `linear-gradient(to bottom, #0a0118, #0d0720)`
-      }}
+      className="py-20 relative overflow-hidden bg-[#0a0a0a]"
     >
-      {/* Pattern overlay for texture */}
-      <PatternOverlay variant="grid" opacity={0.02} />
-      
-      {/* Background glow effects */}
-      <GlowOrb color="rgba(139, 92, 246, 0.12)" size={500} top="0" left="33%" animate />
-      <GlowOrb color="rgba(34, 211, 238, 0.08)" size={500} bottom="0" right="33%" animate />
+      {/* Subtle purple glow */}
+      <div 
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] pointer-events-none"
+        style={{ background: "radial-gradient(ellipse, rgba(139, 92, 246, 0.08) 0%, transparent 60%)" }}
+      />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div 
@@ -74,7 +66,7 @@ export const DigeratiAlertBanner = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-white">
             We Exist to Protect and Enable Your Business
           </h2>
           <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
@@ -99,19 +91,16 @@ export const DigeratiAlertBanner = (): JSX.Element => {
               data-testid={feature.testId}
               className="group relative"
             >
-              {/* Glow effect on hover */}
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600/30 to-cyan-600/30 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
               {/* Card */}
-              <div className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 h-full hover:border-purple-500/40 transition-all duration-300">
+              <div className="relative bg-white/[0.03] border border-white/10 rounded-2xl p-6 h-full hover:border-violet-500/30 hover:bg-white/[0.05] transition-all duration-300">
                 {/* Icon */}
-                <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-                  <feature.icon className="h-7 w-7 text-white" />
+                <div className="w-12 h-12 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center mb-5">
+                  <feature.icon className="h-6 w-6 text-violet-400" />
                 </div>
                 
                 {/* Content */}
-                <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
-                <p className="text-gray-400 leading-relaxed">{feature.description}</p>
+                <h3 className="text-xl font-semibold text-white mb-3">{feature.title}</h3>
+                <p className="text-white/60 leading-relaxed">{feature.description}</p>
               </div>
             </motion.div>
           ))}

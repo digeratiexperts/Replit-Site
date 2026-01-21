@@ -2,7 +2,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { PatternOverlay } from "@/components/SectionPatterns";
 
 interface Testimonial {
   rating: number;
@@ -129,14 +128,12 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
   };
 
   return (
-    <section className="relative py-20 bg-[#0a0118] overflow-hidden">
-      {/* Pattern overlay for texture */}
-      <PatternOverlay variant="dots" opacity={0.02} />
-      
-      {/* Floating gradient orbs - reduced opacity for cleaner look */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/15 rounded-full blur-[128px] pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute top-1/2 right-10 w-64 h-64 bg-pink-500/8 rounded-full blur-[80px] pointer-events-none" />
+    <section className="relative py-20 bg-[#0a0a0a] overflow-hidden">
+      {/* Subtle purple accent */}
+      <div 
+        className="absolute top-0 right-1/4 w-[500px] h-[500px] pointer-events-none"
+        style={{ background: "radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, transparent 60%)" }}
+      />
       
       <motion.div 
         className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10"
@@ -146,7 +143,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
         variants={containerVariants}
       >
         <motion.div className="text-center mb-12" variants={itemVariants}>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
             Real Stories from Satisfied Customers
           </h2>
           <div className="flex items-center justify-center gap-1 mb-4">
@@ -170,24 +167,10 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
           <div className="relative">
             {/* Floating quote mark */}
             <div className="absolute -top-8 -left-4 md:-left-12 z-0 pointer-events-none">
-              <Quote 
-                className="w-20 h-20 md:w-28 md:h-28 opacity-10"
-                style={{
-                  color: 'transparent',
-                  fill: 'url(#quoteGradient)',
-                }}
-              />
-              <svg width="0" height="0">
-                <defs>
-                  <linearGradient id="quoteGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#a855f7" />
-                    <stop offset="100%" stopColor="#22d3ee" />
-                  </linearGradient>
-                </defs>
-              </svg>
+              <Quote className="w-20 h-20 md:w-28 md:h-28 text-violet-500/20" />
             </div>
 
-            <Card className="relative bg-white/5 backdrop-blur-2xl border border-white/15 rounded-2xl shadow-[0_20px_60px_-25px_rgba(139,92,246,0.3)] hover:shadow-[0_25px_70px_-20px_rgba(139,92,246,0.4)] hover:border-white/25 transition-all duration-500">
+            <Card className="relative bg-white/[0.03] border border-white/10 rounded-2xl hover:border-violet-500/20 transition-all duration-300">
               <CardContent className="p-8 md:p-10 overflow-hidden">
                 <div className="flex items-center justify-center mb-6">
                   {[...Array(5)].map((_, i) => (

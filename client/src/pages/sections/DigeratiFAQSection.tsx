@@ -78,8 +78,8 @@ export const DigeratiFAQSection = (): JSX.Element => {
       }}
     >
       {/* Diagonal transitions */}
-      <DiagonalDivider position="top" toColor="#0a0118" height={80} angle="left" />
-      <DiagonalDivider position="bottom" toColor="#0a0118" height={80} angle="right" />
+      <DiagonalDivider position="top" toColor="#0a0a0a" height={80} angle="left" />
+      <DiagonalDivider position="bottom" toColor="#0a0a0a" height={80} angle="right" />
       
       {/* Pattern overlay */}
       <PatternOverlay variant="dots" opacity={0.025} />

@@ -1,6 +1,5 @@
 import { Eye, ShieldCheck, UserCheck, KeyRound, Cloud, AlertCircle, ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
-import { PatternOverlay, GlowOrb } from "@/components/SectionPatterns";
 
 export const DigeratiServicesSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -80,26 +79,13 @@ export const DigeratiServicesSection = (): JSX.Element => {
   return (
     <section 
       id="services" 
-      className="relative py-[60px] bg-gradient-to-br from-[#07041a] via-[#0f0b2c] to-[#1a1143] overflow-hidden"
+      className="relative py-20 bg-[#0a0a0a] overflow-hidden"
     >
-      {/* Pattern overlay for visual texture */}
-      <PatternOverlay variant="diagonal" opacity={0.015} />
-      
-      {/* Mesh gradient overlay */}
+      {/* Subtle purple accent */}
       <div 
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: `
-            radial-gradient(circle at 20% 20%, rgba(139,92,246,0.15), transparent 50%),
-            radial-gradient(circle at 80% 80%, rgba(59,130,246,0.12), transparent 50%),
-            radial-gradient(circle at 50% 50%, rgba(34,211,238,0.08), transparent 60%)
-          `
-        }}
+        className="absolute top-1/2 left-0 -translate-y-1/2 w-[500px] h-[500px] pointer-events-none"
+        style={{ background: "radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, transparent 60%)" }}
       />
-      
-      {/* Glow accents */}
-      <GlowOrb color="rgba(139, 92, 246, 0.1)" size={600} top="-10%" left="10%" animate />
-      <GlowOrb color="rgba(59, 130, 246, 0.08)" size={500} bottom="-10%" right="15%" animate />
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div 
@@ -109,7 +95,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-white">
             What We Provide
           </h2>
           <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
@@ -129,43 +115,27 @@ export const DigeratiServicesSection = (): JSX.Element => {
             return (
               <motion.div 
                 key={index} 
-                className="group relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 
+                className="group relative bg-white/[0.03] border border-white/10 rounded-2xl p-8 
                            transition-all duration-300 
-                           hover:bg-white/10 hover:border-white/20 hover:-translate-y-2
-                           shadow-[0_20px_40px_-20px_rgba(139,92,246,0.3)]"
+                           hover:bg-white/[0.06] hover:border-violet-500/30"
                 variants={cardVariants}
                 data-testid={service.testId}
               >
-                {/* Neon edge highlight on hover */}
-                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                     style={{
-                       background: 'linear-gradient(135deg, rgba(139,92,246,0.2) 0%, transparent 50%, rgba(34,211,238,0.2) 100%)',
-                       padding: '1px',
-                       mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                       maskComposite: 'xor',
-                       WebkitMaskComposite: 'xor'
-                     }}
-                />
-                
-                {/* Icon container with gradient and glow */}
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl 
-                                bg-gradient-to-br from-purple-600/30 to-cyan-600/30 
-                                border border-purple-500/20 mb-6
-                                shadow-[0_0_20px_rgba(139,92,246,0.2)]
-                                group-hover:shadow-[0_0_30px_rgba(139,92,246,0.35)]
-                                transition-shadow duration-300">
-                  <Icon className="text-cyan-400 h-7 w-7" />
+                {/* Icon */}
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl 
+                                bg-violet-500/10 border border-violet-500/20 mb-6">
+                  <Icon className="text-violet-400 h-6 w-6" />
                 </div>
                 
-                <h3 className="text-xl font-bold text-white mb-3">
+                <h3 className="text-xl font-semibold text-white mb-3">
                   {service.title}
                 </h3>
-                <p className="text-gray-300 leading-relaxed line-clamp-2 mb-4">
+                <p className="text-white/60 leading-relaxed line-clamp-2 mb-4">
                   {service.description}
                 </p>
                 <a 
                   href={service.link}
-                  className="inline-flex items-center text-cyan-400 hover:text-cyan-300 font-medium text-sm transition-colors"
+                  className="inline-flex items-center text-violet-400 hover:text-violet-300 font-medium text-sm transition-colors"
                   data-testid={`link-${service.testId}`}
                 >
                   Learn More <ArrowRight className="ml-1 h-4 w-4" />
@@ -185,13 +155,8 @@ export const DigeratiServicesSection = (): JSX.Element => {
           <a 
             href="/solutions"
             className="inline-flex items-center justify-center px-6 py-3 
-                       bg-gradient-to-r from-purple-600 to-cyan-600 
-                       hover:from-purple-500 hover:to-cyan-500
-                       text-white font-semibold rounded-lg 
-                       transition-all duration-300 
-                       shadow-[0_10px_30px_-10px_rgba(139,92,246,0.5)]
-                       hover:shadow-[0_15px_40px_-10px_rgba(139,92,246,0.6)]
-                       hover:-translate-y-1"
+                       bg-white text-black font-semibold rounded-lg 
+                       transition-all duration-300 hover:bg-white/90"
             data-testid="button-explore-services"
           >
             Explore More Services <ArrowRight className="ml-2 h-5 w-5" />

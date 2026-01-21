@@ -33,10 +33,10 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
   };
 
   const benefits = [
-    { icon: Shield, label: "Security Alerts", color: "text-purple-600" },
-    { icon: Lock, label: "Best Practices", color: "text-blue-600" },
-    { icon: TrendingUp, label: "Industry Trends", color: "text-green-600" },
-    { icon: Users, label: "Expert Insights", color: "text-amber-600" },
+    { icon: Shield, label: "Security Alerts", color: "text-violet-600" },
+    { icon: Lock, label: "Best Practices", color: "text-violet-600" },
+    { icon: TrendingUp, label: "Industry Trends", color: "text-violet-600" },
+    { icon: Users, label: "Expert Insights", color: "text-violet-600" },
   ];
 
   return (
@@ -47,16 +47,15 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
       }}
     >
       {/* Diagonal transitions */}
-      <DiagonalDivider position="top" toColor="#0a0118" height={70} angle="right" />
-      <DiagonalDivider position="bottom" toColor="#0a0118" height={70} angle="left" />
+      <DiagonalDivider position="top" toColor="#0a0a0a" height={70} angle="right" />
+      <DiagonalDivider position="bottom" toColor="#0a0a0a" height={70} angle="left" />
       
       {/* Pattern overlay */}
       <PatternOverlay variant="dots" opacity={0.025} />
       
       {/* Background decoration */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-purple-200/40 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-blue-200/40 rounded-full blur-[120px]" />
+        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-violet-200/30 rounded-full blur-[120px]" />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -78,7 +77,7 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
             </div>
 
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-gray-900">
-              Subscribe to Our Newsletter & <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">Stay Secure</span>
+              Subscribe to Our Newsletter & <span className="text-violet-600">Stay Secure</span>
             </h2>
             <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
               Enter your email to receive expert updates and personalized security advice.

@@ -32,7 +32,7 @@ const FooterLink = ({ href, children, testId }: { href: string; children: React.
   >
     <span className="relative">
       {children}
-      <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-gradient-to-r from-purple-500 to-cyan-500 transition-all duration-300 group-hover:w-full" />
+      <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-violet-500 transition-all duration-300 group-hover:w-full" />
     </span>
   </a>
 );
@@ -127,9 +127,9 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
   ];
 
   return (
-    <footer className="relative bg-[#050210] bg-gradient-to-t from-[#050210] via-[#0a0118] to-[#0d0720] border-t border-white/10 overflow-hidden">
+    <footer className="relative bg-[#0a0a0a] border-t border-white/10 overflow-hidden">
       <CircuitOverlay />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(139,92,246,0.08),transparent_50%),radial-gradient(circle_at_80%_20%,rgba(34,211,238,0.06),transparent_50%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(139,92,246,0.06),transparent_50%)] pointer-events-none" />
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-16 max-w-[1440px] relative z-10">
         <div className="mb-12 pl-4 md:pl-8 lg:pl-0">

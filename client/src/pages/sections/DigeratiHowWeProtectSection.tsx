@@ -60,10 +60,10 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
       }}
     >
       {/* Diagonal clip from dark section above */}
-      <DiagonalDivider position="top" toColor="#0a0118" height={80} angle="right" />
+      <DiagonalDivider position="top" toColor="#0a0a0a" height={80} angle="right" />
       
       {/* Diagonal clip to dark section below */}
-      <DiagonalDivider position="bottom" toColor="#0f0720" height={80} angle="left" />
+      <DiagonalDivider position="bottom" toColor="#0a0a0a" height={80} angle="left" />
       
       {/* Subtle pattern overlay for texture */}
       <PatternOverlay variant="dots" opacity={0.03} />

@@ -10,7 +10,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { PatternOverlay, GlowOrb } from "@/components/SectionPatterns";
 
 const contactFormSchema = z.object({
   name: z.string()
@@ -80,17 +79,13 @@ export const DigeratiContactSection = (): JSX.Element => {
   return (
     <section 
       id="contact" 
-      className="py-20 relative overflow-hidden"
-      style={{
-        background: `linear-gradient(to bottom, #0f0b2c, #0a0118)`
-      }}
+      className="py-20 relative overflow-hidden bg-[#0a0a0a]"
     >
-      {/* Pattern overlay */}
-      <PatternOverlay variant="grid" opacity={0.015} />
-      
-      {/* Background glow effects */}
-      <GlowOrb color="rgba(139, 92, 246, 0.1)" size={600} top="25%" right="0" animate />
-      <GlowOrb color="rgba(34, 211, 238, 0.06)" size={600} bottom="25%" left="0" animate />
+      {/* Subtle accent */}
+      <div 
+        className="absolute top-0 right-0 w-[500px] h-[500px] pointer-events-none"
+        style={{ background: "radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.08) 0%, transparent 50%)" }}
+      />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
@@ -101,7 +96,7 @@ export const DigeratiContactSection = (): JSX.Element => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6 text-white">
               Ready to Secure Your Business?
             </h2>
             <p className="text-lg text-gray-300 mb-8 leading-relaxed">
@@ -115,26 +110,26 @@ export const DigeratiContactSection = (): JSX.Element => {
                 <a 
                   key={item.label}
                   href={item.href}
-                  className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-purple-500/40 hover:bg-white/10 transition-all duration-300 group"
+                  className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.03] border border-white/10 hover:border-violet-500/30 hover:bg-white/[0.05] transition-all duration-300 group"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <item.icon className="h-5 w-5 text-white" />
+                  <div className="w-10 h-10 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center">
+                    <item.icon className="h-5 w-5 text-violet-400" />
                   </div>
-                  <span className="text-gray-300 group-hover:text-white transition-colors">{item.label}</span>
+                  <span className="text-white/70 group-hover:text-white transition-colors">{item.label}</span>
                 </a>
               ))}
             </div>
 
             {/* Office Hours */}
-            <div className="p-6 rounded-xl bg-white/5 border border-white/10 mb-8">
+            <div className="p-6 rounded-xl bg-white/[0.03] border border-white/10 mb-8">
               <div className="flex items-center gap-3 mb-4">
-                <Clock className="h-5 w-5 text-cyan-400" />
+                <Clock className="h-5 w-5 text-violet-400" />
                 <h3 className="text-lg font-semibold text-white">Office Hours</h3>
               </div>
-              <div className="space-y-2 text-gray-400">
+              <div className="space-y-2 text-white/50">
                 <p>Monday - Friday: 7:00 AM - 6:00 PM MST</p>
                 <p>Saturday & Sunday: Emergency Support Only</p>
-                <p className="flex items-center gap-2 text-cyan-400 font-semibold mt-3">
+                <p className="flex items-center gap-2 text-emerald-500 font-semibold mt-3">
                   <Shield className="h-4 w-4" />
                   24/7 Security Operations Center Always Active
                 </p>
@@ -156,7 +151,7 @@ export const DigeratiContactSection = (): JSX.Element => {
                     target="_blank"
                     rel="noopener noreferrer"
                     data-testid={social.testId}
-                    className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-purple-500/20 hover:border-purple-500/40 transition-all duration-300"
+                    className="w-10 h-10 rounded-lg bg-white/[0.03] border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-violet-500/30 transition-all duration-300"
                   >
                     <social.icon className="h-5 w-5" />
                   </a>

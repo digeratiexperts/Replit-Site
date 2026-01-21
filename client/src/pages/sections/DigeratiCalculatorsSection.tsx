@@ -37,21 +37,19 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
   return (
     <>
       {/* Downtime Calculator Section */}
-      <section id="calculators" className="py-[60px] relative overflow-visible" style={{ background: 'linear-gradient(to bottom, #0f0720, #0a0118)' }}>
-        {/* Background effects */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-600/10 rounded-full blur-[120px]" />
-        </div>
+      <section id="calculators" className="py-20 relative overflow-visible bg-[#0a0a0a]">
+        {/* Subtle accent */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] pointer-events-none"
+             style={{ background: "radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.06) 0%, transparent 50%)" }} />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
-              <Calculator className="w-4 h-4 text-purple-400" />
-              <span className="text-sm text-gray-300">Cost Calculator</span>
+              <Calculator className="w-4 h-4 text-violet-400" />
+              <span className="text-sm text-white/60">Cost Calculator</span>
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-              What's Downtime Really <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Costing You?</span>
+              What's Downtime Really <span className="text-violet-400">Costing You?</span>
             </h2>
             <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
               Quick estimate now. Open advanced to factor RTO/RPO and annual impact.
@@ -82,7 +80,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                 </div>
 
                 <div>
-                  <Label htmlFor="employees-affected" className="text-sm font-semibold text-gray-200 uppercase tracking-wide">Employees Affected: <span className="text-cyan-400">{employees}</span></Label>
+                  <Label htmlFor="employees-affected" className="text-sm font-semibold text-white/80 uppercase tracking-wide">Employees Affected: <span className="text-violet-400">{employees}</span></Label>
                   <Slider 
                     id="employees-affected"
                     value={[employees]} 
@@ -90,13 +88,13 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                     max={100} 
                     min={1} 
                     step={1}
-                    className="mt-4 [&_[role=slider]]:bg-gradient-to-r [&_[role=slider]]:from-purple-500 [&_[role=slider]]:to-cyan-500 [&_[role=slider]]:border-0 [&_.range]:bg-gradient-to-r [&_.range]:from-purple-500 [&_.range]:to-cyan-500"
+                    className="mt-4 [&_[role=slider]]:bg-violet-500 [&_[role=slider]]:border-0 [&_.range]:bg-violet-500"
                     data-testid="slider-employees-affected"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="hourly-wage" className="text-sm font-semibold text-gray-200 uppercase tracking-wide">Avg Hourly Wage ($): <span className="text-cyan-400">{hourlyWage}</span></Label>
+                  <Label htmlFor="hourly-wage" className="text-sm font-semibold text-white/80 uppercase tracking-wide">Avg Hourly Wage ($): <span className="text-violet-400">{hourlyWage}</span></Label>
                   <Slider 
                     id="hourly-wage"
                     value={[hourlyWage]} 
@@ -104,13 +102,13 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                     max={200} 
                     min={15} 
                     step={5}
-                    className="mt-4 [&_[role=slider]]:bg-gradient-to-r [&_[role=slider]]:from-purple-500 [&_[role=slider]]:to-cyan-500 [&_[role=slider]]:border-0 [&_.range]:bg-gradient-to-r [&_.range]:from-purple-500 [&_.range]:to-cyan-500"
+                    className="mt-4 [&_[role=slider]]:bg-violet-500 [&_[role=slider]]:border-0 [&_.range]:bg-violet-500"
                     data-testid="slider-hourly-wage"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="downtime-hours" className="text-sm font-semibold text-gray-200 uppercase tracking-wide">Expected Downtime (hours): <span className="text-cyan-400">{downtime}</span></Label>
+                  <Label htmlFor="downtime-hours" className="text-sm font-semibold text-white/80 uppercase tracking-wide">Expected Downtime (hours): <span className="text-violet-400">{downtime}</span></Label>
                   <Slider 
                     id="downtime-hours"
                     value={[downtime]} 
@@ -118,23 +116,23 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                     max={24} 
                     min={1} 
                     step={1}
-                    className="mt-4 [&_[role=slider]]:bg-gradient-to-r [&_[role=slider]]:from-purple-500 [&_[role=slider]]:to-cyan-500 [&_[role=slider]]:border-0 [&_.range]:bg-gradient-to-r [&_.range]:from-purple-500 [&_.range]:to-cyan-500"
+                    className="mt-4 [&_[role=slider]]:bg-violet-500 [&_[role=slider]]:border-0 [&_.range]:bg-violet-500"
                     data-testid="slider-downtime-hours"
                   />
                 </div>
               </div>
 
-              <div className="mt-10 p-8 bg-gradient-to-r from-purple-500/10 via-transparent to-cyan-500/10 rounded-xl border border-white/10">
+              <div className="mt-10 p-8 bg-violet-500/5 rounded-xl border border-white/10">
                 <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <p className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-2">Per-Incident Cost</p>
-                    <p className="text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">
+                    <p className="text-xs font-bold text-white/60 uppercase tracking-wider mb-2">Per-Incident Cost</p>
+                    <p className="text-4xl lg:text-5xl font-bold text-violet-400">
                       ${downtimeCost.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-2">Annual Cost (4 incidents)</p>
-                    <p className="text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
+                    <p className="text-xs font-bold text-white/60 uppercase tracking-wider mb-2">Annual Cost (4 incidents)</p>
+                    <p className="text-4xl lg:text-5xl font-bold text-white">
                       ${(downtimeCost * 4).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                     </p>
                   </div>
@@ -142,7 +140,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
               </div>
 
               <div className="mt-6 text-center">
-                <Button className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-500 hover:to-indigo-500 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300" data-testid="button-open-detailed-calculator">
+                <Button className="bg-white text-black hover:bg-white/90 transition-all duration-300" data-testid="button-open-detailed-calculator">
                   Open Detailed Calculator <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
@@ -152,12 +150,10 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
       </section>
 
       {/* Service Cost Estimator Section */}
-      <section className="py-[60px] relative overflow-visible" style={{ background: 'linear-gradient(to bottom, #0a0118, #0d0720)' }}>
-        {/* Background effects */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[150px] -translate-y-1/2" />
-          <div className="absolute top-1/2 right-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[150px] -translate-y-1/2" />
-        </div>
+      <section className="py-20 relative overflow-visible bg-[#0a0a0a]">
+        {/* Subtle accent */}
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] pointer-events-none"
+             style={{ background: "radial-gradient(circle at 0% 100%, rgba(139, 92, 246, 0.06) 0%, transparent 50%)" }} />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">

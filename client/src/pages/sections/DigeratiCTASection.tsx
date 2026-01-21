@@ -1,6 +1,5 @@
-import { Star, Shield, Award, CheckCircle } from "lucide-react";
+import { Shield, Award, CheckCircle, Star } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
-import { PatternOverlay } from "@/components/SectionPatterns";
 
 const badges = [
   { name: "SOC 2 Type II", icon: Shield },
@@ -13,61 +12,12 @@ export const DigeratiCTASection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
   
   return (
-    <section className="py-[60px] bg-[#0a0118] relative overflow-hidden">
-      {/* Pattern overlay for texture */}
-      <PatternOverlay variant="grid" opacity={0.015} />
-      
-      {/* Mesh gradient background */}
+    <section className="py-20 bg-[#0a0a0a] relative overflow-hidden">
+      {/* Subtle purple glow */}
       <div 
-        className="absolute inset-0"
-        style={{
-          background: `
-            radial-gradient(circle at 20% 20%, rgba(59,130,246,0.3), transparent 60%),
-            radial-gradient(circle at 80% 10%, rgba(147,51,234,0.35), transparent 55%),
-            radial-gradient(circle at 50% 80%, rgba(139,92,246,0.2), transparent 50%),
-            radial-gradient(circle at 90% 90%, rgba(59,130,246,0.15), transparent 45%)
-          `
-        }}
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse at 50% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 60%)" }}
       />
-      
-      {/* Animated floating orbs - hidden for reduced motion */}
-      {!prefersReducedMotion && (
-        <>
-          <motion.div
-            className="absolute top-20 left-1/4 w-64 h-64 bg-purple-600/20 rounded-full blur-3xl"
-            animate={{
-              x: [0, 30, 0],
-              y: [0, -20, 0],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-          <motion.div
-            className="absolute bottom-20 right-1/4 w-72 h-72 bg-blue-600/20 rounded-full blur-3xl"
-            animate={{
-              x: [0, -25, 0],
-              y: [0, 25, 0],
-              scale: [1, 1.15, 1],
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-        </>
-      )}
-      {/* Static orbs for reduced motion users */}
-      {prefersReducedMotion && (
-        <>
-          <div className="absolute top-20 left-1/4 w-64 h-64 bg-purple-600/20 rounded-full blur-3xl" />
-          <div className="absolute bottom-20 right-1/4 w-72 h-72 bg-blue-600/20 rounded-full blur-3xl" />
-        </>
-      )}
       
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         {/* Animated headline with light sweep */}
@@ -81,7 +31,7 @@ export const DigeratiCTASection = (): JSX.Element => {
           <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight mb-6 relative overflow-hidden">
             <span className="relative z-10">
               Get a{" "}
-              <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="text-violet-400">
                 $20,000 Pen Test
               </span>
               {" "}– Free
@@ -161,15 +111,12 @@ export const DigeratiCTASection = (): JSX.Element => {
           transition={{ duration: 0.6, delay: 0.7 }}
         >
           <motion.button
-            className="h-14 px-10 rounded-xl bg-gradient-to-r from-purple-600 via-violet-600 to-blue-600 text-white text-lg font-bold shadow-[0_0_40px_rgba(139,92,246,0.5)] inline-flex items-center justify-center gap-2 whitespace-nowrap transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0118]"
+            className="h-14 px-10 rounded-xl bg-white text-black text-lg font-semibold inline-flex items-center justify-center gap-2 whitespace-nowrap transition-all duration-300 hover:bg-white/90"
             data-testid="button-cta-assessment"
             onClick={() => {
               document.getElementById('assessment-form')?.scrollIntoView({ behavior: 'smooth' });
             }}
-            whileHover={{ 
-              scale: 1.05,
-              boxShadow: "0 0 60px rgba(139,92,246,0.7), 0 0 100px rgba(59,130,246,0.4)"
-            }}
+            whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
             Get My Free Assessment

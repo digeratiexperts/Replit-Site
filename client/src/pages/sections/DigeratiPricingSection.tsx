@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
-import { PatternOverlay, GlowOrb, WaveDivider } from "@/components/SectionPatterns";
+import { WaveDivider } from "@/components/SectionPatterns";
 
 export const DigeratiPricingSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -78,15 +78,8 @@ export const DigeratiPricingSection = (): JSX.Element => {
       }}
     >
       {/* Wave transitions for visual flow */}
-      <WaveDivider position="top" toColor="#0a0118" height={60} />
-      <WaveDivider position="bottom" toColor="#0a0118" height={60} flip />
-      
-      {/* Pattern overlay */}
-      <PatternOverlay variant="diagonal" opacity={0.02} />
-      
-      {/* Accent glows */}
-      <GlowOrb color="rgba(139, 92, 246, 0.12)" size={400} top="20%" left="5%" animate />
-      <GlowOrb color="rgba(59, 130, 246, 0.1)" size={400} bottom="20%" right="5%" animate />
+      <WaveDivider position="top" toColor="#0a0a0a" height={60} />
+      <WaveDivider position="bottom" toColor="#0a0a0a" height={60} flip />
       
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
@@ -100,8 +93,8 @@ export const DigeratiPricingSection = (): JSX.Element => {
             ProActive Ecosystem Pricing
           </h2>
           <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
-            Clear, predictable, and compliance-ready. Packages start at <span className="font-bold text-cyan-400">$165 per user/month</span>. 
-            A <span className="font-bold text-cyan-400">$1,200/site minimum</span> applies for offices with 5+ users.
+            Clear, predictable, and compliance-ready. Packages start at <span className="font-bold text-white">$165 per user/month</span>. 
+            A <span className="font-bold text-white">$1,200/site minimum</span> applies for offices with 5+ users.
           </p>
         </motion.div>
 
