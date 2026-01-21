@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { Star, ChevronLeft, ChevronRight, Quote, Building2 } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useReducedMotion, useScroll, useTransform } from "framer-motion";
 
 import avatar1 from "@assets/stock_images/professional_busines_96e20e69.jpg";
 import avatar2 from "@assets/stock_images/doctor_physician_med_6ae69a73.jpg";
@@ -14,46 +14,63 @@ interface Testimonial {
   text: string;
   author: string;
   role: string;
+  company: string;
   avatar: string;
 }
 
 export const DigeratiTestimonialsSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-10%", "10%"]);
+  const floatingY1 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 50, prefersReducedMotion ? 0 : -50]);
+  const floatingY2 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : -30, prefersReducedMotion ? 0 : 30]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [prefersReducedMotion ? 1 : 0.95, 1, prefersReducedMotion ? 1 : 0.95]);
   
   const testimonials: Testimonial[] = [
     {
       rating: 5,
       text: "Digerati delivered beyond our expectations. Their encryption protocols and risk assessments helped us meet strict compliance standards with ease.",
       author: "James Torres",
-      role: "CEO, Phoenix Manufacturing",
+      role: "CEO",
+      company: "Phoenix Manufacturing",
       avatar: avatar1
     },
     {
       rating: 5,
       text: "After a ransomware scare hit a firm down the street, we called Digerati. They implemented 24/7 SOC monitoring and now I actually sleep at night knowing client files are protected.",
       author: "Rebecca Thornton",
-      role: "Managing Partner, Thornton & Associates Law",
+      role: "Managing Partner",
+      company: "Thornton & Associates Law",
       avatar: avatar2
     },
     {
       rating: 5, 
       text: "We passed our HIPAA audit with zero findings. Digerati's team documented everything, trained our staff, and handled the technical controls. Worth every penny.",
       author: "Dr. David Nguyen",
-      role: "Owner, East Valley Family Medicine",
+      role: "Owner",
+      company: "East Valley Family Medicine",
       avatar: avatar3
     },
     {
       rating: 5,
       text: "We had a wire fraud attempt during a $400K closing. Digerati's email security flagged it instantly and saved us from disaster. That alone paid for years of service.",
       author: "Mark Rodriguez",
-      role: "Broker/Owner, Sonoran Realty Partners",
+      role: "Broker/Owner",
+      company: "Sonoran Realty Partners",
       avatar: avatar4
     },
     {
       rating: 5,
       text: "Moving to their ProActive platform consolidated 6 different vendors into one bill. Now I have one number to call and one team that knows our entire environment.",
       author: "Jennifer Blackwood",
-      role: "Operations Director, Blackwood Veterinary Hospital",
+      role: "Operations Director",
+      company: "Blackwood Veterinary Hospital",
       avatar: avatar5
     }
   ];
@@ -96,103 +113,152 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
     exit: { zIndex: 0, opacity: 1 },
   } : {
     enter: (direction: number) => ({
-      x: direction > 0 ? 100 : -100,
+      x: direction > 0 ? 80 : -80,
       opacity: 0,
+      scale: 0.95,
     }),
     center: {
       zIndex: 1,
       x: 0,
       opacity: 1,
+      scale: 1,
     },
     exit: (direction: number) => ({
       zIndex: 0,
-      x: direction < 0 ? 100 : -100,
+      x: direction < 0 ? 80 : -80,
       opacity: 0,
+      scale: 0.95,
     }),
   };
 
-  const containerVariants = prefersReducedMotion ? undefined : {
-    hidden: { opacity: 0, y: 60 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut",
-        staggerChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = prefersReducedMotion ? undefined : {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
-    },
-  };
-
   return (
-    <section className="relative py-20 bg-[#0a0a0a] overflow-hidden">
-      {/* Subtle purple accent */}
-      <div 
-        className="absolute top-0 right-1/4 w-[500px] h-[500px] pointer-events-none"
-        style={{ background: "radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, transparent 60%)" }}
-      />
-      
+    <section 
+      ref={sectionRef}
+      className="relative py-24 overflow-hidden"
+      style={{
+        background: 'linear-gradient(180deg, #0a0a0a 0%, #0f0f1a 50%, #0a0a0a 100%)'
+      }}
+    >
+      {/* Parallax Background Elements */}
       <motion.div 
-        className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        variants={containerVariants}
+        className="absolute inset-0 pointer-events-none"
+        style={{ y: backgroundY }}
       >
-        <motion.div className="text-center mb-12" variants={itemVariants}>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
-            Real Stories from Satisfied Customers
+        {/* Large gradient orb - top right */}
+        <div 
+          className="absolute -top-20 -right-20 w-[600px] h-[600px] opacity-30"
+          style={{ 
+            background: "radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, rgba(168, 85, 247, 0.1) 40%, transparent 70%)",
+            filter: "blur(60px)"
+          }}
+        />
+        {/* Smaller orb - bottom left */}
+        <div 
+          className="absolute -bottom-20 -left-20 w-[400px] h-[400px] opacity-20"
+          style={{ 
+            background: "radial-gradient(circle, rgba(192, 38, 211, 0.3) 0%, rgba(139, 92, 246, 0.1) 40%, transparent 70%)",
+            filter: "blur(40px)"
+          }}
+        />
+      </motion.div>
+
+      {/* Floating decorative elements with parallax */}
+      <motion.div 
+        className="absolute top-20 left-10 w-20 h-20 opacity-10 pointer-events-none"
+        style={{ y: floatingY1 }}
+      >
+        <div className="w-full h-full rounded-full border-2 border-violet-500" />
+      </motion.div>
+      <motion.div 
+        className="absolute bottom-32 right-16 w-12 h-12 opacity-10 pointer-events-none"
+        style={{ y: floatingY2 }}
+      >
+        <div className="w-full h-full rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 rotate-45" />
+      </motion.div>
+      <motion.div 
+        className="absolute top-1/2 right-8 w-8 h-8 opacity-5 pointer-events-none"
+        style={{ y: floatingY1 }}
+      >
+        <Star className="w-full h-full text-violet-400" />
+      </motion.div>
+
+      <motion.div 
+        className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 z-10"
+        style={{ scale }}
+      >
+        {/* Header */}
+        <motion.div 
+          className="text-center mb-16"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6">
+            <Building2 className="w-4 h-4 text-violet-400" />
+            <span className="text-sm font-medium text-violet-300">Client Success Stories</span>
+          </div>
+          
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-white">
+            Trusted by <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">100+ Arizona</span> Businesses
           </h2>
+          
           <div className="flex items-center justify-center gap-1 mb-4">
             {[...Array(5)].map((_, i) => (
               <Star 
                 key={i} 
-                className="h-6 w-6 fill-current" 
+                className="h-7 w-7 fill-current" 
                 style={{
                   color: '#fbbf24',
-                  filter: 'drop-shadow(0 0 4px rgba(251, 191, 36, 0.5))'
+                  filter: 'drop-shadow(0 0 6px rgba(251, 191, 36, 0.6))'
                 }}
               />
             ))}
+            <span className="ml-3 text-lg font-semibold text-amber-400">5.0</span>
           </div>
-          <p className="text-lg text-gray-400">
-            Trusted by 100+ Arizona Businesses
-          </p>
         </motion.div>
 
-        <motion.div className="max-w-3xl mx-auto" variants={itemVariants}>
+        {/* Testimonial Card */}
+        <motion.div 
+          className="max-w-4xl mx-auto"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
           <div className="relative">
-            {/* Floating quote mark */}
-            <div className="absolute -top-8 -left-4 md:-left-12 z-0 pointer-events-none">
-              <Quote className="w-20 h-20 md:w-28 md:h-28 text-violet-500/20" />
-            </div>
+            {/* Gradient border wrapper */}
+            <div className="absolute -inset-[1px] rounded-3xl bg-gradient-to-br from-violet-500/50 via-purple-500/30 to-fuchsia-500/50 opacity-60" />
+            
+            {/* Quote decoration */}
+            <motion.div 
+              className="absolute -top-6 -left-2 md:-left-6 z-20 pointer-events-none"
+              style={{ y: floatingY2 }}
+            >
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center shadow-xl shadow-violet-500/30">
+                <Quote className="w-8 h-8 md:w-10 md:h-10 text-white" />
+              </div>
+            </motion.div>
 
-            <Card className="relative bg-white/[0.03] border border-white/10 rounded-2xl hover:border-violet-500/20 transition-all duration-300">
-              <CardContent className="p-8 md:p-10 overflow-hidden">
-                <div className="flex items-center justify-center mb-6">
+            <Card className="relative bg-[#111111]/90 backdrop-blur-xl border-0 rounded-3xl overflow-hidden">
+              <CardContent className="p-8 md:p-12">
+                {/* Stars row */}
+                <div className="flex items-center justify-center gap-1 mb-8">
                   {[...Array(5)].map((_, i) => (
                     <Star 
                       key={i} 
                       className="h-5 w-5 fill-current"
                       style={{
                         color: '#fbbf24',
-                        filter: 'drop-shadow(0 0 3px rgba(251, 191, 36, 0.4))'
+                        filter: 'drop-shadow(0 0 4px rgba(251, 191, 36, 0.5))'
                       }}
                     />
                   ))}
-                  <span className="ml-2 text-base text-gray-400">5-Star Rating</span>
+                  <span className="ml-3 text-sm font-medium text-white/60">5-Star Rating</span>
                 </div>
                 
-                <div className="relative min-h-[120px]">
+                {/* Testimonial content with animation */}
+                <div className="relative min-h-[180px] mb-8">
                   <AnimatePresence initial={false} custom={direction} mode="wait">
                     <motion.div
                       key={currentTestimonial}
@@ -203,25 +269,34 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                       exit="exit"
                       transition={{
                         x: { type: "spring", stiffness: 300, damping: 30 },
-                        opacity: { duration: 0.3 },
+                        opacity: { duration: 0.25 },
+                        scale: { duration: 0.25 },
                       }}
+                      className="absolute inset-0"
                     >
-                      <p className="text-lg text-gray-200 italic text-center mb-6" data-testid="testimonial-text">
+                      <p className="text-xl md:text-2xl text-white/90 italic text-center leading-relaxed mb-8" data-testid="testimonial-text">
                         "{testimonials[currentTestimonial].text}"
                       </p>
                       
-                      <div className="flex items-center justify-center">
-                        <div className="w-12 h-12 bg-gradient-to-br from-violet-500/30 to-purple-500/30 rounded-full mr-4 border border-white/20 flex items-center justify-center">
-                          <span className="text-white font-semibold text-lg">
-                            {testimonials[currentTestimonial].author.charAt(0)}
-                          </span>
+                      {/* Author info */}
+                      <div className="flex items-center justify-center gap-4">
+                        <div className="relative">
+                          <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 opacity-70 blur-sm" />
+                          <img 
+                            src={testimonials[currentTestimonial].avatar}
+                            alt={testimonials[currentTestimonial].author}
+                            className="relative w-14 h-14 rounded-full object-cover border-2 border-white/20"
+                          />
                         </div>
-                        <div>
-                          <div className="font-semibold text-white" data-testid="testimonial-author">
+                        <div className="text-left">
+                          <div className="font-bold text-lg text-white" data-testid="testimonial-author">
                             {testimonials[currentTestimonial].author}
                           </div>
-                          <div className="text-base text-gray-400" data-testid="testimonial-role">
+                          <div className="text-violet-400 font-medium" data-testid="testimonial-role">
                             {testimonials[currentTestimonial].role}
+                          </div>
+                          <div className="text-white/50 text-sm">
+                            {testimonials[currentTestimonial].company}
                           </div>
                         </div>
                       </div>
@@ -229,37 +304,39 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                   </AnimatePresence>
                 </div>
 
+                {/* Navigation arrows */}
                 <button
                   onClick={handlePrevious}
-                  className="absolute top-1/2 -translate-y-1/2 left-2 md:left-4 z-10 p-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 hover:border-white/30 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="absolute top-1/2 -translate-y-1/2 left-3 md:left-6 z-10 p-3 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-violet-500/20 hover:border-violet-500/40 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-violet-500 group"
                   data-testid="testimonial-prev"
                   aria-label="Previous testimonial"
                   type="button"
                 >
-                  <ChevronLeft className="h-5 w-5 text-white" />
+                  <ChevronLeft className="h-5 w-5 text-white/70 group-hover:text-white transition-colors" />
                 </button>
 
                 <button
                   onClick={handleNext}
-                  className="absolute top-1/2 -translate-y-1/2 right-2 md:right-4 z-10 p-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 hover:border-white/30 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="absolute top-1/2 -translate-y-1/2 right-3 md:right-6 z-10 p-3 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-violet-500/20 hover:border-violet-500/40 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-violet-500 group"
                   data-testid="testimonial-next"
                   aria-label="Next testimonial"
                   type="button"
                 >
-                  <ChevronRight className="h-5 w-5 text-white" />
+                  <ChevronRight className="h-5 w-5 text-white/70 group-hover:text-white transition-colors" />
                 </button>
               </CardContent>
             </Card>
           </div>
 
-          <div className="flex justify-center mt-6 gap-2">
+          {/* Pagination dots */}
+          <div className="flex justify-center mt-8 gap-3">
             {testimonials.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToTestimonial(index)}
-                className={`h-3 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0118] hover:scale-125 ${
+                className={`h-3 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a] hover:scale-125 ${
                   currentTestimonial === index 
-                    ? 'w-8 bg-gradient-to-r from-violet-500 to-purple-400' 
+                    ? 'w-10 bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 shadow-lg shadow-violet-500/40' 
                     : 'w-3 bg-white/20 hover:bg-white/40'
                 }`}
                 aria-label={`Go to testimonial ${index + 1}`}
