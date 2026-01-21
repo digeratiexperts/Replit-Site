@@ -56,7 +56,79 @@ export function LocationServicePage(props: LocationPageProps) {
     document.title = `${props.title} | Digerati Experts`;
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute('content', props.description);
-  }, [props.title, props.description]);
+    
+    // Add local business JSON-LD schema
+    const existingSchema = document.querySelector('script[data-schema="local-business"]');
+    if (existingSchema) existingSchema.remove();
+    
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Digerati Experts",
+      "description": props.description,
+      "url": `https://digeratiexperts.com/locations/${props.city.toLowerCase().replace(/\s+/g, '-')}-az`,
+      "telephone": "325-480-9870",
+      "email": "info@digeratiexperts.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "3165 S Alma School Rd Suite 29",
+        "addressLocality": "Chandler",
+        "addressRegion": "AZ",
+        "postalCode": "85248",
+        "addressCountry": "US"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 33.2826,
+        "longitude": -111.8407
+      },
+      "areaServed": {
+        "@type": "City",
+        "name": props.city,
+        "containedInPlace": {
+          "@type": "State",
+          "name": "Arizona"
+        }
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          "opens": "07:00",
+          "closes": "18:00"
+        }
+      ],
+      "priceRange": "$$",
+      "image": "https://digeratiexperts.com/logo.png",
+      "sameAs": [
+        "https://www.linkedin.com/company/digerati-experts",
+        "https://www.facebook.com/digeratiexperts",
+        "https://twitter.com/digerati_experts"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "IT Services",
+        "itemListElement": props.serviceFocus.map(service => ({
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": service
+          }
+        }))
+      }
+    };
+    
+    const scriptTag = document.createElement('script');
+    scriptTag.type = 'application/ld+json';
+    scriptTag.setAttribute('data-schema', 'local-business');
+    scriptTag.textContent = JSON.stringify(schema);
+    document.head.appendChild(scriptTag);
+    
+    return () => {
+      const schemaToRemove = document.querySelector('script[data-schema="local-business"]');
+      if (schemaToRemove) schemaToRemove.remove();
+    };
+  }, [props.title, props.description, props.city, props.serviceFocus]);
 
   const form = useForm<AssessmentFormData>({
     resolver: zodResolver(assessmentFormSchema),
@@ -86,10 +158,10 @@ export function LocationServicePage(props: LocationPageProps) {
   ];
 
   const features = [
-    { icon: CheckCircle, text: "Insurance & Compliance-Ready", color: "text-green-400" },
-    { icon: Shield, text: "24/7 Human-Led Monitoring", color: "text-blue-400" },
-    { icon: Building, text: `Built for ${props.city} Businesses`, color: "text-purple-400" },
-    { icon: FileCheck, text: "Easy-to-Read Risk Reports", color: "text-yellow-400" },
+    { icon: FileCheck, text: "Insurance & Compliance-Ready", color: "text-violet-400" },
+    { icon: Shield, text: "24/7 Human-Led Monitoring", color: "text-violet-400" },
+    { icon: Building, text: `Built for ${props.city} Businesses`, color: "text-violet-400" },
+    { icon: CheckCircle, text: "Easy-to-Read Risk Reports", color: "text-violet-400" },
   ];
 
   return (

@@ -59,10 +59,10 @@ export const ModernHeroSection = (): JSX.Element => {
   const opacity = 1;
 
   const features = [
-    { icon: CheckCircle, text: "Compliance-Ready" },
-    { icon: Shield, text: "24/7 Monitoring" },
-    { icon: Building, text: "Built for SMBs" },
-    { icon: FileCheck, text: "Risk Reports" },
+    { icon: FileCheck, text: "Insurance & Compliance-Ready" },
+    { icon: Shield, text: "24/7 Human-Led Monitoring" },
+    { icon: Building, text: "Built for Small Businesses" },
+    { icon: CheckCircle, text: "Easy-to-Read Risk Reports" },
   ];
 
   return (
@@ -107,14 +107,14 @@ export const ModernHeroSection = (): JSX.Element => {
                 </span>
                 <br />
                 <span className="text-white mt-2 block">
-                  Protect Your Business 24/7.
+                  Protect Arizona Businesses 24/7.
                 </span>
               </h1>
 
               {/* Subheadline */}
               <p className="text-lg text-white/60 leading-relaxed max-w-lg">
-                Enterprise cybersecurity for Arizona law firms, medical practices, and professional services. 
-                Flat-rate pricing with 24/7 monitoring.
+                Enterprise-grade cybersecurity for small businesses. Get 24/7 protection, 
+                cut cyber liability, and pass compliance checks.
               </p>
 
               {/* Simple feature list */}

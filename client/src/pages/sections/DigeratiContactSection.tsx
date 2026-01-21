@@ -313,7 +313,7 @@ export const DigeratiContactSection = (): JSX.Element => {
                     />
                     
                     <Button 
-                      className="w-full h-14 text-lg font-bold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-0 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300" 
+                      className="w-full h-14 text-lg font-bold bg-violet-600 hover:bg-violet-700 border-0 shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all duration-300" 
                       data-testid="button-send-message"
                       type="submit"
                       disabled={isSubmitting}

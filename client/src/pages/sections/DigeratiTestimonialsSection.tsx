@@ -23,23 +23,23 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
   const testimonials: Testimonial[] = [
     {
       rating: 5,
+      text: "Digerati delivered beyond our expectations. Their encryption protocols and risk assessments helped us meet strict compliance standards with ease.",
+      author: "James Torres",
+      role: "CEO, Phoenix Manufacturing",
+      avatar: avatar1
+    },
+    {
+      rating: 5,
       text: "After a ransomware scare hit a firm down the street, we called Digerati. They implemented 24/7 SOC monitoring and now I actually sleep at night knowing client files are protected.",
       author: "Rebecca Thornton",
       role: "Managing Partner, Thornton & Associates Law",
-      avatar: avatar1
+      avatar: avatar2
     },
     {
       rating: 5, 
       text: "We passed our HIPAA audit with zero findings. Digerati's team documented everything, trained our staff, and handled the technical controls. Worth every penny.",
       author: "Dr. David Nguyen",
       role: "Owner, East Valley Family Medicine",
-      avatar: avatar2
-    },
-    {
-      rating: 5,
-      text: "Our old MSP took 2 days to respond to tickets. Digerati responds in under 15 minutes. When our server went down last month, they had us back online in 2 hours.",
-      author: "Patricia Wells",
-      role: "Office Manager, Desert Sun CPA Group",
       avatar: avatar3
     },
     {

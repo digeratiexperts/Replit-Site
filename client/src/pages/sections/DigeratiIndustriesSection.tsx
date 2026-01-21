@@ -48,7 +48,7 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
       icon: Heart, 
       name: "Animal Hospitals", 
       testId: "industry-animal",
-      slug: "nonprofits",
+      slug: "animal-hospitals",
       description: "Veterinary practice and client data protection",
       image: animalHospitalImg
     }

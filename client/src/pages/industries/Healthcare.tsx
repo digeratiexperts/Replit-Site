@@ -8,10 +8,10 @@ export default function Healthcare() {
   const prefersReducedMotion = useReducedMotion() ?? false;
   
   const metrics = [
-    { label: "HIPAA Compliance", value: "100%", icon: Shield, color: "from-blue-500 to-cyan-500" },
-    { label: "Data Encryption", value: "256-bit", icon: Lock, color: "from-cyan-500 to-teal-500" },
-    { label: "System Uptime", value: "99.95%", icon: Activity, color: "from-teal-500 to-green-500" },
-    { label: "Healthcare Clients", value: "25+", icon: Heart, color: "from-green-500 to-emerald-500" }
+    { label: "HIPAA Compliance", value: "100%", icon: Shield, color: "from-violet-500 to-purple-500" },
+    { label: "Data Encryption", value: "256-bit", icon: Lock, color: "from-purple-500 to-fuchsia-500" },
+    { label: "System Uptime", value: "99.95%", icon: Activity, color: "from-fuchsia-500 to-violet-500" },
+    { label: "Healthcare Clients", value: "25+", icon: Heart, color: "from-violet-500 to-purple-500" }
   ];
 
   const challenges = [
@@ -19,19 +19,19 @@ export default function Healthcare() {
       icon: Shield, 
       title: "HIPAA Compliance", 
       description: "Maintain full HIPAA compliance with our comprehensive security solutions and documentation.",
-      color: "text-blue-400"
+      color: "text-violet-400"
     },
     { 
       icon: Lock, 
       title: "Patient Data Security", 
       description: "Protect sensitive patient data with enterprise-grade encryption and access controls.",
-      color: "text-cyan-400"
+      color: "text-purple-400"
     },
     { 
       icon: FileCheck, 
       title: "Audit-Ready Documentation", 
       description: "Always audit-ready with comprehensive documentation and compliance reporting.",
-      color: "text-teal-400"
+      color: "text-fuchsia-400"
     }
   ];
 
@@ -52,7 +52,7 @@ export default function Healthcare() {
     <PageTemplate
       title="IT Solutions for Healthcare"
       subtitle="HIPAA-compliant IT solutions designed to protect patient data and ensure regulatory compliance."
-      gradientColors="from-blue-600 via-cyan-600 to-teal-600"
+      gradientColors="from-violet-600 via-purple-600 to-fuchsia-600"
       icon={<Stethoscope className="w-10 h-10 text-white" />}
       breadcrumbs={[{ label: "Industries", href: "/" }, { label: "Healthcare" }]}
     >
@@ -71,7 +71,7 @@ export default function Healthcare() {
                 className="group relative"
               >
                 <div className={`absolute inset-0 bg-gradient-to-r ${metric.color} rounded-xl blur opacity-0 group-hover:opacity-30 transition-all duration-300`} />
-                <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:border-blue-500/30 hover:shadow-lg transition-all">
+                <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:border-violet-500/30 hover:shadow-lg transition-all">
                   <CardContent className="pt-6">
                     <div className="flex items-start justify-between mb-3">
                       <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${metric.color} flex items-center justify-center`}>
@@ -129,7 +129,7 @@ export default function Healthcare() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-violet-600 to-purple-600 flex items-center justify-center">
               <Shield className="w-5 h-5 text-white" />
             </div>
             Healthcare IT Challenges We Solve
@@ -145,9 +145,9 @@ export default function Healthcare() {
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.1, duration: 0.5 }}
                 >
-                  <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-blue-500/30 hover:shadow-xl transition-all duration-300">
+                  <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-violet-500/30 hover:shadow-xl transition-all duration-300">
                     <CardHeader>
-                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                         <Icon className={`h-7 w-7 ${item.color}`} />
                       </div>
                       <CardTitle className="text-xl text-white">{item.title}</CardTitle>
@@ -170,12 +170,12 @@ export default function Healthcare() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-blue-500/20 to-transparent rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-cyan-500/20 to-transparent rounded-full blur-3xl" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-violet-500/20 to-transparent rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-purple-500/20 to-transparent rounded-full blur-3xl" />
           
           <div className="relative">
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-violet-600 to-purple-600 flex items-center justify-center">
                 <FileCheck className="w-5 h-5 text-white" />
               </div>
               <h2 className="text-3xl font-bold text-white">HIPAA Compliance Features</h2>
@@ -185,13 +185,13 @@ export default function Healthcare() {
               {complianceFeatures.map((item, index) => (
                 <motion.div 
                   key={index} 
-                  className="flex items-center gap-3 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:border-blue-500/30 hover:shadow-md transition-all duration-300"
+                  className="flex items-center gap-3 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:border-violet-500/30 hover:shadow-md transition-all duration-300"
                   initial={prefersReducedMotion ? {} : { opacity: 0, x: -10 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.05, duration: 0.3 }}
                 >
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center">
                     <CheckCircle className="h-4 w-4 text-white" />
                   </div>
                   <span className="text-gray-300 font-medium">{item}</span>
@@ -203,7 +203,7 @@ export default function Healthcare() {
 
         {/* Success Metrics */}
         <motion.div 
-          className="grid md:grid-cols-3 gap-6 bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-600 rounded-2xl p-8 text-white"
+          className="grid md:grid-cols-3 gap-6 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 rounded-2xl p-8 text-white"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -211,15 +211,15 @@ export default function Healthcare() {
         >
           <div className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
             <p className="text-4xl font-bold mb-2">25+</p>
-            <p className="text-blue-100">Healthcare Clients</p>
+            <p className="text-white/70">Healthcare Clients</p>
           </div>
           <div className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
             <p className="text-4xl font-bold mb-2">0</p>
-            <p className="text-blue-100">HIPAA Violations</p>
+            <p className="text-white/70">HIPAA Violations</p>
           </div>
           <div className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
             <p className="text-4xl font-bold mb-2">100%</p>
-            <p className="text-blue-100">Audit Pass Rate</p>
+            <p className="text-white/70">Audit Pass Rate</p>
           </div>
         </motion.div>
 
@@ -231,7 +231,7 @@ export default function Healthcare() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-600" />
+          <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600" />
           <div className="absolute inset-0 opacity-20">
             <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
               <defs>
@@ -253,14 +253,14 @@ export default function Healthcare() {
                 href="https://meet.digerati-experts.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center justify-center bg-white text-blue-700 hover:bg-blue-50 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
+                className="group inline-flex items-center justify-center bg-white text-violet-700 hover:bg-violet-50 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
                 data-testid="button-get-assessment"
               >
                 Get Free Assessment
               </a>
               <a 
                 href="tel:325-480-9870"
-                className="inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-blue-600 px-8 py-4 rounded-xl font-semibold transition-all"
+                className="inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-violet-600 px-8 py-4 rounded-xl font-semibold transition-all"
                 data-testid="button-call-now"
               >
                 <Phone className="mr-2 h-5 w-5" />

@@ -5,10 +5,10 @@ import { CheckCircle, Heart, Users, Shield, Zap, TrendingUp, DollarSign, Target 
 
 export default function Nonprofits() {
   const savings = [
-    { metric: "IT Cost Savings", value: "40%", icon: DollarSign, color: "text-green-600" },
-    { metric: "Staff Time Saved", value: "6 hrs/wk", icon: Zap, color: "text-amber-600" },
-    { metric: "Donor Confidence", value: "+85%", icon: Heart, color: "text-red-600" },
-    { metric: "Audit Pass Rate", value: "100%", icon: CheckCircle, color: "text-blue-600" }
+    { metric: "IT Cost Savings", value: "40%", icon: DollarSign, color: "text-violet-400" },
+    { metric: "Staff Time Saved", value: "6 hrs/wk", icon: Zap, color: "text-violet-400" },
+    { metric: "Donor Confidence", value: "+85%", icon: Heart, color: "text-violet-400" },
+    { metric: "Audit Pass Rate", value: "100%", icon: CheckCircle, color: "text-emerald-500" }
   ];
 
   return (

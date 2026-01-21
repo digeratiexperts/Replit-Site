@@ -15,7 +15,7 @@ export default function RealEstate() {
     <PageTemplate
       title="IT Solutions for Real Estate Professionals"
       subtitle="Prevent wire fraud, protect transaction data, stay compliant—secure IT for Arizona real estate"
-      gradientColors="from-indigo-700 via-blue-700 to-cyan-700"
+      gradientColors="from-violet-600 via-purple-600 to-fuchsia-600"
     >
       <div className="space-y-16">
         {/* Wire Fraud Statistics - Modern Dashboard */}
@@ -94,10 +94,10 @@ export default function RealEstate() {
               const Icon = service.icon;
               return (
                 <div key={idx} className="group relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-indigo-400 to-blue-400 rounded-xl blur opacity-0 group-hover:opacity-15 transition-all" />
-                  <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:shadow-lg transition-all group-hover:border-indigo-400/50">
+                  <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-purple-500 rounded-xl blur opacity-0 group-hover:opacity-15 transition-all" />
+                  <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:shadow-lg transition-all group-hover:border-violet-500/30">
                     <CardHeader>
-                      <Icon className="h-10 w-10 text-indigo-400 mb-2 group-hover:scale-110 transition-transform" />
+                      <Icon className="h-10 w-10 text-violet-400 mb-2 group-hover:scale-110 transition-transform" />
                       <CardTitle className="text-white">{service.title}</CardTitle>
                       <p className="text-sm text-gray-400 mt-1">{service.desc}</p>
                     </CardHeader>
@@ -105,7 +105,7 @@ export default function RealEstate() {
                       <ul className="space-y-2">
                         {service.features.map((f, i) => (
                           <li key={i} className="flex gap-2 text-sm text-gray-300">
-                            <CheckCircle className="h-4 w-4 text-indigo-400 flex-shrink-0 mt-0.5" />
+                            <CheckCircle className="h-4 w-4 text-violet-400 flex-shrink-0 mt-0.5" />
                             {f}
                           </li>
                         ))}
@@ -119,7 +119,7 @@ export default function RealEstate() {
         </div>
 
         {/* Protection Checklist */}
-        <div className="bg-indigo-500/10 backdrop-blur-sm rounded-xl p-8 border border-indigo-500/20">
+        <div className="bg-violet-500/10 backdrop-blur-sm rounded-xl p-8 border border-violet-500/20">
           <h3 className="text-2xl font-bold mb-6 text-white">Wire Fraud Prevention Checklist</h3>
           <div className="grid md:grid-cols-2 gap-4">
             {[
@@ -131,7 +131,7 @@ export default function RealEstate() {
               { q: "Do you have documented security procedures?", status: "required" }
             ].map((item, idx) => (
               <div key={idx} className="flex gap-3 p-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg hover:bg-white/10 transition-all">
-                <CheckCircle className="h-6 w-6 text-green-400 flex-shrink-0 mt-0.5" />
+                <CheckCircle className="h-6 w-6 text-emerald-500 flex-shrink-0 mt-0.5" />
                 <span className="text-gray-300 text-sm">{item.q}</span>
               </div>
             ))}
@@ -139,31 +139,31 @@ export default function RealEstate() {
         </div>
 
         {/* Protection ROI */}
-        <div className="grid md:grid-cols-3 gap-6 bg-gradient-to-r from-indigo-600 to-blue-600 rounded-xl p-8 text-white">
+        <div className="grid md:grid-cols-3 gap-6 bg-gradient-to-r from-violet-600 to-purple-600 rounded-xl p-8 text-white">
           <div className="text-center">
             <p className="text-4xl font-bold mb-2">$0</p>
-            <p className="text-indigo-100">Fraud Losses (Protected Agents)</p>
+            <p className="text-white/70">Fraud Losses (Protected Agents)</p>
           </div>
-          <div className="text-center border-l border-r border-indigo-400">
+          <div className="text-center border-l border-r border-violet-400">
             <p className="text-4xl font-bold mb-2">100%</p>
-            <p className="text-indigo-100">Closings Protected</p>
+            <p className="text-white/70">Closings Protected</p>
           </div>
           <div className="text-center">
             <p className="text-4xl font-bold mb-2">1 click</p>
-            <p className="text-indigo-100">Verify Wire Instructions</p>
+            <p className="text-white/70">Verify Wire Instructions</p>
           </div>
         </div>
 
         {/* CTA */}
-        <div className="bg-gradient-to-r from-indigo-600 to-blue-600 rounded-xl p-8 text-center text-white">
+        <div className="bg-gradient-to-r from-violet-600 to-purple-600 rounded-xl p-8 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Protect Your Transactions Today</h2>
-          <p className="text-lg mb-6 text-indigo-100">Free security assessment for real estate professionals.</p>
+          <p className="text-lg mb-6 text-white/70">Free security assessment for real estate professionals.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 
               href="https://meet.digerati-experts.com/" 
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center bg-white text-indigo-700 hover:bg-indigo-50 px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
+              className="inline-flex items-center justify-center bg-white text-violet-700 hover:bg-violet-50 px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
               data-testid="button-schedule-real-estate"
             >
               Get Security Assessment

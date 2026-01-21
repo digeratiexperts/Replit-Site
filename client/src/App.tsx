@@ -21,6 +21,7 @@ const Accounting = lazy(() => import("@/pages/industries/Accounting"));
 const LawFirms = lazy(() => import("@/pages/industries/LawFirms"));
 const RealEstate = lazy(() => import("@/pages/industries/RealEstate"));
 const Nonprofits = lazy(() => import("@/pages/industries/Nonprofits"));
+const AnimalHospitals = lazy(() => import("@/pages/industries/AnimalHospitals"));
 const CaseStudies = lazy(() => import("@/pages/resources/CaseStudies"));
 const Blog = lazy(() => import("@/pages/resources/Blog"));
 const SecurityUpdates = lazy(() => import("@/pages/resources/SecurityUpdates"));
@@ -143,6 +144,11 @@ function Router() {
       <Route path="/industries/nonprofits" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <Nonprofits />
+        </Suspense>
+      )} />
+      <Route path="/industries/animal-hospitals" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <AnimalHospitals />
         </Suspense>
       )} />
       {Object.entries(industryPageData).map(([key, data]) => (

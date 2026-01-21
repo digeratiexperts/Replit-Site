@@ -102,7 +102,7 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
                   type="submit"
                   size="lg"
                   data-testid="button-newsletter-submit"
-                  className="h-12 px-8 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold shadow-lg"
+                  className="h-12 px-8 bg-violet-600 hover:bg-violet-700 text-white font-semibold shadow-lg"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
