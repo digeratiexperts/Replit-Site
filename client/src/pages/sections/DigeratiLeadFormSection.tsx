@@ -8,6 +8,7 @@ import { ArrowRight, Loader2, Check, Shield, Clock, CheckCircle } from "lucide-r
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { PatternOverlay, GlowOrb } from "@/components/SectionPatterns";
 
 const formSchema = z.object({
   fullName: z.string()
@@ -68,9 +69,30 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
   return (
     <section 
       id="assessment-form"
-      className="py-[60px] bg-[#F7FAFC] relative overflow-hidden"
+      className="py-[80px] pt-32 pb-32 relative overflow-hidden"
+      style={{ 
+        background: 'linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 50%, #E2E8F0 100%)'
+      }}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Diagonal transitions for visual flow */}
+      <div className="absolute top-0 left-0 right-0 h-20 overflow-hidden pointer-events-none z-0">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute w-full h-full">
+          <polygon points="0,100 100,0 100,100" fill="#0f0720" />
+        </svg>
+      </div>
+      <div className="absolute bottom-0 left-0 right-0 h-20 overflow-hidden pointer-events-none z-0">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute w-full h-full">
+          <polygon points="0,0 100,100 0,100" fill="#0d0720" />
+        </svg>
+      </div>
+      
+      {/* Pattern overlay */}
+      <PatternOverlay variant="dots" opacity={0.025} />
+      
+      {/* Accent glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-purple-300/10 rounded-full blur-[100px] pointer-events-none z-0" />
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-4xl mx-auto">
           <motion.div 
             className="text-center mb-10"

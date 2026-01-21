@@ -1,5 +1,6 @@
 import { Shield, Users, Activity } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { PatternOverlay, GlowOrb } from "@/components/SectionPatterns";
 
 export const DigeratiAlertBanner = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -58,11 +59,12 @@ export const DigeratiAlertBanner = (): JSX.Element => {
         background: `linear-gradient(to bottom, #0a0118, #0d0720)`
       }}
     >
-      {/* Background effects */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/3 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[150px]" />
-        <div className="absolute bottom-0 right-1/3 w-[500px] h-[500px] bg-cyan-600/8 rounded-full blur-[150px]" />
-      </div>
+      {/* Pattern overlay for texture */}
+      <PatternOverlay variant="grid" opacity={0.02} />
+      
+      {/* Background glow effects */}
+      <GlowOrb color="rgba(139, 92, 246, 0.12)" size={500} top="0" left="33%" animate />
+      <GlowOrb color="rgba(34, 211, 238, 0.08)" size={500} bottom="0" right="33%" animate />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div 

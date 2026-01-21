@@ -1,5 +1,6 @@
 import { Shield, Bug, Lock, Database, AlertTriangle, Users } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { PatternOverlay, GlowOrb } from "@/components/SectionPatterns";
 
 export const DigeratiWhatWeTackleSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -45,16 +46,12 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
 
   return (
     <section className="py-24 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0d0720, #0a0118)' }}>
-      {/* Background effects */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-purple-600/8 rounded-full blur-[150px]" />
-        <div className="absolute bottom-1/4 right-0 w-[600px] h-[600px] bg-cyan-600/8 rounded-full blur-[150px]" />
-        {/* Grid pattern overlay */}
-        <div className="absolute inset-0 opacity-[0.02]" style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-          backgroundSize: '50px 50px'
-        }} />
-      </div>
+      {/* Pattern overlay for visual texture */}
+      <PatternOverlay variant="grid" opacity={0.02} />
+      
+      {/* Background glow effects */}
+      <GlowOrb color="rgba(139, 92, 246, 0.08)" size={600} top="25%" left="0" animate />
+      <GlowOrb color="rgba(34, 211, 238, 0.06)" size={600} bottom="25%" right="0" animate />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div 

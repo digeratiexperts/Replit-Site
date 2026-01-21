@@ -1,6 +1,7 @@
 import { Briefcase, Calculator, Stethoscope, Home, Heart, ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { PatternOverlay, GlowOrb } from "@/components/SectionPatterns";
 
 // Import industry images from attached assets
 import lawBooksImg from "@assets/Rectangle-152058_1767027918697.png";
@@ -113,6 +114,13 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
         `
       }}
     >
+      {/* Pattern overlay for visual texture */}
+      <PatternOverlay variant="dots" opacity={0.015} />
+      
+      {/* Accent glows */}
+      <GlowOrb color="rgba(59, 130, 246, 0.1)" size={500} top="10%" right="10%" animate />
+      <GlowOrb color="rgba(139, 92, 246, 0.08)" size={500} bottom="10%" left="10%" animate />
+      
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div 
           className="text-center mb-12 md:mb-16"

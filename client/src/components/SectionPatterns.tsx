@@ -40,7 +40,7 @@ export const PatternOverlay = ({
 
   return (
     <div 
-      className={`absolute inset-0 pointer-events-none ${className}`}
+      className={`absolute inset-0 pointer-events-none z-0 ${className}`}
       style={{ ...patterns[variant], opacity }}
     />
   );
@@ -63,7 +63,7 @@ export const WaveDivider = ({
 }: WaveDividerProps) => {
   return (
     <div 
-      className={`absolute left-0 right-0 overflow-hidden ${position === "top" ? "top-0" : "bottom-0"}`}
+      className={`absolute left-0 right-0 overflow-hidden pointer-events-none z-0 ${position === "top" ? "top-0" : "bottom-0"}`}
       style={{ 
         height: `${height}px`,
         transform: flip ? "scaleY(-1)" : undefined
@@ -104,7 +104,7 @@ export const DiagonalDivider = ({
   
   return (
     <div 
-      className={`absolute left-0 right-0 overflow-hidden ${position === "top" ? "top-0" : "bottom-0"}`}
+      className={`absolute left-0 right-0 overflow-hidden pointer-events-none z-0 ${position === "top" ? "top-0" : "bottom-0"}`}
       style={{ height: `${height}px` }}
     >
       <svg
@@ -157,7 +157,7 @@ export const GlowOrb = ({
 
   return (
     <OrbElement
-      className="absolute rounded-full pointer-events-none"
+      className="absolute rounded-full pointer-events-none z-0"
       style={{
         width: size,
         height: size,

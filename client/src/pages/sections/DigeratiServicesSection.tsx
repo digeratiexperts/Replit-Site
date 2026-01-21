@@ -1,5 +1,6 @@
 import { Eye, ShieldCheck, UserCheck, KeyRound, Cloud, AlertCircle, ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { PatternOverlay, GlowOrb } from "@/components/SectionPatterns";
 
 export const DigeratiServicesSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -81,6 +82,9 @@ export const DigeratiServicesSection = (): JSX.Element => {
       id="services" 
       className="relative py-[60px] bg-gradient-to-br from-[#07041a] via-[#0f0b2c] to-[#1a1143] overflow-hidden"
     >
+      {/* Pattern overlay for visual texture */}
+      <PatternOverlay variant="diagonal" opacity={0.015} />
+      
       {/* Mesh gradient overlay */}
       <div 
         className="absolute inset-0 pointer-events-none"
@@ -92,6 +96,10 @@ export const DigeratiServicesSection = (): JSX.Element => {
           `
         }}
       />
+      
+      {/* Glow accents */}
+      <GlowOrb color="rgba(139, 92, 246, 0.1)" size={600} top="-10%" left="10%" animate />
+      <GlowOrb color="rgba(59, 130, 246, 0.08)" size={500} bottom="-10%" right="15%" animate />
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div 

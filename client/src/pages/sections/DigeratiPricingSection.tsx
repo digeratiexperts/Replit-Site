@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { PatternOverlay, GlowOrb, WaveDivider } from "@/components/SectionPatterns";
 
 export const DigeratiPricingSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -71,8 +72,21 @@ export const DigeratiPricingSection = (): JSX.Element => {
   return (
     <section 
       id="pricing" 
-      className="relative py-[60px] bg-[#2D3748] overflow-hidden"
+      className="relative py-[80px] pt-32 pb-32 overflow-hidden"
+      style={{ 
+        background: 'linear-gradient(135deg, #2D3748 0%, #1A202C 50%, #171923 100%)'
+      }}
     >
+      {/* Wave transitions for visual flow */}
+      <WaveDivider position="top" toColor="#0a0118" height={60} />
+      <WaveDivider position="bottom" toColor="#0a0118" height={60} flip />
+      
+      {/* Pattern overlay */}
+      <PatternOverlay variant="diagonal" opacity={0.02} />
+      
+      {/* Accent glows */}
+      <GlowOrb color="rgba(139, 92, 246, 0.12)" size={400} top="20%" left="5%" animate />
+      <GlowOrb color="rgba(59, 130, 246, 0.1)" size={400} bottom="20%" right="5%" animate />
       
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 

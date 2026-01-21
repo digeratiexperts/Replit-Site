@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { motion, useReducedMotion } from "framer-motion";
+import { PatternOverlay, DiagonalDivider } from "@/components/SectionPatterns";
 
 // Import avatar strip image
 import avatarsImg from "@assets/Frame-2131330726_1767027918695.png";
@@ -39,11 +40,23 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
+    <section 
+      className="py-24 pt-32 pb-32 relative overflow-hidden"
+      style={{ 
+        background: 'linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 50%, #E2E8F0 100%)'
+      }}
+    >
+      {/* Diagonal transitions */}
+      <DiagonalDivider position="top" toColor="#0a0118" height={70} angle="right" />
+      <DiagonalDivider position="bottom" toColor="#0a0118" height={70} angle="left" />
+      
+      {/* Pattern overlay */}
+      <PatternOverlay variant="dots" opacity={0.025} />
+      
       {/* Background decoration */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-purple-100/60 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-blue-100/60 rounded-full blur-[120px]" />
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-purple-200/40 rounded-full blur-[120px]" />
+        <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-blue-200/40 rounded-full blur-[120px]" />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { PatternOverlay, DiagonalDivider } from "@/components/SectionPatterns";
 
 export const DigeratiHowWeProtectSection = (): JSX.Element => {
   const steps = [
@@ -53,9 +54,24 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
 
   return (
     <section 
-      className="py-10 bg-[#F7FAFC] relative overflow-hidden"
+      className="py-20 pt-32 pb-32 relative overflow-hidden"
+      style={{ 
+        background: 'linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 50%, #E2E8F0 100%)'
+      }}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Diagonal clip from dark section above */}
+      <DiagonalDivider position="top" toColor="#0a0118" height={80} angle="right" />
+      
+      {/* Diagonal clip to dark section below */}
+      <DiagonalDivider position="bottom" toColor="#0f0720" height={80} angle="left" />
+      
+      {/* Subtle pattern overlay for texture */}
+      <PatternOverlay variant="dots" opacity={0.03} />
+      
+      {/* Accent glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-purple-400/5 rounded-full blur-[100px] pointer-events-none" />
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div 
           className="text-center mb-12 md:mb-16"
           initial={{ opacity: 0, y: 20 }}

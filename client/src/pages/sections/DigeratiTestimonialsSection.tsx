@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { PatternOverlay } from "@/components/SectionPatterns";
 
 interface Testimonial {
   rating: number;
@@ -129,10 +130,13 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
 
   return (
     <section className="relative py-20 bg-[#0a0118] overflow-hidden">
-      {/* Floating gradient orbs */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-[128px] pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-cyan-500/15 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute top-1/2 right-10 w-64 h-64 bg-pink-500/10 rounded-full blur-[80px] pointer-events-none" />
+      {/* Pattern overlay for texture */}
+      <PatternOverlay variant="dots" opacity={0.02} />
+      
+      {/* Floating gradient orbs - reduced opacity for cleaner look */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/15 rounded-full blur-[128px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/2 right-10 w-64 h-64 bg-pink-500/8 rounded-full blur-[80px] pointer-events-none" />
       
       <motion.div 
         className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10"

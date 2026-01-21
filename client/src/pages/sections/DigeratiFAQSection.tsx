@@ -1,6 +1,7 @@
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { PatternOverlay, DiagonalDivider } from "@/components/SectionPatterns";
 
 interface FAQ {
   question: string;
@@ -70,7 +71,22 @@ export const DigeratiFAQSection = (): JSX.Element => {
   };
 
   return (
-    <section className="relative py-[60px] bg-[#F7FAFC] overflow-hidden">
+    <section 
+      className="relative py-[80px] pt-32 pb-32 overflow-hidden"
+      style={{ 
+        background: 'linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 50%, #E2E8F0 100%)'
+      }}
+    >
+      {/* Diagonal transitions */}
+      <DiagonalDivider position="top" toColor="#0a0118" height={80} angle="left" />
+      <DiagonalDivider position="bottom" toColor="#0a0118" height={80} angle="right" />
+      
+      {/* Pattern overlay */}
+      <PatternOverlay variant="dots" opacity={0.025} />
+      
+      {/* Accent glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-purple-400/5 rounded-full blur-[80px] pointer-events-none z-0" />
+      
       {/* SVG gradient definition for chevron */}
       <svg width="0" height="0" className="absolute">
         <defs>
@@ -81,7 +97,7 @@ export const DigeratiFAQSection = (): JSX.Element => {
         </defs>
       </svg>
       
-      <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
         <motion.div
           initial="hidden"
           whileInView="visible"

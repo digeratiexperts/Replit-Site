@@ -1,5 +1,6 @@
 import { Star, Shield, Award, CheckCircle } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { PatternOverlay } from "@/components/SectionPatterns";
 
 const badges = [
   { name: "SOC 2 Type II", icon: Shield },
@@ -13,15 +14,18 @@ export const DigeratiCTASection = (): JSX.Element => {
   
   return (
     <section className="py-[60px] bg-[#0a0118] relative overflow-hidden">
+      {/* Pattern overlay for texture */}
+      <PatternOverlay variant="grid" opacity={0.015} />
+      
       {/* Mesh gradient background */}
       <div 
         className="absolute inset-0"
         style={{
           background: `
-            radial-gradient(circle at 20% 20%, rgba(59,130,246,0.35), transparent 60%),
-            radial-gradient(circle at 80% 10%, rgba(147,51,234,0.4), transparent 55%),
-            radial-gradient(circle at 50% 80%, rgba(139,92,246,0.25), transparent 50%),
-            radial-gradient(circle at 90% 90%, rgba(59,130,246,0.2), transparent 45%)
+            radial-gradient(circle at 20% 20%, rgba(59,130,246,0.3), transparent 60%),
+            radial-gradient(circle at 80% 10%, rgba(147,51,234,0.35), transparent 55%),
+            radial-gradient(circle at 50% 80%, rgba(139,92,246,0.2), transparent 50%),
+            radial-gradient(circle at 90% 90%, rgba(59,130,246,0.15), transparent 45%)
           `
         }}
       />
