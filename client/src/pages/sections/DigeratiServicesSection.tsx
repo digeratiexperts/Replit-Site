@@ -115,9 +115,10 @@ export const DigeratiServicesSection = (): JSX.Element => {
             return (
               <motion.div 
                 key={index} 
-                className="group relative bg-white/[0.03] border border-white/10 rounded-2xl p-8 
+                className="group relative bg-[#161616] border border-white/[0.08] rounded-2xl p-8 
+                           shadow-[0_4px_24px_rgba(0,0,0,0.4)]
                            transition-all duration-300 
-                           hover:bg-white/[0.06] hover:border-violet-500/30"
+                           hover:bg-[#1a1a1a] hover:border-violet-500/30 hover:shadow-[0_8px_32px_rgba(139,92,246,0.15)]"
                 variants={cardVariants}
                 data-testid={service.testId}
               >
