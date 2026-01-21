@@ -96,34 +96,64 @@ interface DiagonalDividerProps {
 export const DiagonalDivider = ({ 
   position = "bottom",
   toColor = "#0a0a0a",
-  height = 40,
+  height = 80,
+  angle = "right",
   accent = true
 }: DiagonalDividerProps) => {
-  // Simple gradient fade - no diagonal, just a clean blend
-  const gradientDirection = position === "top" ? "to top" : "to bottom";
-  const fromColor = "transparent";
+  const isTop = position === "top";
+  const isRight = angle === "right";
+  
+  // SVG points for different configurations
+  const getPoints = () => {
+    if (isTop) {
+      return isRight ? "0,100 100,0 100,100" : "0,0 100,100 0,100";
+    } else {
+      return isRight ? "0,0 100,100 0,100" : "100,0 0,100 100,100";
+    }
+  };
+
+  // SVG line coordinates for accent
+  const getLineCoords = () => {
+    if (isTop) {
+      return isRight ? { x1: 0, y1: 100, x2: 100, y2: 0 } : { x1: 0, y1: 0, x2: 100, y2: 100 };
+    } else {
+      return isRight ? { x1: 0, y1: 0, x2: 100, y2: 100 } : { x1: 100, y1: 0, x2: 0, y2: 100 };
+    }
+  };
+  
+  const lineCoords = getLineCoords();
   
   return (
     <div 
-      className={`absolute left-0 right-0 pointer-events-none z-10 ${position === "top" ? "top-0" : "bottom-0"}`}
+      className={`absolute left-0 right-0 pointer-events-none z-10 ${isTop ? "top-0" : "bottom-0"}`}
       style={{ height: `${height}px` }}
     >
-      {/* Clean gradient fade */}
-      <div 
-        className="absolute inset-0"
-        style={{ 
-          background: `linear-gradient(${gradientDirection}, ${fromColor} 0%, ${toColor} 100%)`
-        }}
-      />
-      {/* Subtle violet accent line at edge */}
-      {accent && (
-        <div 
-          className={`absolute left-0 right-0 h-px ${position === "top" ? "top-0" : "bottom-0"}`}
-          style={{
-            background: `linear-gradient(to right, transparent 10%, rgba(139, 92, 246, 0.3) 30%, rgba(139, 92, 246, 0.4) 50%, rgba(139, 92, 246, 0.3) 70%, transparent 90%)`
-          }}
-        />
-      )}
+      <svg
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        className="absolute w-full h-full"
+      >
+        <polygon points={getPoints()} fill={toColor} />
+        {accent && (
+          <line 
+            x1={lineCoords.x1} 
+            y1={lineCoords.y1} 
+            x2={lineCoords.x2} 
+            y2={lineCoords.y2}
+            stroke="url(#violetGradient)"
+            strokeWidth="0.5"
+          />
+        )}
+        <defs>
+          <linearGradient id="violetGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="5%" stopColor="transparent" />
+            <stop offset="30%" stopColor="rgba(139, 92, 246, 0.5)" />
+            <stop offset="50%" stopColor="rgba(139, 92, 246, 0.6)" />
+            <stop offset="70%" stopColor="rgba(139, 92, 246, 0.5)" />
+            <stop offset="95%" stopColor="transparent" />
+          </linearGradient>
+        </defs>
+      </svg>
     </div>
   );
 };
