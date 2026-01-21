@@ -238,12 +238,30 @@ function listEndpoints(): Array<{ method: string; path: string }> {
     app.use(vite.middlewares);
     log("✨ Vite development server middleware attached");
   } else {
-    // Serve static files in production
+    // Serve static files in production with caching
     const distPath = path.resolve(process.cwd(), "dist/public");
     const indexPath = path.join(distPath, "index.html");
     
-    // Serve static files
-    app.use(express.static(distPath));
+    // Serve static files with aggressive caching for assets
+    app.use(express.static(distPath, {
+      maxAge: '1y',
+      etag: true,
+      lastModified: true,
+      setHeaders: (res, filePath) => {
+        // Cache JS/CSS/fonts for 1 year (they have hashes in filenames)
+        if (filePath.match(/\.(js|css|woff2?|ttf|eot)$/)) {
+          res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+        }
+        // Cache images for 1 month
+        else if (filePath.match(/\.(png|jpg|jpeg|gif|svg|webp|ico)$/)) {
+          res.setHeader('Cache-Control', 'public, max-age=2592000');
+        }
+        // HTML files - no cache (always fresh)
+        else if (filePath.endsWith('.html')) {
+          res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        }
+      }
+    }));
     
     // SPA fallback - send index.html for all non-API routes
     app.get("*", (req, res, next) => {
