@@ -1,6 +1,6 @@
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 interface FAQ {
   question: string;
@@ -34,113 +34,76 @@ export const DigeratiFAQSection = (): JSX.Element => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  const containerVariants = prefersReducedMotion ? undefined : {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = prefersReducedMotion ? undefined : {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut",
-      },
-    },
-  };
-
-  const headerVariants = prefersReducedMotion ? undefined : {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut",
-      },
-    },
-  };
-
   return (
-    <section className="py-20 md:py-28 bg-slate-100">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-24 bg-[#f0f4f8]">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
         <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={headerVariants}
-          className="text-center mb-12"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-14"
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-gray-900">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Frequently Asked Questions
           </h2>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg text-gray-500">
             Find answers to common queries about us.
           </p>
         </motion.div>
 
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          variants={containerVariants}
-          className="space-y-4"
-        >
+        {/* FAQ Items */}
+        <div className="space-y-4">
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
             
             return (
               <motion.div
                 key={index}
-                variants={itemVariants}
-                className="bg-white rounded-2xl shadow-sm border border-slate-200/50 overflow-hidden"
+                initial={prefersReducedMotion ? {} : { opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
                 data-testid={`faq-${index}`}
               >
-                <button
-                  className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-inset"
-                  onClick={() => toggleAccordion(index)}
-                  aria-expanded={isOpen}
-                  data-testid={`faq-trigger-${index}`}
-                >
-                  <span className="text-base md:text-lg font-semibold text-gray-900 pr-4">
-                    {faq.question}
-                  </span>
-                  <motion.div
-                    animate={{ rotate: isOpen ? 180 : 0 }}
-                    transition={{ duration: 0.2, ease: "easeInOut" }}
-                    className="flex-shrink-0"
+                <div className="bg-white rounded-xl shadow-sm">
+                  <button
+                    className="w-full px-6 py-5 flex items-center justify-between text-left"
+                    onClick={() => toggleAccordion(index)}
+                    aria-expanded={isOpen}
+                    data-testid={`faq-trigger-${index}`}
                   >
-                    <ChevronDown className="h-5 w-5 text-violet-500" />
-                  </motion.div>
-                </button>
+                    <span className="text-lg font-medium text-gray-900">
+                      {faq.question}
+                    </span>
+                    <ChevronDown 
+                      className={`h-5 w-5 text-violet-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+                    />
+                  </button>
 
-                <motion.div
-                  initial={false}
-                  animate={{
-                    height: isOpen ? "auto" : 0,
-                    opacity: isOpen ? 1 : 0,
-                  }}
-                  transition={{ duration: 0.2, ease: "easeInOut" }}
-                  className="overflow-hidden"
-                >
-                  <div className="px-6 pb-5">
-                    <p className="text-gray-600 leading-relaxed" data-testid={`faq-answer-${index}`}>
-                      {faq.answer}
-                    </p>
-                  </div>
-                </motion.div>
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="px-6 pb-5 pt-0">
+                          <p className="text-gray-600 leading-relaxed" data-testid={`faq-answer-${index}`}>
+                            {faq.answer}
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </motion.div>
             );
           })}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
