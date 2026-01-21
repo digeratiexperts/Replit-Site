@@ -84,15 +84,6 @@ export const DigeratiFAQSection = (): JSX.Element => {
       {/* Accent glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-purple-400/5 rounded-full blur-[80px] pointer-events-none z-0" />
       
-      {/* SVG gradient definition for chevron */}
-      <svg width="0" height="0" className="absolute">
-        <defs>
-          <linearGradient id="chevronGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#7C3AED" />
-            <stop offset="100%" stopColor="#9333EA" />
-          </linearGradient>
-        </defs>
-      </svg>
       
       <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
         <motion.div
@@ -148,10 +139,7 @@ export const DigeratiFAQSection = (): JSX.Element => {
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                     className="flex-shrink-0"
                   >
-                    <ChevronDown 
-                      className="h-5 w-5" 
-                      style={{ stroke: 'url(#chevronGradient)' }} 
-                    />
+                    <ChevronDown className="h-5 w-5 text-violet-500" />
                   </motion.div>
                 </button>
 
