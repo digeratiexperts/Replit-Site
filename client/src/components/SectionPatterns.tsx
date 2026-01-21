@@ -96,51 +96,34 @@ interface DiagonalDividerProps {
 export const DiagonalDivider = ({ 
   position = "bottom",
   toColor = "#0a0a0a",
-  height = 60,
-  angle = "left",
+  height = 40,
   accent = true
 }: DiagonalDividerProps) => {
-  // Shallow diagonal - only 20% of height as the slant
-  // This creates a much more subtle, professional angle
-  const mainPoints = position === "bottom"
-    ? (angle === "left" ? "0,20 100,100 0,100" : "0,100 100,20 100,100")
-    : (angle === "left" ? "0,0 100,80 0,80" : "0,80 100,0 100,80");
-  
-  // Thin accent line along the diagonal edge
-  const stripePoints = position === "bottom"
-    ? (angle === "left" ? "0,18 100,98 100,100 0,20" : "0,98 100,18 100,20 0,100")
-    : (angle === "left" ? "0,0 100,78 100,80 0,2" : "0,78 100,0 100,2 0,80");
+  // Simple gradient fade - no diagonal, just a clean blend
+  const gradientDirection = position === "top" ? "to top" : "to bottom";
+  const fromColor = "transparent";
   
   return (
     <div 
-      className={`absolute left-0 right-0 overflow-hidden pointer-events-none z-10 ${position === "top" ? "top-0" : "bottom-0"}`}
+      className={`absolute left-0 right-0 pointer-events-none z-10 ${position === "top" ? "top-0" : "bottom-0"}`}
       style={{ height: `${height}px` }}
     >
-      <svg
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-        className="absolute w-full h-full"
-      >
-        {/* Define gradient for accent stripe */}
-        <defs>
-          <linearGradient id={`diagonalAccent-${position}-${angle}`} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="rgba(139, 92, 246, 0)" />
-            <stop offset="30%" stopColor="rgba(139, 92, 246, 0.4)" />
-            <stop offset="50%" stopColor="rgba(139, 92, 246, 0.6)" />
-            <stop offset="70%" stopColor="rgba(139, 92, 246, 0.4)" />
-            <stop offset="100%" stopColor="rgba(139, 92, 246, 0)" />
-          </linearGradient>
-        </defs>
-        {/* Main fill */}
-        <polygon points={mainPoints} fill={toColor} />
-        {/* Accent stripe */}
-        {accent && (
-          <polygon 
-            points={stripePoints} 
-            fill={`url(#diagonalAccent-${position}-${angle})`}
-          />
-        )}
-      </svg>
+      {/* Clean gradient fade */}
+      <div 
+        className="absolute inset-0"
+        style={{ 
+          background: `linear-gradient(${gradientDirection}, ${fromColor} 0%, ${toColor} 100%)`
+        }}
+      />
+      {/* Subtle violet accent line at edge */}
+      {accent && (
+        <div 
+          className={`absolute left-0 right-0 h-px ${position === "top" ? "top-0" : "bottom-0"}`}
+          style={{
+            background: `linear-gradient(to right, transparent 10%, rgba(139, 92, 246, 0.3) 30%, rgba(139, 92, 246, 0.4) 50%, rgba(139, 92, 246, 0.3) 70%, transparent 90%)`
+          }}
+        />
+      )}
     </div>
   );
 };
