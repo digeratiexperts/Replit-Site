@@ -20,6 +20,7 @@ type AssessmentFormData = z.infer<typeof assessmentFormSchema>;
 export const ModernHeroSection = (): JSX.Element => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedField, setSelectedField] = useState<'fullName' | 'email'>('fullName');
   const prefersReducedMotion = useReducedMotion();
   const { toast } = useToast();
   
@@ -140,8 +141,13 @@ export const ModernHeroSection = (): JSX.Element => {
                               <Input 
                                 placeholder="Your name" 
                                 data-testid="input-hero-full-name"
-                                className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus-visible:ring-violet-500/50 focus-visible:border-violet-500/50 h-12"
+                                className={`h-12 text-white placeholder:text-white/40 transition-all duration-200 ${
+                                  selectedField === 'fullName' 
+                                    ? 'bg-white/10 border-violet-500/60 ring-1 ring-violet-500/30' 
+                                    : 'bg-white/5 border-white/10 hover:border-white/20'
+                                }`}
                                 disabled={isSubmitting}
+                                onFocus={() => setSelectedField('fullName')}
                                 {...field} 
                               />
                             </FormControl>
@@ -160,8 +166,13 @@ export const ModernHeroSection = (): JSX.Element => {
                                 type="email" 
                                 placeholder="Work email" 
                                 data-testid="input-hero-email"
-                                className="bg-white/5 border-white/10 text-white placeholder:text-white/40 focus-visible:ring-violet-500/50 focus-visible:border-violet-500/50 h-12"
+                                className={`h-12 text-white placeholder:text-white/40 transition-all duration-200 ${
+                                  selectedField === 'email' 
+                                    ? 'bg-white/10 border-violet-500/60 ring-1 ring-violet-500/30' 
+                                    : 'bg-white/5 border-white/10 hover:border-white/20'
+                                }`}
                                 disabled={isSubmitting}
+                                onFocus={() => setSelectedField('email')}
                                 {...field} 
                               />
                             </FormControl>
