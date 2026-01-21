@@ -3,8 +3,15 @@ import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhanced
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, ArrowRight, User, Tag, Search } from "lucide-react";
+import { Calendar, Clock, ArrowRight, User, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+
+import trendsImg from "@assets/stock_images/cybersecurity_trends_d69267d4.jpg";
+import hipaaImg from "@assets/stock_images/healthcare_medical_r_3bfa1a64.jpg";
+import ransomwareImg from "@assets/stock_images/ransomware_protectio_63d2a35d.jpg";
+import cloudImg from "@assets/stock_images/cloud_backup_server__4ac65288.jpg";
+import realEstateImg from "@assets/stock_images/real_estate_house_ke_f7c5422b.jpg";
+import trainingImg from "@assets/stock_images/employee_security_tr_12ae4644.jpg";
 
 const blogPosts = [
   {
@@ -16,7 +23,7 @@ const blogPosts = [
     date: "2024-12-01",
     readTime: "8 min read",
     featured: true,
-    image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800",
+    image: trendsImg,
   },
   {
     id: 2,
@@ -27,7 +34,7 @@ const blogPosts = [
     date: "2024-11-28",
     readTime: "12 min read",
     featured: true,
-    image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=800",
+    image: hipaaImg,
   },
   {
     id: 3,
@@ -38,7 +45,7 @@ const blogPosts = [
     date: "2024-11-25",
     readTime: "10 min read",
     featured: false,
-    image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800",
+    image: ransomwareImg,
   },
   {
     id: 4,
@@ -49,7 +56,7 @@ const blogPosts = [
     date: "2024-11-20",
     readTime: "6 min read",
     featured: false,
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800",
+    image: cloudImg,
   },
   {
     id: 5,
@@ -60,7 +67,7 @@ const blogPosts = [
     date: "2024-11-15",
     readTime: "7 min read",
     featured: false,
-    image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800",
+    image: realEstateImg,
   },
   {
     id: 6,
@@ -71,7 +78,7 @@ const blogPosts = [
     date: "2024-11-10",
     readTime: "5 min read",
     featured: false,
-    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800",
+    image: trainingImg,
   },
 ];
 
@@ -131,7 +138,9 @@ export default function Blog() {
             <div className="grid md:grid-cols-2 gap-6">
               {featuredPosts.map((post) => (
                 <Card key={post.id} className="bg-white/[0.02] border-white/10 overflow-hidden hover:border-violet-500/50 transition-colors" data-testid={`card-post-${post.id}`}>
-                  <div className="aspect-video bg-gradient-to-r from-violet-600/30 to-purple-600/30" />
+                  <div className="aspect-video overflow-hidden">
+                    <img src={post.image} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+                  </div>
                   <CardHeader>
                     <div className="flex items-center gap-3 mb-2">
                       <Badge variant="secondary" className="bg-violet-500/20 text-violet-400">
@@ -173,8 +182,10 @@ export default function Blog() {
             <h2 className="text-2xl font-bold text-white mb-6">Recent Articles</h2>
             <div className="grid md:grid-cols-3 gap-6">
               {regularPosts.map((post) => (
-                <Card key={post.id} className="bg-white/[0.02] border-white/10 hover:border-violet-500/50 transition-colors" data-testid={`card-post-${post.id}`}>
-                  <div className="aspect-video bg-gradient-to-r from-violet-600/20 to-purple-600/20" />
+                <Card key={post.id} className="bg-white/[0.02] border-white/10 hover:border-violet-500/50 transition-colors overflow-hidden" data-testid={`card-post-${post.id}`}>
+                  <div className="aspect-video overflow-hidden">
+                    <img src={post.image} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+                  </div>
                   <CardHeader>
                     <Badge variant="secondary" className="w-fit bg-violet-500/20 text-violet-400 mb-2">
                       {post.category}
