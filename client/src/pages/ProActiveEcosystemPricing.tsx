@@ -12,25 +12,25 @@ const ProActiveEcosystemPricing = () => {
     {
       name: "Office",
       tier: "Basic IT",
-      price: 129,
+      price: 165,
       note: "A clean, managed IT baseline.",
-      gradient: "from-cyan-500 to-blue-500",
+      gradient: "from-violet-500 to-purple-500",
       testId: "plan-office"
     },
     {
       name: "Business",
       tier: "Security",
-      price: 189,
+      price: 245,
       note: "Adds stronger protection and response.",
-      gradient: "from-blue-500 to-purple-500",
+      gradient: "from-purple-500 to-violet-500",
       testId: "plan-business"
     },
     {
       name: "Enterprise",
       tier: "Compliance",
-      price: 249,
+      price: 345,
       note: "Adds governance and audit readiness.",
-      gradient: "from-purple-500 to-pink-500",
+      gradient: "from-violet-500 to-fuchsia-500",
       testId: "plan-enterprise"
     }
   ];
@@ -107,7 +107,7 @@ const ProActiveEcosystemPricing = () => {
         <motion.div
           className="absolute bottom-[-10%] left-[-15%] w-[700px] h-[700px] rounded-full"
           style={{
-            background: "radial-gradient(circle, rgba(34, 211, 238, 0.2) 0%, rgba(34, 211, 238, 0) 60%)",
+            background: "radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0) 60%)",
           }}
           animate={prefersReducedMotion ? {} : {
             scale: [1.1, 1, 1.1],
