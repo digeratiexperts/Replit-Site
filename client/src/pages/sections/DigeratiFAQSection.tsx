@@ -70,16 +70,13 @@ export const DigeratiFAQSection = (): JSX.Element => {
   };
 
   return (
-    <section className="relative py-16 md:py-20 lg:py-24 bg-[#0d0720] overflow-hidden">
-      {/* Radial gradient overlay */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(139,92,246,0.15),transparent_50%),radial-gradient(circle_at_70%_80%,rgba(34,211,238,0.1),transparent_50%)]" />
-      
+    <section className="relative py-[60px] bg-[#F7FAFC] overflow-hidden">
       {/* SVG gradient definition for chevron */}
       <svg width="0" height="0" className="absolute">
         <defs>
           <linearGradient id="chevronGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#22d3ee" />
-            <stop offset="100%" stopColor="#a855f7" />
+            <stop offset="0%" stopColor="#7C3AED" />
+            <stop offset="100%" stopColor="#9333EA" />
           </linearGradient>
         </defs>
       </svg>
@@ -92,10 +89,10 @@ export const DigeratiFAQSection = (): JSX.Element => {
           variants={headerVariants}
           className="text-center mb-12 md:mb-16"
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-[#1A202C]">
             Frequently Asked Questions
           </h2>
-          <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
+          <p className="text-lg md:text-xl text-[#4A5568] leading-relaxed">
             Find answers to common queries about us.
           </p>
         </motion.div>
@@ -117,20 +114,20 @@ export const DigeratiFAQSection = (): JSX.Element => {
                 className={`
                   relative rounded-xl transition-all duration-300
                   ${isOpen 
-                    ? 'bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_0_30px_rgba(139,92,246,0.2)]' 
-                    : 'bg-[#0f0b28]/80 backdrop-blur-xl border border-white/10 hover:border-white/20 hover:shadow-[0_0_20px_rgba(139,92,246,0.15)]'
+                    ? 'bg-white border border-purple-200 shadow-lg' 
+                    : 'bg-white border border-gray-200 hover:border-purple-300 hover:shadow-md'
                   }
                 `}
                 data-testid={`faq-${index}`}
               >
                 {/* Accordion Trigger */}
                 <button
-                  className="w-full p-5 md:p-6 cursor-pointer flex items-center justify-between text-left focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 focus:ring-offset-[#0d0720] rounded-xl"
+                  className="w-full p-5 md:p-6 cursor-pointer flex items-center justify-between text-left focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 focus:ring-offset-[#F7FAFC] rounded-xl"
                   onClick={() => toggleAccordion(index)}
                   aria-expanded={isOpen}
                   data-testid={`faq-trigger-${index}`}
                 >
-                  <span className="text-lg font-semibold text-white pr-4">
+                  <span className="text-lg font-semibold text-[#1A202C] pr-4">
                     {faq.question}
                   </span>
                   <motion.div
@@ -155,11 +152,11 @@ export const DigeratiFAQSection = (): JSX.Element => {
                   transition={{ duration: 0.3, ease: "easeInOut" }}
                   className="overflow-hidden"
                 >
-                  {/* Neon divider */}
-                  <div className="mx-5 md:mx-6 h-px bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent" />
+                  {/* Divider */}
+                  <div className="mx-5 md:mx-6 h-px bg-purple-200" />
                   
                   <div className="p-5 md:p-6 pt-4">
-                    <p className="text-gray-300 leading-relaxed" data-testid={`faq-answer-${index}`}>
+                    <p className="text-[#4A5568] leading-relaxed" data-testid={`faq-answer-${index}`}>
                       {faq.answer}
                     </p>
                   </div>

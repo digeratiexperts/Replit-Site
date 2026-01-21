@@ -18,7 +18,7 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
   ];
 
   return (
-    <section className="py-20 relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0d0720, #0a0118)' }}>
+    <section className="py-[60px] relative overflow-hidden" style={{ background: 'linear-gradient(to bottom, #0d0720, #0a0118)' }}>
       {/* Background decoration - dark theme */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 -left-20 w-96 h-96 bg-purple-600/15 rounded-full blur-[120px]" />
@@ -133,7 +133,8 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
               <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
                 <Button 
                   size="lg"
-                  className="bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white shadow-lg shadow-purple-500/25"
+                  variant="outline"
+                  className="border-2 border-white/50 text-white bg-transparent hover:bg-white/10 hover:border-white"
                   data-testid="button-ai-action"
                 >
                   See AI in Action
@@ -143,7 +144,7 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
               <Button 
                 size="lg"
                 variant="outline"
-                className="border-white/30 text-white bg-transparent hover:bg-white/10 hover:border-white/40"
+                className="border-2 border-white/50 text-white bg-transparent hover:bg-white/10 hover:border-white"
                 data-testid="button-ai-learn-more"
               >
                 Learn More

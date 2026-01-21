@@ -9,6 +9,7 @@ import { DigeratiAlertBanner } from "./sections/DigeratiAlertBanner";
 import { DigeratiServicesSection } from "./sections/DigeratiServicesSection";
 import { DigeratiHowWeProtectSection } from "./sections/DigeratiHowWeProtectSection";
 import { DigeratiCalculatorsSection } from "./sections/DigeratiCalculatorsSection";
+import { DigeratiLeadFormSection } from "./sections/DigeratiLeadFormSection";
 import { DigeratiWhatWeTackleSection } from "./sections/DigeratiWhatWeTackleSection";
 import { DigeratiThreatsInsightsSection } from "./sections/DigeratiThreatsInsightsSection";
 import { DigeratiAIAssistanceSection } from "./sections/DigeratiAIAssistanceSection";
@@ -102,6 +103,9 @@ export const DigeratiHomepage = (): JSX.Element => {
         setServicePackage={setServicePackage}
         serviceCost={serviceCost}
       />
+
+      {/* Lead Form Section - Below Downtime Calculator */}
+      <DigeratiLeadFormSection />
 
       {/* What We Tackle Section */}
       <DigeratiWhatWeTackleSection />

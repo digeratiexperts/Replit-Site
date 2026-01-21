@@ -12,7 +12,7 @@ export const DigeratiCTASection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
   
   return (
-    <section className="py-16 md:py-20 lg:py-24 bg-[#0a0118] relative overflow-hidden">
+    <section className="py-[60px] bg-[#0a0118] relative overflow-hidden">
       {/* Mesh gradient background */}
       <div 
         className="absolute inset-0"

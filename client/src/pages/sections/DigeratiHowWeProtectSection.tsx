@@ -53,13 +53,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
 
   return (
     <section 
-      className="py-16 md:py-20 lg:py-24 bg-[#0a0118] relative overflow-hidden"
-      style={{
-        backgroundImage: `
-          radial-gradient(circle at 30% 20%, rgba(139,92,246,0.1), transparent 50%),
-          radial-gradient(circle at 70% 80%, rgba(34,211,238,0.08), transparent 50%)
-        `
-      }}
+      className="py-[60px] bg-[#F7FAFC] relative overflow-hidden"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
@@ -69,10 +63,10 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1A202C] leading-tight mb-4">
             How We Protect Your Business
           </h2>
-          <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-[#4A5568] leading-relaxed max-w-3xl mx-auto">
             Our proven 4-step process ensures your business stays secure and compliant
           </p>
         </motion.div>
@@ -85,7 +79,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
           viewport={{ once: true, margin: "-100px" }}
         >
           {/* Vertical Timeline Line */}
-          <div className="absolute left-8 md:left-12 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-500/60 via-cyan-400/60 to-purple-500/60 rounded-full shadow-[0_0_15px_rgba(139,92,246,0.4)]" />
+          <div className="absolute left-8 md:left-12 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-500 via-purple-400 to-purple-500 rounded-full" />
 
           {/* Timeline Steps */}
           <div className="space-y-8 md:space-y-12">
@@ -99,32 +93,29 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
                 {/* Step Number Circle */}
                 <div className="relative z-10 flex-shrink-0">
                   <div 
-                    className="w-16 h-16 md:w-24 md:h-24 rounded-full flex items-center justify-center relative animate-pulse"
-                    style={{ animationDuration: '3s' }}
+                    className="w-16 h-16 md:w-24 md:h-24 rounded-full flex items-center justify-center relative"
                   >
                     {/* Gradient Border */}
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-500 via-cyan-400 to-purple-500 p-[2px]">
-                      <div className="w-full h-full rounded-full bg-[#0a0118] flex items-center justify-center">
-                        <span className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(139,92,246,0.5)]">
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 p-[2px]">
+                      <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+                        <span className="text-2xl md:text-3xl font-bold text-purple-600">
                           {step.number}
                         </span>
                       </div>
                     </div>
-                    {/* Glow Effect */}
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-500/20 to-cyan-400/20 blur-xl" />
                   </div>
                 </div>
 
                 {/* Step Card */}
                 <motion.div 
-                  className="flex-1 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6 md:p-8 transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:shadow-[0_0_30px_rgba(139,92,246,0.2)] group"
+                  className="flex-1 bg-white border border-gray-200 rounded-xl p-6 md:p-8 transition-all duration-300 hover:border-purple-300 hover:shadow-lg group"
                   whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <h3 className="text-xl md:text-2xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-cyan-400 group-hover:to-purple-500 group-hover:bg-clip-text transition-all duration-300">
+                  <h3 className="text-xl md:text-2xl font-bold text-[#1A202C] mb-3 group-hover:text-purple-600 transition-all duration-300">
                     {step.title}
                   </h3>
-                  <p className="text-gray-300 leading-relaxed">
+                  <p className="text-[#4A5568] leading-relaxed">
                     {step.description}
                   </p>
                 </motion.div>

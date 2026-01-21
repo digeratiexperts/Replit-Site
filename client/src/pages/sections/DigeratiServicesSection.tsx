@@ -7,37 +7,43 @@ export const DigeratiServicesSection = (): JSX.Element => {
     {
       icon: Eye,
       title: "SOC / MDR Monitoring + Response",
-      description: "24/7 Security Operations Center with real-time threat detection, investigation, and response.",
+      description: "24/7 Security Operations Center with real-time threat detection and response.",
+      link: "/solutions/security-operations",
       testId: "card-threat-monitoring"
     },
     {
       icon: ShieldCheck,
       title: "Endpoint Security (EDR)",
-      description: "Advanced endpoint detection and response protecting all devices in your environment.",
+      description: "Advanced endpoint detection protecting all devices in your environment.",
+      link: "/solutions/endpoint-management",
       testId: "card-endpoint"
     },
     {
       icon: UserCheck,
       title: "SMART Identity (MFA + SSO)",
-      description: "Multi-factor authentication, single sign-on, password management, and conditional access policies.",
+      description: "Multi-factor authentication and single sign-on for secure access.",
+      link: "/solutions/identity-management",
       testId: "card-mfa"
     },
     {
       icon: KeyRound,
       title: "Privileged Access Controls",
-      description: "Admin controls, access reviews, audit logs, and device trust for enterprise security.",
+      description: "Admin controls, audit logs, and device trust for enterprise security.",
+      link: "/solutions/identity-management",
       testId: "card-identity"
     },
     {
       icon: Cloud,
       title: "Backup & Disaster Recovery",
-      description: "Backup strategy with restore testing, DR runbooks, and off-site backup for business continuity.",
+      description: "Backup strategy with DR runbooks for business continuity.",
+      link: "/solutions/backup-disaster-recovery",
       testId: "card-cloud"
     },
     {
       icon: AlertCircle,
       title: "Email Protection (Anti-Phishing)",
-      description: "Advanced email filtering, content controls, and protection against phishing and malicious attachments.",
+      description: "Advanced email filtering and protection against phishing attacks.",
+      link: "/solutions/email-security",
       testId: "card-phishing"
     }
   ];
@@ -73,7 +79,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
   return (
     <section 
       id="services" 
-      className="relative py-16 md:py-20 lg:py-24 bg-gradient-to-br from-[#07041a] via-[#0f0b2c] to-[#1a1143] overflow-hidden"
+      className="relative py-[60px] bg-gradient-to-br from-[#07041a] via-[#0f0b2c] to-[#1a1143] overflow-hidden"
     >
       {/* Mesh gradient overlay */}
       <div 
@@ -146,9 +152,16 @@ export const DigeratiServicesSection = (): JSX.Element => {
                 <h3 className="text-xl font-bold text-white mb-3">
                   {service.title}
                 </h3>
-                <p className="text-gray-300 leading-relaxed">
+                <p className="text-gray-300 leading-relaxed line-clamp-2 mb-4">
                   {service.description}
                 </p>
+                <a 
+                  href={service.link}
+                  className="inline-flex items-center text-cyan-400 hover:text-cyan-300 font-medium text-sm transition-colors"
+                  data-testid={`link-${service.testId}`}
+                >
+                  Learn More <ArrowRight className="ml-1 h-4 w-4" />
+                </a>
               </motion.div>
             );
           })}

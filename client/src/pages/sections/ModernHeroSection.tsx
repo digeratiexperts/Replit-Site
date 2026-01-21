@@ -1,44 +1,12 @@
-import { motion, useScroll, useTransform, useReducedMotion, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
-import { ArrowRight, Phone, Sparkles, Shield, Zap, Clock, CheckCircle, Building, FileCheck, Loader2, X, ShieldCheck, Award, Apple, Check } from "lucide-react";
+import { ArrowRight, Phone, Sparkles, Shield, Zap, Clock, CheckCircle, Building, FileCheck, ShieldCheck, Award, Apple, Check } from "lucide-react";
 import { AnimatedShield, NetworkNodes, FloatingParticles, DashboardMockup } from "@/components/graphics";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-
-// Step 1 schema - minimal friction
-const step1Schema = z.object({
-  fullName: z.string()
-    .min(2, "Name must be at least 2 characters")
-    .max(50, "Name must be less than 50 characters"),
-  email: z.string()
-    .email("Please enter a valid email address"),
-});
-
-// Step 2 schema - qualification questions
-const step2Schema = z.object({
-  phone: z.string().optional(),
-  company: z.string().optional(),
-  endpoints: z.string().min(1, "Please select an option"),
-  hasProvider: z.string().min(1, "Please select an option"),
-  primaryConcern: z.string().min(1, "Please select an option"),
-});
-
-type Step1Data = z.infer<typeof step1Schema>;
-type Step2Data = z.infer<typeof step2Schema>;
 
 export const ModernHeroSection = (): JSX.Element => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [showStep2Modal, setShowStep2Modal] = useState(false);
-  const [step1Data, setStep1Data] = useState<Step1Data | null>(null);
-  const { toast } = useToast();
   const prefersReducedMotion = useReducedMotion();
   
   useEffect(() => {
@@ -55,89 +23,6 @@ export const ModernHeroSection = (): JSX.Element => {
 
   const y = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 150]);
   const opacity = useTransform(scrollYProgress, isMobile ? [0, 1] : [0, 0.85], [1, 0]);
-
-  // Step 1 form
-  const step1Form = useForm<Step1Data>({
-    resolver: zodResolver(step1Schema),
-    defaultValues: {
-      fullName: "",
-      email: "",
-    },
-  });
-
-  // Step 2 form
-  const step2Form = useForm<Step2Data>({
-    resolver: zodResolver(step2Schema),
-    defaultValues: {
-      phone: "",
-      company: "",
-      endpoints: "",
-      hasProvider: "",
-      primaryConcern: "",
-    },
-  });
-
-  const handleStep1Submit = async (data: Step1Data) => {
-    setStep1Data(data);
-    setShowStep2Modal(true);
-  };
-
-  const handleStep2Submit = async (data: Step2Data) => {
-    setIsSubmitting(true);
-    
-    try {
-      // Combine step 1 and step 2 data
-      const fullData = { ...step1Data, ...data };
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      toast({
-        title: "Assessment Request Submitted!",
-        description: "We'll contact you within 24 hours to schedule your free assessment.",
-        variant: "default",
-      });
-      
-      step1Form.reset();
-      step2Form.reset();
-      setShowStep2Modal(false);
-      setStep1Data(null);
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again later.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleSkipStep2 = async () => {
-    setIsSubmitting(true);
-    
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      toast({
-        title: "Request Received!",
-        description: "We'll be in touch within 24 hours.",
-        variant: "default",
-      });
-      
-      step1Form.reset();
-      setShowStep2Modal(false);
-      setStep1Data(null);
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again later.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   const stats = [
     { icon: Shield, value: "99.9%", label: "Uptime SLA", delay: 0 },
@@ -157,6 +42,13 @@ export const ModernHeroSection = (): JSX.Element => {
     { name: "Microsoft Partner", icon: Award },
     { name: "Apple Consultants", icon: Apple },
   ];
+
+  const handleScrollToForm = () => {
+    const formElement = document.getElementById('assessment-form');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <section 
@@ -229,16 +121,15 @@ export const ModernHeroSection = (): JSX.Element => {
         {/* Fluid container - wide feel but never edge-to-edge */}
         <div className="mx-auto w-[min(94vw,1680px)] 2xl:w-[min(92vw,1800px)]">
           
-          {/* Main grid - Form on left, Dashboard on right */}
+          {/* Main grid - Content on left, Dashboard on right */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
             
-            {/* Left column - Vertical Form with integrated info */}
+            {/* Left column - Content with CTA */}
             <motion.div 
               className="flex flex-col gap-6 w-full"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              id="assessment-form"
             >
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-purple-500/30 bg-purple-500/10 backdrop-blur-sm w-fit">
@@ -276,7 +167,7 @@ export const ModernHeroSection = (): JSX.Element => {
                 ))}
               </div>
 
-              {/* Trust Badges - Credibility row ABOVE the form */}
+              {/* Trust Badges - Credibility row */}
               <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
                 <span className="text-gray-300 font-medium">Trusted by:</span>
                 {trustBadges.map((badge) => (
@@ -291,116 +182,49 @@ export const ModernHeroSection = (): JSX.Element => {
                 ))}
               </div>
 
-              {/* Form Card - Glassmorphism - STEP 1: Just Name + Email */}
+              {/* CTA Buttons */}
               <motion.div
-                className="relative"
+                className="flex flex-col sm:flex-row gap-4 mt-2"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                {/* Subtle glow effect - reduced intensity */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/15 via-transparent to-cyan-600/15 blur-2xl" />
-                
-                {/* Form container - Softer styling */}
-                <div className="relative backdrop-blur-xl bg-[#1a0a2e]/70 border border-white/10 rounded-2xl p-6 shadow-[0_4px_24px_rgba(0,0,0,0.3)]">
-                  <Form {...step1Form}>
-                    <form onSubmit={step1Form.handleSubmit(handleStep1Submit)} className="space-y-4">
-                      {/* Form fields - Just Name + Email */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <FormField
-                          control={step1Form.control}
-                          name="fullName"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-sm text-gray-300 font-medium">Full Name</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  placeholder="John Smith" 
-                                  data-testid="input-hero-full-name"
-                                  className="h-12 bg-white/10 border-white/30 text-white placeholder:text-gray-400 focus-visible:ring-purple-500 focus-visible:border-purple-400 text-base"
-                                  disabled={isSubmitting}
-                                  {...field} 
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={step1Form.control}
-                          name="email"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-sm text-gray-300 font-medium">Work Email</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  type="email" 
-                                  placeholder="john@company.com" 
-                                  data-testid="input-hero-email"
-                                  className="h-12 bg-white/10 border-white/30 text-white placeholder:text-gray-400 focus-visible:ring-purple-500 focus-visible:border-purple-400 text-base"
-                                  disabled={isSubmitting}
-                                  {...field} 
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      {/* Primary CTA Button - centered icon */}
-                      <Button 
-                        type="submit"
-                        size="lg"
-                        data-testid="button-hero-submit"
-                        disabled={isSubmitting}
-                        className="w-full h-14 text-lg font-bold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-0 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300 justify-center gap-2"
-                      >
-                        {isSubmitting ? (
-                          <>
-                            <Loader2 className="h-5 w-5 animate-spin" />
-                            Submitting...
-                          </>
-                        ) : (
-                          <>
-                            Get Free Assessment
-                            <ArrowRight className="w-5 h-5" />
-                          </>
-                        )}
-                      </Button>
-
-                      {/* Reassurance microcopy - pulled closer to CTA */}
-                      <div className="flex items-center justify-center gap-5 text-gray-300">
-                        <div className="flex items-center gap-1.5">
-                          <Check className="w-4 h-4 text-green-400" />
-                          <span className="text-sm">No obligation</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <Check className="w-4 h-4 text-green-400" />
-                          <span className="text-sm">Results in 24-48hrs</span>
-                        </div>
-                        <div className="hidden sm:flex items-center gap-1.5">
-                          <Check className="w-4 h-4 text-green-400" />
-                          <span className="text-sm">No credit card</span>
-                        </div>
-                      </div>
-
-                      {/* Phone as text link - secondary option */}
-                      <p className="text-center text-sm text-gray-500">
-                        Prefer to call?{" "}
-                        <a 
-                          href="tel:325-480-9870" 
-                          data-testid="link-hero-phone"
-                          className="text-cyan-400 hover:text-cyan-300 transition-colors"
-                        >
-                          325-480-9870
-                        </a>
-                      </p>
-                    </form>
-                  </Form>
-                </div>
+                <Button 
+                  size="lg"
+                  data-testid="button-hero-assessment"
+                  onClick={handleScrollToForm}
+                  className="h-14 px-8 text-lg font-bold bg-purple-600 hover:bg-purple-700 text-white border-0 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300 justify-center gap-2"
+                >
+                  Get Free Assessment
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+                <Button 
+                  size="lg"
+                  variant="outline"
+                  data-testid="button-hero-call"
+                  className="h-14 px-8 text-lg font-medium border-2 border-white/30 text-white bg-transparent hover:bg-white/10 hover:border-white/50 transition-all duration-300 gap-2"
+                  onClick={() => window.location.href = 'tel:325-480-9870'}
+                >
+                  <Phone className="w-5 h-5" />
+                  Call 325-480-9870
+                </Button>
               </motion.div>
+
+              {/* Reassurance microcopy */}
+              <div className="flex items-center gap-5 text-gray-300 mt-2">
+                <div className="flex items-center gap-1.5">
+                  <Check className="w-4 h-4 text-green-400" />
+                  <span className="text-sm">No obligation</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Check className="w-4 h-4 text-green-400" />
+                  <span className="text-sm">Results in 24-48hrs</span>
+                </div>
+                <div className="hidden sm:flex items-center gap-1.5">
+                  <Check className="w-4 h-4 text-green-400" />
+                  <span className="text-sm">No credit card</span>
+                </div>
+              </div>
 
               {/* Stats row - compact, subtle styling */}
               <div className="grid grid-cols-3 gap-3 mt-6">
@@ -495,241 +319,6 @@ export const ModernHeroSection = (): JSX.Element => {
           />
         </motion.div>
       </motion.div>
-
-      {/* Step 2 Modal */}
-      <AnimatePresence>
-        {showStep2Modal && (
-          <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            {/* Backdrop */}
-            <motion.div
-              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => !isSubmitting && setShowStep2Modal(false)}
-            />
-
-            {/* Modal */}
-            <motion.div
-              className="relative w-full max-w-lg bg-gradient-to-br from-[#1a0a2e] to-[#0f0720] border border-white/15 rounded-2xl shadow-2xl overflow-hidden"
-              initial={{ scale: 0.9, y: 50, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.9, y: 50, opacity: 0 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            >
-              {/* Close button */}
-              <button
-                onClick={() => !isSubmitting && setShowStep2Modal(false)}
-                className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors z-10"
-                disabled={isSubmitting}
-              >
-                <X className="w-5 h-5 text-white/70" />
-              </button>
-
-              {/* Glow effect */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-purple-500/20 blur-3xl" />
-
-              <div className="relative p-6 sm:p-8">
-                {/* Progress indicator */}
-                <div className="flex items-center justify-center gap-2 mb-6">
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
-                      <Check className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="text-sm text-green-400">Step 1</span>
-                  </div>
-                  <div className="w-8 h-px bg-white/20" />
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center text-white text-sm font-medium">
-                      2
-                    </div>
-                    <span className="text-sm text-purple-400">Step 2</span>
-                  </div>
-                </div>
-
-                {/* Header */}
-                <div className="text-center mb-6">
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
-                    Almost there! Just 3 quick questions
-                  </h3>
-                  <p className="text-sm text-gray-400">
-                    Help us personalize your security assessment
-                  </p>
-                </div>
-
-                {/* User info recap */}
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/10 mb-6">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center text-white font-medium">
-                    {step1Data?.fullName?.charAt(0).toUpperCase() || 'U'}
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-white">{step1Data?.fullName}</p>
-                    <p className="text-xs text-gray-400">{step1Data?.email}</p>
-                  </div>
-                </div>
-
-                {/* Step 2 Form */}
-                <Form {...step2Form}>
-                  <form onSubmit={step2Form.handleSubmit(handleStep2Submit)} className="space-y-4">
-                    {/* Endpoints dropdown */}
-                    <FormField
-                      control={step2Form.control}
-                      name="endpoints"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm text-gray-300">How many devices/computers do you have?</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger className="h-11 bg-white/10 border-white/20 text-white">
-                                <SelectValue placeholder="Select range" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent className="bg-[#1a0a2e] border-white/20 text-white">
-                              <SelectItem value="1-10" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">1-10 devices</SelectItem>
-                              <SelectItem value="11-25" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">11-25 devices</SelectItem>
-                              <SelectItem value="26-50" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">26-50 devices</SelectItem>
-                              <SelectItem value="51-100" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">51-100 devices</SelectItem>
-                              <SelectItem value="100+" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">100+ devices</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* Current provider dropdown */}
-                    <FormField
-                      control={step2Form.control}
-                      name="hasProvider"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm text-gray-300">Do you currently have an IT provider?</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger className="h-11 bg-white/10 border-white/20 text-white">
-                                <SelectValue placeholder="Select option" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent className="bg-[#1a0a2e] border-white/20 text-white">
-                              <SelectItem value="no" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">No, managing internally</SelectItem>
-                              <SelectItem value="yes-happy" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Yes, but exploring options</SelectItem>
-                              <SelectItem value="yes-switching" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Yes, looking to switch</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* Primary concern dropdown */}
-                    <FormField
-                      control={step2Form.control}
-                      name="primaryConcern"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm text-gray-300">What's your primary concern?</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger className="h-11 bg-white/10 border-white/20 text-white">
-                                <SelectValue placeholder="Select concern" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent className="bg-[#1a0a2e] border-white/20 text-white">
-                              <SelectItem value="compliance" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Compliance requirements</SelectItem>
-                              <SelectItem value="insurance" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Cyber insurance requirements</SelectItem>
-                              <SelectItem value="breach" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Recent breach or threat</SelectItem>
-                              <SelectItem value="protection" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">General protection</SelectItem>
-                              <SelectItem value="other" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Other</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* Optional fields */}
-                    <div className="grid grid-cols-2 gap-4 pt-2">
-                      <FormField
-                        control={step2Form.control}
-                        name="phone"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-sm text-gray-400">Phone (optional)</FormLabel>
-                            <FormControl>
-                              <Input 
-                                type="tel" 
-                                placeholder="(480) 000-0000" 
-                                data-testid="input-step2-phone"
-                                className="h-10 bg-white/10 border-white/20 text-white placeholder:text-gray-500"
-                                {...field} 
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={step2Form.control}
-                        name="company"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-sm text-gray-400">Company (optional)</FormLabel>
-                            <FormControl>
-                              <Input 
-                                placeholder="Your Company" 
-                                data-testid="input-step2-company"
-                                className="h-10 bg-white/10 border-white/20 text-white placeholder:text-gray-500"
-                                {...field} 
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
-                    {/* Submit button */}
-                    <div className="flex flex-col gap-3 pt-2">
-                      <Button 
-                        type="submit"
-                        size="lg"
-                        data-testid="button-step2-submit"
-                        disabled={isSubmitting}
-                        className="w-full h-12 text-base font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-0 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300"
-                      >
-                        {isSubmitting ? (
-                          <>
-                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                            Submitting...
-                          </>
-                        ) : (
-                          <>
-                            Complete My Assessment
-                            <ArrowRight className="w-5 h-5 ml-2" />
-                          </>
-                        )}
-                      </Button>
-
-                      <button
-                        type="button"
-                        onClick={handleSkipStep2}
-                        disabled={isSubmitting}
-                        className="text-sm text-gray-400 hover:text-white transition-colors"
-                      >
-                        Skip for now, just send my request
-                      </button>
-                    </div>
-                  </form>
-                </Form>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   );
 };
