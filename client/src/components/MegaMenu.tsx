@@ -291,6 +291,22 @@ export function MegaMenu() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close mobile menu when resizing to desktop viewport
+  useEffect(() => {
+    const handleResize = () => {
+      const isDesktop = window.innerWidth >= 1024; // lg breakpoint
+      if (isDesktop && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+      if (!isDesktop && activeMenu) {
+        setActiveMenu(null);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [mobileMenuOpen, activeMenu]);
+
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {
