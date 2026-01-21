@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle, Building, FileCheck, Check, Loader2, Shield, User, Mail } from "lucide-react";
+import { ArrowRight, CheckCircle, Building, FileCheck, Check, Loader2, Shield, User, Mail, Clock, Activity, Zap } from "lucide-react";
 import { DashboardMockup } from "@/components/graphics";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
@@ -228,6 +228,42 @@ export const ModernHeroSection = (): JSX.Element => {
               <p className="text-white/50 text-base md:text-lg">
                 Or call <a href="tel:325-480-9870" className="text-violet-400 hover:text-violet-300 font-medium transition-colors" data-testid="link-hero-phone">325-480-9870</a>
               </p>
+
+              {/* Stats Bar */}
+              <motion.div 
+                className="flex flex-wrap gap-6 mt-4 pt-6 border-t border-white/10"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
+                    <Zap className="w-5 h-5 text-violet-400" />
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-white">99.9%</div>
+                    <div className="text-sm text-white/50">Uptime SLA</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
+                    <Clock className="w-5 h-5 text-violet-400" />
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-white">&lt;15min</div>
+                    <div className="text-sm text-white/50">Response Time</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
+                    <Activity className="w-5 h-5 text-violet-400" />
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-white">24/7</div>
+                    <div className="text-sm text-white/50">Monitoring</div>
+                  </div>
+                </div>
+              </motion.div>
             </motion.div>
 
             {/* Right column - Dashboard Visual (hidden on mobile, visible tablet+) */}

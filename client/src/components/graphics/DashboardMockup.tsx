@@ -75,7 +75,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
           <div className="grid grid-cols-3 gap-3">
             {[
               { icon: CheckCircle, label: "Threats Blocked", value: "2,847", color: "from-green-500 to-emerald-600", trend: "+12%" },
-              { icon: Eye, label: "Endpoints Monitored", value: "156", color: "from-blue-500 to-cyan-600", trend: "Active" },
+              { icon: Eye, label: "Endpoints Monitored", value: "156", color: "from-violet-500 to-purple-600", trend: "Active" },
               { icon: AlertTriangle, label: "Risk Score", value: "Low", color: "from-purple-500 to-violet-600", trend: "Optimal" },
             ].map((stat, index) => (
               <motion.div
