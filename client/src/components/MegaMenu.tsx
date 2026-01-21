@@ -326,17 +326,17 @@ export function MegaMenu() {
 
   return (
     <>
-      {/* Top Utility Bar */}
+      {/* Top Utility Bar - subtle, matches header */}
       <div 
-        className={`fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-purple-900/90 to-blue-900/90 backdrop-blur-sm transition-all duration-300 ${
-          isScrolled ? 'h-0 overflow-hidden opacity-0' : 'h-auto md:h-10'
+        className={`fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-white/5 transition-all duration-300 ${
+          isScrolled ? 'h-0 overflow-hidden opacity-0' : 'h-auto md:h-9'
         }`}
       >
         <div className="container mx-auto px-4 lg:px-8 h-full flex flex-col md:flex-row items-center justify-end py-2 md:py-0">
           <div className="flex items-center flex-wrap gap-2 md:gap-6 justify-center md:justify-end">
             <a
               href="tel:325-480-9870"
-              className="flex items-center text-white/90 hover:text-cyan-400 text-xs md:text-sm font-medium transition-colors"
+              className="flex items-center text-white/60 hover:text-white text-xs md:text-sm font-medium transition-colors"
               data-testid="utility-phone"
             >
               <Phone className="h-3.5 w-3.5 mr-1.5" />
@@ -348,7 +348,7 @@ export function MegaMenu() {
               href="https://portal.digeratiexperts.com/portal/login"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center text-white/90 hover:text-cyan-400 text-xs md:text-sm font-medium transition-colors"
+              className="flex items-center text-white/60 hover:text-white text-xs md:text-sm font-medium transition-colors"
               data-testid="utility-portal"
             >
               <span className="hidden sm:inline">Client Portal</span>
@@ -359,12 +359,12 @@ export function MegaMenu() {
         </div>
       </div>
 
-      {/* Main Navigation */}
+      {/* Main Navigation - clean black background */}
       <nav 
         className={`fixed left-0 right-0 z-50 mega-menu-container transition-all duration-300 ${
           isScrolled 
-            ? 'top-0 bg-[#050210] backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(139,92,246,0.25)]' 
-            : 'top-10 bg-[#0a0118] backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(139,92,246,0.15)]'
+            ? 'top-0 bg-black/95 backdrop-blur-xl border-b border-white/[0.08]' 
+            : 'top-9 bg-black/90 backdrop-blur-xl border-b border-white/[0.05]'
         }`}
         ref={menuContainerRef}
         role="navigation"
@@ -400,21 +400,21 @@ export function MegaMenu() {
                   {item.isSimple ? (
                     <a
                       href={item.href}
-                      className="group relative px-3 py-2 text-white hover:text-cyan-400 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-[#0a0118] rounded"
+                      className="group relative px-3 py-2 text-white/80 hover:text-white font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded"
                       data-testid={`nav-${item.name.toLowerCase()}`}
                       onClick={handleLinkClick}
                       aria-label={`Go to ${item.name}`}
                     >
                       {item.name}
-                      <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-500 group-hover:w-full transition-all duration-300" />
+                      <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-violet-400 group-hover:w-full transition-all duration-300" />
                     </a>
                   ) : (
                     <button
                       ref={(el) => {
                         if (el) navButtonsRef.current.set(item.name, el);
                       }}
-                      className={`group relative px-3 py-2 text-white hover:text-cyan-400 font-medium transition-colors flex items-center focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-[#0a0118] rounded ${
-                        activeMenu === item.name ? 'text-cyan-400' : ''
+                      className={`group relative px-3 py-2 text-white/80 hover:text-white font-medium transition-colors flex items-center focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded ${
+                        activeMenu === item.name ? 'text-white' : ''
                       }`}
                       data-testid={`nav-${item.name.toLowerCase()}`}
                       data-menu-trigger="true"
@@ -430,7 +430,7 @@ export function MegaMenu() {
                         }`} 
                         aria-hidden="true"
                       />
-                      <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-500 transition-all duration-300 ${
+                      <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-violet-400 transition-all duration-300 ${
                         activeMenu === item.name ? 'w-full' : 'w-0 group-hover:w-full'
                       }`} />
                     </button>
