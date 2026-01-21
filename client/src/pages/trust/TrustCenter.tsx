@@ -10,7 +10,7 @@ export default function TrustCenter() {
   const certifications = [
     { icon: Award, title: "SOC 2 Type II", desc: "Independently audited security controls for Service Organization Control", status: "Certified", gradient: "from-purple-500 to-indigo-600" },
     { icon: FileCheck, title: "HIPAA Compliant", desc: "Business Associate Agreements available for healthcare clients", status: "Compliant", gradient: "from-indigo-500 to-blue-600" },
-    { icon: Lock, title: "PCI DSS", desc: "Payment Card Industry Data Security Standard compliance", status: "Compliant", gradient: "from-blue-500 to-cyan-600" }
+    { icon: Lock, title: "PCI DSS", desc: "Payment Card Industry Data Security Standard compliance", status: "Compliant", gradient: "from-violet-500 to-purple-600" }
   ];
 
   const technicalControls = [
@@ -152,7 +152,7 @@ export default function TrustCenter() {
 
         {/* Infrastructure Security */}
         <motion.div 
-          className="bg-white/5 backdrop-blur-sm border-l-4 border-blue-500 border border-white/10 rounded-xl p-8"
+          className="bg-white/5 backdrop-blur-sm border-l-4 border-violet-500 border border-white/10 rounded-xl p-8"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

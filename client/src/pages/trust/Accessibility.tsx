@@ -25,7 +25,7 @@ export default function Accessibility() {
   ];
 
   const supportedUsers = [
-    { icon: Eye, text: "Blind or have low vision", color: "from-blue-500 to-cyan-600" },
+    { icon: Eye, text: "Blind or have low vision", color: "from-violet-500 to-purple-600" },
     { icon: Ear, text: "Deaf or have hearing loss", color: "from-purple-500 to-indigo-600" },
     { icon: Hand, text: "Living with mobility impairments", color: "from-green-500 to-emerald-600" },
     { icon: Brain, text: "Living with cognitive disabilities", color: "from-amber-500 to-orange-600" }
@@ -58,14 +58,14 @@ export default function Accessibility() {
 
         {/* Conformance Status */}
         <motion.div 
-          className="bg-white/5 backdrop-blur-sm border-l-4 border-blue-500 border border-white/10 rounded-xl p-8"
+          className="bg-white/5 backdrop-blur-sm border-l-4 border-violet-500 border border-white/10 rounded-xl p-8"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
               <CheckCircle className="w-5 h-5 text-white" />
             </div>
             <h2 className="text-2xl font-bold text-white">Conformance Status</h2>

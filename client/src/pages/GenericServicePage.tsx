@@ -36,7 +36,7 @@ const FeatureCard = ({
     <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/30 hover:bg-white/[0.08] transition-all duration-300 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       <CardHeader className="relative">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-600 to-cyan-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
           {feature.icon || <Sparkles className="w-6 h-6 text-white" />}
         </div>
         <CardTitle className="text-xl font-semibold text-white group-hover:text-purple-300 transition-colors">
@@ -56,7 +56,7 @@ export default function GenericServicePage({
   description,
   features,
   benefits,
-  gradientColors = "from-purple-600 via-indigo-600 to-blue-600"
+  gradientColors = "from-violet-600 via-purple-600 to-fuchsia-600"
 }: GenericServicePageProps) {
   const prefersReducedMotion = useReducedMotion() ?? false;
   
@@ -76,7 +76,7 @@ export default function GenericServicePage({
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-500 to-cyan-500 rounded-full" />
+          <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-violet-500 to-fuchsia-500 rounded-full" />
           <p className="text-xl text-gray-300 leading-relaxed pl-6 max-w-4xl">
             {description}
           </p>
@@ -92,7 +92,7 @@ export default function GenericServicePage({
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-600 to-cyan-500 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-600 to-fuchsia-500 flex items-center justify-center">
                 <Zap className="w-5 h-5 text-white" />
               </div>
               <h2 className="text-3xl font-bold text-white">Key Features</h2>
@@ -121,11 +121,11 @@ export default function GenericServicePage({
           >
             {/* Decorative elements */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-500/10 to-transparent rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-cyan-500/10 to-transparent rounded-full blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-fuchsia-500/10 to-transparent rounded-full blur-3xl" />
             
             <div className="relative">
               <div className="flex items-center gap-3 mb-8">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center">
                   <CheckCircle className="w-5 h-5 text-white" />
                 </div>
                 <h2 className="text-3xl font-bold text-white">What You Get</h2>
@@ -141,7 +141,7 @@ export default function GenericServicePage({
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.05, duration: 0.3 }}
                   >
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center">
                       <CheckCircle className="h-4 w-4 text-white" />
                     </div>
                     <span className="text-gray-300 font-medium">{benefit}</span>
@@ -161,7 +161,7 @@ export default function GenericServicePage({
           transition={{ duration: 0.5 }}
         >
           {/* Gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-600" />
+          <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600" />
           
           {/* Mesh overlay */}
           <div className="absolute inset-0 opacity-30">
@@ -176,7 +176,7 @@ export default function GenericServicePage({
           </div>
           
           {/* Glowing orbs */}
-          <div className="absolute -top-20 -right-20 w-64 h-64 bg-cyan-400/20 rounded-full blur-3xl" />
+          <div className="absolute -top-20 -right-20 w-64 h-64 bg-fuchsia-400/20 rounded-full blur-3xl" />
           <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-purple-400/20 rounded-full blur-3xl" />
           
           <div className="relative p-8 md:p-12 text-center">

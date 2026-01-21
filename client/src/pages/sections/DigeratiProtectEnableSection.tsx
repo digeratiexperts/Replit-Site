@@ -16,21 +16,21 @@ export const DigeratiProtectEnableSection = (): JSX.Element => {
       description: "Every system, endpoint, and user is protected - by design, not by reaction.",
       icon: Shield,
       image: securityImg,
-      gradient: "from-purple-600 to-blue-600"
+      gradient: "from-violet-600 to-purple-600"
     },
     {
       title: "Co-Managed or Fully Managed",
       description: "We support your internal IT or serve as your outsourced technology team.",
       icon: Users,
       image: techWorkImg,
-      gradient: "from-blue-500 to-cyan-500"
+      gradient: "from-purple-500 to-fuchsia-500"
     },
     {
       title: "Executive-Level Transparency",
       description: "Reports, KPIs, and compliance insights that make sense - and drive decisions.",
       icon: BarChart,
       image: codeImg,
-      gradient: "from-cyan-400 to-teal-500"
+      gradient: "from-fuchsia-400 to-pink-500"
     }
   ];
 
@@ -45,7 +45,7 @@ export const DigeratiProtectEnableSection = (): JSX.Element => {
       icon: Code,
       title: "Technology Excellence",
       description: "We leverage cutting-edge tools and platforms to deliver enterprise-grade solutions to businesses of all sizes.",
-      gradient: "from-cyan-500 to-blue-600"
+      gradient: "from-fuchsia-500 to-violet-600"
     }
   ];
 

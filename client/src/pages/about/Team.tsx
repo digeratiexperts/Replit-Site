@@ -20,21 +20,21 @@ export default function Team() {
       description: "Specialized cybersecurity experts protecting your business 24/7",
       certifications: ["CEH", "GIAC", "OSCP", "Security+"],
       icon: Shield,
-      gradient: "from-indigo-500 to-blue-600"
+      gradient: "from-purple-500 to-violet-600"
     },
     {
       name: "System Engineers",
       description: "Infrastructure experts ensuring your systems run smoothly",
       certifications: ["MCSE", "VMware VCP", "AWS Certified", "Azure Administrator"],
       icon: Briefcase,
-      gradient: "from-blue-500 to-cyan-600"
+      gradient: "from-violet-500 to-fuchsia-600"
     },
     {
       name: "Support Team",
       description: "Friendly, responsive technicians ready to help when you need it",
       certifications: ["A+", "Network+", "ITIL", "HDI Support"],
       icon: Users,
-      gradient: "from-cyan-500 to-teal-600"
+      gradient: "from-fuchsia-500 to-pink-600"
     }
   ];
 

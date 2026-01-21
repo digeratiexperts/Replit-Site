@@ -215,13 +215,13 @@ export function LocationServicePage(props: LocationPageProps) {
 
                 {/* Headline */}
                 <h1 className="text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-bold leading-[1.1] tracking-tight">
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400">
                     {props.city} Businesses
                   </span>
                   <br />
                   <span className="text-white">
                     Deserve{" "}
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Better IT.</span>
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-fuchsia-400">Better IT.</span>
                   </span>
                 </h1>
 
@@ -241,7 +241,7 @@ export function LocationServicePage(props: LocationPageProps) {
 
                 {/* Form Card */}
                 <motion.div className="relative" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
-                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 via-transparent to-cyan-600/20 blur-2xl" />
+                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 via-transparent to-fuchsia-600/20 blur-2xl" />
                   
                   <div className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6">
                     <Form {...form}>
@@ -352,7 +352,7 @@ export function LocationServicePage(props: LocationPageProps) {
         <div className="mx-auto w-[min(94vw,1400px)] px-4">
           <motion.div className="text-center mb-16" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              IT Services for <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">{props.city}</span> Businesses
+              IT Services for <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-fuchsia-400">{props.city}</span> Businesses
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">{props.serviceRadius}</p>
           </motion.div>
@@ -378,14 +378,14 @@ export function LocationServicePage(props: LocationPageProps) {
         <div className="mx-auto w-[min(94vw,1400px)] px-4">
           <motion.div className="text-center mb-16" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Why {props.city} Chooses <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Digerati Experts</span>
+              Why {props.city} Chooses <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-fuchsia-400">Digerati Experts</span>
             </h2>
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             {props.whyChooseUs.map((reason, index) => (
               <motion.div key={index} className="flex gap-4 p-5 rounded-xl bg-white/5 border border-white/10" initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
-                <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0 mt-0.5" />
+                <CheckCircle className="w-6 h-6 text-emerald-400 flex-shrink-0 mt-0.5" />
                 <p className="text-gray-300">{reason}</p>
               </motion.div>
             ))}
@@ -402,7 +402,7 @@ export function LocationServicePage(props: LocationPageProps) {
 
           <div className="flex flex-wrap justify-center gap-4">
             {props.localProof.industries.map((industry, index) => (
-              <motion.div key={industry} className="px-6 py-3 rounded-full bg-gradient-to-r from-purple-500/10 to-cyan-500/10 border border-purple-500/30 text-gray-300" initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
+              <motion.div key={industry} className="px-6 py-3 rounded-full bg-gradient-to-r from-purple-500/10 to-fuchsia-500/10 border border-purple-500/30 text-gray-300" initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
                 {industry}
               </motion.div>
             ))}

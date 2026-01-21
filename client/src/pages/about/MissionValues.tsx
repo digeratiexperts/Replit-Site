@@ -17,19 +17,19 @@ export default function MissionValues() {
       icon: Users,
       title: "Partnership",
       description: "We're not just your IT provider – we're your technology partner. Your success is our success, and we're invested in your long-term growth.",
-      gradient: "from-indigo-500 to-blue-600"
+      gradient: "from-purple-500 to-violet-600"
     },
     {
       icon: Target,
       title: "Proactive Approach",
       description: "We prevent problems before they happen. Our proactive monitoring and maintenance keep your systems running smoothly 24/7.",
-      gradient: "from-blue-500 to-cyan-600"
+      gradient: "from-violet-500 to-fuchsia-600"
     },
     {
       icon: Heart,
       title: "Local Commitment",
       description: "Based in Chandler, Arizona, we're proud to serve businesses throughout the Phoenix metro area with personalized, local support.",
-      gradient: "from-cyan-500 to-teal-600"
+      gradient: "from-fuchsia-500 to-pink-600"
     }
   ];
 
