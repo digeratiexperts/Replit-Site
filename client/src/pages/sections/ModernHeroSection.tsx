@@ -131,82 +131,78 @@ export const ModernHeroSection = (): JSX.Element => {
               <div className="mt-2" id="assessment-form">
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
-                    <div className="flex flex-col gap-3">
-                      {/* Input fields row */}
-                      <div className="flex flex-col sm:flex-row gap-3">
-                        <FormField
-                          control={form.control}
-                          name="fullName"
-                          render={({ field }) => (
-                            <FormItem className="flex-1">
-                              <FormControl>
-                                <div className="relative">
-                                  <User className={`absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 pointer-events-none transition-colors duration-200 ${
-                                    selectedField === 'fullName' ? 'text-violet-400' : 'text-white/30'
-                                  }`} />
-                                  <Input 
-                                    placeholder="Your name" 
-                                    data-testid="input-hero-full-name"
-                                    className={`h-12 pl-11 text-white placeholder:text-white/40 transition-all duration-200 ${
-                                      selectedField === 'fullName' 
-                                        ? 'bg-white/10 border-violet-500/60 ring-1 ring-violet-500/30' 
-                                        : 'bg-white/5 border-white/10 hover:border-white/20'
-                                    }`}
-                                    disabled={isSubmitting}
-                                    onFocus={() => setSelectedField('fullName')}
-                                    {...field} 
-                                  />
-                                </div>
-                              </FormControl>
-                              <FormMessage className="text-red-400 text-xs" />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="email"
-                          render={({ field }) => (
-                            <FormItem className="flex-1">
-                              <FormControl>
-                                <div className="relative">
-                                  <Mail className={`absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 pointer-events-none transition-colors duration-200 ${
-                                    selectedField === 'email' ? 'text-violet-400' : 'text-white/30'
-                                  }`} />
-                                  <Input 
-                                    type="email" 
-                                    placeholder="Work email" 
-                                    data-testid="input-hero-email"
-                                    className={`h-12 pl-11 text-white placeholder:text-white/40 transition-all duration-200 ${
-                                      selectedField === 'email' 
-                                        ? 'bg-white/10 border-violet-500/60 ring-1 ring-violet-500/30' 
-                                        : 'bg-white/5 border-white/10 hover:border-white/20'
-                                    }`}
-                                    disabled={isSubmitting}
-                                    onFocus={() => setSelectedField('email')}
-                                    {...field} 
-                                  />
-                                </div>
-                              </FormControl>
-                              <FormMessage className="text-red-400 text-xs" />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <FormField
+                        control={form.control}
+                        name="fullName"
+                        render={({ field }) => (
+                          <FormItem className="flex-1">
+                            <FormControl>
+                              <div className="relative">
+                                <User className={`absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 pointer-events-none transition-colors duration-200 ${
+                                  selectedField === 'fullName' ? 'text-violet-400' : 'text-white/30'
+                                }`} />
+                                <Input 
+                                  placeholder="Your name" 
+                                  data-testid="input-hero-full-name"
+                                  className={`h-12 pl-11 text-white placeholder:text-white/40 transition-all duration-200 ${
+                                    selectedField === 'fullName' 
+                                      ? 'bg-white/10 border-violet-500/60 ring-1 ring-violet-500/30' 
+                                      : 'bg-white/5 border-white/10 hover:border-white/20'
+                                  }`}
+                                  disabled={isSubmitting}
+                                  onFocus={() => setSelectedField('fullName')}
+                                  {...field} 
+                                />
+                              </div>
+                            </FormControl>
+                            <FormMessage className="text-red-400 text-xs" />
+                          </FormItem>
+                        )}
+                      />
                       
-                      {/* Full-width submit button */}
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem className="flex-1">
+                            <FormControl>
+                              <div className="relative">
+                                <Mail className={`absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 pointer-events-none transition-colors duration-200 ${
+                                  selectedField === 'email' ? 'text-violet-400' : 'text-white/30'
+                                }`} />
+                                <Input 
+                                  type="email" 
+                                  placeholder="Work email" 
+                                  data-testid="input-hero-email"
+                                  className={`h-12 pl-11 text-white placeholder:text-white/40 transition-all duration-200 ${
+                                    selectedField === 'email' 
+                                      ? 'bg-white/10 border-violet-500/60 ring-1 ring-violet-500/30' 
+                                      : 'bg-white/5 border-white/10 hover:border-white/20'
+                                  }`}
+                                  disabled={isSubmitting}
+                                  onFocus={() => setSelectedField('email')}
+                                  {...field} 
+                                />
+                              </div>
+                            </FormControl>
+                            <FormMessage className="text-red-400 text-xs" />
+                          </FormItem>
+                        )}
+                      />
+                      
                       <Button 
                         type="submit"
                         size="lg"
                         data-testid="button-hero-submit"
                         disabled={isSubmitting}
-                        className="w-full sm:w-auto h-12 px-8 font-semibold bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white border-0 shadow-lg shadow-violet-500/25 hover:shadow-xl hover:shadow-violet-500/30 transition-all duration-300"
+                        className="h-12 px-6 font-semibold bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white border-0 shadow-lg shadow-violet-500/25 hover:shadow-xl hover:shadow-violet-500/30 transition-all duration-300 whitespace-nowrap"
                       >
                         {isSubmitting ? (
                           <Loader2 className="h-5 w-5 animate-spin" />
                         ) : (
                           <>
-                            Get Your Free Assessment
+                            Get Started
                             <ArrowRight className="ml-2 w-5 h-5" />
                           </>
                         )}
