@@ -61,37 +61,36 @@ export function MegaMenu() {
           featured: true,
           viewAllUrl: '/solutions',
           items: [
-            { title: 'Office Package', description: 'Everything your office needs in one plan', icon: <Monitor className="h-5 w-5" />, url: '/solutions/office-package', badge: 'Best Value', price: 'From $99/mo' },
-            { title: 'Co-Managed IT', description: 'Extend your IT team without hiring', icon: <Users className="h-5 w-5" />, url: '/solutions/co-managed-it', badge: 'Popular', price: 'Custom' },
+            { title: 'Office Package', description: 'Everything your office needs', icon: <Monitor className="h-5 w-5" />, url: '/solutions/office-package', badge: 'Best Value' },
+            { title: 'Co-Managed IT', description: 'Extend your IT team', icon: <Users className="h-5 w-5" />, url: '/solutions/co-managed-it', badge: 'Popular' },
+            { title: 'Managed IT Support', description: 'End recurring IT headaches', icon: <HeadphonesIcon className="h-5 w-5" />, url: '/solutions/managed-it-support' },
           ]
         },
         {
           title: 'Managed Services',
           viewAllUrl: '/solutions',
           items: [
-            { title: 'Managed IT Support', description: 'End recurring IT headaches for good', icon: <HeadphonesIcon className="h-5 w-5" />, url: '/solutions/managed-it-support' },
-            { title: 'Managed Workplace', description: 'Focus on work, not technology', icon: <Building className="h-5 w-5" />, url: '/solutions/managed-workplace' },
-            { title: 'Cloud Backup', description: 'Never lose critical business data', icon: <Cloud className="h-5 w-5" />, url: '/solutions/cloud-backup' },
-            { title: 'Security Training', description: 'Turn staff into security assets', icon: <Shield className="h-5 w-5" />, url: '/solutions/security-awareness' },
+            { title: 'Managed Workplace', description: 'Focus on work, not tech', icon: <Building className="h-5 w-5" />, url: '/solutions/managed-workplace' },
+            { title: 'Cloud Backup', description: 'Never lose business data', icon: <Cloud className="h-5 w-5" />, url: '/solutions/cloud-backup' },
+            { title: 'Security Training', description: 'Turn staff into assets', icon: <Shield className="h-5 w-5" />, url: '/solutions/security-awareness' },
           ]
         },
         {
-          title: 'Security Solutions',
+          title: 'Security',
           viewAllUrl: '/solutions',
           items: [
-            { title: 'Threat Detection', description: 'Stop attacks before damage occurs', icon: <Zap className="h-5 w-5" />, url: '/solutions/threat-detection' },
-            { title: 'Security Operations', description: '24/7 expert eyes on your systems', icon: <Lock className="h-5 w-5" />, url: '/solutions/security-operations' },
-            { title: 'Backup & DR', description: 'Recover in hours, not weeks', icon: <Server className="h-5 w-5" />, url: '/solutions/backup-disaster-recovery' },
+            { title: 'Threat Detection', description: 'Stop attacks early', icon: <Zap className="h-5 w-5" />, url: '/solutions/threat-detection' },
+            { title: 'Security Operations', description: '24/7 expert monitoring', icon: <Lock className="h-5 w-5" />, url: '/solutions/security-operations' },
+            { title: 'Backup & DR', description: 'Recover in hours', icon: <Server className="h-5 w-5" />, url: '/solutions/backup-disaster-recovery' },
           ]
         },
         {
-          title: 'Enterprise & Compliance',
+          title: 'Compliance',
           viewAllUrl: '/solutions',
           items: [
-            { title: 'vCIO & Strategy', description: 'Executive IT guidance on demand', icon: <BarChart3 className="h-5 w-5" />, url: '/solutions/vcio-strategy', badge: 'For Compliance' },
-            { title: 'Data Encryption', description: 'Protect sensitive information', icon: <Lock className="h-5 w-5" />, url: '/solutions/data-encryption' },
-            { title: 'Compliance Reports', description: 'Pass audits with confidence', icon: <ClipboardCheck className="h-5 w-5" />, url: '/solutions/compliance-reports' },
-            { title: 'Unified Security', description: 'Complete security visibility', icon: <Layers className="h-5 w-5" />, url: '/solutions/unified-security' },
+            { title: 'vCIO & Strategy', description: 'Executive IT guidance', icon: <BarChart3 className="h-5 w-5" />, url: '/solutions/vcio-strategy' },
+            { title: 'Compliance Reports', description: 'Pass audits confidently', icon: <ClipboardCheck className="h-5 w-5" />, url: '/solutions/compliance-reports' },
+            { title: 'Unified Security', description: 'Complete visibility', icon: <Layers className="h-5 w-5" />, url: '/solutions/unified-security' },
           ]
         }
       ]
@@ -101,20 +100,20 @@ export function MegaMenu() {
       sections: [
         {
           title: 'Industries We Serve',
+          viewAllUrl: '/industries',
           items: [
             { title: 'Healthcare', description: 'HIPAA compliance made simple', icon: <Shield className="h-5 w-5" />, url: '/industries/healthcare' },
             { title: 'Law Firms', description: 'Protect client confidentiality', icon: <FileCheck className="h-5 w-5" />, url: '/industries/law-firms' },
             { title: 'Accounting', description: 'Secure tax & financial data', icon: <Server className="h-5 w-5" />, url: '/industries/accounting-finance' },
-            { title: 'Real Estate', description: 'Prevent wire fraud attacks', icon: <Building className="h-5 w-5" />, url: '/industries/real-estate' },
-            { title: 'Nonprofits', description: 'Affordable IT for your mission', icon: <Users className="h-5 w-5" />, url: '/industries/nonprofits' },
           ]
         },
         {
-          title: 'Why Digerati',
+          title: 'More Industries',
+          viewAllUrl: '/industries',
           items: [
-            { title: 'Audit-Ready Docs', description: 'Complete compliance evidence', icon: <ClipboardCheck className="h-5 w-5" />, url: '/about/compliance' },
-            { title: '15-Min Response', description: 'Guaranteed response time', icon: <Zap className="h-5 w-5" />, url: '/about/support' },
-            { title: 'Insurance Aligned', description: 'Meet carrier requirements', icon: <Shield className="h-5 w-5" />, url: '/about/insurance' },
+            { title: 'Real Estate', description: 'Prevent wire fraud attacks', icon: <Building className="h-5 w-5" />, url: '/industries/real-estate' },
+            { title: 'Nonprofits', description: 'Affordable IT for mission', icon: <Users className="h-5 w-5" />, url: '/industries/nonprofits' },
+            { title: 'Professional Services', description: 'Secure client data', icon: <BarChart3 className="h-5 w-5" />, url: '/industries/professional-services' },
           ]
         }
       ]
