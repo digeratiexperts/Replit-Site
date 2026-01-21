@@ -3,6 +3,12 @@ import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
+import avatar1 from "@assets/stock_images/professional_busines_96e20e69.jpg";
+import avatar2 from "@assets/stock_images/doctor_physician_med_6ae69a73.jpg";
+import avatar3 from "@assets/stock_images/office_manager_profe_89dfed13.jpg";
+import avatar4 from "@assets/stock_images/real_estate_broker_p_f7fb1c14.jpg";
+import avatar5 from "@assets/stock_images/professional_busines_525b74f5.jpg";
+
 interface Testimonial {
   rating: number;
   text: string;
@@ -20,35 +26,35 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
       text: "After a ransomware scare hit a firm down the street, we called Digerati. They implemented 24/7 SOC monitoring and now I actually sleep at night knowing client files are protected.",
       author: "Rebecca Thornton",
       role: "Managing Partner, Thornton & Associates Law",
-      avatar: "/api/placeholder/40/40"
+      avatar: avatar1
     },
     {
       rating: 5, 
       text: "We passed our HIPAA audit with zero findings. Digerati's team documented everything, trained our staff, and handled the technical controls. Worth every penny.",
       author: "Dr. David Nguyen",
       role: "Owner, East Valley Family Medicine",
-      avatar: "/api/placeholder/40/40"
+      avatar: avatar2
     },
     {
       rating: 5,
       text: "Our old MSP took 2 days to respond to tickets. Digerati responds in under 15 minutes. When our server went down last month, they had us back online in 2 hours.",
       author: "Patricia Wells",
       role: "Office Manager, Desert Sun CPA Group",
-      avatar: "/api/placeholder/40/40"
+      avatar: avatar3
     },
     {
       rating: 5,
       text: "We had a wire fraud attempt during a $400K closing. Digerati's email security flagged it instantly and saved us from disaster. That alone paid for years of service.",
       author: "Mark Rodriguez",
       role: "Broker/Owner, Sonoran Realty Partners",
-      avatar: "/api/placeholder/40/40"
+      avatar: avatar4
     },
     {
       rating: 5,
       text: "Moving to their ProActive platform consolidated 6 different vendors into one bill. Now I have one number to call and one team that knows our entire environment.",
       author: "Jennifer Blackwood",
       role: "Operations Director, Blackwood Veterinary Hospital",
-      avatar: "/api/placeholder/40/40"
+      avatar: avatar5
     }
   ];
 
