@@ -281,12 +281,19 @@ export function MegaMenu() {
   }, [handleKeyDown]);
 
   useEffect(() => {
+    let ticking = false;
+    
     const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      setIsScrolled(scrollPosition > 50);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 50);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -313,15 +320,6 @@ export function MegaMenu() {
       }
     };
   }, []);
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 8 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: { delay: i * 0.03, duration: 0.2, ease: 'easeOut' }
-    })
-  };
 
   return (
     <>
@@ -519,13 +517,11 @@ export function MegaMenu() {
                                   const hasHoveredSibling = hoveredItem !== null && !isHovered;
                                   
                                   return (
-                                  <motion.li 
+                                  <li 
                                     key={subItem.title} 
                                     role="none"
-                                    custom={sectionIdx * section.items.length + itemIdx}
-                                    variants={itemVariants}
-                                    initial="hidden"
-                                    animate="visible"
+                                    className="animate-fade-in"
+                                    style={{ animationDelay: '0ms', animationDuration: '150ms' }}
                                   >
                                     <a
                                       href={subItem.url || '#'}
@@ -579,7 +575,7 @@ export function MegaMenu() {
                                         )}
                                       </div>
                                     </a>
-                                  </motion.li>
+                                  </li>
                                   );
                                 })}
                               </ul>
