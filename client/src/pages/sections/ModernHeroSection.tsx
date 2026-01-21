@@ -139,9 +139,9 @@ export const ModernHeroSection = (): JSX.Element => {
               transition={{ duration: 0.6 }}
             >
               {/* Trust Badge */}
-              <div className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full border border-white/20 bg-white/5 w-fit backdrop-blur-sm">
-                <ShieldCheck className="w-4 h-4 text-cyan-400" />
-                <span className="text-sm text-white/90 font-medium tracking-wide">SOC 2 Compliant · Serving Arizona since 2019</span>
+              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-white/10 bg-white/[0.02] w-fit">
+                <ShieldCheck className="w-4 h-4 text-cyan-400/80" />
+                <span className="text-sm text-white/60 font-medium tracking-wide">SOC 2 Compliant · Serving Arizona since 2019</span>
               </div>
 
               {/* Headline - Apple-like clarity */}
