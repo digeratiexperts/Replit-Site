@@ -100,7 +100,6 @@ export function MegaMenu() {
       sections: [
         {
           title: 'Industries We Serve',
-          viewAllUrl: '/industries',
           items: [
             { title: 'Healthcare', description: 'HIPAA compliance made simple', icon: <Shield className="h-5 w-5" />, url: '/industries/healthcare' },
             { title: 'Law Firms', description: 'Protect client confidentiality', icon: <FileCheck className="h-5 w-5" />, url: '/industries/law-firms' },
@@ -109,7 +108,6 @@ export function MegaMenu() {
         },
         {
           title: 'More Industries',
-          viewAllUrl: '/industries',
           items: [
             { title: 'Real Estate', description: 'Prevent wire fraud attacks', icon: <Building className="h-5 w-5" />, url: '/industries/real-estate' },
             { title: 'Nonprofits', description: 'Affordable IT for mission', icon: <Users className="h-5 w-5" />, url: '/industries/nonprofits' },
