@@ -97,54 +97,41 @@ export const ModernHeroSection = (): JSX.Element => {
       id="home" 
       className="relative min-h-screen overflow-hidden"
     >
-      {/* Lighter gradient background - more inviting and visible */}
+      {/* Pitch black background */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1f1445] via-[#362560] to-[#1f1445]" />
+        <div className="absolute inset-0 bg-black" />
         
-        {/* Large gradient orbs - positioned behind content with z-index */}
+        {/* Subtle accent orbs - minimal on black */}
         <motion.div
-          className="absolute top-[-20%] right-[-10%] w-[1000px] h-[1000px] rounded-full -z-10"
+          className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full -z-10"
           style={{
-            background: "radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, rgba(139, 92, 246, 0) 60%)",
+            background: "radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, rgba(139, 92, 246, 0) 60%)",
           }}
           animate={{
-            scale: [1, 1.15, 1],
-            x: [0, 60, 0],
-            y: [0, 30, 0],
+            scale: [1, 1.1, 1],
+            x: [0, 40, 0],
           }}
           transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute bottom-[-20%] left-[-15%] w-[900px] h-[900px] rounded-full -z-10"
+          className="absolute bottom-[-20%] left-[-15%] w-[700px] h-[700px] rounded-full -z-10"
           style={{
-            background: "radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(99, 102, 241, 0) 60%)",
+            background: "radial-gradient(circle, rgba(59, 130, 246, 0.06) 0%, rgba(59, 130, 246, 0) 60%)",
           }}
           animate={{
             scale: [1.1, 1, 1.1],
-            x: [0, -40, 0],
-            y: [0, -60, 0],
+            x: [0, -30, 0],
           }}
           transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
         />
-        <motion.div
-          className="absolute top-[40%] left-[50%] w-[500px] h-[500px] rounded-full -z-10"
-          style={{
-            background: "radial-gradient(circle, rgba(34, 211, 238, 0.08) 0%, rgba(34, 211, 238, 0) 60%)",
-          }}
-          animate={{
-            scale: [1, 1.3, 1],
-            x: [0, 100, 0],
-          }}
-          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-        />
 
-        {/* Grid overlay */}
+        {/* Grid overlay - subtle on black */}
         <div 
-          className="absolute inset-0 opacity-10"
+          className="absolute inset-0 opacity-[0.04]"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(139, 92, 246, 0.15) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(139, 92, 246, 0.15) 1px, transparent 1px)
+              linear-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px)
             `,
             backgroundSize: "80px 80px",
           }}
@@ -173,14 +160,14 @@ export const ModernHeroSection = (): JSX.Element => {
               transition={{ duration: 0.6 }}
             >
               {/* Trust Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 w-fit">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-400/40 bg-cyan-400/10 w-fit">
                 <ShieldCheck className="w-4 h-4 text-cyan-400" />
-                <span className="text-sm text-cyan-300">SOC 2 Compliant | Serving Arizona businesses since 2019</span>
+                <span className="text-sm text-cyan-300 font-medium">SOC 2 Compliant | Serving Arizona businesses since 2019</span>
               </div>
 
               {/* Headline */}
               <h1 className="text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-bold leading-[1.1] tracking-tight">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400">
                   Hackers Don't Wait.
                 </span>
                 <br />
@@ -190,7 +177,7 @@ export const ModernHeroSection = (): JSX.Element => {
               </h1>
 
               {/* Subheadline */}
-              <p className="text-lg text-gray-300 leading-relaxed max-w-xl">
+              <p className="text-lg text-gray-200 leading-relaxed max-w-xl">
                 IT and cybersecurity for Arizona law firms, medical practices, CPAs, and professional services. 
                 Flat-rate pricing, compliance-ready, and backed by 24/7 monitoring.
               </p>
@@ -200,25 +187,25 @@ export const ModernHeroSection = (): JSX.Element => {
                 {features.map((feature) => (
                   <div 
                     key={feature.text}
-                    className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10"
+                    className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white/[0.08] border border-white/15"
                   >
                     <feature.icon className={`h-4 w-4 ${feature.color} flex-shrink-0`} />
-                    <span className="text-xs text-gray-300 leading-tight">{feature.text}</span>
+                    <span className="text-xs text-gray-200 leading-tight">{feature.text}</span>
                   </div>
                 ))}
               </div>
 
               {/* Trust Badges - Credibility row */}
               <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-                <span className="text-gray-300 font-medium">Trusted by:</span>
+                <span className="text-gray-200 font-medium">Trusted by:</span>
                 {trustBadges.map((badge) => (
                   <span 
                     key={badge.name}
                     className="flex items-center gap-1.5"
                     data-testid={`trust-badge-${badge.name.toLowerCase().replace(/\s+/g, '-')}`}
                   >
-                    <badge.icon className="w-4 h-4 text-gray-400" />
-                    <span className="text-gray-300">{badge.name}</span>
+                    <badge.icon className="w-4 h-4 text-gray-300" />
+                    <span className="text-gray-200">{badge.name}</span>
                   </span>
                 ))}
               </div>
@@ -239,12 +226,12 @@ export const ModernHeroSection = (): JSX.Element => {
                         name="fullName"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-gray-300 text-sm">Full Name</FormLabel>
+                            <FormLabel className="text-gray-200 text-sm font-medium">Full Name</FormLabel>
                             <FormControl>
                               <Input 
                                 placeholder="John Smith" 
                                 data-testid="input-hero-full-name"
-                                className="bg-slate-800 border-slate-600 text-white placeholder:text-gray-400 focus-visible:ring-purple-500 h-12"
+                                className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus-visible:ring-cyan-500 focus-visible:border-cyan-400 h-12"
                                 disabled={isSubmitting}
                                 {...field} 
                               />
@@ -259,13 +246,13 @@ export const ModernHeroSection = (): JSX.Element => {
                         name="email"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-gray-300 text-sm">Work Email</FormLabel>
+                            <FormLabel className="text-gray-200 text-sm font-medium">Work Email</FormLabel>
                             <FormControl>
                               <Input 
                                 type="email" 
                                 placeholder="john@company.com" 
                                 data-testid="input-hero-email"
-                                className="bg-slate-800 border-slate-600 text-white placeholder:text-gray-400 focus-visible:ring-purple-500 h-12"
+                                className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 focus-visible:ring-cyan-500 focus-visible:border-cyan-400 h-12"
                                 disabled={isSubmitting}
                                 {...field} 
                               />
