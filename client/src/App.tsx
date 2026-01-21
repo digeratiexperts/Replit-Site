@@ -24,6 +24,7 @@ const Nonprofits = lazy(() => import("@/pages/industries/Nonprofits"));
 const AnimalHospitals = lazy(() => import("@/pages/industries/AnimalHospitals"));
 const CaseStudies = lazy(() => import("@/pages/resources/CaseStudies"));
 const Blog = lazy(() => import("@/pages/resources/Blog"));
+const BlogPost = lazy(() => import("@/pages/resources/BlogPost"));
 const SecurityUpdates = lazy(() => import("@/pages/resources/SecurityUpdates"));
 const Videos = lazy(() => import("@/pages/resources/Videos"));
 const SecurityChecklist = lazy(() => import("@/pages/resources/SecurityChecklist"));
@@ -168,6 +169,11 @@ function Router() {
       <Route path="/resources/blog" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <Blog />
+        </Suspense>
+      )} />
+      <Route path="/resources/blog/:slug" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <BlogPost />
         </Suspense>
       )} />
       <Route path="/resources/security-updates" component={() => (

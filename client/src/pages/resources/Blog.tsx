@@ -1,3 +1,4 @@
+import { Link } from "wouter";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,6 +25,7 @@ const blogPosts = [
     readTime: "8 min read",
     featured: true,
     image: trendsImg,
+    slug: "2025-cybersecurity-trends",
   },
   {
     id: 2,
@@ -35,6 +37,7 @@ const blogPosts = [
     readTime: "12 min read",
     featured: true,
     image: hipaaImg,
+    slug: "hipaa-compliance-checklist",
   },
   {
     id: 3,
@@ -46,6 +49,7 @@ const blogPosts = [
     readTime: "10 min read",
     featured: false,
     image: ransomwareImg,
+    slug: "ransomware-protection",
   },
   {
     id: 4,
@@ -57,6 +61,7 @@ const blogPosts = [
     readTime: "6 min read",
     featured: false,
     image: cloudImg,
+    slug: "cloud-backup-best-practices",
   },
   {
     id: 5,
@@ -68,6 +73,7 @@ const blogPosts = [
     readTime: "7 min read",
     featured: false,
     image: realEstateImg,
+    slug: "wire-fraud-prevention-real-estate",
   },
   {
     id: 6,
@@ -79,6 +85,7 @@ const blogPosts = [
     readTime: "5 min read",
     featured: false,
     image: trainingImg,
+    slug: "security-awareness-training-roi",
   },
 ];
 
@@ -137,42 +144,44 @@ export default function Blog() {
             <h2 className="text-2xl font-bold text-white mb-6">Featured Articles</h2>
             <div className="grid md:grid-cols-2 gap-6">
               {featuredPosts.map((post) => (
-                <Card key={post.id} className="bg-white/[0.02] border-white/10 overflow-hidden hover:border-violet-500/50 transition-colors" data-testid={`card-post-${post.id}`}>
-                  <div className="aspect-video overflow-hidden">
-                    <img src={post.image} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
-                  </div>
-                  <CardHeader>
-                    <div className="flex items-center gap-3 mb-2">
-                      <Badge variant="secondary" className="bg-violet-500/20 text-violet-400">
-                        {post.category}
-                      </Badge>
-                      <span className="text-sm text-white/50 flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {post.readTime}
-                      </span>
+                <Link href={`/resources/blog/${post.slug}`} key={post.id}>
+                  <Card className="bg-white/[0.02] border-white/10 overflow-hidden hover:border-violet-500/50 transition-colors cursor-pointer" data-testid={`card-post-${post.id}`}>
+                    <div className="aspect-video overflow-hidden">
+                      <img src={post.image} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
                     </div>
-                    <CardTitle className="text-xl text-white hover:text-violet-400 transition-colors cursor-pointer">
-                      {post.title}
-                    </CardTitle>
-                    <CardDescription className="text-white/60">
-                      {post.excerpt}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-sm text-white/50">
-                        <User className="h-4 w-4" />
-                        {post.author}
-                        <span className="mx-2">•</span>
-                        <Calendar className="h-4 w-4" />
-                        {new Date(post.date).toLocaleDateString()}
+                    <CardHeader>
+                      <div className="flex items-center gap-3 mb-2">
+                        <Badge variant="secondary" className="bg-violet-500/20 text-violet-400">
+                          {post.category}
+                        </Badge>
+                        <span className="text-sm text-white/50 flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {post.readTime}
+                        </span>
                       </div>
-                      <Button variant="ghost" size="sm" className="text-violet-400 hover:text-violet-300 hover:bg-violet-500/10">
-                        Read More <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                      <CardTitle className="text-xl text-white hover:text-violet-400 transition-colors">
+                        {post.title}
+                      </CardTitle>
+                      <CardDescription className="text-white/60">
+                        {post.excerpt}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-sm text-white/50">
+                          <User className="h-4 w-4" />
+                          {post.author}
+                          <span className="mx-2">•</span>
+                          <Calendar className="h-4 w-4" />
+                          {new Date(post.date).toLocaleDateString()}
+                        </div>
+                        <Button variant="ghost" size="sm" className="text-violet-400 hover:text-violet-300 hover:bg-violet-500/10">
+                          Read More <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
               ))}
             </div>
           </div>
@@ -182,29 +191,31 @@ export default function Blog() {
             <h2 className="text-2xl font-bold text-white mb-6">Recent Articles</h2>
             <div className="grid md:grid-cols-3 gap-6">
               {regularPosts.map((post) => (
-                <Card key={post.id} className="bg-white/[0.02] border-white/10 hover:border-violet-500/50 transition-colors overflow-hidden" data-testid={`card-post-${post.id}`}>
-                  <div className="aspect-video overflow-hidden">
-                    <img src={post.image} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
-                  </div>
-                  <CardHeader>
-                    <Badge variant="secondary" className="w-fit bg-violet-500/20 text-violet-400 mb-2">
-                      {post.category}
-                    </Badge>
-                    <CardTitle className="text-lg text-white hover:text-violet-400 transition-colors cursor-pointer">
-                      {post.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-white/50 text-sm mb-4 line-clamp-2">{post.excerpt}</p>
-                    <div className="flex items-center justify-between text-sm text-white/40">
-                      <span className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {post.readTime}
-                      </span>
-                      <span>{new Date(post.date).toLocaleDateString()}</span>
+                <Link href={`/resources/blog/${post.slug}`} key={post.id}>
+                  <Card className="bg-white/[0.02] border-white/10 hover:border-violet-500/50 transition-colors overflow-hidden cursor-pointer" data-testid={`card-post-${post.id}`}>
+                    <div className="aspect-video overflow-hidden">
+                      <img src={post.image} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
                     </div>
-                  </CardContent>
-                </Card>
+                    <CardHeader>
+                      <Badge variant="secondary" className="w-fit bg-violet-500/20 text-violet-400 mb-2">
+                        {post.category}
+                      </Badge>
+                      <CardTitle className="text-lg text-white hover:text-violet-400 transition-colors">
+                        {post.title}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-white/50 text-sm mb-4 line-clamp-2">{post.excerpt}</p>
+                      <div className="flex items-center justify-between text-sm text-white/40">
+                        <span className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {post.readTime}
+                        </span>
+                        <span>{new Date(post.date).toLocaleDateString()}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
               ))}
             </div>
           </div>
