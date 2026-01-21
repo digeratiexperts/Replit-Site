@@ -57,11 +57,17 @@ export const ModernHeroSection = (): JSX.Element => {
   // Keep opacity at 1 - no scroll-based fade effect
   const opacity = 1;
 
+  // COLOR SYSTEM:
+  // Primary accent: Purple (violet-400) - CTAs, key highlights
+  // Secondary accent: Cyan (cyan-400) - Icons, badges  
+  // Text: White with opacity hierarchy (100%, 70%, 50%, 40%)
+  // Success: Green (emerald-400) - Checkmarks only
+  
   const features = [
-    { icon: CheckCircle, text: "Insurance & Compliance-Ready", color: "text-green-400" },
-    { icon: Shield, text: "24/7 Human-Led Monitoring", color: "text-blue-400" },
-    { icon: Building, text: "Built for Small Businesses", color: "text-purple-400" },
-    { icon: FileCheck, text: "Easy-to-Read Risk Reports", color: "text-yellow-400" },
+    { icon: CheckCircle, text: "Insurance & Compliance-Ready" },
+    { icon: Shield, text: "24/7 Human-Led Monitoring" },
+    { icon: Building, text: "Built for Small Businesses" },
+    { icon: FileCheck, text: "Easy-to-Read Risk Reports" },
   ];
 
   const trustBadges = [
@@ -80,13 +86,13 @@ export const ModernHeroSection = (): JSX.Element => {
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-black" />
         
-        {/* Subtle accent orbs - minimal on black */}
+        {/* Accent orbs - purple only (primary brand color) */}
         <motion.div
           className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full -z-10"
           style={{
-            background: "radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, rgba(139, 92, 246, 0) 60%)",
+            background: "radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, rgba(139, 92, 246, 0) 60%)",
           }}
-          animate={{
+          animate={prefersReducedMotion ? {} : {
             scale: [1, 1.1, 1],
             x: [0, 40, 0],
           }}
@@ -95,9 +101,9 @@ export const ModernHeroSection = (): JSX.Element => {
         <motion.div
           className="absolute bottom-[-20%] left-[-15%] w-[700px] h-[700px] rounded-full -z-10"
           style={{
-            background: "radial-gradient(circle, rgba(59, 130, 246, 0.06) 0%, rgba(59, 130, 246, 0) 60%)",
+            background: "radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, rgba(139, 92, 246, 0) 60%)",
           }}
-          animate={{
+          animate={prefersReducedMotion ? {} : {
             scale: [1.1, 1, 1.1],
             x: [0, -30, 0],
           }}
@@ -138,15 +144,15 @@ export const ModernHeroSection = (): JSX.Element => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              {/* Trust Badge */}
+              {/* Trust Badge - uses secondary accent (cyan) */}
               <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-white/10 bg-white/[0.02] w-fit">
-                <ShieldCheck className="w-4 h-4 text-cyan-400/80" />
+                <ShieldCheck className="w-4 h-4 text-violet-400" />
                 <span className="text-sm text-white/60 font-medium tracking-wide">SOC 2 Compliant · Serving Arizona since 2019</span>
               </div>
 
-              {/* Headline - Apple-like clarity */}
+              {/* Headline - Purple gradient (primary brand color) */}
               <h1 className="text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-bold leading-[1.08] tracking-[-0.03em]">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-300 to-purple-300">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-purple-300 to-fuchsia-300">
                   Hackers Don't Wait.
                 </span>
                 <br />
@@ -155,36 +161,36 @@ export const ModernHeroSection = (): JSX.Element => {
                 </span>
               </h1>
 
-              {/* Subheadline - clean, readable */}
+              {/* Subheadline - white/70 for secondary text */}
               <p className="text-lg sm:text-xl text-white/70 leading-[1.7] max-w-xl font-normal tracking-[-0.01em]">
                 IT and cybersecurity for Arizona law firms, medical practices, CPAs, and professional services. 
                 Flat-rate pricing, compliance-ready, and backed by 24/7 monitoring.
               </p>
 
-              {/* Feature pills - responsive grid */}
+              {/* Feature pills - all icons use violet (primary accent) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
                 {features.map((feature) => (
                   <div 
                     key={feature.text}
                     className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] transition-colors"
                   >
-                    <feature.icon className={`h-4 w-4 ${feature.color} flex-shrink-0`} />
-                    <span className="text-[13px] sm:text-sm text-white/80 font-medium tracking-[-0.01em]">{feature.text}</span>
+                    <feature.icon className="h-4 w-4 text-violet-400 flex-shrink-0" />
+                    <span className="text-[13px] sm:text-sm text-white/70 font-medium tracking-[-0.01em]">{feature.text}</span>
                   </div>
                 ))}
               </div>
 
-              {/* Trust Badges - Credibility row */}
+              {/* Trust Badges - icons use white/40, text white/60 */}
               <div className="flex flex-wrap items-center gap-x-5 sm:gap-x-6 gap-y-2 text-sm">
-                <span className="text-white/50 font-medium w-full sm:w-auto tracking-wide uppercase text-xs">Trusted by:</span>
+                <span className="text-white/40 font-medium w-full sm:w-auto tracking-wide uppercase text-xs">Trusted by:</span>
                 {trustBadges.map((badge) => (
                   <span 
                     key={badge.name}
                     className="flex items-center gap-2"
                     data-testid={`trust-badge-${badge.name.toLowerCase().replace(/\s+/g, '-')}`}
                   >
-                    <badge.icon className="w-4 h-4 text-white/40" />
-                    <span className="text-white/70 text-[13px] font-medium">{badge.name}</span>
+                    <badge.icon className="w-4 h-4 text-white/30" />
+                    <span className="text-white/60 text-[13px] font-medium">{badge.name}</span>
                   </span>
                 ))}
               </div>
@@ -242,12 +248,13 @@ export const ModernHeroSection = (): JSX.Element => {
                       />
                     </div>
                     
+                    {/* CTA Button - white with purple text (inverted primary) */}
                     <Button 
                       type="submit"
                       size="lg"
                       data-testid="button-hero-submit"
                       disabled={isSubmitting}
-                      className="w-full sm:w-auto h-14 px-10 text-lg font-semibold bg-white hover:bg-white/95 text-gray-900 border-0 shadow-2xl shadow-white/10 hover:shadow-white/20 transition-all duration-300 tracking-[-0.01em]"
+                      className="w-full sm:w-auto h-14 px-10 text-lg font-semibold bg-white hover:bg-white/95 text-violet-700 border-0 shadow-2xl shadow-violet-500/10 hover:shadow-violet-500/20 transition-all duration-300 tracking-[-0.01em]"
                     >
                       {isSubmitting ? (
                         <>
@@ -265,25 +272,25 @@ export const ModernHeroSection = (): JSX.Element => {
                 </Form>
               </motion.div>
 
-              {/* Reassurance microcopy */}
+              {/* Reassurance microcopy - green for success/trust signals */}
               <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-4 sm:gap-6 mt-5">
                 <div className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-green-400/80" />
+                  <Check className="w-4 h-4 text-emerald-400" />
                   <span className="text-[13px] text-white/50 font-medium">No obligation</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-green-400/80" />
+                  <Check className="w-4 h-4 text-emerald-400" />
                   <span className="text-[13px] text-white/50 font-medium">Results in 24-48hrs</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-green-400/80" />
+                  <Check className="w-4 h-4 text-emerald-400" />
                   <span className="text-[13px] text-white/50 font-medium">No credit card</span>
                 </div>
               </div>
               
-              {/* Phone alternative */}
+              {/* Phone alternative - violet accent for link */}
               <div className="text-white/40 text-sm mt-4">
-                Prefer to call? <a href="tel:325-480-9870" className="text-white/70 hover:text-white font-medium transition-colors" data-testid="link-hero-phone">325-480-9870</a>
+                Prefer to call? <a href="tel:325-480-9870" className="text-violet-300 hover:text-violet-200 font-medium transition-colors" data-testid="link-hero-phone">325-480-9870</a>
               </div>
             </motion.div>
 
@@ -295,8 +302,8 @@ export const ModernHeroSection = (): JSX.Element => {
                 animate={{ opacity: 1, x: 0, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
               >
-                {/* Subtle glow effect - behind dashboard only */}
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/15 via-blue-500/10 to-cyan-500/15 blur-3xl scale-110 -z-10" />
+                {/* Subtle glow effect - purple tones only */}
+                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/15 via-purple-500/10 to-fuchsia-500/10 blur-3xl scale-110 -z-10" />
                 
                 {/* Dashboard with subtle 3D effect */}
                 <motion.div

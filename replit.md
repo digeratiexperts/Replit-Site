@@ -16,7 +16,27 @@ Digerati Experts is a comprehensive platform integrating a public marketing webs
 ## System Architecture
 
 ### UI/UX Decisions
-The platform features a modern, responsive SaaS design system with consistent tokens, typography, and a purple-blue gradient color scheme, utilizing a two-tier navigation and a mobile-first approach. Typography uses Space Grotesk for headings, Inter for body text, and optionally Oxanium for numbers. The design incorporates a dark theme with glassmorphism elements, animated particles, and glow effects, ensuring accessibility with `prefers-reduced-motion` support.
+The platform features a modern, responsive SaaS design system with consistent tokens, typography, and a unified purple color scheme, utilizing a two-tier navigation and a mobile-first approach. Typography uses Space Grotesk for headings, Inter for body text, and optionally Oxanium for numbers. The design incorporates a dark theme with glassmorphism elements, animated particles, and glow effects, ensuring accessibility with `prefers-reduced-motion` support.
+
+### Color System (Consistent Pattern)
+| Role | Color | Usage |
+|------|-------|-------|
+| **Primary Accent** | `violet-400/300` | CTAs, icons, links, headline gradients, highlights |
+| **Primary Gradient** | `violet-300 → purple-300 → fuchsia-300` | Headlines on dark backgrounds |
+| **Success** | `emerald-400` | Checkmarks, confirmation indicators only |
+| **Text Primary** | `white` or `text-white` | Headlines, important content |
+| **Text Secondary** | `white/70` | Body text, descriptions |
+| **Text Tertiary** | `white/50` | Labels, captions, secondary info |
+| **Text Muted** | `white/40` | Subtle hints, less important text |
+| **Borders** | `white/10` or `white/[0.08]` | Cards, containers, separators |
+| **Backgrounds** | `white/[0.04]` or `white/[0.02]` | Subtle card fills |
+| **Button Text (on white)** | `violet-700` | CTA buttons with white background |
+
+**Rules:**
+- Never mix cyan/blue with purple in the same element
+- All colored icons should use `violet-400` (except success checkmarks use `emerald-400`)
+- Links use `violet-300` with hover `violet-200`
+- Background glows/orbs use only purple tones (rgba(139, 92, 246, opacity))
 
 ### Technical Implementations
 The frontend is built with React 18 and TypeScript, using Wouter for routing, shadcn/ui with Radix UI for components, Lucide React for icons, and Tailwind CSS for styling. The backend uses an Express.js server with TypeScript. Payment processing integrates Stripe Checkout, Zelle, and Zoho Payments, supported by `stripe-replit-sync` and a PostgreSQL schema. Content is dynamically generated or custom-authored for solutions and industry pages. SEO is comprehensive, including meta tags, Open Graph, and Twitter cards. Security features include HSTS, CSP, X-Frame-Options, secure cookies, rate limiting, bot detection, input sanitization, and CSRF protection. The platform is hosted on CyberPanel/OpenLiteSpeed.
