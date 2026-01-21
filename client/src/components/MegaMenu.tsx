@@ -332,21 +332,21 @@ export function MegaMenu() {
           isScrolled ? 'h-0 overflow-hidden opacity-0' : 'h-auto md:h-10'
         }`}
         style={{
-          background: 'linear-gradient(180deg, #12081f 0%, #0d0614 70%, #0a0a0a 100%)',
+          background: '#0a0a0a',
         }}
       >
-        {/* Subtle inner glow accent */}
+        {/* Fade-in gradient from left (black) to right (subtle purple tint) */}
         <div 
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: 'linear-gradient(90deg, transparent 0%, rgba(139, 92, 246, 0.08) 50%, transparent 100%)',
+            background: 'linear-gradient(90deg, #0a0a0a 0%, #0a0a0a 40%, rgba(18, 8, 31, 0.8) 70%, rgba(13, 6, 20, 0.9) 100%)',
           }}
         />
-        {/* Bottom edge fade line */}
+        {/* Bottom edge fade line - only visible on right side */}
         <div 
           className="absolute bottom-0 left-0 right-0 h-px"
           style={{
-            background: 'linear-gradient(90deg, transparent 10%, rgba(139, 92, 246, 0.3) 50%, transparent 90%)',
+            background: 'linear-gradient(90deg, transparent 0%, transparent 50%, rgba(139, 92, 246, 0.3) 80%, rgba(139, 92, 246, 0.2) 100%)',
           }}
         />
         <div className="container mx-auto px-4 lg:px-8 h-full flex flex-col md:flex-row items-center justify-end py-2 md:py-0 relative z-10">
