@@ -7,7 +7,7 @@ export default function Accounting() {
   const metrics = [
     { label: "Compliance Pass Rate", value: "99.8%", icon: CheckCircle, color: "text-emerald-500" },
     { label: "Avg. Audit Findings", value: "0.2", icon: TrendingUp, color: "text-violet-400" },
-    { label: "Data Protection", value: "256-bit", icon: Lock, color: "text-purple-400" },
+    { label: "Data Protection", value: "256-bit", icon: Lock, color: "text-violet-400" },
     { label: "Uptime Guarantee", value: "99.95%", icon: Activity, color: "text-violet-400" }
   ];
 
@@ -113,7 +113,7 @@ export default function Accounting() {
                     <ul className="space-y-2">
                       {service.features.map((f, i) => (
                         <li key={i} className="flex items-center gap-2 text-sm text-gray-300">
-                          <CheckCircle className="h-4 w-4 text-violet-400 flex-shrink-0" />
+                          <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
                           {f}
                         </li>
                       ))}

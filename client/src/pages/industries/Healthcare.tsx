@@ -25,13 +25,13 @@ export default function Healthcare() {
       icon: Lock, 
       title: "Patient Data Security", 
       description: "Protect sensitive patient data with enterprise-grade encryption and access controls.",
-      color: "text-purple-400"
+      color: "text-violet-400"
     },
     { 
       icon: FileCheck, 
       title: "Audit-Ready Documentation", 
       description: "Always audit-ready with comprehensive documentation and compliance reporting.",
-      color: "text-fuchsia-400"
+      color: "text-violet-400"
     }
   ];
 

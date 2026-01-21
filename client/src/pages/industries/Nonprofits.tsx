@@ -15,7 +15,7 @@ export default function Nonprofits() {
     <PageTemplate
       title="IT Solutions for Nonprofits"
       subtitle="Cost-effective, compliant IT for mission-driven organizations in Arizona"
-      gradientColors="from-purple-600 via-fuchsia-600 to-pink-600"
+      gradientColors="from-violet-600 via-purple-600 to-fuchsia-600"
     >
       <div className="space-y-16">
         {/* Impact Metrics */}
@@ -24,7 +24,7 @@ export default function Nonprofits() {
             const Icon = item.icon;
             return (
               <div key={idx} className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-400 rounded-xl blur opacity-0 group-hover:opacity-20 transition-all" />
+                <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-purple-500 rounded-xl blur opacity-0 group-hover:opacity-20 transition-all" />
                 <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:shadow-lg transition-all">
                   <CardContent className="pt-6">
                     <Icon className={`h-6 w-6 ${item.color} mb-3`} />
@@ -38,12 +38,12 @@ export default function Nonprofits() {
         </div>
 
         {/* Why Nonprofits Struggle */}
-        <div className="bg-purple-500/10 backdrop-blur-sm border border-purple-500/30 rounded-xl p-8">
+        <div className="bg-violet-500/10 backdrop-blur-sm border border-violet-500/30 rounded-xl p-8">
           <div className="flex gap-4">
-            <Target className="h-8 w-8 text-purple-400 flex-shrink-0 mt-1" />
+            <Target className="h-8 w-8 text-violet-400 flex-shrink-0 mt-1" />
             <div>
               <h3 className="text-2xl font-bold text-white mb-3">Nonprofit IT Challenges</h3>
-              <div className="space-y-2 text-purple-200">
+              <div className="space-y-2 text-white/50">
                 {[
                   "Limited IT budgets—every dollar matters for mission",
                   "Volunteer staff with limited technical expertise",
@@ -52,7 +52,7 @@ export default function Nonprofits() {
                   "Rapid growth strains IT infrastructure"
                 ].map((item, idx) => (
                   <div key={idx} className="flex gap-2">
-                    <span className="text-purple-400 font-bold">•</span>
+                    <span className="text-violet-400 font-bold">•</span>
                     <span>{item}</span>
                   </div>
                 ))}
@@ -94,10 +94,10 @@ export default function Nonprofits() {
               const Icon = service.icon;
               return (
                 <div key={idx} className="group relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-400 rounded-xl blur opacity-0 group-hover:opacity-15 transition-all" />
-                  <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:shadow-lg transition-all group-hover:border-purple-400/50">
+                  <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-purple-500 rounded-xl blur opacity-0 group-hover:opacity-15 transition-all" />
+                  <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:shadow-lg transition-all group-hover:border-violet-500/30">
                     <CardHeader>
-                      <Icon className="h-10 w-10 text-purple-400 mb-2 group-hover:scale-110 transition-transform" />
+                      <Icon className="h-10 w-10 text-violet-400 mb-2 group-hover:scale-110 transition-transform" />
                       <CardTitle className="text-white">{service.title}</CardTitle>
                       <p className="text-sm text-gray-400 mt-1">{service.desc}</p>
                     </CardHeader>
@@ -105,7 +105,7 @@ export default function Nonprofits() {
                       <ul className="space-y-2">
                         {service.features.map((f, i) => (
                           <li key={i} className="flex gap-2 text-sm text-gray-300">
-                            <CheckCircle className="h-4 w-4 text-purple-400 flex-shrink-0 mt-0.5" />
+                            <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0 mt-0.5" />
                             {f}
                           </li>
                         ))}
@@ -119,7 +119,7 @@ export default function Nonprofits() {
         </div>
 
         {/* Supported Programs */}
-        <div className="bg-purple-500/10 backdrop-blur-sm rounded-xl p-8 border border-purple-500/20">
+        <div className="bg-violet-500/10 backdrop-blur-sm rounded-xl p-8 border border-violet-500/20">
           <h3 className="text-2xl font-bold mb-8 text-center text-white">Nonprofit Programs We Support</h3>
           <div className="grid md:grid-cols-3 gap-4">
             {[
@@ -131,7 +131,7 @@ export default function Nonprofits() {
               "QuickBooks Nonprofit Pricing"
             ].map((prog, idx) => (
               <div key={idx} className="flex items-center gap-3 p-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg hover:bg-white/10 transition-all">
-                <CheckCircle className="h-5 w-5 text-purple-400 flex-shrink-0" />
+                <CheckCircle className="h-5 w-5 text-emerald-500 flex-shrink-0" />
                 <span className="text-gray-300 font-medium">{prog}</span>
               </div>
             ))}
@@ -139,34 +139,34 @@ export default function Nonprofits() {
         </div>
 
         {/* Success Story */}
-        <div className="grid md:grid-cols-3 gap-6 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-8 text-white">
+        <div className="grid md:grid-cols-3 gap-6 bg-gradient-to-r from-violet-600 to-purple-600 rounded-xl p-8 text-white">
           <div className="text-center p-4 bg-white/10 rounded-lg backdrop-blur-sm">
             <p className="text-3xl font-bold mb-1">40%</p>
-            <p className="text-purple-100">IT Cost Reduction</p>
-            <p className="text-xs text-purple-200 mt-2">20% nonprofit discount + efficient management</p>
+            <p className="text-white/70">IT Cost Reduction</p>
+            <p className="text-xs text-white/50 mt-2">20% nonprofit discount + efficient management</p>
           </div>
-          <div className="text-center p-4 bg-white/10 rounded-lg backdrop-blur-sm border-l border-r border-purple-300">
+          <div className="text-center p-4 bg-white/10 rounded-lg backdrop-blur-sm border-l border-r border-violet-400">
             <p className="text-3xl font-bold mb-1">100%</p>
-            <p className="text-purple-100">Audit Pass Rate</p>
-            <p className="text-xs text-purple-200 mt-2">Grant compliance documentation</p>
+            <p className="text-white/70">Audit Pass Rate</p>
+            <p className="text-xs text-white/50 mt-2">Grant compliance documentation</p>
           </div>
           <div className="text-center p-4 bg-white/10 rounded-lg backdrop-blur-sm">
             <p className="text-3xl font-bold mb-1">24/7</p>
-            <p className="text-purple-100">Support Available</p>
-            <p className="text-xs text-purple-200 mt-2">Dedicated MSP partner for mission</p>
+            <p className="text-white/70">Support Available</p>
+            <p className="text-xs text-white/50 mt-2">Dedicated MSP partner for mission</p>
           </div>
         </div>
 
         {/* CTA */}
-        <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-8 text-center text-white">
+        <div className="bg-gradient-to-r from-violet-600 to-purple-600 rounded-xl p-8 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Focus on Your Mission</h2>
-          <p className="text-lg mb-6 text-purple-100">Let us handle technology. Get nonprofit pricing + free consultation.</p>
+          <p className="text-lg mb-6 text-white/70">Let us handle technology. Get nonprofit pricing + free consultation.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 
               href="https://meet.digerati-experts.com/" 
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center bg-white text-purple-700 hover:bg-purple-50 px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
+              className="inline-flex items-center justify-center bg-white text-violet-700 hover:bg-violet-50 px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
               data-testid="button-schedule-nonprofit"
             >
               Schedule Free Consultation

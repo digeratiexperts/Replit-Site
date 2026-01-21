@@ -105,7 +105,7 @@ export default function LawFirms() {
                       <ul className="space-y-2">
                         {service.features.map((f, i) => (
                           <li key={i} className="flex gap-2 text-sm text-gray-300">
-                            <CheckCircle className="h-4 w-4 text-violet-400 flex-shrink-0 mt-0.5" />
+                            <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0 mt-0.5" />
                             {f}
                           </li>
                         ))}

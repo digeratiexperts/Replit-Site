@@ -8,7 +8,7 @@ export default function RealEstate() {
     { stat: "$1.9B", label: "Annual Fraud Losses", icon: DollarSign, color: "text-red-600" },
     { stat: "45%", label: "Year-over-Year Increase", icon: TrendingDown, color: "text-orange-600" },
     { stat: "98%", label: "Reported by Email", icon: AlertCircle, color: "text-amber-600" },
-    { stat: "3 mins", label: "Average Compromise Time", icon: Zap, color: "text-purple-600" }
+    { stat: "3 mins", label: "Average Compromise Time", icon: Zap, color: "text-violet-400" }
   ];
 
   return (
@@ -105,7 +105,7 @@ export default function RealEstate() {
                       <ul className="space-y-2">
                         {service.features.map((f, i) => (
                           <li key={i} className="flex gap-2 text-sm text-gray-300">
-                            <CheckCircle className="h-4 w-4 text-violet-400 flex-shrink-0 mt-0.5" />
+                            <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0 mt-0.5" />
                             {f}
                           </li>
                         ))}

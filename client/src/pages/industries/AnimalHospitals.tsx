@@ -10,8 +10,8 @@ export default function AnimalHospitals() {
   const metrics = [
     { label: "Data Protection", value: "100%", icon: Shield, color: "from-violet-500 to-purple-500" },
     { label: "System Uptime", value: "99.95%", icon: Activity, color: "from-purple-500 to-fuchsia-500" },
-    { label: "Response Time", value: "<15min", icon: Clock, color: "from-fuchsia-500 to-pink-500" },
-    { label: "Veterinary Clients", value: "20+", icon: Heart, color: "from-pink-500 to-rose-500" }
+    { label: "Response Time", value: "<15min", icon: Clock, color: "from-violet-500 to-purple-500" },
+    { label: "Veterinary Clients", value: "20+", icon: Heart, color: "from-purple-500 to-fuchsia-500" }
   ];
 
   const challenges = [
@@ -25,13 +25,13 @@ export default function AnimalHospitals() {
       icon: Lock, 
       title: "Payment Card Compliance", 
       description: "Maintain PCI DSS compliance for credit card transactions and client billing systems.",
-      color: "text-purple-400"
+      color: "text-violet-400"
     },
     { 
       icon: Users, 
       title: "Multi-Location Management", 
       description: "Seamlessly manage IT across multiple clinic locations with centralized security and monitoring.",
-      color: "text-fuchsia-400"
+      color: "text-violet-400"
     }
   ];
 
