@@ -387,26 +387,25 @@ export function MegaMenu() {
         role="navigation"
         aria-label="Main navigation"
       >
-        <div className="container mx-auto">
-          <div className={`flex items-center justify-between px-4 lg:px-8 transition-all duration-300 ${
+        <div className="max-w-7xl mx-auto">
+          <div className={`flex items-center justify-between px-4 xl:px-8 transition-all duration-300 ${
             isScrolled ? 'h-16' : 'h-20'
           }`}>
             {/* Logo */}
-            <div className="flex items-center lg:space-x-12">
-              <a href="/" className="flex items-center flex-shrink-0">
-                <img 
-                  src={logoImage} 
-                  alt="Digerati Experts Logo" 
-                  className={`transition-all duration-300 ${
-                    isScrolled ? 'h-8' : 'h-12'
-                  }`}
-                  style={{ width: 'auto', maxWidth: '200px' }}
-                  data-testid="logo-header"
-                />
-              </a>
+            <a href="/" className="flex items-center flex-shrink-0">
+              <img 
+                src={logoImage} 
+                alt="Digerati Experts Logo" 
+                className={`transition-all duration-300 ${
+                  isScrolled ? 'h-8' : 'h-10'
+                }`}
+                style={{ width: 'auto', maxWidth: '180px' }}
+                data-testid="logo-header"
+              />
+            </a>
 
-            {/* Desktop Navigation - Only show at xl breakpoint and above */}
-            <div className="hidden lg:flex items-center space-x-1 mega-menu-nav">
+            {/* Desktop Navigation - Center */}
+            <div className="hidden lg:flex items-center space-x-0.5 xl:space-x-1 mega-menu-nav">
               {navItems.map((item, index) => (
                 <div
                   key={item.name}
@@ -417,7 +416,7 @@ export function MegaMenu() {
                   {item.isSimple ? (
                     <a
                       href={item.href}
-                      className="group relative px-3 py-2 text-white/80 hover:text-white font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded"
+                      className="group relative px-2 xl:px-3 py-2 text-sm xl:text-base text-white/80 hover:text-white font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded whitespace-nowrap"
                       data-testid={`nav-${item.name.toLowerCase()}`}
                       onClick={handleLinkClick}
                       aria-label={`Go to ${item.name}`}
@@ -430,7 +429,7 @@ export function MegaMenu() {
                       ref={(el) => {
                         if (el) navButtonsRef.current.set(item.name, el);
                       }}
-                      className={`group relative px-3 py-2 text-white/80 hover:text-white font-medium transition-colors flex items-center focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded ${
+                      className={`group relative px-2 xl:px-3 py-2 text-sm xl:text-base text-white/80 hover:text-white font-medium transition-colors flex items-center focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded whitespace-nowrap ${
                         activeMenu === item.name ? 'text-white' : ''
                       }`}
                       data-testid={`nav-${item.name.toLowerCase()}`}
@@ -657,9 +656,8 @@ export function MegaMenu() {
                 </div>
               ))}
             </div>
-          </div>
 
-          {/* Right Side Actions */}
+            {/* Right Side Actions */}
           <div className="flex items-center space-x-2 lg:space-x-4">
             <a
               href="https://meet.digerati-experts.com/"
