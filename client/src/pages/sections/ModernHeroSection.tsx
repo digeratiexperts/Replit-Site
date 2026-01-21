@@ -53,7 +53,7 @@ export const ModernHeroSection = (): JSX.Element => {
     offset: ["start start", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 150]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 60]);
   // Keep opacity at 1 - no scroll-based fade effect
   const opacity = 1;
 
@@ -204,8 +204,8 @@ export const ModernHeroSection = (): JSX.Element => {
               </div>
               
               {/* Phone */}
-              <p className="text-white/40 text-sm">
-                Or call <a href="tel:325-480-9870" className="text-violet-400 hover:text-violet-300 transition-colors" data-testid="link-hero-phone">325-480-9870</a>
+              <p className="text-white/50 text-base md:text-lg">
+                Or call <a href="tel:325-480-9870" className="text-violet-400 hover:text-violet-300 font-medium transition-colors" data-testid="link-hero-phone">325-480-9870</a>
               </p>
             </motion.div>
 
