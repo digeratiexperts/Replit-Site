@@ -12,7 +12,8 @@ const ProActiveEcosystemPricing = () => {
     {
       name: "Office",
       tier: "Basic IT",
-      price: 165,
+      monthlyPrice: 825,
+      perUserPrice: 165,
       note: "A clean, managed IT baseline.",
       gradient: "from-violet-500 to-purple-500",
       testId: "plan-office"
@@ -20,7 +21,8 @@ const ProActiveEcosystemPricing = () => {
     {
       name: "Business",
       tier: "Security",
-      price: 245,
+      monthlyPrice: 1225,
+      perUserPrice: 245,
       note: "Adds stronger protection and response.",
       gradient: "from-purple-500 to-violet-500",
       testId: "plan-business"
@@ -28,7 +30,8 @@ const ProActiveEcosystemPricing = () => {
     {
       name: "Enterprise",
       tier: "Compliance",
-      price: 345,
+      monthlyPrice: 1725,
+      perUserPrice: 345,
       note: "Adds governance and audit readiness.",
       gradient: "from-violet-500 to-fuchsia-500",
       testId: "plan-enterprise"
@@ -172,10 +175,10 @@ const ProActiveEcosystemPricing = () => {
                   Included in every plan
                 </span>
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-3">
-                  ProActive Ecosystem Foundation
+                  ProActive Ecosystem Pricing
                 </h1>
                 <p className="text-gray-400 text-base sm:text-lg max-w-3xl leading-relaxed">
-                  Office, Business, and Enterprise all include the same managed foundation. Higher tiers add depth: 
+                  Pricing shown for a <span className="text-white font-medium">5-user office</span>. All tiers include the same managed foundation. Higher tiers add depth: 
                   <span className="text-white font-medium"> Basic IT → Security → Compliance</span>.
                 </p>
               </header>
@@ -207,9 +210,15 @@ const ProActiveEcosystemPricing = () => {
                       </span>
                     </div>
                     
-                    <div className="flex items-baseline gap-2 mb-2">
-                      <span className="text-white font-black text-4xl tracking-tight">${plan.price}</span>
-                      <span className="text-gray-400 text-sm">/ user / month</span>
+                    <div className="mb-1">
+                      <span className="text-gray-500 text-xs uppercase tracking-wide">Starting at</span>
+                    </div>
+                    <div className="flex items-baseline gap-2 mb-1">
+                      <span className="text-white font-black text-4xl tracking-tight">${plan.monthlyPrice.toLocaleString()}</span>
+                      <span className="text-gray-400 text-sm">/mo</span>
+                    </div>
+                    <div className="text-gray-500 text-xs mb-2">
+                      for 5 users • ${plan.perUserPrice}/user
                     </div>
                     
                     <p className="text-gray-400 text-sm leading-relaxed">
