@@ -1,7 +1,6 @@
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { PatternOverlay, DiagonalDivider } from "@/components/SectionPatterns";
 
 interface FAQ {
   question: string;
@@ -71,32 +70,19 @@ export const DigeratiFAQSection = (): JSX.Element => {
   };
 
   return (
-    <section 
-      className="relative py-[80px] pt-32 pb-32 overflow-hidden"
-      style={{ 
-        background: 'linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 50%, #E2E8F0 100%)'
-      }}
-    >
-      
-      {/* Pattern overlay */}
-      <PatternOverlay variant="dots" opacity={0.025} />
-      
-      {/* Accent glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-purple-400/5 rounded-full blur-[80px] pointer-events-none z-0" />
-      
-      
-      <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+    <section className="py-20 md:py-28 bg-slate-100">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={headerVariants}
-          className="text-center mb-12 md:mb-16"
+          className="text-center mb-12"
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-[#1A202C]">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-gray-900">
             Frequently Asked Questions
           </h2>
-          <p className="text-lg md:text-xl text-[#4A5568] leading-relaxed">
+          <p className="text-lg text-gray-600">
             Find answers to common queries about us.
           </p>
         </motion.div>
@@ -115,49 +101,38 @@ export const DigeratiFAQSection = (): JSX.Element => {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className={`
-                  relative rounded-xl transition-all duration-300
-                  ${isOpen 
-                    ? 'bg-white border border-purple-200 shadow-lg' 
-                    : 'bg-white border border-gray-200 hover:border-purple-300 hover:shadow-md'
-                  }
-                `}
+                className="bg-white rounded-2xl shadow-sm border border-slate-200/50 overflow-hidden"
                 data-testid={`faq-${index}`}
               >
-                {/* Accordion Trigger */}
                 <button
-                  className="w-full p-5 md:p-6 cursor-pointer flex items-center justify-between text-left focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 focus:ring-offset-[#F7FAFC] rounded-xl"
+                  className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-inset"
                   onClick={() => toggleAccordion(index)}
                   aria-expanded={isOpen}
                   data-testid={`faq-trigger-${index}`}
                 >
-                  <span className="text-lg font-semibold text-[#1A202C] pr-4">
+                  <span className="text-base md:text-lg font-semibold text-gray-900 pr-4">
                     {faq.question}
                   </span>
                   <motion.div
                     animate={{ rotate: isOpen ? 180 : 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    transition={{ duration: 0.2, ease: "easeInOut" }}
                     className="flex-shrink-0"
                   >
                     <ChevronDown className="h-5 w-5 text-violet-500" />
                   </motion.div>
                 </button>
 
-                {/* Accordion Content */}
                 <motion.div
                   initial={false}
                   animate={{
                     height: isOpen ? "auto" : 0,
                     opacity: isOpen ? 1 : 0,
                   }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  transition={{ duration: 0.2, ease: "easeInOut" }}
                   className="overflow-hidden"
                 >
-                  {/* Divider */}
-                  <div className="mx-5 md:mx-6 h-px bg-purple-200" />
-                  
-                  <div className="p-5 md:p-6 pt-4">
-                    <p className="text-[#4A5568] leading-relaxed" data-testid={`faq-answer-${index}`}>
+                  <div className="px-6 pb-5">
+                    <p className="text-gray-600 leading-relaxed" data-testid={`faq-answer-${index}`}>
                       {faq.answer}
                     </p>
                   </div>
