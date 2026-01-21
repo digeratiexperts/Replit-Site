@@ -84,6 +84,7 @@ const LeadQuoteWizard = lazy(() => import("@/pages/LeadQuoteWizard"));
 const QuoteConfirmation = lazy(() => import("@/pages/QuoteConfirmation"));
 const ThankYouSuccess = lazy(() => import("@/pages/ThankYouSuccess"));
 const SalesProcess = lazy(() => import("@/pages/portal/SalesProcess"));
+const ProActiveEcosystemPricing = lazy(() => import("@/pages/ProActiveEcosystemPricing"));
 
 import { servicePageData, industryPageData, resourcePageData, supportPageData } from "@/pages/routes/servicePages";
 
@@ -504,6 +505,13 @@ function Router() {
       <Route path="/thank-you-success-page" component={() => (
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
           <ThankYouSuccess />
+        </Suspense>
+      )} />
+      
+      {/* ProActive Ecosystem Pricing */}
+      <Route path="/proactive-ecosystem-pricing" component={() => (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+          <ProActiveEcosystemPricing />
         </Suspense>
       )} />
       

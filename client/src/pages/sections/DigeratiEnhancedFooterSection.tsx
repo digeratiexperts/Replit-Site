@@ -77,12 +77,12 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
   ];
 
   const services = [
-    { name: "Managed IT", href: "#services" },
-    { name: "Cybersecurity", href: "#services" },
-    { name: "Compliance & Risk", href: "#services" },
-    { name: "Backup & DR", href: "#services" },
-    { name: "Networking", href: "#services" },
-    { name: "UCaaS & VoIP", href: "#services" }
+    { name: "Managed IT", href: "/solutions/managed-it-support" },
+    { name: "Cybersecurity", href: "/solutions/security-operations" },
+    { name: "Compliance & Risk", href: "/solutions/compliance-reports" },
+    { name: "Backup & DR", href: "/solutions/backup-disaster-recovery" },
+    { name: "Threat Detection", href: "/solutions/threat-detection" },
+    { name: "Security Training", href: "/solutions/security-awareness" }
   ];
 
   const legal = [

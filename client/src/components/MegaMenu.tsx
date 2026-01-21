@@ -142,7 +142,7 @@ export function MegaMenu() {
     },
     {
       name: 'Pricing',
-      href: '#pricing',
+      href: '/proactive-ecosystem-pricing',
       isSimple: true
     },
     {
