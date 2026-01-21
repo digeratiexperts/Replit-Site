@@ -326,20 +326,37 @@ export function MegaMenu() {
 
   return (
     <>
-      {/* Top Utility Bar - subtle, matches header */}
+      {/* Top Utility Bar - solid dark violet with fade effect */}
       <div 
-        className={`fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-white/5 transition-all duration-300 ${
-          isScrolled ? 'h-0 overflow-hidden opacity-0' : 'h-auto md:h-9'
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled ? 'h-0 overflow-hidden opacity-0' : 'h-auto md:h-10'
         }`}
+        style={{
+          background: 'linear-gradient(180deg, #12081f 0%, #0d0614 70%, #0a0a0a 100%)',
+        }}
       >
-        <div className="container mx-auto px-4 lg:px-8 h-full flex flex-col md:flex-row items-center justify-end py-2 md:py-0">
-          <div className="flex items-center flex-wrap gap-2 md:gap-6 justify-center md:justify-end">
+        {/* Subtle inner glow accent */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'linear-gradient(90deg, transparent 0%, rgba(139, 92, 246, 0.08) 50%, transparent 100%)',
+          }}
+        />
+        {/* Bottom edge fade line */}
+        <div 
+          className="absolute bottom-0 left-0 right-0 h-px"
+          style={{
+            background: 'linear-gradient(90deg, transparent 10%, rgba(139, 92, 246, 0.3) 50%, transparent 90%)',
+          }}
+        />
+        <div className="container mx-auto px-4 lg:px-8 h-full flex flex-col md:flex-row items-center justify-end py-2 md:py-0 relative z-10">
+          <div className="flex items-center flex-wrap gap-3 md:gap-8 justify-center md:justify-end">
             <a
               href="tel:325-480-9870"
-              className="flex items-center text-white/60 hover:text-white text-xs md:text-sm font-medium transition-colors"
+              className="flex items-center text-white/70 hover:text-violet-300 text-xs md:text-sm font-medium transition-colors"
               data-testid="utility-phone"
             >
-              <Phone className="h-3.5 w-3.5 mr-1.5" />
+              <Phone className="h-3.5 w-3.5 mr-1.5 text-violet-400" />
               <span className="hidden sm:inline">325-480-9870</span>
               <span className="sm:hidden">Call</span>
             </a>
@@ -348,12 +365,12 @@ export function MegaMenu() {
               href="https://portal.digeratiexperts.com/portal/login"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center text-white/60 hover:text-white text-xs md:text-sm font-medium transition-colors"
+              className="flex items-center text-white/70 hover:text-violet-300 text-xs md:text-sm font-medium transition-colors"
               data-testid="utility-portal"
             >
               <span className="hidden sm:inline">Client Portal</span>
               <span className="sm:hidden">Portal</span>
-              <ExternalLink className="h-3 w-3 ml-1" />
+              <ExternalLink className="h-3 w-3 ml-1.5 text-violet-400" />
             </a>
           </div>
         </div>
@@ -364,7 +381,7 @@ export function MegaMenu() {
         className={`fixed left-0 right-0 z-50 mega-menu-container transition-all duration-300 ${
           isScrolled 
             ? 'top-0 bg-black/95 backdrop-blur-xl border-b border-white/[0.08]' 
-            : 'top-9 bg-black/90 backdrop-blur-xl border-b border-white/[0.05]'
+            : 'top-10 bg-black/90 backdrop-blur-xl border-b border-white/[0.05]'
         }`}
         ref={menuContainerRef}
         role="navigation"
