@@ -142,30 +142,30 @@ const categories = ["All", "Services", "Security", "Backup", "Compliance", "Trai
 
 const getTypeColor = (type: string) => {
   switch (type) {
-    case "datasheet": return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+    case "datasheet": return "bg-violet-500/20 text-violet-400 border-violet-500/30";
     case "whitepaper": return "bg-purple-500/20 text-purple-400 border-purple-500/30";
-    case "guide": return "bg-green-500/20 text-green-400 border-green-500/30";
-    case "infographic": return "bg-orange-500/20 text-orange-400 border-orange-500/30";
-    default: return "bg-gray-500/20 text-gray-400 border-gray-500/30";
+    case "guide": return "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
+    case "infographic": return "bg-fuchsia-500/20 text-fuchsia-400 border-fuchsia-500/30";
+    default: return "bg-white/10 text-white/70 border-white/20";
   }
 };
 
 export default function Datasheets() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#030228] to-[#0f0d2e]">
+    <div className="min-h-screen bg-[#0a0a0a]">
       <MegaMenu />
       
       <main className="pt-32 pb-20">
         <div className="container mx-auto px-4 max-w-7xl">
           {/* Header */}
           <div className="text-center mb-12">
-            <Badge className="mb-4 bg-[#5034ff]/20 text-[#5034ff] border-[#5034ff]/30">
+            <Badge className="mb-4 bg-violet-500/20 text-violet-400 border-violet-500/30">
               Resource Library
             </Badge>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Datasheets & Documentation
             </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-xl text-white/70 max-w-3xl mx-auto">
               Download detailed information about our services, solutions, and best practices guides.
             </p>
           </div>
@@ -177,7 +177,7 @@ export default function Datasheets() {
                 key={category}
                 variant="outline"
                 size="sm"
-                className="border-white/20 text-white hover:bg-white/10"
+                className="border-violet-500/30 bg-transparent text-white/70 hover:bg-violet-500/10 hover:text-violet-400 hover:border-violet-400"
                 data-testid={`button-filter-${category.toLowerCase()}`}
               >
                 {category}
@@ -188,27 +188,27 @@ export default function Datasheets() {
           {/* Document Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {documents.map((doc) => (
-              <Card key={doc.id} className="bg-white/5 border-white/10 hover:border-[#5034ff]/50 transition-colors" data-testid={`card-document-${doc.id}`}>
+              <Card key={doc.id} className="bg-white/[0.02] border-white/10 hover:border-violet-500/50 transition-colors" data-testid={`card-document-${doc.id}`}>
                 <CardHeader>
                   <div className="flex items-start justify-between mb-2">
-                    <div className="w-12 h-12 rounded-lg bg-[#5034ff]/20 flex items-center justify-center">
-                      <doc.icon className="h-6 w-6 text-[#5034ff]" />
+                    <div className="w-12 h-12 rounded-lg bg-violet-500/20 flex items-center justify-center">
+                      <doc.icon className="h-6 w-6 text-violet-400" />
                     </div>
                     <Badge className={getTypeColor(doc.type)}>
                       {doc.type}
                     </Badge>
                   </div>
                   <CardTitle className="text-lg text-white">{doc.title}</CardTitle>
-                  <CardDescription className="text-gray-300">
+                  <CardDescription className="text-white/60">
                     {doc.description}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center justify-between text-sm text-gray-400 mb-4">
+                  <div className="flex items-center justify-between text-sm text-white/50 mb-4">
                     <span>{doc.category}</span>
                     <span>{doc.pages ? `${doc.pages} pages` : ""} • {doc.fileSize}</span>
                   </div>
-                  <Button className="w-full bg-[#5034ff] hover:bg-[#5034ff]/90" data-testid={`button-download-${doc.id}`}>
+                  <Button className="w-full bg-violet-600 hover:bg-violet-500 text-white" data-testid={`button-download-${doc.id}`}>
                     <Download className="mr-2 h-4 w-4" />
                     Download PDF
                   </Button>
@@ -218,16 +218,15 @@ export default function Datasheets() {
           </div>
 
           {/* Request Custom Content */}
-          <Card className="mt-12 bg-gradient-to-r from-[#5034ff]/20 to-purple-600/20 border-[#5034ff]/30">
+          <Card className="mt-12 bg-gradient-to-r from-violet-600/20 to-purple-600/20 border-violet-500/30">
             <CardContent className="p-8">
               <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                 <div>
                   <h3 className="text-2xl font-bold text-white mb-2">Need Custom Documentation?</h3>
-                  <p className="text-gray-300">We can provide tailored proposals, assessments, and documentation for your specific needs.</p>
+                  <p className="text-white/70">We can provide tailored proposals, assessments, and documentation for your specific needs.</p>
                 </div>
                 <Button 
-                  variant="outline"
-                  className="border-white/20 text-white hover:bg-white/10 whitespace-nowrap"
+                  className="bg-white text-violet-700 hover:bg-white/90 whitespace-nowrap"
                   onClick={() => window.open("https://meet.digerati-experts.com/", "_blank")}
                   data-testid="button-request-docs"
                 >
