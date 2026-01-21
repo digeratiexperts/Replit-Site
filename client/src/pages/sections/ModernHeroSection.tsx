@@ -101,11 +101,11 @@ export const ModernHeroSection = (): JSX.Element => {
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-[#1f1445] via-[#362560] to-[#1f1445]" />
         
-        {/* Large gradient orbs */}
+        {/* Large gradient orbs - positioned behind content with z-index */}
         <motion.div
-          className="absolute top-[-20%] right-[-10%] w-[1000px] h-[1000px] rounded-full"
+          className="absolute top-[-20%] right-[-10%] w-[1000px] h-[1000px] rounded-full -z-10"
           style={{
-            background: "radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, rgba(139, 92, 246, 0) 60%)",
+            background: "radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, rgba(139, 92, 246, 0) 60%)",
           }}
           animate={{
             scale: [1, 1.15, 1],
@@ -115,9 +115,9 @@ export const ModernHeroSection = (): JSX.Element => {
           transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute bottom-[-20%] left-[-15%] w-[900px] h-[900px] rounded-full"
+          className="absolute bottom-[-20%] left-[-15%] w-[900px] h-[900px] rounded-full -z-10"
           style={{
-            background: "radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(99, 102, 241, 0) 60%)",
+            background: "radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(99, 102, 241, 0) 60%)",
           }}
           animate={{
             scale: [1.1, 1, 1.1],
@@ -127,9 +127,9 @@ export const ModernHeroSection = (): JSX.Element => {
           transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute top-[40%] left-[50%] w-[500px] h-[500px] rounded-full"
+          className="absolute top-[40%] left-[50%] w-[500px] h-[500px] rounded-full -z-10"
           style={{
-            background: "radial-gradient(circle, rgba(34, 211, 238, 0.12) 0%, rgba(34, 211, 238, 0) 60%)",
+            background: "radial-gradient(circle, rgba(34, 211, 238, 0.08) 0%, rgba(34, 211, 238, 0) 60%)",
           }}
           animate={{
             scale: [1, 1.3, 1],
@@ -173,7 +173,7 @@ export const ModernHeroSection = (): JSX.Element => {
               transition={{ duration: 0.6 }}
             >
               {/* Trust Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 backdrop-blur-sm w-fit">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 w-fit">
                 <ShieldCheck className="w-4 h-4 text-cyan-400" />
                 <span className="text-sm text-cyan-300">SOC 2 Compliant | Serving Arizona businesses since 2019</span>
               </div>
@@ -329,8 +329,8 @@ export const ModernHeroSection = (): JSX.Element => {
                 animate={{ opacity: 1, x: 0, scale: 1 }}
                 transition={{ duration: 0.9, delay: 0.5, ease: "easeOut" }}
               >
-                {/* Glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/30 via-indigo-600/15 to-cyan-600/30 blur-3xl scale-110" />
+                {/* Subtle glow effect - behind dashboard only */}
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-indigo-600/10 to-cyan-600/20 blur-2xl scale-105 -z-10" />
                 
                 {/* Dashboard with 3D effect */}
                 <motion.div
