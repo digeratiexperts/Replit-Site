@@ -105,47 +105,47 @@ export default function SecurityChecklist() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#030228] to-[#0f0d2e]">
+    <div className="min-h-screen bg-[#0a0a0a]">
       <MegaMenu />
       
       <main className="pt-32 pb-20">
         <div className="container mx-auto px-4 max-w-5xl">
           {/* Header */}
           <div className="text-center mb-12">
-            <Badge className="mb-4 bg-[#5034ff]/20 text-[#5034ff] border-[#5034ff]/30">
+            <Badge className="mb-4 bg-violet-500/20 text-violet-400 border-violet-500/30">
               Security Checklist
             </Badge>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Business Security Checklist
             </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-xl text-white/70 max-w-3xl mx-auto">
               Use this interactive checklist to assess your organization's security posture. Complete these essential items to strengthen your defenses.
             </p>
           </div>
 
           {/* Progress Card */}
-          <Card className="mb-8 bg-gradient-to-r from-[#5034ff]/20 to-purple-600/20 border-[#5034ff]/30">
+          <Card className="mb-8 bg-gradient-to-r from-violet-600/20 to-purple-600/20 border-violet-500/30">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <h3 className="text-xl font-bold text-white">Your Progress</h3>
-                  <p className="text-gray-300">{completedItems} of {totalItems} items completed</p>
+                  <p className="text-white/70">{completedItems} of {totalItems} items completed</p>
                 </div>
-                <div className="text-4xl font-bold text-[#5034ff]">{percentComplete}%</div>
+                <div className="text-4xl font-bold text-violet-400">{percentComplete}%</div>
               </div>
               <div className="w-full bg-white/10 rounded-full h-4">
                 <div 
-                  className="bg-gradient-to-r from-[#5034ff] to-purple-500 h-4 rounded-full transition-all duration-500"
+                  className="bg-gradient-to-r from-violet-600 to-purple-500 h-4 rounded-full transition-all duration-500"
                   style={{ width: `${percentComplete}%` }}
                 />
               </div>
               <div className="mt-4 flex gap-4">
-                <Button variant="outline" className="border-white/20 text-white hover:bg-white/10" data-testid="button-download-pdf">
+                <Button variant="outline" className="border-violet-500/30 bg-transparent text-white/70 hover:bg-violet-500/10 hover:text-violet-400 hover:border-violet-400" data-testid="button-download-pdf">
                   <Download className="mr-2 h-4 w-4" />
                   Download PDF
                 </Button>
                 <Button 
-                  className="bg-[#5034ff] hover:bg-[#5034ff]/90"
+                  className="bg-white text-violet-700 hover:bg-white/90"
                   onClick={() => window.open("https://meet.digerati-experts.com/", "_blank")}
                   data-testid="button-get-assessment"
                 >
@@ -159,10 +159,10 @@ export default function SecurityChecklist() {
           {/* Checklist Categories */}
           <div className="space-y-8">
             {checklistData.map((category) => (
-              <Card key={category.name} className="bg-white/5 border-white/10" data-testid={`card-category-${category.name.toLowerCase().replace(/\s+/g, '-')}`}>
+              <Card key={category.name} className="bg-white/[0.02] border-white/10" data-testid={`card-category-${category.name.toLowerCase().replace(/\s+/g, '-')}`}>
                 <CardHeader>
                   <CardTitle className="text-xl text-white flex items-center gap-3">
-                    <category.icon className="h-6 w-6 text-[#5034ff]" />
+                    <category.icon className="h-6 w-6 text-violet-400" />
                     {category.name}
                   </CardTitle>
                 </CardHeader>
@@ -210,12 +210,12 @@ export default function SecurityChecklist() {
           </div>
 
           {/* CTA */}
-          <Card className="mt-12 bg-white/5 border-white/10">
+          <Card className="mt-12 bg-white/[0.02] border-white/10">
             <CardContent className="p-8 text-center">
               <h3 className="text-2xl font-bold text-white mb-2">Need Help Completing Your Checklist?</h3>
-              <p className="text-gray-300 mb-6">Our security experts can help you implement these controls and more. Schedule a free consultation.</p>
+              <p className="text-white/70 mb-6">Our security experts can help you implement these controls and more. Schedule a free consultation.</p>
               <Button 
-                className="bg-[#5034ff] hover:bg-[#5034ff]/90"
+                className="bg-violet-600 hover:bg-violet-500 text-white"
                 onClick={() => window.open("https://meet.digerati-experts.com/", "_blank")}
                 data-testid="button-schedule-consultation"
               >
