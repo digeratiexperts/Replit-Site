@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import { lazy, Suspense } from "react";
+import { ScrollToTop } from "@/components/ScrollToTop";
+import { useGlobalShortcuts } from "@/hooks/useKeyboardShortcuts";
 
 import { DigeratiHomepage } from "@/pages/DigeratiHomepage";
 
@@ -521,12 +523,28 @@ function Router() {
   );
 }
 
+function AppContent() {
+  useGlobalShortcuts();
+  
+  return (
+    <>
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+      <div id="main-content">
+        <Router />
+      </div>
+      <ScrollToTop />
+    </>
+  );
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
-        <Router />
+        <AppContent />
       </TooltipProvider>
     </QueryClientProvider>
   );
