@@ -1,5 +1,6 @@
-import { Shield, Users, Activity } from "lucide-react";
+import { Shield, Users, Activity, ArrowRight, Phone } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 export const DigeratiAlertBanner = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -75,38 +76,108 @@ export const DigeratiAlertBanner = (): JSX.Element => {
           <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
             If you're like most business leaders, you don't want another vendor — you want a security-first partner who proactively reduces risk, improves uptime, and keeps your team moving.
           </p>
-          <p className="text-lg text-gray-500 max-w-3xl mx-auto mt-4">
-            Digerati Experts brings managed IT, cybersecurity, and compliance together in one streamlined operation – built for results, not noise.
-          </p>
         </motion.div>
 
         <motion.div 
-          className="grid md:grid-cols-3 gap-6 md:gap-8"
+          className="grid md:grid-cols-3 gap-6 md:gap-8 mb-12"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
-          {features.map((feature) => (
+          {features.map((feature, index) => (
             <motion.div
               key={feature.title}
               variants={cardVariants}
               data-testid={feature.testId}
               className="group relative"
             >
+              {/* Gradient border effect on hover */}
+              <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-[1px]" />
+              
               {/* Card */}
-              <div className="relative bg-white border border-gray-200 rounded-2xl p-6 h-full shadow-sm hover:border-violet-300 hover:shadow-lg hover:shadow-violet-500/10 transition-all duration-300">
-                {/* Icon */}
-                <div className="w-12 h-12 rounded-xl bg-violet-100 border border-violet-200 flex items-center justify-center mb-5">
-                  <feature.icon className="h-6 w-6 text-violet-600" />
+              <div className="relative bg-white border border-gray-200 rounded-2xl p-6 h-full shadow-sm group-hover:border-transparent group-hover:shadow-xl group-hover:shadow-violet-500/10 transition-all duration-300">
+                {/* Icon with gradient background */}
+                <div 
+                  className="w-14 h-14 rounded-xl flex items-center justify-center mb-5 shadow-lg"
+                  style={{
+                    background: index === 0 
+                      ? 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)' 
+                      : index === 1 
+                        ? 'linear-gradient(135deg, #a855f7 0%, #c026d3 100%)'
+                        : 'linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%)'
+                  }}
+                >
+                  <feature.icon className="h-7 w-7 text-white" />
                 </div>
                 
                 {/* Content */}
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-violet-700 transition-colors duration-300">{feature.title}</h3>
                 <p className="text-gray-600 leading-relaxed">{feature.description}</p>
               </div>
             </motion.div>
           ))}
+        </motion.div>
+
+        {/* Premium Gradient CTA Card */}
+        <motion.div
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+        >
+          <div 
+            className="relative rounded-2xl p-10 md:p-12 overflow-hidden shadow-2xl"
+            style={{
+              background: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 35%, #c026d3 70%, #d946ef 100%)'
+            }}
+          >
+            {/* Grid pattern overlay */}
+            <div 
+              className="absolute inset-0 opacity-10"
+              style={{
+                backgroundImage: `
+                  linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+                `,
+                backgroundSize: '40px 40px'
+              }}
+            />
+            
+            {/* Content */}
+            <div className="relative z-10 text-center">
+              <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4">
+                Ready to Secure Your Business?
+              </h3>
+              <p className="text-lg text-white/90 max-w-2xl mx-auto mb-8">
+                Get enterprise-grade protection tailored for Arizona businesses. Let's discuss your security needs.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                  <Button 
+                    size="lg"
+                    className="h-14 px-8 bg-white text-violet-700 hover:bg-white/90 font-semibold rounded-xl shadow-lg transition-all duration-300 hover:scale-[1.02]"
+                    data-testid="button-schedule-consultation-banner"
+                  >
+                    <ArrowRight className="mr-2 h-5 w-5" />
+                    Schedule Consultation
+                  </Button>
+                </a>
+                <a href="tel:325-480-9870">
+                  <Button 
+                    variant="outline"
+                    size="lg"
+                    className="h-14 px-8 bg-transparent border-2 border-white/30 text-white hover:bg-white/10 font-semibold rounded-xl transition-all duration-300"
+                    data-testid="button-call-banner"
+                  >
+                    <Phone className="mr-2 h-5 w-5" />
+                    Call 325-480-9870
+                  </Button>
+                </a>
+              </div>
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>
