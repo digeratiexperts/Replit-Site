@@ -158,22 +158,22 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
-              <DollarSign className="w-4 h-4 text-cyan-400" />
-              <span className="text-sm text-gray-300">Pricing Estimator</span>
+              <DollarSign className="w-4 h-4 text-violet-400" />
+              <span className="text-sm text-white/60">Pricing Estimator</span>
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-              Estimate Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">Service Cost</span> Now
+              Estimate Your <span className="text-violet-400">Service Cost</span> Now
             </h2>
             <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
               Get an instant quote based on your needs and team size.
             </p>
           </div>
 
-          <Card className="w-full max-w-5xl mx-auto bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(34,211,238,0.15)]">
+          <Card className="w-full max-w-5xl mx-auto bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(139,92,246,0.15)]">
             <CardContent className="p-6 sm:p-8 md:p-10 lg:p-12">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <Label htmlFor="service-employees" className="text-sm font-semibold text-gray-200 uppercase tracking-wide">Number of Employees: <span className="text-cyan-400">{serviceEmployees}</span></Label>
+                  <Label htmlFor="service-employees" className="text-sm font-semibold text-gray-200 uppercase tracking-wide">Number of Employees: <span className="text-violet-400">{serviceEmployees}</span></Label>
                   <Slider 
                     id="service-employees"
                     value={[serviceEmployees]} 
@@ -181,7 +181,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                     max={100} 
                     min={1} 
                     step={1}
-                    className="mt-4 [&_[role=slider]]:bg-gradient-to-r [&_[role=slider]]:from-cyan-500 [&_[role=slider]]:to-purple-500 [&_[role=slider]]:border-0 [&_.range]:bg-gradient-to-r [&_.range]:from-cyan-500 [&_.range]:to-purple-500"
+                    className="mt-4 [&_[role=slider]]:bg-violet-500 [&_[role=slider]]:border-0 [&_.range]:bg-violet-500"
                     data-testid="slider-service-employees"
                   />
                 </div>
@@ -201,23 +201,23 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                 </div>
               </div>
 
-              <div className="mt-10 p-8 bg-gradient-to-r from-cyan-500/10 via-transparent to-purple-500/10 rounded-xl border border-white/10">
+              <div className="mt-10 p-8 bg-violet-500/5 rounded-xl border border-violet-500/20">
                 <div className="text-center">
-                  <p className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-2">Estimated Monthly Cost</p>
-                  <p className="text-5xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400">
+                  <p className="text-xs font-bold text-white/50 uppercase tracking-wider mb-2">Estimated Monthly Cost</p>
+                  <p className="text-5xl lg:text-6xl font-bold text-violet-400">
                     ${serviceCost.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                   </p>
-                  <p className="text-sm text-gray-300 mt-3">
+                  <p className="text-sm text-white/60 mt-3">
                     ${servicePackage}/user/month
                   </p>
-                  <p className="text-base text-emerald-400 font-semibold mt-2">
+                  <p className="text-base text-emerald-500 font-semibold mt-2">
                     Quarterly: ${(serviceCost * 3 * 0.9).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} (10% off)
                   </p>
                 </div>
               </div>
 
               <div className="mt-6 text-center">
-                <Button className="bg-gradient-to-r from-cyan-500 to-purple-600 text-white hover:from-cyan-400 hover:to-purple-500 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transition-all duration-300" data-testid="button-open-detailed-estimator">
+                <Button className="bg-violet-600 text-white hover:bg-violet-500 shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all duration-300" data-testid="button-open-detailed-estimator">
                   Open Detailed Estimator <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>

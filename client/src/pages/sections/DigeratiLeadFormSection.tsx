@@ -8,7 +8,7 @@ import { ArrowRight, Loader2, Check, Shield, Clock, CheckCircle } from "lucide-r
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { PatternOverlay, GlowOrb } from "@/components/SectionPatterns";
+import { PatternOverlay, DiagonalDivider } from "@/components/SectionPatterns";
 
 const formSchema = z.object({
   fullName: z.string()
@@ -74,17 +74,9 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
         background: 'linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 50%, #E2E8F0 100%)'
       }}
     >
-      {/* Diagonal transitions for visual flow */}
-      <div className="absolute top-0 left-0 right-0 h-20 overflow-hidden pointer-events-none z-0">
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute w-full h-full">
-          <polygon points="0,100 100,0 100,100" fill="#0f0720" />
-        </svg>
-      </div>
-      <div className="absolute bottom-0 left-0 right-0 h-20 overflow-hidden pointer-events-none z-0">
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute w-full h-full">
-          <polygon points="0,0 100,100 0,100" fill="#0d0720" />
-        </svg>
-      </div>
+      {/* Diagonal transitions with violet accent */}
+      <DiagonalDivider position="top" toColor="#0a0a0a" height={100} angle="right" />
+      <DiagonalDivider position="bottom" toColor="#0a0a0a" height={100} angle="right" />
       
       {/* Pattern overlay */}
       <PatternOverlay variant="dots" opacity={0.025} />
