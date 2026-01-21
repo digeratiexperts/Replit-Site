@@ -1,13 +1,56 @@
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Shield, Zap, Clock, CheckCircle, Building, FileCheck, ShieldCheck, Award, Apple, Check } from "lucide-react";
-import { AnimatedShield, NetworkNodes, FloatingParticles, DashboardMockup } from "@/components/graphics";
+import { ArrowRight, Sparkles, Shield, Zap, Clock, CheckCircle, Building, FileCheck, ShieldCheck, Award, Apple, Check, Loader2 } from "lucide-react";
+import { FloatingParticles } from "@/components/graphics";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+const assessmentFormSchema = z.object({
+  fullName: z.string().min(2, "Name must be at least 2 characters").max(50, "Name must be less than 50 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  phone: z.string().regex(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/, "Please enter a valid phone number"),
+  company: z.string().min(2, "Company name must be at least 2 characters").max(100, "Company name must be less than 100 characters"),
+});
+
+type AssessmentFormData = z.infer<typeof assessmentFormSchema>;
 
 export const ModernHeroSection = (): JSX.Element => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const prefersReducedMotion = useReducedMotion();
+  const { toast } = useToast();
+  
+  const form = useForm<AssessmentFormData>({
+    resolver: zodResolver(assessmentFormSchema),
+    defaultValues: { fullName: "", email: "", phone: "", company: "" },
+  });
+
+  const handleFormSubmit = async (data: AssessmentFormData) => {
+    setIsSubmitting(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      toast({
+        title: "Assessment Request Submitted!",
+        description: "We'll contact you within 24 hours to schedule your free assessment.",
+      });
+      form.reset();
+    } catch {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -235,54 +278,136 @@ export const ModernHeroSection = (): JSX.Element => {
               </div>
             </motion.div>
 
-            {/* Right column - Dashboard Visual */}
-            <div className="relative flex justify-center lg:justify-end w-full mt-8 lg:mt-0">
+            {/* Right column - Lead Capture Form */}
+            <motion.div 
+              className="relative w-full mt-8 lg:mt-0"
+              id="assessment-form"
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+            >
+              {/* Glow effect behind form */}
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-indigo-600/10 to-cyan-600/20 blur-3xl scale-110" />
               
-              {/* Dashboard Mockup - Primary visual */}
-              <motion.div
-                className="relative w-full max-w-[500px] lg:max-w-[550px] xl:max-w-[600px]"
-                initial={{ opacity: 0, x: 60, scale: 0.95 }}
-                animate={{ opacity: 1, x: 0, scale: 1 }}
-                transition={{ duration: 0.9, delay: 0.5, ease: "easeOut" }}
-              >
-                {/* Glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/30 via-indigo-600/15 to-cyan-600/30 blur-3xl scale-110" />
-                
-                {/* Dashboard with 3D effect */}
-                <motion.div
-                  className="relative"
-                  style={{ 
-                    transform: "perspective(1200px) rotateY(-8deg) rotateX(3deg)",
-                    transformStyle: "preserve-3d"
-                  }}
-                  animate={{
-                    rotateY: [-8, -5, -8],
-                    rotateX: [3, 4, 3],
-                  }}
-                  transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <DashboardMockup className="w-full drop-shadow-2xl" />
-                </motion.div>
-
-                {/* Floating shield accent */}
-                <motion.div
-                  className="absolute -top-8 -left-4 w-24 h-28 z-30"
-                  animate={{ y: [0, -12, 0], rotate: [0, 5, 0] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <AnimatedShield className="w-full h-full drop-shadow-lg" />
-                </motion.div>
-
-                {/* Network nodes accent */}
-                <motion.div
-                  className="absolute bottom-4 -right-6 w-32 h-40 opacity-60"
-                  animate={{ y: [0, 8, 0] }}
-                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                >
-                  <NetworkNodes className="w-full h-full" />
-                </motion.div>
-              </motion.div>
-            </div>
+              <Card className="relative backdrop-blur-xl bg-white/95 shadow-2xl border-0">
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-2xl text-gray-900">Get Started Today</CardTitle>
+                  <CardDescription className="text-gray-600">
+                    Lock In 80% Off Your Cyber Risk Assessment — Act Now to Identify Vulnerabilities Before Hackers Do.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
+                      <FormField
+                        control={form.control}
+                        name="fullName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Full Name *</FormLabel>
+                            <FormControl>
+                              <Input 
+                                placeholder="John Smith" 
+                                data-testid="input-hero-full-name"
+                                className="focus-visible:ring-purple-600"
+                                disabled={isSubmitting}
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email Address *</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="email" 
+                                placeholder="john@company.com" 
+                                data-testid="input-hero-email"
+                                className="focus-visible:ring-purple-600"
+                                disabled={isSubmitting}
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Phone Number *</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="tel" 
+                                placeholder="(480) 000-0000" 
+                                data-testid="input-hero-phone"
+                                className="focus-visible:ring-purple-600"
+                                disabled={isSubmitting}
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="company"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Company Name *</FormLabel>
+                            <FormControl>
+                              <Input 
+                                placeholder="Your Company Inc." 
+                                data-testid="input-hero-company"
+                                className="focus-visible:ring-purple-600"
+                                disabled={isSubmitting}
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <p className="text-xs text-gray-500">
+                        All information submitted is protected and handled in compliance with our Privacy Policy.
+                      </p>
+                      
+                      <Button 
+                        className="w-full h-12 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold shadow-lg shadow-orange-500/30" 
+                        data-testid="button-hero-submit"
+                        type="submit"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Submitting...
+                          </>
+                        ) : (
+                          <>
+                            Get My Free Assessment
+                            <ArrowRight className="ml-2 h-5 w-5" />
+                          </>
+                        )}
+                      </Button>
+                    </form>
+                  </Form>
+                </CardContent>
+              </Card>
+            </motion.div>
           </div>
         </div>
       </motion.div>
