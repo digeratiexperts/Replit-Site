@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Shield, Zap, Clock, CheckCircle, Building, FileCheck, ShieldCheck, Award, Apple, Check, Loader2 } from "lucide-react";
+import { ArrowRight, CheckCircle, Building, FileCheck, ShieldCheck, Award, Apple, Check, Loader2, Shield } from "lucide-react";
 import { AnimatedShield, NetworkNodes, FloatingParticles, DashboardMockup } from "@/components/graphics";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -19,7 +19,6 @@ type AssessmentFormData = z.infer<typeof assessmentFormSchema>;
 
 export const ModernHeroSection = (): JSX.Element => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const { toast } = useToast();
@@ -49,13 +48,6 @@ export const ModernHeroSection = (): JSX.Element => {
     }
   };
   
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-  
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
@@ -64,12 +56,6 @@ export const ModernHeroSection = (): JSX.Element => {
   const y = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 150]);
   // Keep opacity at 1 - no scroll-based fade effect
   const opacity = 1;
-
-  const stats = [
-    { icon: Shield, value: "99.9%", label: "Uptime SLA", delay: 0 },
-    { icon: Zap, value: "<15min", label: "Response Time", delay: 0.1 },
-    { icon: Clock, value: "24/7", label: "Monitoring", delay: 0.2 },
-  ];
 
   const features = [
     { icon: CheckCircle, text: "Insurance & Compliance-Ready", color: "text-green-400" },
@@ -83,13 +69,6 @@ export const ModernHeroSection = (): JSX.Element => {
     { name: "Microsoft Partner", icon: Award },
     { name: "Apple Consultants", icon: Apple },
   ];
-
-  const handleScrollToCalculator = () => {
-    const calculatorElement = document.getElementById('calculators');
-    if (calculatorElement) {
-      calculatorElement.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   return (
     <section 
@@ -182,30 +161,30 @@ export const ModernHeroSection = (): JSX.Element => {
                 Flat-rate pricing, compliance-ready, and backed by 24/7 monitoring.
               </p>
 
-              {/* Feature pills - 2x2 grid */}
-              <div className="grid grid-cols-2 gap-3">
+              {/* Feature pills - responsive grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                 {features.map((feature) => (
                   <div 
                     key={feature.text}
-                    className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white/[0.08] border border-white/15"
+                    className="flex items-center gap-2.5 px-3.5 py-3 rounded-xl bg-white/[0.06] border border-white/10 hover:bg-white/[0.1] hover:border-white/20 transition-colors"
                   >
                     <feature.icon className={`h-4 w-4 ${feature.color} flex-shrink-0`} />
-                    <span className="text-xs text-gray-200 leading-tight">{feature.text}</span>
+                    <span className="text-sm sm:text-xs text-gray-100 leading-tight">{feature.text}</span>
                   </div>
                 ))}
               </div>
 
               {/* Trust Badges - Credibility row */}
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-                <span className="text-gray-200 font-medium">Trusted by:</span>
+              <div className="flex flex-wrap items-center gap-x-4 sm:gap-x-6 gap-y-2 text-sm">
+                <span className="text-gray-300 font-medium w-full sm:w-auto">Trusted by:</span>
                 {trustBadges.map((badge) => (
                   <span 
                     key={badge.name}
                     className="flex items-center gap-1.5"
                     data-testid={`trust-badge-${badge.name.toLowerCase().replace(/\s+/g, '-')}`}
                   >
-                    <badge.icon className="w-4 h-4 text-gray-300" />
-                    <span className="text-gray-200">{badge.name}</span>
+                    <badge.icon className="w-4 h-4 text-cyan-400/70" />
+                    <span className="text-gray-200 text-xs sm:text-sm">{badge.name}</span>
                   </span>
                 ))}
               </div>
@@ -287,73 +266,67 @@ export const ModernHeroSection = (): JSX.Element => {
               </motion.div>
 
               {/* Reassurance microcopy */}
-              <div className="flex flex-wrap items-center gap-6 mt-5">
+              <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3 sm:gap-5 mt-4">
                 <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
-                    <Check className="w-3 h-3 text-green-400" />
-                  </div>
-                  <span className="text-sm text-white/90 font-medium">No obligation</span>
+                  <Check className="w-4 h-4 text-green-400" />
+                  <span className="text-sm text-white/80">No obligation</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
-                    <Check className="w-3 h-3 text-green-400" />
-                  </div>
-                  <span className="text-sm text-white/90 font-medium">Results in 24-48hrs</span>
+                  <Check className="w-4 h-4 text-green-400" />
+                  <span className="text-sm text-white/80">Results in 24-48hrs</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center">
-                    <Check className="w-3 h-3 text-green-400" />
-                  </div>
-                  <span className="text-sm text-white/90 font-medium">No credit card</span>
+                  <Check className="w-4 h-4 text-green-400" />
+                  <span className="text-sm text-white/80">No credit card</span>
                 </div>
               </div>
               
               {/* Phone alternative */}
-              <div className="text-white/80 text-sm mt-4">
-                Prefer to call? <a href="tel:325-480-9870" className="text-cyan-300 hover:text-cyan-200 font-semibold transition-colors" data-testid="link-hero-phone">325-480-9870</a>
+              <div className="text-gray-400 text-sm mt-3">
+                Prefer to call? <a href="tel:325-480-9870" className="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors underline underline-offset-2" data-testid="link-hero-phone">325-480-9870</a>
               </div>
             </motion.div>
 
-            {/* Right column - Dashboard Visual */}
-            <div className="relative flex justify-center lg:justify-end w-full mt-8 lg:mt-0">
+            {/* Right column - Dashboard Visual (hidden on mobile, visible tablet+) */}
+            <div className="hidden md:flex relative justify-center lg:justify-end w-full">
               <motion.div
-                className="relative w-full max-w-[500px] lg:max-w-[550px] xl:max-w-[600px]"
-                initial={{ opacity: 0, x: 60, scale: 0.95 }}
+                className="relative w-full max-w-[420px] md:max-w-[480px] lg:max-w-[520px] xl:max-w-[580px]"
+                initial={{ opacity: 0, x: 40, scale: 0.95 }}
                 animate={{ opacity: 1, x: 0, scale: 1 }}
-                transition={{ duration: 0.9, delay: 0.5, ease: "easeOut" }}
+                transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
               >
                 {/* Subtle glow effect - behind dashboard only */}
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-indigo-600/10 to-cyan-600/20 blur-2xl scale-105 -z-10" />
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/15 via-blue-500/10 to-cyan-500/15 blur-3xl scale-110 -z-10" />
                 
-                {/* Dashboard with 3D effect */}
+                {/* Dashboard with subtle 3D effect */}
                 <motion.div
                   className="relative"
                   style={{ 
-                    transform: "perspective(1200px) rotateY(-8deg) rotateX(3deg)",
+                    transform: "perspective(1200px) rotateY(-6deg) rotateX(2deg)",
                     transformStyle: "preserve-3d"
                   }}
-                  animate={{
-                    rotateY: [-8, -5, -8],
-                    rotateX: [3, 4, 3],
+                  animate={prefersReducedMotion ? {} : {
+                    rotateY: [-6, -4, -6],
+                    rotateX: [2, 3, 2],
                   }}
                   transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
                 >
                   <DashboardMockup className="w-full drop-shadow-2xl" />
                 </motion.div>
 
-                {/* Floating shield accent */}
+                {/* Floating shield accent - hidden on tablet */}
                 <motion.div
-                  className="absolute -top-8 -left-4 w-24 h-28 z-30"
-                  animate={{ y: [0, -12, 0], rotate: [0, 5, 0] }}
+                  className="hidden lg:block absolute -top-6 -left-2 w-20 h-24 z-30"
+                  animate={prefersReducedMotion ? {} : { y: [0, -10, 0], rotate: [0, 3, 0] }}
                   transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 >
                   <AnimatedShield className="w-full h-full drop-shadow-lg" />
                 </motion.div>
 
-                {/* Network nodes accent */}
+                {/* Network nodes accent - hidden on tablet */}
                 <motion.div
-                  className="absolute bottom-4 -right-6 w-32 h-40 opacity-60"
-                  animate={{ y: [0, 8, 0] }}
+                  className="hidden lg:block absolute bottom-4 -right-4 w-28 h-36 opacity-50"
+                  animate={prefersReducedMotion ? {} : { y: [0, 6, 0] }}
                   transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
                 >
                   <NetworkNodes className="w-full h-full" />
@@ -364,24 +337,24 @@ export const ModernHeroSection = (): JSX.Element => {
         </div>
       </motion.div>
 
-      {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a0118] to-transparent z-10" />
+      {/* Bottom gradient fade - matches next section */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 sm:h-32 bg-gradient-to-t from-[#0d0720] to-transparent z-10 pointer-events-none" />
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator - hidden on mobile */}
       <motion.div
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20"
+        className="hidden sm:block absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.5, duration: 0.6 }}
       >
         <motion.div
           className="w-6 h-10 rounded-full border-2 border-white/20 flex items-start justify-center p-2"
-          animate={{ opacity: [0.5, 1, 0.5] }}
+          animate={prefersReducedMotion ? {} : { opacity: [0.4, 0.8, 0.4] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
           <motion.div
-            className="w-1 h-2 rounded-full bg-white/60"
-            animate={{ y: [0, 12, 0] }}
+            className="w-1 h-2 rounded-full bg-white/50"
+            animate={prefersReducedMotion ? {} : { y: [0, 12, 0] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
           />
         </motion.div>
