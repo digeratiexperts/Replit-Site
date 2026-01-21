@@ -205,7 +205,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                       </p>
                       
                       <div className="flex items-center justify-center">
-                        <div className="w-12 h-12 bg-gradient-to-br from-purple-500/30 to-cyan-500/30 rounded-full mr-4 border border-white/20 flex items-center justify-center">
+                        <div className="w-12 h-12 bg-gradient-to-br from-violet-500/30 to-purple-500/30 rounded-full mr-4 border border-white/20 flex items-center justify-center">
                           <span className="text-white font-semibold text-lg">
                             {testimonials[currentTestimonial].author.charAt(0)}
                           </span>
@@ -253,7 +253,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                 onClick={() => goToTestimonial(index)}
                 className={`h-3 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0118] hover:scale-125 ${
                   currentTestimonial === index 
-                    ? 'w-8 bg-gradient-to-r from-purple-500 to-cyan-400' 
+                    ? 'w-8 bg-gradient-to-r from-violet-500 to-purple-400' 
                     : 'w-3 bg-white/20 hover:bg-white/40'
                 }`}
                 aria-label={`Go to testimonial ${index + 1}`}

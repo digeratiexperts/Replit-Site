@@ -41,7 +41,7 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
       readTime: "4 min read",
       urgent: false,
       icon: <Lock className="h-5 w-5" />,
-      gradient: "from-cyan-500 to-blue-500",
+      gradient: "from-violet-500 to-purple-500",
       slug: "hhs-ocr-right-of-access-concentra-2025-12-16"
     }
   ];
@@ -67,7 +67,7 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
             24/7 Security Response Team
           </Badge>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Recent Threats & <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-purple-400 to-cyan-400">Insights</span>
+            Recent Threats & <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-violet-400 to-purple-400">Insights</span>
           </h2>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">
             Stay ahead of cyber threats with real-time alerts and expert analysis from our security team.

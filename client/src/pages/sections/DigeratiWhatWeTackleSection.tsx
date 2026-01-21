@@ -16,7 +16,7 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
       icon: <Database className="h-8 w-8" />,
       title: "Data Loss Prevention",
       description: "Comprehensive backup strategies with tested disaster recovery ensuring business continuity",
-      gradient: "from-blue-500 to-cyan-500"
+      gradient: "from-violet-500 to-purple-500"
     },
     {
       icon: <AlertTriangle className="h-8 w-8" />,
@@ -63,7 +63,7 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
             <span className="text-sm text-gray-300">Threat Protection</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            What We <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-cyan-400 to-pink-400">Tackle</span>
+            What We <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-purple-300 to-fuchsia-300">Tackle</span>
           </h2>
           <p className="text-xl text-gray-400 max-w-4xl mx-auto leading-relaxed">
             Your business faces evolving cyber threats daily. We handle these complex challenges 

@@ -26,7 +26,7 @@ const assessmentFormSchema = z.object({
 type AssessmentFormData = z.infer<typeof assessmentFormSchema>;
 
 const benefits = [
-  { icon: Shield, text: "Full vulnerability assessment included", color: "text-cyan-400" },
+  { icon: Shield, text: "Full vulnerability assessment included", color: "text-violet-400" },
   { icon: CheckCircle, text: "Results delivered within 48 hours", color: "text-green-400" },
   { icon: Clock, text: "No commitment required", color: "text-purple-400" },
   { icon: Award, text: "Expert recommendations included", color: "text-yellow-400" },
@@ -139,7 +139,7 @@ export const LeadCaptureBand = (): JSX.Element => {
             className="relative"
           >
             {/* Glow effect behind card */}
-            <div className="absolute -inset-4 bg-gradient-to-br from-purple-600/20 via-transparent to-cyan-600/20 blur-3xl" />
+            <div className="absolute -inset-4 bg-gradient-to-br from-violet-600/20 via-transparent to-purple-600/20 blur-3xl" />
             
             <Card className="relative backdrop-blur-xl bg-white/95 dark:bg-gray-900/95 shadow-[0_20px_70px_-15px_rgba(139,92,246,0.4)] border-0 ring-1 ring-white/20">
               <CardHeader className="pb-4">
@@ -244,7 +244,7 @@ export const LeadCaptureBand = (): JSX.Element => {
                     </p>
                     
                     <Button 
-                      className="w-full h-12 text-base bg-gradient-to-r from-purple-600 to-cyan-500 text-white hover:from-purple-700 hover:to-cyan-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-purple-500/25" 
+                      className="w-full h-12 text-base bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-600 focus-visible:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-violet-500/25" 
                       data-testid="button-lead-submit"
                       type="submit"
                       disabled={isSubmitting}
