@@ -138,7 +138,7 @@ export const ModernHeroSection = (): JSX.Element => {
                 </span>
                 <br />
                 <span className="text-white mt-2 block">
-                  Protect Arizona Businesses 24/7.
+                  Your Arizona Business. Protected 24/7.
                 </span>
               </h1>
 
