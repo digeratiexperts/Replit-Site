@@ -22,6 +22,7 @@ import { DigeratiNewsletterSection } from "./sections/DigeratiNewsletterSection"
 import { PremiumCTASection } from "@/components/PremiumCTASection";
 import { DigeratiContactSection } from "./sections/DigeratiContactSection";
 import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooterSection";
+import { DigeratiStatsSection } from "./sections/DigeratiStatsSection";
 
 // Industry multiplier lookup table - maps unique keys to exact multiplier values
 const industryMultipliers: Record<string, number> = {
@@ -80,6 +81,9 @@ export const DigeratiHomepage = (): JSX.Element => {
 
       {/* Value Proof / Alert Banner Section */}
       <DigeratiAlertBanner />
+
+      {/* Statistics Section */}
+      <DigeratiStatsSection />
 
       {/* Services Section */}
       <DigeratiServicesSection />

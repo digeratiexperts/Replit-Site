@@ -1,12 +1,18 @@
 import { PageTemplate } from "@/components/PageTemplate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, Phone, ArrowRight, Sparkles, Zap } from "lucide-react";
+import { CheckCircle, Phone, ArrowRight, Sparkles, Zap, AlertTriangle } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 
 interface ServiceFeature {
   title: string;
   description: string;
   icon?: React.ReactNode;
+}
+
+interface ServiceStat {
+  value: string;
+  label: string;
+  source: string;
 }
 
 interface GenericServicePageProps {
@@ -16,6 +22,7 @@ interface GenericServicePageProps {
   features: ServiceFeature[];
   benefits: string[];
   gradientColors?: string;
+  stat?: ServiceStat;
 }
 
 const FeatureCard = ({ 
@@ -56,7 +63,8 @@ export default function GenericServicePage({
   description,
   features,
   benefits,
-  gradientColors = "from-violet-600 via-purple-600 to-fuchsia-600"
+  gradientColors = "from-violet-600 via-purple-600 to-fuchsia-600",
+  stat
 }: GenericServicePageProps) {
   const prefersReducedMotion = useReducedMotion() ?? false;
   
@@ -68,6 +76,31 @@ export default function GenericServicePage({
       variant="dark"
     >
       <div className="space-y-16">
+        {/* Stat Callout */}
+        {stat && (
+          <motion.div
+            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="p-6 rounded-2xl bg-violet-500/10 border border-violet-500/20"
+            data-testid="service-stat-callout"
+          >
+            <div className="flex items-start gap-4">
+              <div className="p-3 rounded-xl bg-violet-500/20">
+                <AlertTriangle className="h-6 w-6 text-violet-400" />
+              </div>
+              <div>
+                <div className="text-3xl font-bold bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">
+                  {stat.value}
+                </div>
+                <p className="mt-1 text-white/80">{stat.label}</p>
+                <p className="mt-1 text-sm text-white/50">— {stat.source}</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         {/* Description with visual accent */}
         <motion.div 
           className="relative"

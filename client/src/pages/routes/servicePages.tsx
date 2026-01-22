@@ -85,7 +85,8 @@ export const servicePageData = {
       "Compliance-grade encryption audit trail",
       "Peace of mind: tested backups, not just 'set and forget'"
     ],
-    gradientColors: "from-blue-600 via-cyan-600 to-teal-600"
+    gradientColors: "from-blue-600 via-cyan-600 to-teal-600",
+    stat: { value: "54%", label: "used backups to restore encrypted data (lowest in 6 years)", source: "Sophos 2025" }
   },
   'security-awareness': {
     title: "Security Awareness Training",
@@ -107,7 +108,8 @@ export const servicePageData = {
       "Reduced support tickets from malware/ransomware",
       "Lower breach risk from insider mistakes"
     ],
-    gradientColors: "from-amber-600 via-orange-600 to-red-600"
+    gradientColors: "from-amber-600 via-orange-600 to-red-600",
+    stat: { value: "60%", label: "of breaches involve the human element", source: "Verizon DBIR 2025" }
   },
   'co-managed-it': {
     title: "Co-Managed IT",
@@ -151,7 +153,8 @@ export const servicePageData = {
       "Compliance-ready incident documentation",
       "24/7 detection + real response, not 'good luck with alerts'"
     ],
-    gradientColors: "from-red-700 via-rose-700 to-pink-700"
+    gradientColors: "from-red-700 via-rose-700 to-pink-700",
+    stat: { value: "88%", label: "of SMB breaches involve ransomware", source: "Verizon DBIR 2025" }
   },
   'security-operations': {
     title: "Security Operations (SOC-as-a-Service)",
@@ -179,6 +182,7 @@ export const servicePageData = {
     title: "Backup & Disaster Recovery (BCDR)",
     subtitle: "Tested recovery with guaranteed targets—business won't stay down",
     description: "BCDR is guaranteed continuity, not just 'we have backups.' Agreed RPO/RTO targets, image-based backups, scheduled restore tests, and DR runbooks. Your business comes back up on a timeline you define—not when backups finally work.",
+    stat: { value: "$1.53M", label: "average ransomware recovery cost (excluding ransom)", source: "Sophos 2025" },
     features: [
       { title: "Guaranteed RTO/RTO Targets", description: "Committed recovery time and data-loss objectives with SLA backing" },
       { title: "Image-Based Backups", description: "MSP360 Server/VM features for full-system restore, not file-by-file recovery" },
