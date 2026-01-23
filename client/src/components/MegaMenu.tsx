@@ -61,36 +61,36 @@ export function MegaMenu() {
           featured: true,
           viewAllUrl: '/solutions',
           items: [
-            { title: 'ProActive Ecosystem', description: 'Everything your office needs', icon: <Monitor className="h-5 w-5" />, url: '/solutions/office-package', badge: 'Best Value' },
-            { title: 'Co-Managed IT', description: 'Extend your IT team', icon: <Users className="h-5 w-5" />, url: '/solutions/co-managed-it', badge: 'Popular' },
-            { title: 'Managed IT Support', description: 'End recurring IT headaches', icon: <HeadphonesIcon className="h-5 w-5" />, url: '/solutions/managed-it-support' },
+            { title: 'ProActive Ecosystem', description: 'Everything your office needs in one plan', icon: <Monitor className="h-5 w-5" />, url: '/solutions/office-package', badge: 'Best Value', price: 'From $165/user' },
+            { title: 'Co-Managed IT', description: 'Extend your IT team without hiring', icon: <Users className="h-5 w-5" />, url: '/solutions/co-managed-it', badge: 'Popular', price: 'Custom' },
+            { title: 'Managed IT Support', description: 'End recurring IT headaches for good', icon: <HeadphonesIcon className="h-5 w-5" />, url: '/solutions/managed-it-support' },
           ]
         },
         {
           title: 'Managed Services',
           viewAllUrl: '/solutions',
           items: [
-            { title: 'Managed Workplace', description: 'Focus on work, not tech', icon: <Building className="h-5 w-5" />, url: '/solutions/managed-workplace' },
-            { title: 'Cloud Backup', description: 'Never lose business data', icon: <Cloud className="h-5 w-5" />, url: '/solutions/cloud-backup' },
-            { title: 'Security Training', description: 'Turn staff into assets', icon: <Shield className="h-5 w-5" />, url: '/solutions/security-awareness' },
+            { title: 'Managed Workplace', description: 'Focus on work, not technology', icon: <Building className="h-5 w-5" />, url: '/solutions/managed-workplace' },
+            { title: 'Cloud Backup', description: 'Never lose critical business data', icon: <Cloud className="h-5 w-5" />, url: '/solutions/cloud-backup' },
+            { title: 'Security Training', description: 'Turn staff into security assets', icon: <Shield className="h-5 w-5" />, url: '/solutions/security-awareness' },
           ]
         },
         {
           title: 'Security',
           viewAllUrl: '/solutions',
           items: [
-            { title: 'Threat Detection', description: 'Stop attacks early', icon: <Zap className="h-5 w-5" />, url: '/solutions/threat-detection' },
-            { title: 'Security Operations', description: '24/7 expert monitoring', icon: <Lock className="h-5 w-5" />, url: '/solutions/security-operations' },
-            { title: 'Backup & DR', description: 'Recover in hours', icon: <Server className="h-5 w-5" />, url: '/solutions/backup-disaster-recovery' },
+            { title: 'Threat Detection', description: 'Stop attacks before damage occurs', icon: <Zap className="h-5 w-5" />, url: '/solutions/threat-detection' },
+            { title: 'Security Operations', description: '24/7 expert eyes on your systems', icon: <Lock className="h-5 w-5" />, url: '/solutions/security-operations' },
+            { title: 'Backup & DR', description: 'Recover in hours, not weeks', icon: <Server className="h-5 w-5" />, url: '/solutions/backup-disaster-recovery' },
           ]
         },
         {
           title: 'Compliance',
           viewAllUrl: '/solutions',
           items: [
-            { title: 'vCIO & Strategy', description: 'Executive IT guidance', icon: <BarChart3 className="h-5 w-5" />, url: '/solutions/vcio-strategy' },
-            { title: 'Compliance Reports', description: 'Pass audits confidently', icon: <ClipboardCheck className="h-5 w-5" />, url: '/solutions/compliance-reports' },
-            { title: 'Unified Security', description: 'Complete visibility', icon: <Layers className="h-5 w-5" />, url: '/solutions/unified-security' },
+            { title: 'vCIO & Strategy', description: 'Executive IT guidance on demand', icon: <BarChart3 className="h-5 w-5" />, url: '/solutions/vcio-strategy', badge: 'For Compliance' },
+            { title: 'Compliance Reports', description: 'Pass audits with confidence', icon: <ClipboardCheck className="h-5 w-5" />, url: '/solutions/compliance-reports' },
+            { title: 'Unified Security', description: 'Complete security visibility', icon: <Layers className="h-5 w-5" />, url: '/solutions/unified-security' },
           ]
         }
       ]
@@ -392,9 +392,9 @@ export function MegaMenu() {
                 src={logoImage} 
                 alt="Digerati Experts Logo" 
                 className={`transition-all duration-300 ${
-                  isScrolled ? 'h-8' : 'h-10'
+                  isScrolled ? 'h-8' : 'h-12'
                 }`}
-                style={{ width: 'auto', maxWidth: '180px' }}
+                style={{ width: 'auto', maxWidth: '200px' }}
                 data-testid="logo-header"
               />
             </a>
@@ -484,25 +484,23 @@ export function MegaMenu() {
                               }`}
                             >
                               {/* Section Header */}
-                              <div className="mb-3">
-                                <div className="flex items-center justify-between gap-2 mb-1">
-                                  <h3 
-                                    className={`font-bold text-xs uppercase tracking-wider whitespace-nowrap ${
-                                      section.featured ? 'text-violet-400' : 'text-gray-400'
-                                    }`}
-                                    id={`menu-section-${section.title.replace(/\s+/g, '-')}`}
-                                  >
-                                    {section.title}
-                                  </h3>
+                              <div className="mb-4">
+                                <h3 
+                                  className={`font-bold text-sm uppercase tracking-wider flex items-center gap-2 ${
+                                    section.featured ? 'text-violet-400' : 'text-gray-400'
+                                  }`}
+                                  id={`menu-section-${section.title.replace(/\s+/g, '-')}`}
+                                >
+                                  {section.title}
                                   {section.featured && (
-                                    <span className="text-[9px] bg-violet-600/80 text-white px-1.5 py-0.5 rounded font-medium whitespace-nowrap">
-                                      ★ Top
+                                    <span className="text-[10px] bg-violet-600 text-white px-2 py-0.5 rounded-full font-medium normal-case tracking-normal">
+                                      ★ Top Picks
                                     </span>
                                   )}
-                                </div>
-                                <div className={`h-px ${
+                                </h3>
+                                <div className={`h-px mt-2 ${
                                   section.featured 
-                                    ? 'bg-gradient-to-r from-violet-500/50 to-transparent' 
+                                    ? 'bg-gradient-to-r from-violet-500/50 to-purple-500/50' 
                                     : 'bg-white/10'
                                 }`} />
                               </div>
@@ -519,15 +517,16 @@ export function MegaMenu() {
                                   const hasHoveredSibling = hoveredItem !== null && !isHovered;
                                   
                                   return (
-                                  <li 
+                                  <motion.li 
                                     key={subItem.title} 
                                     role="none"
-                                    className="animate-fade-in"
-                                    style={{ animationDelay: '0ms', animationDuration: '150ms' }}
+                                    initial={{ opacity: 0, y: 8 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: itemIdx * 0.03, duration: 0.2, ease: 'easeOut' }}
                                   >
                                     <a
                                       href={subItem.url || '#'}
-                                      className={`group/item flex items-start gap-2 p-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500 border ${
+                                      className={`group/item flex items-start gap-3 p-2.5 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500 border ${
                                         isHovered 
                                           ? 'bg-violet-600/20 border-violet-500/40 shadow-[0_0_15px_rgba(139,92,246,0.3)]' 
                                           : hasHoveredSibling
@@ -547,14 +546,14 @@ export function MegaMenu() {
                                         </span>
                                       )}
                                       <div className="flex-1 min-w-0">
-                                        <div className="flex items-center gap-1.5 flex-wrap">
-                                          <span className={`font-medium transition-colors text-[13px] leading-tight ${
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                          <span className={`font-medium transition-colors text-sm ${
                                             isHovered ? 'text-white' : hasHoveredSibling ? 'text-gray-400' : 'text-gray-200 group-hover/item:text-white'
                                           }`}>
                                             {subItem.title}
                                           </span>
                                           {subItem.badge && (
-                                            <span className={`text-[9px] px-1 py-0.5 rounded font-medium ${
+                                            <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
                                               subItem.badge === 'Popular' 
                                                 ? 'bg-violet-500/20 text-violet-300 border border-violet-500/30'
                                                 : subItem.badge === 'Best Value'
@@ -566,18 +565,18 @@ export function MegaMenu() {
                                           )}
                                         </div>
                                         {subItem.description && (
-                                          <p className="text-[11px] text-gray-500 group-hover/item:text-gray-400 mt-0.5 transition-colors leading-snug line-clamp-2">
+                                          <p className="text-xs text-gray-500 group-hover/item:text-gray-400 mt-1 transition-colors leading-snug">
                                             {subItem.description}
                                           </p>
                                         )}
                                         {subItem.price && (
-                                          <p className="text-[10px] text-violet-400/70 mt-0.5 font-medium">
+                                          <p className="text-[11px] text-violet-400/70 mt-1 font-medium">
                                             {subItem.price}
                                           </p>
                                         )}
                                       </div>
                                     </a>
-                                  </li>
+                                  </motion.li>
                                   );
                                 })}
                               </ul>
