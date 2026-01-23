@@ -468,7 +468,7 @@ export function MegaMenu() {
                       >
                         <div className={`p-6 relative ${
                           item.name === 'Solutions' 
-                            ? 'grid grid-cols-[1fr_1.1fr_1.1fr_1.1fr_1fr] gap-4' 
+                            ? 'grid grid-cols-[1fr_1.1fr_1.1fr_1.1fr_1fr] gap-6' 
                             : 'grid grid-cols-3 gap-6'
                         }`}>
                           {item.sections.map((section, sectionIdx) => (
@@ -477,7 +477,11 @@ export function MegaMenu() {
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: sectionIdx * 0.05 }}
-                              className="min-w-0"
+                              className={`min-w-0 ${
+                                item.name === 'Solutions' 
+                                  ? 'bg-white/[0.02] rounded-xl p-3 border border-white/[0.06]' 
+                                  : ''
+                              }`}
                             >
                               {/* Section Header */}
                               <div className="mb-3">
