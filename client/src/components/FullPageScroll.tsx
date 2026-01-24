@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, createContext, useContext } from 'react';
-import { ChevronDown, Lock, Unlock, ArrowRight } from 'lucide-react';
+import { ChevronDown, Lock, Unlock, ArrowRight, Shield, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ScrollSection {
@@ -289,7 +289,7 @@ interface NavigationDotsProps {
 
 function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, onToggleSnap, sectionProgress }: NavigationDotsProps) {
   return (
-    <div className="fixed bottom-6 left-0 right-0 z-50 hidden lg:flex justify-center pointer-events-none">
+    <div className="fixed bottom-4 left-0 right-0 z-50 hidden lg:flex justify-center pointer-events-none px-4">
       <motion.nav
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -297,6 +297,11 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
         className="pointer-events-auto flex flex-row items-center gap-1 py-2 px-4 rounded-full bg-black/95 backdrop-blur-xl border-2 border-violet-500/60 shadow-[0_0_24px_rgba(139,92,246,0.35),0_4px_24px_rgba(0,0,0,0.5)]"
         aria-label="Section navigation"
       >
+        <div className="flex items-center gap-2 pr-3 border-r border-white/20 mr-2">
+          <Shield className="w-5 h-5 text-violet-400" />
+          <span className="text-white font-medium text-sm whitespace-nowrap">Is Your Business Protected?</span>
+        </div>
+        
         {sections.map((section, index) => {
           const isActive = currentSection === index;
           
@@ -308,10 +313,10 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
                 e.stopPropagation();
                 onNavigate(index);
               }}
-              className={`relative px-4 py-2 text-sm font-medium rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-violet-400 whitespace-nowrap ${
+              className={`relative px-3 py-1.5 text-sm font-medium rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-violet-400 whitespace-nowrap ${
                 isActive 
                   ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg shadow-violet-500/40' 
-                  : 'text-white/80 hover:text-white hover:bg-white/10'
+                  : 'text-white/70 hover:text-white hover:bg-white/10'
               }`}
               aria-label={`Go to ${section.label} (section ${index + 1} of ${sections.length})`}
               aria-current={isActive ? 'true' : undefined}
@@ -325,10 +330,19 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
         <div className="w-px h-6 bg-white/20 mx-2" />
         
         <a
+          href="tel:+14805912424"
+          className="flex items-center gap-1.5 text-white/70 hover:text-white transition-colors text-sm whitespace-nowrap"
+          data-testid="nav-phone"
+        >
+          <Phone className="w-4 h-4" />
+          <span>(480) 591-2424</span>
+        </a>
+        
+        <a
           href="https://meet.digerati-experts.com/"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-full bg-white text-violet-700 hover:bg-violet-50 transition-all duration-300 shadow-lg whitespace-nowrap"
+          className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold rounded-full bg-white text-violet-700 hover:bg-violet-50 transition-all duration-300 shadow-lg whitespace-nowrap ml-2"
           data-testid="nav-cta-assessment"
         >
           Free Assessment
