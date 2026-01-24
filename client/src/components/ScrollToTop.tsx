@@ -43,7 +43,7 @@ export const ScrollToTop = () => {
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 z-50 p-3 bg-violet-600/90 hover:bg-violet-500 text-white rounded-full shadow-lg shadow-violet-500/25 backdrop-blur-sm border border-violet-500/30 transition-colors duration-200 group"
+          className="fixed bottom-24 right-6 z-50 p-3 bg-violet-600/90 hover:bg-violet-500 text-white rounded-full shadow-lg shadow-violet-500/25 backdrop-blur-sm border border-violet-500/30 transition-colors duration-200 group"
           aria-label="Scroll to top"
           data-testid="button-scroll-to-top"
         >
