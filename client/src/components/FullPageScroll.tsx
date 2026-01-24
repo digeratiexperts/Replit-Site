@@ -290,13 +290,14 @@ interface NavigationDotsProps {
 function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, onToggleSnap, sectionProgress }: NavigationDotsProps) {
   return (
     <motion.nav
-      initial={{ opacity: 0, x: -10 }}
+      initial={{ opacity: 0, x: 10 }}
       animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -10 }}
-      className="fixed left-3 z-50 hidden lg:flex flex-col items-center gap-1 py-2 px-1 rounded-full"
+      exit={{ opacity: 0, x: 10 }}
+      className="fixed right-3 z-50 hidden lg:flex flex-col items-center gap-1 py-2 px-1 rounded-full"
       style={{
         top: '50%',
         transform: 'translateY(-50%)',
+        marginTop: '-40px',
       }}
       aria-label="Section navigation"
     >
@@ -316,7 +317,7 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
         ) : (
           <Unlock className="w-2.5 h-2.5 text-violet-400/60 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]" />
         )}
-        <span className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-2 py-1 bg-black/80 backdrop-blur-md text-white text-[10px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-lg">
+        <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-2 py-1 bg-black/80 backdrop-blur-md text-white text-[10px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-lg">
           {isSnapEnabled ? 'Guided scroll' : 'Free scroll'}
         </span>
       </button>
@@ -375,7 +376,7 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
                 transition: 'all 0.3s ease'
               }}
             />
-            <span className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-2 py-1 bg-black/80 backdrop-blur-md text-white text-[10px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-lg">
+            <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-2 py-1 bg-black/80 backdrop-blur-md text-white text-[10px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-lg">
               {section.label}
             </span>
           </button>
