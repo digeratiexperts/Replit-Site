@@ -355,7 +355,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
             <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
               <Button 
                 size="lg" 
-                className="border-2 border-white/30 text-white bg-transparent hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all duration-200"
+                className="border-2 border-white/30 text-white bg-transparent hover:bg-violet-600 hover:border-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all duration-200"
                 variant="outline"
                 data-testid="button-book-intro-call"
               >
@@ -365,7 +365,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
             <a href="/quote-wizard">
               <Button 
                 size="lg" 
-                className="border-2 border-white/30 text-white bg-transparent hover:bg-white hover:text-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all duration-200"
+                className="border-2 border-white/30 text-white bg-transparent hover:bg-violet-600 hover:border-violet-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all duration-200"
                 variant="outline"
                 data-testid="button-see-pricing"
               >
