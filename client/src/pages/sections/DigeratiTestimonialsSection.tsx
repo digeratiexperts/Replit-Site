@@ -135,7 +135,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
   return (
     <section 
       ref={sectionRef}
-      className="relative py-24 overflow-hidden"
+      className="relative py-12 md:py-16 lg:py-24 overflow-hidden"
       style={{
         position: 'relative',
         background: 'linear-gradient(180deg, #0a0a0a 0%, #0f0f1a 50%, #0a0a0a 100%)'
@@ -190,26 +190,26 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
       >
         {/* Header */}
         <motion.div 
-          className="text-center mb-16"
+          className="text-center mb-8 md:mb-12 lg:mb-16"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6">
-            <Building2 className="w-4 h-4 text-violet-400" />
-            <span className="text-sm font-medium text-violet-300">Client Success Stories</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4 md:mb-6">
+            <Building2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-violet-400" />
+            <span className="text-xs md:text-sm font-medium text-violet-300">Client Success Stories</span>
           </div>
           
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-white">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 text-white px-4">
             Trusted by <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">100+ Arizona</span> Businesses
           </h2>
           
-          <div className="flex items-center justify-center gap-1 mb-4" role="img" aria-label="5 star rating">
+          <div className="flex items-center justify-center gap-1 mb-2 md:mb-4" role="img" aria-label="5 star rating">
             {[...Array(5)].map((_, i) => (
               <Star 
                 key={i} 
-                className="h-7 w-7 fill-current" 
+                className="h-5 w-5 md:h-7 md:w-7 fill-current" 
                 style={{
                   color: '#fbbf24',
                   filter: 'drop-shadow(0 0 6px rgba(251, 191, 36, 0.6))'
@@ -218,7 +218,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                 data-testid={`star-rating-${i}`}
               />
             ))}
-            <span className="ml-3 text-lg font-semibold text-amber-400">5.0</span>
+            <span className="ml-2 md:ml-3 text-base md:text-lg font-semibold text-amber-400">5.0</span>
           </div>
         </motion.div>
 
@@ -236,22 +236,22 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
             
             {/* Quote decoration */}
             <motion.div 
-              className="absolute -top-6 -left-2 md:-left-6 z-20 pointer-events-none"
+              className="absolute -top-4 md:-top-6 -left-1 md:-left-6 z-20 pointer-events-none"
               style={{ y: floatingY2 }}
             >
-              <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center shadow-xl shadow-violet-500/30">
-                <Quote className="w-8 h-8 md:w-10 md:h-10 text-white" />
+              <div className="w-12 h-12 md:w-20 md:h-20 rounded-xl md:rounded-2xl bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center shadow-xl shadow-violet-500/30">
+                <Quote className="w-6 h-6 md:w-10 md:h-10 text-white" />
               </div>
             </motion.div>
 
-            <Card className="relative bg-[#111111]/90 backdrop-blur-xl border-0 rounded-3xl overflow-hidden">
-              <CardContent className="p-8 md:p-12">
+            <Card className="relative bg-[#111111]/90 backdrop-blur-xl border-0 rounded-2xl md:rounded-3xl overflow-hidden">
+              <CardContent className="px-6 py-8 md:p-12">
                 {/* Stars row */}
-                <div className="flex items-center justify-center gap-1 mb-8" role="img" aria-label="5 star rating">
+                <div className="flex items-center justify-center gap-1 mb-4 md:mb-8" role="img" aria-label="5 star rating">
                   {[...Array(5)].map((_, i) => (
                     <Star 
                       key={i} 
-                      className="h-5 w-5 fill-current"
+                      className="h-4 w-4 md:h-5 md:w-5 fill-current"
                       style={{
                         color: '#fbbf24',
                         filter: 'drop-shadow(0 0 4px rgba(251, 191, 36, 0.5))'
@@ -260,11 +260,11 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                       data-testid={`testimonial-star-${i}`}
                     />
                   ))}
-                  <span className="ml-3 text-sm font-medium text-white/60">5-Star Rating</span>
+                  <span className="ml-2 md:ml-3 text-xs md:text-sm font-medium text-white/60">5-Star Rating</span>
                 </div>
                 
                 {/* Testimonial content with animation */}
-                <div className="relative min-h-[180px] mb-8">
+                <div className="relative min-h-[200px] md:min-h-[180px] mb-6 md:mb-8 px-1 md:px-8">
                   <AnimatePresence initial={false} custom={direction} mode="wait">
                     <motion.div
                       key={currentTestimonial}
@@ -280,28 +280,28 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                       }}
                       className="absolute inset-0"
                     >
-                      <p className="text-xl md:text-2xl text-white/90 italic text-center leading-relaxed mb-8" data-testid="testimonial-text">
+                      <p className="text-base md:text-xl lg:text-2xl text-white/90 italic text-center leading-relaxed mb-6 md:mb-8" data-testid="testimonial-text">
                         "{testimonials[currentTestimonial].text}"
                       </p>
                       
                       {/* Author info */}
-                      <div className="flex items-center justify-center gap-4">
+                      <div className="flex items-center justify-center gap-3 md:gap-4">
                         <div className="relative">
                           <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 opacity-70 blur-sm" />
                           <img 
                             src={testimonials[currentTestimonial].avatar}
                             alt={testimonials[currentTestimonial].author}
-                            className="relative w-14 h-14 rounded-full object-cover border-2 border-white/20"
+                            className="relative w-10 h-10 md:w-14 md:h-14 rounded-full object-cover border-2 border-white/20"
                           />
                         </div>
                         <div className="text-left">
-                          <div className="font-bold text-lg text-white" data-testid="testimonial-author">
+                          <div className="font-bold text-base md:text-lg text-white" data-testid="testimonial-author">
                             {testimonials[currentTestimonial].author}
                           </div>
-                          <div className="text-violet-400 font-medium" data-testid="testimonial-role">
+                          <div className="text-violet-400 font-medium text-sm md:text-base" data-testid="testimonial-role">
                             {testimonials[currentTestimonial].role}
                           </div>
-                          <div className="text-white/50 text-sm">
+                          <div className="text-white/50 text-xs md:text-sm">
                             {testimonials[currentTestimonial].company}
                           </div>
                         </div>
@@ -309,41 +309,41 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                     </motion.div>
                   </AnimatePresence>
                 </div>
-
-                {/* Navigation arrows */}
-                <button
-                  onClick={handlePrevious}
-                  className="absolute top-1/2 -translate-y-1/2 left-3 md:left-6 z-10 p-3 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-violet-500/20 hover:border-violet-500/40 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-violet-500 group"
-                  data-testid="testimonial-prev"
-                  aria-label="Previous testimonial"
-                  type="button"
-                >
-                  <ChevronLeft className="h-5 w-5 text-white/70 group-hover:text-white transition-colors" />
-                </button>
-
-                <button
-                  onClick={handleNext}
-                  className="absolute top-1/2 -translate-y-1/2 right-3 md:right-6 z-10 p-3 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-violet-500/20 hover:border-violet-500/40 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-violet-500 group"
-                  data-testid="testimonial-next"
-                  aria-label="Next testimonial"
-                  type="button"
-                >
-                  <ChevronRight className="h-5 w-5 text-white/70 group-hover:text-white transition-colors" />
-                </button>
               </CardContent>
             </Card>
+            
+            {/* Navigation arrows - positioned outside card on mobile */}
+            <button
+              onClick={handlePrevious}
+              className="absolute top-1/2 -translate-y-1/2 -left-2 md:left-4 z-10 p-2 md:p-3 rounded-full bg-black/60 md:bg-white/5 backdrop-blur-sm border border-white/20 md:border-white/10 hover:bg-violet-500/20 hover:border-violet-500/40 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-violet-500 group"
+              data-testid="testimonial-prev"
+              aria-label="Previous testimonial"
+              type="button"
+            >
+              <ChevronLeft className="h-4 w-4 md:h-5 md:w-5 text-white/70 group-hover:text-white transition-colors" />
+            </button>
+
+            <button
+              onClick={handleNext}
+              className="absolute top-1/2 -translate-y-1/2 -right-2 md:right-4 z-10 p-2 md:p-3 rounded-full bg-black/60 md:bg-white/5 backdrop-blur-sm border border-white/20 md:border-white/10 hover:bg-violet-500/20 hover:border-violet-500/40 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-violet-500 group"
+              data-testid="testimonial-next"
+              aria-label="Next testimonial"
+              type="button"
+            >
+              <ChevronRight className="h-4 w-4 md:h-5 md:w-5 text-white/70 group-hover:text-white transition-colors" />
+            </button>
           </div>
 
           {/* Pagination dots */}
-          <div className="flex justify-center mt-8 gap-3">
+          <div className="flex justify-center mt-6 md:mt-8 gap-2 md:gap-3">
             {testimonials.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToTestimonial(index)}
-                className={`h-3 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a] hover:scale-125 ${
+                className={`h-2 md:h-3 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a] hover:scale-125 ${
                   currentTestimonial === index 
-                    ? 'w-10 bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 shadow-lg shadow-violet-500/40' 
-                    : 'w-3 bg-white/20 hover:bg-white/40'
+                    ? 'w-6 md:w-10 bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 shadow-lg shadow-violet-500/40' 
+                    : 'w-2 md:w-3 bg-white/20 hover:bg-white/40'
                 }`}
                 aria-label={`Go to testimonial ${index + 1}`}
                 data-testid={`testimonial-indicator-${index}`}
