@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, createContext, useContext } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Lock, Unlock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ScrollSection {
@@ -154,8 +154,10 @@ export function FullPageScrollProvider({
         sections={sections} 
         currentSection={currentSection} 
         onNavigate={scrollToSection}
-        isVisible={effectiveSnapEnabled}
+        isVisible={true}
         currentTheme={sections[currentSection]?.theme || 'dark'}
+        isSnapEnabled={effectiveSnapEnabled}
+        onToggleSnap={toggleSnap}
       />
       
       <ScrollDownIndicator 
@@ -181,11 +183,11 @@ interface NavigationDotsProps {
   onNavigate: (index: number) => void;
   isVisible: boolean;
   currentTheme: 'dark' | 'light';
+  isSnapEnabled: boolean;
+  onToggleSnap: () => void;
 }
 
-function NavigationDots({ sections, currentSection, onNavigate, isVisible, currentTheme }: NavigationDotsProps) {
-  if (!isVisible) return null;
-  
+function NavigationDots({ sections, currentSection, onNavigate, isVisible, currentTheme, isSnapEnabled, onToggleSnap }: NavigationDotsProps) {
   const isDark = currentTheme === 'dark';
   
   return (
@@ -201,9 +203,40 @@ function NavigationDots({ sections, currentSection, onNavigate, isVisible, curre
       }}
       aria-label="Section navigation"
     >
+      {/* Scroll mode toggle */}
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onToggleSnap();
+        }}
+        className={`group relative p-1.5 mb-1 rounded-full transition-all duration-300 ${
+          isDark 
+            ? 'hover:bg-white/20' 
+            : 'hover:bg-gray-200/80'
+        }`}
+        aria-label={isSnapEnabled ? 'Switch to free scroll' : 'Switch to guided scroll'}
+        data-testid="scroll-mode-toggle"
+      >
+        {isSnapEnabled ? (
+          <Lock className={`w-3 h-3 transition-colors ${isDark ? 'text-violet-400' : 'text-violet-600'}`} />
+        ) : (
+          <Unlock className={`w-3 h-3 transition-colors ${isDark ? 'text-white/60' : 'text-gray-500'}`} />
+        )}
+        <span className={`absolute right-full mr-4 top-1/2 -translate-y-1/2 px-2.5 py-1.5 backdrop-blur-md text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 ${
+          isDark 
+            ? 'bg-black/90 text-white border border-white/20 shadow-xl' 
+            : 'bg-white text-gray-800 border border-gray-200 shadow-xl'
+        }`}>
+          {isSnapEnabled ? 'Guided scroll' : 'Free scroll'}
+        </span>
+      </button>
+      
+      {/* Divider */}
+      <div className={`w-4 h-px mb-1 ${isDark ? 'bg-white/20' : 'bg-gray-300'}`} />
+      
       {sections.map((section, index) => {
         const isActive = currentSection === index;
-        const sectionTheme = section.theme || 'dark';
         const useDarkStyle = isDark;
         
         return (
