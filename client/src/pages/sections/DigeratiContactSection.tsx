@@ -50,7 +50,17 @@ export const DigeratiContactSection = (): JSX.Element => {
     setIsSubmitting(true);
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to send message');
+      }
       
       toast({
         title: "Message Sent Successfully!",
@@ -59,10 +69,10 @@ export const DigeratiContactSection = (): JSX.Element => {
       });
       
       form.reset();
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to send message. Please try again or call us directly.",
+        description: error.message || "Failed to send message. Please try again or call us directly.",
         variant: "destructive",
       });
     } finally {

@@ -21,17 +21,37 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
     if (!email) return;
     
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
     
-    toast({
-      title: "Successfully Subscribed!",
-      description: "You'll receive our security updates and expert insights.",
-      variant: "default",
-    });
-    
-    setEmail("");
-    setIsSubmitting(false);
-    setIsSubscribed(true);
+    try {
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to subscribe');
+      }
+      
+      toast({
+        title: "Successfully Subscribed!",
+        description: "You'll receive our security updates and expert insights.",
+        variant: "default",
+      });
+      
+      setEmail("");
+      setIsSubscribed(true);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to subscribe. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const benefits = [

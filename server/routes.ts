@@ -1475,6 +1475,106 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  // ===== CONTACT FORM =====
+  app.post("/api/contact", [leadQuoteRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { name, email, phone, company, service, message } = req.body;
+      
+      // Basic validation
+      if (!name || !email || !phone) {
+        return res.status(400).json({ error: "Name, email, and phone are required" });
+      }
+
+      // Basic spam prevention - honeypot check
+      const honeypot = req.body.website_url;
+      if (honeypot) {
+        logSecurityEvent("SPAM_DETECTED_HONEYPOT", req, { email });
+        return res.status(400).json({ error: "Invalid request" });
+      }
+
+      // Store contact submission
+      const contactData = {
+        id: randomId(),
+        name,
+        email,
+        phone,
+        company: company || null,
+        service: service || null,
+        message: message || null,
+        ipAddress: req.ip,
+        userAgent: req.headers['user-agent'],
+        createdAt: new Date(),
+      };
+
+      // Log the contact form submission
+      console.log("[CONTACT] Form submitted:", { name, email, company, service, timestamp: new Date().toISOString() });
+      logSecurityEvent("CONTACT_FORM_SUBMITTED", req, { email, company, service });
+
+      // In production, this would:
+      // 1. Store in database
+      // 2. Send to CRM (Zoho)
+      // 3. Trigger email notification
+      res.json({
+        success: true,
+        contactId: contactData.id,
+        message: "Message received successfully",
+      });
+    } catch (error: any) {
+      console.error("[ERROR] Contact form submission failed:", error);
+      res.status(500).json({ error: "Failed to process contact request" });
+    }
+  });
+
+  // ===== NEWSLETTER SUBSCRIPTION =====
+  app.post("/api/newsletter", [leadQuoteRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { email } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ error: "Email is required" });
+      }
+
+      // Basic email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ error: "Please enter a valid email address" });
+      }
+
+      // Basic spam prevention - honeypot check
+      const honeypot = req.body.website_url;
+      if (honeypot) {
+        logSecurityEvent("SPAM_DETECTED_HONEYPOT", req, { email });
+        return res.status(400).json({ error: "Invalid request" });
+      }
+
+      // Store newsletter subscription
+      const subscriptionData = {
+        id: randomId(),
+        email,
+        ipAddress: req.ip,
+        userAgent: req.headers['user-agent'],
+        subscribedAt: new Date(),
+      };
+
+      // Log the newsletter subscription
+      console.log("[NEWSLETTER] Subscription:", { email, timestamp: new Date().toISOString() });
+      logSecurityEvent("NEWSLETTER_SUBSCRIBED", req, { email });
+
+      // In production, this would:
+      // 1. Store in database
+      // 2. Add to email marketing list (Zoho Campaigns, etc.)
+      // 3. Send confirmation email
+      res.json({
+        success: true,
+        subscriptionId: subscriptionData.id,
+        message: "Successfully subscribed to newsletter",
+      });
+    } catch (error: any) {
+      console.error("[ERROR] Newsletter subscription failed:", error);
+      res.status(500).json({ error: "Failed to process subscription" });
+    }
+  });
+
   // ========== ZOHO API ROUTES ==========
 
   // Check Zoho connection status
