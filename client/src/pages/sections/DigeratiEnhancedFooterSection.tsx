@@ -306,12 +306,8 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                   <a
                     key={index}
                     href={location.href}
-                    className={`
-                      px-4 py-2 rounded-lg font-medium transition-all duration-300 text-sm 
-                      ${location.primary 
-                        ? 'bg-white/5 border border-white/10 text-white hover:bg-purple-600/20 hover:border-purple-500/30' 
-                        : 'text-gray-400 hover:text-white hover:bg-white/10'}
-                    `}
+                    className="city-btn"
+                    data-city={location.name.toLowerCase()}
                     data-testid={`footer-location-${location.name.toLowerCase()}`}
                   >
                     {location.name}
