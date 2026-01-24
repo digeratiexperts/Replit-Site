@@ -1,6 +1,7 @@
 import { MegaMenu } from "@/components/MegaMenu";
 import { SimpleDivider } from "@/components/SimpleDivider";
 import { ZohoASAPWidget } from "@/components/ZohoASAPWidget";
+import { FullPageScrollProvider, ScrollSectionAuto } from "@/components/FullPageScroll";
 import { useState, useEffect } from "react";
 
 // Import all section components
@@ -23,6 +24,22 @@ import { DigeratiNewsletterSection } from "./sections/DigeratiNewsletterSection"
 import { DigeratiContactSection } from "./sections/DigeratiContactSection";
 import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooterSection";
 import { DigeratiStatsSection } from "./sections/DigeratiStatsSection";
+
+const homepageSections = [
+  { id: 'hero', label: 'Home' },
+  { id: 'stats', label: 'Results' },
+  { id: 'services', label: 'Services' },
+  { id: 'protection', label: 'Protection' },
+  { id: 'calculators', label: 'Calculators' },
+  { id: 'challenges', label: 'Challenges' },
+  { id: 'industries', label: 'Industries' },
+  { id: 'pricing', label: 'Pricing' },
+  { id: 'testimonials', label: 'Reviews' },
+  { id: 'insights', label: 'Insights' },
+  { id: 'cta', label: 'Get Started' },
+  { id: 'faq', label: 'FAQ' },
+  { id: 'contact', label: 'Contact' },
+];
 
 // Industry multiplier lookup table - maps unique keys to exact multiplier values
 const industryMultipliers: Record<string, number> = {
@@ -65,82 +82,102 @@ export const DigeratiHomepage = (): JSX.Element => {
   }, [serviceEmployees, servicePackage]);
 
   return (
-    <div className="min-h-screen bg-[#050312]">
-      {/* Zoho ASAP Widget */}
-      <ZohoASAPWidget 
-        isEnabled={true}
-        accountId={import.meta.env.VITE_ZOHO_ACCOUNT_ID}
-        portalId={import.meta.env.VITE_ZOHO_PORTAL_ID}
-      />
+    <FullPageScrollProvider sections={homepageSections} enableOnMobile={false}>
+      <div className="min-h-screen bg-[#050312]">
+        {/* Zoho ASAP Widget */}
+        <ZohoASAPWidget 
+          isEnabled={true}
+          accountId={import.meta.env.VITE_ZOHO_ACCOUNT_ID}
+          portalId={import.meta.env.VITE_ZOHO_PORTAL_ID}
+        />
 
-      {/* Navigation */}
-      <MegaMenu />
+        {/* Navigation */}
+        <MegaMenu />
 
-      {/* Modern Hero Section - Includes integrated lead capture form */}
-      <ModernHeroSection />
+        {/* Modern Hero Section - Includes integrated lead capture form */}
+        <ScrollSectionAuto id="hero">
+          <ModernHeroSection />
+          <DigeratiAlertBanner />
+        </ScrollSectionAuto>
 
-      {/* Value Proof / Alert Banner Section */}
-      <DigeratiAlertBanner />
+        {/* Statistics Section */}
+        <ScrollSectionAuto id="stats">
+          <DigeratiStatsSection />
+        </ScrollSectionAuto>
 
-      {/* Statistics Section */}
-      <DigeratiStatsSection />
+        {/* Services Section */}
+        <ScrollSectionAuto id="services">
+          <DigeratiServicesSection />
+        </ScrollSectionAuto>
 
-      {/* Services Section */}
-      <DigeratiServicesSection />
+        {/* How We Protect Your Business Section */}
+        <ScrollSectionAuto id="protection">
+          <DigeratiHowWeProtectSection />
+        </ScrollSectionAuto>
 
-      {/* How We Protect Your Business Section */}
-      <DigeratiHowWeProtectSection />
+        {/* Calculators Section */}
+        <ScrollSectionAuto id="calculators">
+          <DigeratiCalculatorsSection
+            employees={employees}
+            setEmployees={setEmployees}
+            hourlyWage={hourlyWage}
+            setHourlyWage={setHourlyWage}
+            downtime={downtime}
+            setDowntime={setDowntime}
+            industry={industry}
+            setIndustry={setIndustry}
+            downtimeCost={downtimeCost}
+            serviceEmployees={serviceEmployees}
+            setServiceEmployees={setServiceEmployees}
+            servicePackage={servicePackage}
+            setServicePackage={setServicePackage}
+            serviceCost={serviceCost}
+          />
+        </ScrollSectionAuto>
 
-      {/* Calculators Section */}
-      <DigeratiCalculatorsSection
-        employees={employees}
-        setEmployees={setEmployees}
-        hourlyWage={hourlyWage}
-        setHourlyWage={setHourlyWage}
-        downtime={downtime}
-        setDowntime={setDowntime}
-        industry={industry}
-        setIndustry={setIndustry}
-        downtimeCost={downtimeCost}
-        serviceEmployees={serviceEmployees}
-        setServiceEmployees={setServiceEmployees}
-        servicePackage={servicePackage}
-        setServicePackage={setServicePackage}
-        serviceCost={serviceCost}
-      />
+        {/* What We Tackle Section */}
+        <ScrollSectionAuto id="challenges">
+          <DigeratiWhatWeTackleSection />
+        </ScrollSectionAuto>
 
-      {/* What We Tackle Section */}
-      <DigeratiWhatWeTackleSection />
+        {/* Industries Section */}
+        <ScrollSectionAuto id="industries">
+          <DigeratiIndustriesSection />
+        </ScrollSectionAuto>
 
-      {/* Industries Section */}
-      <DigeratiIndustriesSection />
+        {/* Pricing Section */}
+        <ScrollSectionAuto id="pricing">
+          <DigeratiPricingSection />
+        </ScrollSectionAuto>
 
-      {/* Pricing Section */}
-      <DigeratiPricingSection />
+        {/* Testimonials Section */}
+        <ScrollSectionAuto id="testimonials">
+          <DigeratiTestimonialsSection />
+        </ScrollSectionAuto>
 
-      {/* Testimonials Section */}
-      <DigeratiTestimonialsSection />
+        {/* Recent Threats & Insights Section */}
+        <ScrollSectionAuto id="insights">
+          <DigeratiThreatsInsightsSection />
+          <DigeratiAIAssistanceSection />
+        </ScrollSectionAuto>
 
-      {/* Recent Threats & Insights Section */}
-      <DigeratiThreatsInsightsSection />
+        {/* CTA Section */}
+        <ScrollSectionAuto id="cta">
+          <DigeratiCTASection />
+        </ScrollSectionAuto>
 
-      {/* AI Assistance Section */}
-      <DigeratiAIAssistanceSection />
+        {/* FAQ Section */}
+        <ScrollSectionAuto id="faq">
+          <DigeratiFAQSection />
+          <DigeratiNewsletterSection />
+        </ScrollSectionAuto>
 
-      {/* CTA Section */}
-      <DigeratiCTASection />
-
-      {/* FAQ Section */}
-      <DigeratiFAQSection />
-
-      {/* Newsletter Section */}
-      <DigeratiNewsletterSection />
-
-      {/* Contact Section */}
-      <DigeratiContactSection />
-
-      {/* Enhanced Footer */}
-      <DigeratiEnhancedFooterSection />
-    </div>
+        {/* Contact Section */}
+        <ScrollSectionAuto id="contact">
+          <DigeratiContactSection />
+          <DigeratiEnhancedFooterSection />
+        </ScrollSectionAuto>
+      </div>
+    </FullPageScrollProvider>
   );
 };

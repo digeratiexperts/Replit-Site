@@ -45,6 +45,51 @@ html {
   scroll-snap-stop: normal;
 }
 
+/* Full Page Scroll / Section Snapping */
+.scroll-snap-container {
+  scroll-snap-type: y proximity;
+  overflow-y: auto;
+  height: 100vh;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scroll-snap-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+}
+
+.scroll-snap-section-auto {
+  scroll-snap-align: start;
+}
+
+/* Hide scroll snap on mobile for better UX */
+@media (max-width: 1023px) {
+  .scroll-snap-container {
+    scroll-snap-type: none;
+    height: auto;
+    overflow: visible;
+  }
+  
+  .scroll-snap-section,
+  .scroll-snap-section-auto {
+    scroll-snap-align: none;
+  }
+}
+
+/* Keyboard navigation focus styles for scroll sections */
+.scroll-snap-section:focus,
+.scroll-snap-section-auto:focus {
+  outline: none;
+}
+
+/* Smooth scroll behavior when navigating between sections */
+@supports (scroll-behavior: smooth) {
+  .scroll-snap-container {
+    scroll-behavior: smooth;
+  }
+}
+
 /* Improved focus indicators for keyboard navigation */
 :focus-visible {
   outline: 2px solid rgb(139, 92, 246);
