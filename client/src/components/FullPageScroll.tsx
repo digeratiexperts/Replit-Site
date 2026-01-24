@@ -297,7 +297,7 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
       style={{
         top: '50%',
         transform: 'translateY(-50%)',
-        marginTop: '-40px',
+        marginTop: '-80px',
       }}
       aria-label="Section navigation"
     >
