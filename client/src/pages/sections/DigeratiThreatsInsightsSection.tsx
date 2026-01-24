@@ -2,14 +2,24 @@ import { Calendar, User, ArrowRight, AlertCircle, Shield, Lock, Zap, ChevronLeft
 import { Link } from "wouter";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 
 export const DigeratiThreatsInsightsSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  // Parallax transforms - subtle depth effect
+  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-5%", "5%"]);
+  const floatingY = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 20, prefersReducedMotion ? 0 : -20]);
   
   const insights = [
     {
@@ -80,10 +90,25 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
   };
 
   return (
-    <section className="py-16 md:py-20 lg:py-24 relative overflow-hidden bg-[#0a0a0a]">
-      {/* Subtle violet accent glow */}
-      <div className="absolute inset-0 pointer-events-none"
-           style={{ background: "radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.06) 0%, transparent 60%)" }} />
+    <section 
+      ref={sectionRef}
+      className="py-16 md:py-20 lg:py-24 relative overflow-hidden bg-[#0a0a0a]"
+      style={{ position: 'relative' }}
+    >
+      {/* Parallax violet accent glow */}
+      <motion.div 
+        className="absolute inset-0 pointer-events-none"
+        style={{ 
+          y: backgroundY,
+          background: "radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 60%)" 
+        }} 
+      />
+      
+      {/* Floating decorative element */}
+      <motion.div 
+        className="absolute top-20 right-16 w-4 h-4 rounded-full border border-violet-500/20 pointer-events-none hidden lg:block"
+        style={{ y: floatingY }}
+      />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div 

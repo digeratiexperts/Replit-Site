@@ -54,11 +54,12 @@ export const ModernHeroSection = (): JSX.Element => {
     offset: ["start start", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 80]);
-  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["0%", "30%"]);
-  const floatingY1 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -100]);
-  const floatingY2 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -60]);
-  const floatingY3 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -40]);
+  // Parallax transforms - subtle, smooth movement
+  const y = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 60]);
+  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["0%", "20%"]);
+  const floatingY1 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -80]);
+  const floatingY2 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -50]);
+  const floatingY3 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -30]);
   const opacity = 1;
 
   const features = [
@@ -73,6 +74,7 @@ export const ModernHeroSection = (): JSX.Element => {
       ref={containerRef}
       id="home" 
       className="relative min-h-screen overflow-hidden"
+      style={{ position: 'relative' }}
     >
       {/* Clean black background with parallax purple glows */}
       <div className="absolute inset-0 bg-black">

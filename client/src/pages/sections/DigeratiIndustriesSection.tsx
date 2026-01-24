@@ -21,9 +21,10 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
     offset: ["start end", "end start"]
   });
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-8%", "8%"]);
-  const floatingY1 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 35, prefersReducedMotion ? 0 : -35]);
-  const floatingY2 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : -25, prefersReducedMotion ? 0 : 25]);
+  // Parallax transforms - subtle depth effect
+  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-5%", "5%"]);
+  const floatingY1 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 25, prefersReducedMotion ? 0 : -25]);
+  const floatingY2 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : -15, prefersReducedMotion ? 0 : 15]);
 
   const industries = [
     { 
@@ -137,6 +138,7 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
     <section 
       ref={sectionRef}
       className="py-12 md:py-16 lg:py-24 bg-[#0a0a0a] relative overflow-hidden"
+      style={{ position: 'relative' }}
     >
       {/* Parallax background accents */}
       <motion.div 

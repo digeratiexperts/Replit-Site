@@ -12,9 +12,10 @@ export const DigeratiServicesSection = (): JSX.Element => {
     offset: ["start end", "end start"]
   });
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-8%", "8%"]);
-  const floatingY1 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 40, prefersReducedMotion ? 0 : -40]);
-  const floatingY2 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : -25, prefersReducedMotion ? 0 : 25]);
+  // Parallax transforms - subtle depth effect
+  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-5%", "5%"]);
+  const floatingY1 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 30, prefersReducedMotion ? 0 : -30]);
+  const floatingY2 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : -20, prefersReducedMotion ? 0 : 20]);
 
   const services = [
     {
@@ -100,6 +101,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
       ref={sectionRef}
       id="services" 
       className="relative py-12 md:py-16 lg:py-24 bg-[#0a0a0a] overflow-hidden"
+      style={{ position: 'relative' }}
     >
       {/* Parallax gradient orbs */}
       <motion.div 

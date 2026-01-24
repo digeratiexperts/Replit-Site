@@ -1,8 +1,18 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Shield, Search, FileText, Settings, Activity } from "lucide-react";
+import { useRef } from "react";
 
 export const DigeratiHowWeProtectSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  // Parallax transforms - subtle depth effect for light section
+  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-3%", "3%"]);
   
   const steps = [
     {
@@ -60,7 +70,9 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
 
   return (
     <section 
+      ref={sectionRef}
       className="py-12 md:py-16 lg:py-24 relative overflow-hidden bg-white"
+      style={{ position: 'relative' }}
     >
       {/* Subtle background gradient */}
       <div 
@@ -70,10 +82,13 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
         }}
       />
       
-      {/* Subtle accent */}
-      <div 
+      {/* Subtle parallax accent */}
+      <motion.div 
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] pointer-events-none opacity-50"
-        style={{ background: "radial-gradient(ellipse, rgba(139, 92, 246, 0.05) 0%, transparent 70%)" }}
+        style={{ 
+          y: backgroundY,
+          background: "radial-gradient(ellipse, rgba(139, 92, 246, 0.05) 0%, transparent 70%)" 
+        }}
       />
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

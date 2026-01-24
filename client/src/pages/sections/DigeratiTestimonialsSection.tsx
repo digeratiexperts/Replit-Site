@@ -27,10 +27,11 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
     offset: ["start end", "end start"]
   });
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-10%", "10%"]);
-  const floatingY1 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 50, prefersReducedMotion ? 0 : -50]);
-  const floatingY2 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : -30, prefersReducedMotion ? 0 : 30]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [prefersReducedMotion ? 1 : 0.95, 1, prefersReducedMotion ? 1 : 0.95]);
+  // Parallax transforms - subtle depth effect
+  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-5%", "5%"]);
+  const floatingY1 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 30, prefersReducedMotion ? 0 : -30]);
+  const floatingY2 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : -20, prefersReducedMotion ? 0 : 20]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [prefersReducedMotion ? 1 : 0.98, 1, prefersReducedMotion ? 1 : 0.98]);
   
   const testimonials: Testimonial[] = [
     {
@@ -136,6 +137,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
       ref={sectionRef}
       className="relative py-24 overflow-hidden"
       style={{
+        position: 'relative',
         background: 'linear-gradient(180deg, #0a0a0a 0%, #0f0f1a 50%, #0a0a0a 100%)'
       }}
     >
