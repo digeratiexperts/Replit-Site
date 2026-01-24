@@ -3,6 +3,7 @@ import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink, X, 
 import { Button } from '@/components/ui/button';
 import logoImage from '@assets/DE-Logo-new_1762461524794.webp';
 import { motion, AnimatePresence } from 'framer-motion';
+import * as Tooltip from '@radix-ui/react-tooltip';
 
 const NoiseTexture = ({ id }: { id: string }) => (
   <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.025]" aria-hidden="true">
@@ -430,8 +431,9 @@ export function MegaMenu() {
   }, []);
 
   return (
-    <>
-      {/* Top Utility Bar - solid dark violet with fade effect */}
+    <Tooltip.Provider delayDuration={0}>
+      <>
+        {/* Top Utility Bar - solid dark violet with fade effect */}
       <div 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled ? 'h-0 overflow-hidden opacity-0' : 'h-auto md:h-10'
@@ -649,48 +651,64 @@ export function MegaMenu() {
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: itemIdx * 0.03, duration: 0.2, ease: 'easeOut' }}
                                   >
-                                    <a
-                                      href={subItem.url || '#'}
-                                      className={`group/item flex items-start gap-3 p-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-violet-500/50 border ${
-                                        isHovered 
-                                          ? 'bg-violet-600/10 border-violet-500/20' 
-                                          : 'border-transparent hover:bg-white/[0.03]'
-                                      }`}
-                                      onClick={handleLinkClick}
-                                      onMouseEnter={() => setHoveredItem(itemKey)}
-                                      role="menuitem"
-                                    >
-                                      {subItem.icon && (
-                                        <span className={`mt-0.5 transition-colors flex-shrink-0 ${
-                                          isHovered ? 'text-violet-400' : 'text-violet-400/60 group-hover/item:text-violet-400'
-                                        }`} aria-hidden="true">
-                                          <div className="scale-90">{subItem.icon}</div>
-                                        </span>
-                                      )}
-                                      <div className="flex-1 min-w-0">
-                                        <div className="flex items-center gap-2 flex-wrap">
-                                          <span className={`font-semibold transition-colors text-[13px] ${
-                                            isHovered ? 'text-white' : 'text-gray-300 group-hover/item:text-white'
-                                          }`}>
-                                            {subItem.title}
-                                          </span>
-                                          {subItem.badge && (
-                                            <DiagonalLinesBadge
-                                              variant={
-                                                subItem.badge === 'Popular' ? 'popular' : subItem.badge === 'Best Value' ? 'bestValue' : 'compliance'
-                                              }
-                                            >
-                                              {subItem.badge}
-                                            </DiagonalLinesBadge>
+                                    <Tooltip.Root>
+                                      <Tooltip.Trigger asChild>
+                                        <a
+                                          href={subItem.url || '#'}
+                                          className={`group/item flex items-start gap-3 p-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-violet-500/50 border ${
+                                            isHovered 
+                                              ? 'bg-violet-600/10 border-violet-500/20' 
+                                              : 'border-transparent hover:bg-white/[0.03]'
+                                          }`}
+                                          onClick={handleLinkClick}
+                                          onMouseEnter={() => setHoveredItem(itemKey)}
+                                          role="menuitem"
+                                        >
+                                          {subItem.icon && (
+                                            <span className={`mt-0.5 transition-colors flex-shrink-0 ${
+                                              isHovered ? 'text-violet-400' : 'text-violet-400/60 group-hover/item:text-violet-400'
+                                            }`} aria-hidden="true">
+                                              <div className="scale-90">{subItem.icon}</div>
+                                            </span>
                                           )}
-                                        </div>
-                                        {subItem.description && (
-                                          <p className="text-[11px] text-gray-500 group-hover/item:text-gray-400 mt-0.5 transition-colors leading-tight line-clamp-1">
+                                          <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-2 flex-wrap">
+                                              <span className={`font-semibold transition-colors text-[13px] ${
+                                                isHovered ? 'text-white' : 'text-gray-300 group-hover/item:text-white'
+                                              }`}>
+                                                {subItem.title}
+                                              </span>
+                                              {subItem.badge && (
+                                                <DiagonalLinesBadge
+                                                  variant={
+                                                    subItem.badge === 'Popular' ? 'popular' : subItem.badge === 'Best Value' ? 'bestValue' : 'compliance'
+                                                  }
+                                                >
+                                                  {subItem.badge}
+                                                </DiagonalLinesBadge>
+                                              )}
+                                            </div>
+                                            {subItem.description && (
+                                              <p className="text-[11px] text-gray-500 group-hover/item:text-gray-400 mt-0.5 transition-colors leading-tight line-clamp-1">
+                                                {subItem.description}
+                                              </p>
+                                            )}
+                                          </div>
+                                        </a>
+                                      </Tooltip.Trigger>
+                                      {subItem.description && (
+                                        <Tooltip.Portal>
+                                          <Tooltip.Content
+                                            className="z-[100] max-w-[250px] bg-[#1a0b2e] border border-white/20 px-3 py-2 rounded-lg text-xs text-gray-200 shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+                                            sideOffset={5}
+                                            side="right"
+                                          >
                                             {subItem.description}
-                                          </p>
-                                        )}
-                                      </div>
-                                    </a>
+                                            <Tooltip.Arrow className="fill-[#1a0b2e] stroke-white/20" />
+                                          </Tooltip.Content>
+                                        </Tooltip.Portal>
+                                      )}
+                                    </Tooltip.Root>
                                   </motion.li>
                                   );
                                 })}
@@ -1008,6 +1026,7 @@ export function MegaMenu() {
         </div>
       </div>
     </nav>
-    </>
+      </>
+    </Tooltip.Provider>
   );
 }
