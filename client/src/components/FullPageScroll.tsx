@@ -336,28 +336,48 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
               e.stopPropagation();
               onNavigate(index);
             }}
-            className="group relative p-0.5 focus:outline-none rounded-full"
+            className="group relative p-1 focus:outline-none rounded-full"
             aria-label={`Go to ${section.label} (section ${index + 1} of ${sections.length})`}
             aria-current={isActive ? 'true' : undefined}
             data-testid={`nav-dot-${section.id}`}
           >
             {/* Progress ring for active dot */}
             {isActive && (
-              <motion.span
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="absolute inset-0 rounded-full"
-                style={{
-                  background: `conic-gradient(from 0deg, rgba(167, 139, 250, 0.9) ${sectionProgress * 360}deg, transparent ${sectionProgress * 360}deg)`,
-                  transform: 'scale(1.8)',
-                  opacity: 0.5
-                }}
-              />
+              <>
+                {/* Background ring (track) */}
+                <span
+                  className="absolute inset-0 rounded-full"
+                  style={{
+                    width: '16px',
+                    height: '16px',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    border: '2px solid rgba(167, 139, 250, 0.2)',
+                  }}
+                />
+                {/* Progress ring */}
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="absolute rounded-full"
+                  style={{
+                    width: '16px',
+                    height: '16px',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    background: `conic-gradient(from -90deg, rgba(167, 139, 250, 1) ${sectionProgress * 360}deg, transparent ${sectionProgress * 360}deg)`,
+                    mask: 'radial-gradient(farthest-side, transparent calc(100% - 2px), #fff calc(100% - 2px))',
+                    WebkitMask: 'radial-gradient(farthest-side, transparent calc(100% - 2px), #fff calc(100% - 2px))',
+                  }}
+                />
+              </>
             )}
             
             <motion.span 
               animate={isActive ? {
-                scale: [1, 1.15, 1],
+                scale: [1, 1.1, 1],
               } : {}}
               transition={{
                 duration: 2,
@@ -366,17 +386,17 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
               }}
               className={`block rounded-full transition-all duration-300 relative z-10 ${
                 isActive 
-                  ? 'w-1.5 h-1.5 bg-violet-400'
-                  : 'w-1 h-1 bg-violet-400/40 hover:bg-violet-400/80'
+                  ? 'w-2 h-2 bg-violet-400'
+                  : 'w-1.5 h-1.5 bg-violet-400/50 hover:bg-violet-400/80'
               }`}
               style={{
                 boxShadow: isActive 
-                  ? '0 0 8px rgba(167, 139, 250, 0.8), 0 1px 3px rgba(0, 0, 0, 0.4)' 
+                  ? '0 0 10px rgba(167, 139, 250, 0.9), 0 1px 3px rgba(0, 0, 0, 0.4)' 
                   : '0 1px 2px rgba(0, 0, 0, 0.3)',
                 transition: 'all 0.3s ease'
               }}
             />
-            <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-2 py-1 bg-black/80 backdrop-blur-md text-white text-[10px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-lg">
+            <span className="absolute right-full mr-4 top-1/2 -translate-y-1/2 px-2 py-1 bg-black/80 backdrop-blur-md text-white text-[10px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-lg">
               {section.label}
             </span>
           </button>
