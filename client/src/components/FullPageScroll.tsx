@@ -289,38 +289,40 @@ interface NavigationDotsProps {
 
 function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, onToggleSnap, sectionProgress }: NavigationDotsProps) {
   return (
-    <motion.nav
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 20 }}
-      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden lg:flex flex-row items-center gap-1 py-2 px-3 rounded-full bg-black/95 backdrop-blur-xl border-2 border-violet-500/50 shadow-[0_0_20px_rgba(139,92,246,0.3),0_4px_20px_rgba(0,0,0,0.4)]"
-      aria-label="Section navigation"
-    >
-      {sections.map((section, index) => {
-        const isActive = currentSection === index;
-        
-        return (
-          <button
-            key={section.id}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              onNavigate(index);
-            }}
-            className={`relative px-4 py-1.5 text-xs font-medium rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-violet-400 ${
-              isActive 
-                ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg shadow-violet-500/30' 
-                : 'text-white/70 hover:text-white hover:bg-white/10'
-            }`}
-            aria-label={`Go to ${section.label} (section ${index + 1} of ${sections.length})`}
-            aria-current={isActive ? 'true' : undefined}
-            data-testid={`nav-dot-${section.id}`}
-          >
-            {section.label}
-          </button>
-        );
-      })}
-    </motion.nav>
+    <div className="fixed bottom-6 left-0 right-0 z-50 hidden lg:flex justify-center pointer-events-none">
+      <motion.nav
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 20 }}
+        className="pointer-events-auto flex flex-row items-center gap-1 py-2 px-4 rounded-full bg-black/95 backdrop-blur-xl border-2 border-violet-500/60 shadow-[0_0_24px_rgba(139,92,246,0.35),0_4px_24px_rgba(0,0,0,0.5)]"
+        aria-label="Section navigation"
+      >
+        {sections.map((section, index) => {
+          const isActive = currentSection === index;
+          
+          return (
+            <button
+              key={section.id}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onNavigate(index);
+              }}
+              className={`relative px-4 py-2 text-sm font-medium rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-violet-400 whitespace-nowrap ${
+                isActive 
+                  ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg shadow-violet-500/40' 
+                  : 'text-white/80 hover:text-white hover:bg-white/10'
+              }`}
+              aria-label={`Go to ${section.label} (section ${index + 1} of ${sections.length})`}
+              aria-current={isActive ? 'true' : undefined}
+              data-testid={`nav-dot-${section.id}`}
+            >
+              {section.label}
+            </button>
+          );
+        })}
+      </motion.nav>
+    </div>
   );
 }
 
