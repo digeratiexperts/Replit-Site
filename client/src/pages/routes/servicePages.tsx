@@ -1,6 +1,6 @@
 export const servicePageData = {
-  'office-package': {
-    title: "Office Package",
+  'ProActive-Ecosystem-Packages': {
+    title: "ProActive Ecosystem Packages",
     subtitle: "Complete IT ownership for small offices—security built in",
     description: "The Office Package is your complete IT solution for small offices (5-25 users) with no internal IT team. We own your day-to-day IT outcomes: helpdesk support, continuous maintenance, security baseline, backup, and vendor coordination. You get enterprise-level protection without the enterprise cost—all for one predictable monthly price.",
     features: [
