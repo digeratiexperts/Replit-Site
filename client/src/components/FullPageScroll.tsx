@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, createContext, useContext } from 'react';
-import { ChevronDown, ChevronUp, Lock, Unlock } from 'lucide-react';
+import { ChevronDown, Lock, Unlock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ScrollSection {
@@ -274,10 +274,6 @@ export function FullPageScrollProvider({
         isVisible={effectiveSnapEnabled && currentSection < sections.length - 1}
       />
       
-      <ScrollUpButton
-        onScrollUp={() => scrollToSection(0)}
-        isVisible={currentSection > 0}
-      />
     </FullPageScrollContext.Provider>
   );
 }
@@ -428,33 +424,6 @@ function ScrollDownIndicator({ onScrollDown, isVisible }: ScrollDownIndicatorPro
   );
 }
 
-interface ScrollUpButtonProps {
-  onScrollUp: () => void;
-  isVisible: boolean;
-}
-
-function ScrollUpButton({ onScrollUp, isVisible }: ScrollUpButtonProps) {
-  return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.button
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.8 }}
-          onClick={onScrollUp}
-          className="fixed bottom-6 right-[5.5rem] z-30 p-2 rounded-full group focus:outline-none focus:ring-2 focus:ring-violet-400 hidden lg:flex bg-violet-500 border border-violet-400 hover:bg-violet-400"
-          style={{
-            boxShadow: '0 2px 8px rgba(0,0,0,0.3), 0 0 12px rgba(167, 139, 250, 0.4)',
-          }}
-          aria-label="Scroll to top"
-          data-testid="scroll-up-btn"
-        >
-          <ChevronUp className="w-3.5 h-3.5 text-white" />
-        </motion.button>
-      )}
-    </AnimatePresence>
-  );
-}
 
 interface ScrollSectionProps {
   id: string;
