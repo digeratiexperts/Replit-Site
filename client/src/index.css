@@ -962,21 +962,29 @@ button, [role="button"], a {
 
 /* City Location Buttons - Arizona Cities with official colors */
 .city-btn {
-  --c1: #000;
-  --c2: #fff;
-  --c3: transparent;
-  position: relative;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  @apply relative inline-flex items-center justify-center px-6 py-3 transition-all duration-300;
   color: rgba(255, 255, 255, 0.7);
-  border-radius: 12px;
-  padding: 10px 16px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-  overflow: hidden;
-  text-decoration: none;
-  display: inline-block;
+  background: rgba(255, 255, 255, 0.05);
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  min-width: 120px;
+  margin: 0 -15px; /* Honeycomb overlap */
+}
+
+.city-btn:hover {
+  @apply scale-110 z-10 text-white;
+  background: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+}
+
+.honeycomb-grid {
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 15px;
+  gap: 10px 0;
+}
+
+.honeycomb-row-offset {
+  @apply ml-[45px] -mt-[15px];
 }
 
 .city-btn:hover {

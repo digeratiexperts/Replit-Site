@@ -301,18 +301,33 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
               <h4 className="text-white text-sm font-semibold mb-6 uppercase tracking-wider ">
                 Serving Greater Phoenix
               </h4>
-              <div className="flex flex-wrap gap-3">
-                {locations.map((location, index) => (
-                  <a
-                    key={index}
-                    href={location.href}
-                    className="city-btn"
-                    data-city={location.name.toLowerCase()}
-                    data-testid={`footer-location-${location.name.toLowerCase()}`}
-                  >
-                    {location.name}
-                  </a>
-                ))}
+              <div className="honeycomb-grid max-w-md">
+                <div className="flex gap-x-2">
+                  {locations.slice(0, 3).map((location, index) => (
+                    <a
+                      key={index}
+                      href={location.href}
+                      className="city-btn"
+                      data-city={location.name.toLowerCase()}
+                      data-testid={`footer-location-${location.name.toLowerCase()}`}
+                    >
+                      {location.name}
+                    </a>
+                  ))}
+                </div>
+                <div className="honeycomb-row-offset flex gap-x-2">
+                  {locations.slice(3, 6).map((location, index) => (
+                    <a
+                      key={index}
+                      href={location.href}
+                      className="city-btn"
+                      data-city={location.name.toLowerCase()}
+                      data-testid={`footer-location-${location.name.toLowerCase()}`}
+                    >
+                      {location.name}
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
