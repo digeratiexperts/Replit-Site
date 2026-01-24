@@ -540,6 +540,11 @@ function Router() {
           <ProActiveEcosystemPricing />
         </Suspense>
       )} />
+      <Route path="/pricing" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ProActiveEcosystemPricing />
+        </Suspense>
+      )} />
       
       {/* Fallback to 404 */}
       <Route component={NotFound} />

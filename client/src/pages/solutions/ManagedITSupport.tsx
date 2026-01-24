@@ -2,6 +2,7 @@ import { PageTemplate } from "@/components/PageTemplate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Shield, Clock, Users, CheckCircle, Phone } from "lucide-react";
+import { ServiceMatrix } from "@/components/ServiceMatrix";
 
 export default function ManagedITSupport() {
   return (
@@ -71,8 +72,11 @@ export default function ManagedITSupport() {
           </div>
         </div>
 
+        {/* Pricing Matrix */}
+        <ServiceMatrix variant="compact" />
+
         {/* CTA */}
-        <div className="bg-gradient-to-r from-purple-600 to-cyan-600 rounded-lg p-8 text-center text-white">
+        <div className="bg-gradient-to-r from-purple-600 to-violet-600 rounded-lg p-8 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
           <p className="text-lg mb-6 text-white/90">Schedule a free consultation to see how we can support your IT needs.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
