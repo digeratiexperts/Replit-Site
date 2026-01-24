@@ -317,7 +317,10 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
         ) : (
           <Unlock className="w-2.5 h-2.5 text-violet-400/60 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]" />
         )}
-        <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-2 py-1 bg-black/80 backdrop-blur-md text-white text-[10px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-lg">
+        <span 
+          role="tooltip"
+          className="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-2 py-1 bg-black/80 backdrop-blur-md text-white text-[10px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-lg"
+        >
           {isSnapEnabled ? 'Guided scroll' : 'Free scroll'}
         </span>
       </button>
@@ -396,7 +399,10 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
                 transition: 'all 0.3s ease'
               }}
             />
-            <span className="absolute right-full mr-4 top-1/2 -translate-y-1/2 px-2 py-1 bg-black/80 backdrop-blur-md text-white text-[10px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-lg">
+            <span 
+              role="tooltip"
+              className="absolute right-full mr-4 top-1/2 -translate-y-1/2 px-2 py-1 bg-black/80 backdrop-blur-md text-white text-[10px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-lg"
+            >
               {section.label}
             </span>
           </button>
