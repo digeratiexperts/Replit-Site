@@ -1510,13 +1510,34 @@ export async function registerRoutes(app: Express) {
       console.log("[CONTACT] Form submitted:", { name, email, company, service, timestamp: new Date().toISOString() });
       logSecurityEvent("CONTACT_FORM_SUBMITTED", req, { email, company, service });
 
-      // In production, this would:
-      // 1. Store in database
-      // 2. Send to CRM (Zoho)
-      // 3. Trigger email notification
+      // Push lead to Zoho CRM
+      let zohoLeadId = null;
+      try {
+        const nameParts = name.trim().split(' ');
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.slice(1).join(' ') || name;
+        
+        const zohoLead = await zohoCRMService.createLead({
+          First_Name: firstName,
+          Last_Name: lastName,
+          Email: email,
+          Phone: phone,
+          Company: company || 'Not Specified',
+          Lead_Source: 'Website Contact Form',
+          Description: message || '',
+          Lead_Status: 'New',
+        });
+        zohoLeadId = zohoLead?.details?.id || zohoLead?.id;
+        console.log("[ZOHO] Lead created:", zohoLeadId);
+      } catch (zohoError: any) {
+        console.error("[ZOHO] Failed to create lead (non-blocking):", zohoError.message);
+        // Don't fail the request if Zoho fails - the form submission is still valid
+      }
+
       res.json({
         success: true,
         contactId: contactData.id,
+        zohoLeadId,
         message: "Message received successfully",
       });
     } catch (error: any) {
@@ -1560,13 +1581,33 @@ export async function registerRoutes(app: Express) {
       console.log("[NEWSLETTER] Subscription:", { email, timestamp: new Date().toISOString() });
       logSecurityEvent("NEWSLETTER_SUBSCRIBED", req, { email });
 
-      // In production, this would:
-      // 1. Store in database
-      // 2. Add to email marketing list (Zoho Campaigns, etc.)
-      // 3. Send confirmation email
+      // Push to Zoho CRM as a lead with newsletter source
+      let zohoLeadId = null;
+      try {
+        // Check if lead already exists
+        const existingLead = await zohoCRMService.getLeadByEmail(email);
+        if (!existingLead) {
+          const zohoLead = await zohoCRMService.createLead({
+            Last_Name: email.split('@')[0], // Use email prefix as name
+            Email: email,
+            Lead_Source: 'Newsletter Signup',
+            Lead_Status: 'New',
+            Description: 'Subscribed to newsletter',
+          });
+          zohoLeadId = zohoLead?.details?.id || zohoLead?.id;
+          console.log("[ZOHO] Newsletter lead created:", zohoLeadId);
+        } else {
+          console.log("[ZOHO] Lead already exists for:", email);
+        }
+      } catch (zohoError: any) {
+        console.error("[ZOHO] Failed to create newsletter lead (non-blocking):", zohoError.message);
+        // Don't fail the request if Zoho fails
+      }
+
       res.json({
         success: true,
         subscriptionId: subscriptionData.id,
+        zohoLeadId,
         message: "Successfully subscribed to newsletter",
       });
     } catch (error: any) {

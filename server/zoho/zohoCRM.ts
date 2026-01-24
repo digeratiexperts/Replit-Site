@@ -42,6 +42,21 @@ export interface ZohoCRMDeal {
   Modified_Time: string;
 }
 
+export interface ZohoCRMLead {
+  id?: string;
+  First_Name?: string;
+  Last_Name: string;
+  Email: string;
+  Phone?: string;
+  Company?: string;
+  Lead_Source?: string;
+  Description?: string;
+  Industry?: string;
+  Lead_Status?: string;
+  Created_Time?: string;
+  Modified_Time?: string;
+}
+
 class ZohoCRMService {
   async getAccounts(params?: {
     page?: number;
@@ -206,6 +221,42 @@ class ZohoCRMService {
       console.error('Error creating account:', error.response?.data || error.message);
       throw error;
     }
+  }
+
+  async createLead(data: Partial<ZohoCRMLead>): Promise<ZohoCRMLead> {
+    try {
+      const client = await zohoClient.getClient();
+      
+      const response = await client.post('/crm/v6/Leads', {
+        data: [data],
+      });
+
+      console.log('✅ Lead created in Zoho CRM:', response.data?.data?.[0]?.details?.id);
+      return response.data?.data?.[0];
+    } catch (error: any) {
+      console.error('Error creating lead:', error.response?.data || error.message);
+      throw error;
+    }
+  }
+
+  async searchLeads(criteria: string): Promise<ZohoCRMLead[]> {
+    try {
+      const client = await zohoClient.getClient();
+      
+      const response = await client.get('/crm/v6/Leads/search', {
+        params: { criteria },
+      });
+
+      return response.data?.data || [];
+    } catch (error: any) {
+      console.error('Error searching leads:', error.response?.data || error.message);
+      return [];
+    }
+  }
+
+  async getLeadByEmail(email: string): Promise<ZohoCRMLead | null> {
+    const leads = await this.searchLeads(`(Email:equals:${email})`);
+    return leads[0] || null;
   }
 }
 
