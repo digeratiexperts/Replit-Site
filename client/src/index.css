@@ -10,6 +10,23 @@
 /* Performance & Accessibility Optimizations */
 html {
   scroll-behavior: smooth;
+  /* Scale down overall sizing - 14px base instead of 16px default */
+  /* This makes 100% zoom look similar to previous 87.5% zoom */
+  font-size: 14px;
+}
+
+/* Slightly larger on very wide screens */
+@media (min-width: 1920px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+/* Larger on 4K displays */
+@media (min-width: 2560px) {
+  html {
+    font-size: 16px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
