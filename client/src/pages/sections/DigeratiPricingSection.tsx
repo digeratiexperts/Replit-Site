@@ -191,10 +191,10 @@ export const DigeratiPricingSection = (): JSX.Element => {
                   </div>
                   
                   <div className="flex items-baseline mb-1">
-                    <span className="text-3xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                    <span className="text-3xl font-bold text-gray-900">
                       ${plan.monthlyPrice.toLocaleString()}
                     </span>
-                    <span className="text-gray-500 ml-1 text-sm">/mo</span>
+                    <span className="text-gray-600 ml-1 text-sm">/mo</span>
                   </div>
                   
                   <div className="text-xs text-gray-500">
@@ -283,10 +283,10 @@ export const DigeratiPricingSection = (): JSX.Element => {
                 </div>
                 
                 <div className="flex items-baseline mb-2">
-                  <span className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                  <span className="text-4xl md:text-5xl font-bold text-gray-900">
                     ${plan.monthlyPrice.toLocaleString()}
                   </span>
-                  <span className="text-gray-500 ml-2 text-base">/mo</span>
+                  <span className="text-gray-600 ml-2 text-base">/mo</span>
                 </div>
                 
                 <div className="text-sm text-gray-500">
