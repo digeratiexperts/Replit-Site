@@ -79,7 +79,7 @@ export const DigeratiContactSection = (): JSX.Element => {
   return (
     <section 
       id="contact" 
-      className="py-12 lg:py-16 relative overflow-hidden bg-[#0a0a0a]"
+      className="py-8 lg:py-10 relative overflow-hidden bg-[#0a0a0a]"
     >
       {/* Subtle accent */}
       <div 
@@ -96,16 +96,16 @@ export const DigeratiContactSection = (): JSX.Element => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold leading-tight mb-4 text-white">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold leading-tight mb-3 text-white">
               Ready to Secure Your Business?
             </h2>
-            <p className="text-base text-gray-300 mb-6 leading-relaxed">
+            <p className="text-sm text-gray-300 mb-4 leading-relaxed">
               Located in the heart of Chandler, we're your local cybersecurity experts. 
               Whether you need immediate help or want to explore our services, we're here for you.
             </p>
 
             {/* Contact info */}
-            <div className="space-y-3 mb-6">
+            <div className="space-y-2 mb-4">
               {contactInfo.map((item) => (
                 <a 
                   key={item.label}
@@ -167,12 +167,12 @@ export const DigeratiContactSection = (): JSX.Element => {
           >
             <div className="relative">
               <div className="absolute -inset-1 bg-violet-500/10 blur-xl rounded-2xl" />
-              <div className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-5 md:p-6 shadow-[0_8px_32px_rgba(139,92,246,0.15)]">
-                <h3 className="text-xl font-bold text-white mb-1">Get in Touch</h3>
-                <p className="text-sm text-gray-400 mb-4">Fill out the form for a free consultation</p>
+              <div className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 shadow-[0_8px_32px_rgba(139,92,246,0.15)]">
+                <h3 className="text-lg font-bold text-white mb-0.5">Get in Touch</h3>
+                <p className="text-xs text-gray-400 mb-3">Fill out the form for a free consultation</p>
 
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-3">
+                  <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-2">
                     <FormField
                       control={form.control}
                       name="name"
@@ -311,7 +311,7 @@ export const DigeratiContactSection = (): JSX.Element => {
                     />
                     
                     <Button 
-                      className="w-full h-11 text-base font-bold bg-violet-600 hover:bg-violet-700 border-0 shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all duration-300" 
+                      className="w-full h-10 text-sm font-bold bg-violet-600 hover:bg-violet-700 border-0 shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all duration-300" 
                       data-testid="button-send-message"
                       type="submit"
                       disabled={isSubmitting}
