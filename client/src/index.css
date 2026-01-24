@@ -971,9 +971,10 @@ button, [role="button"], a {
 }
 
 .city-btn:hover {
-  @apply scale-110 z-10 text-white;
-  background: rgba(139, 92, 246, 0.4);
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  @apply scale-110 z-10;
+  color: var(--c2, #fff);
+  background: var(--c1, rgba(139, 92, 246, 0.4));
+  box-shadow: 0 0 20px color-mix(in srgb, var(--c1, #8b5cf6) 30%, transparent 70%);
 }
 
 .honeycomb-grid {
@@ -987,15 +988,8 @@ button, [role="button"], a {
   @apply ml-[45px] -mt-[15px];
 }
 
-.city-btn:hover {
-  transform: translateY(-2px);
-  color: #fff;
-  border-color: var(--c1);
-  box-shadow: 0 0 20px color-mix(in srgb, var(--c1) 30%, transparent 70%);
-}
-
 .city-btn:focus-visible {
-  outline: 2px solid var(--c2);
+  outline: 2px solid var(--c2, #fff);
   outline-offset: 2px;
 }
 
