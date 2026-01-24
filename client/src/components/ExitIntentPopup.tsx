@@ -41,28 +41,15 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
       }
     };
 
-    const handleTouchEnd = () => {
-      const scrollY = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight;
-      const windowHeight = window.innerHeight;
-      const scrollPercent = (scrollY / (docHeight - windowHeight)) * 100;
-      
-      if (scrollPercent > 50 && isReady) {
-        showPopup();
-      }
-    };
-
     timeoutId = setTimeout(() => {
       isReady = true;
     }, delay);
 
     document.addEventListener("mouseleave", handleMouseLeave);
-    document.addEventListener("touchend", handleTouchEnd);
 
     return () => {
       clearTimeout(timeoutId);
       document.removeEventListener("mouseleave", handleMouseLeave);
-      document.removeEventListener("touchend", handleTouchEnd);
     };
   }, [delay, showPopup]);
 
@@ -142,9 +129,10 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", duration: 0.5 }}
-            className="fixed inset-x-4 top-1/2 -translate-y-1/2 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 max-w-lg w-full z-[101] mx-auto"
+            className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none"
             data-testid="popup-exit-intent"
           >
+            <div className="max-w-lg w-full pointer-events-auto">
             <div className="relative rounded-2xl overflow-hidden bg-slate-900 border border-violet-500/30 shadow-2xl shadow-violet-500/20">
               <button
                 onClick={handleClose}
@@ -239,6 +227,7 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                   </div>
                 )}
               </div>
+            </div>
             </div>
           </motion.div>
         </>
