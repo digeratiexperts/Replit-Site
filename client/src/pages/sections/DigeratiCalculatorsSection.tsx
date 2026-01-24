@@ -26,9 +26,6 @@ interface CalculatorProps {
 
 export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
-  const [downtimeExpanded, setDowntimeExpanded] = useState(true);
-  const [pricingExpanded, setPricingExpanded] = useState(true);
-
   const {
     employees, setEmployees,
     hourlyWage, setHourlyWage,
@@ -39,6 +36,9 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
     servicePackage, setServicePackage,
     serviceCost
   } = props;
+
+  const [downtimeExpanded, setDowntimeExpanded] = useState(true);
+  const [pricingExpanded, setPricingExpanded] = useState(false);
 
   return (
     <section id="calculators" className="py-12 md:py-16 lg:py-20 relative overflow-visible bg-[#0a0a0a]">
@@ -274,9 +274,13 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                 </div>
                 <div className="flex items-center gap-3">
                   {!pricingExpanded && (
-                    <span className="hidden sm:block text-sm text-violet-400 font-medium">
+                    <motion.span 
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="hidden sm:block text-sm text-violet-400 font-medium"
+                    >
                       Current estimate: ${serviceCost.toLocaleString()}/mo
-                    </span>
+                    </motion.span>
                   )}
                   <ChevronDown 
                     className={`w-5 h-5 text-white/50 transition-transform duration-300 ${pricingExpanded ? 'rotate-180' : ''}`} 
