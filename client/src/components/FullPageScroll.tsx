@@ -195,13 +195,16 @@ function NavigationDots({ sections, currentSection, onNavigate, isVisible, curre
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 20 }}
-      className="fixed right-4 top-1/2 z-50 hidden lg:flex flex-col items-center gap-2 py-3 px-2 rounded-full backdrop-blur-md transition-colors duration-500"
+      className="fixed right-4 z-50 hidden lg:flex flex-col items-center gap-1.5 py-2.5 px-1.5 rounded-full backdrop-blur-md transition-colors duration-500"
       style={{
-        transform: 'translateY(calc(-50% - 40px))',
-        maxHeight: 'calc(100vh - 160px)',
-        backgroundColor: isDark ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.7)',
-        border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.1)',
-        boxShadow: isDark ? '0 4px 20px rgba(0, 0, 0, 0.3)' : '0 4px 20px rgba(0, 0, 0, 0.1)'
+        top: '80px',
+        bottom: '140px',
+        backgroundColor: isDark ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.8)',
+        border: isDark ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid rgba(0, 0, 0, 0.1)',
+        boxShadow: isDark ? '0 4px 20px rgba(0, 0, 0, 0.4)' : '0 4px 20px rgba(0, 0, 0, 0.15)',
+        justifyContent: 'flex-start',
+        overflowY: 'auto',
+        scrollbarWidth: 'none'
       }}
       aria-label="Section navigation"
     >
