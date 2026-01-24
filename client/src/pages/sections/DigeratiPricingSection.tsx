@@ -216,7 +216,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                 <div className="space-y-2 mt-auto">
                   <a href={plan.learnMoreUrl}>
                     <Button 
-                      className="w-full h-9 text-sm border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-600 hover:text-white" 
+                      className="w-full h-9 text-sm border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-600 hover:text-white active:text-white focus:text-violet-600 focus:bg-transparent" 
                       variant="outline"
                       data-testid={`button-learn-more-${plan.name.toLowerCase()}`}
                     >
@@ -227,8 +227,8 @@ export const DigeratiPricingSection = (): JSX.Element => {
                     <Button 
                       className={`w-full h-9 text-sm font-semibold ${
                         plan.isPopular 
-                          ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-500 hover:to-purple-500 border-0' 
-                          : 'border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-50'
+                          ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-500 hover:to-purple-500 active:text-white border-0' 
+                          : 'border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-50 active:text-violet-600 focus:text-violet-600'
                       }`}
                       variant={plan.isPopular ? "default" : "outline"}
                       data-testid={`button-strategy-call-${plan.name.toLowerCase()}`}
@@ -308,7 +308,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
               <div className="space-y-3 mt-auto">
                 <a href={plan.learnMoreUrl}>
                   <Button 
-                    className="w-full border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-600 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all duration-200" 
+                    className="w-full border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-600 hover:text-white active:text-white focus:text-violet-600 focus:bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all duration-200" 
                     variant="outline"
                     data-testid={`button-learn-more-${plan.name.toLowerCase()}`}
                   >
@@ -319,8 +319,8 @@ export const DigeratiPricingSection = (): JSX.Element => {
                   <Button 
                     className={`w-full font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 ${
                       plan.isPopular 
-                        ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-500 hover:to-purple-500 border-0' 
-                        : 'border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-50'
+                        ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-500 hover:to-purple-500 active:text-white border-0' 
+                        : 'border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-50 active:text-violet-600 focus:text-violet-600'
                     }`}
                     variant={plan.isPopular ? "default" : "outline"}
                     data-testid={`button-strategy-call-${plan.name.toLowerCase()}`}
