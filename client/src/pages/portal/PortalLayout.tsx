@@ -19,6 +19,8 @@ const navItems = [
   { href: "/portal/surveys", label: "Surveys", icon: CheckSquare },
   { href: "/portal/approvals", label: "Approvals", icon: FileStack },
   { href: "/portal/services", label: "My Services", icon: Package },
+  { href: "/portal/billing", label: "Billing", icon: FileText },
+  { href: "/portal/company", label: "Company", icon: Building2 },
   { href: "/portal/files", label: "Files & Downloads", icon: FileText },
   { href: "/portal/invoices", label: "Invoices", icon: FileText },
   { href: "/portal/vpn", label: "VPN Access", icon: Shield },

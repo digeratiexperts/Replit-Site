@@ -87,6 +87,8 @@ const PortalQuestionnaireCalendar = lazy(() => import("@/pages/portal/PortalQues
 const PortalVPN = lazy(() => import("@/pages/portal/PortalVPN"));
 const PortalCytracom = lazy(() => import("@/pages/portal/PortalCytracom"));
 const PortalFiles = lazy(() => import("@/pages/portal/PortalFiles"));
+const PortalBilling = lazy(() => import("@/pages/portal/PortalBilling"));
+const PortalCompany = lazy(() => import("@/pages/portal/PortalCompany"));
 const AdminImportPage = lazy(() => import("@/pages/portal/AdminImport").then(m => ({ default: m.AdminImport })));
 const AdminAgentsPage = lazy(() => import("@/pages/portal/AdminAgents").then(m => ({ default: m.AdminAgents })));
 const AdminOpenAIPage = lazy(() => import("@/pages/portal/AdminOpenAI").then(m => ({ default: m.AdminOpenAI })));
@@ -449,6 +451,16 @@ function Router() {
       <Route path="/portal/settings" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalSettings />
+        </Suspense>
+      )} />
+      <Route path="/portal/billing" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <PortalBilling />
+        </Suspense>
+      )} />
+      <Route path="/portal/company" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <PortalCompany />
         </Suspense>
       )} />
       <Route path="/portal/ship-center" component={() => (

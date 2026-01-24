@@ -691,6 +691,7 @@ export async function registerRoutes(app: Express) {
         return res.status(400).json({ error: "Subject and description are required" });
       }
 
+      // Create ticket in local storage
       const ticket = await storage.createPortalTicket({
         userId: req.userId || "",
         createdBy: req.userId || "",
@@ -701,7 +702,27 @@ export async function registerRoutes(app: Express) {
         category: category || "general",
       });
 
-      res.json({ success: true, ticket });
+      // Try to sync with Zoho Desk if configured
+      try {
+        const { zohoDeskService } = await import("./zoho/zohoDesk");
+        const { zohoClient } = await import("./zoho/zohoClient");
+        
+        if (zohoClient.isConfigured()) {
+          const user = req.user;
+          const zohoTicket = await zohoDeskService.createTicket({
+            subject,
+            description,
+            email: user?.email,
+            priority: priority === "high" ? "High" : priority === "low" ? "Low" : "Medium",
+          });
+          console.log("✅ Ticket synced to Zoho Desk:", zohoTicket.id);
+        }
+      } catch (zohoError) {
+        console.warn("Could not sync ticket to Zoho Desk:", zohoError);
+        // Continue - local ticket was created successfully
+      }
+
+      res.status(201).json({ success: true, ticket });
       logSecurityEvent("TICKET_CREATED", req, { ticketId: ticket.id });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
@@ -936,22 +957,212 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  // Portal Dashboard Stats
+  // Portal Dashboard Stats - Enhanced with Zoho data (scoped to user)
   app.get("/api/portal/dashboard", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
+      const { zohoDeskService } = await import("./zoho/zohoDesk");
+      const { zohoBillingService } = await import("./zoho/zohoBilling");
+      const { zohoClient } = await import("./zoho/zohoClient");
+      
+      let openTickets = 0;
+      let resolvedTickets = 0;
+      let pendingInvoices = 0;
+      let recentTickets: any[] = [];
+      let zohoDataFetched = false;
+      
+      const userEmail = req.user?.email;
+      
+      // Try to get Zoho data if connected - scoped to user
+      if (zohoClient.isConfigured() && userEmail) {
+        try {
+          // Get contact by email first to scope ticket queries
+          const contact = await zohoDeskService.getContactByEmail(userEmail);
+          
+          if (contact) {
+            // Get tickets for this specific contact
+            const contactTickets = await zohoDeskService.getTicketsByContact(contact.id);
+            
+            openTickets = contactTickets.filter(t => 
+              t.status?.toLowerCase() === "open" || t.status?.toLowerCase() === "in progress"
+            ).length;
+            resolvedTickets = contactTickets.filter(t => 
+              t.status?.toLowerCase() === "closed" || t.status?.toLowerCase() === "resolved"
+            ).length;
+            recentTickets = contactTickets.slice(0, 5).map(t => ({
+              id: t.id,
+              ticketNumber: t.ticketNumber,
+              subject: t.subject,
+              status: t.status?.toLowerCase() || "open",
+              priority: t.priority,
+              createdAt: t.createdTime,
+            }));
+            zohoDataFetched = true;
+          }
+        } catch (deskError) {
+          console.warn("Could not fetch Zoho Desk data for user:", deskError);
+        }
+        
+        try {
+          // Get invoices scoped to user's billing customer
+          const customer = await zohoBillingService.getCustomerByEmail(userEmail);
+          if (customer) {
+            const customerInvoices = await zohoBillingService.getInvoicesByCustomer(customer.customer_id);
+            pendingInvoices = customerInvoices.filter(inv => 
+              inv.status?.toLowerCase() === "unpaid" || inv.status?.toLowerCase() === "overdue"
+            ).length;
+          }
+        } catch (billingError) {
+          console.warn("Could not fetch Zoho Billing data for user:", billingError);
+        }
+      }
+      
+      // Fallback to local tickets if Zoho didn't return data
+      if (!zohoDataFetched) {
+        const tickets = await storage.getPortalTickets(req.userId || "");
+        openTickets = tickets.filter(t => t.status === "open" || t.status === "in-progress").length;
+        resolvedTickets = tickets.filter(t => t.status === "resolved" || t.status === "closed").length;
+        recentTickets = tickets.slice(0, 5).map(t => ({
+          id: t.id,
+          ticketNumber: t.ticketNumber || `#TK${String(t.id).padStart(3, '0')}`,
+          subject: t.subject,
+          status: t.status,
+          priority: t.priority,
+          createdAt: t.createdAt,
+        }));
+      }
+      
+      // Services would come from subscription data in production
+      const services = [
+        { id: "svc-1", serviceName: "Managed IT Support", userCount: 15, status: "active" },
+        { id: "svc-2", serviceName: "Endpoint Protection", userCount: 15, status: "active" },
+        { id: "svc-3", serviceName: "Email Security", userCount: 15, status: "active" },
+      ];
+      
       const dashboardStats = {
-        openTickets: 0,
-        resolvedTickets: 0,
-        activeServices: 0,
-        pendingInvoices: 0,
-        recentTickets: [],
-        services: [],
+        openTickets,
+        resolvedTickets,
+        activeServices: services.length,
+        pendingInvoices,
+        recentTickets,
+        services,
+        zohoConnected: zohoDataFetched,
       };
       
       res.json(dashboardStats);
     } catch (error: any) {
       console.error("[ERROR] Dashboard fetch failed:", error);
       res.status(500).json({ message: "Failed to load dashboard" });
+    }
+  });
+
+  // Portal Billing - Get subscription and invoices from Zoho Billing
+  app.get("/api/portal/billing", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { zohoBillingService } = await import("./zoho/zohoBilling");
+      const { zohoClient } = await import("./zoho/zohoClient");
+      
+      if (!zohoClient.isConfigured()) {
+        return res.json({
+          subscription: null,
+          invoices: [],
+          zohoConnected: false,
+          message: "Billing integration not configured",
+        });
+      }
+      
+      let subscription = null;
+      let invoices: any[] = [];
+      let zohoConnected = false;
+      
+      try {
+        const userEmail = req.user?.email;
+        
+        // Try to find customer by email first for proper data isolation
+        let customer = null;
+        if (userEmail) {
+          customer = await zohoBillingService.getCustomerByEmail(userEmail);
+        }
+        
+        if (customer) {
+          // Get subscriptions for this specific customer
+          const customerSubs = await zohoBillingService.getSubscriptionsByCustomer(customer.customer_id);
+          subscription = customerSubs.find(s => s.status === "live") || customerSubs[0] || null;
+          
+          // Get invoices for this specific customer
+          invoices = await zohoBillingService.getInvoicesByCustomer(customer.customer_id);
+          zohoConnected = true;
+        } else {
+          // No customer found - return empty with message
+          console.log(`No Zoho Billing customer found for: ${userEmail}`);
+        }
+      } catch (error) {
+        console.warn("Could not fetch Zoho Billing data:", error);
+      }
+      
+      res.json({
+        subscription,
+        invoices,
+        zohoConnected,
+        message: !zohoConnected ? "Your billing account is being set up" : undefined,
+      });
+    } catch (error: any) {
+      console.error("[ERROR] Billing fetch failed:", error);
+      res.status(500).json({ message: "Failed to load billing data" });
+    }
+  });
+
+  // Portal Company - Get CRM account and contacts
+  app.get("/api/portal/company", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { zohoCRMService } = await import("./zoho/zohoCRM");
+      const { zohoClient } = await import("./zoho/zohoClient");
+      
+      if (!zohoClient.isConfigured()) {
+        return res.json({
+          account: null,
+          contacts: [],
+          zohoConnected: false,
+          message: "CRM integration not configured",
+        });
+      }
+      
+      let account = null;
+      let contacts: any[] = [];
+      let zohoConnected = false;
+      
+      try {
+        const userEmail = req.user?.email;
+        
+        // Find the contact by email first, then get their associated account
+        if (userEmail) {
+          const contact = await zohoCRMService.getContactByEmail(userEmail);
+          
+          if (contact && contact.Account_Name?.id) {
+            // Get the account this contact belongs to
+            account = await zohoCRMService.getAccountById(contact.Account_Name.id);
+            
+            if (account) {
+              // Get all contacts for this account
+              contacts = await zohoCRMService.getContactsByAccount(account.id);
+              zohoConnected = true;
+            }
+          } else {
+            console.log(`No Zoho CRM contact/account found for: ${userEmail}`);
+          }
+        }
+      } catch (error) {
+        console.warn("Could not fetch Zoho CRM data:", error);
+      }
+      
+      res.json({
+        account,
+        contacts,
+        zohoConnected,
+        message: !zohoConnected ? "Your company profile is being set up" : undefined,
+      });
+    } catch (error: any) {
+      console.error("[ERROR] Company fetch failed:", error);
+      res.status(500).json({ message: "Failed to load company data" });
     }
   });
 
@@ -1037,13 +1248,55 @@ export async function registerRoutes(app: Express) {
   });
 
   // Portal Invoices List
-  app.get("/api/portal/invoices", [authMiddleware], async (_req: AuthenticatedRequest, res: Response) => {
+  app.get("/api/portal/invoices", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const invoices = [
-        { id: "inv-001", invoiceNumber: "INV-2025-001", amount: 2499.00, status: "paid", dueDate: "2025-01-15", paidDate: "2025-01-10" },
-        { id: "inv-002", invoiceNumber: "INV-2025-002", amount: 2499.00, status: "pending", dueDate: "2025-02-15", paidDate: null },
-      ];
-      res.json(invoices);
+      const { zohoBillingService } = await import("./zoho/zohoBilling");
+      const { zohoClient } = await import("./zoho/zohoClient");
+      
+      let invoices: any[] = [];
+      let zohoConnected = false;
+      
+      if (!zohoClient.isConfigured()) {
+        return res.json({
+          invoices: [],
+          zohoConnected: false,
+          message: "Billing integration not configured",
+        });
+      }
+      
+      try {
+        const userEmail = req.user?.email;
+        
+        // Scope to authenticated user's customer account for data isolation
+        if (userEmail) {
+          const customer = await zohoBillingService.getCustomerByEmail(userEmail);
+          
+          if (customer) {
+            const customerInvoices = await zohoBillingService.getInvoicesByCustomer(customer.customer_id);
+            invoices = customerInvoices.map(inv => ({
+              id: inv.invoice_id,
+              invoiceNumber: inv.invoice_number,
+              amount: inv.total.toString(),
+              status: inv.status?.toLowerCase() || "pending",
+              issueDate: inv.invoice_date,
+              dueDate: inv.due_date,
+              balance: inv.balance,
+              currency: inv.currency_code,
+            }));
+            zohoConnected = true;
+          } else {
+            console.log(`No Zoho Billing customer found for invoices: ${userEmail}`);
+          }
+        }
+      } catch (error) {
+        console.warn("Could not fetch Zoho Billing invoices:", error);
+      }
+      
+      res.json({
+        invoices,
+        zohoConnected,
+        message: !zohoConnected ? "Your billing account is being set up" : undefined,
+      });
     } catch (error: any) {
       res.status(500).json({ message: "Failed to load invoices" });
     }

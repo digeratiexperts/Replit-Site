@@ -17,11 +17,19 @@ interface Invoice {
   description?: string;
 }
 
+interface InvoicesResponse {
+  invoices: Invoice[];
+  zohoConnected: boolean;
+  message?: string;
+}
+
 export default function PortalInvoices() {
-  const { data: invoices = [], isLoading, isError, error } = useQuery<Invoice[]>({
+  const { data, isLoading, isError, error } = useQuery<InvoicesResponse>({
     queryKey: ["/api/portal/invoices"],
-    queryFn: () => portalGet<Invoice[]>("/api/portal/invoices"),
+    queryFn: () => portalGet<InvoicesResponse>("/api/portal/invoices"),
   });
+
+  const invoices = data?.invoices || [];
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -44,6 +52,15 @@ export default function PortalInvoices() {
           <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 rounded-lg">
             <p className="text-sm text-red-800 dark:text-red-300">
               Failed to load invoices: {error instanceof Error ? error.message : "Unknown error"}
+            </p>
+          </div>
+        )}
+
+        {/* Zoho Status */}
+        {!data?.zohoConnected && !isLoading && (
+          <div className="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-900/30 rounded-lg">
+            <p className="text-sm text-amber-800 dark:text-amber-300">
+              {data?.message || "Your billing account is being set up. Invoice data may be limited."}
             </p>
           </div>
         )}
