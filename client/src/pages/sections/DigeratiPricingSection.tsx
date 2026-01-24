@@ -1,9 +1,40 @@
 import { Button } from "@/components/ui/button";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
 
 export const DigeratiPricingSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const checkScrollButtons = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    }
+  };
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', checkScrollButtons);
+      checkScrollButtons();
+      return () => container.removeEventListener('scroll', checkScrollButtons);
+    }
+  }, []);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 300;
+      scrollContainerRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
   const pricingPlans = [
     {
       name: "Office",
@@ -77,7 +108,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
   return (
     <section 
       id="pricing" 
-      className="relative py-20 pt-28 pb-28 overflow-hidden bg-[#0a0a0a]"
+      className="relative py-12 md:py-16 lg:py-20 pt-16 md:pt-20 lg:pt-28 pb-16 md:pb-20 lg:pb-28 overflow-hidden bg-[#0a0a0a]"
     >
       {/* Subtle violet accent glow */}
       <div className="absolute inset-0 pointer-events-none"
@@ -85,25 +116,141 @@ export const DigeratiPricingSection = (): JSX.Element => {
       
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
-          className="text-center mb-12 md:mb-16"
+          className="text-center mb-8 md:mb-12 lg:mb-16"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6">
-            <span className="text-sm font-medium text-violet-300">Transparent Pricing</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4 md:mb-6">
+            <span className="text-xs md:text-sm font-medium text-violet-300">Transparent Pricing</span>
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-white">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-3 md:mb-4 text-white">
             ProActive Ecosystem <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">Pricing</span>
           </h2>
-          <p className="text-lg md:text-xl text-white/60 leading-relaxed max-w-3xl mx-auto">
+          <p className="text-base md:text-lg lg:text-xl text-white/60 leading-relaxed max-w-3xl mx-auto px-4">
             Clear, predictable, and compliance-ready. Pricing shown for a <span className="font-bold text-white">5-user office</span>.
           </p>
         </motion.div>
 
+        {/* Mobile: Horizontal scroll with navigation */}
+        <div className="md:hidden relative">
+          <button
+            onClick={() => scroll('left')}
+            className={`absolute left-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/80 backdrop-blur-sm border border-white/20 flex items-center justify-center transition-all ${
+              canScrollLeft ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
+            aria-label="Scroll left"
+            data-testid="pricing-scroll-left"
+          >
+            <ChevronLeft className="w-5 h-5 text-white" />
+          </button>
+          
+          <button
+            onClick={() => scroll('right')}
+            className={`absolute right-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/80 backdrop-blur-sm border border-white/20 flex items-center justify-center transition-all ${
+              canScrollRight ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
+            aria-label="Scroll right"
+            data-testid="pricing-scroll-right"
+          >
+            <ChevronRight className="w-5 h-5 text-white" />
+          </button>
+
+          <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+
+          <div 
+            ref={scrollContainerRef}
+            className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 px-2 snap-x snap-mandatory"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {pricingPlans.map((plan, index) => (
+              <div
+                key={index}
+                className={`relative rounded-2xl p-5 transition-all duration-300 flex-shrink-0 w-[280px] snap-center ${
+                  plan.isPopular 
+                    ? 'bg-white border-2 border-violet-500 ring-2 ring-violet-500/30 shadow-xl shadow-violet-500/10' 
+                    : 'bg-white border border-gray-200'
+                }`}
+                data-testid={`pricing-${plan.name.toLowerCase().replace(' ', '-')}`}
+              >
+                {plan.isPopular && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <span className="bg-gradient-to-r from-violet-600 to-purple-600 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
+                      Most Popular
+                    </span>
+                  </div>
+                )}
+                
+                <div className="mb-4">
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">{plan.name}</h3>
+                  
+                  <div className="mb-1">
+                    <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Starting at</span>
+                  </div>
+                  
+                  <div className="flex items-baseline mb-1">
+                    <span className="text-3xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                      ${plan.monthlyPrice.toLocaleString()}
+                    </span>
+                    <span className="text-gray-500 ml-1 text-sm">/mo</span>
+                  </div>
+                  
+                  <div className="text-xs text-gray-500">
+                    for 5 users • ${plan.perUserPrice}/user
+                  </div>
+                </div>
+
+                <ul className="space-y-2 mb-6">
+                  {plan.features.map((feature, featureIndex) => (
+                    <li key={featureIndex} className="flex items-start">
+                      <CheckCircle className="h-4 w-4 text-emerald-500 mr-2 flex-shrink-0 mt-0.5" />
+                      <span className={`text-base text-gray-600 ${featureIndex === 0 && plan.name !== "Office" ? 'font-semibold text-gray-900' : ''}`}>
+                        {feature}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="space-y-2">
+                  <a href={plan.learnMoreUrl}>
+                    <Button 
+                      className="w-full h-9 text-sm border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-50" 
+                      variant="outline"
+                      data-testid={`button-learn-more-${plan.name.toLowerCase()}`}
+                    >
+                      Learn More
+                    </Button>
+                  </a>
+                  <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                    <Button 
+                      className={`w-full h-9 text-sm font-semibold ${
+                        plan.isPopular 
+                          ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-500 hover:to-purple-500 border-0' 
+                          : 'border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-50'
+                      }`}
+                      variant={plan.isPopular ? "default" : "outline"}
+                      data-testid={`button-strategy-call-${plan.name.toLowerCase()}`}
+                    >
+                      Book Strategy Call
+                    </Button>
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex justify-center gap-2 mt-4">
+            {pricingPlans.map((_, index) => (
+              <div key={index} className="w-2 h-2 rounded-full bg-white/20" />
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop: Grid layout */}
         <motion.div 
-          className="grid md:grid-cols-3 gap-6 md:gap-8"
+          className="hidden md:grid md:grid-cols-3 gap-6 md:gap-8"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -131,12 +278,10 @@ export const DigeratiPricingSection = (): JSX.Element => {
               <div className="mb-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-4">{plan.name}</h3>
                 
-                {/* Starting at price */}
                 <div className="mb-2">
                   <span className="text-sm font-medium text-gray-500 uppercase tracking-wide">Starting at</span>
                 </div>
                 
-                {/* Main price display */}
                 <div className="flex items-baseline mb-2">
                   <span className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
                     ${plan.monthlyPrice.toLocaleString()}
@@ -144,7 +289,6 @@ export const DigeratiPricingSection = (): JSX.Element => {
                   <span className="text-gray-500 ml-2 text-base">/mo</span>
                 </div>
                 
-                {/* Per user breakdown */}
                 <div className="text-sm text-gray-500">
                   for 5 users <span className="text-gray-400">•</span> ${plan.perUserPrice}/user
                 </div>

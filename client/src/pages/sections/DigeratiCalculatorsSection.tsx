@@ -52,7 +52,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
   return (
     <>
       {/* Downtime Calculator Section */}
-      <section ref={sectionRef} id="calculators" className="py-24 relative overflow-visible bg-[#0a0a0a]">
+      <section ref={sectionRef} id="calculators" className="py-12 md:py-16 lg:py-24 relative overflow-visible bg-[#0a0a0a]">
         {/* Parallax gradient accent orbs */}
         <motion.div 
           className="absolute top-20 right-0 w-[600px] h-[600px] pointer-events-none opacity-40"
@@ -81,20 +81,20 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div 
-            className="text-center mb-14"
+            className="text-center mb-8 md:mb-10 lg:mb-14"
             initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6">
-              <TrendingDown className="w-4 h-4 text-violet-400" />
-              <span className="text-sm font-medium text-violet-300">Risk Assessment Tool</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4 md:mb-6">
+              <TrendingDown className="w-3.5 h-3.5 md:w-4 md:h-4 text-violet-400" />
+              <span className="text-xs md:text-sm font-medium text-violet-300">Risk Assessment Tool</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 px-2">
               What's Downtime Really <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">Costing You?</span>
             </h2>
-            <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto">
+            <p className="text-base md:text-lg lg:text-xl text-white/60 max-w-2xl mx-auto px-4">
               Calculate your potential losses and see why proactive protection pays for itself.
             </p>
           </motion.div>
@@ -245,7 +245,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
       </section>
 
       {/* Service Cost Estimator Section */}
-      <section className="py-24 relative overflow-visible bg-[#0a0a0a]">
+      <section className="py-12 md:py-16 lg:py-24 relative overflow-visible bg-[#0a0a0a]">
         {/* Accent */}
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] pointer-events-none opacity-30"
              style={{ background: "radial-gradient(circle at 0% 100%, rgba(139, 92, 246, 0.12) 0%, transparent 50%)" }} />
@@ -258,14 +258,14 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6">
-              <DollarSign className="w-4 h-4 text-violet-400" />
-              <span className="text-sm font-medium text-violet-300">Pricing Estimator</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4 md:mb-6">
+              <DollarSign className="w-3.5 h-3.5 md:w-4 md:h-4 text-violet-400" />
+              <span className="text-xs md:text-sm font-medium text-violet-300">Pricing Estimator</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 px-2">
               Estimate Your <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">Monthly Investment</span>
             </h2>
-            <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto">
+            <p className="text-base md:text-lg lg:text-xl text-white/60 max-w-2xl mx-auto px-4">
               Transparent pricing based on your team size and protection level.
             </p>
           </motion.div>

@@ -246,7 +246,7 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
                     <h3 className="text-xl font-bold text-white mb-2">
                       {industry.name}
                     </h3>
-                    <p className="text-gray-300 text-base leading-relaxed">
+                    <p className="text-gray-200 text-base leading-relaxed">
                       {industry.description}
                     </p>
                   </div>

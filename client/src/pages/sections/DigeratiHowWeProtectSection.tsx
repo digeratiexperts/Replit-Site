@@ -60,7 +60,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
 
   return (
     <section 
-      className="py-24 relative overflow-hidden bg-white"
+      className="py-12 md:py-16 lg:py-24 relative overflow-hidden bg-white"
     >
       {/* Subtle background gradient */}
       <div 
@@ -78,26 +78,26 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div 
-          className="text-center mb-16"
+          className="text-center mb-8 md:mb-12 lg:mb-16"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-50 border border-violet-200 mb-6">
-            <Shield className="w-4 h-4 text-violet-600" />
-            <span className="text-sm font-medium text-violet-700">Our Process</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-50 border border-violet-200 mb-4 md:mb-6">
+            <Shield className="w-3.5 h-3.5 md:w-4 md:h-4 text-violet-400" />
+            <span className="text-xs md:text-sm font-medium text-violet-600">Our Process</span>
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-3 md:mb-4 px-2">
             How We Protect Your Business
           </h2>
-          <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
+          <p className="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto px-4">
             Our proven 4-step process ensures your business stays secure and compliant
           </p>
         </motion.div>
 
         <motion.div 
-          className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto"
+          className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 max-w-6xl mx-auto"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -112,23 +112,23 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
                 variants={stepVariants}
                 data-testid={step.testId}
               >
-                <div className="h-full bg-white border border-gray-200 rounded-2xl p-6 shadow-sm transition-all duration-300 hover:border-violet-300 hover:shadow-xl hover:shadow-violet-500/10">
+                <div className="h-full bg-white border border-gray-200 rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6 shadow-sm transition-all duration-300 hover:border-violet-300 hover:shadow-xl hover:shadow-violet-500/10">
                   {/* Step number badge */}
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-500/25">
-                      <span className="text-lg font-bold text-white">
+                  <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                    <div className="w-8 h-8 sm:w-9 md:w-10 sm:h-9 md:h-10 rounded-lg md:rounded-xl bg-violet-400 flex items-center justify-center shadow-lg shadow-violet-400/25">
+                      <span className="text-sm sm:text-base md:text-lg font-bold text-white">
                         {step.number}
                       </span>
                     </div>
-                    <div className="w-10 h-10 rounded-xl bg-violet-50 flex items-center justify-center">
-                      <IconComponent className="w-5 h-5 text-violet-600" />
+                    <div className="w-8 h-8 sm:w-9 md:w-10 sm:h-9 md:h-10 rounded-lg md:rounded-xl bg-violet-50 flex items-center justify-center">
+                      <IconComponent className="w-4 h-4 sm:w-4.5 md:w-5 sm:h-4.5 md:h-5 text-violet-400" />
                     </div>
                   </div>
 
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-violet-600 transition-colors duration-300">
+                  <h3 className="text-base sm:text-lg md:text-lg lg:text-xl font-bold text-gray-900 mb-2 sm:mb-3 group-hover:text-violet-400 transition-colors duration-300">
                     {step.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed text-base">
+                  <p className="text-base text-gray-600 leading-relaxed">
                     {step.description}
                   </p>
                 </div>

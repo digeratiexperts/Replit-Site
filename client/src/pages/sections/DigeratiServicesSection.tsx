@@ -99,7 +99,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
     <section 
       ref={sectionRef}
       id="services" 
-      className="relative py-24 bg-[#0a0a0a] overflow-hidden"
+      className="relative py-12 md:py-16 lg:py-24 bg-[#0a0a0a] overflow-hidden"
     >
       {/* Parallax gradient orbs */}
       <motion.div 
@@ -117,7 +117,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
         }}
       />
       
-      {/* Floating decorative elements */}
+      {/* Floating decorative elements - hidden on mobile */}
       <motion.div 
         className="absolute top-40 right-20 w-6 h-6 rounded-full border border-violet-500/20 pointer-events-none hidden lg:block"
         style={{ y: floatingY1 }}
@@ -129,26 +129,26 @@ export const DigeratiServicesSection = (): JSX.Element => {
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div 
-          className="text-center mb-14"
+          className="text-center mb-8 md:mb-10 lg:mb-14"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6">
-            <ShieldCheck className="w-4 h-4 text-violet-400" />
-            <span className="text-sm font-medium text-violet-300">Core Security Services</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4 md:mb-6">
+            <ShieldCheck className="w-3.5 h-3.5 md:w-4 md:h-4 text-violet-400" />
+            <span className="text-xs md:text-sm font-medium text-violet-300">Core Security Services</span>
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-white">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-3 md:mb-4 text-white">
             What We <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">Provide</span>
           </h2>
-          <p className="text-lg md:text-xl text-white/60 leading-relaxed max-w-3xl mx-auto">
+          <p className="text-base md:text-lg lg:text-xl text-white/60 leading-relaxed max-w-3xl mx-auto px-4">
             Enterprise-grade security services designed to protect your business at every level.
           </p>
         </motion.div>
 
         <motion.div 
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-8"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -164,29 +164,29 @@ export const DigeratiServicesSection = (): JSX.Element => {
                 data-testid={service.testId}
               >
                 {/* Gradient border on hover */}
-                <div className={`absolute -inset-[1px] rounded-2xl bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+                <div className={`absolute -inset-[1px] rounded-xl md:rounded-2xl bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
                 
                 {/* Card */}
-                <div className="relative bg-[#111111] border border-white/[0.08] rounded-2xl p-8 h-full
+                <div className="relative bg-[#111111] border border-white/[0.08] rounded-xl md:rounded-2xl p-5 sm:p-6 lg:p-8 h-full
                                group-hover:border-transparent transition-all duration-300">
                   {/* Icon with gradient */}
                   <div 
-                    className={`w-14 h-14 rounded-xl bg-gradient-to-br ${service.gradient} flex items-center justify-center mb-6 shadow-lg shadow-violet-500/20 group-hover:shadow-violet-500/40 transition-shadow duration-300`}
+                    className={`w-10 h-10 md:w-12 lg:w-14 md:h-12 lg:h-14 rounded-lg md:rounded-xl bg-gradient-to-br ${service.gradient} flex items-center justify-center mb-4 md:mb-6 shadow-lg shadow-violet-500/20 group-hover:shadow-violet-500/40 transition-shadow duration-300`}
                   >
-                    <Icon className="h-7 w-7 text-white" />
+                    <Icon className="h-5 w-5 md:h-6 lg:h-7 md:w-6 lg:w-7 text-white" />
                   </div>
                   
                   {/* Content */}
-                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-violet-300 transition-colors duration-300">
+                  <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white mb-2 md:mb-3 group-hover:text-violet-400 transition-colors duration-300">
                     {service.title}
                   </h3>
-                  <p className="text-white/60 leading-relaxed mb-6">
+                  <p className="text-base text-white/60 leading-relaxed mb-4 md:mb-6">
                     {service.description}
                   </p>
                   
                   {/* Link */}
                   <Link href={service.link} data-testid={`link-${service.testId}`}>
-                    <span className="inline-flex items-center gap-2 text-violet-400 font-medium hover:text-violet-300 transition-colors cursor-pointer group/link">
+                    <span className="inline-flex items-center gap-2 text-base text-violet-400 font-medium hover:text-violet-300 transition-colors cursor-pointer group/link">
                       Learn more
                       <ArrowRight className="h-4 w-4 transition-transform group-hover/link:translate-x-1" />
                     </span>

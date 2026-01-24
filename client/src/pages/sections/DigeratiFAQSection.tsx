@@ -35,7 +35,7 @@ export const DigeratiFAQSection = (): JSX.Element => {
   };
 
   return (
-    <section className="py-24 bg-[#f0f4f8]">
+    <section className="py-12 md:py-16 lg:py-24 bg-[#f0f4f8]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -43,12 +43,12 @@ export const DigeratiFAQSection = (): JSX.Element => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-14"
+          className="text-center mb-8 md:mb-10 lg:mb-14"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 md:mb-4 px-2">
             Frequently Asked Questions
           </h2>
-          <p className="text-lg text-gray-500">
+          <p className="text-base md:text-lg text-gray-500 px-4">
             Find answers to common queries about us.
           </p>
         </motion.div>
@@ -67,18 +67,18 @@ export const DigeratiFAQSection = (): JSX.Element => {
                 transition={{ duration: 0.4, delay: index * 0.1 }}
                 data-testid={`faq-${index}`}
               >
-                <div className="bg-white rounded-xl shadow-sm">
+                <div className="bg-white rounded-lg md:rounded-xl shadow-sm">
                   <button
-                    className="w-full px-6 py-5 flex items-center justify-between text-left"
+                    className="w-full px-4 py-4 md:px-6 md:py-5 flex items-center justify-between text-left"
                     onClick={() => toggleAccordion(index)}
                     aria-expanded={isOpen}
                     data-testid={`faq-trigger-${index}`}
                   >
-                    <span className="text-lg font-medium text-gray-900">
+                    <span className="text-base md:text-lg font-medium text-gray-900 pr-4">
                       {faq.question}
                     </span>
                     <ChevronDown 
-                      className={`h-5 w-5 text-violet-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+                      className={`h-5 w-5 text-violet-500 transition-transform duration-200 flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
                     />
                   </button>
 
@@ -91,8 +91,8 @@ export const DigeratiFAQSection = (): JSX.Element => {
                         transition={{ duration: 0.2 }}
                         className="overflow-hidden"
                       >
-                        <div className="px-6 pb-5 pt-0">
-                          <p className="text-gray-600 leading-relaxed" data-testid={`faq-answer-${index}`}>
+                        <div className="px-4 pb-4 md:px-6 md:pb-5 pt-0">
+                          <p className="text-base text-gray-600 leading-relaxed" data-testid={`faq-answer-${index}`}>
                             {faq.answer}
                           </p>
                         </div>

@@ -200,7 +200,7 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-4 sm:p-6 pt-0">
-                    <CardDescription className="text-gray-400 mb-4 line-clamp-3 text-sm">
+                    <CardDescription className="text-gray-400 mb-4 line-clamp-3 text-base">
                       {insight.excerpt}
                     </CardDescription>
                     <div className="flex items-center justify-between pt-4 border-t border-white/10">

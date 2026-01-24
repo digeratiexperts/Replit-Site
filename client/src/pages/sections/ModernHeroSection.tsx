@@ -126,13 +126,13 @@ export const ModernHeroSection = (): JSX.Element => {
             
             {/* Left column - Content with CTA */}
             <motion.div 
-              className="flex flex-col gap-6 w-full"
+              className="flex flex-col gap-4 sm:gap-5 lg:gap-6 w-full"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
               {/* Headline - clean and bold */}
-              <h1 className="text-4xl sm:text-5xl xl:text-6xl font-bold leading-[1.1] tracking-[-0.02em]">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold leading-[1.1] tracking-[-0.02em]">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-purple-400">
                   Hackers Don't Wait.
                 </span>
@@ -143,17 +143,17 @@ export const ModernHeroSection = (): JSX.Element => {
               </h1>
 
               {/* Subheadline */}
-              <p className="text-lg text-white/60 leading-relaxed max-w-lg">
+              <p className="text-base md:text-lg text-white/60 leading-relaxed max-w-lg">
                 Enterprise-grade cybersecurity for small businesses. Get 24/7 protection, 
                 cut cyber liability, and pass compliance checks.
               </p>
 
-              {/* Simple feature list */}
-              <div className="flex flex-wrap gap-x-6 gap-y-2">
+              {/* Simple feature list - 2 columns on mobile */}
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2 sm:flex sm:flex-wrap sm:gap-x-6">
                 {features.map((feature) => (
-                  <div key={feature.text} className="flex items-center gap-2">
-                    <feature.icon className="h-4 w-4 text-violet-400" />
-                    <span className="text-base text-white/70">{feature.text}</span>
+                  <div key={feature.text} className="flex items-center gap-1.5 sm:gap-2">
+                    <feature.icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-violet-400 flex-shrink-0" />
+                    <span className="text-sm sm:text-base text-white/70">{feature.text}</span>
                   </div>
                 ))}
               </div>
@@ -262,36 +262,36 @@ export const ModernHeroSection = (): JSX.Element => {
 
               {/* Stats Bar */}
               <motion.div 
-                className="flex flex-wrap gap-6 mt-4 pt-6 border-t border-white/10"
+                className="grid grid-cols-3 gap-3 sm:flex sm:flex-wrap sm:gap-6 mt-4 pt-5 sm:pt-6 border-t border-white/10"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
-                    <Zap className="w-5 h-5 text-violet-400" />
+                <div className="flex flex-col sm:flex-row items-center sm:items-center gap-1.5 sm:gap-3 text-center sm:text-left">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
+                    <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-violet-400" />
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-white">99.9%</div>
-                    <div className="text-sm text-white/50">Uptime SLA</div>
+                    <div className="text-lg sm:text-2xl font-bold text-white">99.9%</div>
+                    <div className="text-xs sm:text-sm text-white/50">Uptime SLA</div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
-                    <Clock className="w-5 h-5 text-violet-400" />
+                <div className="flex flex-col sm:flex-row items-center sm:items-center gap-1.5 sm:gap-3 text-center sm:text-left">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
+                    <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-violet-400" />
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-white">&lt;15min</div>
-                    <div className="text-sm text-white/50">Response Time</div>
+                    <div className="text-lg sm:text-2xl font-bold text-white">&lt;15min</div>
+                    <div className="text-xs sm:text-sm text-white/50">Response</div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
-                    <Activity className="w-5 h-5 text-violet-400" />
+                <div className="flex flex-col sm:flex-row items-center sm:items-center gap-1.5 sm:gap-3 text-center sm:text-left">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
+                    <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-violet-400" />
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-white">24/7</div>
-                    <div className="text-sm text-white/50">Monitoring</div>
+                    <div className="text-lg sm:text-2xl font-bold text-white">24/7</div>
+                    <div className="text-xs sm:text-sm text-white/50">Monitoring</div>
                   </div>
                 </div>
               </motion.div>
