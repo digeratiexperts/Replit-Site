@@ -10,7 +10,7 @@ interface ExitIntentPopupProps {
   delay?: number;
 }
 
-export function ExitIntentPopup({ delay = 5000 }: ExitIntentPopupProps) {
+export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [hasShown, setHasShown] = useState(false);
   const [email, setEmail] = useState("");
@@ -174,7 +174,7 @@ export function ExitIntentPopup({ delay = 5000 }: ExitIntentPopupProps) {
                         Wait! Don't Leave Unprotected
                       </h3>
                       <p className="text-white/70">
-                        Get our free <span className="text-violet-300 font-semibold">2024 Cybersecurity Checklist</span> - 
+                        Get our free <span className="text-violet-300 font-semibold">2026 Cybersecurity Checklist</span> - 
                         the same checklist we use with our enterprise clients.
                       </p>
                     </div>
