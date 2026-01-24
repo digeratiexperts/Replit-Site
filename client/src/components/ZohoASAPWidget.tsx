@@ -118,9 +118,9 @@ export const ZohoASAPWidget = ({
 
         {/* Widget Panel */}
         {isOpen && (
-          <div className="absolute bottom-0 right-0 w-[420px] bg-white rounded-lg shadow-2xl overflow-hidden transform transition-all border border-gray-200">
+          <div className="absolute bottom-0 right-0 w-[420px] max-w-[90vw] max-h-[80vh] bg-white rounded-lg shadow-2xl overflow-hidden transform transition-all border border-gray-200 flex flex-col">
             {/* Header */}
-            <div className="bg-gradient-to-r from-purple-600 to-blue-900 text-white p-4 flex justify-between items-center">
+            <div className="bg-gradient-to-r from-purple-600 to-blue-900 text-white p-4 flex justify-between items-center flex-shrink-0">
               <div>
                 <h3
                   className="font-bold text-lg"
@@ -145,7 +145,7 @@ export const ZohoASAPWidget = ({
             </div>
 
             {/* Tabs */}
-            <div className="border-b flex bg-gray-50">
+            <div className="border-b flex bg-gray-50 flex-shrink-0">
               {(
                 ["support", "kb", "status"] as const
               ).map((tab) => (
@@ -177,7 +177,7 @@ export const ZohoASAPWidget = ({
             </div>
 
             {/* Content */}
-            <div className="p-4 max-h-96 overflow-y-auto">
+            <div className="p-4 overflow-y-auto flex-1">
               {activeTab === "support" && (
                 <div className="space-y-3">
                   <div>
@@ -190,7 +190,7 @@ export const ZohoASAPWidget = ({
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       data-testid="input-support-email"
-                      className="text-sm"
+                      className="text-sm h-9"
                     />
                   </div>
 
@@ -203,7 +203,7 @@ export const ZohoASAPWidget = ({
                       value={subject}
                       onChange={(e) => setSubject(e.target.value)}
                       data-testid="input-support-subject"
-                      className="text-sm"
+                      className="text-sm h-9"
                     />
                   </div>
 
@@ -216,15 +216,15 @@ export const ZohoASAPWidget = ({
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                       data-testid="input-support-message"
-                      rows={4}
-                      className="text-sm resize-none"
+                      rows={3}
+                      className="text-sm resize-none min-h-[80px]"
                     />
                   </div>
 
                   <Button
                     onClick={handleSubmitTicket}
                     disabled={isLoading}
-                    className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                    className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 h-10 mt-2"
                     data-testid="button-submit-support"
                   >
                     {isLoading ? "Sending..." : "Send Message"}
