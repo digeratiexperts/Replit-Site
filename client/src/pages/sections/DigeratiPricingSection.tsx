@@ -191,7 +191,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                   </div>
                   
                   <div className="flex items-baseline mb-1">
-                    <span className="text-3xl font-bold text-violet-600">
+                    <span className="text-3xl font-bold text-violet-600 selection:bg-violet-200 selection:text-gray-900">
                       ${plan.monthlyPrice.toLocaleString()}
                     </span>
                     <span className="text-gray-500 ml-1 text-sm">/mo</span>
@@ -202,7 +202,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                   </div>
                 </div>
 
-                <ul className="space-y-2 mb-6 flex-grow">
+                <ul className="space-y-2 mb-4 flex-grow">
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-start">
                       <CheckCircle className="h-4 w-4 text-emerald-500 mr-2 flex-shrink-0 mt-0.5" />
@@ -213,7 +213,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                   ))}
                 </ul>
 
-                <div className="space-y-2 mt-auto">
+                <div className="space-y-3 mt-auto pt-2">
                   <a href={plan.learnMoreUrl}>
                     <Button 
                       className="w-full h-9 text-sm border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-600 hover:text-white active:text-white focus:text-violet-600 focus:bg-transparent" 
@@ -283,7 +283,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                 </div>
                 
                 <div className="flex items-baseline mb-2">
-                  <span className="text-4xl md:text-5xl font-bold text-violet-600">
+                  <span className="text-4xl md:text-5xl font-bold text-violet-600 selection:bg-violet-200 selection:text-gray-900">
                     ${plan.monthlyPrice.toLocaleString()}
                   </span>
                   <span className="text-gray-500 ml-2 text-base">/mo</span>
@@ -294,7 +294,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                 </div>
               </div>
 
-              <ul className="space-y-3 mb-8 flex-grow">
+              <ul className="space-y-3 mb-4 flex-grow">
                 {plan.features.map((feature, featureIndex) => (
                   <li key={featureIndex} className="flex items-start">
                     <CheckCircle className="h-5 w-5 text-emerald-500 mr-2 flex-shrink-0 mt-0.5" />
@@ -305,7 +305,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                 ))}
               </ul>
 
-              <div className="space-y-3 mt-auto">
+              <div className="space-y-4 mt-auto pt-2">
                 <a href={plan.learnMoreUrl}>
                   <Button 
                     className="w-full border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-600 hover:text-white active:text-white focus:text-violet-600 focus:bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all duration-200" 
