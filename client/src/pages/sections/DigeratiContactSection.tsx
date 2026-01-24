@@ -79,7 +79,7 @@ export const DigeratiContactSection = (): JSX.Element => {
   return (
     <section 
       id="contact" 
-      className="py-20 relative overflow-hidden bg-[#0a0a0a]"
+      className="py-12 lg:py-16 relative overflow-hidden bg-[#0a0a0a]"
     >
       {/* Subtle accent */}
       <div 
@@ -88,7 +88,7 @@ export const DigeratiContactSection = (): JSX.Element => {
       />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Left column - Info */}
           <motion.div
             initial={prefersReducedMotion ? {} : { opacity: 0, x: -30 }}
@@ -96,67 +96,65 @@ export const DigeratiContactSection = (): JSX.Element => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6 text-white">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold leading-tight mb-4 text-white">
               Ready to Secure Your Business?
             </h2>
-            <p className="text-lg text-gray-300 mb-8 leading-relaxed">
+            <p className="text-base text-gray-300 mb-6 leading-relaxed">
               Located in the heart of Chandler, we're your local cybersecurity experts. 
               Whether you need immediate help or want to explore our services, we're here for you.
             </p>
 
             {/* Contact info */}
-            <div className="space-y-4 mb-8">
+            <div className="space-y-3 mb-6">
               {contactInfo.map((item) => (
                 <a 
                   key={item.label}
                   href={item.href}
-                  className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.03] border border-white/10 hover:border-violet-500/30 hover:bg-white/[0.05] transition-all duration-300 group"
+                  className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10 hover:border-violet-500/30 hover:bg-white/[0.05] transition-all duration-300 group"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center">
-                    <item.icon className="h-5 w-5 text-violet-400" />
+                  <div className="w-9 h-9 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center">
+                    <item.icon className="h-4 w-4 text-violet-400" />
                   </div>
-                  <span className="text-white/70 group-hover:text-white transition-colors">{item.label}</span>
+                  <span className="text-sm text-white/70 group-hover:text-white transition-colors">{item.label}</span>
                 </a>
               ))}
             </div>
 
             {/* Office Hours */}
-            <div className="p-6 rounded-xl bg-white/[0.03] border border-white/10 mb-8">
-              <div className="flex items-center gap-3 mb-4">
-                <Clock className="h-5 w-5 text-violet-400" />
-                <h3 className="text-lg font-semibold text-white">Office Hours</h3>
+            <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10">
+              <div className="flex items-center gap-2 mb-2">
+                <Clock className="h-4 w-4 text-violet-400" />
+                <h3 className="text-base font-semibold text-white">Office Hours</h3>
               </div>
-              <div className="space-y-2 text-white/50">
+              <div className="space-y-1 text-sm text-white/50">
                 <p>Monday - Friday: 7:00 AM - 6:00 PM MST</p>
                 <p>Saturday & Sunday: Emergency Support Only</p>
-                <p className="flex items-center gap-2 text-emerald-500 font-semibold mt-3">
-                  <Shield className="h-4 w-4" />
+                <p className="flex items-center gap-2 text-emerald-500 font-semibold mt-2">
+                  <Shield className="h-3 w-3" />
                   24/7 Security Operations Center Always Active
                 </p>
               </div>
             </div>
 
-            {/* Social links */}
-            <div>
-              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Connect With Us</h3>
-              <div className="flex gap-3">
-                {[
-                  { icon: Linkedin, testId: "social-linkedin", href: "https://www.linkedin.com/company/digerati-experts" },
-                  { icon: Facebook, testId: "social-facebook", href: "https://www.facebook.com/digeratiexperts" },
-                  { icon: Twitter, testId: "social-twitter", href: "https://twitter.com/digeratiexperts" },
-                ].map((social) => (
-                  <a 
-                    key={social.testId}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    data-testid={social.testId}
-                    className="w-10 h-10 rounded-lg bg-white/[0.03] border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-violet-500/30 transition-all duration-300"
-                  >
-                    <social.icon className="h-5 w-5" />
-                  </a>
-                ))}
-              </div>
+            {/* Social links - inline */}
+            <div className="flex items-center gap-3 mt-4">
+              <span className="text-xs text-gray-500">Follow us:</span>
+              {[
+                { icon: Linkedin, testId: "social-linkedin", href: "https://www.linkedin.com/company/digerati-experts" },
+                { icon: Facebook, testId: "social-facebook", href: "https://www.facebook.com/digeratiexperts" },
+                { icon: Twitter, testId: "social-twitter", href: "https://twitter.com/digeratiexperts" },
+              ].map((social) => (
+                <a 
+                  key={social.testId}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-testid={social.testId}
+                  className="w-8 h-8 rounded-lg bg-white/[0.03] border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-violet-500/30 transition-all duration-300"
+                >
+                  <social.icon className="h-4 w-4" />
+                </a>
+              ))}
             </div>
           </motion.div>
 
@@ -169,23 +167,23 @@ export const DigeratiContactSection = (): JSX.Element => {
           >
             <div className="relative">
               <div className="absolute -inset-1 bg-violet-500/10 blur-xl rounded-2xl" />
-              <div className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 shadow-[0_8px_32px_rgba(139,92,246,0.15)]">
-                <h3 className="text-2xl font-bold text-white mb-2">Get in Touch</h3>
-                <p className="text-gray-400 mb-6">Fill out the form for a free consultation</p>
+              <div className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-5 md:p-6 shadow-[0_8px_32px_rgba(139,92,246,0.15)]">
+                <h3 className="text-xl font-bold text-white mb-1">Get in Touch</h3>
+                <p className="text-sm text-gray-400 mb-4">Fill out the form for a free consultation</p>
 
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-5">
+                  <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-3">
                     <FormField
                       control={form.control}
                       name="name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-300">Your Name *</FormLabel>
+                          <FormLabel className="text-sm text-gray-300">Your Name *</FormLabel>
                           <FormControl>
                             <Input 
                               placeholder="John Smith" 
                               data-testid="input-contact-name"
-                              className="h-12 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-400"
+                              className="h-10 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-400"
                               disabled={isSubmitting}
                               {...field} 
                             />
@@ -195,19 +193,19 @@ export const DigeratiContactSection = (): JSX.Element => {
                       )}
                     />
                     
-                    <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="grid sm:grid-cols-2 gap-3">
                       <FormField
                         control={form.control}
                         name="email"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-gray-300">Business Email *</FormLabel>
+                            <FormLabel className="text-sm text-gray-300">Business Email *</FormLabel>
                             <FormControl>
                               <Input 
                                 type="email" 
                                 placeholder="john@company.com" 
                                 data-testid="input-contact-email"
-                                className="h-12 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-400"
+                                className="h-10 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-400"
                                 disabled={isSubmitting}
                                 {...field} 
                               />
@@ -222,13 +220,13 @@ export const DigeratiContactSection = (): JSX.Element => {
                         name="phone"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-gray-300">Phone Number *</FormLabel>
+                            <FormLabel className="text-sm text-gray-300">Phone Number *</FormLabel>
                             <FormControl>
                               <Input 
                                 type="tel" 
                                 placeholder="(480) 000-0000" 
                                 data-testid="input-contact-phone"
-                                className="h-12 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-400"
+                                className="h-10 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-400"
                                 disabled={isSubmitting}
                                 {...field} 
                               />
@@ -244,12 +242,12 @@ export const DigeratiContactSection = (): JSX.Element => {
                       name="company"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-300">Company Name</FormLabel>
+                          <FormLabel className="text-sm text-gray-300">Company Name</FormLabel>
                           <FormControl>
                             <Input 
                               placeholder="Your Company Inc." 
                               data-testid="input-contact-company"
-                              className="h-12 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-400"
+                              className="h-10 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-400"
                               disabled={isSubmitting}
                               {...field} 
                             />
@@ -264,7 +262,7 @@ export const DigeratiContactSection = (): JSX.Element => {
                       name="service"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-300">Service Interested In</FormLabel>
+                          <FormLabel className="text-sm text-gray-300">Service Interested In</FormLabel>
                           <Select 
                             onValueChange={field.onChange} 
                             defaultValue={field.value}
@@ -272,7 +270,7 @@ export const DigeratiContactSection = (): JSX.Element => {
                           >
                             <FormControl>
                               <SelectTrigger 
-                                className="h-12 bg-white/10 border-white/20 text-white [&>span]:text-gray-400 focus:ring-purple-500"
+                                className="h-10 bg-white/10 border-white/20 text-white [&>span]:text-gray-400 focus:ring-purple-500"
                                 data-testid="select-contact-service"
                               >
                                 <SelectValue placeholder="Select a service" />
@@ -296,11 +294,11 @@ export const DigeratiContactSection = (): JSX.Element => {
                       name="message"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-300">Message</FormLabel>
+                          <FormLabel className="text-sm text-gray-300">Message</FormLabel>
                           <FormControl>
                             <Textarea 
                               placeholder="Tell us about your security needs..." 
-                              rows={4} 
+                              rows={3} 
                               data-testid="textarea-contact-message"
                               className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-400 resize-none"
                               disabled={isSubmitting}
@@ -313,7 +311,7 @@ export const DigeratiContactSection = (): JSX.Element => {
                     />
                     
                     <Button 
-                      className="w-full h-14 text-lg font-bold bg-violet-600 hover:bg-violet-700 border-0 shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all duration-300" 
+                      className="w-full h-11 text-base font-bold bg-violet-600 hover:bg-violet-700 border-0 shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all duration-300" 
                       data-testid="button-send-message"
                       type="submit"
                       disabled={isSubmitting}
