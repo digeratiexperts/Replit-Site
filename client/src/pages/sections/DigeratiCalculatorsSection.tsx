@@ -26,8 +26,8 @@ interface CalculatorProps {
 
 export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
-  const [downtimeExpanded, setDowntimeExpanded] = useState(false);
-  const [pricingExpanded, setPricingExpanded] = useState(false);
+  const [downtimeExpanded, setDowntimeExpanded] = useState(true);
+  const [pricingExpanded, setPricingExpanded] = useState(true);
 
   const {
     employees, setEmployees,
