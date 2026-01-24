@@ -293,7 +293,7 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
-      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden lg:flex flex-row items-center gap-1 py-1.5 px-2 rounded-full bg-black/90 backdrop-blur-md border border-white/10 shadow-2xl"
+      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden lg:flex flex-row items-center gap-1 py-2 px-3 rounded-full bg-black/95 backdrop-blur-xl border-2 border-violet-500/50 shadow-[0_0_20px_rgba(139,92,246,0.3),0_4px_20px_rgba(0,0,0,0.4)]"
       aria-label="Section navigation"
     >
       {sections.map((section, index) => {
@@ -307,9 +307,9 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
               e.stopPropagation();
               onNavigate(index);
             }}
-            className={`relative px-4 py-1.5 text-xs font-medium rounded-full transition-all duration-300 focus:outline-none ${
+            className={`relative px-4 py-1.5 text-xs font-medium rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-violet-400 ${
               isActive 
-                ? 'bg-white text-black shadow-lg' 
+                ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg shadow-violet-500/30' 
                 : 'text-white/70 hover:text-white hover:bg-white/10'
             }`}
             aria-label={`Go to ${section.label} (section ${index + 1} of ${sections.length})`}
