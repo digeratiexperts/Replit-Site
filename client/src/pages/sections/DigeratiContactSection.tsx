@@ -166,10 +166,10 @@ export const DigeratiContactSection = (): JSX.Element => {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div className="relative">
-              <div className="absolute -inset-1 bg-violet-500/10 blur-xl rounded-2xl" />
-              <div className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 shadow-[0_8px_32px_rgba(139,92,246,0.15)]">
-                <h3 className="text-lg font-bold text-white mb-0.5">Get in Touch</h3>
-                <p className="text-xs text-gray-400 mb-3">Fill out the form for a free consultation</p>
+              <div className="absolute -inset-1 bg-violet-500/5 blur-xl rounded-2xl" />
+              <div className="relative backdrop-blur-xl bg-white border border-gray-200 rounded-2xl p-4 md:p-5 shadow-xl">
+                <h3 className="text-lg font-bold text-gray-900 mb-0.5">Get in Touch</h3>
+                <p className="text-xs text-gray-500 mb-3">Fill out the form for a free consultation</p>
 
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-2">
@@ -178,12 +178,12 @@ export const DigeratiContactSection = (): JSX.Element => {
                       name="name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-sm text-gray-300">Your Name *</FormLabel>
+                          <FormLabel className="text-sm text-gray-700 font-medium">Your Name *</FormLabel>
                           <FormControl>
                             <Input 
                               placeholder="John Smith" 
                               data-testid="input-contact-name"
-                              className="h-10 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-400"
+                              className="h-10 bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus-visible:ring-violet-500 focus-visible:border-violet-400"
                               disabled={isSubmitting}
                               {...field} 
                             />
@@ -199,13 +199,13 @@ export const DigeratiContactSection = (): JSX.Element => {
                         name="email"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-sm text-gray-300">Business Email *</FormLabel>
+                            <FormLabel className="text-sm text-gray-700 font-medium">Business Email *</FormLabel>
                             <FormControl>
                               <Input 
                                 type="email" 
                                 placeholder="john@company.com" 
                                 data-testid="input-contact-email"
-                                className="h-10 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-400"
+                                className="h-10 bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus-visible:ring-violet-500 focus-visible:border-violet-400"
                                 disabled={isSubmitting}
                                 {...field} 
                               />
@@ -220,13 +220,13 @@ export const DigeratiContactSection = (): JSX.Element => {
                         name="phone"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-sm text-gray-300">Phone Number *</FormLabel>
+                            <FormLabel className="text-sm text-gray-700 font-medium">Phone Number *</FormLabel>
                             <FormControl>
                               <Input 
                                 type="tel" 
                                 placeholder="(480) 000-0000" 
                                 data-testid="input-contact-phone"
-                                className="h-10 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-400"
+                                className="h-10 bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus-visible:ring-violet-500 focus-visible:border-violet-400"
                                 disabled={isSubmitting}
                                 {...field} 
                               />
@@ -242,12 +242,12 @@ export const DigeratiContactSection = (): JSX.Element => {
                       name="company"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-sm text-gray-300">Company Name</FormLabel>
+                          <FormLabel className="text-sm text-gray-700 font-medium">Company Name</FormLabel>
                           <FormControl>
                             <Input 
                               placeholder="Your Company Inc." 
                               data-testid="input-contact-company"
-                              className="h-10 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-400"
+                              className="h-10 bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus-visible:ring-violet-500 focus-visible:border-violet-400"
                               disabled={isSubmitting}
                               {...field} 
                             />
@@ -262,7 +262,7 @@ export const DigeratiContactSection = (): JSX.Element => {
                       name="service"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-sm text-gray-300">Service Interested In</FormLabel>
+                          <FormLabel className="text-sm text-gray-700 font-medium">Service Interested In</FormLabel>
                           <Select 
                             onValueChange={field.onChange} 
                             defaultValue={field.value}
@@ -270,18 +270,18 @@ export const DigeratiContactSection = (): JSX.Element => {
                           >
                             <FormControl>
                               <SelectTrigger 
-                                className="h-10 bg-white/10 border-white/20 text-white [&>span]:text-gray-400 focus:ring-purple-500"
+                                className="h-10 bg-gray-50 border-gray-200 text-gray-900 [&>span]:text-gray-400 focus:ring-violet-500"
                                 data-testid="select-contact-service"
                               >
                                 <SelectValue placeholder="Select a service" />
                               </SelectTrigger>
                             </FormControl>
-                            <SelectContent className="bg-[#0a0a0a] border-white/20">
-                              <SelectItem value="managed-security" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Managed Security Services</SelectItem>
-                              <SelectItem value="managed-it" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Managed IT Services</SelectItem>
-                              <SelectItem value="compliance" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Compliance & Governance</SelectItem>
-                              <SelectItem value="incident-response" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Incident Response</SelectItem>
-                              <SelectItem value="assessment" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white">Security Assessment</SelectItem>
+                            <SelectContent className="bg-white border-gray-200">
+                              <SelectItem value="managed-security" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900">Managed Security Services</SelectItem>
+                              <SelectItem value="managed-it" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900">Managed IT Services</SelectItem>
+                              <SelectItem value="compliance" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900">Compliance & Governance</SelectItem>
+                              <SelectItem value="incident-response" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900">Incident Response</SelectItem>
+                              <SelectItem value="assessment" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900">Security Assessment</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -294,13 +294,13 @@ export const DigeratiContactSection = (): JSX.Element => {
                       name="message"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-sm text-gray-300">Message</FormLabel>
+                          <FormLabel className="text-sm text-gray-700 font-medium">Message</FormLabel>
                           <FormControl>
                             <Textarea 
                               placeholder="Tell us about your security needs..." 
                               rows={3} 
                               data-testid="textarea-contact-message"
-                              className="bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500 focus-visible:border-purple-400 resize-none"
+                              className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus-visible:ring-violet-500 focus-visible:border-violet-400 resize-none"
                               disabled={isSubmitting}
                               {...field} 
                             />
