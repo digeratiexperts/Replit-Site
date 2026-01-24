@@ -7,6 +7,8 @@ import NotFound from "@/pages/not-found";
 import { lazy, Suspense } from "react";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { ScrollProgress } from "@/components/ScrollProgress";
+import { ExitIntentPopup } from "@/components/ExitIntentPopup";
+import { StickyCTABar } from "@/components/StickyCTABar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PageLoadingSkeleton } from "@/components/LoadingSkeleton";
 import { AnnouncerProvider } from "@/components/AccessibleAnnouncer";
@@ -38,6 +40,7 @@ const Team = lazy(() => import("@/pages/about/Team"));
 const Compliance = lazy(() => import("@/pages/about/Compliance"));
 const SupportPage = lazy(() => import("@/pages/about/Support"));
 const Insurance = lazy(() => import("@/pages/about/Insurance"));
+const ComplianceCertifications = lazy(() => import("@/pages/about/ComplianceCertifications"));
 const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy"));
 const TermsOfUse = lazy(() => import("@/pages/legal/TermsOfUse"));
 const MSA = lazy(() => import("@/pages/legal/MSA"));
@@ -233,6 +236,11 @@ function Router() {
       <Route path="/about/insurance" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <Insurance />
+        </Suspense>
+      )} />
+      <Route path="/about/compliance-certifications" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ComplianceCertifications />
         </Suspense>
       )} />
       
@@ -552,6 +560,8 @@ function AppContent() {
         <Router />
       </div>
       <ScrollToTop />
+      <StickyCTABar />
+      <ExitIntentPopup delay={10000} />
     </AnnouncerProvider>
   );
 }

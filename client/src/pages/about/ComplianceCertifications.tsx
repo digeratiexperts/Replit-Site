@@ -1,0 +1,401 @@
+import { Shield, CheckCircle2, FileCheck, Building2, Heart, CreditCard, Lock, Award, ArrowRight, Clock, Users, FileText, ExternalLink } from "lucide-react";
+import { Link } from "wouter";
+import { Button } from "@/components/ui/button";
+import { MegaMenu } from "@/components/MegaMenu";
+import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
+import { motion } from "framer-motion";
+
+const complianceFrameworks = [
+  {
+    id: "hipaa",
+    name: "HIPAA",
+    fullName: "Health Insurance Portability and Accountability Act",
+    icon: Heart,
+    color: "from-violet-500 to-purple-600",
+    description: "Comprehensive protection for healthcare organizations handling Protected Health Information (PHI).",
+    industries: ["Healthcare Providers", "Medical Practices", "Dental Offices", "Mental Health", "Home Health", "Pharmacies"],
+    keyRequirements: [
+      "Administrative Safeguards - Workforce training, access management, contingency planning",
+      "Physical Safeguards - Facility access controls, workstation security, device controls",
+      "Technical Safeguards - Access controls, audit controls, encryption, integrity controls",
+      "Breach Notification - Incident response and notification procedures"
+    ],
+    ourCapabilities: [
+      "HIPAA Security Risk Assessments",
+      "Business Associate Agreements (BAAs)",
+      "PHI encryption at rest and in transit",
+      "Access logging and audit trails",
+      "Employee security awareness training",
+      "Incident response planning",
+      "Secure email and file sharing",
+      "HIPAA-compliant cloud infrastructure"
+    ]
+  },
+  {
+    id: "cmmc",
+    name: "CMMC",
+    fullName: "Cybersecurity Maturity Model Certification",
+    icon: Shield,
+    color: "from-purple-500 to-violet-600",
+    description: "Required certification for Department of Defense contractors handling Controlled Unclassified Information (CUI).",
+    industries: ["Defense Contractors", "DoD Suppliers", "Aerospace", "Manufacturing", "Engineering Firms", "Research Institutions"],
+    keyRequirements: [
+      "Level 1 - Basic cyber hygiene (17 practices)",
+      "Level 2 - Intermediate cyber hygiene (110 practices aligned with NIST 800-171)",
+      "Level 3 - Good cyber hygiene (additional 20 practices)",
+      "Third-party assessment and certification"
+    ],
+    ourCapabilities: [
+      "CMMC readiness assessments",
+      "Gap analysis and remediation planning",
+      "NIST 800-171 control implementation",
+      "System Security Plan (SSP) development",
+      "Plan of Action & Milestones (POA&M)",
+      "Continuous monitoring solutions",
+      "Enclave solutions for CUI handling",
+      "C3PAO preparation support"
+    ]
+  },
+  {
+    id: "pci-dss",
+    name: "PCI DSS",
+    fullName: "Payment Card Industry Data Security Standard",
+    icon: CreditCard,
+    color: "from-fuchsia-500 to-purple-600",
+    description: "Security standards for organizations that handle credit card transactions and cardholder data.",
+    industries: ["Retail", "E-commerce", "Restaurants", "Hotels", "Financial Services", "Healthcare with Payment Processing"],
+    keyRequirements: [
+      "Build and maintain secure network - Firewalls, secure configurations",
+      "Protect cardholder data - Encryption, secure storage",
+      "Maintain vulnerability management - Anti-malware, secure development",
+      "Access control measures - Restrict access, unique IDs, physical access",
+      "Network monitoring and testing - Track access, regular testing",
+      "Information security policy - Maintain comprehensive policies"
+    ],
+    ourCapabilities: [
+      "PCI DSS gap assessments",
+      "Scope reduction strategies",
+      "Network segmentation implementation",
+      "Cardholder data environment (CDE) security",
+      "Quarterly vulnerability scanning",
+      "Penetration testing coordination",
+      "Security awareness training",
+      "SAQ and ROC preparation assistance"
+    ]
+  },
+  {
+    id: "soc2",
+    name: "SOC 2",
+    fullName: "Service Organization Control 2",
+    icon: FileCheck,
+    color: "from-purple-500 to-violet-600",
+    description: "Trust Services Criteria for service organizations demonstrating security, availability, and confidentiality controls.",
+    industries: ["SaaS Companies", "Cloud Providers", "Data Centers", "Managed Service Providers", "Financial Tech", "Healthcare Tech"],
+    keyRequirements: [
+      "Security - Protection against unauthorized access",
+      "Availability - System availability for operation",
+      "Processing Integrity - Complete and accurate processing",
+      "Confidentiality - Protection of confidential information",
+      "Privacy - Personal information handling"
+    ],
+    ourCapabilities: [
+      "SOC 2 readiness assessments",
+      "Control design and implementation",
+      "Evidence collection and documentation",
+      "Continuous control monitoring",
+      "Policy and procedure development",
+      "Vendor risk management",
+      "Security awareness programs",
+      "Audit preparation and support"
+    ]
+  },
+  {
+    id: "ftc-safeguards",
+    name: "FTC Safeguards",
+    fullName: "FTC Safeguards Rule (GLBA)",
+    icon: Building2,
+    color: "from-violet-400 to-fuchsia-500",
+    description: "Required security program for non-banking financial institutions under Gramm-Leach-Bliley Act.",
+    industries: ["Tax Preparers", "Accountants", "Financial Advisors", "Mortgage Brokers", "Auto Dealers", "Collection Agencies"],
+    keyRequirements: [
+      "Qualified Individual - Designated security coordinator",
+      "Risk Assessment - Written assessment of risks",
+      "Safeguards Implementation - Controls to address identified risks",
+      "Service Provider Oversight - Due diligence and contracts",
+      "Continuous Evaluation - Regular testing and updates",
+      "Incident Response - Written response plan"
+    ],
+    ourCapabilities: [
+      "Qualified Individual as-a-service",
+      "Comprehensive risk assessments",
+      "Written Information Security Program (WISP)",
+      "Multi-factor authentication implementation",
+      "Encryption for customer data",
+      "Annual penetration testing",
+      "Employee training programs",
+      "Vendor security assessments"
+    ]
+  }
+];
+
+const certifications = [
+  { name: "Microsoft Partner", logo: "🏆" },
+  { name: "CompTIA Security+", logo: "🛡️" },
+  { name: "Certified Ethical Hacker", logo: "🔐" },
+  { name: "CISSP", logo: "📜" },
+  { name: "AWS Certified", logo: "☁️" },
+  { name: "Azure Certified", logo: "💠" }
+];
+
+export default function ComplianceCertifications() {
+  return (
+    <div className="min-h-screen bg-slate-950">
+      <MegaMenu />
+
+        {/* Hero Section */}
+        <section className="relative pt-32 pb-20 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-violet-900/20 via-slate-950 to-purple-900/20" />
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl" />
+          
+          <div className="relative container mx-auto px-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="max-w-4xl mx-auto text-center"
+              data-testid="section-hero-compliance"
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6" data-testid="badge-compliance-header">
+                <Shield className="w-4 h-4 text-violet-400" />
+                <span className="text-violet-300 text-sm font-medium">Compliance & Certifications</span>
+              </div>
+              
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6" data-testid="heading-compliance-hero">
+                Navigate Compliance with{" "}
+                <span className="bg-gradient-to-r from-violet-300 via-purple-300 to-fuchsia-300 bg-clip-text text-transparent">
+                  Confidence
+                </span>
+              </h1>
+              
+              <p className="text-xl text-white/70 mb-8 max-w-3xl mx-auto" data-testid="text-compliance-description">
+                From HIPAA to CMMC to PCI-DSS, we help Arizona businesses achieve, maintain, and demonstrate 
+                regulatory compliance with comprehensive security programs tailored to your industry.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button
+                  asChild
+                  size="lg"
+                  className="bg-white text-violet-700 hover:bg-violet-50 font-semibold px-8"
+                  data-testid="button-compliance-assessment"
+                >
+                  <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                    Get Compliance Assessment
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </a>
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="border-violet-500/30 text-violet-300 hover:bg-violet-500/10"
+                  data-testid="button-download-guide"
+                >
+                  <Link href="/resources/security-checklist">
+                    Download Compliance Guide
+                  </Link>
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Why Compliance Matters */}
+        <section className="py-16 border-t border-white/10" data-testid="section-why-compliance">
+          <div className="container mx-auto px-6">
+            <div className="grid md:grid-cols-4 gap-6">
+              {[
+                { icon: Lock, title: "Avoid Fines", desc: "HIPAA fines up to $1.9M per violation", id: "avoid-fines" },
+                { icon: Users, title: "Win Contracts", desc: "CMMC required for DoD contracts", id: "win-contracts" },
+                { icon: Award, title: "Build Trust", desc: "Demonstrate security to customers", id: "build-trust" },
+                { icon: Clock, title: "Save Time", desc: "Streamlined audit preparation", id: "save-time" }
+              ].map((item) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                  viewport={{ once: true }}
+                  className="p-6 rounded-xl bg-white/[0.02] border border-white/10 text-center"
+                  data-testid={`card-why-compliance-${item.id}`}
+                >
+                  <div className="w-12 h-12 rounded-lg bg-violet-500/10 flex items-center justify-center mx-auto mb-4">
+                    <item.icon className="w-6 h-6 text-violet-400" />
+                  </div>
+                  <h3 className="text-white font-semibold mb-2" data-testid={`heading-${item.id}`}>{item.title}</h3>
+                  <p className="text-white/60 text-sm">{item.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Framework Details */}
+        <section className="py-20" data-testid="section-frameworks">
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4" data-testid="heading-frameworks">
+                Compliance Frameworks We Support
+              </h2>
+              <p className="text-white/60 max-w-2xl mx-auto" data-testid="text-frameworks-description">
+                Deep expertise across major regulatory frameworks with proven methodologies for achieving and maintaining compliance.
+              </p>
+            </div>
+
+            <div className="space-y-12">
+              {complianceFrameworks.map((framework, index) => (
+                <motion.div
+                  key={framework.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  id={framework.id}
+                  className="rounded-2xl border border-white/10 overflow-hidden bg-white/[0.02]"
+                  data-testid={`section-compliance-${framework.id}`}
+                >
+                  {/* Header */}
+                  <div className={`p-6 bg-gradient-to-r ${framework.color} bg-opacity-10`} data-testid={`header-${framework.id}`}>
+                    <div className="flex items-start gap-4">
+                      <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${framework.color} flex items-center justify-center flex-shrink-0`}>
+                        <framework.icon className="w-7 h-7 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-1">
+                          <h3 className="text-2xl font-bold text-white" data-testid={`heading-${framework.id}`}>{framework.name}</h3>
+                          <span className="px-3 py-1 rounded-full bg-white/10 text-white/70 text-xs font-medium" data-testid={`badge-industries-count-${framework.id}`}>
+                            {framework.industries.length} Industries
+                          </span>
+                        </div>
+                        <p className="text-white/80 font-medium" data-testid={`text-fullname-${framework.id}`}>{framework.fullName}</p>
+                        <p className="text-white/60 mt-2" data-testid={`text-description-${framework.id}`}>{framework.description}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-6 grid md:grid-cols-2 gap-8">
+                    {/* Key Requirements */}
+                    <div data-testid={`list-requirements-${framework.id}`}>
+                      <h4 className="text-white font-semibold mb-4 flex items-center gap-2">
+                        <FileText className="w-5 h-5 text-violet-400" />
+                        Key Requirements
+                      </h4>
+                      <ul className="space-y-3">
+                        {framework.keyRequirements.map((req, i) => (
+                          <li key={i} className="flex items-start gap-3" data-testid={`item-requirement-${framework.id}-${i}`}>
+                            <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                            <span className="text-white/70 text-sm">{req}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Our Capabilities */}
+                    <div data-testid={`list-capabilities-${framework.id}`}>
+                      <h4 className="text-white font-semibold mb-4 flex items-center gap-2">
+                        <Shield className="w-5 h-5 text-violet-400" />
+                        Our Capabilities
+                      </h4>
+                      <ul className="space-y-2">
+                        {framework.ourCapabilities.map((cap, i) => (
+                          <li key={i} className="flex items-center gap-2" data-testid={`item-capability-${framework.id}-${i}`}>
+                            <div className="w-1.5 h-1.5 rounded-full bg-violet-400" />
+                            <span className="text-white/70 text-sm">{cap}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Industries */}
+                  <div className="px-6 pb-6">
+                    <div className="p-4 rounded-lg bg-white/[0.04] border border-white/[0.08]" data-testid={`list-industries-${framework.id}`}>
+                      <span className="text-white/50 text-xs uppercase tracking-wider">Industries We Serve:</span>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {framework.industries.map((industry, i) => (
+                          <span key={i} className="px-3 py-1 rounded-full bg-violet-500/10 text-violet-300 text-xs" data-testid={`badge-industry-${framework.id}-${i}`}>
+                            {industry}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Our Certifications */}
+        <section className="py-16 border-t border-white/10" data-testid="section-team-certifications">
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-12">
+              <h2 className="text-2xl font-bold text-white mb-2" data-testid="heading-certifications">Our Team Certifications</h2>
+              <p className="text-white/60">Industry-recognized credentials backing our expertise</p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-6" data-testid="list-certifications">
+              {certifications.map((cert, i) => (
+                <div key={i} className="flex items-center gap-3 px-6 py-3 rounded-xl bg-white/[0.04] border border-white/10" data-testid={`badge-certification-${i}`}>
+                  <span className="text-2xl">{cert.logo}</span>
+                  <span className="text-white/80 font-medium">{cert.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-20 bg-gradient-to-br from-violet-900/30 via-slate-950 to-purple-900/30">
+          <div className="container mx-auto px-6">
+            <div className="max-w-3xl mx-auto text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                Ready to Achieve Compliance?
+              </h2>
+              <p className="text-white/70 mb-8">
+                Schedule a free compliance assessment to understand your current posture, identify gaps, 
+                and create a roadmap to full compliance.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button
+                  asChild
+                  size="lg"
+                  className="bg-white text-violet-700 hover:bg-violet-50 font-semibold px-8"
+                  data-testid="button-schedule-assessment"
+                >
+                  <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                    Schedule Free Assessment
+                    <ExternalLink className="ml-2 h-4 w-4" />
+                  </a>
+                </Button>
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="border-violet-500/30 text-violet-300 hover:bg-violet-500/10"
+                  data-testid="button-contact-us"
+                >
+                  <Link href="/#contact">
+                    Contact Us
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      <DigeratiEnhancedFooterSection />
+    </div>
+  );
+}
