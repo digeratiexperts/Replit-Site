@@ -293,11 +293,10 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
       initial={{ opacity: 0, x: 10 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 10 }}
-      className="fixed right-3 z-50 hidden lg:flex flex-col items-center gap-1 py-2 px-1 rounded-full"
+      className="fixed right-4 z-50 hidden lg:flex flex-col items-center gap-1.5 py-3 px-1.5 rounded-full bg-black/20 backdrop-blur-sm border border-white/10"
       style={{
-        top: '50%',
+        top: '35%',
         transform: 'translateY(-50%)',
-        marginTop: '-80px',
       }}
       aria-label="Section navigation"
     >
@@ -380,7 +379,7 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
             
             <motion.span 
               animate={isActive ? {
-                scale: [1, 1.1, 1],
+                scale: [1, 1.15, 1],
               } : {}}
               transition={{
                 duration: 2,
@@ -389,13 +388,13 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
               }}
               className={`block rounded-full transition-all duration-300 relative z-10 ${
                 isActive 
-                  ? 'w-2 h-2 bg-violet-400'
-                  : 'w-1.5 h-1.5 bg-violet-400/50 hover:bg-violet-400/80'
+                  ? 'w-2.5 h-2.5 bg-violet-400 ring-2 ring-violet-400/40 ring-offset-1 ring-offset-black/50'
+                  : 'w-2 h-2 bg-white/40 hover:bg-white/70 border border-white/20'
               }`}
               style={{
                 boxShadow: isActive 
-                  ? '0 0 10px rgba(167, 139, 250, 0.9), 0 1px 3px rgba(0, 0, 0, 0.4)' 
-                  : '0 1px 2px rgba(0, 0, 0, 0.3)',
+                  ? '0 0 12px rgba(167, 139, 250, 1), 0 2px 4px rgba(0, 0, 0, 0.5)' 
+                  : '0 1px 3px rgba(0, 0, 0, 0.4)',
                 transition: 'all 0.3s ease'
               }}
             />
