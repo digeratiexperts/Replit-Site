@@ -97,6 +97,33 @@ The project follows a modular structure (`client/` and `server/`), using UUIDs f
 - `server/zoho/zohoCRM.ts` - CRM API service
 - `server/zoho/zohoBilling.ts` - Billing API service
 
+### Data Isolation Pattern
+All portal endpoints scope Zoho queries by authenticated user's email to prevent tenant data leakage:
+- **Dashboard**: Tickets scoped via `getContactByEmail` + `getTicketsByContact`, invoices via `getCustomerByEmail`
+- **Billing**: Subscription/invoices scoped to user's billing customer
+- **Company**: Account/contacts scoped via CRM contact email lookup
+- **Invoices**: All invoices scoped to user's billing customer
+
+### Response Format
+All Zoho-integrated endpoints return consistent structure:
+```typescript
+{
+  data: T,                    // The actual data (tickets, invoices, etc.)
+  zohoConnected: boolean,     // Whether user-specific Zoho data was found
+  message?: string            // Fallback message if Zoho data unavailable
+}
+```
+
+### Portal Pages
+| Route | Component | Description |
+|-------|-----------|-------------|
+| `/portal/dashboard` | PortalDashboard | Overview with tickets, services, invoices from Zoho |
+| `/portal/billing` | PortalBilling | Subscription details and invoices from Zoho Billing |
+| `/portal/company` | PortalCompany | Company profile and team from Zoho CRM |
+| `/portal/invoices` | PortalInvoices | Full invoice list from Zoho Billing |
+| `/portal/tickets` | PortalTickets | Support tickets from Zoho Desk |
+| `/portal/tickets/new` | PortalCreateTicket | Create ticket (syncs to Zoho Desk) |
+
 ## External Dependencies
 - **Stripe**: Payments and subscription management (`stripe-replit-sync`)
 - **Zelle**: Bank transfer payments
