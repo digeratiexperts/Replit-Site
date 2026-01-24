@@ -9,7 +9,7 @@ import { DigeratiAlertBanner } from "./sections/DigeratiAlertBanner";
 import { DigeratiServicesSection } from "./sections/DigeratiServicesSection";
 import { DigeratiHowWeProtectSection } from "./sections/DigeratiHowWeProtectSection";
 import { DigeratiCalculatorsSection } from "./sections/DigeratiCalculatorsSection";
-import { DigeratiLeadFormSection } from "./sections/DigeratiLeadFormSection";
+// DigeratiLeadFormSection removed - hero already has lead form
 import { DigeratiWhatWeTackleSection } from "./sections/DigeratiWhatWeTackleSection";
 import { DigeratiThreatsInsightsSection } from "./sections/DigeratiThreatsInsightsSection";
 import { DigeratiAIAssistanceSection } from "./sections/DigeratiAIAssistanceSection";
@@ -19,7 +19,7 @@ import { DigeratiTestimonialsSection } from "./sections/DigeratiTestimonialsSect
 import { DigeratiFAQSection } from "./sections/DigeratiFAQSection";
 import { DigeratiCTASection } from "./sections/DigeratiCTASection";
 import { DigeratiNewsletterSection } from "./sections/DigeratiNewsletterSection";
-import { PremiumCTASection } from "@/components/PremiumCTASection";
+// PremiumCTASection removed - keeping only one CTA section
 import { DigeratiContactSection } from "./sections/DigeratiContactSection";
 import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooterSection";
 import { DigeratiStatsSection } from "./sections/DigeratiStatsSection";
@@ -109,20 +109,11 @@ export const DigeratiHomepage = (): JSX.Element => {
         serviceCost={serviceCost}
       />
 
-      {/* Lead Form Section - Below Downtime Calculator */}
-      <DigeratiLeadFormSection />
-
       {/* What We Tackle Section */}
       <DigeratiWhatWeTackleSection />
 
       {/* Industries Section */}
       <DigeratiIndustriesSection />
-
-      {/* Premium CTA Section */}
-      <PremiumCTASection 
-        headline="Ready to Secure Your Business?"
-        subheadline="Get enterprise-grade protection tailored for Arizona businesses. Let's discuss your security needs."
-      />
 
       {/* Pricing Section */}
       <DigeratiPricingSection />

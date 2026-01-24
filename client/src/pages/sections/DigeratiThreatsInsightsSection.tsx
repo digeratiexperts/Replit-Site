@@ -1,11 +1,15 @@
-import { Calendar, User, ArrowRight, AlertCircle, Shield, Lock, Zap } from "lucide-react";
+import { Calendar, User, ArrowRight, AlertCircle, Shield, Lock, Zap, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion, useReducedMotion } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
 
 export const DigeratiThreatsInsightsSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
   
   const insights = [
     {
@@ -48,35 +52,63 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
 
   const categories = ["All", "CISA Alerts", "Ransomware", "Compliance", "Best Practices"];
 
+  const checkScrollButtons = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    }
+  };
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', checkScrollButtons);
+      checkScrollButtons();
+      return () => container.removeEventListener('scroll', checkScrollButtons);
+    }
+  }, []);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 320;
+      scrollContainerRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
-    <section className="py-24 relative overflow-hidden bg-[#0a0a0a]">
+    <section className="py-16 md:py-20 lg:py-24 relative overflow-hidden bg-[#0a0a0a]">
       {/* Subtle violet accent glow */}
       <div className="absolute inset-0 pointer-events-none"
            style={{ background: "radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.06) 0%, transparent 60%)" }} />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div 
-          className="text-center mb-12"
+          className="text-center mb-8 md:mb-12"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <Badge className="mb-4 bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30">
+          <Badge className="mb-3 md:mb-4 bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 text-xs md:text-sm">
             <Zap className="w-3 h-3 mr-1" />
             24/7 Security Response Team
           </Badge>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 px-2">
             Recent Threats & <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-violet-400 to-purple-400">Insights</span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+          <p className="text-base md:text-lg lg:text-xl text-gray-400 max-w-3xl mx-auto px-4">
             Stay ahead of cyber threats with real-time alerts and expert analysis from our security team.
           </p>
         </motion.div>
 
-        {/* Category filters */}
+        {/* Category filters - horizontal scroll on mobile */}
         <motion.div 
-          className="flex flex-wrap justify-center gap-2 mb-10"
+          className="flex overflow-x-auto scrollbar-hide gap-2 mb-8 md:mb-10 pb-2 md:justify-center"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -85,7 +117,7 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
           {categories.map((category, index) => (
             <button
               key={index}
-              className={`px-4 py-2 rounded-full transition-all duration-300 text-sm font-medium ${
+              className={`px-3 md:px-4 py-1.5 md:py-2 rounded-full transition-all duration-300 text-xs md:text-sm font-medium whitespace-nowrap flex-shrink-0 ${
                 index === 0
                   ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-500/25"
                   : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10"
@@ -97,7 +129,106 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
           ))}
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        {/* Mobile: Horizontal scroll */}
+        <div className="lg:hidden relative mb-8">
+          {/* Scroll buttons */}
+          <button
+            onClick={() => scroll('left')}
+            className={`absolute left-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/80 backdrop-blur-sm border border-white/20 flex items-center justify-center transition-all ${
+              canScrollLeft ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
+            aria-label="Scroll left"
+            data-testid="threats-scroll-left"
+          >
+            <ChevronLeft className="w-5 h-5 text-white" />
+          </button>
+          
+          <button
+            onClick={() => scroll('right')}
+            className={`absolute right-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/80 backdrop-blur-sm border border-white/20 flex items-center justify-center transition-all ${
+              canScrollRight ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
+            aria-label="Scroll right"
+            data-testid="threats-scroll-right"
+          >
+            <ChevronRight className="w-5 h-5 text-white" />
+          </button>
+
+          {/* Gradient edges */}
+          <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+
+          <div 
+            ref={scrollContainerRef}
+            className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 px-2 snap-x snap-mandatory"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {insights.map((insight, index) => (
+              <div
+                key={index}
+                className="flex-shrink-0 w-[300px] sm:w-[340px] snap-center"
+              >
+                <Card 
+                  className="h-full bg-white/5 backdrop-blur-xl border-white/10 hover:border-white/20 transition-all duration-300 hover:bg-white/[0.07] overflow-hidden"
+                  data-testid={`insight-card-${index}`}
+                >
+                  <div className={`h-1 bg-gradient-to-r ${insight.gradient}`} />
+                  
+                  <CardHeader className="pb-3 p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-3 gap-2">
+                      <Badge 
+                        className={`${
+                          insight.urgent 
+                            ? 'bg-red-500/20 text-red-400 border-red-500/30' 
+                            : 'bg-violet-500/20 text-violet-400 border-violet-500/30'
+                        } border text-xs`}
+                      >
+                        <span className="flex items-center gap-1">
+                          {insight.icon}
+                          <span className="hidden sm:inline">{insight.category}</span>
+                          <span className="sm:hidden">{insight.category.split(' ')[0]}</span>
+                        </span>
+                      </Badge>
+                      <span className="text-[10px] sm:text-xs text-gray-500 flex items-center gap-1 whitespace-nowrap">
+                        <Calendar className="h-3 w-3" />
+                        <span className="hidden sm:inline">{insight.date}</span>
+                        <span className="sm:hidden">{insight.date.split(',')[0]}</span>
+                      </span>
+                    </div>
+                    <CardTitle className="text-base sm:text-lg text-white line-clamp-2">
+                      {insight.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-4 sm:p-6 pt-0">
+                    <CardDescription className="text-gray-400 mb-4 line-clamp-3 text-sm">
+                      {insight.excerpt}
+                    </CardDescription>
+                    <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                      <div className="flex items-center gap-2 text-[10px] sm:text-xs text-gray-500">
+                        <User className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                        <span className="hidden sm:inline">{insight.author}</span>
+                        <span className="sm:hidden">{insight.author.split(' ')[0]}</span>
+                        <span>•</span>
+                        <span>{insight.readTime}</span>
+                      </div>
+                      <Link 
+                        href="/resources/security-updates"
+                        className="text-purple-400 hover:text-purple-300 font-medium text-xs sm:text-sm flex items-center gap-1"
+                      >
+                        <span className="hidden sm:inline">Know More</span>
+                        <span className="sm:hidden">More</span>
+                        <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop: Grid layout */}
+        <div className="hidden lg:grid grid-cols-3 gap-6 mb-12">
           {insights.map((insight, index) => (
             <motion.div
               key={index}
@@ -110,7 +241,6 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
                 className="group h-full bg-white/5 backdrop-blur-xl border-white/10 hover:border-white/20 transition-all duration-300 hover:bg-white/[0.07] overflow-hidden"
                 data-testid={`insight-card-${index}`}
               >
-                {/* Gradient accent line */}
                 <div className={`h-1 bg-gradient-to-r ${insight.gradient}`} />
                 
                 <CardHeader className="pb-3">
@@ -170,7 +300,7 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
         >
           <Link 
             href="/resources/security-updates"
-            className="px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-500 hover:to-indigo-500 transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 font-semibold inline-flex items-center gap-2 hover:scale-105"
+            className="px-6 md:px-8 py-2.5 md:py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-500 hover:to-indigo-500 transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 font-semibold inline-flex items-center gap-2 hover:scale-105 text-sm md:text-base"
             data-testid="view-all-updates"
           >
             View All Security Updates
