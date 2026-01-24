@@ -184,23 +184,23 @@ function NavigationDots({ sections, currentSection, onNavigate, isVisible }: Nav
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 20 }}
-      className="fixed right-4 lg:right-6 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col items-center gap-2"
+      className="fixed right-3 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col items-center gap-1.5"
       aria-label="Section navigation"
     >
       {sections.map((section, index) => (
         <button
           key={section.id}
           onClick={() => onNavigate(index)}
-          className="group relative p-1.5 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded-full"
+          className="group relative p-1 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded-full"
           aria-label={`Go to ${section.label}`}
           aria-current={currentSection === index ? 'true' : undefined}
           data-testid={`nav-dot-${section.id}`}
         >
           <span 
-            className={`block w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+            className={`block w-2 h-2 rounded-full transition-all duration-300 border ${
               currentSection === index 
-                ? 'bg-violet-400 scale-125 shadow-[0_0_10px_rgba(139,92,246,0.6)]' 
-                : 'bg-white/20 hover:bg-white/40'
+                ? 'bg-transparent border-white scale-125 shadow-[0_0_8px_rgba(255,255,255,0.4)]' 
+                : 'bg-transparent border-white/40 hover:border-white/70'
             }`}
           />
           <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-2 py-1 bg-black/80 backdrop-blur-sm text-xs text-white rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-white/10">
@@ -228,19 +228,19 @@ function ScrollDownIndicator({ onScrollDown, isVisible }: ScrollDownIndicatorPro
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           onClick={onScrollDown}
-          className="fixed bottom-8 left-1/2 -translate-x-1/2 z-40 p-3 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:border-violet-400/50 transition-all group focus:outline-none focus:ring-2 focus:ring-violet-400"
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 p-2.5 rounded-full bg-white/5 backdrop-blur-sm border border-white/20 hover:bg-white/10 hover:border-violet-400/50 transition-all group focus:outline-none focus:ring-2 focus:ring-violet-400 hidden lg:flex"
           aria-label="Scroll to next section"
           data-testid="scroll-down-btn"
         >
           <motion.div
-            animate={{ y: [0, 6, 0] }}
+            animate={{ y: [0, 4, 0] }}
             transition={{ 
               duration: 1.5, 
               repeat: Infinity, 
               ease: "easeInOut" 
             }}
           >
-            <ChevronDown className="w-6 h-6 text-white/60 group-hover:text-violet-400 transition-colors" />
+            <ChevronDown className="w-5 h-5 text-white/60 group-hover:text-violet-400 transition-colors" />
           </motion.div>
         </motion.button>
       )}
@@ -262,11 +262,11 @@ function ScrollUpButton({ onScrollUp, isVisible }: ScrollUpButtonProps) {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
           onClick={onScrollUp}
-          className="fixed bottom-8 right-4 lg:right-20 z-40 p-3 rounded-full bg-violet-600/80 backdrop-blur-sm border border-violet-500/50 hover:bg-violet-500 transition-all group focus:outline-none focus:ring-2 focus:ring-violet-400 shadow-lg shadow-violet-500/30"
+          className="fixed bottom-6 right-[5.5rem] z-30 p-2.5 rounded-full bg-violet-600/80 backdrop-blur-sm border border-violet-500/50 hover:bg-violet-500 transition-all group focus:outline-none focus:ring-2 focus:ring-violet-400 shadow-lg shadow-violet-500/30 hidden lg:flex"
           aria-label="Scroll to top"
           data-testid="scroll-up-btn"
         >
-          <ChevronUp className="w-5 h-5 text-white" />
+          <ChevronUp className="w-4 h-4 text-white" />
         </motion.button>
       )}
     </AnimatePresence>
