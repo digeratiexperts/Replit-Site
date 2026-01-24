@@ -14,6 +14,7 @@ import { FloatingParticles, DashboardMockup, AnimatedShield, NetworkNodes } from
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useSEO } from "@/hooks/useSEO";
 
 const assessmentFormSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters").max(50),
@@ -52,10 +53,13 @@ export function LocationServicePage(props: LocationPageProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
+  useSEO({
+    title: props.title,
+    description: props.description,
+    canonical: `/locations/${props.city.toLowerCase().replace(/\s+/g, '-')}-az`,
+  });
+
   useEffect(() => {
-    document.title = `${props.title} | Digerati Experts`;
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) metaDesc.setAttribute('content', props.description);
     
     // Add local business JSON-LD schema
     const existingSchema = document.querySelector('script[data-schema="local-business"]');

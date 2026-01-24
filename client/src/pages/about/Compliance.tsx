@@ -6,6 +6,7 @@ export default function Compliance() {
       title="Audit-Ready Compliance Documentation"
       subtitle="Enterprise-grade compliance evidence for your business"
       description="Digerati Experts provides comprehensive compliance documentation that helps you pass audits and meet regulatory requirements. Our documented evidence trails, control mapping, and audit packets are ready when you need them."
+      canonical="/about/compliance"
       features={[
         { title: "Framework Mapping", description: "Complete mapping of our controls to HIPAA, GDPR, FTC Safeguards, CIS, and SOC 2" },
         { title: "Evidence Retention", description: "Automated collection and archival of training logs, access reviews, baselines, and incident trails" },

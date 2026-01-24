@@ -1,9 +1,16 @@
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
 import { Shield, Lock, Database, FileText, AlertTriangle } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function PrivacyPolicy() {
   const lastUpdated = "November 6, 2025";
+
+  useSEO({
+    title: 'Privacy Policy',
+    description: 'Digerati Experts privacy policy. Learn how we collect, use, and protect your personal information in accordance with Arizona and federal laws.',
+    canonical: '/privacy',
+  });
 
   return (
     <div className="min-h-screen bg-slate-900">

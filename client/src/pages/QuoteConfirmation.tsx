@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useLocation } from 'wouter';
 import { CheckCircle, Calendar, Mail, ArrowRight } from 'lucide-react';
+import { useSEO } from '@/hooks/useSEO';
 
 interface ConfirmationData {
   plan: string;
@@ -12,6 +13,12 @@ interface ConfirmationData {
 }
 
 export default function QuoteConfirmation() {
+  useSEO({
+    title: 'Quote Confirmation',
+    description: 'Your IT services quote has been submitted. Review your recommended plan and schedule a consultation.',
+    noIndex: true,
+  });
+
   const [data, setData] = useState<ConfirmationData | null>(null);
   const [, setLocation] = useLocation();
 

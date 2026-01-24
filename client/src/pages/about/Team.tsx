@@ -3,9 +3,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Shield, Award, Briefcase, Users, Star, Trophy, CheckCircle } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function Team() {
   const prefersReducedMotion = useReducedMotion() ?? false;
+
+  useSEO({
+    title: 'Our Team - Certified IT & Security Experts',
+    description: 'Meet the Digerati Experts team. Certified cybersecurity professionals, system engineers, and IT support specialists serving Arizona businesses.',
+    canonical: '/about/team',
+  });
   
   const team = [
     {

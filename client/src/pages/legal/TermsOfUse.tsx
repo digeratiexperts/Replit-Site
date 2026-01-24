@@ -1,9 +1,16 @@
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
 import { FileText, Shield, AlertTriangle, Scale, Clock, DollarSign } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function TermsOfUse() {
   const lastUpdated = "November 6, 2025";
+
+  useSEO({
+    title: 'Terms of Service',
+    description: 'Digerati Experts terms of service. Read the terms and conditions governing use of our managed security and IT services.',
+    canonical: '/terms',
+  });
 
   return (
     <div className="min-h-screen bg-slate-900">

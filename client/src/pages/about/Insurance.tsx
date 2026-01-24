@@ -6,6 +6,7 @@ export default function Insurance() {
       title="Insurance-Aligned Security & Compliance"
       subtitle="Meet your cyber insurance carrier requirements"
       description="Digerati Experts builds your security posture to meet cyber insurance requirements. We help you satisfy carrier mandates, reduce premiums through better security controls, and maintain the documentation needed for claims."
+      canonical="/about/insurance"
       features={[
         { title: "Insurance Control Alignment", description: "Security controls mapped to carrier requirements and underwriting criteria" },
         { title: "Documentation for Claims", description: "Comprehensive incident documentation and forensic evidence for claim support" },

@@ -1,7 +1,14 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { AlertCircle } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function NotFound() {
+  useSEO({
+    title: '404 - Page Not Found',
+    description: 'The page you are looking for could not be found. Return to the Digerati Experts homepage for managed IT and cybersecurity services.',
+    noIndex: true,
+  });
+
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
       <Card className="w-full max-w-md mx-4">

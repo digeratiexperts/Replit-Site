@@ -7,9 +7,16 @@ import {
   Activity, RefreshCw, Lock, Users, Cloud, FileCheck, Zap, 
   BarChart3, Clock, Phone, Award
 } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 const SolutionsIndex = () => {
   const prefersReducedMotion = useReducedMotion();
+
+  useSEO({
+    title: 'Managed IT & Security Solutions',
+    description: 'Comprehensive managed IT and cybersecurity solutions. Network security, endpoint protection, cloud security, compliance support, and 24/7 monitoring for Arizona businesses.',
+    canonical: '/solutions',
+  });
 
   const plans = [
     {

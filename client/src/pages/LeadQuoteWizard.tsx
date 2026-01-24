@@ -10,6 +10,7 @@ import { z } from 'zod';
 import { ArrowRight, ChevronLeft, Loader2 } from 'lucide-react';
 import { isValidCorporateEmail } from '@/lib/emailValidator';
 import { useLocation } from 'wouter';
+import { useSEO } from '@/hooks/useSEO';
 
 // Step 1: Seat sizing
 const step1Schema = z.object({
@@ -100,6 +101,12 @@ const getPlanMatch = (data: {
 };
 
 export default function LeadQuoteWizard() {
+  useSEO({
+    title: 'Get a Quote - IT Services Pricing',
+    description: 'Get an instant quote for managed IT and cybersecurity services. Simple 3-step process to find the right plan for your business.',
+    canonical: '/quote',
+  });
+
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showResults, setShowResults] = useState(false);

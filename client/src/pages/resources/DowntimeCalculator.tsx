@@ -7,6 +7,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { ArrowRight, Plus, Minus, Calculator, DollarSign, Clock, TrendingUp, Shield } from "lucide-react";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiFooterSection } from "@/pages/sections/DigeratiFooterSection";
+import { useSEO } from "@/hooks/useSEO";
 
 const industryMultipliers: Record<string, { name: string; multiplier: number }> = {
   'general-office': { name: 'General Office', multiplier: 1.6 },
@@ -28,6 +29,12 @@ const servicePackages: Record<string, { name: string; price: number }> = {
 };
 
 export default function DowntimeCalculator() {
+  useSEO({
+    title: 'Downtime Cost Calculator',
+    description: 'Calculate how much IT downtime costs your business. Free downtime cost calculator shows the real impact of outages on your productivity and revenue.',
+    canonical: '/resources/downtime-calculator',
+  });
+
   const [activeTab, setActiveTab] = useState<'downtime' | 'service'>('downtime');
   
   // Downtime calculator state

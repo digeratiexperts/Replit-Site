@@ -6,6 +6,7 @@ export default function Support() {
       title="Fast, Reliable Support & Response"
       subtitle="15-minute response guarantee for your peace of mind"
       description="Digerati Experts commits to rapid response and expert support. We don't just answer calls—we resolve issues quickly with our proven stack and experienced team, backed by clear SLAs and accountability."
+      canonical="/about/support"
       features={[
         { title: "15-Minute Response SLA", description: "Guaranteed response to critical issues within 15 minutes, 24/7/365" },
         { title: "Expert Support Team", description: "Certified technicians with deep knowledge of your IT environment" },

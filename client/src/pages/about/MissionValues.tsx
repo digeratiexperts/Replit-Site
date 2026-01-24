@@ -2,9 +2,16 @@ import { PageTemplate } from "@/components/PageTemplate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heart, Target, Users, Shield, Zap, Clock, Award, Star } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function MissionValues() {
   const prefersReducedMotion = useReducedMotion() ?? false;
+
+  useSEO({
+    title: 'Mission & Values - Our Commitment',
+    description: 'Digerati Experts mission and core values. Security-first IT, local partnership, and proactive protection for Arizona businesses.',
+    canonical: '/about/mission',
+  });
   
   const values = [
     {

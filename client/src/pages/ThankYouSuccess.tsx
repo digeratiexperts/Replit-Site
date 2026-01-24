@@ -4,14 +4,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Calendar, Clock, MapPin, Video, ExternalLink } from "lucide-react";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
-import { useEffect } from "react";
 import { SiGoogle } from "react-icons/si";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function ThankYouSuccess() {
-  useEffect(() => {
-    document.title = "Thank You | Digerati Experts";
-  }, []);
+  useSEO({
+    title: 'Thank You',
+    description: 'Thank you for contacting Digerati Experts. We will be in touch shortly to discuss your IT and cybersecurity needs.',
+    noIndex: true,
+  });
 
   return (
     <div className="min-h-screen bg-white flex flex-col">

@@ -3,6 +3,7 @@ import { SimpleDivider } from "@/components/SimpleDivider";
 import { ZohoASAPWidget } from "@/components/ZohoASAPWidget";
 import { FullPageScrollProvider, ScrollSectionAuto } from "@/components/FullPageScroll";
 import { useState, useEffect } from "react";
+import { useSEO } from "@/hooks/useSEO";
 
 // Import all section components
 import { ModernHeroSection } from "./sections/ModernHeroSection";
@@ -55,6 +56,12 @@ const industryMultipliers: Record<string, number> = {
 };
 
 export const DigeratiHomepage = (): JSX.Element => {
+  useSEO({
+    title: 'Managed Security Service Provider',
+    description: "Arizona's trusted MSP/MSSP. Get 24/7 cybersecurity monitoring, managed IT services, and compliance support for small-to-medium businesses. Free penetration test available.",
+    canonical: '/',
+  });
+
   // State for calculators - managed here as it's shared between calculator sections
   const [employees, setEmployees] = useState(10);
   const [hourlyWage, setHourlyWage] = useState(50);

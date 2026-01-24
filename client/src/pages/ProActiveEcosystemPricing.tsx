@@ -4,9 +4,16 @@ import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooter
 import { Button } from "@/components/ui/button";
 import { Headphones, Wifi, Monitor, Activity, RefreshCw, Shield, ArrowRight } from "lucide-react";
 import { FloatingParticles } from "@/components/graphics";
+import { useSEO } from "@/hooks/useSEO";
 
 const ProActiveEcosystemPricing = () => {
   const prefersReducedMotion = useReducedMotion();
+
+  useSEO({
+    title: 'Pricing - Managed IT & Security Plans',
+    description: 'Transparent pricing for managed IT services. Office, Business, and Enterprise plans starting at $165/user. Get 24/7 support, security monitoring, and compliance assistance.',
+    canonical: '/pricing',
+  });
 
   const plans = [
     {

@@ -2,6 +2,7 @@ import { PageTemplate } from "@/components/PageTemplate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, Phone, ArrowRight, Sparkles, Zap, AlertTriangle } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useSEO } from "@/hooks/useSEO";
 
 interface ServiceFeature {
   title: string;
@@ -23,6 +24,7 @@ interface GenericServicePageProps {
   benefits: string[];
   gradientColors?: string;
   stat?: ServiceStat;
+  canonical?: string;
 }
 
 const FeatureCard = ({ 
@@ -64,9 +66,16 @@ export default function GenericServicePage({
   features,
   benefits,
   gradientColors = "from-violet-600 via-purple-600 to-fuchsia-600",
-  stat
+  stat,
+  canonical
 }: GenericServicePageProps) {
   const prefersReducedMotion = useReducedMotion() ?? false;
+
+  useSEO({
+    title,
+    description,
+    canonical,
+  });
   
   return (
     <PageTemplate
