@@ -963,9 +963,9 @@ button, [role="button"], a {
 /* City Location Buttons - Arizona Cities with official colors */
 .city-btn {
   @apply relative inline-flex items-center justify-center px-5 py-2.5 transition-all duration-300 rounded-full text-sm font-medium;
-  color: var(--c2, #fff);
-  background: var(--c1, rgba(139, 92, 246, 0.8));
-  border: 1.5px solid var(--c1, rgba(139, 92, 246, 0.8));
+  color: var(--c1, rgba(139, 92, 246, 0.9));
+  background: transparent;
+  border: 1.5px solid var(--c1, rgba(139, 92, 246, 0.5));
 }
 
 .city-btn:hover {
