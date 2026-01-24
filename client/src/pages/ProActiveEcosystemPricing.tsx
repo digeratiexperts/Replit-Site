@@ -2,9 +2,10 @@ import { motion, useReducedMotion } from "framer-motion";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooterSection";
 import { Button } from "@/components/ui/button";
-import { Headphones, Wifi, Monitor, Activity, RefreshCw, Shield, ArrowRight } from "lucide-react";
+import { Headphones, Wifi, Monitor, Activity, RefreshCw, Shield, ArrowRight, Calculator, TrendingDown, DollarSign } from "lucide-react";
 import { FloatingParticles } from "@/components/graphics";
 import { useSEO } from "@/hooks/useSEO";
+import { Link } from "wouter";
 
 const ProActiveEcosystemPricing = () => {
   const prefersReducedMotion = useReducedMotion();
@@ -270,6 +271,50 @@ const ProActiveEcosystemPricing = () => {
                     </p>
                   </motion.article>
                 ))}
+              </motion.div>
+
+              <motion.div
+                className="mt-10 rounded-2xl p-6 border border-violet-500/20 relative overflow-hidden"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05))'
+                }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+              >
+                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-violet-500/20 flex items-center justify-center">
+                      <Calculator className="w-6 h-6 text-violet-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-bold text-lg" data-testid="heading-calculators">Calculate Your Investment</h3>
+                      <p className="text-gray-400 text-sm">Estimate your costs and potential savings with our interactive tools</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Link href="/resources/downtime-calculator">
+                      <Button
+                        variant="outline"
+                        className="border-violet-500/30 text-violet-300 hover:bg-violet-500/10 hover:text-violet-200"
+                        data-testid="button-downtime-calculator"
+                      >
+                        <TrendingDown className="w-4 h-4 mr-2" />
+                        Downtime Cost Calculator
+                      </Button>
+                    </Link>
+                    <Link href="/#calculators">
+                      <Button
+                        variant="outline"
+                        className="border-violet-500/30 text-violet-300 hover:bg-violet-500/10 hover:text-violet-200"
+                        data-testid="button-service-estimator"
+                      >
+                        <DollarSign className="w-4 h-4 mr-2" />
+                        Service Cost Estimator
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
               </motion.div>
 
               <motion.div 

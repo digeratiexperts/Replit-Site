@@ -19,7 +19,8 @@ interface PageTemplateProps {
 const FloatingOrbs = ({ prefersReducedMotion }: { prefersReducedMotion: boolean }) => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
     <motion.div
-      className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 blur-3xl"
+      className="absolute -top-20 -right-20 w-96 h-96 rounded-full"
+      style={{ background: "radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, transparent 60%)" }}
       animate={prefersReducedMotion ? {} : {
         x: [0, 30, 0],
         y: [0, -20, 0],
@@ -28,7 +29,8 @@ const FloatingOrbs = ({ prefersReducedMotion }: { prefersReducedMotion: boolean 
       transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
     />
     <motion.div
-      className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-gradient-to-tr from-purple-500/20 to-pink-500/20 blur-3xl"
+      className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full"
+      style={{ background: "radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 60%)" }}
       animate={prefersReducedMotion ? {} : {
         x: [0, -20, 0],
         y: [0, 30, 0],
@@ -37,7 +39,8 @@ const FloatingOrbs = ({ prefersReducedMotion }: { prefersReducedMotion: boolean 
       transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
     />
     <motion.div
-      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-gradient-to-r from-indigo-500/10 to-cyan-500/10 blur-3xl"
+      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full"
+      style={{ background: "radial-gradient(circle, rgba(167, 139, 250, 0.15) 0%, transparent 60%)" }}
       animate={prefersReducedMotion ? {} : {
         scale: [1, 1.2, 1],
         opacity: [0.3, 0.5, 0.3],
@@ -68,9 +71,9 @@ const ShieldBadge = () => (
     transition={{ delay: 0.5, duration: 0.6 }}
   >
     <div className="relative">
-      <div className="absolute inset-0 bg-gradient-to-br from-cyan-400 to-purple-600 rounded-full blur-xl opacity-50" />
+      <div className="absolute inset-0 bg-gradient-to-br from-violet-400 to-purple-600 rounded-full blur-xl opacity-50" />
       <div className="relative w-32 h-32 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 flex items-center justify-center">
-        <Shield className="w-16 h-16 text-white/80" />
+        <Shield className="w-16 h-16 text-violet-300" />
       </div>
     </div>
   </motion.div>

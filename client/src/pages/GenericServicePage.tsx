@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, Phone, ArrowRight, Sparkles, Zap, AlertTriangle } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
+import { ServiceMatrix } from "@/components/ServiceMatrix";
 
 interface ServiceFeature {
   title: string;
@@ -193,6 +194,16 @@ export default function GenericServicePage({
             </div>
           </motion.div>
         )}
+
+        {/* Pricing Matrix */}
+        <motion.div
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <ServiceMatrix variant="compact" />
+        </motion.div>
 
         {/* CTA Section */}
         <motion.div 
