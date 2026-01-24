@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, createContext, useContext } from 'react';
-import { ChevronDown, Lock, Unlock } from 'lucide-react';
+import { ChevronDown, Lock, Unlock, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ScrollSection {
@@ -321,6 +321,19 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
             </button>
           );
         })}
+        
+        <div className="w-px h-6 bg-white/20 mx-2" />
+        
+        <a
+          href="https://meet.digerati-experts.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-full bg-white text-violet-700 hover:bg-violet-50 transition-all duration-300 shadow-lg whitespace-nowrap"
+          data-testid="nav-cta-assessment"
+        >
+          Free Assessment
+          <ArrowRight className="w-4 h-4" />
+        </a>
       </motion.nav>
     </div>
   );
