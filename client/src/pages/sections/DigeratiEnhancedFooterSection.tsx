@@ -141,10 +141,12 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-12 px-4 md:px-8 lg:px-0">
-          <div className="group p-4 -m-4 rounded-xl transition-all duration-300 hover:bg-white/5">
-            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider ">Quick Access</h4>
-            <ul className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 mb-12 border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
+          {/* Quick Access - Dark Style */}
+          <div className="p-8 bg-[#0a0a0a] relative group border-r border-white/10 transition-colors hover:bg-[#0d0d0d]">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(139,92,246,0.1)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider relative z-10">Quick Access</h4>
+            <ul className="space-y-3 relative z-10">
               {quickAccess.map((item, index) => (
                 <li key={index}>
                   <FooterLink href={item.href} testId={`footer-${item.name.toLowerCase().replace(/\s+/g, '-')}`}>
@@ -155,9 +157,11 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
             </ul>
           </div>
 
-          <div className="group p-4 -m-4 rounded-xl transition-all duration-300 hover:bg-white/5">
-            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider ">Services</h4>
-            <ul className="space-y-3">
+          {/* Services - Glassmorphism Style */}
+          <div className="p-8 bg-white/[0.02] backdrop-blur-xl relative group border-r border-white/10 transition-colors hover:bg-white/[0.04]">
+            <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(139,92,246,0.05)_0%,transparent_100%)]" />
+            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider relative z-10">Services</h4>
+            <ul className="space-y-3 relative z-10">
               {services.map((item, index) => (
                 <li key={index}>
                   <FooterLink href={item.href} testId={`footer-service-${index}`}>
@@ -168,9 +172,11 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
             </ul>
           </div>
 
-          <div className="group p-4 -m-4 rounded-xl transition-all duration-300 hover:bg-white/5">
-            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider ">Legal</h4>
-            <ul className="space-y-3">
+          {/* Legal - Deep Dark Style */}
+          <div className="p-8 bg-[#050312] relative group border-r border-white/10 transition-colors hover:bg-[#070518]">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.05)_0%,transparent_70%)]" />
+            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider relative z-10">Legal</h4>
+            <ul className="space-y-3 relative z-10">
               {legal.map((item, index) => (
                 <li key={index}>
                   <a 
@@ -183,7 +189,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                       <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-violet-500 transition-all duration-300 group-hover/link:w-full" />
                     </span>
                     {item.badge && (
-                      <span className="text-xs bg-violet-600 text-white px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] bg-violet-600/50 text-white/80 px-1.5 py-0.5 rounded-full border border-violet-500/30">
                         {item.badge}
                       </span>
                     )}
@@ -193,7 +199,8 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
             </ul>
           </div>
 
-          <div className="group p-4 -m-4 rounded-xl transition-all duration-300 hover:bg-white/5">
+          {/* Trust - Modern Light/Dark Contrast */}
+          <div className="p-8 bg-gradient-to-br from-white/[0.03] to-white/[0.01] relative group transition-colors hover:bg-white/[0.05]">
             <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider ">Trust</h4>
             <ul className="space-y-3">
               {trust.map((item, index) => (
@@ -262,27 +269,28 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
         </div>
 
         <div className="border-t border-white/10 py-8 px-4 md:px-8 lg:px-0">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div>
-              <h4 className="text-white text-sm font-semibold mb-4 uppercase tracking-wider ">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-3xl p-8 relative overflow-hidden group hover:bg-white/[0.05] transition-colors">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(139,92,246,0.1)_0%,transparent_70%)]" />
+              <h4 className="text-white text-sm font-semibold mb-4 uppercase tracking-wider relative z-10">
                 Stay Updated
               </h4>
-              <p className="text-gray-400 text-sm mb-4 ">
+              <p className="text-gray-400 text-sm mb-6 relative z-10">
                 Get the latest cybersecurity insights and IT tips delivered to your inbox.
               </p>
               {isSubscribed ? (
-                <div className="flex items-center gap-2 text-green-400">
+                <div className="flex items-center gap-2 text-green-400 relative z-10">
                   <CheckCircle className="h-5 w-5" />
                   <span className="text-sm ">Thank you for subscribing!</span>
                 </div>
               ) : (
-                <form onSubmit={handleNewsletterSubmit} className="flex gap-3">
+                <form onSubmit={handleNewsletterSubmit} className="flex gap-3 relative z-10">
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
-                    className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition-all duration-300 text-sm"
+                    className="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition-all duration-300 text-sm"
                     data-testid="footer-newsletter-input"
                   />
                   <button
@@ -297,11 +305,12 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
               )}
             </div>
             
-            <div>
-              <h4 className="text-white text-sm font-semibold mb-6 uppercase tracking-wider ">
+            <div className="p-8 bg-[#0a0a0a] border border-white/10 rounded-3xl h-full flex flex-col justify-center relative overflow-hidden group hover:bg-[#0d0d0d] transition-colors">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_100%_100%,rgba(139,92,246,0.05)_0%,transparent_70%)]" />
+              <h4 className="text-white text-sm font-semibold mb-6 uppercase tracking-wider relative z-10">
                 Serving Greater Phoenix
               </h4>
-              <div className="honeycomb-grid max-w-md">
+              <div className="honeycomb-grid relative z-10">
                 <div className="flex gap-x-2">
                   {locations.slice(0, 3).map((location, index) => (
                     <a
