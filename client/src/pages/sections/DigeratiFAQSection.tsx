@@ -67,19 +67,35 @@ export const DigeratiFAQSection = (): JSX.Element => {
                 transition={{ duration: 0.3, delay: index * 0.05 }}
                 data-testid={`faq-${index}`}
               >
-                <div className="bg-white rounded-lg md:rounded-xl shadow-sm">
+                <div 
+                  className={`bg-white rounded-xl shadow-md border-l-4 transition-all duration-300 hover:shadow-lg ${
+                    isOpen 
+                      ? 'border-l-violet-600 shadow-lg' 
+                      : 'border-l-violet-400/50 hover:border-l-violet-500'
+                  }`}
+                >
                   <button
-                    className="w-full px-4 py-4 md:px-6 md:py-5 flex items-center justify-between text-left"
+                    className="w-full px-5 py-5 md:px-6 md:py-6 flex items-center justify-between text-left group"
                     onClick={() => toggleAccordion(index)}
                     aria-expanded={isOpen}
                     data-testid={`faq-trigger-${index}`}
                   >
-                    <span className="text-base md:text-lg font-medium text-gray-900 pr-4">
+                    <span className={`text-base md:text-lg font-semibold pr-4 transition-colors duration-200 ${
+                      isOpen ? 'text-violet-700' : 'text-gray-900 group-hover:text-violet-600'
+                    }`}>
                       {faq.question}
                     </span>
-                    <ChevronDown 
-                      className={`h-5 w-5 text-violet-500 transition-transform duration-200 flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
-                    />
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
+                      isOpen 
+                        ? 'bg-violet-600 rotate-180' 
+                        : 'bg-violet-100 group-hover:bg-violet-200'
+                    }`}>
+                      <ChevronDown 
+                        className={`h-5 w-5 transition-colors duration-200 flex-shrink-0 ${
+                          isOpen ? 'text-white' : 'text-violet-600'
+                        }`}
+                      />
+                    </div>
                   </button>
 
                   <AnimatePresence initial={false}>
@@ -88,13 +104,15 @@ export const DigeratiFAQSection = (): JSX.Element => {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
+                        transition={{ duration: 0.25, ease: "easeOut" }}
                         className="overflow-hidden"
                       >
-                        <div className="px-4 pb-4 md:px-6 md:pb-5 pt-0">
-                          <p className="text-base text-gray-600 leading-relaxed" data-testid={`faq-answer-${index}`}>
-                            {faq.answer}
-                          </p>
+                        <div className="px-5 pb-5 md:px-6 md:pb-6 pt-0">
+                          <div className="border-t border-gray-100 pt-4">
+                            <p className="text-base text-gray-600 leading-relaxed" data-testid={`faq-answer-${index}`}>
+                              {faq.answer}
+                            </p>
+                          </div>
                         </div>
                       </motion.div>
                     )}
