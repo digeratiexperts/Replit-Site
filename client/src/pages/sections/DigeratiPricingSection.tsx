@@ -213,8 +213,8 @@ export const DigeratiPricingSection = (): JSX.Element => {
                   ))}
                 </ul>
 
-                <div className="space-y-3 mt-auto pt-2">
-                  <a href={plan.learnMoreUrl}>
+                <div className="flex flex-col gap-3 mt-auto pt-2">
+                  <a href={plan.learnMoreUrl} className="block">
                     <Button 
                       className="w-full h-9 text-sm border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-600 hover:text-white active:text-white focus:text-violet-600 focus:bg-transparent" 
                       variant="outline"
@@ -223,7 +223,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                       Learn More
                     </Button>
                   </a>
-                  <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                  <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer" className="block">
                     <Button 
                       className={`w-full h-9 text-sm font-semibold ${
                         plan.isPopular 
@@ -305,8 +305,8 @@ export const DigeratiPricingSection = (): JSX.Element => {
                 ))}
               </ul>
 
-              <div className="space-y-4 mt-auto pt-2">
-                <a href={plan.learnMoreUrl}>
+              <div className="flex flex-col gap-4 mt-auto pt-2">
+                <a href={plan.learnMoreUrl} className="block">
                   <Button 
                     className="w-full border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-600 hover:text-white active:text-white focus:text-violet-600 focus:bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all duration-200" 
                     variant="outline"
@@ -315,7 +315,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                     Learn More
                   </Button>
                 </a>
-                <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer" className="block">
                   <Button 
                     className={`w-full font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 ${
                       plan.isPopular 
