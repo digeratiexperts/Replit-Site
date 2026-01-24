@@ -92,7 +92,7 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
   return (
     <section 
       ref={sectionRef}
-      className="py-16 md:py-20 lg:py-24 relative overflow-hidden bg-[#0a0a0a]"
+      className="py-10 md:py-14 lg:py-16 relative overflow-hidden bg-[#0a0a0a]"
       style={{ position: 'relative' }}
     >
       {/* Parallax violet accent glow */}

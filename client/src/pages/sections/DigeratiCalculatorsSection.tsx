@@ -41,7 +41,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
   const [pricingExpanded, setPricingExpanded] = useState(false);
 
   return (
-    <section id="calculators" className="py-12 md:py-16 lg:py-20 relative overflow-visible bg-[#0a0a0a]">
+    <section id="calculators" className="py-10 md:py-14 lg:py-16 relative overflow-visible bg-[#0a0a0a]">
       {/* Subtle background accent */}
       <div 
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] pointer-events-none opacity-30"

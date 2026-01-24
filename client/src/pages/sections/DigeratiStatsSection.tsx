@@ -32,14 +32,14 @@ export const DigeratiStatsSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section className="py-16 bg-[#0a0a0a]">
+    <section className="py-10 lg:py-12 bg-[#0a0a0a]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          className="text-center mb-8"
         >
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
             The Threats Are Real

@@ -12,7 +12,7 @@ export const DigeratiCTASection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
   
   return (
-    <section className="py-20 bg-[#0a0a0a] relative overflow-hidden">
+    <section className="py-12 lg:py-16 bg-[#0a0a0a] relative overflow-hidden">
       {/* Subtle purple glow */}
       <div 
         className="absolute inset-0 pointer-events-none"

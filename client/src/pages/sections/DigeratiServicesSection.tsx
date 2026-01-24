@@ -100,7 +100,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
     <section 
       ref={sectionRef}
       id="services" 
-      className="relative py-12 md:py-16 lg:py-24 bg-[#0a0a0a] overflow-hidden"
+      className="relative py-10 md:py-14 lg:py-16 bg-[#0a0a0a] overflow-hidden"
       style={{ position: 'relative' }}
     >
       {/* Parallax gradient orbs */}

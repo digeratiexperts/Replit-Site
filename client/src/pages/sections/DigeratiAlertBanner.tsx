@@ -63,7 +63,7 @@ export const DigeratiAlertBanner = (): JSX.Element => {
   return (
     <section 
       ref={sectionRef}
-      className="py-20 relative overflow-hidden"
+      className="py-12 lg:py-16 relative overflow-hidden"
       style={{
         background: 'linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 50%, #E2E8F0 100%)'
       }}

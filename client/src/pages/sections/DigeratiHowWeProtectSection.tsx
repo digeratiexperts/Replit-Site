@@ -71,7 +71,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
   return (
     <section 
       ref={sectionRef}
-      className="py-12 md:py-16 lg:py-24 relative overflow-hidden bg-white"
+      className="py-10 md:py-14 lg:py-16 relative overflow-hidden bg-white"
       style={{ position: 'relative' }}
     >
       {/* Subtle background gradient */}

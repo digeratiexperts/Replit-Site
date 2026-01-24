@@ -108,7 +108,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
   return (
     <section 
       id="pricing" 
-      className="relative py-12 md:py-16 lg:py-20 pt-16 md:pt-20 lg:pt-28 pb-16 md:pb-20 lg:pb-28 overflow-hidden bg-[#0a0a0a]"
+      className="relative py-10 md:py-14 lg:py-16 overflow-hidden bg-[#0a0a0a]"
     >
       {/* Subtle violet accent glow */}
       <div className="absolute inset-0 pointer-events-none"
@@ -116,7 +116,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
       
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
-          className="text-center mb-8 md:mb-12 lg:mb-16"
+          className="text-center mb-6 md:mb-8 lg:mb-10"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

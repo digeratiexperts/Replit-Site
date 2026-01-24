@@ -35,7 +35,7 @@ export const DigeratiFAQSection = (): JSX.Element => {
   };
 
   return (
-    <section className="py-12 md:py-16 lg:py-24 bg-[#f0f4f8]">
+    <section className="py-10 md:py-14 lg:py-16 bg-[#f0f4f8]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -43,7 +43,7 @@ export const DigeratiFAQSection = (): JSX.Element => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.35 }}
-          className="text-center mb-8 md:mb-10 lg:mb-14"
+          className="text-center mb-6 md:mb-8"
         >
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 md:mb-4 px-2">
             Frequently Asked Questions
