@@ -25,20 +25,20 @@ import { DigeratiContactSection } from "./sections/DigeratiContactSection";
 import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooterSection";
 import { DigeratiStatsSection } from "./sections/DigeratiStatsSection";
 
-const homepageSections = [
-  { id: 'hero', label: 'Home' },
-  { id: 'stats', label: 'Results' },
-  { id: 'services', label: 'Services' },
-  { id: 'protection', label: 'Protection' },
-  { id: 'calculators', label: 'Calculators' },
-  { id: 'challenges', label: 'Challenges' },
-  { id: 'industries', label: 'Industries' },
-  { id: 'pricing', label: 'Pricing' },
-  { id: 'testimonials', label: 'Reviews' },
-  { id: 'insights', label: 'Insights' },
-  { id: 'cta', label: 'Get Started' },
-  { id: 'faq', label: 'FAQ' },
-  { id: 'contact', label: 'Contact' },
+const homepageSections: { id: string; label: string; theme: 'dark' | 'light' }[] = [
+  { id: 'hero', label: 'Home', theme: 'dark' },
+  { id: 'stats', label: 'Results', theme: 'dark' },
+  { id: 'services', label: 'Services', theme: 'light' },
+  { id: 'protection', label: 'Protection', theme: 'dark' },
+  { id: 'calculators', label: 'Calculators', theme: 'dark' },
+  { id: 'challenges', label: 'Challenges', theme: 'dark' },
+  { id: 'industries', label: 'Industries', theme: 'dark' },
+  { id: 'pricing', label: 'Pricing', theme: 'light' },
+  { id: 'testimonials', label: 'Reviews', theme: 'dark' },
+  { id: 'insights', label: 'Insights', theme: 'dark' },
+  { id: 'cta', label: 'Get Started', theme: 'dark' },
+  { id: 'faq', label: 'FAQ', theme: 'light' },
+  { id: 'contact', label: 'Contact', theme: 'dark' },
 ];
 
 // Industry multiplier lookup table - maps unique keys to exact multiplier values

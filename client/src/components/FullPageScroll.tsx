@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface ScrollSection {
   id: string;
   label: string;
+  theme?: 'dark' | 'light';
 }
 
 interface FullPageScrollContextType {
@@ -13,6 +14,7 @@ interface FullPageScrollContextType {
   scrollToSection: (index: number) => void;
   isSnapEnabled: boolean;
   toggleSnap: () => void;
+  currentTheme: 'dark' | 'light';
 }
 
 const FullPageScrollContext = createContext<FullPageScrollContextType | null>(null);
@@ -132,7 +134,8 @@ export function FullPageScrollProvider({
       totalSections: sections.length,
       scrollToSection,
       isSnapEnabled: effectiveSnapEnabled,
-      toggleSnap
+      toggleSnap,
+      currentTheme: sections[currentSection]?.theme || 'dark'
     }}>
       <div 
         ref={containerRef}
@@ -152,6 +155,7 @@ export function FullPageScrollProvider({
         currentSection={currentSection} 
         onNavigate={scrollToSection}
         isVisible={effectiveSnapEnabled}
+        currentTheme={sections[currentSection]?.theme || 'dark'}
       />
       
       <ScrollDownIndicator 
@@ -159,11 +163,13 @@ export function FullPageScrollProvider({
         totalSections={sections.length}
         onScrollDown={() => scrollToSection(currentSection + 1)}
         isVisible={effectiveSnapEnabled && currentSection < sections.length - 1}
+        currentTheme={sections[currentSection]?.theme || 'dark'}
       />
       
       <ScrollUpButton
         onScrollUp={() => scrollToSection(0)}
         isVisible={currentSection > 0}
+        currentTheme={sections[currentSection]?.theme || 'dark'}
       />
     </FullPageScrollContext.Provider>
   );
@@ -174,10 +180,13 @@ interface NavigationDotsProps {
   currentSection: number;
   onNavigate: (index: number) => void;
   isVisible: boolean;
+  currentTheme: 'dark' | 'light';
 }
 
-function NavigationDots({ sections, currentSection, onNavigate, isVisible }: NavigationDotsProps) {
+function NavigationDots({ sections, currentSection, onNavigate, isVisible, currentTheme }: NavigationDotsProps) {
   if (!isVisible) return null;
+  
+  const isDark = currentTheme === 'dark';
   
   return (
     <motion.nav
@@ -191,7 +200,9 @@ function NavigationDots({ sections, currentSection, onNavigate, isVisible }: Nav
         <button
           key={section.id}
           onClick={() => onNavigate(index)}
-          className="group relative p-1 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded-full"
+          className={`group relative p-1 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 rounded-full transition-colors duration-300 ${
+            isDark ? 'focus:ring-offset-black' : 'focus:ring-offset-white'
+          }`}
           aria-label={`Go to ${section.label}`}
           aria-current={currentSection === index ? 'true' : undefined}
           data-testid={`nav-dot-${section.id}`}
@@ -199,11 +210,19 @@ function NavigationDots({ sections, currentSection, onNavigate, isVisible }: Nav
           <span 
             className={`block w-2 h-2 rounded-full transition-all duration-300 border ${
               currentSection === index 
-                ? 'bg-transparent border-white scale-125 shadow-[0_0_8px_rgba(255,255,255,0.4)]' 
-                : 'bg-transparent border-white/40 hover:border-white/70'
+                ? isDark 
+                  ? 'bg-transparent border-white scale-125 shadow-[0_0_8px_rgba(255,255,255,0.4)]'
+                  : 'bg-transparent border-violet-600 scale-125 shadow-[0_0_8px_rgba(139,92,246,0.4)]'
+                : isDark
+                  ? 'bg-transparent border-white/40 hover:border-white/70'
+                  : 'bg-transparent border-gray-400 hover:border-gray-600'
             }`}
           />
-          <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-2 py-1 bg-black/80 backdrop-blur-sm text-xs text-white rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-white/10">
+          <span className={`absolute right-full mr-3 top-1/2 -translate-y-1/2 px-2 py-1 backdrop-blur-sm text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border ${
+            isDark 
+              ? 'bg-black/80 text-white border-white/10' 
+              : 'bg-white/90 text-gray-800 border-gray-200 shadow-lg'
+          }`}>
             {section.label}
           </span>
         </button>
@@ -217,9 +236,12 @@ interface ScrollDownIndicatorProps {
   totalSections: number;
   onScrollDown: () => void;
   isVisible: boolean;
+  currentTheme: 'dark' | 'light';
 }
 
-function ScrollDownIndicator({ onScrollDown, isVisible }: ScrollDownIndicatorProps) {
+function ScrollDownIndicator({ onScrollDown, isVisible, currentTheme }: ScrollDownIndicatorProps) {
+  const isDark = currentTheme === 'dark';
+  
   return (
     <AnimatePresence>
       {isVisible && (
@@ -228,7 +250,11 @@ function ScrollDownIndicator({ onScrollDown, isVisible }: ScrollDownIndicatorPro
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           onClick={onScrollDown}
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 p-2.5 rounded-full bg-white/5 backdrop-blur-sm border border-white/20 hover:bg-white/10 hover:border-violet-400/50 transition-all group focus:outline-none focus:ring-2 focus:ring-violet-400 hidden lg:flex"
+          className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-30 p-2.5 rounded-full backdrop-blur-sm transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-violet-400 hidden lg:flex ${
+            isDark 
+              ? 'bg-white/5 border border-white/20 hover:bg-white/10 hover:border-violet-400/50' 
+              : 'bg-black/5 border border-gray-300 hover:bg-black/10 hover:border-violet-500/50 shadow-sm'
+          }`}
           aria-label="Scroll to next section"
           data-testid="scroll-down-btn"
         >
@@ -240,7 +266,11 @@ function ScrollDownIndicator({ onScrollDown, isVisible }: ScrollDownIndicatorPro
               ease: "easeInOut" 
             }}
           >
-            <ChevronDown className="w-5 h-5 text-white/60 group-hover:text-violet-400 transition-colors" />
+            <ChevronDown className={`w-5 h-5 transition-colors duration-300 ${
+              isDark 
+                ? 'text-white/60 group-hover:text-violet-400' 
+                : 'text-gray-500 group-hover:text-violet-600'
+            }`} />
           </motion.div>
         </motion.button>
       )}
@@ -251,9 +281,12 @@ function ScrollDownIndicator({ onScrollDown, isVisible }: ScrollDownIndicatorPro
 interface ScrollUpButtonProps {
   onScrollUp: () => void;
   isVisible: boolean;
+  currentTheme: 'dark' | 'light';
 }
 
-function ScrollUpButton({ onScrollUp, isVisible }: ScrollUpButtonProps) {
+function ScrollUpButton({ onScrollUp, isVisible, currentTheme }: ScrollUpButtonProps) {
+  const isDark = currentTheme === 'dark';
+  
   return (
     <AnimatePresence>
       {isVisible && (
@@ -262,7 +295,11 @@ function ScrollUpButton({ onScrollUp, isVisible }: ScrollUpButtonProps) {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
           onClick={onScrollUp}
-          className="fixed bottom-6 right-[5.5rem] z-30 p-2.5 rounded-full bg-violet-600/80 backdrop-blur-sm border border-violet-500/50 hover:bg-violet-500 transition-all group focus:outline-none focus:ring-2 focus:ring-violet-400 shadow-lg shadow-violet-500/30 hidden lg:flex"
+          className={`fixed bottom-6 right-[5.5rem] z-30 p-2.5 rounded-full backdrop-blur-sm transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-violet-400 hidden lg:flex ${
+            isDark 
+              ? 'bg-violet-600/80 border border-violet-500/50 hover:bg-violet-500 shadow-lg shadow-violet-500/30' 
+              : 'bg-violet-600 border border-violet-500 hover:bg-violet-500 shadow-lg shadow-violet-500/40'
+          }`}
           aria-label="Scroll to top"
           data-testid="scroll-up-btn"
         >

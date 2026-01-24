@@ -53,6 +53,7 @@ The homepage uses scroll snap functionality for a polished landing page experien
 - **Mobile behavior**: Normal scrolling on mobile (snap disabled for better UX)
 - **CSS**: Uses `scroll-snap-type: y proximity` for non-jarring snapping
 - **Component**: `FullPageScrollProvider` wraps homepage sections with `ScrollSectionAuto`
+- **Dynamic theming**: Navigation elements automatically switch between dark/light styles based on current section background (white outline on dark sections, violet/gray on light sections)
 
 ### System Design Choices
 The project follows a modular structure (`client/` and `server/`), using UUIDs for IDs. Payment processing includes enterprise-grade encryption and webhook signature validation. AI services for ticket classification and priority detection are implemented with graceful fallback. Role-based access control manages navigation and features. User storage is in-memory, designed for future PostgreSQL migration, using bcrypt hashing and JWT tokens.
