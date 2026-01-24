@@ -126,7 +126,7 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
                 <Button 
                   size="lg"
                   variant="outline"
-                  className="border-2 border-white/50 text-white bg-transparent hover:bg-white/10 hover:border-white"
+                  className="border-2 border-white/50 text-white bg-transparent hover:bg-white hover:text-black hover:border-white"
                   data-testid="button-ai-action"
                 >
                   See AI in Action
@@ -137,7 +137,7 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
                 <Button 
                   size="lg"
                   variant="outline"
-                  className="border-2 border-white/50 text-white bg-transparent hover:bg-white/10 hover:border-white"
+                  className="border-2 border-white/50 text-white bg-transparent hover:bg-white hover:text-black hover:border-white"
                   data-testid="button-ai-learn-more"
                 >
                   Learn More

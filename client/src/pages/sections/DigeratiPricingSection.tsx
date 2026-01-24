@@ -216,7 +216,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                 <div className="space-y-2 mt-auto">
                   <a href={plan.learnMoreUrl}>
                     <Button 
-                      className="w-full h-9 text-sm border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-50" 
+                      className="w-full h-9 text-sm border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-600 hover:text-white" 
                       variant="outline"
                       data-testid={`button-learn-more-${plan.name.toLowerCase()}`}
                     >
@@ -308,7 +308,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
               <div className="space-y-3 mt-auto">
                 <a href={plan.learnMoreUrl}>
                   <Button 
-                    className="w-full border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all duration-200" 
+                    className="w-full border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-600 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all duration-200" 
                     variant="outline"
                     data-testid={`button-learn-more-${plan.name.toLowerCase()}`}
                   >
