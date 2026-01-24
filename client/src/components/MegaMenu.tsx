@@ -1,8 +1,95 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useId } from 'react';
 import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink, X, ArrowRight, Monitor, Cloud, Lock, Zap, HeadphonesIcon, Building, BarChart3, ClipboardCheck, Layers, TrendingUp, Star, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import logoImage from '@assets/DE-Logo-new_1762461524794.webp';
 import { motion, AnimatePresence } from 'framer-motion';
+
+const NoiseTexture = ({ id }: { id: string }) => (
+  <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.025]" aria-hidden="true">
+    <defs>
+      <filter id={`noise-${id}`}>
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/>
+        <feColorMatrix type="saturate" values="0"/>
+      </filter>
+    </defs>
+    <rect width="100%" height="100%" filter={`url(#noise-${id})`}/>
+  </svg>
+);
+
+const DotMatrixTexture = () => (
+  <div 
+    className="absolute inset-0 pointer-events-none opacity-[0.04]"
+    style={{
+      backgroundImage: `radial-gradient(circle at center, white 1px, transparent 1px)`,
+      backgroundSize: '10px 10px',
+    }}
+    aria-hidden="true"
+  />
+);
+
+const HexagonPattern = ({ id }: { id: string }) => (
+  <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.02]" aria-hidden="true">
+    <defs>
+      <pattern id={`hex-${id}`} width="50" height="43.3" patternUnits="userSpaceOnUse" patternTransform="scale(1)">
+        <polygon 
+          points="25,0 50,14.4 50,43.3 25,28.9 0,43.3 0,14.4" 
+          fill="none" 
+          stroke="rgba(139,92,246,1)" 
+          strokeWidth="0.5"
+        />
+        <polygon 
+          points="25,14.4 50,28.9 50,57.7 25,43.3 0,57.7 0,28.9" 
+          fill="none" 
+          stroke="rgba(139,92,246,1)" 
+          strokeWidth="0.5"
+          transform="translate(25, 0)"
+        />
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill={`url(#hex-${id})`}/>
+  </svg>
+);
+
+const CircuitLines = ({ id }: { id: string }) => (
+  <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none overflow-hidden opacity-[0.08]" aria-hidden="true">
+    <svg className="w-full h-full" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id={`circuit-${id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="transparent"/>
+          <stop offset="20%" stopColor="rgba(139,92,246,1)"/>
+          <stop offset="80%" stopColor="rgba(139,92,246,1)"/>
+          <stop offset="100%" stopColor="transparent"/>
+        </linearGradient>
+      </defs>
+      <path d="M0,20 L100,20 L120,10 L200,10 L220,20 L350,20 L370,30 L450,30" stroke={`url(#circuit-${id})`} strokeWidth="1" fill="none"/>
+      <path d="M500,25 L600,25 L620,15 L700,15 L720,25 L850,25" stroke={`url(#circuit-${id})`} strokeWidth="1" fill="none"/>
+      <circle cx="120" cy="10" r="2" fill="rgba(139,92,246,0.5)"/>
+      <circle cx="370" cy="30" r="2" fill="rgba(139,92,246,0.5)"/>
+      <circle cx="620" cy="15" r="2" fill="rgba(139,92,246,0.5)"/>
+    </svg>
+  </div>
+);
+
+const DiagonalLinesBadge = ({ children, variant }: { children: React.ReactNode; variant: 'popular' | 'bestValue' | 'compliance' }) => {
+  const baseClasses = variant === 'popular' 
+    ? 'bg-violet-500/20 text-violet-300 border border-violet-500/30'
+    : variant === 'bestValue'
+    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+    : 'bg-purple-500/20 text-purple-300 border border-purple-500/30';
+    
+  return (
+    <span className={`relative text-[10px] px-1.5 py-0.5 rounded font-medium overflow-hidden ${baseClasses}`}>
+      <span 
+        className="absolute inset-0 pointer-events-none opacity-[0.05]"
+        style={{
+          backgroundImage: `repeating-linear-gradient(45deg, white 0px, white 1px, transparent 1px, transparent 4px)`,
+        }}
+        aria-hidden="true"
+      />
+      <span className="relative">{children}</span>
+    </span>
+  );
+};
 
 interface MegaMenuItem {
   title: string;
@@ -38,10 +125,30 @@ export function MegaMenu() {
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
   const [isScrolled, setIsScrolled] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [hoveredColumn, setHoveredColumn] = useState<number | null>(null);
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const menuContainerRef = useRef<HTMLDivElement>(null);
   const navButtonsRef = useRef<Map<string, HTMLButtonElement>>(new Map());
   const dropdownRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  const columnRefs = useRef<Map<number, HTMLDivElement>>(new Map());
+  const rafRef = useRef<number | null>(null);
+  const uniqueId = useId();
+
+  const handleColumnMouseMove = useCallback((e: React.MouseEvent, columnIdx: number) => {
+    if (rafRef.current) return;
+    
+    rafRef.current = requestAnimationFrame(() => {
+      const rect = columnRefs.current.get(columnIdx)?.getBoundingClientRect();
+      if (rect) {
+        setCursorPos({
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top
+        });
+      }
+      rafRef.current = null;
+    });
+  }, []);
 
   const navItems: NavItem[] = [
     {
@@ -316,6 +423,9 @@ export function MegaMenu() {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
     };
   }, []);
 
@@ -460,12 +570,17 @@ export function MegaMenu() {
                         transition={{ duration: 0.2 }}
                         className={`fixed left-0 right-0 top-20 mx-auto ${
                           item.name === 'Solutions' ? 'w-[95vw] max-w-6xl' : 'w-[90vw] max-w-5xl'
-                        } bg-[#0a0118] backdrop-blur-xl border border-white/15 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.6),0_0_40px_rgba(139,92,246,0.2)] mega-menu-dropdown`}
+                        } bg-[#0a0118] backdrop-blur-xl border border-white/15 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.6),0_0_40px_rgba(139,92,246,0.2)] mega-menu-dropdown overflow-hidden`}
                         onMouseEnter={handleDropdownMouseEnter}
                         onMouseLeave={handleMouseLeave}
                         role="menu"
                         aria-label={`${item.name} submenu`}
                       >
+                        {/* Texture Overlays */}
+                        <NoiseTexture id={uniqueId} />
+                        <DotMatrixTexture />
+                        {item.name === 'Solutions' && <CircuitLines id={uniqueId} />}
+                        
                         <div className={`p-6 relative ${
                           item.name === 'Solutions' 
                             ? 'grid grid-cols-[1fr_1.1fr_1.1fr_1.1fr_1fr] gap-6' 
@@ -474,15 +589,31 @@ export function MegaMenu() {
                           {item.sections.map((section, sectionIdx) => (
                             <motion.div 
                               key={section.title}
+                              ref={(el) => {
+                                if (el && item.name === 'Solutions') columnRefs.current.set(sectionIdx, el);
+                              }}
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: sectionIdx * 0.05 }}
-                              className={`min-w-0 ${
+                              className={`min-w-0 relative overflow-hidden ${
                                 item.name === 'Solutions' 
                                   ? 'bg-white/[0.02] rounded-xl p-3 border border-white/[0.06]' 
                                   : ''
                               }`}
+                              onMouseMove={(e) => item.name === 'Solutions' && handleColumnMouseMove(e, sectionIdx)}
+                              onMouseEnter={() => item.name === 'Solutions' && setHoveredColumn(sectionIdx)}
+                              onMouseLeave={() => item.name === 'Solutions' && setHoveredColumn(null)}
                             >
+                              {/* Cursor-following radial gradient for Solutions columns */}
+                              {item.name === 'Solutions' && hoveredColumn === sectionIdx && (
+                                <div 
+                                  className="absolute inset-0 pointer-events-none transition-opacity duration-200"
+                                  style={{
+                                    background: `radial-gradient(200px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(139,92,246,0.1), transparent 70%)`,
+                                  }}
+                                  aria-hidden="true"
+                                />
+                              )}
                               {/* Section Header */}
                               <div className="mb-4">
                                 <h3 
@@ -553,15 +684,17 @@ export function MegaMenu() {
                                             {subItem.title}
                                           </span>
                                           {subItem.badge && (
-                                            <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
-                                              subItem.badge === 'Popular' 
-                                                ? 'bg-violet-500/20 text-violet-300 border border-violet-500/30'
-                                                : subItem.badge === 'Best Value'
-                                                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                                                : 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-                                            }`}>
+                                            <DiagonalLinesBadge
+                                              variant={
+                                                subItem.badge === 'Popular' 
+                                                  ? 'popular' 
+                                                  : subItem.badge === 'Best Value'
+                                                  ? 'bestValue'
+                                                  : 'compliance'
+                                              }
+                                            >
                                               {subItem.badge}
-                                            </span>
+                                            </DiagonalLinesBadge>
                                           )}
                                         </div>
                                         {subItem.description && (
@@ -598,12 +731,15 @@ export function MegaMenu() {
                           {/* Featured Panel for Solutions */}
                           {item.featuredPanel && (
                             <motion.div 
-                              className="bg-gradient-to-br from-violet-900/30 to-purple-900/20 border border-violet-500/20 rounded-xl p-4 flex flex-col justify-between"
+                              className="relative bg-gradient-to-br from-violet-900/30 to-purple-900/20 border border-violet-500/20 rounded-xl p-4 flex flex-col justify-between overflow-hidden"
                               initial={{ opacity: 0, scale: 0.95 }}
                               animate={{ opacity: 1, scale: 1 }}
                               transition={{ delay: 0.15 }}
                             >
-                              <div>
+                              {/* Hexagon pattern background */}
+                              <HexagonPattern id={uniqueId} />
+                              
+                              <div className="relative z-10">
                                 <h4 className="font-bold text-white text-sm mb-3 flex items-center gap-2">
                                   <CheckCircle className="w-4 h-4 text-emerald-500" />
                                   {item.featuredPanel.title}
@@ -621,7 +757,7 @@ export function MegaMenu() {
                                 href={item.featuredPanel.cta.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="mt-3 w-full inline-flex items-center justify-center px-3 py-2 bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold rounded-lg transition-all hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] focus:outline-none focus:ring-2 focus:ring-violet-500"
+                                className="relative z-10 mt-3 w-full inline-flex items-center justify-center px-3 py-2 bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold rounded-lg transition-all hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] focus:outline-none focus:ring-2 focus:ring-violet-500"
                                 onClick={handleLinkClick}
                               >
                                 {item.featuredPanel.cta.text}
