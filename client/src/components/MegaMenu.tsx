@@ -569,7 +569,7 @@ export function MegaMenu() {
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.2 }}
                         className={`fixed left-0 right-0 top-20 mx-auto ${
-                          item.name === 'Solutions' ? 'w-[95vw] max-w-6xl' : 'w-[90vw] max-w-5xl'
+                          item.name === 'Solutions' ? 'w-[98vw] max-w-7xl' : 'w-[90vw] max-w-5xl'
                         } bg-[#0a0118] backdrop-blur-xl border border-white/15 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.6),0_0_40px_rgba(139,92,246,0.2)] mega-menu-dropdown overflow-hidden`}
                         onMouseEnter={handleDropdownMouseEnter}
                         onMouseLeave={handleMouseLeave}
@@ -581,10 +581,10 @@ export function MegaMenu() {
                         <DotMatrixTexture />
                         {item.name === 'Solutions' && <CircuitLines id={uniqueId} />}
                         
-                        <div className={`p-6 relative ${
+                        <div className={`relative ${
                           item.name === 'Solutions' 
-                            ? 'grid grid-cols-[1fr_1.1fr_1.1fr_1.1fr_1fr] gap-6' 
-                            : 'grid grid-cols-3 gap-6'
+                            ? 'grid grid-cols-5 divide-x divide-white/5' 
+                            : 'p-6 grid grid-cols-3 gap-6'
                         }`}>
                           {item.sections.map((section, sectionIdx) => (
                             <motion.div 
@@ -597,7 +597,7 @@ export function MegaMenu() {
                               transition={{ delay: sectionIdx * 0.05 }}
                               className={`min-w-0 relative overflow-hidden ${
                                 item.name === 'Solutions' 
-                                  ? 'bg-white/[0.02] rounded-xl p-3 border border-white/[0.06]' 
+                                  ? 'p-4' 
                                   : ''
                               }`}
                               onMouseMove={(e) => item.name === 'Solutions' && handleColumnMouseMove(e, sectionIdx)}
@@ -615,29 +615,24 @@ export function MegaMenu() {
                                 />
                               )}
                               {/* Section Header */}
-                              <div className="mb-4">
+                              <div className="mb-3">
                                 <h3 
-                                  className={`font-bold text-sm uppercase tracking-wider flex items-center gap-2 ${
-                                    section.featured ? 'text-violet-400' : 'text-gray-400'
+                                  className={`font-bold text-[11px] uppercase tracking-[0.2em] flex items-center gap-2 ${
+                                    section.featured ? 'text-violet-400' : 'text-gray-500'
                                   }`}
                                   id={`menu-section-${section.title.replace(/\s+/g, '-')}`}
                                 >
                                   {section.title}
-                                  {section.featured && (
-                                    <span className="text-[10px] bg-violet-600 text-white px-2 py-0.5 rounded-full font-medium normal-case tracking-normal">
-                                      ★ Top Picks
-                                    </span>
-                                  )}
                                 </h3>
-                                <div className={`h-px mt-2 ${
+                                <div className={`h-px mt-1.5 ${
                                   section.featured 
-                                    ? 'bg-gradient-to-r from-violet-500/50 to-purple-500/50' 
-                                    : 'bg-white/10'
+                                    ? 'bg-violet-500/30' 
+                                    : 'bg-white/5'
                                 }`} />
                               </div>
                               
                               <ul 
-                                className="space-y-1"
+                                className="space-y-0.5"
                                 role="menu"
                                 aria-labelledby={`menu-section-${section.title.replace(/\s+/g, '-')}`}
                                 onMouseLeave={() => setHoveredItem(null)}
@@ -645,7 +640,6 @@ export function MegaMenu() {
                                 {section.items.map((subItem, itemIdx) => {
                                   const itemKey = `${section.title}-${subItem.title}`;
                                   const isHovered = hoveredItem === itemKey;
-                                  const hasHoveredSibling = hoveredItem !== null && !isHovered;
                                   
                                   return (
                                   <motion.li 
@@ -657,40 +651,33 @@ export function MegaMenu() {
                                   >
                                     <a
                                       href={subItem.url || '#'}
-                                      className={`group/item flex items-start gap-3 p-2.5 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500 border ${
+                                      className={`group/item flex items-start gap-3 p-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-violet-500/50 border ${
                                         isHovered 
-                                          ? 'bg-violet-600/20 border-violet-500/40 shadow-[0_0_15px_rgba(139,92,246,0.3)]' 
-                                          : hasHoveredSibling
-                                          ? 'border-transparent opacity-50'
-                                          : 'border-transparent hover:border-white/10 hover:bg-white/5'
+                                          ? 'bg-violet-600/10 border-violet-500/20' 
+                                          : 'border-transparent hover:bg-white/[0.03]'
                                       }`}
                                       onClick={handleLinkClick}
                                       onMouseEnter={() => setHoveredItem(itemKey)}
                                       role="menuitem"
-                                      aria-label={`${subItem.title}: ${subItem.description || ''}`}
                                     >
                                       {subItem.icon && (
                                         <span className={`mt-0.5 transition-colors flex-shrink-0 ${
-                                          isHovered ? 'text-violet-400' : hasHoveredSibling ? 'text-violet-400/50' : 'text-violet-400 group-hover/item:text-violet-300'
+                                          isHovered ? 'text-violet-400' : 'text-violet-400/60 group-hover/item:text-violet-400'
                                         }`} aria-hidden="true">
-                                          {subItem.icon}
+                                          <div className="scale-90">{subItem.icon}</div>
                                         </span>
                                       )}
                                       <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 flex-wrap">
-                                          <span className={`font-medium transition-colors text-sm ${
-                                            isHovered ? 'text-white' : hasHoveredSibling ? 'text-gray-400' : 'text-gray-200 group-hover/item:text-white'
+                                          <span className={`font-semibold transition-colors text-[13px] ${
+                                            isHovered ? 'text-white' : 'text-gray-300 group-hover/item:text-white'
                                           }`}>
                                             {subItem.title}
                                           </span>
                                           {subItem.badge && (
                                             <DiagonalLinesBadge
                                               variant={
-                                                subItem.badge === 'Popular' 
-                                                  ? 'popular' 
-                                                  : subItem.badge === 'Best Value'
-                                                  ? 'bestValue'
-                                                  : 'compliance'
+                                                subItem.badge === 'Popular' ? 'popular' : subItem.badge === 'Best Value' ? 'bestValue' : 'compliance'
                                               }
                                             >
                                               {subItem.badge}
@@ -698,13 +685,8 @@ export function MegaMenu() {
                                           )}
                                         </div>
                                         {subItem.description && (
-                                          <p className="text-xs text-gray-500 group-hover/item:text-gray-400 mt-1 transition-colors leading-snug">
+                                          <p className="text-[11px] text-gray-500 group-hover/item:text-gray-400 mt-0.5 transition-colors leading-tight line-clamp-1">
                                             {subItem.description}
-                                          </p>
-                                        )}
-                                        {subItem.price && (
-                                          <p className="text-[11px] text-violet-400/70 mt-1 font-medium">
-                                            {subItem.price}
                                           </p>
                                         )}
                                       </div>
@@ -718,11 +700,11 @@ export function MegaMenu() {
                               {section.viewAllUrl && (
                                 <a
                                   href={section.viewAllUrl}
-                                  className="inline-flex items-center gap-1 mt-3 px-2 text-xs text-gray-500 hover:text-violet-400 transition-colors group/view"
+                                  className="inline-flex items-center gap-1 mt-2 px-2 text-[10px] font-bold text-gray-600 hover:text-violet-400 transition-colors group/view uppercase tracking-wider"
                                   onClick={handleLinkClick}
                                 >
-                                  View all
-                                  <ArrowRight className="w-3 h-3 group-hover/view:translate-x-0.5 transition-transform" />
+                                  Explore
+                                  <ArrowRight className="w-2.5 h-2.5 group-hover/view:translate-x-0.5 transition-transform" />
                                 </a>
                               )}
                             </motion.div>
@@ -731,7 +713,7 @@ export function MegaMenu() {
                           {/* Featured Panel for Solutions */}
                           {item.featuredPanel && (
                             <motion.div 
-                              className="relative bg-gradient-to-br from-violet-900/30 to-purple-900/20 border border-violet-500/20 rounded-xl p-4 flex flex-col justify-between overflow-hidden"
+                              className="relative bg-white/[0.02] p-4 flex flex-col justify-between overflow-hidden"
                               initial={{ opacity: 0, scale: 0.95 }}
                               animate={{ opacity: 1, scale: 1 }}
                               transition={{ delay: 0.15 }}
@@ -740,15 +722,15 @@ export function MegaMenu() {
                               <HexagonPattern id={uniqueId} />
                               
                               <div className="relative z-10">
-                                <h4 className="font-bold text-white text-sm mb-3 flex items-center gap-2">
-                                  <CheckCircle className="w-4 h-4 text-emerald-500" />
+                                <h4 className="font-bold text-white text-[13px] mb-3 flex items-center gap-2">
+                                  <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
                                   {item.featuredPanel.title}
                                 </h4>
                                 <div className="space-y-2">
                                   {item.featuredPanel.stats.map((stat, idx) => (
-                                    <div key={idx} className="flex items-center justify-between py-1.5 border-b border-white/5 last:border-0">
-                                      <span className="text-gray-400 text-xs">{stat.label}</span>
-                                      <span className="text-violet-400 font-bold text-sm">{stat.value}</span>
+                                    <div key={idx} className="flex items-center justify-between py-1 border-b border-white/5 last:border-0">
+                                      <span className="text-gray-500 text-[10px] uppercase tracking-wider font-semibold">{stat.label}</span>
+                                      <span className="text-violet-400 font-bold text-xs">{stat.value}</span>
                                     </div>
                                   ))}
                                 </div>
@@ -757,11 +739,11 @@ export function MegaMenu() {
                                 href={item.featuredPanel.cta.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="relative z-10 mt-3 w-full inline-flex items-center justify-center px-3 py-2 bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold rounded-lg transition-all hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] focus:outline-none focus:ring-2 focus:ring-violet-500"
+                                className="relative z-10 mt-4 w-full inline-flex items-center justify-center px-3 py-2 bg-violet-600 hover:bg-violet-500 text-white text-[11px] font-bold rounded-lg transition-all shadow-lg shadow-violet-500/20 uppercase tracking-wider"
                                 onClick={handleLinkClick}
                               >
                                 {item.featuredPanel.cta.text}
-                                <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+                                <ArrowRight className="w-3 h-3 ml-1.5" />
                               </a>
                             </motion.div>
                           )}
