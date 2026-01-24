@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { motion } from "framer-motion";
 
 interface ZohoASAPWidgetProps {
   isEnabled?: boolean;
@@ -117,7 +118,7 @@ export const ZohoASAPWidget = ({
 
         {/* Widget Panel */}
         {isOpen && (
-          <div className="absolute bottom-0 right-0 w-80 bg-white rounded-lg shadow-2xl overflow-hidden transform transition-all">
+          <div className="absolute bottom-0 right-0 w-[420px] bg-white rounded-lg shadow-2xl overflow-hidden transform transition-all border border-gray-200">
             {/* Header */}
             <div className="bg-gradient-to-r from-purple-600 to-blue-900 text-white p-4 flex justify-between items-center">
               <div>
@@ -144,25 +145,33 @@ export const ZohoASAPWidget = ({
             </div>
 
             {/* Tabs */}
-            <div className="border-b flex">
+            <div className="border-b flex bg-gray-50">
               {(
                 ["support", "kb", "status"] as const
               ).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`flex-1 py-2 px-3 text-sm font-medium transition-colors ${
+                  className={`flex-1 py-3 px-2 text-[13px] font-semibold transition-all flex flex-col items-center gap-1 ${
                     activeTab === tab
-                      ? "text-purple-600 border-b-2 border-purple-600"
-                      : "text-gray-600 hover:text-gray-900"
+                      ? "text-purple-600 bg-white"
+                      : "text-gray-500 hover:text-gray-900 hover:bg-gray-100/50"
                   }`}
                   data-testid={`button-tab-${tab}`}
                 >
-                  {tab === "support"
-                    ? "Support"
-                    : tab === "kb"
-                      ? "Knowledge Base"
-                      : "Status"}
+                  <span>
+                    {tab === "support"
+                      ? "Support"
+                      : tab === "kb"
+                        ? "Knowledge Base"
+                        : "Status"}
+                  </span>
+                  {activeTab === tab && (
+                    <motion.div 
+                      layoutId="activeTab"
+                      className="h-0.5 w-12 bg-purple-600 rounded-full"
+                    />
+                  )}
                 </button>
               ))}
             </div>
