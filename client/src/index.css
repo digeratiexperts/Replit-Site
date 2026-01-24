@@ -970,9 +970,9 @@ button, [role="button"], a {
 
 .city-btn:hover {
   @apply scale-105 z-10;
-  color: var(--c2, #fff);
-  background: var(--c1, rgba(139, 92, 246, 0.6));
-  border-color: var(--c1, rgba(139, 92, 246, 0.8));
+  color: var(--c1, rgba(139, 92, 246, 1));
+  background: transparent;
+  border-color: var(--c1, rgba(139, 92, 246, 1));
   box-shadow: 0 0 16px color-mix(in srgb, var(--c1, #8b5cf6) 25%, transparent 75%);
 }
 
