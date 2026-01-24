@@ -293,9 +293,9 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
       initial={{ opacity: 0, x: 10 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 10 }}
-      className="fixed right-4 z-50 hidden lg:flex flex-col items-center gap-1.5 py-3 px-1.5 rounded-full bg-black/20 backdrop-blur-sm border border-white/10"
+      className="fixed left-4 z-50 hidden lg:flex flex-col items-center gap-1.5 py-3 px-1.5 rounded-full bg-black/20 backdrop-blur-sm border border-white/10"
       style={{
-        top: '35%',
+        top: '50%',
         transform: 'translateY(-50%)',
       }}
       aria-label="Section navigation"
@@ -318,7 +318,7 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
         )}
         <span 
           role="tooltip"
-          className="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-2 py-1 bg-black/80 backdrop-blur-md text-white text-[10px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-lg"
+          className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-2 py-1 bg-black/80 backdrop-blur-md text-white text-[10px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-lg"
         >
           {isSnapEnabled ? 'Guided scroll' : 'Free scroll'}
         </span>
@@ -400,7 +400,7 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
             />
             <span 
               role="tooltip"
-              className="absolute right-full mr-4 top-1/2 -translate-y-1/2 px-2 py-1 bg-black/80 backdrop-blur-md text-white text-[10px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-lg"
+              className="absolute left-full ml-4 top-1/2 -translate-y-1/2 px-2 py-1 bg-black/80 backdrop-blur-md text-white text-[10px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-lg"
             >
               {section.label}
             </span>
