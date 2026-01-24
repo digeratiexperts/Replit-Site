@@ -193,40 +193,53 @@ function NavigationDots({ sections, currentSection, onNavigate, isVisible, curre
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 20 }}
-      className="fixed right-3 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col items-center gap-1.5"
+      className="fixed right-4 top-1/2 -translate-y-1/2 z-50 hidden lg:flex flex-col items-center gap-2 py-3 px-2 rounded-full backdrop-blur-md transition-colors duration-500"
+      style={{
+        backgroundColor: isDark ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.7)',
+        border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.1)',
+        boxShadow: isDark ? '0 4px 20px rgba(0, 0, 0, 0.3)' : '0 4px 20px rgba(0, 0, 0, 0.1)'
+      }}
       aria-label="Section navigation"
     >
-      {sections.map((section, index) => (
-        <button
-          key={section.id}
-          onClick={() => onNavigate(index)}
-          className={`group relative p-1 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 rounded-full transition-colors duration-300 ${
-            isDark ? 'focus:ring-offset-black' : 'focus:ring-offset-white'
-          }`}
-          aria-label={`Go to ${section.label}`}
-          aria-current={currentSection === index ? 'true' : undefined}
-          data-testid={`nav-dot-${section.id}`}
-        >
-          <span 
-            className={`block w-2 h-2 rounded-full transition-all duration-300 border ${
-              currentSection === index 
-                ? isDark 
-                  ? 'bg-transparent border-white scale-125 shadow-[0_0_8px_rgba(255,255,255,0.4)]'
-                  : 'bg-transparent border-violet-600 scale-125 shadow-[0_0_8px_rgba(139,92,246,0.4)]'
-                : isDark
-                  ? 'bg-transparent border-white/40 hover:border-white/70'
-                  : 'bg-transparent border-gray-400 hover:border-gray-600'
-            }`}
-          />
-          <span className={`absolute right-full mr-3 top-1/2 -translate-y-1/2 px-2 py-1 backdrop-blur-sm text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border ${
-            isDark 
-              ? 'bg-black/80 text-white border-white/10' 
-              : 'bg-white/90 text-gray-800 border-gray-200 shadow-lg'
-          }`}>
-            {section.label}
-          </span>
-        </button>
-      ))}
+      {sections.map((section, index) => {
+        const isActive = currentSection === index;
+        const sectionTheme = section.theme || 'dark';
+        const useDarkStyle = isDark;
+        
+        return (
+          <button
+            key={section.id}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onNavigate(index);
+            }}
+            className={`group relative p-0.5 focus:outline-none rounded-full transition-all duration-300`}
+            aria-label={`Go to ${section.label} (section ${index + 1} of ${sections.length})`}
+            aria-current={isActive ? 'true' : undefined}
+            data-testid={`nav-dot-${section.id}`}
+          >
+            <span 
+              className={`block rounded-full transition-all duration-300 ${
+                isActive 
+                  ? useDarkStyle
+                    ? 'w-2.5 h-2.5 bg-white shadow-[0_0_10px_rgba(255,255,255,0.6)]'
+                    : 'w-2.5 h-2.5 bg-violet-600 shadow-[0_0_10px_rgba(139,92,246,0.6)]'
+                  : useDarkStyle
+                    ? 'w-2 h-2 bg-white/30 hover:bg-white/60'
+                    : 'w-2 h-2 bg-gray-400/60 hover:bg-violet-500/80'
+              }`}
+            />
+            <span className={`absolute right-full mr-4 top-1/2 -translate-y-1/2 px-2.5 py-1.5 backdrop-blur-md text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 ${
+              useDarkStyle 
+                ? 'bg-black/90 text-white border border-white/20 shadow-xl' 
+                : 'bg-white text-gray-800 border border-gray-200 shadow-xl'
+            }`}>
+              {section.label}
+            </span>
+          </button>
+        );
+      })}
     </motion.nav>
   );
 }
