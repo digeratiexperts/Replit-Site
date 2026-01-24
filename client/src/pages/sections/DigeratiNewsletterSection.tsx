@@ -12,6 +12,7 @@ import avatarsImg from "@assets/Frame-2131330726_1767027918695.png";
 export const DigeratiNewsletterSection = (): JSX.Element => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const { toast } = useToast();
   const prefersReducedMotion = useReducedMotion();
 
@@ -30,6 +31,7 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
     
     setEmail("");
     setIsSubmitting(false);
+    setIsSubscribed(true);
   };
 
   const benefits = [
@@ -84,40 +86,62 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
 
             {/* Email form - Clean card style */}
             <div className="max-w-xl mx-auto mb-10">
-              <form 
-                onSubmit={handleSubmit} 
-                className="flex flex-col sm:flex-row gap-3 p-2 rounded-2xl bg-white shadow-xl border border-gray-200"
-              >
-                <Input
-                  type="email"
-                  placeholder="Enter your work email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  data-testid="input-newsletter-email"
-                  className="flex-1 h-12 border-0 shadow-none focus-visible:ring-0 text-gray-900 placeholder:text-gray-400"
-                  disabled={isSubmitting}
-                  required
-                />
-                <Button
-                  type="submit"
-                  size="lg"
-                  data-testid="button-newsletter-submit"
-                  className="h-12 px-8 bg-violet-600 hover:bg-violet-700 text-white font-semibold shadow-lg"
-                  disabled={isSubmitting}
+              {isSubscribed ? (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-white shadow-xl border border-emerald-200"
+                  data-testid="newsletter-success"
                 >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                      Subscribing...
-                    </>
-                  ) : (
-                    <>
-                      Subscribe
-                      <Mail className="ml-2 h-5 w-5" />
-                    </>
-                  )}
-                </Button>
-              </form>
+                  <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center">
+                    <Shield className="h-6 w-6 text-emerald-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">You're Subscribed!</h3>
+                  <p className="text-gray-600 text-center">Check your inbox for a confirmation email. Welcome to our security community!</p>
+                  <Button
+                    variant="ghost"
+                    onClick={() => setIsSubscribed(false)}
+                    className="text-violet-600 hover:text-violet-700"
+                  >
+                    Subscribe another email
+                  </Button>
+                </motion.div>
+              ) : (
+                <form 
+                  onSubmit={handleSubmit} 
+                  className="flex flex-col sm:flex-row gap-3 p-2 rounded-2xl bg-white shadow-xl border border-gray-200"
+                >
+                  <Input
+                    type="email"
+                    placeholder="Enter your work email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    data-testid="input-newsletter-email"
+                    className="flex-1 h-12 border-0 shadow-none focus-visible:ring-0 text-gray-900 placeholder:text-gray-400"
+                    disabled={isSubmitting}
+                    required
+                  />
+                  <Button
+                    type="submit"
+                    size="lg"
+                    data-testid="button-newsletter-submit"
+                    className="h-12 px-8 bg-violet-600 hover:bg-violet-700 text-white font-semibold shadow-lg"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        Subscribing...
+                      </>
+                    ) : (
+                      <>
+                        Subscribe
+                        <Mail className="ml-2 h-5 w-5" />
+                      </>
+                    )}
+                  </Button>
+                </form>
+              )}
             </div>
 
             {/* Benefits */}
