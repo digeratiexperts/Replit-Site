@@ -19,7 +19,9 @@ export function StickyCTABar() {
       const threshold = window.innerHeight * 0.5;
       
       const isPortalPage = window.location.pathname.startsWith("/portal");
-      if (isPortalPage) {
+      const isHomePage = window.location.pathname === "/";
+      
+      if (isPortalPage || isHomePage) {
         setIsVisible(false);
         return;
       }
