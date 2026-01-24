@@ -293,36 +293,9 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
-      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden lg:flex flex-row items-center gap-3 py-2 px-4 rounded-full bg-black/40 backdrop-blur-md border border-white/15 shadow-lg"
+      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden lg:flex flex-row items-center gap-1 py-1.5 px-2 rounded-full bg-black/90 backdrop-blur-md border border-white/10 shadow-2xl"
       aria-label="Section navigation"
     >
-      {/* Scroll mode toggle */}
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          onToggleSnap();
-        }}
-        className="group relative p-1 mb-0.5 rounded-full transition-all duration-300 hover:bg-violet-500/20"
-        aria-label={isSnapEnabled ? 'Switch to free scroll' : 'Switch to guided scroll'}
-        data-testid="scroll-mode-toggle"
-      >
-        {isSnapEnabled ? (
-          <Lock className="w-2.5 h-2.5 text-violet-400 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]" />
-        ) : (
-          <Unlock className="w-2.5 h-2.5 text-violet-400/60 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]" />
-        )}
-        <span 
-          role="tooltip"
-          className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 px-2 py-1 bg-black/80 backdrop-blur-md text-white text-[10px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-lg"
-        >
-          {isSnapEnabled ? 'Guided scroll' : 'Free scroll'}
-        </span>
-      </button>
-      
-      {/* Divider */}
-      <div className="w-px h-4 bg-violet-400/30" />
-      
       {sections.map((section, index) => {
         const isActive = currentSection === index;
         
@@ -334,72 +307,16 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
               e.stopPropagation();
               onNavigate(index);
             }}
-            className="group relative p-1 focus:outline-none rounded-full"
+            className={`relative px-4 py-1.5 text-xs font-medium rounded-full transition-all duration-300 focus:outline-none ${
+              isActive 
+                ? 'bg-white text-black shadow-lg' 
+                : 'text-white/70 hover:text-white hover:bg-white/10'
+            }`}
             aria-label={`Go to ${section.label} (section ${index + 1} of ${sections.length})`}
             aria-current={isActive ? 'true' : undefined}
             data-testid={`nav-dot-${section.id}`}
           >
-            {/* Progress ring for active dot */}
-            {isActive && (
-              <>
-                {/* Background ring (track) */}
-                <span
-                  className="absolute inset-0 rounded-full"
-                  style={{
-                    width: '16px',
-                    height: '16px',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    border: '2px solid rgba(167, 139, 250, 0.2)',
-                  }}
-                />
-                {/* Progress ring */}
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="absolute rounded-full"
-                  style={{
-                    width: '16px',
-                    height: '16px',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    background: `conic-gradient(from -90deg, rgba(167, 139, 250, 1) ${sectionProgress * 360}deg, transparent ${sectionProgress * 360}deg)`,
-                    mask: 'radial-gradient(farthest-side, transparent calc(100% - 2px), #fff calc(100% - 2px))',
-                    WebkitMask: 'radial-gradient(farthest-side, transparent calc(100% - 2px), #fff calc(100% - 2px))',
-                  }}
-                />
-              </>
-            )}
-            
-            <motion.span 
-              animate={isActive ? {
-                scale: [1, 1.15, 1],
-              } : {}}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              className={`block rounded-full transition-all duration-300 relative z-10 ${
-                isActive 
-                  ? 'w-2.5 h-2.5 bg-violet-400 ring-2 ring-violet-400/40 ring-offset-1 ring-offset-black/50'
-                  : 'w-2 h-2 bg-white/40 hover:bg-white/70 border border-white/20'
-              }`}
-              style={{
-                boxShadow: isActive 
-                  ? '0 0 12px rgba(167, 139, 250, 1), 0 2px 4px rgba(0, 0, 0, 0.5)' 
-                  : '0 1px 3px rgba(0, 0, 0, 0.4)',
-                transition: 'all 0.3s ease'
-              }}
-            />
-            <span 
-              role="tooltip"
-              className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 px-2 py-1 bg-black/80 backdrop-blur-md text-white text-[10px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-lg"
-            >
-              {section.label}
-            </span>
+            {section.label}
           </button>
         );
       })}
