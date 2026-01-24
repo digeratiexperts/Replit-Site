@@ -15,6 +15,7 @@ interface FullPageScrollContextType {
   isSnapEnabled: boolean;
   toggleSnap: () => void;
   currentTheme: 'dark' | 'light';
+  sectionProgress: number;
 }
 
 const FullPageScrollContext = createContext<FullPageScrollContextType | null>(null);
@@ -39,11 +40,15 @@ export function FullPageScrollProvider({
   enableOnMobile = false 
 }: FullPageScrollProviderProps) {
   const [currentSection, setCurrentSection] = useState(0);
+  const [sectionProgress, setSectionProgress] = useState(0);
   const [isSnapEnabled, setIsSnapEnabled] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const isScrollingRef = useRef(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const snapTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastScrollY = useRef(0);
+  const sectionVisibility = useRef<Map<string, number>>(new Map());
 
   useEffect(() => {
     const checkMobile = () => {
@@ -68,7 +73,7 @@ export function FullPageScrollProvider({
       }
       scrollTimeoutRef.current = setTimeout(() => {
         isScrollingRef.current = false;
-      }, 1000);
+      }, 800);
     }
   }, [sections]);
 
@@ -76,20 +81,72 @@ export function FullPageScrollProvider({
     setIsSnapEnabled(prev => !prev);
   }, []);
 
+  // Center-based section tracking for reliable theme switching
   useEffect(() => {
-    const handleScroll = () => {
+    const findCenterSection = () => {
       if (isScrollingRef.current) return;
       
-      const scrollPosition = window.scrollY + window.innerHeight / 3;
+      const viewportCenter = window.scrollY + window.innerHeight / 2;
+      let closestSection = 0;
+      let closestDistance = Infinity;
       
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = document.getElementById(sections[i].id);
-        if (section && section.offsetTop <= scrollPosition) {
-          if (currentSection !== i) {
-            setCurrentSection(i);
+      sections.forEach((section, index) => {
+        const element = document.getElementById(section.id);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          const elementTop = window.scrollY + rect.top;
+          const elementCenter = elementTop + element.offsetHeight / 2;
+          const distance = Math.abs(viewportCenter - elementCenter);
+          
+          // Also check if viewport center is within the section bounds
+          const isWithinSection = viewportCenter >= elementTop && 
+                                   viewportCenter <= elementTop + element.offsetHeight;
+          
+          if (isWithinSection) {
+            closestSection = index;
+            closestDistance = 0;
+          } else if (distance < closestDistance) {
+            closestDistance = distance;
+            closestSection = index;
           }
-          break;
         }
+      });
+      
+      if (currentSection !== closestSection) {
+        setCurrentSection(closestSection);
+      }
+    };
+    
+    // Use requestAnimationFrame for smooth updates
+    let rafId: number;
+    const handleScroll = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(findCenterSection);
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Initial check
+    findCenterSection();
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      cancelAnimationFrame(rafId);
+    };
+  }, [sections, currentSection]);
+
+  // Scroll progress tracking within current section
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentElement = document.getElementById(sections[currentSection]?.id);
+      if (currentElement) {
+        const rect = currentElement.getBoundingClientRect();
+        const sectionHeight = currentElement.offsetHeight;
+        const viewportHeight = window.innerHeight;
+        
+        // Calculate how much of the section has been scrolled
+        const scrolled = Math.max(0, -rect.top);
+        const progress = Math.min(1, Math.max(0, scrolled / (sectionHeight - viewportHeight * 0.5)));
+        setSectionProgress(progress);
       }
     };
 
@@ -97,9 +154,65 @@ export function FullPageScrollProvider({
     return () => window.removeEventListener('scroll', handleScroll);
   }, [sections, currentSection]);
 
+  // Debounced snap-to-section on scroll end
+  useEffect(() => {
+    if (!isSnapEnabled || isMobile) return;
+    
+    const handleScrollEnd = () => {
+      if (isScrollingRef.current) return;
+      
+      // Clear any existing snap timeout
+      if (snapTimeoutRef.current) {
+        clearTimeout(snapTimeoutRef.current);
+      }
+      
+      // Debounce: wait for scroll to settle
+      snapTimeoutRef.current = setTimeout(() => {
+        // Find the section closest to the viewport center
+        const viewportCenter = window.scrollY + window.innerHeight / 2;
+        let closestSection = 0;
+        let closestDistance = Infinity;
+        
+        sections.forEach((section, index) => {
+          const element = document.getElementById(section.id);
+          if (element) {
+            const sectionCenter = element.offsetTop + element.offsetHeight / 2;
+            const distance = Math.abs(viewportCenter - sectionCenter);
+            if (distance < closestDistance) {
+              closestDistance = distance;
+              closestSection = index;
+            }
+          }
+        });
+        
+        // Only snap if we're not already at the closest section
+        const currentElement = document.getElementById(sections[closestSection]?.id);
+        if (currentElement) {
+          const rect = currentElement.getBoundingClientRect();
+          // Only snap if section is partially visible but not well-aligned
+          if (Math.abs(rect.top) > 50 && Math.abs(rect.top) < window.innerHeight * 0.4) {
+            scrollToSection(closestSection);
+          }
+        }
+      }, 150); // 150ms debounce
+    };
+    
+    const handleScroll = () => {
+      lastScrollY.current = window.scrollY;
+      handleScrollEnd();
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (snapTimeoutRef.current) {
+        clearTimeout(snapTimeoutRef.current);
+      }
+    };
+  }, [isSnapEnabled, isMobile, sections, scrollToSection]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isSnapEnabled) return;
       if (isMobile && !enableOnMobile) return;
       
       if (e.key === 'Escape') {
@@ -124,7 +237,7 @@ export function FullPageScrollProvider({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isSnapEnabled, isMobile, enableOnMobile, currentSection, sections.length, scrollToSection]);
+  }, [isMobile, enableOnMobile, currentSection, sections.length, scrollToSection]);
 
   const effectiveSnapEnabled = isSnapEnabled && (!isMobile || enableOnMobile);
 
@@ -135,17 +248,12 @@ export function FullPageScrollProvider({
       scrollToSection,
       isSnapEnabled: effectiveSnapEnabled,
       toggleSnap,
-      currentTheme: sections[currentSection]?.theme || 'dark'
+      currentTheme: sections[currentSection]?.theme || 'dark',
+      sectionProgress
     }}>
       <div 
         ref={containerRef}
-        className={effectiveSnapEnabled ? 'scroll-snap-container' : ''}
-        style={effectiveSnapEnabled ? {
-          scrollSnapType: 'y proximity',
-          overflowY: 'auto',
-          height: '100vh',
-          scrollBehavior: 'smooth'
-        } : undefined}
+        className="scroll-smooth"
       >
         {children}
       </div>
@@ -158,6 +266,7 @@ export function FullPageScrollProvider({
         currentTheme={sections[currentSection]?.theme || 'dark'}
         isSnapEnabled={effectiveSnapEnabled}
         onToggleSnap={toggleSnap}
+        sectionProgress={sectionProgress}
       />
       
       <ScrollDownIndicator 
@@ -185,9 +294,10 @@ interface NavigationDotsProps {
   currentTheme: 'dark' | 'light';
   isSnapEnabled: boolean;
   onToggleSnap: () => void;
+  sectionProgress: number;
 }
 
-function NavigationDots({ sections, currentSection, onNavigate, isVisible, currentTheme, isSnapEnabled, onToggleSnap }: NavigationDotsProps) {
+function NavigationDots({ sections, currentSection, onNavigate, currentTheme, isSnapEnabled, onToggleSnap, sectionProgress }: NavigationDotsProps) {
   const isDark = currentTheme === 'dark';
   
   return (
@@ -195,14 +305,15 @@ function NavigationDots({ sections, currentSection, onNavigate, isVisible, curre
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 20 }}
-      className="fixed right-4 z-50 hidden lg:flex flex-col items-center gap-1.5 py-3 px-2 rounded-full backdrop-blur-md transition-colors duration-500"
+      className="fixed right-4 z-50 hidden lg:flex flex-col items-center gap-1.5 py-3 px-2 rounded-full backdrop-blur-md"
       style={{
         top: '50%',
         transform: 'translateY(-50%)',
         marginTop: '-60px',
         backgroundColor: isDark ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.8)',
         border: isDark ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid rgba(0, 0, 0, 0.1)',
-        boxShadow: isDark ? '0 4px 20px rgba(0, 0, 0, 0.4)' : '0 4px 20px rgba(0, 0, 0, 0.15)'
+        boxShadow: isDark ? '0 4px 20px rgba(0, 0, 0, 0.4)' : '0 4px 20px rgba(0, 0, 0, 0.15)',
+        transition: 'background-color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease'
       }}
       aria-label="Section navigation"
     >
@@ -222,9 +333,9 @@ function NavigationDots({ sections, currentSection, onNavigate, isVisible, curre
         data-testid="scroll-mode-toggle"
       >
         {isSnapEnabled ? (
-          <Lock className={`w-3 h-3 transition-colors ${isDark ? 'text-violet-400' : 'text-violet-600'}`} />
+          <Lock className={`w-3 h-3 transition-colors duration-300 ${isDark ? 'text-violet-400' : 'text-violet-600'}`} />
         ) : (
-          <Unlock className={`w-3 h-3 transition-colors ${isDark ? 'text-white/60' : 'text-gray-500'}`} />
+          <Unlock className={`w-3 h-3 transition-colors duration-300 ${isDark ? 'text-white/60' : 'text-gray-500'}`} />
         )}
         <span className={`absolute right-full mr-4 top-1/2 -translate-y-1/2 px-2.5 py-1.5 backdrop-blur-md text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 ${
           isDark 
@@ -236,7 +347,7 @@ function NavigationDots({ sections, currentSection, onNavigate, isVisible, curre
       </button>
       
       {/* Divider */}
-      <div className={`w-4 h-px mb-1 ${isDark ? 'bg-white/20' : 'bg-gray-300'}`} />
+      <div className={`w-4 h-px mb-1 transition-colors duration-500 ${isDark ? 'bg-white/20' : 'bg-gray-300'}`} />
       
       {sections.map((section, index) => {
         const isActive = currentSection === index;
@@ -250,21 +361,48 @@ function NavigationDots({ sections, currentSection, onNavigate, isVisible, curre
               e.stopPropagation();
               onNavigate(index);
             }}
-            className={`group relative p-0.5 focus:outline-none rounded-full transition-all duration-300`}
+            className="group relative p-0.5 focus:outline-none rounded-full"
             aria-label={`Go to ${section.label} (section ${index + 1} of ${sections.length})`}
             aria-current={isActive ? 'true' : undefined}
             data-testid={`nav-dot-${section.id}`}
           >
-            <span 
-              className={`block rounded-full transition-all duration-300 ${
+            {/* Progress ring for active dot */}
+            {isActive && (
+              <motion.span
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="absolute inset-0 rounded-full"
+                style={{
+                  background: useDarkStyle 
+                    ? `conic-gradient(from 0deg, rgba(167, 139, 250, 0.8) ${sectionProgress * 360}deg, transparent ${sectionProgress * 360}deg)`
+                    : `conic-gradient(from 0deg, rgba(139, 92, 246, 0.8) ${sectionProgress * 360}deg, transparent ${sectionProgress * 360}deg)`,
+                  transform: 'scale(1.6)',
+                  opacity: 0.6
+                }}
+              />
+            )}
+            
+            <motion.span 
+              animate={isActive ? {
+                scale: [1, 1.1, 1],
+              } : {}}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className={`block rounded-full transition-all duration-300 relative z-10 ${
                 isActive 
                   ? useDarkStyle
-                    ? 'w-2.5 h-2.5 bg-white shadow-[0_0_10px_rgba(255,255,255,0.6)]'
-                    : 'w-2.5 h-2.5 bg-violet-600 shadow-[0_0_10px_rgba(139,92,246,0.6)]'
+                    ? 'w-2.5 h-2.5 bg-white shadow-[0_0_12px_rgba(255,255,255,0.7)]'
+                    : 'w-2.5 h-2.5 bg-violet-600 shadow-[0_0_12px_rgba(139,92,246,0.7)]'
                   : useDarkStyle
                     ? 'w-2 h-2 bg-white/30 hover:bg-white/60'
                     : 'w-2 h-2 bg-gray-400/60 hover:bg-violet-500/80'
               }`}
+              style={{
+                transition: 'all 0.3s ease, background-color 0.5s ease'
+              }}
             />
             <span className={`absolute right-full mr-4 top-1/2 -translate-y-1/2 px-2.5 py-1.5 backdrop-blur-md text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 ${
               useDarkStyle 
@@ -299,11 +437,14 @@ function ScrollDownIndicator({ onScrollDown, isVisible, currentTheme }: ScrollDo
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           onClick={onScrollDown}
-          className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-30 p-2.5 rounded-full backdrop-blur-sm transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-violet-400 hidden lg:flex ${
+          className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-30 p-2.5 rounded-full backdrop-blur-sm group focus:outline-none focus:ring-2 focus:ring-violet-400 hidden lg:flex ${
             isDark 
               ? 'bg-white/5 border border-white/20 hover:bg-white/10 hover:border-violet-400/50' 
               : 'bg-black/5 border border-gray-300 hover:bg-black/10 hover:border-violet-500/50 shadow-sm'
           }`}
+          style={{
+            transition: 'all 0.5s ease'
+          }}
           aria-label="Scroll to next section"
           data-testid="scroll-down-btn"
         >
@@ -315,7 +456,7 @@ function ScrollDownIndicator({ onScrollDown, isVisible, currentTheme }: ScrollDo
               ease: "easeInOut" 
             }}
           >
-            <ChevronDown className={`w-5 h-5 transition-colors duration-300 ${
+            <ChevronDown className={`w-5 h-5 transition-colors duration-500 ${
               isDark 
                 ? 'text-white/60 group-hover:text-violet-400' 
                 : 'text-gray-500 group-hover:text-violet-600'
@@ -344,11 +485,14 @@ function ScrollUpButton({ onScrollUp, isVisible, currentTheme }: ScrollUpButtonP
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
           onClick={onScrollUp}
-          className={`fixed bottom-6 right-[5.5rem] z-30 p-2.5 rounded-full backdrop-blur-sm transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-violet-400 hidden lg:flex ${
+          className={`fixed bottom-6 right-[5.5rem] z-30 p-2.5 rounded-full backdrop-blur-sm group focus:outline-none focus:ring-2 focus:ring-violet-400 hidden lg:flex ${
             isDark 
               ? 'bg-violet-600/80 border border-violet-500/50 hover:bg-violet-500 shadow-lg shadow-violet-500/30' 
               : 'bg-violet-600 border border-violet-500 hover:bg-violet-500 shadow-lg shadow-violet-500/40'
           }`}
+          style={{
+            transition: 'all 0.5s ease'
+          }}
           aria-label="Scroll to top"
           data-testid="scroll-up-btn"
         >
