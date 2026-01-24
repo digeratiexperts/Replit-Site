@@ -262,8 +262,6 @@ export function FullPageScrollProvider({
         sections={sections} 
         currentSection={currentSection} 
         onNavigate={scrollToSection}
-        isVisible={true}
-        currentTheme={sections[currentSection]?.theme || 'dark'}
         isSnapEnabled={effectiveSnapEnabled}
         onToggleSnap={toggleSnap}
         sectionProgress={sectionProgress}
@@ -274,13 +272,11 @@ export function FullPageScrollProvider({
         totalSections={sections.length}
         onScrollDown={() => scrollToSection(currentSection + 1)}
         isVisible={effectiveSnapEnabled && currentSection < sections.length - 1}
-        currentTheme={sections[currentSection]?.theme || 'dark'}
       />
       
       <ScrollUpButton
         onScrollUp={() => scrollToSection(0)}
         isVisible={currentSection > 0}
-        currentTheme={sections[currentSection]?.theme || 'dark'}
       />
     </FullPageScrollContext.Provider>
   );
@@ -290,30 +286,21 @@ interface NavigationDotsProps {
   sections: ScrollSection[];
   currentSection: number;
   onNavigate: (index: number) => void;
-  isVisible: boolean;
-  currentTheme: 'dark' | 'light';
   isSnapEnabled: boolean;
   onToggleSnap: () => void;
   sectionProgress: number;
 }
 
-function NavigationDots({ sections, currentSection, onNavigate, currentTheme, isSnapEnabled, onToggleSnap, sectionProgress }: NavigationDotsProps) {
-  const isDark = currentTheme === 'dark';
-  
+function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, onToggleSnap, sectionProgress }: NavigationDotsProps) {
   return (
     <motion.nav
-      initial={{ opacity: 0, x: 20 }}
+      initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 20 }}
-      className="fixed right-4 z-50 hidden lg:flex flex-col items-center gap-1.5 py-3 px-2 rounded-full backdrop-blur-md"
+      exit={{ opacity: 0, x: -10 }}
+      className="fixed left-3 z-50 hidden lg:flex flex-col items-center gap-1 py-2 px-1 rounded-full"
       style={{
         top: '50%',
         transform: 'translateY(-50%)',
-        marginTop: '-60px',
-        backgroundColor: isDark ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.8)',
-        border: isDark ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid rgba(0, 0, 0, 0.1)',
-        boxShadow: isDark ? '0 4px 20px rgba(0, 0, 0, 0.4)' : '0 4px 20px rgba(0, 0, 0, 0.15)',
-        transition: 'background-color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease'
       }}
       aria-label="Section navigation"
     >
@@ -324,34 +311,25 @@ function NavigationDots({ sections, currentSection, onNavigate, currentTheme, is
           e.stopPropagation();
           onToggleSnap();
         }}
-        className={`group relative p-1.5 mb-1 rounded-full transition-all duration-300 ${
-          isDark 
-            ? 'hover:bg-white/20' 
-            : 'hover:bg-gray-200/80'
-        }`}
+        className="group relative p-1 mb-0.5 rounded-full transition-all duration-300 hover:bg-violet-500/20"
         aria-label={isSnapEnabled ? 'Switch to free scroll' : 'Switch to guided scroll'}
         data-testid="scroll-mode-toggle"
       >
         {isSnapEnabled ? (
-          <Lock className={`w-3 h-3 transition-colors duration-300 ${isDark ? 'text-violet-400' : 'text-violet-600'}`} />
+          <Lock className="w-2.5 h-2.5 text-violet-400 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]" />
         ) : (
-          <Unlock className={`w-3 h-3 transition-colors duration-300 ${isDark ? 'text-white/60' : 'text-gray-500'}`} />
+          <Unlock className="w-2.5 h-2.5 text-violet-400/60 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]" />
         )}
-        <span className={`absolute right-full mr-4 top-1/2 -translate-y-1/2 px-2.5 py-1.5 backdrop-blur-md text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 ${
-          isDark 
-            ? 'bg-black/90 text-white border border-white/20 shadow-xl' 
-            : 'bg-white text-gray-800 border border-gray-200 shadow-xl'
-        }`}>
+        <span className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-2 py-1 bg-black/80 backdrop-blur-md text-white text-[10px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-lg">
           {isSnapEnabled ? 'Guided scroll' : 'Free scroll'}
         </span>
       </button>
       
       {/* Divider */}
-      <div className={`w-4 h-px mb-1 transition-colors duration-500 ${isDark ? 'bg-white/20' : 'bg-gray-300'}`} />
+      <div className="w-2 h-px mb-0.5 bg-violet-400/30" />
       
       {sections.map((section, index) => {
         const isActive = currentSection === index;
-        const useDarkStyle = isDark;
         
         return (
           <button
@@ -373,18 +351,16 @@ function NavigationDots({ sections, currentSection, onNavigate, currentTheme, is
                 animate={{ scale: 1, opacity: 1 }}
                 className="absolute inset-0 rounded-full"
                 style={{
-                  background: useDarkStyle 
-                    ? `conic-gradient(from 0deg, rgba(167, 139, 250, 0.8) ${sectionProgress * 360}deg, transparent ${sectionProgress * 360}deg)`
-                    : `conic-gradient(from 0deg, rgba(139, 92, 246, 0.8) ${sectionProgress * 360}deg, transparent ${sectionProgress * 360}deg)`,
-                  transform: 'scale(1.6)',
-                  opacity: 0.6
+                  background: `conic-gradient(from 0deg, rgba(167, 139, 250, 0.9) ${sectionProgress * 360}deg, transparent ${sectionProgress * 360}deg)`,
+                  transform: 'scale(1.8)',
+                  opacity: 0.5
                 }}
               />
             )}
             
             <motion.span 
               animate={isActive ? {
-                scale: [1, 1.1, 1],
+                scale: [1, 1.15, 1],
               } : {}}
               transition={{
                 duration: 2,
@@ -393,22 +369,17 @@ function NavigationDots({ sections, currentSection, onNavigate, currentTheme, is
               }}
               className={`block rounded-full transition-all duration-300 relative z-10 ${
                 isActive 
-                  ? useDarkStyle
-                    ? 'w-2.5 h-2.5 bg-white shadow-[0_0_12px_rgba(255,255,255,0.7)]'
-                    : 'w-2.5 h-2.5 bg-violet-600 shadow-[0_0_12px_rgba(139,92,246,0.7)]'
-                  : useDarkStyle
-                    ? 'w-2 h-2 bg-white/30 hover:bg-white/60'
-                    : 'w-2 h-2 bg-gray-400/60 hover:bg-violet-500/80'
+                  ? 'w-1.5 h-1.5 bg-violet-400'
+                  : 'w-1 h-1 bg-violet-400/40 hover:bg-violet-400/80'
               }`}
               style={{
-                transition: 'all 0.3s ease, background-color 0.5s ease'
+                boxShadow: isActive 
+                  ? '0 0 8px rgba(167, 139, 250, 0.8), 0 1px 3px rgba(0, 0, 0, 0.4)' 
+                  : '0 1px 2px rgba(0, 0, 0, 0.3)',
+                transition: 'all 0.3s ease'
               }}
             />
-            <span className={`absolute right-full mr-4 top-1/2 -translate-y-1/2 px-2.5 py-1.5 backdrop-blur-md text-xs font-medium rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 ${
-              useDarkStyle 
-                ? 'bg-black/90 text-white border border-white/20 shadow-xl' 
-                : 'bg-white text-gray-800 border border-gray-200 shadow-xl'
-            }`}>
+            <span className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-2 py-1 bg-black/80 backdrop-blur-md text-white text-[10px] font-medium rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-lg">
               {section.label}
             </span>
           </button>
@@ -423,12 +394,9 @@ interface ScrollDownIndicatorProps {
   totalSections: number;
   onScrollDown: () => void;
   isVisible: boolean;
-  currentTheme: 'dark' | 'light';
 }
 
-function ScrollDownIndicator({ onScrollDown, isVisible, currentTheme }: ScrollDownIndicatorProps) {
-  const isDark = currentTheme === 'dark';
-  
+function ScrollDownIndicator({ onScrollDown, isVisible }: ScrollDownIndicatorProps) {
   return (
     <AnimatePresence>
       {isVisible && (
@@ -437,30 +405,22 @@ function ScrollDownIndicator({ onScrollDown, isVisible, currentTheme }: ScrollDo
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           onClick={onScrollDown}
-          className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-30 p-2.5 rounded-full backdrop-blur-sm group focus:outline-none focus:ring-2 focus:ring-violet-400 hidden lg:flex ${
-            isDark 
-              ? 'bg-white/5 border border-white/20 hover:bg-white/10 hover:border-violet-400/50' 
-              : 'bg-black/5 border border-gray-300 hover:bg-black/10 hover:border-violet-500/50 shadow-sm'
-          }`}
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 p-2 rounded-full group focus:outline-none focus:ring-2 focus:ring-violet-400 hidden lg:flex bg-violet-500/20 backdrop-blur-sm border border-violet-400/30 hover:bg-violet-500/30 hover:border-violet-400/50"
           style={{
-            transition: 'all 0.5s ease'
+            boxShadow: '0 2px 8px rgba(0,0,0,0.3), 0 0 12px rgba(167, 139, 250, 0.2)',
           }}
           aria-label="Scroll to next section"
           data-testid="scroll-down-btn"
         >
           <motion.div
-            animate={{ y: [0, 4, 0] }}
+            animate={{ y: [0, 3, 0] }}
             transition={{ 
               duration: 1.5, 
               repeat: Infinity, 
               ease: "easeInOut" 
             }}
           >
-            <ChevronDown className={`w-5 h-5 transition-colors duration-500 ${
-              isDark 
-                ? 'text-white/60 group-hover:text-violet-400' 
-                : 'text-gray-500 group-hover:text-violet-600'
-            }`} />
+            <ChevronDown className="w-4 h-4 text-violet-300 group-hover:text-violet-200 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]" />
           </motion.div>
         </motion.button>
       )}
@@ -471,12 +431,9 @@ function ScrollDownIndicator({ onScrollDown, isVisible, currentTheme }: ScrollDo
 interface ScrollUpButtonProps {
   onScrollUp: () => void;
   isVisible: boolean;
-  currentTheme: 'dark' | 'light';
 }
 
-function ScrollUpButton({ onScrollUp, isVisible, currentTheme }: ScrollUpButtonProps) {
-  const isDark = currentTheme === 'dark';
-  
+function ScrollUpButton({ onScrollUp, isVisible }: ScrollUpButtonProps) {
   return (
     <AnimatePresence>
       {isVisible && (
@@ -485,18 +442,14 @@ function ScrollUpButton({ onScrollUp, isVisible, currentTheme }: ScrollUpButtonP
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
           onClick={onScrollUp}
-          className={`fixed bottom-6 right-[5.5rem] z-30 p-2.5 rounded-full backdrop-blur-sm group focus:outline-none focus:ring-2 focus:ring-violet-400 hidden lg:flex ${
-            isDark 
-              ? 'bg-violet-600/80 border border-violet-500/50 hover:bg-violet-500 shadow-lg shadow-violet-500/30' 
-              : 'bg-violet-600 border border-violet-500 hover:bg-violet-500 shadow-lg shadow-violet-500/40'
-          }`}
+          className="fixed bottom-6 right-[5.5rem] z-30 p-2 rounded-full group focus:outline-none focus:ring-2 focus:ring-violet-400 hidden lg:flex bg-violet-500 border border-violet-400 hover:bg-violet-400"
           style={{
-            transition: 'all 0.5s ease'
+            boxShadow: '0 2px 8px rgba(0,0,0,0.3), 0 0 12px rgba(167, 139, 250, 0.4)',
           }}
           aria-label="Scroll to top"
           data-testid="scroll-up-btn"
         >
-          <ChevronUp className="w-4 h-4 text-white" />
+          <ChevronUp className="w-3.5 h-3.5 text-white" />
         </motion.button>
       )}
     </AnimatePresence>
