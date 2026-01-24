@@ -54,12 +54,12 @@ export const ModernHeroSection = (): JSX.Element => {
     offset: ["start start", "end start"],
   });
 
-  // Parallax transforms - subtle, smooth movement
-  const y = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 60]);
-  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["0%", "20%"]);
-  const floatingY1 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -80]);
-  const floatingY2 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -50]);
-  const floatingY3 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -30]);
+  // Parallax transforms - reduced for smoother scroll experience
+  const y = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 40]);
+  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["0%", "12%"]);
+  const floatingY1 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -50]);
+  const floatingY2 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -35]);
+  const floatingY3 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -20]);
   const opacity = 1;
 
   const features = [
@@ -129,9 +129,9 @@ export const ModernHeroSection = (): JSX.Element => {
             {/* Left column - Content with CTA */}
             <motion.div 
               className="flex flex-col gap-4 sm:gap-5 lg:gap-6 w-full"
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.4 }}
             >
               {/* Headline - clean and bold */}
               <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold leading-[1.1] tracking-[-0.02em]">
@@ -265,9 +265,9 @@ export const ModernHeroSection = (): JSX.Element => {
               {/* Stats Bar */}
               <motion.div 
                 className="grid grid-cols-3 gap-3 sm:flex sm:flex-wrap sm:gap-6 mt-4 pt-5 sm:pt-6 border-t border-white/10"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
+                transition={{ duration: 0.35, delay: 0.25 }}
               >
                 <div className="flex flex-col sm:flex-row items-center sm:items-center gap-1.5 sm:gap-3 text-center sm:text-left">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
@@ -303,9 +303,9 @@ export const ModernHeroSection = (): JSX.Element => {
             <div className="hidden lg:flex relative justify-end w-full">
               <motion.div
                 className="relative w-full max-w-[520px] xl:max-w-[560px]"
-                initial={{ opacity: 0, x: 30 }}
+                initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
+                transition={{ duration: 0.45, delay: 0.2, ease: "easeOut" }}
               >
                 {/* Subtle glow behind dashboard */}
                 <div className="absolute inset-0 bg-violet-500/10 blur-3xl scale-110 -z-10 rounded-3xl" />

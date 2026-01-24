@@ -17,9 +17,9 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
     offset: ["start end", "end start"]
   });
 
-  // Parallax transforms - subtle depth effect
-  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-5%", "5%"]);
-  const floatingY = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 20, prefersReducedMotion ? 0 : -20]);
+  // Parallax transforms - reduced for smoother scroll
+  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-3%", "3%"]);
+  const floatingY = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 15, prefersReducedMotion ? 0 : -15]);
   
   const insights = [
     {
@@ -113,10 +113,10 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div 
           className="text-center mb-8 md:mb-12"
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.35 }}
         >
           <Badge className="mb-3 md:mb-4 bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 text-xs md:text-sm">
             <Zap className="w-3 h-3 mr-1" />
@@ -134,10 +134,10 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
         <motion.div 
           className="flex overflow-x-auto scrollbar-hide gap-2 mb-8 md:mb-10 pb-2 md:justify-center"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 10 }}
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4, delay: 0.2 }}
+          viewport={{ once: true, margin: "-30px" }}
+          transition={{ duration: 0.3, delay: 0.1 }}
         >
           {categories.map((category, index) => (
             <button
@@ -257,10 +257,10 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
           {insights.map((insight, index) => (
             <motion.div
               key={index}
-              initial={prefersReducedMotion ? {} : { opacity: 0, y: 30 }}
+              initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true, margin: "-30px" }}
+              transition={{ duration: 0.35, delay: index * 0.06 }}
             >
               <Card 
                 className="group h-full bg-white/5 backdrop-blur-xl border-white/10 hover:border-white/20 transition-all duration-300 hover:bg-white/[0.07] overflow-hidden"
@@ -318,10 +318,10 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
 
         <motion.div 
           className="text-center"
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          viewport={{ once: true, margin: "-30px" }}
+          transition={{ duration: 0.35, delay: 0.2 }}
         >
           <Link 
             href="/resources/security-updates"

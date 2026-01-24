@@ -12,10 +12,10 @@ export const DigeratiServicesSection = (): JSX.Element => {
     offset: ["start end", "end start"]
   });
 
-  // Parallax transforms - subtle depth effect
-  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-5%", "5%"]);
-  const floatingY1 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 30, prefersReducedMotion ? 0 : -30]);
-  const floatingY2 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : -20, prefersReducedMotion ? 0 : 20]);
+  // Parallax transforms - reduced for smoother scroll
+  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-3%", "3%"]);
+  const floatingY1 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 20, prefersReducedMotion ? 0 : -20]);
+  const floatingY2 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : -15, prefersReducedMotion ? 0 : 15]);
 
   const services = [
     {
@@ -73,8 +73,8 @@ export const DigeratiServicesSection = (): JSX.Element => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
+        staggerChildren: 0.06,
+        delayChildren: 0.1
       }
     }
   };
@@ -82,15 +82,15 @@ export const DigeratiServicesSection = (): JSX.Element => {
   const cardVariants = prefersReducedMotion ? undefined : {
     hidden: { 
       opacity: 0, 
-      y: 40,
-      scale: 0.95
+      y: 25,
+      scale: 0.98
     },
     visible: { 
       opacity: 1, 
       y: 0,
       scale: 1,
       transition: {
-        duration: 0.5,
+        duration: 0.35,
         ease: [0.25, 0.46, 0.45, 0.94]
       }
     }

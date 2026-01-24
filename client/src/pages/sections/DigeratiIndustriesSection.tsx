@@ -21,10 +21,10 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
     offset: ["start end", "end start"]
   });
 
-  // Parallax transforms - subtle depth effect
-  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-5%", "5%"]);
-  const floatingY1 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 25, prefersReducedMotion ? 0 : -25]);
-  const floatingY2 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : -15, prefersReducedMotion ? 0 : 15]);
+  // Parallax transforms - reduced for smoother scroll
+  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-3%", "3%"]);
+  const floatingY1 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 18, prefersReducedMotion ? 0 : -18]);
+  const floatingY2 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : -12, prefersReducedMotion ? 0 : 12]);
 
   const industries = [
     { 
@@ -101,8 +101,8 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
+        staggerChildren: 0.06,
+        delayChildren: 0.1
       }
     }
   };
@@ -110,8 +110,8 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
   const cardVariants = prefersReducedMotion ? undefined : {
     hidden: { 
       opacity: 0, 
-      y: 30,
-      scale: 0.95
+      y: 20,
+      scale: 0.98
     },
     visible: { 
       opacity: 1, 
@@ -119,18 +119,18 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
       scale: 1,
       transition: {
         type: "spring",
-        stiffness: 100,
-        damping: 15
+        stiffness: 150,
+        damping: 20
       }
     }
   };
 
   const titleVariants = prefersReducedMotion ? undefined : {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 15 },
     visible: { 
       opacity: 1, 
       y: 0,
-      transition: { duration: 0.6, ease: "easeOut" }
+      transition: { duration: 0.4, ease: "easeOut" }
     }
   };
 

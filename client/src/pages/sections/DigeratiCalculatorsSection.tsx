@@ -52,10 +52,10 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
         {/* Section header */}
         <motion.div 
           className="text-center mb-8 md:mb-10"
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.35 }}
         >
           <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4 md:mb-6">
             <Calculator className="w-3.5 h-3.5 md:w-4 md:h-4 text-violet-400" />
@@ -73,10 +73,10 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
         <div className="space-y-4">
           {/* Downtime Calculator Accordion */}
           <motion.div
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+            initial={prefersReducedMotion ? {} : { opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            viewport={{ once: true, margin: "-30px" }}
+            transition={{ duration: 0.3 }}
           >
             <Card className="bg-[#111111] border border-white/[0.08] rounded-xl overflow-hidden">
               {/* Accordion trigger */}
@@ -251,10 +251,10 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
 
           {/* Pricing Estimator Accordion */}
           <motion.div
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+            initial={prefersReducedMotion ? {} : { opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            viewport={{ once: true, margin: "-30px" }}
+            transition={{ duration: 0.3, delay: 0.05 }}
           >
             <Card className="bg-[#111111] border border-white/[0.08] rounded-xl overflow-hidden">
               {/* Accordion trigger */}

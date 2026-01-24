@@ -27,11 +27,11 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
     offset: ["start end", "end start"]
   });
 
-  // Parallax transforms - subtle depth effect
-  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-5%", "5%"]);
-  const floatingY1 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 30, prefersReducedMotion ? 0 : -30]);
-  const floatingY2 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : -20, prefersReducedMotion ? 0 : 20]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [prefersReducedMotion ? 1 : 0.98, 1, prefersReducedMotion ? 1 : 0.98]);
+  // Parallax transforms - reduced for smoother scroll
+  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-3%", "3%"]);
+  const floatingY1 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 20, prefersReducedMotion ? 0 : -20]);
+  const floatingY2 = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : -15, prefersReducedMotion ? 0 : 15]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [prefersReducedMotion ? 1 : 0.99, 1, prefersReducedMotion ? 1 : 0.99]);
   
   const testimonials: Testimonial[] = [
     {
@@ -191,10 +191,10 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
         {/* Header */}
         <motion.div 
           className="text-center mb-8 md:mb-12 lg:mb-16"
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 30 }}
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.35 }}
         >
           <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4 md:mb-6">
             <Building2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-violet-400" />
@@ -225,10 +225,10 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
         {/* Testimonial Card */}
         <motion.div 
           className="max-w-4xl mx-auto"
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 40 }}
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          viewport={{ once: true, margin: "-30px" }}
+          transition={{ duration: 0.4, delay: 0.1 }}
         >
           <div className="relative">
             {/* Gradient border wrapper */}

@@ -39,10 +39,10 @@ export const DigeratiFAQSection = (): JSX.Element => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.35 }}
           className="text-center mb-8 md:mb-10 lg:mb-14"
         >
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 md:mb-4 px-2">
@@ -61,10 +61,10 @@ export const DigeratiFAQSection = (): JSX.Element => {
             return (
               <motion.div
                 key={index}
-                initial={prefersReducedMotion ? {} : { opacity: 0, y: 15 }}
+                initial={prefersReducedMotion ? {} : { opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
+                viewport={{ once: true, margin: "-30px" }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
                 data-testid={`faq-${index}`}
               >
                 <div className="bg-white rounded-lg md:rounded-xl shadow-sm">
