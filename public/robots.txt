@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://digeratiexperts.com/sitemap.xml
+
+# Disallow admin/portal areas from search engines
+Disallow: /portal/
+Disallow: /admin/
+Disallow: /api/
+
+# Allow specific assets
+Allow: /favicon.png
+Allow: /favicon-512x512.png

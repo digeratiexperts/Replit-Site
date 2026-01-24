@@ -1,0 +1,74 @@
+import { useEffect } from 'react';
+
+interface SEOProps {
+  title: string;
+  description?: string;
+  canonical?: string;
+  ogImage?: string;
+  noIndex?: boolean;
+}
+
+const BASE_TITLE = 'Digerati Experts';
+const DEFAULT_DESCRIPTION = "Arizona's trusted MSP/MSSP. Get 24/7 cybersecurity monitoring, managed IT services, and compliance support.";
+const SITE_URL = 'https://digeratiexperts.com';
+const DEFAULT_IMAGE = `${SITE_URL}/favicon-512x512.png`;
+
+export function useSEO({ title, description, canonical, ogImage, noIndex }: SEOProps) {
+  useEffect(() => {
+    const fullTitle = title ? `${title} | ${BASE_TITLE}` : BASE_TITLE;
+    const metaDescription = description || DEFAULT_DESCRIPTION;
+    const canonicalUrl = canonical ? `${SITE_URL}${canonical}` : undefined;
+    const image = ogImage || DEFAULT_IMAGE;
+
+    document.title = fullTitle;
+
+    const updateMetaTag = (selector: string, content: string, attribute = 'content') => {
+      let tag = document.querySelector(selector);
+      if (tag) {
+        tag.setAttribute(attribute, content);
+      }
+    };
+
+    const updateOrCreateMetaTag = (name: string, content: string, isProperty = false) => {
+      const attr = isProperty ? 'property' : 'name';
+      let tag = document.querySelector(`meta[${attr}="${name}"]`);
+      if (tag) {
+        tag.setAttribute('content', content);
+      } else {
+        tag = document.createElement('meta');
+        tag.setAttribute(attr, name);
+        tag.setAttribute('content', content);
+        document.head.appendChild(tag);
+      }
+    };
+
+    updateOrCreateMetaTag('description', metaDescription);
+    updateOrCreateMetaTag('og:title', fullTitle, true);
+    updateOrCreateMetaTag('og:description', metaDescription, true);
+    updateOrCreateMetaTag('og:image', image, true);
+    updateOrCreateMetaTag('twitter:title', fullTitle);
+    updateOrCreateMetaTag('twitter:description', metaDescription);
+    updateOrCreateMetaTag('twitter:image', image);
+
+    if (canonicalUrl) {
+      updateOrCreateMetaTag('og:url', canonicalUrl, true);
+      updateOrCreateMetaTag('twitter:url', canonicalUrl);
+      let link = document.querySelector('link[rel="canonical"]');
+      if (link) {
+        link.setAttribute('href', canonicalUrl);
+      }
+    }
+
+    if (noIndex) {
+      updateOrCreateMetaTag('robots', 'noindex, nofollow');
+    } else {
+      updateOrCreateMetaTag('robots', 'index, follow');
+    }
+
+    return () => {
+      document.title = BASE_TITLE;
+    };
+  }, [title, description, canonical, ogImage, noIndex]);
+}
+
+export default useSEO;
