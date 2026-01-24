@@ -784,23 +784,23 @@ export async function registerRoutes(app: Express) {
   demoCompanies.forEach(c => portalClients.set(c.id, c));
   
   // Admin credentials - CHANGE THESE IN PRODUCTION
-  // Password hash for "Admin123!" generated with bcrypt (12 rounds)
+  // Password: Admin123! (bcrypt 12 rounds)
   const adminUser = {
     id: "admin-001",
     email: "admin@digeratiexperts.com",
     username: "admin",
-    password: "$2b$12$ZvvL.svaDsmMCVWaeav.nOFxG69gq986jpWrc4tpr/9n.RU1Y9f8G",
+    password: "$2b$12$Bf.sDD1gQ6391SrTebkd4.9BeiteKKOswHl63vyCN0/51CmDldT7K",
     role: "admin",
     fullName: "Administrator",
     clientId: null,
   };
   
-  // Demo client users - Password: ClientDemo1! (hash: $2b$12$ZvvL.svaDsmMCVWaeav.nOFxG69gq986jpWrc4tpr/9n.RU1Y9f8G)
+  // Demo client users - Password: Admin123! (same as admin for demo)
   const demoUser1 = {
     id: "user-001",
     email: "john.smith@acme.com",
     username: "johnsmith",
-    password: "$2b$12$ZvvL.svaDsmMCVWaeav.nOFxG69gq986jpWrc4tpr/9n.RU1Y9f8G",
+    password: "$2b$12$Bf.sDD1gQ6391SrTebkd4.9BeiteKKOswHl63vyCN0/51CmDldT7K",
     role: "user",
     fullName: "John Smith",
     clientId: "client-1",
@@ -811,7 +811,7 @@ export async function registerRoutes(app: Express) {
     id: "user-002",
     email: "sarah.jones@phoenixmedical.com",
     username: "sarahjones",
-    password: "$2b$12$ZvvL.svaDsmMCVWaeav.nOFxG69gq986jpWrc4tpr/9n.RU1Y9f8G",
+    password: "$2b$12$Bf.sDD1gQ6391SrTebkd4.9BeiteKKOswHl63vyCN0/51CmDldT7K",
     role: "user",
     fullName: "Sarah Jones",
     clientId: "client-2",
@@ -910,10 +910,8 @@ export async function registerRoutes(app: Express) {
         return res.status(401).json({ message: "Invalid email or password" });
       }
 
-      // Generate JWT token
-      const jwt = await import('jsonwebtoken');
-      const JWT_SECRET = process.env.JWT_SECRET || "development-secret-key";
-      const token = jwt.default.sign(
+      // Generate JWT token using the module-level JWT_SECRET
+      const token = jwt.sign(
         { userId: user.id, email: user.email, role: user.role },
         JWT_SECRET,
         { expiresIn: '24h' }

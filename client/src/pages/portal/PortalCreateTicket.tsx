@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { queryClient } from "@/lib/queryClient";
 
 export default function PortalCreateTicket() {
   const [, navigate] = useLocation();
@@ -71,6 +72,10 @@ export default function PortalCreateTicket() {
       if (files.length > 0) {
         console.log(`Note: ${files.length} file(s) selected. File upload support coming soon.`);
       }
+
+      // Invalidate tickets cache so the list refreshes
+      queryClient.invalidateQueries({ queryKey: ["/api/portal/tickets"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/portal/dashboard"] });
 
       // Reset form and navigate
       setFormData({ subject: "", category: "", priority: "medium", description: "" });
