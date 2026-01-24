@@ -132,7 +132,7 @@ export default function Ecosystem() {
             {tiers.map((tier, index) => (
               <div
                 key={tier.name}
-                className={`rounded-2xl p-8 bg-white/5 backdrop-blur-xl border transition-all duration-300 ${
+                className={`rounded-2xl p-8 bg-white/5 backdrop-blur-xl border transition-all duration-300 flex flex-col ${
                   index === 1 
                     ? 'border-purple-500/50 ring-2 ring-purple-500/30 shadow-[0_30px_70px_-30px_rgba(139,92,246,0.4)]' 
                     : 'border-white/10 hover:border-white/20'
@@ -145,7 +145,7 @@ export default function Ecosystem() {
                     </span>
                   </div>
                 )}
-                <div className={`inline-block px-4 py-1.5 rounded-lg bg-gradient-to-r ${tier.color} text-white text-sm font-bold mb-4`}>
+                <div className={`inline-block px-4 py-1.5 rounded-lg bg-gradient-to-r ${tier.color} text-white text-sm font-bold mb-4 w-fit`}>
                   {tier.name}
                 </div>
                 <div className="mb-4">
@@ -153,7 +153,7 @@ export default function Ecosystem() {
                   <span className="text-gray-400 text-sm">/user avg</span>
                 </div>
                 <p className="text-gray-300 text-sm mb-6">{tier.desc}</p>
-                <ul className="space-y-2">
+                <ul className="space-y-2 flex-grow">
                   {tier.highlights.map((highlight, idx) => (
                     <li key={idx} className="text-sm text-gray-400 flex items-start gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-1.5 flex-shrink-0" />

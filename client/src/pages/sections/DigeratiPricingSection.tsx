@@ -168,7 +168,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
             {pricingPlans.map((plan, index) => (
               <div
                 key={index}
-                className={`relative rounded-2xl p-5 transition-all duration-300 flex-shrink-0 w-[280px] snap-center ${
+                className={`relative rounded-2xl p-5 transition-all duration-300 flex-shrink-0 w-[280px] snap-center flex flex-col ${
                   plan.isPopular 
                     ? 'bg-white border-2 border-violet-500 ring-2 ring-violet-500/30 shadow-xl shadow-violet-500/10' 
                     : 'bg-white border border-gray-200'
@@ -202,7 +202,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                   </div>
                 </div>
 
-                <ul className="space-y-2 mb-6">
+                <ul className="space-y-2 mb-6 flex-grow">
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-start">
                       <CheckCircle className="h-4 w-4 text-emerald-500 mr-2 flex-shrink-0 mt-0.5" />
@@ -213,7 +213,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                   ))}
                 </ul>
 
-                <div className="space-y-2">
+                <div className="space-y-2 mt-auto">
                   <a href={plan.learnMoreUrl}>
                     <Button 
                       className="w-full h-9 text-sm border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-50" 
@@ -260,7 +260,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
             <motion.div
               key={index}
               variants={cardVariants}
-              className={`relative rounded-2xl p-6 md:p-8 transition-all duration-300 ${
+              className={`relative rounded-2xl p-6 md:p-8 transition-all duration-300 flex flex-col ${
                 plan.isPopular 
                   ? 'bg-white border-2 border-violet-500 ring-2 ring-violet-500/30 shadow-xl shadow-violet-500/10' 
                   : 'bg-white border border-gray-200 hover:border-violet-300 hover:shadow-lg'
@@ -294,7 +294,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                 </div>
               </div>
 
-              <ul className="space-y-3 mb-8">
+              <ul className="space-y-3 mb-8 flex-grow">
                 {plan.features.map((feature, featureIndex) => (
                   <li key={featureIndex} className="flex items-start">
                     <CheckCircle className="h-5 w-5 text-emerald-500 mr-2 flex-shrink-0 mt-0.5" />
@@ -305,7 +305,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                 ))}
               </ul>
 
-              <div className="space-y-3">
+              <div className="space-y-3 mt-auto">
                 <a href={plan.learnMoreUrl}>
                   <Button 
                     className="w-full border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all duration-200" 
