@@ -73,7 +73,10 @@ export default function ManagedITSupport() {
         </div>
 
         {/* Pricing Matrix */}
-        <ServiceMatrix variant="compact" />
+        <div className="py-12">
+          <h2 className="text-3xl font-bold mb-8 text-white text-center">Service Comparison Matrix</h2>
+          <ServiceMatrix variant="full" showCTA={true} />
+        </div>
 
         {/* CTA */}
         <div className="bg-gradient-to-r from-purple-600 to-violet-600 rounded-lg p-8 text-center text-white">
