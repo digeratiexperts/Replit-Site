@@ -11,7 +11,8 @@ import {
   ExternalLink,
   Home,
   Briefcase,
-  Shield
+  Shield,
+  FolderOpen
 } from "lucide-react";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
 
@@ -700,6 +701,56 @@ export default function SalesProcessPage() {
             </div>
           </section>
         )}
+
+        {/* Reference Materials Section */}
+        <section className="mt-16 pt-12 border-t border-white/[0.08]">
+          <div className="flex items-center gap-3 mb-8">
+            <FolderOpen className="w-6 h-6 text-violet-400" />
+            <h2 className="text-xl font-semibold text-white">Reference Materials</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Link href="/internal/workplace-matrix" className="block p-4 bg-white/[0.02] border border-white/[0.06] rounded-lg hover:bg-white/[0.04] hover:border-violet-400/30 transition-all" data-testid="link-workplace-matrix">
+              <div className="text-violet-400 font-semibold mb-1">Workplace Matrix</div>
+              <div className="text-white/50 text-sm">Modern Digital Workplace framework</div>
+            </Link>
+            <Link href="/internal/core-it" className="block p-4 bg-white/[0.02] border border-white/[0.06] rounded-lg hover:bg-white/[0.04] hover:border-violet-400/30 transition-all" data-testid="link-core-it">
+              <div className="text-violet-400 font-semibold mb-1">Core IT</div>
+              <div className="text-white/50 text-sm">Essential IT systems overview</div>
+            </Link>
+            <Link href="/internal/security-stack" className="block p-4 bg-white/[0.02] border border-white/[0.06] rounded-lg hover:bg-white/[0.04] hover:border-violet-400/30 transition-all" data-testid="link-security-stack">
+              <div className="text-violet-400 font-semibold mb-1">Security Stack</div>
+              <div className="text-white/50 text-sm">Defense-in-depth approach</div>
+            </Link>
+            <Link href="/internal/pricing-tiers" className="block p-4 bg-white/[0.02] border border-white/[0.06] rounded-lg hover:bg-white/[0.04] hover:border-violet-400/30 transition-all" data-testid="link-pricing-tiers">
+              <div className="text-violet-400 font-semibold mb-1">Pricing Tiers</div>
+              <div className="text-white/50 text-sm">ProActive Ecosystem pricing</div>
+            </Link>
+            <Link href="/internal/service-packages" className="block p-4 bg-white/[0.02] border border-white/[0.06] rounded-lg hover:bg-white/[0.04] hover:border-violet-400/30 transition-all" data-testid="link-service-packages">
+              <div className="text-violet-400 font-semibold mb-1">Service Packages</div>
+              <div className="text-white/50 text-sm">Add-on packages breakdown</div>
+            </Link>
+            <Link href="/internal/vcio" className="block p-4 bg-white/[0.02] border border-white/[0.06] rounded-lg hover:bg-white/[0.04] hover:border-violet-400/30 transition-all" data-testid="link-vcio">
+              <div className="text-violet-400 font-semibold mb-1">vCIO Services</div>
+              <div className="text-white/50 text-sm">Strategic IT leadership offerings</div>
+            </Link>
+            <Link href="/internal/six-reasons" className="block p-4 bg-white/[0.02] border border-white/[0.06] rounded-lg hover:bg-white/[0.04] hover:border-violet-400/30 transition-all" data-testid="link-six-reasons">
+              <div className="text-violet-400 font-semibold mb-1">6 Reasons</div>
+              <div className="text-white/50 text-sm">Why choose Digerati Experts</div>
+            </Link>
+            <Link href="/internal/buyers-guide" className="block p-4 bg-white/[0.02] border border-white/[0.06] rounded-lg hover:bg-white/[0.04] hover:border-violet-400/30 transition-all" data-testid="link-buyers-guide">
+              <div className="text-violet-400 font-semibold mb-1">21 Questions Buyer's Guide</div>
+              <div className="text-white/50 text-sm">IT services evaluation questions</div>
+            </Link>
+            <Link href="/internal/cover-letter" className="block p-4 bg-white/[0.02] border border-white/[0.06] rounded-lg hover:bg-white/[0.04] hover:border-violet-400/30 transition-all" data-testid="link-cover-letter">
+              <div className="text-violet-400 font-semibold mb-1">Pre-Meeting Cover Letter</div>
+              <div className="text-white/50 text-sm">Shock & Awe introduction</div>
+            </Link>
+            <Link href="/internal/audio-business-card" className="block p-4 bg-white/[0.02] border border-white/[0.06] rounded-lg hover:bg-white/[0.04] hover:border-violet-400/30 transition-all" data-testid="link-audio-business-card">
+              <div className="text-violet-400 font-semibold mb-1">Audio Business Card</div>
+              <div className="text-white/50 text-sm">Interview script for audio content</div>
+            </Link>
+          </div>
+        </section>
 
         {/* Simple footer */}
         <footer className="mt-16 pt-8 border-t border-white/[0.04]">

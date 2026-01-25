@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet-async";
-import { Shield, Target, BarChart3, Scale, Layers, Award, Phone, Mail, Globe } from "lucide-react";
+import { Link } from "wouter";
+import { Shield, Target, BarChart3, Scale, Layers, Award, Phone, Mail, Globe, ArrowLeft } from "lucide-react";
 
 interface ReasonCardProps {
   number: number;
@@ -67,6 +68,12 @@ export default function SixReasons() {
 
       <div className="min-h-screen bg-[#030228]">
         <div className="max-w-5xl mx-auto px-6 py-16">
+          {/* Back Link */}
+          <Link href="/internal/sales-process" className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors text-sm mb-8" data-testid="link-back">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Sales Process
+          </Link>
+
           {/* Header */}
           <div className="border-b-2 border-violet-400/50 pb-6 mb-12">
             <div className="font-mono text-2xl font-bold text-violet-400 mb-2">
