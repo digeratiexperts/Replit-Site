@@ -330,12 +330,12 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
         <div className="w-px h-6 bg-white/20 mx-2" />
         
         <a
-          href="tel:+14805912424"
+          href="tel:325-480-9870"
           className="flex items-center gap-1.5 text-white/70 hover:text-white transition-colors text-sm whitespace-nowrap"
           data-testid="nav-phone"
         >
           <Phone className="w-4 h-4" />
-          <span>(480) 591-2424</span>
+          <span>325-480-9870</span>
         </a>
         
         <a
