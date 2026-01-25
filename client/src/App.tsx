@@ -3,6 +3,7 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { HelmetProvider } from "react-helmet-async";
 import NotFound from "@/pages/not-found";
 import { lazy, Suspense } from "react";
 import { ScrollToTop } from "@/components/ScrollToTop";
@@ -109,6 +110,7 @@ const CoreIT = lazy(() => import("@/pages/internal/CoreIT"));
 const SecurityStack = lazy(() => import("@/pages/internal/SecurityStack"));
 const PricingTiers = lazy(() => import("@/pages/internal/PricingTiers"));
 const ServicePackages = lazy(() => import("@/pages/internal/ServicePackages"));
+const VcioServices = lazy(() => import("@/pages/internal/VcioServices"));
 
 import { servicePageData, industryPageData, resourcePageData, supportPageData } from "@/pages/routes/servicePages";
 
@@ -615,6 +617,11 @@ function Router() {
           <ServicePackages />
         </Suspense>
       )} />
+      <Route path="/internal/vcio" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <VcioServices />
+        </Suspense>
+      )} />
       
       {/* Fallback to 404 */}
       <Route component={NotFound} />
@@ -644,12 +651,14 @@ function AppContent() {
 function App() {
   return (
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Toaster />
-          <AppContent />
-        </TooltipProvider>
-      </QueryClientProvider>
+      <HelmetProvider>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <Toaster />
+            <AppContent />
+          </TooltipProvider>
+        </QueryClientProvider>
+      </HelmetProvider>
     </ErrorBoundary>
   );
 }
