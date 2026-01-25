@@ -111,6 +111,10 @@ const SecurityStack = lazy(() => import("@/pages/internal/SecurityStack"));
 const PricingTiers = lazy(() => import("@/pages/internal/PricingTiers"));
 const ServicePackages = lazy(() => import("@/pages/internal/ServicePackages"));
 const VcioServices = lazy(() => import("@/pages/internal/VcioServices"));
+const SixReasons = lazy(() => import("@/pages/internal/SixReasons"));
+const BuyersGuide = lazy(() => import("@/pages/internal/BuyersGuide"));
+const CoverLetter = lazy(() => import("@/pages/internal/CoverLetter"));
+const AudioBusinessCard = lazy(() => import("@/pages/internal/AudioBusinessCard"));
 
 import { servicePageData, industryPageData, resourcePageData, supportPageData } from "@/pages/routes/servicePages";
 
@@ -620,6 +624,26 @@ function Router() {
       <Route path="/internal/vcio" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <VcioServices />
+        </Suspense>
+      )} />
+      <Route path="/internal/six-reasons" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <SixReasons />
+        </Suspense>
+      )} />
+      <Route path="/internal/buyers-guide" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <BuyersGuide />
+        </Suspense>
+      )} />
+      <Route path="/internal/cover-letter" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <CoverLetter />
+        </Suspense>
+      )} />
+      <Route path="/internal/audio-business-card" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <AudioBusinessCard />
         </Suspense>
       )} />
       
