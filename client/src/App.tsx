@@ -107,6 +107,8 @@ const InternalSalesProcess = lazy(() => import("@/pages/internal/SalesProcessPag
 const WorkplaceMatrix = lazy(() => import("@/pages/internal/WorkplaceMatrix"));
 const CoreIT = lazy(() => import("@/pages/internal/CoreIT"));
 const SecurityStack = lazy(() => import("@/pages/internal/SecurityStack"));
+const PricingTiers = lazy(() => import("@/pages/internal/PricingTiers"));
+const ServicePackages = lazy(() => import("@/pages/internal/ServicePackages"));
 
 import { servicePageData, industryPageData, resourcePageData, supportPageData } from "@/pages/routes/servicePages";
 
@@ -601,6 +603,16 @@ function Router() {
       <Route path="/internal/security-stack" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <SecurityStack />
+        </Suspense>
+      )} />
+      <Route path="/internal/pricing-tiers" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <PricingTiers />
+        </Suspense>
+      )} />
+      <Route path="/internal/service-packages" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ServicePackages />
         </Suspense>
       )} />
       

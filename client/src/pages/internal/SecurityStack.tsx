@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import { Helmet } from "react-helmet-async";
 import { ArrowLeft, ChevronDown, Shield, AlertTriangle, Lock, Eye, Mail, Users } from "lucide-react";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
 
@@ -142,6 +143,11 @@ export default function SecurityStack() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#030228] to-[#0a0a12]">
+      <Helmet>
+        <title>DE Security Stack | Internal Reference | Digerati Experts</title>
+        <meta name="description" content="Internal reference guide for the 6-layer security stack including Identity, Endpoint, Email, Network, Data Protection, and Security Awareness." />
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
       <header className="border-b border-white/10 bg-[#030228]/95 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/internal/sales-process" className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors text-sm" data-testid="link-back">
