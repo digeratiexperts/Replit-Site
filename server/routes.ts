@@ -815,6 +815,7 @@ export async function registerRoutes(app: Express) {
     { id: "client-2", companyName: "Phoenix Medical Group", contactEmail: "it@phoenixmedical.com", contactPhone: "(480) 555-1002", industry: "Healthcare", primaryContact: "Sarah Jones", status: "active", type: "client", createdAt: new Date() },
     { id: "client-3", companyName: "Desert Law Partners", contactEmail: "admin@desertlaw.com", contactPhone: "(480) 555-1003", industry: "Legal", primaryContact: "Mike Davis", status: "active", type: "client", createdAt: new Date() },
     { id: "client-4", companyName: "Scottsdale Realty", contactEmail: "tech@scottsdalereal.com", contactPhone: "(480) 555-1004", industry: "Real Estate", primaryContact: "Lisa Wilson", status: "active", type: "client", createdAt: new Date() },
+    { id: "client-5", companyName: "Alamo Industries", contactEmail: "support@alamoindustries.com", contactPhone: "(480) 555-1005", industry: "Manufacturing", primaryContact: "Maria Garcia", status: "active", type: "client", createdAt: new Date() },
   ];
   demoCompanies.forEach(c => portalClients.set(c.id, c));
   
@@ -853,6 +854,18 @@ export async function registerRoutes(app: Express) {
     isActive: true,
   };
   
+  // Alamo Industries user - Password: AlamoUser123!
+  const alamoUser = {
+    id: "user-003",
+    email: "admin@alamoindustries.com",
+    username: "alamoadmin",
+    password: "$2b$12$N9Ys4.kLCKht2rMjK4x0TOJHlQlxY7dRzAT6vmC7.mGrjck7TUI7O",
+    role: "user",
+    fullName: "Maria Garcia",
+    clientId: "client-5",
+    isActive: true,
+  };
+  
   // Initialize with admin and demo users
   portalUsers.set(adminUser.email, adminUser);
   portalUsers.set(adminUser.username, adminUser);
@@ -860,6 +873,8 @@ export async function registerRoutes(app: Express) {
   portalUsers.set(demoUser1.username, demoUser1);
   portalUsers.set(demoUser2.email, demoUser2);
   portalUsers.set(demoUser2.username, demoUser2);
+  portalUsers.set(alamoUser.email, alamoUser);
+  portalUsers.set(alamoUser.username, alamoUser);
 
   // Portal Register Endpoint
   app.post("/api/portal/register", [validateInput], async (req: AuthenticatedRequest, res: Response) => {
