@@ -65,20 +65,36 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
               </div>
 
               {/* Floating AI badge */}
-              <div className="absolute -top-4 -right-4 bg-white/5 backdrop-blur-sm rounded-xl p-3 shadow-xl border border-white/10">
-                <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-lg bg-violet-500/20 border border-violet-500/30 flex items-center justify-center">
-                    <Bot className="h-5 w-5 text-white" />
+              <motion.div 
+                className="absolute -top-6 -right-6 bg-gradient-to-br from-[#1a1a2e] to-[#16162a] backdrop-blur-xl rounded-2xl p-4 shadow-2xl border border-violet-500/20"
+                initial={prefersReducedMotion ? {} : { opacity: 0, scale: 0.8, y: 20 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+              >
+                {/* Subtle glow effect behind the card */}
+                <div className="absolute inset-0 bg-violet-500/10 rounded-2xl blur-xl -z-10" />
+                
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-600 to-purple-700 flex items-center justify-center shadow-lg">
+                      <Bot className="h-6 w-6 text-white" />
+                    </div>
+                    {/* Animated ring */}
+                    <div className="absolute -inset-1 rounded-xl border-2 border-violet-400/30 animate-pulse" />
                   </div>
                   <div>
-                    <div className="text-sm text-gray-400">AI Status</div>
-                    <div className="text-base font-semibold text-emerald-400 flex items-center gap-1">
-                      <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                    <div className="text-xs font-medium text-gray-400 uppercase tracking-wider">AI Status</div>
+                    <div className="text-lg font-bold text-white flex items-center gap-2 mt-0.5">
+                      <span className="relative flex h-2.5 w-2.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+                      </span>
                       Active
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </motion.div>
 
