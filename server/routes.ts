@@ -1993,16 +1993,25 @@ export async function registerRoutes(app: Express) {
       if (!subject || !description) {
         return res.status(400).json({ error: "Subject and description required" });
       }
+
+      // Check for existing contact or create one if needed
+      let contactId: string | undefined;
+      const contact = await zohoDeskService.getContactByEmail(req.user?.email);
+      if (contact) {
+        contactId = contact.id;
+      }
       
       const ticket = await zohoDeskService.createTicket({
         subject,
         description,
+        contactId, // Use contactId if we found one
         email: req.user?.email,
         priority: priority || "Medium",
       });
       
       res.json(ticket);
     } catch (error: any) {
+      console.error("[ZOHO TICKET ERROR]", error.response?.data || error.message);
       res.status(500).json({ error: error.message });
     }
   });
