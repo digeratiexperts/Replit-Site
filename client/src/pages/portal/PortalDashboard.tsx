@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PortalLayout } from "./PortalLayout";
-import { AlertCircle, CheckCircle2, Clock, Ticket, Package, FileText, TrendingUp, ArrowRight } from "lucide-react";
+import { AlertCircle, CheckCircle2, Clock, Ticket, Package, FileText, TrendingUp, ArrowRight, ExternalLink } from "lucide-react";
 import { Link } from "wouter";
 import { portalGet } from "@/lib/portalApi";
 
@@ -194,15 +194,29 @@ export default function PortalDashboard() {
                         <p className="font-medium text-sm text-gray-900 dark:text-white truncate">
                           {service.serviceName}
                         </p>
-                        {service.userCount && (
+                        {service.amount && (
                           <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {service.userCount} users
+                            ${service.amount}/mo
                           </p>
                         )}
                       </div>
-                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30">
-                        Active
-                      </Badge>
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30">
+                          {service.status || "Active"}
+                        </Badge>
+                        {service.zohoLink && (
+                          <a
+                            href={service.zohoLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-violet-500 hover:text-violet-700 p-1"
+                            title="View in Zoho"
+                            data-testid={`link-zoho-${service.id}`}
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                          </a>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>

@@ -1045,12 +1045,41 @@ export async function registerRoutes(app: Express) {
         }));
       }
       
-      // Services would come from subscription data in production
-      const services = [
-        { id: "svc-1", serviceName: "Managed IT Support", userCount: 15, status: "active" },
-        { id: "svc-2", serviceName: "Endpoint Protection", userCount: 15, status: "active" },
-        { id: "svc-3", serviceName: "Email Security", userCount: 15, status: "active" },
-      ];
+      // Get services from Zoho subscriptions
+      let services: any[] = [];
+      let zohoBillingFetched = false;
+      
+      if (zohoClient.isConfigured() && userEmail) {
+        try {
+          const customer = await zohoBillingService.getCustomerByEmail(userEmail);
+          if (customer) {
+            const subscriptions = await zohoBillingService.getSubscriptionsByCustomer(customer.customer_id);
+            services = subscriptions
+              .filter(sub => sub.status === "live" || sub.status === "active")
+              .map(sub => ({
+                id: sub.subscription_id,
+                serviceName: sub.plan?.name || sub.name,
+                status: sub.status,
+                amount: sub.amount,
+                nextBilling: sub.next_billing_at,
+                zohoLink: `https://billing.zoho.com/app#/subscriptions/${sub.subscription_id}`,
+              }));
+            zohoBillingFetched = true;
+          }
+        } catch (subError) {
+          console.warn("Could not fetch Zoho subscriptions for services:", subError);
+        }
+      }
+      
+      // Fallback to placeholder services if no Zoho services found
+      // This ensures the dashboard always shows something meaningful
+      if (services.length === 0) {
+        services = [
+          { id: "svc-placeholder-1", serviceName: "Managed IT Support", status: "active" },
+          { id: "svc-placeholder-2", serviceName: "Endpoint Protection", status: "active" },
+          { id: "svc-placeholder-3", serviceName: "Email Security", status: "active" },
+        ];
+      }
       
       const dashboardStats = {
         openTickets,
@@ -1059,7 +1088,7 @@ export async function registerRoutes(app: Express) {
         pendingInvoices,
         recentTickets,
         services,
-        zohoConnected: zohoDataFetched,
+        zohoConnected: zohoDataFetched || zohoBillingFetched,
       };
       
       res.json(dashboardStats);
@@ -1113,9 +1142,20 @@ export async function registerRoutes(app: Express) {
         console.warn("Could not fetch Zoho Billing data:", error);
       }
       
+      // Add Zoho links to subscription and invoices
+      const subscriptionWithLink = subscription ? {
+        ...subscription,
+        zohoLink: `https://billing.zoho.com/app#/subscriptions/${subscription.subscription_id}`,
+      } : null;
+      
+      const invoicesWithLinks = invoices.map(inv => ({
+        ...inv,
+        zohoLink: `https://billing.zoho.com/app#/invoices/${inv.invoice_id}`,
+      }));
+      
       res.json({
-        subscription,
-        invoices,
+        subscription: subscriptionWithLink,
+        invoices: invoicesWithLinks,
         zohoConnected,
         message: !zohoConnected ? "Your billing account is being set up" : undefined,
       });
@@ -1168,9 +1208,20 @@ export async function registerRoutes(app: Express) {
         console.warn("Could not fetch Zoho CRM data:", error);
       }
       
+      // Add Zoho links to account and contacts
+      const accountWithLink = account ? {
+        ...account,
+        zohoLink: `https://crm.zoho.com/crm/org/tab/Accounts/${account.id}`,
+      } : null;
+      
+      const contactsWithLinks = contacts.map(c => ({
+        ...c,
+        zohoLink: `https://crm.zoho.com/crm/org/tab/Contacts/${c.id}`,
+      }));
+      
       res.json({
-        account,
-        contacts,
+        account: accountWithLink,
+        contacts: contactsWithLinks,
         zohoConnected,
         message: !zohoConnected ? "Your company profile is being set up" : undefined,
       });

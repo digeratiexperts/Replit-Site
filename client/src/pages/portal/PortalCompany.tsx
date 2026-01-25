@@ -16,6 +16,7 @@ interface CRMContact {
   Mobile: string;
   Title: string;
   Department: string;
+  zohoLink?: string;
 }
 
 interface CRMAccount {
@@ -30,6 +31,7 @@ interface CRMAccount {
   Billing_Code: string;
   Description: string;
   Created_Time: string;
+  zohoLink?: string;
 }
 
 interface CompanyData {
@@ -98,6 +100,14 @@ export default function PortalCompany() {
                 </CardTitle>
                 <CardDescription>Your organization details from our CRM</CardDescription>
               </div>
+              {data?.account?.zohoLink && (
+                <a href={data.account.zohoLink} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="sm" className="border-violet-500/30 text-violet-700 dark:text-violet-300" data-testid="button-edit-in-zoho">
+                    <ExternalLink className="h-4 w-4 mr-2" />
+                    Edit in Zoho
+                  </Button>
+                </a>
+              )}
             </div>
           </CardHeader>
           <CardContent>
@@ -247,6 +257,18 @@ export default function PortalCompany() {
                         >
                           <Phone className="h-4 w-4" />
                           <span className="hidden md:inline">{contact.Phone || contact.Mobile}</span>
+                        </a>
+                      )}
+                      {contact.zohoLink && (
+                        <a
+                          href={contact.zohoLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1 hover:text-violet-600 dark:hover:text-violet-400"
+                          title="View in Zoho"
+                          data-testid={`link-zoho-${contact.id}`}
+                        >
+                          <ExternalLink className="h-4 w-4" />
                         </a>
                       )}
                     </div>

@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PortalLayout } from "./PortalLayout";
-import { CreditCard, FileText, Calendar, DollarSign, ArrowRight, Download, CheckCircle, Clock, AlertCircle, RefreshCcw } from "lucide-react";
+import { CreditCard, FileText, Calendar, DollarSign, ArrowRight, Download, CheckCircle, Clock, AlertCircle, RefreshCcw, ExternalLink } from "lucide-react";
 import { Link } from "wouter";
 import { portalGet } from "@/lib/portalApi";
 
@@ -20,6 +20,7 @@ interface Subscription {
   next_billing_at: string;
   current_term_ends_at: string;
   amount: number;
+  zohoLink?: string;
 }
 
 interface Invoice {
@@ -31,6 +32,7 @@ interface Invoice {
   total: number;
   balance: number;
   currency_code: string;
+  zohoLink?: string;
 }
 
 interface BillingData {
@@ -174,9 +176,14 @@ export default function PortalBilling() {
                 </div>
 
                 <div className="flex gap-3">
-                  <Button variant="outline" className="border-violet-500/30 text-violet-700 dark:text-violet-300 hover:bg-violet-50 dark:hover:bg-violet-900/20" data-testid="button-manage-subscription">
-                    Manage Subscription
-                  </Button>
+                  {data.subscription.zohoLink && (
+                    <a href={data.subscription.zohoLink} target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" className="border-violet-500/30 text-violet-700 dark:text-violet-300 hover:bg-violet-50 dark:hover:bg-violet-900/20" data-testid="button-manage-subscription">
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        Manage in Zoho
+                      </Button>
+                    </a>
+                  )}
                   <Button variant="outline" data-testid="button-update-payment">
                     Update Payment Method
                   </Button>
@@ -262,6 +269,13 @@ export default function PortalBilling() {
                         <Button variant="ghost" size="sm" data-testid={`button-download-${invoice.invoice_id}`}>
                           <Download className="h-4 w-4" />
                         </Button>
+                        {invoice.zohoLink && (
+                          <a href={invoice.zohoLink} target="_blank" rel="noopener noreferrer">
+                            <Button variant="ghost" size="sm" title="Open in Zoho" data-testid={`button-zoho-${invoice.invoice_id}`}>
+                              <ExternalLink className="h-4 w-4" />
+                            </Button>
+                          </a>
+                        )}
                       </div>
                     </div>
                   );
