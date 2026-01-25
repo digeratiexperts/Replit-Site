@@ -635,6 +635,9 @@ export async function registerRoutes(app: Express) {
   // ===== ADMIN OPENAI CONTROL =====
   app.get("/api/portal/admin/openai/status", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
       res.json({
         success: true,
         enabled: process.env.ENABLE_OPENAI_INTEGRATION === "true",
@@ -647,6 +650,9 @@ export async function registerRoutes(app: Express) {
 
   app.post("/api/portal/admin/openai/toggle", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
       const currentState = process.env.ENABLE_OPENAI_INTEGRATION === "true";
       res.json({
         success: true,
