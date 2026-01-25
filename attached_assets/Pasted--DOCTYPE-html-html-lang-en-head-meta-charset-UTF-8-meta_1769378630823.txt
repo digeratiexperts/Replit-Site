@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DE Security Stack (Internal)</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body{
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #e4e6eb;
+      background: radial-gradient(1200px 600px at 20% 10%, rgba(239,68,68,0.12), transparent 60%),
+                  radial-gradient(900px 500px at 80% 20%, rgba(249,115,22,0.10), transparent 55%),
+                  linear-gradient(135deg, #090910 0%, #0f0a12 45%, #120a0a 100%);
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+
+    .container{ max-width: 1400px; margin: 0 auto; }
+
+    .header{
+      background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 45%, #f97316 100%);
+      padding: 56px 46px;
+      border-radius: 24px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 25px 70px rgba(220,38,38,0.35);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .header::before{
+      content:'';
+      position:absolute;
+      top:-55%;
+      right:-25%;
+      width:720px;
+      height:720px;
+      background: radial-gradient(circle, rgba(255,255,255,0.16) 0%, transparent 70%);
+      border-radius: 50%;
+      filter: blur(0px);
+      animation: pulse 5s ease-in-out infinite;
+    }
+    @keyframes pulse{
+      0%,100%{ transform: scale(1); opacity: 0.16; }
+      50%{ transform: scale(1.07); opacity: 0.26; }
+    }
+    .header-content{ position: relative; z-index: 1; }
+
+    .header h1{
+      font-size: 3.1em;
+      font-weight: 950;
+      letter-spacing: -2px;
+      margin-bottom: 10px;
+      background: linear-gradient(to right, #ffffff, #fee2e2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 45px rgba(255,255,255,0.08);
+    }
+    .subline{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-top: 6px;
+      margin-bottom: 18px;
+      opacity: 0.95;
+    }
+    .subtitle{
+      font-size: 1.25em;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.22);
+      backdrop-filter: blur(10px);
+      font-size: 0.95em;
+      font-weight: 650;
+    }
+
+    .meta{
+      display:flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .meta .chip{
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(0,0,0,0.28);
+      border: 1px solid rgba(255,255,255,0.14);
+      font-size: 0.95em;
+      color: rgba(255,255,255,0.92);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin: 22px 0 26px;
+    }
+
+    .card{
+      background: linear-gradient(135deg, #161623 0%, #121a2b 100%);
+      border-radius: 18px;
+      padding: 22px;
+      border: 1px solid rgba(220,38,38,0.22);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+      transition: all .25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .card:hover{
+      transform: translateY(-4px);
+      border-color: rgba(220,38,38,0.38);
+      box-shadow: 0 18px 55px rgba(220,38,38,0.16);
+    }
+    .card .label{
+      color: #cbd5e1;
+      font-weight: 650;
+      margin-top: 10px;
+      font-size: 1.02em;
+    }
+    .card .value{
+      font-size: 2.1em;
+      font-weight: 950;
+      color: #ef4444;
+      letter-spacing: -1px;
+      margin-top: 2px;
+    }
+    .card .icon{
+      font-size: 2.1em;
+      opacity: 0.95;
+    }
+    .mini{
+      margin-top: 10px;
+      font-size: 0.95em;
+      color: rgba(226,232,240,0.92);
+      line-height: 1.6;
+    }
+    .mini strong{ color: #fecaca; }
+
+    .warn{
+      margin-top: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(245,158,11,0.10);
+      border: 1px solid rgba(245,158,11,0.22);
+      color: #fde68a;
+      font-size: 0.95em;
+      line-height: 1.55;
+    }
+
+    .legend{
+      background: linear-gradient(135deg, #161623 0%, #121a2b 100%);
+      padding: 26px;
+      border-radius: 18px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(220,38,38,0.22);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+    }
+    .legend h3{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      font-size: 1.35em;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .legend h3 .box{
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: linear-gradient(135deg, #7f1d1d, #ef4444);
+      box-shadow: 0 8px 25px rgba(220,38,38,0.25);
+      font-size: 1.15em;
+    }
+    .legend p{ color: #cbd5e1; line-height: 1.8; }
+
+    .table-wrapper{
+      background: linear-gradient(135deg, #161623 0%, #121a2b 100%);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.55);
+      border: 1px solid rgba(220,38,38,0.22);
+    }
+    .table-container{ overflow-x:auto; }
+
+    table{ width: 100%; border-collapse: separate; border-spacing: 0; min-width: 980px; }
+    thead{
+      background: rgba(0,0,0,0.55);
+      position: sticky; top: 0; z-index: 10;
+    }
+    th{
+      padding: 18px 22px;
+      text-align:left;
+      font-weight: 900;
+      font-size: 0.92em;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      color: #fecaca;
+      border-bottom: 2px solid rgba(220,38,38,0.45);
+      white-space: nowrap;
+    }
+
+    tbody tr.category-row{
+      background: linear-gradient(135deg, rgba(220,38,38,0.22), rgba(249,115,22,0.14)) !important;
+      border-top: 2px solid rgba(220,38,38,0.5);
+      border-bottom: 2px solid rgba(220,38,38,0.5);
+    }
+    tbody tr.category-row td{
+      padding: 18px 22px;
+      font-size: 1.1em;
+      font-weight: 950;
+      color: #fff;
+      letter-spacing: 0.4px;
+    }
+
+    tbody tr.feature-row{
+      cursor: pointer;
+      transition: all .25s ease;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      position: relative;
+    }
+    tbody tr.feature-row:nth-child(even){ background: rgba(255,255,255,0.02); }
+    tbody tr.feature-row:hover{
+      background: rgba(220,38,38,0.14) !important;
+      transform: translateX(4px);
+    }
+    tbody tr.feature-row.expanded{
+      background: rgba(220,38,38,0.20) !important;
+    }
+
+    td{ padding: 16px 22px; vertical-align: top; }
+
+    .svc{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      font-weight: 750;
+      color: #e5e7eb;
+    }
+    .expand-icon{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width: 26px; height: 26px;
+      border-radius: 8px;
+      background: rgba(239,68,68,0.18);
+      color: #ef4444;
+      font-size: 0.8em;
+      flex-shrink: 0;
+      transition: all .25s ease;
+    }
+    .feature-row.expanded .expand-icon{ transform: rotate(90deg); background: rgba(239,68,68,0.32); }
+
+    .vendor{
+      color: #cbd5e1;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.78em;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      white-space: nowrap;
+    }
+    .included{ background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.28); color: #86efac; }
+    .addon{ background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.28); color: #fde68a; }
+    .tbd{ background: rgba(148,163,184,0.12); border: 1px solid rgba(148,163,184,0.25); color: #e2e8f0; }
+
+    .money{
+      display:flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 140px;
+    }
+    .money .line{
+      display:flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: #cbd5e1;
+      font-size: 0.95em;
+    }
+    .money .line strong{ color: #fff; }
+    .money .line .muted{ color: rgba(203,213,225,0.75); }
+    .money .line .good{ color: #86efac; font-weight: 850; }
+    .money .line .warnm{ color: #fde68a; font-weight: 850; }
+
+    .description-row{
+      display:none;
+      background: linear-gradient(135deg, rgba(220,38,38,0.10), rgba(249,115,22,0.06)) !important;
+      border-left: 5px solid #ef4444;
+    }
+    .description-row.show{
+      display: table-row;
+      animation: drop .28s ease;
+    }
+    @keyframes drop{
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .description-content{
+      padding: 18px 22px 18px 54px;
+      color: #cbd5e1;
+      line-height: 1.85;
+    }
+    .description-content p{ margin-bottom: 10px; }
+    .description-content strong{ color: #fecaca; }
+    .description-content ul{ margin-left: 22px; margin-top: 8px; margin-bottom: 10px; }
+    .description-content li{ margin-bottom: 8px; }
+
+    .note{
+      margin-top: 18px;
+      background: linear-gradient(135deg, #111827 0%, #0b1220 100%);
+      border: 1px solid rgba(220,38,38,0.18);
+      border-left: 5px solid rgba(239,68,68,0.7);
+      border-radius: 18px;
+      padding: 18px 22px;
+      color: #cbd5e1;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+    }
+    .note strong{ color: #fecaca; }
+
+    .footer{
+      margin-top: 14px;
+      opacity: 0.9;
+      font-size: 0.92em;
+      color: rgba(203,213,225,0.9);
+    }
+
+    @media (max-width: 1024px){
+      .header h1{ font-size: 2.4em; }
+      .header{ padding: 40px 28px; }
+    }
+    @media (max-width: 768px){
+      body{ padding: 20px 14px; }
+      .header h1{ font-size: 2.0em; }
+      .subtitle{ font-size: 1.1em; }
+    }
+
+    ::-webkit-scrollbar { width: 12px; height: 12px; }
+    ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 6px; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #dc2626, #ef4444); border-radius: 6px; }
+    ::-webkit-scrollbar-thumb:hover { background: linear-gradient(135deg, #ef4444, #f97316); }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="header">
+      <div class="header-content">
+        <h1>DE Security Stack</h1>
+        <div class="subline">
+          <div class="subtitle">Internal Build Sheet (Tools + Pricing + Coverage)</div>
+          <div class="pill">🔒 Package: <strong>Security + Managed Services</strong></div>
+          <div class="pill">📅 Updated: <strong>December 19, 2025</strong></div>
+        </div>
+
+        <div class="meta">
+          <div class="chip">🎯 Goal: exact inclusions + unit economics</div>
+          <div class="chip">🧾 Billing: per-user + occasional per-customer items</div>
+          <div class="chip">⚙️ Notes: mark unknown vendor costs as <strong>TBD</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRICING SUMMARY (KNOWN + TBD) -->
+    <div class="grid">
+      <div class="card">
+        <div class="icon">💰</div>
+        <div class="label">Client Sell Price (known)</div>
+        <div class="value">$65</div>
+        <div class="mini"><strong>Per user / month</strong> for <strong>Security + Managed Services</strong> (does not include Workplace add-ons).</div>
+      </div>
+
+      <div class="card">
+        <div class="icon">🧮</div>
+        <div class="label">Known COGS Floor (partial)</div>
+        <div class="value">$25+</div>
+        <div class="mini">
+          Known vendor costs we have on file:
+          <br/>• <strong>Coro</strong> (historical): <strong>$20/user</strong>
+          <br/>• <strong>Blackpoint</strong> (internal): <strong>$5/user</strong>
+        </div>
+        <div class="warn"><strong>Heads up:</strong> this is a floor only. Add Mimecast / Atakama / training / DNS / etc once you drop final vendor costs.</div>
+      </div>
+
+      <div class="card">
+        <div class="icon">📦</div>
+        <div class="label">Included vs Add-on</div>
+        <div class="value">Core</div>
+        <div class="mini">
+          This page is built as a <strong>modular sheet</strong>:
+          <br/>• <strong>Included</strong> = counted inside $65/user
+          <br/>• <strong>Add-on</strong> = optional line item
+          <br/>• <strong>TBD</strong> = included or add-on not finalized
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="icon">🧷</div>
+        <div class="label">Separations You Asked For</div>
+        <div class="value">Clean</div>
+        <div class="mini">
+          We keep these separate unless you explicitly bundle:
+          <br/>• <strong>Workplace Services</strong> (separate total)
+          <br/>• <strong>Compliance Modules</strong> (separate)
+          <br/>• <strong>Backup / DR</strong> (separate)
+          <br/>• <strong>Network hardware</strong> (separate)
+        </div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <h3><span class="box">🧠</span>Internal Instructions</h3>
+      <p>
+        This is the internal version of the Security Stack page. It is designed to answer:
+        <strong>(1)</strong> what tools are actually in the package,
+        <strong>(2)</strong> how each maps to a security layer,
+        <strong>(3)</strong> what we sell it for vs what it costs, and
+        <strong>(4)</strong> what is included vs add-on.
+        Click any row to expand operational notes.
+      </p>
+    </div>
+
+    <div class="table-wrapper">
+      <div class="table-container">
+        <table id="securityInternalTable">
+          <thead>
+            <tr>
+              <th style="width: 32%;">Service / Control</th>
+              <th style="width: 14%;">Primary Vendor</th>
+              <th style="width: 10%;">Status</th>
+              <th style="width: 16%;">Sell Price</th>
+              <th style="width: 16%;">Vendor Cost</th>
+              <th style="width: 12%;">Margin Notes</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <!-- LAYER 1 -->
+            <tr class="category-row">
+              <td colspan="6">🔐 Layer 1 — Identity & Access Control (IAM)</td>
+            </tr>
+
+            <tr class="feature-row" data-description="
+              <p><strong>Internal scope:</strong> IAM is typically sold/managed under Workplace/IAM pages, not inside the $65 Security package unless you explicitly bundle it.</p>
+              <p><strong>What belongs here when bundled:</strong></p>
+              <ul>
+                <li>MFA, SSO, Conditional Access, Device Trust gates, provisioning/deprovisioning automation</li>
+                <li>Passwordless options (FIDO2 / passkeys / platform authenticators)</li>
+              </ul>
+              <p><strong>Action:</strong> Keep this row as <em>TBD</em> unless you confirm IAM is inside Security + Managed Services for this client.</p>
+            ">
+              <td>
+                <div class="svc"><span class="expand-icon">▶</span> Secure Login & Access Management</div>
+              </td>
+              <td class="vendor">JumpCloud / Entra</td>
+              <td><span class="badge tbd">TBD</span></td>
+              <td>
+                <div class="money">
+                  <div class="line"><span class="muted">Per user:</span><strong>TBD</strong></div>
+                  <div class="line"><span class="muted">Unit:</span><span>user/mo</span></div>
+                </div>
+              </td>
+              <td>
+                <div class="money">
+                  <div class="line"><span class="muted">Per user:</span><strong>TBD</strong></div>
+                  <div class="line"><span class="muted">Notes:</span><span class="muted">Bundle rules</span></div>
+                </div>
+              </td>
+              <td>
+                <div class="money">
+                  <div class="line"><span class="muted">Margin:</span><span class="warnm">TBD</span></div>
+                  <div class="line"><span class="muted">Keep separate</span><span>✅</span></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="description-row"><td colspan="6"><div class="description-content"></div></td></tr>
+
+            <!-- LAYER 2 -->
+            <tr class="category-row">
+              <td colspan="6">🔑 Layer 2 — Password Security</td>
+            </tr>
+
+            <tr class="feature-row" data-description="
+              <p><strong>Internal scope:</strong> Password manager SKU can be included or optional. If included, define the exact product (1Password/Bitwarden/etc) and whether families/personal vaults are in/out.</p>
+              <p><strong>Operational notes:</strong></p>
+              <ul>
+                <li>Must enforce: unique passwords, MFA on vault, admin recovery policy, shared vault structure by department</li>
+                <li>Offboarding: rotate shared creds and remove user access same-day</li>
+              </ul>
+              <p><strong>Action:</strong> Drop in chosen vendor + cost when finalized.</p>
+            ">
+              <td><div class="svc"><span class="expand-icon">▶</span> Encrypted Password Management</div></td>
+              <td class="vendor">TBD</td>
+              <td><span class="badge tbd">TBD</span></td>
+              <td>
+                <div class="money">
+                  <div class="line"><span class="muted">Per user:</span><strong>TBD</strong></div>
+                  <div class="line"><span class="muted">Unit:</span><span>user/mo</span></div>
+                </div>
+              </td>
+              <td>
+                <div class="money">
+                  <div class="line"><span class="muted">Per user:</span><strong>TBD</strong></div>
+                  <div class="line"><span class="muted">Unit:</span><span>user/mo</span></div>
+                </div>
+              </td>
+              <td>
+                <div class="money">
+                  <div class="line"><span class="muted">Margin:</span><span class="warnm">TBD</span></div>
+                  <div class="line"><span class="muted">Standardize</span><span>✅</span></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="description-row"><td colspan="6"><div class="description-content"></div></td></tr>
+
+            <!-- LAYER 3 -->
+            <tr class="category-row">
+              <td colspan="6">💻 Layer 3 — Device Protection (EDR / Endpoint)</td>
+            </tr>
+
+            <tr class="feature-row" data-description="
+              <p><strong>Vendor:</strong> Coro (EDR / endpoint security) — historical pricing on file: <strong>$20/user/mo</strong>.</p>
+              <p><strong>What to document as included controls:</strong></p>
+              <ul>
+                <li>EDR enabled on all endpoints</li>
+                <li>Auto-isolation/quarantine policy for high-confidence threats</li>
+                <li>Alert routing: ticket + SOC escalation (if MDR is active)</li>
+                <li>Device inventory alignment with RMM / directory</li>
+              </ul>
+              <p><strong>Action:</strong> If Coro is inside the $65 bundle (recommended), mark as Included and keep sell/cost here.</p>
+            ">
+              <td><div class="svc"><span class="expand-icon">▶</span> AI-Powered Endpoint Security (EDR / Malware / Ransomware)</div></td>
+              <td class="vendor">Coro</td>
+              <td><span class="badge included">Included</span></td>
+              <td>
+                <div class="money">
+                  <div class="line"><span class="muted">Per user:</span><strong>$20</strong></div>
+                  <div class="line"><span class="muted">Unit:</span><span>user/mo</span></div>
+                </div>
+              </td>
+              <td>
+                <div class="money">
+                  <div class="line"><span class="muted">Per user:</span><strong>$20</strong></div>
+                  <div class="line"><span class="muted">Source:</span><span class="muted">historical</span></div>
+                </div>
+              </td>
+              <td>
+                <div class="money">
+                  <div class="line"><span class="muted">Margin:</span><span class="warnm">$0</span></div>
+                  <div class="line"><span class="muted">Roll into svc</span><span>✅</span></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="description-row"><td colspan="6"><div class="description-content"></div></td></tr>
+
+            <tr class="feature-row" data-description="
+              <p><strong>Device trust / compliance enforcement:</strong> usually delivered via MDM/RMM + IAM conditional access. If you keep Workplace separate, do not count this inside Security unless bundled.</p>
+              <p><strong>Action:</strong> Decide whether device compliance gates belong in the Security bundle or in Workplace/Endpoint Management.</p>
+            ">
+              <td><div class="svc"><span class="expand-icon">▶</span> Device Compliance Gates (encryption, lock screen, baseline)</div></td>
+              <td class="vendor">Intune / RMM</td>
+              <td><span class="badge tbd">TBD</span></td>
+              <td><div class="money"><div class="line"><span class="muted">Per user:</span><strong>TBD</strong></div><div class="line"><span class="muted">Unit:</span><span>user/mo</span></div></div></td>
+              <td><div class="money"><div class="line"><span class="muted">Per user:</span><strong>TBD</strong></div><div class="line"><span class="muted">Unit:</span><span>user/mo</span></div></div></td>
+              <td><div class="money"><div class="line"><span class="muted">Margin:</span><span class="warnm">TBD</span></div><div class="line"><span class="muted">Separate?</span><span>✅</span></div></div></td>
+            </tr>
+            <tr class="description-row"><td colspan="6"><div class="description-content"></div></td></tr>
+
+            <!-- LAYER 4 -->
+            <tr class="category-row">
+              <td colspan="6">🌐 Layer 4 — Web / Browser / DNS Protection</td>
+            </tr>
+
+            <tr class="feature-row" data-description="
+              <p><strong>Possible vendors:</strong> Atakama Browser Security (not priced in this sheet yet).</p>
+              <p><strong>Expected included controls (if active):</strong></p>
+              <ul>
+                <li>DNS/content filtering + malicious domain blocking</li>
+                <li>Anti-phishing and anti-malware within browser context</li>
+                <li>Data policy enforcement (download restrictions, copy/paste, etc where applicable)</li>
+                <li>Audit logs and reporting on high-risk browser events</li>
+              </ul>
+              <p><strong>Action:</strong> Insert Atakama sell/cost when finalized and decide Included vs Add-on.</p>
+            ">
+              <td><div class="svc"><span class="expand-icon">▶</span> Browser Security + DNS Filtering</div></td>
+              <td class="vendor">Atakama</td>
+              <td><span class="badge tbd">TBD</span></td>
+              <td><div class="money"><div class="line"><span class="muted">Per user:</span><strong>TBD</strong></div><div class="line"><span class="muted">Unit:</span><span>user/mo</span></div></div></td>
+              <td><div class="money"><div class="line"><span class="muted">Per user:</span><strong>TBD</strong></div><div class="line"><span class="muted">Unit:</span><span>user/mo</span></div></div></td>
+              <td><div class="money"><div class="line"><span class="muted">Margin:</span><span class="warnm">TBD</span></div><div class="line"><span class="muted">High value</span><span>✅</span></div></div></td>
+            </tr>
+            <tr class="description-row"><td colspan="6"><div class="description-content"></div></td></tr>
+
+            <!-- LAYER 5 -->
+            <tr class="category-row">
+              <td colspan="6">🛡️ Layer 5 — Email Security + Threat Detection</td>
+            </tr>
+
+            <tr class="feature-row" data-description="
+              <p><strong>Vendor:</strong> Mimecast (not priced in this sheet yet).</p>
+              <p><strong>What to explicitly define for “included”:</strong></p>
+              <ul>
+                <li>Inbound anti-phishing + attachment/link protection</li>
+                <li>Impersonation protection policies (exec / vendor / domain lookalikes)</li>
+                <li>Quarantine workflow ownership (DE vs client)</li>
+                <li>SPF/DKIM/DMARC stance (monitor vs quarantine vs reject)</li>
+              </ul>
+              <p><strong>Action:</strong> Add Mimecast per-user sell/cost once confirmed. Decide if email encryption is included here or reserved for compliance/regulated add-on.</p>
+            ">
+              <td><div class="svc"><span class="expand-icon">▶</span> Email Threat Protection (anti-phishing / impersonation / sandboxing)</div></td>
+              <td class="vendor">Mimecast</td>
+              <td><span class="badge tbd">TBD</span></td>
+              <td><div class="money"><div class="line"><span class="muted">Per user:</span><strong>TBD</strong></div><div class="line"><span class="muted">Unit:</span><span>user/mo</span></div></div></td>
+              <td><div class="money"><div class="line"><span class="muted">Per user:</span><strong>TBD</strong></div><div class="line"><span class="muted">Unit:</span><span>user/mo</span></div></div></td>
+              <td><div class="money"><div class="line"><span class="muted">Margin:</span><span class="warnm">TBD</span></div><div class="line"><span class="muted">Stops BEC</span><span>✅</span></div></div></td>
+            </tr>
+            <tr class="description-row"><td colspan="6"><div class="description-content"></div></td></tr>
+
+            <tr class="feature-row" data-description="
+              <p><strong>Cloud security / governance:</strong> If Coro cloud modules are enabled, document which are included: cloud apps visibility, risky sharing alerts, malware scanning, etc.</p>
+              <p><strong>Action:</strong> Confirm whether cloud security is Coro-powered (included) or separate CASB/CSPM add-on (recommended for certain clients).</p>
+            ">
+              <td><div class="svc"><span class="expand-icon">▶</span> Cloud Data Protection (M365 / Google / SaaS)</div></td>
+              <td class="vendor">Coro / TBD</td>
+              <td><span class="badge tbd">TBD</span></td>
+              <td><div class="money"><div class="line"><span class="muted">Per user:</span><strong>TBD</strong></div><div class="line"><span class="muted">Unit:</span><span>user/mo</span></div></div></td>
+              <td><div class="money"><div class="line"><span class="muted">Per user:</span><strong>TBD</strong></div><div class="line"><span class="muted">Unit:</span><span>user/mo</span></div></div></td>
+              <td><div class="money"><div class="line"><span class="muted">Margin:</span><span class="warnm">TBD</span></div><div class="line"><span class="muted">Scope it</span><span>✅</span></div></div></td>
+            </tr>
+            <tr class="description-row"><td colspan="6"><div class="description-content"></div></td></tr>
+
+            <!-- LAYER 6 -->
+            <tr class="category-row">
+              <td colspan="6">🔍 Layer 6 — 24/7 Security Operations (MDR / SOC)</td>
+            </tr>
+
+            <tr class="feature-row" data-description="
+              <p><strong>Vendor:</strong> Blackpoint Cyber — internal MSP cost: <strong>$5/user</strong>; DE target sell: <strong>$8/user</strong>.</p>
+              <p><strong>Define inclusions:</strong></p>
+              <ul>
+                <li>24/7 monitoring + alert triage</li>
+                <li>Containment actions (where supported) + escalation paths</li>
+                <li>Client comms + incident summaries</li>
+              </ul>
+              <p><strong>Action:</strong> If MDR is included inside $65, mark Included and keep sell/cost here.</p>
+            ">
+              <td><div class="svc"><span class="expand-icon">▶</span> MDR / SOC Monitoring & Response (24/7)</div></td>
+              <td class="vendor">Blackpoint</td>
+              <td><span class="badge included">Included</span></td>
+              <td>
+                <div class="money">
+                  <div class="line"><span class="muted">Per user:</span><strong>$8</strong></div>
+                  <div class="line"><span class="muted">Unit:</span><span>user/mo</span></div>
+                </div>
+              </td>
+              <td>
+                <div class="money">
+                  <div class="line"><span class="muted">Per user:</span><strong>$5</strong></div>
+                  <div class="line"><span class="muted">Unit:</span><span>user/mo</span></div>
+                </div>
+              </td>
+              <td>
+                <div class="money">
+                  <div class="line"><span class="muted">Margin:</span><span class="good">$3</span></div>
+                  <div class="line"><span class="muted">Per user/mo</span><span>✅</span></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="description-row"><td colspan="6"><div class="description-content"></div></td></tr>
+
+            <tr class="feature-row" data-description="
+              <p><strong>Threat hunting:</strong> if you sell it as a named deliverable, define cadence + reporting expectations.</p>
+              <p><strong>Option A:</strong> Include as part of MDR (if vendor covers).</p>
+              <p><strong>Option B:</strong> Add-on advisory service billed separately.</p>
+            ">
+              <td><div class="svc"><span class="expand-icon">▶</span> Proactive Threat Hunting (defined cadence + reporting)</div></td>
+              <td class="vendor">Blackpoint / DE</td>
+              <td><span class="badge tbd">TBD</span></td>
+              <td><div class="money"><div class="line"><span class="muted">Per user:</span><strong>TBD</strong></div><div class="line"><span class="muted">Unit:</span><span>user/mo</span></div></div></td>
+              <td><div class="money"><div class="line"><span class="muted">Per user:</span><strong>TBD</strong></div><div class="line"><span class="muted">Unit:</span><span>user/mo</span></div></div></td>
+              <td><div class="money"><div class="line"><span class="muted">Margin:</span><span class="warnm">TBD</span></div><div class="line"><span class="muted">Deliverable</span><span>✅</span></div></div></td>
+            </tr>
+            <tr class="description-row"><td colspan="6"><div class="description-content"></div></td></tr>
+
+            <!-- LAYER 7 -->
+            <tr class="category-row">
+              <td colspan="6">📊 Layer 7 — Governance / Training / Risk</td>
+            </tr>
+
+            <tr class="feature-row" data-description="
+              <p><strong>Vendor:</strong> Ninjio (security awareness training) — pricing not inserted yet.</p>
+              <p><strong>Define inclusions:</strong></p>
+              <ul>
+                <li>Training cadence (monthly recommended)</li>
+                <li>Phish simulation frequency + consequence policy</li>
+                <li>Reporting ownership (DE produces / client reviews)</li>
+              </ul>
+              <p><strong>Action:</strong> Add sell/cost when ready. Decide if included in $65 or a separate training line item.</p>
+            ">
+              <td><div class="svc"><span class="expand-icon">▶</span> Security Awareness Training + Phish Testing</div></td>
+              <td class="vendor">Ninjio</td>
+              <td><span class="badge tbd">TBD</span></td>
+              <td><div class="money"><div class="line"><span class="muted">Per user:</span><strong>TBD</strong></div><div class="line"><span class="muted">Unit:</span><span>user/mo</span></div></div></td>
+              <td><div class="money"><div class="line"><span class="muted">Per user:</span><strong>TBD</strong></div><div class="line"><span class="muted">Unit:</span><span>user/mo</span></div></div></td>
+              <td><div class="money"><div class="line"><span class="muted">Margin:</span><span class="warnm">TBD</span></div><div class="line"><span class="muted">Human layer</span><span>✅</span></div></div></td>
+            </tr>
+            <tr class="description-row"><td colspan="6"><div class="description-content"></div></td></tr>
+
+            <tr class="feature-row" data-description="
+              <p><strong>Dark web / credential monitoring:</strong> can be bundled via existing security platform or separate service.</p>
+              <p><strong>Action:</strong> Specify vendor + whether auto-remediation is in scope (forced resets, domain takedown requests, etc.).</p>
+            ">
+              <td><div class="svc"><span class="expand-icon">▶</span> Credential Leak Monitoring (dark web / breach alerts)</div></td>
+              <td class="vendor">TBD</td>
+              <td><span class="badge tbd">TBD</span></td>
+              <td><div class="money"><div class="line"><span class="muted">Per user:</span><strong>TBD</strong></div><div class="line"><span class="muted">Unit:</span><span>user/mo</span></div></div></td>
+              <td><div class="money"><div class="line"><span class="muted">Per user:</span><strong>TBD</strong></div><div class="line"><span class="muted">Unit:</span><span>user/mo</span></div></div></td>
+              <td><div class="money"><div class="line"><span class="muted">Margin:</span><span class="warnm">TBD</span></div><div class="line"><span class="muted">Scope it</span><span>✅</span></div></div></td>
+            </tr>
+            <tr class="description-row"><td colspan="6"><div class="description-content"></div></td></tr>
+
+            <!-- NETWORK / OPTIONAL -->
+            <tr class="category-row">
+              <td colspan="6">🌐 Optional Network Security Layer (if bundled)</td>
+            </tr>
+
+            <tr class="feature-row" data-description="
+              <p><strong>Vendor model (on file):</strong> ControlOne is sold per-customer with a required cloud instance and optional endpoint/site components.</p>
+              <ul>
+                <li><strong>Cloud Instance:</strong> $49/customer/mo (required)</li>
+                <li><strong>Endpoint User License:</strong> $10/user/mo</li>
+                <li><strong>Site License + Hardware:</strong> $100/site/mo + $199 NRE (+ shipping)</li>
+                <li><strong>Extras:</strong> SD-WAN uplinks $49/uplink/mo, SIEM integration $49/mo, etc.</li>
+              </ul>
+              <p><strong>Action:</strong> Mark as Add-on unless you are explicitly including ZTNA/SD-WAN in this specific package.</p>
+            ">
+              <td><div class="svc"><span class="expand-icon">▶</span> ZTNA / SD-WAN / Secure Remote Access</div></td>
+              <td class="vendor">ControlOne</td>
+              <td><span class="badge addon">Add-on</span></td>
+              <td>
+                <div class="money">
+                  <div class="line"><span class="muted">Per user:</span><strong>TBD</strong></div>
+                  <div class="line"><span class="muted">+ Per org:</span><strong>$49</strong></div>
+                </div>
+              </td>
+              <td>
+                <div class="money">
+                  <div class="line"><span class="muted">Per user:</span><strong>$10</strong></div>
+                  <div class="line"><span class="muted">+ Per org:</span><strong>$49</strong></div>
+                </div>
+              </td>
+              <td>
+                <div class="money">
+                  <div class="line"><span class="muted">Margin:</span><span class="warnm">TBD</span></div>
+                  <div class="line"><span class="muted">Scope by site</span><span>✅</span></div>
+                </div>
+              </td>
+            </tr>
+            <tr class="description-row"><td colspan="6"><div class="description-content"></div></td></tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Pricing integrity note:</strong>
+      I only filled in prices we already have on record (<strong>$65/user</strong> bundle total, <strong>Coro $20</strong> historical, <strong>Blackpoint $5 cost / $8 sell</strong>, ControlOne core pricing model).
+      Everything else is intentionally marked <strong>TBD</strong> so we don’t accidentally publish invented numbers internally.
+    </div>
+
+    <div class="footer">
+      Tip: Once you drop Mimecast / Atakama / Ninjio unit costs, I can wire this page so the “Known COGS Floor” auto-updates and shows true gross margin.
+    </div>
+
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const featureRows = document.querySelectorAll('#securityInternalTable .feature-row');
+
+      featureRows.forEach(row => {
+        row.addEventListener('click', function () {
+          const isExpanded = this.classList.contains('expanded');
+          const desc = this.getAttribute('data-description');
+          const descRow = this.nextElementSibling;
+
+          // close others
+          document.querySelectorAll('#securityInternalTable .feature-row.expanded').forEach(openRow => {
+            if (openRow !== this) {
+              openRow.classList.remove('expanded');
+              const r = openRow.nextElementSibling;
+              if (r && r.classList.contains('description-row')) r.classList.remove('show');
+            }
+          });
+
+          if (!descRow || !descRow.classList.contains('description-row')) return;
+
+          if (isExpanded) {
+            this.classList.remove('expanded');
+            descRow.classList.remove('show');
+          } else {
+            this.classList.add('expanded');
+            const content = descRow.querySelector('.description-content');
+            if (content) content.innerHTML = desc || '<p><strong>No internal notes added yet.</strong></p>';
+            descRow.classList.add('show');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

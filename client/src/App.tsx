@@ -43,6 +43,7 @@ const Insurance = lazy(() => import("@/pages/about/Insurance"));
 const ComplianceCertifications = lazy(() => import("@/pages/about/ComplianceCertifications"));
 const ClientBillOfRights = lazy(() => import("@/pages/about/ClientBillOfRights"));
 const Guarantee = lazy(() => import("@/pages/about/Guarantee"));
+const TwentyOneQuestions = lazy(() => import("@/pages/about/TwentyOneQuestions"));
 const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy"));
 const TermsOfUse = lazy(() => import("@/pages/legal/TermsOfUse"));
 const MSA = lazy(() => import("@/pages/legal/MSA"));
@@ -103,6 +104,9 @@ const ProActiveEcosystemPricing = lazy(() => import("@/pages/ProActiveEcosystemP
 
 // Internal pages (DE staff only)
 const InternalSalesProcess = lazy(() => import("@/pages/internal/SalesProcessPage"));
+const WorkplaceMatrix = lazy(() => import("@/pages/internal/WorkplaceMatrix"));
+const CoreIT = lazy(() => import("@/pages/internal/CoreIT"));
+const SecurityStack = lazy(() => import("@/pages/internal/SecurityStack"));
 
 import { servicePageData, industryPageData, resourcePageData, supportPageData } from "@/pages/routes/servicePages";
 
@@ -258,6 +262,11 @@ function Router() {
       <Route path="/about/guarantee" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <Guarantee />
+        </Suspense>
+      )} />
+      <Route path="/about/21-questions" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <TwentyOneQuestions />
         </Suspense>
       )} />
       
@@ -577,6 +586,21 @@ function Router() {
       <Route path="/internal/sales-process" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <InternalSalesProcess />
+        </Suspense>
+      )} />
+      <Route path="/internal/workplace-matrix" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <WorkplaceMatrix />
+        </Suspense>
+      )} />
+      <Route path="/internal/core-it" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <CoreIT />
+        </Suspense>
+      )} />
+      <Route path="/internal/security-stack" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <SecurityStack />
         </Suspense>
       )} />
       
