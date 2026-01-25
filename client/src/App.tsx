@@ -99,6 +99,9 @@ const ThankYouSuccess = lazy(() => import("@/pages/ThankYouSuccess"));
 const SalesProcess = lazy(() => import("@/pages/portal/SalesProcess"));
 const ProActiveEcosystemPricing = lazy(() => import("@/pages/ProActiveEcosystemPricing"));
 
+// Internal pages (DE staff only)
+const InternalSalesProcess = lazy(() => import("@/pages/internal/SalesProcessPage"));
+
 import { servicePageData, industryPageData, resourcePageData, supportPageData } from "@/pages/routes/servicePages";
 
 function Router() {
@@ -555,6 +558,13 @@ function Router() {
       <Route path="/pricing" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <ProActiveEcosystemPricing />
+        </Suspense>
+      )} />
+      
+      {/* Internal DE Pages (Staff Only) */}
+      <Route path="/internal/sales-process" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <InternalSalesProcess />
         </Suspense>
       )} />
       
