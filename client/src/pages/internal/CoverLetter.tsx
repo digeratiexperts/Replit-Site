@@ -129,17 +129,17 @@ export default function CoverLetter() {
           </div>
 
           {/* Contact Box */}
-          <div className="bg-white/[0.03] border border-white/10 rounded-lg p-8 text-center mb-12">
-            <p className="text-white/70 mb-4">If you have any questions prior to our meeting, please call me directly:</p>
+          <div className="bg-white/[0.03] border border-violet-400/20 rounded-xl p-10 text-center mb-12">
+            <p className="text-white/70 mb-6 text-lg">If you have any questions prior to our meeting, please call me directly:</p>
             <a
               href="tel:325-480-9870"
-              className="inline-flex items-center gap-3 text-2xl font-bold text-violet-400 hover:text-violet-300 transition-colors"
+              className="inline-flex items-center gap-4 text-3xl font-bold text-violet-400 hover:text-violet-300 transition-colors"
               data-testid="link-phone"
             >
-              <Phone className="w-6 h-6" />
+              <Phone className="w-8 h-8" />
               325-480-9870
             </a>
-            <p className="text-white/60 mt-4">
+            <p className="text-white/50 mt-6 leading-relaxed">
               I truly appreciate the opportunity to meet with you and discuss how we can protect and support your business.
             </p>
           </div>

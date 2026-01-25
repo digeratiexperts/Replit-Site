@@ -170,12 +170,12 @@ export default function BuyersGuide() {
           </div>
 
           {/* Provider Box */}
-          <div className="bg-white/[0.03] border-l-4 border-violet-400 rounded-r-lg p-6 text-center mb-12">
+          <div className="bg-white/[0.03] border-l-4 border-violet-400 rounded-r-lg p-8 text-center mb-12">
             <p className="text-white/60 mb-2">Provided as an educational service by:</p>
-            <p className="text-xl text-violet-400 font-bold">Joseph R. Petro</p>
-            <p className="text-white/70">Founder & Security Strategy Lead</p>
-            <p className="text-white/70">Digerati Experts</p>
-            <p className="text-white/50 mt-3">Chandler, Arizona | 325-480-9870</p>
+            <p className="text-2xl text-violet-300 font-bold mb-1">Joseph R. Petro</p>
+            <p className="text-white/80 font-medium">Founder & Security Strategy Lead</p>
+            <p className="text-white/60">Digerati Experts</p>
+            <p className="text-violet-400/80 mt-4 font-mono">Chandler, Arizona | 325-480-9870</p>
           </div>
 
           {/* Letter Section */}

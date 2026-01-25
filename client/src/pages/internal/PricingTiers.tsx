@@ -337,13 +337,13 @@ export default function PricingTiers() {
   const getTierColors = (id: string) => {
     switch (id) {
       case "essentials":
-        return { text: "text-gray-400", bg: "bg-gray-500", border: "border-gray-400/30" };
+        return { text: "text-slate-400", bg: "bg-slate-500", border: "border-slate-400/30" };
       case "office":
         return { text: "text-violet-400", bg: "bg-violet-500", border: "border-violet-400/30" };
       case "business":
         return { text: "text-violet-300", bg: "bg-violet-600", border: "border-violet-300/30" };
       case "enterprise":
-        return { text: "text-fuchsia-400", bg: "bg-fuchsia-500", border: "border-fuchsia-400/30" };
+        return { text: "text-purple-400", bg: "bg-purple-500", border: "border-purple-400/30" };
       default:
         return { text: "text-violet-400", bg: "bg-violet-500", border: "border-violet-400/30" };
     }
@@ -401,7 +401,7 @@ export default function PricingTiers() {
           {/* Top Note */}
           <div className="max-w-4xl mx-auto bg-gradient-to-br from-fuchsia-600/10 to-purple-600/5 border border-fuchsia-400/20 rounded-2xl p-6 mb-10">
             <p className="text-white/70 text-sm leading-relaxed">
-              <strong className="text-fuchsia-400">Provisioning & Hardening:</strong> Microsoft-native environments include deeper security baselines (tenant hardening, device enrollment, policy enforcement, auditing). That work is priced up front as a <strong className="text-white">Microsoft Native Security Baseline Fee</strong>. Budget-focused clients can choose the <strong className="text-white">Cross-Platform Directory Suite</strong> <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold bg-gray-500/20 text-gray-300 ml-1">Cost-Saver</span> across all tiers.
+              <strong className="text-violet-300">Provisioning & Hardening:</strong> Microsoft-native environments include deeper security baselines (tenant hardening, device enrollment, policy enforcement, auditing). That work is priced up front as a <strong className="text-white">Microsoft Native Security Baseline Fee</strong>. Budget-focused clients can choose the <strong className="text-white">Cross-Platform Directory Suite</strong> <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-500/20 text-slate-300 ml-1">Cost-Saver</span> across all tiers.
             </p>
             <p className="text-white/50 text-sm mt-3">
               <strong className="text-white/70">Note:</strong> Microsoft licensing (M365/Entra/Intune SKUs) is billed separately unless explicitly bundled.

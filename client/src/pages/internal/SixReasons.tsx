@@ -87,12 +87,12 @@ export default function SixReasons() {
           {/* Hero */}
           <div className="text-center mb-16">
             <div className="text-sm text-violet-400 uppercase tracking-widest mb-4 font-semibold">
-              What Makes Us Unique?
+              The Digerati Experts Advantage
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-purple-300 to-fuchsia-300 mb-6">
               6 Reasons Why You'll Want To Work With Digerati Experts
             </h1>
-            <p className="text-lg text-white/60 max-w-2xl mx-auto">
+            <p className="text-lg text-white/70 max-w-2xl mx-auto">
               Over any and every other IT services firm in the Phoenix metro area
             </p>
           </div>
