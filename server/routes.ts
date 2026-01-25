@@ -795,12 +795,26 @@ export async function registerRoutes(app: Express) {
   const portalUsers: Map<string, any> = new Map();
   const portalClients: Map<string, any> = new Map();
   
-  // Demo companies - Password: ClientDemo1!
+  // MSP company (Digerati Experts) - separate from client companies
+  const mspCompany = { 
+    id: "msp-digerati", 
+    companyName: "Digerati Experts (Internal)", 
+    contactEmail: "admin@digeratiexperts.com", 
+    contactPhone: "(480) 555-1000", 
+    industry: "MSP/MSSP", 
+    primaryContact: "Digerati Admin", 
+    status: "active", 
+    type: "msp", // MSP's own account
+    createdAt: new Date() 
+  };
+  portalClients.set(mspCompany.id, mspCompany);
+  
+  // Demo client companies - Password: ClientDemo1!
   const demoCompanies = [
-    { id: "client-1", companyName: "Acme Corp", contactEmail: "admin@acme.com", contactPhone: "(480) 555-1001", industry: "Manufacturing", primaryContact: "John Smith", status: "active", createdAt: new Date() },
-    { id: "client-2", companyName: "Phoenix Medical Group", contactEmail: "it@phoenixmedical.com", contactPhone: "(480) 555-1002", industry: "Healthcare", primaryContact: "Sarah Jones", status: "active", createdAt: new Date() },
-    { id: "client-3", companyName: "Desert Law Partners", contactEmail: "admin@desertlaw.com", contactPhone: "(480) 555-1003", industry: "Legal", primaryContact: "Mike Davis", status: "active", createdAt: new Date() },
-    { id: "client-4", companyName: "Scottsdale Realty", contactEmail: "tech@scottsdalereal.com", contactPhone: "(480) 555-1004", industry: "Real Estate", primaryContact: "Lisa Wilson", status: "active", createdAt: new Date() },
+    { id: "client-1", companyName: "Acme Corp", contactEmail: "admin@acme.com", contactPhone: "(480) 555-1001", industry: "Manufacturing", primaryContact: "John Smith", status: "active", type: "client", createdAt: new Date() },
+    { id: "client-2", companyName: "Phoenix Medical Group", contactEmail: "it@phoenixmedical.com", contactPhone: "(480) 555-1002", industry: "Healthcare", primaryContact: "Sarah Jones", status: "active", type: "client", createdAt: new Date() },
+    { id: "client-3", companyName: "Desert Law Partners", contactEmail: "admin@desertlaw.com", contactPhone: "(480) 555-1003", industry: "Legal", primaryContact: "Mike Davis", status: "active", type: "client", createdAt: new Date() },
+    { id: "client-4", companyName: "Scottsdale Realty", contactEmail: "tech@scottsdalereal.com", contactPhone: "(480) 555-1004", industry: "Real Estate", primaryContact: "Lisa Wilson", status: "active", type: "client", createdAt: new Date() },
   ];
   demoCompanies.forEach(c => portalClients.set(c.id, c));
   
@@ -1316,11 +1330,45 @@ export async function registerRoutes(app: Express) {
         companyName: client.companyName,
         contactEmail: client.contactEmail,
         status: client.status || "active",
+        type: client.type || "client", // "msp" for Digerati, "client" for customers
         userCount: Array.from(portalUsers.values()).filter(u => u.clientId === client.id).length,
         createdAt: client.createdAt,
       }));
       
       res.json({ companies });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+  
+  // Admin tenant selector - quick list for dropdown
+  app.get("/api/portal/admin/tenants", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      
+      // Get MSP company first, then clients sorted by name
+      const allCompanies = Array.from(portalClients.values());
+      const mspCompanies = allCompanies.filter(c => c.type === "msp").map(c => ({
+        id: c.id,
+        companyName: c.companyName,
+        type: "msp",
+      }));
+      const clientCompanies = allCompanies
+        .filter(c => c.type !== "msp")
+        .sort((a, b) => a.companyName.localeCompare(b.companyName))
+        .map(c => ({
+          id: c.id,
+          companyName: c.companyName,
+          type: "client",
+        }));
+      
+      res.json({ 
+        tenants: [...mspCompanies, ...clientCompanies],
+        mspCount: mspCompanies.length,
+        clientCount: clientCompanies.length,
+      });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -1375,6 +1423,7 @@ export async function registerRoutes(app: Express) {
         industry: industry || null,
         primaryContact: primaryContact || null,
         status: "active",
+        type: "client", // New companies are always clients, not MSP
         createdAt: new Date(),
       };
       
@@ -1511,23 +1560,40 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  // Get files for current user's company (regular users)
+  // Get files for current user's company (regular users + admin impersonation)
   app.get("/api/portal/my-files", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const user = portalUsers.get(req.user?.email || "");
-      if (!user) {
-        return res.status(404).json({ error: "User not found" });
+      let clientId: string | null = null;
+      let companyName: string = "";
+      
+      // Check if admin is impersonating a company
+      const impersonatingCompanyId = (req.user as any)?.impersonatingCompanyId;
+      if (impersonatingCompanyId) {
+        const company = portalClients.get(impersonatingCompanyId);
+        if (company) {
+          clientId = impersonatingCompanyId;
+          companyName = company.companyName;
+        }
+      } else {
+        // Regular user - get their company
+        const user = portalUsers.get(req.user?.email || "");
+        if (user) {
+          const company = portalClients.get(user.clientId);
+          if (company) {
+            clientId = user.clientId;
+            companyName = company.companyName;
+          }
+        }
       }
       
-      const company = portalClients.get(user.clientId);
-      if (!company) {
-        return res.status(404).json({ error: "Company not found" });
+      if (!clientId) {
+        return res.json({ files: [], companyName: "Your Company" });
       }
       
       // Get tenant files from storage
-      const tenantFiles = await storage.getTenantFilesByClientId(user.clientId);
+      const tenantFiles = await storage.getTenantFilesByClientId(clientId);
       
-      res.json({ files: tenantFiles, companyName: company.companyName });
+      res.json({ files: tenantFiles, companyName });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

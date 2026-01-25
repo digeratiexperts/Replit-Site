@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { LogOut, Menu, X, LayoutDashboard, Ticket, Package, FileText, BookOpen, Settings, Activity, GraduationCap, MessageCircle, Download, Truck, ShoppingCart, ClipboardList, CheckSquare, FileStack, Upload, Users, Calendar, Shield, Phone, Building2, AlertTriangle } from "lucide-react";
 import { useState } from "react";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
+import { TenantSelector } from "@/components/portal/TenantSelector";
 
 interface PortalLayoutProps {
   children: React.ReactNode;
@@ -201,11 +202,11 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
         )}
 
         {/* Header */}
-        <header className="bg-white dark:bg-slate-900 border-b dark:border-slate-800 px-6 py-4 flex items-center justify-between">
+        <header className="bg-gradient-to-r from-[#030228] to-[#0f0d2e] border-b border-white/10 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="md:hidden p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg"
+              className="md:hidden p-2 hover:bg-white/10 rounded-lg text-white"
               data-testid="button-toggle-sidebar"
             >
               {sidebarOpen ? (
@@ -214,10 +215,17 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
                 <Menu className="h-5 w-5" />
               )}
             </button>
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h1>
+            <h1 className="text-xl font-bold text-white">{title}</h1>
           </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">
-            Welcome back, {user?.fullName?.split(" ")[0]}!
+          <div className="flex items-center gap-4">
+            {user?.role === "admin" && (
+              <TenantSelector 
+                currentTenant={impersonatingCompany}
+              />
+            )}
+            <span className="text-sm text-white/70 hidden sm:inline">
+              Welcome, {user?.fullName?.split(" ")[0]}
+            </span>
           </div>
         </header>
 
