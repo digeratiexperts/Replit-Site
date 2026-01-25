@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback, useId } from 'react';
-import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink, X, ArrowRight, Monitor, Cloud, Lock, Zap, HeadphonesIcon, Building, BarChart3, ClipboardCheck, Layers, TrendingUp, Star, CheckCircle } from 'lucide-react';
+import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink, X, ArrowRight, Monitor, Cloud, Lock, Zap, HeadphonesIcon, Building, BarChart3, ClipboardCheck, Layers, TrendingUp, Star, CheckCircle, Award } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import logoImage from '@assets/DE-Logo-new_1762461524794.webp';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -267,6 +267,8 @@ export function MegaMenu() {
             { title: 'Mission & Values', description: 'Our commitment to partnership', icon: <Star className="h-5 w-5" />, url: '/about/mission-values' },
             { title: 'Case Studies', description: 'Arizona business success stories', icon: <TrendingUp className="h-5 w-5" />, url: '/resources/case-studies' },
             { title: 'Meet The Experts', description: 'Our certified Chandler team', icon: <Users className="h-5 w-5" />, url: '/about/team' },
+            { title: 'Client Bill of Rights', description: 'Our 8 pledges to you', icon: <Award className="h-5 w-5" />, url: '/about/client-bill-of-rights' },
+            { title: '100% Guarantee', description: '30-day money-back promise', icon: <CheckCircle className="h-5 w-5" />, url: '/about/guarantee' },
           ]
         }
       ]

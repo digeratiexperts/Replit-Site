@@ -1,0 +1,128 @@
+import { Link } from "wouter";
+import { ArrowLeft, Phone, CheckCircle2 } from "lucide-react";
+import { DigeratiEnhancedFooterSection } from "../sections/DigeratiEnhancedFooterSection";
+
+export default function Guarantee() {
+  return (
+    <div className="min-h-screen bg-[#030228]">
+      <header className="border-b border-white/10 bg-[#030228]/95 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto px-6 py-4">
+          <Link href="/" className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors text-sm" data-testid="link-back-home">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Home
+          </Link>
+        </div>
+      </header>
+
+      <section className="py-20 px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4" data-testid="heading-guarantee">
+              100% Money-Back Guarantee
+            </h1>
+            <p className="text-lg text-white/60">
+              No-Risk. No-Small-Print. No Questions Asked.
+            </p>
+          </div>
+
+          <div className="flex flex-col lg:flex-row gap-10 items-center lg:items-start">
+            <div className="flex-1 order-2 lg:order-1">
+              <div className="mb-8">
+                <p className="text-white/80 text-lg leading-relaxed mb-6">
+                  Because we are ardently committed to deliver <span className="text-violet-400 font-semibold">excellence</span> in 
+                  IT services and cybersecurity, keeping our commitments and <span className="text-violet-400 font-semibold">exceeding</span> our 
+                  clients' expectations, we stand behind our work with a 100%, no-small-print, no weasel clause guarantee:
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-6 mb-8">
+                <p className="text-white/70 leading-relaxed mb-6">
+                  Partner with Digerati Experts as your IT and cybersecurity provider. If you are not 
+                  over-the-top thrilled with our support, customer service, or problem-resolution by the 
+                  end of the first 30 days, you can cancel your agreement and we'll refund 100% of your 
+                  services fees, no questions asked. We'll also release you from any contract or project 
+                  you hired us to deliver without penalties.
+                </p>
+
+                <p className="text-white/70 leading-relaxed">
+                  We're the <span className="text-white font-semibold">only</span> IT firm in the Phoenix area that offers this bold guarantee 
+                  because we're confident you'll be <span className="text-white font-semibold">thrilled</span> with the level of support and 
+                  service you receive. We also believe this guarantee keeps us <span className="text-white font-semibold">sharp</span> and 
+                  focused on ensuring everything is done right, on time and to your complete satisfaction. 
+                  Why risk hiring anyone else?
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-violet-400 mt-0.5 flex-shrink-0" />
+                  <span className="text-white/70">30-day risk-free trial period</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-violet-400 mt-0.5 flex-shrink-0" />
+                  <span className="text-white/70">100% refund of service fees if not satisfied</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-violet-400 mt-0.5 flex-shrink-0" />
+                  <span className="text-white/70">Release from contracts without penalties</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-violet-400 mt-0.5 flex-shrink-0" />
+                  <span className="text-white/70">No questions asked, no fine print</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="order-1 lg:order-2 flex-shrink-0">
+              <div className="w-56 h-56 md:w-64 md:h-64 relative" data-testid="guarantee-badge">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-violet-600 to-purple-700 animate-pulse opacity-30" />
+                <div className="absolute inset-2 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
+                  <div className="w-[85%] h-[85%] rounded-full bg-white flex flex-col items-center justify-center text-center p-4">
+                    <div className="text-5xl md:text-6xl font-bold text-[#030228] leading-none">100%</div>
+                    <div className="mt-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm md:text-base font-bold uppercase tracking-wide shadow-lg">
+                      Money Back
+                    </div>
+                    <div className="mt-2 text-sm md:text-base font-bold text-[#030228] uppercase tracking-wide">
+                      Guarantee
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 px-6 border-t border-white/[0.06]">
+        <div className="max-w-3xl mx-auto text-center">
+          <p className="text-xl text-white/80 mb-4">
+            Call us today to see what Elite IT & Cybersecurity is all about
+          </p>
+          <a 
+            href="tel:+14805195892" 
+            className="inline-flex items-center gap-3 text-2xl md:text-3xl font-bold text-violet-400 hover:text-violet-300 transition-colors"
+            data-testid="link-phone"
+          >
+            <Phone className="w-6 h-6" />
+            (480) 519-5892
+          </a>
+        </div>
+      </section>
+
+      <section className="py-12 px-6 border-t border-white/[0.06]">
+        <div className="max-w-3xl mx-auto text-center">
+          <p className="text-white/50 mb-4">See also our commitments to you</p>
+          <Link 
+            href="/about/client-bill-of-rights"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-medium transition-colors"
+            data-testid="link-bill-of-rights"
+          >
+            Client Bill of Rights
+          </Link>
+        </div>
+      </section>
+
+      <DigeratiEnhancedFooterSection />
+    </div>
+  );
+}

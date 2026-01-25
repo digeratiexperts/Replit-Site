@@ -41,6 +41,8 @@ const Compliance = lazy(() => import("@/pages/about/Compliance"));
 const SupportPage = lazy(() => import("@/pages/about/Support"));
 const Insurance = lazy(() => import("@/pages/about/Insurance"));
 const ComplianceCertifications = lazy(() => import("@/pages/about/ComplianceCertifications"));
+const ClientBillOfRights = lazy(() => import("@/pages/about/ClientBillOfRights"));
+const Guarantee = lazy(() => import("@/pages/about/Guarantee"));
 const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy"));
 const TermsOfUse = lazy(() => import("@/pages/legal/TermsOfUse"));
 const MSA = lazy(() => import("@/pages/legal/MSA"));
@@ -246,6 +248,16 @@ function Router() {
       <Route path="/about/compliance-certifications" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <ComplianceCertifications />
+        </Suspense>
+      )} />
+      <Route path="/about/client-bill-of-rights" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ClientBillOfRights />
+        </Suspense>
+      )} />
+      <Route path="/about/guarantee" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <Guarantee />
         </Suspense>
       )} />
       
