@@ -172,7 +172,7 @@ export default function BuyersGuide() {
           {/* Provider Box */}
           <div className="bg-white/[0.03] border-l-4 border-violet-400 rounded-r-lg p-8 text-center mb-12">
             <p className="text-white/60 mb-2">Provided as an educational service by:</p>
-            <p className="text-2xl text-violet-300 font-bold mb-1">Joseph R. Petro</p>
+            <p className="text-2xl text-violet-300 font-bold mb-1">Joe Petro, Owner of Digerati Experts</p>
             <p className="text-white/80 font-medium">Founder & Security Strategy Lead</p>
             <p className="text-white/60">Digerati Experts</p>
             <p className="text-violet-400/80 mt-4 font-mono">Chandler, Arizona | 325-480-9870</p>
@@ -181,7 +181,7 @@ export default function BuyersGuide() {
           {/* Letter Section */}
           <div className="mb-16">
             <div className="bg-white/[0.03] border border-white/10 rounded-lg p-5 mb-8">
-              <p className="text-sm text-white/60"><strong className="text-white/80">From the Desk of:</strong> Joseph R. Petro</p>
+              <p className="text-sm text-white/60"><strong className="text-white/80">From the Desk of:</strong> Joe Petro, Owner of Digerati Experts</p>
               <p className="text-sm text-white/60"><strong className="text-white/80">Founder & Security Strategy Lead,</strong> Digerati Experts</p>
             </div>
 
@@ -199,7 +199,7 @@ export default function BuyersGuide() {
             </div>
 
             <p className="mt-8 text-white/70">Dedicated to serving you,</p>
-            <p className="text-lg font-bold text-violet-400 mt-2">Joseph R. Petro</p>
+            <p className="text-lg font-bold text-violet-400 mt-2">Joe Petro</p>
             <p className="text-white/50 text-sm">Founder & Security Strategy Lead, Digerati Experts</p>
           </div>
 

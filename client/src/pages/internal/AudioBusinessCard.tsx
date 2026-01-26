@@ -71,15 +71,15 @@ export default function AudioBusinessCard() {
           name: "Host (Opening)",
           content: [
             "Hello and welcome to our Business Builder Interview series. My name is [Host Name], and I'll be your host for today's conversation.",
-            "Our guest today is Joseph Petro, a well-known and respected expert in <strong class=\"text-violet-300\">cybersecurity and IT services for Arizona businesses</strong>. He is the Founder and Security Strategy Lead of <strong class=\"text-violet-300\">Digerati Experts</strong>, based in Chandler, Arizona, and has been protecting businesses throughout the Phoenix metro area since 2019.",
-            "Joseph and his team specialize in putting <strong class=\"text-violet-300\">cybersecurity FIRST</strong> - not as an afterthought, but as the foundation of everything they do. They work with businesses ranging from professional services firms to healthcare organizations, legal practices to manufacturing companies.",
-            "The reason I wanted to interview Joseph for all of you is that he is an absolute expert at protecting businesses from the cybersecurity threats that are plaguing companies today. With ransomware attacks increasing, compliance requirements tightening, and cyber insurance getting harder to obtain, EVERY business owner needs to find a COMPETENT IT partner who can not only protect their business from devastating cyber-attacks, but also help them be far more strategic about technology to increase productivity, improve efficiency, lower costs, and - of course - achieve greater peace of mind.",
-            "Joseph, welcome to the program!"
+            "Our guest today is Joe Petro, owner of Digerati Experts and a well-known and respected expert in <strong class=\"text-violet-300\">cybersecurity and IT services for Arizona businesses</strong>. He is the Founder and Security Strategy Lead of <strong class=\"text-violet-300\">Digerati Experts</strong>, based in Chandler, Arizona, and has been protecting businesses throughout the Phoenix metro area since 2019.",
+            "Joe and his team specialize in putting <strong class=\"text-violet-300\">cybersecurity FIRST</strong> - not as an afterthought, but as the foundation of everything they do. They work with businesses ranging from professional services firms to healthcare organizations, legal practices to manufacturing companies.",
+            "The reason I wanted to interview Joe for all of you is that he is an absolute expert at protecting businesses from the cybersecurity threats that are plaguing companies today. With ransomware attacks increasing, compliance requirements tightening, and cyber insurance getting harder to obtain, EVERY business owner needs to find a COMPETENT IT partner who can not only protect their business from devastating cyber-attacks, but also help them be far more strategic about technology to increase productivity, improve efficiency, lower costs, and - of course - achieve greater peace of mind.",
+            "Joe, welcome to the program!"
           ]
         },
         {
           speaker: "guest" as const,
-          name: "Joseph",
+          name: "Joe",
           content: ["Thank you, [Host Name], it's a pleasure to be here."]
         }
       ]
@@ -90,11 +90,11 @@ export default function AudioBusinessCard() {
         {
           speaker: "host" as const,
           name: "Host",
-          content: ["Joseph, can you give us a quick overview of who you are and what Digerati Experts does?"]
+          content: ["Joe, can you give us a quick overview of who you are and what Digerati Experts does?"]
         },
         {
           speaker: "guest" as const,
-          name: "Joseph",
+          name: "Joe",
           content: [
             "Absolutely. Digerati Experts is the outsourced IT and cybersecurity partner for businesses throughout the Phoenix metro area. We've been in business since 2019, and we work primarily with companies that have between 10 and 100 employees - businesses that have reached a maturity level where professional IT and cybersecurity services are absolutely critical, but they're not large enough to justify hiring a full-time internal IT staff.",
             "What makes us different from traditional IT companies is that we put <strong class=\"text-violet-300\">cybersecurity FIRST</strong>. That's not just a tagline for us - it's how we approach every single thing we do. While other IT companies bolt security on as an afterthought or charge extra for it, we build security into the foundation from day one.",
@@ -113,7 +113,7 @@ export default function AudioBusinessCard() {
         },
         {
           speaker: "guest" as const,
-          name: "Joseph",
+          name: "Joe",
           content: [
             "That's a great question. I got into this industry because I saw firsthand how devastating cyber-attacks can be to small and medium-sized businesses. I watched companies - good companies with great products and loyal customers - get absolutely devastated by ransomware attacks that could have been prevented with proper cybersecurity measures.",
             "The frustrating part was that many of these businesses THOUGHT they were protected. They had an IT company. They had antivirus software. They thought they were covered. But when a sophisticated attack came, their defenses crumbled because they were relying on outdated, reactive approaches to IT instead of proactive, security-first strategies.",
@@ -133,7 +133,7 @@ export default function AudioBusinessCard() {
         },
         {
           speaker: "guest" as const,
-          name: "Joseph",
+          name: "Joe",
           content: [
             "That's an important question because we're not a right fit for everyone, and I want to be upfront about that.",
             "Our <strong class=\"text-violet-300\">BEST clients</strong> are successful, established businesses that have been around for several years, typically with 10 to 100 employees, and they're continuing to grow. Technology is essential to their business operations and client service, so they cannot tolerate email outages, system downtime, or security breaches. They need their systems working like clockwork so they can focus on running their business without constant IT interruptions.",
@@ -155,7 +155,7 @@ export default function AudioBusinessCard() {
         },
         {
           speaker: "guest" as const,
-          name: "Joseph",
+          name: "Joe",
           content: [
             "I guess it's because of what our customers tell us. And the number one reason clients like doing business with us is something I believe shouldn't be unique or rare, but unfortunately it is...and that is we actually <strong class=\"text-violet-300\">DELIVER on our promises</strong>!",
             "In my opinion, every company should do that. However, there are a LOT of IT companies out there who SAY they're proactive, who SAY they're monitoring your systems 24/7, who SAY they're backing everything up properly - but just try to validate that they're actually DOING what they claim! In many cases, you never see them until something breaks.",
@@ -177,7 +177,7 @@ export default function AudioBusinessCard() {
         },
         {
           speaker: "guest" as const,
-          name: "Joseph",
+          name: "Joe",
           content: [
             "Sure. I think the best place to start is describing where we typically find businesses when they first come to us.",
             "Usually they're experiencing one of two situations:"
@@ -192,7 +192,7 @@ export default function AudioBusinessCard() {
         },
         {
           speaker: "guest" as const,
-          name: "Joseph (continued)",
+          name: "Joe (continued)",
           content: [
             "So what makes our process and approach <strong class=\"text-violet-300\">UNIQUE</strong> and allows us to really deliver for our clients comes down to several key things:"
           ],
@@ -212,7 +212,7 @@ export default function AudioBusinessCard() {
         },
         {
           speaker: "guest" as const,
-          name: "Joseph (continued)",
+          name: "Joe (continued)",
           content: [
             "And again, this is not \"revolutionary\" stuff. These are <strong class=\"text-violet-300\">best practices</strong> that SHOULD be standard in our industry. But MOST other IT firms simply don't do these things for their clients, even though they claim they do!",
             "The reason clients stay with us for years and refer others is that we make all the pain, aggravation, and risk of inadequate cybersecurity go away. We actually deliver what we say we're going to deliver.",
@@ -231,7 +231,7 @@ export default function AudioBusinessCard() {
         },
         {
           speaker: "guest" as const,
-          name: "Joseph",
+          name: "Joe",
           content: [
             "Great question. We offer what we call our <strong class=\"text-violet-300\">ProActive Ecosystem</strong> - tiered service packages that provide transparent, flat-rate pricing. Clients know exactly what they're paying each month, with no surprise bills, no hidden fees, no \"time and materials\" guessing games.",
             "We have four tiers - IT Essentials, Office, Business, and Enterprise - ranging from $180 to $360 per user per month. Each tier includes progressively more comprehensive security services, monitoring, support, and compliance capabilities.",
@@ -252,7 +252,7 @@ export default function AudioBusinessCard() {
         },
         {
           speaker: "guest" as const,
-          name: "Joseph",
+          name: "Joe",
           content: [
             "Excellent question. Here are the key things every business owner should demand from any IT provider they're considering:"
           ],
@@ -272,7 +272,7 @@ export default function AudioBusinessCard() {
         },
         {
           speaker: "guest" as const,
-          name: "Joseph (continued)",
+          name: "Joe (continued)",
           content: [
             "And here's maybe the most important piece of advice: <strong class=\"text-violet-300\">Don't choose based on price alone.</strong> The cheapest IT provider is rarely the best value. When you're talking about protecting your business, your data, your reputation, and your clients' trust, quality matters far more than saving a few dollars per month.",
             "Think about it this way: Would you rather invest $300 per employee per month in proper cybersecurity, or risk a $250,000 ransomware attack plus weeks of downtime? The math is pretty simple when you look at it that way."
@@ -286,11 +286,11 @@ export default function AudioBusinessCard() {
         {
           speaker: "host" as const,
           name: "Host (Closing)",
-          content: ["Joseph, this has been incredibly valuable. How can business owners get in touch with you if they want to learn more or schedule a consultation?"]
+          content: ["Joe, this has been incredibly valuable. How can business owners get in touch with you if they want to learn more or schedule a consultation?"]
         },
         {
           speaker: "guest" as const,
-          name: "Joseph",
+          name: "Joe",
           content: [
             "The best way is to contact us directly. You can call us at <strong class=\"text-violet-300\">325-480-9870</strong>, email us at <strong class=\"text-violet-300\">admin@digerati-experts.com</strong>, or visit our website at <strong class=\"text-violet-300\">digeratiexperts.com</strong>.",
             "We offer complimentary <strong class=\"text-violet-300\">Cybersecurity Risk Assessments</strong> for businesses throughout the Phoenix metro area. During this assessment, we'll evaluate your current security posture, identify vulnerabilities, and provide a detailed report with prioritized recommendations - all at no cost and with no obligation.",
@@ -301,11 +301,11 @@ export default function AudioBusinessCard() {
         {
           speaker: "host" as const,
           name: "Host",
-          content: ["Joseph Petro, Founder and Security Strategy Lead of Digerati Experts. Thank you so much for sharing your expertise with us today."]
+          content: ["Joe Petro, Owner of Digerati Experts. Thank you so much for sharing your expertise with us today."]
         },
         {
           speaker: "guest" as const,
-          name: "Joseph",
+          name: "Joe",
           content: ["Thank you for having me. It's been a pleasure."]
         }
       ]

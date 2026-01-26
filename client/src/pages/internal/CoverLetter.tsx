@@ -89,7 +89,7 @@ export default function CoverLetter() {
           {/* Letter Header */}
           <div className="bg-white/[0.03] border-l-4 border-violet-400 rounded-r-lg p-5 mb-10">
             <p className="text-sm text-white/60 mb-1">
-              <strong className="text-white/80">From the Desk of:</strong> Joseph R. Petro
+              <strong className="text-white/80">From the Desk of:</strong> Joe Petro, Owner of Digerati Experts
             </p>
             <p className="text-sm text-white/60 mb-1">
               <strong className="text-white/80">Title:</strong> Founder & Security Strategy Lead, Digerati Experts
@@ -147,7 +147,7 @@ export default function CoverLetter() {
           {/* Signature */}
           <div className="mb-16">
             <p className="text-white/70 mb-6">Dedicated to serving you,</p>
-            <p className="text-xl font-bold text-violet-400 mb-1">Joseph R. Petro</p>
+            <p className="text-xl font-bold text-violet-400 mb-1">Joe Petro</p>
             <p className="text-white/50 text-sm">Founder & Security Strategy Lead</p>
             <p className="text-white/50 text-sm">Digerati Experts</p>
           </div>
