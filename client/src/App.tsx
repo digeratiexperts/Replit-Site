@@ -124,6 +124,7 @@ const ElevenThingsBetter = lazy(() => import("@/pages/internal/ElevenThingsBette
 const USPWorksheet = lazy(() => import("@/pages/internal/USPWorksheet"));
 const ProActiveEcosystems = lazy(() => import("@/pages/internal/ProActiveEcosystems"));
 const GuaranteesValues = lazy(() => import("@/pages/internal/GuaranteesValues"));
+const CyberFacts = lazy(() => import("@/pages/internal/CyberFacts"));
 
 import { servicePageData, industryPageData, resourcePageData, supportPageData } from "@/pages/routes/servicePages";
 
@@ -692,6 +693,11 @@ function Router() {
       <Route path="/internal/guarantees-values" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <GuaranteesValues />
+        </Suspense>
+      )} />
+      <Route path="/internal/cyber-facts" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <CyberFacts />
         </Suspense>
       )} />
 
