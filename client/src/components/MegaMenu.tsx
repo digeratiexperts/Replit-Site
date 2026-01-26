@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback, useId } from 'react';
 import { Link } from 'wouter';
-import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink, X, ArrowRight, Monitor, Cloud, Lock, Zap, HeadphonesIcon, Building, BarChart3, ClipboardCheck, Layers, TrendingUp, Star, CheckCircle, Award } from 'lucide-react';
+import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink, X, ArrowRight, Monitor, Cloud, Lock, Zap, HeadphonesIcon, Building, BarChart3, ClipboardCheck, Layers, TrendingUp, Star, CheckCircle, Award, LayoutGrid, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import logoImage from '@assets/DE-Logo-new_1762461524794.webp';
 import ebookCover from '@/assets/images/ebook-defending-digital-realm-cover.png';
@@ -280,6 +280,8 @@ export function MegaMenu() {
           items: [
             { title: '11 Things We Do Better', description: 'Why Phoenix businesses choose us', icon: <CheckCircle className="h-5 w-5" />, url: '/internal/11-things-better' },
             { title: '6 Reasons to Choose Us', description: 'What makes us unique', icon: <Star className="h-5 w-5" />, url: '/internal/six-reasons' },
+            { title: 'ProActive Ecosystems', description: 'Compare service tiers', icon: <LayoutGrid className="h-5 w-5" />, url: '/internal/proactive-ecosystems' },
+            { title: 'Guarantees & Values', description: 'Our promises and principles', icon: <Heart className="h-5 w-5" />, url: '/internal/guarantees-values' },
           ]
         }
       ]

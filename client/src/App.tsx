@@ -121,6 +121,8 @@ const CoverLetter = lazy(() => import("@/pages/internal/CoverLetter"));
 const AudioBusinessCard = lazy(() => import("@/pages/internal/AudioBusinessCard"));
 const ElevenThingsBetter = lazy(() => import("@/pages/internal/ElevenThingsBetter"));
 const USPWorksheet = lazy(() => import("@/pages/internal/USPWorksheet"));
+const ProActiveEcosystems = lazy(() => import("@/pages/internal/ProActiveEcosystems"));
+const GuaranteesValues = lazy(() => import("@/pages/internal/GuaranteesValues"));
 
 import { servicePageData, industryPageData, resourcePageData, supportPageData } from "@/pages/routes/servicePages";
 
@@ -672,6 +674,16 @@ function Router() {
       <Route path="/internal/usp-worksheet" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <USPWorksheet />
+        </Suspense>
+      )} />
+      <Route path="/internal/proactive-ecosystems" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ProActiveEcosystems />
+        </Suspense>
+      )} />
+      <Route path="/internal/guarantees-values" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <GuaranteesValues />
         </Suspense>
       )} />
 
