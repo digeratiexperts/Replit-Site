@@ -183,6 +183,7 @@ export function MegaMenu() {
             { title: 'Managed Workplace', description: 'Focus on work, not technology', icon: <Building className="h-5 w-5" />, url: '/solutions/managed-workplace' },
             { title: 'Cloud Backup', description: 'Never lose critical business data', icon: <Cloud className="h-5 w-5" />, url: '/solutions/cloud-backup' },
             { title: 'Security Training', description: 'Turn staff into security assets', icon: <Shield className="h-5 w-5" />, url: '/solutions/security-awareness' },
+            { title: 'UCaaS: Voice & Meetings', description: 'Unified phone and meeting systems', icon: <Phone className="h-5 w-5" />, url: '/services/ucaas' },
           ]
         },
         {
@@ -272,6 +273,13 @@ export function MegaMenu() {
             { title: 'Client Bill of Rights', description: 'Our 8 pledges to you', icon: <Award className="h-5 w-5" />, url: '/about/client-bill-of-rights' },
             { title: '100% Guarantee', description: '30-day money-back promise', icon: <CheckCircle className="h-5 w-5" />, url: '/about/guarantee' },
             { title: '21 Questions to Ask', description: 'Before hiring any IT company', icon: <ClipboardCheck className="h-5 w-5" />, url: '/about/21-questions' },
+          ]
+        },
+        {
+          title: 'Why Us',
+          items: [
+            { title: '11 Things We Do Better', description: 'Why Phoenix businesses choose us', icon: <CheckCircle className="h-5 w-5" />, url: '/internal/11-things-better' },
+            { title: '6 Reasons to Choose Us', description: 'What makes us unique', icon: <Star className="h-5 w-5" />, url: '/internal/six-reasons' },
           ]
         }
       ]

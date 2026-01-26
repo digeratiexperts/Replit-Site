@@ -19,6 +19,7 @@ import { DigeratiHomepage } from "@/pages/DigeratiHomepage";
 
 const SolutionsIndex = lazy(() => import("@/pages/solutions/SolutionsIndex"));
 const ManagedITSupport = lazy(() => import("@/pages/solutions/ManagedITSupport"));
+const UCaaS = lazy(() => import("@/pages/services/UCaaS"));
 const Healthcare = lazy(() => import("@/pages/industries/Healthcare"));
 const Accounting = lazy(() => import("@/pages/industries/Accounting"));
 const LawFirms = lazy(() => import("@/pages/industries/LawFirms"));
@@ -118,6 +119,8 @@ const SixReasons = lazy(() => import("@/pages/internal/SixReasons"));
 const BuyersGuide = lazy(() => import("@/pages/internal/BuyersGuide"));
 const CoverLetter = lazy(() => import("@/pages/internal/CoverLetter"));
 const AudioBusinessCard = lazy(() => import("@/pages/internal/AudioBusinessCard"));
+const ElevenThingsBetter = lazy(() => import("@/pages/internal/ElevenThingsBetter"));
+const USPWorksheet = lazy(() => import("@/pages/internal/USPWorksheet"));
 
 import { servicePageData, industryPageData, resourcePageData, supportPageData } from "@/pages/routes/servicePages";
 
@@ -145,6 +148,13 @@ function Router() {
           </Suspense>
         )} />
       ))}
+      
+      {/* Services Pages */}
+      <Route path="/services/ucaas" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <UCaaS />
+        </Suspense>
+      )} />
       
       {/* Industries Pages */}
       <Route path="/industries/healthcare" component={() => (
@@ -652,6 +662,16 @@ function Router() {
       <Route path="/internal/audio-business-card" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <AudioBusinessCard />
+        </Suspense>
+      )} />
+      <Route path="/internal/11-things-better" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ElevenThingsBetter />
+        </Suspense>
+      )} />
+      <Route path="/internal/usp-worksheet" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <USPWorksheet />
         </Suspense>
       )} />
 

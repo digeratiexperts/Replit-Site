@@ -1,0 +1,344 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>DE Packages — Line Items with Cost, Revenue, Profit & Margin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root{
+      --bg:#0b0f17; --panel:#101827; --panel2:#0f1625; --border:#1e2740; --text:#e6e6e6;
+      --muted:#9aa7bd; --accent:#3b82f6; --good:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+    }
+    *{box-sizing:border-box}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:var(--bg);color:var(--text)}
+    header{padding:16px 20px;background:linear-gradient(90deg,#0b0f17,#141b2b);position:sticky;top:0;z-index:12;border-bottom:1px solid var(--border)}
+    h1{margin:0;font-size:20px}
+    .controls{display:grid;grid-template-columns:repeat(6,minmax(140px,1fr));gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);background:#0e1422}
+    @media (max-width:1100px){ .controls{grid-template-columns:repeat(3,1fr)} }
+    @media (max-width:680px){ .controls{grid-template-columns:1fr} }
+    label{font-size:12px;color:#a8b4cc;display:flex;flex-direction:column;gap:6px}
+    .input, select{background:#0e1523;border:1px solid #223253;color:var(--text);border-radius:10px;padding:8px 10px;width:100%}
+    .wrap{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;padding:16px}
+    @media (max-width:1200px){ .wrap{grid-template-columns:1fr} }
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:16px;box-shadow:0 6px 16px rgba(0,0,0,.25);display:flex;flex-direction:column;min-height:300px}
+    .card header{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border);background:#0f1829;position:sticky;top:56px;z-index:5}
+    .title{font-weight:700}
+    .badges{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+    .badge{font-size:11px;padding:2px 8px;border:1px solid #2e3e62;border-radius:999px;color:#a8c2ff;white-space:nowrap}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th, td{padding:8px 10px;border-bottom:1px solid var(--border);text-align:left;vertical-align:middle}
+    th{color:#b9d0ff;position:sticky;top:104px;background:linear-gradient(#111a2b,#0f1829)}
+    tbody tr:hover{background:#111a24}
+    .editable{cursor:text;border-bottom:1px dotted #335}
+    .foot{margin-top:auto;border-top:1px solid var(--border);padding:10px 12px;display:flex;gap:12px;flex-wrap:wrap;background:#0e1525;position:sticky;bottom:0}
+    .kpi{background:#0f1b31;border:1px solid #21345b;border-radius:10px;padding:8px 10px;font-size:13px}
+    .kpi strong{color:#d8e7ff}
+    .muted{color:var(--muted)}
+    .bar{height:8px;border-radius:6px;background:#16223a;overflow:hidden}
+    .bar > div{height:100%;background:linear-gradient(90deg,#1f4cff,#24c772);transition:width .2s}
+    .mini{font-size:11px;color:#9fb0d2}
+  </style>
+</head>
+<body>
+<header>
+  <h1>DE Packages — Line Items with Cost, Allocated Revenue, Profit & Margin</h1>
+</header>
+
+<section class="controls">
+  <label>Users
+    <input id="users" type="number" class="input" min="1" step="1" value="10">
+  </label>
+  <label>Sites
+    <input id="sites" type="number" class="input" min="1" step="1" value="1">
+  </label>
+  <label>Storage per User (TB)
+    <input id="tbPerUser" type="number" class="input" step="0.01" value="0.10">
+  </label>
+  <label>ControlOne Sites
+    <input id="c1Sites" type="number" class="input" min="0" step="1" value="1">
+  </label>
+  <label>Allocation Mode
+    <select id="alloc" class="input">
+      <option value="cost">Cost-weighted (default)</option>
+      <option value="equal">Equal per service</option>
+    </select>
+  </label>
+  <label>Actions
+    <div style="display:flex;gap:8px">
+      <button id="exportCSV" class="input" style="cursor:pointer">Export CSV</button>
+      <button id="reset" class="input" style="cursor:pointer">Reset</button>
+    </div>
+  </label>
+</section>
+
+<main id="grid" class="wrap"></main>
+
+<script>
+// ------------ PLANS (as used before) ------------
+const plans = [
+  { id:"office_custom", name:"Office Ecosystem — Custom Buildout",
+    pricePerUser:125, minUsers:6, siteFee:750, minMonthly:750,
+    bullets:["Core Platform","Endpoint Security","Backup Foundation","Human Firewall","Business-hours helpdesk","Monthly Reviews","Bonus: ONE (MDR / Passwordless / Continuity / Cloud Gateway)"]
+  },
+  { id:"office_essentials", name:"Office — DE Essentials Monitoring",
+    pricePerUser:0, minUsers:3, siteFee:500, minMonthly:500,
+    bullets:["Agents","Patching","Security alerts","Basic XDR (to 3 devices)","Monthly reports","On-demand ticketing"]
+  },
+  { id:"business_managed", name:"Business — Managed Security & Continuity",
+    pricePerUser:240, minUsers:5, siteFee:0, minMonthly:1200,
+    bullets:["CloudShield SASE","IAM (MFA/SSO)","XDR + 24/7 MDR","Email security","Continuity (failover)","Training","Passwordless (Atakama)","Help desk","Automation","Quarterly DR validation"]
+  },
+  { id:"business_network", name:"Business — Network Integration & Infrastructure",
+    pricePerUser:250, minUsers:10, siteFee:2500, minMonthly:0,
+    bullets:["SASE overlay","Includes Managed Security stack","Legacy HW support","Segmentation","Lifecycle planning","Diagrams & addressing","Upgrade paths"]
+  },
+  { id:"enterprise_compliance", name:"Enterprise — Managed Compliance (Zero-Trust)",
+    pricePerUser:350, minUsers:10, siteFee:0, minMonthly:3500,
+    bullets:["Includes Network Integration","HIPAA/GDPR/FTC","vCISO","Annual pen test","Live SOC & forensic logging","IR defined","DLP & vendor review","Insurance documentation"]
+  }
+];
+
+// ------------ SERVICES (shared editable costs) ------------
+const svc = [
+  {id:"jumpcloud",       name:"JumpCloud IAM (SSO/MFA/Device)",      unit:"user/mo",  cost:21.6,  qtyPerUser:1},
+  {id:"blackpoint",      name:"Blackpoint MDR/XDR",                   unit:"user/mo",  cost:5,     qtyPerUser:1},
+  {id:"coro",            name:"Coro (EDR+Email+Cloud)",               unit:"user/mo",  cost:20,    qtyPerUser:1},
+  {id:"emailsec",        name:"Email Security (placeholder)",         unit:"user/mo",  cost:3,     qtyPerUser:1},
+  {id:"ninjio",          name:"Security Awareness (NINJIO)",          unit:"user/mo",  cost:1.5,   qtyPerUser:1},
+  {id:"msp360_m365",     name:"MSP360 SaaS Backup (M365/GWS)",        unit:"user/mo",  cost:1.10,  qtyPerUser:1},
+  {id:"wasabi",          name:"Wasabi Storage",                       unit:"TB/mo",    cost:6.99,  qtyPerUser:0.10}, // users * tbPerUser
+  {id:"controlone_user", name:"ControlOne Endpoint",                  unit:"user/mo",  cost:10,    qtyPerUser:1},
+  {id:"controlone_org",  name:"ControlOne Cloud Instance",            unit:"org/mo",   cost:49,    qtyPerUser:0},     // per org
+  {id:"controlone_site", name:"ControlOne Site License + HW",         unit:"site/mo",  cost:100,   qtyPerUser:0},     // per site
+  {id:"wazuh",           name:"Wazuh SIEM (self-hosted)",             unit:"org/mo",   cost:0,     qtyPerUser:0},
+  {id:"hudu",            name:"Hudu IT Documentation",                unit:"org/mo",   cost:30,    qtyPerUser:0},
+  {id:"msp360_connect",  name:"MSP360 Connect (admin)",               unit:"admin/mo", cost:34.99, qtyPerUser:0.05},  // allocation for admin seats/time
+  {id:"msp360_rmm",      name:"MSP360 RMM (admin)",                   unit:"admin/mo", cost:59.99, qtyPerUser:0.05},
+  {id:"atakama",         name:"Atakama Passwordless/File Encryption", unit:"user/mo",  cost:0,     qtyPerUser:1}
+];
+
+// ------------ BUNDLES ------------
+const bundle = {
+  office_custom:        ["jumpcloud","coro","msp360_m365","wasabi","ninjio","msp360_connect","msp360_rmm","hudu"],
+  office_essentials:    ["msp360_rmm","msp360_connect","coro"],
+  business_managed:     ["controlone_user","controlone_org","jumpcloud","blackpoint","emailsec","msp360_m365","wasabi","ninjio","wazuh","hudu"],
+  business_network:     ["controlone_user","controlone_org","controlone_site","jumpcloud","blackpoint","emailsec","msp360_m365","wasabi","ninjio","wazuh","hudu"],
+  enterprise_compliance:["controlone_user","controlone_org","controlone_site","jumpcloud","blackpoint","emailsec","msp360_m365","wasabi","ninjio","wazuh","hudu","atakama"]
+};
+
+// ------------ DOM ------------
+const grid = document.getElementById('grid');
+const elUsers = document.getElementById('users');
+const elSites = document.getElementById('sites');
+const elTB    = document.getElementById('tbPerUser');
+const elC1    = document.getElementById('c1Sites');
+const elAlloc = document.getElementById('alloc');
+
+function money(n){ return "$" + (Math.round(n*100)/100).toFixed(2); }
+
+// qty calc per service
+function qtyForService(s, users, sites, tbPerUser, c1Sites){
+  if(s.id==="controlone_org" || s.id==="wazuh" || s.id==="hudu") return 1;
+  if(s.id==="controlone_site") return c1Sites;
+  if(s.id==="wasabi") return users * tbPerUser;
+  return (s.qtyPerUser||0) * users;
+}
+
+// revenue per plan
+function revenueForPlan(plan, users, sites){
+  let rev = 0;
+  if(plan.pricePerUser>0) rev += users*plan.pricePerUser;
+  if(plan.siteFee>0)      rev += Math.max(sites,1)*plan.siteFee;
+  if(plan.minMonthly>0)   rev  = Math.max(rev, plan.minMonthly);
+  return rev;
+}
+
+function render(){
+  const users   = parseInt(elUsers.value)||0;
+  const sites   = parseInt(elSites.value)||0;
+  const tbUser  = parseFloat(elTB.value)||0;
+  const c1Sites = parseInt(elC1.value)||0;
+  const alloc   = elAlloc.value; // "cost" or "equal"
+
+  grid.innerHTML = "";
+
+  plans.forEach(plan=>{
+    // build rows for services in this plan
+    const services = (bundle[plan.id]||[]).map(id=>svc.find(x=>x.id===id)).filter(Boolean);
+    const rows = services.map(s=>{
+      const qty   = qtyForService(s, users, sites, tbUser, c1Sites);
+      const costU = s.cost;
+      const lineC = qty * costU;
+      return { sid:s.id, name:s.name, unit:s.unit, qty, costU, lineC };
+    });
+
+    const totalCost = rows.reduce((a,b)=>a+b.lineC, 0);
+    const revenue   = revenueForPlan(plan, users, sites);
+
+    // allocation
+    let allocs = [];
+    if(alloc==="equal"){
+      const share = rows.length>0 ? 1/rows.length : 0;
+      allocs = rows.map(() => revenue*share);
+    }else{ // cost-weighted
+      if(totalCost>0) allocs = rows.map(r => revenue * (r.lineC/totalCost));
+      else            allocs = rows.map(()=>0);
+    }
+
+    const enriched = rows.map((r,i)=>{
+      const rev = allocs[i]||0;
+      const prof = rev - r.lineC;
+      const margin = rev>0 ? (prof/rev*100) : 0;
+      return {...r, rev, prof, margin};
+    });
+
+    const planProfit = revenue - totalCost;
+    const planMargin = revenue>0 ? (planProfit/revenue*100) : 0;
+
+    // card DOM
+    const card = document.createElement('section');
+    card.className = "card";
+
+    const h = document.createElement('header');
+    h.innerHTML = `
+      <div class="title">${plan.name}</div>
+      <div class="badges">
+        ${plan.pricePerUser ? `<span class="badge">$${plan.pricePerUser}/user</span>` : `<span class="badge">Flat/Min</span>`}
+        ${plan.siteFee ? `<span class="badge">Site $${plan.siteFee}</span>` : ``}
+        ${plan.minMonthly ? `<span class="badge">Min $${plan.minMonthly}/mo</span>` : ``}
+      </div>
+    `;
+    card.appendChild(h);
+
+    // table
+    const tbl = document.createElement('table');
+    tbl.innerHTML = `
+      <thead>
+        <tr>
+          <th style="min-width:220px">Service</th>
+          <th>Unit</th>
+          <th>Qty</th>
+          <th>Cost/Unit</th>
+          <th>Line Cost</th>
+          <th>Allocated Revenue</th>
+          <th>Profit</th>
+          <th>Margin</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    `;
+    const tb = tbl.querySelector('tbody');
+
+    enriched.forEach(row=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div>${row.name}</div>
+            <div class="bar" title="Cost vs Revenue bar">
+              <div style="width:${row.rev>0 ? Math.min(100, (row.lineC/row.rev)*100).toFixed(1) : 0}%"></div>
+            </div>
+            <div class="mini">
+              Cost: ${money(row.lineC)} · Rev: ${money(row.rev)} · Profit: ${money(row.prof)}
+            </div>
+          </div>
+        </td>
+        <td>${row.unit}</td>
+        <td>${row.qty.toFixed(2)}</td>
+        <td contenteditable="true" data-sid="${row.sid}" class="editable">${money(row.costU)}</td>
+        <td>${money(row.lineC)}</td>
+        <td>${money(row.rev)}</td>
+        <td style="color:${row.prof>=0?'var(--good)':'var(--bad)'}">${money(row.prof)}</td>
+        <td>${isFinite(row.margin)?row.margin.toFixed(2):'0.00'}%</td>
+      `;
+      tb.appendChild(tr);
+    });
+
+    card.appendChild(tbl);
+
+    // footer KPIs
+    const foot = document.createElement('div');
+    foot.className = "foot";
+    foot.innerHTML = `
+      <div class="kpi"><span class="muted">Users:</span> <strong>${users}</strong></div>
+      <div class="kpi"><span class="muted">Sites:</span> <strong>${sites}</strong></div>
+      <div class="kpi"><span class="muted">Plan Revenue:</span> <strong>${money(revenue)}</strong></div>
+      <div class="kpi"><span class="muted">Plan Cost:</span> <strong>${money(totalCost)}</strong></div>
+      <div class="kpi"><span class="muted">Plan Profit:</span> <strong style="color:${planProfit>=0?'var(--good)':'var(--bad)'}">${money(planProfit)}</strong></div>
+      <div class="kpi"><span class="muted">Plan Margin:</span> <strong>${isFinite(planMargin)?planMargin.toFixed(2):'0.00'}%</strong></div>
+      <div class="kpi"><span class="muted">Allocation:</span> <strong>${alloc==="cost"?"Cost-weighted":"Equal per service"}</strong></div>
+    `;
+    card.appendChild(foot);
+
+    grid.appendChild(card);
+  });
+}
+
+// ---- Inline edit handling (Cost/Unit) shared across all plans ----
+document.addEventListener('blur', (e)=>{
+  const el = e.target;
+  if(!el.classList || !el.classList.contains('editable')) return;
+  const id = el.dataset.sid;
+  const val = parseFloat(el.textContent.replace(/[^0-9.]/g,''));
+  const s = svc.find(x=>x.id===id);
+  if(s && isFinite(val)){ s.cost = val; render(); }
+}, true);
+
+// ---- Inputs reactivity ----
+[elUsers, elSites, elTB, elC1, elAlloc].forEach(x=>x.addEventListener('input', render));
+
+// ---- Export CSV for all plans ----
+document.getElementById('exportCSV').addEventListener('click', ()=>{
+  const users   = parseInt(elUsers.value)||0;
+  const sites   = parseInt(elSites.value)||0;
+  const tbUser  = parseFloat(elTB.value)||0;
+  const c1Sites = parseInt(elC1.value)||0;
+  const alloc   = elAlloc.value;
+
+  let rows = [];
+  plans.forEach(plan=>{
+    const services = (bundle[plan.id]||[]).map(id=>svc.find(x=>x.id===id)).filter(Boolean);
+    const rws = services.map(s=>{
+      const qty   = qtyForService(s, users, sites, tbUser, c1Sites);
+      const costU = s.cost;
+      const lineC = qty * costU;
+      return { sid:s.id, name:s.name, unit:s.unit, qty, costU, lineC };
+    });
+    const totalCost = rws.reduce((a,b)=>a+b.lineC,0);
+    const revenue   = revenueForPlan(plan, users, sites);
+    let allocs = [];
+    if(alloc==="equal"){
+      const share = rws.length>0 ? 1/rws.length : 0;
+      allocs = rws.map(()=> revenue*share);
+    }else{
+      allocs = totalCost>0 ? rws.map(r=>revenue*(r.lineC/totalCost)) : rws.map(()=>0);
+    }
+    rows.push(["Plan", plan.name, "", "", "", "", "", ""]);
+    rows.push(["Service","Unit","Qty","Cost/Unit","Line Cost","Allocated Revenue","Profit","Margin %"]);
+    rws.forEach((r,i)=>{
+      const rev = allocs[i]||0;
+      const prof = rev - r.lineC;
+      const margin = rev>0 ? (prof/rev*100) : 0;
+      rows.push([r.name, r.unit, r.qty.toFixed(2), r.costU, r.lineC, rev, prof, margin.toFixed(2)]);
+    });
+    const planProfit = revenue - totalCost;
+    const planMargin = revenue>0 ? (planProfit/revenue*100) : 0;
+    rows.push(["Totals","","","", totalCost, revenue, planProfit, planMargin.toFixed(2)]);
+    rows.push(["","","","","","","",""]);
+  });
+
+  const csv = rows.map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(",")).join("\n");
+  const blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement("a");
+  a.href = url; a.download = "DE_Packages_Itemization.csv"; a.click();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('reset').addEventListener('click', ()=> location.reload());
+
+// initial paint
+render();
+</script>
+</body>
+</html>
