@@ -139,6 +139,10 @@ export default function NetworkPlannerOfficial() {
     <div className="min-h-screen bg-[#0a1020] text-white">
       <Helmet>
         <title>Networking Planner | Digerati Experts</title>
+        <meta name="description" content="Plan your CloudShield SASE and CoreStack network packages with our interactive pricing calculator. Configure sites, users, and hardware for accurate cost estimates." />
+        <meta property="og:title" content="Networking Planner | Digerati Experts" />
+        <meta property="og:description" content="Interactive network planning tool for CloudShield and CoreStack solutions." />
+        <meta property="og:type" content="website" />
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
@@ -158,10 +162,10 @@ export default function NetworkPlannerOfficial() {
             </div>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" className="border-white/15 text-slate-200 hover:bg-white/5" onClick={handleReset}>
+            <Button variant="outline" className="border-white/15 text-slate-200 hover:bg-white/5" onClick={handleReset} data-testid="button-reset">
               <RotateCcw className="w-4 h-4 mr-2" /> Reset
             </Button>
-            <Button className="bg-gradient-to-r from-amber-500 to-orange-500 text-black font-bold border border-orange-400 shadow-lg shadow-orange-500/25" onClick={() => window.print()}>
+            <Button className="bg-gradient-to-r from-amber-500 to-orange-500 text-black font-bold border border-orange-400 shadow-lg shadow-orange-500/25" onClick={() => window.print()} data-testid="button-print">
               <Printer className="w-4 h-4 mr-2" /> Print / Save
             </Button>
           </div>
@@ -172,7 +176,7 @@ export default function NetworkPlannerOfficial() {
           <h2 className="text-xl font-extrabold text-indigo-50 mb-4">Solutions</h2>
           <div className="grid md:grid-cols-2 gap-4">
             <label className="cursor-pointer group">
-              <div className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${cloudShield ? 'bg-[#182346] border-amber-500 shadow-[0_0_0_2px_rgba(255,155,22,0.18)]' : 'bg-gradient-to-b from-[#10182a] to-[#0b1220] border-white/10 hover:border-white/20'}`} onClick={() => setCloudShield(!cloudShield)}>
+              <div className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${cloudShield ? 'bg-[#182346] border-amber-500 shadow-[0_0_0_2px_rgba(255,155,22,0.18)]' : 'bg-gradient-to-b from-[#10182a] to-[#0b1220] border-white/10 hover:border-white/20'}`} onClick={() => setCloudShield(!cloudShield)} data-testid="toggle-cloudshield">
                 <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-violet-500/25 to-cyan-500/18 border border-white/15 flex items-center justify-center">
                   <Shield className="w-5 h-5 text-violet-300" />
                 </div>
@@ -187,7 +191,7 @@ export default function NetworkPlannerOfficial() {
             </label>
 
             <label className="cursor-pointer group">
-              <div className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${coreStack ? 'bg-[#182346] border-amber-500 shadow-[0_0_0_2px_rgba(255,155,22,0.18)]' : 'bg-gradient-to-b from-[#10182a] to-[#0b1220] border-white/10 hover:border-white/20'}`} onClick={() => setCoreStack(!coreStack)}>
+              <div className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${coreStack ? 'bg-[#182346] border-amber-500 shadow-[0_0_0_2px_rgba(255,155,22,0.18)]' : 'bg-gradient-to-b from-[#10182a] to-[#0b1220] border-white/10 hover:border-white/20'}`} onClick={() => setCoreStack(!coreStack)} data-testid="toggle-corestack">
                 <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-violet-500/25 to-cyan-500/18 border border-white/15 flex items-center justify-center">
                   <Server className="w-5 h-5 text-cyan-300" />
                 </div>
@@ -216,6 +220,7 @@ export default function NetworkPlannerOfficial() {
                 value={sites} 
                 onChange={(e) => setSites(Math.max(1, parseInt(e.target.value) || 1))}
                 className="bg-[#0e1524] border-white/15 focus:border-violet-500"
+                data-testid="input-sites"
               />
             </div>
             <div className="space-y-2">
@@ -226,6 +231,7 @@ export default function NetworkPlannerOfficial() {
                 value={users} 
                 onChange={(e) => setUsers(Math.max(0, parseInt(e.target.value) || 0))}
                 className="bg-[#0e1524] border-white/15 focus:border-violet-500"
+                data-testid="input-users"
               />
             </div>
           </div>
@@ -246,7 +252,7 @@ export default function NetworkPlannerOfficial() {
                     </TooltipTrigger>
                     <TooltipContent><p>Recurring add-on ($49 each)</p></TooltipContent>
                   </Tooltip>
-                  <Input type="number" min={0} value={csUplinksPerSite} onChange={(e) => setCsUplinksPerSite(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" />
+                  <Input type="number" min={0} value={csUplinksPerSite} onChange={(e) => setCsUplinksPerSite(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" data-testid="input-uplinks" />
                 </div>
 
                 <div className="space-y-2">
@@ -258,7 +264,7 @@ export default function NetworkPlannerOfficial() {
                     </TooltipTrigger>
                     <TooltipContent><p>Recurring ($59/site) + setup $199</p></TooltipContent>
                   </Tooltip>
-                  <Input type="number" min={0} value={csWarmSites} onChange={(e) => setCsWarmSites(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" />
+                  <Input type="number" min={0} value={csWarmSites} onChange={(e) => setCsWarmSites(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" data-testid="input-warm-spare" />
                 </div>
 
                 <div className="space-y-2">
@@ -270,7 +276,7 @@ export default function NetworkPlannerOfficial() {
                     </TooltipTrigger>
                     <TooltipContent><p>Recurring add-on ($29 each)</p></TooltipContent>
                   </Tooltip>
-                  <Input type="number" min={0} value={csIpsec} onChange={(e) => setCsIpsec(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" />
+                  <Input type="number" min={0} value={csIpsec} onChange={(e) => setCsIpsec(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" data-testid="input-ipsec" />
                 </div>
 
                 <div className="space-y-2">
@@ -282,7 +288,7 @@ export default function NetworkPlannerOfficial() {
                     </TooltipTrigger>
                     <TooltipContent><p>Recurring add-on ($19 each)</p></TooltipContent>
                   </Tooltip>
-                  <Input type="number" min={0} value={csIPs} onChange={(e) => setCsIPs(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" />
+                  <Input type="number" min={0} value={csIPs} onChange={(e) => setCsIPs(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" data-testid="input-cloud-ips" />
                 </div>
               </TooltipProvider>
             </div>
@@ -297,7 +303,7 @@ export default function NetworkPlannerOfficial() {
               <div className="space-y-2">
                 <Label className="text-slate-400">Gateway model (per site)</Label>
                 <Select value={gateway} onValueChange={setGateway}>
-                  <SelectTrigger className="bg-[#0e1524] border-white/15">
+                  <SelectTrigger className="bg-[#0e1524] border-white/15" data-testid="select-gateway">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-[#141b2b] border-white/15">
@@ -310,7 +316,7 @@ export default function NetworkPlannerOfficial() {
               <div className="space-y-2">
                 <Label className="text-slate-400">Billing term</Label>
                 <Select value={billingTerm} onValueChange={(v) => setBillingTerm(v as "mo" | "1y" | "3y")}>
-                  <SelectTrigger className="bg-[#0e1524] border-white/15">
+                  <SelectTrigger className="bg-[#0e1524] border-white/15" data-testid="select-billing-term">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-[#141b2b] border-white/15">
@@ -338,19 +344,19 @@ export default function NetworkPlannerOfficial() {
               <div className="grid md:grid-cols-4 gap-4">
                 <div className="space-y-2">
                   <Label className="text-slate-400">8-port PoE switches</Label>
-                  <Input type="number" min={0} value={sw8} onChange={(e) => setSw8(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" />
+                  <Input type="number" min={0} value={sw8} onChange={(e) => setSw8(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" data-testid="input-sw8" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-slate-400">24-port PoE switches</Label>
-                  <Input type="number" min={0} value={sw24} onChange={(e) => setSw24(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" />
+                  <Input type="number" min={0} value={sw24} onChange={(e) => setSw24(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" data-testid="input-sw24" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-slate-400">48-port PoE switches</Label>
-                  <Input type="number" min={0} value={sw48} onChange={(e) => setSw48(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" />
+                  <Input type="number" min={0} value={sw48} onChange={(e) => setSw48(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" data-testid="input-sw48" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-slate-400">WiFi access points</Label>
-                  <Input type="number" min={0} value={aps} onChange={(e) => setAps(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" />
+                  <Input type="number" min={0} value={aps} onChange={(e) => setAps(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" data-testid="input-aps" />
                 </div>
               </div>
             </fieldset>
@@ -363,20 +369,20 @@ export default function NetworkPlannerOfficial() {
           <div className="grid md:grid-cols-4 gap-3 mb-6">
             <div className="bg-gradient-to-b from-[#10182a] to-[#0b1220] border border-white/10 rounded-xl p-4 shadow-inner">
               <div className="text-xs text-violet-300 mb-1">Monthly Recurring</div>
-              <div className="text-2xl font-black text-white">${pricing.totalMRC.toLocaleString()}</div>
+              <div className="text-2xl font-black text-white" data-testid="text-total-mrc">${pricing.totalMRC.toLocaleString()}</div>
             </div>
             <div className="bg-gradient-to-b from-[#10182a] to-[#0b1220] border border-white/10 rounded-xl p-4 shadow-inner">
               <div className="text-xs text-violet-300 mb-1">One-Time Setup</div>
-              <div className="text-2xl font-black text-white">${pricing.totalNRC.toLocaleString()}</div>
+              <div className="text-2xl font-black text-white" data-testid="text-total-nrc">${pricing.totalNRC.toLocaleString()}</div>
             </div>
             <div className="bg-gradient-to-b from-[#182346] to-[#101a39] border border-white/15 rounded-xl p-4 shadow-inner">
               <div className="text-xs text-cyan-300 mb-1">Per User Cost</div>
-              <div className="text-2xl font-black text-white">${pricing.perUser}</div>
+              <div className="text-2xl font-black text-white" data-testid="text-per-user">${pricing.perUser}</div>
             </div>
             {pricing.mergedDiscount > 0 && (
               <div className="bg-gradient-to-b from-[#182346] to-[#101a39] border border-amber-500/30 rounded-xl p-4 shadow-inner">
                 <div className="text-xs text-amber-400 mb-1">Bundle Savings</div>
-                <div className="text-2xl font-black text-emerald-400">-${pricing.mergedDiscount}</div>
+                <div className="text-2xl font-black text-emerald-400" data-testid="text-bundle-savings">-${pricing.mergedDiscount}</div>
               </div>
             )}
           </div>
@@ -421,10 +427,10 @@ export default function NetworkPlannerOfficial() {
 
           {/* CTA */}
           <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
-            <Button className="bg-gradient-to-r from-amber-500 to-orange-500 text-black font-bold px-8 py-6 text-lg border border-orange-400 shadow-lg shadow-orange-500/25">
+            <Button className="bg-gradient-to-r from-amber-500 to-orange-500 text-black font-bold px-8 py-6 text-lg border border-orange-400 shadow-lg shadow-orange-500/25" data-testid="button-request-quote">
               Request Custom Quote
             </Button>
-            <Button variant="outline" className="border-white/15 text-slate-200 px-8 py-6">
+            <Button variant="outline" className="border-white/15 text-slate-200 px-8 py-6" data-testid="button-schedule-call">
               Schedule Discovery Call
             </Button>
           </div>

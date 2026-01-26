@@ -113,6 +113,10 @@ export default function EcosystemMatrixOfficial() {
     <div className={`min-h-screen transition-colors duration-300 ${isDark ? "bg-[#0a0a0f] text-white" : "bg-slate-50 text-slate-900"}`}>
       <Helmet>
         <title>Service Matrix | Digerati Experts</title>
+        <meta name="description" content="Compare Digerati Experts IT service tiers: IT Essentials, Office, Business, and Enterprise. Interactive service matrix with feature comparison across managed IT and cybersecurity offerings." />
+        <meta property="og:title" content="Service Matrix | Digerati Experts" />
+        <meta property="og:description" content="Interactive service tier comparison for managed IT and cybersecurity solutions." />
+        <meta property="og:type" content="website" />
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
