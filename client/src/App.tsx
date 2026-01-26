@@ -647,6 +647,12 @@ function Router() {
           <AudioBusinessCard />
         </Suspense>
       )} />
+
+      <Route path="/de-ecosystem-matrix-offical" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <EcosystemMatrixOfficial />
+        </Suspense>
+      )} />
       
       {/* Fallback to 404 */}
       <Route component={NotFound} />

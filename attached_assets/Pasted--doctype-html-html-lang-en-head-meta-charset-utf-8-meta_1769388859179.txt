@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Digerati Experts — Networking Planner</title>
+<style>
+  :root{
+    --page-max: 1120px;
+    --bg-grad: radial-gradient(900px 500px at 8% -10%, rgba(95,60,200,.22) 0%, rgba(95,60,200,0) 60%),
+               radial-gradient(900px 520px at 100% 110%, rgba(11,163,255,.18) 0%, rgba(11,163,255,0) 60%),
+               #0a1020;
+    --card-top:#141b2b; --card-bot:#0f1525; --surface:linear-gradient(180deg, var(--card-top) 0%, var(--card-bot) 100%);
+    --text:#f3f6ff; --muted:#9aa3b2; --line:rgba(255,255,255,.08); --line-strong:rgba(255,255,255,.14);
+    --tile:linear-gradient(180deg,#10182a 0%, #0b1220 100%); --tile-accent:linear-gradient(180deg,#182346 0%, #101a39 100%);
+    --input:#0e1524; --input-border:rgba(255,255,255,.14);
+    --cta:#ffb020; --cta-2:#ff8b0d; --cta-text:#0b0c14;
+    --radius:16px; --radius-sm:12px; --radius-pill:999px; --shadow:0 16px 40px rgba(6,10,25,.45);
+  }
+
+  body{margin:0;background:#000;color:var(--text);font:14px/1.65 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif}
+  .de-wrap{max-width:1120px;margin:0 auto;padding:28px;background:var(--bg-grad);border-radius:18px}
+
+  /* Header */
+  .de-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:10px}
+  .de-badge{background:linear-gradient(135deg, rgba(124,92,255,.25), rgba(43,179,255,.18));border:1px solid var(--line-strong);color:#dbe2ff;font-weight:700;letter-spacing:.2px;padding:8px 12px;border-radius:12px;height:fit-content}
+  .de-title{flex:1;padding-left:8px}
+  .de-title h1{font-size:26px;margin:0 0 6px;color:#EEF2FF;text-shadow:0 1px 0 rgba(0,0,0,.25)}
+  .de-subtitle{margin:0;color:var(--muted)}
+  .de-actions{display:flex;gap:10px}
+  .de-btn{background:linear-gradient(135deg,var(--cta),var(--cta-2));color:var(--cta-text);border:1px solid #ff9b16;border-radius:var(--radius-pill);padding:10px 16px;font-weight:700;cursor:pointer;box-shadow:0 10px 28px rgba(255,146,16,.25)}
+  .de-btn:hover{transform:translateY(-1px)}
+  .de-btn.de-ghost{background:transparent;color:#e8edff;border:1px solid var(--line-strong);box-shadow:none}
+
+  /* Cards */
+  .de-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin:14px 0;box-shadow:var(--shadow)}
+  .de-h{margin:0 0 12px;font-size:20px;color:#EEF2FF;text-shadow:0 1px 0 rgba(0,0,0,.25);font-weight:800}
+
+  /* Grid */
+  .de-grid{display:grid;gap:12px}
+  .de-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .de-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .de-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  @media(max-width:900px){.de-2,.de-3,.de-4{grid-template-columns:1fr}}
+
+  /* Inputs */
+  label{display:flex;flex-direction:column;gap:6px;color:var(--muted)}
+  input,select{background:var(--input);color:var(--text);border:1px solid var(--input-border);border-radius:var(--radius-sm);padding:10px 12px;outline:0}
+  input:focus,select:focus{border-color:#97a3ff;box-shadow:0 0 0 3px rgba(124,92,255,.24)}
+  #de-netcalc-wu-match input[type="checkbox"]{appearance:none;width:18px;height:18px;border-radius:6px;background:var(--input);border:1.5px solid var(--input-border);display:inline-grid;place-items:center;cursor:pointer}
+  #de-netcalc-wu-match input[type="checkbox"]:focus{outline:none;box-shadow:0 0 0 3px rgba(124,92,255,.24);border-color:#97a3ff}
+  #de-netcalc-wu-match input[type="checkbox"]:checked{background:linear-gradient(135deg,var(--cta),var(--cta-2));border-color:#ff9b16}
+  #de-netcalc-wu-match input[type="checkbox"]:checked::after{content:"";width:10px;height:6px;border:2px solid var(--cta-text);border-top:0;border-left:0;transform:rotate(45deg);margin-top:-1px}
+
+  /* Solution toggles */
+  .de-solutions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .de-opt{position:relative;display:block;cursor:pointer}
+  .de-opt input{position:absolute;inset:0;opacity:0;pointer-events:none}
+  .de-opt .opt{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;background:var(--tile);border:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.04);transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease, background .18s ease}
+  .de-opt .opt:hover{border-color:var(--line-strong);transform:translateY(-1px)}
+  .de-opt .opt-icon{width:34px;height:34px;min-width:34px;border-radius:10px;display:grid;place-items:center;color:#cfe1ff;background:linear-gradient(135deg, rgba(124,92,255,.25), rgba(43,179,255,.18));border:1px solid var(--line-strong)}
+  .de-opt .opt-title{font-weight:800;color:#EEF2FF}
+  .de-opt .opt-sub{font-size:12px;color:#9aa3b2}
+  .de-opt .opt-check{margin-left:auto;width:22px;height:22px;border-radius:8px;background:linear-gradient(135deg,var(--cta),var(--cta-2));border:1px solid #ff9b16;display:grid;place-items:center;box-shadow:0 8px 18px rgba(255,146,16,.25);opacity:0;transform:scale(.85);transition:opacity .18s ease, transform .18s ease}
+  .de-opt input:checked + .opt{background:var(--tile-accent);border-color:#ff9b16;box-shadow:0 0 0 2px rgba(255,155,22,.18), 0 8px 24px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.06)}
+  .de-opt input:checked + .opt .opt-check{opacity:1;transform:scale(1)}
+  @media(max-width:900px){.de-solutions{grid-template-columns:1fr}}
+
+  /* Summary */
+  .de-summary .de-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+  @media(max-width:900px){.de-summary .de-kpis{grid-template-columns:1fr 1fr}}
+  .de-kpi{background: var(--tile);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow: 0 10px 30px rgba(8,12,25,.35) inset, 0 6px 18px rgba(0,0,0,.25)}
+  .de-kpi.de-kpi-accent{background: var(--tile-accent);border-color: var(--line-strong)}
+  .de-kpi-title{font-size:12px;color:#c9d3ff}
+  .de-kpi-value{font-weight:900;font-size:24px;margin-top:4px}
+
+  /* Tables */
+  .de-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+  .de-col-full{grid-column:1/-1}
+  .de-table{width:100%;border-collapse:collapse;font-size:14px;background:transparent;color:var(--text)}
+  .de-table thead th{font-weight:700;color:#dbe2ff;border-bottom:1px solid var(--line-strong);padding:10px}
+  .de-table td{border-top:1px solid var(--line);padding:10px}
+  .de-breakdown summary{cursor:pointer;font-weight:800;margin-top:10px;color:#EEF2FF}
+
+  /* Fieldset */
+  .de-fieldset{border:1px dashed var(--line);border-radius:14px;padding:12px;margin-top:8px}
+  .de-fieldset legend{padding:0 6px;color:#DDE6FF}
+
+  /* Info pill */
+  .de-info{background:rgba(255,255,255,.05);border:1px solid var(--line-strong);padding:10px 12px;border-radius:12px;color:#dfe6ff;min-height:42px;display:flex;align-items:center;word-break:break-word}
+
+  /* Admin lock */
+  .lock-badge{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:10px;font-size:12px;border:1px solid var(--line-strong);background:rgba(255,255,255,.06);color:#eaefff}
+  .locked-note{margin:10px 0 0;color:#dfe6ff}
+  .lock-actions{display:flex;gap:8px;margin-top:10px}
+  .is-error{box-shadow:0 0 0 3px rgba(255,115,0,.25) !important;border-color:#ff9b16 !important}
+
+  dialog{border:1px solid var(--line-strong);border-radius:14px;background:var(--surface);color:var(--text);padding:16px;max-width:360px}
+  dialog::backdrop{background:rgba(0,0,0,.55)}
+  .dlg-actions{display:flex;gap:8px;margin-top:12px;justify-content:flex-end}
+
+  /* Print */
+  @media print{
+    .de-actions,.de-admin .lock-badge,.de-admin .locked-section,dialog{display:none!important}
+    .de-wrap{box-shadow:none;background:#fff;color:#000}
+    .de-card{break-inside:avoid;background:#fff;border-color:#ccc}
+    .de-table td,.de-table th{border-color:#ddd;color:#000}
+  }
+</style>
+</head>
+<body>
+<div id="de-netcalc-wu-match" class="de-wrap" role="application" aria-label="Digerati Experts Networking Planner">
+  <!-- Header -->
+  <header class="de-header">
+    <div class="de-badge">Networking</div>
+    <div class="de-title">
+      <h1>Plan Your Networking Package</h1>
+      <p class="de-subtitle">Choose needs first. Pricing shows at the end. Compare <strong>CloudShield</strong>, <strong>CoreStack</strong>, or a <strong>Merged</strong> package.</p>
+    </div>
+    <div class="de-actions">
+      <button class="de-btn de-ghost" type="button" id="btnReset" title="Reset all fields">Reset</button>
+      <button class="de-btn" type="button" id="btnPrint" title="Print or save as PDF">Print / Save</button>
+    </div>
+  </header>
+
+  <!-- Solutions -->
+  <section class="de-card">
+    <h2 class="de-h">Solutions</h2>
+    <div class="de-solutions">
+      <label class="de-opt">
+        <input type="checkbox" id="optCloud" checked>
+        <div class="opt">
+          <div class="opt-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2l8 3v6c0 5-3.5 9.7-8 10C7.5 20.7 4 16 4 11V5l8-3z"/></svg>
+          </div>
+          <div class="opt-body"><div class="opt-title">CloudShield</div><div class="opt-sub">(SASE)</div></div>
+          <div class="opt-check" aria-hidden="true"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="var(--cta-text)" stroke-width="2"><path d="M5 10l3 3 7-7"/></svg></div>
+        </div>
+      </label>
+
+      <label class="de-opt">
+        <input type="checkbox" id="optCore" checked>
+        <div class="opt">
+          <div class="opt-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+              <rect x="3" y="5" width="8" height="6" rx="1"/><rect x="13" y="5" width="8" height="6" rx="1"/>
+              <rect x="3" y="13" width="8" height="6" rx="1"/><rect x="13" y="13" width="8" height="6" rx="1"/>
+            </svg>
+          </div>
+          <div class="opt-body"><div class="opt-title">CoreStack</div><div class="opt-sub">(Network)</div></div>
+          <div class="opt-check" aria-hidden="true"><svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="var(--cta-text)" stroke-width="2"><path d="M5 10l3 3 7-7"/></svg></div>
+        </div>
+      </label>
+    </div>
+    <p class="de-note">Pick either solo, or both to preview a merged package.</p>
+  </section>
+
+  <!-- Environment -->
+  <section class="de-card">
+    <h2 class="de-h">Your Environment</h2>
+    <div class="de-grid de-2">
+      <label>Number of sites
+        <input type="number" id="sites" min="1" step="1" value="1" inputmode="numeric">
+      </label>
+      <label>Number of users
+        <input type="number" id="users" min="0" step="1" value="20" inputmode="numeric">
+      </label>
+    </div>
+  </section>
+
+  <!-- CloudShield Needs -->
+  <section class="de-card" id="csCard">
+    <h2 class="de-h">CloudShield (SASE) — Networking Needs</h2>
+    <div class="de-grid de-4">
+      <label title="Recurring add-on ($49 each)">
+        Extra SD-WAN uplinks per site
+        <input type="number" id="csUplinksPerSite" min="0" step="1" value="0">
+      </label>
+      <label title="Recurring add-on ($59/site) + setup $199 (one-time)">
+        Sites needing warm spare
+        <input type="number" id="csWarmSites" min="0" step="1" value="0">
+      </label>
+      <label title="Recurring add-on ($29 each)">
+        External IPSec connectors (total)
+        <input type="number" id="csIpsec" min="0" step="1" value="0">
+      </label>
+      <label title="Recurring add-on ($19 each)">
+        Additional cloud IPs (total)
+        <input type="number" id="csIPs" min="0" step="1" value="0">
+      </label>
+    </div>
+  </section>
+
+  <!-- CoreStack Needs -->
+  <section class="de-card" id="uvlCard">
+    <h2 class="de-h">CoreStack (Network) — Needs</h2>
+
+    <div class="de-grid de-3">
+      <label>Gateway model (per site)
+        <select id="uvlGateway"></select>
+      </label>
+      <label>Billing term
+        <select id="uvlTerm">
+          <option value="mo" selected>Monthly</option>
+          <option value="1y">1 Year</option>
+          <option value="3y">3 Years</option>
+        </select>
+      </label>
+      <label>Info
+        <div id="gwInfo" class="de-info">—</div>
+      </label>
+    </div>
+
+    <div class="de-grid de-2" style="margin-top:8px">
+      <label class="de-check" style="align-self:end">
+        <input type="checkbox" id="uvlTenG"> <span>High performance / 10G uplinks required</span>
+      </label>
+    </div>
+
+    <fieldset class="de-fieldset" style="margin-top:10px">
+      <legend>Network hardware subscriptions (per site)</legend>
+      <div class="de-grid de-4">
+        <label>8-port PoE switches <input type="number" id="sw8" min="0" step="1" value="0"></label>
+        <label>24-port PoE switches <input type="number" id="sw24" min="0" step="1" value="0"></label>
+        <label>24-port + SFP+ switches <input type="number" id="sw24sfp" min="0" step="1" value="0"></label>
+        <label>48-port PoE switches <input type="number" id="sw48" min="0" step="1" value="0"></label>
+      </div>
+      <div class="de-grid de-3">
+        <label>Wi-Fi 5 APs <input type="number" id="ap5" min="0" step="1" value="0"></label>
+        <label>Wi-Fi 6 APs <input type="number" id="ap6" min="0" step="1" value="0"></label>
+      </div>
+    </fieldset>
+
+    <p class="de-note">CoreStack subs are included in the site foundation on the sell side; they’re counted on the <em>cost</em> side here for GM accuracy.</p>
+  </section>
+
+  <!-- Compliance (pass-through) -->
+  <section class="de-card" id="cmpCard">
+    <h2 class="de-h">Compliance (Pass-through)</h2>
+    <div class="de-grid de-3">
+      <label class="de-check" title="Adds $100 per appliance + $2 per endpoint (monthly) to cost; sell uses near-cost GM.">
+        <input type="checkbox" id="optRetention"> <span>Compliance logging (12-month retention)</span>
+      </label>
+      <label>Retention appliances (defaults to sites)
+        <input type="number" id="retAppliances" min="0" step="1" value="0">
+      </label>
+      <label>Retention seats (defaults to users)
+        <input type="number" id="retSeats" min="0" step="1" value="0">
+      </label>
+    </div>
+    <p class="de-note">Not networking. Priced at or close to cost (default 0% GM).</p>
+  </section>
+
+  <!-- Summary -->
+  <section class="de-card de-summary">
+    <h2 class="de-h">Pricing Summary</h2>
+    <div class="de-kpis">
+      <div class="de-kpi"><div class="de-kpi-title">CloudShield (solo)</div><div class="de-kpi-value" id="kpiCs">$0</div></div>
+      <div class="de-kpi"><div class="de-kpi-title">CoreStack (solo)</div><div class="de-kpi-value" id="kpiUvl">$0</div></div>
+      <div class="de-kpi de-kpi-accent"><div class="de-kpi-title">Merged package</div><div class="de-kpi-value" id="kpiMerged">$0</div></div>
+      <div class="de-kpi"><div class="de-kpi-title">Blended GM (merged)</div><div class="de-kpi-value" id="kpiGM">0%</div></div>
+    </div>
+
+    <details class="de-breakdown">
+      <summary>Line-item breakdown</summary>
+      <div class="de-columns">
+        <div class="de-col">
+          <h3>CloudShield (solo)</h3>
+          <table class="de-table">
+            <thead><tr><th>Item</th><th>Scope</th><th>Cost</th><th>Sell</th></tr></thead>
+            <tbody id="bdCs"></tbody>
+            <tfoot><tr><td colspan="3">Total Sell</td><td id="bdCsSum">$0</td></tr></tfoot>
+          </table>
+        </div>
+        <div class="de-col">
+          <h3>CoreStack (solo)</h3>
+          <table class="de-table">
+            <thead><tr><th>Item</th><th>Scope</th><th>Cost</th><th>Sell</th></tr></thead>
+            <tbody id="bdUvl"></tbody>
+            <tfoot><tr><td colspan="3">Total Sell</td><td id="bdUvlSum">$0</td></tr></tfoot>
+          </table>
+        </div>
+        <div class="de-col de-col-full">
+          <h3>Merged package</h3>
+          <table class="de-table">
+            <thead><tr><th>Item</th><th>Scope</th><th>Cost</th><th>Sell</th></tr></thead>
+            <tbody id="bdMerged"></tbody>
+            <tfoot>
+              <tr><td colspan="3">Monthly Cost</td><td id="bdCost">$0</td></tr>
+              <tr><td colspan="3">Monthly Sell</td><td id="bdSell">$0</td></tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- Admin (locked) -->
+  <details class="de-admin" id="adminPanel" open>
+    <summary>Admin settings <span id="lockBadge" class="lock-badge">Locked</span></summary>
+
+    <div class="locked-section" id="adminLocked">
+      <p class="locked-note">Admin is locked. Click unlock and enter the password to edit margin and foundation settings.</p>
+      <div class="lock-actions">
+        <button class="de-btn de-ghost" id="btnUnlock" type="button">Unlock Admin</button>
+      </div>
+    </div>
+
+    <div id="adminContent" hidden>
+      <div class="de-grid de-4">
+        <label>Site foundation (sell) per site
+          <input type="number" id="siteMin" min="0" step="1" value="0">
+        </label>
+        <label>Core GM % (site/user)
+          <input type="number" id="gmCore" min="0" max="95" step="1" value="75">
+        </label>
+        <label>Add-ons GM %
+          <input type="number" id="gmAdd" min="0" max="95" step="1" value="70">
+        </label>
+        <label>Retention GM % (near-cost)
+          <input type="number" id="gmRetention" min="0" max="20" step="1" value="0">
+        </label>
+      </div>
+      <p class="de-note">ControlOne cost basis: Cloud $49, Site $100/site, Endpoint $10/user, Uplink $49, Warm spare $59/site (+$199 setup), IPSec $29, Cloud IP $19. CoreStack subs are modeled on the cost side.</p>
+    </div>
+  </details>
+</div>
+
+<!-- Password dialog -->
+<dialog id="pwDialog" aria-labelledby="pwTitle">
+  <h3 id="pwTitle" style="margin:0 0 8px">Unlock Admin</h3>
+  <p style="margin:0 0 8px;color:#dfe6ff">Enter password to edit Admin settings.</p>
+  <input type="password" id="adminPw" placeholder="Password" autocomplete="current-password" style="width:100%">
+  <div class="dlg-actions">
+    <button class="de-btn de-ghost" type="button" id="pwCancel">Cancel</button>
+    <button class="de-btn" type="button" id="pwOk">Unlock</button>
+  </div>
+</dialog>
+
+<script>
+(function(){
+  // ===== Utilities =====
+  const $ = id => document.getElementById(id);
+  const moneyFmt = new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits:2 });
+  const pctFmt   = new Intl.NumberFormat('en-US', { style:'percent',  maximumFractionDigits:1 });
+  const fmt = n => moneyFmt.format(isFinite(n) ? +n : 0);
+  const pc  = n => pctFmt.format(isFinite(n) ? +n : 0);
+  const clampInt = (v,min)=>{const x=parseInt(v,10);return (isFinite(x)&&x>=min)?x:min};
+  const ADMIN_PASSWORD = "DeSales123$";
+
+  // ControlOne costs (monthly)
+  const C1={cloud:49,site:100,user:10,uplink:49,warm:59,warmSetup:199,ipsec:29,ip:19,retAppliance:100,retSeat:2,siem:49};
+
+  // CoreStack monthly buckets (cost side)
+  const UVL_BUCKET = { std:66, rd1:150, rd4:272, rd8:375 };
+  const UVL_10G = 112;
+  const UVL_SW = { sw8:36, sw24:45, sw24sfp:77.5, sw48:79 };
+  const UVL_AP = { ap5:16, ap6:19.75 };
+  const TERM_FACTOR = { mo:1, '1y':1, '3y':1 }; // adjust for discounts if needed
+
+  // Gateway catalog -> maps long label/SKU to a bucket
+  const GATEWAYS = [
+    { id:'UG206-1T', label:'UG-206 1TB (GATEWAY-206-1TFS-SUB)',   sku:'GATEWAY-206-1TFS-SUB',  tier:'rd1' },
+    { id:'UG206-4T', label:'UG-206 4TB (GATEWAY-206-4TFS-SUB)',   sku:'GATEWAY-206-4TFS-SUB',  tier:'rd4' },
+    { id:'UG206-8T', label:'UG-206 8TB (GATEWAY-206-8TFS-SUB)',   sku:'GATEWAY-206-8TFS-SUB',  tier:'rd8' },
+    { id:'UG406-4T', label:'UG-406 4TB (GATEWAY-406-4TFS-SUB)',   sku:'GATEWAY-406-4TFS-SUB',  tier:'rd4' },
+    { id:'UG406-8T', label:'UG-406 8TB (GATEWAY-406-8TFS-SUB)',   sku:'GATEWAY-406-8TFS-SUB',  tier:'rd8' },
+    { id:'UG206-STD',label:'UG-206 Standard (GATEWAY-206-STD-SUB)', sku:'GATEWAY-206-STD-SUB', tier:'std' }
+  ];
+
+  const sellFromCost=(cost,gm)=> (gm>=95)?cost : cost/(1-(gm/100));
+
+  // ===== Gateway UI =====
+  function getGatewayById(id){ return GATEWAYS.find(g=>g.id===id) || GATEWAYS[0]; }
+  function populateGateways(){
+    const sel = $('uvlGateway'); sel.innerHTML='';
+    GATEWAYS.forEach(g=>{
+      const cost = UVL_BUCKET[g.tier] ?? 0;
+      const opt = document.createElement('option');
+      opt.value = g.id;
+      opt.textContent = `${g.label} • ${fmt(cost)}/mo`;
+      opt.title = `${g.label} • ${fmt(cost)}/mo`;
+      sel.appendChild(opt);
+    });
+    sel.value = sel.value || GATEWAYS[0].id;
+    updateGwInfo();
+  }
+  function updateGwInfo(){
+    const g = getGatewayById($('uvlGateway').value);
+    const monthly = (UVL_BUCKET[g.tier] ?? 0) * (TERM_FACTOR[$('uvlTerm').value] ?? 1);
+    $('gwInfo').textContent = `${g.label} • ${g.sku} • ${fmt(monthly)}/mo (cost)`;
+  }
+
+  // ===== Read UI =====
+  function read(){
+    // clamp & validate all number inputs (adds is-error class if something was corrected)
+    document.querySelectorAll('#de-netcalc-wu-match input[type=number]').forEach(el=>{
+      const min = isFinite(+el.min) ? +el.min : -Infinity;
+      const max = isFinite(+el.max) ? +el.max :  Infinity;
+      let v = parseInt(el.value,10); if(!isFinite(v)) v = min;
+      v = Math.max(min, Math.min(max, v));
+      const corrected = String(v) !== el.value.trim();
+      if (corrected) el.value = v;
+      el.classList.toggle('is-error', corrected);
+    });
+
+    const v={
+      cs: $('optCloud').checked, uvl: $('optCore').checked,
+      sites: clampInt($('sites').value,1),
+      users: clampInt($('users').value,0),
+
+      csU: clampInt($('csUplinksPerSite').value,0),
+      csW: clampInt($('csWarmSites').value,0),
+      csIke: clampInt($('csIpsec').value,0),
+      csIPs: clampInt($('csIPs').value,0),
+
+      gwId: $('uvlGateway').value,
+      term: $('uvlTerm').value,
+      u10g: $('uvlTenG').checked,
+      sw8: clampInt($('sw8').value,0), sw24: clampInt($('sw24').value,0),
+      sw24s: clampInt($('sw24sfp').value,0), sw48: clampInt($('sw48').value,0),
+      ap5: clampInt($('ap5').value,0), ap6: clampInt($('ap6').value,0),
+
+      optRet: $('optRetention').checked,
+      retAppl: clampInt($('retAppliances').value,0),
+      retSeats: clampInt($('retSeats').value,0),
+
+      siteMin: Number($('siteMin')?.value || 0),
+      gmCore: Number($('gmCore')?.value || 75),
+      gmAdd:  Number($('gmAdd')?.value || 70),
+      gmRet:  Number($('gmRetention')?.value || 0),
+    };
+
+    if(v.retAppl===0) v.retAppl = v.sites;
+    if(v.retSeats===0) v.retSeats = v.users;
+
+    $('csCard').style.display = v.cs ? 'block' : 'none';
+    $('uvlCard').style.display = v.uvl ? 'block' : 'none';
+    if(!v.cs && !v.uvl){ $('optCloud').checked=true; v.cs=true; }
+
+    return v;
+  }
+
+  // ===== Calculators =====
+  function csSolo(v){
+    const rows=[]; let cost=0, sell=0;
+
+    const perUserSell = sellFromCost(C1.user, v.gmCore);
+    const siteSell = v.siteMin>0 ? v.siteMin*v.sites : 0;
+    if(siteSell>0){ sell += siteSell; rows.push(['Site foundation (sell)', `${v.sites} site(s)`, 0, siteSell]); }
+    sell += perUserSell*v.users; rows.push(['Per-user (sell)', `${v.users} user(s) @ ${fmt(perUserSell)}`, 0, perUserSell*v.users]);
+
+    cost += C1.cloud; rows.push(['Cloud instance (cost)','1×',C1.cloud,'—']);
+    cost += C1.site*v.sites; rows.push(['Site licenses (cost)',`${v.sites} site(s)`,C1.site*v.sites,'—']);
+    cost += C1.user*v.users; rows.push(['Endpoint users (cost)',`${v.users} user(s)`,C1.user*v.users,'—']);
+
+    const add=(lbl,qty,unit,qtyNum)=>{ if(qtyNum<=0) return; const c=unit*qtyNum, s=sellFromCost(c,v.gmAdd); cost+=c; sell+=s; rows.push([lbl,qty,c,s]); };
+    add('Extra SD-WAN uplinks',`${v.csU}/site × ${v.sites} site(s)`,C1.uplink,v.csU*v.sites);
+    add('Warm spare (licenses)',`${v.csW} site(s)`,C1.warm,v.csW);
+    add('External IPSec connectors',`${v.csIke}`,C1.ipsec,v.csIke);
+    add('Additional cloud IPs',`${v.csIPs}`,C1.ip,v.csIPs);
+
+    if(v.optRet){
+      const cA=C1.retAppliance*v.retAppl, cS=C1.retSeat*v.retSeats;
+      const sA=sellFromCost(cA,v.gmRet), sS=sellFromCost(cS,v.gmRet);
+      cost+=cA+cS; sell+=sA+sS;
+      rows.push(['Compliance logging (appliances)',`${v.retAppl}`,cA,sA]);
+      rows.push(['Compliance logging (seats)',`${v.retSeats}`,cS,sS]);
+    }
+    return {rows,cost,sell};
+  }
+
+  function uvlSolo(v){
+    const rows=[]; let cost=0, sell=0;
+    const siteSell = v.siteMin>0 ? v.siteMin*v.sites : 0;
+    if(siteSell>0){ sell += siteSell; rows.push(['Site foundation (sell)', `${v.sites} site(s)`, 0, siteSell]); }
+
+    // CoreStack cost side
+    const g = getGatewayById(v.gwId);
+    const gwMonthly = (UVL_BUCKET[g.tier] ?? 0) * (TERM_FACTOR[v.term] ?? 1);
+    if (gwMonthly>0){
+      const c = gwMonthly * v.sites;
+      cost += c; rows.push(['Gateway subs (cost)', `${v.sites} × ${g.label}`, c, '—']);
+    }
+    if(v.u10g){ const bump=UVL_10G*v.sites; cost+=bump; rows.push(['10G performance uplift (cost)',`${v.sites} site(s)`,bump,'—']); }
+    const swPerSite=UVL_SW.sw8*v.sw8 + UVL_SW.sw24*v.sw24 + UVL_SW.sw24s*v.sw24s + UVL_SW.sw48*v.sw48;
+    if(swPerSite>0){ const c=swPerSite*v.sites; cost+=c; rows.push(['Switch subs (cost)',`${v.sites} site(s)`,c,'—']); }
+    const apPerSite=UVL_AP.ap5*v.ap5 + UVL_AP.ap6*v.ap6;
+    if(apPerSite>0){ const c=apPerSite*v.sites; cost+=c; rows.push(['Wi-Fi AP subs (cost)',`${v.sites} site(s)`,c,'—']); }
+
+    if(v.optRet){
+      const cA=C1.retAppliance*v.retAppl, cS=C1.retSeat*v.retSeats;
+      const sA=sellFromCost(cA,v.gmRet), sS=sellFromCost(cS,v.gmRet);
+      cost+=cA+cS; sell+=sA+sS;
+      rows.push(['Compliance logging (appliances)',`${v.retAppl}`,cA,sA]);
+      rows.push(['Compliance logging (seats)',`${v.retSeats}`,cS,sS]);
+    }
+    return {rows,cost,sell};
+  }
+
+  function merged(v){
+    const rows=[]; let cost=0, sell=0;
+    const siteSell = v.siteMin>0 ? v.siteMin*v.sites : 0;
+    if(siteSell>0){ sell += siteSell; rows.push(['Site foundation (sell)', `${v.sites} site(s)`, 0, siteSell]); }
+
+    if (v.cs){
+      const perUserSell = sellFromCost(C1.user, v.gmCore);
+      sell += perUserSell*v.users; rows.push(['Per-user (sell)', `${v.users} user(s) @ ${fmt(perUserSell)}`, 0, perUserSell*v.users]);
+      cost += C1.cloud; rows.push(['Cloud instance (cost)','1×',C1.cloud,'—']);
+      cost += C1.site*v.sites; rows.push(['Site licenses (cost)',`${v.sites} site(s)`,C1.site*v.sites,'—']);
+      cost += C1.user*v.users; rows.push(['Endpoint users (cost)',`${v.users} user(s)`,C1.user*v.users,'—']);
+      const add=(lbl,qty,unit,qtyNum)=>{ if(qtyNum<=0) return; const c=unit*qtyNum, s=sellFromCost(c,v.gmAdd); cost+=c; sell+=s; rows.push([lbl,qty,c,s]); };
+      add('Extra SD-WAN uplinks',`${v.csU}/site × ${v.sites} site(s)`,C1.uplink,v.csU*v.sites);
+      add('Warm spare (licenses)',`${v.csW} site(s)`,C1.warm,v.csW);
+      add('External IPSec connectors',`${v.csIke}`,C1.ipsec,v.csIke);
+      add('Additional cloud IPs',`${v.csIPs}`,C1.ip,v.csIPs);
+    }
+
+    if (v.uvl){
+      const g = getGatewayById(v.gwId);
+      const gwMonthly = (UVL_BUCKET[g.tier] ?? 0) * (TERM_FACTOR[v.term] ?? 1);
+      if (gwMonthly>0){
+        const c = gwMonthly * v.sites;
+        cost += c; rows.push(['Gateway subs (cost)', `${v.sites} × ${g.label}`, c, '—']);
+      }
+      if(v.u10g){ const bump=UVL_10G*v.sites; cost+=bump; rows.push(['10G performance uplift (cost)',`${v.sites} site(s)`,bump,'—']); }
+      const swPerSite=UVL_SW.sw8*v.sw8 + UVL_SW.sw24*v.sw24 + UVL_SW.sw24s*v.sw24s + UVL_SW.sw48*v.sw48;
+      if(swPerSite>0){ const c=swPerSite*v.sites; cost+=c; rows.push(['Switch subs (cost)',`${v.sites} site(s)`,c,'—']); }
+      const apPerSite=UVL_AP.ap5*v.ap5 + UVL_AP.ap6*v.ap6;
+      if(apPerSite>0){ const c=apPerSite*v.sites; cost+=c; rows.push(['Wi-Fi AP subs (cost)',`${v.sites} site(s)`,c,'—']); }
+    }
+
+    if(v.optRet){
+      const cA=C1.retAppliance*v.retAppl, cS=C1.retSeat*v.retSeats;
+      const sA=sellFromCost(cA,v.gmRet), sS=sellFromCost(cS,v.gmRet);
+      cost+=cA+cS; sell+=sA+sS;
+      rows.push(['Compliance logging (appliances)',`${v.retAppl}`,cA,sA]);
+      rows.push(['Compliance logging (seats)',`${v.retSeats}`,cS,sS]);
+    }
+    return {rows,cost,sell};
+  }
+
+  // ===== Render helpers =====
+  function renderTable(tbodyId, rows){
+    const tb = $(tbodyId);
+    tb.innerHTML="";
+    rows.forEach(r=>{
+      const tr=document.createElement('tr');
+      const c = s => isNaN(s) ? '—' : fmt(s);
+      tr.innerHTML = `<td>${r[0]}</td><td>${r[1]}</td><td>${c(r[2])}</td><td>${c(r[3])}</td>`;
+      tb.appendChild(tr);
+    });
+  }
+
+  // Live region for accessibility
+  const live = document.createElement('div'); live.className='sr-only'; live.setAttribute('aria-live','polite'); live.style.position='absolute'; live.style.left='-9999px'; document.body.appendChild(live);
+  function announceKPIs(){ live.textContent = `CloudShield ${$('kpiCs').textContent}, CoreStack ${$('kpiUvl').textContent}, Merged ${$('kpiMerged').textContent}, margin ${$('kpiGM').textContent}.`; }
+
+  // ===== Compute with tiny debounce =====
+  let _needs=false,_last=0;
+  function scheduleCompute(){
+    _last=Date.now();
+    if(_needs) return;
+    _needs=true;
+    requestAnimationFrame(()=>{
+      if(Date.now()-_last<24){ _needs=false; return scheduleCompute(); }
+      _needs=false;
+      updateGwInfo();
+      const v = read();
+      const cs = v.cs ? csSolo(v) : {rows:[],cost:0,sell:0};
+      const uv = v.uvl ? uvlSolo(v) : {rows:[],cost:0,sell:0};
+      const mg = (v.cs || v.uvl) ? merged(v) : {rows:[],cost:0,sell:0};
+
+      $('kpiCs').textContent     = fmt(cs.sell);
+      $('kpiUvl').textContent    = fmt(uv.sell);
+      $('kpiMerged').textContent = fmt(mg.sell);
+      $('kpiGM').textContent     = mg.sell>0 ? pc((mg.sell-mg.cost)/mg.sell) : '0%';
+
+      renderTable('bdCs', cs.rows);     $('bdCsSum').textContent = fmt(cs.sell);
+      renderTable('bdUvl', uv.rows);    $('bdUvlSum').textContent = fmt(uv.sell);
+      renderTable('bdMerged', mg.rows); $('bdCost').textContent   = fmt(mg.cost); $('bdSell').textContent = fmt(mg.sell);
+      announceKPIs();
+    });
+  }
+
+  // ===== Admin lock =====
+  function lockAdmin(){
+    $('adminContent').hidden = true;
+    $('adminLocked').hidden  = false;
+    $('lockBadge').textContent = 'Locked';
+  }
+  function unlockAdmin(){
+    $('adminContent').hidden = false;
+    $('adminLocked').hidden  = true;
+    $('lockBadge').textContent = 'Unlocked';
+  }
+  function askUnlock(){
+    const dlg = $('pwDialog'); const input = $('adminPw');
+    input.value = '';
+    dlg.showModal();
+    setTimeout(()=>input.focus(), 50);
+  }
+  function tryUnlock(){
+    const ok = $('adminPw').value === ADMIN_PASSWORD;
+    if(!ok){
+      $('adminPw').classList.add('is-error');
+      setTimeout(()=>$('adminPw').classList.remove('is-error'), 500);
+      return;
+    }
+    $('pwDialog').close();
+    unlockAdmin();
+  }
+
+  // ===== Wiring =====
+  function wire(){
+    populateGateways();
+
+    document.querySelectorAll('#de-netcalc-wu-match input, #de-netcalc-wu-match select')
+      .forEach(el=>{ el.addEventListener('input', scheduleCompute); el.addEventListener('change', scheduleCompute); });
+
+    $('btnReset').addEventListener('click', ()=>{
+      $('optCloud').checked = true; $('optCore').checked = true;
+      $('sites').value = 1; $('users').value = 20;
+      $('csUplinksPerSite').value = 0; $('csWarmSites').value = 0; $('csIpsec').value = 0; $('csIPs').value = 0;
+
+      $('uvlGateway').value = GATEWAYS[0].id; $('uvlTerm').value = 'mo'; $('uvlTenG').checked = false;
+      $('sw8').value=0; $('sw24').value=0; $('sw24sfp').value=0; $('sw48').value=0; $('ap5').value=0; $('ap6').value=0;
+
+      $('optRetention').checked=false; $('retAppliances').value=0; $('retSeats').value=0;
+
+      $('siteMin').value=0; $('gmCore').value=75; $('gmAdd').value=70; $('gmRetention').value=0;
+
+      lockAdmin();
+      scheduleCompute();
+    });
+
+    $('btnPrint').addEventListener('click', ()=>window.print());
+
+    // Admin lock handlers
+    $('btnUnlock').addEventListener('click', askUnlock);
+    $('pwOk').addEventListener('click', tryUnlock);
+    $('pwCancel').addEventListener('click', ()=>$('pwDialog').close());
+    $('adminPw').addEventListener('keydown', e=>{ if(e.key==='Enter') tryUnlock(); });
+
+    // First render
+    lockAdmin();
+    scheduleCompute();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire);
+  else wire();
+})();
+</script>
+</body>
+</html>
