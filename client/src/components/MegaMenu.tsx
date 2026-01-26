@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect, useCallback, useId } from 'react';
+import { Link } from 'wouter';
 import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink, X, ArrowRight, Monitor, Cloud, Lock, Zap, HeadphonesIcon, Building, BarChart3, ClipboardCheck, Layers, TrendingUp, Star, CheckCircle, Award } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import logoImage from '@assets/DE-Logo-new_1762461524794.webp';
+import ebookCover from '@assets/images/ebook-defending-digital-realm-cover.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as Tooltip from '@radix-ui/react-tooltip';
 
@@ -769,8 +771,8 @@ export function MegaMenu() {
                             </motion.div>
                           )}
                           
-                          {/* Placeholder Box for Industries, Resources, and About */}
-                          {(item.name === 'Industries' || item.name === 'Resources' || item.name === 'About') && (
+                          {/* Placeholder Box for Industries and About */}
+                          {(item.name === 'Industries' || item.name === 'About') && (
                             <motion.div 
                               className="bg-gradient-to-br from-purple-900/30 to-violet-900/20 border border-white/10 rounded-xl p-6 flex flex-col items-center justify-center min-h-64"
                               initial={{ opacity: 0 }}
@@ -787,6 +789,38 @@ export function MegaMenu() {
                                 <p className="text-sm font-medium text-white/60 mb-1">Video or Case Study</p>
                                 <p className="text-xs text-gray-500">Coming soon</p>
                               </div>
+                            </motion.div>
+                          )}
+
+                          {/* Ebook Feature for Resources */}
+                          {item.name === 'Resources' && (
+                            <motion.div 
+                              className="bg-gradient-to-br from-orange-900/20 to-amber-900/10 border border-orange-500/20 rounded-xl p-4 flex flex-col min-h-64 hover:border-orange-500/40 transition-colors"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.2 }}
+                              data-testid="menu-ebook-feature"
+                            >
+                              <Link 
+                                href="/resources/ebook/defending-digital-realm"
+                                onClick={handleLinkClick}
+                                className="flex flex-col h-full"
+                              >
+                                <div className="flex-1 flex items-center justify-center mb-3">
+                                  <img 
+                                    src={ebookCover} 
+                                    alt="Defending the Digital Realm ebook" 
+                                    className="max-h-36 w-auto rounded-lg shadow-lg shadow-orange-500/20 border border-orange-500/30"
+                                  />
+                                </div>
+                                <div className="text-center">
+                                  <span className="inline-block bg-white text-orange-600 text-xs font-bold px-2 py-1 rounded mb-2">
+                                    FREE EBOOK
+                                  </span>
+                                  <p className="text-sm font-semibold text-white mb-1">Defending the Digital Realm</p>
+                                  <p className="text-xs text-white/60">Cybersecurity Risk Assessment Guide</p>
+                                </div>
+                              </Link>
                             </motion.div>
                           )}
                         </div>

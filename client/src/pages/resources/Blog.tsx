@@ -13,8 +13,22 @@ import ransomwareImg from "@assets/stock_images/ransomware_protectio_63d2a35d.jp
 import cloudImg from "@assets/stock_images/cloud_backup_server__4ac65288.jpg";
 import realEstateImg from "@assets/stock_images/real_estate_house_ke_f7c5422b.jpg";
 import trainingImg from "@assets/stock_images/employee_security_tr_12ae4644.jpg";
+import ebookCover from "@assets/images/ebook-defending-digital-realm-cover.png";
 
 const blogPosts = [
+  {
+    id: 0,
+    title: "Defending the Digital Realm",
+    excerpt: "A comprehensive guide to cybersecurity risk assessment. Learn how to identify, analyze, and mitigate risks to protect your Arizona business.",
+    category: "Ebook",
+    author: "Joseph Petro",
+    date: "2025-01-15",
+    readTime: "25 min read",
+    featured: true,
+    image: ebookCover,
+    slug: "ebook/defending-digital-realm",
+    isEbook: true,
+  },
   {
     id: 1,
     title: "2025 Cybersecurity Trends: What Arizona Businesses Need to Know",

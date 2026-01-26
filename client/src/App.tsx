@@ -104,6 +104,7 @@ const SalesProcess = lazy(() => import("@/pages/portal/SalesProcess"));
 const ProActiveEcosystemPricing = lazy(() => import("@/pages/ProActiveEcosystemPricing"));
 const EcosystemMatrixOfficial = lazy(() => import("@/pages/EcosystemMatrixOfficial"));
 const NetworkPlannerOfficial = lazy(() => import("@/pages/NetworkPlannerOfficial"));
+const Ebook = lazy(() => import("@/pages/resources/Ebook"));
 
 // Internal pages (DE staff only)
 const InternalSalesProcess = lazy(() => import("@/pages/internal/SalesProcessPage"));
@@ -198,6 +199,11 @@ function Router() {
       <Route path="/resources/blog/:slug" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <BlogPost />
+        </Suspense>
+      )} />
+      <Route path="/resources/ebook/defending-digital-realm" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <Ebook />
         </Suspense>
       )} />
       <Route path="/resources/security-updates" component={() => (
