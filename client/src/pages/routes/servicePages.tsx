@@ -19,7 +19,8 @@ export const servicePageData = {
       "Compliance optional: add modules only when needed",
       "Monthly service summaries and quarterly business reviews available"
     ],
-    gradientColors: "from-blue-600 via-purple-600 to-indigo-600"
+    gradientColors: "from-blue-600 via-purple-600 to-indigo-600",
+    recommendedTier: "office" as const
   },
   'managed-it-support': {
     title: "Managed IT Support",
@@ -41,7 +42,8 @@ export const servicePageData = {
       "Stack-native support: we built these tools",
       "Help + education: users learn safer behaviors"
     ],
-    gradientColors: "from-indigo-600 via-blue-600 to-cyan-600"
+    gradientColors: "from-indigo-600 via-blue-600 to-cyan-600",
+    recommendedTier: "office" as const
   },
   'managed-workplace': {
     title: "Managed Workplace",
@@ -63,7 +65,8 @@ export const servicePageData = {
       "Zero-Trust identity posture at every login",
       "Automated offboarding: revoked access in minutes, not hours"
     ],
-    gradientColors: "from-emerald-600 via-teal-600 to-cyan-600"
+    gradientColors: "from-emerald-600 via-teal-600 to-cyan-600",
+    recommendedTier: "office" as const
   },
   'cloud-backup': {
     title: "Cloud Backup",
@@ -86,7 +89,8 @@ export const servicePageData = {
       "Peace of mind: tested backups, not just 'set and forget'"
     ],
     gradientColors: "from-blue-600 via-cyan-600 to-teal-600",
-    stat: { value: "54%", label: "used backups to restore encrypted data (lowest in 6 years)", source: "Sophos 2025" }
+    stat: { value: "54%", label: "used backups to restore encrypted data (lowest in 6 years)", source: "Sophos 2025" },
+    recommendedTier: "office" as const
   },
   'security-awareness': {
     title: "Security Awareness Training",
@@ -109,7 +113,8 @@ export const servicePageData = {
       "Lower breach risk from insider mistakes"
     ],
     gradientColors: "from-amber-600 via-orange-600 to-red-600",
-    stat: { value: "60%", label: "of breaches involve the human element", source: "Verizon DBIR 2025" }
+    stat: { value: "60%", label: "of breaches involve the human element", source: "Verizon DBIR 2025" },
+    recommendedTier: "business" as const
   },
   'co-managed-it': {
     title: "Co-Managed IT",
@@ -131,7 +136,8 @@ export const servicePageData = {
       "Strategic IT planning and technology roadmap alignment",
       "Your IT team + DE stack = higher maturity without hiring"
     ],
-    gradientColors: "from-purple-700 via-violet-700 to-indigo-700"
+    gradientColors: "from-purple-700 via-violet-700 to-indigo-700",
+    recommendedTier: "business" as const
   },
   'threat-detection': {
     title: "Threat Detection & Response",
@@ -154,7 +160,8 @@ export const servicePageData = {
       "24/7 detection + real response, not 'good luck with alerts'"
     ],
     gradientColors: "from-red-700 via-rose-700 to-pink-700",
-    stat: { value: "88%", label: "of SMB breaches involve ransomware", source: "Verizon DBIR 2025" }
+    stat: { value: "88%", label: "of SMB breaches involve ransomware", source: "Verizon DBIR 2025" },
+    recommendedTier: "business" as const
   },
   'security-operations': {
     title: "Security Operations (SOC-as-a-Service)",
@@ -176,7 +183,8 @@ export const servicePageData = {
       "Compliance evidence and audit readiness",
       "Full SOC maturity without hiring SOC analysts"
     ],
-    gradientColors: "from-purple-600 via-indigo-600 to-blue-600"
+    gradientColors: "from-purple-600 via-indigo-600 to-blue-600",
+    recommendedTier: "business" as const
   },
   'backup-disaster-recovery': {
     title: "Backup & Disaster Recovery (BCDR)",
@@ -199,7 +207,8 @@ export const servicePageData = {
       "Compliance-ready DR documentation",
       "Peace of mind: proven recovery capabilities"
     ],
-    gradientColors: "from-cyan-600 via-blue-600 to-indigo-600"
+    gradientColors: "from-cyan-600 via-blue-600 to-indigo-600",
+    recommendedTier: "enterprise" as const
   },
   'vcio-strategy': {
     title: "vCIO & Strategy",
@@ -221,7 +230,8 @@ export const servicePageData = {
       "Reduced surprise costs and projects",
       "IT becomes a strategic business partner, not a cost center"
     ],
-    gradientColors: "from-emerald-600 via-green-600 to-teal-600"
+    gradientColors: "from-emerald-600 via-green-600 to-teal-600",
+    recommendedTier: "enterprise" as const
   },
   'data-encryption': {
     title: "Data Encryption & Control",
@@ -243,7 +253,8 @@ export const servicePageData = {
       "Default for healthcare, finance, and legal verticals",
       "Works alongside endpoint security, not instead of it"
     ],
-    gradientColors: "from-indigo-600 via-blue-600 to-cyan-600"
+    gradientColors: "from-indigo-600 via-blue-600 to-cyan-600",
+    recommendedTier: "business" as const
   },
   'compliance-reports': {
     title: "Compliance & Risk Reports",
@@ -265,7 +276,8 @@ export const servicePageData = {
       "Regulatory confidence: proactive, not reactive",
       "Clear roadmap to full compliance certification"
     ],
-    gradientColors: "from-purple-600 via-violet-600 to-indigo-600"
+    gradientColors: "from-purple-600 via-violet-600 to-indigo-600",
+    recommendedTier: "enterprise" as const
   },
   'unified-security': {
     title: "Unified Security Posture",
@@ -287,7 +299,8 @@ export const servicePageData = {
       "Measurable risk reduction over time",
       "Compliance readiness score when modules active"
     ],
-    gradientColors: "from-red-600 via-pink-600 to-rose-600"
+    gradientColors: "from-red-600 via-pink-600 to-rose-600",
+    recommendedTier: "enterprise" as const
   }
 };
 

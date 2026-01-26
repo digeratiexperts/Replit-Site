@@ -26,6 +26,7 @@ interface GenericServicePageProps {
   gradientColors?: string;
   stat?: ServiceStat;
   canonical?: string;
+  recommendedTier?: "office" | "business" | "enterprise";
 }
 
 const FeatureCard = ({ 
@@ -68,7 +69,8 @@ export default function GenericServicePage({
   benefits,
   gradientColors = "from-violet-600 via-purple-600 to-fuchsia-600",
   stat,
-  canonical
+  canonical,
+  recommendedTier
 }: GenericServicePageProps) {
   const prefersReducedMotion = useReducedMotion() ?? false;
 
@@ -202,7 +204,24 @@ export default function GenericServicePage({
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <ServiceMatrix variant="compact" />
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-white mb-2 text-center">
+              {recommendedTier ? `Recommended Plan for ${title}` : 'Service Plans'}
+            </h2>
+            <p className="text-white/60 text-center">
+              {recommendedTier ? 'This service is included in the following plan' : 'Choose the plan that fits your needs'}
+            </p>
+          </div>
+          <ServiceMatrix 
+            variant="full" 
+            highlightTier={recommendedTier}
+            showOnlyHighlighted={!!recommendedTier}
+          />
+          <div className="mt-6 text-center">
+            <a href="/pricing" className="text-violet-400 hover:text-violet-300 underline text-sm">
+              View all pricing tiers and full service matrix →
+            </a>
+          </div>
         </motion.div>
 
         {/* CTA Section */}
