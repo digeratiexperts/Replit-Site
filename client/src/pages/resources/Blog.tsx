@@ -13,7 +13,7 @@ import ransomwareImg from "@assets/stock_images/ransomware_protectio_63d2a35d.jp
 import cloudImg from "@assets/stock_images/cloud_backup_server__4ac65288.jpg";
 import realEstateImg from "@assets/stock_images/real_estate_house_ke_f7c5422b.jpg";
 import trainingImg from "@assets/stock_images/employee_security_tr_12ae4644.jpg";
-import ebookCover from "@assets/images/ebook-defending-digital-realm-cover.png";
+import ebookCover from "@/assets/images/ebook-defending-digital-realm-cover.png";
 
 const blogPosts = [
   {
@@ -158,7 +158,7 @@ export default function Blog() {
             <h2 className="text-2xl font-bold text-white mb-6">Featured Articles</h2>
             <div className="grid md:grid-cols-2 gap-6">
               {featuredPosts.map((post) => (
-                <Link href={`/resources/blog/${post.slug}`} key={post.id}>
+                <Link href={post.isEbook ? `/resources/${post.slug}` : `/resources/blog/${post.slug}`} key={post.id}>
                   <Card className="bg-white/[0.02] border-white/10 overflow-hidden hover:border-violet-500/50 transition-colors cursor-pointer" data-testid={`card-post-${post.id}`}>
                     <div className="aspect-video overflow-hidden">
                       <img src={post.image} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
@@ -205,7 +205,7 @@ export default function Blog() {
             <h2 className="text-2xl font-bold text-white mb-6">Recent Articles</h2>
             <div className="grid md:grid-cols-3 gap-6">
               {regularPosts.map((post) => (
-                <Link href={`/resources/blog/${post.slug}`} key={post.id}>
+                <Link href={post.isEbook ? `/resources/${post.slug}` : `/resources/blog/${post.slug}`} key={post.id}>
                   <Card className="bg-white/[0.02] border-white/10 hover:border-violet-500/50 transition-colors overflow-hidden cursor-pointer" data-testid={`card-post-${post.id}`}>
                     <div className="aspect-video overflow-hidden">
                       <img src={post.image} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />

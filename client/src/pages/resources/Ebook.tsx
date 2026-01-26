@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, ChevronRight, Home, BookOpen, ArrowLeft } from "lucide-react";
 
-import ebookCover from "@assets/images/ebook-defending-digital-realm-cover.png";
+import ebookCover from "@/assets/images/ebook-defending-digital-realm-cover.png";
 
 interface Chapter {
   id: number;
