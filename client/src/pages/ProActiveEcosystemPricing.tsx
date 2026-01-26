@@ -8,7 +8,8 @@ import {
   Users, Building2, ChevronDown, ChevronUp, Shield, Server, 
   Lock, Mail, GraduationCap, Database, HardDrive, Monitor,
   FileText, Key, ArrowRight, Check, Calculator, Sparkles,
-  TrendingUp, DollarSign, Percent
+  TrendingUp, DollarSign, Briefcase, FileCheck, Star, Bookmark,
+  ChevronRight, Layers
 } from "lucide-react";
 import { FloatingParticles } from "@/components/graphics";
 import { useSEO } from "@/hooks/useSEO";
@@ -37,6 +38,84 @@ interface Plan {
   services: string[];
   popular?: boolean;
 }
+
+interface MatrixService {
+  name: string;
+  tooltip: string;
+  basic: boolean | 'addon';
+  advanced: boolean | 'addon';
+  enterprise: boolean | 'addon';
+}
+
+interface MatrixCategory {
+  id: string;
+  title: string;
+  icon: React.ReactNode;
+  isHighlight?: boolean;
+  isAddon?: boolean;
+  ribbon?: string;
+  services: MatrixService[];
+}
+
+const matrixCategories: MatrixCategory[] = [
+  {
+    id: "productivity",
+    title: "Productivity & Core IT",
+    icon: <Briefcase className="w-5 h-5" />,
+    services: [
+      { name: "Secure Email & Productivity", tooltip: "Secure cloud email + productivity tools", basic: true, advanced: true, enterprise: true },
+      { name: "Unified Ticketing & Support Desk", tooltip: "Centralized helpdesk & ticketing", basic: true, advanced: true, enterprise: true },
+      { name: "Automated Backups + SaaS Archiving", tooltip: "Automated backups with cloud archiving", basic: true, advanced: true, enterprise: true },
+      { name: "Cloud File Sharing", tooltip: "Secure file sharing with compliance controls", basic: true, advanced: true, enterprise: true },
+    ]
+  },
+  {
+    id: "security",
+    title: "Advanced Security",
+    icon: <Shield className="w-5 h-5" />,
+    services: [
+      { name: "Endpoint & Email Protection", tooltip: "Stops malware, ransomware, phishing", basic: false, advanced: true, enterprise: true },
+      { name: "Data Loss Prevention & Encryption", tooltip: "Encrypts files, prevents data leaks", basic: false, advanced: true, enterprise: true },
+      { name: "24/7 SOC + Threat Detection", tooltip: "24/7 monitoring & human-led response", basic: false, advanced: true, enterprise: true },
+      { name: "Risk Assessments + Insurance Readiness", tooltip: "Risk reporting for insurance", basic: false, advanced: true, enterprise: true },
+    ]
+  },
+  {
+    id: "compliance",
+    title: "Enterprise Compliance",
+    icon: <FileCheck className="w-5 h-5" />,
+    services: [
+      { name: "Continuous Compliance Monitoring", tooltip: "HIPAA, SOC 2, ISO monitoring", basic: false, advanced: false, enterprise: true },
+      { name: "Audit-Ready Documentation", tooltip: "Automated policy tracking", basic: false, advanced: false, enterprise: true },
+      { name: "Policy Tracking & Evidence Collection", tooltip: "Centralized compliance evidence", basic: false, advanced: false, enterprise: true },
+      { name: "vCISO & Compliance Certifications", tooltip: "Virtual CISO and industry certifications", basic: false, advanced: false, enterprise: true },
+    ]
+  },
+  {
+    id: "value-add",
+    title: "Digerati Value-Add",
+    icon: <Star className="w-5 h-5" />,
+    isHighlight: true,
+    ribbon: "Included in all packages",
+    services: [
+      { name: "Proactive Patch & IT Management", tooltip: "Managed IT operations & patching", basic: true, advanced: true, enterprise: true },
+      { name: "Network Architecture", tooltip: "Zero Trust, SD-WAN, SASE design", basic: true, advanced: true, enterprise: true },
+      { name: "Security Awareness Training", tooltip: "End-user training & phishing simulations", basic: true, advanced: true, enterprise: true },
+      { name: "Executive Risk Dashboards", tooltip: "C-level dashboards with ROI metrics", basic: false, advanced: true, enterprise: true },
+    ]
+  },
+  {
+    id: "addons",
+    title: "Optional Add-Ons",
+    icon: <Bookmark className="w-5 h-5" />,
+    isAddon: true,
+    services: [
+      { name: "UCaaS / VoIP Telephony", tooltip: "Cloud-based voice & phone systems", basic: 'addon', advanced: 'addon', enterprise: 'addon' },
+      { name: "DRaaS (Disaster Recovery)", tooltip: "Disaster Recovery with cloud failover", basic: 'addon', advanced: 'addon', enterprise: 'addon' },
+      { name: "Extended Cloud Backup", tooltip: "Extra storage & compliance backups", basic: 'addon', advanced: 'addon', enterprise: 'addon' },
+    ]
+  }
+];
 
 const services: Service[] = [
   { id: "jumpcloud", name: "JumpCloud IAM (SSO/MFA/Device)", icon: Key, unit: "user/mo", cost: 21.6, qtyPerUser: 1, category: "identity" },
@@ -488,6 +567,112 @@ const ProActiveEcosystemPricing = () => {
                 </motion.div>
               );
             })}
+          </motion.div>
+
+          {/* Service Comparison Matrix */}
+          <motion.div
+            className="mt-12 rounded-2xl border border-white/10 backdrop-blur-xl overflow-hidden"
+            style={{
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02))'
+            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+          >
+            <div className="p-6 border-b border-white/10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-violet-500/20 flex items-center justify-center">
+                  <Layers className="w-5 h-5 text-violet-400" />
+                </div>
+                <div>
+                  <h2 className="text-white font-bold text-xl" data-testid="heading-service-matrix">Service Comparison Matrix</h2>
+                  <p className="text-white/50 text-sm">See what's included in each tier at a glance</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Matrix Header */}
+            <div className="hidden md:grid grid-cols-[1fr,100px,100px,100px] gap-2 px-6 py-3 bg-white/[0.02] border-b border-white/10">
+              <div className="text-white/50 text-xs font-medium uppercase tracking-wider">Service</div>
+              <div className="text-center text-violet-300 text-xs font-bold uppercase tracking-wider">Basic IT</div>
+              <div className="text-center text-purple-300 text-xs font-bold uppercase tracking-wider">Security</div>
+              <div className="text-center text-fuchsia-300 text-xs font-bold uppercase tracking-wider">Enterprise</div>
+            </div>
+
+            {/* Matrix Categories */}
+            <div className="divide-y divide-white/10">
+              {matrixCategories.map((category) => (
+                <div key={category.id} className={`${category.isHighlight ? 'bg-violet-500/5' : category.isAddon ? 'bg-amber-500/5' : ''}`} data-testid={`matrix-category-${category.id}`}>
+                  {/* Category Header */}
+                  <div className="flex items-center gap-3 px-6 py-3 bg-white/[0.02]">
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                      category.isHighlight ? "bg-violet-500/20 text-violet-400" : 
+                      category.isAddon ? "bg-amber-500/20 text-amber-400" : 
+                      "bg-white/10 text-white/70"
+                    }`}>
+                      {category.icon}
+                    </div>
+                    <span className="font-semibold text-white text-sm">{category.title}</span>
+                    {category.ribbon && (
+                      <span className="px-2 py-0.5 text-[10px] font-medium bg-violet-500/20 text-violet-300 rounded-full">
+                        {category.ribbon}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Category Services */}
+                  <div className="divide-y divide-white/5">
+                    {category.services.map((service, idx) => (
+                      <div 
+                        key={idx} 
+                        className="grid grid-cols-1 md:grid-cols-[1fr,100px,100px,100px] gap-2 px-6 py-2.5 hover:bg-white/[0.02] transition-colors"
+                        data-testid={`matrix-row-${category.id}-${idx}`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-white/70 text-sm" title={service.tooltip}>{service.name}</span>
+                        </div>
+                        <div className="flex items-center justify-between md:justify-center">
+                          <span className="md:hidden text-white/40 text-xs">Basic IT</span>
+                          {service.basic === 'addon' ? (
+                            <span className="text-xs text-amber-400 font-medium">Add-On</span>
+                          ) : service.basic ? (
+                            <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                              <Check className="w-3 h-3 text-emerald-400" />
+                            </div>
+                          ) : (
+                            <div className="w-2 h-0.5 bg-white/20 rounded" />
+                          )}
+                        </div>
+                        <div className="flex items-center justify-between md:justify-center">
+                          <span className="md:hidden text-white/40 text-xs">Security</span>
+                          {service.advanced === 'addon' ? (
+                            <span className="text-xs text-amber-400 font-medium">Add-On</span>
+                          ) : service.advanced ? (
+                            <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                              <Check className="w-3 h-3 text-emerald-400" />
+                            </div>
+                          ) : (
+                            <div className="w-2 h-0.5 bg-white/20 rounded" />
+                          )}
+                        </div>
+                        <div className="flex items-center justify-between md:justify-center">
+                          <span className="md:hidden text-white/40 text-xs">Enterprise</span>
+                          {service.enterprise === 'addon' ? (
+                            <span className="text-xs text-amber-400 font-medium">Add-On</span>
+                          ) : service.enterprise ? (
+                            <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                              <Check className="w-3 h-3 text-emerald-400" />
+                            </div>
+                          ) : (
+                            <div className="w-2 h-0.5 bg-white/20 rounded" />
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </motion.div>
 
           {/* Summary & CTA */}
