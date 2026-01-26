@@ -1,0 +1,454 @@
+import { useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { MegaMenu } from "@/components/MegaMenu";
+import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooterSection";
+import { Button } from "@/components/ui/button";
+import { 
+  ChevronDown, ChevronUp, Shield, Server, Users, 
+  Monitor, Cloud, Key, Settings, Phone, HardDrive,
+  FileCheck, Building2, Check, X, Star, Zap
+} from "lucide-react";
+import { FloatingParticles } from "@/components/graphics";
+import { useSEO } from "@/hooks/useSEO";
+
+interface ServiceRow {
+  capability: string;
+  essentials: string | boolean;
+  office: string | boolean;
+  business: string | boolean;
+  enterprise: string | boolean;
+}
+
+interface ServiceCategory {
+  id: string;
+  title: string;
+  icon: React.ReactNode;
+  rows: ServiceRow[];
+}
+
+const serviceCategories: ServiceCategory[] = [
+  {
+    id: "managed-it",
+    title: "Managed IT",
+    icon: <Monitor className="w-5 h-5" />,
+    rows: [
+      { capability: "Help Desk & SLA", essentials: false, office: "8×5", business: "8×5 + Priority", enterprise: "VIP + 24×7 opt" },
+      { capability: "Remote Monitoring & Alerting", essentials: true, office: true, business: true, enterprise: true },
+      { capability: "Patch & App Management", essentials: true, office: true, business: true, enterprise: true },
+      { capability: "Remote Support & Quick Assist", essentials: false, office: true, business: true, enterprise: true },
+      { capability: "IT Documentation & Knowledge Base", essentials: false, office: "Standard", business: "Comprehensive", enterprise: "Full + Client access" },
+      { capability: "Client Portal & Ticketing", essentials: false, office: true, business: true, enterprise: true },
+      { capability: "Asset & Warranty", essentials: false, office: "Basic", business: "Full", enterprise: "Lifecycle + budgeting" },
+      { capability: "Executive Reporting & QBRs", essentials: false, office: "Semi-annual", business: "Quarterly", enterprise: "Monthly" },
+      { capability: "IT Governance & Roadmaps", essentials: false, office: false, business: false, enterprise: "Included" },
+      { capability: "vCIO", essentials: false, office: "Semi-annual", business: "Quarterly", enterprise: "Monthly" },
+    ]
+  },
+  {
+    id: "cybersecurity",
+    title: "Cybersecurity",
+    icon: <Shield className="w-5 h-5" />,
+    rows: [
+      { capability: "Baseline Threat Protection", essentials: true, office: true, business: true, enterprise: true },
+      { capability: "Data Safeguards & Identity Controls", essentials: true, office: true, business: true, enterprise: true },
+      { capability: "Email Security & MFA", essentials: false, office: "Secure gateway", business: "Advanced gateway", enterprise: "Advanced + SSO" },
+      { capability: "Endpoint Detection & Response", essentials: false, office: "EDR", business: "EDR + rollback", enterprise: "EDR + MDR" },
+      { capability: "Security Awareness & Phishing", essentials: false, office: "Baseline", business: "Interactive + sims", enterprise: "Role-based + sims" },
+      { capability: "SaaS App Security Monitoring", essentials: false, office: "Optional", business: true, enterprise: true },
+      { capability: "Dark Web Monitoring", essentials: false, office: true, business: true, enterprise: true },
+      { capability: "DNS Filtering & Web Gateway", essentials: false, office: true, business: true, enterprise: true },
+      { capability: "Vulnerability Scanning", essentials: false, office: "Quarterly", business: "Monthly", enterprise: "Continuous" },
+      { capability: "Incident Response Plan", essentials: false, office: false, business: "Template", enterprise: "Custom + tabletop" },
+    ]
+  },
+  {
+    id: "cloud-backup",
+    title: "Cloud & Backup",
+    icon: <Cloud className="w-5 h-5" />,
+    rows: [
+      { capability: "Endpoint Backup", essentials: false, office: true, business: true, enterprise: true },
+      { capability: "SaaS Backup (M365/Google)", essentials: false, office: true, business: true, enterprise: true },
+      { capability: "Server/VM Backup", essentials: false, office: "Optional", business: true, enterprise: true },
+      { capability: "Immutable Backup Copies", essentials: false, office: false, business: true, enterprise: true },
+      { capability: "Verified Restore Testing", essentials: false, office: "Quarterly", business: "Monthly", enterprise: "Weekly" },
+      { capability: "Disaster Recovery (DRaaS)", essentials: false, office: "Optional", business: "Optional", enterprise: true },
+      { capability: "RTO/RPO Guarantees", essentials: false, office: false, business: "Standard", enterprise: "Custom SLA" },
+    ]
+  },
+  {
+    id: "identity",
+    title: "Identity & Access",
+    icon: <Key className="w-5 h-5" />,
+    rows: [
+      { capability: "Cloud Directory & SSO", essentials: false, office: true, business: true, enterprise: true },
+      { capability: "Multi-Factor Authentication", essentials: false, office: true, business: true, enterprise: true },
+      { capability: "Conditional Access Policies", essentials: false, office: "Basic", business: "Advanced", enterprise: "Zero Trust" },
+      { capability: "User Lifecycle Automation", essentials: false, office: false, business: true, enterprise: true },
+      { capability: "Privileged Access Management", essentials: false, office: false, business: "Optional", enterprise: true },
+      { capability: "Access Reviews & Auditing", essentials: false, office: false, business: "Quarterly", enterprise: "Continuous" },
+    ]
+  },
+  {
+    id: "site-services",
+    title: "Site Services",
+    icon: <Building2 className="w-5 h-5" />,
+    rows: [
+      { capability: "Network Design & Management", essentials: false, office: false, business: "Consultation", enterprise: true },
+      { capability: "Firewall & SD-WAN", essentials: false, office: false, business: "Optional", enterprise: true },
+      { capability: "Wi-Fi Management", essentials: false, office: false, business: "Optional", enterprise: true },
+      { capability: "On-Site Support", essentials: false, office: "Per incident", business: "Scheduled", enterprise: "Priority dispatch" },
+      { capability: "Hardware Procurement", essentials: false, office: "Assisted", business: "Managed", enterprise: "Full lifecycle" },
+      { capability: "Printer & Peripheral Support", essentials: false, office: "Basic", business: true, enterprise: true },
+    ]
+  },
+  {
+    id: "add-ons",
+    title: "Available Add-Ons",
+    icon: <Zap className="w-5 h-5" />,
+    rows: [
+      { capability: "UCaaS / VoIP Telephony", essentials: "Add-on", office: "Add-on", business: "Add-on", enterprise: "Add-on" },
+      { capability: "Compliance Modules (HIPAA, SOC 2)", essentials: "Add-on", office: "Add-on", business: "Add-on", enterprise: "Included" },
+      { capability: "Extended Retention & Archiving", essentials: "Add-on", office: "Add-on", business: "Add-on", enterprise: "Add-on" },
+      { capability: "Penetration Testing", essentials: "Add-on", office: "Add-on", business: "Add-on", enterprise: "Annual included" },
+      { capability: "24/7 SOC Monitoring", essentials: "Add-on", office: "Add-on", business: "Add-on", enterprise: true },
+    ]
+  }
+];
+
+const tiers = [
+  { 
+    id: "essentials", 
+    name: "IT Essentials", 
+    subtitle: "Core IT only",
+    ribbon: "Core",
+    gradient: "from-slate-500 to-gray-600",
+    borderColor: "border-slate-500/30"
+  },
+  { 
+    id: "office", 
+    name: "Office", 
+    subtitle: "$65 /user·mo*",
+    ribbon: "Popular",
+    gradient: "from-violet-500 to-purple-500",
+    borderColor: "border-violet-500/30"
+  },
+  { 
+    id: "business", 
+    name: "Business", 
+    subtitle: "$95 /user·mo*",
+    ribbon: "Best Value",
+    gradient: "from-emerald-500 to-teal-500",
+    borderColor: "border-emerald-500/30",
+    featured: true
+  },
+  { 
+    id: "enterprise", 
+    name: "Enterprise", 
+    subtitle: "Multi-site + MDR/SIEM",
+    ribbon: "Custom",
+    gradient: "from-amber-500 to-orange-500",
+    borderColor: "border-amber-500/30"
+  }
+];
+
+const EcosystemPricing = () => {
+  const prefersReducedMotion = useReducedMotion();
+  const [expandedCategories, setExpandedCategories] = useState<string[]>(
+    serviceCategories.map(c => c.id)
+  );
+  const [highlightUpgrades, setHighlightUpgrades] = useState(false);
+
+  useSEO({
+    title: 'Ecosystem Pricing - Digerati Experts Service Matrix',
+    description: 'Compare Digerati Experts managed IT service tiers. IT Essentials, Office, Business, and Enterprise packages with detailed feature comparison.',
+    canonical: '/ecosystem-pricing',
+  });
+
+  const toggleCategory = (categoryId: string) => {
+    setExpandedCategories(prev => 
+      prev.includes(categoryId) 
+        ? prev.filter(id => id !== categoryId)
+        : [...prev, categoryId]
+    );
+  };
+
+  const renderCellValue = (value: string | boolean, tierIndex: number) => {
+    if (value === true) {
+      return (
+        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400">
+          <Check className="w-4 h-4" />
+        </span>
+      );
+    }
+    if (value === false) {
+      return (
+        <span className="text-white/30">—</span>
+      );
+    }
+    if (value === "Add-on") {
+      return (
+        <span className="px-2 py-1 rounded-full text-xs font-medium bg-amber-500/20 text-amber-400 border border-amber-500/30">
+          Add-on
+        </span>
+      );
+    }
+    if (value === "Optional") {
+      return (
+        <span className="px-2 py-1 rounded-full text-xs font-medium bg-violet-500/20 text-violet-300 border border-violet-500/30">
+          Optional
+        </span>
+      );
+    }
+    // String value - show as pill
+    const isPro = tierIndex >= 2;
+    return (
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+        isPro 
+          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' 
+          : 'bg-violet-500/20 text-violet-300 border border-violet-500/30'
+      }`}>
+        {value}
+      </span>
+    );
+  };
+
+  const containerVariants = prefersReducedMotion ? undefined : {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.05 }
+    }
+  };
+
+  const itemVariants = prefersReducedMotion ? undefined : {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0a0a0f]">
+      <MegaMenu />
+      <FloatingParticles />
+      
+      <main className="relative z-10 pt-24 pb-16">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Hero */}
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-300 text-sm font-medium mb-4">
+              <Shield className="w-4 h-4" />
+              <span>Security-First IT Bundles</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4" data-testid="heading-ecosystem-pricing">
+              Digerati Experts — Service Matrix
+            </h1>
+            <p className="text-white/60 text-lg max-w-2xl mx-auto mb-6">
+              Compare tiers · Explore capabilities · Find your fit
+            </p>
+            
+            {/* Legend */}
+            <div className="flex flex-wrap justify-center gap-6 text-sm">
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-emerald-400"></span>
+                <span className="text-white/60">Included / ✓</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-violet-400"></span>
+                <span className="text-white/60">Premium / Pro</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-white/20"></span>
+                <span className="text-white/60">Not included</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Controls */}
+          <div className="flex flex-wrap justify-center gap-3 mb-8">
+            <Button
+              variant={highlightUpgrades ? "default" : "outline"}
+              size="sm"
+              onClick={() => setHighlightUpgrades(!highlightUpgrades)}
+              className={highlightUpgrades ? "bg-violet-600 hover:bg-violet-700" : "border-white/20 text-white/70 hover:text-white"}
+              data-testid="btn-highlight-upgrades"
+            >
+              <Star className="w-4 h-4 mr-2" />
+              Highlight upgrades
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setExpandedCategories(serviceCategories.map(c => c.id))}
+              className="border-white/20 text-white/70 hover:text-white"
+              data-testid="btn-expand-all"
+            >
+              Expand All
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setExpandedCategories([])}
+              className="border-white/20 text-white/70 hover:text-white"
+              data-testid="btn-collapse-all"
+            >
+              Collapse All
+            </Button>
+          </div>
+
+          {/* Tier Headers - Sticky */}
+          <div className="sticky top-16 z-20 bg-[#0a0a0f]/95 backdrop-blur-xl border-b border-white/10 mb-6 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+            <div className="max-w-[1600px] mx-auto">
+              <div className="grid grid-cols-5 gap-2 py-4">
+                <div className="text-white/40 text-sm font-medium flex items-center">
+                  Capability
+                </div>
+                {tiers.map((tier, index) => (
+                  <div 
+                    key={tier.id}
+                    className={`text-center p-3 rounded-xl border ${tier.borderColor} ${
+                      tier.featured ? 'bg-emerald-500/10' : 'bg-white/[0.02]'
+                    }`}
+                    data-testid={`tier-header-${tier.id}`}
+                  >
+                    {tier.featured && (
+                      <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider mb-1">
+                        Best Value
+                      </div>
+                    )}
+                    <div className={`text-xs font-semibold text-transparent bg-clip-text bg-gradient-to-r ${tier.gradient} uppercase tracking-wide mb-1`}>
+                      {tier.ribbon}
+                    </div>
+                    <h3 className="text-white font-bold text-sm md:text-base">{tier.name}</h3>
+                    <p className="text-white/50 text-xs">{tier.subtitle}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Service Categories */}
+          <motion.div
+            className="space-y-4"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {serviceCategories.map((category) => {
+              const isExpanded = expandedCategories.includes(category.id);
+              
+              return (
+                <motion.div
+                  key={category.id}
+                  className="rounded-xl border border-white/10 overflow-hidden"
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02))'
+                  }}
+                  variants={itemVariants}
+                  data-testid={`category-${category.id}`}
+                >
+                  {/* Category Header */}
+                  <button
+                    onClick={() => toggleCategory(category.id)}
+                    className="w-full flex items-center justify-between p-4 hover:bg-white/[0.02] transition-colors"
+                    data-testid={`btn-toggle-${category.id}`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-violet-500/20 flex items-center justify-center text-violet-400">
+                        {category.icon}
+                      </div>
+                      <span className="text-white font-bold text-lg">{category.title}</span>
+                      <span className="text-white/40 text-sm">({category.rows.length})</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {isExpanded ? (
+                        <ChevronUp className="w-5 h-5 text-white/40" />
+                      ) : (
+                        <ChevronDown className="w-5 h-5 text-white/40" />
+                      )}
+                    </div>
+                  </button>
+
+                  {/* Category Rows */}
+                  {isExpanded && (
+                    <div className="border-t border-white/10">
+                      {category.rows.map((row, rowIndex) => (
+                        <div
+                          key={rowIndex}
+                          className={`grid grid-cols-5 gap-2 p-3 ${
+                            rowIndex % 2 === 0 ? 'bg-white/[0.01]' : 'bg-transparent'
+                          } hover:bg-white/[0.03] transition-colors`}
+                          data-testid={`row-${category.id}-${rowIndex}`}
+                        >
+                          <div className="text-white/80 text-sm flex items-center">
+                            {row.capability}
+                          </div>
+                          <div className="text-center flex items-center justify-center">
+                            {renderCellValue(row.essentials, 0)}
+                          </div>
+                          <div className="text-center flex items-center justify-center">
+                            {renderCellValue(row.office, 1)}
+                          </div>
+                          <div className={`text-center flex items-center justify-center ${
+                            highlightUpgrades && row.business !== row.office ? 'bg-emerald-500/10 rounded-lg' : ''
+                          }`}>
+                            {renderCellValue(row.business, 2)}
+                          </div>
+                          <div className={`text-center flex items-center justify-center ${
+                            highlightUpgrades && row.enterprise !== row.business ? 'bg-amber-500/10 rounded-lg' : ''
+                          }`}>
+                            {renderCellValue(row.enterprise, 3)}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              );
+            })}
+          </motion.div>
+
+          {/* Pricing Note */}
+          <motion.div
+            className="mt-8 p-6 rounded-xl border border-white/10 bg-white/[0.02] text-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+          >
+            <p className="text-white/50 text-sm mb-4">
+              * Pricing shown is per-user/month. Minimum user counts and site fees may apply. 
+              Contact us for a custom quote based on your specific requirements.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                <Button 
+                  className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white"
+                  data-testid="btn-book-call"
+                >
+                  <Phone className="w-4 h-4 mr-2" />
+                  Book a Call
+                </Button>
+              </a>
+              <a href="/proactive-ecosystem-pricing">
+                <Button 
+                  variant="outline" 
+                  className="border-white/20 text-white hover:bg-white/10"
+                  data-testid="btn-compare-packages"
+                >
+                  Compare Packages
+                </Button>
+              </a>
+            </div>
+          </motion.div>
+        </div>
+      </main>
+
+      <DigeratiEnhancedFooterSection />
+    </div>
+  );
+};
+
+export default EcosystemPricing;

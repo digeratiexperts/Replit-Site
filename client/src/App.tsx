@@ -103,6 +103,7 @@ const QuoteConfirmation = lazy(() => import("@/pages/QuoteConfirmation"));
 const ThankYouSuccess = lazy(() => import("@/pages/ThankYouSuccess"));
 const SalesProcess = lazy(() => import("@/pages/portal/SalesProcess"));
 const ProActiveEcosystemPricing = lazy(() => import("@/pages/ProActiveEcosystemPricing"));
+const EcosystemPricing = lazy(() => import("@/pages/EcosystemPricing"));
 const EcosystemMatrixOfficial = lazy(() => import("@/pages/EcosystemMatrixOfficial"));
 const NetworkPlannerOfficial = lazy(() => import("@/pages/NetworkPlannerOfficial"));
 const Ebook = lazy(() => import("@/pages/resources/Ebook"));
@@ -607,6 +608,13 @@ function Router() {
       <Route path="/pricing" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <ProActiveEcosystemPricing />
+        </Suspense>
+      )} />
+      
+      {/* Ecosystem Pricing - Service Matrix */}
+      <Route path="/ecosystem-pricing" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <EcosystemPricing />
         </Suspense>
       )} />
       
