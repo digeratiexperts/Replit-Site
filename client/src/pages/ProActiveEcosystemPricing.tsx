@@ -8,8 +8,7 @@ import {
   Users, Building2, ChevronDown, ChevronUp, Shield, Server, 
   Lock, Mail, GraduationCap, Database, HardDrive, Monitor,
   FileText, Key, ArrowRight, Check, Calculator, Sparkles,
-  TrendingUp, DollarSign, Briefcase, FileCheck, Star, Bookmark,
-  ChevronRight, Layers
+  Briefcase, FileCheck, Star, Bookmark, Layers
 } from "lucide-react";
 import { FloatingParticles } from "@/components/graphics";
 import { useSEO } from "@/hooks/useSEO";
@@ -212,9 +211,8 @@ const ProActiveEcosystemPricing = () => {
 
   useSEO({
     title: 'ProActive Ecosystem Pricing - Managed IT & Security Plans',
-    description: 'Transparent pricing for managed IT services. Office, Business, and Enterprise plans with detailed cost breakdowns. Calculate your exact investment with our interactive pricing tool.',
+    description: 'Transparent pricing for managed IT services. Office, Business, and Enterprise plans with detailed service breakdowns. Calculate your exact investment with our interactive pricing tool.',
     canonical: '/proactive-ecosystem-pricing',
-    noIndex: true,
   });
 
   const calculateServiceCost = (serviceId: string, userCount: number, siteCount: number) => {
@@ -469,28 +467,6 @@ const ProActiveEcosystemPricing = () => {
                       )}
                     </div>
 
-                    {/* Quick Stats */}
-                    <div className="grid grid-cols-2 gap-2 mb-4">
-                      <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-                        <div className="flex items-center gap-1 text-white/40 text-[10px] uppercase">
-                          <TrendingUp className="w-3 h-3" />
-                          Margin
-                        </div>
-                        <div className={`font-bold text-sm ${plan.margin >= 30 ? 'text-emerald-400' : plan.margin >= 15 ? 'text-amber-400' : 'text-red-400'}`} data-testid={`text-margin-${plan.id}`}>
-                          {plan.margin.toFixed(1)}%
-                        </div>
-                      </div>
-                      <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-                        <div className="flex items-center gap-1 text-white/40 text-[10px] uppercase">
-                          <DollarSign className="w-3 h-3" />
-                          Profit
-                        </div>
-                        <div className={`font-bold text-sm ${plan.profit >= 0 ? 'text-emerald-400' : 'text-red-400'}`} data-testid={`text-profit-${plan.id}`}>
-                          ${Math.round(plan.profit).toLocaleString()}
-                        </div>
-                      </div>
-                    </div>
-
                     {/* Features */}
                     <ul className="space-y-1.5 mb-4">
                       {plan.bullets.slice(0, 4).map((bullet, i) => (
@@ -540,26 +516,12 @@ const ProActiveEcosystemPricing = () => {
                         className="mt-4 pt-4 border-t border-white/10"
                       >
                         <div className="space-y-2">
-                          {planServices.map((service) => {
-                            const cost = calculateServiceCost(service.id, plan.effectiveUsers, sites);
-                            return (
-                              <div key={service.id} className="flex items-center justify-between py-1.5 px-2 rounded-lg bg-white/[0.03]" data-testid={`row-service-${plan.id}-${service.id}`}>
-                                <div className="flex items-center gap-2">
-                                  <service.icon className="w-3.5 h-3.5 text-violet-400" />
-                                  <span className="text-white/70 text-[11px]" data-testid={`text-service-name-${service.id}`}>{service.name}</span>
-                                </div>
-                                <span className="text-white/50 text-[11px] font-mono" data-testid={`text-service-cost-${plan.id}-${service.id}`}>
-                                  ${cost.toFixed(2)}
-                                </span>
-                              </div>
-                            );
-                          })}
-                          <div className="flex items-center justify-between pt-2 border-t border-white/10">
-                            <span className="text-white/60 text-xs font-medium">Total Cost</span>
-                            <span className="text-white font-bold text-sm" data-testid={`text-total-cost-${plan.id}`}>
-                              ${plan.serviceCosts.toFixed(2)}
-                            </span>
-                          </div>
+                          {planServices.map((service) => (
+                            <div key={service.id} className="flex items-center gap-2 py-1.5 px-2 rounded-lg bg-white/[0.03]" data-testid={`row-service-${plan.id}-${service.id}`}>
+                              <service.icon className="w-3.5 h-3.5 text-violet-400" />
+                              <span className="text-white/70 text-[11px]" data-testid={`text-service-name-${service.id}`}>{service.name}</span>
+                            </div>
+                          ))}
                         </div>
                       </motion.div>
                     )}
@@ -703,26 +665,6 @@ const ProActiveEcosystemPricing = () => {
             </a>
           </motion.div>
 
-          {/* Legend */}
-          <motion.div
-            className="mt-8 flex flex-wrap justify-center gap-6 text-xs text-white/40"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-          >
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-emerald-400" />
-              <span>30%+ margin (healthy)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-amber-400" />
-              <span>15-30% margin (moderate)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-400" />
-              <span>&lt;15% margin (review pricing)</span>
-            </div>
-          </motion.div>
         </div>
       </main>
 
