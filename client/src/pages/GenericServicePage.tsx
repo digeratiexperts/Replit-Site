@@ -1,9 +1,10 @@
 import { PageTemplate } from "@/components/PageTemplate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, Phone, ArrowRight, Sparkles, Zap, AlertTriangle } from "lucide-react";
+import { CheckCircle, Phone, ArrowRight, Sparkles, Zap, AlertTriangle, Grid3X3 } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
 import { ServiceMatrix } from "@/components/ServiceMatrix";
+import { ServiceCapabilityMatrix } from "@/components/ServiceCapabilityMatrix";
 
 interface ServiceFeature {
   title: string;
@@ -27,6 +28,7 @@ interface GenericServicePageProps {
   stat?: ServiceStat;
   canonical?: string;
   recommendedTier?: "office" | "business" | "enterprise";
+  serviceKey?: string;
 }
 
 const FeatureCard = ({ 
@@ -70,7 +72,8 @@ export default function GenericServicePage({
   gradientColors = "from-violet-600 via-purple-600 to-fuchsia-600",
   stat,
   canonical,
-  recommendedTier
+  recommendedTier,
+  serviceKey
 }: GenericServicePageProps) {
   const prefersReducedMotion = useReducedMotion() ?? false;
 
@@ -197,7 +200,31 @@ export default function GenericServicePage({
           </motion.div>
         )}
 
-        {/* Pricing Matrix */}
+        {/* Service Capability Matrix */}
+        {serviceKey && (
+          <motion.div
+            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-600 to-purple-500 flex items-center justify-center">
+                <Grid3X3 className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-white">Service Tiers</h2>
+                <p className="text-white/60 text-sm">Compare what's included at each tier</p>
+              </div>
+            </div>
+            <ServiceCapabilityMatrix 
+              serviceKey={serviceKey}
+              highlightTier={recommendedTier}
+            />
+          </motion.div>
+        )}
+
+        {/* Pricing Plans */}
         <motion.div
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -217,11 +244,6 @@ export default function GenericServicePage({
             highlightTier={recommendedTier}
             showOnlyHighlighted={!!recommendedTier}
           />
-          <div className="mt-6 text-center">
-            <a href="/pricing" className="text-violet-400 hover:text-violet-300 underline text-sm">
-              View all pricing tiers and full service matrix →
-            </a>
-          </div>
         </motion.div>
 
         {/* CTA Section */}

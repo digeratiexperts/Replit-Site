@@ -148,7 +148,7 @@ function Router() {
       {Object.entries(servicePageData).map(([key, data]) => (
         <Route key={key} path={`/solutions/${key}`} component={() => (
           <Suspense fallback={<PageLoadingSkeleton />}>
-            <GenericServicePage {...data} />
+            <GenericServicePage {...data} serviceKey={key} />
           </Suspense>
         )} />
       ))}

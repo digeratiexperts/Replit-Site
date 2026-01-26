@@ -270,29 +270,28 @@ const EcosystemPricing = () => {
           {/* Controls */}
           <div className="flex flex-wrap justify-center gap-3 mb-8">
             <Button
-              variant={highlightUpgrades ? "default" : "outline"}
               size="sm"
               onClick={() => setHighlightUpgrades(!highlightUpgrades)}
-              className={highlightUpgrades ? "bg-violet-600 hover:bg-violet-700" : "border-white/20 text-white/70 hover:text-white"}
+              className={highlightUpgrades 
+                ? "bg-violet-600 hover:bg-violet-700 text-white" 
+                : "bg-white/10 border border-white/20 text-white hover:bg-white/20"}
               data-testid="btn-highlight-upgrades"
             >
               <Star className="w-4 h-4 mr-2" />
               Highlight upgrades
             </Button>
             <Button
-              variant="outline"
               size="sm"
               onClick={() => setExpandedCategories(serviceCategories.map(c => c.id))}
-              className="border-white/20 text-white/70 hover:text-white"
+              className="bg-white/10 border border-white/20 text-white hover:bg-white/20"
               data-testid="btn-expand-all"
             >
               Expand All
             </Button>
             <Button
-              variant="outline"
               size="sm"
               onClick={() => setExpandedCategories([])}
-              className="border-white/20 text-white/70 hover:text-white"
+              className="bg-white/10 border border-white/20 text-white hover:bg-white/20"
               data-testid="btn-collapse-all"
             >
               Collapse All
@@ -434,8 +433,7 @@ const EcosystemPricing = () => {
               </a>
               <a href="/proactive-ecosystem-pricing">
                 <Button 
-                  variant="outline" 
-                  className="border-white/20 text-white hover:bg-white/10"
+                  className="bg-white/10 border border-white/20 text-white hover:bg-white/20"
                   data-testid="btn-compare-packages"
                 >
                   Compare Packages
