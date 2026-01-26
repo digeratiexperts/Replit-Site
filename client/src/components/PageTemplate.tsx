@@ -51,15 +51,33 @@ const FloatingOrbs = ({ prefersReducedMotion }: { prefersReducedMotion: boolean 
 );
 
 const GridPattern = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
+  <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-15">
     <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
-          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-white/30" />
+          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-white/40" />
         </pattern>
       </defs>
       <rect width="100%" height="100%" fill="url(#grid-pattern)" />
     </svg>
+  </div>
+);
+
+const NoiseTexture = () => (
+  <div 
+    className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay"
+    style={{
+      backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+      backgroundRepeat: 'repeat',
+      backgroundSize: '128px 128px'
+    }}
+  />
+);
+
+const GlowEffects = () => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="absolute top-0 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
+    <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-violet-500/20 rounded-full blur-3xl" />
   </div>
 );
 
@@ -112,11 +130,23 @@ export const PageTemplate = ({
       
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        {/* Gradient Background */}
+        {/* Gradient Background - Enhanced with multiple layers */}
         <div className={`absolute inset-0 bg-gradient-to-br ${gradientColors}`} />
         
+        {/* Secondary diagonal gradient for depth */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-black/30 via-transparent to-white/5" />
+        
         {/* Mesh overlay for depth */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/40" />
+        
+        {/* Radial highlight at top */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-gradient-radial from-white/10 via-transparent to-transparent" />
+        
+        {/* Noise texture for premium feel */}
+        <NoiseTexture />
+        
+        {/* Glow effects */}
+        <GlowEffects />
         
         {/* Grid Pattern */}
         <GridPattern />

@@ -19,7 +19,7 @@ export const servicePageData = {
       "Compliance optional: add modules only when needed",
       "Monthly service summaries and quarterly business reviews available"
     ],
-    gradientColors: "from-blue-600 via-purple-600 to-indigo-600",
+    gradientColors: "from-violet-600 via-purple-600 to-indigo-600",
     recommendedTier: "office" as const
   },
   'managed-it-support': {
@@ -42,7 +42,7 @@ export const servicePageData = {
       "Stack-native support: we built these tools",
       "Help + education: users learn safer behaviors"
     ],
-    gradientColors: "from-indigo-600 via-blue-600 to-cyan-600",
+    gradientColors: "from-violet-600 via-indigo-600 to-purple-600",
     recommendedTier: "office" as const
   },
   'managed-workplace': {
@@ -65,7 +65,7 @@ export const servicePageData = {
       "Zero-Trust identity posture at every login",
       "Automated offboarding: revoked access in minutes, not hours"
     ],
-    gradientColors: "from-emerald-600 via-teal-600 to-cyan-600",
+    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
     recommendedTier: "office" as const
   },
   'cloud-backup': {
@@ -88,7 +88,7 @@ export const servicePageData = {
       "Compliance-grade encryption audit trail",
       "Peace of mind: tested backups, not just 'set and forget'"
     ],
-    gradientColors: "from-blue-600 via-cyan-600 to-teal-600",
+    gradientColors: "from-indigo-600 via-violet-600 to-purple-600",
     stat: { value: "54%", label: "used backups to restore encrypted data (lowest in 6 years)", source: "Sophos 2025" },
     recommendedTier: "office" as const
   },
@@ -112,7 +112,7 @@ export const servicePageData = {
       "Reduced support tickets from malware/ransomware",
       "Lower breach risk from insider mistakes"
     ],
-    gradientColors: "from-amber-600 via-orange-600 to-red-600",
+    gradientColors: "from-purple-600 via-violet-600 to-rose-600",
     stat: { value: "60%", label: "of breaches involve the human element", source: "Verizon DBIR 2025" },
     recommendedTier: "business" as const
   },
@@ -159,7 +159,7 @@ export const servicePageData = {
       "Compliance-ready incident documentation",
       "24/7 detection + real response, not 'good luck with alerts'"
     ],
-    gradientColors: "from-red-700 via-rose-700 to-pink-700",
+    gradientColors: "from-violet-700 via-purple-700 to-rose-700",
     stat: { value: "88%", label: "of SMB breaches involve ransomware", source: "Verizon DBIR 2025" },
     recommendedTier: "business" as const
   },
@@ -207,7 +207,7 @@ export const servicePageData = {
       "Compliance-ready DR documentation",
       "Peace of mind: proven recovery capabilities"
     ],
-    gradientColors: "from-cyan-600 via-blue-600 to-indigo-600",
+    gradientColors: "from-indigo-600 via-purple-600 to-violet-600",
     recommendedTier: "enterprise" as const
   },
   'vcio-strategy': {
@@ -230,7 +230,7 @@ export const servicePageData = {
       "Reduced surprise costs and projects",
       "IT becomes a strategic business partner, not a cost center"
     ],
-    gradientColors: "from-emerald-600 via-green-600 to-teal-600",
+    gradientColors: "from-violet-600 via-emerald-600 to-teal-600",
     recommendedTier: "enterprise" as const
   },
   'data-encryption': {
@@ -253,7 +253,7 @@ export const servicePageData = {
       "Default for healthcare, finance, and legal verticals",
       "Works alongside endpoint security, not instead of it"
     ],
-    gradientColors: "from-indigo-600 via-blue-600 to-cyan-600",
+    gradientColors: "from-violet-600 via-indigo-600 to-purple-600",
     recommendedTier: "business" as const
   },
   'compliance-reports': {
@@ -299,7 +299,7 @@ export const servicePageData = {
       "Measurable risk reduction over time",
       "Compliance readiness score when modules active"
     ],
-    gradientColors: "from-red-600 via-pink-600 to-rose-600",
+    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
     recommendedTier: "enterprise" as const
   }
 };
@@ -321,7 +321,7 @@ export const industryPageData = {
       "Backup and recovery",
       "Cybersecurity insurance support"
     ],
-    gradientColors: "from-green-700 via-emerald-700 to-teal-700"
+    gradientColors: "from-violet-600 via-emerald-600 to-teal-600"
   },
   'real-estate': {
     title: "IT Solutions for Real Estate",
@@ -339,7 +339,7 @@ export const industryPageData = {
       "RESPA compliance support",
       "Transaction monitoring"
     ],
-    gradientColors: "from-indigo-700 via-blue-700 to-cyan-700"
+    gradientColors: "from-purple-600 via-indigo-600 to-violet-600"
   },
   'nonprofits': {
     title: "IT Solutions for Nonprofits",
@@ -357,7 +357,7 @@ export const industryPageData = {
       "Fundraising platform support",
       "Budget-friendly solutions"
     ],
-    gradientColors: "from-purple-600 via-fuchsia-600 to-pink-600"
+    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600"
   }
 };
 
@@ -378,7 +378,7 @@ export const resourcePageData = {
       "Compliance updates",
       "Technology trends"
     ],
-    gradientColors: "from-slate-700 via-gray-700 to-zinc-700"
+    gradientColors: "from-violet-700 via-purple-700 to-indigo-700"
   },
   'videos': {
     title: "Videos & Webinars",
@@ -414,7 +414,7 @@ export const resourcePageData = {
       "Benchmark against peers",
       "Detailed report"
     ],
-    gradientColors: "from-red-600 via-orange-600 to-amber-600"
+    gradientColors: "from-violet-600 via-rose-600 to-orange-600"
   },
   'datasheets': {
     title: "Datasheets & Documentation",
@@ -432,7 +432,7 @@ export const resourcePageData = {
       "Compliance evidence",
       "Integration guides"
     ],
-    gradientColors: "from-gray-600 via-slate-600 to-zinc-600"
+    gradientColors: "from-purple-700 via-violet-700 to-indigo-700"
   }
 };
 
@@ -453,7 +453,7 @@ export const supportPageData = {
       "Multi-monitor support",
       "File transfer capability"
     ],
-    gradientColors: "from-blue-600 via-indigo-600 to-violet-600"
+    gradientColors: "from-violet-600 via-indigo-600 to-purple-600"
   },
   'pay-invoice': {
     title: "Pay Invoice",
@@ -471,7 +471,7 @@ export const supportPageData = {
       "Payment history",
       "Secure portal access"
     ],
-    gradientColors: "from-green-600 via-emerald-600 to-teal-600"
+    gradientColors: "from-violet-600 via-emerald-600 to-teal-600"
   },
   'knowledge-base': {
     title: "Knowledge Base",
@@ -489,7 +489,7 @@ export const supportPageData = {
       "Video tutorials",
       "Printable guides"
     ],
-    gradientColors: "from-cyan-600 via-sky-600 to-blue-600"
+    gradientColors: "from-purple-600 via-violet-600 to-indigo-600"
   },
   'system-status': {
     title: "System Status",
@@ -507,6 +507,6 @@ export const supportPageData = {
       "Uptime reports",
       "SLA tracking"
     ],
-    gradientColors: "from-emerald-600 via-green-600 to-lime-600"
+    gradientColors: "from-violet-600 via-emerald-600 to-green-600"
   }
 };
