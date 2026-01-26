@@ -74,8 +74,21 @@ export default function ManagedITSupport() {
 
         {/* Pricing Matrix */}
         <div className="py-12">
-          <h2 className="text-3xl font-bold mb-8 text-white text-center">Service Comparison Matrix</h2>
-          <ServiceMatrix variant="full" showCTA={true} />
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-white mb-2 text-center">Recommended Plan for Managed IT Support</h2>
+            <p className="text-white/60 text-center">This service is included in the following plan</p>
+          </div>
+          <ServiceMatrix 
+            variant="full" 
+            showCTA={true}
+            highlightTier="office"
+            showOnlyHighlighted={true}
+          />
+          <div className="mt-6 text-center">
+            <a href="/pricing" className="text-violet-400 hover:text-violet-300 underline text-sm">
+              View all pricing tiers and full service matrix →
+            </a>
+          </div>
         </div>
 
         {/* CTA */}
