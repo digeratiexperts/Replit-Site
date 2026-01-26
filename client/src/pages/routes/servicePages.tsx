@@ -4,12 +4,12 @@ export const servicePageData = {
     subtitle: "Complete IT ownership for small offices—security built in",
     description: "The Office Package is your complete IT solution for small offices (5-25 users) with no internal IT team. We own your day-to-day IT outcomes: helpdesk support, continuous maintenance, security baseline, backup, and vendor coordination. You get enterprise-level protection without the enterprise cost—all for one predictable monthly price.",
     features: [
-      { title: "Managed Helpdesk & Support", description: "Zoho ticketing + remote/onsite support with response SLAs and vendor coordination" },
-      { title: "Core Security Baseline", description: "Endpoint EDR (Coro), email security (Mimecast), MFA enforcement, and basic cloud security" },
-      { title: "Identity & Access Management", description: "JumpCloud IAM, SSO, MFA, and automated provisioning/deprovisioning for users and apps" },
+      { title: "Managed Helpdesk & Support", description: "DE ticketing + remote/onsite support with response SLAs and vendor coordination" },
+      { title: "Core Security Baseline", description: "Endpoint EDR, email security, MFA enforcement, and basic cloud security" },
+      { title: "Identity & Access Management", description: "DE IAM with SSO, MFA, and automated provisioning/deprovisioning for users and apps" },
       { title: "Continuous Maintenance", description: "Proactive patching, hardening, updates, and least-privilege enforcement" },
-      { title: "Cloud Backup & Recovery", description: "MSP360 backups with Wasabi storage, verified recovery testing, and restore readiness" },
-      { title: "Documentation & Visibility", description: "Hudu inventory, network and SaaS app maps, and 'known good config' snapshots" }
+      { title: "Cloud Backup & Recovery", description: "DE cloud backups with secure storage, verified recovery testing, and restore readiness" },
+      { title: "Documentation & Visibility", description: "DE inventory, network and SaaS app maps, and 'known good config' snapshots" }
     ],
     benefits: [
       "Predictable monthly costs with no surprises",
@@ -25,7 +25,7 @@ export const servicePageData = {
   'managed-it-support': {
     title: "Managed IT Support",
     subtitle: "Fast, proactive help anchored to the DE stack",
-    description: "Managed IT Support is not generic helpdesk—it's support built on our proven stack (JumpCloud, Coro, MSP360). We handle remote troubleshooting, endpoint remediation, user onboarding, SaaS provisioning, and device basics. Support for everything you've sold with DE; out-of-scope items are escalated or handled via education.",
+    description: "Managed IT Support is not generic helpdesk—it's support built on our proven DE stack. We handle remote troubleshooting, endpoint remediation, user onboarding, SaaS provisioning, and device basics. Support for everything you've deployed with DE; out-of-scope items are escalated or handled via education.",
     features: [
       { title: "Service Desk Coverage", description: "Fast response to user issues with clear resolution pathways and SLAs" },
       { title: "Remote Troubleshooting", description: "Secure remote access for quick diagnosis and remediation of endpoint issues" },
@@ -50,11 +50,11 @@ export const servicePageData = {
     subtitle: "End-to-end employee digital experience management",
     description: "Managed Workplace is your digital employee lifecycle engine. We manage identity, apps, devices, email, voice, and workflow automation—everything employees need to work productively and securely. New hires productive in one day, not a week. Your environment stays standardized, secure, and compliant.",
     features: [
-      { title: "Identity Lifecycle Management", description: "JumpCloud cloud directory with SSO, MFA, conditional access, and automated provisioning to all SaaS" },
-      { title: "Business App Management", description: "SaaS licensing (Pax8), app onboarding, role mapping, shadow IT discovery, and access reviews" },
+      { title: "Identity Lifecycle Management", description: "DE cloud directory with SSO, MFA, conditional access, and automated provisioning to all SaaS" },
+      { title: "Business App Management", description: "SaaS licensing management, app onboarding, role mapping, shadow IT discovery, and access reviews" },
       { title: "Email & Collaboration", description: "M365 or Google Workspace admin, Teams/Drive structure, message hygiene, and retention policies" },
       { title: "Voice & Unified Communications", description: "Teams Voice, Zoom UCaaS, or VoIP integration; conference room provisioning and device enrollment" },
-      { title: "Device & Mobile Management", description: "Windows/macOS baseline policies via JumpCloud; MDM for iOS/Android (Jamf integration available)" },
+      { title: "Device & Mobile Management", description: "Windows/macOS baseline policies via DE IAM; MDM for iOS/Android available" },
       { title: "HR-to-IAM Workflows", description: "Onboarding automation: HR system → identity → device → SaaS app provisioning" }
     ],
     benefits: [
@@ -73,10 +73,10 @@ export const servicePageData = {
     subtitle: "Baseline data protection with verified recovery",
     description: "Cloud Backup is your minimum continuity layer. Automated encryption-at-rest and in-transit protection for endpoints, servers, and cloud data (M365/Google). We verify monthly that restores actually work—because a backup that doesn't restore is worthless.",
     features: [
-      { title: "Automated Encrypted Backups", description: "MSP360 continuous backup of endpoints, servers, and M365/Google data with AES-256 encryption" },
+      { title: "Automated Encrypted Backups", description: "DE continuous backup of endpoints, servers, and M365/Google data with AES-256 encryption" },
       { title: "Backup Health Monitoring", description: "Automated monitoring with alerts when backup jobs fail or fall behind" },
       { title: "Verified Restore Testing", description: "Monthly restore verification to confirm backups are recoverable and complete" },
-      { title: "Wasabi Cloud Storage", description: "Cost-effective, secure cloud storage with 11 nines durability guarantee" },
+      { title: "DE Cloud Storage", description: "Cost-effective, secure cloud storage with enterprise-grade durability guarantee" },
       { title: "Exception Reporting", description: "Clear visibility on backup health and any issues requiring attention" },
       { title: "Ransomware Defense", description: "Immutable backup copies protect against ransomware encryption" }
     ],
@@ -97,7 +97,7 @@ export const servicePageData = {
     subtitle: "Turn staff into a security layer, not a liability",
     description: "Security Awareness is human-risk hardening. Your employees are your first line of defense—or your biggest vulnerability. We train, test, and coach your team so people stop being the weakest link. Phishing simulations, targeted campaigns, and ongoing coaching reduce incidents and change culture.",
     features: [
-      { title: "Video Training Campaigns", description: "Ninjio-based lessons on phishing, malware, data handling, and real threats your org faces" },
+      { title: "Video Training Campaigns", description: "Engaging micro-learning lessons on phishing, malware, data handling, and real threats your org faces" },
       { title: "Phishing Simulations", description: "Regular simulated phishing attacks with automatic remedial training for repeat offenders" },
       { title: "Risk Scoring & Metrics", description: "Department-level risk scoring, participation rates, and phish-failure trend analysis" },
       { title: "Executive Reporting", description: "Board-ready reporting on security culture maturity and employee readiness" },
@@ -121,7 +121,7 @@ export const servicePageData = {
     subtitle: "Augment your internal IT team with DE expertise and stack",
     description: "Already have internal IT? Co-Managed IT partners with your team to fill skill gaps, provide 24/7 coverage, and add specialized muscle. You keep control; we provide stack, automation, security maturity, and Tier 2/3 escalation. Avoid burnout and tap into deep expertise.",
     features: [
-      { title: "Shared Tooling Platform", description: "Access to JumpCloud, Coro, MSP360, and full visibility into your environment" },
+      { title: "Shared Tooling Platform", description: "Access to DE security and management platform with full visibility into your environment" },
       { title: "Responsibility Matrix", description: "Clear SOW defining who owns onboarding, patching, vendor comms, and incidents" },
       { title: "Tier 2/3 Escalation", description: "Expert escalation for complex issues, security incidents, and strategic decisions" },
       { title: "24/7 Monitoring & Response", description: "After-hours and weekend coverage so your team doesn't burn out" },
@@ -145,11 +145,11 @@ export const servicePageData = {
     description: "Threat Detection & Response is detection + triage + containment + guided recovery. We monitor endpoints, cloud apps, email, and network events 24/7 for threats. When we see something, we investigate, contain (isolate endpoints, reset credentials), and walk you through recovery. Not just alerts—real response.",
     features: [
       { title: "24/7 Telemetry Monitoring", description: "Real-time monitoring of endpoints, cloud apps, email, and gateway security events" },
-      { title: "Advanced Endpoint Detection", description: "Coro.net EDR detects suspicious behavior, lateral movement, and advanced techniques" },
+      { title: "Advanced Endpoint Detection", description: "DE EDR detects suspicious behavior, lateral movement, and advanced techniques" },
       { title: "Automated Containment", description: "Safe automated actions like endpoint isolation, credential reset, and session termination" },
-      { title: "Incident Runbooks", description: "Documented response playbooks maintained in Hudu, customized to your environment" },
+      { title: "Incident Runbooks", description: "Documented response playbooks maintained in DE documentation platform, customized to your environment" },
       { title: "Monthly Threat Reports", description: "Trend analysis, incident summaries, and 'mean time to contain' metrics" },
-      { title: "Wazuh SIEM Integration", description: "Deeper log correlation and retention for complex organizations" }
+      { title: "DE SIEM Integration", description: "Deeper log correlation and retention for complex organizations" }
     ],
     benefits: [
       "Real-time threat detection 24/7/365",
@@ -170,7 +170,7 @@ export const servicePageData = {
     features: [
       { title: "Threat Hunting Cycles", description: "Proactive investigation for advanced threats, unusual patterns, and insider risk" },
       { title: "Policy Tuning & Optimization", description: "Continuous refinement of EDR, email, cloud, and access control policies based on threats and trends" },
-      { title: "Log Correlation & Analytics", description: "Wazuh SIEM with deeper telemetry retention for pattern detection and forensics" },
+      { title: "Log Correlation & Analytics", description: "DE SIEM with deeper telemetry retention for pattern detection and forensics" },
       { title: "Security Change Management", description: "Documented policy changes with rationale and testing before deployment" },
       { title: "SOC Monthly Report", description: "Hunt findings, policy changes, incident trends, and audit-support packets" },
       { title: "Escalation & IR Coordination", description: "Full incident response coordination and external comms when needed" }
@@ -193,7 +193,7 @@ export const servicePageData = {
     stat: { value: "$1.53M", label: "average ransomware recovery cost (excluding ransom)", source: "Sophos 2025" },
     features: [
       { title: "Guaranteed RTO/RTO Targets", description: "Committed recovery time and data-loss objectives with SLA backing" },
-      { title: "Image-Based Backups", description: "MSP360 Server/VM features for full-system restore, not file-by-file recovery" },
+      { title: "Image-Based Backups", description: "DE Server/VM backup features for full-system restore, not file-by-file recovery" },
       { title: "Scheduled Restore Tests", description: "Regular failover drills to confirm your systems can actually be restored" },
       { title: "DR Runbooks & Tabletop Exercises", description: "Documented recovery procedures with periodic team exercises" },
       { title: "Priority Restore Paths", description: "Defined restore sequencing so critical systems come back first" },
@@ -236,7 +236,7 @@ export const servicePageData = {
   'data-encryption': {
     title: "Data Encryption & Control",
     subtitle: "Stop data leakage and risky browsing at the source",
-    description: "Data Encryption & Control uses browser-layer security (Atakama) to protect data even if endpoints are compromised. DLP policies, anti-phishing, DNS filtering, and secure browsing controls at the gateway. Data governance happens inside the browser—the last place hackers look.",
+    description: "Data Encryption & Control uses browser-layer security to protect data even if endpoints are compromised. DLP policies, anti-phishing, DNS filtering, and secure browsing controls at the gateway. Data governance happens inside the browser—the last place hackers look.",
     features: [
       { title: "Browser-Layer DLP", description: "Stop mass downloads, clipboard theft, and data exfiltration at the browser boundary" },
       { title: "Anti-Phishing & Anti-Malware", description: "In-browser threat detection and blocking before users click malicious links" },
@@ -284,8 +284,8 @@ export const servicePageData = {
     subtitle: "Comprehensive managed security—not a pile of tools",
     description: "Unified Security Posture is DE's highest security promise: identity, endpoint, cloud, email, network, and incident response fully integrated and continuously governed. Single pane of glass. One cohesive security strategy, not a collection of disconnected tools.",
     features: [
-      { title: "IAM Spine + Zero Trust", description: "JumpCloud Prime identity with Zero Trust enforcement across all access" },
-      { title: "Integrated Endpoint-Cloud-Email Security", description: "Coro.net unified threat detection across all surfaces aligned to policy" },
+      { title: "IAM Spine + Zero Trust", description: "DE Prime identity with Zero Trust enforcement across all access" },
+      { title: "Integrated Endpoint-Cloud-Email Security", description: "DE unified threat detection across all surfaces aligned to policy" },
       { title: "Security Awareness Tied to Risk", description: "Training + phishing simulations linked to actual threat trends and risk scores" },
       { title: "Backup/BCDR Linked to IR", description: "Recovery procedures integrated with incident response playbooks" },
       { title: "Drift Detection & Correction", description: "Continuous monitoring for configuration drift with automated correction" },

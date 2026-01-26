@@ -27,17 +27,17 @@ const agents: Agent[] = [
     supportedOS: ["Windows 10", "Windows 11"],
   },
   {
-    name: "JumpCloud Agent",
+    name: "DE Identity Agent",
     version: "2.5.1",
-    downloadUrl: "https://agents.jumpcloud.com/windows-installer.exe",
-    description: "JumpCloud device management and user authentication",
+    downloadUrl: "#",
+    description: "Device management and user authentication",
     features: ["User Management", "MDM", "MFA", "System Inventory"],
     supportedOS: ["Windows 10", "Windows 11", "macOS", "Linux"],
   },
   {
-    name: "Coro.net EDR Agent",
+    name: "DE Endpoint Protection Agent",
     version: "3.2.0",
-    downloadUrl: "https://agents.coro.net/edr-windows.exe",
+    downloadUrl: "#",
     description: "Endpoint Detection and Response (EDR)",
     features: [
       "Endpoint Detection",
@@ -48,9 +48,9 @@ const agents: Agent[] = [
     supportedOS: ["Windows 10", "Windows 11"],
   },
   {
-    name: "BlackPoint Cyber Agent",
+    name: "DE MDR Agent",
     version: "1.8.5",
-    downloadUrl: "https://agents.blackpointcyber.com/bpcy-agent.exe",
+    downloadUrl: "#",
     description: "Behavioral analytics and anomaly detection",
     features: [
       "Behavioral Analysis",

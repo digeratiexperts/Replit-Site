@@ -117,21 +117,21 @@ const matrixCategories: MatrixCategory[] = [
 ];
 
 const services: Service[] = [
-  { id: "jumpcloud", name: "JumpCloud IAM (SSO/MFA/Device)", icon: Key, unit: "user/mo", cost: 21.6, qtyPerUser: 1, category: "identity" },
-  { id: "blackpoint", name: "Blackpoint MDR/XDR", icon: Shield, unit: "user/mo", cost: 5, qtyPerUser: 1, category: "mdr" },
-  { id: "coro", name: "Coro (EDR+Email+Cloud)", icon: Monitor, unit: "user/mo", cost: 20, qtyPerUser: 1, category: "edr" },
-  { id: "emailsec", name: "Email Security", icon: Mail, unit: "user/mo", cost: 3, qtyPerUser: 1, category: "security" },
-  { id: "ninjio", name: "Security Awareness Training", icon: GraduationCap, unit: "user/mo", cost: 1.5, qtyPerUser: 1, category: "training" },
-  { id: "msp360_m365", name: "MSP360 SaaS Backup (M365/GWS)", icon: Database, unit: "user/mo", cost: 1.10, qtyPerUser: 1, category: "backup" },
-  { id: "wasabi", name: "Wasabi Cloud Storage", icon: HardDrive, unit: "TB/mo", cost: 6.99, qtyPerUser: 0.10, category: "storage" },
-  { id: "controlone_user", name: "ControlOne Endpoint", icon: Monitor, unit: "user/mo", cost: 10, qtyPerUser: 1, category: "rmm" },
-  { id: "controlone_org", name: "ControlOne Cloud Instance", icon: Server, unit: "org/mo", cost: 49, qtyPerUser: 0, category: "rmm" },
-  { id: "controlone_site", name: "ControlOne Site License + HW", icon: Building2, unit: "site/mo", cost: 100, qtyPerUser: 0, category: "rmm" },
-  { id: "wazuh", name: "Wazuh SIEM (self-hosted)", icon: Shield, unit: "org/mo", cost: 0, qtyPerUser: 0, category: "monitoring" },
-  { id: "hudu", name: "Hudu IT Documentation", icon: FileText, unit: "org/mo", cost: 30, qtyPerUser: 0, category: "compliance" },
-  { id: "msp360_connect", name: "MSP360 Connect (admin)", icon: Server, unit: "admin/mo", cost: 34.99, qtyPerUser: 0.05, category: "rmm" },
-  { id: "msp360_rmm", name: "MSP360 RMM (admin)", icon: Monitor, unit: "admin/mo", cost: 59.99, qtyPerUser: 0.05, category: "rmm" },
-  { id: "atakama", name: "Atakama Passwordless/File Encryption", icon: Lock, unit: "user/mo", cost: 0, qtyPerUser: 1, category: "security" },
+  { id: "iam", name: "DE Identity & Access Management (SSO/MFA/Device)", icon: Key, unit: "user/mo", cost: 21.6, qtyPerUser: 1, category: "identity" },
+  { id: "mdr", name: "DE 24/7 Managed Detection & Response", icon: Shield, unit: "user/mo", cost: 5, qtyPerUser: 1, category: "mdr" },
+  { id: "edr", name: "DE Endpoint Protection (EDR+Email+Cloud)", icon: Monitor, unit: "user/mo", cost: 20, qtyPerUser: 1, category: "edr" },
+  { id: "emailsec", name: "DE Email Security", icon: Mail, unit: "user/mo", cost: 3, qtyPerUser: 1, category: "security" },
+  { id: "training", name: "DE Security Awareness Training", icon: GraduationCap, unit: "user/mo", cost: 1.5, qtyPerUser: 1, category: "training" },
+  { id: "saas_backup", name: "DE SaaS Backup (M365/Google)", icon: Database, unit: "user/mo", cost: 1.10, qtyPerUser: 1, category: "backup" },
+  { id: "cloud_storage", name: "DE Cloud Storage", icon: HardDrive, unit: "TB/mo", cost: 6.99, qtyPerUser: 0.10, category: "storage" },
+  { id: "endpoint_mgmt", name: "DE Endpoint Management", icon: Monitor, unit: "user/mo", cost: 10, qtyPerUser: 1, category: "rmm" },
+  { id: "cloud_instance", name: "DE Cloud Management Instance", icon: Server, unit: "org/mo", cost: 49, qtyPerUser: 0, category: "rmm" },
+  { id: "site_license", name: "DE Site License + Hardware", icon: Building2, unit: "site/mo", cost: 100, qtyPerUser: 0, category: "rmm" },
+  { id: "siem", name: "DE SIEM Monitoring", icon: Shield, unit: "org/mo", cost: 0, qtyPerUser: 0, category: "monitoring" },
+  { id: "documentation", name: "DE IT Documentation", icon: FileText, unit: "org/mo", cost: 30, qtyPerUser: 0, category: "compliance" },
+  { id: "remote_connect", name: "DE Remote Connect", icon: Server, unit: "admin/mo", cost: 34.99, qtyPerUser: 0.05, category: "rmm" },
+  { id: "rmm", name: "DE Remote Monitoring & Management", icon: Monitor, unit: "admin/mo", cost: 59.99, qtyPerUser: 0.05, category: "rmm" },
+  { id: "encryption", name: "DE Passwordless & File Encryption", icon: Lock, unit: "user/mo", cost: 0, qtyPerUser: 1, category: "security" },
 ];
 
 const plans: Plan[] = [
@@ -146,7 +146,7 @@ const plans: Plan[] = [
     bullets: ["Agent Deployment", "Patch Management", "Security Alerts", "Basic XDR (up to 3 devices)", "Monthly Reports", "On-demand Ticketing"],
     gradient: "from-slate-500 to-gray-600",
     borderColor: "border-slate-500/30",
-    services: ["msp360_rmm", "msp360_connect", "coro"]
+    services: ["rmm", "remote_connect", "edr"]
   },
   {
     id: "office_custom",
@@ -159,7 +159,7 @@ const plans: Plan[] = [
     bullets: ["Core Platform", "Endpoint Security", "Backup Foundation", "Human Firewall Training", "Business-hours Helpdesk", "Monthly Reviews", "Choose ONE: MDR / Passwordless / Continuity / Cloud Gateway"],
     gradient: "from-violet-500 to-purple-500",
     borderColor: "border-violet-500/30",
-    services: ["jumpcloud", "coro", "msp360_m365", "wasabi", "ninjio", "msp360_connect", "msp360_rmm", "hudu"]
+    services: ["iam", "edr", "saas_backup", "cloud_storage", "training", "remote_connect", "rmm", "documentation"]
   },
   {
     id: "business_managed",
@@ -169,10 +169,10 @@ const plans: Plan[] = [
     minUsers: 5,
     siteFee: 0,
     minMonthly: 1200,
-    bullets: ["CloudShield SASE", "IAM (MFA/SSO)", "XDR + 24/7 MDR", "Email Security", "Continuity (failover)", "Security Training", "Passwordless (Atakama)", "Help Desk Support", "Automation", "Quarterly DR Validation"],
+    bullets: ["CloudShield SASE", "IAM (MFA/SSO)", "XDR + 24/7 MDR", "Email Security", "Continuity (failover)", "Security Training", "Passwordless Encryption", "Help Desk Support", "Automation", "Quarterly DR Validation"],
     gradient: "from-purple-500 to-violet-500",
     borderColor: "border-purple-500/30",
-    services: ["controlone_user", "controlone_org", "jumpcloud", "blackpoint", "emailsec", "msp360_m365", "wasabi", "ninjio", "wazuh", "hudu"],
+    services: ["endpoint_mgmt", "cloud_instance", "iam", "mdr", "emailsec", "saas_backup", "cloud_storage", "training", "siem", "documentation"],
     popular: true
   },
   {
@@ -186,7 +186,7 @@ const plans: Plan[] = [
     bullets: ["SASE Overlay Network", "Includes Managed Security Stack", "Legacy Hardware Support", "Network Segmentation", "Lifecycle Planning", "Network Diagrams & Addressing", "Upgrade Path Planning"],
     gradient: "from-cyan-500 to-blue-500",
     borderColor: "border-cyan-500/30",
-    services: ["controlone_user", "controlone_org", "controlone_site", "jumpcloud", "blackpoint", "emailsec", "msp360_m365", "wasabi", "ninjio", "wazuh", "hudu"]
+    services: ["endpoint_mgmt", "cloud_instance", "site_license", "iam", "mdr", "emailsec", "saas_backup", "cloud_storage", "training", "siem", "documentation"]
   },
   {
     id: "enterprise_compliance",
@@ -199,7 +199,7 @@ const plans: Plan[] = [
     bullets: ["Includes Network Integration", "HIPAA/GDPR/FTC Compliance", "Virtual CISO", "Annual Penetration Test", "Live SOC & Forensic Logging", "Incident Response Plan", "DLP & Vendor Review", "Insurance Documentation"],
     gradient: "from-fuchsia-500 to-pink-500",
     borderColor: "border-fuchsia-500/30",
-    services: ["controlone_user", "controlone_org", "controlone_site", "jumpcloud", "blackpoint", "emailsec", "msp360_m365", "wasabi", "ninjio", "wazuh", "hudu", "atakama"]
+    services: ["endpoint_mgmt", "cloud_instance", "site_license", "iam", "mdr", "emailsec", "saas_backup", "cloud_storage", "training", "siem", "documentation", "encryption"]
   }
 ];
 
@@ -219,9 +219,9 @@ const ProActiveEcosystemPricing = () => {
     const service = services.find(s => s.id === serviceId);
     if (!service) return 0;
     
-    if (serviceId === "controlone_org" || serviceId === "wazuh" || serviceId === "hudu") return service.cost;
-    if (serviceId === "controlone_site") return siteCount * service.cost;
-    if (serviceId === "wasabi") return userCount * service.qtyPerUser * service.cost;
+    if (serviceId === "cloud_instance" || serviceId === "siem" || serviceId === "documentation") return service.cost;
+    if (serviceId === "site_license") return siteCount * service.cost;
+    if (serviceId === "cloud_storage") return userCount * service.qtyPerUser * service.cost;
     return service.qtyPerUser * userCount * service.cost;
   };
 
