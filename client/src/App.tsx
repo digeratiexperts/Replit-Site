@@ -102,6 +102,7 @@ const QuoteConfirmation = lazy(() => import("@/pages/QuoteConfirmation"));
 const ThankYouSuccess = lazy(() => import("@/pages/ThankYouSuccess"));
 const SalesProcess = lazy(() => import("@/pages/portal/SalesProcess"));
 const ProActiveEcosystemPricing = lazy(() => import("@/pages/ProActiveEcosystemPricing"));
+const EcosystemMatrixOfficial = lazy(() => import("@/pages/EcosystemMatrixOfficial"));
 
 // Internal pages (DE staff only)
 const InternalSalesProcess = lazy(() => import("@/pages/internal/SalesProcessPage"));
