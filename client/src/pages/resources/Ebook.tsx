@@ -307,7 +307,7 @@ const chapters: Chapter[] = [
             © {new Date().getFullYear()} Digerati Experts. All rights reserved.
           </p>
           <p className="text-slate-500 text-sm mt-2">
-            By Joseph Petro
+            By Joe Petro, Owner of Digerati Experts
           </p>
         </div>
       </>
@@ -341,7 +341,7 @@ export default function Ebook() {
     <div className="min-h-screen bg-[#0a0a0a]">
       <Helmet>
         <title>Defending the Digital Realm - Free Ebook | Digerati Experts</title>
-        <meta name="description" content="A comprehensive guide to cybersecurity risk assessment by Joseph Petro. Learn how to protect your Arizona business from digital threats." />
+        <meta name="description" content="A comprehensive guide to cybersecurity risk assessment by Joe Petro, Owner of Digerati Experts. Learn how to protect your Arizona business from digital threats." />
         <meta property="og:title" content="Defending the Digital Realm - Free Cybersecurity Ebook" />
         <meta property="og:description" content="A comprehensive guide to cybersecurity risk assessment for Arizona businesses." />
         <meta property="og:type" content="book" />
@@ -376,7 +376,7 @@ export default function Ebook() {
               <p className="text-xl text-white/70 mb-2">
                 A Comprehensive Guide to Cybersecurity Risk Assessment
               </p>
-              <p className="text-white/50 mb-8">By Joseph Petro</p>
+              <p className="text-white/50 mb-8">By Joe Petro, Owner of Digerati Experts</p>
               <Button 
                 onClick={() => setShowCover(false)}
                 className="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold px-8 py-6 text-lg hover:shadow-lg hover:shadow-orange-500/25 transition-all"
