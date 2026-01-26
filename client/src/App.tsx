@@ -20,6 +20,7 @@ import { DigeratiHomepage } from "@/pages/DigeratiHomepage";
 const SolutionsIndex = lazy(() => import("@/pages/solutions/SolutionsIndex"));
 const ManagedITSupport = lazy(() => import("@/pages/solutions/ManagedITSupport"));
 const ManagedWorkplace = lazy(() => import("@/pages/solutions/ManagedWorkplace"));
+const BackupDisasterRecovery = lazy(() => import("@/pages/solutions/BackupDisasterRecovery"));
 const UCaaS = lazy(() => import("@/pages/services/UCaaS"));
 const Healthcare = lazy(() => import("@/pages/industries/Healthcare"));
 const Accounting = lazy(() => import("@/pages/industries/Accounting"));
@@ -151,7 +152,12 @@ function Router() {
           <ManagedWorkplace />
         </Suspense>
       )} />
-      {Object.entries(servicePageData).filter(([key]) => key !== 'managed-workplace').map(([key, data]) => (
+      <Route path="/solutions/backup-disaster-recovery" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <BackupDisasterRecovery />
+        </Suspense>
+      )} />
+      {Object.entries(servicePageData).filter(([key]) => !['managed-workplace', 'backup-disaster-recovery'].includes(key)).map(([key, data]) => (
         <Route key={key} path={`/solutions/${key}`} component={() => (
           <Suspense fallback={<PageLoadingSkeleton />}>
             <GenericServicePage {...data} serviceKey={key} />
