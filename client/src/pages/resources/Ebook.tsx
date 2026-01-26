@@ -1,11 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link } from "wouter";
 import { Helmet } from "react-helmet-async";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, ChevronRight, Home, BookOpen, ArrowLeft } from "lucide-react";
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  Home, 
+  BookOpen, 
+  ArrowLeft,
+  Download,
+  Bookmark,
+  BookMarked,
+  List,
+  X,
+  ZoomIn,
+  ZoomOut
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 import ebookCover from "@/assets/images/ebook-defending-digital-realm-cover.png";
 
@@ -318,23 +332,90 @@ const chapters: Chapter[] = [
 export default function Ebook() {
   const [currentChapter, setCurrentChapter] = useState(0);
   const [showCover, setShowCover] = useState(true);
+  const [showTOC, setShowTOC] = useState(false);
+  const [bookmarks, setBookmarks] = useState<number[]>([]);
+  const [readProgress, setReadProgress] = useState(0);
+  const [fontSize, setFontSize] = useState(16);
+  const [pageDirection, setPageDirection] = useState<'left' | 'right'>('right');
 
-  const goToChapter = (index: number) => {
+  // Track reading progress
+  useEffect(() => {
+    if (!showCover) {
+      const progress = ((currentChapter + 1) / chapters.length) * 100;
+      setReadProgress(progress);
+    }
+  }, [currentChapter, showCover]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (showCover) return;
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextChapter();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevChapter();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        goToChapter(0);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        goToChapter(chapters.length - 1);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showCover, currentChapter]);
+
+  const goToChapter = useCallback((index: number) => {
+    setPageDirection(index > currentChapter ? 'right' : 'left');
     setCurrentChapter(index);
     setShowCover(false);
+    setShowTOC(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, [currentChapter]);
 
-  const nextChapter = () => {
+  const nextChapter = useCallback(() => {
     if (currentChapter < chapters.length - 1) {
+      setPageDirection('right');
       goToChapter(currentChapter + 1);
     }
-  };
+  }, [currentChapter, goToChapter]);
 
-  const prevChapter = () => {
+  const prevChapter = useCallback(() => {
     if (currentChapter > 0) {
+      setPageDirection('left');
       goToChapter(currentChapter - 1);
     }
+  }, [currentChapter, goToChapter]);
+
+  const toggleBookmark = (chapterIndex: number) => {
+    setBookmarks(prev => 
+      prev.includes(chapterIndex) 
+        ? prev.filter(b => b !== chapterIndex)
+        : [...prev, chapterIndex]
+    );
+  };
+
+  const isBookmarked = bookmarks.includes(currentChapter);
+
+  const pageVariants = {
+    enter: (direction: 'left' | 'right') => ({
+      x: direction === 'right' ? 100 : -100,
+      opacity: 0,
+      rotateY: direction === 'right' ? 5 : -5,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      rotateY: 0,
+    },
+    exit: (direction: 'left' | 'right') => ({
+      x: direction === 'right' ? -100 : 100,
+      opacity: 0,
+      rotateY: direction === 'right' ? -5 : 5,
+    }),
   };
 
   return (
@@ -350,6 +431,18 @@ export default function Ebook() {
 
       <MegaMenu />
 
+      {/* Reading Progress Bar */}
+      {!showCover && (
+        <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-slate-800">
+          <motion.div 
+            className="h-full bg-gradient-to-r from-orange-500 via-amber-500 to-orange-400"
+            initial={{ width: 0 }}
+            animate={{ width: `${readProgress}%` }}
+            transition={{ duration: 0.3 }}
+          />
+        </div>
+      )}
+
       <main className="pt-24 pb-20">
         <div className="container mx-auto px-4 max-w-5xl">
           <Link href="/resources/blog" className="inline-flex items-center text-violet-400 hover:text-violet-300 mb-6 transition-colors" data-testid="link-back-blog">
@@ -358,16 +451,28 @@ export default function Ebook() {
           </Link>
 
           {showCover ? (
-            <div className="text-center py-12">
-              <div className="max-w-md mx-auto mb-8">
+            <motion.div 
+              className="text-center py-12"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <motion.div 
+                className="max-w-md mx-auto mb-8 perspective-1000"
+                whileHover={{ scale: 1.02, rotateY: 5 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
                 <img 
                   src={ebookCover} 
                   alt="Defending the Digital Realm ebook cover" 
-                  className="w-full rounded-xl shadow-2xl shadow-orange-500/20 border border-orange-500/30"
+                  className="w-full rounded-xl shadow-2xl shadow-orange-500/30 border border-orange-500/30"
+                  style={{ 
+                    boxShadow: '0 25px 50px -12px rgba(249, 115, 22, 0.25), 0 0 0 1px rgba(249, 115, 22, 0.1), inset 0 0 0 1px rgba(255,255,255,0.05)'
+                  }}
                   data-testid="img-ebook-cover"
                 />
-              </div>
-              <Badge className="mb-4 bg-orange-500/20 text-orange-400 border-orange-500/30">
+              </motion.div>
+              <Badge className="mb-4 bg-gradient-to-r from-orange-500/20 to-amber-500/20 text-orange-400 border-orange-500/30 px-4 py-1">
                 Free Ebook
               </Badge>
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
@@ -377,97 +482,265 @@ export default function Ebook() {
                 A Comprehensive Guide to Cybersecurity Risk Assessment
               </p>
               <p className="text-white/50 mb-8">By Joe Petro, Owner of Digerati Experts</p>
-              <Button 
-                onClick={() => setShowCover(false)}
-                className="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold px-8 py-6 text-lg hover:shadow-lg hover:shadow-orange-500/25 transition-all"
-                data-testid="button-start-reading"
-              >
-                <BookOpen className="mr-2 h-5 w-5" />
-                Start Reading
-              </Button>
+              
+              <div className="flex flex-wrap justify-center gap-4 mb-8">
+                <Button 
+                  onClick={() => setShowCover(false)}
+                  className="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold px-8 py-6 text-lg hover:shadow-xl hover:shadow-orange-500/30 hover:-translate-y-1 transition-all"
+                  data-testid="button-start-reading"
+                >
+                  <BookOpen className="mr-2 h-5 w-5" />
+                  Start Reading
+                </Button>
+                <Button
+                  variant="outline"
+                  className="border-orange-500/50 text-orange-400 hover:bg-orange-500/10 px-6 py-6"
+                  onClick={() => window.print()}
+                  data-testid="button-download"
+                >
+                  <Download className="mr-2 h-5 w-5" />
+                  Save as PDF
+                </Button>
+              </div>
 
               <div className="mt-12 grid md:grid-cols-3 gap-6 text-left">
-                <div className="bg-white/[0.02] border border-white/10 rounded-xl p-6">
-                  <h3 className="text-lg font-bold text-orange-400 mb-2">6 Chapters</h3>
-                  <p className="text-white/60 text-sm">Comprehensive coverage of risk assessment fundamentals</p>
-                </div>
-                <div className="bg-white/[0.02] border border-white/10 rounded-xl p-6">
-                  <h3 className="text-lg font-bold text-orange-400 mb-2">Real Case Studies</h3>
-                  <p className="text-white/60 text-sm">Learn from actual Arizona business experiences</p>
-                </div>
-                <div className="bg-white/[0.02] border border-white/10 rounded-xl p-6">
-                  <h3 className="text-lg font-bold text-orange-400 mb-2">Actionable Roadmap</h3>
-                  <p className="text-white/60 text-sm">90-day plan to improve your security posture</p>
-                </div>
+                {[
+                  { title: "6 Chapters", desc: "Comprehensive coverage of risk assessment fundamentals", icon: "📚" },
+                  { title: "Real Case Studies", desc: "Learn from actual Arizona business experiences", icon: "📊" },
+                  { title: "Actionable Roadmap", desc: "90-day plan to improve your security posture", icon: "🗺️" }
+                ].map((item, idx) => (
+                  <motion.div 
+                    key={idx}
+                    className="bg-gradient-to-br from-white/[0.03] to-white/[0.01] border border-white/10 rounded-xl p-6 hover:border-orange-500/30 transition-colors"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 + idx * 0.1 }}
+                  >
+                    <span className="text-2xl mb-3 block">{item.icon}</span>
+                    <h3 className="text-lg font-bold text-orange-400 mb-2">{item.title}</h3>
+                    <p className="text-white/60 text-sm">{item.desc}</p>
+                  </motion.div>
+                ))}
               </div>
-            </div>
+            </motion.div>
           ) : (
-            <div className="bg-gradient-to-b from-slate-900 to-slate-950 rounded-2xl shadow-2xl overflow-hidden">
-              {/* Chapter Navigation */}
-              <div className="bg-gradient-to-r from-slate-800 to-slate-900 border-b border-slate-700 sticky top-16 z-30">
-                <div className="flex overflow-x-auto">
-                  <button
-                    onClick={() => setShowCover(true)}
-                    className="px-4 py-3 text-sm text-white/60 hover:text-orange-400 hover:bg-orange-500/10 transition-colors flex items-center gap-1 whitespace-nowrap border-b-2 border-transparent"
-                    data-testid="button-cover"
+            <div className="relative">
+              {/* Table of Contents Sidebar */}
+              <AnimatePresence>
+                {showTOC && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -300 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -300 }}
+                    className="fixed left-0 top-0 bottom-0 w-80 bg-slate-900/98 backdrop-blur-xl border-r border-slate-700 z-50 pt-20 overflow-y-auto"
                   >
-                    <Home className="w-4 h-4" />
-                  </button>
-                  {chapters.map((chapter, idx) => (
-                    <button
-                      key={chapter.id}
-                      onClick={() => goToChapter(idx)}
-                      className={`px-4 py-3 text-sm whitespace-nowrap transition-colors border-b-2 ${
-                        currentChapter === idx
-                          ? 'text-orange-400 border-orange-500 bg-orange-500/10'
-                          : 'text-white/60 border-transparent hover:text-white hover:bg-white/5'
-                      }`}
-                      data-testid={`button-chapter-${chapter.id}`}
-                    >
-                      Ch. {chapter.id}
-                    </button>
-                  ))}
-                </div>
-              </div>
+                    <div className="p-6">
+                      <div className="flex justify-between items-center mb-6">
+                        <h3 className="text-xl font-bold text-white">Table of Contents</h3>
+                        <button 
+                          onClick={() => setShowTOC(false)}
+                          className="text-slate-400 hover:text-white transition-colors"
+                        >
+                          <X className="w-5 h-5" />
+                        </button>
+                      </div>
+                      <div className="space-y-2">
+                        {chapters.map((chapter, idx) => (
+                          <button
+                            key={chapter.id}
+                            onClick={() => goToChapter(idx)}
+                            className={`w-full text-left p-4 rounded-xl transition-all ${
+                              currentChapter === idx
+                                ? 'bg-gradient-to-r from-orange-500/20 to-amber-500/10 border-l-4 border-orange-500 text-white'
+                                : 'hover:bg-white/5 text-slate-400 hover:text-white'
+                            }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className={`font-mono text-sm ${currentChapter === idx ? 'text-orange-400' : 'text-slate-500'}`}>
+                                {String(chapter.id).padStart(2, '0')}
+                              </span>
+                              <div>
+                                <p className="font-medium text-sm">{chapter.title}</p>
+                                <p className="text-xs text-slate-500 mt-1">{chapter.subtitle}</p>
+                              </div>
+                              {bookmarks.includes(idx) && (
+                                <BookMarked className="w-4 h-4 text-orange-400 ml-auto" />
+                              )}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-              {/* Chapter Content */}
-              <div className="p-8 md:p-12 min-h-[600px]">
-                <Badge className="mb-4 bg-gradient-to-r from-orange-500/20 to-amber-500/10 text-orange-400 border-orange-500/30">
-                  CHAPTER {chapters[currentChapter].id}
-                </Badge>
-                <h1 className="text-3xl md:text-4xl font-bold text-orange-500 mb-3 pb-4 border-b-4 border-orange-500">
-                  {chapters[currentChapter].title}
-                </h1>
-                <p className="text-xl text-slate-400 mb-10">{chapters[currentChapter].subtitle}</p>
+              {/* Main Reader */}
+              <div className="bg-gradient-to-b from-slate-900 to-slate-950 rounded-2xl shadow-2xl overflow-hidden border border-slate-800" 
+                style={{ boxShadow: '0 25px 80px -20px rgba(0,0,0,0.5), 0 0 40px rgba(249, 115, 22, 0.05)' }}>
                 
-                <div className="prose prose-invert prose-orange max-w-none">
-                  {chapters[currentChapter].content}
+                {/* Enhanced Chapter Navigation Bar */}
+                <div className="bg-gradient-to-b from-slate-800 to-slate-850 border-b border-slate-700/50 sticky top-16 z-30">
+                  <div className="flex items-center justify-between px-2 py-1">
+                    <div className="flex items-center">
+                      <button
+                        onClick={() => setShowTOC(true)}
+                        className="p-3 text-slate-400 hover:text-orange-400 hover:bg-orange-500/10 rounded-lg transition-all mr-1"
+                        title="Table of Contents"
+                        data-testid="button-toc"
+                      >
+                        <List className="w-5 h-5" />
+                      </button>
+                      <button
+                        onClick={() => setShowCover(true)}
+                        className="p-3 text-slate-400 hover:text-orange-400 hover:bg-orange-500/10 rounded-lg transition-all"
+                        data-testid="button-cover"
+                        title="Cover"
+                      >
+                        <Home className="w-5 h-5" />
+                      </button>
+                    </div>
+                    
+                    <div className="flex overflow-x-auto scrollbar-hide">
+                      {chapters.map((chapter, idx) => (
+                        <button
+                          key={chapter.id}
+                          onClick={() => goToChapter(idx)}
+                          className={`relative px-5 py-3 text-sm font-medium whitespace-nowrap transition-all ${
+                            currentChapter === idx
+                              ? 'text-orange-400'
+                              : 'text-slate-400 hover:text-white'
+                          }`}
+                          data-testid={`button-chapter-${chapter.id}`}
+                        >
+                          Ch. {chapter.id}
+                          {currentChapter === idx && (
+                            <motion.div 
+                              layoutId="activeChapter"
+                              className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-orange-500 to-amber-500"
+                            />
+                          )}
+                          {bookmarks.includes(idx) && currentChapter !== idx && (
+                            <span className="absolute top-1 right-1 w-2 h-2 bg-orange-500 rounded-full" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => setFontSize(prev => Math.max(12, prev - 2))}
+                        className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                        title="Decrease font size"
+                      >
+                        <ZoomOut className="w-4 h-4" />
+                      </button>
+                      <span className="text-xs text-slate-500 w-8 text-center">{fontSize}</span>
+                      <button
+                        onClick={() => setFontSize(prev => Math.min(24, prev + 2))}
+                        className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                        title="Increase font size"
+                      >
+                        <ZoomIn className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => toggleBookmark(currentChapter)}
+                        className={`p-2 rounded-lg transition-all ${
+                          isBookmarked 
+                            ? 'text-orange-400 bg-orange-500/10' 
+                            : 'text-slate-400 hover:text-orange-400 hover:bg-orange-500/10'
+                        }`}
+                        title={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
+                        data-testid="button-bookmark"
+                      >
+                        {isBookmarked ? <BookMarked className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Chapter Navigation */}
-                <div className="flex justify-between items-center mt-12 pt-8 border-t-2 border-slate-700">
-                  <Button
-                    onClick={prevChapter}
-                    disabled={currentChapter === 0}
-                    variant="outline"
-                    className="border-orange-500/30 text-orange-400 hover:bg-orange-500/10 disabled:opacity-30"
-                    data-testid="button-prev-chapter"
+                {/* Chapter Content with Page Effect */}
+                <AnimatePresence mode="wait" custom={pageDirection}>
+                  <motion.div
+                    key={currentChapter}
+                    custom={pageDirection}
+                    variants={pageVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="p-8 md:p-12 min-h-[600px]"
+                    style={{ fontSize: `${fontSize}px` }}
                   >
-                    <ChevronLeft className="mr-2 h-4 w-4" />
-                    Previous
-                  </Button>
-                  <span className="text-slate-500 text-sm">
-                    {currentChapter + 1} of {chapters.length}
-                  </span>
-                  <Button
-                    onClick={nextChapter}
-                    disabled={currentChapter === chapters.length - 1}
-                    className="bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:shadow-lg disabled:opacity-30"
-                    data-testid="button-next-chapter"
-                  >
-                    Next
-                    <ChevronRight className="ml-2 h-4 w-4" />
-                  </Button>
+                    {/* Page Header */}
+                    <div className="flex items-center justify-between mb-6">
+                      <Badge className="bg-gradient-to-r from-orange-500/20 to-amber-500/10 text-orange-400 border-orange-500/30 font-mono">
+                        CHAPTER {chapters[currentChapter].id}
+                      </Badge>
+                      <span className="text-xs text-slate-500 font-mono">
+                        Page {currentChapter + 1} of {chapters.length}
+                      </span>
+                    </div>
+
+                    <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
+                      {chapters[currentChapter].title}
+                    </h1>
+                    <p className="text-xl text-slate-400 mb-10 pb-6 border-b border-slate-700/50">
+                      {chapters[currentChapter].subtitle}
+                    </p>
+                    
+                    <div className="prose prose-invert prose-orange max-w-none" data-testid="ebook-content">
+                      {chapters[currentChapter].content}
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* Enhanced Navigation Footer */}
+                <div className="bg-gradient-to-t from-slate-900 to-transparent border-t border-slate-700/50 p-6">
+                  <div className="flex justify-between items-center">
+                    <Button
+                      onClick={prevChapter}
+                      disabled={currentChapter === 0}
+                      variant="outline"
+                      className="border-slate-600 text-slate-300 hover:text-white hover:bg-white/5 hover:border-slate-500 disabled:opacity-30 disabled:cursor-not-allowed px-6 py-5 group transition-all"
+                      data-testid="button-prev-chapter"
+                    >
+                      <ChevronLeft className="mr-2 h-5 w-5 group-hover:-translate-x-1 transition-transform" />
+                      Previous
+                    </Button>
+                    
+                    <div className="flex items-center gap-3">
+                      {chapters.map((_, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => goToChapter(idx)}
+                          className={`w-3 h-3 rounded-full transition-all ${
+                            currentChapter === idx
+                              ? 'bg-gradient-to-r from-orange-500 to-amber-500 scale-125'
+                              : 'bg-slate-600 hover:bg-slate-500'
+                          }`}
+                          data-testid={`page-dot-${idx}`}
+                        />
+                      ))}
+                    </div>
+                    
+                    <Button
+                      onClick={nextChapter}
+                      disabled={currentChapter === chapters.length - 1}
+                      className="bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:shadow-lg hover:shadow-orange-500/25 disabled:opacity-30 disabled:cursor-not-allowed px-6 py-5 group transition-all"
+                      data-testid="button-next-chapter"
+                    >
+                      Next
+                      <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </div>
+                  
+                  {/* Page indicator */}
+                  <div className="text-center mt-4">
+                    <span className="text-sm text-slate-500 font-mono">
+                      {currentChapter + 1} of {chapters.length}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
