@@ -55,6 +55,19 @@ The homepage uses scroll snap functionality for a polished landing page experien
 - **Component**: `FullPageScrollProvider` wraps homepage sections with `ScrollSectionAuto`
 - **Dynamic theming**: Navigation elements automatically switch between dark/light styles based on current section background (white outline on dark sections, violet/gray on light sections)
 
+### Internal Sales & Reference Pages
+Internal pages for sales team reference and client presentations, accessible via MegaMenu About > Why Us:
+| Route | Component | Description |
+|-------|-----------|-------------|
+| `/internal/11-things-better` | ElevenThingsBetter | 11 differentiators with animated cards |
+| `/internal/six-reasons` | SixReasons | 6 reasons to choose Digerati |
+| `/internal/proactive-ecosystems` | ProActiveEcosystems | Service tier comparison matrix (Basic/Advanced/Enterprise) |
+| `/internal/guarantees-values` | GuaranteesValues | 9 guarantees, 5 core values, 4-step guide |
+| `/internal/usp-worksheet` | USPWorksheet | Interactive sales worksheet with localStorage persistence |
+| `/services/ucaas` | UCaaS | Voice & Meetings service page with pricing tiers |
+
+All internal pages use `noindex, nofollow` meta tags for SEO.
+
 ### System Design Choices
 The project follows a modular structure (`client/` and `server/`), using UUIDs for IDs. Payment processing includes enterprise-grade encryption and webhook signature validation. AI services for ticket classification and priority detection are implemented with graceful fallback. Role-based access control manages navigation and features. User storage is in-memory, designed for future PostgreSQL migration, using bcrypt hashing and JWT tokens.
 
