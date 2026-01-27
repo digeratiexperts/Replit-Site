@@ -601,9 +601,13 @@ export function MegaMenu() {
                         <div className={`relative ${
                           item.name === 'Solutions' 
                             ? 'grid grid-cols-5 divide-x divide-white/5' 
-                            : item.sections.length === 3 
-                              ? 'p-6 grid grid-cols-3 gap-6' 
-                              : 'p-6 flex gap-6'
+                            : item.name === 'About'
+                              ? 'p-6 grid grid-cols-4 gap-6 items-start'
+                              : item.name === 'Industries'
+                                ? 'p-6 grid grid-cols-3 gap-6 items-start'
+                                : item.sections.length === 3 
+                                  ? 'p-6 grid grid-cols-3 gap-6 items-start' 
+                                  : 'p-6 flex gap-6 items-start'
                         }`}>
                           {item.sections.map((section, sectionIdx) => (
                             <motion.div 
