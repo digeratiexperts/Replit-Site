@@ -184,7 +184,7 @@ export default function Ecosystem() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
         >
-          Onboarding starts at ~$1,500. Monthly minimums: $500/month for 5+ users. Final pricing tailored to your environment.
+          Minimums: Office $750/site/mo; Business/Enterprise $1,200/site/mo. Final pricing tailored to your environment.
         </motion.p>
       </div>
     </section>

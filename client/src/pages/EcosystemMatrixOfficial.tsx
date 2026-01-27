@@ -254,9 +254,8 @@ export default function EcosystemMatrixOfficial() {
         {/* FOOTER NOTE */}
         <div className="mt-12 p-6 rounded-2xl bg-gradient-to-br from-violet-500/10 to-transparent border border-white/10 text-center">
           <p className="text-white/40 text-sm">
-            * Monthly prices shown are per user per month. Minimums and setup fees may apply based on environment complexity.
-            <br />
-            Enterprise tier requires custom scoping for MDR/SIEM and multi-site connectivity.
+            Minimum billing: Office $750/site/mo; Business $1,200/site/mo; Enterprise $1,200/site/mo. 
+            Billing rule: Minimums apply when per-user total &lt; minimum.
           </p>
           <div className="mt-6 flex justify-center gap-4">
             <Button className="bg-violet-600 hover:bg-violet-700">Book Technical Assessment</Button>

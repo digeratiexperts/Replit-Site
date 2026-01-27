@@ -782,7 +782,7 @@ export default function PricingTiers() {
               We'll confirm users + sites, pick the right lane, and map your onboarding + baseline fees upfront so your monthly is predictable.
             </p>
             <p className="text-sm text-white/50 mb-6">
-              <strong className="text-violet-400">Office minimum $750</strong> • <strong className="text-violet-300">Business minimum $1,200</strong> • <strong className="text-fuchsia-400">Enterprise minimum $3,500</strong>
+              <strong className="text-violet-400">Office minimum $750</strong> • <strong className="text-violet-300">Business minimum $1,200</strong> • <strong className="text-fuchsia-400">Enterprise minimum $1,200</strong>
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               <a

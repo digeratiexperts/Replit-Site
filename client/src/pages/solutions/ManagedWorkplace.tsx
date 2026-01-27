@@ -147,7 +147,7 @@ const workplaceData = {
     },
     {
       question: "What's the minimum user count?",
-      answer: "Our minimum is 5 users. Pricing starts at $165/user/month for Workplace Essentials, with a minimum monthly commitment of $825."
+      answer: "Pricing starts at $165/user/month. Minimum billing applies if the per-user total is below the tier minimum: Office $750/site/mo, Business $1,200/site/mo."
     },
     {
       question: "How fast can you onboard/offboard?",
@@ -433,8 +433,8 @@ export default function ManagedWorkplace() {
                         </div>
                         <p className="text-white/50 text-sm mt-1">
                           {pricingMode === 'per_user' 
-                            ? `Min ${workplaceData.pricing.minimum_users} users ($${pkg.starting_price * 5}/mo)` 
-                            : `Includes ${workplaceData.pricing.minimum_users} users ($${pkg.starting_price}/user)`
+                            ? `Minimum billing: Office $750/mo, Business/Enterprise $1,200/mo` 
+                            : `Includes base tier access`
                           }
                         </p>
                       </>

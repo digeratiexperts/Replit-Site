@@ -38,7 +38,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
   const pricingPlans = [
     {
       name: "Office",
-      monthlyPrice: 825,
+      monthlyPrice: 750,
       perUserPrice: 165,
       isPopular: false,
       learnMoreUrl: "/solutions/managed-it-support",
@@ -53,7 +53,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
     },
     {
       name: "Business",
-      monthlyPrice: 1225,
+      monthlyPrice: 1200,
       perUserPrice: 245,
       isPopular: true,
       learnMoreUrl: "/solutions/security-operations",
@@ -68,7 +68,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
     },
     {
       name: "Enterprise",
-      monthlyPrice: 1725,
+      monthlyPrice: 1200,
       perUserPrice: 345,
       isPopular: false,
       learnMoreUrl: "/solutions/compliance-reports",
@@ -129,7 +129,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
             ProActive Ecosystem <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">Pricing</span>
           </h2>
           <p className="text-base md:text-lg lg:text-xl text-white/60 leading-relaxed max-w-3xl mx-auto px-4">
-            Clear, predictable, and compliance-ready. Pricing shown for a <span className="font-bold text-white">5-user office</span>.
+            Clear, predictable, and compliance-ready. Packages start at $165/user/mo. <span className="font-bold text-white">Minimum billing applies</span>.
           </p>
         </motion.div>
 
@@ -198,8 +198,8 @@ export const DigeratiPricingSection = (): JSX.Element => {
                   </div>
                   
                   <div className="text-xs text-gray-500">
-                    for 5 users • ${plan.perUserPrice}/user
-                  </div>
+                  {plan.name === 'Office' ? '$750/site/mo minimum' : '$1,200/site/mo minimum'}
+                </div>
                 </div>
 
                 <ul className="space-y-2 mb-4 flex-grow">
@@ -290,7 +290,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                 </div>
                 
                 <div className="text-sm text-gray-500">
-                  for 5 users <span className="text-gray-400">•</span> ${plan.perUserPrice}/user
+                  {plan.name === 'Office' ? '$750/site/mo minimum' : '$1,200/site/mo minimum'}
                 </div>
               </div>
 
@@ -340,7 +340,8 @@ export const DigeratiPricingSection = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ delay: 0.6, duration: 0.5 }}
         >
-          <p>Offices with fewer than 5 users are billed per-user only — no minimum.</p>
+          <p>Minimum billing: Office $750/site/mo, Business $1,200/site/mo, Enterprise $1,200/site/mo</p>
+          <p>Billing rule: Minimums apply when per-user total &lt; minimum.</p>
           <p>Final pricing is tailored to your users, sites, and compliance needs.</p>
         </motion.div>
 
