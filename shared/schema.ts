@@ -11,6 +11,15 @@ export const viewTypeEnum = pgEnum("view_type", ["board", "list", "calendar", "t
 
 // Portal enums
 export const portalUserRoleEnum = pgEnum("portal_user_role", ["admin", "user", "viewer"]);
+
+// Store role enum for RBAC - determines what users can do in the store
+// - public: Anonymous visitors (not logged in)
+// - prospect: Registered but unverified users
+// - managed: Managed service clients (can't purchase managed services, schedule only)
+// - comanaged: Co-Managed clients (can purchase co-managed products)
+// - admin: Digerati admin (full access)
+export const storeRoleEnum = pgEnum("store_role", ["public", "prospect", "managed", "comanaged", "admin"]);
+
 export const ticketStatusEnum = pgEnum("ticket_status", ["open", "in_progress", "pending_client", "resolved", "closed"]);
 export const ticketPriorityEnum = pgEnum("ticket_priority", ["low", "medium", "high", "critical"]);
 export const invoiceStatusEnum = pgEnum("invoice_status", ["draft", "sent", "paid", "overdue", "cancelled"]);

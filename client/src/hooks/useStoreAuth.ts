@@ -1,12 +1,16 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import type { ClientType } from "@/data/storeProducts";
 
+// Store role types for RBAC
+export type StoreRole = 'public' | 'prospect' | 'managed' | 'comanaged' | 'admin';
+
 export interface PortalUser {
   id: string;
   email: string;
   username: string;
   fullName: string;
   role: string;
+  storeRole?: StoreRole;
   clientId?: string | null;
 }
 
@@ -23,7 +27,10 @@ export interface StoreAuthState {
   token: string | null;
   clientType: ClientType;
   clientId: string | null;
+  storeRole: StoreRole;
   clientPricing: ClientPricing[];
+  canPurchase: boolean;
+  isAdmin: boolean;
   loginRedirect: () => void;
   logout: () => void;
   refreshPricing: () => Promise<void>;
@@ -161,6 +168,20 @@ export function useStoreAuth(): StoreAuthState {
 
   const isLoggedIn = useMemo(() => !!user && !!token, [user, token]);
   const clientId = useMemo(() => user?.clientId || null, [user]);
+  
+  // Derive store role from user data - defaults to 'public' for unauthenticated
+  const storeRole: StoreRole = useMemo(() => {
+    if (!user) return 'public';
+    return user.storeRole || 'prospect';
+  }, [user]);
+  
+  // Check if user can purchase (comanaged or admin only)
+  const canPurchase = useMemo(() => {
+    return storeRole === 'comanaged' || storeRole === 'admin';
+  }, [storeRole]);
+  
+  // Check if user is admin
+  const isAdmin = useMemo(() => storeRole === 'admin', [storeRole]);
 
   return {
     isLoggedIn,
@@ -169,7 +190,10 @@ export function useStoreAuth(): StoreAuthState {
     token,
     clientType,
     clientId,
+    storeRole,
     clientPricing,
+    canPurchase,
+    isAdmin,
     loginRedirect,
     logout,
     refreshPricing,

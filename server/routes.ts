@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { registerObjectStorageRoutes, ObjectStorageService } from "./replit_integrations/object_storage";
 import { zohoClient, zohoDeskService, zohoCRMService, zohoBillingService } from "./zoho";
+import { verifyTurnstile } from "./middleware/security";
 
 const JWT_SECRET = process.env.JWT_SECRET || randomBytes(32).toString('hex');
 const SALT_ROUNDS = 12;
@@ -23,14 +24,19 @@ interface JWTPayload {
   userId: string;
   email: string;
   role: string;
+  storeRole?: string;
   clientId?: string | null;
   iat?: number;
   exp?: number;
 }
 
+// Session store for tracking active sessions with rotation (module-level for authMiddleware access)
+export const sessionStore = new Map<string, { userId: string; createdAt: number; lastRotated: number }>();
+const SESSION_EXPIRY_MS = 24 * 60 * 60 * 1000; // 24 hours
+
 // ========== MIDDLEWARE ==========
 
-// JWT-based auth middleware with proper validation
+// JWT-based auth middleware with proper validation and optional session validation
 export function authMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
@@ -44,8 +50,31 @@ export function authMiddleware(req: AuthenticatedRequest, res: Response, next: N
   
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
-    req.user = { id: decoded.userId, email: decoded.email, role: decoded.role, clientId: decoded.clientId || null };
+    req.user = { id: decoded.userId, email: decoded.email, role: decoded.role, storeRole: decoded.storeRole || 'public', clientId: decoded.clientId || null };
     req.userId = decoded.userId;
+    
+    // Optional session validation from cookies
+    const sessionId = req.cookies?.sessionId;
+    if (sessionId) {
+      const session = sessionStore.get(sessionId);
+      if (session) {
+        // Validate session belongs to same user and hasn't expired
+        const now = Date.now();
+        if (session.userId === decoded.userId && (now - session.createdAt) < SESSION_EXPIRY_MS) {
+          // Session is valid, attach session info
+          (req as any).sessionId = sessionId;
+          (req as any).sessionValid = true;
+        } else {
+          // Session expired or user mismatch - remove stale session but allow JWT auth to proceed
+          sessionStore.delete(sessionId);
+          (req as any).sessionValid = false;
+        }
+      } else {
+        // Session ID present but not found in store - allow JWT auth to proceed
+        (req as any).sessionValid = false;
+      }
+    }
+    
     next();
   } catch (e: any) {
     if (e.name === 'TokenExpiredError') {
@@ -53,6 +82,34 @@ export function authMiddleware(req: AuthenticatedRequest, res: Response, next: N
     }
     res.status(401).json({ error: "Invalid token" });
   }
+}
+
+// Store role types for RBAC
+export type StoreRole = 'public' | 'prospect' | 'managed' | 'comanaged' | 'admin';
+
+// Role-based access control middleware for store routes
+export function requireRole(...allowedRoles: StoreRole[]) {
+  return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+    const userStoreRole = req.user.storeRole || 'public';
+    if (!allowedRoles.includes(userStoreRole as StoreRole)) {
+      return res.status(403).json({ error: 'Insufficient permissions' });
+    }
+    next();
+  };
+}
+
+// Middleware that requires admin role for portal admin routes
+export function requireAdmin(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  if (!req.user) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+  next();
 }
 
 // Generate JWT token
@@ -634,11 +691,8 @@ export async function registerRoutes(app: Express) {
   });
 
   // ===== ADMIN OPENAI CONTROL =====
-  app.get("/api/portal/admin/openai/status", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+  app.get("/api/portal/admin/openai/status", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      if (req.user?.role !== "admin") {
-        return res.status(403).json({ error: "Admin access required" });
-      }
       res.json({
         success: true,
         enabled: process.env.ENABLE_OPENAI_INTEGRATION === "true",
@@ -649,11 +703,8 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  app.post("/api/portal/admin/openai/toggle", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  app.post("/api/portal/admin/openai/toggle", [authMiddleware, requireAdmin, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      if (req.user?.role !== "admin") {
-        return res.status(403).json({ error: "Admin access required" });
-      }
       const currentState = process.env.ENABLE_OPENAI_INTEGRATION === "true";
       res.json({
         success: true,
@@ -802,6 +853,16 @@ export async function registerRoutes(app: Express) {
   const portalUsers: Map<string, any> = new Map();
   const portalClients: Map<string, any> = new Map();
   
+  // Note: sessionStore is now at module level for authMiddleware access
+  
+  // Email verification tokens storage
+  const emailVerificationTokens = new Map<string, { 
+    email: string; 
+    userId: string; 
+    createdAt: number;
+    expiresAt: number;
+  }>();
+  
   // MSP company (Digerati Experts) - separate from client companies
   const mspCompany = { 
     id: "msp-digerati", 
@@ -835,17 +896,20 @@ export async function registerRoutes(app: Express) {
     username: "admin",
     password: "$2b$12$Bf.sDD1gQ6391SrTebkd4.9BeiteKKOswHl63vyCN0/51CmDldT7K",
     role: "admin",
+    storeRole: "admin" as StoreRole,
     fullName: "Administrator",
     clientId: null,
   };
   
   // Demo client users - Password: Admin123! (same as admin for demo)
+  // storeRole is derived from client's serviceType: managed -> managed, comanaged -> comanaged
   const demoUser1 = {
     id: "user-001",
     email: "john.smith@acme.com",
     username: "johnsmith",
     password: "$2b$12$Bf.sDD1gQ6391SrTebkd4.9BeiteKKOswHl63vyCN0/51CmDldT7K",
     role: "user",
+    storeRole: "managed" as StoreRole,
     fullName: "John Smith",
     clientId: "client-1",
     isActive: true,
@@ -857,18 +921,21 @@ export async function registerRoutes(app: Express) {
     username: "sarahjones",
     password: "$2b$12$Bf.sDD1gQ6391SrTebkd4.9BeiteKKOswHl63vyCN0/51CmDldT7K",
     role: "user",
+    storeRole: "managed" as StoreRole,
     fullName: "Sarah Jones",
     clientId: "client-2",
     isActive: true,
   };
   
   // Alamo Industries user - Password: AlamoUser123!
+  // Alamo is a comanaged client (client-5), so they can purchase products
   const alamoUser = {
     id: "user-003",
     email: "admin@alamoindustries.com",
     username: "alamoadmin",
     password: "$2b$12$N9Ys4.kLCKht2rMjK4x0TOJHlQlxY7dRzAT6vmC7.mGrjck7TUI7O",
     role: "user",
+    storeRole: "comanaged" as StoreRole,
     fullName: "Maria Garcia",
     clientId: "client-5",
     isActive: true,
@@ -885,7 +952,7 @@ export async function registerRoutes(app: Express) {
   portalUsers.set(alamoUser.username, alamoUser);
 
   // Portal Register Endpoint
-  app.post("/api/portal/register", [validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  app.post("/api/portal/register", [verifyTurnstile, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { email, username, password } = req.body;
 
@@ -909,7 +976,7 @@ export async function registerRoutes(app: Express) {
       const bcrypt = await import('bcrypt');
       const hashedPassword = await bcrypt.hash(password, 12);
       
-      // Create new user
+      // Create new user with emailVerified: false
       const newUser = {
         id: randomId(),
         email,
@@ -917,28 +984,156 @@ export async function registerRoutes(app: Express) {
         password: hashedPassword,
         role: "user",
         fullName: username,
+        emailVerified: false,
         createdAt: new Date(),
       };
 
       portalUsers.set(email, newUser);
       portalUsers.set(username, newUser);
 
-      logSecurityEvent("PORTAL_USER_REGISTERED", req, { userId: newUser.id, email });
+      // Generate email verification token
+      const verificationToken = randomId();
+      const now = Date.now();
+      const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+      
+      emailVerificationTokens.set(verificationToken, {
+        email: newUser.email,
+        userId: newUser.id,
+        createdAt: now,
+        expiresAt: now + TWENTY_FOUR_HOURS,
+      });
+
+      // Log verification link (since we don't have email sending yet)
+      const verificationLink = `/api/portal/verify-email?token=${verificationToken}`;
+      console.log(`[EMAIL VERIFICATION] User ${email} - Verification link: ${verificationLink}`);
+      console.log(`[EMAIL VERIFICATION] Token expires at: ${new Date(now + TWENTY_FOUR_HOURS).toISOString()}`);
+
+      logSecurityEvent("PORTAL_USER_REGISTERED", req, { userId: newUser.id, email, emailVerified: false });
 
       return res.json({
         success: true,
-        message: "Account created successfully",
+        message: "Account created successfully. Please check your email to verify your account.",
+        requiresVerification: true,
         user: {
           id: newUser.id,
           email: newUser.email,
           username: newUser.username,
           fullName: newUser.fullName,
           role: newUser.role,
+          emailVerified: false,
         },
       });
     } catch (error: any) {
       console.error("[ERROR] Portal registration failed:", error);
       res.status(500).json({ message: "Registration failed" });
+    }
+  });
+
+  // Email Verification Endpoint
+  app.get("/api/portal/verify-email", async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { token } = req.query;
+
+      if (!token || typeof token !== 'string') {
+        return res.redirect('/portal/login?error=invalid_token&message=Invalid verification link');
+      }
+
+      // Check if token exists
+      const tokenData = emailVerificationTokens.get(token);
+      if (!tokenData) {
+        return res.redirect('/portal/login?error=invalid_token&message=Verification link is invalid or has already been used');
+      }
+
+      // Check if token has expired
+      if (Date.now() > tokenData.expiresAt) {
+        emailVerificationTokens.delete(token);
+        return res.redirect('/portal/login?error=expired_token&message=Verification link has expired. Please request a new one.');
+      }
+
+      // Find and update user
+      const user = portalUsers.get(tokenData.email);
+      if (!user) {
+        emailVerificationTokens.delete(token);
+        return res.redirect('/portal/login?error=user_not_found&message=User not found');
+      }
+
+      // Mark user as verified
+      user.emailVerified = true;
+      portalUsers.set(tokenData.email, user);
+      if (user.username) {
+        portalUsers.set(user.username, user);
+      }
+
+      // Clear the token
+      emailVerificationTokens.delete(token);
+
+      logSecurityEvent("EMAIL_VERIFIED", req, { userId: user.id, email: tokenData.email });
+
+      // Redirect to portal login with success message
+      return res.redirect('/portal/login?verified=true&message=Email verified successfully! You can now log in.');
+    } catch (error: any) {
+      console.error("[ERROR] Email verification failed:", error);
+      return res.redirect('/portal/login?error=verification_failed&message=Email verification failed');
+    }
+  });
+
+  // Resend Verification Email Endpoint
+  app.post("/api/portal/resend-verification", [validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { email } = req.body;
+
+      if (!email) {
+        return res.status(400).json({ message: "Email is required" });
+      }
+
+      // Find user by email
+      const user = portalUsers.get(email);
+      if (!user) {
+        // Don't reveal whether user exists for security
+        return res.json({ 
+          success: true, 
+          message: "If an account exists with this email, a new verification link has been sent." 
+        });
+      }
+
+      // Check if already verified
+      if (user.emailVerified) {
+        return res.status(400).json({ message: "Email is already verified" });
+      }
+
+      // Delete any existing tokens for this user
+      for (const [token, data] of emailVerificationTokens.entries()) {
+        if (data.email === email) {
+          emailVerificationTokens.delete(token);
+        }
+      }
+
+      // Generate new verification token
+      const verificationToken = randomId();
+      const now = Date.now();
+      const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+      
+      emailVerificationTokens.set(verificationToken, {
+        email: user.email,
+        userId: user.id,
+        createdAt: now,
+        expiresAt: now + TWENTY_FOUR_HOURS,
+      });
+
+      // Log the new verification link
+      const verificationLink = `/api/portal/verify-email?token=${verificationToken}`;
+      console.log(`[EMAIL VERIFICATION] Resend for ${email} - Verification link: ${verificationLink}`);
+      console.log(`[EMAIL VERIFICATION] Token expires at: ${new Date(now + TWENTY_FOUR_HOURS).toISOString()}`);
+
+      logSecurityEvent("VERIFICATION_EMAIL_RESENT", req, { email });
+
+      return res.json({
+        success: true,
+        message: "If an account exists with this email, a new verification link has been sent.",
+      });
+    } catch (error: any) {
+      console.error("[ERROR] Resend verification failed:", error);
+      res.status(500).json({ message: "Failed to resend verification email" });
     }
   });
 
@@ -968,30 +1163,105 @@ export async function registerRoutes(app: Express) {
         return res.status(401).json({ message: "Invalid email or password" });
       }
 
-      // Generate JWT token using the module-level JWT_SECRET
+      // Check email verification status (allow admin to login regardless)
+      if (user.role !== 'admin' && user.emailVerified === false) {
+        logSecurityEvent("PORTAL_LOGIN_UNVERIFIED", req, { email });
+        return res.status(403).json({ 
+          message: "Please verify your email before logging in. Check your inbox for the verification link.",
+          code: "EMAIL_NOT_VERIFIED",
+          email: user.email
+        });
+      }
+
+      // Generate session ID for session tracking and rotation
+      const sessionId = randomId();
+      const now = Date.now();
+      
+      // Store session in session store with rotation tracking
+      sessionStore.set(sessionId, {
+        userId: user.id,
+        createdAt: now,
+        lastRotated: now,
+      });
+
+      // Derive storeRole from user or client data
+      let storeRole: StoreRole = 'prospect';
+      if (user.storeRole) {
+        storeRole = user.storeRole as StoreRole;
+      } else if (user.role === 'admin') {
+        storeRole = 'admin';
+      } else if (user.clientId) {
+        const client = portalClients.get(user.clientId);
+        if (client?.serviceType === 'managed') {
+          storeRole = 'managed';
+        } else if (client?.serviceType === 'comanaged') {
+          storeRole = 'comanaged';
+        }
+      }
+
+      // Generate JWT token using the module-level JWT_SECRET (includes storeRole for RBAC)
       const token = jwt.sign(
-        { userId: user.id, email: user.email, role: user.role, clientId: user.clientId || null },
+        { userId: user.id, email: user.email, role: user.role, storeRole, clientId: user.clientId || null },
         JWT_SECRET,
         { expiresIn: '24h' }
       );
 
-      logSecurityEvent("PORTAL_USER_LOGIN", req, { userId: user.id, email, role: user.role });
+      // Set secure session cookie with HttpOnly, Secure, and SameSite flags
+      res.cookie('sessionId', sessionId, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours in milliseconds
+        path: '/',
+      });
+
+      logSecurityEvent("PORTAL_USER_LOGIN", req, { userId: user.id, email, role: user.role, storeRole, sessionId });
 
       return res.json({
         success: true,
         token,
+        sessionId,
         user: {
           id: user.id,
           email: user.email,
           username: user.username,
           fullName: user.fullName,
           role: user.role,
+          storeRole,
           clientId: user.clientId || null,
         },
       });
     } catch (error: any) {
       console.error("[ERROR] Portal login failed:", error);
       res.status(500).json({ message: "Login failed" });
+    }
+  });
+
+  // Portal Logout Endpoint - Clears session cookie
+  app.post("/api/portal/logout", [validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const sessionId = req.cookies?.sessionId;
+      
+      if (sessionId) {
+        // Remove session from session store
+        sessionStore.delete(sessionId);
+        logSecurityEvent("SESSION_TERMINATED", req, { sessionId });
+      }
+
+      // Clear the session cookie
+      res.clearCookie('sessionId', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+      });
+
+      logSecurityEvent("PORTAL_USER_LOGOUT", req, { userId: req.user?.id || "unknown" });
+
+      return res.json({ success: true, message: "Logged out successfully" });
+    } catch (error: any) {
+      console.error("[ERROR] Portal logout failed:", error);
+      res.status(500).json({ message: "Logout failed" });
     }
   });
 
@@ -1426,6 +1696,13 @@ export async function registerRoutes(app: Express) {
         billingName: order.billingName,
       }));
       
+      logSecurityEvent("ORDERS_LIST_VIEWED", req, { 
+        userId,
+        clientId,
+        orderCount: orders.length,
+        statusFilter: status || "all"
+      });
+      
       res.json({ orders });
     } catch (error: any) {
       console.error("[ERROR] Failed to fetch orders:", error);
@@ -1450,6 +1727,14 @@ export async function registerRoutes(app: Express) {
       if (order.userId !== userId && order.clientId !== clientId) {
         return res.status(403).json({ error: "Access denied to this order" });
       }
+      
+      logSecurityEvent("ORDER_DETAIL_VIEWED", req, { 
+        orderId: order.id,
+        orderNumber: order.orderNumber,
+        userId,
+        clientId,
+        orderStatus: order.status
+      });
       
       res.json({
         order: {
@@ -1611,6 +1896,15 @@ export async function registerRoutes(app: Express) {
 </html>
       `;
       
+      logSecurityEvent("RECEIPT_GENERATED", req, { 
+        orderId: order.id,
+        orderNumber: order.orderNumber,
+        userId,
+        clientId,
+        total: order.total,
+        orderStatus: order.status
+      });
+      
       res.setHeader("Content-Type", "text/html");
       res.setHeader("Content-Disposition", `attachment; filename="receipt-${order.orderNumber}.html"`);
       res.send(receiptHtml);
@@ -1623,12 +1917,8 @@ export async function registerRoutes(app: Express) {
   // ===== ADMIN TENANT MANAGEMENT =====
   
   // List all companies (admin only)
-  app.get("/api/portal/admin/companies", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+  app.get("/api/portal/admin/companies", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      if (req.user?.role !== "admin") {
-        return res.status(403).json({ error: "Admin access required" });
-      }
-      
       const companies = Array.from(portalClients.values()).map(client => ({
         id: client.id,
         companyName: client.companyName,
@@ -1646,12 +1936,8 @@ export async function registerRoutes(app: Express) {
   });
   
   // Admin tenant selector - quick list for dropdown
-  app.get("/api/portal/admin/tenants", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+  app.get("/api/portal/admin/tenants", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      if (req.user?.role !== "admin") {
-        return res.status(403).json({ error: "Admin access required" });
-      }
-      
       // Get MSP company first, then clients sorted by name
       const allCompanies = Array.from(portalClients.values());
       const mspCompanies = allCompanies.filter(c => c.type === "msp").map(c => ({
@@ -1679,12 +1965,8 @@ export async function registerRoutes(app: Express) {
   });
 
   // Get company details with users (admin only)
-  app.get("/api/portal/admin/companies/:id", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+  app.get("/api/portal/admin/companies/:id", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      if (req.user?.role !== "admin") {
-        return res.status(403).json({ error: "Admin access required" });
-      }
-      
       const company = portalClients.get(req.params.id);
       if (!company) {
         return res.status(404).json({ error: "Company not found" });
@@ -1707,12 +1989,8 @@ export async function registerRoutes(app: Express) {
   });
 
   // Create new company (admin only)
-  app.post("/api/portal/admin/companies", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  app.post("/api/portal/admin/companies", [authMiddleware, requireAdmin, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      if (req.user?.role !== "admin") {
-        return res.status(403).json({ error: "Admin access required" });
-      }
-      
       const { companyName, contactEmail, contactPhone, industry, primaryContact } = req.body;
       
       if (!companyName || !contactEmail) {
@@ -1741,12 +2019,8 @@ export async function registerRoutes(app: Express) {
   });
 
   // Update company (admin only)
-  app.put("/api/portal/admin/companies/:id", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  app.put("/api/portal/admin/companies/:id", [authMiddleware, requireAdmin, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      if (req.user?.role !== "admin") {
-        return res.status(403).json({ error: "Admin access required" });
-      }
-      
       const company = portalClients.get(req.params.id);
       if (!company) {
         return res.status(404).json({ error: "Company not found" });
@@ -1774,12 +2048,8 @@ export async function registerRoutes(app: Express) {
   });
 
   // Admin impersonation - switch to view a company's portal
-  app.post("/api/portal/admin/impersonate", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  app.post("/api/portal/admin/impersonate", [authMiddleware, requireAdmin, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      if (req.user?.role !== "admin") {
-        return res.status(403).json({ error: "Admin access required" });
-      }
-      
       const { companyId } = req.body;
       
       if (!companyId) {
@@ -1819,12 +2089,8 @@ export async function registerRoutes(app: Express) {
   });
 
   // Stop impersonation - return to admin view
-  app.post("/api/portal/admin/stop-impersonation", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+  app.post("/api/portal/admin/stop-impersonation", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      if (req.user?.role !== "admin") {
-        return res.status(403).json({ error: "Admin access required" });
-      }
-      
       // Generate a regular admin token without impersonation
       const adminToken = jwt.sign(
         { 
@@ -1844,12 +2110,8 @@ export async function registerRoutes(app: Express) {
   });
 
   // Get tenant-specific files for a company (admin only)
-  app.get("/api/portal/admin/companies/:id/files", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+  app.get("/api/portal/admin/companies/:id/files", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      if (req.user?.role !== "admin") {
-        return res.status(403).json({ error: "Admin access required" });
-      }
-      
       const company = portalClients.get(req.params.id);
       if (!company) {
         return res.status(404).json({ error: "Company not found" });
@@ -1904,12 +2166,8 @@ export async function registerRoutes(app: Express) {
   });
 
   // Upload file for a tenant (admin only)
-  app.post("/api/portal/admin/companies/:id/files", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  app.post("/api/portal/admin/companies/:id/files", [authMiddleware, requireAdmin, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      if (req.user?.role !== "admin") {
-        return res.status(403).json({ error: "Admin access required" });
-      }
-      
       const company = portalClients.get(req.params.id);
       if (!company) {
         return res.status(404).json({ error: "Company not found" });
@@ -1939,12 +2197,8 @@ export async function registerRoutes(app: Express) {
   });
 
   // Delete tenant file (admin only)
-  app.delete("/api/portal/admin/companies/:companyId/files/:fileId", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+  app.delete("/api/portal/admin/companies/:companyId/files/:fileId", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      if (req.user?.role !== "admin") {
-        return res.status(403).json({ error: "Admin access required" });
-      }
-      
       const deleted = await storage.deleteTenantFile(req.params.fileId);
       if (!deleted) {
         return res.status(404).json({ error: "File not found" });
@@ -1958,12 +2212,8 @@ export async function registerRoutes(app: Express) {
   });
 
   // Get company metrics/stats (admin only)
-  app.get("/api/portal/admin/companies/:id/metrics", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+  app.get("/api/portal/admin/companies/:id/metrics", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      if (req.user?.role !== "admin") {
-        return res.status(403).json({ error: "Admin access required" });
-      }
-      
       const companyId = req.params.id;
       const company = portalClients.get(companyId);
       if (!company) {
@@ -2037,7 +2287,7 @@ export async function registerRoutes(app: Express) {
   });
 
   // ===== LEAD QUOTE FORM =====
-  app.post("/api/lead-quote", [leadQuoteRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  app.post("/api/lead-quote", [verifyTurnstile, leadQuoteRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { seats, enterpriseToggle, connectivity, devices, recommendedPlan, firstName, lastName, company, email, consent, source, pageUrl, timestamp } = req.body;
       
@@ -2097,7 +2347,7 @@ export async function registerRoutes(app: Express) {
   });
 
   // ===== CONTACT FORM =====
-  app.post("/api/contact", [leadQuoteRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  app.post("/api/contact", [verifyTurnstile, leadQuoteRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { name, email, phone, company, service, message } = req.body;
       
@@ -2237,10 +2487,122 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  // ========== STORE CART ROUTES ==========
+  
+  // In-memory cart storage (per user session)
+  const userCarts: Map<string, { productId: string; quantity: number; name: string; price: number; sku: string }[]> = new Map();
+  
+  // Add item to cart
+  app.post("/api/store/cart/add", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { productId, quantity, name, price, sku } = req.body;
+      
+      if (!productId || !quantity || quantity < 1) {
+        return res.status(400).json({ error: "Product ID and valid quantity are required" });
+      }
+      
+      const userId = req.userId || "anonymous";
+      const cart = userCarts.get(userId) || [];
+      
+      // Check if item already exists in cart
+      const existingIndex = cart.findIndex(item => item.productId === productId);
+      if (existingIndex >= 0) {
+        cart[existingIndex].quantity += quantity;
+      } else {
+        cart.push({ productId, quantity, name: name || "Product", price: price || 0, sku: sku || "" });
+      }
+      
+      userCarts.set(userId, cart);
+      
+      logSecurityEvent("CART_ITEM_ADDED", req, { 
+        productId, 
+        quantity, 
+        userId,
+        clientId: req.user?.clientId,
+        cartItemCount: cart.length
+      });
+      
+      res.json({ success: true, cart, itemCount: cart.length });
+    } catch (error: any) {
+      console.error("[CART ADD ERROR]", error);
+      res.status(500).json({ error: "Failed to add item to cart" });
+    }
+  });
+  
+  // Remove item from cart
+  app.post("/api/store/cart/remove", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { productId, quantity } = req.body;
+      
+      if (!productId) {
+        return res.status(400).json({ error: "Product ID is required" });
+      }
+      
+      const userId = req.userId || "anonymous";
+      let cart = userCarts.get(userId) || [];
+      
+      const existingIndex = cart.findIndex(item => item.productId === productId);
+      if (existingIndex >= 0) {
+        if (quantity && quantity < cart[existingIndex].quantity) {
+          cart[existingIndex].quantity -= quantity;
+        } else {
+          cart = cart.filter(item => item.productId !== productId);
+        }
+      }
+      
+      userCarts.set(userId, cart);
+      
+      logSecurityEvent("CART_ITEM_REMOVED", req, { 
+        productId, 
+        userId,
+        clientId: req.user?.clientId,
+        cartItemCount: cart.length
+      });
+      
+      res.json({ success: true, cart, itemCount: cart.length });
+    } catch (error: any) {
+      console.error("[CART REMOVE ERROR]", error);
+      res.status(500).json({ error: "Failed to remove item from cart" });
+    }
+  });
+  
+  // Clear cart
+  app.post("/api/store/cart/clear", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.userId || "anonymous";
+      const previousCart = userCarts.get(userId) || [];
+      
+      userCarts.delete(userId);
+      
+      logSecurityEvent("CART_CLEARED", req, { 
+        userId,
+        clientId: req.user?.clientId,
+        clearedItemCount: previousCart.length
+      });
+      
+      res.json({ success: true, cart: [], itemCount: 0 });
+    } catch (error: any) {
+      console.error("[CART CLEAR ERROR]", error);
+      res.status(500).json({ error: "Failed to clear cart" });
+    }
+  });
+  
+  // Get cart contents
+  app.get("/api/store/cart", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.userId || "anonymous";
+      const cart = userCarts.get(userId) || [];
+      res.json({ cart, itemCount: cart.length });
+    } catch (error: any) {
+      console.error("[CART GET ERROR]", error);
+      res.status(500).json({ error: "Failed to get cart" });
+    }
+  });
+
   // ========== STORE CHECKOUT ROUTES ==========
 
-  // Create Stripe checkout session
-  app.post("/api/store/checkout/stripe", [validateInput], async (req: Request, res: Response) => {
+  // Create Stripe checkout session - requires 'comanaged' or 'admin' role for purchasing
+  app.post("/api/store/checkout/stripe", [authMiddleware, requireRole('comanaged', 'admin'), validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { lineItems, billing, subtotal, total } = req.body;
       
@@ -2306,15 +2668,30 @@ export async function registerRoutes(app: Express) {
         billingCompany: billing.company || null,
       }).returning();
 
+      logSecurityEvent("CHECKOUT_STARTED", req, { 
+        orderId: order.id, 
+        orderNumber, 
+        cartTotal: total, 
+        itemCount: lineItems.length, 
+        userId: req.userId,
+        clientId: req.user?.clientId,
+        paymentMethod: "stripe"
+      });
+      
       res.json({ url: session.url, orderId: order.id });
     } catch (error: any) {
       console.error("[STRIPE CHECKOUT ERROR]", error);
+      logSecurityEvent("CHECKOUT_FAILED", req, { 
+        error: error.message, 
+        userId: req.userId,
+        clientId: req.user?.clientId 
+      });
       res.status(500).json({ error: error.message || "Failed to create checkout session" });
     }
   });
 
-  // Create order (for quote requests or other payment methods)
-  app.post("/api/store/orders", [validateInput], async (req: Request, res: Response) => {
+  // Create order (for quote requests or other payment methods) - requires 'comanaged' or 'admin' role
+  app.post("/api/store/orders", [authMiddleware, requireRole('comanaged', 'admin'), validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { lineItems, billing, paymentMethod, status, subtotal, total, notes } = req.body;
       
@@ -2345,6 +2722,16 @@ export async function registerRoutes(app: Express) {
         notes: notes || null,
       }).returning();
 
+      logSecurityEvent("ORDER_CREATED", req, { 
+        orderId: order.id, 
+        orderNumber: order.orderNumber,
+        clientId: req.user?.clientId,
+        userId: req.userId,
+        total,
+        paymentMethod: paymentMethod || "quote_request",
+        itemCount: lineItems.length
+      });
+      
       res.json({ orderId: order.id, orderNumber: order.orderNumber });
     } catch (error: any) {
       console.error("[CREATE ORDER ERROR]", error);
@@ -2380,8 +2767,8 @@ export async function registerRoutes(app: Express) {
 
   // ========== STORE QUOTE REQUESTS ==========
 
-  // Create quote request
-  app.post("/api/store/quote-requests", [validateInput], async (req: Request, res: Response) => {
+  // Create quote request - allows all authenticated users (any role can request a quote)
+  app.post("/api/store/quote-requests", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { contactName, contactEmail, contactPhone, companyName, message, requestedItems } = req.body;
       
@@ -2414,6 +2801,17 @@ export async function registerRoutes(app: Express) {
       }).returning();
 
       console.log(`[QUOTE REQUEST] Created: ${quoteNumber} for ${contactEmail}`);
+      
+      logSecurityEvent("QUOTE_REQUESTED", req, { 
+        quoteId: quoteRequest.id, 
+        quoteNumber,
+        clientId: req.user?.clientId,
+        userId: req.userId,
+        contactEmail,
+        companyName,
+        itemCount: requestedItems.length,
+        items: requestedItems.map((item: any) => ({ id: item.id, name: item.name, quantity: item.quantity }))
+      });
 
       res.json({
         id: quoteRequest.id,
@@ -2486,6 +2884,12 @@ export async function registerRoutes(app: Express) {
         const { storeOrders } = await import("@shared/schema");
         const { eq } = await import("drizzle-orm");
         
+        // Get the order to retrieve its details for logging
+        const [existingOrder] = await db.select().from(storeOrders)
+          .where(eq(storeOrders.stripeSessionId, sessionId)).limit(1);
+        
+        const oldStatus = existingOrder?.status || "unknown";
+        
         await db.update(storeOrders)
           .set({
             status: "paid",
@@ -2496,6 +2900,24 @@ export async function registerRoutes(app: Express) {
           .where(eq(storeOrders.stripeSessionId, sessionId));
           
         console.log(`[STRIPE WEBHOOK] Order paid: session=${sessionId}`);
+        
+        // Log checkout completion and order status change
+        console.log(`[SECURITY] CHECKOUT_COMPLETED`, { 
+          orderId: existingOrder?.id,
+          orderNumber: existingOrder?.orderNumber,
+          paymentMethod: "stripe",
+          total: existingOrder?.total,
+          stripeSessionId: sessionId,
+          stripePaymentIntentId: session.payment_intent
+        });
+        
+        console.log(`[SECURITY] ORDER_STATUS_CHANGED`, { 
+          orderId: existingOrder?.id,
+          orderNumber: existingOrder?.orderNumber,
+          oldStatus,
+          newStatus: "paid",
+          triggeredBy: "stripe_webhook"
+        });
       }
 
       res.json({ received: true });
@@ -2525,12 +2947,8 @@ export async function registerRoutes(app: Express) {
   // ========== ZOHO DESK ROUTES ==========
 
   // Get all tickets (admin)
-  app.get("/api/zoho/desk/tickets", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+  app.get("/api/zoho/desk/tickets", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      if (req.user?.role !== "admin") {
-        return res.status(403).json({ error: "Admin access required" });
-      }
-      
       const { status, limit, from } = req.query;
       const result = await zohoDeskService.getTickets({
         status: status as string,
@@ -2616,12 +3034,8 @@ export async function registerRoutes(app: Express) {
   // ========== ZOHO CRM ROUTES ==========
 
   // Get CRM accounts (companies)
-  app.get("/api/zoho/crm/accounts", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+  app.get("/api/zoho/crm/accounts", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      if (req.user?.role !== "admin") {
-        return res.status(403).json({ error: "Admin access required" });
-      }
-      
       const { page, per_page } = req.query;
       const result = await zohoCRMService.getAccounts({
         page: page ? parseInt(page as string) : undefined,
@@ -2648,12 +3062,8 @@ export async function registerRoutes(app: Express) {
   });
 
   // Get CRM contacts
-  app.get("/api/zoho/crm/contacts", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+  app.get("/api/zoho/crm/contacts", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      if (req.user?.role !== "admin") {
-        return res.status(403).json({ error: "Admin access required" });
-      }
-      
       const { page, per_page } = req.query;
       const result = await zohoCRMService.getContacts({
         page: page ? parseInt(page as string) : undefined,
@@ -2667,12 +3077,8 @@ export async function registerRoutes(app: Express) {
   });
 
   // Get CRM deals
-  app.get("/api/zoho/crm/deals", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+  app.get("/api/zoho/crm/deals", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      if (req.user?.role !== "admin") {
-        return res.status(403).json({ error: "Admin access required" });
-      }
-      
       const { page, per_page } = req.query;
       const result = await zohoCRMService.getDeals({
         page: page ? parseInt(page as string) : undefined,
@@ -2688,12 +3094,8 @@ export async function registerRoutes(app: Express) {
   // ========== ZOHO BILLING ROUTES ==========
 
   // Get subscriptions
-  app.get("/api/zoho/billing/subscriptions", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+  app.get("/api/zoho/billing/subscriptions", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      if (req.user?.role !== "admin") {
-        return res.status(403).json({ error: "Admin access required" });
-      }
-      
       const { status, page, per_page } = req.query;
       const result = await zohoBillingService.getSubscriptions({
         status: status as string,
@@ -2723,12 +3125,8 @@ export async function registerRoutes(app: Express) {
   });
 
   // Get invoices
-  app.get("/api/zoho/billing/invoices", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+  app.get("/api/zoho/billing/invoices", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      if (req.user?.role !== "admin") {
-        return res.status(403).json({ error: "Admin access required" });
-      }
-      
       const { status, page, per_page } = req.query;
       const result = await zohoBillingService.getInvoices({
         status: status as string,
@@ -2848,6 +3246,130 @@ export async function registerRoutes(app: Express) {
     } catch (error: any) {
       console.error("[ERROR] Failed to get client pricing:", error);
       res.status(500).json({ error: "Failed to get client pricing" });
+    }
+  });
+
+  // ========== ADMIN PRICING ROUTES ==========
+  
+  // In-memory product pricing store (productId -> basePrice)
+  const productPricing: Map<string, number> = new Map();
+  
+  // Update product pricing (admin only)
+  app.post("/api/admin/pricing/update", [authMiddleware, requireAdmin, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { productId, newPrice } = req.body;
+      
+      if (!productId || newPrice === undefined || newPrice < 0) {
+        return res.status(400).json({ error: "Product ID and valid price are required" });
+      }
+      
+      const oldPrice = productPricing.get(productId) || 0;
+      productPricing.set(productId, newPrice);
+      
+      logSecurityEvent("PRICING_UPDATED", req, { 
+        productId, 
+        oldPrice, 
+        newPrice, 
+        adminId: req.userId,
+        adminEmail: req.user?.email
+      });
+      
+      res.json({ success: true, productId, oldPrice, newPrice });
+    } catch (error: any) {
+      console.error("[PRICING UPDATE ERROR]", error);
+      res.status(500).json({ error: "Failed to update pricing" });
+    }
+  });
+  
+  // Set client-specific pricing (admin only)
+  app.post("/api/admin/client-pricing/set", [authMiddleware, requireAdmin, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { clientId, productId, customPrice, discountPercent } = req.body;
+      
+      if (!clientId || !productId) {
+        return res.status(400).json({ error: "Client ID and Product ID are required" });
+      }
+      
+      if (customPrice === undefined && discountPercent === undefined) {
+        return res.status(400).json({ error: "Either custom price or discount percent is required" });
+      }
+      
+      // Get or create client pricing array
+      let clientPricing = clientPricingData.get(clientId) || [];
+      
+      // Check if pricing already exists for this product
+      const existingIndex = clientPricing.findIndex(p => p.productId === productId);
+      const oldPricing = existingIndex >= 0 ? clientPricing[existingIndex] : null;
+      
+      const newPricingEntry = {
+        productId,
+        customPrice: customPrice || oldPricing?.customPrice || 0,
+        discountPercent: discountPercent !== undefined ? discountPercent : (oldPricing?.discountPercent || 0)
+      };
+      
+      if (existingIndex >= 0) {
+        clientPricing[existingIndex] = newPricingEntry;
+      } else {
+        clientPricing.push(newPricingEntry);
+      }
+      
+      clientPricingData.set(clientId, clientPricing);
+      
+      logSecurityEvent("CLIENT_PRICING_SET", req, { 
+        clientId, 
+        productId, 
+        oldPrice: oldPricing?.customPrice,
+        oldDiscount: oldPricing?.discountPercent,
+        newPrice: newPricingEntry.customPrice,
+        discount: newPricingEntry.discountPercent, 
+        adminId: req.userId,
+        adminEmail: req.user?.email
+      });
+      
+      res.json({ success: true, clientId, productId, pricing: newPricingEntry });
+    } catch (error: any) {
+      console.error("[CLIENT PRICING SET ERROR]", error);
+      res.status(500).json({ error: "Failed to set client pricing" });
+    }
+  });
+  
+  // Get all client pricing (admin only)
+  app.get("/api/admin/client-pricing/:clientId", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { clientId } = req.params;
+      const pricing = clientPricingData.get(clientId) || [];
+      
+      res.json({ clientId, pricing });
+    } catch (error: any) {
+      console.error("[GET CLIENT PRICING ERROR]", error);
+      res.status(500).json({ error: "Failed to get client pricing" });
+    }
+  });
+  
+  // Delete client-specific pricing (admin only)
+  app.delete("/api/admin/client-pricing/:clientId/:productId", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { clientId, productId } = req.params;
+      
+      let clientPricing = clientPricingData.get(clientId) || [];
+      const oldPricing = clientPricing.find(p => p.productId === productId);
+      
+      clientPricing = clientPricing.filter(p => p.productId !== productId);
+      clientPricingData.set(clientId, clientPricing);
+      
+      logSecurityEvent("CLIENT_PRICING_REMOVED", req, { 
+        clientId, 
+        productId, 
+        oldPrice: oldPricing?.customPrice,
+        oldDiscount: oldPricing?.discountPercent,
+        adminId: req.userId,
+        adminEmail: req.user?.email
+      });
+      
+      res.json({ success: true, clientId, productId });
+    } catch (error: any) {
+      console.error("[DELETE CLIENT PRICING ERROR]", error);
+      res.status(500).json({ error: "Failed to delete client pricing" });
     }
   });
 

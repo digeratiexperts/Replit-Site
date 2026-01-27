@@ -42,6 +42,19 @@ The platform includes a comprehensive e-commerce store at `/store` with:
 - **Portal Integration**: Order history and receipts at `/portal/orders`
 - **Database Schema**: `storeProducts`, `storeOrders`, `storeCarts`, `storeQuoteRequests`, `storeClientPricing` tables
 
+### Security Implementation
+The platform implements comprehensive security following enterprise best practices:
+- **Transport & Headers**: HTTPS + HSTS, CSP (Content-Security-Policy), X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
+- **Authentication**: JWT tokens with secure HttpOnly/Secure/SameSite=Lax cookies, session management with rotation, email verification for new accounts
+- **RBAC Roles**: Public, Prospect, Managed Client, Co-Managed Client, Admin - with server-side enforcement on every route
+- **Access Control**: Checkout restricted to comanaged/admin users, separate admin area with stricter rules
+- **Form Protection**: Cloudflare Turnstile verification, honeypot fields, rate limiting (5 login/15min, 10 forms/hour, 10 payments/hour)
+- **Bot Detection**: User-agent analysis, request rate monitoring, submission timing checks
+- **Input Validation**: Schema validation, SQL injection prevention, XSS defenses
+- **CSRF Protection**: Token validation for all state-changing requests
+- **Audit Logging**: Security events for auth, orders, pricing changes, admin actions
+- **Payment Security**: Stripe hosted checkout (PCI compliant), webhook signature verification
+
 ### System Design Choices
 The project follows a modular structure (`client/` and `server/`), using UUIDs for IDs. Payment processing includes enterprise-grade encryption and webhook signature validation. AI services for ticket classification and priority detection are implemented with graceful fallback. Role-based access control manages navigation and features. User storage is in-memory, designed for future PostgreSQL migration, using bcrypt hashing and JWT tokens. Zoho One API integration uses OAuth with secrets for various modules, implementing a data isolation pattern to scope queries by authenticated user's email and returning a consistent response format across portal endpoints.
 

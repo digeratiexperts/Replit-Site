@@ -4,6 +4,7 @@ import { registerRoutes } from "./routes";
 import { createServer as createViteServer } from "vite";
 import path from "path";
 import fs from "fs";
+import cookieParser from "cookie-parser";
 import { runMigrations } from "stripe-replit-sync";
 import { getStripeSync } from "./stripeClient";
 import { WebhookHandlers } from "./webhookHandlers";
@@ -185,6 +186,7 @@ app.post(
 // --------- Basic parsers (after health and webhook so nothing delays them)
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 /** Utility to list routes for debugging */
 function listEndpoints(): Array<{ method: string; path: string }> {

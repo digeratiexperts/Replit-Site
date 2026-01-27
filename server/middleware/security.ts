@@ -52,6 +52,44 @@ export function validateCSRFToken(req: Request, res: Response, next: NextFunctio
   next();
 }
 
+// ==================== CLOUDFLARE TURNSTILE BOT PROTECTION ====================
+export async function verifyTurnstile(req: Request, res: Response, next: NextFunction) {
+  const turnstileToken = req.body.turnstileToken || req.body['cf-turnstile-response'];
+  
+  // Skip in development if not configured
+  if (!process.env.TURNSTILE_SECRET_KEY) {
+    console.warn('[SECURITY] Turnstile not configured - skipping verification');
+    return next();
+  }
+  
+  if (!turnstileToken) {
+    return res.status(400).json({ error: 'Bot verification required' });
+  }
+  
+  try {
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        secret: process.env.TURNSTILE_SECRET_KEY,
+        response: turnstileToken,
+        remoteip: req.ip || ''
+      }).toString()
+    });
+    
+    const data = await response.json();
+    if (!data.success) {
+      logSecurityEvent('TURNSTILE_FAILED', req, { error: data['error-codes'] });
+      return res.status(400).json({ error: 'Bot verification failed' });
+    }
+    
+    next();
+  } catch (error) {
+    console.error('[SECURITY] Turnstile verification error:', error);
+    next(); // Allow through on error to prevent blocking legitimate users
+  }
+}
+
 // ==================== INPUT SANITIZATION ====================
 export function sanitizeInput(input: any): any {
   if (typeof input === "string") {
@@ -294,8 +332,24 @@ export function setSecurityHeaders(req: Request, res: Response, next: NextFuncti
   // HSTS: Enforce HTTPS
   res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
 
+  // Content Security Policy
+  const csp = [
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://challenges.cloudflare.com https://salesiq.zoho.com",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src 'self' https://fonts.gstatic.com",
+    "img-src 'self' data: https: blob:",
+    "frame-src https://js.stripe.com https://challenges.cloudflare.com https://meet.digerati-experts.com https://*.zoho.com",
+    "connect-src 'self' https://api.stripe.com https://*.zoho.com wss://*.replit.dev",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'self'"
+  ].join("; ");
+  res.setHeader("Content-Security-Policy", csp);
+
   // Prevent clickjacking
-  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
 
   // Prevent MIME type sniffing
   res.setHeader("X-Content-Type-Options", "nosniff");
