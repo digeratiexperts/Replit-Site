@@ -631,9 +631,8 @@ export default function ManagedWorkplace() {
                 </Button>
                 <Button
                   asChild
-                  variant="outline"
                   size="lg"
-                  className="border-white/30 text-white hover:bg-white/10"
+                  className="bg-transparent border border-white/30 text-white hover:bg-white/10"
                   data-testid="btn-final-call"
                 >
                   <a href="tel:325-480-9870">
