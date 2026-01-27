@@ -383,15 +383,6 @@ export default function OfficePage() {
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </a>
                   </Button>
-                  <Button
-                    asChild
-                    variant="outline"
-                    size="lg"
-                    className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-                    data-testid="btn-hero-pricing"
-                  >
-                    <a href="#package">Get Pricing</a>
-                  </Button>
                 </div>
               </div>
             </div>
