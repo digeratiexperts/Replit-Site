@@ -601,7 +601,9 @@ export function MegaMenu() {
                         <div className={`relative ${
                           item.name === 'Solutions' 
                             ? 'grid grid-cols-5 divide-x divide-white/5' 
-                            : 'p-6 grid grid-cols-3 gap-6'
+                            : item.sections.length === 3 
+                              ? 'p-6 grid grid-cols-3 gap-6' 
+                              : 'p-6 flex gap-6'
                         }`}>
                           {item.sections.map((section, sectionIdx) => (
                             <motion.div 
@@ -612,10 +614,10 @@ export function MegaMenu() {
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: sectionIdx * 0.05 }}
-                              className={`min-w-0 relative overflow-hidden ${
+                              className={`relative overflow-hidden ${
                                 item.name === 'Solutions' 
-                                  ? 'p-4' 
-                                  : ''
+                                  ? 'min-w-0 p-4' 
+                                  : 'flex-1 min-w-0'
                               }`}
                               onMouseMove={(e) => item.name === 'Solutions' && handleColumnMouseMove(e, sectionIdx)}
                               onMouseEnter={() => item.name === 'Solutions' && setHoveredColumn(sectionIdx)}
@@ -784,7 +786,7 @@ export function MegaMenu() {
                           {/* Placeholder Box for Industries and About */}
                           {(item.name === 'Industries' || item.name === 'About') && (
                             <motion.div 
-                              className="bg-gradient-to-br from-purple-900/30 to-violet-900/20 border border-white/10 rounded-xl p-6 flex flex-col items-center justify-center min-h-64"
+                              className="bg-gradient-to-br from-purple-900/30 to-violet-900/20 border border-white/10 rounded-xl p-6 flex flex-col items-center justify-center flex-1 min-h-[200px]"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: 0.2 }}
@@ -805,7 +807,7 @@ export function MegaMenu() {
                           {/* Ebook Feature for Resources */}
                           {item.name === 'Resources' && (
                             <motion.div 
-                              className="bg-gradient-to-br from-orange-900/20 to-amber-900/10 border border-orange-500/20 rounded-xl p-4 flex flex-col min-h-64 hover:border-orange-500/40 transition-colors"
+                              className="bg-gradient-to-br from-orange-900/20 to-amber-900/10 border border-orange-500/20 rounded-xl p-4 flex flex-col flex-1 min-h-[200px] hover:border-orange-500/40 transition-colors"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: 0.2 }}
