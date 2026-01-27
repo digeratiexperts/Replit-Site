@@ -116,9 +116,9 @@ export default function CoreIT() {
       </Helmet>
       <header className="border-b border-white/10 bg-[#030228]/95 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/internal/sales-process" className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors text-sm" data-testid="link-back">
+          <Link href="/internal" className="inline-flex items-center gap-2 text-violet-400 hover:text-violet-300 transition-colors mb-8" data-testid="link-back">
             <ArrowLeft className="w-4 h-4" />
-            Back to Sales Process
+            <span>Back to Sales Tools</span>
           </Link>
           <img src={logoImage} alt="Digerati Experts" className="h-8" />
         </div>

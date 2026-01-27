@@ -55,16 +55,41 @@ The homepage uses scroll snap functionality for a polished landing page experien
 - **Component**: `FullPageScrollProvider` wraps homepage sections with `ScrollSectionAuto`
 - **Dynamic theming**: Navigation elements automatically switch between dark/light styles based on current section background (white outline on dark sections, violet/gray on light sections)
 
-### Internal Sales & Reference Pages
-Internal pages for sales team reference and client presentations, accessible via MegaMenu About > Why Us:
+### Internal Sales Tools Hub
+Unified dashboard at `/internal` that organizes all internal sales resources into categories:
+
+**Sales Process**
 | Route | Component | Description |
 |-------|-----------|-------------|
-| `/internal/11-things-better` | ElevenThingsBetter | 11 differentiators with animated cards |
-| `/internal/six-reasons` | SixReasons | 6 reasons to choose Digerati |
+| `/internal` | InternalHub | Central sales tools dashboard with category navigation |
+| `/internal/sales-process` | SalesProcessPage | Complete sales pipeline, Q&A cards, objection handlers |
+
+**Reference Materials**
+| Route | Component | Description |
+|-------|-----------|-------------|
 | `/internal/proactive-ecosystems` | ProActiveEcosystems | Service tier comparison matrix (Basic/Advanced/Enterprise) |
 | `/internal/guarantees-values` | GuaranteesValues | 9 guarantees, 5 core values, 4-step guide |
-| `/internal/usp-worksheet` | USPWorksheet | Interactive sales worksheet with localStorage persistence |
-| `/services/ucaas` | UCaaS | Voice & Meetings service page with pricing tiers |
+| `/internal/11-things-better` | ElevenThingsBetter | 11 differentiators with animated cards |
+| `/internal/six-reasons` | SixReasons | 6 reasons to choose Digerati |
+| `/internal/pricing-tiers` | PricingTiers | Package pricing structure reference |
+| `/internal/service-packages` | ServicePackages | Detailed breakdown of service tiers |
+| `/internal/vcio` | VcioServices | vCIO offering details |
+| `/internal/workplace-matrix` | WorkplaceMatrix | Managed Workplace feature comparison |
+| `/internal/core-it` | CoreIT | Foundation IT services documentation |
+| `/internal/security-stack` | SecurityStack | Cybersecurity layers reference |
+| `/internal/cyber-facts` | CyberFacts | Statistics and talking points |
+
+**Interactive Tools**
+| Route | Component | Description |
+|-------|-----------|-------------|
+| `/internal/usp-worksheet` | USPWorksheet | USP development with localStorage persistence |
+| `/internal/audio-business-card` | AudioBusinessCard | Voicemail and intro scripts |
+
+**Sales Collateral**
+| Route | Component | Description |
+|-------|-----------|-------------|
+| `/internal/buyers-guide` | BuyersGuide | MSP/MSSP evaluation guide |
+| `/internal/cover-letter` | CoverLetter | Proposal cover letter templates |
 
 All internal pages use `noindex, nofollow` meta tags for SEO.
 

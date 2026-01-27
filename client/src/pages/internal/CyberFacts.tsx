@@ -1,12 +1,13 @@
 import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { Link } from "wouter";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "../sections/DigeratiEnhancedFooterSection";
 import { Button } from "@/components/ui/button";
 import { 
   Shield, AlertTriangle, Users, DollarSign, Clock, 
   ExternalLink, Copy, Check, RefreshCw, Sparkles,
-  Filter, ChevronDown, Lock, Server, Mail, Brain
+  Filter, ChevronDown, Lock, Server, Mail, Brain, ArrowLeft
 } from "lucide-react";
 import { FloatingParticles } from "@/components/graphics";
 import { useSEO } from "@/hooks/useSEO";
@@ -360,6 +361,11 @@ const CyberFacts = () => {
       
       <main className="relative z-10 pt-24 pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Back Link */}
+          <Link href="/internal" className="inline-flex items-center gap-2 text-violet-400 hover:text-violet-300 transition-colors mb-8" data-testid="link-back">
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Sales Tools</span>
+          </Link>
           
           {/* Page Header */}
           <motion.div

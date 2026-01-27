@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
 import { Button } from "@/components/ui/button";
+import { GuidedSalesPitch } from "@/components/GuidedSalesPitch";
 import { 
   ChevronDown, ChevronUp, Shield, Monitor, Cloud, Key,
   Check, X, Phone, ArrowRight, Users, Building2, Clock,
@@ -10,6 +11,43 @@ import {
 } from "lucide-react";
 import { FloatingParticles } from "@/components/graphics";
 import { useSEO } from "@/hooks/useSEO";
+
+const officeSalesPitchData = {
+  corePitch: [
+    "All-in-one baseline security—no gaps, no guesswork",
+    "Predictable monthly cost with no surprise invoices",
+    "Designed specifically for offices under 25 users",
+    "No IT staff needed—we handle everything",
+    "Proactive maintenance prevents problems before they happen"
+  ],
+  discoveryQuestions: [
+    "How many support tickets are you dealing with each month?",
+    "Do you have any compliance exposure—HIPAA, PCI, or other regulations?",
+    "What gaps do you see with your current IT provider?",
+    "How often do you onboard or offboard employees?",
+    "Do you ever need support after business hours?"
+  ],
+  objections: [
+    {
+      objection: "We only need break/fix support",
+      response: "Reactive support costs more in downtime and risk. Proactive management prevents the fires you're always putting out."
+    },
+    {
+      objection: "We're too small to be a target",
+      response: "43% of cyberattacks target small businesses. Attackers know you have fewer defenses—you need protection too."
+    },
+    {
+      objection: "The price seems high vs doing it ourselves",
+      response: "The true cost includes your time, your risk exposure, and the expertise you'd need to hire. We deliver enterprise security at SMB prices."
+    }
+  ],
+  valueProof: [
+    "Single point of contact for all IT",
+    "Predictable monthly billing",
+    "Enterprise security at SMB prices",
+    "Reduced ticket volume through prevention"
+  ]
+};
 
 type InclusionStatus = "included" | "limited" | "optional" | "not-included";
 
@@ -361,51 +399,7 @@ export default function OfficePage() {
 
           {/* Guided Sales Pitch */}
           <motion.section {...fadeInUp}>
-            <div className="bg-white/[0.02] border border-white/10 rounded-2xl overflow-hidden">
-              <div className="grid md:grid-cols-2">
-                <div className="p-8 md:p-12 bg-gradient-to-br from-violet-600/10 to-transparent">
-                  <h2 className="text-3xl font-bold text-white mb-6">Your entire IT foundation</h2>
-                  <p className="text-white/70 mb-8 leading-relaxed text-lg">
-                    Stop worrying about hardware, security, or support tickets. Office is built for small teams who need 
-                    enterprise-grade IT without the enterprise overhead or complexity.
-                  </p>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-violet-600/20 flex items-center justify-center">
-                        <Monitor className="w-5 h-5 text-violet-400" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-white">Full Management</h4>
-                        <p className="text-white/50 text-sm">We handle the tech so you don't have to.</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-violet-600/20 flex items-center justify-center">
-                        <Zap className="w-5 h-5 text-violet-400" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-white">Predictable Monthly Cost</h4>
-                        <p className="text-white/50 text-sm">No surprise hourly bills or setup fees.</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="p-8 md:p-12 border-l border-white/10 flex flex-col justify-center bg-white/[0.01]">
-                  <blockquote className="text-xl italic text-white/80 mb-6 leading-relaxed">
-                    "The Office Package is about removing the friction of IT for growing businesses. One foundation, one partner, one result: uptime."
-                  </blockquote>
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-violet-600/20 flex items-center justify-center font-bold text-violet-400">
-                      JP
-                    </div>
-                    <div>
-                      <p className="text-white font-semibold">Joe Petro</p>
-                      <p className="text-white/50 text-sm">Owner of Digerati Experts</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <GuidedSalesPitch data={officeSalesPitchData} />
           </motion.section>
 
           {/* Who It's For + Outcomes */}

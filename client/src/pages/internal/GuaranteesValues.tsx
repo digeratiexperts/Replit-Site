@@ -270,7 +270,7 @@ export default function GuaranteesValues() {
           <div className="max-w-6xl mx-auto relative z-10">
             <Link href="/internal" className="inline-flex items-center gap-2 text-violet-400 hover:text-violet-300 transition-colors mb-8" data-testid="link-back">
               <ArrowLeft className="w-4 h-4" />
-              <span>Back to Internal Tools</span>
+              <span>Back to Sales Tools</span>
             </Link>
 
             <div className="text-center mb-12">

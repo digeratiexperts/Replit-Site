@@ -113,6 +113,7 @@ const NetworkPlannerOfficial = lazy(() => import("@/pages/NetworkPlannerOfficial
 const Ebook = lazy(() => import("@/pages/resources/Ebook"));
 
 // Internal pages (DE staff only)
+const InternalHub = lazy(() => import("@/pages/internal/InternalHub"));
 const InternalSalesProcess = lazy(() => import("@/pages/internal/SalesProcessPage"));
 const WorkplaceMatrix = lazy(() => import("@/pages/internal/WorkplaceMatrix"));
 const CoreIT = lazy(() => import("@/pages/internal/CoreIT"));
@@ -644,6 +645,11 @@ function Router() {
       )} />
       
       {/* Internal DE Pages (Staff Only) */}
+      <Route path="/internal" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <InternalHub />
+        </Suspense>
+      )} />
       <Route path="/internal/sales-process" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <InternalSalesProcess />

@@ -359,9 +359,9 @@ export default function VcioServices() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         <header className="mb-8">
-          <Link href="/internal/sales-process" className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors text-sm" data-testid="link-back">
+          <Link href="/internal" className="inline-flex items-center gap-2 text-violet-400 hover:text-violet-300 transition-colors mb-8" data-testid="link-back">
             <ArrowLeft className="w-4 h-4" />
-            Back to Sales Process
+            <span>Back to Sales Tools</span>
           </Link>
           <div className="flex items-center gap-4 mt-4 mb-6">
             <img src={logoImage} alt="Digerati Experts" className="h-10 w-auto" />

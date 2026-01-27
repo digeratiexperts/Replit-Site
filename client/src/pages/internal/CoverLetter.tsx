@@ -59,9 +59,9 @@ export default function CoverLetter() {
       <div className="min-h-screen bg-[#030228]">
         <div className="max-w-3xl mx-auto px-6 py-16">
           {/* Back Link */}
-          <Link href="/internal/sales-process" className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors text-sm mb-8" data-testid="link-back">
+          <Link href="/internal" className="inline-flex items-center gap-2 text-violet-400 hover:text-violet-300 transition-colors mb-8" data-testid="link-back">
             <ArrowLeft className="w-4 h-4" />
-            Back to Sales Process
+            <span>Back to Sales Tools</span>
           </Link>
 
           {/* Header */}

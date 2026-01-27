@@ -376,6 +376,10 @@ export default function SalesProcessPage() {
               <span className="text-white/60 text-sm font-medium">Sales Process</span>
             </div>
             <div className="flex items-center gap-2">
+              <Link href="/internal" className="px-3 py-1.5 text-white/50 hover:text-white/80 text-sm transition-colors flex items-center gap-1">
+                <FolderOpen className="w-4 h-4" />
+                <span className="hidden sm:inline">All Tools</span>
+              </Link>
               <Link href="/" className="px-3 py-1.5 text-white/50 hover:text-white/80 text-sm transition-colors">
                 <Home className="w-4 h-4" />
               </Link>

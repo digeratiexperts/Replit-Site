@@ -3,6 +3,7 @@ import { PageTemplate } from "@/components/PageTemplate";
 import { Button } from "@/components/ui/button";
 import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
+import { GuidedSalesPitch } from "@/components/GuidedSalesPitch";
 import {
   Shield,
   Clock,
@@ -32,6 +33,43 @@ import {
   Settings,
   BarChart3
 } from "lucide-react";
+
+const bcdrSalesPitchData = {
+  corePitch: [
+    "Tested recovery—not just backups that sit untouched",
+    "Documented RPO/RTO targets in your service agreement",
+    "Ransomware recovery capability with immutable backups",
+    "Annual or quarterly restore verification depending on tier",
+    "Immutable backup copies that can't be encrypted by attackers"
+  ],
+  discoveryQuestions: [
+    "When was the last time you actually tested a restore?",
+    "What's the acceptable downtime for your critical systems?",
+    "Do you have compliance requirements around data recovery?",
+    "Who is your current backup vendor—and have you seen a restore report?",
+    "How many critical systems would need to come back online first?"
+  ],
+  objections: [
+    {
+      objection: "Our backups are already handled",
+      response: "Backups ≠ tested recovery. We verify restores regularly and provide proof that your data can actually come back."
+    },
+    {
+      objection: "It's too expensive",
+      response: "Compare it to the $1.53M average ransomware recovery cost. BCDR is the cheapest insurance you'll ever buy."
+    },
+    {
+      objection: "We've never needed disaster recovery",
+      response: "It's insurance—not if, but when. 60% of SMBs that lose data shut down within 6 months."
+    }
+  ],
+  valueProof: [
+    "Documented recovery time in writing",
+    "Proof of restore capability with reports",
+    "Compliance-ready audit reports",
+    "Immutable backups immune to ransomware"
+  ]
+};
 
 const bcdrData = {
   packages: [
@@ -409,51 +447,7 @@ export default function BackupDisasterRecovery() {
 
         {/* Guided Sales Pitch */}
         <motion.section {...fadeInUp}>
-          <div className="bg-white/[0.02] border border-white/10 rounded-2xl overflow-hidden">
-            <div className="grid md:grid-cols-2">
-              <div className="p-8 md:p-12 bg-gradient-to-br from-indigo-600/10 to-transparent">
-                <h2 className="text-3xl font-bold text-white mb-6">Proven, not assumed</h2>
-                <p className="text-white/70 mb-8 leading-relaxed text-lg">
-                  Most backups fail when you actually need them. We eliminate the guesswork with scheduled, 
-                  verified restore tests and documented recovery playbooks.
-                </p>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-indigo-600/20 flex items-center justify-center">
-                      <Timer className="w-5 h-5 text-indigo-400" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-white">Guaranteed Targets</h4>
-                      <p className="text-white/50 text-sm">RPO/RTO targets in writing.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-indigo-600/20 flex items-center justify-center">
-                      <RefreshCw className="w-5 h-5 text-indigo-400" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-white">Continuous Verification</h4>
-                      <p className="text-white/50 text-sm">Regular failover drills as standard.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="p-8 md:p-12 border-l border-white/10 flex flex-col justify-center bg-white/[0.01]">
-                <blockquote className="text-xl italic text-white/80 mb-6 leading-relaxed">
-                  "BCDR isn't an insurance policy—it's a continuity program. We don't just backup data; we guarantee your business comes back online."
-                </blockquote>
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-indigo-600/20 flex items-center justify-center font-bold text-indigo-400">
-                    JP
-                  </div>
-                  <div>
-                    <p className="text-white font-semibold">Joe Petro</p>
-                    <p className="text-white/50 text-sm">Owner of Digerati Experts</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <GuidedSalesPitch data={bcdrSalesPitchData} />
         </motion.section>
 
         {/* What We Protect */}

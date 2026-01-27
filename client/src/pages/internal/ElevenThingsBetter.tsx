@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async";
+import { Link } from "wouter";
 import { MegaMenu } from "@/components/MegaMenu";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
@@ -14,6 +15,7 @@ import {
   Clock,
   BarChart3,
   Trophy,
+  ArrowLeft,
 } from "lucide-react";
 
 interface ThingCardProps {
@@ -143,6 +145,11 @@ export default function ElevenThingsBetter() {
         <MegaMenu />
 
         <div className="max-w-6xl mx-auto px-6 py-16 pt-24">
+          <Link href="/internal" className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors text-sm mb-8" data-testid="link-back">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Sales Tools
+          </Link>
+          
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

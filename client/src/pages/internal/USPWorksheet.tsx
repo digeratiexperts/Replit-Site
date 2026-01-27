@@ -160,9 +160,9 @@ export default function USPWorksheet() {
       <div className="max-w-[1000px] mx-auto px-6 py-10 print:px-5 print:py-5">
         <header className="border-b-[3px] border-[#FFD700] pb-8 mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 print:hidden">
           <div>
-            <Link href="/internal/sales-process" className="inline-flex items-center gap-2 text-[#A0A0A0] hover:text-white transition-colors text-sm mb-4" data-testid="link-back">
+            <Link href="/internal" className="inline-flex items-center gap-2 text-[#A0A0A0] hover:text-white transition-colors text-sm mb-4" data-testid="link-back">
               <ArrowLeft className="w-4 h-4" />
-              Back to Sales Process
+              Back to Sales Tools
             </Link>
             <div className="font-mono text-2xl font-bold text-[#FFD700] tracking-tight" data-testid="logo-text">
               DIGERATI EXPERTS
