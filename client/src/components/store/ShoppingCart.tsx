@@ -52,7 +52,7 @@ export function ShoppingCart() {
                 variant="ghost"
                 size="icon"
                 onClick={closeCart}
-                className="text-white/60 hover:text-white hover:bg-white/10"
+                className="text-white/60 hover:text-white hover:bg-violet-500/10"
                 data-testid="button-close-cart"
               >
                 <X className="w-5 h-5" />
@@ -109,7 +109,7 @@ export function ShoppingCart() {
                             size="icon"
                             onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
                             disabled={item.quantity <= item.product.minimumQuantity}
-                            className="w-8 h-8 border-white/20 text-white hover:bg-white/10"
+                            className="w-8 h-8 bg-violet-500/10 border-violet-500/30 text-white hover:bg-violet-500/20"
                             data-testid={`button-decrease-${item.product.id}`}
                           >
                             <Minus className="w-3 h-3" />
@@ -121,7 +121,7 @@ export function ShoppingCart() {
                             variant="outline"
                             size="icon"
                             onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                            className="w-8 h-8 border-white/20 text-white hover:bg-white/10"
+                            className="w-8 h-8 bg-violet-500/10 border-violet-500/30 text-white hover:bg-violet-500/20"
                             data-testid={`button-increase-${item.product.id}`}
                           >
                             <Plus className="w-3 h-3" />
@@ -169,7 +169,7 @@ export function ShoppingCart() {
                   <Button
                     variant="ghost"
                     onClick={clearCart}
-                    className="w-full text-white/60 hover:text-white hover:bg-white/10"
+                    className="w-full text-white/60 hover:text-white hover:bg-violet-500/10"
                     data-testid="button-clear-cart"
                   >
                     Clear Cart

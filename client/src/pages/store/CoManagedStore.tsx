@@ -186,8 +186,7 @@ const CoManagedStore = () => {
               {product.isClientOnly && !isLoggedIn ? (
                 <Button 
                   size="sm" 
-                  variant="outline"
-                  className="border-white/20 text-white hover:bg-white/10 text-xs"
+                  className="bg-violet-600 hover:bg-violet-500 text-white border-none shadow-[0_0_15px_rgba(139,92,246,0.3)]"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -233,7 +232,7 @@ const CoManagedStore = () => {
                     Welcome, <span className="font-semibold text-violet-300">{user.fullName || user.username}</span>
                   </span>
                   {clientType !== "public" && (
-                    <span className="ml-2 px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 text-xs font-medium">
+                    <span className="ml-2 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-medium">
                       {clientType === "managed" ? "Managed Client" : "Co-Managed Client"}
                     </span>
                   )}
@@ -242,7 +241,7 @@ const CoManagedStore = () => {
                   variant="ghost"
                   size="sm"
                   onClick={logout}
-                  className="text-white/60 hover:text-white"
+                  className="text-white/60 hover:text-white hover:bg-violet-500/10"
                   data-testid="button-store-logout"
                 >
                   <LogOut className="w-4 h-4 mr-1" />
@@ -254,7 +253,7 @@ const CoManagedStore = () => {
                 variant="outline"
                 size="sm"
                 onClick={loginRedirect}
-                className="border-violet-500/30 text-violet-300 hover:bg-violet-500/10"
+                className="bg-violet-600 hover:bg-violet-500 text-white border-none shadow-[0_0_15px_rgba(139,92,246,0.3)]"
                 data-testid="button-store-login"
               >
                 <User className="w-4 h-4 mr-2" />
@@ -310,8 +309,8 @@ const CoManagedStore = () => {
                 size="sm"
                 variant={selectedCategory === "all" ? "default" : "outline"}
                 className={selectedCategory === "all" 
-                  ? "bg-violet-600 text-white" 
-                  : "border-white/20 text-white/70 hover:text-white hover:bg-white/10"
+                  ? "bg-violet-600 text-white border-none" 
+                  : "bg-violet-500/5 border-violet-500/20 text-violet-300 hover:text-white hover:bg-violet-500/20"
                 }
                 onClick={() => setSelectedCategory("all")}
                 data-testid="filter-all"
@@ -326,8 +325,8 @@ const CoManagedStore = () => {
                     size="sm"
                     variant={selectedCategory === category ? "default" : "outline"}
                     className={selectedCategory === category 
-                      ? "bg-violet-600 text-white" 
-                      : "border-white/20 text-white/70 hover:text-white hover:bg-white/10"
+                      ? "bg-violet-600 text-white border-none" 
+                      : "bg-violet-500/5 border-violet-500/20 text-violet-300 hover:text-white hover:bg-violet-500/20"
                     }
                     onClick={() => setSelectedCategory(category)}
                     data-testid={`filter-${category}`}
