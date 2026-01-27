@@ -84,17 +84,19 @@ let stripeEnabled = false;
 
 async function testDatabaseConnection(): Promise<boolean> {
   const databaseUrl = process.env.DATABASE_URL;
-  if (!databaseUrl) return false;
+  if (!databaseUrl) {
+    console.log("[DB TEST] No DATABASE_URL set");
+    return false;
+  }
   
   try {
-    const { Pool } = await import('@neondatabase/serverless');
-    const pool = new Pool({ connectionString: databaseUrl });
-    const client = await pool.connect();
-    await client.query('SELECT 1');
-    client.release();
-    await pool.end();
-    return true;
-  } catch (error) {
+    const { initPromise, getDatabaseStatus } = await import('./db');
+    await initPromise;
+    const status = getDatabaseStatus();
+    console.log("[DB TEST] Status:", status);
+    return status.connected;
+  } catch (error: any) {
+    console.error("[DB TEST] Connection failed:", error.message || error);
     return false;
   }
 }
