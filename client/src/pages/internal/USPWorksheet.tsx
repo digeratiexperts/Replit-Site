@@ -232,7 +232,7 @@ export default function USPWorksheet() {
 
           <FormField
             label="1. State a problem a typical prospect would have OR something they're LOOKING for:"
-            example='"Most IT firms are highly unresponsive and require us to constantly follow up with them to resolve problems we have."'
+            example={"Most IT firms are highly unresponsive and require us to constantly follow up with them to resolve problems we have."}
             value={formData.problem1}
             onChange={(v) => handleInputChange("problem1", v)}
             placeholder="Enter the problem or desire..."
@@ -242,7 +242,7 @@ export default function USPWorksheet() {
 
           <FormField
             label="2. Make a claim about how you resolve this problem better than the competition:"
-            example='"We are more responsive than the average IT support firm."'
+            example={"We are more responsive than the average IT support firm."}
             value={formData.claim1}
             onChange={(v) => handleInputChange("claim1", v)}
             placeholder="Enter your claim..."
@@ -252,7 +252,7 @@ export default function USPWorksheet() {
 
           <FormField
             label="3. What is the industry standard?"
-            example='"The average industry response time is 4-6 hours or longer. Most don\'t guarantee any response time in their SLA and many outsource their help desk."'
+            example={'The average industry response time is 4-6 hours or longer. Most don\'t guarantee any response time in their SLA and many outsource their help desk.'}
             value={formData.standard1}
             onChange={(v) => handleInputChange("standard1", v)}
             placeholder="Describe the industry standard..."
@@ -262,7 +262,7 @@ export default function USPWorksheet() {
 
           <FormField
             label="4. How do you do it better, SPECIFICALLY? (Detail 2-3 ways)"
-            example='"We have a far more mature and well-staffed help desk than most IT service companies, which enables us to answer our support lines LIVE and guarantee to have a competent technician working on resolving a problem within 10 minutes or less of receiving the call."'
+            example={"We have a far more mature and well-staffed help desk than most IT service companies, which enables us to answer our support lines LIVE and guarantee to have a competent technician working on resolving a problem within 10 minutes or less of receiving the call."}
             value={formData.better1}
             onChange={(v) => handleInputChange("better1", v)}
             placeholder="Detail specifically how you do it better..."
@@ -273,7 +273,7 @@ export default function USPWorksheet() {
 
           <FormField
             label="5. Why should the prospect care? What's the specific, QUANTIFIABLE benefit?"
-            example='"If your company has an average of one support request a week and it takes your technician 4 hours to respond on average, you\'ll end up wasting 208 hours – or 8.6 weeks – WAITING on your technician to simply respond. Is that really acceptable to you?"'
+            example={"If your company has an average of one support request a week and it takes your technician 4 hours to respond on average, you'll end up wasting 208 hours – or 8.6 weeks – WAITING on your technician to simply respond. Is that really acceptable to you?"}
             value={formData.benefit1}
             onChange={(v) => handleInputChange("benefit1", v)}
             placeholder="Quantify the benefit to the prospect..."
