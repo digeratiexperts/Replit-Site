@@ -312,7 +312,7 @@ const StoreLanding = () => {
                         <Icon className="w-5 h-5 text-violet-400" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-white font-semibold mb-1 truncate">{product.name}</h3>
+                        <h3 className="text-white font-semibold mb-1 truncate" title={product.name}>{product.name}</h3>
                         <p className="text-white/50 text-xs">{categoryLabels[product.category]}</p>
                       </div>
                     </div>

@@ -406,7 +406,7 @@ const ProductDetail = () => {
                             <RelatedIcon className="w-5 h-5 text-violet-400" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h3 className="text-white font-semibold line-clamp-1 group-hover:text-violet-300 transition-colors">
+                            <h3 className="text-white font-semibold line-clamp-1 group-hover:text-violet-300 transition-colors" title={related.name}>
                               {related.name}
                             </h3>
                           </div>

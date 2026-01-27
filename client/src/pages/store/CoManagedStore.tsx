@@ -168,7 +168,7 @@ const CoManagedStore = () => {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-0.5">
-                <h3 className="text-white font-semibold line-clamp-1 group-hover:text-violet-300 transition-colors">{product.name}</h3>
+                <h3 className="text-white font-semibold line-clamp-1 group-hover:text-violet-300 transition-colors" title={product.name}>{product.name}</h3>
                 {product.isClientOnly && (
                   <span className="px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 text-[10px] font-medium whitespace-nowrap flex-shrink-0">
                     Client
