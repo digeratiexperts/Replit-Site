@@ -21,6 +21,7 @@ const SolutionsIndex = lazy(() => import("@/pages/solutions/SolutionsIndex"));
 const ManagedITSupport = lazy(() => import("@/pages/solutions/ManagedITSupport"));
 const ManagedWorkplace = lazy(() => import("@/pages/solutions/ManagedWorkplace"));
 const BackupDisasterRecovery = lazy(() => import("@/pages/solutions/BackupDisasterRecovery"));
+const OfficePage = lazy(() => import("@/pages/solutions/OfficePage"));
 const UCaaS = lazy(() => import("@/pages/services/UCaaS"));
 const Healthcare = lazy(() => import("@/pages/industries/Healthcare"));
 const Accounting = lazy(() => import("@/pages/industries/Accounting"));
@@ -155,6 +156,11 @@ function Router() {
       <Route path="/solutions/backup-disaster-recovery" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <BackupDisasterRecovery />
+        </Suspense>
+      )} />
+      <Route path="/solutions/ProActive-Ecosystem-Packages" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <OfficePage />
         </Suspense>
       )} />
       {Object.entries(servicePageData).filter(([key]) => !['managed-workplace', 'backup-disaster-recovery'].includes(key)).map(([key, data]) => (
