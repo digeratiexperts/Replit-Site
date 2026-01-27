@@ -335,7 +335,7 @@ export default function Ebook() {
   const [showTOC, setShowTOC] = useState(false);
   const [bookmarks, setBookmarks] = useState<number[]>([]);
   const [readProgress, setReadProgress] = useState(0);
-  const [fontSize, setFontSize] = useState(16);
+  const [fontSize, setFontSize] = useState(19);
   const [pageDirection, setPageDirection] = useState<'left' | 'right'>('right');
 
   // Track reading progress
@@ -444,7 +444,7 @@ export default function Ebook() {
       )}
 
       <main className="pt-24 pb-20">
-        <div className="container mx-auto px-4 max-w-5xl">
+        <div className="container mx-auto px-4 max-w-7xl">
           <Link href="/resources/blog" className="inline-flex items-center text-violet-400 hover:text-violet-300 mb-6 transition-colors" data-testid="link-back-blog">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Resources
@@ -576,8 +576,11 @@ export default function Ebook() {
               </AnimatePresence>
 
               {/* Main Reader */}
-              <div className="bg-gradient-to-b from-slate-900 to-slate-950 rounded-2xl shadow-2xl overflow-hidden border border-slate-800" 
-                style={{ boxShadow: '0 25px 80px -20px rgba(0,0,0,0.5), 0 0 40px rgba(249, 115, 22, 0.05)' }}>
+              <div className="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 rounded-3xl shadow-2xl overflow-hidden border border-orange-500/20 relative" 
+                style={{ boxShadow: '0 25px 100px -20px rgba(0,0,0,0.6), 0 0 80px rgba(249, 115, 22, 0.08), inset 0 1px 0 rgba(255,255,255,0.05)' }}>
+                
+                {/* Decorative glow effect */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-1 bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
                 
                 {/* Enhanced Chapter Navigation Bar */}
                 <div className="bg-gradient-to-b from-slate-800 to-slate-850 border-b border-slate-700/50 sticky top-16 z-30">
@@ -629,7 +632,7 @@ export default function Ebook() {
 
                     <div className="flex items-center gap-1">
                       <button
-                        onClick={() => setFontSize(prev => Math.max(12, prev - 2))}
+                        onClick={() => setFontSize(prev => Math.max(14, prev - 2))}
                         className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all"
                         title="Decrease font size"
                       >
@@ -637,7 +640,7 @@ export default function Ebook() {
                       </button>
                       <span className="text-xs text-slate-500 w-8 text-center">{fontSize}</span>
                       <button
-                        onClick={() => setFontSize(prev => Math.min(24, prev + 2))}
+                        onClick={() => setFontSize(prev => Math.min(28, prev + 2))}
                         className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all"
                         title="Increase font size"
                       >
@@ -669,8 +672,8 @@ export default function Ebook() {
                     animate="center"
                     exit="exit"
                     transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className="p-8 md:p-12 min-h-[600px]"
-                    style={{ fontSize: `${fontSize}px` }}
+                    className="p-8 md:p-16 lg:p-20 min-h-[700px]"
+                    style={{ fontSize: `${fontSize}px`, lineHeight: '1.8' }}
                   >
                     {/* Page Header */}
                     <div className="flex items-center justify-between mb-6">
@@ -682,14 +685,14 @@ export default function Ebook() {
                       </span>
                     </div>
 
-                    <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
                       {chapters[currentChapter].title}
                     </h1>
-                    <p className="text-xl text-slate-400 mb-10 pb-6 border-b border-slate-700/50">
+                    <p className="text-xl md:text-2xl text-slate-400 mb-12 pb-8 border-b border-slate-700/50">
                       {chapters[currentChapter].subtitle}
                     </p>
                     
-                    <div className="prose prose-invert prose-orange max-w-none" data-testid="ebook-content">
+                    <div className="prose prose-invert prose-orange prose-lg md:prose-xl max-w-none prose-headings:text-white prose-p:text-slate-300 prose-strong:text-orange-400 prose-li:text-slate-300" data-testid="ebook-content">
                       {chapters[currentChapter].content}
                     </div>
                   </motion.div>
