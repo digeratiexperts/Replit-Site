@@ -293,7 +293,7 @@ export function MegaMenu() {
     },
     {
       name: 'Contact',
-      href: '#contact',
+      href: '/#contact',
       isSimple: true
     }
   ];
