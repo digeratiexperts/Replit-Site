@@ -22,6 +22,7 @@ const ManagedITSupport = lazy(() => import("@/pages/solutions/ManagedITSupport")
 const ManagedWorkplace = lazy(() => import("@/pages/solutions/ManagedWorkplace"));
 const BackupDisasterRecovery = lazy(() => import("@/pages/solutions/BackupDisasterRecovery"));
 const OfficePage = lazy(() => import("@/pages/solutions/OfficePage"));
+const CoManagedIT = lazy(() => import("@/pages/solutions/CoManagedIT"));
 const UCaaS = lazy(() => import("@/pages/services/UCaaS"));
 const Healthcare = lazy(() => import("@/pages/industries/Healthcare"));
 const Accounting = lazy(() => import("@/pages/industries/Accounting"));
@@ -163,7 +164,12 @@ function Router() {
           <OfficePage />
         </Suspense>
       )} />
-      {Object.entries(servicePageData).filter(([key]) => !['managed-workplace', 'backup-disaster-recovery'].includes(key)).map(([key, data]) => (
+      <Route path="/solutions/co-managed-it" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <CoManagedIT />
+        </Suspense>
+      )} />
+      {Object.entries(servicePageData).filter(([key]) => !['managed-workplace', 'backup-disaster-recovery', 'co-managed-it'].includes(key)).map(([key, data]) => (
         <Route key={key} path={`/solutions/${key}`} component={() => (
           <Suspense fallback={<PageLoadingSkeleton />}>
             <GenericServicePage {...data} serviceKey={key} />
