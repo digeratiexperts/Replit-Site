@@ -1,0 +1,264 @@
+import { useEffect } from "react";
+import { useRoute, Link } from "wouter";
+import { motion } from "framer-motion";
+import { MegaMenu } from "@/components/MegaMenu";
+import { DigeratiEnhancedFooterSection } from "../sections/DigeratiEnhancedFooterSection";
+import { Button } from "@/components/ui/button";
+import { useSEO } from "@/hooks/useSEO";
+import { useQuery } from "@tanstack/react-query";
+import {
+  CheckCircle,
+  Clock,
+  Mail,
+  Phone,
+  Calendar,
+  FileText,
+  ArrowRight,
+  Home,
+  Loader2,
+} from "lucide-react";
+
+const QuoteConfirmation = () => {
+  const [, params] = useRoute("/store/quote-confirmation/:id");
+  const quoteId = params?.id;
+
+  useSEO({
+    title: "Quote Request Submitted | Digerati Store",
+    description: "Your quote request has been submitted successfully. Our team will contact you shortly.",
+    canonical: `/store/quote-confirmation/${quoteId}`,
+  });
+
+  const { data: quoteRequest, isLoading, error } = useQuery({
+    queryKey: ['/api/store/quote-requests', quoteId],
+    queryFn: async () => {
+      const response = await fetch(`/api/store/quote-requests/${quoteId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch quote request');
+      }
+      return response.json();
+    },
+    enabled: !!quoteId,
+  });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a]">
+        <MegaMenu />
+        <main className="pt-28 pb-20">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <Loader2 className="w-12 h-12 text-violet-400 animate-spin mx-auto" />
+            <p className="text-white/60 mt-4">Loading quote details...</p>
+          </div>
+        </main>
+        <DigeratiEnhancedFooterSection />
+      </div>
+    );
+  }
+
+  if (error || !quoteRequest) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a]">
+        <MegaMenu />
+        <main className="pt-28 pb-20">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white/5 border border-white/10 rounded-xl p-12"
+            >
+              <FileText className="w-16 h-16 text-white/40 mx-auto mb-6" />
+              <h1 className="text-2xl font-bold text-white mb-4" data-testid="text-error-title">
+                Quote Not Found
+              </h1>
+              <p className="text-white/60 mb-8" data-testid="text-error-message">
+                We couldn't find the quote request you're looking for.
+              </p>
+              <Link href="/store">
+                <Button className="bg-violet-600 hover:bg-violet-500 text-white" data-testid="button-back-to-store">
+                  Back to Store
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
+        </main>
+        <DigeratiEnhancedFooterSection />
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#0a0a0a]">
+      <MegaMenu />
+
+      <main className="pt-28 pb-20">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="text-center mb-12">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6"
+              >
+                <CheckCircle className="w-12 h-12 text-emerald-400" />
+              </motion.div>
+
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-4" data-testid="text-confirmation-title">
+                Quote Request Submitted!
+              </h1>
+              <p className="text-xl text-white/60" data-testid="text-confirmation-subtitle">
+                Thank you for your interest. Our team will be in touch shortly.
+              </p>
+            </div>
+
+            <div className="bg-white/5 border border-white/10 rounded-xl p-8 mb-8" data-testid="section-quote-details">
+              <div className="text-center mb-8">
+                <p className="text-white/60 text-sm uppercase tracking-wide mb-2">Quote Request Number</p>
+                <p className="text-3xl font-mono font-bold text-violet-400" data-testid="text-quote-number">
+                  {quoteRequest.quoteNumber}
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6 mb-8">
+                <div className="bg-white/5 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Mail className="w-5 h-5 text-violet-400" />
+                    <span className="text-white font-medium">Email</span>
+                  </div>
+                  <p className="text-white/70 ml-8" data-testid="text-contact-email">
+                    {quoteRequest.contactEmail}
+                  </p>
+                </div>
+
+                <div className="bg-white/5 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Calendar className="w-5 h-5 text-violet-400" />
+                    <span className="text-white font-medium">Submitted</span>
+                  </div>
+                  <p className="text-white/70 ml-8" data-testid="text-submitted-date">
+                    {new Date(quoteRequest.createdAt).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </p>
+                </div>
+              </div>
+
+              {quoteRequest.companyName && (
+                <div className="border-t border-white/10 pt-4">
+                  <p className="text-white/60 text-sm mb-1">Company</p>
+                  <p className="text-white font-medium" data-testid="text-company-name">
+                    {quoteRequest.companyName}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="bg-gradient-to-r from-violet-500/10 to-purple-500/10 border border-violet-500/30 rounded-xl p-8 mb-8" data-testid="section-next-steps">
+              <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                <Clock className="w-5 h-5 text-violet-400" />
+                What Happens Next
+              </h2>
+
+              <div className="space-y-6">
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center">
+                    <span className="text-violet-400 font-bold text-sm">1</span>
+                  </div>
+                  <div>
+                    <h3 className="text-white font-medium mb-1">Review</h3>
+                    <p className="text-white/60 text-sm">
+                      Our team will review your request and requirements within 1 business day.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center">
+                    <span className="text-violet-400 font-bold text-sm">2</span>
+                  </div>
+                  <div>
+                    <h3 className="text-white font-medium mb-1">Consultation</h3>
+                    <p className="text-white/60 text-sm">
+                      A Digerati consultant will contact you to discuss your specific needs and customize the solution.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center">
+                    <span className="text-violet-400 font-bold text-sm">3</span>
+                  </div>
+                  <div>
+                    <h3 className="text-white font-medium mb-1">Custom Quote</h3>
+                    <p className="text-white/60 text-sm">
+                      You'll receive a detailed quote with pricing tailored to your business requirements.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white/5 border border-white/10 rounded-xl p-6 mb-8" data-testid="section-contact-info">
+              <h3 className="text-lg font-semibold text-white mb-4">Need Immediate Assistance?</h3>
+              <div className="flex flex-col md:flex-row gap-4">
+                <a
+                  href="tel:+14806244149"
+                  className="flex items-center gap-3 text-white/70 hover:text-violet-400 transition-colors"
+                  data-testid="link-phone"
+                >
+                  <Phone className="w-5 h-5" />
+                  <span>(480) 624-4149</span>
+                </a>
+                <a
+                  href="mailto:sales@digerati-experts.com"
+                  className="flex items-center gap-3 text-white/70 hover:text-violet-400 transition-colors"
+                  data-testid="link-email"
+                >
+                  <Mail className="w-5 h-5" />
+                  <span>sales@digerati-experts.com</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/">
+                <Button
+                  variant="outline"
+                  className="border-white/20 text-white hover:bg-white/10"
+                  data-testid="button-back-home"
+                >
+                  <Home className="w-4 h-4 mr-2" />
+                  Back to Home
+                </Button>
+              </Link>
+              <Link href="/store">
+                <Button
+                  className="bg-violet-600 hover:bg-violet-500 text-white"
+                  data-testid="button-continue-browsing"
+                >
+                  Continue Browsing
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </main>
+
+      <DigeratiEnhancedFooterSection />
+    </div>
+  );
+};
+
+export default QuoteConfirmation;

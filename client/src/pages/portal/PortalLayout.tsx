@@ -24,6 +24,7 @@ const navItems = [
   { href: "/portal/company", label: "Company", icon: Building2 },
   { href: "/portal/files", label: "Files & Downloads", icon: FileText },
   { href: "/portal/invoices", label: "Invoices", icon: FileText },
+  { href: "/portal/orders", label: "Orders", icon: ShoppingCart },
   { href: "/portal/vpn", label: "VPN Access", icon: Shield },
   { href: "/portal/cytracom", label: "ControlOne Phone", icon: Phone },
   { href: "/portal/ship-center", label: "Ship Center", icon: Truck },

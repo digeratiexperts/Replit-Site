@@ -24,6 +24,24 @@ The frontend is built with React 18 and TypeScript, utilizing Wouter for routing
 ### Feature Specifications
 Key features include a mega menu navigation, a hero section with a free assessment, core security services, a 4-step protection process, interactive calculators, industry-specific solutions, three-tier pricing, testimonials, FAQ, and a contact form. The blog includes individual article pages with a branded reading progress bar. The client portal offers advanced forms, satisfaction surveys, approvals, questionnaires, and a calendar. Admin features include import systems, agent management, multi-tenancy access control, and OpenAI billing control. Shipping integration supports real-time tracking, rate quotes, and label generation. Lead generation includes a multi-step quote wizard, corporate email validation, and spam protection. Portal authentication uses email/password validation, token-based authentication, and a seeded admin user. The homepage utilizes scroll snap functionality with navigation dots, a scroll-down indicator, and a scroll-to-top button for an enhanced landing page experience, with dynamic theming for navigation elements. An internal sales tools hub provides categorized resources, and a reusable `GuidedSalesPitch` component offers sales enablement on customer-facing solution pages.
 
+### E-Commerce Store
+The platform includes a comprehensive e-commerce store at `/store` with:
+- **Managed Clients Section** (`/store/managed`): Contract-only services (ProActive Ecosystem packages, Managed Workplace, Managed Cybersecurity, Managed BCDR) - all CTAs schedule consultant meetings
+- **Co-Managed Clients Section** (`/store/co-managed`): Checkout-enabled products across 14 categories:
+  - A) Contract-only services (schedule consult)
+  - B) Co-Managed IT subscriptions + onboarding
+  - C) Networking solutions (Managed Network, project labor)
+  - D) UCaaS packages + setup
+  - E) Physical hardware + mandatory provisioning
+  - F) Digital products (assessments, templates, training)
+  - G) Professional services (consulting, support blocks)
+- **Product Catalog**: 95+ SKUs defined in `client/src/data/storeProducts.ts` with full pricing from PDF catalog
+- **Shopping Cart**: Persistent cart with localStorage, slide-out panel, recurring vs one-time pricing breakdown
+- **Checkout Flow**: Stripe Checkout integration for payments, Quote Request option for contract discussions
+- **Client Pricing**: Logged-in portal clients see client-specific discounts and exclusive client-only products
+- **Portal Integration**: Order history and receipts at `/portal/orders`
+- **Database Schema**: `storeProducts`, `storeOrders`, `storeCarts`, `storeQuoteRequests`, `storeClientPricing` tables
+
 ### System Design Choices
 The project follows a modular structure (`client/` and `server/`), using UUIDs for IDs. Payment processing includes enterprise-grade encryption and webhook signature validation. AI services for ticket classification and priority detection are implemented with graceful fallback. Role-based access control manages navigation and features. User storage is in-memory, designed for future PostgreSQL migration, using bcrypt hashing and JWT tokens. Zoho One API integration uses OAuth with secrets for various modules, implementing a data isolation pattern to scope queries by authenticated user's email and returning a consistent response format across portal endpoints.
 

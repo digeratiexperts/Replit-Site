@@ -869,3 +869,199 @@ export const insertPortalClientSchema = createInsertSchema(portalClients).omit({
 export type PortalTenantFile = typeof portalTenantFiles.$inferSelect;
 export type InsertPortalTenantFile = z.infer<typeof insertPortalTenantFileSchema>;
 export type InsertPortalClient = z.infer<typeof insertPortalClientSchema>;
+
+// =============== E-COMMERCE STORE TABLES ===============
+
+// Store product category enum
+export const storeProductCategoryEnum = pgEnum("store_product_category", [
+  "contract_services",      // A) Contract-only (non-purchasable)
+  "comanaged_subscriptions", // B) Co-Managed IT subscriptions
+  "comanaged_onboarding",   // B2) Co-Managed onboarding
+  "networking_managed",     // C) Managed Network
+  "networking_projects",    // C2) Network project labor
+  "ucaas_subscriptions",    // D) UCaaS subscriptions
+  "ucaas_setup",           // D2) UCaaS setup
+  "hardware_provisioning", // E) Hardware provisioning
+  "hardware_physical",     // E2) Physical hardware
+  "hardware_handling",     // E3) Optional handling & install
+  "digital_assessments",   // F) Digital assessments
+  "digital_templates",     // F2) Templates & compliance packs
+  "digital_training",      // F3) Training
+  "professional_services"  // G) Professional services
+]);
+
+// Pricing type enum
+export const storePricingTypeEnum = pgEnum("store_pricing_type", [
+  "one_time",      // One-time purchase
+  "monthly",       // Monthly subscription
+  "yearly",        // Annual subscription
+  "per_hour",      // Hourly rate
+  "per_user",      // Per user pricing
+  "per_endpoint",  // Per endpoint pricing
+  "per_device",    // Per device pricing
+  "per_location",  // Per location pricing
+  "per_seat"       // Per seat pricing
+]);
+
+// Client type for store access
+export const storeClientTypeEnum = pgEnum("store_client_type", [
+  "public",        // Public visitors (no login)
+  "managed",       // Managed clients (contract-only)
+  "comanaged"      // Co-Managed clients (checkout enabled)
+]);
+
+// Store Products table
+export const storeProducts = pgTable("store_products", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  sku: text("sku").notNull().unique(),
+  name: text("name").notNull(),
+  description: text("description"),
+  shortDescription: text("short_description"),
+  category: storeProductCategoryEnum("category").notNull(),
+  pricingType: storePricingTypeEnum("pricing_type").notNull(),
+  basePrice: decimal("base_price", { precision: 10, scale: 2 }).notNull(),
+  pricingUnit: text("pricing_unit"), // "user", "endpoint", "device", "location", "hour", "seat"
+  isContractOnly: boolean("is_contract_only").default(false), // True = schedule consult, no checkout
+  isCheckoutEnabled: boolean("is_checkout_enabled").default(true),
+  isClientOnly: boolean("is_client_only").default(false), // Only visible to logged-in clients
+  requiredClientType: storeClientTypeEnum("required_client_type").default("public"),
+  minimumQuantity: integer("minimum_quantity").default(1),
+  features: text("features").array(),
+  imageUrl: text("image_url"),
+  sortOrder: integer("sort_order").default(0),
+  isActive: boolean("is_active").default(true),
+  stripePriceId: text("stripe_price_id"), // For Stripe checkout
+  stripeProductId: text("stripe_product_id"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Client-specific pricing tiers
+export const storeClientPricing = pgTable("store_client_pricing", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clientId: varchar("client_id").notNull().references(() => portalClients.id, { onDelete: "cascade" }),
+  productId: varchar("product_id").notNull().references(() => storeProducts.id, { onDelete: "cascade" }),
+  customPrice: decimal("custom_price", { precision: 10, scale: 2 }).notNull(),
+  discountPercent: decimal("discount_percent", { precision: 5, scale: 2 }),
+  notes: text("notes"),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Shopping cart
+export const storeCarts = pgTable("store_carts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  sessionId: text("session_id"), // For guest carts
+  userId: varchar("user_id").references(() => portalUsers.id, { onDelete: "cascade" }),
+  clientId: varchar("client_id").references(() => portalClients.id, { onDelete: "cascade" }),
+  items: jsonb("items").notNull().default([]), // Array of {productId, quantity, unitPrice}
+  subtotal: decimal("subtotal", { precision: 10, scale: 2 }).default("0"),
+  expiresAt: timestamp("expires_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Store order status enum
+export const storeOrderStatusEnum = pgEnum("store_order_status", [
+  "pending",
+  "quote_requested",
+  "quote_sent",
+  "awaiting_payment",
+  "paid",
+  "processing",
+  "provisioning",
+  "completed",
+  "cancelled",
+  "refunded"
+]);
+
+// Payment method enum
+export const storePaymentMethodEnum = pgEnum("store_payment_method", [
+  "stripe",
+  "zoho",
+  "quote_request",
+  "invoice"
+]);
+
+// Store Orders table
+export const storeOrders = pgTable("store_orders", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  orderNumber: text("order_number").unique().notNull(),
+  userId: varchar("user_id").references(() => portalUsers.id, { onDelete: "set null" }),
+  clientId: varchar("client_id").references(() => portalClients.id, { onDelete: "set null" }),
+  status: storeOrderStatusEnum("status").default("pending"),
+  paymentMethod: storePaymentMethodEnum("payment_method"),
+  lineItems: jsonb("line_items").notNull(), // Array of order items with product details
+  subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
+  tax: decimal("tax", { precision: 10, scale: 2 }).default("0"),
+  total: decimal("total", { precision: 10, scale: 2 }).notNull(),
+  stripeSessionId: text("stripe_session_id"),
+  stripePaymentIntentId: text("stripe_payment_intent_id"),
+  zohoPaymentId: text("zoho_payment_id"),
+  billingEmail: text("billing_email"),
+  billingName: text("billing_name"),
+  billingCompany: text("billing_company"),
+  billingAddress: jsonb("billing_address"),
+  notes: text("notes"),
+  paidAt: timestamp("paid_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Quote requests for contract-only items
+export const storeQuoteRequests = pgTable("store_quote_requests", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  quoteNumber: text("quote_number").unique().notNull(),
+  userId: varchar("user_id").references(() => portalUsers.id, { onDelete: "set null" }),
+  clientId: varchar("client_id").references(() => portalClients.id, { onDelete: "set null" }),
+  contactName: text("contact_name").notNull(),
+  contactEmail: text("contact_email").notNull(),
+  contactPhone: text("contact_phone"),
+  companyName: text("company_name"),
+  requestedItems: jsonb("requested_items").notNull(), // Products/services requested
+  message: text("message"),
+  status: text("status").default("pending"), // pending, contacted, quoted, converted, declined
+  assignedTo: text("assigned_to"),
+  meetingScheduled: timestamp("meeting_scheduled"),
+  quoteSentAt: timestamp("quote_sent_at"),
+  convertedOrderId: varchar("converted_order_id").references(() => storeOrders.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Insert schemas
+export const insertStoreProductSchema = createInsertSchema(storeProducts).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertStoreOrderSchema = createInsertSchema(storeOrders).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertStoreQuoteRequestSchema = createInsertSchema(storeQuoteRequests).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertStoreCartSchema = createInsertSchema(storeCarts).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+// Types
+export type StoreProduct = typeof storeProducts.$inferSelect;
+export type InsertStoreProduct = z.infer<typeof insertStoreProductSchema>;
+export type StoreClientPricing = typeof storeClientPricing.$inferSelect;
+export type StoreCart = typeof storeCarts.$inferSelect;
+export type InsertStoreCart = z.infer<typeof insertStoreCartSchema>;
+export type StoreOrder = typeof storeOrders.$inferSelect;
+export type InsertStoreOrder = z.infer<typeof insertStoreOrderSchema>;
+export type StoreQuoteRequest = typeof storeQuoteRequests.$inferSelect;
+export type InsertStoreQuoteRequest = z.infer<typeof insertStoreQuoteRequestSchema>;

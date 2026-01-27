@@ -14,6 +14,8 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PageLoadingSkeleton } from "@/components/LoadingSkeleton";
 import { AnnouncerProvider } from "@/components/AccessibleAnnouncer";
 import { useGlobalShortcuts } from "@/hooks/useKeyboardShortcuts";
+import { CartProvider } from "@/contexts/CartContext";
+import { ShoppingCart } from "@/components/store/ShoppingCart";
 
 import { DigeratiHomepage } from "@/pages/DigeratiHomepage";
 
@@ -96,6 +98,8 @@ const PortalQuestionnaireCalendar = lazy(() => import("@/pages/portal/PortalQues
 const PortalVPN = lazy(() => import("@/pages/portal/PortalVPN"));
 const PortalCytracom = lazy(() => import("@/pages/portal/PortalCytracom"));
 const PortalFiles = lazy(() => import("@/pages/portal/PortalFiles"));
+const PortalOrders = lazy(() => import("@/pages/portal/PortalOrders"));
+const PortalOrderDetail = lazy(() => import("@/pages/portal/PortalOrderDetail"));
 const PortalBilling = lazy(() => import("@/pages/portal/PortalBilling"));
 const PortalCompany = lazy(() => import("@/pages/portal/PortalCompany"));
 const AdminImportPage = lazy(() => import("@/pages/portal/AdminImport").then(m => ({ default: m.AdminImport })));
@@ -111,6 +115,16 @@ const EcosystemPricing = lazy(() => import("@/pages/EcosystemPricing"));
 const EcosystemMatrixOfficial = lazy(() => import("@/pages/EcosystemMatrixOfficial"));
 const NetworkPlannerOfficial = lazy(() => import("@/pages/NetworkPlannerOfficial"));
 const Ebook = lazy(() => import("@/pages/resources/Ebook"));
+
+// Store pages
+const StoreLanding = lazy(() => import("@/pages/store/StoreLanding"));
+const ManagedStore = lazy(() => import("@/pages/store/ManagedStore"));
+const CoManagedStore = lazy(() => import("@/pages/store/CoManagedStore"));
+const ProductDetail = lazy(() => import("@/pages/store/ProductDetail"));
+const Checkout = lazy(() => import("@/pages/store/Checkout"));
+const OrderConfirmation = lazy(() => import("@/pages/store/OrderConfirmation"));
+const QuoteRequestPage = lazy(() => import("@/pages/store/QuoteRequest"));
+const QuoteConfirmationPage = lazy(() => import("@/pages/store/QuoteConfirmation"));
 
 // Internal pages (DE staff only)
 const InternalHub = lazy(() => import("@/pages/internal/InternalHub"));
@@ -177,6 +191,48 @@ function Router() {
           </Suspense>
         )} />
       ))}
+      
+      {/* Store Pages */}
+      <Route path="/store" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <StoreLanding />
+        </Suspense>
+      )} />
+      <Route path="/store/managed" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ManagedStore />
+        </Suspense>
+      )} />
+      <Route path="/store/co-managed" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <CoManagedStore />
+        </Suspense>
+      )} />
+      <Route path="/store/product/:sku" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ProductDetail />
+        </Suspense>
+      )} />
+      <Route path="/store/checkout" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <Checkout />
+        </Suspense>
+      )} />
+      <Route path="/store/order-confirmation" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <OrderConfirmation />
+        </Suspense>
+      )} />
+      <Route path="/store/quote-request" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <QuoteRequestPage />
+        </Suspense>
+      )} />
+      <Route path="/store/quote-confirmation/:id" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <QuoteConfirmationPage />
+        </Suspense>
+      )} />
       
       {/* Services Pages */}
       <Route path="/services/ucaas" component={() => (
@@ -486,6 +542,16 @@ function Router() {
           <PortalInvoices />
         </Suspense>
       )} />
+      <Route path="/portal/orders" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <PortalOrders />
+        </Suspense>
+      )} />
+      <Route path="/portal/orders/:id" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <PortalOrderDetail />
+        </Suspense>
+      )} />
       <Route path="/portal/invoices/:id/pay" component={({ params }) => {
         const invoice = {
           id: params.id || "",
@@ -772,10 +838,13 @@ function App() {
     <ErrorBoundary>
       <HelmetProvider>
         <QueryClientProvider client={queryClient}>
-          <TooltipProvider>
-            <Toaster />
-            <AppContent />
-          </TooltipProvider>
+          <CartProvider>
+            <TooltipProvider>
+              <Toaster />
+              <ShoppingCart />
+              <AppContent />
+            </TooltipProvider>
+          </CartProvider>
         </QueryClientProvider>
       </HelmetProvider>
     </ErrorBoundary>

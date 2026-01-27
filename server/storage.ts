@@ -89,6 +89,10 @@ export interface IStorage {
   getTenantFilesByClientId(clientId: string): Promise<any[]>;
   createTenantFile(data: { clientId: string; fileName: string; fileType: string; category: string; description: string; fileUrl: string; uploadedBy: string }): Promise<any>;
   deleteTenantFile(id: string): Promise<boolean>;
+
+  getStoreOrders(): Promise<any[]>;
+  getStoreOrder(id: string): Promise<any | undefined>;
+  createStoreOrder(order: any): Promise<any>;
 }
 
 function generateId(): string {
@@ -151,6 +155,30 @@ interface TenantFile {
   createdAt: Date;
 }
 
+interface MemStoreOrder {
+  id: string;
+  orderNumber: string;
+  userId: string | null;
+  clientId: string | null;
+  status: string;
+  paymentMethod: string | null;
+  lineItems: any[];
+  subtotal: string;
+  tax: string;
+  total: string;
+  stripeSessionId: string | null;
+  stripePaymentIntentId: string | null;
+  zohoPaymentId: string | null;
+  billingEmail: string | null;
+  billingName: string | null;
+  billingCompany: string | null;
+  billingAddress: any | null;
+  notes: string | null;
+  paidAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export class MemStorage implements IStorage {
   private users: Map<string, User> = new Map();
   private workspaces: Map<string, Workspace> = new Map();
@@ -165,6 +193,7 @@ export class MemStorage implements IStorage {
   private portalTicketsMap: Map<string, MemPortalTicket> = new Map();
   private ticketComments: Map<string, MemPortalTicketComment> = new Map();
   private tenantFiles: Map<string, TenantFile> = new Map();
+  private storeOrdersMap: Map<string, MemStoreOrder> = new Map();
 
   constructor() {
     this.seedDemoData();
@@ -655,6 +684,42 @@ export class MemStorage implements IStorage {
   async deleteTenantFile(id: string): Promise<boolean> {
     return this.tenantFiles.delete(id);
   }
+
+  async getStoreOrders(): Promise<any[]> {
+    return Array.from(this.storeOrdersMap.values());
+  }
+
+  async getStoreOrder(id: string): Promise<any | undefined> {
+    return this.storeOrdersMap.get(id);
+  }
+
+  async createStoreOrder(order: any): Promise<any> {
+    const newOrder: MemStoreOrder = {
+      id: order.id || crypto.randomUUID(),
+      orderNumber: order.orderNumber || `ORD-${Date.now()}`,
+      userId: order.userId || null,
+      clientId: order.clientId || null,
+      status: order.status || "pending",
+      paymentMethod: order.paymentMethod || null,
+      lineItems: order.lineItems || [],
+      subtotal: order.subtotal || "0",
+      tax: order.tax || "0",
+      total: order.total || "0",
+      stripeSessionId: order.stripeSessionId || null,
+      stripePaymentIntentId: order.stripePaymentIntentId || null,
+      zohoPaymentId: order.zohoPaymentId || null,
+      billingEmail: order.billingEmail || null,
+      billingName: order.billingName || null,
+      billingCompany: order.billingCompany || null,
+      billingAddress: order.billingAddress || null,
+      notes: order.notes || null,
+      paidAt: order.paidAt || null,
+      createdAt: order.createdAt || new Date(),
+      updatedAt: new Date(),
+    };
+    this.storeOrdersMap.set(newOrder.id, newOrder);
+    return newOrder;
+  }
 }
 
 export class DatabaseStorage implements IStorage {
@@ -985,6 +1050,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   private tenantFilesCache: Map<string, any> = new Map();
+  private storeOrdersMap: Map<string, MemStoreOrder> = new Map();
 
   async getTenantFilesByClientId(clientId: string): Promise<any[]> {
     return Array.from(this.tenantFilesCache.values()).filter(f => f.clientId === clientId);
@@ -1008,6 +1074,42 @@ export class DatabaseStorage implements IStorage {
 
   async deleteTenantFile(id: string): Promise<boolean> {
     return this.tenantFilesCache.delete(id);
+  }
+
+  async getStoreOrders(): Promise<any[]> {
+    return Array.from(this.storeOrdersMap.values());
+  }
+
+  async getStoreOrder(id: string): Promise<any | undefined> {
+    return this.storeOrdersMap.get(id);
+  }
+
+  async createStoreOrder(order: any): Promise<any> {
+    const newOrder: MemStoreOrder = {
+      id: order.id || crypto.randomUUID(),
+      orderNumber: order.orderNumber || `ORD-${Date.now()}`,
+      userId: order.userId || null,
+      clientId: order.clientId || null,
+      status: order.status || "pending",
+      paymentMethod: order.paymentMethod || null,
+      lineItems: order.lineItems || [],
+      subtotal: order.subtotal || "0",
+      tax: order.tax || "0",
+      total: order.total || "0",
+      stripeSessionId: order.stripeSessionId || null,
+      stripePaymentIntentId: order.stripePaymentIntentId || null,
+      zohoPaymentId: order.zohoPaymentId || null,
+      billingEmail: order.billingEmail || null,
+      billingName: order.billingName || null,
+      billingCompany: order.billingCompany || null,
+      billingAddress: order.billingAddress || null,
+      notes: order.notes || null,
+      paidAt: order.paidAt || null,
+      createdAt: order.createdAt || new Date(),
+      updatedAt: new Date(),
+    };
+    this.storeOrdersMap.set(newOrder.id, newOrder);
+    return newOrder;
   }
 }
 

@@ -23,6 +23,7 @@ interface JWTPayload {
   userId: string;
   email: string;
   role: string;
+  clientId?: string | null;
   iat?: number;
   exp?: number;
 }
@@ -43,7 +44,7 @@ export function authMiddleware(req: AuthenticatedRequest, res: Response, next: N
   
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
-    req.user = { id: decoded.userId, email: decoded.email, role: decoded.role };
+    req.user = { id: decoded.userId, email: decoded.email, role: decoded.role, clientId: decoded.clientId || null };
     req.userId = decoded.userId;
     next();
   } catch (e: any) {
@@ -816,12 +817,13 @@ export async function registerRoutes(app: Express) {
   portalClients.set(mspCompany.id, mspCompany);
   
   // Demo client companies - Password: ClientDemo1!
+  // serviceType: "managed" = full managed services, "comanaged" = co-managed IT
   const demoCompanies = [
-    { id: "client-1", companyName: "Acme Corp", contactEmail: "admin@acme.com", contactPhone: "(480) 555-1001", industry: "Manufacturing", primaryContact: "John Smith", status: "active", type: "client", createdAt: new Date() },
-    { id: "client-2", companyName: "Phoenix Medical Group", contactEmail: "it@phoenixmedical.com", contactPhone: "(480) 555-1002", industry: "Healthcare", primaryContact: "Sarah Jones", status: "active", type: "client", createdAt: new Date() },
-    { id: "client-3", companyName: "Desert Law Partners", contactEmail: "admin@desertlaw.com", contactPhone: "(480) 555-1003", industry: "Legal", primaryContact: "Mike Davis", status: "active", type: "client", createdAt: new Date() },
-    { id: "client-4", companyName: "Scottsdale Realty", contactEmail: "tech@scottsdalereal.com", contactPhone: "(480) 555-1004", industry: "Real Estate", primaryContact: "Lisa Wilson", status: "active", type: "client", createdAt: new Date() },
-    { id: "client-5", companyName: "Alamo Industries", contactEmail: "support@alamoindustries.com", contactPhone: "(480) 555-1005", industry: "Manufacturing", primaryContact: "Maria Garcia", status: "active", type: "client", createdAt: new Date() },
+    { id: "client-1", companyName: "Acme Corp", contactEmail: "admin@acme.com", contactPhone: "(480) 555-1001", industry: "Manufacturing", primaryContact: "John Smith", status: "active", type: "client", serviceType: "managed", createdAt: new Date() },
+    { id: "client-2", companyName: "Phoenix Medical Group", contactEmail: "it@phoenixmedical.com", contactPhone: "(480) 555-1002", industry: "Healthcare", primaryContact: "Sarah Jones", status: "active", type: "client", serviceType: "managed", createdAt: new Date() },
+    { id: "client-3", companyName: "Desert Law Partners", contactEmail: "admin@desertlaw.com", contactPhone: "(480) 555-1003", industry: "Legal", primaryContact: "Mike Davis", status: "active", type: "client", serviceType: "comanaged", createdAt: new Date() },
+    { id: "client-4", companyName: "Scottsdale Realty", contactEmail: "tech@scottsdalereal.com", contactPhone: "(480) 555-1004", industry: "Real Estate", primaryContact: "Lisa Wilson", status: "active", type: "client", serviceType: "comanaged", createdAt: new Date() },
+    { id: "client-5", companyName: "Alamo Industries", contactEmail: "support@alamoindustries.com", contactPhone: "(480) 555-1005", industry: "Manufacturing", primaryContact: "Maria Garcia", status: "active", type: "client", serviceType: "comanaged", createdAt: new Date() },
   ];
   demoCompanies.forEach(c => portalClients.set(c.id, c));
   
@@ -968,7 +970,7 @@ export async function registerRoutes(app: Express) {
 
       // Generate JWT token using the module-level JWT_SECRET
       const token = jwt.sign(
-        { userId: user.id, email: user.email, role: user.role },
+        { userId: user.id, email: user.email, role: user.role, clientId: user.clientId || null },
         JWT_SECRET,
         { expiresIn: '24h' }
       );
@@ -984,6 +986,7 @@ export async function registerRoutes(app: Express) {
           username: user.username,
           fullName: user.fullName,
           role: user.role,
+          clientId: user.clientId || null,
         },
       });
     } catch (error: any) {
@@ -1385,6 +1388,235 @@ export async function registerRoutes(app: Express) {
       });
     } catch (error: any) {
       res.status(500).json({ message: "Failed to load invoices" });
+    }
+  });
+
+  // ===== PORTAL ORDER ROUTES =====
+  
+  // List orders for authenticated client
+  app.get("/api/portal/orders", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { status } = req.query;
+      const userId = req.userId;
+      const clientId = req.user?.clientId;
+      
+      // Get orders from database for this user/client
+      const allOrders = await storage.getStoreOrders();
+      
+      // Filter orders by user or client
+      let userOrders = allOrders.filter(order => 
+        order.userId === userId || order.clientId === clientId
+      );
+      
+      // Apply status filter if provided
+      if (status && typeof status === "string" && status !== "all") {
+        userOrders = userOrders.filter(order => order.status === status);
+      }
+      
+      // Sort by creation date (newest first)
+      userOrders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      
+      const orders = userOrders.map(order => ({
+        id: order.id,
+        orderNumber: order.orderNumber,
+        status: order.status,
+        total: order.total,
+        createdAt: order.createdAt,
+        itemCount: Array.isArray(order.lineItems) ? order.lineItems.length : 0,
+        billingName: order.billingName,
+      }));
+      
+      res.json({ orders });
+    } catch (error: any) {
+      console.error("[ERROR] Failed to fetch orders:", error);
+      res.status(500).json({ message: "Failed to load orders" });
+    }
+  });
+
+  // Get single order detail for client
+  app.get("/api/portal/orders/:id", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { id } = req.params;
+      const userId = req.userId;
+      const clientId = req.user?.clientId;
+      
+      const order = await storage.getStoreOrder(id);
+      
+      if (!order) {
+        return res.status(404).json({ error: "Order not found" });
+      }
+      
+      // Verify the order belongs to the authenticated user/client
+      if (order.userId !== userId && order.clientId !== clientId) {
+        return res.status(403).json({ error: "Access denied to this order" });
+      }
+      
+      res.json({
+        order: {
+          id: order.id,
+          orderNumber: order.orderNumber,
+          status: order.status,
+          paymentMethod: order.paymentMethod,
+          lineItems: order.lineItems || [],
+          subtotal: order.subtotal,
+          tax: order.tax,
+          total: order.total,
+          billingName: order.billingName,
+          billingEmail: order.billingEmail,
+          billingCompany: order.billingCompany,
+          billingAddress: order.billingAddress,
+          stripePaymentIntentId: order.stripePaymentIntentId,
+          notes: order.notes,
+          paidAt: order.paidAt,
+          createdAt: order.createdAt,
+          updatedAt: order.updatedAt,
+        },
+      });
+    } catch (error: any) {
+      console.error("[ERROR] Failed to fetch order:", error);
+      res.status(500).json({ message: "Failed to load order" });
+    }
+  });
+
+  // Generate receipt HTML for order
+  app.get("/api/portal/orders/:id/receipt", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { id } = req.params;
+      const userId = req.userId;
+      const clientId = req.user?.clientId;
+      
+      const order = await storage.getStoreOrder(id);
+      
+      if (!order) {
+        return res.status(404).json({ error: "Order not found" });
+      }
+      
+      // Verify the order belongs to the authenticated user/client
+      if (order.userId !== userId && order.clientId !== clientId) {
+        return res.status(403).json({ error: "Access denied to this order" });
+      }
+      
+      const lineItems = Array.isArray(order.lineItems) ? order.lineItems : [];
+      const billingAddress = order.billingAddress as { street?: string; city?: string; state?: string; zipCode?: string; country?: string } | null;
+      
+      // Generate HTML receipt
+      const receiptHtml = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Receipt - ${order.orderNumber}</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #333; }
+    .header { text-align: center; margin-bottom: 40px; }
+    .logo { font-size: 24px; font-weight: bold; color: #5034ff; margin-bottom: 8px; }
+    .receipt-title { font-size: 18px; color: #666; }
+    .order-info { display: flex; justify-content: space-between; margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px; }
+    .order-info div { }
+    .order-info .label { font-size: 12px; color: #666; margin-bottom: 4px; }
+    .order-info .value { font-weight: 600; }
+    table { width: 100%; border-collapse: collapse; margin: 30px 0; }
+    th { text-align: left; padding: 12px; border-bottom: 2px solid #e0e0e0; font-weight: 600; }
+    td { padding: 12px; border-bottom: 1px solid #e0e0e0; }
+    .text-right { text-align: right; }
+    .totals { margin-left: auto; width: 300px; }
+    .totals .row { display: flex; justify-content: space-between; padding: 8px 0; }
+    .totals .total { font-weight: bold; font-size: 18px; border-top: 2px solid #333; padding-top: 12px; margin-top: 8px; }
+    .billing { margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px; }
+    .billing h3 { margin: 0 0 12px 0; font-size: 14px; color: #666; }
+    .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e0e0e0; color: #666; font-size: 12px; }
+    @media print { body { padding: 20px; } }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">Digerati Experts</div>
+    <div class="receipt-title">Order Receipt</div>
+  </div>
+  
+  <div class="order-info">
+    <div>
+      <div class="label">Order Number</div>
+      <div class="value">${order.orderNumber}</div>
+    </div>
+    <div>
+      <div class="label">Order Date</div>
+      <div class="value">${new Date(order.createdAt).toLocaleDateString()}</div>
+    </div>
+    <div>
+      <div class="label">Status</div>
+      <div class="value">${(order.status || "pending").replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</div>
+    </div>
+    ${order.paidAt ? `
+    <div>
+      <div class="label">Paid On</div>
+      <div class="value">${new Date(order.paidAt).toLocaleDateString()}</div>
+    </div>
+    ` : ""}
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th class="text-right">Qty</th>
+        <th class="text-right">Unit Price</th>
+        <th class="text-right">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${lineItems.map((item: any) => `
+        <tr>
+          <td>${item.name || "Item"}<br><small style="color:#666">SKU: ${item.sku || "N/A"}</small></td>
+          <td class="text-right">${item.quantity || 1}</td>
+          <td class="text-right">$${parseFloat(item.unitPrice || "0").toFixed(2)}</td>
+          <td class="text-right">$${parseFloat(item.total || "0").toFixed(2)}</td>
+        </tr>
+      `).join("")}
+    </tbody>
+  </table>
+
+  <div class="totals">
+    <div class="row">
+      <span>Subtotal</span>
+      <span>$${parseFloat(order.subtotal).toFixed(2)}</span>
+    </div>
+    <div class="row">
+      <span>Tax</span>
+      <span>$${parseFloat(order.tax || "0").toFixed(2)}</span>
+    </div>
+    <div class="row total">
+      <span>Total</span>
+      <span>$${parseFloat(order.total).toFixed(2)}</span>
+    </div>
+  </div>
+
+  <div class="billing">
+    <h3>Billing Information</h3>
+    <div>${order.billingName || "N/A"}</div>
+    ${order.billingCompany ? `<div>${order.billingCompany}</div>` : ""}
+    ${order.billingEmail ? `<div>${order.billingEmail}</div>` : ""}
+    ${billingAddress?.street ? `<div>${billingAddress.street}</div>` : ""}
+    ${billingAddress?.city || billingAddress?.state || billingAddress?.zipCode ? `
+      <div>${billingAddress.city || ""}${billingAddress.city && billingAddress.state ? ", " : ""}${billingAddress.state || ""} ${billingAddress.zipCode || ""}</div>
+    ` : ""}
+  </div>
+
+  <div class="footer">
+    <p>Thank you for your business!</p>
+    <p>Digerati Experts | support@digeratiexperts.com | (480) 555-1000</p>
+  </div>
+</body>
+</html>
+      `;
+      
+      res.setHeader("Content-Type", "text/html");
+      res.setHeader("Content-Disposition", `attachment; filename="receipt-${order.orderNumber}.html"`);
+      res.send(receiptHtml);
+    } catch (error: any) {
+      console.error("[ERROR] Failed to generate receipt:", error);
+      res.status(500).json({ message: "Failed to generate receipt" });
     }
   });
 
@@ -2005,6 +2237,274 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  // ========== STORE CHECKOUT ROUTES ==========
+
+  // Create Stripe checkout session
+  app.post("/api/store/checkout/stripe", [validateInput], async (req: Request, res: Response) => {
+    try {
+      const { lineItems, billing, subtotal, total } = req.body;
+      
+      if (!lineItems || !Array.isArray(lineItems) || lineItems.length === 0) {
+        return res.status(400).json({ error: "Line items are required" });
+      }
+      
+      if (!billing || !billing.email || !billing.name) {
+        return res.status(400).json({ error: "Billing name and email are required" });
+      }
+
+      const { getUncachableStripeClient } = await import("./stripeClient");
+      const stripe = await getUncachableStripeClient();
+      
+      const orderNumber = `ORD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+      
+      const stripeLineItems = lineItems.map((item: any) => ({
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: item.name,
+            description: `SKU: ${item.sku}`,
+          },
+          unit_amount: Math.round(item.unitPrice * 100),
+        },
+        quantity: item.quantity,
+      }));
+
+      const baseUrl = process.env.REPLIT_DEPLOYMENT === "1" 
+        ? `https://${process.env.REPLIT_DEPLOYMENT_URL || process.env.REPL_SLUG + '.replit.app'}`
+        : `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`;
+      
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: stripeLineItems,
+        mode: "payment",
+        customer_email: billing.email,
+        success_url: `${baseUrl}/store/order-confirmation?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${baseUrl}/store/checkout`,
+        metadata: {
+          orderNumber,
+          lineItems: JSON.stringify(lineItems.slice(0, 5)),
+          billingName: billing.name,
+          billingEmail: billing.email,
+          billingCompany: billing.company || "",
+        },
+      });
+
+      const { db } = await import("./db");
+      const { storeOrders } = await import("@shared/schema");
+      
+      const [order] = await db.insert(storeOrders).values({
+        orderNumber,
+        status: "awaiting_payment",
+        paymentMethod: "stripe",
+        lineItems,
+        subtotal: subtotal.toString(),
+        tax: "0",
+        total: total.toString(),
+        stripeSessionId: session.id,
+        billingEmail: billing.email,
+        billingName: billing.name,
+        billingCompany: billing.company || null,
+      }).returning();
+
+      res.json({ url: session.url, orderId: order.id });
+    } catch (error: any) {
+      console.error("[STRIPE CHECKOUT ERROR]", error);
+      res.status(500).json({ error: error.message || "Failed to create checkout session" });
+    }
+  });
+
+  // Create order (for quote requests or other payment methods)
+  app.post("/api/store/orders", [validateInput], async (req: Request, res: Response) => {
+    try {
+      const { lineItems, billing, paymentMethod, status, subtotal, total, notes } = req.body;
+      
+      if (!lineItems || !Array.isArray(lineItems) || lineItems.length === 0) {
+        return res.status(400).json({ error: "Line items are required" });
+      }
+      
+      if (!billing || !billing.email || !billing.name) {
+        return res.status(400).json({ error: "Billing name and email are required" });
+      }
+
+      const { db } = await import("./db");
+      const { storeOrders } = await import("@shared/schema");
+      
+      const orderNumber = `ORD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+
+      const [order] = await db.insert(storeOrders).values({
+        orderNumber,
+        status: status || "pending",
+        paymentMethod: paymentMethod || "quote_request",
+        lineItems,
+        subtotal: subtotal.toString(),
+        tax: "0",
+        total: total.toString(),
+        billingEmail: billing.email,
+        billingName: billing.name,
+        billingCompany: billing.company || null,
+        notes: notes || null,
+      }).returning();
+
+      res.json({ orderId: order.id, orderNumber: order.orderNumber });
+    } catch (error: any) {
+      console.error("[CREATE ORDER ERROR]", error);
+      res.status(500).json({ error: error.message || "Failed to create order" });
+    }
+  });
+
+  // Get order by ID or session ID
+  app.get("/api/store/orders/:id", async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const { db } = await import("./db");
+      const { storeOrders } = await import("@shared/schema");
+      const { eq, or } = await import("drizzle-orm");
+      
+      const [order] = await db.select().from(storeOrders).where(
+        or(
+          eq(storeOrders.id, id),
+          eq(storeOrders.stripeSessionId, id)
+        )
+      ).limit(1);
+      
+      if (!order) {
+        return res.status(404).json({ error: "Order not found" });
+      }
+
+      res.json(order);
+    } catch (error: any) {
+      console.error("[GET ORDER ERROR]", error);
+      res.status(500).json({ error: error.message || "Failed to get order" });
+    }
+  });
+
+  // ========== STORE QUOTE REQUESTS ==========
+
+  // Create quote request
+  app.post("/api/store/quote-requests", [validateInput], async (req: Request, res: Response) => {
+    try {
+      const { contactName, contactEmail, contactPhone, companyName, message, requestedItems } = req.body;
+      
+      if (!contactName || !contactEmail) {
+        return res.status(400).json({ error: "Contact name and email are required" });
+      }
+      
+      if (!requestedItems || !Array.isArray(requestedItems) || requestedItems.length === 0) {
+        return res.status(400).json({ error: "Requested items are required" });
+      }
+
+      const { db } = await import("./db");
+      const { storeQuoteRequests } = await import("@shared/schema");
+      
+      // Generate quote number in QR-YYYYMMDD-XXXX format
+      const now = new Date();
+      const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+      const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase();
+      const quoteNumber = `QR-${dateStr}-${randomSuffix}`;
+
+      const [quoteRequest] = await db.insert(storeQuoteRequests).values({
+        quoteNumber,
+        contactName,
+        contactEmail,
+        contactPhone: contactPhone || null,
+        companyName: companyName || null,
+        message: message || null,
+        requestedItems,
+        status: "pending",
+      }).returning();
+
+      console.log(`[QUOTE REQUEST] Created: ${quoteNumber} for ${contactEmail}`);
+
+      res.json({
+        id: quoteRequest.id,
+        quoteNumber: quoteRequest.quoteNumber,
+        message: "Quote request submitted successfully",
+      });
+    } catch (error: any) {
+      console.error("[CREATE QUOTE REQUEST ERROR]", error);
+      res.status(500).json({ error: error.message || "Failed to create quote request" });
+    }
+  });
+
+  // Get quote request by ID
+  app.get("/api/store/quote-requests/:id", async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const { db } = await import("./db");
+      const { storeQuoteRequests } = await import("@shared/schema");
+      const { eq, or } = await import("drizzle-orm");
+      
+      const [quoteRequest] = await db.select().from(storeQuoteRequests).where(
+        or(
+          eq(storeQuoteRequests.id, id),
+          eq(storeQuoteRequests.quoteNumber, id)
+        )
+      ).limit(1);
+      
+      if (!quoteRequest) {
+        return res.status(404).json({ error: "Quote request not found" });
+      }
+
+      res.json(quoteRequest);
+    } catch (error: any) {
+      console.error("[GET QUOTE REQUEST ERROR]", error);
+      res.status(500).json({ error: error.message || "Failed to get quote request" });
+    }
+  });
+
+  // Stripe webhook handler for checkout.session.completed
+  app.post("/api/webhooks/stripe", async (req: Request, res: Response) => {
+    try {
+      const { getUncachableStripeClient, getStripeSecretKey } = await import("./stripeClient");
+      const stripe = await getUncachableStripeClient();
+      
+      const sig = req.headers["stripe-signature"];
+      if (!sig) {
+        return res.status(400).json({ error: "Missing stripe-signature header" });
+      }
+
+      const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+      
+      let event;
+      
+      if (webhookSecret) {
+        try {
+          event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+        } catch (err: any) {
+          console.error("[STRIPE WEBHOOK SIGNATURE ERROR]", err.message);
+          return res.status(400).json({ error: `Webhook signature verification failed: ${err.message}` });
+        }
+      } else {
+        event = req.body;
+      }
+
+      if (event.type === "checkout.session.completed") {
+        const session = event.data.object;
+        const sessionId = session.id;
+        
+        const { db } = await import("./db");
+        const { storeOrders } = await import("@shared/schema");
+        const { eq } = await import("drizzle-orm");
+        
+        await db.update(storeOrders)
+          .set({
+            status: "paid",
+            stripePaymentIntentId: session.payment_intent,
+            paidAt: new Date(),
+            updatedAt: new Date(),
+          })
+          .where(eq(storeOrders.stripeSessionId, sessionId));
+          
+        console.log(`[STRIPE WEBHOOK] Order paid: session=${sessionId}`);
+      }
+
+      res.json({ received: true });
+    } catch (error: any) {
+      console.error("[STRIPE WEBHOOK ERROR]", error);
+      res.status(500).json({ error: error.message || "Webhook handler failed" });
+    }
+  });
+
   // ========== ZOHO API ROUTES ==========
 
   // Check Zoho connection status
@@ -2264,6 +2764,90 @@ export async function registerRoutes(app: Express) {
       res.json({ plans });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ========== STORE CLIENT AUTH ROUTES ==========
+
+  // Demo client pricing - in production this would come from a database
+  const clientPricingData: Map<string, { productId: string; customPrice: number; discountPercent: number }[]> = new Map([
+    ["client-1", [
+      { productId: "prod-010", customPrice: 35, discountPercent: 10 },
+      { productId: "prod-011", customPrice: 22, discountPercent: 12 },
+      { productId: "prod-040", customPrice: 22.50, discountPercent: 10 },
+    ]],
+    ["client-2", [
+      { productId: "prod-010", customPrice: 32, discountPercent: 18 },
+      { productId: "prod-012", customPrice: 5, discountPercent: 17 },
+    ]],
+    ["client-3", [
+      { productId: "prod-010", customPrice: 37, discountPercent: 5 },
+      { productId: "prod-035", customPrice: 160, discountPercent: 9 },
+      { productId: "prod-036", customPrice: 200, discountPercent: 11 },
+    ]],
+    ["client-4", [
+      { productId: "prod-010", customPrice: 36, discountPercent: 8 },
+      { productId: "prod-030", customPrice: 179, discountPercent: 10 },
+    ]],
+    ["client-5", [
+      { productId: "prod-010", customPrice: 34, discountPercent: 13 },
+      { productId: "prod-011", customPrice: 20, discountPercent: 20 },
+      { productId: "prod-030", customPrice: 169, discountPercent: 15 },
+      { productId: "prod-040", customPrice: 20, discountPercent: 20 },
+    ]],
+  ]);
+
+  // Get client info for store (returns client type)
+  app.get("/api/store/client-info", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userEmail = req.user?.email;
+      if (!userEmail) {
+        return res.json({ clientType: "public", clientId: null });
+      }
+
+      const user = portalUsers.get(userEmail);
+      if (!user || !user.clientId) {
+        return res.json({ clientType: "public", clientId: null });
+      }
+
+      const client = portalClients.get(user.clientId);
+      if (!client) {
+        return res.json({ clientType: "public", clientId: null });
+      }
+
+      const serviceType = client.serviceType || "public";
+      const clientType = serviceType === "managed" ? "managed" : 
+                         serviceType === "comanaged" ? "comanaged" : "public";
+
+      res.json({
+        clientType,
+        clientId: user.clientId,
+        companyName: client.companyName,
+      });
+    } catch (error: any) {
+      console.error("[ERROR] Failed to get client info:", error);
+      res.status(500).json({ error: "Failed to get client info" });
+    }
+  });
+
+  // Get client-specific pricing
+  app.get("/api/store/client-pricing", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userEmail = req.user?.email;
+      if (!userEmail) {
+        return res.json({ pricing: [] });
+      }
+
+      const user = portalUsers.get(userEmail);
+      if (!user || !user.clientId) {
+        return res.json({ pricing: [] });
+      }
+
+      const pricing = clientPricingData.get(user.clientId) || [];
+      res.json({ pricing });
+    } catch (error: any) {
+      console.error("[ERROR] Failed to get client pricing:", error);
+      res.status(500).json({ error: "Failed to get client pricing" });
     }
   });
 
