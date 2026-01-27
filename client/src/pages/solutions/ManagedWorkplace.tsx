@@ -272,6 +272,55 @@ export default function ManagedWorkplace() {
           </div>
         </motion.section>
 
+        {/* Guided Sales Pitch */}
+        <motion.section {...fadeInUp}>
+          <div className="bg-white/[0.02] border border-white/10 rounded-2xl overflow-hidden">
+            <div className="grid md:grid-cols-2">
+              <div className="p-8 md:p-12 bg-gradient-to-br from-violet-600/10 to-transparent">
+                <h2 className="text-3xl font-bold text-white mb-6">Standardize your workplace</h2>
+                <p className="text-white/70 mb-8 leading-relaxed text-lg">
+                  Is your onboarding a manual mess? Are you worried about who has access to what SaaS app?
+                  Standardization is the only way to scale security without scaling your workload.
+                </p>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-violet-600/20 flex items-center justify-center">
+                      <UserPlus className="w-5 h-5 text-violet-400" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-white">Consistent Onboarding</h4>
+                      <p className="text-white/50 text-sm">Every user, every app, every time.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-violet-600/20 flex items-center justify-center">
+                      <Lock className="w-5 h-5 text-violet-400" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-white">Identity Governance</h4>
+                      <p className="text-white/50 text-sm">SSO and MFA enforced site-wide.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="p-8 md:p-12 border-l border-white/10 flex flex-col justify-center bg-white/[0.01]">
+                <blockquote className="text-xl italic text-white/80 mb-6 leading-relaxed">
+                  "Managed Workplace isn't just about managing laptops—it's about owning the identity and access that runs your entire business."
+                </blockquote>
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-violet-600/20 flex items-center justify-center font-bold text-violet-400">
+                    JP
+                  </div>
+                  <div>
+                    <p className="text-white font-semibold">Joe Petro</p>
+                    <p className="text-white/50 text-sm">Owner of Digerati Experts</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
         {/* Outcomes Section */}
         <motion.section {...fadeInUp}>
           <div className="text-center mb-12">
