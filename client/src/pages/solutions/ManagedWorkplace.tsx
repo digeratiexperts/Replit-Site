@@ -245,7 +245,7 @@ export default function ManagedWorkplace() {
                   asChild
                   variant="outline"
                   size="lg"
-                  className="border-white/20 text-white hover:bg-white/10"
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20"
                   data-testid="btn-hero-packages"
                 >
                   <a href="#packages">
