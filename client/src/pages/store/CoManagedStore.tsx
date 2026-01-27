@@ -41,6 +41,23 @@ const categoryIcons: Record<ProductCategory, typeof Shield> = {
   professional_services: Cloud,
 };
 
+const categoryColors: Record<ProductCategory, { border: string; borderHover: string; iconBg: string; accent: string }> = {
+  contract_services: { border: "border-amber-500/30", borderHover: "hover:border-amber-500/60", iconBg: "bg-amber-500/20", accent: "text-amber-400" },
+  comanaged_subscriptions: { border: "border-violet-500/30", borderHover: "hover:border-violet-500/60", iconBg: "bg-violet-500/20", accent: "text-violet-400" },
+  comanaged_onboarding: { border: "border-purple-500/30", borderHover: "hover:border-purple-500/60", iconBg: "bg-purple-500/20", accent: "text-purple-400" },
+  networking_managed: { border: "border-cyan-500/30", borderHover: "hover:border-cyan-500/60", iconBg: "bg-cyan-500/20", accent: "text-cyan-400" },
+  networking_projects: { border: "border-sky-500/30", borderHover: "hover:border-sky-500/60", iconBg: "bg-sky-500/20", accent: "text-sky-400" },
+  ucaas_subscriptions: { border: "border-green-500/30", borderHover: "hover:border-green-500/60", iconBg: "bg-green-500/20", accent: "text-green-400" },
+  ucaas_setup: { border: "border-emerald-500/30", borderHover: "hover:border-emerald-500/60", iconBg: "bg-emerald-500/20", accent: "text-emerald-400" },
+  hardware_provisioning: { border: "border-orange-500/30", borderHover: "hover:border-orange-500/60", iconBg: "bg-orange-500/20", accent: "text-orange-400" },
+  hardware_physical: { border: "border-rose-500/30", borderHover: "hover:border-rose-500/60", iconBg: "bg-rose-500/20", accent: "text-rose-400" },
+  hardware_handling: { border: "border-red-500/30", borderHover: "hover:border-red-500/60", iconBg: "bg-red-500/20", accent: "text-red-400" },
+  digital_assessments: { border: "border-blue-500/30", borderHover: "hover:border-blue-500/60", iconBg: "bg-blue-500/20", accent: "text-blue-400" },
+  digital_templates: { border: "border-indigo-500/30", borderHover: "hover:border-indigo-500/60", iconBg: "bg-indigo-500/20", accent: "text-indigo-400" },
+  digital_training: { border: "border-fuchsia-500/30", borderHover: "hover:border-fuchsia-500/60", iconBg: "bg-fuchsia-500/20", accent: "text-fuchsia-400" },
+  professional_services: { border: "border-teal-500/30", borderHover: "hover:border-teal-500/60", iconBg: "bg-teal-500/20", accent: "text-teal-400" },
+};
+
 const CoManagedStore = () => {
   const prefersReducedMotion = useReducedMotion();
   const searchString = useSearch();
@@ -117,51 +134,48 @@ const CoManagedStore = () => {
 
   const ProductCard = ({ product }: { product: StoreProduct }) => {
     const Icon = categoryIcons[product.category];
+    const colors = categoryColors[product.category];
     const { price, hasDiscount, discountPercent } = getProductPrice(product.id, product.basePrice);
     
     const renderPrice = () => {
       if (hasDiscount) {
         return (
-          <div className="flex flex-col">
+          <div className="flex flex-col min-w-0 flex-shrink">
             <div className="flex items-center gap-2">
-              <span className="text-violet-400 font-bold" data-testid={`price-${product.id}`}>${price.toFixed(2)}</span>
+              <span className={`${colors.accent} font-bold text-sm`} data-testid={`price-${product.id}`}>${price.toFixed(2)}</span>
               <span className="text-white/40 text-xs line-through">${product.basePrice.toFixed(2)}</span>
             </div>
             <span className="text-violet-400/80 text-xs flex items-center gap-1">
               <Tag className="w-3 h-3" />
-              {discountPercent}% client discount
+              {discountPercent}% off
             </span>
           </div>
         );
       }
-      return <span className="text-violet-400 font-bold" data-testid={`price-${product.id}`}>{formatPrice(product)}</span>;
+      return <span className={`${colors.accent} font-bold text-sm`} data-testid={`price-${product.id}`}>{formatPrice(product)}</span>;
     };
     
     return (
       <Link href={`/store/product/${product.sku}`}>
         <motion.div
           variants={itemVariants}
-          className={`p-5 rounded-xl bg-white/[0.03] border transition-all duration-300 group flex flex-col h-full cursor-pointer ${
-            product.isClientOnly 
-              ? "border-violet-500/30 hover:border-violet-500/50" 
-              : "border-white/10 hover:border-violet-500/30"
-          }`}
+          className={`p-5 rounded-xl bg-white/[0.03] border-2 transition-all duration-300 group flex flex-col h-full cursor-pointer ${colors.border} ${colors.borderHover}`}
           data-testid={`product-${product.id}`}
         >
           <div className="flex items-start gap-3 mb-3">
-            <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-violet-500/30 transition-colors">
-              <Icon className="w-5 h-5 text-violet-400" />
+            <div className={`w-10 h-10 rounded-lg ${colors.iconBg} flex items-center justify-center flex-shrink-0 group-hover:opacity-80 transition-colors`}>
+              <Icon className={`w-5 h-5 ${colors.accent}`} />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-0.5">
                 <h3 className="text-white font-semibold line-clamp-1 group-hover:text-violet-300 transition-colors">{product.name}</h3>
                 {product.isClientOnly && (
-                  <span className="px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 text-[10px] font-medium whitespace-nowrap">
-                    Client Only
+                  <span className="px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 text-[10px] font-medium whitespace-nowrap flex-shrink-0">
+                    Client
                   </span>
                 )}
               </div>
-              <p className="text-white/40 text-xs">{categoryLabels[product.category]}</p>
+              <p className={`${colors.accent} text-xs opacity-80`}>{categoryLabels[product.category]}</p>
             </div>
           </div>
           
@@ -171,7 +185,7 @@ const CoManagedStore = () => {
             <ul className="space-y-1 mb-4">
               {product.features.slice(0, 3).map((feature, idx) => (
                 <li key={idx} className="text-white/50 text-xs flex items-start gap-1.5">
-                  <span className="text-violet-400 mt-0.5">•</span>
+                  <span className={`${colors.accent} mt-0.5`}>•</span>
                   <span className="line-clamp-1">{feature}</span>
                 </li>
               ))}
@@ -180,13 +194,13 @@ const CoManagedStore = () => {
               )}
             </ul>
             
-            <div className="flex items-center justify-between pt-3 border-t border-white/10">
-              {renderPrice()}
+            <div className="flex items-center justify-between gap-2 pt-3 border-t border-white/10">
+              <div className="min-w-0 flex-shrink">{renderPrice()}</div>
               
               {product.isClientOnly && !isLoggedIn ? (
                 <Button 
                   size="sm" 
-                  className="bg-violet-600 hover:bg-violet-500 text-white border-none shadow-[0_0_15px_rgba(139,92,246,0.3)]"
+                  className="bg-violet-600 hover:bg-violet-500 text-white border-none shadow-[0_0_15px_rgba(139,92,246,0.3)] flex-shrink-0 text-xs px-2"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -195,12 +209,12 @@ const CoManagedStore = () => {
                   data-testid={`button-login-${product.id}`}
                 >
                   <LogIn className="w-3 h-3 mr-1" />
-                  Login Required
+                  Login
                 </Button>
               ) : (
                 <Button 
                   size="sm" 
-                  className="bg-violet-600 hover:bg-violet-500 text-white text-xs"
+                  className="bg-violet-600 hover:bg-violet-500 text-white text-xs flex-shrink-0 px-2"
                   onClick={(e) => handleAddToCart(product, e)}
                   data-testid={`button-add-${product.id}`}
                 >
