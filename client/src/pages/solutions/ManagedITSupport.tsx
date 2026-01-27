@@ -155,8 +155,7 @@ export default function ManagedITSupport() {
             <a href="tel:325-480-9870">
               <Button 
                 size="lg" 
-                variant="outline" 
-                className="border-white text-white hover:bg-white hover:text-violet-600"
+                className="bg-transparent border border-white text-white hover:bg-white hover:text-violet-600"
                 data-testid="button-call-now"
               >
                 <Phone className="mr-2 h-4 w-4" />
