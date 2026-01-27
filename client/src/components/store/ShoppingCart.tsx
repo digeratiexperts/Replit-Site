@@ -1,12 +1,19 @@
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
+import { X, Minus, Plus, Trash2, ShoppingBag, ArrowRight, ChevronDown, Loader2, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart, isRecurringPricing } from "@/contexts/CartContext";
 import { formatPrice } from "@/data/storeProducts";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 
 export function ShoppingCart() {
-  const { items, isOpen, closeCart, removeFromCart, updateQuantity, getCartTotal, clearCart } = useCart();
+  const { items, isOpen, closeCart, removeFromCart, updateQuantity, getCartTotal, getSavings, clearCart } = useCart();
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const { toast } = useToast();
+  const [, setLocation] = useLocation();
 
   const total = getCartTotal();
   const hasRecurring = items.some((item) => isRecurringPricing(item.product.pricingType));
@@ -19,6 +26,51 @@ export function ShoppingCart() {
   const oneTimeTotal = items
     .filter((item) => !isRecurringPricing(item.product.pricingType))
     .reduce((sum, item) => sum + item.product.basePrice * item.quantity, 0);
+
+  const savings = getSavings();
+
+  const handleCheckout = async () => {
+    if (items.length === 0) return;
+    
+    setIsCheckingOut(true);
+    try {
+      const lineItems = items.map(item => ({
+        productId: item.product.id,
+        sku: item.product.sku,
+        name: item.product.name,
+        quantity: item.quantity,
+        unitPrice: item.clientPrice ?? item.product.basePrice,
+        pricingType: item.product.pricingType,
+      }));
+
+      const response = await apiRequest("POST", "/api/store/checkout/stripe", { lineItems });
+      const data = await response.json();
+
+      if (data.url) {
+        // Redirect to Stripe Checkout
+        window.location.href = data.url;
+      } else if (data.error) {
+        toast({
+          title: "Checkout Error",
+          description: data.error,
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
+      console.error("Checkout error:", error);
+      toast({
+        title: "Checkout Failed",
+        description: error.message || "Unable to initiate checkout. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsCheckingOut(false);
+    }
+  };
+
+  const handleMinimize = () => {
+    setIsMinimized(!isMinimized);
+  };
 
   return (
     <AnimatePresence>
@@ -36,10 +88,10 @@ export function ShoppingCart() {
 
           <motion.div
             initial={{ x: "100%" }}
-            animate={{ x: 0 }}
+            animate={{ x: 0, height: isMinimized ? "auto" : "100%" }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed right-0 top-0 h-full w-full max-w-md bg-[#0a0a0a] border-l border-white/10 z-50 flex flex-col"
+            className={`fixed right-0 ${isMinimized ? "bottom-0 top-auto rounded-tl-2xl" : "top-0"} w-full max-w-md bg-[#0a0a0a] border-l border-white/10 z-50 flex flex-col`}
             data-testid="shopping-cart-panel"
           >
             <div className="flex items-center justify-between p-6 border-b border-white/10">
@@ -48,17 +100,30 @@ export function ShoppingCart() {
                 <h2 className="text-xl font-semibold text-white">Your Cart</h2>
                 <span className="text-white/50 text-sm">({items.length} items)</span>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={closeCart}
-                className="text-white/60 hover:text-white hover:bg-violet-500/10"
-                data-testid="button-close-cart"
-              >
-                <X className="w-5 h-5" />
-              </Button>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleMinimize}
+                  className="text-white/60 hover:text-white hover:bg-violet-500/10"
+                  data-testid="button-minimize-cart"
+                  title={isMinimized ? "Expand cart" : "Minimize cart"}
+                >
+                  <ChevronDown className={`w-5 h-5 transition-transform ${isMinimized ? "rotate-180" : ""}`} />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={closeCart}
+                  className="text-white/60 hover:text-white hover:bg-violet-500/10"
+                  data-testid="button-close-cart"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
             </div>
 
+            {!isMinimized && (
             <div className="flex-1 overflow-y-auto p-6">
               {items.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center">
@@ -136,6 +201,7 @@ export function ShoppingCart() {
                 </div>
               )}
             </div>
+            )}
 
             {items.length > 0 && (
               <div className="p-6 border-t border-white/10 bg-white/[0.02]">
@@ -152,6 +218,12 @@ export function ShoppingCart() {
                       <span className="text-white">${oneTimeTotal.toFixed(2)}</span>
                     </div>
                   )}
+                  {savings > 0 && (
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-emerald-400">You Save</span>
+                      <span className="text-emerald-400 font-medium">-${savings.toFixed(2)}</span>
+                    </div>
+                  )}
                   <div className="flex items-center justify-between pt-2 border-t border-white/10">
                     <span className="text-white font-medium">Total</span>
                     <span className="text-violet-400 font-bold text-lg">${total.toFixed(2)}</span>
@@ -160,11 +232,23 @@ export function ShoppingCart() {
 
                 <div className="space-y-3">
                   <Button
-                    className="w-full bg-violet-600 hover:bg-violet-500 text-white"
+                    className="w-full bg-violet-600 hover:bg-violet-500 text-white disabled:opacity-50"
+                    onClick={handleCheckout}
+                    disabled={isCheckingOut}
                     data-testid="button-checkout"
                   >
-                    Proceed to Checkout
-                    <ArrowRight className="w-4 h-4 ml-2" />
+                    {isCheckingOut ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <CreditCard className="w-4 h-4 mr-2" />
+                        Proceed to Checkout
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </>
+                    )}
                   </Button>
                   <Button
                     variant="ghost"
