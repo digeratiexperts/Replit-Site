@@ -384,7 +384,7 @@ export default function BackupDisasterRecovery() {
       <div className="space-y-24">
         {/* Hero Section */}
         <motion.section {...fadeInUp} className="relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/20 via-purple-600/10 to-transparent rounded-3xl pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 via-purple-600/10 to-transparent rounded-3xl pointer-events-none" />
           <div className="relative bg-white/[0.02] border border-white/10 rounded-3xl p-8 md:p-12">
             <div className="max-w-4xl">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-300 text-sm font-medium mb-6">
@@ -394,7 +394,7 @@ export default function BackupDisasterRecovery() {
               
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
                 Recover in hours—
-                <span className="bg-gradient-to-r from-indigo-300 via-purple-300 to-violet-300 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-violet-300 via-purple-300 to-violet-300 bg-clip-text text-transparent">
                   not days
                 </span>
               </h1>
@@ -470,7 +470,7 @@ export default function BackupDisasterRecovery() {
             <h2 className="text-3xl font-bold text-white mb-6 text-center">BCDR in 30 Seconds</h2>
             <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
               <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center mx-auto mb-4">
                   <HardDrive className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="font-semibold text-white mb-2">Backup</h3>
@@ -520,7 +520,7 @@ export default function BackupDisasterRecovery() {
                 className="bg-white/[0.03] border border-white/10 rounded-xl p-6 hover:bg-white/[0.05] transition-colors"
               >
                 <div className="flex items-start gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center flex-shrink-0">
                     <feature.icon className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -540,7 +540,7 @@ export default function BackupDisasterRecovery() {
                         className={`text-xs px-2 py-0.5 rounded ${
                           tier === 'enterprise' ? 'bg-violet-600/30 text-violet-300' :
                           tier === 'business' ? 'bg-purple-600/30 text-purple-300' :
-                          'bg-indigo-600/30 text-indigo-300'
+                          'bg-violet-600/30 text-violet-300'
                         }`}
                       >
                         {tier.charAt(0).toUpperCase()}
@@ -675,7 +675,7 @@ export default function BackupDisasterRecovery() {
                 className="relative"
               >
                 <div className="bg-white/[0.03] border border-white/10 rounded-xl p-8 text-center h-full">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mx-auto mb-6">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center mx-auto mb-6">
                     <span className="text-2xl font-bold text-white">{step.step}</span>
                   </div>
                   <step.icon className="w-8 h-8 text-violet-400 mx-auto mb-4" />
@@ -715,7 +715,7 @@ export default function BackupDisasterRecovery() {
 
         {/* What Happens Next */}
         <motion.section {...fadeInUp}>
-          <div className="bg-gradient-to-br from-indigo-600/20 via-purple-600/10 to-transparent rounded-2xl border border-white/10 p-8 md:p-12">
+          <div className="bg-gradient-to-br from-violet-600/20 via-purple-600/10 to-transparent rounded-2xl border border-white/10 p-8 md:p-12">
             <h2 className="text-2xl font-bold text-white mb-6 text-center">What Happens After You Book?</h2>
             <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
               <div className="text-center">
@@ -746,7 +746,7 @@ export default function BackupDisasterRecovery() {
         {/* Final CTA */}
         <motion.section {...fadeInUp}>
           <div className="relative rounded-2xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 opacity-90" />
+            <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-violet-600 opacity-90" />
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] pointer-events-none" />
             <div className="relative py-16 px-8 text-center">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">

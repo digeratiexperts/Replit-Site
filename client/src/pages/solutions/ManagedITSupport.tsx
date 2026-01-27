@@ -3,6 +3,46 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Shield, Clock, Users, CheckCircle, Phone } from "lucide-react";
 import { ServiceMatrix } from "@/components/ServiceMatrix";
+import { GuidedSalesPitch } from "@/components/GuidedSalesPitch";
+
+const supportSalesPitchData = {
+  corePitch: [
+    "15-minute response SLA—not 'we'll get to it when we can'",
+    "Stack-native support: we built these tools, we know them cold",
+    "Vendor coordination included—no more juggling ISPs and SaaS vendors",
+    "Repeat issue tracking reduces incidents over time, not just band-aids",
+    "Users get help AND education—safer behaviors, fewer tickets",
+    "Predictable monthly costs with no surprise bills"
+  ],
+  discoveryQuestions: [
+    "How quickly does your current IT respond to issues?",
+    "How often do the same problems keep coming back?",
+    "Who coordinates with your vendors when something breaks?",
+    "Do your users feel confident calling IT, or do they just work around issues?",
+    "What's your biggest frustration with IT support right now?"
+  ],
+  objections: [
+    {
+      objection: "We already have IT support",
+      response: "Great—but are they proactive or reactive? Our stack-native approach means we prevent issues, not just fix them. How often do you see the same tickets repeat?"
+    },
+    {
+      objection: "Our team can handle it",
+      response: "Internal teams often get pulled in multiple directions. We provide dedicated focus with SLAs, so your team can work on strategic projects."
+    },
+    {
+      objection: "It's too expensive",
+      response: "What's the cost of downtime? A single outage can cost more than a year of support. Our flat-rate model means predictable costs and faster resolution."
+    }
+  ],
+  valueProof: [
+    "15-minute response SLA documented in writing",
+    "Repeat issue tracking—you'll see the numbers drop",
+    "Vendor coordination saves you hours of frustration",
+    "Monthly service reports with resolution metrics",
+    "Stack-native expertise—we built the tools we support"
+  ]
+};
 
 export default function ManagedITSupport() {
   return (
@@ -16,9 +56,9 @@ export default function ManagedITSupport() {
         <div>
           <h2 className="text-3xl font-bold mb-8 text-white">Why Choose Our Managed IT Support?</h2>
           <div className="grid md:grid-cols-3 gap-6">
-            <Card className="bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/30 hover:bg-white/[0.08] transition-all">
+            <Card className="bg-white/5 backdrop-blur-sm border border-white/10 hover:border-violet-500/30 hover:bg-white/[0.08] transition-all">
               <CardHeader>
-                <Shield className="h-10 w-10 text-purple-400 mb-2" />
+                <Shield className="h-10 w-10 text-violet-400 mb-2" />
                 <CardTitle className="text-white">Proactive Monitoring</CardTitle>
               </CardHeader>
               <CardContent>
@@ -26,9 +66,9 @@ export default function ManagedITSupport() {
               </CardContent>
             </Card>
             
-            <Card className="bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/30 hover:bg-white/[0.08] transition-all">
+            <Card className="bg-white/5 backdrop-blur-sm border border-white/10 hover:border-violet-500/30 hover:bg-white/[0.08] transition-all">
               <CardHeader>
-                <Clock className="h-10 w-10 text-purple-400 mb-2" />
+                <Clock className="h-10 w-10 text-violet-400 mb-2" />
                 <CardTitle className="text-white">15-Minute Response Time</CardTitle>
               </CardHeader>
               <CardContent>
@@ -36,9 +76,9 @@ export default function ManagedITSupport() {
               </CardContent>
             </Card>
             
-            <Card className="bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/30 hover:bg-white/[0.08] transition-all">
+            <Card className="bg-white/5 backdrop-blur-sm border border-white/10 hover:border-violet-500/30 hover:bg-white/[0.08] transition-all">
               <CardHeader>
-                <Users className="h-10 w-10 text-purple-400 mb-2" />
+                <Users className="h-10 w-10 text-violet-400 mb-2" />
                 <CardTitle className="text-white">Dedicated Support Team</CardTitle>
               </CardHeader>
               <CardContent>
@@ -91,8 +131,11 @@ export default function ManagedITSupport() {
           </div>
         </div>
 
+        {/* Sales Pitch Section */}
+        <GuidedSalesPitch data={supportSalesPitchData} />
+
         {/* CTA */}
-        <div className="bg-gradient-to-r from-purple-600 to-violet-600 rounded-lg p-8 text-center text-white">
+        <div className="bg-gradient-to-r from-violet-600 to-purple-600 rounded-lg p-8 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
           <p className="text-lg mb-6 text-white/90">Schedule a free consultation to see how we can support your IT needs.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -103,7 +146,7 @@ export default function ManagedITSupport() {
             >
               <Button 
                 size="lg" 
-                className="bg-white text-purple-700 hover:bg-gray-100"
+                className="bg-white text-violet-700 hover:bg-gray-100"
                 data-testid="button-schedule-consultation"
               >
                 Schedule Consultation
@@ -113,7 +156,7 @@ export default function ManagedITSupport() {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-white text-white hover:bg-white hover:text-purple-600"
+                className="border-white text-white hover:bg-white hover:text-violet-600"
                 data-testid="button-call-now"
               >
                 <Phone className="mr-2 h-4 w-4" />

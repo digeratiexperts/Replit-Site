@@ -183,7 +183,7 @@ const SolutionsIndex = () => {
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
               The ProActive{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-purple-300 to-fuchsia-300">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-violet-300 to-fuchsia-300">
                 Ecosystem
               </span>
             </h1>
@@ -384,13 +384,13 @@ const SolutionsIndex = () => {
                   className="flex gap-4 p-5 rounded-xl bg-white/[0.03] border border-white/10 hover:border-violet-500/30 transition-all duration-300"
                   data-testid={`compliance-${index}`}
                 >
-                  <div className="w-12 h-12 rounded-lg bg-purple-500/20 flex items-center justify-center flex-shrink-0">
-                    <service.icon className="w-6 h-6 text-purple-400" />
+                  <div className="w-12 h-12 rounded-lg bg-violet-500/20 flex items-center justify-center flex-shrink-0">
+                    <service.icon className="w-6 h-6 text-violet-400" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <h3 className="text-white font-semibold">{service.title}</h3>
-                      <span className="px-2 py-0.5 text-xs bg-purple-500/20 text-purple-300 rounded">
+                      <span className="px-2 py-0.5 text-xs bg-violet-500/20 text-violet-300 rounded">
                         {service.tier}
                       </span>
                     </div>
@@ -403,7 +403,7 @@ const SolutionsIndex = () => {
 
           {/* Why Choose Us */}
           <motion.section 
-            className="mb-20 rounded-2xl p-8 bg-gradient-to-br from-violet-900/20 to-purple-900/20 border border-violet-500/20"
+            className="mb-20 rounded-2xl p-8 bg-gradient-to-br from-violet-900/20 to-violet-900/20 border border-violet-500/20"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { FloatingParticles } from "@/components/graphics";
 import { useSEO } from "@/hooks/useSEO";
+import { GuidedSalesPitch } from "@/components/GuidedSalesPitch";
 
 type EngagementMode = "collaboration" | "kits";
 type Ownership = "de" | "client" | "shared";
@@ -115,6 +116,49 @@ const faqs = [
     answer: "Collaboration typically requires a 12-month agreement. Kits can be month-to-month after the initial setup, depending on the service scope."
   }
 ];
+
+const coManagedSalesPitchData = {
+  corePitch: [
+    "Fill skill gaps without full-time hires—get specialized expertise on demand",
+    "24/7 coverage without burning out your internal team",
+    "Clear RACI matrix—everyone knows who owns what",
+    "Stack-native integration with your existing tools and processes",
+    "Start with Kits, expand to full Collaboration—scale at your pace",
+    "Your IT team stays in control while we handle the heavy lifting"
+  ],
+  discoveryQuestions: [
+    "Where does your IT team spend most of their time—strategic work or firefighting?",
+    "What happens when your senior IT person is on vacation or leaves?",
+    "Do you have 24/7 monitoring, or are incidents discovered in the morning?",
+    "Which specialized skills are hardest to hire for—security, cloud, compliance?",
+    "How often do projects stall because your team is pulled into support?"
+  ],
+  objections: [
+    {
+      objection: "We already have internal IT",
+      response: "Great—we don't replace them, we augment them. Clear RACI means no confusion. Your team focuses on what they do best; we handle the rest."
+    },
+    {
+      objection: "We don't want to give up control",
+      response: "You keep full control. We work under your direction with defined scope. Think of us as an extension of your team, not a replacement."
+    },
+    {
+      objection: "Our IT person handles everything",
+      response: "What happens when they're out? Or when they need specialized skills? Co-Managed means coverage without the single-point-of-failure risk."
+    },
+    {
+      objection: "It's too expensive to add more IT support",
+      response: "Compare it to hiring: salary, benefits, training, turnover. Co-Managed gives you flexible expertise at a fraction of the cost."
+    }
+  ],
+  valueProof: [
+    "RACI matrix included—no ambiguity about responsibilities",
+    "24/7 monitoring coverage without overtime costs",
+    "Specialized expertise available without hiring full-time",
+    "Kits option for project-based or device-specific management",
+    "Quarterly posture meetings keep everyone aligned"
+  ]
+};
 
 const outcomes = [
   { stat: "30–50%", label: "fewer interruptions after 60–90 days" },
@@ -617,6 +661,13 @@ export default function CoManagedIT() {
               ))}
             </div>
           </motion.section>
+
+          {/* Sales Pitch Section */}
+          <section className="py-16 relative">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+              <GuidedSalesPitch data={coManagedSalesPitchData} />
+            </div>
+          </section>
 
           {/* Final CTA */}
           <motion.section {...fadeInUp}>

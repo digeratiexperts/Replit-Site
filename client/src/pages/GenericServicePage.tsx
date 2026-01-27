@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
 import { ServiceMatrix } from "@/components/ServiceMatrix";
 import { ServiceCapabilityMatrix } from "@/components/ServiceCapabilityMatrix";
+import { GuidedSalesPitch } from "@/components/GuidedSalesPitch";
 
 interface ServiceFeature {
   title: string;
@@ -18,6 +19,13 @@ interface ServiceStat {
   source: string;
 }
 
+interface SalesPitchData {
+  corePitch: string[];
+  discoveryQuestions: string[];
+  objections: Array<{ objection: string; response: string }>;
+  valueProof: string[];
+}
+
 interface GenericServicePageProps {
   title: string;
   subtitle: string;
@@ -29,6 +37,7 @@ interface GenericServicePageProps {
   canonical?: string;
   recommendedTier?: "office" | "business" | "enterprise";
   serviceKey?: string;
+  salesPitchData?: SalesPitchData;
 }
 
 const FeatureCard = ({ 
@@ -46,13 +55,13 @@ const FeatureCard = ({
     viewport={{ once: true }}
     transition={{ delay: index * 0.1, duration: 0.5 }}
   >
-    <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/30 hover:bg-white/[0.08] transition-all duration-300 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+    <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-violet-500/30 hover:bg-white/[0.08] transition-all duration-300 overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       <CardHeader className="relative">
         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
           {feature.icon || <Sparkles className="w-6 h-6 text-white" />}
         </div>
-        <CardTitle className="text-xl font-semibold text-white group-hover:text-purple-300 transition-colors">
+        <CardTitle className="text-xl font-semibold text-white group-hover:text-violet-300 transition-colors">
           {feature.title}
         </CardTitle>
       </CardHeader>
@@ -73,7 +82,8 @@ export default function GenericServicePage({
   stat,
   canonical,
   recommendedTier,
-  serviceKey
+  serviceKey,
+  salesPitchData
 }: GenericServicePageProps) {
   const prefersReducedMotion = useReducedMotion() ?? false;
 
@@ -168,7 +178,7 @@ export default function GenericServicePage({
             transition={{ duration: 0.5 }}
           >
             {/* Decorative elements */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-500/10 to-transparent rounded-full blur-3xl" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-violet-500/10 to-transparent rounded-full blur-3xl" />
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-fuchsia-500/10 to-transparent rounded-full blur-3xl" />
             
             <div className="relative">
@@ -246,6 +256,18 @@ export default function GenericServicePage({
           />
         </motion.div>
 
+        {/* Sales Pitch Section */}
+        {salesPitchData && (
+          <motion.div
+            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <GuidedSalesPitch data={salesPitchData} />
+          </motion.div>
+        )}
+
         {/* CTA Section */}
         <motion.div 
           className="relative rounded-2xl overflow-hidden"
@@ -271,7 +293,7 @@ export default function GenericServicePage({
           
           {/* Glowing orbs */}
           <div className="absolute -top-20 -right-20 w-64 h-64 bg-fuchsia-400/20 rounded-full blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-purple-400/20 rounded-full blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-violet-400/20 rounded-full blur-3xl" />
           
           <div className="relative p-8 md:p-12 text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Ready to Learn More?</h2>
@@ -283,7 +305,7 @@ export default function GenericServicePage({
                 href="https://meet.digerati-experts.com/" 
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center justify-center bg-white text-purple-700 hover:bg-gray-100 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
+                className="group inline-flex items-center justify-center bg-white text-violet-700 hover:bg-gray-100 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
                 data-testid="button-contact"
               >
                 <ArrowRight className="mr-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -291,7 +313,7 @@ export default function GenericServicePage({
               </a>
               <a 
                 href="tel:325-480-9870"
-                className="group inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-purple-700 px-8 py-4 rounded-xl font-semibold transition-all"
+                className="group inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-violet-700 px-8 py-4 rounded-xl font-semibold transition-all"
                 data-testid="button-call"
               >
                 <Phone className="mr-2 h-5 w-5" />
