@@ -4,7 +4,7 @@ hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
 
 [nix]
 channel = "stable-24_05"
-packages = ["psmisc", "nsis"]
+packages = ["psmisc", "nsis", "unzip"]
 
 [deployment]
 deploymentTarget = "autoscale"

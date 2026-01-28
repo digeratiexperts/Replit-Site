@@ -885,6 +885,7 @@ export async function registerRoutes(app: Express) {
     { id: "client-3", companyName: "Desert Law Partners", contactEmail: "admin@desertlaw.com", contactPhone: "(480) 555-1003", industry: "Legal", primaryContact: "Mike Davis", status: "active", type: "client", serviceType: "comanaged", createdAt: new Date() },
     { id: "client-4", companyName: "Scottsdale Realty", contactEmail: "tech@scottsdalereal.com", contactPhone: "(480) 555-1004", industry: "Real Estate", primaryContact: "Lisa Wilson", status: "active", type: "client", serviceType: "comanaged", createdAt: new Date() },
     { id: "client-5", companyName: "Alamo Industries", contactEmail: "support@alamoindustries.com", contactPhone: "(480) 555-1005", industry: "Manufacturing", primaryContact: "Maria Garcia", status: "active", type: "client", serviceType: "comanaged", createdAt: new Date() },
+    { id: "client-6", companyName: "Sel Machining", contactEmail: "support@selmachining.com", contactPhone: "(480) 555-1006", industry: "Manufacturing", primaryContact: "Operations Manager", status: "active", type: "client", serviceType: "comanaged", createdAt: new Date() },
   ];
   demoCompanies.forEach(c => portalClients.set(c.id, c));
   
@@ -941,6 +942,20 @@ export async function registerRoutes(app: Express) {
     isActive: true,
   };
   
+  // Sel Machining user - Password: SelUser123!
+  // Sel Machining is a comanaged client (client-6)
+  const selUser = {
+    id: "user-004",
+    email: "admin@selmachining.com",
+    username: "seladmin",
+    password: "$2b$12$m6eyC5YfWBIG4/beE40TxOeG5BG4v/MxsowQ4Ays9RrjhOzcVxx.a",
+    role: "user",
+    storeRole: "comanaged" as StoreRole,
+    fullName: "Sel Operations",
+    clientId: "client-6",
+    isActive: true,
+  };
+  
   // Initialize with admin and demo users
   portalUsers.set(adminUser.email, adminUser);
   portalUsers.set(adminUser.username, adminUser);
@@ -950,6 +965,8 @@ export async function registerRoutes(app: Express) {
   portalUsers.set(demoUser2.username, demoUser2);
   portalUsers.set(alamoUser.email, alamoUser);
   portalUsers.set(alamoUser.username, alamoUser);
+  portalUsers.set(selUser.email, selUser);
+  portalUsers.set(selUser.username, selUser);
 
   // Portal Register Endpoint
   app.post("/api/portal/register", [verifyTurnstile, validateInput], async (req: AuthenticatedRequest, res: Response) => {
