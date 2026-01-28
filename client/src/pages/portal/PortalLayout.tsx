@@ -1,7 +1,7 @@
 import { useLocation, Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { LogOut, Menu, X, LayoutDashboard, Ticket, Package, FileText, BookOpen, Settings, Activity, GraduationCap, MessageCircle, Download, Truck, ShoppingCart, ClipboardList, CheckSquare, FileStack, Upload, Users, Calendar, Shield, Phone, Building2, AlertTriangle, FileSignature } from "lucide-react";
+import { LogOut, Menu, X, LayoutDashboard, Ticket, Package, FileText, BookOpen, Settings, Activity, GraduationCap, MessageCircle, Download, Truck, ShoppingCart, ClipboardList, CheckSquare, FileStack, Upload, Users, Calendar, Shield, Phone, Building2, AlertTriangle, FileSignature, FilePlus } from "lucide-react";
 import { useState } from "react";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
 import { TenantSelector } from "@/components/portal/TenantSelector";
@@ -20,6 +20,7 @@ const navItems = [
   { href: "/portal/surveys", label: "Surveys", icon: CheckSquare },
   { href: "/portal/approvals", label: "Approvals", icon: FileStack },
   { href: "/portal/contracts", label: "Contracts", icon: FileSignature },
+  { href: "/portal/order-form", label: "New Order", icon: FilePlus },
   { href: "/portal/services", label: "My Services", icon: Package },
   { href: "/portal/billing", label: "Billing", icon: FileText },
   { href: "/portal/company", label: "Company", icon: Building2 },

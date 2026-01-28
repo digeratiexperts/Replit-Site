@@ -7,6 +7,8 @@ import jwt from "jsonwebtoken";
 import { registerObjectStorageRoutes, ObjectStorageService } from "./replit_integrations/object_storage";
 import { zohoClient, zohoDeskService, zohoCRMService, zohoBillingService } from "./zoho";
 import { verifyTurnstile } from "./middleware/security";
+import fs from "fs";
+import path from "path";
 
 const JWT_SECRET = process.env.JWT_SECRET || randomBytes(32).toString('hex');
 const SALT_ROUNDS = 12;
@@ -4115,6 +4117,503 @@ export async function registerRoutes(app: Express) {
   // In-memory stores for clients and users (module level for admin routes)
   const portalClientsStore = new Map<string, any>();
   const portalUsersStore = new Map<string, any>();
+
+  // ========== DOCUMENT TEMPLATE MANAGEMENT ==========
+  
+  // In-memory store for document templates (loaded from manifest)
+  const documentTemplatesStore = new Map<string, any>();
+  const documentPacketsStore = new Map<string, any>();
+  const documentPacketItemsStore = new Map<string, any[]>();
+  
+  // Load document manifest on startup
+  const loadDocumentManifest = () => {
+    try {
+      const manifestPath = path.join(process.cwd(), 'server/data/document-manifest.json');
+      
+      if (fs.existsSync(manifestPath)) {
+        const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+        manifest.forEach((doc: any) => {
+          documentTemplatesStore.set(doc.id, {
+            id: doc.id,
+            selectionKey: doc.selection_key,
+            title: doc.title,
+            category: doc.category,
+            version: doc.version,
+            sortOrder: doc.order,
+            requiresSignature: doc.requires_signature,
+            templateDocxPath: doc.template_docx,
+            templatePdfPath: doc.template_pdf,
+            dependsOn: doc.depends_on || [],
+            notes: doc.notes,
+            isActive: true
+          });
+        });
+        console.log(`[DOCS] Loaded ${manifest.length} document templates from manifest`);
+      } else {
+        console.log('[DOCS] Document manifest not found at', manifestPath);
+      }
+    } catch (error) {
+      console.error('[DOCS] Failed to load document manifest:', error);
+    }
+  };
+  
+  loadDocumentManifest();
+  
+  // Get all document templates (admin)
+  app.get("/api/admin/document-templates", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const templates = Array.from(documentTemplatesStore.values())
+        .sort((a, b) => a.sortOrder - b.sortOrder);
+      res.json({ templates });
+    } catch (error: any) {
+      console.error("[GET DOCUMENT TEMPLATES ERROR]", error);
+      res.status(500).json({ error: "Failed to fetch document templates" });
+    }
+  });
+  
+  // Get all document templates (portal - for order form)
+  app.get("/api/portal/document-templates", authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const templates = Array.from(documentTemplatesStore.values())
+        .filter(t => t.isActive)
+        .sort((a, b) => a.sortOrder - b.sortOrder);
+      res.json({ templates });
+    } catch (error: any) {
+      console.error("[GET DOCUMENT TEMPLATES ERROR]", error);
+      res.status(500).json({ error: "Failed to fetch document templates" });
+    }
+  });
+  
+  // Serve document template PDFs
+  app.get("/api/documents/pdf/:filename", async (req: Request, res: Response) => {
+    try {
+      const { filename } = req.params;
+      
+      // Security: prevent path traversal
+      const safeFilename = path.basename(filename);
+      const pdfPath = path.join(process.cwd(), 'document_templates/templates/pdf', safeFilename);
+      
+      if (!fs.existsSync(pdfPath)) {
+        return res.status(404).json({ error: "Document not found" });
+      }
+      
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `inline; filename="${safeFilename}"`);
+      
+      const fileStream = fs.createReadStream(pdfPath);
+      fileStream.pipe(res);
+    } catch (error: any) {
+      console.error("[SERVE PDF ERROR]", error);
+      res.status(500).json({ error: "Failed to serve document" });
+    }
+  });
+  
+  // Create document packet for client (admin)
+  app.post("/api/admin/document-packets", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { 
+        clientId, name, description, serviceSelections,
+        effectiveDate, billingStartDate, contractTerm,
+        totalMonthlyValue, totalOneTimeValue,
+        clientSignatory, clientSignatoryTitle, clientSignatoryEmail
+      } = req.body;
+      
+      if (!clientId || !name || !serviceSelections?.length) {
+        return res.status(400).json({ error: "Client ID, name, and service selections are required" });
+      }
+      
+      const packetId = randomId();
+      const packet = {
+        id: packetId,
+        clientId,
+        name,
+        description,
+        status: 'draft',
+        serviceSelections,
+        effectiveDate: effectiveDate ? new Date(effectiveDate) : null,
+        billingStartDate: billingStartDate ? new Date(billingStartDate) : null,
+        contractTerm,
+        totalMonthlyValue,
+        totalOneTimeValue,
+        clientSignatory,
+        clientSignatoryTitle,
+        clientSignatoryEmail,
+        createdBy: req.userId,
+        sentAt: null,
+        completedAt: null,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      documentPacketsStore.set(packetId, packet);
+      
+      // Auto-generate packet items based on service selections
+      const items: any[] = [];
+      const coreDocKeys = ['nda', 'msa', 'order_form', 'invoice-terms-and-conditions-digerati-experts'];
+      
+      // Add core documents
+      coreDocKeys.forEach((key, index) => {
+        const template = Array.from(documentTemplatesStore.values())
+          .find(t => t.selectionKey === key);
+        if (template) {
+          items.push({
+            id: randomId(),
+            packetId,
+            templateId: template.id,
+            sortOrder: index * 10,
+            requiresSignature: template.requiresSignature,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          });
+        }
+      });
+      
+      // Add SOW documents based on service selections
+      serviceSelections.forEach((selection: string, index: number) => {
+        const template = Array.from(documentTemplatesStore.values())
+          .find(t => t.selectionKey === selection || t.id.includes(selection));
+        if (template && !items.find(i => i.templateId === template.id)) {
+          items.push({
+            id: randomId(),
+            packetId,
+            templateId: template.id,
+            sortOrder: 100 + index * 10,
+            requiresSignature: template.requiresSignature,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          });
+        }
+      });
+      
+      documentPacketItemsStore.set(packetId, items);
+      
+      logSecurityEvent("DOCUMENT_PACKET_CREATED", req, { packetId, clientId, itemCount: items.length });
+      
+      res.status(201).json({ packet, items });
+    } catch (error: any) {
+      console.error("[CREATE DOCUMENT PACKET ERROR]", error);
+      res.status(500).json({ error: "Failed to create document packet" });
+    }
+  });
+  
+  // Get all document packets (admin)
+  app.get("/api/admin/document-packets", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const packets = Array.from(documentPacketsStore.values())
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      
+      // Enrich with items
+      const enrichedPackets = packets.map(packet => ({
+        ...packet,
+        items: documentPacketItemsStore.get(packet.id) || []
+      }));
+      
+      res.json({ packets: enrichedPackets });
+    } catch (error: any) {
+      console.error("[GET DOCUMENT PACKETS ERROR]", error);
+      res.status(500).json({ error: "Failed to fetch document packets" });
+    }
+  });
+  
+  // Get document packet by ID (admin)
+  app.get("/api/admin/document-packets/:id", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const packet = documentPacketsStore.get(req.params.id);
+      
+      if (!packet) {
+        return res.status(404).json({ error: "Packet not found" });
+      }
+      
+      const items = (documentPacketItemsStore.get(req.params.id) || []).map(item => {
+        const template = documentTemplatesStore.get(item.templateId);
+        return { ...item, template };
+      });
+      
+      res.json({ packet, items });
+    } catch (error: any) {
+      console.error("[GET DOCUMENT PACKET ERROR]", error);
+      res.status(500).json({ error: "Failed to fetch document packet" });
+    }
+  });
+  
+  // Send document packet to client (admin)
+  app.post("/api/admin/document-packets/:id/send", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const packet = documentPacketsStore.get(req.params.id);
+      
+      if (!packet) {
+        return res.status(404).json({ error: "Packet not found" });
+      }
+      
+      if (packet.status !== 'draft') {
+        return res.status(400).json({ error: "Only draft packets can be sent" });
+      }
+      
+      const updatedPacket = {
+        ...packet,
+        status: 'pending_review',
+        sentAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      documentPacketsStore.set(req.params.id, updatedPacket);
+      
+      logSecurityEvent("DOCUMENT_PACKET_SENT", req, { packetId: req.params.id });
+      
+      // TODO: Send email notification to client
+      
+      res.json({ packet: updatedPacket });
+    } catch (error: any) {
+      console.error("[SEND DOCUMENT PACKET ERROR]", error);
+      res.status(500).json({ error: "Failed to send document packet" });
+    }
+  });
+  
+  // Submit order form (portal client) - creates onboarding data and document packet
+  app.post("/api/portal/order-form", authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const clientId = req.user?.clientId;
+      const userId = req.userId;
+      
+      if (!clientId) {
+        return res.status(403).json({ error: "No client association" });
+      }
+      
+      const { 
+        serviceSelections, clientInfo, selectedServices, pricing, name 
+      } = req.body;
+      
+      if (!serviceSelections?.length || !clientInfo?.legalName || !clientInfo?.signatoryEmail) {
+        return res.status(400).json({ error: "Service selections and client information are required" });
+      }
+      
+      // Create document packet for this order
+      const packetId = randomId();
+      const packet = {
+        id: packetId,
+        clientId,
+        name: name || `Service Order - ${clientInfo.legalName}`,
+        description: `Order for ${selectedServices?.length || 0} services`,
+        status: 'pending_review',  // Skip draft, send directly
+        serviceSelections,
+        effectiveDate: clientInfo.preferredStartDate ? new Date(clientInfo.preferredStartDate) : null,
+        billingStartDate: null,
+        contractTerm: pricing?.contractTerm || 12,
+        totalMonthlyValue: pricing?.monthlyTotal || 0,
+        totalOneTimeValue: pricing?.oneTimeTotal || 0,
+        clientSignatory: clientInfo.signatoryName,
+        clientSignatoryTitle: clientInfo.signatoryTitle,
+        clientSignatoryEmail: clientInfo.signatoryEmail,
+        clientInfo,
+        selectedServices,
+        createdBy: userId,
+        sentAt: new Date().toISOString(),
+        completedAt: null,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      documentPacketsStore.set(packetId, packet);
+      
+      // Auto-generate packet items based on service selections (document keys)
+      const items: any[] = [];
+      
+      // First add core documents (NDA, MSA, Order Form, Terms)
+      const coreDocKeys = ['nda', 'msa', 'order_form', 'invoice-terms-and-conditions-digerati-experts'];
+      
+      coreDocKeys.forEach((key, index) => {
+        const template = Array.from(documentTemplatesStore.values())
+          .find(t => t.selectionKey === key || t.id.toLowerCase().includes(key.replace(/_/g, '-')));
+        if (template) {
+          items.push({
+            id: randomId(),
+            packetId,
+            templateId: template.id,
+            sortOrder: index * 10,
+            requiresSignature: template.requiresSignature,
+            signedAt: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          });
+        }
+      });
+      
+      // Add SOW documents based on service selections (document keys from catalog)
+      serviceSelections.forEach((docKey: string, index: number) => {
+        // Find template by exact selectionKey or partial match on ID
+        const template = Array.from(documentTemplatesStore.values())
+          .find(t => t.selectionKey === docKey || t.id === docKey);
+        
+        if (template && !items.find(i => i.templateId === template.id)) {
+          items.push({
+            id: randomId(),
+            packetId,
+            templateId: template.id,
+            sortOrder: 100 + index * 10,
+            requiresSignature: template.requiresSignature,
+            signedAt: null,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          });
+        }
+      });
+      
+      documentPacketItemsStore.set(packetId, items);
+      
+      logSecurityEvent("ORDER_FORM_SUBMITTED", req, { 
+        packetId, 
+        clientId, 
+        itemCount: items.length,
+        serviceCount: selectedServices?.length || 0,
+        monthlyTotal: pricing?.monthlyTotal || 0
+      });
+      
+      // Enrich items with template info for response
+      const enrichedItems = items.map(item => {
+        const template = documentTemplatesStore.get(item.templateId);
+        return { ...item, template };
+      });
+      
+      res.status(201).json({ 
+        success: true,
+        packet, 
+        items: enrichedItems,
+        message: "Order submitted successfully. Your document packet is ready for review."
+      });
+    } catch (error: any) {
+      console.error("[ORDER FORM SUBMIT ERROR]", error);
+      res.status(500).json({ error: "Failed to submit order form" });
+    }
+  });
+  
+  // Get document packets for logged-in client (portal)
+  app.get("/api/portal/document-packets", authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const clientId = req.user?.clientId;
+      
+      if (!clientId) {
+        return res.status(403).json({ error: "No client association" });
+      }
+      
+      const packets = Array.from(documentPacketsStore.values())
+        .filter(p => p.clientId === clientId && p.status !== 'draft')
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      
+      // Enrich with items
+      const enrichedPackets = packets.map(packet => {
+        const items = (documentPacketItemsStore.get(packet.id) || []).map(item => {
+          const template = documentTemplatesStore.get(item.templateId);
+          return { ...item, template };
+        });
+        return { ...packet, items };
+      });
+      
+      res.json({ packets: enrichedPackets });
+    } catch (error: any) {
+      console.error("[GET PORTAL DOCUMENT PACKETS ERROR]", error);
+      res.status(500).json({ error: "Failed to fetch document packets" });
+    }
+  });
+  
+  // Get single document packet (portal)
+  app.get("/api/portal/document-packets/:id", authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const clientId = req.user?.clientId;
+      const packet = documentPacketsStore.get(req.params.id);
+      
+      if (!packet) {
+        return res.status(404).json({ error: "Packet not found" });
+      }
+      
+      if (packet.clientId !== clientId) {
+        return res.status(403).json({ error: "Access denied" });
+      }
+      
+      const items = (documentPacketItemsStore.get(req.params.id) || []).map(item => {
+        const template = documentTemplatesStore.get(item.templateId);
+        return { ...item, template };
+      });
+      
+      res.json({ packet, items });
+    } catch (error: any) {
+      console.error("[GET PORTAL DOCUMENT PACKET ERROR]", error);
+      res.status(500).json({ error: "Failed to fetch document packet" });
+    }
+  });
+  
+  // Sign document in packet (portal)
+  app.post("/api/portal/document-packets/:packetId/items/:itemId/sign", authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const clientId = req.user?.clientId;
+      const { packetId, itemId } = req.params;
+      const { signatureData, signerName } = req.body;
+      
+      const packet = documentPacketsStore.get(packetId);
+      
+      if (!packet) {
+        return res.status(404).json({ error: "Packet not found" });
+      }
+      
+      if (packet.clientId !== clientId) {
+        return res.status(403).json({ error: "Access denied" });
+      }
+      
+      if (!['pending_review', 'in_progress', 'partially_signed'].includes(packet.status)) {
+        return res.status(400).json({ error: "This packet cannot be signed" });
+      }
+      
+      if (!signatureData || !signerName) {
+        return res.status(400).json({ error: "Signature data and signer name are required" });
+      }
+      
+      const items = documentPacketItemsStore.get(packetId) || [];
+      const itemIndex = items.findIndex(i => i.id === itemId);
+      
+      if (itemIndex === -1) {
+        return res.status(404).json({ error: "Document item not found" });
+      }
+      
+      // Update item with signature
+      items[itemIndex] = {
+        ...items[itemIndex],
+        signedAt: new Date().toISOString(),
+        signatureData,
+        signerName,
+        signerIp: req.ip,
+        signerUserAgent: req.headers['user-agent'],
+        updatedAt: new Date().toISOString()
+      };
+      
+      documentPacketItemsStore.set(packetId, items);
+      
+      // Check if all required items are signed
+      const requiredItems = items.filter(i => i.requiresSignature);
+      const signedItems = requiredItems.filter(i => i.signedAt);
+      
+      let newStatus = 'in_progress';
+      if (signedItems.length === requiredItems.length) {
+        newStatus = 'completed';
+      } else if (signedItems.length > 0) {
+        newStatus = 'partially_signed';
+      }
+      
+      const updatedPacket = {
+        ...packet,
+        status: newStatus,
+        completedAt: newStatus === 'completed' ? new Date().toISOString() : null,
+        updatedAt: new Date().toISOString()
+      };
+      
+      documentPacketsStore.set(packetId, updatedPacket);
+      
+      logSecurityEvent("DOCUMENT_ITEM_SIGNED", req, { packetId, itemId, signerName });
+      
+      res.json({ item: items[itemIndex], packet: updatedPacket, allSigned: newStatus === 'completed' });
+    } catch (error: any) {
+      console.error("[SIGN DOCUMENT ITEM ERROR]", error);
+      res.status(500).json({ error: "Failed to sign document" });
+    }
+  });
 
   return app;
 }

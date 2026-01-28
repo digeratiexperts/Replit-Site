@@ -55,6 +55,21 @@ The platform implements comprehensive security following enterprise best practic
 - **Audit Logging**: Security events for auth, orders, pricing changes, admin actions
 - **Payment Security**: Stripe hosted checkout (PCI compliant), webhook signature verification
 
+### Document Management System
+The platform includes a comprehensive document management and digital signature system:
+- **Document Templates**: 15+ templates loaded from `server/data/document-manifest.json` including NDA, MSA, Order Form, and various SOWs
+- **Template Categories**: core_legal (NDA, MSA), commercial (Order Form, Terms), sow (Service-specific agreements)
+- **Document Packets**: Admin-assembled bundles of documents for client onboarding with status tracking (draft → pending_review → in_progress → completed)
+- **Order Form Page** (`/portal/order-form`): Multi-step wizard for service selection with:
+  - Service catalog with 7 categories (Core IT, Security, BCDR, Networking, UCaaS, Compliance, Consulting)
+  - Tier-based pricing (Office $750/site, Business $1,200/site, Enterprise $1,200/site)
+  - Real-time pricing calculator with monthly/one-time breakdown
+  - Automatic document packet assembly based on service selections
+  - Client information collection for contract population
+- **PDF Serving**: Static file route at `/api/documents/pdf/:filename` for serving template PDFs
+- **Digital Signatures**: Canvas-based signature capture with IP and user-agent logging for audit trail
+- **Client Accounts**: Pre-configured accounts for Alamo Industries and Sel Machining
+
 ### System Design Choices
 The project follows a modular structure (`client/` and `server/`), using UUIDs for IDs. Payment processing includes enterprise-grade encryption and webhook signature validation. AI services for ticket classification and priority detection are implemented with graceful fallback. Role-based access control manages navigation and features. User storage is in-memory, designed for future PostgreSQL migration, using bcrypt hashing and JWT tokens. Zoho One API integration uses OAuth with secrets for various modules, implementing a data isolation pattern to scope queries by authenticated user's email and returning a consistent response format across portal endpoints.
 
