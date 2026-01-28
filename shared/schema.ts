@@ -879,6 +879,131 @@ export type PortalTenantFile = typeof portalTenantFiles.$inferSelect;
 export type InsertPortalTenantFile = z.infer<typeof insertPortalTenantFileSchema>;
 export type InsertPortalClient = z.infer<typeof insertPortalClientSchema>;
 
+// =============== CONTRACT & SIGNATURE TABLES ===============
+
+// Contract status enum
+export const contractStatusEnum = pgEnum("contract_status", [
+  "draft",           // Template being prepared
+  "pending",         // Sent to client, awaiting signature
+  "signed",          // Client has signed
+  "countersigned",   // Both parties signed
+  "expired",         // Contract expired without signature
+  "declined",        // Client declined to sign
+  "cancelled"        // Cancelled by admin
+]);
+
+// Contract templates (master templates uploaded by admin)
+export const contractTemplates = pgTable("contract_templates", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  description: text("description"),
+  category: text("category"), // "msa", "sow", "nda", "sla", "addendum", "other"
+  version: text("version").default("1.0"),
+  pdfUrl: text("pdf_url"), // URL to the PDF template
+  pdfContent: text("pdf_content"), // Base64 encoded PDF content
+  htmlContent: text("html_content"), // HTML version for display
+  fields: jsonb("fields"), // Merge fields like {{client_name}}, {{date}}, etc.
+  requiresCountersign: boolean("requires_countersign").default(false),
+  expirationDays: integer("expiration_days").default(30), // Days until contract expires
+  isActive: boolean("is_active").default(true),
+  sortOrder: integer("sort_order").default(0),
+  createdBy: varchar("created_by"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Contracts assigned to clients
+export const contracts = pgTable("contracts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  templateId: varchar("template_id").references(() => contractTemplates.id),
+  clientId: varchar("client_id").notNull().references(() => portalClients.id, { onDelete: "cascade" }),
+  assignedToUserId: varchar("assigned_to_user_id").references(() => portalUsers.id), // Specific user who should sign
+  contractNumber: text("contract_number").unique(),
+  title: text("title").notNull(),
+  description: text("description"),
+  pdfUrl: text("pdf_url"), // Generated PDF URL
+  pdfContent: text("pdf_content"), // Base64 encoded PDF with signature
+  mergedFields: jsonb("merged_fields"), // Field values merged into template
+  status: contractStatusEnum("status").default("draft"),
+  sentAt: timestamp("sent_at"), // When sent to client
+  expiresAt: timestamp("expires_at"), // Deadline to sign
+  signedAt: timestamp("signed_at"), // When client signed
+  countersignedAt: timestamp("countersigned_at"), // When admin countersigned
+  declinedAt: timestamp("declined_at"),
+  declineReason: text("decline_reason"),
+  signedPdfUrl: text("signed_pdf_url"), // Final signed PDF
+  ipAddress: text("ip_address"), // IP when signed
+  userAgent: text("user_agent"), // Browser info when signed
+  createdBy: varchar("created_by"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Individual signatures on contracts (supports multiple signers)
+export const contractSignatures = pgTable("contract_signatures", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  contractId: varchar("contract_id").notNull().references(() => contracts.id, { onDelete: "cascade" }),
+  userId: varchar("user_id").references(() => portalUsers.id), // Portal user who signed
+  signerName: text("signer_name").notNull(),
+  signerEmail: text("signer_email").notNull(),
+  signerTitle: text("signer_title"), // Job title
+  signatureType: text("signature_type").default("drawn"), // "drawn", "typed", "uploaded"
+  signatureData: text("signature_data"), // Base64 of drawn signature or text
+  signedAt: timestamp("signed_at"),
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
+  isCountersign: boolean("is_countersign").default(false), // True if this is admin countersign
+  pageNumber: integer("page_number"), // Which page the signature appears on
+  positionX: integer("position_x"), // X coordinate of signature
+  positionY: integer("position_y"), // Y coordinate of signature
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Contract audit log
+export const contractAuditLog = pgTable("contract_audit_log", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  contractId: varchar("contract_id").notNull().references(() => contracts.id, { onDelete: "cascade" }),
+  action: text("action").notNull(), // "created", "sent", "viewed", "signed", "declined", "expired"
+  performedBy: varchar("performed_by"), // User ID or "system"
+  performedByName: text("performed_by_name"),
+  details: text("details"),
+  ipAddress: text("ip_address"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Insert schemas
+export const insertContractTemplateSchema = createInsertSchema(contractTemplates).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertContractSchema = createInsertSchema(contracts).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertContractSignatureSchema = createInsertSchema(contractSignatures).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertContractAuditLogSchema = createInsertSchema(contractAuditLog).omit({
+  id: true,
+  createdAt: true,
+});
+
+// Types
+export type ContractTemplate = typeof contractTemplates.$inferSelect;
+export type InsertContractTemplate = z.infer<typeof insertContractTemplateSchema>;
+export type Contract = typeof contracts.$inferSelect;
+export type InsertContract = z.infer<typeof insertContractSchema>;
+export type ContractSignature = typeof contractSignatures.$inferSelect;
+export type InsertContractSignature = z.infer<typeof insertContractSignatureSchema>;
+export type ContractAuditLog = typeof contractAuditLog.$inferSelect;
+export type InsertContractAuditLog = z.infer<typeof insertContractAuditLogSchema>;
+
 // =============== E-COMMERCE STORE TABLES ===============
 
 // Store product category enum

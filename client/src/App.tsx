@@ -106,6 +106,8 @@ const AdminImportPage = lazy(() => import("@/pages/portal/AdminImport").then(m =
 const AdminAgentsPage = lazy(() => import("@/pages/portal/AdminAgents").then(m => ({ default: m.AdminAgents })));
 const AdminOpenAIPage = lazy(() => import("@/pages/portal/AdminOpenAI").then(m => ({ default: m.AdminOpenAI })));
 const AdminCompaniesPage = lazy(() => import("@/pages/portal/AdminCompanies").then(m => ({ default: m.AdminCompanies })));
+const AdminContractsPage = lazy(() => import("@/pages/portal/AdminContracts").then(m => ({ default: m.AdminContracts })));
+const PortalContracts = lazy(() => import("@/pages/portal/PortalContracts").then(m => ({ default: m.PortalContracts })));
 const LeadQuoteWizard = lazy(() => import("@/pages/LeadQuoteWizard"));
 const QuoteConfirmation = lazy(() => import("@/pages/QuoteConfirmation"));
 const ThankYouSuccess = lazy(() => import("@/pages/ThankYouSuccess"));
@@ -666,6 +668,16 @@ function Router() {
       <Route path="/portal/admin/companies" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <AdminCompaniesPage />
+        </Suspense>
+      )} />
+      <Route path="/portal/admin/contracts" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <AdminContractsPage />
+        </Suspense>
+      )} />
+      <Route path="/portal/contracts" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <PortalContracts />
         </Suspense>
       )} />
       <Route path="/portal/sales-process" component={() => (

@@ -3373,5 +3373,731 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  // =============== CONTRACT & SIGNATURE ROUTES ===============
+  
+  // In-memory stores for contracts (will be replaced with DB queries)
+  const contractTemplatesStore = new Map<string, any>();
+  const contractsStore = new Map<string, any>();
+  const contractSignaturesStore = new Map<string, any[]>();
+  const contractAuditLogStore = new Map<string, any[]>();
+  
+  // Helper to generate contract number
+  function generateContractNumber(): string {
+    const year = new Date().getFullYear();
+    const random = Math.random().toString(36).substring(2, 8).toUpperCase();
+    return `DE-${year}-${random}`;
+  }
+  
+  // ========== CONTRACT TEMPLATES (Admin) ==========
+  
+  // Get all contract templates
+  app.get("/api/admin/contract-templates", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const templates = Array.from(contractTemplatesStore.values()).filter(t => t.isActive !== false);
+      res.json({ templates });
+    } catch (error: any) {
+      console.error("[GET CONTRACT TEMPLATES ERROR]", error);
+      res.status(500).json({ error: "Failed to fetch contract templates" });
+    }
+  });
+  
+  // Get single contract template
+  app.get("/api/admin/contract-templates/:id", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const template = contractTemplatesStore.get(req.params.id);
+      if (!template) {
+        return res.status(404).json({ error: "Template not found" });
+      }
+      res.json({ template });
+    } catch (error: any) {
+      console.error("[GET CONTRACT TEMPLATE ERROR]", error);
+      res.status(500).json({ error: "Failed to fetch contract template" });
+    }
+  });
+  
+  // Create contract template
+  app.post("/api/admin/contract-templates", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { name, description, category, version, pdfUrl, pdfContent, htmlContent, fields, requiresCountersign, expirationDays } = req.body;
+      
+      if (!name) {
+        return res.status(400).json({ error: "Template name is required" });
+      }
+      
+      const template = {
+        id: randomId(),
+        name,
+        description: description || '',
+        category: category || 'other',
+        version: version || '1.0',
+        pdfUrl: pdfUrl || null,
+        pdfContent: pdfContent || null,
+        htmlContent: htmlContent || null,
+        fields: fields || [],
+        requiresCountersign: requiresCountersign || false,
+        expirationDays: expirationDays || 30,
+        isActive: true,
+        sortOrder: contractTemplatesStore.size,
+        createdBy: req.userId,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      contractTemplatesStore.set(template.id, template);
+      
+      logSecurityEvent("CONTRACT_TEMPLATE_CREATED", req, { templateId: template.id, name });
+      
+      res.status(201).json({ template });
+    } catch (error: any) {
+      console.error("[CREATE CONTRACT TEMPLATE ERROR]", error);
+      res.status(500).json({ error: "Failed to create contract template" });
+    }
+  });
+  
+  // Update contract template
+  app.patch("/api/admin/contract-templates/:id", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const template = contractTemplatesStore.get(req.params.id);
+      if (!template) {
+        return res.status(404).json({ error: "Template not found" });
+      }
+      
+      const updates = req.body;
+      const updatedTemplate = { ...template, ...updates, updatedAt: new Date().toISOString() };
+      contractTemplatesStore.set(req.params.id, updatedTemplate);
+      
+      logSecurityEvent("CONTRACT_TEMPLATE_UPDATED", req, { templateId: req.params.id });
+      
+      res.json({ template: updatedTemplate });
+    } catch (error: any) {
+      console.error("[UPDATE CONTRACT TEMPLATE ERROR]", error);
+      res.status(500).json({ error: "Failed to update contract template" });
+    }
+  });
+  
+  // Delete contract template
+  app.delete("/api/admin/contract-templates/:id", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const template = contractTemplatesStore.get(req.params.id);
+      if (!template) {
+        return res.status(404).json({ error: "Template not found" });
+      }
+      
+      // Soft delete
+      contractTemplatesStore.set(req.params.id, { ...template, isActive: false, updatedAt: new Date().toISOString() });
+      
+      logSecurityEvent("CONTRACT_TEMPLATE_DELETED", req, { templateId: req.params.id });
+      
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("[DELETE CONTRACT TEMPLATE ERROR]", error);
+      res.status(500).json({ error: "Failed to delete contract template" });
+    }
+  });
+  
+  // ========== CONTRACTS (Admin) ==========
+  
+  // Get all contracts (admin view)
+  app.get("/api/admin/contracts", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { status, clientId } = req.query;
+      let contracts = Array.from(contractsStore.values());
+      
+      if (status) {
+        contracts = contracts.filter(c => c.status === status);
+      }
+      if (clientId) {
+        contracts = contracts.filter(c => c.clientId === clientId);
+      }
+      
+      // Sort by created date desc
+      contracts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      
+      res.json({ contracts });
+    } catch (error: any) {
+      console.error("[GET CONTRACTS ERROR]", error);
+      res.status(500).json({ error: "Failed to fetch contracts" });
+    }
+  });
+  
+  // Get single contract (admin)
+  app.get("/api/admin/contracts/:id", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const contract = contractsStore.get(req.params.id);
+      if (!contract) {
+        return res.status(404).json({ error: "Contract not found" });
+      }
+      
+      const signatures = contractSignaturesStore.get(req.params.id) || [];
+      const auditLog = contractAuditLogStore.get(req.params.id) || [];
+      
+      res.json({ contract, signatures, auditLog });
+    } catch (error: any) {
+      console.error("[GET CONTRACT ERROR]", error);
+      res.status(500).json({ error: "Failed to fetch contract" });
+    }
+  });
+  
+  // Create and assign contract to client
+  app.post("/api/admin/contracts", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { templateId, clientId, assignedToUserId, title, description, mergedFields, expiresAt } = req.body;
+      
+      if (!clientId || !title) {
+        return res.status(400).json({ error: "Client ID and title are required" });
+      }
+      
+      let pdfUrl = null;
+      let pdfContent = null;
+      
+      // If using a template, copy its PDF content
+      if (templateId) {
+        const template = contractTemplatesStore.get(templateId);
+        if (template) {
+          pdfUrl = template.pdfUrl;
+          pdfContent = template.pdfContent;
+        }
+      }
+      
+      const contract = {
+        id: randomId(),
+        templateId: templateId || null,
+        clientId,
+        assignedToUserId: assignedToUserId || null,
+        contractNumber: generateContractNumber(),
+        title,
+        description: description || '',
+        pdfUrl,
+        pdfContent,
+        mergedFields: mergedFields || {},
+        status: 'draft',
+        sentAt: null,
+        expiresAt: expiresAt || null,
+        signedAt: null,
+        countersignedAt: null,
+        declinedAt: null,
+        declineReason: null,
+        signedPdfUrl: null,
+        ipAddress: null,
+        userAgent: null,
+        createdBy: req.userId,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      contractsStore.set(contract.id, contract);
+      
+      // Add audit log entry
+      const auditEntry = {
+        id: randomId(),
+        contractId: contract.id,
+        action: 'created',
+        performedBy: req.userId,
+        performedByName: req.user?.email || 'Admin',
+        details: `Contract "${title}" created`,
+        ipAddress: req.ip,
+        createdAt: new Date().toISOString()
+      };
+      contractAuditLogStore.set(contract.id, [auditEntry]);
+      
+      logSecurityEvent("CONTRACT_CREATED", req, { contractId: contract.id, clientId, title });
+      
+      res.status(201).json({ contract });
+    } catch (error: any) {
+      console.error("[CREATE CONTRACT ERROR]", error);
+      res.status(500).json({ error: "Failed to create contract" });
+    }
+  });
+  
+  // Send contract to client (changes status to pending)
+  app.post("/api/admin/contracts/:id/send", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const contract = contractsStore.get(req.params.id);
+      if (!contract) {
+        return res.status(404).json({ error: "Contract not found" });
+      }
+      
+      if (contract.status !== 'draft') {
+        return res.status(400).json({ error: "Only draft contracts can be sent" });
+      }
+      
+      const { expiresAt } = req.body;
+      
+      // Calculate expiration if not provided
+      let expirationDate = expiresAt;
+      if (!expirationDate) {
+        const template = contract.templateId ? contractTemplatesStore.get(contract.templateId) : null;
+        const expirationDays = template?.expirationDays || 30;
+        expirationDate = new Date(Date.now() + expirationDays * 24 * 60 * 60 * 1000).toISOString();
+      }
+      
+      const updatedContract = {
+        ...contract,
+        status: 'pending',
+        sentAt: new Date().toISOString(),
+        expiresAt: expirationDate,
+        updatedAt: new Date().toISOString()
+      };
+      
+      contractsStore.set(req.params.id, updatedContract);
+      
+      // Add audit log
+      const auditLog = contractAuditLogStore.get(req.params.id) || [];
+      auditLog.push({
+        id: randomId(),
+        contractId: req.params.id,
+        action: 'sent',
+        performedBy: req.userId,
+        performedByName: req.user?.email || 'Admin',
+        details: 'Contract sent to client for signature',
+        ipAddress: req.ip,
+        createdAt: new Date().toISOString()
+      });
+      contractAuditLogStore.set(req.params.id, auditLog);
+      
+      logSecurityEvent("CONTRACT_SENT", req, { contractId: req.params.id });
+      
+      res.json({ contract: updatedContract });
+    } catch (error: any) {
+      console.error("[SEND CONTRACT ERROR]", error);
+      res.status(500).json({ error: "Failed to send contract" });
+    }
+  });
+  
+  // Cancel contract (admin)
+  app.post("/api/admin/contracts/:id/cancel", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const contract = contractsStore.get(req.params.id);
+      if (!contract) {
+        return res.status(404).json({ error: "Contract not found" });
+      }
+      
+      if (['signed', 'countersigned'].includes(contract.status)) {
+        return res.status(400).json({ error: "Cannot cancel a signed contract" });
+      }
+      
+      const updatedContract = {
+        ...contract,
+        status: 'cancelled',
+        updatedAt: new Date().toISOString()
+      };
+      
+      contractsStore.set(req.params.id, updatedContract);
+      
+      // Add audit log
+      const auditLog = contractAuditLogStore.get(req.params.id) || [];
+      auditLog.push({
+        id: randomId(),
+        contractId: req.params.id,
+        action: 'cancelled',
+        performedBy: req.userId,
+        performedByName: req.user?.email || 'Admin',
+        details: 'Contract cancelled by admin',
+        ipAddress: req.ip,
+        createdAt: new Date().toISOString()
+      });
+      contractAuditLogStore.set(req.params.id, auditLog);
+      
+      logSecurityEvent("CONTRACT_CANCELLED", req, { contractId: req.params.id });
+      
+      res.json({ contract: updatedContract });
+    } catch (error: any) {
+      console.error("[CANCEL CONTRACT ERROR]", error);
+      res.status(500).json({ error: "Failed to cancel contract" });
+    }
+  });
+  
+  // Countersign contract (admin)
+  app.post("/api/admin/contracts/:id/countersign", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const contract = contractsStore.get(req.params.id);
+      if (!contract) {
+        return res.status(404).json({ error: "Contract not found" });
+      }
+      
+      if (contract.status !== 'signed') {
+        return res.status(400).json({ error: "Contract must be signed by client first" });
+      }
+      
+      const { signatureData, signerName, signerTitle } = req.body;
+      
+      if (!signatureData) {
+        return res.status(400).json({ error: "Signature is required" });
+      }
+      
+      // Add countersign signature
+      const signatures = contractSignaturesStore.get(req.params.id) || [];
+      signatures.push({
+        id: randomId(),
+        contractId: req.params.id,
+        userId: req.userId,
+        signerName: signerName || req.user?.email,
+        signerEmail: req.user?.email,
+        signerTitle: signerTitle || 'Administrator',
+        signatureType: 'drawn',
+        signatureData,
+        signedAt: new Date().toISOString(),
+        ipAddress: req.ip,
+        userAgent: req.headers['user-agent'],
+        isCountersign: true,
+        createdAt: new Date().toISOString()
+      });
+      contractSignaturesStore.set(req.params.id, signatures);
+      
+      // Update contract status
+      const updatedContract = {
+        ...contract,
+        status: 'countersigned',
+        countersignedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      contractsStore.set(req.params.id, updatedContract);
+      
+      // Add audit log
+      const auditLog = contractAuditLogStore.get(req.params.id) || [];
+      auditLog.push({
+        id: randomId(),
+        contractId: req.params.id,
+        action: 'countersigned',
+        performedBy: req.userId,
+        performedByName: signerName || req.user?.email,
+        details: 'Contract countersigned by administrator',
+        ipAddress: req.ip,
+        createdAt: new Date().toISOString()
+      });
+      contractAuditLogStore.set(req.params.id, auditLog);
+      
+      logSecurityEvent("CONTRACT_COUNTERSIGNED", req, { contractId: req.params.id });
+      
+      res.json({ contract: updatedContract, signatures });
+    } catch (error: any) {
+      console.error("[COUNTERSIGN CONTRACT ERROR]", error);
+      res.status(500).json({ error: "Failed to countersign contract" });
+    }
+  });
+  
+  // ========== CLIENT PORTAL CONTRACT ROUTES ==========
+  
+  // Get contracts for current user's client
+  app.get("/api/portal/contracts", authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const clientId = req.user?.clientId;
+      if (!clientId) {
+        return res.status(403).json({ error: "No client associated with this account" });
+      }
+      
+      let contracts = Array.from(contractsStore.values())
+        .filter(c => c.clientId === clientId && ['pending', 'signed', 'countersigned'].includes(c.status));
+      
+      // Sort by created date desc
+      contracts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      
+      res.json({ contracts });
+    } catch (error: any) {
+      console.error("[GET PORTAL CONTRACTS ERROR]", error);
+      res.status(500).json({ error: "Failed to fetch contracts" });
+    }
+  });
+  
+  // Get single contract for portal user
+  app.get("/api/portal/contracts/:id", authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const clientId = req.user?.clientId;
+      const contract = contractsStore.get(req.params.id);
+      
+      if (!contract) {
+        return res.status(404).json({ error: "Contract not found" });
+      }
+      
+      if (contract.clientId !== clientId) {
+        return res.status(403).json({ error: "Access denied" });
+      }
+      
+      // Log view action
+      const auditLog = contractAuditLogStore.get(req.params.id) || [];
+      auditLog.push({
+        id: randomId(),
+        contractId: req.params.id,
+        action: 'viewed',
+        performedBy: req.userId,
+        performedByName: req.user?.email,
+        details: 'Contract viewed by client',
+        ipAddress: req.ip,
+        createdAt: new Date().toISOString()
+      });
+      contractAuditLogStore.set(req.params.id, auditLog);
+      
+      const signatures = contractSignaturesStore.get(req.params.id) || [];
+      
+      res.json({ contract, signatures });
+    } catch (error: any) {
+      console.error("[GET PORTAL CONTRACT ERROR]", error);
+      res.status(500).json({ error: "Failed to fetch contract" });
+    }
+  });
+  
+  // Sign contract (portal user)
+  app.post("/api/portal/contracts/:id/sign", authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const clientId = req.user?.clientId;
+      const contract = contractsStore.get(req.params.id);
+      
+      if (!contract) {
+        return res.status(404).json({ error: "Contract not found" });
+      }
+      
+      if (contract.clientId !== clientId) {
+        return res.status(403).json({ error: "Access denied" });
+      }
+      
+      if (contract.status !== 'pending') {
+        return res.status(400).json({ error: "This contract cannot be signed" });
+      }
+      
+      // Check if expired
+      if (contract.expiresAt && new Date(contract.expiresAt) < new Date()) {
+        const updatedContract = { ...contract, status: 'expired', updatedAt: new Date().toISOString() };
+        contractsStore.set(req.params.id, updatedContract);
+        return res.status(400).json({ error: "This contract has expired" });
+      }
+      
+      const { signatureData, signerName, signerTitle, signatureType } = req.body;
+      
+      if (!signatureData || !signerName) {
+        return res.status(400).json({ error: "Signature and signer name are required" });
+      }
+      
+      // Add signature
+      const signatures = contractSignaturesStore.get(req.params.id) || [];
+      signatures.push({
+        id: randomId(),
+        contractId: req.params.id,
+        userId: req.userId,
+        signerName,
+        signerEmail: req.user?.email,
+        signerTitle: signerTitle || '',
+        signatureType: signatureType || 'drawn',
+        signatureData,
+        signedAt: new Date().toISOString(),
+        ipAddress: req.ip,
+        userAgent: req.headers['user-agent'],
+        isCountersign: false,
+        createdAt: new Date().toISOString()
+      });
+      contractSignaturesStore.set(req.params.id, signatures);
+      
+      // Update contract status
+      const template = contract.templateId ? contractTemplatesStore.get(contract.templateId) : null;
+      const newStatus = template?.requiresCountersign ? 'signed' : 'countersigned';
+      
+      const updatedContract = {
+        ...contract,
+        status: newStatus,
+        signedAt: new Date().toISOString(),
+        ipAddress: req.ip,
+        userAgent: req.headers['user-agent'],
+        updatedAt: new Date().toISOString()
+      };
+      contractsStore.set(req.params.id, updatedContract);
+      
+      // Add audit log
+      const auditLog = contractAuditLogStore.get(req.params.id) || [];
+      auditLog.push({
+        id: randomId(),
+        contractId: req.params.id,
+        action: 'signed',
+        performedBy: req.userId,
+        performedByName: signerName,
+        details: `Contract signed by ${signerName}`,
+        ipAddress: req.ip,
+        createdAt: new Date().toISOString()
+      });
+      contractAuditLogStore.set(req.params.id, auditLog);
+      
+      logSecurityEvent("CONTRACT_SIGNED", req, { contractId: req.params.id, signerName });
+      
+      res.json({ contract: updatedContract, signatures });
+    } catch (error: any) {
+      console.error("[SIGN CONTRACT ERROR]", error);
+      res.status(500).json({ error: "Failed to sign contract" });
+    }
+  });
+  
+  // Decline contract (portal user)
+  app.post("/api/portal/contracts/:id/decline", authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const clientId = req.user?.clientId;
+      const contract = contractsStore.get(req.params.id);
+      
+      if (!contract) {
+        return res.status(404).json({ error: "Contract not found" });
+      }
+      
+      if (contract.clientId !== clientId) {
+        return res.status(403).json({ error: "Access denied" });
+      }
+      
+      if (contract.status !== 'pending') {
+        return res.status(400).json({ error: "This contract cannot be declined" });
+      }
+      
+      const { reason } = req.body;
+      
+      const updatedContract = {
+        ...contract,
+        status: 'declined',
+        declinedAt: new Date().toISOString(),
+        declineReason: reason || 'No reason provided',
+        updatedAt: new Date().toISOString()
+      };
+      contractsStore.set(req.params.id, updatedContract);
+      
+      // Add audit log
+      const auditLog = contractAuditLogStore.get(req.params.id) || [];
+      auditLog.push({
+        id: randomId(),
+        contractId: req.params.id,
+        action: 'declined',
+        performedBy: req.userId,
+        performedByName: req.user?.email,
+        details: `Contract declined: ${reason || 'No reason provided'}`,
+        ipAddress: req.ip,
+        createdAt: new Date().toISOString()
+      });
+      contractAuditLogStore.set(req.params.id, auditLog);
+      
+      logSecurityEvent("CONTRACT_DECLINED", req, { contractId: req.params.id, reason });
+      
+      res.json({ contract: updatedContract });
+    } catch (error: any) {
+      console.error("[DECLINE CONTRACT ERROR]", error);
+      res.status(500).json({ error: "Failed to decline contract" });
+    }
+  });
+  
+  // ========== ADMIN CLIENT/USER MANAGEMENT ==========
+  
+  // Get all portal clients (admin)
+  app.get("/api/admin/clients", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      // Return from in-memory store (in production would use DB)
+      const clients = portalClientsStore ? Array.from(portalClientsStore.values()) : [];
+      res.json({ clients });
+    } catch (error: any) {
+      console.error("[GET CLIENTS ERROR]", error);
+      res.status(500).json({ error: "Failed to fetch clients" });
+    }
+  });
+  
+  // Create portal client (admin)
+  app.post("/api/admin/clients", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { companyName, contactEmail, contactPhone, address, city, state, zipCode, website, industry, employeeCount, primaryContact, accountManager } = req.body;
+      
+      if (!companyName || !contactEmail) {
+        return res.status(400).json({ error: "Company name and contact email are required" });
+      }
+      
+      const client = {
+        id: randomId(),
+        companyName,
+        contactEmail,
+        contactPhone: contactPhone || '',
+        address: address || '',
+        city: city || '',
+        state: state || '',
+        zipCode: zipCode || '',
+        website: website || '',
+        industry: industry || '',
+        employeeCount: employeeCount || 0,
+        primaryContact: primaryContact || '',
+        accountManager: accountManager || '',
+        status: 'active',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      portalClientsStore.set(client.id, client);
+      
+      logSecurityEvent("CLIENT_CREATED", req, { clientId: client.id, companyName });
+      
+      res.status(201).json({ client });
+    } catch (error: any) {
+      console.error("[CREATE CLIENT ERROR]", error);
+      res.status(500).json({ error: "Failed to create client" });
+    }
+  });
+  
+  // Create portal user for a client (admin)
+  app.post("/api/admin/clients/:clientId/users", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { clientId } = req.params;
+      const { email, password, fullName, role } = req.body;
+      
+      if (!email || !password || !fullName) {
+        return res.status(400).json({ error: "Email, password, and full name are required" });
+      }
+      
+      // Check if client exists
+      const client = portalClientsStore.get(clientId);
+      if (!client) {
+        return res.status(404).json({ error: "Client not found" });
+      }
+      
+      // Check if user already exists
+      const existingUser = Array.from(portalUsersStore.values()).find(u => u.email === email);
+      if (existingUser) {
+        return res.status(400).json({ error: "User with this email already exists" });
+      }
+      
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+      
+      const user = {
+        id: randomId(),
+        clientId,
+        email,
+        password: hashedPassword,
+        fullName,
+        role: role || 'user',
+        isActive: true,
+        lastLogin: null,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      portalUsersStore.set(user.id, user);
+      
+      logSecurityEvent("PORTAL_USER_CREATED", req, { userId: user.id, email, clientId });
+      
+      // Return user without password
+      const { password: _, ...userWithoutPassword } = user;
+      res.status(201).json({ user: userWithoutPassword });
+    } catch (error: any) {
+      console.error("[CREATE USER ERROR]", error);
+      res.status(500).json({ error: "Failed to create user" });
+    }
+  });
+  
+  // Get users for a client (admin)
+  app.get("/api/admin/clients/:clientId/users", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { clientId } = req.params;
+      
+      const users = Array.from(portalUsersStore.values())
+        .filter(u => u.clientId === clientId)
+        .map(({ password, ...user }) => user);
+      
+      res.json({ users });
+    } catch (error: any) {
+      console.error("[GET CLIENT USERS ERROR]", error);
+      res.status(500).json({ error: "Failed to fetch users" });
+    }
+  });
+
+  // In-memory stores for clients and users (module level for admin routes)
+  const portalClientsStore = new Map<string, any>();
+  const portalUsersStore = new Map<string, any>();
+
   return app;
 }
