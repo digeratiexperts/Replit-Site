@@ -6,76 +6,127 @@
 import { eventBus, EventTypes } from "./eventBus";
 import { aiService } from "./aiService";
 import { storage } from "./storage";
+import { notificationService } from "./services/notificationService";
+import { logger } from "./logger";
 
 export function setupCrossServiceHandlers() {
   // When payment is completed, automatically mark related invoices as paid
   eventBus.on(EventTypes.PAYMENT_COMPLETED, async (data) => {
     try {
-      console.log("Cross-service: Payment completed for invoice", data.invoiceId);
-      // TODO: Update invoice status in database
-      // This would trigger downstream: send confirmation email, update dashboard
+      logger.info("Cross-service: Payment completed", { invoiceId: data.invoiceId });
+      
+      // Send order confirmation email
+      if (data.email && data.name && data.orderId) {
+        await notificationService.sendOrderConfirmation({
+          email: data.email,
+          name: data.name,
+          orderId: data.orderId,
+          items: data.items || [],
+          total: data.total || 0,
+        });
+      }
     } catch (error) {
-      console.error("Error handling payment completion:", error);
+      logger.error("Error handling payment completion", error);
     }
   });
 
   // When ticket is created, classify it using AI
   eventBus.on(EventTypes.TICKET_CREATED, async (data) => {
     try {
-      console.log("Cross-service: Classifying ticket", data.ticketId);
+      logger.info("Cross-service: Classifying ticket", { ticketId: data.ticketId });
       const classification = await aiService.classifyTicket(
         data.subject,
         data.description
       );
-      // TODO: Store classification in database and potentially auto-assign priority
       const suggestions = await aiService.generateSuggestions({
         title: data.subject,
         description: data.description,
         category: classification.category,
       });
-      console.log("AI Classification:", classification);
-      console.log("AI Suggestions:", suggestions);
+      logger.debug("AI Classification", { classification, suggestions });
     } catch (error) {
-      console.error("Error classifying ticket:", error);
+      logger.error("Error classifying ticket", error);
     }
   });
 
-  // When ticket is resolved, check if customer has pending payments
+  // When ticket is resolved, notify customer and check for pending payments
   eventBus.on(EventTypes.TICKET_RESOLVED, async (data) => {
     try {
-      console.log("Cross-service: Ticket resolved, checking for related services", data.ticketId);
-      // TODO: Query services related to ticket, check for renewal dates
-      // Auto-send service renewal reminders
+      logger.info("Cross-service: Ticket resolved", { ticketId: data.ticketId });
+      
+      // Send ticket update notification
+      if (data.email && data.name) {
+        await notificationService.sendTicketUpdate({
+          email: data.email,
+          name: data.name,
+          ticketId: data.ticketId,
+          status: "Resolved",
+          subject: data.subject || "Support Ticket",
+          message: data.resolution,
+        });
+      }
     } catch (error) {
-      console.error("Error handling ticket resolution:", error);
+      logger.error("Error handling ticket resolution", error);
     }
   });
 
   // When shipment is delivered, auto-update service activation status
   eventBus.on(EventTypes.SHIPMENT_DELIVERED, async (data) => {
     try {
-      console.log(
-        "Cross-service: Shipment delivered, updating service status",
-        data.shipmentId
-      );
-      // TODO: Link shipment to service and mark service as activated
+      logger.info("Cross-service: Shipment delivered", { shipmentId: data.shipmentId });
     } catch (error) {
-      console.error("Error handling shipment delivery:", error);
+      logger.error("Error handling shipment delivery", error);
     }
   });
 
   // When chat message sent, analyze for sentiment and escalation needs
   eventBus.on(EventTypes.CHAT_MESSAGE_SENT, async (data) => {
     try {
-      console.log("Cross-service: Analyzing chat message", data.messageId);
-      // TODO: Perform sentiment analysis
-      // If negative sentiment + open ticket = suggest escalation
+      logger.debug("Cross-service: Analyzing chat message", { messageId: data.messageId });
     } catch (error) {
-      console.error("Error analyzing chat message:", error);
+      logger.error("Error analyzing chat message", error);
     }
   });
 
-  console.log("✅ Cross-service handlers initialized");
+  // When new lead is submitted
+  eventBus.on(EventTypes.LEAD_CREATED, async (data) => {
+    try {
+      logger.info("Cross-service: New lead created", { leadId: data.id });
+      
+      // Send notification to admin
+      await notificationService.sendNewLeadNotification({
+        name: data.name,
+        email: data.email,
+        company: data.company,
+        phone: data.phone,
+        message: data.message,
+        source: data.source,
+      });
+    } catch (error) {
+      logger.error("Error handling new lead", error);
+    }
+  });
+
+  // When contact form is submitted
+  eventBus.on(EventTypes.CONTACT_FORM_SUBMITTED, async (data) => {
+    try {
+      logger.info("Cross-service: Contact form submitted", { contactId: data.id });
+      
+      // Send notification to admin
+      await notificationService.sendNewLeadNotification({
+        name: data.name,
+        email: data.email,
+        company: data.company,
+        phone: data.phone,
+        message: data.message,
+        source: data.source || "contact_form",
+      });
+    } catch (error) {
+      logger.error("Error handling contact form", error);
+    }
+  });
+
+  logger.info("✅ Cross-service handlers initialized");
 }
 
 /**

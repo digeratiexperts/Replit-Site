@@ -113,6 +113,11 @@ export const EventTypes = {
   // Chat events
   CHAT_MESSAGE_SENT: "chat:message_sent",
   CHAT_SESSION_CREATED: "chat:session_created",
+
+  // Lead/Contact events
+  LEAD_CREATED: "lead:created",
+  QUOTE_REQUESTED: "quote:requested",
+  CONTACT_FORM_SUBMITTED: "contact:submitted",
 };
 
 export const eventBus = new EventBus();

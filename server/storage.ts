@@ -1118,12 +1118,15 @@ let dbAvailable = false;
 
 async function initializeStorage(): Promise<IStorage> {
   try {
-    const { dbReady, initPromise } = await import("./db");
-    await initPromise;
+    const dbModule = await import("./db");
+    await dbModule.initPromise;
     
-    if (dbReady) {
+    // Check dbReady AFTER initPromise resolves (it's updated in the module)
+    const status = dbModule.getDatabaseStatus();
+    
+    if (status.connected) {
       dbAvailable = true;
-      console.log("✅ Database connected, using DatabaseStorage");
+      console.log(`✅ Database connected (${status.type}), using DatabaseStorage`);
       return new DatabaseStorage();
     }
   } catch (error) {

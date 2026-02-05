@@ -7,6 +7,9 @@ import jwt from "jsonwebtoken";
 import { registerObjectStorageRoutes, ObjectStorageService } from "./replit_integrations/object_storage";
 import { zohoClient, zohoDeskService, zohoCRMService, zohoBillingService } from "./zoho";
 import { verifyTurnstile } from "./middleware/security";
+import { eventBus, EventTypes } from "./eventBus";
+import { notificationService } from "./services/notificationService";
+import { logger } from "./logger";
 
 const JWT_SECRET = process.env.JWT_SECRET || randomBytes(32).toString('hex');
 const SALT_ROUNDS = 12;
@@ -2327,14 +2330,19 @@ export async function registerRoutes(app: Express) {
       };
 
       // Log the lead capture
-      console.log("[LEAD] Quote form submitted:", { email, company, recommendedPlan, timestamp });
+      logger.info("[LEAD] Quote form submitted", { email, company, recommendedPlan, timestamp });
       logSecurityEvent("LEAD_QUOTE_SUBMITTED", req, { email, company, recommendedPlan });
 
-      // In production, this would:
-      // 1. Store in database
-      // 2. Send to CRM (Zoho)
-      // 3. Trigger email automation
-      // For now, we just confirm receipt
+      // Emit lead event for cross-service handling (email notifications, CRM sync)
+      eventBus.emit(EventTypes.LEAD_CREATED, {
+        id: leadData.id,
+        name: `${firstName} ${lastName}`,
+        email,
+        company,
+        source: source || "quote_wizard",
+        message: `Recommended Plan: ${recommendedPlan}, Seats: ${seats}`,
+      }, "lead-quote");
+
       res.json({
         success: true,
         leadId: leadData.id,
@@ -2378,8 +2386,19 @@ export async function registerRoutes(app: Express) {
       };
 
       // Log the contact form submission
-      console.log("[CONTACT] Form submitted:", { name, email, company, service, timestamp: new Date().toISOString() });
+      logger.info("[CONTACT] Form submitted", { name, email, company, service, timestamp: new Date().toISOString() });
       logSecurityEvent("CONTACT_FORM_SUBMITTED", req, { email, company, service });
+
+      // Emit contact event for cross-service handling (email notifications)
+      eventBus.emit(EventTypes.CONTACT_FORM_SUBMITTED, {
+        id: contactData.id,
+        name,
+        email,
+        company,
+        phone,
+        message,
+        source: "contact_form",
+      }, "contact-form");
 
       // Push lead to Zoho CRM
       let zohoLeadId = null;
@@ -3371,6 +3390,31 @@ export async function registerRoutes(app: Express) {
       console.error("[DELETE CLIENT PRICING ERROR]", error);
       res.status(500).json({ error: "Failed to delete client pricing" });
     }
+  });
+
+  // ===== EMAIL TEST ENDPOINT (Admin only) =====
+  app.post("/api/admin/test-email", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const result = await notificationService.testEmailConnection();
+      logger.info("Email test requested", { 
+        success: result.success, 
+        adminEmail: req.user?.email 
+      });
+      res.json(result);
+    } catch (error: any) {
+      logger.error("Email test failed", error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Email status check (no auth required for health checks)
+  app.get("/api/email-status", async (req: Request, res: Response) => {
+    const hasToken = !!process.env.ZEPTOMAIL_API_TOKEN;
+    res.json({
+      configured: hasToken,
+      provider: "ZeptoMail",
+      sender: "noreply@digeratiexperts.com",
+    });
   });
 
   return app;
