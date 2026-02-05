@@ -1,7 +1,7 @@
 import { useLocation, Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { LogOut, Menu, X, LayoutDashboard, Ticket, Package, FileText, BookOpen, Settings, Activity, GraduationCap, MessageCircle, Download, Truck, ShoppingCart, ClipboardList, CheckSquare, FileStack, Upload, Users, Calendar, Shield, Phone, Building2, AlertTriangle } from "lucide-react";
+import { LogOut, Menu, X, LayoutDashboard, Ticket, Package, FileText, BookOpen, Settings, Activity, GraduationCap, MessageCircle, Download, Truck, ShoppingCart, ClipboardList, CheckSquare, FileStack, Upload, Users, Calendar, Shield, Phone, Building2, AlertTriangle, FileSignature, FilePlus } from "lucide-react";
 import { useState } from "react";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
 import { TenantSelector } from "@/components/portal/TenantSelector";
@@ -19,6 +19,8 @@ const navItems = [
   { href: "/portal/forms", label: "Request Forms", icon: ClipboardList },
   { href: "/portal/surveys", label: "Surveys", icon: CheckSquare },
   { href: "/portal/approvals", label: "Approvals", icon: FileStack },
+  { href: "/portal/contracts", label: "Contracts", icon: FileSignature },
+  { href: "/portal/order-form", label: "New Order", icon: FilePlus },
   { href: "/portal/services", label: "My Services", icon: Package },
   { href: "/portal/billing", label: "Billing", icon: FileText },
   { href: "/portal/company", label: "Company", icon: Building2 },
@@ -38,6 +40,7 @@ const navItems = [
 
 const adminItems = [
   { href: "/portal/admin/companies", label: "Companies", icon: Building2 },
+  { href: "/portal/admin/contracts", label: "Contracts", icon: FileSignature },
   { href: "/portal/admin/import", label: "Data Import", icon: Upload },
   { href: "/portal/admin/agents", label: "Manage Agents", icon: Users },
   { href: "/portal/admin/openai", label: "OpenAI Billing", icon: Settings },

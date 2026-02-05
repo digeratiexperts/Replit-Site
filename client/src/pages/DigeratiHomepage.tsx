@@ -83,6 +83,22 @@ export const DigeratiHomepage = (): JSX.Element => {
     setServiceCost(finalCost);
   }, [serviceEmployees, servicePackage]);
 
+  // Handle hash navigation - scroll to anchor when navigating from other pages
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const targetId = hash.replace('#', '');
+      // Small delay to ensure DOM is ready
+      const timer = setTimeout(() => {
+        const element = document.getElementById(targetId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   return (
     <FullPageScrollProvider sections={homepageSections} enableOnMobile={false}>
       <div className="min-h-screen bg-[#050312] pb-20 lg:pb-24">

@@ -721,6 +721,24 @@ export const industryPageData = {
       "Budget-friendly solutions"
     ],
     gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600"
+  },
+  'professional-services': {
+    title: "IT Solutions for Professional Services",
+    subtitle: "Secure client data and streamline operations",
+    description: "Professional services firms—consultants, architects, engineers, and advisors—handle sensitive client data and intellectual property. Our tailored IT solutions protect confidential information while enabling seamless collaboration and mobile productivity.",
+    features: [
+      { title: "Client Data Protection", description: "Encrypt and secure sensitive client files and communications" },
+      { title: "Secure Collaboration", description: "Enable team collaboration without compromising security" },
+      { title: "Mobile Productivity", description: "Work securely from anywhere with managed devices" }
+    ],
+    benefits: [
+      "Client confidentiality assured",
+      "Secure remote access for field work",
+      "Professional email and communication",
+      "Document version control",
+      "Compliance support for industry regulations"
+    ],
+    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600"
   }
 };
 

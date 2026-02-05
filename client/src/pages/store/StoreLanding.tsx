@@ -84,7 +84,7 @@ const StoreLanding = () => {
                     Welcome, <span className="font-semibold text-violet-300">{user.fullName || user.username}</span>
                   </span>
                   {clientType !== "public" && (
-                    <span className="ml-2 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-medium">
+                    <span className="ml-2 px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 text-xs font-medium">
                       {clientType === "managed" ? "Managed Client" : "Co-Managed Client"}
                     </span>
                   )}
@@ -93,7 +93,7 @@ const StoreLanding = () => {
                   variant="ghost"
                   size="sm"
                   onClick={logout}
-                  className="text-white/60 hover:text-white"
+                  className="text-white/60 hover:text-white hover:bg-violet-500/10"
                   data-testid="button-store-logout"
                 >
                   <LogOut className="w-4 h-4 mr-1" />
@@ -105,7 +105,7 @@ const StoreLanding = () => {
                 <Button 
                   variant="outline"
                   size="sm"
-                  className="border-violet-500/30 text-violet-300 hover:bg-violet-500/10"
+                  className="bg-violet-600 hover:bg-violet-500 text-white border-none"
                   data-testid="button-store-login"
                 >
                   <User className="w-4 h-4 mr-2" />
@@ -207,7 +207,7 @@ const StoreLanding = () => {
                     <span className="text-white/50 text-sm">{checkoutProducts.length} products available</span>
                     <Link href="/store/co-managed">
                       <Button 
-                        className="bg-white/10 hover:bg-white/20 text-white border border-white/20"
+                        className="bg-violet-600 hover:bg-violet-500 text-white border-none"
                         data-testid="button-view-comanaged"
                       >
                         Browse Products
@@ -312,7 +312,7 @@ const StoreLanding = () => {
                         <Icon className="w-5 h-5 text-violet-400" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-white font-semibold mb-1 truncate">{product.name}</h3>
+                        <h3 className="text-white font-semibold mb-1 truncate" title={product.name}>{product.name}</h3>
                         <p className="text-white/50 text-xs">{categoryLabels[product.category]}</p>
                       </div>
                     </div>

@@ -153,7 +153,7 @@ const ProductDetail = () => {
                     Welcome, <span className="font-semibold text-violet-300">{user.fullName || user.username}</span>
                   </span>
                   {clientType !== "public" && (
-                    <span className="ml-2 px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 text-xs font-medium">
+                    <span className="ml-2 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-medium">
                       {clientType === "managed" ? "Managed Client" : "Co-Managed Client"}
                     </span>
                   )}
@@ -162,7 +162,7 @@ const ProductDetail = () => {
                   variant="ghost"
                   size="sm"
                   onClick={logout}
-                  className="text-white/60 hover:text-white"
+                  className="text-white/60 hover:text-white hover:bg-violet-500/10"
                   data-testid="button-store-logout"
                 >
                   <LogOut className="w-4 h-4 mr-1" />
@@ -174,7 +174,7 @@ const ProductDetail = () => {
                 variant="outline"
                 size="sm"
                 onClick={loginRedirect}
-                className="border-violet-500/30 text-violet-300 hover:bg-violet-500/10"
+                className="bg-violet-600 hover:bg-violet-500 text-white border-none"
                 data-testid="button-store-login"
               >
                 <User className="w-4 h-4 mr-2" />
@@ -321,7 +321,7 @@ const ProductDetail = () => {
                         size="icon"
                         onClick={() => handleQuantityChange(-1)}
                         disabled={quantity <= minQty}
-                        className="border-white/20 text-white hover:bg-white/10"
+                        className="bg-violet-500/10 border-violet-500/30 text-white hover:bg-violet-500/20"
                         data-testid="button-decrease-qty"
                       >
                         <Minus className="w-4 h-4" />
@@ -333,7 +333,7 @@ const ProductDetail = () => {
                         variant="outline"
                         size="icon"
                         onClick={() => handleQuantityChange(1)}
-                        className="border-white/20 text-white hover:bg-white/10"
+                        className="bg-violet-500/10 border-violet-500/30 text-white hover:bg-violet-500/20"
                         data-testid="button-increase-qty"
                       >
                         <Plus className="w-4 h-4" />
@@ -406,7 +406,7 @@ const ProductDetail = () => {
                             <RelatedIcon className="w-5 h-5 text-violet-400" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h3 className="text-white font-semibold line-clamp-1 group-hover:text-violet-300 transition-colors">
+                            <h3 className="text-white font-semibold line-clamp-1 group-hover:text-violet-300 transition-colors" title={related.name}>
                               {related.name}
                             </h3>
                           </div>

@@ -55,14 +55,14 @@ async function initDb(): Promise<boolean> {
       if (isNeon) {
         pool = new NeonPool({ 
           connectionString: databaseUrl,
-          connectionTimeoutMillis: 5000,
-          max: 10,
+          connectionTimeoutMillis: 10000,
+          max: 5,
         });
       } else {
         pool = new PgPool({ 
           connectionString: databaseUrl,
-          connectionTimeoutMillis: 5000,
-          max: 10,
+          connectionTimeoutMillis: 10000,
+          max: 5,
           idleTimeoutMillis: 30000,
         });
       }

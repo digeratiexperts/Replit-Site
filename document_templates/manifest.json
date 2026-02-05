@@ -1,0 +1,223 @@
+[
+  {
+    "id": "nda-mutual-confidentiality-agreement-digerati-experts",
+    "selection_key": "nda",
+    "title": "NDA Mutual Confidentiality Agreement Digerati Experts",
+    "category": "core_legal",
+    "version": "v2026.6",
+    "order": 10,
+    "requires_signature": true,
+    "template_docx": "templates/docx/nda-mutual-confidentiality-agreement-digerati-experts-v2026.6.docx",
+    "template_pdf": "templates/pdf/nda-mutual-confidentiality-agreement-digerati-experts-v2026.6.pdf",
+    "depends_on": [],
+    "notes": ""
+  },
+  {
+    "id": "msa-digerati-experts-2026",
+    "selection_key": "msa",
+    "title": "MSA Digerati Experts 2026",
+    "category": "core_legal",
+    "version": "v2026.6",
+    "order": 20,
+    "requires_signature": true,
+    "template_docx": "templates/docx/msa-digerati-experts-2026-v2026.6.docx",
+    "template_pdf": "templates/pdf/msa-digerati-experts-2026-v2026.6.pdf",
+    "depends_on": [],
+    "notes": ""
+  },
+  {
+    "id": "order-form-service-selection-and-pricing",
+    "selection_key": "order_form",
+    "title": "Order Form   Service Selection and Pricing",
+    "category": "commercial",
+    "version": "v2026.6",
+    "order": 30,
+    "requires_signature": true,
+    "template_docx": "templates/docx/order-form-service-selection-and-pricing-v2026.6.docx",
+    "template_pdf": "templates/pdf/order-form-service-selection-and-pricing-v2026.6.pdf",
+    "depends_on": [
+      "msa"
+    ],
+    "notes": ""
+  },
+  {
+    "id": "sow-csra-ultimate-cybersecurity-risk-assessment",
+    "selection_key": "csra-ultimate-cybersecurity-risk-assessment",
+    "title": "SOW CSRA Ultimate Cybersecurity Risk Assessment",
+    "category": "sow",
+    "version": "v2026.6",
+    "order": 50,
+    "requires_signature": true,
+    "template_docx": "templates/docx/sow-csra-ultimate-cybersecurity-risk-assessment-v2026.6.docx",
+    "template_pdf": "templates/pdf/sow-csra-ultimate-cybersecurity-risk-assessment-v2026.6.pdf",
+    "depends_on": [
+      "msa"
+    ],
+    "notes": ""
+  },
+  {
+    "id": "sow-compliance-services",
+    "selection_key": "compliance-services",
+    "title": "SOW Compliance Services",
+    "category": "sow",
+    "version": "v2026.6",
+    "order": 50,
+    "requires_signature": true,
+    "template_docx": "templates/docx/sow-compliance-services-v2026.6.docx",
+    "template_pdf": "templates/pdf/sow-compliance-services-v2026.6.pdf",
+    "depends_on": [
+      "msa"
+    ],
+    "notes": ""
+  },
+  {
+    "id": "sow-de-backup-disaster-recovery-and-continuity-2026",
+    "selection_key": "de-backup-disaster-recovery-and-continuity-2026",
+    "title": "SOW DE Backup Disaster Recovery and Continuity 2026",
+    "category": "sow",
+    "version": "v2026.6",
+    "order": 50,
+    "requires_signature": true,
+    "template_docx": "templates/docx/sow-de-backup-disaster-recovery-and-continuity-2026-v2026.6.docx",
+    "template_pdf": "templates/pdf/sow-de-backup-disaster-recovery-and-continuity-2026-v2026.6.pdf",
+    "depends_on": [
+      "msa"
+    ],
+    "notes": ""
+  },
+  {
+    "id": "sow-de-core-it-infrastructure-and-support-2026",
+    "selection_key": "de-core-it-infrastructure-and-support-2026",
+    "title": "SOW DE Core IT Infrastructure and Support 2026",
+    "category": "sow",
+    "version": "v2026.6",
+    "order": 50,
+    "requires_signature": true,
+    "template_docx": "templates/docx/sow-de-core-it-infrastructure-and-support-2026-v2026.6.docx",
+    "template_pdf": "templates/pdf/sow-de-core-it-infrastructure-and-support-2026-v2026.6.pdf",
+    "depends_on": [
+      "msa"
+    ],
+    "notes": ""
+  },
+  {
+    "id": "sow-de-managed-assessments-2026",
+    "selection_key": "de-managed-assessments-2026",
+    "title": "SOW DE Managed Assessments 2026",
+    "category": "sow",
+    "version": "v2026.5-v2026.6",
+    "order": 50,
+    "requires_signature": true,
+    "template_docx": "templates/docx/sow-de-managed-assessments-2026-v2026.5-v2026.6.docx",
+    "template_pdf": "templates/pdf/sow-de-managed-assessments-2026-v2026.5-v2026.6.pdf",
+    "depends_on": [
+      "msa"
+    ],
+    "notes": "Filename contains two versions (v2026.5-v2026.6). Consider renaming to v2026.6 only after confirming document header/footer."
+  },
+  {
+    "id": "sow-de-network-integration-and-advanced-networking-2026",
+    "selection_key": "de-network-integration-and-advanced-networking-2026",
+    "title": "SOW DE Network Integration and Advanced Networking 2026",
+    "category": "sow",
+    "version": "v2026.6",
+    "order": 50,
+    "requires_signature": true,
+    "template_docx": "templates/docx/sow-de-network-integration-and-advanced-networking-2026-v2026.6.docx",
+    "template_pdf": "templates/pdf/sow-de-network-integration-and-advanced-networking-2026-v2026.6.pdf",
+    "depends_on": [
+      "msa"
+    ],
+    "notes": ""
+  },
+  {
+    "id": "sow-de-security-stack-and-operations-2026",
+    "selection_key": "de-security-stack-and-operations-2026",
+    "title": "SOW DE Security Stack and Operations 2026",
+    "category": "sow",
+    "version": "v2026.6",
+    "order": 50,
+    "requires_signature": true,
+    "template_docx": "templates/docx/sow-de-security-stack-and-operations-2026-v2026.6.docx",
+    "template_pdf": "templates/pdf/sow-de-security-stack-and-operations-2026-v2026.6.pdf",
+    "depends_on": [
+      "msa"
+    ],
+    "notes": ""
+  },
+  {
+    "id": "sow-de-ucaas-voip-2026",
+    "selection_key": "de-ucaas-voip-2026",
+    "title": "SOW DE UCaaS VoIP 2026",
+    "category": "sow",
+    "version": "v2026.6",
+    "order": 50,
+    "requires_signature": true,
+    "template_docx": "templates/docx/sow-de-ucaas-voip-2026-v2026.6.docx",
+    "template_pdf": "templates/pdf/sow-de-ucaas-voip-2026-v2026.6.pdf",
+    "depends_on": [
+      "msa"
+    ],
+    "notes": ""
+  },
+  {
+    "id": "sow-de-workplace-client-legal-facing",
+    "selection_key": "de-workplace-client-legal-facing",
+    "title": "SOW DE Workplace Client Legal Facing",
+    "category": "sow",
+    "version": "v2026.6",
+    "order": 50,
+    "requires_signature": true,
+    "template_docx": "templates/docx/sow-de-workplace-client-legal-facing-v2026.6.docx",
+    "template_pdf": "templates/pdf/sow-de-workplace-client-legal-facing-v2026.6.pdf",
+    "depends_on": [
+      "msa"
+    ],
+    "notes": ""
+  },
+  {
+    "id": "sow-de-vcio-services-2026",
+    "selection_key": "de-vcio-services-2026",
+    "title": "SOW DE vCIO Services 2026",
+    "category": "sow",
+    "version": "v2026.6",
+    "order": 50,
+    "requires_signature": true,
+    "template_docx": "templates/docx/sow-de-vcio-services-2026-v2026.6.docx",
+    "template_pdf": "templates/pdf/sow-de-vcio-services-2026-v2026.6.pdf",
+    "depends_on": [
+      "msa"
+    ],
+    "notes": ""
+  },
+  {
+    "id": "sow-managed-services",
+    "selection_key": "managed-services",
+    "title": "SOW Managed Services",
+    "category": "sow",
+    "version": "v2026.6",
+    "order": 50,
+    "requires_signature": true,
+    "template_docx": "templates/docx/sow-managed-services-v2026.6.docx",
+    "template_pdf": "templates/pdf/sow-managed-services-v2026.6.pdf",
+    "depends_on": [
+      "msa"
+    ],
+    "notes": ""
+  },
+  {
+    "id": "sow-invoice-terms-and-conditions-digerati-experts",
+    "selection_key": "invoice-terms-and-conditions-digerati-experts",
+    "title": "SOW Invoice Terms and Conditions Digerati Experts",
+    "category": "commercial",
+    "version": "v2026.6",
+    "order": 90,
+    "requires_signature": false,
+    "template_docx": "templates/docx/sow-invoice-terms-and-conditions-digerati-experts-v2026.6.docx",
+    "template_pdf": "templates/pdf/sow-invoice-terms-and-conditions-digerati-experts-v2026.6.pdf",
+    "depends_on": [
+      "msa"
+    ],
+    "notes": ""
+  }
+]

@@ -288,8 +288,13 @@ export function MegaMenu() {
       ]
     },
     {
+      name: 'Store',
+      href: '/store',
+      isSimple: true
+    },
+    {
       name: 'Contact',
-      href: '#contact',
+      href: '/#contact',
       isSimple: true
     }
   ];
