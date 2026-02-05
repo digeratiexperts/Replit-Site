@@ -68,7 +68,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
     },
     {
       name: "Enterprise",
-      monthlyPrice: 1200,
+      monthlyPrice: 1725,
       perUserPrice: 345,
       isPopular: false,
       learnMoreUrl: "/solutions/compliance-reports",
@@ -198,7 +198,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                   </div>
                   
                   <div className="text-xs text-gray-500">
-                  {plan.name === 'Office' ? '$750/site/mo minimum' : '$1,200/site/mo minimum'}
+                  {plan.name === 'Office' ? '$750/site/mo minimum' : plan.name === 'Business' ? '$1,200/site/mo minimum' : '$1,725/site/mo minimum'}
                 </div>
                 </div>
 
@@ -290,7 +290,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                 </div>
                 
                 <div className="text-sm text-gray-500">
-                  {plan.name === 'Office' ? '$750/site/mo minimum' : '$1,200/site/mo minimum'}
+                  {plan.name === 'Office' ? '$750/site/mo minimum' : plan.name === 'Business' ? '$1,200/site/mo minimum' : '$1,725/site/mo minimum'}
                 </div>
               </div>
 
@@ -340,7 +340,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ delay: 0.6, duration: 0.5 }}
         >
-          <p>Minimum billing: Office $750/site/mo, Business $1,200/site/mo, Enterprise $1,200/site/mo</p>
+          <p>Minimum billing: Office $750/site/mo, Business $1,200/site/mo, Enterprise $1,725/site/mo</p>
           <p>Billing rule: Minimums apply when per-user total &lt; minimum.</p>
           <p>Final pricing is tailored to your users, sites, and compliance needs.</p>
         </motion.div>

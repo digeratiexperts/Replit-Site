@@ -184,7 +184,7 @@ export default function Ecosystem() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
         >
-          Minimums: Office $750/site/mo; Business/Enterprise $1,200/site/mo. Final pricing tailored to your environment.
+          Minimums: Office $750/site/mo; Business $1,200/site/mo; Enterprise $1,725/site/mo. Final pricing tailored to your environment.
         </motion.p>
       </div>
     </section>

@@ -51,7 +51,7 @@ const defaultPlans: PricingPlan[] = [
   {
     name: "Enterprise",
     tier: "Compliance",
-    monthlyPrice: 1200,
+    monthlyPrice: 1725,
     perUserPrice: 345,
     note: "Adds governance and audit readiness.",
     learnMoreUrl: "/solutions/compliance-reports",

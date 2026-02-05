@@ -433,7 +433,7 @@ export default function ManagedWorkplace() {
                         </div>
                         <p className="text-white/50 text-sm mt-1">
                           {pricingMode === 'per_user' 
-                            ? `Minimum billing: Office $750/mo, Business/Enterprise $1,200/mo` 
+                            ? `Minimum billing: Office $750/mo, Business $1,200/mo, Enterprise $1,725/mo` 
                             : `Includes base tier access`
                           }
                         </p>
