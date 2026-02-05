@@ -56,10 +56,28 @@ The platform implements comprehensive security following enterprise best practic
 - **Payment Security**: Stripe hosted checkout (PCI compliant), webhook signature verification
 
 ### System Design Choices
-The project follows a modular structure (`client/` and `server/`), using UUIDs for IDs. Payment processing includes enterprise-grade encryption and webhook signature validation. AI services for ticket classification and priority detection are implemented with graceful fallback. Role-based access control manages navigation and features. User storage is in-memory, designed for future PostgreSQL migration, using bcrypt hashing and JWT tokens. Zoho One API integration uses OAuth with secrets for various modules, implementing a data isolation pattern to scope queries by authenticated user's email and returning a consistent response format across portal endpoints.
+The project follows a modular structure (`client/` and `server/`), using UUIDs for IDs. Payment processing includes enterprise-grade encryption and webhook signature validation. AI services for ticket classification and priority detection are implemented with graceful fallback. Role-based access control manages navigation and features. User storage uses PostgreSQL via DatabaseStorage with bcrypt hashing and JWT tokens. Zoho One API integration uses OAuth with secrets for various modules, implementing a data isolation pattern to scope queries by authenticated user's email and returning a consistent response format across portal endpoints.
+
+### Event-Driven Architecture
+The platform implements an event-driven architecture via `server/eventBus.ts` for cross-service communication:
+- **Event Types**: PAYMENT_COMPLETED, TICKET_CREATED, TICKET_RESOLVED, SHIPMENT_DELIVERED, CHAT_MESSAGE_SENT, LEAD_CREATED, CONTACT_FORM_SUBMITTED
+- **Cross-Service Handler** (`server/crossServiceHandler.ts`): Subscribes to events and triggers appropriate actions
+- **Email Notifications** (`server/services/notificationService.ts`): ZeptoMail integration for transactional emails (lead alerts, quote confirmations, ticket updates, password resets)
+- **Structured Logging** (`server/logger.ts`): Environment-aware logging with security event tracking
+
+### Email Notification System
+Transactional email notifications powered by ZeptoMail (requires `ZEPTOMAIL_API_TOKEN` secret):
+- **Lead Notifications**: Alerts sales team when new leads are captured
+- **Quote Confirmations**: Confirms quote requests to customers
+- **Ticket Updates**: Notifies clients of ticket status changes
+- **Password Resets**: Secure password reset emails
+- **Sender**: noreply@digeratiexperts.com
+- **Admin Test Endpoint**: POST `/api/admin/test-email`
+- **Status Endpoint**: GET `/api/email-status`
 
 ## External Dependencies
 - **Stripe**: Payments and subscription management
+- **ZeptoMail**: Transactional email notifications (requires ZEPTOMAIL_API_TOKEN)
 - **Zelle**: Bank transfer payments
 - **Zoho Payments**: Checkout widget
 - **Zoho Bookings**: Scheduling system
