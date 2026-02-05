@@ -18,7 +18,7 @@ const defaultPlans: PricingPlan[] = [
   {
     name: "Office",
     tier: "Basic IT",
-    monthlyPrice: 825,
+    monthlyPrice: 750,
     perUserPrice: 165,
     note: "A clean, managed IT baseline.",
     learnMoreUrl: "/solutions/managed-it-support",
@@ -34,7 +34,7 @@ const defaultPlans: PricingPlan[] = [
   {
     name: "Business",
     tier: "Security",
-    monthlyPrice: 1225,
+    monthlyPrice: 1200,
     perUserPrice: 245,
     note: "Adds stronger protection and response.",
     learnMoreUrl: "/solutions/security-operations",
@@ -51,7 +51,7 @@ const defaultPlans: PricingPlan[] = [
   {
     name: "Enterprise",
     tier: "Compliance",
-    monthlyPrice: 1725,
+    monthlyPrice: 1200,
     perUserPrice: 345,
     note: "Adds governance and audit readiness.",
     learnMoreUrl: "/solutions/compliance-reports",
