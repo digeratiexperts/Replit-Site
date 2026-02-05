@@ -492,7 +492,7 @@ export default function OfficePage() {
                       <span className="text-4xl font-bold text-white">$165</span>
                       <span className="text-white/60">/user/month</span>
                     </div>
-                    <p className="text-white/50 text-sm mt-1">5-user minimum ($825/mo)</p>
+                    <p className="text-white/50 text-sm mt-1">$750/site minimum</p>
                   </div>
 
                   <div className="space-y-3 mb-6">

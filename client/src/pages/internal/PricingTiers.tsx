@@ -66,8 +66,8 @@ const pricingTiers: PricingTier[] = [
         description: "Real security, backup & guidance — choose your add-on",
         price: "$750",
         priceUnit: "/month minimum",
-        siteBase: "Plus $125/user/month",
-        minimum: "Formula: $750/site + $125 × users",
+        siteBase: "Plus $165/user/month",
+        minimum: "Formula: $750/site + $165 × users",
         techtime: "10 min/user + 30 min/co",
         provisioningFees: [
           { name: "Microsoft Native", badge: "Premium", fee: "$1,250/site + $50/user", note: "Entra + Intune + Autopilot, tenant hardening" },
@@ -274,7 +274,7 @@ const componentMatrix = [
 
 const quickPricingExamples = [
   { label: "6-user Office", items: [
-    { name: "Monthly:", value: "$750 + (6×$125) = $1,500/mo", highlight: true },
+    { name: "Monthly:", value: "$750 + (6×$165) = $1,740/mo", highlight: true },
     { name: "MS Native:", value: "$1,250 + (6×$50) = $1,550" },
     { name: "Cost-Saver:", value: "$500 + (6×$25) = $650" }
   ]},
@@ -290,7 +290,7 @@ const quickPricingExamples = [
   ]},
   { label: "Per-User Effective Rate", items: [
     { name: "Essentials", value: "~$167/user (at 3)" },
-    { name: "Office", value: "$750/site min + $125/u" },
+    { name: "Office", value: "$750/site min + $165/u" },
     { name: "Business", value: "$240–250/user" },
     { name: "Enterprise", value: "$350/user" }
   ]}
@@ -694,7 +694,7 @@ export default function PricingTiers() {
                   <tr className="bg-white/5">
                     <th className="text-left px-4 py-3 text-white/60 font-semibold min-w-[180px]">Component</th>
                     <th className="text-center px-4 py-3 text-gray-400 font-semibold">Essentials<br/><span className="text-xs font-normal">$500/site</span></th>
-                    <th className="text-center px-4 py-3 text-violet-400 font-semibold">Office<br/><span className="text-xs font-normal">$750 min + $125/u</span></th>
+                    <th className="text-center px-4 py-3 text-violet-400 font-semibold">Office<br/><span className="text-xs font-normal">$750 min + $165/u</span></th>
                     <th className="text-center px-4 py-3 text-violet-300 font-semibold">Business<br/><span className="text-xs font-normal">$240/user</span></th>
                     <th className="text-center px-4 py-3 text-fuchsia-400 font-semibold">Enterprise<br/><span className="text-xs font-normal">$350/user</span></th>
                   </tr>

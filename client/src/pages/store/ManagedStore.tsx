@@ -193,7 +193,7 @@ const ManagedStore = () => {
             </div>
             
             <p className="text-center text-white/40 text-sm mt-6">
-              Sites with 5+ users include a $1,200/site minimum. Final pricing tailored to your users, sites, and compliance needs.
+              Minimum billing: Office $750/site/mo, Business/Enterprise $1,200/site/mo. Final pricing tailored to your users, sites, and compliance needs.
             </p>
           </motion.section>
 
