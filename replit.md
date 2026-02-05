@@ -55,6 +55,15 @@ The platform implements comprehensive security following enterprise best practic
 - **Audit Logging**: Security events for auth, orders, pricing changes, admin actions
 - **Payment Security**: Stripe hosted checkout (PCI compliant), webhook signature verification
 
+### Centralized Pricing Configuration
+All ProActive Ecosystem tier pricing is managed from a single source of truth at `client/src/data/pricing.ts`:
+- **Office Tier**: $750/site minimum + $165/user (5-25 users)
+- **Business Tier**: $1,200/site minimum + $245/user (5-50 users)
+- **Enterprise Tier**: $1,725/site minimum + $345/user (25-100+ users)
+- **Helper Functions**: `formatPrice()`, `formatSiteMin()`, `formatUserPrice()`, `getPricingFooterText()`
+- **15+ Components**: Import pricing from this config (DigeratiPricingSection, ServiceMatrix, calculators, MegaMenu, Ecosystem pages, etc.)
+- **Note**: BackupDisasterRecovery.tsx has separate BCDR product pricing ($750/mo) which is intentionally independent
+
 ### System Design Choices
 The project follows a modular structure (`client/` and `server/`), using UUIDs for IDs. Payment processing includes enterprise-grade encryption and webhook signature validation. AI services for ticket classification and priority detection are implemented with graceful fallback. Role-based access control manages navigation and features. User storage uses PostgreSQL via DatabaseStorage with bcrypt hashing and JWT tokens. Zoho One API integration uses OAuth with secrets for various modules, implementing a data isolation pattern to scope queries by authenticated user's email and returning a consistent response format across portal endpoints.
 

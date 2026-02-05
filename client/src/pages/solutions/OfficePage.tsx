@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { FloatingParticles } from "@/components/graphics";
 import { useSEO } from "@/hooks/useSEO";
+import { pricing } from "@/data/pricing";
 
 const officeSalesPitchData = {
   corePitch: [
@@ -489,10 +490,10 @@ export default function OfficePage() {
                   
                   <div className="mb-6">
                     <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-bold text-white">$165</span>
+                      <span className="text-4xl font-bold text-white">${pricing.office.user}</span>
                       <span className="text-white/60">/user/month</span>
                     </div>
-                    <p className="text-white/50 text-sm mt-1">$750/site minimum</p>
+                    <p className="text-white/50 text-sm mt-1">${pricing.office.siteMin}/site minimum</p>
                   </div>
 
                   <div className="space-y-3 mb-6">

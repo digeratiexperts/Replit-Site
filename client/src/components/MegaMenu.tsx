@@ -6,6 +6,7 @@ import logoImage from '@assets/DE-Logo-new_1762461524794.webp';
 import ebookCover from '@/assets/images/ebook-defending-digital-realm-cover.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as Tooltip from '@radix-ui/react-tooltip';
+import { pricing } from '@/data/pricing';
 
 const NoiseTexture = ({ id }: { id: string }) => (
   <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.025]" aria-hidden="true">
@@ -171,7 +172,7 @@ export function MegaMenu() {
           featured: true,
           viewAllUrl: '/solutions',
           items: [
-            { title: 'ProActive Ecosystem', description: 'Everything your office needs in one plan', icon: <Monitor className="h-5 w-5" />, url: '/solutions/ProActive-Ecosystem-Packages', badge: 'Best Value', price: 'From $165/user' },
+            { title: 'ProActive Ecosystem', description: 'Everything your office needs in one plan', icon: <Monitor className="h-5 w-5" />, url: '/solutions/ProActive-Ecosystem-Packages', badge: 'Best Value', price: `From $${pricing.office.user}/user` },
             { title: 'Co-Managed IT', description: 'Extend your IT team without hiring', icon: <Users className="h-5 w-5" />, url: '/solutions/co-managed-it', badge: 'Popular', price: 'Custom' },
             { title: 'Managed IT Support', description: 'End recurring IT headaches for good', icon: <HeadphonesIcon className="h-5 w-5" />, url: '/solutions/managed-it-support' },
           ]

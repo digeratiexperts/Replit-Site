@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Helmet } from "react-helmet-async";
 import { ArrowLeft, ChevronDown, Check, Clock, RefreshCw, Archive, Timer, Shuffle, Rocket, Calendar, Handshake, TrendingUp, Plus } from "lucide-react";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
+import { pricing } from "@/data/pricing";
 
 interface PricingPlan {
   name: string;
@@ -64,10 +65,10 @@ const pricingTiers: PricingTier[] = [
       {
         name: "Custom Buildout",
         description: "Real security, backup & guidance — choose your add-on",
-        price: "$750",
+        price: `$${pricing.office.siteMin}`,
         priceUnit: "/month minimum",
-        siteBase: "Plus $165/user/month",
-        minimum: "Formula: $750/site + $165 × users",
+        siteBase: `Plus $${pricing.office.user}/user/month`,
+        minimum: `Formula: $${pricing.office.siteMin}/site + $${pricing.office.user} × users`,
         techtime: "10 min/user + 30 min/co",
         provisioningFees: [
           { name: "Microsoft Native", badge: "Premium", fee: "$1,250/site + $50/user", note: "Entra + Intune + Autopilot, tenant hardening" },
@@ -103,7 +104,7 @@ const pricingTiers: PricingTier[] = [
         description: "Secure-by-default for cloud-first teams",
         price: "$240",
         priceUnit: "/user/month",
-        minimum: "Min $1,200/mo (5 users)",
+        minimum: `Min $${pricing.business.siteMin.toLocaleString()}/mo (5 users)`,
         featured: true,
         outcome: "Prevent breaches, reduce downtime, standardize your environment so support gets faster.",
         techtime: "20 min/user + 45 min/co",
@@ -274,25 +275,25 @@ const componentMatrix = [
 
 const quickPricingExamples = [
   { label: "6-user Office", items: [
-    { name: "Monthly:", value: "$750 + (6×$165) = $1,740/mo", highlight: true },
+    { name: "Monthly:", value: `$${pricing.office.siteMin} + (6×$${pricing.office.user}) = $${pricing.office.siteMin + 6 * pricing.office.user}/mo`, highlight: true },
     { name: "MS Native:", value: "$1,250 + (6×$50) = $1,550" },
     { name: "Cost-Saver:", value: "$500 + (6×$25) = $650" }
   ]},
   { label: "15-user Business", items: [
-    { name: "Monthly:", value: "15 × $240 = $3,600/mo", highlight: true },
+    { name: "Monthly:", value: `15 × $${pricing.business.user} = $${15 * pricing.business.user}/mo`, highlight: true },
     { name: "MS Native:", value: "$1,250 + (15×$50) = $2,000" },
     { name: "TechTime:", value: "(15×20)+45 = 5.75 hrs/mo", techtime: true }
   ]},
   { label: "30-user Enterprise (2 sites)", items: [
-    { name: "Monthly:", value: "30 × $350 = $10,500/mo", highlight: true },
+    { name: "Monthly:", value: `30 × $${pricing.enterprise.user} = $${(30 * pricing.enterprise.user).toLocaleString()}/mo`, highlight: true },
     { name: "MS Native:", value: "(2×$1,250) + (30×$50) = $4,000" },
     { name: "TechTime:", value: "(30×2hr)+(2×3hr) = 66 hrs/mo", techtime: true }
   ]},
   { label: "Per-User Effective Rate", items: [
     { name: "Essentials", value: "~$167/user (at 3)" },
-    { name: "Office", value: "$750/site min + $165/u" },
-    { name: "Business", value: "$240–250/user" },
-    { name: "Enterprise", value: "$350/user" }
+    { name: "Office", value: `$${pricing.office.siteMin}/site min + $${pricing.office.user}/u` },
+    { name: "Business", value: `$${pricing.business.user}/user` },
+    { name: "Enterprise", value: `$${pricing.enterprise.user}/user` }
   ]}
 ];
 
@@ -694,9 +695,9 @@ export default function PricingTiers() {
                   <tr className="bg-white/5">
                     <th className="text-left px-4 py-3 text-white/60 font-semibold min-w-[180px]">Component</th>
                     <th className="text-center px-4 py-3 text-gray-400 font-semibold">Essentials<br/><span className="text-xs font-normal">$500/site</span></th>
-                    <th className="text-center px-4 py-3 text-violet-400 font-semibold">Office<br/><span className="text-xs font-normal">$750 min + $165/u</span></th>
-                    <th className="text-center px-4 py-3 text-violet-300 font-semibold">Business<br/><span className="text-xs font-normal">$240/user</span></th>
-                    <th className="text-center px-4 py-3 text-fuchsia-400 font-semibold">Enterprise<br/><span className="text-xs font-normal">$350/user</span></th>
+                    <th className="text-center px-4 py-3 text-violet-400 font-semibold">Office<br/><span className="text-xs font-normal">${pricing.office.siteMin} min + ${pricing.office.user}/u</span></th>
+                    <th className="text-center px-4 py-3 text-violet-300 font-semibold">Business<br/><span className="text-xs font-normal">${pricing.business.user}/user</span></th>
+                    <th className="text-center px-4 py-3 text-fuchsia-400 font-semibold">Enterprise<br/><span className="text-xs font-normal">${pricing.enterprise.user}/user</span></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -782,7 +783,7 @@ export default function PricingTiers() {
               We'll confirm users + sites, pick the right lane, and map your onboarding + baseline fees upfront so your monthly is predictable.
             </p>
             <p className="text-sm text-white/50 mb-6">
-              <strong className="text-violet-400">Office minimum $750</strong> • <strong className="text-violet-300">Business minimum $1,200</strong> • <strong className="text-fuchsia-400">Enterprise minimum $1,725</strong>
+              {`Office minimum $${pricing.office.siteMin}`} • {`Business minimum $${pricing.business.siteMin.toLocaleString()}`} • {`Enterprise minimum $${pricing.enterprise.siteMin.toLocaleString()}`}
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               <a

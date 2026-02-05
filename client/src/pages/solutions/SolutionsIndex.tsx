@@ -8,6 +8,7 @@ import {
   BarChart3, Clock, Phone, Award
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
+import { pricing, getPricingFooterText } from "@/data/pricing";
 
 const SolutionsIndex = () => {
   const prefersReducedMotion = useReducedMotion();
@@ -20,9 +21,9 @@ const SolutionsIndex = () => {
 
   const plans = [
     {
-      name: "Office",
-      tier: "Basic IT",
-      price: 165,
+      name: pricing.office.name,
+      tier: pricing.office.tier,
+      price: pricing.office.user,
       description: "A clean, managed IT baseline for businesses ready to get organized.",
       highlight: false,
       features: [
@@ -35,9 +36,9 @@ const SolutionsIndex = () => {
       ]
     },
     {
-      name: "Business",
-      tier: "Security",
-      price: 245,
+      name: pricing.business.name,
+      tier: pricing.business.tier,
+      price: pricing.business.user,
       description: "Adds stronger protection, 24/7 monitoring, and proactive threat response.",
       highlight: true,
       features: [
@@ -50,9 +51,9 @@ const SolutionsIndex = () => {
       ]
     },
     {
-      name: "Enterprise",
-      tier: "Compliance",
-      price: 345,
+      name: pricing.enterprise.name,
+      tier: pricing.enterprise.tier,
+      price: pricing.enterprise.user,
       description: "Full governance, audit readiness, and regulatory compliance support.",
       highlight: false,
       features: [
@@ -267,7 +268,7 @@ const SolutionsIndex = () => {
             </div>
             
             <p className="text-center text-white/40 text-sm mt-6">
-              Minimum billing: Office $750/site/mo, Business $1,200/site/mo, Enterprise $1,725/site/mo. Final pricing tailored to your users, sites, and compliance needs.
+              {getPricingFooterText()}. Final pricing tailored to your users, sites, and compliance needs.
             </p>
           </motion.section>
 

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight, ChevronDown, DollarSign, TrendingDown, Building2, Calculator } from "lucide-react";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { pricing } from "@/data/pricing";
 
 interface CalculatorProps {
   employees: number;
@@ -334,9 +335,9 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent className="bg-[#1a1a1a] border-white/10 rounded-xl">
-                                <SelectItem value="165" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white rounded-lg" data-testid="option-office">Office - $165/user/mo</SelectItem>
-                                <SelectItem value="245" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white rounded-lg" data-testid="option-business">Business - $245/user/mo</SelectItem>
-                                <SelectItem value="345" className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white rounded-lg" data-testid="option-enterprise">Enterprise - $345/user/mo</SelectItem>
+                                <SelectItem value={String(pricing.office.user)} className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white rounded-lg" data-testid="option-office">Office - ${pricing.office.user}/user/mo</SelectItem>
+                                <SelectItem value={String(pricing.business.user)} className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white rounded-lg" data-testid="option-business">Business - ${pricing.business.user}/user/mo</SelectItem>
+                                <SelectItem value={String(pricing.enterprise.user)} className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white rounded-lg" data-testid="option-enterprise">Enterprise - ${pricing.enterprise.user}/user/mo</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>

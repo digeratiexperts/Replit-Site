@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
+import { pricing } from "@/data/pricing";
 
 interface PricingPlan {
   name: string;
@@ -16,10 +17,10 @@ interface PricingPlan {
 
 const defaultPlans: PricingPlan[] = [
   {
-    name: "Office",
-    tier: "Basic IT",
-    monthlyPrice: 750,
-    perUserPrice: 165,
+    name: pricing.office.name,
+    tier: pricing.office.tier,
+    monthlyPrice: pricing.office.siteMin,
+    perUserPrice: pricing.office.user,
     note: "A clean, managed IT baseline.",
     learnMoreUrl: "/solutions/managed-it-support",
     features: [
@@ -32,12 +33,12 @@ const defaultPlans: PricingPlan[] = [
     ]
   },
   {
-    name: "Business",
-    tier: "Security",
-    monthlyPrice: 1200,
-    perUserPrice: 245,
+    name: pricing.business.name,
+    tier: pricing.business.tier,
+    monthlyPrice: pricing.business.siteMin,
+    perUserPrice: pricing.business.user,
     note: "Adds stronger protection and response.",
-    learnMoreUrl: "/solutions/security-operations",
+    learnMoreUrl: pricing.business.learnMoreUrl,
     isPopular: true,
     features: [
       "Everything in Office",
@@ -49,12 +50,12 @@ const defaultPlans: PricingPlan[] = [
     ]
   },
   {
-    name: "Enterprise",
-    tier: "Compliance",
-    monthlyPrice: 1725,
-    perUserPrice: 345,
-    note: "Adds governance and audit readiness.",
-    learnMoreUrl: "/solutions/compliance-reports",
+    name: pricing.enterprise.name,
+    tier: pricing.enterprise.tier,
+    monthlyPrice: pricing.enterprise.siteMin,
+    perUserPrice: pricing.enterprise.user,
+    note: pricing.enterprise.note,
+    learnMoreUrl: pricing.enterprise.learnMoreUrl,
     features: [
       "Everything in Business",
       "HIPAA / GDPR Compliance Modules",
@@ -108,7 +109,7 @@ export function ServiceMatrix({
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
           <div>
             <h3 className="text-xl font-bold text-white mb-1">Protection Plans</h3>
-            <p className="text-white/60 text-sm">Starting at $165/user/month</p>
+            <p className="text-white/60 text-sm">Starting at ${pricing.office.user}/user/month</p>
           </div>
           <Link href="/pricing">
             <Button 

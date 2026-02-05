@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
+import { pricing, getPricingFooterText } from "@/data/pricing";
 
 export const DigeratiPricingSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -37,9 +38,9 @@ export const DigeratiPricingSection = (): JSX.Element => {
   };
   const pricingPlans = [
     {
-      name: "Office",
-      monthlyPrice: 750,
-      perUserPrice: 165,
+      name: pricing.office.name,
+      monthlyPrice: pricing.office.siteMin,
+      perUserPrice: pricing.office.user,
       isPopular: false,
       learnMoreUrl: "/solutions/managed-it-support",
       features: [
@@ -52,11 +53,11 @@ export const DigeratiPricingSection = (): JSX.Element => {
       ]
     },
     {
-      name: "Business",
-      monthlyPrice: 1200,
-      perUserPrice: 245,
+      name: pricing.business.name,
+      monthlyPrice: pricing.business.siteMin,
+      perUserPrice: pricing.business.user,
       isPopular: true,
-      learnMoreUrl: "/solutions/security-operations",
+      learnMoreUrl: pricing.business.learnMoreUrl,
       features: [
         "Everything in Office",
         "SOC / MDR Monitoring + Response",
@@ -67,11 +68,11 @@ export const DigeratiPricingSection = (): JSX.Element => {
       ]
     },
     {
-      name: "Enterprise",
-      monthlyPrice: 1725,
-      perUserPrice: 345,
+      name: pricing.enterprise.name,
+      monthlyPrice: pricing.enterprise.siteMin,
+      perUserPrice: pricing.enterprise.user,
       isPopular: false,
-      learnMoreUrl: "/solutions/compliance-reports",
+      learnMoreUrl: pricing.enterprise.learnMoreUrl,
       features: [
         "Everything in Business",
         "HIPAA / GDPR Compliance Modules",
@@ -129,7 +130,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
             ProActive Ecosystem <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">Pricing</span>
           </h2>
           <p className="text-base md:text-lg lg:text-xl text-white/60 leading-relaxed max-w-3xl mx-auto px-4">
-            Clear, predictable, and compliance-ready. Packages start at $165/user/mo. <span className="font-bold text-white">Minimum billing applies</span>.
+            Clear, predictable, and compliance-ready. Packages start at ${pricing.office.user}/user/mo. <span className="font-bold text-white">Minimum billing applies</span>.
           </p>
         </motion.div>
 
@@ -198,7 +199,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                   </div>
                   
                   <div className="text-xs text-gray-500">
-                  {plan.name === 'Office' ? '$750/site/mo minimum' : plan.name === 'Business' ? '$1,200/site/mo minimum' : '$1,725/site/mo minimum'}
+                  {plan.name === 'Office' ? `$${pricing.office.siteMin}/site/mo minimum` : plan.name === 'Business' ? `$${pricing.business.siteMin.toLocaleString()}/site/mo minimum` : `$${pricing.enterprise.siteMin.toLocaleString()}/site/mo minimum`}
                 </div>
                 </div>
 
@@ -290,7 +291,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                 </div>
                 
                 <div className="text-sm text-gray-500">
-                  {plan.name === 'Office' ? '$750/site/mo minimum' : plan.name === 'Business' ? '$1,200/site/mo minimum' : '$1,725/site/mo minimum'}
+                  {plan.name === 'Office' ? `$${pricing.office.siteMin}/site/mo minimum` : plan.name === 'Business' ? `$${pricing.business.siteMin.toLocaleString()}/site/mo minimum` : `$${pricing.enterprise.siteMin.toLocaleString()}/site/mo minimum`}
                 </div>
               </div>
 
@@ -340,7 +341,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ delay: 0.6, duration: 0.5 }}
         >
-          <p>Minimum billing: Office $750/site/mo, Business $1,200/site/mo, Enterprise $1,725/site/mo</p>
+          <p>{getPricingFooterText()}</p>
           <p>Billing rule: Minimums apply when per-user total &lt; minimum.</p>
           <p>Final pricing is tailored to your users, sites, and compliance needs.</p>
         </motion.div>

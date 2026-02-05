@@ -1,5 +1,6 @@
 import { Shield, Users, Server, Building2, HeadphonesIcon, FileCheck } from "lucide-react";
 import { motion } from "framer-motion";
+import { pricing } from "@/data/pricing";
 
 export default function Ecosystem() {
   const servicePillars = [
@@ -49,23 +50,23 @@ export default function Ecosystem() {
 
   const tiers = [
     { 
-      name: "Office", 
+      name: pricing.office.name, 
       color: "from-blue-600 to-cyan-600", 
-      price: "$165",
+      price: `$${pricing.office.user}`,
       desc: "Core security-first IT for small teams",
       highlights: ["Email + MFA + SSO", "EDR + Email Protection", "Managed Network", "Service Desk + Backup"]
     },
     { 
-      name: "Business", 
+      name: pricing.business.name, 
       color: "from-purple-600 to-violet-600", 
-      price: "$245",
+      price: `$${pricing.business.user}`,
       desc: "SOC/MDR + SMART HR + vCIO advisory",
       highlights: ["Everything in Office", "SOC / MDR Monitoring", "SMART HR Workflows", "Security Awareness + vCIO"]
     },
     { 
-      name: "Enterprise", 
+      name: pricing.enterprise.name, 
       color: "from-cyan-500 to-teal-500", 
-      price: "$345",
+      price: `$${pricing.enterprise.user}`,
       desc: "Full compliance + advanced controls",
       highlights: ["Everything in Business", "HIPAA/GDPR Modules", "Pen Testing + DR Runbooks", "AI & Cloud Automation"]
     },
@@ -184,7 +185,7 @@ export default function Ecosystem() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
         >
-          Minimums: Office $750/site/mo; Business $1,200/site/mo; Enterprise $1,725/site/mo. Final pricing tailored to your environment.
+          {`Minimums: Office $${pricing.office.siteMin}/site/mo; Business $${pricing.business.siteMin.toLocaleString()}/site/mo; Enterprise $${pricing.enterprise.siteMin.toLocaleString()}/site/mo. Final pricing tailored to your environment.`}
         </motion.p>
       </div>
     </section>

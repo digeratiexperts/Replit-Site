@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
 import { GuidedSalesPitch } from "@/components/GuidedSalesPitch";
+import { pricing } from "@/data/pricing";
 import {
   Shield,
   Users,
@@ -147,7 +148,7 @@ const workplaceData = {
     },
     {
       question: "What's the minimum user count?",
-      answer: "Pricing starts at $165/user/month. Minimum billing applies if the per-user total is below the tier minimum: Office $750/site/mo, Business $1,200/site/mo."
+      answer: `Pricing starts at $${pricing.office.user}/user/month. Minimum billing applies if the per-user total is below the tier minimum: Office $${pricing.office.siteMin}/site/mo, Business $${pricing.business.siteMin.toLocaleString()}/site/mo.`
     },
     {
       question: "How fast can you onboard/offboard?",
@@ -433,7 +434,7 @@ export default function ManagedWorkplace() {
                         </div>
                         <p className="text-white/50 text-sm mt-1">
                           {pricingMode === 'per_user' 
-                            ? `Minimum billing: Office $750/mo, Business $1,200/mo, Enterprise $1,725/mo` 
+                            ? `Minimum billing: Office $${pricing.office.siteMin}/mo, Business $${pricing.business.siteMin.toLocaleString()}/mo, Enterprise $${pricing.enterprise.siteMin.toLocaleString()}/mo` 
                             : `Includes base tier access`
                           }
                         </p>

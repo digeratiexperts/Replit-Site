@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { pricing } from "@/data/pricing";
 
 const leftCardInputs = [
   {
@@ -46,7 +47,7 @@ const rightCardInputs = [
   {
     id: "servicePackage",
     label: "Service Package",
-    value: "Office ($165/user)",
+    value: `Office ($${pricing.office.user}/user)`,
   },
   {
     id: "devices",

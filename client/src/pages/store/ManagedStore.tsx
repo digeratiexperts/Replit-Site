@@ -15,6 +15,7 @@ import {
   type StoreProduct
 } from "@/data/storeProducts";
 import { CartButton } from "@/components/store/CartButton";
+import { pricing, getPricingFooterText } from "@/data/pricing";
 
 const ManagedStore = () => {
   const prefersReducedMotion = useReducedMotion();
@@ -193,7 +194,7 @@ const ManagedStore = () => {
             </div>
             
             <p className="text-center text-white/40 text-sm mt-6">
-              Minimum billing: Office $750/site/mo, Business $1,200/site/mo, Enterprise $1,725/site/mo. Final pricing tailored to your users, sites, and compliance needs.
+              {getPricingFooterText()}. Final pricing tailored to your users, sites, and compliance needs.
             </p>
           </motion.section>
 
