@@ -63,8 +63,15 @@ const rightCardInputs = [
 
 export const HeroSection = (): JSX.Element => {
   return (
-    <section className="flex flex-col w-full items-start justify-center gap-8 lg:gap-16 px-4 md:px-8 lg:px-[120px] py-8 md:py-12 lg:py-16 relative [background:url(../figmaAssets/background-1.png)_50%_50%_/_cover,linear-gradient(0deg,rgba(3,2,40,1)_0%,rgba(3,2,40,1)_100%)] min-h-screen">
-      <div className="flex flex-col lg:flex-row items-start gap-6 lg:gap-8 justify-between relative self-stretch w-full flex-[0_0_auto]">
+    <section className="flex flex-col w-full items-start justify-center gap-8 lg:gap-16 px-4 md:px-8 lg:px-[120px] py-8 md:py-12 lg:py-16 relative overflow-hidden min-h-screen bg-[#030228]">
+      {/* Background Texture/Overlay */}
+      <div className="absolute inset-0 z-0 opacity-40 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(120,80,255,0.15),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 mix-blend-overlay" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#030228]/50 to-[#030228]" />
+      </div>
+      
+      <div className="flex flex-col lg:flex-row items-start gap-6 lg:gap-8 justify-between relative z-10 self-stretch w-full flex-[0_0_auto]">
         <Card className="inline-flex items-center gap-2.5 px-0 py-8 relative flex-1 bg-[#f0f3ff] rounded-[30px] overflow-hidden border border-solid border-[#333333] shadow-[-11px_16px_32px_-9px_#0000001a] backdrop-blur-[23px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(23px)_brightness(100%)]">
           <CardContent className="relative w-full max-w-[554px] mx-auto p-6 flex flex-col gap-6">
             <div className="flex flex-col items-center gap-4 w-full">
