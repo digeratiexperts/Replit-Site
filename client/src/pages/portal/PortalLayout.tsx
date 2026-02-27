@@ -1,7 +1,7 @@
 import { useLocation, Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { LogOut, Menu, X, LayoutDashboard, Ticket, Package, FileText, BookOpen, Settings, Activity, GraduationCap, MessageCircle, Download, Truck, ShoppingCart, ClipboardList, CheckSquare, FileStack, Upload, Users, Calendar, Shield, Phone, Building2, AlertTriangle, FileSignature, FilePlus } from "lucide-react";
+import { LogOut, Menu, X, LayoutDashboard, Ticket, Package, FileText, BookOpen, Settings, Activity, GraduationCap, MessageCircle, Download, Truck, ShoppingCart, ClipboardList, CheckSquare, FileStack, Upload, Users, Calendar, Shield, Phone, Building2, AlertTriangle, FileSignature, FilePlus, Map, BarChart3 } from "lucide-react";
 import { useState } from "react";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
 import { TenantSelector } from "@/components/portal/TenantSelector";
@@ -31,6 +31,8 @@ const navItems = [
   { href: "/portal/cytracom", label: "ControlOne Phone", icon: Phone },
   { href: "/portal/ship-center", label: "Ship Center", icon: Truck },
   { href: "/portal/procurement", label: "Procurement Store", icon: ShoppingCart },
+  { href: "/portal/roadmap", label: "IT Roadmap", icon: Map },
+  { href: "/portal/qbr", label: "Business Reviews", icon: BarChart3 },
   { href: "/portal/kb", label: "Knowledge Base", icon: BookOpen },
   { href: "/portal/status", label: "System Status", icon: Activity },
   { href: "/portal/learning", label: "Learning", icon: GraduationCap },

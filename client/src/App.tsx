@@ -113,6 +113,8 @@ const LeadQuoteWizard = lazy(() => import("@/pages/LeadQuoteWizard"));
 const QuoteConfirmation = lazy(() => import("@/pages/QuoteConfirmation"));
 const ThankYouSuccess = lazy(() => import("@/pages/ThankYouSuccess"));
 const SalesProcess = lazy(() => import("@/pages/portal/SalesProcess"));
+const PortalRoadmap = lazy(() => import("@/pages/portal/PortalRoadmap"));
+const PortalQBR = lazy(() => import("@/pages/portal/PortalQBR"));
 const ProActiveEcosystemPricing = lazy(() => import("@/pages/ProActiveEcosystemPricing"));
 const EcosystemPricing = lazy(() => import("@/pages/EcosystemPricing"));
 const EcosystemMatrixOfficial = lazy(() => import("@/pages/EcosystemMatrixOfficial"));
@@ -689,6 +691,16 @@ function Router() {
       <Route path="/portal/sales-process" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <SalesProcess />
+        </Suspense>
+      )} />
+      <Route path="/portal/roadmap" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <PortalRoadmap />
+        </Suspense>
+      )} />
+      <Route path="/portal/qbr" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <PortalQBR />
         </Suspense>
       )} />
       
