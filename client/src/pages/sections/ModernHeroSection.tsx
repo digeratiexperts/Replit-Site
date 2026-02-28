@@ -79,27 +79,29 @@ export const ModernHeroSection = (): JSX.Element => {
     >
       {/* Clean black background with parallax purple glows */}
       <div className="absolute inset-0 bg-black">
-        {/* Circuit board pattern overlay - barely visible for subtle tech texture */}
+        {/* Circuit pattern - right half, behind the dashboard area, visible but not overpowering */}
         <div 
-          className="absolute inset-0 opacity-[0.07] pointer-events-none"
+          className="absolute top-0 right-0 w-[65%] h-full opacity-[0.12] pointer-events-none"
           style={{
             backgroundImage: `url(${heroPatternImg})`,
             backgroundSize: "cover",
-            backgroundPosition: "center",
+            backgroundPosition: "center right",
+            maskImage: "linear-gradient(to right, transparent 0%, black 30%, black 100%)",
+            WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 30%, black 100%)",
           }}
         />
-        {/* Main accent - top right corner with parallax */}
+        {/* Main accent - top right corner with parallax, tinted to blend with the pattern */}
         <motion.div 
-          className="absolute top-0 right-0 w-[700px] h-[700px] -z-10 pointer-events-none"
+          className="absolute top-0 right-0 w-[700px] h-[700px] pointer-events-none"
           data-testid="hero-parallax-orb-1"
           style={{
             y: backgroundY,
-            background: "radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.12) 0%, transparent 50%)",
+            background: "radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.15) 0%, transparent 50%)",
           }}
         />
         {/* Secondary accent - bottom left with parallax */}
         <motion.div 
-          className="absolute bottom-0 left-0 w-[500px] h-[500px] -z-10 pointer-events-none"
+          className="absolute bottom-0 left-0 w-[500px] h-[500px] pointer-events-none"
           data-testid="hero-parallax-orb-2"
           style={{
             y: floatingY3,
