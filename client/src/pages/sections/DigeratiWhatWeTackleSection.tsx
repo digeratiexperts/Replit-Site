@@ -1,6 +1,7 @@
 import { Shield, Bug, Lock, Database, AlertTriangle, Users } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { PatternOverlay, GlowOrb } from "@/components/SectionPatterns";
+import networkPatternImg from "@/assets/images/network-shield-pattern.png";
 
 export const DigeratiWhatWeTackleSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -46,6 +47,17 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
 
   return (
     <section className="py-12 lg:py-16 relative overflow-hidden bg-[#0a0a0a]">
+      {/* Network mesh pattern — creates subliminal unease around threats, driving desire for protection */}
+      <div 
+        className="absolute inset-0 opacity-[0.06] pointer-events-none"
+        style={{
+          backgroundImage: `url(${networkPatternImg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          maskImage: "linear-gradient(180deg, transparent 0%, black 20%, black 80%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(180deg, transparent 0%, black 20%, black 80%, transparent 100%)",
+        }}
+      />
       {/* Subtle violet accent glow */}
       <div className="absolute inset-0 pointer-events-none"
            style={{ background: "radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.06) 0%, transparent 60%)" }} />
