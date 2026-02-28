@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Building, FileCheck, Check, Loader2, Shield, User, Mail, Clock, Activity, Zap } from "lucide-react";
 import { DashboardMockup } from "@/components/graphics";
 import { Input } from "@/components/ui/input";
+import heroPatternImg from "@/assets/images/hero-pattern-overlay.png";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
@@ -78,6 +79,15 @@ export const ModernHeroSection = (): JSX.Element => {
     >
       {/* Clean black background with parallax purple glows */}
       <div className="absolute inset-0 bg-black">
+        {/* Circuit board pattern overlay - barely visible for subtle tech texture */}
+        <div 
+          className="absolute inset-0 opacity-[0.07] pointer-events-none"
+          style={{
+            backgroundImage: `url(${heroPatternImg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
         {/* Main accent - top right corner with parallax */}
         <motion.div 
           className="absolute top-0 right-0 w-[700px] h-[700px] -z-10 pointer-events-none"
