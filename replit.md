@@ -74,6 +74,17 @@ The platform implements an event-driven architecture via `server/eventBus.ts` fo
 - **Email Notifications** (`server/services/notificationService.ts`): ZeptoMail integration for transactional emails (lead alerts, quote confirmations, ticket updates, password resets)
 - **Structured Logging** (`server/logger.ts`): Environment-aware logging with security event tracking
 
+### Form → Zoho CRM Integration
+All website forms now create leads in Zoho CRM via OAuth (ZOHO_CLIENT_ID_API, ZOHO_CLIENT_SECRET_API, ZOHO_REFRESH_TOKEN):
+- **Hero Assessment** (`/api/assessment`): Name + email → Zoho CRM lead (source: "Website Assessment")
+- **Lead Form** (`/api/assessment`): Name + email + phone + company → Zoho CRM lead (source: "Website Lead Form")
+- **Contact Form** (`/api/contact`): Full contact details → Zoho CRM lead (source: "Website Contact Form") — requires Turnstile
+- **Newsletter** (`/api/newsletter`): Email → Zoho CRM lead (source: "Newsletter Signup") — deduplicates existing leads
+- **Exit Intent/Ebook** (`/api/newsletter`): Email → Zoho CRM lead (source: "Newsletter Signup")
+- **Quote Wizard** (`/api/lead-quote`): Full wizard data → Zoho CRM lead (source: "Website Quote Wizard") — requires Turnstile + corporate email
+- All Zoho calls are non-blocking: if Zoho fails, the form still succeeds and logs the error
+- For production deployment: set ZOHO_CLIENT_ID_API, ZOHO_CLIENT_SECRET_API, ZOHO_REFRESH_TOKEN env vars on web server
+
 ### Email Notification System
 Transactional email notifications powered by ZeptoMail (requires `ZEPTOMAIL_API_TOKEN` secret):
 - **Lead Notifications**: Alerts sales team when new leads are captured

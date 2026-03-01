@@ -33,16 +33,28 @@ export const ModernHeroSection = (): JSX.Element => {
   const handleFormSubmit = async (data: AssessmentFormData) => {
     setIsSubmitting(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const response = await fetch("/api/assessment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: data.fullName,
+          email: data.email,
+          source: "hero_assessment",
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || "Submission failed");
+      }
       toast({
         title: "Assessment Request Submitted!",
         description: "We'll contact you within 24 hours to schedule your free assessment.",
       });
       form.reset();
-    } catch {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Something went wrong. Please try again later.",
+        description: error.message || "Something went wrong. Please try again later.",
         variant: "destructive",
       });
     } finally {

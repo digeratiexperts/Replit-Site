@@ -40,7 +40,21 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
     setIsSubmitting(true);
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const response = await fetch("/api/assessment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: data.fullName,
+          email: data.email,
+          phone: data.phone || "",
+          company: data.company || "",
+          source: "lead_form",
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || "Submission failed");
+      }
       
       toast({
         title: "Assessment Request Submitted!",
@@ -49,10 +63,10 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
       });
       
       form.reset();
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Something went wrong. Please try again later.",
+        description: error.message || "Something went wrong. Please try again later.",
         variant: "destructive",
       });
     } finally {

@@ -2360,14 +2360,95 @@ export async function registerRoutes(app: Express) {
         message: `Recommended Plan: ${recommendedPlan}, Seats: ${seats}`,
       }, "lead-quote");
 
+      // Push lead to Zoho CRM
+      let zohoLeadId = null;
+      try {
+        const zohoLead = await zohoCRMService.createLead({
+          First_Name: firstName,
+          Last_Name: lastName,
+          Email: email,
+          Company: company || 'Not Specified',
+          Lead_Source: 'Website Quote Wizard',
+          Lead_Status: 'New',
+          Description: `Quote Wizard: Recommended Plan: ${recommendedPlan}, Seats: ${seats}, Connectivity: ${connectivity}, Devices: ${devices}`,
+        });
+        zohoLeadId = zohoLead?.details?.id || zohoLead?.id;
+        console.log("[ZOHO] Quote wizard lead created:", zohoLeadId);
+      } catch (zohoError: any) {
+        console.error("[ZOHO] Failed to create quote lead (non-blocking):", zohoError.message);
+      }
+
       res.json({
         success: true,
         leadId: leadData.id,
+        zohoLeadId,
         message: "Quote request received successfully",
       });
     } catch (error: any) {
       console.error("[ERROR] Lead quote submission failed:", error);
       res.status(500).json({ error: "Failed to process quote request" });
+    }
+  });
+
+  // ===== ASSESSMENT / LEAD CAPTURE FORM =====
+  app.post("/api/assessment", [leadQuoteRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { fullName, email, phone, company, source } = req.body;
+
+      if (!fullName || !email) {
+        return res.status(400).json({ error: "Name and email are required" });
+      }
+
+      const honeypot = req.body.website_url;
+      if (honeypot) {
+        logSecurityEvent("SPAM_DETECTED_HONEYPOT", req, { email });
+        return res.status(400).json({ error: "Invalid request" });
+      }
+
+      const leadId = randomId();
+      logger.info("[ASSESSMENT] Form submitted", { fullName, email, company, source, timestamp: new Date().toISOString() });
+      logSecurityEvent("ASSESSMENT_SUBMITTED", req, { email, source: source || "hero_form" });
+
+      eventBus.emit(EventTypes.LEAD_CREATED, {
+        id: leadId,
+        name: fullName,
+        email,
+        company: company || "",
+        source: source || "hero_assessment",
+        message: `Assessment request from ${source || "hero_form"}`,
+      }, "assessment-form");
+
+      let zohoLeadId = null;
+      try {
+        const nameParts = fullName.trim().split(' ');
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.slice(1).join(' ') || fullName;
+
+        const zohoLead = await zohoCRMService.createLead({
+          First_Name: firstName,
+          Last_Name: lastName,
+          Email: email,
+          Phone: phone || '',
+          Company: company || 'Not Specified',
+          Lead_Source: source === 'lead_form' ? 'Website Lead Form' : 'Website Assessment',
+          Lead_Status: 'New',
+          Description: `Free assessment request submitted from ${source || "homepage hero"}`,
+        });
+        zohoLeadId = zohoLead?.details?.id || zohoLead?.id;
+        console.log("[ZOHO] Assessment lead created:", zohoLeadId);
+      } catch (zohoError: any) {
+        console.error("[ZOHO] Failed to create assessment lead (non-blocking):", zohoError.message);
+      }
+
+      res.json({
+        success: true,
+        leadId,
+        zohoLeadId,
+        message: "Assessment request received successfully",
+      });
+    } catch (error: any) {
+      console.error("[ERROR] Assessment form submission failed:", error);
+      res.status(500).json({ error: "Failed to process assessment request" });
     }
   });
 
