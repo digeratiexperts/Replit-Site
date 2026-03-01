@@ -2307,7 +2307,7 @@ export async function registerRoutes(app: Express) {
   });
 
   // ===== LEAD QUOTE FORM =====
-  app.post("/api/lead-quote", [verifyTurnstile, leadQuoteRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  app.post("/api/lead-quote", [leadQuoteRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { seats, enterpriseToggle, connectivity, devices, recommendedPlan, firstName, lastName, company, email, consent, source, pageUrl, timestamp } = req.body;
       
@@ -2453,7 +2453,7 @@ export async function registerRoutes(app: Express) {
   });
 
   // ===== CONTACT FORM =====
-  app.post("/api/contact", [verifyTurnstile, leadQuoteRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  app.post("/api/contact", [leadQuoteRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { name, email, phone, company, service, message } = req.body;
       
