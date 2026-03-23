@@ -1,7 +1,7 @@
 import { PageTemplate } from "@/components/PageTemplate";
 import { Calendar, Phone, Shield, Clock, CheckCircle } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
-import { ZOHO_BOOKING_URL } from "@/contexts/BookingContext";
+import { ZohoBookingWidget } from "@/components/ZohoBookingWidget";
 
 export default function BookingPage() {
   useSEO({
@@ -19,16 +19,7 @@ export default function BookingPage() {
       <div className="max-w-7xl mx-auto px-4 pb-16">
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <div className="rounded-2xl overflow-hidden border border-violet-500/20 shadow-xl shadow-violet-500/5 bg-white">
-              <iframe
-                src={ZOHO_BOOKING_URL}
-                title="Schedule a consultation with Digerati Experts"
-                className="w-full border-0"
-                style={{ height: "700px", minHeight: "600px" }}
-                allow="payment"
-                data-testid="booking-page-iframe"
-              />
-            </div>
+            <ZohoBookingWidget instanceId="page" className="rounded-2xl overflow-hidden border border-violet-500/20 shadow-xl shadow-violet-500/5" />
           </div>
 
           <div className="space-y-6">
@@ -59,9 +50,7 @@ export default function BookingPage() {
                       <item.icon className="w-4 h-4 text-violet-400" />
                     </div>
                     <div>
-                      <p className="text-white font-medium text-sm">
-                        {item.title}
-                      </p>
+                      <p className="text-white font-medium text-sm">{item.title}</p>
                       <p className="text-gray-400 text-sm">{item.desc}</p>
                     </div>
                   </li>

@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import { X, Calendar, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useBooking, ZOHO_BOOKING_URL } from "@/contexts/BookingContext";
+import { useBooking } from "@/contexts/BookingContext";
+import { ZohoBookingWidget } from "@/components/ZohoBookingWidget";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function BookingModal() {
@@ -51,12 +52,12 @@ export function BookingModal() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="relative w-full max-w-4xl h-[85vh] bg-[#0d0d1a] rounded-2xl overflow-hidden border border-violet-500/20 shadow-2xl shadow-violet-500/10 flex flex-col"
+            className="relative w-full max-w-4xl max-h-[90vh] bg-[#0d0d1a] rounded-2xl overflow-hidden border border-violet-500/20 shadow-2xl shadow-violet-500/10 flex flex-col"
             data-testid="booking-modal"
           >
-            <div className="flex items-center justify-between px-6 py-4 border-b border-violet-500/20 bg-gradient-to-r from-violet-900/40 to-purple-900/40">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-violet-500/20 bg-gradient-to-r from-violet-900/40 to-purple-900/40 flex-shrink-0">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center flex-shrink-0">
                   <Calendar className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -64,7 +65,7 @@ export function BookingModal() {
                     Schedule Your Free Consultation
                   </h2>
                   <p className="text-sm text-gray-400">
-                    Pick a time that works for you
+                    Pick a time that works for you — no obligation
                   </p>
                 </div>
               </div>
@@ -90,14 +91,8 @@ export function BookingModal() {
               </div>
             </div>
 
-            <div className="flex-1 bg-white">
-              <iframe
-                src={ZOHO_BOOKING_URL}
-                title="Schedule a consultation with Digerati Experts"
-                className="w-full h-full border-0"
-                allow="payment"
-                data-testid="booking-iframe"
-              />
+            <div className="flex-1 overflow-y-auto p-6">
+              <ZohoBookingWidget instanceId="modal" className="h-full min-h-[500px]" />
             </div>
           </motion.div>
         </motion.div>
