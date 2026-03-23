@@ -17,6 +17,7 @@ import { useGlobalShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { CartProvider } from "@/contexts/CartContext";
 import { BookingProvider } from "@/contexts/BookingContext";
 import { BookingModal } from "@/components/BookingModal";
+import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { ShoppingCart } from "@/components/store/ShoppingCart";
 
 import { DigeratiHomepage } from "@/pages/DigeratiHomepage";
@@ -868,6 +869,7 @@ function AppContent() {
       <ScrollToTop />
       <StickyCTABar />
       <ExitIntentPopup delay={10000} />
+      <CookieConsentBanner />
     </AnnouncerProvider>
   );
 }
