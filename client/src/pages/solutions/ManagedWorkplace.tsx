@@ -275,7 +275,7 @@ export default function ManagedWorkplace() {
                   className="bg-white text-violet-700 hover:bg-violet-50 font-semibold shadow-lg"
                   data-testid="btn-hero-consultation"
                 >
-                  <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                  <a href="/book">
                     Schedule Consultation
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </a>
@@ -472,7 +472,7 @@ export default function ManagedWorkplace() {
                     }`}
                     data-testid={`btn-package-${pkg.sku}`}
                   >
-                    <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                    <a href="/book">
                       {pkg.starting_price ? 'Get Started' : 'Contact Sales'}
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </a>
@@ -625,7 +625,7 @@ export default function ManagedWorkplace() {
                   className="bg-white text-violet-700 hover:bg-violet-50 font-semibold shadow-lg"
                   data-testid="btn-final-consultation"
                 >
-                  <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                  <a href="/book">
                     Schedule Consultation
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </a>

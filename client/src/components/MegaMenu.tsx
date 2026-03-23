@@ -7,6 +7,7 @@ import ebookCover from '@/assets/images/ebook-defending-digital-realm-cover.png'
 import { motion, AnimatePresence } from 'framer-motion';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { pricing } from '@/data/pricing';
+import { useBooking } from '@/contexts/BookingContext';
 
 const NoiseTexture = ({ id }: { id: string }) => (
   <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.025]" aria-hidden="true">
@@ -129,6 +130,7 @@ export function MegaMenu() {
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
   const [isScrolled, setIsScrolled] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const { openBooking } = useBooking();
   const [hoveredColumn, setHoveredColumn] = useState<number | null>(null);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -164,7 +166,7 @@ export function MegaMenu() {
           { value: '<15min', label: 'Response Time' },
           { value: '$50K+', label: 'Avg. Savings' },
         ],
-        cta: { text: 'Get Free Assessment', url: 'https://meet.digerati-experts.com/' }
+        cta: { text: 'Get Free Assessment', url: '/book' },
       },
       sections: [
         {
@@ -855,17 +857,15 @@ export function MegaMenu() {
 
             {/* Right Side Actions */}
           <div className="flex items-center space-x-2 lg:space-x-4">
-            <a
-              href="https://meet.digerati-experts.com/"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
               className="hidden lg:inline-flex items-center justify-center bg-violet-600 hover:bg-violet-500 text-white px-4 xl:px-5 py-2 rounded-lg text-sm font-semibold whitespace-nowrap shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.4)] transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0a0a0a] border border-white/10"
               data-testid="nav-cta"
-              onClick={handleLinkClick}
+              onClick={() => { handleLinkClick(); openBooking(); }}
               aria-label="Get protected now - Schedule a consultation"
             >
               Get Protected
-            </a>
+            </button>
 
             {/* Mobile/Tablet Menu Button */}
             <button
@@ -1060,18 +1060,16 @@ export function MegaMenu() {
                   transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(20px)'
                 }}
               >
-                <a
-                  href="https://meet.digerati-experts.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  type="button"
                   className="w-full inline-flex items-center justify-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-bold py-4 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0a0a0a] transition-all rounded-xl shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_40px_rgba(139,92,246,0.4)] text-lg"
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => { setMobileMenuOpen(false); openBooking(); }}
                   data-testid="mobile-cta"
                   aria-label="Get protected now - Schedule a consultation"
                 >
                   Get Protected Now
                   <ArrowRight className="w-5 h-5" />
-                </a>
+                </button>
               </div>
               
               {/* Bottom Branding */}

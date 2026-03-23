@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Shield, ArrowRight, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useBooking } from "@/contexts/BookingContext";
 
 export function StickyCTABar() {
   const [isVisible, setIsVisible] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
+  const { openBooking } = useBooking();
 
   useEffect(() => {
     const dismissed = sessionStorage.getItem("stickyCtaDismissed");
@@ -92,15 +94,13 @@ export function StickyCTABar() {
                   </a>
                   
                   <Button
-                    asChild
                     size="sm"
                     className="bg-white text-violet-700 hover:bg-violet-50 font-semibold shadow-lg"
                     data-testid="button-sticky-cta-assessment"
+                    onClick={openBooking}
                   >
-                    <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
-                      Free Assessment
-                      <ArrowRight className="ml-1.5 h-4 w-4" />
-                    </a>
+                    Free Assessment
+                    <ArrowRight className="ml-1.5 h-4 w-4" />
                   </Button>
                 </div>
               </div>

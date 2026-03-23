@@ -178,7 +178,7 @@ export const DigeratiProtectEnableSection = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+          <a href="/book">
             <Button 
               size="lg"
               className="h-14 px-8 text-lg font-bold bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"

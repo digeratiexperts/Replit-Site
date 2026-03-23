@@ -121,7 +121,7 @@ export default function PortalQBR() {
           </p>
           <Button
             className="bg-[#5034ff] hover:bg-[#5034ff]/90"
-            onClick={() => window.open("https://meet.digerati-experts.com/", "_blank")}
+            onClick={() => window.location.href = "/book"}
             data-testid="button-schedule-qbr"
           >
             <Calendar className="h-4 w-4 mr-2" />
@@ -491,7 +491,7 @@ export default function PortalQBR() {
                   </div>
                   <Button
                     className="bg-[#5034ff] hover:bg-[#5034ff]/90"
-                    onClick={() => window.open("https://meet.digerati-experts.com/", "_blank")}
+                    onClick={() => window.location.href = "/book"}
                     data-testid="button-discuss-recommendations"
                   >
                     Book vCIO Session

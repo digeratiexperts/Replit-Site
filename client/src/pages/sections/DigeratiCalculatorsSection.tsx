@@ -231,7 +231,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                         </div>
 
                         <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
-                          <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                          <a href="/book">
                             <Button 
                               size="lg"
                               className="h-12 px-6 bg-white text-black hover:bg-white/90 font-semibold rounded-xl shadow-lg transition-all duration-300 hover:scale-[1.02]" 
@@ -367,7 +367,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                         </div>
 
                         <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
-                          <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                          <a href="/book">
                             <Button 
                               size="lg"
                               className="h-12 px-6 bg-gradient-to-r from-violet-500 to-purple-500 text-white hover:from-violet-400 hover:to-purple-400 font-semibold rounded-xl shadow-lg shadow-violet-500/25 transition-all duration-300 hover:scale-[1.02] hover:shadow-violet-500/40" 

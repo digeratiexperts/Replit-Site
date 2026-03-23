@@ -250,7 +250,7 @@ const SolutionsIndex = () => {
                     ))}
                   </ul>
                   
-                  <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                  <a href="/book">
                     <Button 
                       className={`w-full ${
                         plan.highlight 
@@ -448,7 +448,7 @@ const SolutionsIndex = () => {
               Schedule a free 15-minute call to discuss your needs. No pressure, no obligation—just honest advice about what your business actually needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+              <a href="/book">
                 <Button 
                   size="lg"
                   className="h-14 px-8 text-lg font-semibold bg-violet-600 hover:bg-violet-500 text-white shadow-lg shadow-violet-500/25"

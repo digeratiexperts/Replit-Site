@@ -263,7 +263,7 @@ function StickyCTA() {
             className="bg-white text-violet-700 hover:bg-violet-50 font-semibold"
             data-testid="btn-sticky-consultation"
           >
-            <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+            <a href="/book">
               Schedule Consult
               <ArrowRight className="ml-2 h-4 w-4" />
             </a>
@@ -329,7 +329,7 @@ export default function CoManagedIT() {
                     className="bg-white text-violet-700 hover:bg-violet-50 font-semibold shadow-lg"
                     data-testid="btn-hero-consultation"
                   >
-                    <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                    <a href="/book">
                       Schedule Co-Managed Consult
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </a>
@@ -403,7 +403,7 @@ export default function CoManagedIT() {
                   className="w-full bg-violet-600 text-white hover:bg-violet-500"
                   data-testid="btn-card-collaboration"
                 >
-                  <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                  <a href="/book">
                     Discuss Collaboration Model
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
@@ -447,7 +447,7 @@ export default function CoManagedIT() {
                   className="w-full bg-amber-500 text-gray-900 hover:bg-amber-400 font-semibold"
                   data-testid="btn-card-kits"
                 >
-                  <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                  <a href="/book">
                     Request Kit Quote
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
@@ -686,7 +686,7 @@ export default function CoManagedIT() {
                     className="bg-white text-violet-700 hover:bg-violet-50 font-semibold shadow-lg"
                     data-testid="btn-final-consultation"
                   >
-                    <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                    <a href="/book">
                       Schedule Co-Managed Consult
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </a>

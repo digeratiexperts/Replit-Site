@@ -306,7 +306,7 @@ const chapters: Chapter[] = [
               Digerati Experts offers comprehensive cybersecurity risk assessments designed specifically for Arizona businesses.
             </p>
             <a 
-              href="https://meet.digerati-experts.com/"
+              href="/book"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block bg-white text-orange-600 font-bold px-8 py-3 rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all"

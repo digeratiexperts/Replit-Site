@@ -351,7 +351,7 @@ const StoreLanding = () => {
               to discuss your IT needs and find the right solution.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+              <a href="/book">
                 <Button 
                   size="lg"
                   className="h-12 px-6 bg-violet-600 hover:bg-violet-500 text-white"

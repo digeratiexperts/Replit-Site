@@ -327,7 +327,7 @@ export default function BlogPost() {
             <CardContent className="p-8">
               <h3 className="text-xl font-bold text-white mb-2">Need help implementing these strategies?</h3>
               <p className="text-white/70 mb-6">Our team of cybersecurity experts can help protect your Arizona business.</p>
-              <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+              <a href="/book">
                 <Button className="bg-white text-violet-700 hover:bg-white/90" data-testid="button-consultation">
                   Schedule a Free Consultation
                 </Button>

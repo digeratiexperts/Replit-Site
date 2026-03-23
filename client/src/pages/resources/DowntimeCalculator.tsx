@@ -429,7 +429,7 @@ export default function DowntimeCalculator() {
             <div className="inline-flex items-center gap-3 px-6 py-4 bg-[#1a1a3e]/50 rounded-xl border border-[#FFB800]/20">
               <Shield className="w-6 h-6 text-[#FFB800]" />
               <p className="text-gray-300">
-                Ready to protect your business? <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer" className="text-[#FFB800] hover:text-[#FFC933] font-semibold underline underline-offset-4">Schedule a Free Consultation</a>
+                Ready to protect your business? <a href="/book" className="text-[#FFB800] hover:text-[#FFC933] font-semibold underline underline-offset-4">Schedule a Free Consultation</a>
               </p>
             </div>
           </div>

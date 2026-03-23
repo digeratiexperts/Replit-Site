@@ -180,7 +180,7 @@ export default function PortalRoadmap() {
             variant="outline"
             className="flex items-center gap-2"
             data-testid="button-schedule-vcio"
-            onClick={() => window.open("https://meet.digerati-experts.com/", "_blank")}
+            onClick={() => window.location.href = "/book"}
           >
             <Calendar className="h-4 w-4" />
             Schedule vCIO Review
@@ -393,7 +393,7 @@ export default function PortalRoadmap() {
               </div>
               <Button
                 className="bg-[#5034ff] hover:bg-[#5034ff]/90"
-                onClick={() => window.open("https://meet.digerati-experts.com/", "_blank")}
+                onClick={() => window.location.href = "/book"}
                 data-testid="button-schedule-strategy"
               >
                 Book Strategy Session

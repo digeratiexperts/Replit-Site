@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useBooking } from "@/contexts/BookingContext";
 
 interface PremiumCTASectionProps {
   headline?: string;
@@ -15,11 +16,12 @@ export function PremiumCTASection({
   headline = "Ready to Learn More?",
   subheadline = "Contact us today to discuss how we can help protect and enable your business.",
   primaryButtonText = "Schedule Consultation",
-  primaryButtonHref = "https://meet.digerati-experts.com/",
+  primaryButtonHref = "/book",
   showPhoneButton = true,
   phoneNumber = "325-480-9870",
 }: PremiumCTASectionProps) {
   const prefersReducedMotion = useReducedMotion();
+  const { openBooking } = useBooking();
 
   return (
     <section className="py-16 md:py-20 px-4 bg-[#0a0a0a]">
@@ -84,16 +86,15 @@ export function PremiumCTASection({
               transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-col sm:flex-row items-center justify-center gap-4"
             >
-              <a href={primaryButtonHref} target="_blank" rel="noopener noreferrer">
-                <Button 
-                  size="lg"
-                  className="h-14 px-8 bg-white text-violet-700 hover:bg-white/90 font-semibold text-base rounded-full shadow-lg shadow-black/20"
-                  data-testid="button-premium-cta-primary"
-                >
-                  <ArrowRight className="mr-2 h-5 w-5" />
-                  {primaryButtonText}
-                </Button>
-              </a>
+              <Button 
+                size="lg"
+                className="h-14 px-8 bg-white text-violet-700 hover:bg-white/90 font-semibold text-base rounded-full shadow-lg shadow-black/20"
+                data-testid="button-premium-cta-primary"
+                onClick={(e) => { e.preventDefault(); openBooking(); }}
+              >
+                <ArrowRight className="mr-2 h-5 w-5" />
+                {primaryButtonText}
+              </Button>
               
               {showPhoneButton && (
                 <a href={`tel:${phoneNumber}`}>

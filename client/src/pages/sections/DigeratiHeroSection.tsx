@@ -109,7 +109,7 @@ export const DigeratiHeroSection = (): JSX.Element => {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <a 
-                href="https://meet.digerati-experts.com/"
+                href="/book"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="h-12 px-8 rounded-md bg-white text-purple-700 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl inline-flex items-center justify-center gap-2 whitespace-nowrap text-base font-semibold"

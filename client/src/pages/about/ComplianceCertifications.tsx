@@ -190,7 +190,7 @@ export default function ComplianceCertifications() {
                   className="bg-white text-violet-700 hover:bg-violet-50 font-semibold px-8"
                   data-testid="button-compliance-assessment"
                 >
-                  <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                  <a href="/book">
                     Get Compliance Assessment
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </a>
@@ -374,7 +374,7 @@ export default function ComplianceCertifications() {
                   className="bg-white text-violet-700 hover:bg-violet-50 font-semibold px-8"
                   data-testid="button-schedule-assessment"
                 >
-                  <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                  <a href="/book">
                     Schedule Free Assessment
                     <ExternalLink className="ml-2 h-4 w-4" />
                   </a>

@@ -15,6 +15,8 @@ import { PageLoadingSkeleton } from "@/components/LoadingSkeleton";
 import { AnnouncerProvider } from "@/components/AccessibleAnnouncer";
 import { useGlobalShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { CartProvider } from "@/contexts/CartContext";
+import { BookingProvider } from "@/contexts/BookingContext";
+import { BookingModal } from "@/components/BookingModal";
 import { ShoppingCart } from "@/components/store/ShoppingCart";
 
 import { DigeratiHomepage } from "@/pages/DigeratiHomepage";
@@ -120,6 +122,7 @@ const EcosystemPricing = lazy(() => import("@/pages/EcosystemPricing"));
 const EcosystemMatrixOfficial = lazy(() => import("@/pages/EcosystemMatrixOfficial"));
 const NetworkPlannerOfficial = lazy(() => import("@/pages/NetworkPlannerOfficial"));
 const Ebook = lazy(() => import("@/pages/resources/Ebook"));
+const BookingPage = lazy(() => import("@/pages/BookingPage"));
 
 // Store pages
 const StoreLanding = lazy(() => import("@/pages/store/StoreLanding"));
@@ -838,6 +841,12 @@ function Router() {
         </Suspense>
       )} />
       
+      <Route path="/book" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <BookingPage />
+        </Suspense>
+      )} />
+
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>
@@ -869,11 +878,14 @@ function App() {
       <HelmetProvider>
         <QueryClientProvider client={queryClient}>
           <CartProvider>
-            <TooltipProvider>
-              <Toaster />
-              <ShoppingCart />
-              <AppContent />
-            </TooltipProvider>
+            <BookingProvider>
+              <TooltipProvider>
+                <Toaster />
+                <ShoppingCart />
+                <BookingModal />
+                <AppContent />
+              </TooltipProvider>
+            </BookingProvider>
           </CartProvider>
         </QueryClientProvider>
       </HelmetProvider>

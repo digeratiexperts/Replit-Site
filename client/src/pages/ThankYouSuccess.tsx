@@ -113,7 +113,7 @@ export default function ThankYouSuccess() {
                   className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-6 text-lg rounded-xl shadow-lg"
                   data-testid="button-book-consultation"
                 >
-                  <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                  <a href="/book">
                     Book Your Free Consultation <ExternalLink className="ml-2 h-5 w-5" />
                   </a>
                 </Button>
@@ -132,7 +132,7 @@ export default function ThankYouSuccess() {
                     data-testid="button-google-calendar"
                     asChild
                   >
-                    <a href="https://calendar.google.com" target="_blank" rel="noopener noreferrer">
+                    <a href="https://calendar.google.com">
                       <SiGoogle className="h-4 w-4 mr-2" />
                       Google Calendar
                     </a>
@@ -143,7 +143,7 @@ export default function ThankYouSuccess() {
                     data-testid="button-outlook-calendar"
                     asChild
                   >
-                    <a href="https://outlook.live.com/calendar" target="_blank" rel="noopener noreferrer">
+                    <a href="https://outlook.live.com/calendar">
                       <Calendar className="h-4 w-4 mr-2" />
                       Outlook Calendar
                     </a>
@@ -154,7 +154,7 @@ export default function ThankYouSuccess() {
                     data-testid="button-apple-calendar"
                     asChild
                   >
-                    <a href="https://www.icloud.com/calendar" target="_blank" rel="noopener noreferrer">
+                    <a href="https://www.icloud.com/calendar">
                       <Calendar className="h-4 w-4 mr-2" />
                       iCloud Calendar
                     </a>

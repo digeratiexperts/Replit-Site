@@ -215,7 +215,7 @@ export default function Videos() {
               <p className="text-white/70 mb-6">We offer personalized security training for your team. Contact us to schedule.</p>
               <Button 
                 className="bg-violet-600 hover:bg-violet-500 text-white"
-                onClick={() => window.open("https://meet.digerati-experts.com/", "_blank")}
+                onClick={() => window.location.href = "/book"}
                 data-testid="button-schedule-training"
               >
                 Schedule Training

@@ -227,7 +227,7 @@ export default function Datasheets() {
                 </div>
                 <Button 
                   className="bg-white text-violet-700 hover:bg-white/90 whitespace-nowrap"
-                  onClick={() => window.open("https://meet.digerati-experts.com/", "_blank")}
+                  onClick={() => window.location.href = "/book"}
                   data-testid="button-request-docs"
                 >
                   Request Documents

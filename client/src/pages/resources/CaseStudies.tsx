@@ -224,7 +224,7 @@ export default function CaseStudies() {
               Let's discuss how we can help your business achieve similar results.
             </p>
             <a 
-              href="https://meet.digerati-experts.com/" 
+              href="/book" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="inline-flex items-center justify-center bg-white text-purple-700 hover:bg-purple-50 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105" 

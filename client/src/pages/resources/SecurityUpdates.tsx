@@ -288,7 +288,7 @@ export default function SecurityUpdates() {
                 Our security team can help you assess your exposure and implement mitigations for any of these vulnerabilities.
               </p>
               <a 
-                href="https://meet.digerati-experts.com/"
+                href="/book"
                 target="_blank"
                 rel="noopener noreferrer"
               >

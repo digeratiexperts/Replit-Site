@@ -653,7 +653,7 @@ const ProActiveEcosystemPricing = () => {
             <p className="text-white/60 mb-6 max-w-xl mx-auto">
               Schedule a strategy call to discuss your specific needs. Custom pricing available for larger organizations and unique compliance requirements.
             </p>
-            <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer" data-testid="link-schedule-call">
+            <a href="/book" data-testid="link-schedule-call">
               <Button 
                 size="lg"
                 className="h-14 px-10 text-lg font-bold bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white border-0 shadow-xl shadow-orange-500/30 hover:shadow-orange-500/50 transition-all duration-300"

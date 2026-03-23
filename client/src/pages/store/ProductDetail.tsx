@@ -297,7 +297,7 @@ const ProductDetail = () => {
                     This is a contract-based service. Schedule a consultation to discuss your needs and receive a custom quote.
                   </p>
                   <a
-                    href="https://meet.digerati-experts.com/"
+                    href="/book"
                     target="_blank"
                     rel="noopener noreferrer"
                   >

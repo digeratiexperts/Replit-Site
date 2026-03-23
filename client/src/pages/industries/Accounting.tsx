@@ -167,7 +167,7 @@ export default function Accounting() {
           <p className="text-lg mb-6 text-white/70">Get a compliance assessment from MSP experts.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 
-              href="https://meet.digerati-experts.com/" 
+              href="/book" 
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center bg-white text-violet-700 hover:bg-violet-50 px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"

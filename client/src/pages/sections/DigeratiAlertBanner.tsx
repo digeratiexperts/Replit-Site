@@ -183,7 +183,7 @@ export const DigeratiAlertBanner = (): JSX.Element => {
               </p>
               
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                <a href="/book">
                   <Button 
                     size="lg"
                     className="h-14 px-8 bg-white text-violet-700 hover:bg-white/90 font-semibold rounded-xl shadow-lg transition-all duration-300 hover:scale-[1.02]"

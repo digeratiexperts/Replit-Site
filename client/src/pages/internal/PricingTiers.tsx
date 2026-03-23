@@ -787,7 +787,7 @@ export default function PricingTiers() {
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               <a
-                href="https://meet.digerati-experts.com"
+                href="/book"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-6 py-3 bg-gradient-to-r from-violet-500 to-purple-500 text-white font-semibold rounded-lg hover:opacity-90 transition-opacity"

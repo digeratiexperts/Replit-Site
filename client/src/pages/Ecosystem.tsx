@@ -163,7 +163,7 @@ export default function Ecosystem() {
                   ))}
                 </ul>
                 <a
-                  href="https://meet.digerati-experts.com/"
+                  href="/book"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`block w-full mt-6 py-3 rounded-lg text-center font-semibold transition-all ${

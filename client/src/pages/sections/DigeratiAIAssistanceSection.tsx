@@ -138,7 +138,7 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+              <a href="/book">
                 <Button 
                   size="lg"
                   variant="outline"

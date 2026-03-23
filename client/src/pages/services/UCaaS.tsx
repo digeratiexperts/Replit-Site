@@ -445,7 +445,7 @@ export default function UCaaS() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
-                href="https://meet.digerati-experts.com/" 
+                href="/book" 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group inline-flex items-center justify-center bg-white text-purple-700 hover:bg-gray-100 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"

@@ -322,7 +322,7 @@ export default function ProActiveEcosystems() {
             {/* CTA */}
             <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12">
               <a
-                href="https://meet.digerati-experts.com/"
+                href="/book"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-violet-700 font-semibold rounded-xl hover:bg-white/90 transition-all shadow-lg hover:shadow-violet-500/20"

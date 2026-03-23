@@ -146,7 +146,7 @@ export default function SecurityChecklist() {
                 </Button>
                 <Button 
                   className="bg-white text-violet-700 hover:bg-white/90"
-                  onClick={() => window.open("https://meet.digerati-experts.com/", "_blank")}
+                  onClick={() => window.location.href = "/book"}
                   data-testid="button-get-assessment"
                 >
                   Get Free Assessment
@@ -216,7 +216,7 @@ export default function SecurityChecklist() {
               <p className="text-white/70 mb-6">Our security experts can help you implement these controls and more. Schedule a free consultation.</p>
               <Button 
                 className="bg-violet-600 hover:bg-violet-500 text-white"
-                onClick={() => window.open("https://meet.digerati-experts.com/", "_blank")}
+                onClick={() => window.location.href = "/book"}
                 data-testid="button-schedule-consultation"
               >
                 Schedule Free Consultation

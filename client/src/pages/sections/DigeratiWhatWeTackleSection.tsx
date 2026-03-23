@@ -135,7 +135,7 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
             Don't see your specific challenge? We handle it all.
           </p>
           <a 
-            href="https://meet.digerati-experts.com/"
+            href="/book"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-purple-500 hover:to-indigo-500 transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-105"

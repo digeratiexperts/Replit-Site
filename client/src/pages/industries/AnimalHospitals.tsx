@@ -192,7 +192,7 @@ export default function AnimalHospitals() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 
-              href="https://meet.digerati-experts.com/"
+              href="/book"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-violet-600 hover:bg-violet-700 text-white font-semibold rounded-lg transition-colors"
               data-testid="button-schedule-call"
             >

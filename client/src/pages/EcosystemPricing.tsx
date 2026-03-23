@@ -422,7 +422,7 @@ const EcosystemPricing = () => {
               Contact us for a custom quote based on your specific requirements.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+              <a href="/book">
                 <Button 
                   className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white"
                   data-testid="btn-book-call"

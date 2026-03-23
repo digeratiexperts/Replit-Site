@@ -102,7 +102,7 @@ const ManagedStore = () => {
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          window.open('https://meet.digerati-experts.com/', '_blank', 'noopener,noreferrer');
+          window.location.href = '/book';
         }}
         data-testid={`button-schedule-${product.id}`}
       >
@@ -267,7 +267,7 @@ const ManagedStore = () => {
               and provide a customized quote for your organization.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+              <a href="/book">
                 <Button 
                   size="lg"
                   className="h-14 px-8 text-lg font-semibold bg-violet-600 hover:bg-violet-500 text-white shadow-lg shadow-violet-500/25"

@@ -140,7 +140,7 @@ export default function ManagedITSupport() {
           <p className="text-lg mb-6 text-white/90">Schedule a free consultation to see how we can support your IT needs.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 
-              href="https://meet.digerati-experts.com/"
+              href="/book"
               target="_blank"
               rel="noopener noreferrer"
             >

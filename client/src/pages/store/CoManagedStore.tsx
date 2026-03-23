@@ -452,7 +452,7 @@ const CoManagedStore = () => {
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
-              <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+              <a href="/book">
                 <Button 
                   size="lg"
                   className="h-12 px-6 bg-transparent border-2 border-white/30 text-white hover:bg-white/10"

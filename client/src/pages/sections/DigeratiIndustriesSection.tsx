@@ -319,7 +319,7 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+          <a href="/book">
             <Button 
               size="lg"
               className="h-12 md:h-14 px-6 md:px-8 text-base md:text-lg font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 hover:from-violet-500 hover:via-purple-500 hover:to-fuchsia-500 border-0 shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all duration-300"

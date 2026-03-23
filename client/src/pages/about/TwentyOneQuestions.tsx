@@ -117,7 +117,7 @@ export default function TwentyOneQuestions() {
             </p>
             <div className="mt-8">
               <a
-                href="https://meet.digerati-experts.com/"
+                href="/book"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-violet-500 hover:bg-violet-400 text-white font-semibold px-8 py-4 rounded-lg transition-colors"

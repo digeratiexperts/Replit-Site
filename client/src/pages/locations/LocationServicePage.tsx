@@ -436,7 +436,7 @@ export function LocationServicePage(props: LocationPageProps) {
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">{props.cta}</h2>
             <p className="text-xl text-gray-300 mb-8">Contact our {props.city} team today for your free consultation</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+              <a href="/book">
                 <Button size="lg" className="px-8 py-6 text-lg font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 shadow-lg shadow-purple-500/25">
                   Start Your Free Assessment <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>

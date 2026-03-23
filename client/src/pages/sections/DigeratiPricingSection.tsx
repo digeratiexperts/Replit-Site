@@ -236,7 +236,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                       Learn More
                     </Button>
                   </a>
-                  <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer" className="block">
+                  <a href="/book" className="block">
                     <Button 
                       className={`w-full h-9 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 ${
                         plan.isPopular 
@@ -328,7 +328,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                     Learn More
                   </Button>
                 </a>
-                <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer" className="block">
+                <a href="/book" className="block">
                   <Button 
                     className={`w-full font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 ${
                       plan.isPopular 
@@ -366,7 +366,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
           transition={{ delay: 0.8, duration: 0.5 }}
         >
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+            <a href="/book">
               <Button 
                 size="lg" 
                 className="border-2 border-white/30 text-white bg-transparent hover:bg-violet-600 hover:border-violet-600 hover:text-white active:bg-violet-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all duration-200"

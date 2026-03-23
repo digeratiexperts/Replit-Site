@@ -339,7 +339,7 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
         </a>
         
         <a
-          href="https://meet.digerati-experts.com/"
+          href="/book"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold rounded-full bg-white text-violet-700 hover:bg-violet-50 transition-all duration-300 shadow-lg whitespace-nowrap ml-2"

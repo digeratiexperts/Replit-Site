@@ -294,7 +294,7 @@ export default function InternalHub() {
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <a
-                  href="https://meet.digerati-experts.com/"
+                  href="/book"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-3 bg-white text-violet-700 font-semibold rounded-xl hover:bg-white/90 transition-all"

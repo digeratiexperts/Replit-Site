@@ -348,7 +348,7 @@ function RPOPickerComponent() {
             className="bg-white text-violet-700 hover:bg-violet-50 font-semibold"
             data-testid="btn-picker-quote"
           >
-            <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+            <a href="/book">
               Get Exact Scope + Quote
               <ArrowRight className="ml-2 h-4 w-4" />
             </a>
@@ -409,7 +409,7 @@ export default function BackupDisasterRecovery() {
                   className="bg-white text-violet-700 hover:bg-violet-50 font-semibold shadow-lg"
                   data-testid="btn-hero-assessment"
                 >
-                  <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                  <a href="/book">
                     Schedule BCDR Assessment
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </a>
@@ -645,7 +645,7 @@ export default function BackupDisasterRecovery() {
                     }`}
                     data-testid={`btn-package-${pkg.sku}`}
                   >
-                    <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                    <a href="/book">
                       Get Started
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </a>
@@ -762,7 +762,7 @@ export default function BackupDisasterRecovery() {
                   className="bg-white text-violet-700 hover:bg-violet-50 font-semibold shadow-lg"
                   data-testid="btn-final-assessment"
                 >
-                  <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                  <a href="/book">
                     Schedule BCDR Assessment
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </a>
