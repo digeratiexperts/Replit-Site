@@ -1,8 +1,9 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { analytics } from "@/lib/analytics";
 
 interface BookingContextType {
   isOpen: boolean;
-  openBooking: () => void;
+  openBooking: (source?: string) => void;
   closeBooking: () => void;
 }
 
@@ -13,7 +14,10 @@ const ZOHO_BOOKING_URL = "https://meet.digerati-experts.com/#/432317000000002577
 export function BookingProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const openBooking = useCallback(() => setIsOpen(true), []);
+  const openBooking = useCallback((source: string = "unknown") => {
+    analytics.bookingOpened(source);
+    setIsOpen(true);
+  }, []);
   const closeBooking = useCallback(() => setIsOpen(false), []);
 
   return (

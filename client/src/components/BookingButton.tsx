@@ -4,18 +4,19 @@ import { useBooking } from "@/contexts/BookingContext";
 interface BookingButtonProps {
   children: ReactNode;
   className?: string;
+  source?: string;
   "data-testid"?: string;
   [key: string]: any;
 }
 
-export function BookingButton({ children, className, onClick, ...props }: BookingButtonProps & { onClick?: (e: MouseEvent) => void }) {
+export function BookingButton({ children, className, source = "booking_button", onClick, ...props }: BookingButtonProps & { onClick?: (e: MouseEvent) => void }) {
   const { openBooking } = useBooking();
 
   const handleClick = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (onClick) onClick(e);
-    openBooking();
+    openBooking(source);
   };
 
   return (
@@ -25,7 +26,7 @@ export function BookingButton({ children, className, onClick, ...props }: Bookin
   );
 }
 
-export function BookingLink({ children, className, ...props }: BookingButtonProps) {
+export function BookingLink({ children, className, source = "booking_link", ...props }: BookingButtonProps) {
   const { openBooking } = useBooking();
 
   return (
@@ -34,7 +35,7 @@ export function BookingLink({ children, className, ...props }: BookingButtonProp
       className={className}
       onClick={(e) => {
         e.preventDefault();
-        openBooking();
+        openBooking(source);
       }}
       {...props}
     >

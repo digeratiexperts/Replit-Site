@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { analytics } from '@/lib/analytics';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -108,6 +109,10 @@ export default function LeadQuoteWizard() {
   });
 
   const [currentStep, setCurrentStep] = useState(1);
+
+  useEffect(() => {
+    analytics.quoteWizardStarted();
+  }, []);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [recommendedPlan, setRecommendedPlan] = useState<{ plan: string; reasons: string[] } | null>(null);
@@ -131,6 +136,7 @@ export default function LeadQuoteWizard() {
     const data = await form.trigger(['seats', 'enterpriseToggle']);
     if (data) {
       setFormData(prev => ({ ...prev, ...form.getValues() }));
+      analytics.quoteWizardStep(2, "needs_snapshot");
       setCurrentStep(2);
       window.scrollTo(0, 0);
     }
@@ -140,6 +146,7 @@ export default function LeadQuoteWizard() {
     const data = await form.trigger(['connectivity', 'devices']);
     if (data) {
       setFormData(prev => ({ ...prev, ...form.getValues() }));
+      analytics.quoteWizardStep(3, "lead_capture");
       setCurrentStep(3);
       window.scrollTo(0, 0);
     }
@@ -180,6 +187,7 @@ export default function LeadQuoteWizard() {
 
       if (!response.ok) throw new Error('Failed to submit form');
 
+      analytics.quoteWizardCompleted({ users: data.seats });
       setRecommendedPlan(plan);
       setFormData(prev => ({ ...prev, ...data }));
       setShowResults(true);

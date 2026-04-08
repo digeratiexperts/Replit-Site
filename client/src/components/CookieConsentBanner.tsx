@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { AnimatePresence, motion } from "framer-motion";
+import { saveConsent } from "@/lib/analytics";
 
-const STORAGE_KEY = "de_cookie_consent";
+const LEGACY_KEY = "de_cookie_consent";
+const CONSENT_KEY = "de_cookie_consent_v2";
 
-type ConsentState = "accepted" | "rejected" | null;
-
-function getStoredConsent(): ConsentState {
+function hasStoredConsent(): boolean {
   try {
-    return (localStorage.getItem(STORAGE_KEY) as ConsentState) ?? null;
+    return !!localStorage.getItem(CONSENT_KEY) || !!localStorage.getItem(LEGACY_KEY);
   } catch {
-    return null;
+    return false;
   }
 }
 
@@ -21,27 +21,26 @@ export function CookieConsentBanner() {
   const [marketingEnabled, setMarketingEnabled] = useState(true);
 
   useEffect(() => {
-    const stored = getStoredConsent();
-    if (!stored) {
+    if (!hasStoredConsent()) {
       const timer = setTimeout(() => setVisible(true), 1200);
       return () => clearTimeout(timer);
     }
   }, []);
 
   const accept = () => {
-    localStorage.setItem(STORAGE_KEY, "accepted");
+    saveConsent({ analytics: true, marketing: true });
     setVisible(false);
     setShowPreferences(false);
   };
 
   const reject = () => {
-    localStorage.setItem(STORAGE_KEY, "rejected");
+    saveConsent({ analytics: false, marketing: false });
     setVisible(false);
     setShowPreferences(false);
   };
 
   const savePreferences = () => {
-    localStorage.setItem(STORAGE_KEY, analyticsEnabled || marketingEnabled ? "accepted" : "rejected");
+    saveConsent({ analytics: analyticsEnabled, marketing: marketingEnabled });
     setVisible(false);
     setShowPreferences(false);
   };

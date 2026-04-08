@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { analytics } from "@/lib/analytics";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Shield, Download, ArrowRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,7 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
     const isPortalPage = window.location.pathname.startsWith("/portal");
     if (isPortalPage) return;
 
+    analytics.exitIntentShown();
     setIsVisible(true);
     setHasShown(true);
   }, [hasShown]);
@@ -91,6 +93,7 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
         website_url: ""
       });
       
+      analytics.exitIntentConverted();
       setIsSuccess(true);
       toast({
         title: "Success!",

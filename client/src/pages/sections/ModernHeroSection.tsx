@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useRef, useState } from "react";
+import { analytics } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Building, FileCheck, Check, Loader2, Shield, User, Mail, Clock, Activity, Zap } from "lucide-react";
 import { DashboardMockup } from "@/components/graphics";
@@ -46,6 +47,7 @@ export const ModernHeroSection = (): JSX.Element => {
       if (!response.ok) {
         throw new Error(result.error || "Submission failed");
       }
+      analytics.leadCaptured("hero_assessment");
       toast({
         title: "Assessment Request Submitted!",
         description: "We'll contact you within 24 hours to schedule your free assessment.",

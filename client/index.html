@@ -80,14 +80,26 @@
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=Oxanium:wght@500;600;700&display=swap" rel="stylesheet">
     </noscript>
     
-    <!-- Google Analytics - Deferred -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YDMJ38SXD"></script>
+    <!-- Google Consent Mode v2 — must run before GA4 loads -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
+      // Default: deny all until user consents via cookie banner
+      gtag('consent', 'default', {
+        'analytics_storage': 'denied',
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'wait_for_update': 500
+      });
       gtag('js', new Date());
-      gtag('config', 'G-1YDMJ38SXD', { 'send_page_view': true });
+      gtag('config', 'G-1YDMJ38SXD', {
+        'send_page_view': true,
+        'anonymize_ip': true
+      });
     </script>
+    <!-- Google Analytics GA4 — loads after consent defaults are set -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1YDMJ38SXD"></script>
   </head>
   <body>
     <div id="root"></div>

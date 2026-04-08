@@ -90,7 +90,7 @@ export function PremiumCTASection({
                 size="lg"
                 className="h-14 px-8 bg-white text-violet-700 hover:bg-white/90 font-semibold text-base rounded-full shadow-lg shadow-black/20"
                 data-testid="button-premium-cta-primary"
-                onClick={(e) => { e.preventDefault(); openBooking(); }}
+                onClick={(e) => { e.preventDefault(); openBooking("cta_section"); }}
               >
                 <ArrowRight className="mr-2 h-5 w-5" />
                 {primaryButtonText}

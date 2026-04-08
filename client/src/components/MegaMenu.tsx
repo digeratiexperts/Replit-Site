@@ -861,7 +861,7 @@ export function MegaMenu() {
               type="button"
               className="hidden lg:inline-flex items-center justify-center bg-violet-600 hover:bg-violet-500 text-white px-4 xl:px-5 py-2 rounded-lg text-sm font-semibold whitespace-nowrap shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.4)] transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0a0a0a] border border-white/10"
               data-testid="nav-cta"
-              onClick={() => { handleLinkClick(); openBooking(); }}
+              onClick={() => { handleLinkClick(); openBooking("megamenu"); }}
               aria-label="Get protected now - Schedule a consultation"
             >
               Get Protected
@@ -1063,7 +1063,7 @@ export function MegaMenu() {
                 <button
                   type="button"
                   className="w-full inline-flex items-center justify-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-bold py-4 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0a0a0a] transition-all rounded-xl shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_40px_rgba(139,92,246,0.4)] text-lg"
-                  onClick={() => { setMobileMenuOpen(false); openBooking(); }}
+                  onClick={() => { setMobileMenuOpen(false); openBooking("megamenu_mobile"); }}
                   data-testid="mobile-cta"
                   aria-label="Get protected now - Schedule a consultation"
                 >

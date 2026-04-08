@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { analytics } from "@/lib/analytics";
 
 const contactFormSchema = z.object({
   name: z.string()
@@ -62,6 +63,7 @@ export const DigeratiContactSection = (): JSX.Element => {
         throw new Error(result.error || 'Failed to send message');
       }
       
+      analytics.contactFormSubmitted(data.service || "general");
       toast({
         title: "Message Sent Successfully!",
         description: "We'll get back to you within 24 hours.",
