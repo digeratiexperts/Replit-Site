@@ -1,7 +1,7 @@
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Shield, Search, FileText, Settings, Activity } from "lucide-react";
 import { useRef } from "react";
-import blueprintPatternImg from "@/assets/images/blueprint-grid-pattern.png";
+
 
 export const DigeratiHowWeProtectSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -82,18 +82,6 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
           background: "linear-gradient(180deg, #fafafa 0%, #ffffff 50%, #fafafa 100%)"
         }}
       />
-      {/* Blueprint pattern — signals structured methodology, a plan being executed */}
-      <div 
-        className="absolute inset-0 opacity-[0.04] pointer-events-none"
-        style={{
-          backgroundImage: `url(${blueprintPatternImg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          maskImage: "linear-gradient(180deg, transparent 0%, black 15%, black 85%, transparent 100%)",
-          WebkitMaskImage: "linear-gradient(180deg, transparent 0%, black 15%, black 85%, transparent 100%)",
-        }}
-      />
-      
       {/* Subtle parallax accent */}
       <motion.div 
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] pointer-events-none opacity-50"

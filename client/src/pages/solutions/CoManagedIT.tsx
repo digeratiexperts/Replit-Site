@@ -10,7 +10,6 @@ import {
   Package, Laptop, Settings, Truck, Headphones, Download,
   BarChart3, UserCheck, Network, RefreshCw, Lock
 } from "lucide-react";
-import { FloatingParticles } from "@/components/graphics";
 import { useSEO } from "@/hooks/useSEO";
 import { GuidedSalesPitch } from "@/components/GuidedSalesPitch";
 
@@ -295,7 +294,6 @@ export default function CoManagedIT() {
   return (
     <div className="min-h-screen bg-gray-950 text-white overflow-hidden">
       <MegaMenu />
-      <FloatingParticles />
       
       <main className="relative pt-24 pb-32">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">

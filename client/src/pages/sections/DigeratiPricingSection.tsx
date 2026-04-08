@@ -3,7 +3,7 @@ import { CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { pricing, getPricingFooterText } from "@/data/pricing";
-import heroPatternImg from "@/assets/images/hero-pattern-overlay.png";
+
 
 export const DigeratiPricingSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -112,20 +112,9 @@ export const DigeratiPricingSection = (): JSX.Element => {
       id="pricing" 
       className="relative py-10 md:py-14 lg:py-16 overflow-hidden bg-[#0a0a0a]"
     >
-      {/* Circuit pattern — anchors pricing cards to the technology behind the investment */}
-      <div 
-        className="absolute inset-0 opacity-[0.06] pointer-events-none"
-        style={{
-          backgroundImage: `url(${heroPatternImg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          maskImage: "linear-gradient(180deg, transparent 5%, black 25%, black 75%, transparent 95%)",
-          WebkitMaskImage: "linear-gradient(180deg, transparent 5%, black 25%, black 75%, transparent 95%)",
-        }}
-      />
       {/* Subtle violet accent glow */}
       <div className="absolute inset-0 pointer-events-none"
-           style={{ background: "radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 60%)" }} />
+           style={{ background: "radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.06) 0%, transparent 60%)" }} />
       
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 

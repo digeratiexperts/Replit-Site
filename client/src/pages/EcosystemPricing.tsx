@@ -8,7 +8,6 @@ import {
   Monitor, Cloud, Key, Settings, Phone, HardDrive,
   FileCheck, Building2, Check, X, Star, Zap
 } from "lucide-react";
-import { FloatingParticles } from "@/components/graphics";
 import { useSEO } from "@/hooks/useSEO";
 
 interface ServiceRow {
@@ -228,7 +227,6 @@ const EcosystemPricing = () => {
   return (
     <div className="min-h-screen bg-[#0a0a0f]">
       <MegaMenu />
-      <FloatingParticles />
       
       <main className="relative z-10 pt-24 pb-16">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">

@@ -1,7 +1,6 @@
 import { Shield, Bug, Lock, Database, AlertTriangle, Users } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
-import { PatternOverlay, GlowOrb } from "@/components/SectionPatterns";
-import networkPatternImg from "@/assets/images/network-shield-pattern.png";
+
 
 export const DigeratiWhatWeTackleSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -47,20 +46,6 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
 
   return (
     <section className="py-12 lg:py-16 relative overflow-hidden bg-[#0a0a0a]">
-      {/* Network mesh pattern — creates subliminal unease around threats, driving desire for protection */}
-      <div 
-        className="absolute inset-0 opacity-[0.06] pointer-events-none"
-        style={{
-          backgroundImage: `url(${networkPatternImg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          maskImage: "linear-gradient(180deg, transparent 0%, black 20%, black 80%, transparent 100%)",
-          WebkitMaskImage: "linear-gradient(180deg, transparent 0%, black 20%, black 80%, transparent 100%)",
-        }}
-      />
-      {/* Subtle violet accent glow */}
-      <div className="absolute inset-0 pointer-events-none"
-           style={{ background: "radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.06) 0%, transparent 60%)" }} />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div 
@@ -94,11 +79,8 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              {/* Glow effect on hover */}
-              <div className={`absolute -inset-0.5 bg-gradient-to-r ${challenge.gradient} rounded-2xl opacity-0 group-hover:opacity-20 blur-xl transition-all duration-500`} />
-              
               {/* Card */}
-              <div className="relative bg-white/5 backdrop-blur-xl rounded-2xl p-6 h-full border border-white/10 hover:border-white/20 transition-all duration-300 group-hover:bg-white/[0.07]">
+              <div className="relative bg-white/5 rounded-2xl p-6 h-full border border-white/10 hover:border-white/20 transition-all duration-300 group-hover:bg-white/[0.07]">
                 {/* Icon container with gradient */}
                 <div className="mb-5">
                   <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br ${challenge.gradient} bg-opacity-20 border border-white/10 group-hover:scale-110 transition-transform duration-300`}>

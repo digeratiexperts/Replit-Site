@@ -1,6 +1,6 @@
 import { Shield, Award, CheckCircle, Star } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
-import networkPatternImg from "@/assets/images/network-shield-pattern.png";
+
 
 const badges = [
   { name: "SOC 2 Type II", icon: Shield },
@@ -14,21 +14,10 @@ export const DigeratiCTASection = (): JSX.Element => {
   
   return (
     <section className="py-12 lg:py-16 bg-[#0a0a0a] relative overflow-hidden">
-      {/* Network defense pattern — reinforces "pen test" security theme, builds urgency */}
-      <div 
-        className="absolute inset-0 opacity-[0.08] pointer-events-none"
-        style={{
-          backgroundImage: `url(${networkPatternImg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          maskImage: "radial-gradient(ellipse at 50% 50%, black 30%, transparent 75%)",
-          WebkitMaskImage: "radial-gradient(ellipse at 50% 50%, black 30%, transparent 75%)",
-        }}
-      />
       {/* Subtle purple glow */}
       <div 
         className="absolute inset-0 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse at 50% 50%, rgba(139, 92, 246, 0.12) 0%, transparent 60%)" }}
+        style={{ background: "radial-gradient(ellipse at 50% 50%, rgba(139, 92, 246, 0.10) 0%, transparent 60%)" }}
       />
       
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">

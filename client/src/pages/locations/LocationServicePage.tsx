@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { DigeratiEnhancedFooterSection } from '@/pages/sections/DigeratiEnhancedFooterSection';
 import { MegaMenu } from '@/components/MegaMenu';
-import { FloatingParticles, DashboardMockup, AnimatedShield, NetworkNodes } from "@/components/graphics";
+import { DashboardMockup, AnimatedShield, NetworkNodes } from "@/components/graphics";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -196,7 +196,7 @@ export function LocationServicePage(props: LocationPageProps) {
             backgroundSize: "80px 80px"
           }} />
           
-          <FloatingParticles count={30} />
+          
         </div>
 
         {/* Main content */}

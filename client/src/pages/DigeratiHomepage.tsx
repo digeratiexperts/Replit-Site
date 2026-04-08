@@ -25,6 +25,7 @@ import { DigeratiNewsletterSection } from "./sections/DigeratiNewsletterSection"
 import { DigeratiContactSection } from "./sections/DigeratiContactSection";
 import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooterSection";
 import { DigeratiStatsSection } from "./sections/DigeratiStatsSection";
+import { DigeratiTrustPhotoSection } from "./sections/DigeratiTrustPhotoSection";
 
 const homepageSections: { id: string; label: string; theme: 'dark' | 'light' }[] = [
   { id: 'hero', label: 'Home', theme: 'dark' },
@@ -161,6 +162,11 @@ export const DigeratiHomepage = (): JSX.Element => {
         {/* Industries Section */}
         <ScrollSectionAuto id="industries">
           <DigeratiIndustriesSection />
+        </ScrollSectionAuto>
+
+        {/* Trust & Photography Section */}
+        <ScrollSectionAuto id="trust">
+          <DigeratiTrustPhotoSection />
         </ScrollSectionAuto>
 
         {/* Pricing Section */}

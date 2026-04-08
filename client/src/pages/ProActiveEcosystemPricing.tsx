@@ -10,7 +10,6 @@ import {
   FileText, Key, ArrowRight, Check, Calculator, Sparkles,
   Briefcase, FileCheck, Star, Bookmark, Layers
 } from "lucide-react";
-import { FloatingParticles } from "@/components/graphics";
 import { useSEO } from "@/hooks/useSEO";
 
 interface Service {
@@ -310,7 +309,7 @@ const ProActiveEcosystemPricing = () => {
             backgroundSize: "60px 60px",
           }}
         />
-        <FloatingParticles count={20} />
+        
       </div>
       
       <MegaMenu />

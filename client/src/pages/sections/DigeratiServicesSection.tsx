@@ -173,7 +173,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
                                group-hover:border-transparent transition-all duration-300">
                   {/* Icon with gradient */}
                   <div 
-                    className={`w-10 h-10 md:w-12 lg:w-14 md:h-12 lg:h-14 rounded-lg md:rounded-xl bg-gradient-to-br ${service.gradient} flex items-center justify-center mb-4 md:mb-6 shadow-lg shadow-violet-500/20 group-hover:shadow-violet-500/40 transition-shadow duration-300`}
+                    className={`w-10 h-10 md:w-12 lg:w-14 md:h-12 lg:h-14 rounded-lg md:rounded-xl bg-gradient-to-br ${service.gradient} flex items-center justify-center mb-4 md:mb-6`}
                   >
                     <Icon className="h-5 w-5 md:h-6 lg:h-7 md:w-6 lg:w-7 text-white" />
                   </div>
