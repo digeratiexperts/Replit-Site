@@ -9,7 +9,7 @@ interface BookingContextType {
 
 const BookingContext = createContext<BookingContextType | undefined>(undefined);
 
-const ZOHO_BOOKING_URL = "https://meet.digerati-experts.com/#/4323170000000025779";
+const ZOHO_BOOKING_URL = "https://meet.digerati-experts.com/";
 
 export function BookingProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
