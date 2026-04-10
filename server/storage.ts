@@ -1005,7 +1005,7 @@ export class DatabaseStorage implements IStorage {
   async getPortalTickets(userId?: string): Promise<PortalTicket[]> {
     const db = await this.getDb();
     if (userId) {
-      return await db.select().from(portalTickets).where(eq(portalTickets.userId, userId));
+      return await db.select().from(portalTickets).where(eq(portalTickets.createdBy, userId));
     }
     return await db.select().from(portalTickets);
   }

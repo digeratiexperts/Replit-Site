@@ -2015,6 +2015,45 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  // ===== CONTRACTS =====
+
+  // List contracts for the current user's company
+  app.get("/api/portal/contracts", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      // Demo contracts data — in production these come from Zoho or DB
+      const contracts: any[] = [];
+      return res.json(contracts);
+    } catch (error: any) {
+      logger.error("Failed to load contracts", error);
+      return res.status(500).json({ message: "Failed to load contracts" });
+    }
+  });
+
+  // Sign a contract
+  app.post("/api/portal/contracts/:id/sign", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { id } = req.params;
+      const { signerName, signerTitle, signatureData } = req.body;
+      if (!signerName || !signatureData) {
+        return res.status(400).json({ message: "Signer name and signature are required" });
+      }
+      return res.status(404).json({ message: "Contract not found. Contracts integration is being configured." });
+    } catch (error: any) {
+      logger.error("Failed to sign contract", error);
+      return res.status(500).json({ message: "Failed to sign contract" });
+    }
+  });
+
+  // Decline a contract
+  app.post("/api/portal/contracts/:id/decline", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      return res.status(404).json({ message: "Contract not found. Contracts integration is being configured." });
+    } catch (error: any) {
+      logger.error("Failed to decline contract", error);
+      return res.status(500).json({ message: "Failed to decline contract" });
+    }
+  });
+
   // ===== ADMIN TENANT MANAGEMENT =====
   
   // List all companies (admin only)
