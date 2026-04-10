@@ -873,6 +873,25 @@ export async function registerRoutes(app: Express) {
     createdAt: number;
     expiresAt: number;
   }>();
+
+  // MFA pending challenges — stores temporary MFA session tokens during login
+  const mfaChallenges = new Map<string, {
+    userId: string;
+    email: string;
+    method: 'totp' | 'email';
+    emailCode?: string;
+    createdAt: number;
+    expiresAt: number;
+    attempts: number;
+  }>();
+  const MFA_MAX_ATTEMPTS = 5;
+
+  // MFA TOTP setup — temporary storage while user confirms setup
+  const mfaPendingSetups = new Map<string, {
+    userId: string;
+    secret: string;
+    createdAt: number;
+  }>();
   
   // MSP company (Digerati Experts) - separate from client companies
   const mspCompany = { 
@@ -1174,7 +1193,7 @@ export async function registerRoutes(app: Express) {
   });
 
   // Forgot Password — request reset link
-  app.post("/api/portal/forgot-password", [validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  app.post("/api/portal/forgot-password", [verifyTurnstile, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { email } = req.body;
       if (!email) return res.status(400).json({ message: "Email is required" });
@@ -1239,7 +1258,56 @@ export async function registerRoutes(app: Express) {
   });
 
   // Portal Login Endpoint
-  app.post("/api/portal/login", [validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  // Helper: complete login and return token + session
+  function completeLogin(user: any, req: AuthenticatedRequest, res: Response) {
+    const sessionId = randomId();
+    const now = Date.now();
+    sessionStore.set(sessionId, { userId: user.id, createdAt: now, lastRotated: now });
+
+    let storeRole: StoreRole = 'prospect';
+    if (user.storeRole) {
+      storeRole = user.storeRole as StoreRole;
+    } else if (user.role === 'admin') {
+      storeRole = 'admin';
+    } else if (user.clientId) {
+      const client = portalClients.get(user.clientId);
+      if (client?.serviceType === 'managed') storeRole = 'managed';
+      else if (client?.serviceType === 'comanaged') storeRole = 'comanaged';
+    }
+
+    const token = jwt.sign(
+      { userId: user.id, email: user.email, role: user.role, storeRole, clientId: user.clientId || null },
+      JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    res.cookie('sessionId', sessionId, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60 * 1000,
+      path: '/',
+    });
+
+    logSecurityEvent("PORTAL_USER_LOGIN", req, { userId: user.id, email: user.email, role: user.role, storeRole, sessionId });
+
+    return res.json({
+      success: true,
+      token,
+      sessionId,
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        fullName: user.fullName,
+        role: user.role,
+        storeRole,
+        clientId: user.clientId || null,
+      },
+    });
+  }
+
+  app.post("/api/portal/login", [verifyTurnstile, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { email, password } = req.body;
 
@@ -1247,7 +1315,6 @@ export async function registerRoutes(app: Express) {
         return res.status(400).json({ message: "Email and password are required" });
       }
 
-      // Find user
       const user = portalUsers.get(email);
 
       if (!user) {
@@ -1255,7 +1322,6 @@ export async function registerRoutes(app: Express) {
         return res.status(401).json({ message: "Invalid email or password" });
       }
 
-      // Compare password using bcrypt
       const bcrypt = await import('bcrypt');
       const passwordValid = await bcrypt.compare(password, user.password);
       
@@ -1264,7 +1330,6 @@ export async function registerRoutes(app: Express) {
         return res.status(401).json({ message: "Invalid email or password" });
       }
 
-      // Check email verification status (allow admin to login regardless)
       if (user.role !== 'admin' && user.emailVerified === false) {
         logSecurityEvent("PORTAL_LOGIN_UNVERIFIED", req, { email });
         return res.status(403).json({ 
@@ -1274,67 +1339,120 @@ export async function registerRoutes(app: Express) {
         });
       }
 
-      // Generate session ID for session tracking and rotation
-      const sessionId = randomId();
-      const now = Date.now();
-      
-      // Store session in session store with rotation tracking
-      sessionStore.set(sessionId, {
-        userId: user.id,
-        createdAt: now,
-        lastRotated: now,
-      });
+      // Check if user has MFA enabled
+      if (user.mfaEnabled && user.mfaMethod) {
+        const challengeToken = randomId();
+        const TEN_MINUTES = 10 * 60 * 1000;
+        const now = Date.now();
 
-      // Derive storeRole from user or client data
-      let storeRole: StoreRole = 'prospect';
-      if (user.storeRole) {
-        storeRole = user.storeRole as StoreRole;
-      } else if (user.role === 'admin') {
-        storeRole = 'admin';
-      } else if (user.clientId) {
-        const client = portalClients.get(user.clientId);
-        if (client?.serviceType === 'managed') {
-          storeRole = 'managed';
-        } else if (client?.serviceType === 'comanaged') {
-          storeRole = 'comanaged';
+        if (user.mfaMethod === 'email') {
+          const code = String(Math.floor(100000 + Math.random() * 900000));
+          mfaChallenges.set(challengeToken, {
+            userId: user.id,
+            email: user.email,
+            method: 'email',
+            emailCode: code,
+            createdAt: now,
+            expiresAt: now + TEN_MINUTES,
+            attempts: 0,
+          });
+          notificationService.sendMfaCode({
+            email: user.email,
+            name: user.fullName,
+            code,
+          }).catch(err => logger.warn("Failed to send MFA email code", err));
+        } else {
+          mfaChallenges.set(challengeToken, {
+            userId: user.id,
+            email: user.email,
+            method: 'totp',
+            createdAt: now,
+            expiresAt: now + TEN_MINUTES,
+            attempts: 0,
+          });
         }
+
+        logSecurityEvent("MFA_CHALLENGE_ISSUED", req, { email, method: user.mfaMethod });
+
+        return res.json({
+          success: false,
+          mfaRequired: true,
+          mfaMethod: user.mfaMethod,
+          mfaToken: challengeToken,
+          message: user.mfaMethod === 'email'
+            ? "A verification code has been sent to your email."
+            : "Enter the code from your authenticator app.",
+        });
       }
 
-      // Generate JWT token using the module-level JWT_SECRET (includes storeRole for RBAC)
-      const token = jwt.sign(
-        { userId: user.id, email: user.email, role: user.role, storeRole, clientId: user.clientId || null },
-        JWT_SECRET,
-        { expiresIn: '24h' }
-      );
-
-      // Set secure session cookie with HttpOnly, Secure, and SameSite flags
-      res.cookie('sessionId', sessionId, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 24 * 60 * 60 * 1000, // 24 hours in milliseconds
-        path: '/',
-      });
-
-      logSecurityEvent("PORTAL_USER_LOGIN", req, { userId: user.id, email, role: user.role, storeRole, sessionId });
-
-      return res.json({
-        success: true,
-        token,
-        sessionId,
-        user: {
-          id: user.id,
-          email: user.email,
-          username: user.username,
-          fullName: user.fullName,
-          role: user.role,
-          storeRole,
-          clientId: user.clientId || null,
-        },
-      });
+      return completeLogin(user, req, res);
     } catch (error: any) {
       console.error("[ERROR] Portal login failed:", error);
       res.status(500).json({ message: "Login failed" });
+    }
+  });
+
+  // MFA Verify — complete login after providing MFA code
+  app.post("/api/portal/mfa/verify-login", [validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { mfaToken, code } = req.body;
+      if (!mfaToken || !code) {
+        return res.status(400).json({ message: "MFA token and code are required" });
+      }
+
+      const challenge = mfaChallenges.get(mfaToken);
+      if (!challenge || Date.now() > challenge.expiresAt) {
+        mfaChallenges.delete(mfaToken);
+        return res.status(400).json({ message: "MFA session expired. Please log in again." });
+      }
+
+      if (challenge.attempts >= MFA_MAX_ATTEMPTS) {
+        mfaChallenges.delete(mfaToken);
+        logSecurityEvent("MFA_LOCKED_OUT", req, { email: challenge.email });
+        return res.status(429).json({ message: "Too many attempts. Please log in again." });
+      }
+
+      challenge.attempts++;
+
+      const user = portalUsers.get(challenge.email);
+      if (!user) {
+        mfaChallenges.delete(mfaToken);
+        return res.status(400).json({ message: "User not found" });
+      }
+
+      let verified = false;
+
+      if (challenge.method === 'email') {
+        verified = challenge.emailCode === code.trim();
+      } else if (challenge.method === 'totp' && user.mfaTotpSecret) {
+        const { authenticator } = await import('otplib');
+        verified = authenticator.verify({ token: code.trim(), secret: user.mfaTotpSecret });
+      }
+
+      if (!verified && user.mfaBackupCodes?.length > 0) {
+        const codeUpper = code.trim().toUpperCase();
+        const idx = user.mfaBackupCodes.indexOf(codeUpper);
+        if (idx !== -1) {
+          verified = true;
+          user.mfaBackupCodes.splice(idx, 1);
+          portalUsers.set(user.email, user);
+          if (user.username) portalUsers.set(user.username, user);
+        }
+      }
+
+      if (!verified) {
+        logSecurityEvent("MFA_VERIFICATION_FAILED", req, { email: challenge.email, method: challenge.method, attempt: challenge.attempts });
+        const remaining = MFA_MAX_ATTEMPTS - challenge.attempts;
+        return res.status(401).json({ message: `Invalid verification code. ${remaining} attempt${remaining !== 1 ? 's' : ''} remaining.` });
+      }
+
+      mfaChallenges.delete(mfaToken);
+      logSecurityEvent("MFA_VERIFICATION_SUCCESS", req, { email: challenge.email, method: challenge.method });
+
+      return completeLogin(user, req, res);
+    } catch (error: any) {
+      console.error("[ERROR] MFA verify failed:", error);
+      return res.status(500).json({ message: "Verification failed" });
     }
   });
 
@@ -1363,6 +1481,200 @@ export async function registerRoutes(app: Express) {
     } catch (error: any) {
       console.error("[ERROR] Portal logout failed:", error);
       res.status(500).json({ message: "Logout failed" });
+    }
+  });
+
+  // ===== MFA SETUP & MANAGEMENT =====
+
+  // Get MFA status for the authenticated user
+  app.get("/api/portal/mfa/status", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const user = portalUsers.get(req.user?.email || "");
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      return res.json({
+        mfaEnabled: !!user.mfaEnabled,
+        mfaMethod: user.mfaMethod || null,
+        backupCodesRemaining: user.mfaBackupCodes?.length || 0,
+      });
+    } catch (error: any) {
+      logger.error("Failed to get MFA status", error);
+      return res.status(500).json({ message: "Failed to get MFA status" });
+    }
+  });
+
+  // Begin MFA setup — generates TOTP secret + QR or triggers email flow
+  app.post("/api/portal/mfa/setup", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { method } = req.body; // 'totp' or 'email'
+      if (!method || !['totp', 'email'].includes(method)) {
+        return res.status(400).json({ message: "Method must be 'totp' or 'email'" });
+      }
+
+      const user = portalUsers.get(req.user?.email || "");
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      if (user.mfaEnabled) {
+        return res.status(400).json({ message: "MFA is already enabled. Disable it first to change methods." });
+      }
+
+      if (method === 'totp') {
+        const { authenticator } = await import('otplib');
+        const QRCode = await import('qrcode');
+        const secret = authenticator.generateSecret();
+        const otpauthUrl = authenticator.keyuri(user.email, 'Digerati Experts', secret);
+        const qrCodeDataUrl = await QRCode.toDataURL(otpauthUrl);
+
+        const setupToken = randomId();
+        mfaPendingSetups.set(setupToken, { userId: user.id, secret, createdAt: Date.now() });
+
+        return res.json({
+          method: 'totp',
+          setupToken,
+          qrCode: qrCodeDataUrl,
+          secret,
+          message: "Scan the QR code with your authenticator app, then confirm with a code.",
+        });
+      } else {
+        const code = String(Math.floor(100000 + Math.random() * 900000));
+        const setupToken = randomId();
+        mfaPendingSetups.set(setupToken, { userId: user.id, secret: code, createdAt: Date.now() });
+
+        notificationService.sendMfaCode({
+          email: user.email,
+          name: user.fullName,
+          code,
+        }).catch(err => logger.warn("Failed to send MFA setup code", err));
+
+        return res.json({
+          method: 'email',
+          setupToken,
+          message: "A verification code has been sent to your email. Enter it to confirm setup.",
+        });
+      }
+    } catch (error: any) {
+      logger.error("MFA setup failed", error);
+      return res.status(500).json({ message: "MFA setup failed" });
+    }
+  });
+
+  // Confirm MFA setup — verifies the code and enables MFA
+  app.post("/api/portal/mfa/confirm", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { setupToken, code, method } = req.body;
+      if (!setupToken || !code || !method) {
+        return res.status(400).json({ message: "Setup token, code, and method are required" });
+      }
+
+      const setup = mfaPendingSetups.get(setupToken);
+      const SETUP_EXPIRY = 10 * 60 * 1000;
+      if (!setup || (Date.now() - setup.createdAt > SETUP_EXPIRY)) {
+        if (setup) mfaPendingSetups.delete(setupToken);
+        return res.status(400).json({ message: "Invalid or expired setup token" });
+      }
+
+      const user = portalUsers.get(req.user?.email || "");
+      if (!user || user.id !== setup.userId) {
+        return res.status(403).json({ message: "Unauthorized" });
+      }
+
+      let verified = false;
+
+      if (method === 'totp') {
+        const { authenticator } = await import('otplib');
+        verified = authenticator.verify({ token: code.trim(), secret: setup.secret });
+      } else if (method === 'email') {
+        verified = setup.secret === code.trim();
+      }
+
+      if (!verified) {
+        return res.status(400).json({ message: "Invalid verification code. Please try again." });
+      }
+
+      // Generate backup codes
+      const backupCodes: string[] = [];
+      for (let i = 0; i < 8; i++) {
+        backupCodes.push(randomBytes(3).toString('hex').toUpperCase());
+      }
+
+      // Enable MFA on user
+      user.mfaEnabled = true;
+      user.mfaMethod = method;
+      user.mfaBackupCodes = backupCodes;
+      if (method === 'totp') {
+        user.mfaTotpSecret = setup.secret;
+      }
+      portalUsers.set(user.email, user);
+      if (user.username) portalUsers.set(user.username, user);
+
+      mfaPendingSetups.delete(setupToken);
+      logSecurityEvent("MFA_ENABLED", req, { email: user.email, method });
+
+      return res.json({
+        success: true,
+        message: "MFA enabled successfully!",
+        backupCodes,
+      });
+    } catch (error: any) {
+      logger.error("MFA confirm failed", error);
+      return res.status(500).json({ message: "MFA confirmation failed" });
+    }
+  });
+
+  // Disable MFA
+  app.post("/api/portal/mfa/disable", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { password } = req.body;
+      if (!password) return res.status(400).json({ message: "Password is required to disable MFA" });
+
+      const user = portalUsers.get(req.user?.email || "");
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      const bcrypt = await import('bcrypt');
+      const valid = await bcrypt.compare(password, user.password);
+      if (!valid) return res.status(401).json({ message: "Invalid password" });
+
+      user.mfaEnabled = false;
+      user.mfaMethod = null;
+      user.mfaTotpSecret = null;
+      user.mfaBackupCodes = [];
+      portalUsers.set(user.email, user);
+      if (user.username) portalUsers.set(user.username, user);
+
+      logSecurityEvent("MFA_DISABLED", req, { email: user.email });
+      return res.json({ success: true, message: "MFA has been disabled" });
+    } catch (error: any) {
+      logger.error("MFA disable failed", error);
+      return res.status(500).json({ message: "Failed to disable MFA" });
+    }
+  });
+
+  // Regenerate backup codes
+  app.post("/api/portal/mfa/regenerate-backup-codes", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { password } = req.body;
+      if (!password) return res.status(400).json({ message: "Password is required" });
+
+      const user = portalUsers.get(req.user?.email || "");
+      if (!user || !user.mfaEnabled) return res.status(400).json({ message: "MFA is not enabled" });
+
+      const bcrypt = await import('bcrypt');
+      const valid = await bcrypt.compare(password, user.password);
+      if (!valid) return res.status(401).json({ message: "Invalid password" });
+
+      const backupCodes: string[] = [];
+      for (let i = 0; i < 8; i++) {
+        backupCodes.push(randomBytes(3).toString('hex').toUpperCase());
+      }
+      user.mfaBackupCodes = backupCodes;
+      portalUsers.set(user.email, user);
+      if (user.username) portalUsers.set(user.username, user);
+
+      logSecurityEvent("MFA_BACKUP_CODES_REGENERATED", req, { email: user.email });
+      return res.json({ success: true, backupCodes });
+    } catch (error: any) {
+      logger.error("Backup code regeneration failed", error);
+      return res.status(500).json({ message: "Failed to regenerate backup codes" });
     }
   });
 

@@ -46,13 +46,14 @@ The platform includes a comprehensive e-commerce store at `/store` with:
 The platform implements comprehensive security following enterprise best practices:
 - **Transport & Headers**: HTTPS + HSTS, CSP (Content-Security-Policy), X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
 - **Authentication**: JWT tokens with secure HttpOnly/Secure/SameSite=Lax cookies, session management with rotation, email verification for new accounts
+- **Multi-Factor Authentication (MFA)**: TOTP (Google Authenticator/Authy) and email-based 2FA; backup codes generated with `crypto.randomBytes`; MFA challenge on login with 5-attempt lockout per session; setup/confirm/disable/regenerate endpoints under `/api/portal/mfa/*`; MFA settings in portal at `/portal/settings`
 - **RBAC Roles**: Public, Prospect, Managed Client, Co-Managed Client, Admin - with server-side enforcement on every route
 - **Access Control**: Checkout restricted to comanaged/admin users, separate admin area with stricter rules
-- **Form Protection**: Cloudflare Turnstile verification, honeypot fields, rate limiting (5 login/15min, 10 forms/hour, 10 payments/hour)
+- **Form Protection**: Cloudflare Turnstile verification on login, registration, and forgot-password (fail-closed in production, skips in dev without token); honeypot fields; rate limiting (5 login/15min, 10 forms/hour, 10 payments/hour)
 - **Bot Detection**: User-agent analysis, request rate monitoring, submission timing checks
 - **Input Validation**: Schema validation, SQL injection prevention, XSS defenses
 - **CSRF Protection**: Token validation for all state-changing requests
-- **Audit Logging**: Security events for auth, orders, pricing changes, admin actions
+- **Audit Logging**: Security events for auth, MFA, orders, pricing changes, admin actions
 - **Payment Security**: Stripe hosted checkout (PCI compliant), webhook signature verification
 
 ### Centralized Pricing Configuration

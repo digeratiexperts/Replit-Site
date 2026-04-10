@@ -322,6 +322,28 @@ export const notificationService = {
     });
   },
 
+  async sendMfaCode(data: {
+    email: string;
+    name: string;
+    code: string;
+  }): Promise<boolean> {
+    const content = `
+      <h2>Your Login Verification Code</h2>
+      <p>Hi ${data.name},</p>
+      <p>Your one-time verification code is:</p>
+      <div style="text-align: center; margin: 24px 0;">
+        <span style="font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #8b5cf6; background: #1a1a2e; padding: 16px 32px; border-radius: 8px; display: inline-block;">${data.code}</span>
+      </div>
+      <p style="color: #888; font-size: 13px;">This code expires in 10 minutes. If you didn't request this, please secure your account immediately.</p>
+    `;
+
+    return sendEmail({
+      to: data.email,
+      subject: `${data.code} — Digerati Experts Verification Code`,
+      htmlBody: baseEmailTemplate(content, "Login Verification"),
+    });
+  },
+
   async sendEmailVerification(data: {
     email: string;
     name: string;

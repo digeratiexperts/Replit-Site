@@ -56,9 +56,13 @@ export function validateCSRFToken(req: Request, res: Response, next: NextFunctio
 export async function verifyTurnstile(req: Request, res: Response, next: NextFunction) {
   const turnstileToken = req.body.turnstileToken || req.body['cf-turnstile-response'];
   
-  // Skip in development if not configured
   if (!process.env.TURNSTILE_SECRET_KEY) {
     console.warn('[SECURITY] Turnstile not configured - skipping verification');
+    return next();
+  }
+
+  if (process.env.NODE_ENV === 'development' && !turnstileToken) {
+    console.warn('[SECURITY] Turnstile token missing in dev mode - skipping verification');
     return next();
   }
   
@@ -86,7 +90,10 @@ export async function verifyTurnstile(req: Request, res: Response, next: NextFun
     next();
   } catch (error) {
     console.error('[SECURITY] Turnstile verification error:', error);
-    next(); // Allow through on error to prevent blocking legitimate users
+    if (process.env.NODE_ENV === 'production') {
+      return res.status(500).json({ message: 'Security verification unavailable. Please try again.' });
+    }
+    next();
   }
 }
 

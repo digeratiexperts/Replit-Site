@@ -5,9 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { AlertCircle, Mail, CheckCircle2 } from "lucide-react";
 import { Link } from "wouter";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
+import TurnstileWidget from "@/components/TurnstileWidget";
 
 export default function PortalForgotPassword() {
   const [email, setEmail] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -21,7 +23,7 @@ export default function PortalForgotPassword() {
       const response = await fetch("/api/portal/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, turnstileToken }),
       });
 
       const data = await response.json();
@@ -93,6 +95,8 @@ export default function PortalForgotPassword() {
                     />
                   </div>
                 </div>
+
+                <TurnstileWidget onVerify={setTurnstileToken} />
 
                 <Button
                   type="submit"

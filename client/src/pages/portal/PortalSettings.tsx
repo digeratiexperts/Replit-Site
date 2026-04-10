@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PortalLayout } from "./PortalLayout";
 import { User, Lock, Bell, Shield } from "lucide-react";
+import MfaSetup from "@/components/portal/MfaSetup";
 
 export default function PortalSettings() {
   const [user, setUser] = useState(() => {
@@ -196,32 +197,8 @@ export default function PortalSettings() {
           </CardContent>
         </Card>
 
-        {/* Security */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-[#5034ff]" />
-              <div>
-                <CardTitle>Security</CardTitle>
-                <CardDescription>Manage your account security</CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-900/30 rounded-lg">
-              <p className="text-sm text-green-800 dark:text-green-300">
-                Your account is secure. Last login was today at 2:30 PM.
-              </p>
-            </div>
-            <Button
-              variant="outline"
-              className="w-full"
-              data-testid="button-view-sessions"
-            >
-              View Active Sessions
-            </Button>
-          </CardContent>
-        </Card>
+        {/* Two-Factor Authentication */}
+        <MfaSetup />
       </div>
     </PortalLayout>
   );
