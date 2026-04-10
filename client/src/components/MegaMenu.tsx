@@ -492,15 +492,12 @@ export function MegaMenu() {
             </a>
 
             <a
-              href="https://portal.digeratiexperts.com/portal/login"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/portal/login"
               className="flex items-center text-white/70 hover:text-violet-300 text-xs md:text-sm font-medium transition-colors"
               data-testid="utility-portal"
             >
               <span className="hidden sm:inline">Client Portal</span>
               <span className="sm:hidden">Portal</span>
-              <ExternalLink className="h-3 w-3 ml-1.5 text-violet-400" />
             </a>
           </div>
         </div>
@@ -1034,12 +1031,10 @@ export function MegaMenu() {
                 </a>
                 
                 <a
-                  href="https://portal.digeratiexperts.com/portal/login"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/portal/login"
                   className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all group"
                   data-testid="mobile-portal"
-                  aria-label="Access client portal (opens in new window)"
+                  aria-label="Access client portal"
                 >
                   <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/20 to-purple-500/10 flex items-center justify-center border border-purple-500/20">
                     <ExternalLink className="h-5 w-5 text-purple-400" aria-hidden="true" />
