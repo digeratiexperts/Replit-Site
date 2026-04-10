@@ -87,13 +87,17 @@ All website forms now create leads in Zoho CRM via OAuth (ZOHO_CLIENT_ID_API, ZO
 
 ### Email Notification System
 Transactional email notifications powered by ZeptoMail (requires `ZEPTOMAIL_API_TOKEN` secret):
-- **Lead Notifications**: Alerts sales team when new leads are captured
-- **Quote Confirmations**: Confirms quote requests to customers
-- **Ticket Updates**: Notifies clients of ticket status changes
-- **Password Resets**: Secure password reset emails
+- **Lead Notifications**: Alerts sales team (`ADMIN_EMAIL` env var, defaults to `info@digeratiexperts.com`) when new leads are captured
+- **Quote Confirmations**: Confirms quote requests; CTA links to `/portal/orders`
+- **Ticket Updates**: Notifies clients; CTA links to `/portal/tickets/${ticketId}`
+- **Email Verification**: Sent on signup and resend-verification; links to `APP_URL/api/portal/verify-email?token=…`
+- **Password Resets**: Full flow — POST `/api/portal/forgot-password` sends reset email; POST `/api/portal/reset-password` completes reset; frontend pages at `/portal/forgot-password` and `/portal/reset-password`
+- **Welcome Emails**: Sent via `sendWelcomeEmail()` (wired in crossServiceHandler on USER_CREATED event)
+- **Authorization Fix**: `Zoho-enczapikey` prefix handled correctly — token checked before prepending to avoid double-prefix
 - **Sender**: noreply@digeratiexperts.com
 - **Admin Test Endpoint**: POST `/api/admin/test-email`
 - **Status Endpoint**: GET `/api/email-status`
+- **APP_URL env var**: Defaults to `https://digeratiexperts.com`; set to override base URL in verification/reset links
 
 ## External Dependencies
 - **Stripe**: Payments and subscription management

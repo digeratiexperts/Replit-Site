@@ -8,7 +8,7 @@ import { logger } from "../logger";
 const ZEPTOMAIL_API_URL = "https://api.zeptomail.com/v1.1/email";
 const FROM_EMAIL = "noreply@digeratiexperts.com";
 const FROM_NAME = "Digerati Experts";
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@digerati-experts.com";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "info@digeratiexperts.com";
 
 interface EmailOptions {
   to: string | string[];
@@ -57,7 +57,7 @@ async function sendEmail(options: EmailOptions): Promise<boolean> {
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "Authorization": `Zoho-enczapikey ${apiToken}`,
+        "Authorization": apiToken.startsWith("Zoho-enczapikey") ? apiToken : `Zoho-enczapikey ${apiToken}`,
       },
       body: JSON.stringify(payload),
     });
@@ -176,7 +176,7 @@ export const notificationService = {
         ${itemsHtml}
         <tr style="border-top: 2px solid #8b5cf6;"><td style="padding: 12px;"><strong>Total</strong></td><td style="padding: 12px; text-align: right;"><strong class="highlight">$${data.total.toFixed(2)}</strong></td></tr>
       </table>
-      <a href="https://digeratiexperts.com/portal" class="button">View in Portal</a>
+      <a href="https://digeratiexperts.com/portal/orders" class="button">View Order in Portal</a>
     `;
 
     return sendEmail({
@@ -235,7 +235,7 @@ export const notificationService = {
         <tr><td style="padding: 8px 0; color: #888;">Status:</td><td class="highlight">${data.status}</td></tr>
       </table>
       ${data.message ? `<p><strong>Latest Update:</strong></p><p style="background: #1a1a2e; padding: 15px; border-radius: 6px;">${data.message}</p>` : ''}
-      <a href="https://digeratiexperts.com/portal/support" class="button">View Ticket</a>
+      <a href="https://digeratiexperts.com/portal/tickets/${data.ticketId}" class="button">View Ticket</a>
     `;
 
     return sendEmail({
@@ -319,6 +319,26 @@ export const notificationService = {
       to: data.email,
       subject: "Welcome to Digerati Experts!",
       htmlBody: baseEmailTemplate(content, "Welcome"),
+    });
+  },
+
+  async sendEmailVerification(data: {
+    email: string;
+    name: string;
+    verificationLink: string;
+  }): Promise<boolean> {
+    const content = `
+      <h2>Verify Your Email Address</h2>
+      <p>Hi ${data.name},</p>
+      <p>Thanks for signing up for the Digerati Experts client portal. Please verify your email address to activate your account:</p>
+      <a href="${data.verificationLink}" class="button">Verify My Email</a>
+      <p style="color: #888; font-size: 12px; margin-top: 20px;">This link expires in 24 hours. If you didn't create an account, you can safely ignore this email.</p>
+    `;
+
+    return sendEmail({
+      to: data.email,
+      subject: "Verify your email — Digerati Experts Portal",
+      htmlBody: baseEmailTemplate(content, "Email Verification"),
     });
   },
 

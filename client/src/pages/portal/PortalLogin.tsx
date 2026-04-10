@@ -105,6 +105,12 @@ export default function PortalLogin() {
                 </div>
               </div>
 
+              <div className="flex justify-end">
+                <a href="/portal/forgot-password" className="text-xs text-violet-400 hover:underline" data-testid="link-forgot-password">
+                  Forgot password?
+                </a>
+              </div>
+
               <Button
                 type="submit"
                 disabled={loading}

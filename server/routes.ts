@@ -865,6 +865,14 @@ export async function registerRoutes(app: Express) {
     createdAt: number;
     expiresAt: number;
   }>();
+
+  // Password reset tokens storage
+  const passwordResetTokens = new Map<string, {
+    email: string;
+    userId: string;
+    createdAt: number;
+    expiresAt: number;
+  }>();
   
   // MSP company (Digerati Experts) - separate from client companies
   const mspCompany = { 
@@ -1023,10 +1031,14 @@ export async function registerRoutes(app: Express) {
         expiresAt: now + TWENTY_FOUR_HOURS,
       });
 
-      // Log verification link (since we don't have email sending yet)
-      const verificationLink = `/api/portal/verify-email?token=${verificationToken}`;
-      console.log(`[EMAIL VERIFICATION] User ${email} - Verification link: ${verificationLink}`);
-      console.log(`[EMAIL VERIFICATION] Token expires at: ${new Date(now + TWENTY_FOUR_HOURS).toISOString()}`);
+      // Send email verification
+      const baseUrl = process.env.APP_URL || "https://digeratiexperts.com";
+      const verificationLink = `${baseUrl}/api/portal/verify-email?token=${verificationToken}`;
+      notificationService.sendEmailVerification({
+        email: newUser.email,
+        name: newUser.fullName,
+        verificationLink,
+      }).catch(err => logger.warn("Failed to send verification email", err));
 
       logSecurityEvent("PORTAL_USER_REGISTERED", req, { userId: newUser.id, email, emailVerified: false });
 
@@ -1140,10 +1152,14 @@ export async function registerRoutes(app: Express) {
         expiresAt: now + TWENTY_FOUR_HOURS,
       });
 
-      // Log the new verification link
-      const verificationLink = `/api/portal/verify-email?token=${verificationToken}`;
-      console.log(`[EMAIL VERIFICATION] Resend for ${email} - Verification link: ${verificationLink}`);
-      console.log(`[EMAIL VERIFICATION] Token expires at: ${new Date(now + TWENTY_FOUR_HOURS).toISOString()}`);
+      // Send verification email
+      const baseUrl = process.env.APP_URL || "https://digeratiexperts.com";
+      const verificationLink = `${baseUrl}/api/portal/verify-email?token=${verificationToken}`;
+      notificationService.sendEmailVerification({
+        email: user.email,
+        name: user.fullName,
+        verificationLink,
+      }).catch(err => logger.warn("Failed to resend verification email", err));
 
       logSecurityEvent("VERIFICATION_EMAIL_RESENT", req, { email });
 
@@ -1154,6 +1170,71 @@ export async function registerRoutes(app: Express) {
     } catch (error: any) {
       console.error("[ERROR] Resend verification failed:", error);
       res.status(500).json({ message: "Failed to resend verification email" });
+    }
+  });
+
+  // Forgot Password — request reset link
+  app.post("/api/portal/forgot-password", [validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { email } = req.body;
+      if (!email) return res.status(400).json({ message: "Email is required" });
+
+      const SAFE_RESPONSE = { success: true, message: "If an account exists with this email, a password reset link has been sent." };
+
+      const user = portalUsers.get(email);
+      if (!user) return res.json(SAFE_RESPONSE);
+
+      // Invalidate any existing reset tokens for this user
+      for (const [tok, data] of passwordResetTokens.entries()) {
+        if (data.email === email) passwordResetTokens.delete(tok);
+      }
+
+      const resetToken = randomId();
+      const ONE_HOUR = 60 * 60 * 1000;
+      const now = Date.now();
+      passwordResetTokens.set(resetToken, { email, userId: user.id, createdAt: now, expiresAt: now + ONE_HOUR });
+
+      const baseUrl = process.env.APP_URL || "https://digeratiexperts.com";
+      const resetLink = `${baseUrl}/portal/reset-password?token=${resetToken}`;
+      notificationService.sendPasswordReset({ email: user.email, name: user.fullName, resetLink })
+        .catch(err => logger.warn("Failed to send password reset email", err));
+
+      logSecurityEvent("PASSWORD_RESET_REQUESTED", req, { email });
+      return res.json(SAFE_RESPONSE);
+    } catch (error: any) {
+      logger.error("Forgot password failed", error);
+      return res.status(500).json({ message: "Request failed" });
+    }
+  });
+
+  // Reset Password — submit new password using token
+  app.post("/api/portal/reset-password", [validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { token, password } = req.body;
+      if (!token || !password) return res.status(400).json({ message: "Token and new password are required" });
+
+      const tokenData = passwordResetTokens.get(token);
+      if (!tokenData || Date.now() > tokenData.expiresAt) {
+        return res.status(400).json({ message: "Reset link is invalid or has expired. Please request a new one." });
+      }
+
+      if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+        return res.status(400).json({ message: "Password must be at least 8 characters with 1 uppercase letter and 1 number" });
+      }
+
+      const user = portalUsers.get(tokenData.email);
+      if (!user) return res.status(400).json({ message: "Account not found" });
+
+      const bcrypt = await import('bcrypt');
+      user.password = await bcrypt.hash(password, 12);
+      portalUsers.set(tokenData.email, user);
+      passwordResetTokens.delete(token);
+
+      logSecurityEvent("PASSWORD_RESET_COMPLETED", req, { email: tokenData.email });
+      return res.json({ success: true, message: "Password updated successfully. You can now log in." });
+    } catch (error: any) {
+      logger.error("Reset password failed", error);
+      return res.status(500).json({ message: "Password reset failed" });
     }
   });
 
