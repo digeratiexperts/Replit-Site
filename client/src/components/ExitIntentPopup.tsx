@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import shieldImage from "@assets/lucid-origin_Cybersecurity_ebook_cover_art_dark_navy_blue_to_b_1775876025204.jpg";
 
 interface ExitIntentPopupProps {
   delay?: number;
@@ -153,10 +154,8 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                   <>
                     <div className="flex items-center justify-center mb-6">
                       <div className="relative">
-                        <div className="absolute inset-0 bg-violet-500/30 rounded-full blur-xl" />
-                        <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
-                          <Shield className="w-8 h-8 text-white" />
-                        </div>
+                        <div className="absolute inset-0 bg-violet-500/20 rounded-xl blur-xl" />
+                        <img src={shieldImage} alt="Cybersecurity Shield" className="relative w-20 h-20 rounded-xl object-cover ring-2 ring-violet-500/30" />
                       </div>
                     </div>
 

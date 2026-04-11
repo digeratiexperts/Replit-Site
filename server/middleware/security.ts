@@ -61,8 +61,8 @@ export async function verifyTurnstile(req: Request, res: Response, next: NextFun
     return next();
   }
 
-  if (process.env.NODE_ENV === 'development' && !turnstileToken) {
-    console.warn('[SECURITY] Turnstile token missing in dev mode - skipping verification');
+  if (process.env.NODE_ENV === 'development' && (!turnstileToken || turnstileToken === 'dev-bypass-token')) {
+    console.warn('[SECURITY] Turnstile token missing or dev-bypass in dev mode - skipping verification');
     return next();
   }
   

@@ -6,6 +6,7 @@ import logoImage from '@assets/DE-Logo-new_1762461524794.webp';
 import ebookCover from '@/assets/images/ebook-defending-digital-realm-cover.png';
 import socImage from '@assets/lucid-origin_cybersecurity_operations_center_actively_stopping_1775870357913.jpg';
 import socTeamImage from '@assets/lucid-origin_modern_cybersecurity_operations_center_with_a_sma_1775870491267.jpg';
+import officeRecoveryImage from '@assets/lucid-origin_business_office_recovering_from_a_cyber_attack_IT_1775870566593.jpg';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { pricing } from '@/data/pricing';
@@ -264,9 +265,9 @@ export function MegaMenu() {
         {
           title: 'Is This You?',
           items: [
-            { title: 'Frustrated with IT?', description: 'Slow response and recurring issues', icon: <Zap className="h-5 w-5" /> },
-            { title: 'Worried about Security?', description: 'Concerned about ransomware', icon: <Shield className="h-5 w-5" /> },
-            { title: 'Need Compliance?', description: 'HIPAA, SOC 2, or FTC needs', icon: <ClipboardCheck className="h-5 w-5" /> },
+            { title: 'Frustrated with IT?', description: 'Slow response and recurring issues', icon: <Zap className="h-5 w-5" />, url: '/#contact' },
+            { title: 'Worried about Security?', description: 'Concerned about ransomware', icon: <Shield className="h-5 w-5" />, url: '/solutions/threat-detection' },
+            { title: 'Need Compliance?', description: 'HIPAA, SOC 2, or FTC needs', icon: <ClipboardCheck className="h-5 w-5" />, url: '/solutions/compliance-reports' },
           ]
         },
         {
@@ -766,6 +767,7 @@ export function MegaMenu() {
                             >
                               {/* Hexagon pattern background */}
                               <HexagonPattern id={uniqueId} />
+                              <img src={officeRecoveryImage} alt="" className="absolute inset-0 w-full h-full object-cover opacity-[0.08]" />
                               
                               <div className="relative z-10">
                                 <h4 className="font-bold text-white text-[13px] mb-3 flex items-center gap-2">
