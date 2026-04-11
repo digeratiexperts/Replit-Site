@@ -462,15 +462,29 @@ export default function Ebook() {
                 whileHover={{ scale: 1.02, rotateY: 5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <img 
-                  src={ebookCover} 
-                  alt="Defending the Digital Realm ebook cover" 
-                  className="w-full rounded-xl shadow-2xl shadow-orange-500/30 border border-orange-500/30"
+                <div className="relative rounded-xl overflow-hidden shadow-2xl shadow-orange-500/30 border border-orange-500/30"
                   style={{ 
                     boxShadow: '0 25px 50px -12px rgba(249, 115, 22, 0.25), 0 0 0 1px rgba(249, 115, 22, 0.1), inset 0 0 0 1px rgba(255,255,255,0.05)'
                   }}
                   data-testid="img-ebook-cover"
-                />
+                >
+                  <img 
+                    src={ebookCover} 
+                    alt="Defending the Digital Realm ebook cover" 
+                    className="w-full"
+                  />
+                  <div className="absolute inset-0 flex flex-col items-center justify-start pt-10 md:pt-16 px-6">
+                    <span className="text-xs md:text-sm font-bold tracking-[0.2em] uppercase text-blue-300/90">Digerati Experts</span>
+                    <h2 className="text-2xl md:text-4xl font-bold text-white text-center leading-tight mt-3 drop-shadow-lg">
+                      DEFENDING<br />THE DIGITAL<br />REALM
+                    </h2>
+                    <p className="text-xs md:text-sm text-blue-200/80 mt-2 text-center">A Comprehensive Guide to<br />Cybersecurity Risk Assessment</p>
+                    <div className="mt-auto mb-16 md:mb-24">
+                      <p className="text-xs md:text-sm text-white/60 italic">Joe Petro</p>
+                      <p className="text-[10px] md:text-xs text-white/40">www.digeratiexperts.com</p>
+                    </div>
+                  </div>
+                </div>
               </motion.div>
               <Badge className="mb-4 bg-gradient-to-r from-orange-500/20 to-amber-500/20 text-orange-400 border-orange-500/30 px-4 py-1">
                 Free Ebook
