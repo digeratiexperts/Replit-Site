@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Building, FileCheck, Check, Loader2, Shield, User, Mail, Clock, Activity, Zap } from "lucide-react";
 import { DashboardMockup } from "@/components/graphics";
 import { Input } from "@/components/ui/input";
-import heroBgImage from "@assets/lucid-origin_a_cinematic_photo_of_designed_as_a_background_lay_1775876876671.jpg";
 
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
@@ -92,11 +91,8 @@ export const ModernHeroSection = (): JSX.Element => {
       className="relative min-h-screen overflow-hidden"
       style={{ position: 'relative' }}
     >
-      <div className="absolute inset-0 pointer-events-none">
-        <img src={heroBgImage} alt="" className="w-full h-full object-cover opacity-[0.12]" />
-      </div>
       {/* Clean black background with parallax purple glows */}
-      <div className="absolute inset-0 bg-black/60">
+      <div className="absolute inset-0 bg-black">
         {/* Main accent - top right corner with parallax */}
         <motion.div 
           className="absolute top-0 right-0 w-[700px] h-[700px] pointer-events-none"
