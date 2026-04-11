@@ -197,7 +197,7 @@ export const DigeratiHomepage = (): JSX.Element => {
         </ScrollSectionAuto>
 
         {/* Contact Section */}
-        <ScrollSectionAuto id="contact" className="scroll-mt-24 pt-16">
+        <ScrollSectionAuto id="contact" className="scroll-mt-20 pt-8">
           <DigeratiContactSection />
           <DigeratiEnhancedFooterSection />
         </ScrollSectionAuto>
