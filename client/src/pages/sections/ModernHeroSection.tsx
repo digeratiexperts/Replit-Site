@@ -93,10 +93,10 @@ export const ModernHeroSection = (): JSX.Element => {
       style={{ position: 'relative' }}
     >
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <img src={heroBgImage} alt="" className="absolute inset-0 w-[120%] h-[120%] object-cover opacity-[0.18]" style={{ transform: 'rotate(-8deg) scale(1.2)', transformOrigin: 'top left' }} />
+        <img src={heroBgImage} alt="" className="absolute inset-0 w-full h-full object-cover opacity-[0.15]" style={{ transform: 'rotate(-5deg) scale(1.3)', transformOrigin: 'center center' }} />
       </div>
       {/* Clean black background with parallax purple glows */}
-      <div className="absolute inset-0 bg-black/40">
+      <div className="absolute inset-0 bg-black/70">
         {/* Main accent - top right corner with parallax */}
         <motion.div 
           className="absolute top-0 right-0 w-[700px] h-[700px] pointer-events-none"
