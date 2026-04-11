@@ -457,7 +457,7 @@ export default function ManagedWorkplace() {
                     <p className="text-sm text-white/60 mb-2">Key Outcomes:</p>
                     {pkg.outcomes.map((outcome, i) => (
                       <div key={i} className="flex items-center gap-2 text-sm text-violet-300">
-                        <CheckCircle className="w-4 h-4" />
+                        <Sparkles className="w-4 h-4" />
                         {outcome}
                       </div>
                     ))}

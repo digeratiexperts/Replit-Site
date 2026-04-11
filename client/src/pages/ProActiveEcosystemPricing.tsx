@@ -277,6 +277,35 @@ const ProActiveEcosystemPricing = () => {
         <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full opacity-30"
           style={{ background: "radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%)" }}
         />
+        <div 
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(139, 92, 246, 0.25) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(139, 92, 246, 0.25) 1px, transparent 1px)
+            `,
+            backgroundSize: "60px 60px",
+          }}
+        />
+        <motion.div
+          className="absolute -bottom-40 -left-40 w-[500px] h-[500px] rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 65%)" }}
+          animate={prefersReducedMotion ? {} : {
+            x: [0, 15, 0],
+            y: [0, -20, 0],
+            scale: [1, 1.06, 1],
+          }}
+          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute top-20 -right-20 w-[400px] h-[400px] rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(167, 139, 250, 0.08) 0%, transparent 65%)" }}
+          animate={prefersReducedMotion ? {} : {
+            scale: [1, 1.1, 1],
+            opacity: [0.4, 0.6, 0.4],
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        />
       </div>
       
       <MegaMenu />
@@ -290,9 +319,13 @@ const ProActiveEcosystemPricing = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-4">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-300 text-sm font-medium mb-4">
+              <Sparkles className="w-4 h-4" />
+              Interactive Pricing Calculator
+            </span>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight mb-4">
               ProActive Ecosystem
-              <span className="block text-violet-400">
+              <span className="block bg-gradient-to-r from-violet-400 via-purple-300 to-fuchsia-400 bg-clip-text text-transparent">
                 Pricing
               </span>
             </h1>

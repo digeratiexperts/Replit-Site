@@ -16,6 +16,86 @@ interface PageTemplateProps {
   variant?: "default" | "dark" | "light";
 }
 
+const FloatingOrbs = ({ prefersReducedMotion }: { prefersReducedMotion: boolean }) => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <motion.div
+      className="absolute -top-20 -right-20 w-96 h-96 rounded-full"
+      style={{ background: "radial-gradient(circle, rgba(139, 92, 246, 0.18) 0%, transparent 65%)" }}
+      animate={prefersReducedMotion ? {} : {
+        x: [0, 20, 0],
+        y: [0, -15, 0],
+        scale: [1, 1.05, 1],
+      }}
+      transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+    />
+    <motion.div
+      className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full"
+      style={{ background: "radial-gradient(circle, rgba(139, 92, 246, 0.14) 0%, transparent 65%)" }}
+      animate={prefersReducedMotion ? {} : {
+        x: [0, -15, 0],
+        y: [0, 20, 0],
+        scale: [1, 1.08, 1],
+      }}
+      transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+    />
+    <motion.div
+      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full"
+      style={{ background: "radial-gradient(circle, rgba(167, 139, 250, 0.1) 0%, transparent 65%)" }}
+      animate={prefersReducedMotion ? {} : {
+        scale: [1, 1.12, 1],
+        opacity: [0.3, 0.45, 0.3],
+      }}
+      transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+    />
+  </div>
+);
+
+const GridPattern = () => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.08]">
+    <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="grid-pattern" width="48" height="48" patternUnits="userSpaceOnUse">
+          <path d="M 48 0 L 0 0 0 48" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-white/30" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#grid-pattern)" />
+    </svg>
+  </div>
+);
+
+const NoiseTexture = () => (
+  <div 
+    className="absolute inset-0 opacity-[0.025] pointer-events-none mix-blend-overlay"
+    style={{
+      backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+      backgroundRepeat: 'repeat',
+      backgroundSize: '128px 128px'
+    }}
+  />
+);
+
+const GlowEffects = () => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="absolute top-0 left-1/4 w-96 h-96 bg-white/[0.06] rounded-full blur-3xl" />
+    <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-violet-500/[0.12] rounded-full blur-3xl" />
+  </div>
+);
+
+const ShieldBadge = () => (
+  <motion.div
+    className="absolute right-8 top-1/2 -translate-y-1/2 hidden xl:block"
+    initial={{ opacity: 0, x: 50 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ delay: 0.5, duration: 0.6 }}
+  >
+    <div className="relative">
+      <div className="absolute inset-0 bg-gradient-to-br from-violet-400/40 to-purple-600/40 rounded-full blur-xl" />
+      <div className="relative w-28 h-28 bg-white/[0.07] backdrop-blur-sm rounded-full border border-white/15 flex items-center justify-center">
+        <Shield className="w-14 h-14 text-violet-300/80" />
+      </div>
+    </div>
+  </motion.div>
+);
 
 export const PageTemplate = ({ 
   title, 
@@ -52,6 +132,10 @@ export const PageTemplate = ({
       <section className="relative overflow-hidden">
         <div className={`absolute inset-0 bg-gradient-to-br ${gradientColors}`} />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30" />
+        <FloatingOrbs prefersReducedMotion={prefersReducedMotion} />
+        <GridPattern />
+        <NoiseTexture />
+        <GlowEffects />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-16 md:pt-36 md:pb-20">
           {/* Breadcrumbs */}
@@ -130,6 +214,8 @@ export const PageTemplate = ({
                 </motion.p>
               )}
             </div>
+
+            <ShieldBadge />
           </div>
         </div>
         
