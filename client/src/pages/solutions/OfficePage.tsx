@@ -344,7 +344,7 @@ export default function OfficePage() {
     <div className="min-h-screen bg-gray-950 text-white overflow-hidden">
       <MegaMenu />
       
-      <main className="relative pt-24 pb-32">
+      <main className="relative pt-32 pb-32">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
           
           {/* Hero Section */}

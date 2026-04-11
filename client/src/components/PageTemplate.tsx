@@ -16,86 +16,6 @@ interface PageTemplateProps {
   variant?: "default" | "dark" | "light";
 }
 
-const FloatingOrbs = ({ prefersReducedMotion }: { prefersReducedMotion: boolean }) => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    <motion.div
-      className="absolute -top-20 -right-20 w-96 h-96 rounded-full"
-      style={{ background: "radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, transparent 60%)" }}
-      animate={prefersReducedMotion ? {} : {
-        x: [0, 30, 0],
-        y: [0, -20, 0],
-        scale: [1, 1.1, 1],
-      }}
-      transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-    />
-    <motion.div
-      className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full"
-      style={{ background: "radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 60%)" }}
-      animate={prefersReducedMotion ? {} : {
-        x: [0, -20, 0],
-        y: [0, 30, 0],
-        scale: [1, 1.15, 1],
-      }}
-      transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-    />
-    <motion.div
-      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full"
-      style={{ background: "radial-gradient(circle, rgba(167, 139, 250, 0.15) 0%, transparent 60%)" }}
-      animate={prefersReducedMotion ? {} : {
-        scale: [1, 1.2, 1],
-        opacity: [0.3, 0.5, 0.3],
-      }}
-      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-    />
-  </div>
-);
-
-const GridPattern = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-15">
-    <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
-          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-white/40" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#grid-pattern)" />
-    </svg>
-  </div>
-);
-
-const NoiseTexture = () => (
-  <div 
-    className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay"
-    style={{
-      backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-      backgroundRepeat: 'repeat',
-      backgroundSize: '128px 128px'
-    }}
-  />
-);
-
-const GlowEffects = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    <div className="absolute top-0 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
-    <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-violet-500/20 rounded-full blur-3xl" />
-  </div>
-);
-
-const ShieldBadge = () => (
-  <motion.div
-    className="absolute right-8 top-1/2 -translate-y-1/2 hidden xl:block"
-    initial={{ opacity: 0, x: 50 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ delay: 0.5, duration: 0.6 }}
-  >
-    <div className="relative">
-      <div className="absolute inset-0 bg-gradient-to-br from-violet-400 to-purple-600 rounded-full blur-xl opacity-50" />
-      <div className="relative w-32 h-32 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 flex items-center justify-center">
-        <Shield className="w-16 h-16 text-violet-300" />
-      </div>
-    </div>
-  </motion.div>
-);
 
 export const PageTemplate = ({ 
   title, 
@@ -130,34 +50,10 @@ export const PageTemplate = ({
       
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        {/* Gradient Background - Enhanced with multiple layers */}
         <div className={`absolute inset-0 bg-gradient-to-br ${gradientColors}`} />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30" />
         
-        {/* Secondary diagonal gradient for depth */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-black/30 via-transparent to-white/5" />
-        
-        {/* Mesh overlay for depth */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/40" />
-        
-        {/* Radial highlight at top */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-gradient-radial from-white/10 via-transparent to-transparent" />
-        
-        {/* Noise texture for premium feel */}
-        <NoiseTexture />
-        
-        {/* Glow effects */}
-        <GlowEffects />
-        
-        {/* Grid Pattern */}
-        <GridPattern />
-        
-        {/* Floating Orbs */}
-        <FloatingOrbs prefersReducedMotion={prefersReducedMotion} />
-        
-        {/* Shield Badge for visual interest */}
-        {!icon && <ShieldBadge />}
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16 md:pt-32 md:pb-20">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-16 md:pt-36 md:pb-20">
           {/* Breadcrumbs */}
           {breadcrumbs && breadcrumbs.length > 0 && (
             <motion.nav

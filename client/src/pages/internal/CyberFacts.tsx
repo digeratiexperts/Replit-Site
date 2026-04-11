@@ -359,7 +359,7 @@ const CyberFacts = () => {
       <MegaMenu />
       <FloatingParticles />
       
-      <main className="relative z-10 pt-24 pb-16">
+      <main className="relative z-10 pt-32 pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back Link */}
           <Link href="/internal" className="inline-flex items-center gap-2 text-violet-400 hover:text-violet-300 transition-colors mb-8" data-testid="link-back">

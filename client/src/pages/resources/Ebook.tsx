@@ -443,7 +443,7 @@ export default function Ebook() {
         </div>
       )}
 
-      <main className="pt-24 pb-20">
+      <main className="pt-32 pb-20">
         <div className="container mx-auto px-4 max-w-7xl">
           <Link href="/resources/blog" className="inline-flex items-center text-violet-400 hover:text-violet-300 mb-6 transition-colors" data-testid="link-back-blog">
             <ArrowLeft className="mr-2 h-4 w-4" />

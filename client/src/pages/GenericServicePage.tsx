@@ -1,6 +1,6 @@
 import { PageTemplate } from "@/components/PageTemplate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, Phone, ArrowRight, Sparkles, Zap, AlertTriangle, Grid3X3 } from "lucide-react";
+import { CheckCircle, Phone, ArrowRight, Shield, Zap, AlertTriangle, Grid3X3 } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
 import { ServiceMatrix } from "@/components/ServiceMatrix";
@@ -56,10 +56,9 @@ const FeatureCard = ({
     transition={{ delay: index * 0.1, duration: 0.5 }}
   >
     <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-violet-500/30 hover:bg-white/[0.08] transition-all duration-300 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       <CardHeader className="relative">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-          {feature.icon || <Sparkles className="w-6 h-6 text-white" />}
+        <div className="w-12 h-12 rounded-xl bg-violet-600/20 flex items-center justify-center mb-4">
+          {feature.icon || <Shield className="w-6 h-6 text-violet-400" />}
         </div>
         <CardTitle className="text-xl font-semibold text-white group-hover:text-violet-300 transition-colors">
           {feature.title}

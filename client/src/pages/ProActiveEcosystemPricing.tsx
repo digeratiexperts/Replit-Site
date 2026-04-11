@@ -273,48 +273,15 @@ const ProActiveEcosystemPricing = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Animated background */}
-      <div className="fixed inset-0 bg-gradient-to-br from-[#0a0118] via-[#0d0720] to-[#050312]">
-        <motion.div
-          className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full"
-          style={{
-            background: "radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, rgba(139, 92, 246, 0) 60%)",
-          }}
-          animate={prefersReducedMotion ? {} : {
-            scale: [1, 1.15, 1],
-            x: [0, 50, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+      <div className="fixed inset-0 bg-gradient-to-b from-[#0a0118] via-[#0d0720] to-[#050312]">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full opacity-30"
+          style={{ background: "radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%)" }}
         />
-        <motion.div
-          className="absolute bottom-[-10%] left-[-15%] w-[700px] h-[700px] rounded-full"
-          style={{
-            background: "radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0) 60%)",
-          }}
-          animate={prefersReducedMotion ? {} : {
-            scale: [1.1, 1, 1.1],
-            x: [0, -40, 0],
-            y: [0, -50, 0],
-          }}
-          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <div 
-          className="absolute inset-0 opacity-[0.05]"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px)
-            `,
-            backgroundSize: "60px 60px",
-          }}
-        />
-        
       </div>
       
       <MegaMenu />
       
-      <main className="relative z-10 pt-24 pb-16">
+      <main className="relative z-10 pt-32 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <motion.div
@@ -323,13 +290,9 @@ const ProActiveEcosystemPricing = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-300 text-sm font-medium mb-4">
-              <Sparkles className="w-4 h-4" />
-              Interactive Pricing Calculator
-            </span>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight mb-4">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-4">
               ProActive Ecosystem
-              <span className="block bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
+              <span className="block text-violet-400">
                 Pricing
               </span>
             </h1>
