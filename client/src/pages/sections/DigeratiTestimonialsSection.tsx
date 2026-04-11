@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Star, ChevronLeft, ChevronRight, Quote, Building2 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import testimonialsBgImage from "@assets/lucid-origin_a_cinematic_photo_of_ultra_wide_abstract_backgrou_1775876425988.jpg";
 
 import avatar1 from "@assets/stock_images/professional_busines_96e20e69.jpg";
 import avatar2 from "@assets/stock_images/doctor_physician_med_6ae69a73.jpg";
@@ -141,6 +142,9 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
         background: 'linear-gradient(180deg, #0a0a0a 0%, #0f0f1a 50%, #0a0a0a 100%)'
       }}
     >
+      <div className="absolute inset-0 pointer-events-none">
+        <img src={testimonialsBgImage} alt="" className="w-full h-full object-cover opacity-[0.07]" />
+      </div>
       {/* Parallax Background Elements */}
       <motion.div 
         className="absolute inset-0 pointer-events-none"

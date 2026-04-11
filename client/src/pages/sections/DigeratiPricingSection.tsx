@@ -3,6 +3,7 @@ import { CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { pricing, getPricingFooterText } from "@/data/pricing";
+import pricingBgImage from "@assets/lucid-origin_a_cinematic_photo_of_ultra_wide_abstract_backgrou_1775876876671.jpg";
 
 
 export const DigeratiPricingSection = (): JSX.Element => {
@@ -112,6 +113,9 @@ export const DigeratiPricingSection = (): JSX.Element => {
       id="pricing" 
       className="relative py-10 md:py-14 lg:py-16 overflow-hidden bg-[#0a0a0a]"
     >
+      <div className="absolute inset-0 pointer-events-none">
+        <img src={pricingBgImage} alt="" className="w-full h-full object-cover opacity-[0.08]" />
+      </div>
       {/* Subtle violet accent glow */}
       <div className="absolute inset-0 pointer-events-none"
            style={{ background: "radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.06) 0%, transparent 60%)" }} />

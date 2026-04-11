@@ -2,6 +2,7 @@ import { Eye, ShieldCheck, UserCheck, KeyRound, Cloud, AlertCircle, ArrowRight }
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Link } from "wouter";
 import { useRef } from "react";
+import servicesBgImage from "@assets/lucid-origin_a_cinematic_photo_of_ultra_wide_abstract_cybersec_1775876370561.jpg";
 
 export const DigeratiServicesSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -103,6 +104,9 @@ export const DigeratiServicesSection = (): JSX.Element => {
       className="relative py-10 md:py-14 lg:py-16 bg-[#0a0a0a] overflow-hidden"
       style={{ position: 'relative' }}
     >
+      <div className="absolute inset-0 pointer-events-none">
+        <img src={servicesBgImage} alt="" className="w-full h-full object-cover opacity-[0.08]" />
+      </div>
       {/* Parallax gradient orbs */}
       <motion.div 
         className="absolute top-20 left-0 w-[600px] h-[600px] pointer-events-none opacity-40"

@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { analytics } from "@/lib/analytics";
+import contactBgImage from "@assets/lucid-origin_a_cinematic_photo_of_ultra_wide_abstract_backgrou_1775876876673.jpg";
 
 const contactFormSchema = z.object({
   name: z.string()
@@ -93,6 +94,9 @@ export const DigeratiContactSection = (): JSX.Element => {
       id="contact" 
       className="py-8 lg:py-10 relative overflow-hidden bg-[#0a0a0a] scroll-mt-32"
     >
+      <div className="absolute inset-0 pointer-events-none">
+        <img src={contactBgImage} alt="" className="w-full h-full object-cover opacity-[0.08]" />
+      </div>
       {/* Subtle accent */}
       <div 
         className="absolute top-0 right-0 w-[500px] h-[500px] pointer-events-none"

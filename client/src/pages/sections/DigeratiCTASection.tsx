@@ -1,5 +1,6 @@
 import { Shield, Award, CheckCircle, Star } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import ctaBgImage from "@assets/lucid-origin_a_cinematic_photo_of_ultra_wide_abstract_backgrou_1775876876672.jpg";
 
 
 const badges = [
@@ -14,6 +15,9 @@ export const DigeratiCTASection = (): JSX.Element => {
   
   return (
     <section className="py-12 lg:py-16 bg-[#0a0a0a] relative overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <img src={ctaBgImage} alt="" className="w-full h-full object-cover opacity-[0.10]" />
+      </div>
       {/* Subtle purple glow */}
       <div 
         className="absolute inset-0 pointer-events-none"
