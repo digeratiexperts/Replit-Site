@@ -63,7 +63,7 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
 
   return (
     <section 
-      className="py-24 pt-32 pb-32 relative overflow-hidden"
+      className="py-14 md:py-24 pt-16 md:pt-32 pb-16 md:pb-32 relative overflow-hidden"
       style={{ 
         background: 'linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 50%, #E2E8F0 100%)'
       }}
