@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import logoImage from '@assets/DE-Logo-new_1762461524794.webp';
 import ebookCover from '@/assets/images/ebook-defending-digital-realm-cover.png';
 import socImage from '@assets/lucid-origin_cybersecurity_operations_center_actively_stopping_1775870357913.jpg';
+import socTeamImage from '@assets/lucid-origin_modern_cybersecurity_operations_center_with_a_sma_1775870491267.jpg';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { pricing } from '@/data/pricing';
@@ -793,14 +794,14 @@ export function MegaMenu() {
                             </motion.div>
                           )}
                           
-                          {/* Featured Case Study for Industries and About */}
-                          {(item.name === 'Industries' || item.name === 'About') && (
+                          {/* Featured Case Study for Industries */}
+                          {item.name === 'Industries' && (
                             <motion.div 
                               className="bg-gradient-to-br from-purple-900/30 to-violet-900/20 border border-white/10 rounded-xl overflow-hidden flex flex-col flex-1 min-h-[200px] hover:border-violet-500/40 transition-colors group"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: 0.2 }}
-                              data-testid={`menu-featured-${item.name.toLowerCase()}`}
+                              data-testid="menu-featured-industries"
                             >
                               <div className="relative h-32 overflow-hidden">
                                 <img 
@@ -819,9 +820,44 @@ export function MegaMenu() {
                                 <a 
                                   href="/resources/case-studies" 
                                   className="inline-flex items-center text-xs font-semibold text-violet-400 hover:text-violet-300 transition-colors"
-                                  data-testid={`link-featured-case-study-${item.name.toLowerCase()}`}
+                                  data-testid="link-featured-case-study-industries"
                                 >
                                   Read the Full Story
+                                  <ArrowRight className="w-3 h-3 ml-1.5" />
+                                </a>
+                              </div>
+                            </motion.div>
+                          )}
+
+                          {/* Featured Team Spotlight for About */}
+                          {item.name === 'About' && (
+                            <motion.div 
+                              className="bg-gradient-to-br from-purple-900/30 to-violet-900/20 border border-white/10 rounded-xl overflow-hidden flex flex-col flex-1 min-h-[200px] hover:border-violet-500/40 transition-colors group"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.2 }}
+                              data-testid="menu-featured-about"
+                            >
+                              <div className="relative h-32 overflow-hidden">
+                                <img 
+                                  src={socTeamImage} 
+                                  alt="Digerati Experts Security Operations Team" 
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0826] via-transparent to-transparent" />
+                                <div className="absolute top-2 left-2">
+                                  <span className="bg-emerald-600/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Our Team</span>
+                                </div>
+                              </div>
+                              <div className="p-3 flex flex-col flex-1">
+                                <h4 className="text-sm font-semibold text-white mb-1 leading-tight">Your Dedicated Arizona Security Operations Team</h4>
+                                <p className="text-xs text-gray-400 mb-3 flex-1">Certified experts monitoring your business 24/7 from our Chandler, AZ operations center.</p>
+                                <a 
+                                  href="/about/team" 
+                                  className="inline-flex items-center text-xs font-semibold text-violet-400 hover:text-violet-300 transition-colors"
+                                  data-testid="link-featured-team-about"
+                                >
+                                  Meet the Experts
                                   <ArrowRight className="w-3 h-3 ml-1.5" />
                                 </a>
                               </div>
