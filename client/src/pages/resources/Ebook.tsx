@@ -321,7 +321,7 @@ const chapters: Chapter[] = [
             © {new Date().getFullYear()} Digerati Experts. All rights reserved.
           </p>
           <p className="text-slate-500 text-sm mt-2">
-            By Joe Petro, Owner of Digerati Experts
+            Joe Petro — Founder, Digerati Experts
           </p>
         </div>
       </>
@@ -422,9 +422,9 @@ export default function Ebook() {
     <div className="min-h-screen bg-[#0a0a0a]">
       <Helmet>
         <title>Defending the Digital Realm - Free Ebook | Digerati Experts</title>
-        <meta name="description" content="A comprehensive guide to cybersecurity risk assessment by Joe Petro, Owner of Digerati Experts. Learn how to protect your Arizona business from digital threats." />
+        <meta name="description" content="A cyber risk assessment framework for modern businesses by Joe Petro, Founder of Digerati Experts. Learn how to protect your Arizona business from digital threats." />
         <meta property="og:title" content="Defending the Digital Realm - Free Cybersecurity Ebook" />
-        <meta property="og:description" content="A comprehensive guide to cybersecurity risk assessment for Arizona businesses." />
+        <meta property="og:description" content="A cyber risk assessment framework for modern businesses. Protect your Arizona business from digital threats." />
         <meta property="og:type" content="book" />
         <meta property="og:image" content={ebookCover} />
       </Helmet>
@@ -479,9 +479,9 @@ export default function Ebook() {
                 Defending the Digital Realm
               </h1>
               <p className="text-xl text-white/70 mb-2">
-                A Comprehensive Guide to Cybersecurity Risk Assessment
+                A Cyber Risk Assessment Framework for Modern Businesses
               </p>
-              <p className="text-white/50 mb-8">By Joe Petro, Owner of Digerati Experts</p>
+              <p className="text-white/50 mb-8">Joe Petro — Founder, Digerati Experts</p>
               
               <div className="flex flex-wrap justify-center gap-4 mb-8">
                 <Button 

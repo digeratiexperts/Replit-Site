@@ -19,7 +19,7 @@ const blogPosts = [
   {
     id: 0,
     title: "Defending the Digital Realm",
-    excerpt: "A comprehensive guide to cybersecurity risk assessment. Learn how to identify, analyze, and mitigate risks to protect your Arizona business.",
+    excerpt: "A cyber risk assessment framework for modern businesses. Learn how to identify, analyze, and mitigate risks to protect your Arizona business.",
     category: "Ebook",
     author: "Joe Petro",
     date: "2025-01-15",

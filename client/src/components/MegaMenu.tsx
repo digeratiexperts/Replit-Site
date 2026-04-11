@@ -890,7 +890,7 @@ export function MegaMenu() {
                                     FREE EBOOK
                                   </span>
                                   <p className="text-sm font-semibold text-white mb-1">Defending the Digital Realm</p>
-                                  <p className="text-xs text-white/60">Cybersecurity Risk Assessment Guide</p>
+                                  <p className="text-xs text-white/60">A Cyber Risk Assessment Framework for Modern Businesses</p>
                                 </div>
                               </Link>
                             </motion.div>
