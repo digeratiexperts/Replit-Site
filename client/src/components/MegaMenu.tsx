@@ -4,6 +4,7 @@ import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink, X, 
 import { Button } from '@/components/ui/button';
 import logoImage from '@assets/DE-Logo-new_1762461524794.webp';
 import ebookCover from '@/assets/images/ebook-defending-digital-realm-cover.png';
+import socImage from '@assets/lucid-origin_cybersecurity_operations_center_actively_stopping_1775870357913.jpg';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { pricing } from '@/data/pricing';
@@ -792,23 +793,37 @@ export function MegaMenu() {
                             </motion.div>
                           )}
                           
-                          {/* Placeholder Box for Industries and About */}
+                          {/* Featured Case Study for Industries and About */}
                           {(item.name === 'Industries' || item.name === 'About') && (
                             <motion.div 
-                              className="bg-gradient-to-br from-purple-900/30 to-violet-900/20 border border-white/10 rounded-xl p-6 flex flex-col items-center justify-center flex-1 min-h-[200px]"
+                              className="bg-gradient-to-br from-purple-900/30 to-violet-900/20 border border-white/10 rounded-xl overflow-hidden flex flex-col flex-1 min-h-[200px] hover:border-violet-500/40 transition-colors group"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: 0.2 }}
-                              data-testid={`menu-placeholder-${item.name.toLowerCase()}`}
+                              data-testid={`menu-featured-${item.name.toLowerCase()}`}
                             >
-                              <div className="text-center">
-                                <div className="w-16 h-16 mx-auto bg-violet-600/30 rounded-lg flex items-center justify-center mb-4">
-                                  <svg className="w-8 h-8 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                  </svg>
+                              <div className="relative h-32 overflow-hidden">
+                                <img 
+                                  src={socImage} 
+                                  alt="Cybersecurity Operations Center" 
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0826] via-transparent to-transparent" />
+                                <div className="absolute top-2 left-2">
+                                  <span className="bg-violet-600/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Case Study</span>
                                 </div>
-                                <p className="text-sm font-medium text-white/60 mb-1">Video or Case Study</p>
-                                <p className="text-xs text-gray-500">Coming soon</p>
+                              </div>
+                              <div className="p-3 flex flex-col flex-1">
+                                <h4 className="text-sm font-semibold text-white mb-1 leading-tight">How We Stopped a Ransomware Attack on an AZ Medical Practice</h4>
+                                <p className="text-xs text-gray-400 mb-3 flex-1">Our 24/7 SOC detected and neutralized the threat in under 4 minutes, saving $2.3M in potential damages.</p>
+                                <a 
+                                  href="/resources/case-studies" 
+                                  className="inline-flex items-center text-xs font-semibold text-violet-400 hover:text-violet-300 transition-colors"
+                                  data-testid={`link-featured-case-study-${item.name.toLowerCase()}`}
+                                >
+                                  Read the Full Story
+                                  <ArrowRight className="w-3 h-3 ml-1.5" />
+                                </a>
                               </div>
                             </motion.div>
                           )}
