@@ -91,7 +91,7 @@ export const DigeratiContactSection = (): JSX.Element => {
   return (
     <section 
       id="contact" 
-      className="py-8 lg:py-10 relative overflow-hidden bg-[#0a0a0a]"
+      className="py-8 lg:py-10 relative overflow-hidden bg-[#0a0a0a] scroll-mt-20"
     >
       {/* Subtle accent */}
       <div 
