@@ -879,22 +879,11 @@ export function MegaMenu() {
                                 className="flex flex-col h-full"
                               >
                                 <div className="flex-1 flex items-center justify-center mb-3">
-                                  <div className="relative max-h-36 rounded-lg shadow-lg shadow-orange-500/20 border border-orange-500/30 overflow-hidden">
-                                    <img 
-                                      src={ebookCover} 
-                                      alt="Defending the Digital Realm ebook" 
-                                      className="max-h-36 w-auto"
-                                    />
-                                    <div className="absolute inset-0 flex flex-col items-center justify-start pt-3 px-2">
-                                      <span className="text-[8px] font-bold tracking-[0.15em] uppercase text-blue-300/90">Digerati Experts</span>
-                                      <h3 className="text-[10px] font-bold text-white text-center leading-tight mt-1 drop-shadow-lg">
-                                        DEFENDING<br />THE DIGITAL<br />REALM
-                                      </h3>
-                                      <span className="text-[6px] text-blue-200/70 mt-0.5">A Comprehensive Guide to</span>
-                                      <span className="text-[6px] text-blue-200/70">Cybersecurity Risk Assessment</span>
-                                      <span className="text-[6px] text-white/50 mt-auto mb-6">Joe Petro</span>
-                                    </div>
-                                  </div>
+                                  <img 
+                                    src={ebookCover} 
+                                    alt="Defending the Digital Realm ebook" 
+                                    className="max-h-36 w-auto rounded-lg shadow-lg shadow-orange-500/20 border border-orange-500/30"
+                                  />
                                 </div>
                                 <div className="text-center">
                                   <span className="inline-block bg-white text-orange-600 text-xs font-bold px-2 py-1 rounded mb-2">
