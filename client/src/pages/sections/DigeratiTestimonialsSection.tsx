@@ -143,7 +143,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
       }}
     >
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <img src={testimonialsBgImage} alt="" className="absolute bottom-0 left-0 w-full h-auto opacity-[0.06]" />
+        <img src={testimonialsBgImage} alt="" className="absolute top-0 left-0 w-full h-auto opacity-[0.06]" />
       </div>
       {/* Parallax Background Elements */}
       <motion.div 

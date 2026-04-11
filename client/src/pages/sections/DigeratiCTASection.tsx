@@ -16,7 +16,7 @@ export const DigeratiCTASection = (): JSX.Element => {
   return (
     <section className="py-12 lg:py-16 bg-[#0a0a0a] relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <img src={ctaBgImage} alt="" className="absolute bottom-0 left-0 w-full h-auto opacity-[0.07]" />
+        <img src={ctaBgImage} alt="" className="absolute top-0 left-0 w-full h-auto opacity-[0.07]" />
       </div>
       {/* Subtle purple glow */}
       <div 
