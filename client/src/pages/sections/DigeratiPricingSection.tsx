@@ -114,7 +114,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
       className="relative py-10 md:py-14 lg:py-16 overflow-hidden bg-[#0a0a0a]"
     >
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <img src={pricingBgImage} alt="" className="absolute top-0 left-0 w-full h-auto opacity-[0.15]" />
+        <img src={pricingBgImage} alt="" loading="lazy" className="absolute top-0 left-0 w-full h-auto opacity-[0.15]" />
       </div>
       {/* Subtle violet accent glow */}
       <div className="absolute inset-0 pointer-events-none"

@@ -32,7 +32,7 @@ export const DigeratiStatsSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section className="py-10 lg:py-12 bg-[#0a0a0a]">
+    <section className="py-10 lg:py-12 bg-[#0a0a0a] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
