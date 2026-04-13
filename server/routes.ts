@@ -143,6 +143,12 @@ const leadQuoteRateLimiter = rateLimit({
   message: "Too many quote requests. Please try again later.",
 });
 
+const widgetTicketRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: "Too many support requests. Please try again later.",
+});
+
 // Input validation middleware
 const validateInput = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   // Basic size check
@@ -752,10 +758,38 @@ export async function registerRoutes(app: Express) {
         return res.status(400).json({ error: "Subject and description are required" });
       }
 
-      // Create ticket in local storage
+      const userId = req.userId || "";
+      const userEmail = req.user?.email || "";
+      const clientId = req.user?.clientId;
+
+      // Resolve clientId: use JWT claim, or look up from in-memory portal users
+      let resolvedClientId = clientId;
+      if (!resolvedClientId && userEmail) {
+        const portalUser = portalUsers.get(userEmail);
+        if (portalUser) {
+          resolvedClientId = portalUser.clientId;
+        }
+      }
+      if (!resolvedClientId) {
+        return res.status(400).json({ error: "No client account associated with this user. Please contact support." });
+      }
+
+      // Generate ticket number
+      const ticketNumber = `TKT-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 5).toUpperCase()}`;
+
+      // Map priority to Zoho-compatible values
+      const priorityMap: Record<string, string> = {
+        low: "Low",
+        medium: "Medium",
+        high: "High",
+        critical: "High",
+      };
+
+      // Create ticket in local database
       const ticket = await storage.createPortalTicket({
-        userId: req.userId || "",
-        createdBy: req.userId || "",
+        clientId: resolvedClientId,
+        createdBy: userId,
+        ticketNumber,
         subject,
         description,
         status: "open",
@@ -763,29 +797,47 @@ export async function registerRoutes(app: Express) {
         category: category || "general",
       });
 
-      // Try to sync with Zoho Desk if configured
+      // Sync to Zoho Desk (non-blocking — local ticket succeeds regardless)
+      let zohoTicketId: string | null = null;
       try {
         const { zohoDeskService } = await import("./zoho/zohoDesk");
         const { zohoClient } = await import("./zoho/zohoClient");
         
         if (zohoClient.isConfigured()) {
-          const user = req.user;
+          // Look up or reference the contact in Zoho Desk by email
+          let contactId: string | undefined;
+          try {
+            const contact = await zohoDeskService.getContactByEmail(userEmail);
+            if (contact) {
+              contactId = contact.id;
+            }
+          } catch (contactErr) {
+            console.warn("Could not look up Zoho Desk contact:", contactErr);
+          }
+
           const zohoTicket = await zohoDeskService.createTicket({
             subject,
             description,
-            email: user?.email,
-            priority: priority === "high" ? "High" : priority === "low" ? "Low" : "Medium",
+            contactId,
+            email: contactId ? undefined : userEmail,
+            priority: priorityMap[priority] || "Medium",
           });
-          console.log("✅ Ticket synced to Zoho Desk:", zohoTicket.id);
+          zohoTicketId = zohoTicket.id;
+          console.log(`✅ Ticket ${ticketNumber} synced to Zoho Desk: ${zohoTicket.id}`);
+
+          // Store the Zoho ticket ID on the local ticket for reference
+          try {
+            await storage.updatePortalTicket(ticket.id, { assignedTo: `zoho:${zohoTicket.id}` });
+          } catch {}
         }
-      } catch (zohoError) {
-        console.warn("Could not sync ticket to Zoho Desk:", zohoError);
-        // Continue - local ticket was created successfully
+      } catch (zohoError: any) {
+        console.warn("Could not sync ticket to Zoho Desk:", zohoError?.message || zohoError);
       }
 
-      res.status(201).json({ success: true, ticket });
-      logSecurityEvent("TICKET_CREATED", req, { ticketId: ticket.id });
+      res.status(201).json({ success: true, ticket, zohoTicketId });
+      logSecurityEvent("TICKET_CREATED", req, { ticketId: ticket.id, ticketNumber, zohoTicketId });
     } catch (error: any) {
+      console.error("Ticket creation error:", error);
       res.status(500).json({ error: error.message });
     }
   });
@@ -797,6 +849,12 @@ export async function registerRoutes(app: Express) {
       const ticket = await storage.getPortalTicket(id);
       if (!ticket) {
         return res.status(404).json({ error: "Ticket not found" });
+      }
+
+      const isAdmin = req.user?.role === "admin";
+      const userClientId = req.user?.clientId;
+      if (!isAdmin && ticket.clientId !== userClientId) {
+        return res.status(403).json({ error: "Access denied" });
       }
       
       const comments = await storage.getPortalTicketComments(id);
@@ -816,7 +874,7 @@ export async function registerRoutes(app: Express) {
         },
       });
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: "Failed to retrieve ticket" });
     }
   });
 
@@ -832,6 +890,12 @@ export async function registerRoutes(app: Express) {
       const ticket = await storage.getPortalTicket(id);
       if (!ticket) {
         return res.status(404).json({ error: "Ticket not found" });
+      }
+
+      const isAdmin = req.user?.role === "admin";
+      const userClientId = req.user?.clientId;
+      if (!isAdmin && ticket.clientId !== userClientId) {
+        return res.status(403).json({ error: "Access denied" });
       }
 
       const comment = await storage.createPortalTicketComment({
@@ -3552,6 +3616,104 @@ export async function registerRoutes(app: Express) {
     } catch (error: any) {
       console.error("[ZOHO TICKET ERROR]", error.response?.data || error.message);
       res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Public support widget ticket submission (Zoho ASAP fallback)
+  app.post("/api/portal/zoho/ticket", [widgetTicketRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { email, subject, description, priority } = req.body;
+
+      if (!email || !subject || !description) {
+        return res.status(400).json({ error: "Email, subject, and description are required" });
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ error: "Invalid email address" });
+      }
+
+      if (subject.length > 200 || description.length > 5000) {
+        return res.status(400).json({ error: "Subject or description too long" });
+      }
+
+      const ticketNumber = `TKT-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 5).toUpperCase()}`;
+      const priorityValue = priority || "Medium";
+      const priorityLower = priorityValue.toLowerCase();
+
+      // 1. Try to create ticket in Zoho Desk
+      let zohoTicketId: string | null = null;
+      try {
+        const { zohoClient } = await import("./zoho/zohoClient");
+        if (zohoClient.isConfigured()) {
+          let contactId: string | undefined;
+          try {
+            const contact = await zohoDeskService.getContactByEmail(email);
+            if (contact) contactId = contact.id;
+          } catch {}
+
+          const zohoTicket = await zohoDeskService.createTicket({
+            subject,
+            description,
+            contactId,
+            email: contactId ? undefined : email,
+            priority: priorityValue,
+          });
+          zohoTicketId = zohoTicket.id;
+          console.log(`✅ Widget ticket synced to Zoho Desk: ${zohoTicket.id}`);
+        }
+      } catch (zohoErr: any) {
+        console.warn("Could not create Zoho Desk ticket from widget:", zohoErr?.message || zohoErr);
+      }
+
+      // 2. Try to create ticket in local portal system
+      let localTicket = null;
+      try {
+        // Check if the email belongs to a portal user
+        const portalUser = portalUsers.get(email);
+        if (portalUser && portalUser.clientId) {
+          localTicket = await storage.createPortalTicket({
+            clientId: portalUser.clientId,
+            createdBy: portalUser.id,
+            ticketNumber,
+            subject,
+            description,
+            status: "open",
+            priority: priorityLower === "high" || priorityLower === "urgent" ? "high" : priorityLower === "low" ? "low" : "medium",
+            category: "general",
+          });
+
+          if (zohoTicketId) {
+            try {
+              await storage.updatePortalTicket(localTicket.id, { assignedTo: `zoho:${zohoTicketId}` });
+            } catch {}
+          }
+          console.log(`✅ Widget ticket created locally: ${ticketNumber}`);
+        }
+      } catch (localErr: any) {
+        console.warn("Could not create local ticket from widget:", localErr?.message || localErr);
+      }
+
+      if (!zohoTicketId && !localTicket) {
+        console.log(`📋 Widget ticket queued (no Zoho/local account): ${ticketNumber} from ${email} — Subject: ${subject}`);
+        try {
+          const { default: notificationService } = await import("./services/notificationService");
+          if (notificationService.sendLeadAlert) {
+            await notificationService.sendLeadAlert({ name: email, email, company: "Support Widget", phone: "", source: "Support Widget Ticket", notes: `Subject: ${subject}\n\n${description}` });
+          }
+        } catch {}
+      }
+
+      res.json({
+        success: true,
+        ticketNumber: localTicket?.ticketNumber || ticketNumber,
+        zohoTicketId,
+        message: zohoTicketId || localTicket ? "Your ticket has been created. We'll respond shortly." : "Your request has been received. A team member will contact you shortly.",
+      });
+      logSecurityEvent("WIDGET_TICKET_CREATED", req, { email, ticketNumber, zohoTicketId });
+    } catch (error: any) {
+      console.error("[WIDGET TICKET ERROR]", error);
+      res.status(500).json({ error: "Failed to create ticket. Please try again." });
     }
   });
 

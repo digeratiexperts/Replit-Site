@@ -35,8 +35,8 @@ class ZohoDeskService {
   private async getOrgId(): Promise<string> {
     if (this.orgId) return this.orgId;
     
-    const client = await zohoClient.getClient();
-    const response = await client.get('/desk/v1/organizations');
+    const client = await zohoClient.getDeskClient();
+    const response = await client.get('/organizations');
     
     if (response.data?.data?.[0]?.id) {
       const orgId = response.data.data[0].id;
@@ -54,10 +54,10 @@ class ZohoDeskService {
     sortBy?: string;
   }): Promise<{ tickets: ZohoTicket[]; count: number }> {
     try {
-      const client = await zohoClient.getClient();
+      const client = await zohoClient.getDeskClient();
       const orgId = await this.getOrgId();
       
-      const response = await client.get('/desk/v1/tickets', {
+      const response = await client.get('/tickets', {
         headers: { orgId },
         params: {
           limit: params?.limit || 50,
@@ -79,10 +79,10 @@ class ZohoDeskService {
 
   async getTicketById(ticketId: string): Promise<ZohoTicket | null> {
     try {
-      const client = await zohoClient.getClient();
+      const client = await zohoClient.getDeskClient();
       const orgId = await this.getOrgId();
       
-      const response = await client.get(`/desk/v1/tickets/${ticketId}`, {
+      const response = await client.get(`/tickets/${ticketId}`, {
         headers: { orgId },
       });
 
@@ -102,10 +102,10 @@ class ZohoDeskService {
     priority?: string;
   }): Promise<ZohoTicket> {
     try {
-      const client = await zohoClient.getClient();
+      const client = await zohoClient.getDeskClient();
       const orgId = await this.getOrgId();
       
-      const response = await client.post('/desk/v1/tickets', data, {
+      const response = await client.post('/tickets', data, {
         headers: { orgId },
       });
 
@@ -118,10 +118,10 @@ class ZohoDeskService {
 
   async updateTicket(ticketId: string, data: Partial<ZohoTicket>): Promise<ZohoTicket> {
     try {
-      const client = await zohoClient.getClient();
+      const client = await zohoClient.getDeskClient();
       const orgId = await this.getOrgId();
       
-      const response = await client.patch(`/desk/v1/tickets/${ticketId}`, data, {
+      const response = await client.patch(`/tickets/${ticketId}`, data, {
         headers: { orgId },
       });
 
@@ -137,10 +137,10 @@ class ZohoDeskService {
     from?: number;
   }): Promise<{ contacts: ZohoDeskContact[]; count: number }> {
     try {
-      const client = await zohoClient.getClient();
+      const client = await zohoClient.getDeskClient();
       const orgId = await this.getOrgId();
       
-      const response = await client.get('/desk/v1/contacts', {
+      const response = await client.get('/contacts', {
         headers: { orgId },
         params: {
           limit: params?.limit || 50,
@@ -160,10 +160,10 @@ class ZohoDeskService {
 
   async getContactByEmail(email: string): Promise<ZohoDeskContact | null> {
     try {
-      const client = await zohoClient.getClient();
+      const client = await zohoClient.getDeskClient();
       const orgId = await this.getOrgId();
       
-      const response = await client.get('/desk/v1/contacts/search', {
+      const response = await client.get('/contacts/search', {
         headers: { orgId },
         params: { email },
       });
@@ -177,10 +177,10 @@ class ZohoDeskService {
 
   async getTicketsByContact(contactId: string): Promise<ZohoTicket[]> {
     try {
-      const client = await zohoClient.getClient();
+      const client = await zohoClient.getDeskClient();
       const orgId = await this.getOrgId();
       
-      const response = await client.get(`/desk/v1/contacts/${contactId}/tickets`, {
+      const response = await client.get(`/contacts/${contactId}/tickets`, {
         headers: { orgId },
       });
 
@@ -193,10 +193,10 @@ class ZohoDeskService {
 
   async getDepartments(): Promise<any[]> {
     try {
-      const client = await zohoClient.getClient();
+      const client = await zohoClient.getDeskClient();
       const orgId = await this.getOrgId();
       
-      const response = await client.get('/desk/v1/departments', {
+      const response = await client.get('/departments', {
         headers: { orgId },
       });
 

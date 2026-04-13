@@ -11,6 +11,8 @@ import {
   taskLabels,
   activities,
   portalChatMessages,
+  portalClients,
+  portalUsers as portalUsersTable,
   portalTickets,
   portalTicketComments,
   type User,
@@ -724,12 +726,55 @@ export class MemStorage implements IStorage {
 
 export class DatabaseStorage implements IStorage {
   private dbModule: any = null;
+  private seeded = false;
 
   private async getDb() {
     if (!this.dbModule) {
       this.dbModule = await import("./db");
     }
+    if (!this.seeded) {
+      this.seeded = true;
+      await this.seedDemoClients();
+    }
     return this.dbModule.db;
+  }
+
+  private async seedDemoClients() {
+    if (process.env.NODE_ENV === "production") return;
+    try {
+      const db = this.dbModule.db;
+      const demoClients = [
+        { id: "client-1", companyName: "Acme Corp", contactEmail: "admin@acme.com", contactPhone: "(480) 555-1001", industry: "Manufacturing", primaryContact: "John Smith", status: "active" },
+        { id: "client-2", companyName: "Phoenix Medical Group", contactEmail: "it@phoenixmedical.com", contactPhone: "(480) 555-1002", industry: "Healthcare", primaryContact: "Sarah Jones", status: "active" },
+        { id: "client-3", companyName: "Desert Law Partners", contactEmail: "admin@desertlaw.com", contactPhone: "(480) 555-1003", industry: "Legal", primaryContact: "Mike Davis", status: "active" },
+        { id: "client-5", companyName: "Alamo Industries", contactEmail: "admin@alamoindustries.com", contactPhone: "(480) 555-1005", industry: "Industrial", primaryContact: "Maria Garcia", status: "active" },
+        { id: "client-6", companyName: "SEL Machining", contactEmail: "admin@selmachining.com", contactPhone: "(480) 555-1006", industry: "Manufacturing", primaryContact: "Sel Operations", status: "active" },
+      ];
+      for (const client of demoClients) {
+        const [existing] = await db.select().from(portalClients).where(eq(portalClients.id, client.id));
+        if (!existing) {
+          await db.insert(portalClients).values(client);
+          console.log(`✅ Seeded demo client: ${client.companyName}`);
+        }
+      }
+
+      const bcryptHash = "$2b$12$Bf.sDD1gQ6391SrTebkd4.9BeiteKKOswHl63vyCN0/51CmDldT7K";
+      const demoPortalUsers = [
+        { id: "user-001", clientId: "client-1", email: "john.smith@acme.com", password: bcryptHash, fullName: "John Smith", role: "admin" as const },
+        { id: "user-002", clientId: "client-2", email: "sarah.jones@phoenixmedical.com", password: bcryptHash, fullName: "Sarah Jones", role: "user" as const },
+        { id: "user-003", clientId: "client-5", email: "admin@alamoindustries.com", password: "$2b$12$N9Ys4.kLCKht2rMjK4x0TOJHlQlxY7dRzAT6vmC7.mGrjck7TUI7O", fullName: "Maria Garcia", role: "user" as const },
+        { id: "user-004", clientId: "client-6", email: "admin@selmachining.com", password: "$2b$12$m6eyC5YfWBIG4/beE40TxOeG5BG4v/MxsowQ4Ays9RrjhOzcVxx.a", fullName: "Sel Operations", role: "user" as const },
+      ];
+      for (const user of demoPortalUsers) {
+        const [existing] = await db.select().from(portalUsersTable).where(eq(portalUsersTable.id, user.id));
+        if (!existing) {
+          await db.insert(portalUsersTable).values(user);
+          console.log(`✅ Seeded demo portal user: ${user.fullName}`);
+        }
+      }
+    } catch (err: any) {
+      console.warn("Could not seed demo data:", err?.message);
+    }
   }
 
   async getUser(id: string): Promise<User | undefined> {

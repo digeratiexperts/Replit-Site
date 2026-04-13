@@ -72,6 +72,18 @@ class ZohoClient {
     });
   }
 
+  async getDeskClient(): Promise<AxiosInstance> {
+    const token = await this.getAccessToken();
+    
+    return axios.create({
+      baseURL: 'https://desk.zoho.com/api/v1',
+      headers: {
+        'Authorization': `Zoho-oauthtoken ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+
   isConfigured(): boolean {
     return !!(this.clientId && this.clientSecret && this.refreshToken);
   }
