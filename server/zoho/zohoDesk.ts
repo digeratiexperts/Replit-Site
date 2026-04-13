@@ -31,6 +31,7 @@ export interface ZohoDeskContact {
 
 class ZohoDeskService {
   private orgId: string | null = null;
+  private defaultDepartmentId: string | null = null;
 
   private async getOrgId(): Promise<string> {
     if (this.orgId) return this.orgId;
@@ -41,10 +42,28 @@ class ZohoDeskService {
     if (response.data?.data?.[0]?.id) {
       const orgId = response.data.data[0].id;
       this.orgId = orgId;
+      console.log(`✅ Zoho Desk org ID: ${orgId}`);
       return orgId;
     }
     
     throw new Error('No Zoho Desk organization found');
+  }
+
+  private async getDefaultDepartmentId(): Promise<string> {
+    if (this.defaultDepartmentId) return this.defaultDepartmentId;
+    
+    try {
+      const departments = await this.getDepartments();
+      if (departments.length > 0) {
+        this.defaultDepartmentId = departments[0].id;
+        console.log(`✅ Zoho Desk default department: ${departments[0].name || departments[0].id}`);
+        return this.defaultDepartmentId;
+      }
+    } catch (err: any) {
+      console.warn('Could not fetch departments:', err.message);
+    }
+    
+    throw new Error('No Zoho Desk department found');
   }
 
   async getTickets(params?: {
@@ -105,7 +124,23 @@ class ZohoDeskService {
       const client = await zohoClient.getDeskClient();
       const orgId = await this.getOrgId();
       
-      const response = await client.post('/tickets', data, {
+      const departmentId = data.departmentId || await this.getDefaultDepartmentId();
+      
+      const ticketData: Record<string, any> = {
+        subject: data.subject,
+        description: data.description,
+        departmentId,
+        priority: data.priority || 'Medium',
+        channel: 'Web',
+      };
+
+      if (data.contactId) {
+        ticketData.contactId = data.contactId;
+      } else if (data.email) {
+        ticketData.contact = { email: data.email };
+      }
+      
+      const response = await client.post('/tickets', ticketData, {
         headers: { orgId },
       });
 

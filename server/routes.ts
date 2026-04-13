@@ -3641,22 +3641,14 @@ export async function registerRoutes(app: Express) {
       const priorityValue = priority || "Medium";
       const priorityLower = priorityValue.toLowerCase();
 
-      // 1. Try to create ticket in Zoho Desk
       let zohoTicketId: string | null = null;
       try {
         const { zohoClient } = await import("./zoho/zohoClient");
-        if (zohoClient.isConfigured()) {
-          let contactId: string | undefined;
-          try {
-            const contact = await zohoDeskService.getContactByEmail(email);
-            if (contact) contactId = contact.id;
-          } catch {}
-
+        if (zohoClient.isDeskConfigured()) {
           const zohoTicket = await zohoDeskService.createTicket({
             subject,
             description,
-            contactId,
-            email: contactId ? undefined : email,
+            email,
             priority: priorityValue,
           });
           zohoTicketId = zohoTicket.id;

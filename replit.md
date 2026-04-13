@@ -84,7 +84,7 @@ All website forms now create leads in Zoho CRM via OAuth (ZOHO_CLIENT_ID_API, ZO
 - **Exit Intent/Ebook** (`/api/newsletter`): Email → Zoho CRM lead (source: "Newsletter Signup")
 - **Quote Wizard** (`/api/lead-quote`): Full wizard data → Zoho CRM lead (source: "Website Quote Wizard") — requires Turnstile + corporate email
 - All Zoho calls are non-blocking: if Zoho fails, the form still succeeds and logs the error
-- For production deployment: set ZOHO_CLIENT_ID_API, ZOHO_CLIENT_SECRET_API, ZOHO_REFRESH_TOKEN env vars on web server
+- For production deployment: set ZOHO_CLIENT_ID_API, ZOHO_CLIENT_SECRET_API, ZOHO_REFRESH_TOKEN, ZOHO_DESK_REFRESH_TOKEN env vars on web server
 
 ### Email Notification System
 Transactional email notifications powered by ZeptoMail (requires `ZEPTOMAIL_API_TOKEN` secret):
@@ -106,7 +106,7 @@ Transactional email notifications powered by ZeptoMail (requires `ZEPTOMAIL_API_
 - **Zelle**: Bank transfer payments
 - **Zoho Payments**: Checkout widget
 - **Zoho Bookings**: Scheduling system
-- **Zoho One APIs**: Desk, CRM, Billing
+- **Zoho One APIs**: Desk (via ZOHO_DESK_REFRESH_TOKEN with Desk.tickets.ALL, Desk.contacts.READ, Desk.settings.READ scopes), CRM (via ZOHO_REFRESH_TOKEN), Billing
 - **OpenAI**: AI-powered features
 - **PostgreSQL/Neon**: Database
 - **Vite**: Build tool

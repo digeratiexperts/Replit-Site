@@ -79,7 +79,6 @@ class ZohoClient {
 
   private async _doRefreshDeskToken(): Promise<string> {
     const token = this.getDeskRefreshToken();
-    console.log(`🔑 Desk refresh token prefix: ${token.substring(0, 20)}...`);
     try {
       const response = await axios.post<ZohoTokenResponse>(
         'https://accounts.zoho.com/oauth/v2/token',
