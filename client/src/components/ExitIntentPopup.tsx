@@ -154,8 +154,14 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                   <>
                     <div className="flex items-center justify-center mb-6">
                       <div className="relative">
-                        <div className="absolute inset-0 bg-violet-500/20 rounded-xl blur-xl" />
-                        <img src={shieldImage} alt="Cybersecurity Shield" className="relative w-20 h-20 rounded-xl object-cover ring-2 ring-violet-500/30" />
+                        <div className="absolute inset-0 bg-violet-500/20 rounded-2xl blur-2xl scale-150" />
+                        <div className="relative w-28 h-36 rounded-xl overflow-hidden ring-2 ring-violet-500/30 shadow-lg shadow-violet-500/20">
+                          <img src={shieldImage} alt="Cybersecurity Checklist" className="w-full h-full object-cover" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent" />
+                          <div className="absolute bottom-2 left-0 right-0 flex justify-center">
+                            <Shield className="w-6 h-6 text-violet-300 drop-shadow-lg" />
+                          </div>
+                        </div>
                       </div>
                     </div>
 
