@@ -60,8 +60,24 @@ class ZohoClient {
     }
   }
 
+  private deskRefreshPromise: Promise<string> | null = null;
+
   private async refreshDeskAccessToken(): Promise<string> {
+    if (this.deskRefreshPromise) {
+      return this.deskRefreshPromise;
+    }
+    
+    this.deskRefreshPromise = this._doRefreshDeskToken();
+    try {
+      return await this.deskRefreshPromise;
+    } finally {
+      this.deskRefreshPromise = null;
+    }
+  }
+
+  private async _doRefreshDeskToken(): Promise<string> {
     const token = this.deskRefreshToken || this.refreshToken;
+    console.log(`🔑 Desk refresh token prefix: ${token.substring(0, 20)}...`);
     try {
       const response = await axios.post<ZohoTokenResponse>(
         'https://accounts.zoho.com/oauth/v2/token',
@@ -76,10 +92,14 @@ class ZohoClient {
         }
       );
 
+      if (!response.data.access_token) {
+        console.error('❌ Zoho Desk token response missing access_token:', JSON.stringify(response.data));
+        throw new Error('No access token in Zoho Desk response');
+      }
       this.deskAccessToken = response.data.access_token;
       this.deskTokenExpiry = Date.now() + (response.data.expires_in * 1000) - 60000;
       
-      console.log('✅ Zoho Desk access token refreshed');
+      console.log(`✅ Zoho Desk access token refreshed (scopes: ${response.data.scope || 'unknown'})`);
       return this.deskAccessToken;
     } catch (error: any) {
       console.error('❌ Failed to refresh Zoho Desk token:', error.response?.data || error.message);
