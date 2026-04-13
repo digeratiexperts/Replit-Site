@@ -17,20 +17,22 @@ class ZohoClient {
   private readonly clientId: string;
   private readonly clientSecret: string;
   private readonly refreshToken: string;
-  private readonly deskRefreshToken: string;
-
   constructor() {
     this.clientId = process.env.ZOHO_CLIENT_ID_API || '';
     this.clientSecret = process.env.ZOHO_CLIENT_SECRET_API || '';
     this.refreshToken = process.env.ZOHO_REFRESH_TOKEN || '';
-    this.deskRefreshToken = process.env.ZOHO_FORM_OAUTH || '';
     
     if (!this.clientId || !this.clientSecret || !this.refreshToken) {
       console.warn('⚠️ Zoho API credentials not fully configured');
     }
-    if (this.deskRefreshToken) {
-      console.log('✅ Zoho Desk OAuth token configured (ZOHO_FORM_OAUTH)');
+    const deskToken = this.getDeskRefreshToken();
+    if (deskToken && deskToken !== this.refreshToken) {
+      console.log(`✅ Zoho Desk OAuth token configured (prefix: ${deskToken.substring(0, 10)}...)`);
     }
+  }
+
+  private getDeskRefreshToken(): string {
+    return process.env.ZOHO_DESK_REFRESH_TOKEN || process.env.ZOHO_FORM_OAUTH || this.refreshToken;
   }
 
   private async refreshAccessToken(): Promise<string> {
@@ -76,7 +78,7 @@ class ZohoClient {
   }
 
   private async _doRefreshDeskToken(): Promise<string> {
-    const token = this.deskRefreshToken || this.refreshToken;
+    const token = this.getDeskRefreshToken();
     console.log(`🔑 Desk refresh token prefix: ${token.substring(0, 20)}...`);
     try {
       const response = await axios.post<ZohoTokenResponse>(
