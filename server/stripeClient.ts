@@ -2,7 +2,12 @@ import Stripe from "stripe";
 
 let connectionSettings: any;
 
-async function getCredentials() {
+function isReplitEnvironment(): boolean {
+  return !!(process.env.REPLIT_CONNECTORS_HOSTNAME && 
+    (process.env.REPL_IDENTITY || process.env.WEB_REPL_RENEWAL));
+}
+
+async function getReplitCredentials() {
   const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
   const xReplitToken = process.env.REPL_IDENTITY
     ? "repl " + process.env.REPL_IDENTITY
@@ -45,6 +50,21 @@ async function getCredentials() {
     publishableKey: connectionSettings.settings.publishable,
     secretKey: connectionSettings.settings.secret,
   };
+}
+
+async function getCredentials() {
+  if (isReplitEnvironment()) {
+    return getReplitCredentials();
+  }
+
+  const secretKey = process.env.STRIPE_SECRET_KEY;
+  const publishableKey = process.env.STRIPE_PUBLISHABLE_KEY || "";
+
+  if (!secretKey) {
+    throw new Error("STRIPE_SECRET_KEY environment variable is not set");
+  }
+
+  return { publishableKey, secretKey };
 }
 
 export async function getUncachableStripeClient() {
