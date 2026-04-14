@@ -59,7 +59,15 @@ app.use((req, _res, next) => {
 // --------- COMPREHENSIVE HEALTH CHECK
 app.all("/api/health", async (_req, res) => {
   const port = process.env.REPLIT_SERVER_PORT || process.env.PORT || "unknown";
-  const dbAvailable = await testDatabaseConnection().catch(() => false);
+  let dbAvailable = false;
+  try {
+    const { pool } = await import("./db");
+    if (pool) {
+      const client = await pool.connect();
+      client.release();
+      dbAvailable = true;
+    }
+  } catch { dbAvailable = false; }
   const openaiConfigured = !!(process.env.AI_INTEGRATIONS_OPENAI_BASE_URL && process.env.AI_INTEGRATIONS_OPENAI_API_KEY);
   
   const health = {
