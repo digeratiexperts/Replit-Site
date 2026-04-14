@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, Clock, User, ArrowLeft, Share2, Bookmark, ChevronRight } from "lucide-react";
+import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
 
 import trendsImg from "@assets/stock_images/cybersecurity_trends_d69267d4.jpg";
 import hipaaImg from "@assets/stock_images/healthcare_medical_r_3bfa1a64.jpg";
@@ -241,6 +242,19 @@ export default function BlogPost() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
+      <ArticleJsonLd
+        title={post.title}
+        description={post.excerpt}
+        author={post.author}
+        datePublished={post.date}
+        image={post.image}
+        url={`/resources/blog/${slug}`}
+      />
+      <BreadcrumbJsonLd items={[
+        { name: "Home", url: "/" },
+        { name: "Blog", url: "/resources/blog" },
+        { name: post.title, url: `/resources/blog/${slug}` }
+      ]} />
       <ReadingProgressBar targetRef={articleRef} />
       <MegaMenu />
       

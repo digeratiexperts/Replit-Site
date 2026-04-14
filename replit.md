@@ -44,7 +44,7 @@ The platform includes a comprehensive e-commerce store at `/store` with:
 
 ### Security Implementation
 The platform implements comprehensive security following enterprise best practices:
-- **Transport & Headers**: HTTPS + HSTS, CSP (Content-Security-Policy), X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
+- **Transport & Headers**: HTTPS + HSTS (2yr, preload-ready), CSP (Content-Security-Policy with Zoho Payments allowlisted), X-Frame-Options, X-Content-Type-Options, X-XSS-Protection, Referrer-Policy, Permissions-Policy, Cross-Origin-Opener-Policy, Cross-Origin-Resource-Policy, X-DNS-Prefetch-Control, X-Permitted-Cross-Domain-Policies; `'unsafe-eval'` only in dev (removed in production); middleware applied globally before all routes via `server/middleware/security.ts`
 - **Authentication**: JWT tokens with secure HttpOnly/Secure/SameSite=Lax cookies, session management with rotation, email verification for new accounts
 - **Multi-Factor Authentication (MFA)**: TOTP (Google Authenticator/Authy) and email-based 2FA; backup codes generated with `crypto.randomBytes`; MFA challenge on login with 5-attempt lockout per session; setup/confirm/disable/regenerate endpoints under `/api/portal/mfa/*`; MFA settings in portal at `/portal/settings`
 - **RBAC Roles**: Public, Prospect, Managed Client, Co-Managed Client, Admin - with server-side enforcement on every route
@@ -54,7 +54,8 @@ The platform implements comprehensive security following enterprise best practic
 - **Input Validation**: Schema validation, SQL injection prevention, XSS defenses
 - **CSRF Protection**: Token validation for all state-changing requests
 - **Audit Logging**: Security events for auth, MFA, orders, pricing changes, admin actions
-- **Payment Security**: Stripe hosted checkout (PCI compliant), webhook signature verification
+- **Payment Security**: Zoho Payments checkout, webhook HMAC-SHA256 signature verification
+- **JSON-LD Structured Data**: Reusable `client/src/components/JsonLd.tsx` with Organization, WebSite, FAQPage, Article, Product, Service, Breadcrumb schemas; applied to homepage, FAQ section, blog posts, product detail pages, and all service pages for SEO rich results
 
 ### Centralized Pricing Configuration
 All ProActive Ecosystem tier pricing is managed from a single source of truth at `client/src/data/pricing.ts`:

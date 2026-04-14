@@ -11,6 +11,7 @@ import {
   BarChart3, UserCheck, Network, RefreshCw, Lock
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
+import { ServiceJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
 import { GuidedSalesPitch } from "@/components/GuidedSalesPitch";
 
 type EngagementMode = "collaboration" | "kits";
@@ -293,6 +294,16 @@ export default function CoManagedIT() {
 
   return (
     <div className="min-h-screen bg-gray-950 text-white overflow-hidden">
+      <ServiceJsonLd
+        name="Co-Managed IT"
+        description="Augment your internal IT team or let us manage a single device kit. Clear roles, joint coverage, no confusion."
+        url="/solutions/co-managed-it"
+      />
+      <BreadcrumbJsonLd items={[
+        { name: "Home", url: "/" },
+        { name: "Solutions", url: "/solutions" },
+        { name: "Co-Managed IT", url: "/solutions/co-managed-it" }
+      ]} />
       <MegaMenu />
       
       <main className="relative pt-32 pb-32">

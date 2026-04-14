@@ -3,6 +3,7 @@ import { PageTemplate } from "@/components/PageTemplate";
 import { Button } from "@/components/ui/button";
 import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
+import { ServiceJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
 import { GuidedSalesPitch } from "@/components/GuidedSalesPitch";
 import { pricing } from "@/data/pricing";
 import {
@@ -252,6 +253,16 @@ export default function ManagedWorkplace() {
       title="Managed Workplace" 
       subtitle="Identity, Devices & Apps Management"
     >
+      <ServiceJsonLd
+        name="Managed Workplace"
+        description="We manage identity, devices, email, and app access so your staff stays productive and your business stays protected. New hires ready in 1 day."
+        url="/solutions/managed-workplace"
+      />
+      <BreadcrumbJsonLd items={[
+        { name: "Home", url: "/" },
+        { name: "Solutions", url: "/solutions" },
+        { name: "Managed Workplace", url: "/solutions/managed-workplace" }
+      ]} />
       <div className="space-y-24">
         {/* Hero Section */}
         <motion.section {...fadeInUp} className="relative">

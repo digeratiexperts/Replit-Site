@@ -5,6 +5,7 @@ import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "../sections/DigeratiEnhancedFooterSection";
 import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/useSEO";
+import { ProductJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -139,6 +140,20 @@ const ProductDetail = () => {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
+      <ProductJsonLd
+        name={product.name}
+        description={product.description}
+        price={productPricing.price.toFixed(2)}
+        url={`/store/product/${product.id}`}
+        sku={product.id}
+        category={product.category}
+      />
+      <BreadcrumbJsonLd items={[
+        { name: "Home", url: "/" },
+        { name: "Store", url: "/store" },
+        { name: storeLabel, url: storeLink },
+        { name: product.name, url: `/store/product/${product.id}` }
+      ]} />
       <MegaMenu />
 
       <main className="pt-28 pb-20">

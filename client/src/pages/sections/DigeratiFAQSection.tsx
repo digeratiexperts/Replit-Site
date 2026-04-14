@@ -1,6 +1,7 @@
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { FAQJsonLd } from "@/components/JsonLd";
 
 interface FAQ {
   question: string;
@@ -36,6 +37,7 @@ export const DigeratiFAQSection = (): JSX.Element => {
 
   return (
     <section className="py-10 md:py-14 lg:py-16 bg-[#F7FAFC]">
+      <FAQJsonLd faqs={faqs} />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div

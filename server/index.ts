@@ -46,6 +46,10 @@ const log = (message: string) => {
   console.log(`[${timestamp}] ${message}`);
 };
 
+// --------- Security headers (OWASP recommended) - applied globally before all routes
+import { setSecurityHeaders } from "./middleware/security";
+app.use(setSecurityHeaders);
+
 // --------- EARLY, LOUD TRACE so we know what URL actually hit Express
 app.use((req, _res, next) => {
   log(`→ ${req.method} ${req.originalUrl}`);

@@ -3,6 +3,7 @@ import { PageTemplate } from "@/components/PageTemplate";
 import { Button } from "@/components/ui/button";
 import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
+import { ServiceJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
 import { GuidedSalesPitch } from "@/components/GuidedSalesPitch";
 import {
   Shield,
@@ -381,6 +382,17 @@ export default function BackupDisasterRecovery() {
       title="Backup & Disaster Recovery" 
       subtitle="Tested Recovery with Guaranteed Targets"
     >
+      <ServiceJsonLd
+        name="Backup & Disaster Recovery (BCDR)"
+        description="Recover in hours, not days. BCDR with documented RPO/RTO targets, scheduled restore testing, and DR runbooks."
+        url="/solutions/backup-disaster-recovery"
+        price="750"
+      />
+      <BreadcrumbJsonLd items={[
+        { name: "Home", url: "/" },
+        { name: "Solutions", url: "/solutions" },
+        { name: "Backup & Disaster Recovery", url: "/solutions/backup-disaster-recovery" }
+      ]} />
       <div className="space-y-24">
         {/* Hero Section */}
         <motion.section {...fadeInUp} className="relative">

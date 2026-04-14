@@ -336,24 +336,27 @@ export function createEndpointRateLimiter(
 
 // ==================== SECURE HEADERS ====================
 export function setSecurityHeaders(req: Request, res: Response, next: NextFunction) {
-  // HSTS: Enforce HTTPS
-  res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+  const isProduction = process.env.NODE_ENV === "production";
+
+  // HSTS: Enforce HTTPS (2 years, includeSubDomains, preload-ready)
+  res.setHeader("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
 
   // Content Security Policy
-  const csp = [
+  const cspDirectives = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://challenges.cloudflare.com https://salesiq.zoho.com",
+    `script-src 'self' 'unsafe-inline'${isProduction ? "" : " 'unsafe-eval'"} https://challenges.cloudflare.com https://salesiq.zoho.com https://*.clarity.ms https://www.googletagmanager.com`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: https: blob:",
-    "frame-src https://js.stripe.com https://challenges.cloudflare.com https://meet.digerati-experts.com https://*.zoho.com",
-    "connect-src 'self' https://api.stripe.com https://*.zoho.com wss://*.replit.dev",
+    "frame-src https://challenges.cloudflare.com https://meet.digerati-experts.com https://*.zoho.com https://payments.zoho.com",
+    "connect-src 'self' https://*.zoho.com https://payments.zoho.com https://*.clarity.ms https://www.google-analytics.com" + (isProduction ? "" : " wss://*.replit.dev ws://localhost:*"),
     "object-src 'none'",
     "base-uri 'self'",
-    "form-action 'self'",
-    "frame-ancestors 'self'"
-  ].join("; ");
-  res.setHeader("Content-Security-Policy", csp);
+    "form-action 'self' https://payments.zoho.com",
+    "frame-ancestors 'self'",
+    "upgrade-insecure-requests"
+  ];
+  res.setHeader("Content-Security-Policy", cspDirectives.join("; "));
 
   // Prevent clickjacking
   res.setHeader("X-Frame-Options", "SAMEORIGIN");
@@ -361,20 +364,30 @@ export function setSecurityHeaders(req: Request, res: Response, next: NextFuncti
   // Prevent MIME type sniffing
   res.setHeader("X-Content-Type-Options", "nosniff");
 
-  // Enable XSS protection
+  // XSS protection (legacy browsers)
   res.setHeader("X-XSS-Protection", "1; mode=block");
 
   // Referrer policy
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
 
-  // Permissions policy
+  // Permissions policy (OWASP recommended)
   res.setHeader(
     "Permissions-Policy",
-    "geolocation=(), microphone=(), camera=(), payment=()"
+    "geolocation=(), microphone=(), camera=(), payment=(self), usb=(), magnetometer=(), gyroscope=(), accelerometer=()"
   );
 
-  // Feature policy
+  // Cross-Origin policies (OWASP recommended)
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Resource-Policy", "same-site");
+
+  // Prevent cross-domain policy file loading
   res.setHeader("X-Permitted-Cross-Domain-Policies", "none");
+
+  // Prevent DNS prefetch abuse
+  res.setHeader("X-DNS-Prefetch-Control", "off");
+
+  // Remove server identification
+  res.removeHeader("X-Powered-By");
 
   next();
 }

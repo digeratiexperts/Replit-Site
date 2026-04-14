@@ -10,6 +10,7 @@ import {
   FileCheck, HelpCircle, AlertTriangle, Info, Zap
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
+import { ServiceJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
 import { pricing } from "@/data/pricing";
 
 const officeSalesPitchData = {
@@ -342,6 +343,16 @@ export default function OfficePage() {
 
   return (
     <div className="min-h-screen bg-gray-950 text-white overflow-hidden">
+      <ServiceJsonLd
+        name="ProActive Ecosystem - Office Package"
+        description="One predictable monthly price for small offices (5-25 users) with no internal IT. Includes help desk, security baseline, identity management, and backup."
+        url="/solutions/ProActive-Ecosystem-Packages"
+      />
+      <BreadcrumbJsonLd items={[
+        { name: "Home", url: "/" },
+        { name: "Solutions", url: "/solutions" },
+        { name: "Office Package", url: "/solutions/ProActive-Ecosystem-Packages" }
+      ]} />
       <MegaMenu />
       
       <main className="relative pt-32 pb-32">

@@ -4,6 +4,7 @@ import { ZohoASAPWidget } from "@/components/ZohoASAPWidget";
 import { FullPageScrollProvider, ScrollSectionAuto } from "@/components/FullPageScroll";
 import { useState, useEffect } from "react";
 import { useSEO } from "@/hooks/useSEO";
+import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/JsonLd";
 
 // Import all section components
 import { ModernHeroSection } from "./sections/ModernHeroSection";
@@ -103,6 +104,8 @@ export const DigeratiHomepage = (): JSX.Element => {
   return (
     <FullPageScrollProvider sections={homepageSections} enableOnMobile={false}>
       <div className="min-h-screen bg-[#050312] pb-20 lg:pb-24">
+        <OrganizationJsonLd />
+        <WebSiteJsonLd />
         {/* Zoho ASAP Widget */}
         <ZohoASAPWidget 
           isEnabled={true}

@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
+import { ServiceJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
 
 export default function UCaaS() {
   const prefersReducedMotion = useReducedMotion() ?? false;
@@ -171,6 +172,16 @@ export default function UCaaS() {
         { label: "UCaaS" }
       ]}
     >
+      <ServiceJsonLd
+        name="Unified Communications (UCaaS)"
+        description="We design, secure, and run your phone system and meeting stack so it actually supports the business."
+        url="/solutions/ucaas"
+      />
+      <BreadcrumbJsonLd items={[
+        { name: "Home", url: "/" },
+        { name: "Solutions", url: "/solutions" },
+        { name: "UCaaS", url: "/solutions/ucaas" }
+      ]} />
       <div className="space-y-20">
         {/* What's Broken Section */}
         <motion.section
