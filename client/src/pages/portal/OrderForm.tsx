@@ -698,7 +698,13 @@ export function OrderForm() {
                         type="number"
                         min="1"
                         value={clientInfo.numberOfSites}
-                        onChange={e => setClientInfo(prev => ({ ...prev, numberOfSites: parseInt(e.target.value) || 1 }))}
+                        onChange={e => {
+                          const val = e.target.value;
+                          if (val === '') { setClientInfo(prev => ({ ...prev, numberOfSites: '' as any })); return; }
+                          const num = parseInt(val);
+                          if (!isNaN(num)) setClientInfo(prev => ({ ...prev, numberOfSites: num }));
+                        }}
+                        onBlur={() => { if (!clientInfo.numberOfSites || clientInfo.numberOfSites < 1) setClientInfo(prev => ({ ...prev, numberOfSites: 1 })); }}
                         className="bg-gray-900/50 border-gray-600"
                         data-testid="input-sites"
                       />
@@ -710,7 +716,13 @@ export function OrderForm() {
                         type="number"
                         min="1"
                         value={clientInfo.numberOfUsers}
-                        onChange={e => setClientInfo(prev => ({ ...prev, numberOfUsers: parseInt(e.target.value) || 1 }))}
+                        onChange={e => {
+                          const val = e.target.value;
+                          if (val === '') { setClientInfo(prev => ({ ...prev, numberOfUsers: '' as any })); return; }
+                          const num = parseInt(val);
+                          if (!isNaN(num)) setClientInfo(prev => ({ ...prev, numberOfUsers: num }));
+                        }}
+                        onBlur={() => { if (!clientInfo.numberOfUsers || clientInfo.numberOfUsers < 1) setClientInfo(prev => ({ ...prev, numberOfUsers: 1 })); }}
                         className="bg-gray-900/50 border-gray-600"
                         data-testid="input-users"
                       />

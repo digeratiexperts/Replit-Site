@@ -204,8 +204,8 @@ const plans: Plan[] = [
 
 const ProActiveEcosystemPricing = () => {
   const prefersReducedMotion = useReducedMotion();
-  const [users, setUsers] = useState(10);
-  const [sites, setSites] = useState(1);
+  const [users, setUsers] = useState<number | string>(10);
+  const [sites, setSites] = useState<number | string>(1);
   const [expandedPlan, setExpandedPlan] = useState<string | null>(null);
 
   useSEO({
@@ -224,23 +224,26 @@ const ProActiveEcosystemPricing = () => {
     return service.qtyPerUser * userCount * service.cost;
   };
 
+  const numUsers = typeof users === 'number' ? users : 1;
+  const numSites = typeof sites === 'number' ? sites : 1;
+
   const calculatePlanDetails = useMemo(() => {
     return plans.map(plan => {
-      const effectiveUsers = Math.max(users, plan.minUsers);
+      const effectiveUsers = Math.max(numUsers, plan.minUsers);
       let baseRevenue = 0;
       
       if (plan.pricePerUser > 0) {
         baseRevenue += effectiveUsers * plan.pricePerUser;
       }
       if (plan.siteFee > 0) {
-        baseRevenue += Math.max(sites, 1) * plan.siteFee;
+        baseRevenue += Math.max(numSites, 1) * plan.siteFee;
       }
       if (plan.minMonthly > 0) {
         baseRevenue = Math.max(baseRevenue, plan.minMonthly);
       }
       
       const serviceCosts = plan.services.reduce((total, serviceId) => {
-        return total + calculateServiceCost(serviceId, effectiveUsers, sites);
+        return total + calculateServiceCost(serviceId, effectiveUsers, numSites);
       }, 0);
       
       const profit = baseRevenue - serviceCosts;
@@ -256,7 +259,7 @@ const ProActiveEcosystemPricing = () => {
         margin
       };
     });
-  }, [users, sites]);
+  }, [numUsers, numSites]);
 
   const containerVariants = prefersReducedMotion ? undefined : {
     hidden: { opacity: 0 },
@@ -364,7 +367,13 @@ const ProActiveEcosystemPricing = () => {
                   <Input
                     type="number"
                     value={users}
-                    onChange={(e) => setUsers(Math.max(1, parseInt(e.target.value) || 1))}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '') { setUsers(''); return; }
+                      const num = parseInt(val);
+                      if (!isNaN(num)) setUsers(num);
+                    }}
+                    onBlur={() => { if (!users || users < 1) setUsers(1); }}
                     min={1}
                     className="bg-white/5 border-white/10 text-white text-lg font-bold h-12"
                     data-testid="input-users"
@@ -378,7 +387,13 @@ const ProActiveEcosystemPricing = () => {
                   <Input
                     type="number"
                     value={sites}
-                    onChange={(e) => setSites(Math.max(1, parseInt(e.target.value) || 1))}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '') { setSites(''); return; }
+                      const num = parseInt(val);
+                      if (!isNaN(num)) setSites(num);
+                    }}
+                    onBlur={() => { if (!sites || sites < 1) setSites(1); }}
                     min={1}
                     className="bg-white/5 border-white/10 text-white text-lg font-bold h-12"
                     data-testid="input-sites"
@@ -389,7 +404,7 @@ const ProActiveEcosystemPricing = () => {
                     <div className="flex items-center justify-between">
                       <span className="text-white/50 text-sm">Calculating for:</span>
                       <span className="text-white font-bold" data-testid="text-calculation-summary">
-                        {users} users across {sites} {sites === 1 ? 'site' : 'sites'}
+                        {numUsers} users across {numSites} {numSites === 1 ? 'site' : 'sites'}
                       </span>
                     </div>
                   </div>
