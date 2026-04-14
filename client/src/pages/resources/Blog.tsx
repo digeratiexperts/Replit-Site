@@ -161,7 +161,7 @@ export default function Blog() {
                 <Link href={post.isEbook ? `/resources/${post.slug}` : `/resources/blog/${post.slug}`} key={post.id}>
                   <Card className="bg-white/[0.02] border-white/10 overflow-hidden hover:border-violet-500/50 transition-colors cursor-pointer" data-testid={`card-post-${post.id}`}>
                     <div className="aspect-video overflow-hidden">
-                      <img src={post.image} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+                      <img src={post.image} alt={post.title} loading="lazy" decoding="async" width={600} height={338} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
                     </div>
                     <CardHeader>
                       <div className="flex items-center gap-3 mb-2">
@@ -208,7 +208,7 @@ export default function Blog() {
                 <Link href={post.isEbook ? `/resources/${post.slug}` : `/resources/blog/${post.slug}`} key={post.id}>
                   <Card className="bg-white/[0.02] border-white/10 hover:border-violet-500/50 transition-colors overflow-hidden cursor-pointer" data-testid={`card-post-${post.id}`}>
                     <div className="aspect-video overflow-hidden">
-                      <img src={post.image} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+                      <img src={post.image} alt={post.title} loading="lazy" decoding="async" width={400} height={225} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
                     </div>
                     <CardHeader>
                       <Badge variant="secondary" className="w-fit bg-violet-500/20 text-violet-400 mb-2">

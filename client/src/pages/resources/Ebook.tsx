@@ -465,6 +465,10 @@ export default function Ebook() {
                 <img 
                   src={ebookCover} 
                   alt="Defending the Digital Realm ebook cover" 
+                  loading="eager"
+                  decoding="async"
+                  width={448}
+                  height={580}
                   className="w-full rounded-xl shadow-2xl shadow-orange-500/30 border border-orange-500/30"
                   style={{ 
                     boxShadow: '0 25px 50px -12px rgba(249, 115, 22, 0.25), 0 0 0 1px rgba(249, 115, 22, 0.1), inset 0 0 0 1px rgba(255,255,255,0.05)'

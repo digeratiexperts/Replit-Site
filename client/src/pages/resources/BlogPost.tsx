@@ -306,7 +306,7 @@ export default function BlogPost() {
           </header>
 
           <div className="aspect-video rounded-xl overflow-hidden mb-10">
-            <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+            <img src={post.image} alt={post.title} loading="eager" decoding="async" width={960} height={540} className="w-full h-full object-cover" />
           </div>
 
           <div className="flex gap-4 mb-10 pb-10 border-b border-white/10">

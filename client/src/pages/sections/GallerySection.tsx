@@ -25,7 +25,7 @@ export const GallerySection = (): JSX.Element => {
               className="bg-[#100a25] rounded-2xl border border-solid border-[#f0f3ff] shadow-[-11px_16px_32px_-9px_#0000001a] backdrop-blur-[23px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(23px)_brightness(100%)]"
             >
               <CardContent className="flex items-center gap-[21px] p-[21px] h-[100px]">
-                <img className="w-14 h-14" alt={card.label} src={card.icon} />
+                <img className="w-14 h-14" alt={card.label} src={card.icon} loading="lazy" decoding="async" width={56} height={56} />
                 <div className="flex flex-col gap-[11px]">
                   <div className="font-bold text-slate-400 text-xs tracking-[1.00px] leading-[20.4px] whitespace-nowrap">
                     {card.label}

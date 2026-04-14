@@ -767,7 +767,7 @@ export function MegaMenu() {
                             >
                               {/* Hexagon pattern background */}
                               <HexagonPattern id={uniqueId} />
-                              <img src={officeRecoveryImage} alt="" className="absolute inset-0 w-full h-full object-cover opacity-[0.08]" />
+                              <img src={officeRecoveryImage} alt="" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-[0.08]" />
                               
                               <div className="relative z-10">
                                 <h4 className="font-bold text-white text-[13px] mb-3 flex items-center gap-2">
@@ -809,6 +809,10 @@ export function MegaMenu() {
                                 <img 
                                   src={socImage} 
                                   alt="Cybersecurity Operations Center" 
+                                  loading="lazy"
+                                  decoding="async"
+                                  width={320}
+                                  height={128}
                                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0826] via-transparent to-transparent" />
@@ -844,6 +848,10 @@ export function MegaMenu() {
                                 <img 
                                   src={socTeamImage} 
                                   alt="Digerati Experts Security Operations Team" 
+                                  loading="lazy"
+                                  decoding="async"
+                                  width={320}
+                                  height={128}
                                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0826] via-transparent to-transparent" />
@@ -884,6 +892,10 @@ export function MegaMenu() {
                                   <img 
                                     src={ebookCover} 
                                     alt="Defending the Digital Realm ebook" 
+                                    loading="lazy"
+                                    decoding="async"
+                                    width={120}
+                                    height={144}
                                     className="max-h-36 w-auto rounded-lg shadow-lg shadow-orange-500/20 border border-orange-500/30"
                                   />
                                 </div>

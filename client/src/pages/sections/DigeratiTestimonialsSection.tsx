@@ -143,7 +143,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
       }}
     >
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <img src={testimonialsBgImage} alt="" loading="lazy" className="absolute top-0 left-0 w-full h-auto opacity-[0.15]" />
+        <img src={testimonialsBgImage} alt="" loading="lazy" decoding="async" className="absolute top-0 left-0 w-full h-auto opacity-[0.15]" />
       </div>
       {/* Parallax Background Elements */}
       <motion.div 
@@ -295,6 +295,10 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                           <img 
                             src={testimonials[currentTestimonial].avatar}
                             alt={testimonials[currentTestimonial].author}
+                            loading="lazy"
+                            decoding="async"
+                            width={56}
+                            height={56}
                             className="relative w-10 h-10 md:w-14 md:h-14 rounded-full object-cover border-2 border-white/20"
                           />
                         </div>

@@ -42,6 +42,10 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
                 <img 
                   src={teamMeetingImg} 
                   alt="Expert team collaboration" 
+                  loading="lazy"
+                  decoding="async"
+                  width={448}
+                  height={300}
                   className="w-full max-w-md object-cover"
                 />
                 

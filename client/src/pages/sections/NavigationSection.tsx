@@ -56,6 +56,9 @@ export const NavigationSection = (): JSX.Element => {
                 className="h-10 md:h-12" 
                 alt={logo.alt} 
                 src={logo.src} 
+                loading="lazy"
+                decoding="async"
+                height={48}
                 data-testid={`vendor-logo-${index}`}
               />
             ))}

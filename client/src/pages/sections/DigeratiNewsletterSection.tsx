@@ -93,6 +93,10 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
               <img 
                 src={avatarsImg} 
                 alt="Our community members" 
+                loading="lazy"
+                decoding="async"
+                width={168}
+                height={56}
                 className="h-12 md:h-14"
               />
             </div>
