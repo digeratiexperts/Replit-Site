@@ -8,6 +8,7 @@ import { createServer as createViteServer } from "vite";
 import path from "path";
 import fs from "fs";
 import cookieParser from "cookie-parser";
+import compression from "compression";
 import { zohoPayments } from "./zohoPayments";
 import { setupCrossServiceHandlers } from "./crossServiceHandler";
 import { eventBus, EventTypes } from "./eventBus";
@@ -36,6 +37,15 @@ process.on('uncaughtException', (error) => {
 
 const app = express();
 const server = createServer(app);
+
+app.use(compression({
+  level: 6,
+  threshold: 1024,
+  filter: (req, res) => {
+    if (req.headers['x-no-compression']) return false;
+    return compression.filter(req, res);
+  }
+}));
 
 // Initialize cross-service communication
 setupCrossServiceHandlers();
