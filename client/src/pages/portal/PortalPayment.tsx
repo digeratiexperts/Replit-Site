@@ -33,12 +33,12 @@ export default function PortalPayment({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedMethod, setSelectedMethod] = useState<
-    "stripe" | "zelle" | "zoho" | null
+    "card" | "zelle" | "zoho" | null
   >(null);
   const [zohoEmbedData, setZohoEmbedData] = useState<any>(null);
   const zohoContainerRef = useRef<HTMLDivElement>(null);
 
-  const handleStripeCheckout = async () => {
+  const handleCardCheckout = async () => {
     setLoading(true);
     setError("");
 
@@ -158,15 +158,15 @@ export default function PortalPayment({
         <div className="space-y-3">
           <h3 className="font-semibold text-lg">Select Payment Method</h3>
 
-          {/* Stripe */}
+          {/* Credit/Debit Card */}
           <Card
             className={`cursor-pointer transition-all ${
-              selectedMethod === "stripe"
+              selectedMethod === "card"
                 ? "ring-2 ring-[#5034ff] border-[#5034ff]"
                 : "hover:border-[#5034ff]/50"
             }`}
-            onClick={() => setSelectedMethod("stripe")}
-            data-testid="card-stripe-method"
+            onClick={() => setSelectedMethod("card")}
+            data-testid="card-payment-method"
           >
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
@@ -176,16 +176,16 @@ export default function PortalPayment({
                 <div className="flex-1">
                   <h4 className="font-semibold">Credit/Debit Card</h4>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Pay securely with Stripe
+                    Pay securely via Zoho Payments
                   </p>
                 </div>
               </div>
-              {selectedMethod === "stripe" && (
+              {selectedMethod === "card" && (
                 <Button
                   className="mt-4 w-full bg-[#5034ff] hover:bg-[#5034ff]/90 text-white"
-                  onClick={handleStripeCheckout}
+                  onClick={handleCardCheckout}
                   disabled={loading}
-                  data-testid="button-stripe-pay"
+                  data-testid="button-card-pay"
                 >
                   {loading ? (
                     <>

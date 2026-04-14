@@ -57,8 +57,7 @@ const OrderConfirmation = () => {
   const params = useMemo(() => {
     const searchParams = new URLSearchParams(location.split("?")[1] || "");
     return {
-      orderId: searchParams.get("orderId"),
-      sessionId: searchParams.get("session_id"),
+      orderId: searchParams.get("orderId") || searchParams.get("session_id"),
       method: searchParams.get("method"),
     };
   }, [location]);
@@ -70,8 +69,8 @@ const OrderConfirmation = () => {
   });
 
   const { data: order, isLoading, error } = useQuery<Order>({
-    queryKey: ["/api/store/orders", params.orderId || params.sessionId],
-    enabled: !!(params.orderId || params.sessionId),
+    queryKey: ["/api/store/orders", params.orderId],
+    enabled: !!params.orderId,
   });
 
   useEffect(() => {

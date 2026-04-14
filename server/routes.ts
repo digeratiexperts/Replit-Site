@@ -2227,7 +2227,7 @@ export async function registerRoutes(app: Express) {
           billingEmail: order.billingEmail,
           billingCompany: order.billingCompany,
           billingAddress: order.billingAddress,
-          stripePaymentIntentId: order.stripePaymentIntentId,
+          zohoPaymentId: order.zohoPaymentId,
           notes: order.notes,
           paidAt: order.paidAt,
           createdAt: order.createdAt,
@@ -3214,8 +3214,8 @@ export async function registerRoutes(app: Express) {
 
   // ========== STORE CHECKOUT ROUTES ==========
 
-  // Create Stripe checkout session - requires 'comanaged' or 'admin' role for purchasing
-  app.post("/api/store/checkout/stripe", [authMiddleware, requireRole('comanaged', 'admin'), validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  // Create Zoho Payments checkout session - requires 'comanaged' or 'admin' role for purchasing
+  app.post("/api/store/checkout/zoho", [authMiddleware, requireRole('comanaged', 'admin'), validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { lineItems, billing, subtotal, total } = req.body;
       
@@ -3227,37 +3227,35 @@ export async function registerRoutes(app: Express) {
         return res.status(400).json({ error: "Billing name and email are required" });
       }
 
-      const { getUncachableStripeClient } = await import("./stripeClient");
-      const stripe = await getUncachableStripeClient();
+      const { zohoPayments } = await import("./zohoPayments");
+
+      if (!zohoPayments.isConfigured()) {
+        return res.status(503).json({ error: "Payment processing is not configured. Please contact support." });
+      }
       
       const orderNumber = `ORD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
-      
-      const stripeLineItems = lineItems.map((item: any) => ({
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: item.name,
-            description: `SKU: ${item.sku}`,
-          },
-          unit_amount: Math.round(item.unitPrice * 100),
-        },
-        quantity: item.quantity,
-      }));
 
-      const baseUrl = process.env.REPLIT_DEPLOYMENT === "1" 
+      const baseUrl = process.env.APP_URL || (process.env.REPLIT_DEPLOYMENT === "1" 
         ? `https://${process.env.REPLIT_DEPLOYMENT_URL || process.env.REPL_SLUG + '.replit.app'}`
-        : `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`;
-      
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
-        line_items: stripeLineItems,
-        mode: "payment",
-        customer_email: billing.email,
-        success_url: `${baseUrl}/store/order-confirmation?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${baseUrl}/store/checkout`,
+        : process.env.REPLIT_DOMAINS 
+          ? `https://${process.env.REPLIT_DOMAINS.split(",")[0]}`
+          : "https://digeratiexperts.com");
+
+      const session = await zohoPayments.createPaymentSession({
+        orderNumber,
+        customerEmail: billing.email,
+        customerName: billing.name,
+        lineItems: lineItems.map((item: any) => ({
+          name: item.name,
+          description: `SKU: ${item.sku}`,
+          amount: item.unitPrice,
+          quantity: item.quantity,
+        })),
+        totalAmount: total,
+        successUrl: `${baseUrl}/store/order-confirmation?orderId=ORDER_ID_PLACEHOLDER`,
+        cancelUrl: `${baseUrl}/store/checkout`,
         metadata: {
           orderNumber,
-          lineItems: JSON.stringify(lineItems.slice(0, 5)),
           billingName: billing.name,
           billingEmail: billing.email,
           billingCompany: billing.company || "",
@@ -3270,12 +3268,12 @@ export async function registerRoutes(app: Express) {
       const [order] = await db.insert(storeOrders).values({
         orderNumber,
         status: "awaiting_payment",
-        paymentMethod: "stripe",
+        paymentMethod: "zoho",
         lineItems,
         subtotal: subtotal.toString(),
         tax: "0",
         total: total.toString(),
-        stripeSessionId: session.id,
+        zohoPaymentSessionId: session.payment_session_id,
         billingEmail: billing.email,
         billingName: billing.name,
         billingCompany: billing.company || null,
@@ -3288,12 +3286,15 @@ export async function registerRoutes(app: Express) {
         itemCount: lineItems.length, 
         userId: req.userId,
         clientId: req.user?.clientId,
-        paymentMethod: "stripe"
+        paymentMethod: "zoho"
       });
       
-      res.json({ url: session.url, orderId: order.id });
+      const redirectUrl = session.url?.replace("ORDER_ID_PLACEHOLDER", order.id) || 
+        `${baseUrl}/store/order-confirmation?orderId=${order.id}`;
+      
+      res.json({ url: redirectUrl, orderId: order.id });
     } catch (error: any) {
-      console.error("[STRIPE CHECKOUT ERROR]", error);
+      console.error("[ZOHO CHECKOUT ERROR]", error);
       logSecurityEvent("CHECKOUT_FAILED", req, { 
         error: error.message, 
         userId: req.userId,
@@ -3363,7 +3364,8 @@ export async function registerRoutes(app: Express) {
       const [order] = await db.select().from(storeOrders).where(
         or(
           eq(storeOrders.id, id),
-          eq(storeOrders.stripeSessionId, id)
+          eq(storeOrders.stripeSessionId, id),
+          eq(storeOrders.zohoPaymentSessionId, id)
         )
       ).limit(1);
       
@@ -3463,80 +3465,16 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  // Stripe webhook handler for checkout.session.completed
-  app.post("/api/webhooks/stripe", async (req: Request, res: Response) => {
+  // Zoho Payments status check
+  app.get("/api/store/payment-status", async (_req: Request, res: Response) => {
     try {
-      const { getUncachableStripeClient, getStripeSecretKey } = await import("./stripeClient");
-      const stripe = await getUncachableStripeClient();
-      
-      const sig = req.headers["stripe-signature"];
-      if (!sig) {
-        return res.status(400).json({ error: "Missing stripe-signature header" });
-      }
-
-      const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-      
-      let event;
-      
-      if (webhookSecret) {
-        try {
-          event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
-        } catch (err: any) {
-          console.error("[STRIPE WEBHOOK SIGNATURE ERROR]", err.message);
-          return res.status(400).json({ error: `Webhook signature verification failed: ${err.message}` });
-        }
-      } else {
-        event = req.body;
-      }
-
-      if (event.type === "checkout.session.completed") {
-        const session = event.data.object;
-        const sessionId = session.id;
-        
-        const { db } = await import("./db");
-        const { storeOrders } = await import("@shared/schema");
-        const { eq } = await import("drizzle-orm");
-        
-        // Get the order to retrieve its details for logging
-        const [existingOrder] = await db.select().from(storeOrders)
-          .where(eq(storeOrders.stripeSessionId, sessionId)).limit(1);
-        
-        const oldStatus = existingOrder?.status || "unknown";
-        
-        await db.update(storeOrders)
-          .set({
-            status: "paid",
-            stripePaymentIntentId: session.payment_intent,
-            paidAt: new Date(),
-            updatedAt: new Date(),
-          })
-          .where(eq(storeOrders.stripeSessionId, sessionId));
-          
-        console.log(`[STRIPE WEBHOOK] Order paid: session=${sessionId}`);
-        
-        // Log checkout completion and order status change
-        console.log(`[SECURITY] CHECKOUT_COMPLETED`, { 
-          orderId: existingOrder?.id,
-          orderNumber: existingOrder?.orderNumber,
-          paymentMethod: "stripe",
-          total: existingOrder?.total,
-          stripeSessionId: sessionId,
-          stripePaymentIntentId: session.payment_intent
-        });
-        
-        console.log(`[SECURITY] ORDER_STATUS_CHANGED`, { 
-          orderId: existingOrder?.id,
-          orderNumber: existingOrder?.orderNumber,
-          oldStatus,
-          newStatus: "paid",
-          triggeredBy: "stripe_webhook"
-        });
-      }
-
-      res.json({ received: true });
+      const { zohoPayments } = await import("./zohoPayments");
+      res.json({ 
+        configured: zohoPayments.isConfigured(),
+        provider: "zoho_payments"
+      });
     } catch (error: any) {
-      console.error("[STRIPE WEBHOOK ERROR]", error);
-      res.status(500).json({ error: error.message || "Webhook handler failed" });
+      res.status(500).json({ error: "Failed to check payment status" });
     }
   });
 

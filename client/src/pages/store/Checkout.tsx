@@ -28,7 +28,6 @@ import {
   Loader2,
   Check,
   RefreshCw,
-  Zap,
   Package,
 } from "lucide-react";
 
@@ -41,7 +40,7 @@ const billingSchema = z.object({
 
 type BillingFormData = z.infer<typeof billingSchema>;
 
-type PaymentMethod = "stripe" | "zoho" | "quote_request";
+type PaymentMethod = "zoho" | "quote_request";
 
 const pricingUnitLabels: Record<string, string> = {
   monthly: "/mo",
@@ -59,7 +58,7 @@ const Checkout = () => {
   const [, navigate] = useLocation();
   const { items, getCartTotal, clearCart } = useCart();
   const { toast } = useToast();
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("stripe");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("zoho");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useSEO({
@@ -128,10 +127,11 @@ const Checkout = () => {
         total: item.product.basePrice * item.quantity,
       }));
 
-      if (paymentMethod === "stripe") {
-        const response = await fetch("/api/store/checkout/stripe", {
+      if (paymentMethod === "zoho") {
+        const response = await fetch("/api/store/checkout/zoho", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
           body: JSON.stringify({
             lineItems,
             billing: data,
@@ -148,16 +148,13 @@ const Checkout = () => {
         const result = await response.json();
         if (result.url) {
           window.location.href = result.url;
+        } else if (result.orderId) {
+          clearCart();
+          navigate(`/store/order-confirmation?orderId=${result.orderId}`);
         }
       } else if (paymentMethod === "quote_request") {
         navigate("/store/quote-request");
         return;
-      } else if (paymentMethod === "zoho") {
-        toast({
-          title: "Coming Soon",
-          description: "Zoho payment integration will be available soon.",
-          variant: "default",
-        });
       }
     } catch (error: any) {
       console.error("Checkout error:", error);
@@ -303,29 +300,6 @@ const Checkout = () => {
                     className="space-y-3"
                   >
                     <label
-                      htmlFor="payment-stripe"
-                      className={`flex items-center gap-4 p-4 rounded-lg border cursor-pointer transition-all ${
-                        paymentMethod === "stripe"
-                          ? "border-violet-500 bg-violet-500/10"
-                          : "border-white/20 hover:border-white/40"
-                      }`}
-                    >
-                      <RadioGroupItem value="stripe" id="payment-stripe" data-testid="radio-stripe" />
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <CreditCard className="w-5 h-5 text-violet-400" />
-                          <span className="font-medium text-white">Credit Card (Stripe)</span>
-                        </div>
-                        <p className="text-sm text-white/60 mt-1">
-                          Secure payment via Stripe. All major cards accepted.
-                        </p>
-                      </div>
-                      {paymentMethod === "stripe" && (
-                        <Check className="w-5 h-5 text-violet-400" />
-                      )}
-                    </label>
-
-                    <label
                       htmlFor="payment-zoho"
                       className={`flex items-center gap-4 p-4 rounded-lg border cursor-pointer transition-all ${
                         paymentMethod === "zoho"
@@ -336,14 +310,11 @@ const Checkout = () => {
                       <RadioGroupItem value="zoho" id="payment-zoho" data-testid="radio-zoho" />
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <Zap className="w-5 h-5 text-amber-400" />
-                          <span className="font-medium text-white">Zoho Billing</span>
-                          <span className="text-xs bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded">
-                            Coming Soon
-                          </span>
+                          <CreditCard className="w-5 h-5 text-violet-400" />
+                          <span className="font-medium text-white">Credit / Debit Card</span>
                         </div>
                         <p className="text-sm text-white/60 mt-1">
-                          Pay through your Zoho account for existing customers.
+                          Secure payment processing. All major cards accepted.
                         </p>
                       </div>
                       {paymentMethod === "zoho" && (
@@ -481,11 +452,6 @@ const Checkout = () => {
                         <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                         Processing...
                       </>
-                    ) : paymentMethod === "stripe" ? (
-                      <>
-                        <CreditCard className="w-5 h-5 mr-2" />
-                        Pay with Card
-                      </>
                     ) : paymentMethod === "quote_request" ? (
                       <>
                         <MessageSquare className="w-5 h-5 mr-2" />
@@ -493,8 +459,8 @@ const Checkout = () => {
                       </>
                     ) : (
                       <>
-                        <Zap className="w-5 h-5 mr-2" />
-                        Pay with Zoho
+                        <CreditCard className="w-5 h-5 mr-2" />
+                        Pay Now
                       </>
                     )}
                   </Button>

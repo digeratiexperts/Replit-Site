@@ -37,7 +37,7 @@ interface OrderDetail {
   billingEmail: string;
   billingCompany: string;
   billingAddress: BillingAddress;
-  stripePaymentIntentId?: string;
+  zohoPaymentId?: string;
   notes?: string;
   paidAt?: string;
   createdAt: string;
@@ -87,7 +87,9 @@ export default function PortalOrderDetail() {
   const formatPaymentMethod = (method: string) => {
     switch (method) {
       case "stripe":
-        return "Credit Card (Stripe)";
+        return "Credit Card";
+      case "zoho":
+        return "Credit Card";
       case "invoice":
         return "Invoice";
       case "quote_request":
@@ -314,11 +316,11 @@ export default function PortalOrderDetail() {
                     </p>
                   </div>
                 )}
-                {order.stripePaymentIntentId && (
+                {order.zohoPaymentId && (
                   <div>
                     <p className="text-gray-500 dark:text-gray-400">Transaction ID</p>
                     <p className="font-mono text-xs truncate">
-                      {order.stripePaymentIntentId}
+                      {order.zohoPaymentId}
                     </p>
                   </div>
                 )}

@@ -43,11 +43,10 @@ export function ShoppingCart() {
         pricingType: item.product.pricingType,
       }));
 
-      const response = await apiRequest("POST", "/api/store/checkout/stripe", { lineItems });
+      const response = await apiRequest("POST", "/api/store/checkout/zoho", { lineItems });
       const data = await response.json();
 
       if (data.url) {
-        // Redirect to Stripe Checkout
         window.location.href = data.url;
       } else if (data.error) {
         toast({

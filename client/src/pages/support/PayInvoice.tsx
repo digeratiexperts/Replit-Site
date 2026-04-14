@@ -4,7 +4,7 @@ import { CheckCircle, CreditCard, Lock, Download, Eye, Zap, Shield } from "lucid
 
 export default function PayInvoice() {
   const methods = [
-    { icon: CreditCard, title: "Credit/Debit Card", color: "from-blue-500 to-cyan-500", features: ["Visa, MasterCard, Amex", "Instant processing", "Secure Stripe gateway"] },
+    { icon: CreditCard, title: "Credit/Debit Card", color: "from-blue-500 to-cyan-500", features: ["Visa, MasterCard, Amex", "Instant processing", "Secure payment gateway"] },
     { icon: Lock, title: "Bank Transfer (ACH)", color: "from-green-500 to-emerald-500", features: ["Direct account transfer", "1-3 business days", "No credit card fees"] }
   ];
 

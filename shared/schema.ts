@@ -1133,6 +1133,7 @@ export const storeOrders = pgTable("store_orders", {
   stripeSessionId: text("stripe_session_id"),
   stripePaymentIntentId: text("stripe_payment_intent_id"),
   zohoPaymentId: text("zoho_payment_id"),
+  zohoPaymentSessionId: text("zoho_payment_session_id"),
   billingEmail: text("billing_email"),
   billingName: text("billing_name"),
   billingCompany: text("billing_company"),

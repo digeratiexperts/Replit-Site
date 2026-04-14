@@ -8,9 +8,7 @@ import { createServer as createViteServer } from "vite";
 import path from "path";
 import fs from "fs";
 import cookieParser from "cookie-parser";
-import { runMigrations } from "stripe-replit-sync";
-import { getStripeSync } from "./stripeClient";
-import { WebhookHandlers } from "./webhookHandlers";
+import { zohoPayments } from "./zohoPayments";
 import { setupCrossServiceHandlers } from "./crossServiceHandler";
 import { eventBus, EventTypes } from "./eventBus";
 
@@ -68,7 +66,7 @@ app.all("/api/health", async (_req, res) => {
     port,
     services: {
       database: dbAvailable ? "connected" : "fallback_memory",
-      stripe: stripeEnabled ? "enabled" : "disabled",
+      zohoPayments: zohoPayments.isConfigured() ? "configured" : "not_configured",
       openai: openaiConfigured ? "configured" : "not_configured",
     },
     uptime: process.uptime(),
@@ -83,107 +81,79 @@ app.all("/healthz", (_req, res) => res.status(200).send("ok"));
 // Readiness check for deployments
 app.all("/ready", (_req, res) => res.status(200).json({ ready: true }));
 
-let stripeEnabled = false;
-
-async function testDatabaseConnection(): Promise<boolean> {
-  const databaseUrl = process.env.DATABASE_URL;
-  if (!databaseUrl) {
-    console.log("[DB TEST] No DATABASE_URL set");
-    return false;
-  }
-  
-  try {
-    const { initPromise, getDatabaseStatus } = await import('./db');
-    await initPromise;
-    const status = getDatabaseStatus();
-    console.log("[DB TEST] Status:", status);
-    return status.connected;
-  } catch (error: any) {
-    console.error("[DB TEST] Connection failed:", error.message || error);
-    return false;
-  }
+if (zohoPayments.isConfigured()) {
+  log("✅ Zoho Payments configured");
+} else {
+  log("⚠️ Zoho Payments not configured - set ZOHO_PAYMENTS_API_KEY and ZOHO_PAYMENTS_SIGNING_KEY");
 }
 
-async function initStripe() {
-  const databaseUrl = process.env.DATABASE_URL;
-  if (!databaseUrl) {
-    log("⚠️ DATABASE_URL not set - Stripe integration will not work");
-    return;
-  }
-
-  log("🔄 Initializing Stripe schema...");
-  
-  const dbAvailable = await testDatabaseConnection();
-  if (!dbAvailable) {
-    log("⚠️ Database unavailable - Stripe integration disabled (endpoint may be suspended)");
-    log("⚠️ Portal will use in-memory storage until database is restored");
-    return;
-  }
-
-  try {
-    await runMigrations({
-      databaseUrl,
-    } as any);
-    log("✅ Stripe schema ready");
-
-    const stripeSync = await getStripeSync();
-
-    log("🔄 Setting up managed webhook...");
-    const webhookBaseUrl = `https://${process.env.REPLIT_DOMAINS?.split(",")[0] || "localhost:5000"}`;
-    const { uuid } = await stripeSync.findOrCreateManagedWebhook(
-      `${webhookBaseUrl}/api/stripe/webhook`,
-      {
-        enabled_events: ["*"],
-        description: "Managed webhook for Stripe sync",
-      }
-    );
-    log(`✅ Webhook configured (UUID: ${uuid})`);
-    stripeEnabled = true;
-
-    log("🔄 Syncing Stripe data...");
-    stripeSync.syncBackfill().then(() => {
-      log("✅ Stripe data synced");
-    }).catch((err: Error) => {
-      console.error("Error syncing Stripe data:", err);
-    });
-  } catch (error: any) {
-    if (error.message?.includes("endpoint has been disabled")) {
-      log("⚠️ Database endpoint disabled - Stripe integration deferred");
-    } else {
-      console.error("Failed to initialize Stripe:", error);
-    }
-  }
-}
-
-export { stripeEnabled };
-
-// Start Stripe init in background
-initStripe().catch(console.error);
-
-// --------- Stripe Webhook Route BEFORE JSON middleware
+// --------- Zoho Payments Webhook Route BEFORE JSON middleware (needs raw body for signature verification)
 app.post(
-  "/api/stripe/webhook/:uuid",
+  "/api/webhooks/zoho-payments",
   express.raw({ type: "application/json" }),
   async (req, res) => {
-    const signature = req.headers["stripe-signature"];
-    if (!signature) {
-      return res.status(400).json({ error: "Missing stripe-signature" });
-    }
-
     try {
-      const sig = Array.isArray(signature) ? signature[0] : signature;
-      if (!Buffer.isBuffer(req.body)) {
-        const errorMsg = "STRIPE WEBHOOK ERROR: req.body is not a Buffer. This means express.json() ran before this webhook route. FIX: Move this webhook route registration BEFORE app.use(express.json())";
-        console.error(errorMsg);
-        return res.status(500).json({ error: "Webhook processing error" });
+      const signature = req.headers["x-zoho-webhook-signature"] as string || req.headers["x-webhook-signature"] as string;
+      if (!signature) {
+        console.error("[ZOHO PAYMENTS WEBHOOK] Missing signature header");
+        return res.status(400).json({ error: "Missing webhook signature" });
       }
 
-      const { uuid } = req.params;
-      await WebhookHandlers.processWebhook(req.body as Buffer, sig, uuid);
-      res.status(200).json({ received: true });
+      const isValid = zohoPayments.verifyWebhookSignature(req.body, signature);
+      if (!isValid) {
+        console.error("[ZOHO PAYMENTS WEBHOOK] Invalid signature");
+        return res.status(401).json({ error: "Invalid webhook signature" });
+      }
+
+      const event = JSON.parse(req.body.toString("utf-8"));
+      const eventType = event.event_type || event.type;
+
+      if (eventType === "payment.completed" || eventType === "paymentsession.completed" || eventType === "payment_session.success") {
+        const sessionId = event.data?.payment_session_id || event.payment_session_id || event.data?.id;
+        const paymentId = event.data?.payment_id || event.payment_id;
+
+        if (sessionId) {
+          const { db } = await import("./db");
+          const { storeOrders } = await import("@shared/schema");
+          const { eq } = await import("drizzle-orm");
+
+          const [existingOrder] = await db.select().from(storeOrders)
+            .where(eq(storeOrders.zohoPaymentSessionId, sessionId)).limit(1);
+
+          const oldStatus = existingOrder?.status || "unknown";
+
+          await db.update(storeOrders)
+            .set({
+              status: "paid",
+              zohoPaymentId: paymentId || sessionId,
+              paidAt: new Date(),
+              updatedAt: new Date(),
+            })
+            .where(eq(storeOrders.zohoPaymentSessionId, sessionId));
+
+          console.log(`[ZOHO PAYMENTS WEBHOOK] Order paid: session=${sessionId}`);
+          console.log(`[SECURITY] CHECKOUT_COMPLETED`, {
+            orderId: existingOrder?.id,
+            orderNumber: existingOrder?.orderNumber,
+            paymentMethod: "zoho",
+            total: existingOrder?.total,
+            zohoPaymentSessionId: sessionId,
+            zohoPaymentId: paymentId
+          });
+          console.log(`[SECURITY] ORDER_STATUS_CHANGED`, {
+            orderId: existingOrder?.id,
+            orderNumber: existingOrder?.orderNumber,
+            oldStatus,
+            newStatus: "paid",
+            triggeredBy: "zoho_payments_webhook"
+          });
+        }
+      }
+
+      res.json({ received: true });
     } catch (error: any) {
-      console.error("Webhook error:", error.message);
-      res.status(400).json({ error: "Webhook processing error" });
+      console.error("[ZOHO PAYMENTS WEBHOOK ERROR]", error);
+      res.status(500).json({ error: error.message || "Webhook handler failed" });
     }
   }
 );
