@@ -195,6 +195,17 @@ app.use((req, res, next) => {
   next();
 });
 
+// SEO files (sitemap.xml, robots.txt) live in the repo-root public/ folder,
+// which is outside Vite's publicDir (client/public) and therefore not copied
+// into dist/public by the build. Serve it directly so /sitemap.xml and
+// /robots.txt work in every deployment.
+app.use(
+  express.static(path.resolve(process.cwd(), "public"), {
+    index: false,
+    maxAge: "1h",
+  }),
+);
+
 /** Utility to list routes for debugging */
 function listEndpoints(): Array<{ method: string; path: string }> {
   const routes: Array<{ method: string; path: string }> = [];
