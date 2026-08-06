@@ -72,11 +72,12 @@
 
 ## 📝 Environment Variables Set
 ```
-ZOHO_CLIENT_ID=1000.YSAZC0WPSR6912VXW4MJFTG76LTD0S
-ZOHO_CLIENT_SECRET=fd8352031f30b49d178332398166041d9b5c35f0fe
-JUMPCLOUD_API_KEY=jca_3zmVKcVUkdfVjUBqcWCVX7gz6AJC3DkbB4hL
-CORO_CLIENT_ID=d95432aaf81c4e1cb9639670515cf5d3
-CORO_CLIENT_SECRET=960352eb679447428403284ac1bedd47
+ZOHO_CLIENT_ID=<set in environment — do not commit>
+ZOHO_CLIENT_SECRET=<set in environment — do not commit>
+JUMPCLOUD_API_KEY=<set in environment — do not commit>
+CORO_CLIENT_ID=<set in environment — do not commit>
+CORO_CLIENT_SECRET=<set in environment — do not commit>
 ```
 
-All set and secure! 🔐
+> ⚠️ Real values were previously committed to this public repo and remain in git
+> history. Those Zoho, JumpCloud, and Coro credentials must be rotated.
