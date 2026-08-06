@@ -1,0 +1,45 @@
+# systemd unit for the Digerati Experts public website (production).
+#
+# Install:
+#   sudo cp deploy/vps/digeratiexperts-site.service /etc/systemd/system/digeratiexperts-site.service
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now digeratiexperts-site
+#
+# For STAGING, copy this file to digeratiexperts-staging.service and change:
+#   User/Group        -> the staging.digeratiexperts.com CyberPanel site user
+#   WorkingDirectory  -> /home/staging.digeratiexperts.com/current
+#   EnvironmentFile   -> /home/staging.digeratiexperts.com/shared/.env
+#   PORT              -> 3200
+#
+# NOTE: replace CYBERPANEL_SITE_USER with the actual website user CyberPanel
+# created for the domain (visible in CyberPanel -> Websites -> List Websites,
+# or `ls -l /home/digeratiexperts.com`). Port 3100 is NOT available on this
+# VPS — it is used by the Intelligence Hub (techsales).
+
+[Unit]
+Description=Digerati Experts public website (Node/Express)
+After=network.target
+
+[Service]
+Type=simple
+User=CYBERPANEL_SITE_USER
+Group=CYBERPANEL_SITE_USER
+WorkingDirectory=/home/digeratiexperts.com/current
+EnvironmentFile=/home/digeratiexperts.com/shared/.env
+Environment=NODE_ENV=production
+Environment=PORT=3300
+ExecStart=/usr/bin/node /home/digeratiexperts.com/current/dist/index.js
+Restart=always
+RestartSec=3
+StandardOutput=append:/home/digeratiexperts.com/logs/app.log
+StandardError=append:/home/digeratiexperts.com/logs/app-error.log
+
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/home/digeratiexperts.com/logs
+
+[Install]
+WantedBy=multi-user.target
