@@ -24,6 +24,11 @@ import { DigeratiHomepage } from "@/pages/DigeratiHomepage";
 
 const SolutionsIndex = lazy(() => import("@/pages/solutions/SolutionsIndex"));
 const ManagedITSupport = lazy(() => import("@/pages/solutions/ManagedITSupport"));
+const ProActiveITEcosystemPage = lazy(() => import("@/pages/solutions/ProActiveITEcosystemPage"));
+const ProActiveOfficeEcosystemPage = lazy(() => import("@/pages/solutions/ProActiveOfficeEcosystemPage"));
+const ProActiveBusinessEcosystemPage = lazy(() => import("@/pages/solutions/ProActiveBusinessEcosystemPage"));
+const ProActiveEnterpriseEcosystemPage = lazy(() => import("@/pages/solutions/ProActiveEnterpriseEcosystemPage"));
+const StandaloneServices = lazy(() => import("@/pages/solutions/StandaloneServices"));
 const ManagedWorkplace = lazy(() => import("@/pages/solutions/ManagedWorkplace"));
 const BackupDisasterRecovery = lazy(() => import("@/pages/solutions/BackupDisasterRecovery"));
 const OfficePage = lazy(() => import("@/pages/solutions/OfficePage"));
@@ -172,6 +177,36 @@ function Router() {
       <Route path="/solutions/ProActive-Ecosystem-Packages" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <OfficePage />
+        </Suspense>
+      )} />
+      <Route path="/solutions/proactive-ecosystem" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <OfficePage />
+        </Suspense>
+      )} />
+      <Route path="/solutions/proactive-it-ecosystem" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ProActiveITEcosystemPage />
+        </Suspense>
+      )} />
+      <Route path="/solutions/proactive-office-ecosystem" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ProActiveOfficeEcosystemPage />
+        </Suspense>
+      )} />
+      <Route path="/solutions/proactive-business-ecosystem" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ProActiveBusinessEcosystemPage />
+        </Suspense>
+      )} />
+      <Route path="/solutions/proactive-enterprise-ecosystem" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ProActiveEnterpriseEcosystemPage />
+        </Suspense>
+      )} />
+      <Route path="/solutions/standalone-services" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <StandaloneServices />
         </Suspense>
       )} />
       <Route path="/solutions/co-managed-it" component={() => (
