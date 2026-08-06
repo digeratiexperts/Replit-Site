@@ -185,6 +185,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+// Internal DE sales pages were removed from the public site (they now live in
+// the Intelligence Hub behind auth). Redirect any old /internal URL to home so
+// stale links and crawlers never reach the SPA catch-all.
+app.use((req, res, next) => {
+  if (req.path === "/internal" || req.path.startsWith("/internal/")) {
+    return res.redirect(301, "/");
+  }
+  next();
+});
+
 /** Utility to list routes for debugging */
 function listEndpoints(): Array<{ method: string; path: string }> {
   const routes: Array<{ method: string; path: string }> = [];

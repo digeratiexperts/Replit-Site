@@ -137,24 +137,8 @@ const OrderConfirmation = lazy(() => import("@/pages/store/OrderConfirmation"));
 const QuoteRequestPage = lazy(() => import("@/pages/store/QuoteRequest"));
 const QuoteConfirmationPage = lazy(() => import("@/pages/store/QuoteConfirmation"));
 
-// Internal pages (DE staff only)
-const InternalHub = lazy(() => import("@/pages/internal/InternalHub"));
-const InternalSalesProcess = lazy(() => import("@/pages/internal/SalesProcessPage"));
-const WorkplaceMatrix = lazy(() => import("@/pages/internal/WorkplaceMatrix"));
-const CoreIT = lazy(() => import("@/pages/internal/CoreIT"));
-const SecurityStack = lazy(() => import("@/pages/internal/SecurityStack"));
-const PricingTiers = lazy(() => import("@/pages/internal/PricingTiers"));
-const ServicePackages = lazy(() => import("@/pages/internal/ServicePackages"));
-const VcioServices = lazy(() => import("@/pages/internal/VcioServices"));
-const SixReasons = lazy(() => import("@/pages/internal/SixReasons"));
-const BuyersGuide = lazy(() => import("@/pages/internal/BuyersGuide"));
-const CoverLetter = lazy(() => import("@/pages/internal/CoverLetter"));
-const AudioBusinessCard = lazy(() => import("@/pages/internal/AudioBusinessCard"));
-const ElevenThingsBetter = lazy(() => import("@/pages/internal/ElevenThingsBetter"));
-const USPWorksheet = lazy(() => import("@/pages/internal/USPWorksheet"));
-const ProActiveEcosystems = lazy(() => import("@/pages/internal/ProActiveEcosystems"));
-const GuaranteesValues = lazy(() => import("@/pages/internal/GuaranteesValues"));
-const CyberFacts = lazy(() => import("@/pages/internal/CyberFacts"));
+// Internal DE sales pages were removed from the public bundle for security.
+// They now live behind authentication in the Intelligence Hub (techsales).
 
 import { servicePageData, industryPageData, resourcePageData, supportPageData } from "@/pages/routes/servicePages";
 
@@ -761,93 +745,6 @@ function Router() {
         </Suspense>
       )} />
       
-      {/* Internal DE Pages (Staff Only) */}
-      <Route path="/internal" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <InternalHub />
-        </Suspense>
-      )} />
-      <Route path="/internal/sales-process" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <InternalSalesProcess />
-        </Suspense>
-      )} />
-      <Route path="/internal/workplace-matrix" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <WorkplaceMatrix />
-        </Suspense>
-      )} />
-      <Route path="/internal/core-it" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <CoreIT />
-        </Suspense>
-      )} />
-      <Route path="/internal/security-stack" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <SecurityStack />
-        </Suspense>
-      )} />
-      <Route path="/internal/pricing-tiers" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <PricingTiers />
-        </Suspense>
-      )} />
-      <Route path="/internal/service-packages" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <ServicePackages />
-        </Suspense>
-      )} />
-      <Route path="/internal/vcio" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <VcioServices />
-        </Suspense>
-      )} />
-      <Route path="/internal/six-reasons" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <SixReasons />
-        </Suspense>
-      )} />
-      <Route path="/internal/buyers-guide" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <BuyersGuide />
-        </Suspense>
-      )} />
-      <Route path="/internal/cover-letter" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <CoverLetter />
-        </Suspense>
-      )} />
-      <Route path="/internal/audio-business-card" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <AudioBusinessCard />
-        </Suspense>
-      )} />
-      <Route path="/internal/11-things-better" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <ElevenThingsBetter />
-        </Suspense>
-      )} />
-      <Route path="/internal/usp-worksheet" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <USPWorksheet />
-        </Suspense>
-      )} />
-      <Route path="/internal/proactive-ecosystems" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <ProActiveEcosystems />
-        </Suspense>
-      )} />
-      <Route path="/internal/guarantees-values" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <GuaranteesValues />
-        </Suspense>
-      )} />
-      <Route path="/internal/cyber-facts" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <CyberFacts />
-        </Suspense>
-      )} />
-
       <Route path="/de-ecosystem-matrix-offical" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <EcosystemMatrixOfficial />

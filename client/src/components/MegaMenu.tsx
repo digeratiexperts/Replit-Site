@@ -280,15 +280,6 @@ export function MegaMenu() {
             { title: '100% Guarantee', description: '30-day money-back promise', icon: <CheckCircle className="h-5 w-5" />, url: '/about/guarantee' },
             { title: '21 Questions to Ask', description: 'Before hiring any IT company', icon: <ClipboardCheck className="h-5 w-5" />, url: '/about/21-questions' },
           ]
-        },
-        {
-          title: 'Why Us',
-          items: [
-            { title: '11 Things We Do Better', description: 'Why Phoenix businesses choose us', icon: <CheckCircle className="h-5 w-5" />, url: '/internal/11-things-better' },
-            { title: '6 Reasons to Choose Us', description: 'What makes us unique', icon: <Star className="h-5 w-5" />, url: '/internal/six-reasons' },
-            { title: 'ProActive Ecosystems', description: 'Compare service tiers', icon: <LayoutGrid className="h-5 w-5" />, url: '/internal/proactive-ecosystems' },
-            { title: 'Guarantees & Values', description: 'Our promises and principles', icon: <Heart className="h-5 w-5" />, url: '/internal/guarantees-values' },
-          ]
         }
       ]
     },
