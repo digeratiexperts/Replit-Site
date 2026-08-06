@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
 import { ServiceJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
-import { GuidedSalesPitch } from "@/components/GuidedSalesPitch";
 import {
   Shield,
   Clock,
@@ -34,43 +33,6 @@ import {
   Settings,
   BarChart3
 } from "lucide-react";
-
-const bcdrSalesPitchData = {
-  corePitch: [
-    "Tested recovery—not just backups that sit untouched",
-    "Documented RPO/RTO targets in your service agreement",
-    "Ransomware recovery capability with immutable backups",
-    "Annual or quarterly restore verification depending on tier",
-    "Immutable backup copies that can't be encrypted by attackers"
-  ],
-  discoveryQuestions: [
-    "When was the last time you actually tested a restore?",
-    "What's the acceptable downtime for your critical systems?",
-    "Do you have compliance requirements around data recovery?",
-    "Who is your current backup vendor—and have you seen a restore report?",
-    "How many critical systems would need to come back online first?"
-  ],
-  objections: [
-    {
-      objection: "Our backups are already handled",
-      response: "Backups ≠ tested recovery. We verify restores regularly and provide proof that your data can actually come back."
-    },
-    {
-      objection: "It's too expensive",
-      response: "Compare it to the $1.53M average ransomware recovery cost. BCDR is the cheapest insurance you'll ever buy."
-    },
-    {
-      objection: "We've never needed disaster recovery",
-      response: "It's insurance—not if, but when. 60% of SMBs that lose data shut down within 6 months."
-    }
-  ],
-  valueProof: [
-    "Documented recovery time in writing",
-    "Proof of restore capability with reports",
-    "Compliance-ready audit reports",
-    "Immutable backups immune to ransomware"
-  ]
-};
 
 const bcdrData = {
   packages: [
@@ -455,11 +417,6 @@ export default function BackupDisasterRecovery() {
               </div>
             </div>
           </div>
-        </motion.section>
-
-        {/* Guided Sales Pitch */}
-        <motion.section {...fadeInUp}>
-          <GuidedSalesPitch data={bcdrSalesPitchData} />
         </motion.section>
 
         {/* What We Protect */}

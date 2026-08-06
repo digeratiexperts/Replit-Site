@@ -1,19 +1,27 @@
 export const pricing = {
+  it: {
+    name: "IT",
+    tier: "Entry",
+    siteMin: 0,
+    user: 125,
+    note: "Entry managed IT with baseline security.",
+    learnMoreUrl: "/solutions/proactive-it-ecosystem",
+  },
   office: {
     name: "Office",
     tier: "Foundation",
     siteMin: 750,
     user: 165,
     note: "Core protection + productivity tools for small teams.",
-    learnMoreUrl: "/solutions/office",
+    learnMoreUrl: "/solutions/proactive-office-ecosystem",
   },
   business: {
     name: "Business",
     tier: "Operations",
     siteMin: 1200,
     user: 245,
-    note: "Adds SOC monitoring, HR workflows, and vCIO.",
-    learnMoreUrl: "/solutions/security-operations",
+    note: "Adds SOC monitoring, spend-card controls, and vCIO.",
+    learnMoreUrl: "/solutions/proactive-business-ecosystem",
   },
   enterprise: {
     name: "Enterprise",
@@ -21,7 +29,7 @@ export const pricing = {
     siteMin: 1725,
     user: 345,
     note: "Adds governance and audit readiness.",
-    learnMoreUrl: "/solutions/compliance-reports",
+    learnMoreUrl: "/solutions/proactive-enterprise-ecosystem",
   },
 } as const;
 

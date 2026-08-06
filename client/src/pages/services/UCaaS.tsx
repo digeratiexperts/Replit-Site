@@ -175,12 +175,12 @@ export default function UCaaS() {
       <ServiceJsonLd
         name="Unified Communications (UCaaS)"
         description="We design, secure, and run your phone system and meeting stack so it actually supports the business."
-        url="/solutions/ucaas"
+        url="/services/ucaas"
       />
       <BreadcrumbJsonLd items={[
         { name: "Home", url: "/" },
         { name: "Solutions", url: "/solutions" },
-        { name: "UCaaS", url: "/solutions/ucaas" }
+        { name: "UCaaS", url: "/services/ucaas" }
       ]} />
       <div className="space-y-20">
         {/* What's Broken Section */}

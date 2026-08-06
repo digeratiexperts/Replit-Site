@@ -21,43 +21,6 @@ export const servicePageData = {
     ],
     gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
     recommendedTier: "office" as const,
-    salesPitchData: {
-      corePitch: [
-        "One predictable monthly price—no surprise IT bills",
-        "Enterprise-grade security baseline included in every plan",
-        "We own the outcomes: you focus on your business, not IT",
-        "Zero internal IT staff required—we're your IT department",
-        "Vendor coordination included—no more juggling ISPs and software vendors"
-      ],
-      discoveryQuestions: [
-        "How much did you spend on IT last year, including emergencies and one-off fixes?",
-        "Who handles your IT today? How long does it take to get issues resolved?",
-        "What happens when your current IT person is unavailable?",
-        "How confident are you in your backup and security posture right now?",
-        "Are you paying for software licenses you're not using?"
-      ],
-      objections: [
-        {
-          objection: "We already have an IT guy",
-          response: "Great—but can they monitor 24/7, handle security incidents, and manage vendors? We augment or replace with proven processes and a full team behind every ticket."
-        },
-        {
-          objection: "It's too expensive",
-          response: "Compare it to one ransomware incident or a week of downtime. Our clients save 20-40% vs. break-fix by eliminating emergency calls and preventing problems."
-        },
-        {
-          objection: "We're too small to need managed IT",
-          response: "Small businesses are the #1 target for cyberattacks because hackers know you're less protected. Our Office package is built exactly for 5-25 user organizations."
-        }
-      ],
-      valueProof: [
-        "15-minute first-response SLA—faster than any break-fix provider",
-        "Monthly service summaries show exactly what we did and what we prevented",
-        "Compliance modules available when you're ready—no pressure, no upsell",
-        "Stack-native support: we built these tools, we know them inside out",
-        "Quarterly business reviews keep you informed and aligned"
-      ]
-    }
   },
   'managed-it-support': {
     title: "Managed IT Support",
@@ -81,43 +44,6 @@ export const servicePageData = {
     ],
     gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
     recommendedTier: "office" as const,
-    salesPitchData: {
-      corePitch: [
-        "15-minute first-response SLA—not 'we'll get back to you'",
-        "Stack-native support: we built these tools, we know them cold",
-        "We fix the root cause, not just the symptom",
-        "Vendor coordination included—we handle your ISP, Microsoft, everyone",
-        "Help + education: users learn safer behaviors, reducing repeat tickets"
-      ],
-      discoveryQuestions: [
-        "How long does it typically take to get IT help when something breaks?",
-        "What's the most frustrating IT issue your team deals with repeatedly?",
-        "Who handles your password resets and user onboarding today?",
-        "When was the last time a vendor issue took days to resolve?",
-        "How do you handle IT support after hours or on weekends?"
-      ],
-      objections: [
-        {
-          objection: "We can just call our current IT when we need them",
-          response: "Break-fix means waiting until something breaks. We prevent problems and respond in minutes, not hours or days."
-        },
-        {
-          objection: "Our team can figure most things out themselves",
-          response: "How much productivity is lost when employees troubleshoot their own IT? Our goal is zero disruption—let your team focus on their actual jobs."
-        },
-        {
-          objection: "We don't have that many IT issues",
-          response: "That's great—but when you do, how fast is resolution? And are you preventing issues, or just lucky? We track and reduce incident rates over time."
-        }
-      ],
-      valueProof: [
-        "Repeat incident rate drops month over month with our tracking",
-        "Users get educated, not just patched—building a smarter workforce",
-        "Vendor escalation handled by us: ISPs, SaaS vendors, hardware—all of it",
-        "Remote remediation resolves 90%+ of issues without waiting for onsite",
-        "Clear SLAs with accountability, not vague promises"
-      ]
-    }
   },
   'managed-workplace': {
     title: "Managed Workplace",
@@ -165,43 +91,6 @@ export const servicePageData = {
     gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
     stat: { value: "54%", label: "used backups to restore encrypted data (lowest in 6 years)", source: "Sophos 2025" },
     recommendedTier: "office" as const,
-    salesPitchData: {
-      corePitch: [
-        "Backups that are tested monthly—because untested backups are worthless",
-        "Immutable copies protect against ransomware encryption",
-        "Restore in minutes, not days—verified recovery capability",
-        "AES-256 encryption at rest and in transit—compliance-ready",
-        "Exception reporting: you'll know immediately if something fails"
-      ],
-      discoveryQuestions: [
-        "When was the last time you actually tested restoring from your backups?",
-        "How long would it take to recover if ransomware encrypted everything today?",
-        "Are your M365/Google Workspace emails and files backed up? Are you sure?",
-        "What's your current backup retention policy? Could you restore a file from 30 days ago?",
-        "Who gets notified when a backup fails?"
-      ],
-      objections: [
-        {
-          objection: "We already have backups",
-          response: "Great—when did you last test a restore? We verify monthly that your data is actually recoverable. 46% of ransomware victims couldn't restore from backups."
-        },
-        {
-          objection: "Microsoft/Google backs up our cloud data",
-          response: "No, they don't. Microsoft's SLA covers their infrastructure, not your data. If an employee deletes files or ransomware encrypts them, that's on you without third-party backup."
-        },
-        {
-          objection: "We've never had a data loss incident",
-          response: "Yet. 88% of SMB breaches involve ransomware. The question isn't if, it's when—and whether you can recover."
-        }
-      ],
-      valueProof: [
-        "Monthly verified restore testing—proof your backups actually work",
-        "Ransomware-proof immutable copies that can't be encrypted or deleted",
-        "Covers endpoints, servers, M365, and Google Workspace",
-        "Compliance-grade encryption audit trail for regulators and insurers",
-        "Clear exception reporting so nothing fails silently"
-      ]
-    }
   },
   'security-awareness': {
     title: "Security Awareness Training",
@@ -226,36 +115,6 @@ export const servicePageData = {
     gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
     stat: { value: "60%", label: "of breaches involve the human element", source: "Verizon DBIR 2025" },
     recommendedTier: "business" as const,
-    salesPitchData: {
-      corePitch: [
-        "60% of breaches involve the human element—we fix that",
-        "Measurable behavior change, not just checkbox training",
-        "Phishing simulations that actually catch and coach repeat offenders",
-        "Compliance evidence built-in for audits and insurance"
-      ],
-      discoveryQuestions: [
-        "When was your last phishing simulation? What was the click rate?",
-        "How do you identify and coach high-risk users?",
-        "Does your cyber insurance require security awareness training?",
-        "What happened the last time an employee clicked something they shouldn't?"
-      ],
-      objections: [
-        {
-          objection: "Our employees are trained",
-          response: "When? How do you measure effectiveness? We provide ongoing training with measurable behavior change, not annual checkbox exercises."
-        },
-        {
-          objection: "We don't have time for training",
-          response: "Micro-learning takes 3-5 minutes per week. That's less time than recovering from a single phishing incident."
-        }
-      ],
-      valueProof: [
-        "Department-level risk scoring shows exactly who needs help",
-        "Phish-failure rates typically drop 50%+ in 90 days",
-        "Training logs ready for auditors and insurance carriers",
-        "Targeted coaching for repeat offenders, not just more videos"
-      ]
-    }
   },
   'co-managed-it': {
     title: "Co-Managed IT",
@@ -303,43 +162,6 @@ export const servicePageData = {
     gradientColors: "from-violet-700 via-purple-700 to-fuchsia-700",
     stat: { value: "88%", label: "of SMB breaches involve ransomware", source: "Verizon DBIR 2025" },
     recommendedTier: "business" as const,
-    salesPitchData: {
-      corePitch: [
-        "24/7 monitoring with real human response—not just alerts",
-        "Automated containment: endpoints isolated in seconds, not hours",
-        "We detect, investigate, and contain—you focus on business",
-        "88% of SMB breaches involve ransomware—we stop it before it spreads",
-        "Forensic investigation and root cause analysis included"
-      ],
-      discoveryQuestions: [
-        "If a threat hit your network at 2am on Saturday, who would respond?",
-        "How long would it take to detect and contain an active breach?",
-        "Do you have incident response runbooks customized to your environment?",
-        "What's your current mean time to detect and contain threats?",
-        "Who investigates and determines root cause after an incident?"
-      ],
-      objections: [
-        {
-          objection: "We have antivirus/EDR already",
-          response: "EDR generates alerts—who's triaging and responding 24/7? We provide the human expertise to investigate, contain, and guide recovery."
-        },
-        {
-          objection: "We've never had a breach",
-          response: "That you know of. Average dwell time is 200+ days before detection. We find threats hiding in your environment that others miss."
-        },
-        {
-          objection: "Our IT team handles security",
-          response: "Can they monitor 24/7? Respond at 2am? Perform forensic analysis? We augment your team with dedicated security expertise."
-        }
-      ],
-      valueProof: [
-        "Minutes-to-contain response time with automated isolation",
-        "24/7/365 monitoring by trained security analysts",
-        "Incident runbooks customized to your environment",
-        "Monthly threat reports with trends and mean-time-to-contain metrics",
-        "Compliance-ready incident documentation for auditors"
-      ]
-    }
   },
   'security-operations': {
     title: "Security Operations (SOC-as-a-Service)",
@@ -363,43 +185,6 @@ export const servicePageData = {
     ],
     gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
     recommendedTier: "business" as const,
-    salesPitchData: {
-      corePitch: [
-        "Full SOC capability without hiring a SOC team",
-        "Proactive threat hunting finds attacks before they detonate",
-        "Continuous policy tuning based on real threat intelligence",
-        "Longer log retention for forensics and compliance",
-        "Enterprise-grade security maturity at SMB pricing"
-      ],
-      discoveryQuestions: [
-        "Do you have anyone actively hunting for threats in your environment?",
-        "When was the last time your security policies were tuned or optimized?",
-        "How long do you retain security logs? Can you investigate a 6-month-old incident?",
-        "Who coordinates external communications during a major security incident?",
-        "How do you know your security controls are actually working?"
-      ],
-      objections: [
-        {
-          objection: "Threat detection is enough for us",
-          response: "Detection is reactive. SOC adds proactive hunting, policy optimization, and continuous improvement. We find what attackers are trying to hide."
-        },
-        {
-          objection: "We can't afford a SOC",
-          response: "A full-time SOC analyst costs $150K+. We provide an entire SOC team for a fraction of that—with 24/7 coverage."
-        },
-        {
-          objection: "We don't have compliance requirements",
-          response: "SOC isn't just for compliance—it's for security maturity. But when insurance or regulations do require it, you'll be ready."
-        }
-      ],
-      valueProof: [
-        "Proactive hunt cycles find threats that automated tools miss",
-        "Policy tuning reduces false positives and improves detection",
-        "Extended log retention for deep forensics and regulatory needs",
-        "Monthly SOC reports with hunt findings and policy changes",
-        "Full incident coordination including external communications"
-      ]
-    }
   },
   'backup-disaster-recovery': {
     title: "Backup & Disaster Recovery (BCDR)",
@@ -447,43 +232,6 @@ export const servicePageData = {
     ],
     gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
     recommendedTier: "enterprise" as const,
-    salesPitchData: {
-      corePitch: [
-        "IT leadership without the executive salary",
-        "Technology aligned to business goals, not just keeping lights on",
-        "Quarterly Business Reviews keep you informed and strategic",
-        "Risk registers and budget forecasting—no more surprise IT costs",
-        "Vendor rationalization eliminates waste and shadow IT"
-      ],
-      discoveryQuestions: [
-        "Who's responsible for IT strategy and long-term planning today?",
-        "How do you decide which technology investments to make?",
-        "What percentage of your IT budget goes to unplanned projects or emergencies?",
-        "How often do you review your technology roadmap with business goals in mind?",
-        "Do you have visibility into all the software and vendors your company uses?"
-      ],
-      objections: [
-        {
-          objection: "We don't need a CIO—we're too small",
-          response: "You don't need a full-time CIO. You need strategic IT guidance a few hours per month. That's exactly what vCIO provides at a fraction of the cost."
-        },
-        {
-          objection: "Our IT guy handles strategy",
-          response: "Is your IT person thinking 3 years ahead, or just keeping things running? vCIO brings executive perspective and business alignment your tech team doesn't have time for."
-        },
-        {
-          objection: "We can't afford strategic IT planning",
-          response: "You can't afford not to. Companies without IT strategy spend 20-30% more on technology due to poor decisions and reactive spending."
-        }
-      ],
-      valueProof: [
-        "Quarterly Technology Business Reviews with executive-level insights",
-        "Multi-year budget forecasting eliminates surprise IT costs",
-        "Risk registers prioritize what actually matters to your business",
-        "Vendor consolidation typically saves 15-25% on software spend",
-        "Tech Points system rewards prevention behaviors that reduce costs"
-      ]
-    }
   },
   'data-encryption': {
     title: "Data Encryption & Control",
@@ -507,43 +255,6 @@ export const servicePageData = {
     ],
     gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
     recommendedTier: "business" as const,
-    salesPitchData: {
-      corePitch: [
-        "Browser-layer security—the last place hackers look",
-        "DLP that stops data leakage even if endpoints are compromised",
-        "DNS filtering blocks threats before they reach your network",
-        "Compliance-ready audit trails for data handling",
-        "Essential for healthcare, finance, and legal verticals"
-      ],
-      discoveryQuestions: [
-        "How do you prevent employees from accidentally exfiltrating sensitive data?",
-        "What controls do you have over copy/paste and downloads of confidential information?",
-        "How would you know if an employee was sending data to a personal email?",
-        "Are you confident your DNS filtering blocks malicious domains in real-time?",
-        "What happens if someone's laptop is stolen with client data on it?"
-      ],
-      objections: [
-        {
-          objection: "We already have endpoint security",
-          response: "Endpoint security protects the device. Browser security protects the data inside the browser—where 90% of work happens today. They work together, not instead of each other."
-        },
-        {
-          objection: "Our employees wouldn't leak data",
-          response: "Most data leakage is accidental—wrong email recipient, cloud upload to personal account, copy/paste to wrong window. We prevent mistakes, not just malice."
-        },
-        {
-          objection: "We don't have compliance requirements",
-          response: "Yet. Cyber insurance, client contracts, and regulations are tightening. Building data controls now prevents scrambling later."
-        }
-      ],
-      valueProof: [
-        "Real-time visibility into data activity and web usage",
-        "Mass download and clipboard theft prevention",
-        "DNS-level blocking of malicious domains before connection",
-        "Audit trails meet HIPAA, GDPR, and FTC Safeguards requirements",
-        "Works alongside endpoint security for defense-in-depth"
-      ]
-    }
   },
   'compliance-reports': {
     title: "Compliance & Risk Reports",
@@ -567,43 +278,6 @@ export const servicePageData = {
     ],
     gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
     recommendedTier: "enterprise" as const,
-    salesPitchData: {
-      corePitch: [
-        "Audit-ready evidence on demand—not weeks of scrambling",
-        "Framework mapping to HIPAA, GDPR, FTC, CIS, and cyber insurance",
-        "Continuous risk scoring shows exactly where you stand",
-        "Board-level reporting for owners and executives",
-        "Fast-turnaround compliance packets for auditors and insurers"
-      ],
-      discoveryQuestions: [
-        "How long does it take you to compile evidence for an audit?",
-        "Do you have documented proof of all your security controls?",
-        "What frameworks are you required to comply with? HIPAA? FTC Safeguards?",
-        "How do you demonstrate compliance to cyber insurance carriers?",
-        "Can you show an auditor your training logs, access reviews, and incident trails right now?"
-      ],
-      objections: [
-        {
-          objection: "We passed our last audit",
-          response: "Great—but how much time and stress did it take? We make audits routine with pre-compiled evidence packets and continuous compliance monitoring."
-        },
-        {
-          objection: "We don't have compliance requirements",
-          response: "If you have cyber insurance, client contracts, or operate in healthcare/finance, you likely have requirements you don't know about. We'll help you find out."
-        },
-        {
-          objection: "Compliance is too expensive",
-          response: "Non-compliance is more expensive. Fines, insurance denials, and lost contracts cost far more than proactive compliance. We make it affordable."
-        }
-      ],
-      valueProof: [
-        "Evidence retention automated—training logs, access reviews, baselines",
-        "Gap tracking shows exactly what's needed for full compliance",
-        "Monthly posture reports for executive visibility",
-        "Audit packets generated in hours, not weeks",
-        "Framework mapping covers HIPAA, GDPR, FTC, CIS, and insurance requirements"
-      ]
-    }
   },
   'unified-security': {
     title: "Unified Security Posture",
@@ -627,43 +301,6 @@ export const servicePageData = {
     ],
     gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
     recommendedTier: "enterprise" as const,
-    salesPitchData: {
-      corePitch: [
-        "Single pane of glass—not a pile of disconnected security tools",
-        "Identity, endpoint, cloud, email, and network security fully integrated",
-        "Zero Trust enforcement across every access point",
-        "Coordinated incident response with backup/recovery integration",
-        "Measurable risk reduction with unified reporting"
-      ],
-      discoveryQuestions: [
-        "How many different security tools and dashboards do you manage today?",
-        "If an incident occurs, can you see the full picture across all systems?",
-        "How do you ensure security policies are consistent across endpoints, cloud, and email?",
-        "Is your incident response coordinated with your backup and recovery procedures?",
-        "Can you measure your overall security posture improvement over time?"
-      ],
-      objections: [
-        {
-          objection: "We already have security tools",
-          response: "Tools aren't strategy. We integrate your security layers into one cohesive system with unified visibility, consistent policies, and coordinated response."
-        },
-        {
-          objection: "This seems like overkill for our size",
-          response: "Attackers don't care about your size—they care about your vulnerabilities. Unified security is how enterprises stay protected; we make it accessible for SMBs."
-        },
-        {
-          objection: "We can't rip and replace everything",
-          response: "You don't have to. We integrate and orchestrate your existing tools while filling gaps. The goal is unified visibility and response, not wholesale replacement."
-        }
-      ],
-      valueProof: [
-        "Single dashboard showing control health, human risk, and incidents",
-        "Drift detection catches and corrects configuration changes automatically",
-        "Incident response playbooks integrated with backup/recovery procedures",
-        "Compliance readiness score when compliance modules are active",
-        "Coordinated security strategy replaces siloed tactical tools"
-      ]
-    }
   }
 };
 

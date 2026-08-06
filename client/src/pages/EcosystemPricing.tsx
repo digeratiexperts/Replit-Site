@@ -9,6 +9,7 @@ import {
   FileCheck, Building2, Check, X, Star, Zap
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
+import { pricing } from "@/data/pricing";
 
 interface ServiceRow {
   capability: string;
@@ -117,24 +118,24 @@ const serviceCategories: ServiceCategory[] = [
 const tiers = [
   { 
     id: "essentials", 
-    name: "IT Essentials", 
-    subtitle: "Core IT only",
-    ribbon: "Core",
+    name: "ProActive IT", 
+    subtitle: `Starting at $${pricing.it.user} /user·mo*`,
+    ribbon: "Entry",
     gradient: "from-slate-500 to-gray-600",
     borderColor: "border-slate-500/30"
   },
   { 
     id: "office", 
-    name: "Office", 
-    subtitle: "$65 /user·mo*",
-    ribbon: "Popular",
+    name: "ProActive Office", 
+    subtitle: `Starting at $${pricing.office.user} /user·mo*`,
+    ribbon: "Most Popular",
     gradient: "from-violet-500 to-purple-500",
     borderColor: "border-violet-500/30"
   },
   { 
     id: "business", 
-    name: "Business", 
-    subtitle: "$95 /user·mo*",
+    name: "ProActive Business", 
+    subtitle: `Starting at $${pricing.business.user} /user·mo*`,
     ribbon: "Best Value",
     gradient: "from-emerald-500 to-teal-500",
     borderColor: "border-emerald-500/30",
@@ -142,8 +143,8 @@ const tiers = [
   },
   { 
     id: "enterprise", 
-    name: "Enterprise", 
-    subtitle: "Multi-site + MDR/SIEM",
+    name: "ProActive Enterprise", 
+    subtitle: `Starting at $${pricing.enterprise.user} /user·mo*`,
     ribbon: "Custom",
     gradient: "from-amber-500 to-orange-500",
     borderColor: "border-amber-500/30"
@@ -159,7 +160,7 @@ const EcosystemPricing = () => {
 
   useSEO({
     title: 'Ecosystem Pricing - Digerati Experts Service Matrix',
-    description: 'Compare Digerati Experts managed IT service tiers. IT Essentials, Office, Business, and Enterprise packages with detailed feature comparison.',
+    description: 'Compare Digerati Experts managed IT service tiers. ProActive IT, Office, Business, and Enterprise packages with detailed feature comparison.',
     canonical: '/ecosystem-pricing',
   });
 

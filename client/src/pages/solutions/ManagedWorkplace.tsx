@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
 import { ServiceJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
-import { GuidedSalesPitch } from "@/components/GuidedSalesPitch";
 import { pricing } from "@/data/pricing";
 import {
   Shield,
@@ -30,43 +29,6 @@ import {
   Info,
   ExternalLink
 } from "lucide-react";
-
-const workplaceSalesPitchData = {
-  corePitch: [
-    "New hires ready in 1 day—not a week",
-    "Offboarding completed in minutes with full access revocation",
-    "One identity across all apps with SSO and MFA enforced",
-    "Device compliance enforced automatically across all endpoints",
-    "Complete visibility into SaaS sprawl and shadow IT"
-  ],
-  discoveryQuestions: [
-    "How long does it currently take to onboard a new hire with full access?",
-    "How quickly can you revoke all access when someone leaves?",
-    "How many different apps do your users access daily?",
-    "Are there gaps in your device security policies?",
-    "Who manages identity and access today—is it someone's side job?"
-  ],
-  objections: [
-    {
-      objection: "We already have Microsoft/Google",
-      response: "We manage them for you and extend with SSO, MFA, and device policies that go beyond the basics."
-    },
-    {
-      objection: "Too much change at once",
-      response: "We do phased rollouts and handle the migration—your team sees minimal disruption."
-    },
-    {
-      objection: "We can manage this ourselves",
-      response: "Focus on your business, not IT admin. We free up your team to do what they were hired for."
-    }
-  ],
-  valueProof: [
-    "90% reduction in onboarding time",
-    "Zero orphan accounts after offboarding",
-    "Complete audit trail for compliance",
-    "Single pane of glass for all identity"
-  ]
-};
 
 const workplaceData = {
   product: "Managed Workplace",
@@ -309,11 +271,6 @@ export default function ManagedWorkplace() {
               </div>
             </div>
           </div>
-        </motion.section>
-
-        {/* Guided Sales Pitch */}
-        <motion.section {...fadeInUp}>
-          <GuidedSalesPitch data={workplaceSalesPitchData} />
         </motion.section>
 
         {/* Outcomes Section */}

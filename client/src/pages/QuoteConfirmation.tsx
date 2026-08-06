@@ -105,7 +105,7 @@ export default function QuoteConfirmation() {
         {/* Footer CTA */}
         <div className="text-center">
           <p className="text-gray-600 mb-4">Questions before we reach out?</p>
-          <Button variant="outline" className="border-purple-300 text-purple-700 hover:bg-purple-50 hover:text-purple-800" onClick={() => setLocation('/contact')}>
+          <Button variant="outline" className="border-purple-300 text-purple-700 hover:bg-purple-50 hover:text-purple-800" onClick={() => setLocation('/#contact')}>
             Contact Us Now <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>

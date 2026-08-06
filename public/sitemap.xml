@@ -1,204 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Homepage -->
-  <url>
-    <loc>https://digeratiexperts.com/</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
+  <url><loc>https://digeratiexperts.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
 
-  <!-- Main Pages -->
-  <url>
-    <loc>https://digeratiexperts.com/solutions</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/pricing</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/quote</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
+  <!-- Solutions -->
+  <url><loc>https://digeratiexperts.com/solutions</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://digeratiexperts.com/solutions/proactive-ecosystem</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://digeratiexperts.com/solutions/proactive-it-ecosystem</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://digeratiexperts.com/solutions/proactive-office-ecosystem</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://digeratiexperts.com/solutions/proactive-business-ecosystem</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://digeratiexperts.com/solutions/proactive-enterprise-ecosystem</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://digeratiexperts.com/solutions/co-managed-it</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://digeratiexperts.com/solutions/standalone-services</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://digeratiexperts.com/solutions/managed-it-support</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/solutions/managed-workplace</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/solutions/backup-disaster-recovery</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/services/ucaas</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 
-  <!-- About Pages -->
-  <url>
-    <loc>https://digeratiexperts.com/about/team</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/about/mission</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/about/support</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/about/compliance</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/about/insurance</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
+  <!-- Pricing -->
+  <url><loc>https://digeratiexperts.com/pricing</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
 
-  <!-- Solutions Pages -->
-  <url>
-    <loc>https://digeratiexperts.com/solutions/network-security</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/solutions/endpoint-protection</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/solutions/cloud-security</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/solutions/compliance</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/solutions/incident-response</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/solutions/managed-detection</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
+  <!-- Industries -->
+  <url><loc>https://digeratiexperts.com/industries/healthcare</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/industries/accounting-finance</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/industries/law-firms</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/industries/real-estate</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/industries/nonprofits</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/industries/animal-hospitals</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 
-  <!-- Industry Pages -->
-  <url>
-    <loc>https://digeratiexperts.com/industries/healthcare</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/industries/finance</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/industries/legal</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/industries/manufacturing</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/industries/retail</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Location Pages -->
-  <url>
-    <loc>https://digeratiexperts.com/locations/phoenix-az</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/locations/chandler-az</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/locations/scottsdale-az</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/locations/tempe-az</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/locations/mesa-az</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/locations/gilbert-az</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/locations/glendale-az</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/locations/peoria-az</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
+  <!-- Locations -->
+  <url><loc>https://digeratiexperts.com/locations/chandler-az</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://digeratiexperts.com/locations/phoenix-az</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://digeratiexperts.com/locations/mesa-az</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://digeratiexperts.com/locations/gilbert-az</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://digeratiexperts.com/locations/tempe-az</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://digeratiexperts.com/locations/scottsdale-az</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 
   <!-- Resources -->
-  <url>
-    <loc>https://digeratiexperts.com/resources/downtime-calculator</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
+  <url><loc>https://digeratiexperts.com/resources/case-studies</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/blog</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/security-updates</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/videos</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/security-checklist</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/datasheets</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/downtime-calculator</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/ebook/defending-digital-realm</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
 
-  <!-- Legal Pages -->
-  <url>
-    <loc>https://digeratiexperts.com/privacy</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://digeratiexperts.com/terms</loc>
-    <lastmod>2026-01-24</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
+  <!-- About -->
+  <url><loc>https://digeratiexperts.com/about/mission-values</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://digeratiexperts.com/about/team</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://digeratiexperts.com/about/compliance</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+
+  <!-- Store -->
+  <url><loc>https://digeratiexperts.com/store</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/store/managed</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://digeratiexperts.com/store/co-managed</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+
 </urlset>
