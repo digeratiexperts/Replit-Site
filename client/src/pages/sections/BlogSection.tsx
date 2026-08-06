@@ -31,16 +31,17 @@ const quickAccessLinks = [
   { name: "Remote Support", url: "/support/remote-support" },
   { name: "Pay Invoice", url: "/support/pay-invoice" },
   { name: "Knowledge Base", url: "/support/knowledge-base" },
-  { name: "System Status", url: "/trust/trust-center" },
+  { name: "System Status", url: "/portal/status" },
 ];
 
 const servicesLinks = [
+  { name: "ProActive Ecosystem", url: "/proactive-ecosystem-pricing" },
   { name: "Managed IT", url: "/solutions/managed-it-support" },
-  { name: "Cybersecurity", url: "/solutions/managed-security" },
-  { name: "Compliance & Risk", url: "/solutions/compliance-services" },
+  { name: "Cybersecurity", url: "/solutions/security-operations" },
+  { name: "Compliance & Risk", url: "/solutions/compliance-reports" },
   { name: "Backup & DR", url: "/solutions/backup-disaster-recovery" },
-  { name: "Networking", url: "/solutions/network-infrastructure" },
-  { name: "UCaaS & VoIP", url: "/solutions/ucaas-voip" },
+  { name: "Co-Managed IT", url: "/solutions/co-managed-it" },
+  { name: "UCaaS & VoIP", url: "/services/ucaas" },
 ];
 
 const legalLinks = [
@@ -55,7 +56,7 @@ const legalLinks = [
 
 const trustLinks = [
   { name: "Trust Center", url: "/trust/trust-center" },
-  { name: "Status Page", url: "/trust/trust-center" },
+  { name: "Status Page", url: "/portal/status" },
   { name: "Vulnerability Disclosure", url: "/trust/vulnerability-disclosure" },
   { name: "security.txt", url: "/.well-known/security.txt" },
   { name: "Accessibility", url: "/trust/accessibility" },
@@ -68,7 +69,7 @@ export const BlogSection = (): JSX.Element => {
 
       <div className="relative max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-20 py-8 lg:py-[46px]">
         <div className="text-center text-slate-400 text-xs sm:text-sm font-normal tracking-[0] leading-[23.8px] mb-10 lg:mb-20">
-          © 2025 Digerati Experts, LLC. All rights reserved.
+          © {new Date().getFullYear()} Digerati Experts, LLC. All rights reserved.
         </div>
 
         <img

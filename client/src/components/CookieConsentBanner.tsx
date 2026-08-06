@@ -164,7 +164,7 @@ export function CookieConsentBanner() {
                 <p className="text-gray-200 text-xs leading-relaxed flex-1 min-w-0">
                   Digerati Experts uses cookies and similar tracking technologies to collect information you provide and to capture your interaction with our site. We use this information to enhance site navigation, personalize content, analyze your use of our website, and assist in our marketing efforts and customer service. To deliver the best experience, analytics and hosting service providers may have access to this information. By clicking "Accept All," you consent to our collection, use, and disclosure of such information. For more information about our data processing practices, please see our{" "}
                   <Link
-                    href="/privacy-policy"
+                    href="/legal/privacy-policy"
                     className="underline underline-offset-2 text-violet-300 hover:text-white transition-colors font-medium"
                     data-testid="link-privacy-policy-cookie"
                   >

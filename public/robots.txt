@@ -1,14 +1,24 @@
 User-agent: *
 Allow: /
 
-# Sitemap location
-Sitemap: https://digeratiexperts.com/sitemap.xml
-
-# Disallow admin/portal areas from search engines
-Disallow: /portal/
-Disallow: /admin/
-Disallow: /api/
-
-# Allow specific assets
+# Allow key static assets
 Allow: /favicon.png
 Allow: /favicon-512x512.png
+Allow: /assets/
+Allow: /sitemap.xml
+
+# Block authenticated, transactional, and internal-only pages from indexing
+Disallow: /api/
+Disallow: /portal/
+Disallow: /admin/
+Disallow: /internal/
+Disallow: /store/checkout
+Disallow: /store/cart
+Disallow: /store/order-confirmation
+Disallow: /store/quote-confirmation/
+Disallow: /thanks
+Disallow: /quote-confirmation
+Disallow: /404
+
+# Sitemap
+Sitemap: https://digeratiexperts.com/sitemap.xml
