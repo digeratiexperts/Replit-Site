@@ -5,7 +5,6 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
 import { ServiceMatrix } from "@/components/ServiceMatrix";
 import { ServiceCapabilityMatrix } from "@/components/ServiceCapabilityMatrix";
-import { GuidedSalesPitch } from "@/components/GuidedSalesPitch";
 
 interface ServiceFeature {
   title: string;
@@ -19,13 +18,6 @@ interface ServiceStat {
   source: string;
 }
 
-interface SalesPitchData {
-  corePitch: string[];
-  discoveryQuestions: string[];
-  objections: Array<{ objection: string; response: string }>;
-  valueProof: string[];
-}
-
 interface GenericServicePageProps {
   title: string;
   subtitle: string;
@@ -37,7 +29,6 @@ interface GenericServicePageProps {
   canonical?: string;
   recommendedTier?: "office" | "business" | "enterprise";
   serviceKey?: string;
-  salesPitchData?: SalesPitchData;
 }
 
 const FeatureCard = ({ 
@@ -82,7 +73,6 @@ export default function GenericServicePage({
   canonical,
   recommendedTier,
   serviceKey,
-  salesPitchData
 }: GenericServicePageProps) {
   const prefersReducedMotion = useReducedMotion() ?? false;
 
@@ -254,18 +244,6 @@ export default function GenericServicePage({
             showOnlyHighlighted={!!recommendedTier}
           />
         </motion.div>
-
-        {/* Sales Pitch Section */}
-        {salesPitchData && (
-          <motion.div
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <GuidedSalesPitch data={salesPitchData} />
-          </motion.div>
-        )}
 
         {/* CTA Section */}
         <motion.div 

@@ -3,46 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Shield, Clock, Users, CheckCircle, Phone } from "lucide-react";
 import { ServiceMatrix } from "@/components/ServiceMatrix";
-import { GuidedSalesPitch } from "@/components/GuidedSalesPitch";
-
-const supportSalesPitchData = {
-  corePitch: [
-    "15-minute response SLA—not 'we'll get to it when we can'",
-    "Stack-native support: we built these tools, we know them cold",
-    "Vendor coordination included—no more juggling ISPs and SaaS vendors",
-    "Repeat issue tracking reduces incidents over time, not just band-aids",
-    "Users get help AND education—safer behaviors, fewer tickets",
-    "Predictable monthly costs with no surprise bills"
-  ],
-  discoveryQuestions: [
-    "How quickly does your current IT respond to issues?",
-    "How often do the same problems keep coming back?",
-    "Who coordinates with your vendors when something breaks?",
-    "Do your users feel confident calling IT, or do they just work around issues?",
-    "What's your biggest frustration with IT support right now?"
-  ],
-  objections: [
-    {
-      objection: "We already have IT support",
-      response: "Great—but are they proactive or reactive? Our stack-native approach means we prevent issues, not just fix them. How often do you see the same tickets repeat?"
-    },
-    {
-      objection: "Our team can handle it",
-      response: "Internal teams often get pulled in multiple directions. We provide dedicated focus with SLAs, so your team can work on strategic projects."
-    },
-    {
-      objection: "It's too expensive",
-      response: "What's the cost of downtime? A single outage can cost more than a year of support. Our flat-rate model means predictable costs and faster resolution."
-    }
-  ],
-  valueProof: [
-    "15-minute response SLA documented in writing",
-    "Repeat issue tracking—you'll see the numbers drop",
-    "Vendor coordination saves you hours of frustration",
-    "Monthly service reports with resolution metrics",
-    "Stack-native expertise—we built the tools we support"
-  ]
-};
 
 export default function ManagedITSupport() {
   return (
@@ -130,9 +90,6 @@ export default function ManagedITSupport() {
             </a>
           </div>
         </div>
-
-        {/* Sales Pitch Section */}
-        <GuidedSalesPitch data={supportSalesPitchData} />
 
         {/* CTA */}
         <div className="bg-gradient-to-r from-violet-600 to-purple-600 rounded-lg p-8 text-center text-white">
