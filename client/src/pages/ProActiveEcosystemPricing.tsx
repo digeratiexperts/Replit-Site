@@ -157,7 +157,7 @@ const plans: PlanCard[] = [
     pricePerUser: pricing.office.user,
     priceLabel: `Starting at $${pricing.office.user}/user/mo`,
     minUsers: 5,
-    siteMin: pricing.office.siteMin,
+    siteMin: pricing.office.monthlyMinimum,
     bullets: [
       "Everything in IT, plus:",
       "Managed Network & Connectivity",
@@ -178,9 +178,10 @@ const plans: PlanCard[] = [
     name: "ProActive Business Ecosystem",
     shortName: "Business",
     tagline: "Security-first business package",
-    pricePerUser: null,
-    priceLabel: "Estimated after assessment",
-    priceNote: "Business pricing depends on sites, endpoints, backup scope, SOC requirements, cloud storage backup, compliance needs, and selected infrastructure.",
+    pricePerUser: pricing.business.user,
+    priceLabel: `Starting at $${pricing.business.user}/user/mo`,
+    siteMin: pricing.business.monthlyMinimum,
+    priceNote: `Monthly minimum ${pricing.business.monthlyMinimum.toLocaleString()}. Final scope confirmed after assessment.`,
     bullets: [
       "Everything in Office, plus:",
       "Enhanced Managed Workplace",
@@ -200,9 +201,10 @@ const plans: PlanCard[] = [
     name: "ProActive Enterprise Ecosystem",
     shortName: "Enterprise",
     tagline: "Governance, compliance, mature security",
-    pricePerUser: null,
-    priceLabel: "Custom after assessment",
-    priceNote: "Tailored to governance, compliance scope, and multi-site / complex network needs.",
+    pricePerUser: pricing.enterprise.user,
+    priceLabel: `Starting at $${pricing.enterprise.user}/user/mo`,
+    siteMin: pricing.enterprise.monthlyMinimum,
+    priceNote: `Monthly minimum ${pricing.enterprise.monthlyMinimum.toLocaleString()}. Engagements are scoped after assessment.`,
     bullets: [
       "Everything in Business, plus:",
       "Advanced / custom Managed Workplace",
@@ -362,7 +364,7 @@ export default function ProActiveEcosystemPricing() {
                 <div className="mb-4">
                   <p className="text-violet-300 font-semibold">{plan.priceLabel}</p>
                   {plan.siteMin ? (
-                    <p className="text-xs text-white/50 mt-1">${plan.siteMin.toLocaleString()}/site/mo minimum</p>
+                    <p className="text-xs text-white/50 mt-1">${plan.siteMin.toLocaleString()}/mo minimum</p>
                   ) : null}
                   {plan.minUsers ? (
                     <p className="text-xs text-white/50 mt-1">Minimum {plan.minUsers} users</p>

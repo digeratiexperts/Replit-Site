@@ -52,7 +52,7 @@ const bcdrData = {
         "Annual restore verification"
       ],
       test_cadence: "Annual",
-      starting_price: "Starting at $350/mo",
+      starting_price: "Custom after assessment",
       price_note: "per protected environment"
     },
     {
@@ -72,8 +72,8 @@ const bcdrData = {
         "Restore test reports"
       ],
       test_cadence: "Quarterly",
-      starting_price: "Starting at $750/mo",
-      price_note: "per protected environment"
+      starting_price: "Custom after assessment",
+      price_note: "scoped to protected environments & RTO/RPO"
     },
     {
       sku: "bcdr_enterprise",

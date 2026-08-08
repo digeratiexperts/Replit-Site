@@ -1,13 +1,14 @@
 import { TierDetailTemplate, type TierPageConfig } from "@/components/TierDetailTemplate";
+import { formatMonthlyMinimum, formatUserPrice } from "@/data/pricing";
 
 const config: TierPageConfig = {
   id: "office",
   shortName: "Office",
   fullName: "ProActive Office Ecosystem",
   canonicalPath: "/solutions/proactive-office-ecosystem",
-  seoTitle: "ProActive Office Ecosystem | Digerati Experts",
+  seoTitle: "ProActive Office Ecosystem",
   seoDescription:
-    "Small office operating package from Digerati Experts. Starts at $165/user/mo with a $750/site/mo minimum. Everything in ProActive IT plus managed network & connectivity, limited managed workplace, endpoint backup, and an annual combined technology + cyber review.",
+    `Small office operating package from Digerati Experts. Starts at ${formatUserPrice("office")} with a ${formatMonthlyMinimum("office")}. Everything in ProActive IT plus managed network & connectivity, limited managed workplace, endpoint backup, and an annual combined technology + cyber review.`,
   heroBadge: "Small office operating package",
   tagline: "The small office operating package — managed IT, network, and endpoint backup under one accountable partner.",
   positioning:
@@ -57,7 +58,7 @@ const config: TierPageConfig = {
   reviewCadence:
     "ProActive Office clients receive a monthly operational report and an annual combined technology + cyber review. Semi-annual reviews are part of ProActive Business; quarterly executive reviews are part of Enterprise.",
   pricingNote:
-    "ProActive Office Ecosystem starts at $165/user/mo with a $750/site/mo minimum. Final pricing is confirmed after a short assessment of your environment, user count, and add-on selections.",
+    `ProActive Office Ecosystem starts at ${formatUserPrice("office")} with a ${formatMonthlyMinimum("office")}. Final pricing is confirmed after a short assessment of your environment, user count, and add-on selections.`,
   ctaPrimary: { label: "View Pricing & Matrix", href: "/proactive-ecosystem-pricing" },
 };
 

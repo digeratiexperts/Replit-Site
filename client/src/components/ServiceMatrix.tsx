@@ -18,11 +18,11 @@ interface PricingPlan {
 const defaultPlans: PricingPlan[] = [
   {
     name: pricing.office.name,
-    tier: pricing.office.tier,
-    monthlyPrice: pricing.office.siteMin,
+    tier: pricing.office.id,
+    monthlyPrice: pricing.office.monthlyMinimum,
     perUserPrice: pricing.office.user,
     note: "A clean, managed IT baseline.",
-    learnMoreUrl: "/solutions/managed-it-support",
+    learnMoreUrl: pricing.office.learnMoreUrl,
     features: [
       "Email + Calendar + Team Chat",
       "MFA + SSO + Password Manager",
@@ -34,15 +34,15 @@ const defaultPlans: PricingPlan[] = [
   },
   {
     name: pricing.business.name,
-    tier: pricing.business.tier,
-    monthlyPrice: pricing.business.siteMin,
+    tier: pricing.business.id,
+    monthlyPrice: pricing.business.monthlyMinimum,
     perUserPrice: pricing.business.user,
     note: "Adds stronger protection and response.",
     learnMoreUrl: pricing.business.learnMoreUrl,
     isPopular: true,
     features: [
       "Everything in Office",
-      "SOC / MDR Monitoring + Response",
+      "Security operations / threat detection",
       "SMART HR + Onboarding Workflows",
       "Security Awareness Training",
       "vCIO + Technology Business Reviews",
@@ -51,8 +51,8 @@ const defaultPlans: PricingPlan[] = [
   },
   {
     name: pricing.enterprise.name,
-    tier: pricing.enterprise.tier,
-    monthlyPrice: pricing.enterprise.siteMin,
+    tier: pricing.enterprise.id,
+    monthlyPrice: pricing.enterprise.monthlyMinimum,
     perUserPrice: pricing.enterprise.user,
     note: pricing.enterprise.note,
     learnMoreUrl: pricing.enterprise.learnMoreUrl,

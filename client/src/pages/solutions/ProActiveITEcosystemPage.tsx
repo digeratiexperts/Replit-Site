@@ -1,13 +1,14 @@
 import { TierDetailTemplate, type TierPageConfig } from "@/components/TierDetailTemplate";
+import { formatMonthlyMinimum, formatUserPrice } from "@/data/pricing";
 
 const config: TierPageConfig = {
   id: "it",
   shortName: "IT",
   fullName: "ProActive IT Ecosystem",
   canonicalPath: "/solutions/proactive-it-ecosystem",
-  seoTitle: "ProActive IT Ecosystem | Digerati Experts",
+  seoTitle: "ProActive IT Ecosystem",
   seoDescription:
-    "Entry managed IT package from Digerati Experts. Starts at $125/user/mo. Foundational identity, endpoint, network, and help-desk coverage. Backup is not included by default.",
+    `Entry managed IT package from Digerati Experts. Starts at ${formatUserPrice("it")} with a ${formatMonthlyMinimum("it")}. Foundational identity, endpoint, network, and help-desk coverage. Backup is not included by default.`,
   heroBadge: "Entry managed IT",
   tagline: "Foundational managed IT — keep the lights on, the doors locked, and the help desk reachable.",
   positioning:
@@ -61,7 +62,7 @@ const config: TierPageConfig = {
   reviewCadence:
     "ProActive IT clients receive a monthly operational report and an annual technology check-in. Strategic vCIO planning, QBRs, and security posture reviews are part of ProActive Business and Enterprise.",
   pricingNote:
-    "ProActive IT Ecosystem starts at $125/user/mo. Final pricing is confirmed after a short assessment of your environment, user count, and add-on selections.",
+    `ProActive IT Ecosystem starts at ${formatUserPrice("it")} with a ${formatMonthlyMinimum("it")}. Final pricing is confirmed after a short assessment of your environment, user count, and add-on selections.`,
   ctaPrimary: { label: "View Pricing & Matrix", href: "/proactive-ecosystem-pricing" },
 };
 
