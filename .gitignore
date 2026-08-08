@@ -10,3 +10,39 @@ vite.config.ts.*
 *.key
 id_rsa
 id_ed25519
+
+# Licensed 3D / design source packs — never public, never force-commit binaries
+# Keep README.md and .gitkeep tracked under assets/licensed/
+assets/licensed/**/*.zip
+assets/licensed/**/*.rar
+assets/licensed/**/*.7z
+assets/licensed/**/*.blend
+assets/licensed/**/*.obj
+assets/licensed/**/*.fbx
+assets/licensed/**/*.max
+assets/licensed/**/*.c4d
+assets/licensed/**/*.psd
+assets/licensed/**/*.ai
+assets/licensed/**/*.gltf
+assets/licensed/**/*.glb
+assets/licensed/**/*.mtl
+assets/licensed/**/*.tiff
+assets/licensed/**/*.tif
+assets/licensed/**/*.exr
+assets/licensed/**/*.hdr
+assets/licensed/**/*.png
+assets/licensed/**/*.jpg
+assets/licensed/**/*.jpeg
+assets/licensed/**/*.webp
+assets/licensed/**/*.avif
+assets/licensed/**/*.svg
+assets/licensed/**/*.mp4
+assets/licensed/**/*.mov
+assets/licensed/**/*.pdf
+# Allow small text/license docs + scaffold READMEs; ignore everything else binary-heavy
+!assets/licensed/README.md
+!assets/licensed/**/README.md
+!assets/licensed/**/.gitkeep
+!assets/licensed/**/LICENSE*
+!assets/licensed/**/license*
+!assets/licensed/**/*.txt
