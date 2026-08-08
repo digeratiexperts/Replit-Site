@@ -73,6 +73,110 @@ export const pageNarratives: Record<string, PageNarrative> = {
       "Schedule a free cyber risk assessment. We’ll show what’s brittle, what’s covered, and what a sane managed-IT month looks like for your office.",
   },
 
+  "managed-workplace": {
+    whoFor:
+      "Arizona offices that want new hires productive in a day — with identity, apps, devices, and email under one lifecycle instead of six vendor tickets.",
+    painPoints: [
+      "Onboarding takes a week of access chaos and password resets",
+      "SaaS sprawl and unused licenses nobody owns",
+      "Offboarding leaves mailboxes and app access open for days",
+      "Partners and remote staff work on unmanaged devices with client data",
+    ],
+    process: [
+      {
+        title: "Identity spine",
+        description:
+          "SSO, MFA, and conditional access so every app follows role — not tribal knowledge or shared passwords.",
+      },
+      {
+        title: "Apps & collaboration",
+        description:
+          "License hygiene, shadow-IT discovery, and governed Microsoft 365/Google structure with retention that matches the business.",
+      },
+      {
+        title: "Devices",
+        description:
+          "Windows/macOS baselines and MDM where mobile is real work — standards that survive hybrid schedules.",
+      },
+      {
+        title: "Joiners & leavers",
+        description:
+          "HR-to-IAM automation: hire → identity → device → apps; exit → revoke in minutes, not ‘we’ll get to it.’",
+      },
+    ],
+    arizonaNote:
+      "Built for East Valley firms that hire in bursts and can’t afford a week of ‘waiting on IT’ every time someone joins.",
+    faqs: [
+      {
+        q: "Is this just Microsoft 365 admin?",
+        a: "M365/Google admin is part of it. The value is the full employee lifecycle — identity, devices, apps, voice where needed, and offboarding that actually closes every door.",
+      },
+      {
+        q: "Can we keep our current email tenant?",
+        a: "Yes. We harden and operate what you have, then standardize joiners/leavers and device policy around it.",
+      },
+      {
+        q: "How is this different from Managed IT Support?",
+        a: "Managed IT is day-to-day helpdesk and stack operations. Managed Workplace is the employee digital experience — how people get access, stay productive, and leave cleanly.",
+      },
+    ],
+    ctaHeadline: "Make day-one access the default — not a project",
+    ctaBody:
+      "Schedule an assessment. We’ll map your joiner/leaver path and show where access, licenses, and devices leak risk.",
+  },
+
+  "co-managed-it": {
+    whoFor:
+      "Internal IT leads in Greater Phoenix who need stack depth, after-hours coverage, and Tier 2/3 escalation — without giving up ownership of the environment.",
+    painPoints: [
+      "Your team is underwater on tickets and never gets to projects",
+      "Nights and weekends fall on the same two people",
+      "Security and compliance skills sit outside the current headcount",
+      "Vendors and MSPs blur who owns what until something breaks",
+    ],
+    process: [
+      {
+        title: "RACI first",
+        description:
+          "Written responsibility matrix: who owns onboarding, patching, vendors, and incidents — no assumed handoffs.",
+      },
+      {
+        title: "Shared platform",
+        description:
+          "Your team gets visibility into the same security and management plane we operate — not a black-box ticket queue.",
+      },
+      {
+        title: "Escalate & cover",
+        description:
+          "Tier 2/3 expertise on demand plus monitoring coverage beyond staff hours so burnout isn’t the backup plan.",
+      },
+      {
+        title: "Quarterly with your lead",
+        description:
+          "Posture and roadmap sessions as peers — stack optimization that respects how your team already works.",
+      },
+    ],
+    arizonaNote:
+      "We partner with Arizona internal IT — we don’t replace the people who already know the business.",
+    faqs: [
+      {
+        q: "Will you take over and sideline our IT staff?",
+        a: "No. Co-managed means clear lanes. Your team keeps control of what you want to own; we fill gaps, coverage, and specialized work.",
+      },
+      {
+        q: "Do we have to move to your full ProActive package?",
+        a: "Not necessarily. Co-managed is built for teams that stay in the driver’s seat. We size tooling and scope to the RACI you approve.",
+      },
+      {
+        q: "Can you cover after hours only?",
+        a: "Coverage models are scoped in the SOW. Many clients start with monitoring + escalation, then expand where the RACI proves the need.",
+      },
+    ],
+    ctaHeadline: "Keep the wheel — add the muscle your team is missing",
+    ctaBody:
+      "Book an assessment with your IT lead. We’ll draft a RACI and show where co-managed coverage pays off first.",
+  },
+
   "threat-detection": {
     whoFor:
       "Owners and ops leads who know email + antivirus is not a security program — especially firms holding client data, PHI, or wire instructions.",
@@ -188,6 +292,63 @@ export const pageNarratives: Record<string, PageNarrative> = {
     ],
     ctaHeadline: "Prove your backups can restore — before you need them",
     ctaBody: "We’ll review backup coverage and restore readiness as part of your free assessment.",
+  },
+
+  "backup-disaster-recovery": {
+    whoFor:
+      "Owners who need the business back on a defined timeline — agreed RPO/RTO, image-based recovery, and drills — not a vendor promise that ‘backups exist.’",
+    painPoints: [
+      "File backup is mistaken for full business recovery",
+      "Nobody has practiced restore order when everything is down",
+      "Ransomware or hardware failure would mean days of improvisation",
+      "Insurance and boards ask for DR evidence you can’t produce quickly",
+    ],
+    process: [
+      {
+        title: "Targets",
+        description:
+          "Agree RPO/RTO with ownership first — recovery objectives with SLA backing, not marketing slogans.",
+      },
+      {
+        title: "Protect",
+        description:
+          "Image-based backups for systems that must return as systems — not file-by-file scavenger hunts.",
+      },
+      {
+        title: "Drill",
+        description:
+          "Scheduled restore tests, runbooks, and tabletop exercises so people know the order of operations.",
+      },
+      {
+        title: "Prioritize & standby",
+        description:
+          "Critical systems restore first; optional warm standby when risk and budget demand it.",
+      },
+    ],
+    arizonaNote:
+      "For Arizona firms that can’t stay dark through a long recovery — continuity with local operators who will walk the runbook with you.",
+    proof: {
+      quote:
+        "$1.53M average ransomware recovery cost (excluding ransom) — untested DR is an expensive story.",
+      attribution: "Sophos 2025 (industry context)",
+    },
+    faqs: [
+      {
+        q: "How is this different from Cloud Backup?",
+        a: "Cloud Backup is the continuity baseline — protect and verify restores. BCDR adds recovery-time targets, image-based system recovery, runbooks, drills, and priority restore paths.",
+      },
+      {
+        q: "Do you guarantee zero downtime?",
+        a: "No honest provider does. We commit to agreed RPO/RTO targets and prove recovery with tests — so downtime is bounded and planned, not open-ended.",
+      },
+      {
+        q: "Will you help during a real disaster?",
+        a: "Yes. Runbooks and priority paths exist so recovery is guided — not ‘here’s a portal, good luck.’",
+      },
+    ],
+    ctaHeadline: "Recover the business on a timeline you define",
+    ctaBody:
+      "Start with an assessment. We’ll separate ‘we have backups’ from a recovery plan ownership can trust.",
   },
 
   "security-awareness": {
