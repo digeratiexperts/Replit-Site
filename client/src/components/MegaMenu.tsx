@@ -590,15 +590,14 @@ export function MegaMenu() {
                     </button>
                   )}
 
-                  {/* Mega Menu Dropdown */}
+                  {/* Mega Menu Dropdown — opacity-only motion (no transform) so
+                      position:fixed stays viewport-sized, not nav-trigger-sized. */}
                   <AnimatePresence>
                     {item.sections && activeMenu === item.name && (
                       <motion.div
                         ref={(el) => {
                           if (el) dropdownRefs.current.set(item.name, el);
                         }}
-                        {/* Opacity-only: any transform on this node (or ancestors) makes
-                            position:fixed size to the nav trigger — About looked half-empty. */}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
