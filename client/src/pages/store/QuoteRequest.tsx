@@ -60,6 +60,7 @@ const QuoteRequest = () => {
     title: "Request a Quote | Digerati Experts Store",
     description: "Request a custom quote for IT services and solutions from Digerati Experts.",
     canonical: "/store/quote-request",
+    noIndex: true,
   });
 
   const {

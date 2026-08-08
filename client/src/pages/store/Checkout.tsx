@@ -65,6 +65,7 @@ const Checkout = () => {
     title: "Checkout | Digerati Experts Store",
     description: "Complete your purchase of IT services and solutions from Digerati Experts.",
     canonical: "/store/checkout",
+    noIndex: true,
   });
 
   const {

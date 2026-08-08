@@ -2,8 +2,15 @@ import { PageTemplate } from "@/components/PageTemplate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Shield, Lock, FileText, AlertCircle, DollarSign, TrendingUp, Activity } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function Accounting() {
+  useSEO({
+    title: "IT & Cybersecurity for Accounting Firms",
+    description:
+      "Managed IT and security for Arizona accounting and finance firms — stop BEC, protect tax season systems, and meet cyber-insurance expectations.",
+    canonical: "/industries/accounting-finance",
+  });
   const metrics = [
     { label: "Compliance Pass Rate", value: "99.8%", icon: CheckCircle, color: "text-emerald-500" },
     { label: "Avg. Audit Findings", value: "0.2", icon: TrendingUp, color: "text-violet-400" },

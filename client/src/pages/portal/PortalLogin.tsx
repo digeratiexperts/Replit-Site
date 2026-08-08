@@ -6,6 +6,7 @@ import { AlertCircle, Mail, Lock, ArrowRight, ShieldCheck, ArrowLeft } from "luc
 import { useLocation } from "wouter";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
 import TurnstileWidget from "@/components/TurnstileWidget";
+import { useSEO } from "@/hooks/useSEO";
 
 type LoginStep = "credentials" | "mfa";
 
@@ -15,6 +16,11 @@ function readQueryParam(name: string): string {
 }
 
 export default function PortalLogin() {
+  useSEO({
+    title: "Client Portal Login",
+    description: "Sign in to the Digerati Experts Client Portal. For existing clients only.",
+    noIndex: true,
+  });
   const [step, setStep] = useState<LoginStep>("credentials");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

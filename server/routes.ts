@@ -3548,6 +3548,11 @@ export async function registerRoutes(app: Express) {
         // Don't fail the request if Zoho fails
       }
 
+      // Confirmation / welcome email (ZeptoMail) — warms engagement + List-Unsubscribe
+      notificationService.sendNewsletterWelcome({ email }).catch((err) => {
+        console.warn("[NEWSLETTER] Welcome email failed (non-blocking):", err?.message || err);
+      });
+
       res.json({
         success: true,
         subscriptionId: subscriptionData.id,

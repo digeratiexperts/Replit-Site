@@ -5,6 +5,7 @@ import { LogOut, Menu, X, LayoutDashboard, Ticket, Package, FileText, BookOpen, 
 import { useState } from "react";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
 import { TenantSelector } from "@/components/portal/TenantSelector";
+import { useSEO } from "@/hooks/useSEO";
 
 interface PortalLayoutProps {
   children: React.ReactNode;
@@ -51,6 +52,11 @@ const adminItems = [
 export function PortalLayout({ children, title }: PortalLayoutProps) {
   const [location] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  useSEO({
+    title: `${title} | Client Portal`,
+    description: "Digerati Experts Client Portal — secure access for existing clients.",
+    noIndex: true,
+  });
   const user = localStorage.getItem("portalUser")
     ? JSON.parse(localStorage.getItem("portalUser")!)
     : null;

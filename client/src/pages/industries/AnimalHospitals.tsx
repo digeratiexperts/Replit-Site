@@ -3,8 +3,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Shield, Lock, FileCheck, CheckCircle, Phone, Heart, Activity, PawPrint, AlertTriangle, Database, Clock, Users } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function AnimalHospitals() {
+  useSEO({
+    title: "IT & Cybersecurity for Veterinary Practices",
+    description:
+      "Managed IT and cybersecurity for Arizona animal hospitals — protect PIMS, imaging, and client records without building an internal IT team.",
+    canonical: "/industries/animal-hospitals",
+  });
   const prefersReducedMotion = useReducedMotion() ?? false;
   
   const metrics = [

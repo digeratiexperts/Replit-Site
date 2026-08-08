@@ -1,11 +1,12 @@
-import { Switch, Route, Redirect } from "wouter";
+import { Switch, Route, Redirect, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { HelmetProvider } from "react-helmet-async";
 import NotFound from "@/pages/not-found";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
+import { analytics } from "@/lib/analytics";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { ExitIntentPopup } from "@/components/ExitIntentPopup";
@@ -62,6 +63,7 @@ const ComplianceCertifications = lazy(() => import("@/pages/about/ComplianceCert
 const ClientBillOfRights = lazy(() => import("@/pages/about/ClientBillOfRights"));
 const Guarantee = lazy(() => import("@/pages/about/Guarantee"));
 const TwentyOneQuestions = lazy(() => import("@/pages/about/TwentyOneQuestions"));
+const Press = lazy(() => import("@/pages/about/Press"));
 const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy"));
 const TermsOfUse = lazy(() => import("@/pages/legal/TermsOfUse"));
 const MSA = lazy(() => import("@/pages/legal/MSA"));
@@ -416,6 +418,11 @@ function Router() {
       <Route path="/about/21-questions" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <TwentyOneQuestions />
+        </Suspense>
+      )} />
+      <Route path="/about/press" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <Press />
         </Suspense>
       )} />
       
@@ -821,6 +828,14 @@ function Router() {
   );
 }
 
+function SpaPageViews() {
+  const [location] = useLocation();
+  useEffect(() => {
+    analytics.pageView(location, document.title);
+  }, [location]);
+  return null;
+}
+
 function AppContent() {
   useGlobalShortcuts();
   
@@ -830,6 +845,7 @@ function AppContent() {
         Skip to main content
       </a>
       <ScrollProgress />
+      <SpaPageViews />
       <div id="main-content">
         <Router />
       </div>

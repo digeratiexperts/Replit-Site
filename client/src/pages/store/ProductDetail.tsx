@@ -144,7 +144,7 @@ const ProductDetail = () => {
         name={product.name}
         description={product.description}
         price={productPricing.price.toFixed(2)}
-        url={`/store/product/${product.id}`}
+        url={`/store/product/${product.sku}`}
         sku={product.id}
         category={product.category}
       />

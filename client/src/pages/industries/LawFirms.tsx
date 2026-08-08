@@ -2,8 +2,15 @@ import { PageTemplate } from "@/components/PageTemplate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Lock, Eye, Briefcase, AlertCircle, Scale, Shield, Clock } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function LawFirms() {
+  useSEO({
+    title: "IT & Cybersecurity for Law Firms",
+    description:
+      "Secure IT for Arizona law firms — protect client privilege, stop ransomware and wire fraud, and stay aligned with ABA cybersecurity expectations.",
+    canonical: "/industries/law-firms",
+  });
   const riskFactors = [
     { factor: "Privilege Breach", severity: "Critical", icon: Eye },
     { factor: "Ransomware", severity: "High", icon: Shield },

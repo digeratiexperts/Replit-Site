@@ -2,8 +2,15 @@ import { PageTemplate } from "@/components/PageTemplate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Heart, Users, Shield, Zap, TrendingUp, DollarSign, Target } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function Nonprofits() {
+  useSEO({
+    title: "IT & Cybersecurity for Nonprofits",
+    description:
+      "Affordable managed IT and security for Arizona nonprofits — protect donor data, grant systems, and board confidence.",
+    canonical: "/industries/nonprofits",
+  });
   const savings = [
     { metric: "IT Cost Savings", value: "40%", icon: DollarSign, color: "text-violet-400" },
     { metric: "Staff Time Saved", value: "6 hrs/wk", icon: Zap, color: "text-violet-400" },

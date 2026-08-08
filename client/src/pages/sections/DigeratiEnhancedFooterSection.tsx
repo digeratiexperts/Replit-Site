@@ -123,6 +123,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
 
   const trust = [
     { name: "Trust Center", href: "/trust/trust-center" },
+    { name: "Press & Media", href: "/about/press" },
     { name: "Status Page", href: "/portal/status" },
     { name: "Vulnerability Disclosure", href: "/trust/vulnerability-disclosure" },
     { name: "security.txt", href: "/.well-known/security.txt" },

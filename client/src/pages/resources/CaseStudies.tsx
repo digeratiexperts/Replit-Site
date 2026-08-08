@@ -3,8 +3,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, TrendingUp, Shield, FileText, CheckCircle, Target, Zap, Info } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function CaseStudies() {
+  useSEO({
+    title: "Client Case Studies",
+    description:
+      "How Arizona healthcare, legal, real estate, and manufacturing organizations improved security and IT outcomes with Digerati Experts.",
+    canonical: "/resources/case-studies",
+  });
   const prefersReducedMotion = useReducedMotion() ?? false;
   
   const caseStudies = [
