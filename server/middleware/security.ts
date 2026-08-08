@@ -67,6 +67,17 @@ export async function verifyTurnstile(req: Request, res: Response, next: NextFun
   }
   
   if (!turnstileToken) {
+    try {
+      const { recordLoginKnock, clientIpFromReq } = await import('../portalLoginKnocksStore');
+      void recordLoginKnock({
+        kind: 'turnstile_failed',
+        email: typeof req.body?.email === 'string' ? req.body.email : null,
+        ip: clientIpFromReq(req),
+        userAgent: typeof req.headers?.['user-agent'] === 'string' ? req.headers['user-agent'] : null,
+        path: req.originalUrl || req.url || null,
+        meta: { turnstileFailed: true, reason: 'missing_token' },
+      });
+    } catch { /* non-blocking */ }
     return res.status(400).json({ error: 'Bot verification required' });
   }
   
@@ -84,6 +95,17 @@ export async function verifyTurnstile(req: Request, res: Response, next: NextFun
     const data = await response.json();
     if (!data.success) {
       logSecurityEvent('TURNSTILE_FAILED', req, { error: data['error-codes'] });
+      try {
+        const { recordLoginKnock, clientIpFromReq } = await import('../portalLoginKnocksStore');
+        void recordLoginKnock({
+          kind: 'turnstile_failed',
+          email: typeof req.body?.email === 'string' ? req.body.email : null,
+          ip: clientIpFromReq(req),
+          userAgent: typeof req.headers?.['user-agent'] === 'string' ? req.headers['user-agent'] : null,
+          path: req.originalUrl || req.url || null,
+          meta: { turnstileFailed: true, errorCodes: data['error-codes'] },
+        });
+      } catch { /* non-blocking */ }
       return res.status(400).json({ error: 'Bot verification failed' });
     }
     

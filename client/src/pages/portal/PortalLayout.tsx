@@ -83,6 +83,8 @@ const navItems: NavItem[] = [
 
 const adminItems = [
   { href: "/portal/admin/companies", label: "Companies", icon: Building2 },
+  { href: "/portal/admin/login-knocks", label: "Login Alerts", icon: Shield },
+  { href: "/portal/admin/lifecycle", label: "Onboard / Offboard", icon: Users },
   { href: "/portal/admin/contracts", label: "Contracts", icon: FileSignature },
   { href: "/portal/admin/import", label: "Data Import", icon: Upload },
   { href: "/portal/admin/agents", label: "Manage Agents", icon: Users },

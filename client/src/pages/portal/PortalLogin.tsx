@@ -35,6 +35,17 @@ export default function PortalLogin() {
   const [, navigate] = useLocation();
 
   useEffect(() => {
+    // Door-knock beacon — counts login page visits (bots + people)
+    fetch("/api/portal/login-knocks/ping", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path: "/portal/login" }),
+      credentials: "include",
+      keepalive: true,
+    }).catch(() => {});
+  }, []);
+
+  useEffect(() => {
     const token = readQueryParam("token");
     const zohoSso = readQueryParam("zoho_sso");
     const err = readQueryParam("error");

@@ -75,6 +75,20 @@ import {
   attachFulfillmentTicket,
 } from "./portalApprovalsStore";
 import {
+  initPortalLoginKnocks,
+  recordLoginKnock,
+  listLoginKnocks,
+  summarizeLoginKnocks,
+  clientIpFromReq,
+  type KnockKind,
+} from "./portalLoginKnocksStore";
+import {
+  initLifecycleOrchestrator,
+  lifecycleIntegrationStatus,
+  runLifecycle,
+  listLifecycleEvents,
+} from "./lifecycleOrchestrator";
+import {
   fetchHubCompanyDocuments,
   fetchHubContractDownload,
   resolvePortalCompanyName,
@@ -330,9 +344,35 @@ const validateInput = (req: AuthenticatedRequest, res: Response, next: NextFunct
   next();
 };
 
-// Security event logger
+// Security event logger (+ durable login-door knocks for auth-related events)
+const SECURITY_KNOCK_MAP: Record<string, KnockKind> = {
+  PORTAL_LOGIN_FAILED: "login_failed",
+  PORTAL_USER_LOGIN: "login_success",
+  PORTAL_LOGIN_UNVERIFIED: "login_failed",
+  MFA_VERIFICATION_FAILED: "mfa_failed",
+  MFA_VERIFICATION_SUCCESS: "mfa_success",
+  MFA_LOCKED_OUT: "locked_out",
+  TURNSTILE_FAILED: "turnstile_failed",
+};
+
 const logSecurityEvent = (event: string, req: AuthenticatedRequest, data: any) => {
   console.log(`[SECURITY] ${event}`, { userId: req.user?.id, ...data });
+  const kind = SECURITY_KNOCK_MAP[event];
+  if (!kind) return;
+  const email = data?.email || req.user?.email || null;
+  void recordLoginKnock({
+    kind,
+    email,
+    ip: clientIpFromReq(req),
+    userAgent: typeof req.headers?.["user-agent"] === "string" ? req.headers["user-agent"] : null,
+    path: req.originalUrl || req.url || null,
+    meta: {
+      event,
+      method: data?.method,
+      userId: data?.userId || req.user?.id,
+      turnstileFailed: kind === "turnstile_failed",
+    },
+  });
 };
 
 // ========== ROUTES ==========
@@ -347,6 +387,8 @@ export async function registerRoutes(app: Express) {
   await initPortalApprovals();
   await initPortalChatStore();
   await initPortalSurveyStore();
+  await initPortalLoginKnocks();
+  await initLifecycleOrchestrator();
   const portalUsers = {
     get: (key: string) => portalAuthGetUser(key),
     has: (key: string) => portalAuthHasUser(key),
@@ -2070,12 +2112,107 @@ export async function registerRoutes(app: Express) {
   app.get("/api/portal/auth/zoho/start", (req: AuthenticatedRequest, res: Response) => {
     const cfg = getZohoPortalConfig();
     if (!cfg.configured) {
+      void recordLoginKnock({
+        kind: "zoho_failed",
+        ip: clientIpFromReq(req),
+        userAgent: typeof req.headers?.["user-agent"] === "string" ? req.headers["user-agent"] : null,
+        path: "/api/portal/auth/zoho/start",
+        meta: { reason: "not_configured" },
+      });
       return res.redirect(portalLoginErrorRedirect("zoho_not_configured", "Zoho sign-in is not configured"));
     }
+    void recordLoginKnock({
+      kind: "zoho_start",
+      ip: clientIpFromReq(req),
+      userAgent: typeof req.headers?.["user-agent"] === "string" ? req.headers["user-agent"] : null,
+      path: "/api/portal/auth/zoho/start",
+    });
     const returnTo = sanitizeReturnTo(req.query.returnTo);
     const { authorizeUrl, codeVerifier } = createZohoStartPayload(returnTo);
     setZohoPkceCookie(res, codeVerifier);
     return res.redirect(authorizeUrl);
+  });
+
+  /** Public beacon: login page loaded (door knock). Rate-limited lightly via no auth. */
+  app.post("/api/portal/login-knocks/ping", async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      await recordLoginKnock({
+        kind: "page_hit",
+        ip: clientIpFromReq(req),
+        userAgent: typeof req.headers?.["user-agent"] === "string" ? req.headers["user-agent"] : null,
+        path: typeof req.body?.path === "string" ? req.body.path : "/portal/login",
+        meta: { source: "login_page_beacon" },
+      });
+      return res.json({ ok: true });
+    } catch {
+      return res.json({ ok: true });
+    }
+  });
+
+  app.get("/api/portal/admin/login-knocks", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const sinceHours = Math.min(Number(req.query.hours) || 24, 168);
+      const [summary, knocks] = await Promise.all([
+        summarizeLoginKnocks(sinceHours),
+        listLoginKnocks({ limit: 200, sinceHours }),
+      ]);
+      return res.json({ summary, knocks });
+    } catch (error: any) {
+      console.error("[ERROR] login-knocks list:", error);
+      return res.status(500).json({ message: "Failed to load login knocks" });
+    }
+  });
+
+  app.get("/api/portal/admin/lifecycle/status", [authMiddleware, requireAdmin], async (_req: AuthenticatedRequest, res: Response) => {
+    try {
+      const status = await lifecycleIntegrationStatus();
+      const events = await listLifecycleEvents(40);
+      return res.json({ status, events });
+    } catch (error: any) {
+      console.error("[ERROR] lifecycle status:", error);
+      return res.status(500).json({ message: "Failed to load lifecycle status" });
+    }
+  });
+
+  app.post("/api/portal/admin/lifecycle/onboard", [authMiddleware, requireAdmin, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { email, companyName, firstName, lastName } = req.body || {};
+      if (!email || typeof email !== "string") {
+        return res.status(400).json({ message: "email is required" });
+      }
+      const event = await runLifecycle({
+        action: "onboard",
+        email,
+        companyName,
+        firstName,
+        lastName,
+        requestedBy: req.user?.email || null,
+      });
+      return res.json({ success: event.success, event });
+    } catch (error: any) {
+      console.error("[ERROR] lifecycle onboard:", error);
+      return res.status(500).json({ message: "Onboard failed" });
+    }
+  });
+
+  app.post("/api/portal/admin/lifecycle/offboard", [authMiddleware, requireAdmin, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { email, companyName, deleteJumpCloudUser } = req.body || {};
+      if (!email || typeof email !== "string") {
+        return res.status(400).json({ message: "email is required" });
+      }
+      const event = await runLifecycle({
+        action: "offboard",
+        email,
+        companyName,
+        deleteJumpCloudUser: !!deleteJumpCloudUser,
+        requestedBy: req.user?.email || null,
+      });
+      return res.json({ success: event.success, event });
+    } catch (error: any) {
+      console.error("[ERROR] lifecycle offboard:", error);
+      return res.status(500).json({ message: "Offboard failed" });
+    }
   });
 
   app.get("/api/portal/auth/zoho/callback", handlePortalZohoCallback);
