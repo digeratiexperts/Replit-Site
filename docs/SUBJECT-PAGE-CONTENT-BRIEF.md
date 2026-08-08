@@ -1,6 +1,10 @@
 # Subject-page content brief (magazine pass — deferred)
 
-**Status:** Content + image briefs landed. Process steps on `GenericServicePage` now use alternating L/R magazine beats (gradient visual panels — no invented stock/hero-corner art yet). Full hero-corner photography still waits on DE art direction.
+**Status:** Content + image briefs only. **No UI.** Do not implement hero-corner art or left/right magazine layouts until DE green-lights a visual pass against this doc. `GenericServicePage` stays a text-heavy shell until then.
+
+**Decision (paused visual work)**
+
+Stop implementing hero-corner art and L/R magazine layouts now. This brief locks section copy and image inputs so a later visual pass does not force filler art. Exemplar (for later): Cloud Backup / BCDR hero — white clouds rising from a data center, **right corner only**; subject-matched variants on sibling pages.
 
 **Sources today**
 
@@ -8,7 +12,7 @@
 |-------|------|
 | Feature/benefit shells | `client/src/pages/routes/servicePages.tsx` |
 | Sales narrative | `client/src/pages/routes/pageNarratives.ts` |
-| Page shell | `client/src/pages/GenericServicePage.tsx` (text-heavy; no magazine L/R yet) |
+| Page shell | `client/src/pages/GenericServicePage.tsx` (text-heavy shell — cards, lists, FAQs; **no magazine L/R**) |
 
 **Inventory (2026-08-08)**
 
@@ -512,9 +516,12 @@ Custom pages — **content elevation only when DE schedules**; do not remove exi
 - [ ] Decide whether custom pages (Managed Workplace, Co-Managed, BCDR, industries) adopt GenericServicePage magazine shell or stay custom with shared section components
 - [ ] Asset production method (commissioned illustration vs photo composite vs vector) — pick one system for all subject pages
 
-## Explicitly deferred
+## Explicitly deferred (do not build now)
 
-- Hero corner imagery assets
-- Left/right magazine image columns in `GenericServicePage`
-- Illustration/asset pipeline
+- Hero corner imagery (clouds/data center exemplar and subject-matched siblings)
+- Left/right magazine image columns down the page
+- New illustration/asset generation pipeline
+- Restyling `GenericServicePage` into a magazine layout
 - Mega-menu / Solutions IA restructure
+
+**When DE is ready for the visual pass:** implement against this brief — hero right-corner subject art + alternating L/R sections driven by the locked beats above.
