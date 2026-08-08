@@ -216,10 +216,10 @@ function Router() {
           <CoManagedIT />
         </Suspense>
       )} />
-      {Object.entries(servicePageData).filter(([key]) => !['managed-workplace', 'backup-disaster-recovery', 'co-managed-it'].includes(key)).map(([key, data]) => (
+      {Object.entries(servicePageData).filter(([key]) => !['managed-workplace', 'backup-disaster-recovery', 'co-managed-it', 'managed-it-support'].includes(key)).map(([key, data]) => (
         <Route key={key} path={`/solutions/${key}`} component={() => (
           <Suspense fallback={<PageLoadingSkeleton />}>
-            <GenericServicePage {...data} serviceKey={key} />
+            <GenericServicePage {...data} serviceKey={key} canonical={`/solutions/${key}`} />
           </Suspense>
         )} />
       ))}
@@ -307,7 +307,7 @@ function Router() {
       {Object.entries(industryPageData).map(([key, data]) => (
         <Route key={key} path={`/industries/${key}`} component={() => (
           <Suspense fallback={<PageLoadingSkeleton />}>
-            <GenericServicePage {...data} />
+            <GenericServicePage {...data} serviceKey={key} canonical={`/industries/${key}`} />
           </Suspense>
         )} />
       ))}

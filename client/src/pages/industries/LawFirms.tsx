@@ -138,35 +138,55 @@ export default function LawFirms() {
           </div>
         </div>
 
-        {/* Success Metrics */}
-        <div className="grid md:grid-cols-3 gap-6 bg-gradient-to-r from-violet-600 to-purple-600 rounded-xl p-8 text-white">
-          <div className="text-center">
-            <p className="text-4xl font-bold mb-2">20+</p>
-            <p className="text-white/70">Law Firms Protected</p>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="p-6 rounded-2xl bg-white/[0.04] border border-white/10">
+            <p className="text-xs font-semibold tracking-wide uppercase text-[#FF477F] mb-3">Arizona law firms</p>
+            <p className="text-white/85 leading-relaxed">
+              Privilege, client files, and wire instructions are the attack surface. We work with East Valley and Greater Phoenix firms that need security
+              without slowing partners who live in email and document review.
+            </p>
           </div>
-          <div className="text-center border-l border-r border-violet-400">
-            <p className="text-4xl font-bold mb-2">0</p>
-            <p className="text-white/70">Privilege Breaches</p>
-          </div>
-          <div className="text-center">
-            <p className="text-4xl font-bold mb-2">100%</p>
-            <p className="text-white/70">ABA Ready Firms</p>
+          <div className="p-6 rounded-2xl bg-[#D3126A]/10 border border-[#D3126A]/25">
+            <p className="text-xs font-semibold tracking-wide uppercase text-[#FF477F] mb-3">How engagement works</p>
+            <ol className="space-y-2 text-white/85 list-decimal list-inside">
+              <li>Map identity, email, DMS/cloud file exposure, and remote access</li>
+              <li>Harden MFA, phishing controls, and privilege-aware access</li>
+              <li>Put monitoring and backup restore testing under one operator</li>
+              <li>Support ABA-oriented checklists and insurer questionnaires with evidence</li>
+            </ol>
           </div>
         </div>
 
+        <div className="space-y-4 max-w-4xl">
+          <h2 className="text-2xl font-bold text-white">Questions managing partners ask</h2>
+          {[
+            {
+              q: "Will this disrupt billable work?",
+              a: "We design around partner workflows — remote-first support, change windows that respect court calendars, and onboarding that doesn’t strand new associates.",
+            },
+            {
+              q: "Do you understand client confidentiality?",
+              a: "Yes. Access design, encryption, and incident handling assume privilege and ethical walls — not a generic SMB template pasted onto a firm.",
+            },
+          ].map((faq) => (
+            <div key={faq.q} className="p-5 rounded-xl bg-white/[0.04] border border-white/10">
+              <h3 className="text-lg font-semibold text-white mb-2">{faq.q}</h3>
+              <p className="text-white/70 leading-relaxed">{faq.a}</p>
+            </div>
+          ))}
+        </div>
+
         {/* CTA */}
-        <div className="bg-gradient-to-r from-violet-600 to-purple-600 rounded-xl p-8 text-center text-white">
-          <h2 className="text-3xl font-bold mb-4">Ready to Protect Your Practice?</h2>
-          <p className="text-lg mb-6 text-white/70">ABA compliance + security consultation from MSP experts.</p>
+        <div className="bg-gradient-to-r from-[#D3126A] via-fuchsia-600 to-rose-500 rounded-xl p-8 text-center text-white">
+          <h2 className="text-3xl font-bold mb-4">Protect privilege with a clear security plan</h2>
+          <p className="text-lg mb-6 text-white/90">Schedule a cyber risk assessment focused on law-firm email, access, and client data.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 
               href="/book" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center bg-white text-violet-700 hover:bg-violet-50 px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
+              className="inline-flex items-center justify-center bg-white text-[#D3126A] hover:bg-pink-50 px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
               data-testid="button-schedule-law"
             >
-              Get Security Consultation
+              Schedule Assessment
             </a>
             <a 
               href="tel:325-480-9870"
