@@ -597,12 +597,16 @@ export function MegaMenu() {
                         ref={(el) => {
                           if (el) dropdownRefs.current.set(item.name, el);
                         }}
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.2 }}
-                        className={`fixed left-0 right-0 top-20 mx-auto ${
-                          item.name === 'Solutions' ? 'w-[98vw] max-w-7xl' : 'w-[90vw] max-w-5xl'
+                        {/* Opacity-only: any transform on this node (or ancestors) makes
+                            position:fixed size to the nav trigger — About looked half-empty. */}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.15 }}
+                        className={`fixed inset-x-0 top-20 mx-auto ${
+                          item.name === 'Solutions' || item.name === 'About'
+                            ? 'w-[min(98vw,80rem)]'
+                            : 'w-[min(92vw,64rem)]'
                         } bg-[#0a0118] backdrop-blur-xl border border-white/15 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.6),0_0_40px_rgba(139,92,246,0.2)] mega-menu-dropdown overflow-hidden`}
                         onMouseEnter={handleDropdownMouseEnter}
                         onMouseLeave={handleMouseLeave}
@@ -618,7 +622,7 @@ export function MegaMenu() {
                           item.name === 'Solutions' 
                             ? 'grid grid-cols-5 divide-x divide-white/5' 
                             : item.name === 'About'
-                              ? 'p-6 grid grid-cols-4 gap-6 items-start'
+                              ? 'p-6 grid grid-cols-3 gap-6 items-start'
                               : item.name === 'Industries'
                                 ? 'p-6 grid grid-cols-3 gap-6 items-start'
                                 : item.sections.length === 3 
