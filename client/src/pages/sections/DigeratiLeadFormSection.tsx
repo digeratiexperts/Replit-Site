@@ -212,7 +212,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                   size="lg"
                   data-testid="button-lead-submit"
                   disabled={isSubmitting}
-                  className="w-full h-14 text-lg font-bold bg-purple-600 hover:bg-purple-700 text-white border-0 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all duration-300 justify-center gap-2"
+                  className="w-full h-14 text-lg font-bold bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white border-0 shadow-lg shadow-pink-500/30 hover:shadow-pink-500/45 transition-all duration-300 justify-center gap-2"
                 >
                   {isSubmitting ? (
                     <>

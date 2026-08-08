@@ -55,7 +55,7 @@ export function StickyCTABar() {
           className="fixed bottom-0 left-0 right-0 md:right-[70px] z-50 p-3 md:p-0"
           data-testid="sticky-cta-bar"
         >
-          <div className="relative bg-gradient-to-r from-violet-900/95 via-purple-900/95 to-violet-900/95 backdrop-blur-lg border-t border-violet-500/30 shadow-lg shadow-violet-500/10">
+          <div className="relative bg-gradient-to-r from-fuchsia-900/95 via-pink-900/95 to-violet-900/95 backdrop-blur-lg border-t border-pink-500/35 shadow-lg shadow-pink-500/15">
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMiI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-50 pointer-events-none" />
             
             <button
@@ -95,7 +95,7 @@ export function StickyCTABar() {
                   
                   <Button
                     size="sm"
-                    className="bg-white text-violet-700 hover:bg-violet-50 font-semibold shadow-lg"
+                    className="bg-white text-pink-700 hover:bg-pink-50 font-semibold shadow-lg"
                     data-testid="button-sticky-cta-assessment"
                     onClick={openBooking}
                   >

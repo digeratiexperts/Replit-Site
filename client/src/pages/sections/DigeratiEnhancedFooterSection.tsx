@@ -69,6 +69,8 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
 
   const quickAccess = [
     { name: "Client Portal", href: "https://portal.digeratiexperts.com/portal/login" },
+    { name: "Digerati Journal", href: "/resources/blog" },
+    { name: "Cyber Facts", href: "/resources/cyber-facts" },
     { name: "Submit Ticket", href: "/support/submit-ticket" },
     { name: "Remote Support", href: "/support/remote-support" },
     { name: "Pay Invoice", href: "/support/pay-invoice" },

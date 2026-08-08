@@ -56,8 +56,8 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
           transition={{ duration: 0.6 }}
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
-            <Shield className="w-4 h-4 text-purple-400" />
-            <span className="text-sm text-gray-300">Threat Protection</span>
+            <Shield className="w-4 h-4 text-[#FF477F]" />
+            <span className="text-sm text-gray-300">Problems we solve</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
             What We <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-purple-300 to-fuchsia-300">Tackle</span>

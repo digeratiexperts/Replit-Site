@@ -1,3 +1,4 @@
+import { Link } from "wouter";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -150,9 +151,11 @@ export default function Videos() {
                           {webinar.presenter}
                         </p>
                       </div>
-                      <Button className="w-full bg-violet-600 hover:bg-violet-500 text-white" data-testid={`button-register-${webinar.id}`}>
-                        Register Now
-                      </Button>
+                      <Link href="/book">
+                        <Button className="w-full bg-violet-600 hover:bg-violet-500 text-white" data-testid={`button-register-${webinar.id}`}>
+                          Register Now
+                        </Button>
+                      </Link>
                     </CardContent>
                   </Card>
                 ))}
@@ -176,11 +179,15 @@ export default function Videos() {
                       height={225}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                      <div className="w-16 h-16 bg-violet-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform cursor-pointer">
+                    <Link
+                      href="/resources/blog"
+                      className="absolute inset-0 bg-black/40 flex items-center justify-center"
+                      aria-label={`Related reading for ${video.title}`}
+                    >
+                      <div className="w-16 h-16 bg-violet-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                         <Play className="h-8 w-8 text-white ml-1" />
                       </div>
-                    </div>
+                    </Link>
                     <Badge className="absolute top-3 right-3 bg-black/50 text-white border-0">
                       {video.duration}
                     </Badge>

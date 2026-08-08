@@ -1,6 +1,5 @@
 import { MegaMenu } from "@/components/MegaMenu";
 import { SimpleDivider } from "@/components/SimpleDivider";
-import { ZohoASAPWidget } from "@/components/ZohoASAPWidget";
 import { FullPageScrollProvider, ScrollSectionAuto } from "@/components/FullPageScroll";
 import { useState, useEffect } from "react";
 import { useSEO } from "@/hooks/useSEO";
@@ -12,7 +11,7 @@ import { DigeratiAlertBanner } from "./sections/DigeratiAlertBanner";
 import { DigeratiServicesSection } from "./sections/DigeratiServicesSection";
 import { DigeratiHowWeProtectSection } from "./sections/DigeratiHowWeProtectSection";
 import { DigeratiCalculatorsSection } from "./sections/DigeratiCalculatorsSection";
-// DigeratiLeadFormSection removed - hero already has lead form
+import { DigeratiLeadFormSection } from "./sections/DigeratiLeadFormSection";
 import { DigeratiWhatWeTackleSection } from "./sections/DigeratiWhatWeTackleSection";
 import { DigeratiThreatsInsightsSection } from "./sections/DigeratiThreatsInsightsSection";
 import { DigeratiAIAssistanceSection } from "./sections/DigeratiAIAssistanceSection";
@@ -28,14 +27,22 @@ import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooter
 import { DigeratiStatsSection } from "./sections/DigeratiStatsSection";
 import { DigeratiTrustPhotoSection } from "./sections/DigeratiTrustPhotoSection";
 
-const homepageSections: { id: string; label: string; theme: 'dark' | 'light' }[] = [
+// Live digeratexperts.com story order for sticky-bar cleanness.
+// Extra working-branch sections stay on-page with showInNav:false.
+const homepageSections: { id: string; label: string; theme: 'dark' | 'light'; showInNav?: boolean }[] = [
   { id: 'hero', label: 'Home', theme: 'dark' },
-  { id: 'services', label: 'Services', theme: 'light' },
-  { id: 'protection', label: 'How It Works', theme: 'dark' },
+  { id: 'stats', label: 'Why DE', theme: 'dark' },
+  { id: 'challenges', label: 'Problems', theme: 'dark' },
+  { id: 'services', label: 'Engage', theme: 'dark' },
+  { id: 'protection', label: 'Protect', theme: 'light', showInNav: false },
+  { id: 'pricing', label: 'Packages', theme: 'dark' },
+  { id: 'calculators', label: 'Assessment', theme: 'dark' },
   { id: 'industries', label: 'Industries', theme: 'dark' },
-  { id: 'pricing', label: 'Pricing', theme: 'light' },
-  { id: 'testimonials', label: 'Reviews', theme: 'dark' },
+  { id: 'trust', label: 'Trust', theme: 'light', showInNav: false },
+  { id: 'testimonials', label: 'Proof', theme: 'dark' },
+  { id: 'insights', label: 'Insights', theme: 'dark', showInNav: false },
   { id: 'faq', label: 'FAQ', theme: 'light' },
+  { id: 'cta', label: 'Next step', theme: 'dark' },
   { id: 'contact', label: 'Contact', theme: 'dark' },
 ];
 
@@ -106,38 +113,41 @@ export const DigeratiHomepage = (): JSX.Element => {
       <div className="min-h-screen bg-[#050312] pb-20 lg:pb-24">
         <OrganizationJsonLd />
         <WebSiteJsonLd />
-        {/* Zoho ASAP Widget */}
-        <ZohoASAPWidget 
-          isEnabled={true}
-          accountId={import.meta.env.VITE_ZOHO_ACCOUNT_ID}
-          portalId={import.meta.env.VITE_ZOHO_PORTAL_ID}
-        />
-
-        {/* Navigation */}
+        {/* Navigation — chat lives in App MarketingChrome sitewide */}
         <MegaMenu />
 
-        {/* Modern Hero Section - Includes integrated lead capture form */}
+        {/* Home — Arizona hero + single Schedule CTA (working branch) */}
         <ScrollSectionAuto id="hero">
           <ModernHeroSection />
           <DigeratiAlertBanner />
         </ScrollSectionAuto>
 
-        {/* Statistics Section */}
+        {/* Why DE */}
         <ScrollSectionAuto id="stats">
           <DigeratiStatsSection />
         </ScrollSectionAuto>
 
-        {/* Services Section */}
+        {/* Problems */}
+        <ScrollSectionAuto id="challenges">
+          <DigeratiWhatWeTackleSection />
+        </ScrollSectionAuto>
+
+        {/* Engage */}
         <ScrollSectionAuto id="services">
           <DigeratiServicesSection />
         </ScrollSectionAuto>
 
-        {/* How We Protect Your Business Section */}
+        {/* Kept from working branch — not in live sticky bar */}
         <ScrollSectionAuto id="protection">
           <DigeratiHowWeProtectSection />
         </ScrollSectionAuto>
 
-        {/* Calculators Section */}
+        {/* Packages */}
+        <ScrollSectionAuto id="pricing">
+          <DigeratiPricingSection />
+        </ScrollSectionAuto>
+
+        {/* Assessment */}
         <ScrollSectionAuto id="calculators">
           <DigeratiCalculatorsSection
             employees={employees}
@@ -157,49 +167,42 @@ export const DigeratiHomepage = (): JSX.Element => {
           />
         </ScrollSectionAuto>
 
-        {/* What We Tackle Section */}
-        <ScrollSectionAuto id="challenges">
-          <DigeratiWhatWeTackleSection />
-        </ScrollSectionAuto>
-
-        {/* Industries Section */}
+        {/* Industries */}
         <ScrollSectionAuto id="industries">
           <DigeratiIndustriesSection />
         </ScrollSectionAuto>
 
-        {/* Trust & Photography Section */}
+        {/* Trust imagery — feeds Proof story, hidden from sticky bar */}
         <ScrollSectionAuto id="trust">
           <DigeratiTrustPhotoSection />
         </ScrollSectionAuto>
 
-        {/* Pricing Section */}
-        <ScrollSectionAuto id="pricing">
-          <DigeratiPricingSection />
-        </ScrollSectionAuto>
-
-        {/* Testimonials Section */}
+        {/* Proof */}
         <ScrollSectionAuto id="testimonials">
           <DigeratiTestimonialsSection />
         </ScrollSectionAuto>
 
-        {/* Recent Threats & Insights Section */}
+        {/* Kept from working branch — not in live sticky bar */}
         <ScrollSectionAuto id="insights">
           <DigeratiThreatsInsightsSection />
           <DigeratiAIAssistanceSection />
         </ScrollSectionAuto>
 
-        {/* CTA Section */}
-        <ScrollSectionAuto id="cta">
-          <DigeratiCTASection />
-        </ScrollSectionAuto>
+        {/* Lead form below the fold — hero stays a single Schedule CTA */}
+        <DigeratiLeadFormSection />
 
-        {/* FAQ Section */}
+        {/* FAQ before Next step — live cleanness */}
         <ScrollSectionAuto id="faq">
           <DigeratiFAQSection />
           <DigeratiNewsletterSection />
         </ScrollSectionAuto>
 
-        {/* Contact Section */}
+        {/* Next step */}
+        <ScrollSectionAuto id="cta">
+          <DigeratiCTASection />
+        </ScrollSectionAuto>
+
+        {/* Contact */}
         <ScrollSectionAuto id="contact" className="scroll-mt-20 pt-8">
           <DigeratiContactSection />
           <DigeratiEnhancedFooterSection />

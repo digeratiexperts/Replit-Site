@@ -1,82 +1,27 @@
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { analytics } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle, Building, FileCheck, Check, Loader2, Shield, User, Mail, Clock, Activity, Zap } from "lucide-react";
+import { ArrowRight, CheckCircle, Building, FileCheck, Shield, Check } from "lucide-react";
 import { DashboardMockup } from "@/components/graphics";
-import { Input } from "@/components/ui/input";
-import heroBgImage from "@assets/lucid-origin_a_cinematic_photo_of_designed_as_a_background_lay_1775876876671.jpg";
-
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { useToast } from "@/hooks/use-toast";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-
-const assessmentFormSchema = z.object({
-  fullName: z.string().min(2, "Name must be at least 2 characters").max(50, "Name must be less than 50 characters"),
-  email: z.string().email("Please enter a valid work email address"),
-});
-
-type AssessmentFormData = z.infer<typeof assessmentFormSchema>;
+import heroBgImage from "@assets/de-hero-arizona-dusk.png";
+import { useBooking } from "@/contexts/BookingContext";
 
 export const ModernHeroSection = (): JSX.Element => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedField, setSelectedField] = useState<'fullName' | 'email'>('fullName');
   const prefersReducedMotion = useReducedMotion();
-  const { toast } = useToast();
-  
-  const form = useForm<AssessmentFormData>({
-    resolver: zodResolver(assessmentFormSchema),
-    defaultValues: { fullName: "", email: "" },
-  });
+  const { openBooking } = useBooking();
 
-  const handleFormSubmit = async (data: AssessmentFormData) => {
-    setIsSubmitting(true);
-    try {
-      const response = await fetch("/api/assessment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fullName: data.fullName,
-          email: data.email,
-          source: "hero_assessment",
-        }),
-      });
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.error || "Submission failed");
-      }
-      analytics.leadCaptured("hero_assessment");
-      toast({
-        title: "Assessment Request Submitted!",
-        description: "We'll contact you within 24 hours to schedule your free assessment.",
-      });
-      form.reset();
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || "Something went wrong. Please try again later.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-  
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
 
-  // Parallax transforms - reduced for smoother scroll experience
   const y = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 40]);
   const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["0%", "12%"]);
   const floatingY1 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -50]);
   const floatingY2 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -35]);
   const floatingY3 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -20]);
-  const opacity = 1;
 
   const features = [
     { icon: FileCheck, text: "Insurance & Compliance-Ready" },
@@ -85,252 +30,209 @@ export const ModernHeroSection = (): JSX.Element => {
     { icon: CheckCircle, text: "Easy-to-Read Risk Reports" },
   ];
 
+  const handleSchedule = () => {
+    analytics.bookingOpened("hero");
+    openBooking("hero");
+  };
+
   return (
-    <section 
+    <section
       ref={containerRef}
-      id="home" 
-      className="relative min-h-screen overflow-hidden"
-      style={{ position: 'relative' }}
+      id="home"
+      className="relative min-h-[100svh] lg:min-h-screen overflow-hidden"
+      style={{ position: "relative" }}
     >
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <img src={heroBgImage} alt="" loading="eager" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-[0.15]" style={{ transform: 'rotate(-5deg) scale(1.3)', transformOrigin: 'center center' }} />
-      </div>
-      {/* Clean black background with parallax purple glows */}
-      <div className="absolute inset-0 bg-black/70">
-        {/* Main accent - top right corner with parallax */}
-        <motion.div 
-          className="absolute top-0 right-0 w-[700px] h-[700px] pointer-events-none"
-          data-testid="hero-parallax-orb-1"
-          style={{
-            y: backgroundY,
-            background: "radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.15) 0%, transparent 50%)",
-          }}
-        />
-        {/* Secondary accent - bottom left with parallax */}
-        <motion.div 
-          className="absolute bottom-0 left-0 w-[500px] h-[500px] pointer-events-none"
-          data-testid="hero-parallax-orb-2"
-          style={{
-            y: floatingY3,
-            background: "radial-gradient(circle at 0% 100%, rgba(168, 85, 247, 0.08) 0%, transparent 50%)",
-          }}
+        <img
+          src={heroBgImage}
+          alt=""
+          loading="eager"
+          decoding="async"
+          className="absolute inset-0 w-full h-full object-cover opacity-[0.38]"
+          style={{ transform: "scale(1.08)", transformOrigin: "center center" }}
         />
       </div>
 
-      {/* Floating decorative elements with parallax */}
-      <motion.div 
-        className="absolute top-32 right-20 w-4 h-4 rounded-full bg-violet-500/20 pointer-events-none hidden lg:block"
+      <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/70 to-[#050312]/95">
+        <motion.div
+          className="absolute top-0 right-0 w-[720px] h-[720px] pointer-events-none"
+          data-testid="hero-parallax-orb-1"
+          style={{
+            y: backgroundY,
+            background:
+              "radial-gradient(circle at 100% 0%, rgba(236, 72, 153, 0.22) 0%, rgba(139, 92, 246, 0.16) 42%, transparent 58%)",
+          }}
+        />
+        <motion.div
+          className="absolute bottom-0 left-0 w-[560px] h-[560px] pointer-events-none"
+          data-testid="hero-parallax-orb-2"
+          style={{
+            y: floatingY3,
+            background:
+              "radial-gradient(circle at 0% 100%, rgba(217, 70, 239, 0.14) 0%, rgba(244, 63, 94, 0.08) 45%, transparent 60%)",
+          }}
+        />
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.035]"
+          style={{
+            backgroundImage: "radial-gradient(circle at center, rgba(255,255,255,0.9) 1px, transparent 1px)",
+            backgroundSize: "22px 22px",
+          }}
+          aria-hidden="true"
+        />
+      </div>
+
+      <motion.div
+        className="absolute top-32 right-20 w-4 h-4 rounded-full bg-violet-500/25 pointer-events-none hidden lg:block"
         style={{ y: floatingY1 }}
         data-testid="hero-floating-element-1"
       />
-      <motion.div 
-        className="absolute top-48 right-40 w-2 h-2 rounded-full bg-purple-400/30 pointer-events-none hidden lg:block"
+      <motion.div
+        className="absolute top-48 right-40 w-2 h-2 rounded-full bg-purple-400/35 pointer-events-none hidden lg:block"
         style={{ y: floatingY2 }}
         data-testid="hero-floating-element-2"
       />
-      <motion.div 
-        className="absolute bottom-32 left-20 w-3 h-3 rounded-full bg-fuchsia-500/20 pointer-events-none hidden lg:block"
+      <motion.div
+        className="absolute bottom-32 left-20 w-3 h-3 rounded-full bg-fuchsia-500/25 pointer-events-none hidden lg:block"
         style={{ y: floatingY3 }}
         data-testid="hero-floating-element-3"
       />
 
-      {/* Main content */}
-      <motion.div 
-        className="relative z-10 w-full px-4 sm:px-6 lg:px-12 xl:px-16 pt-32 pb-16 sm:pt-36 lg:pt-40 xl:pt-44 lg:pb-20"
-        style={{ y, opacity }}
+      <motion.div
+        className="relative z-10 w-full px-4 sm:px-6 lg:px-12 xl:px-16 pt-32 pb-16 sm:pt-36 sm:pb-16 lg:pt-40 lg:pb-20 xl:pt-44"
+        style={{ y }}
       >
-        {/* Container */}
         <div className="mx-auto max-w-7xl">
-          
-          {/* Main grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            
-            {/* Left column - Content with CTA */}
-            <motion.div 
-              className="flex flex-col gap-4 sm:gap-5 lg:gap-6 w-full"
-              initial={{ opacity: 0, y: 20 }}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 xl:gap-20 items-center">
+            <motion.div
+              className="flex flex-col gap-5 sm:gap-6 w-full"
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 22 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: prefersReducedMotion ? 0 : 0.45, ease: "easeOut" }}
             >
-              {/* Headline - clean and bold */}
-              <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold leading-[1.1] tracking-[-0.02em]">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-purple-400">
-                  Hackers Don't Wait.
-                </span>
-                <br />
-                <span className="text-white mt-2 block">
-                  Your Arizona Business. Protected 24/7.
+              <motion.p
+                className="text-xs sm:text-sm font-semibold uppercase tracking-[0.22em] text-pink-300/95"
+                initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: prefersReducedMotion ? 0 : 0.35, delay: prefersReducedMotion ? 0 : 0.05 }}
+              >
+                Arizona MSP · Cybersecurity &amp; Managed IT
+              </motion.p>
+
+              <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold leading-[1.08] tracking-[-0.02em] text-white">
+                Your Arizona business,{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-300 via-pink-400 to-violet-300">
+                  protected 24/7.
                 </span>
               </h1>
 
-              {/* Subheadline */}
-              <p className="text-base md:text-lg text-white/60 leading-relaxed max-w-lg">
-                Enterprise-grade cybersecurity for small businesses. Get 24/7 protection, 
-                cut cyber liability, and pass compliance checks.
+              <p className="text-base md:text-lg text-white/85 leading-relaxed max-w-xl">
+                Cybersecurity and managed IT for growing businesses—reducing risk, supporting
+                compliance, and keeping your team productive without building an internal IT
+                department.
               </p>
 
-              {/* Simple feature list - 2 columns on mobile */}
-              <div className="grid grid-cols-2 gap-x-4 gap-y-2 sm:flex sm:flex-wrap sm:gap-x-6">
-                {features.map((feature) => (
-                  <div key={feature.text} className="flex items-center gap-1.5 sm:gap-2">
-                    <feature.icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-violet-400 flex-shrink-0" />
-                    <span className="text-sm sm:text-base text-white/70">{feature.text}</span>
-                  </div>
+              <div className="grid grid-cols-1 xs:grid-cols-2 gap-x-4 gap-y-2.5 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-2.5">
+                {features.map((feature, index) => (
+                  <motion.div
+                    key={feature.text}
+                    className="flex items-center gap-1.5 sm:gap-2"
+                    initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: prefersReducedMotion ? 0 : 0.3,
+                      delay: prefersReducedMotion ? 0 : 0.12 + index * 0.04,
+                    }}
+                  >
+                    <feature.icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-pink-400 flex-shrink-0" aria-hidden="true" />
+                    <span className="text-sm sm:text-base text-white/80">{feature.text}</span>
+                  </motion.div>
                 ))}
               </div>
 
-              {/* Lead Capture Form */}
-              <div className="mt-2" id="assessment-form">
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
-                    <div className="flex flex-col sm:flex-row gap-3">
-                      <FormField
-                        control={form.control}
-                        name="fullName"
-                        render={({ field }) => (
-                          <FormItem className="flex-1">
-                            <FormControl>
-                              <div className="relative">
-                                <User className={`absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 pointer-events-none transition-colors duration-200 ${
-                                  selectedField === 'fullName' ? 'text-violet-400' : 'text-white/30'
-                                }`} />
-                                <Input 
-                                  placeholder="Your name" 
-                                  data-testid="input-hero-full-name"
-                                  className={`h-12 pl-11 text-white placeholder:text-white/40 transition-all duration-200 ${
-                                    selectedField === 'fullName' 
-                                      ? 'bg-white/10 border-violet-500/60 ring-1 ring-violet-500/30' 
-                                      : 'bg-white/5 border-white/10 hover:border-white/20'
-                                  }`}
-                                  disabled={isSubmitting}
-                                  onFocus={() => setSelectedField('fullName')}
-                                  {...field} 
-                                />
-                              </div>
-                            </FormControl>
-                            <FormMessage className="text-red-400 text-xs" />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem className="flex-1">
-                            <FormControl>
-                              <div className="relative">
-                                <Mail className={`absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 pointer-events-none transition-colors duration-200 ${
-                                  selectedField === 'email' ? 'text-violet-400' : 'text-white/30'
-                                }`} />
-                                <Input 
-                                  type="email" 
-                                  placeholder="Work email" 
-                                  data-testid="input-hero-email"
-                                  className={`h-12 pl-11 text-white placeholder:text-white/40 transition-all duration-200 ${
-                                    selectedField === 'email' 
-                                      ? 'bg-white/10 border-violet-500/60 ring-1 ring-violet-500/30' 
-                                      : 'bg-white/5 border-white/10 hover:border-white/20'
-                                  }`}
-                                  disabled={isSubmitting}
-                                  onFocus={() => setSelectedField('email')}
-                                  {...field} 
-                                />
-                              </div>
-                            </FormControl>
-                            <FormMessage className="text-red-400 text-xs" />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <Button 
-                        type="submit"
-                        size="lg"
-                        data-testid="button-hero-submit"
-                        disabled={isSubmitting}
-                        className="h-12 px-6 font-semibold bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white border-0 shadow-lg shadow-violet-500/25 hover:shadow-xl hover:shadow-violet-500/30 transition-all duration-300 whitespace-nowrap"
-                      >
-                        {isSubmitting ? (
-                          <Loader2 className="h-5 w-5 animate-spin" />
-                        ) : (
-                          <>
-                            Get Started
-                            <ArrowRight className="ml-2 w-5 h-5" />
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  </form>
-                </Form>
-                
-                {/* Reassurance */}
-                <div className="flex items-center gap-4 mt-3 text-white/40 text-sm">
-                  <span className="flex items-center gap-1.5">
-                    <Check className="w-3.5 h-3.5 text-emerald-500" />
+              <div className="mt-1 sm:mt-2 flex flex-col items-start gap-4" id="assessment-cta">
+                <Button
+                  type="button"
+                  size="lg"
+                  data-testid="button-hero-schedule"
+                  onClick={handleSchedule}
+                  className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-semibold bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white border border-pink-300/35 shadow-lg shadow-pink-500/40 hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300"
+                >
+                  Schedule Your Cyber Risk Assessment
+                  <ArrowRight className="ml-2 w-5 h-5" aria-hidden="true" />
+                </Button>
+
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-white/70">
+                  <span className="inline-flex items-center gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
                     No obligation
                   </span>
-                  <span className="flex items-center gap-1.5">
-                    <Check className="w-3.5 h-3.5 text-emerald-500" />
-                    24hr response
+                  <span className="inline-flex items-center gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
+                    Response within one business day
                   </span>
                 </div>
-              </div>
-              
-              {/* Phone */}
-              <p className="text-white/50 text-base md:text-lg">
-                Or call <a href="tel:325-480-9870" className="text-violet-400 hover:text-violet-300 font-medium transition-colors" data-testid="link-hero-phone">325-480-9870</a>
-              </p>
 
-              {/* Stats Bar */}
-              <motion.div 
-                className="grid grid-cols-3 gap-3 sm:flex sm:flex-wrap sm:gap-6 mt-4 pt-5 sm:pt-6 border-t border-white/10"
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: 0.25 }}
-              >
-                <div className="flex flex-col sm:flex-row items-center sm:items-center gap-1.5 sm:gap-3 text-center sm:text-left">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
-                    <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-violet-400" />
-                  </div>
-                  <div>
-                    <div className="text-lg sm:text-2xl font-bold text-white">99.9%</div>
-                    <div className="text-xs sm:text-sm text-white/50">Uptime SLA</div>
-                  </div>
-                </div>
-                <div className="flex flex-col sm:flex-row items-center sm:items-center gap-1.5 sm:gap-3 text-center sm:text-left">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
-                    <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-violet-400" />
-                  </div>
-                  <div>
-                    <div className="text-lg sm:text-2xl font-bold text-white">&lt;15min</div>
-                    <div className="text-xs sm:text-sm text-white/50">Response</div>
-                  </div>
-                </div>
-                <div className="flex flex-col sm:flex-row items-center sm:items-center gap-1.5 sm:gap-3 text-center sm:text-left">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
-                    <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-violet-400" />
-                  </div>
-                  <div>
-                    <div className="text-lg sm:text-2xl font-bold text-white">24/7</div>
-                    <div className="text-xs sm:text-sm text-white/50">Monitoring</div>
-                  </div>
-                </div>
-              </motion.div>
+                <p className="text-sm text-white/70 max-w-lg leading-relaxed">
+                  Start with a practical review of your identity, endpoints, email, backups, and
+                  security posture.
+                </p>
+
+                <p className="text-sm sm:text-base text-white/70">
+                  Arizona-based · Principal-led · Recommendations sized to your business
+                  <span className="mx-2 text-white/35" aria-hidden="true">
+                    ·
+                  </span>
+                  Or call{" "}
+                  <a
+                    href="tel:325-480-9870"
+                    className="text-pink-300 hover:text-pink-200 font-medium underline underline-offset-4 decoration-pink-400/40 hover:decoration-pink-300/70 transition-colors"
+                    data-testid="link-hero-phone"
+                  >
+                    325-480-9870
+                  </a>
+                </p>
+              </div>
             </motion.div>
 
-            {/* Right column - Dashboard Visual (hidden on mobile, visible tablet+) */}
             <div className="hidden lg:flex relative justify-end w-full">
               <motion.div
                 className="relative w-full max-w-[520px] xl:max-w-[560px]"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.45, delay: 0.2, ease: "easeOut" }}
+                initial={prefersReducedMotion ? false : { opacity: 0, x: 28, rotateY: -6 }}
+                animate={{ opacity: 1, x: 0, rotateY: 0 }}
+                transition={{
+                  duration: prefersReducedMotion ? 0 : 0.55,
+                  delay: prefersReducedMotion ? 0 : 0.15,
+                  ease: "easeOut",
+                }}
+                style={{ perspective: 1200 }}
               >
-                {/* Subtle glow behind dashboard */}
-                <div className="absolute inset-0 bg-violet-500/10 blur-3xl scale-110 -z-10 rounded-3xl" />
-                
-                {/* Dashboard - clean, no animation */}
-                <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-violet-500/5">
+                <motion.div
+                  className="absolute -inset-6 -z-10 rounded-[2rem] pointer-events-none"
+                  aria-hidden="true"
+                  style={{
+                    background:
+                      "radial-gradient(ellipse at center, rgba(236, 72, 153, 0.28) 0%, rgba(139, 92, 246, 0.18) 45%, transparent 70%)",
+                  }}
+                  animate={
+                    prefersReducedMotion
+                      ? undefined
+                      : { opacity: [0.35, 0.55, 0.35], scale: [1, 1.04, 1] }
+                  }
+                  transition={
+                    prefersReducedMotion
+                      ? undefined
+                      : { duration: 4.5, repeat: Infinity, ease: "easeInOut" }
+                  }
+                />
+                <div
+                  className="relative rounded-2xl overflow-hidden border border-white/12 shadow-2xl shadow-violet-950/50"
+                  style={{
+                    transform: prefersReducedMotion
+                      ? undefined
+                      : "perspective(1200px) rotateX(2deg) rotateY(-2deg)",
+                  }}
+                >
                   <DashboardMockup className="w-full" />
                 </div>
               </motion.div>
@@ -339,8 +241,7 @@ export const ModernHeroSection = (): JSX.Element => {
         </div>
       </motion.div>
 
-      {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#050312] via-[#050312]/80 to-transparent z-10 pointer-events-none" />
     </section>
   );
 };

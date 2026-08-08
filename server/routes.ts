@@ -149,6 +149,14 @@ const widgetTicketRateLimiter = rateLimit({
   message: "Too many support requests. Please try again later.",
 });
 
+const speechRateLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many audio requests. Please wait a moment." },
+});
+
 // Input validation middleware
 const validateInput = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   // Basic size check
@@ -726,6 +734,33 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  // ===== TTS (blog listen / read-aloud) — public with rate limit =====
+  app.post("/api/tts", [speechRateLimiter], async (req: Request, res: Response) => {
+    try {
+      const { text, voice } = req.body;
+      if (!text || typeof text !== "string") {
+        return res.status(400).json({ error: "text is required" });
+      }
+      const { generateSpeech } = await import("./openaiService");
+      const mp3 = await generateSpeech(text, voice || "nova");
+      res.setHeader("Content-Type", "audio/mpeg");
+      res.setHeader(
+        "Cache-Control",
+        "public, max-age=86400, s-maxage=604800, immutable",
+      );
+      res.send(mp3);
+    } catch (error: any) {
+      console.error("TTS error:", error);
+      const msg = error.message || "Failed to generate audio";
+      if (/429|quota|exceeded|rate.limit|billing/i.test(msg)) {
+        return res.status(429).json({
+          error: "Audio quota exceeded. Check your OpenAI billing details.",
+        });
+      }
+      res.status(500).json({ error: msg });
+    }
+  });
+
   // ===== PORTAL TICKET ROUTES =====
   // Get all tickets for user
   app.get("/api/portal/tickets", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
@@ -858,18 +893,22 @@ export async function registerRoutes(app: Express) {
       }
       
       const comments = await storage.getPortalTicketComments(id);
-      
+      // Never expose internal support notes to non-admin clients
+      const visibleComments = isAdmin
+        ? comments
+        : comments.filter((c) => !c.isInternal);
+
       res.json({
         ticket: {
           ...ticket,
           ticketNumber: ticket.ticketNumber || `#TK${String(ticket.id).padStart(3, '0')}`,
-          comments: comments.map(c => ({
+          comments: visibleComments.map(c => ({
             id: c.id,
             author: c.userId === req.userId ? "You" : "Support",
-            role: c.isInternal ? "Support Engineer" : "Client",
+            role: isAdmin && c.isInternal ? "Support Engineer" : (c.userId === req.userId ? "Client" : "Support"),
             content: c.content,
             timestamp: c.createdAt,
-            isInternal: c.isInternal,
+            ...(isAdmin ? { isInternal: !!c.isInternal } : {}),
           })),
         },
       });
@@ -2138,6 +2177,133 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  // Single invoice for payment page — scoped to authenticated customer's invoices
+  app.get("/api/portal/invoices/:id", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { id } = req.params;
+      const { zohoBillingService } = await import("./zoho/zohoBilling");
+      const { zohoClient } = await import("./zoho/zohoClient");
+
+      if (!zohoClient.isConfigured()) {
+        return res.status(503).json({ error: "Billing integration not configured" });
+      }
+
+      const userEmail = req.user?.email;
+      if (!userEmail) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+
+      const customer = await zohoBillingService.getCustomerByEmail(userEmail);
+      if (!customer) {
+        return res.status(404).json({ error: "Invoice not found" });
+      }
+
+      const customerInvoices = await zohoBillingService.getInvoicesByCustomer(customer.customer_id);
+      const inv = customerInvoices.find((i) => i.invoice_id === id || i.invoice_number === id);
+      if (!inv) {
+        return res.status(404).json({ error: "Invoice not found" });
+      }
+
+      res.json({
+        id: inv.invoice_id,
+        invoiceNumber: inv.invoice_number,
+        amount: inv.total.toString(),
+        balance: inv.balance,
+        status: inv.status?.toLowerCase() || "pending",
+        issueDate: inv.invoice_date,
+        dueDate: inv.due_date,
+        currency: inv.currency_code || "USD",
+      });
+    } catch (error: any) {
+      console.error("[PORTAL INVOICE GET]", error);
+      res.status(500).json({ error: "Failed to load invoice" });
+    }
+  });
+
+  // Portal invoice payment via Zoho Payments
+  app.post("/api/portal/payment/zoho", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { invoiceId, amount } = req.body || {};
+      if (!invoiceId) {
+        return res.status(400).json({ error: "invoiceId is required" });
+      }
+
+      const { zohoBillingService } = await import("./zoho/zohoBilling");
+      const { zohoClient } = await import("./zoho/zohoClient");
+      const { zohoPayments } = await import("./zohoPayments");
+
+      if (!zohoPayments.isConfigured()) {
+        return res.status(503).json({ error: "Online payments are not configured. Please contact billing@digeratiexperts.com." });
+      }
+      if (!zohoClient.isConfigured()) {
+        return res.status(503).json({ error: "Billing integration not configured" });
+      }
+
+      const userEmail = req.user?.email;
+      if (!userEmail) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+
+      const customer = await zohoBillingService.getCustomerByEmail(userEmail);
+      if (!customer) {
+        return res.status(404).json({ error: "Billing account not found" });
+      }
+
+      const customerInvoices = await zohoBillingService.getInvoicesByCustomer(customer.customer_id);
+      const inv = customerInvoices.find((i) => i.invoice_id === invoiceId || i.invoice_number === invoiceId);
+      if (!inv) {
+        return res.status(404).json({ error: "Invoice not found" });
+      }
+
+      const payAmount = typeof amount === "number" && amount > 0
+        ? amount / 100
+        : Number(inv.balance ?? inv.total);
+      if (!payAmount || payAmount <= 0) {
+        return res.status(400).json({ error: "Invoice has no balance due" });
+      }
+
+      const appUrl = process.env.APP_URL || "https://digeratiexperts.com";
+      const session = await zohoPayments.createPaymentSession({
+        orderNumber: `INV-${inv.invoice_number}`,
+        customerEmail: userEmail,
+        customerName: req.user?.fullName || customer.display_name || userEmail,
+        lineItems: [{
+          name: `Invoice ${inv.invoice_number}`,
+          description: "Portal invoice payment",
+          amount: payAmount,
+          quantity: 1,
+        }],
+        totalAmount: payAmount,
+        currency: inv.currency_code || "USD",
+        successUrl: `${appUrl}/portal/invoices?paid=1`,
+        cancelUrl: `${appUrl}/portal/invoices/${inv.invoice_id}/pay`,
+        metadata: {
+          invoiceId: inv.invoice_id,
+          invoiceNumber: inv.invoice_number,
+          portalUserId: req.userId || "",
+        },
+      });
+
+      res.json({
+        url: session.url,
+        paymentSessionId: session.payment_session_id,
+        invoiceNumber: inv.invoice_number,
+        amount: payAmount,
+      });
+    } catch (error: any) {
+      console.error("[PORTAL PAYMENT ZOHO]", error);
+      res.status(500).json({ error: error.message || "Failed to start payment" });
+    }
+  });
+
+  // Legacy Stripe path removed — return clear guidance
+  app.post("/api/portal/payment/checkout", [authMiddleware], async (_req: AuthenticatedRequest, res: Response) => {
+    res.status(410).json({
+      error: "Card checkout via Stripe has been replaced. Use Zoho Payments.",
+      use: "/api/portal/payment/zoho",
+    });
+  });
+
   // ===== PORTAL ORDER ROUTES =====
   
   // List orders for authenticated client
@@ -3241,6 +3407,26 @@ export async function registerRoutes(app: Express) {
           ? `https://${process.env.REPLIT_DOMAINS.split(",")[0]}`
           : "https://digeratiexperts.com");
 
+      const { db } = await import("./db");
+      const { storeOrders } = await import("@shared/schema");
+      const { eq } = await import("drizzle-orm");
+
+      // Persist order first so success URL can reference a real id + ownership
+      const [order] = await db.insert(storeOrders).values({
+        orderNumber,
+        userId: req.userId || null,
+        clientId: req.user?.clientId || null,
+        status: "awaiting_payment",
+        paymentMethod: "zoho",
+        lineItems,
+        subtotal: subtotal.toString(),
+        tax: "0",
+        total: total.toString(),
+        billingEmail: billing.email,
+        billingName: billing.name,
+        billingCompany: billing.company || null,
+      }).returning();
+
       const session = await zohoPayments.createPaymentSession({
         orderNumber,
         customerEmail: billing.email,
@@ -3252,32 +3438,20 @@ export async function registerRoutes(app: Express) {
           quantity: item.quantity,
         })),
         totalAmount: total,
-        successUrl: `${baseUrl}/store/order-confirmation?orderId=ORDER_ID_PLACEHOLDER`,
+        successUrl: `${baseUrl}/store/order-confirmation?orderId=${order.id}`,
         cancelUrl: `${baseUrl}/store/checkout`,
         metadata: {
           orderNumber,
+          orderId: order.id,
           billingName: billing.name,
           billingEmail: billing.email,
           billingCompany: billing.company || "",
         },
       });
 
-      const { db } = await import("./db");
-      const { storeOrders } = await import("@shared/schema");
-      
-      const [order] = await db.insert(storeOrders).values({
-        orderNumber,
-        status: "awaiting_payment",
-        paymentMethod: "zoho",
-        lineItems,
-        subtotal: subtotal.toString(),
-        tax: "0",
-        total: total.toString(),
-        zohoPaymentSessionId: session.payment_session_id,
-        billingEmail: billing.email,
-        billingName: billing.name,
-        billingCompany: billing.company || null,
-      }).returning();
+      await db.update(storeOrders)
+        .set({ zohoPaymentSessionId: session.payment_session_id })
+        .where(eq(storeOrders.id, order.id));
 
       logSecurityEvent("CHECKOUT_STARTED", req, { 
         orderId: order.id, 
@@ -3289,10 +3463,7 @@ export async function registerRoutes(app: Express) {
         paymentMethod: "zoho"
       });
       
-      const redirectUrl = session.url?.replace("ORDER_ID_PLACEHOLDER", order.id) || 
-        `${baseUrl}/store/order-confirmation?orderId=${order.id}`;
-      
-      res.json({ url: redirectUrl, orderId: order.id });
+      res.json({ url: session.url, orderId: order.id });
     } catch (error: any) {
       console.error("[ZOHO CHECKOUT ERROR]", error);
       logSecurityEvent("CHECKOUT_FAILED", req, { 
@@ -3353,7 +3524,7 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  // Get order by ID or session ID
+  // Get order by ID (auth) or payment session ID (post-checkout confirmation only)
   app.get("/api/store/orders/:id", async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
@@ -3371,6 +3542,66 @@ export async function registerRoutes(app: Express) {
       
       if (!order) {
         return res.status(404).json({ error: "Order not found" });
+      }
+
+      const matchedPaymentSession =
+        order.zohoPaymentSessionId === id || order.stripeSessionId === id;
+
+      const confirmationPayload = {
+        id: order.id,
+        orderNumber: order.orderNumber,
+        status: order.status,
+        paymentMethod: order.paymentMethod,
+        lineItems: order.lineItems,
+        subtotal: order.subtotal,
+        tax: order.tax,
+        total: order.total,
+        billingEmail: order.billingEmail,
+        billingName: order.billingName,
+        billingCompany: order.billingCompany,
+        paidAt: order.paidAt,
+        createdAt: order.createdAt,
+      };
+
+      // Payment-provider return URLs may look up by session id (redacted payload).
+      if (matchedPaymentSession) {
+        return res.json(confirmationPayload);
+      }
+
+      // Recent checkout confirmation by order id (Zoho success_url) — redacted only,
+      // within 24h, and only when a payment session was attached (not arbitrary UUID probe).
+      const createdMs = order.createdAt ? new Date(order.createdAt).getTime() : 0;
+      const isFreshCheckout =
+        !!order.zohoPaymentSessionId &&
+        createdMs > 0 &&
+        Date.now() - createdMs < 24 * 60 * 60 * 1000 &&
+        (order.status === "awaiting_payment" ||
+          order.status === "paid" ||
+          order.status === "processing" ||
+          order.status === "completed" ||
+          order.status === "pending");
+      if (isFreshCheckout && order.id === id) {
+        return res.json(confirmationPayload);
+      }
+
+      // Full order record requires ownership
+      const authHeader = req.headers.authorization;
+      const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
+      if (!token) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+      let decoded: JWTPayload;
+      try {
+        decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
+      } catch {
+        return res.status(401).json({ error: "Invalid token" });
+      }
+      const isAdmin = decoded.role === "admin";
+      const ownsOrder =
+        (decoded.userId && order.userId === decoded.userId) ||
+        (decoded.clientId && order.clientId === decoded.clientId);
+      if (!isAdmin && !ownsOrder) {
+        return res.status(403).json({ error: "Access denied" });
       }
 
       res.json(order);
@@ -3406,6 +3637,8 @@ export async function registerRoutes(app: Express) {
 
       const [quoteRequest] = await db.insert(storeQuoteRequests).values({
         quoteNumber,
+        userId: req.userId || null,
+        clientId: req.user?.clientId || null,
         contactName,
         contactEmail,
         contactPhone: contactPhone || null,
@@ -3439,8 +3672,8 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  // Get quote request by ID
-  app.get("/api/store/quote-requests/:id", async (req: Request, res: Response) => {
+  // Get quote request by ID — authenticated owner or admin only
+  app.get("/api/store/quote-requests/:id", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { id } = req.params;
       const { db } = await import("./db");
@@ -3458,6 +3691,22 @@ export async function registerRoutes(app: Express) {
         return res.status(404).json({ error: "Quote request not found" });
       }
 
+      const isAdmin = req.user?.role === "admin";
+      const ownsQuote =
+        (req.userId && quoteRequest.userId === req.userId) ||
+        (req.user?.clientId && quoteRequest.clientId === req.user.clientId) ||
+        (req.user?.email &&
+          quoteRequest.contactEmail?.toLowerCase() === req.user.email.toLowerCase());
+      if (!isAdmin && !ownsQuote) {
+        return res.status(403).json({ error: "Access denied" });
+      }
+
+      // Never return internal assignment fields to non-admins
+      if (!isAdmin) {
+        const { assignedTo, ...clientSafe } = quoteRequest as typeof quoteRequest & { assignedTo?: string | null };
+        return res.json(clientSafe);
+      }
+
       res.json(quoteRequest);
     } catch (error: any) {
       console.error("[GET QUOTE REQUEST ERROR]", error);
@@ -3465,8 +3714,8 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  // Zoho Payments status check
-  app.get("/api/store/payment-status", async (_req: Request, res: Response) => {
+  // Zoho Payments status check (admin only — avoids public config probing)
+  app.get("/api/store/payment-status", [authMiddleware, requireAdmin], async (_req: AuthenticatedRequest, res: Response) => {
     try {
       const { zohoPayments } = await import("./zohoPayments");
       res.json({ 
@@ -4029,8 +4278,8 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  // Email status check (no auth required for health checks)
-  app.get("/api/email-status", async (req: Request, res: Response) => {
+  // Email status — admin only (do not advertise mail config publicly)
+  app.get("/api/email-status", [authMiddleware, requireAdmin], async (_req: AuthenticatedRequest, res: Response) => {
     const hasToken = !!process.env.ZEPTOMAIL_API_TOKEN;
     res.json({
       configured: hasToken,

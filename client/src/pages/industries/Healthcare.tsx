@@ -8,10 +8,10 @@ export default function Healthcare() {
   const prefersReducedMotion = useReducedMotion() ?? false;
   
   const metrics = [
-    { label: "HIPAA Compliance", value: "100%", icon: Shield, color: "from-violet-500 to-purple-500" },
-    { label: "Data Encryption", value: "256-bit", icon: Lock, color: "from-purple-500 to-fuchsia-500" },
-    { label: "System Uptime", value: "99.95%", icon: Activity, color: "from-fuchsia-500 to-violet-500" },
-    { label: "Healthcare Clients", value: "25+", icon: Heart, color: "from-violet-500 to-purple-500" }
+    { label: "Focus", value: "HIPAA", icon: Shield, color: "from-[#D3126A] to-fuchsia-600" },
+    { label: "Encryption", value: "AES-256", icon: Lock, color: "from-fuchsia-600 to-violet-600" },
+    { label: "Priority", value: "PHI", icon: Activity, color: "from-violet-600 to-[#D3126A]" },
+    { label: "Outcome", value: "Audit-ready", icon: Heart, color: "from-[#D3126A] to-rose-500" }
   ];
 
   const challenges = [
@@ -201,27 +201,58 @@ export default function Healthcare() {
           </div>
         </motion.div>
 
-        {/* Success Metrics */}
-        <motion.div 
-          className="grid md:grid-cols-3 gap-6 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 rounded-2xl p-8 text-white"
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
-            <p className="text-4xl font-bold mb-2">25+</p>
-            <p className="text-white/70">Healthcare Clients</p>
-          </div>
-          <div className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
-            <p className="text-4xl font-bold mb-2">0</p>
-            <p className="text-white/70">HIPAA Violations</p>
-          </div>
-          <div className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
-            <p className="text-4xl font-bold mb-2">100%</p>
-            <p className="text-white/70">Audit Pass Rate</p>
-          </div>
-        </motion.div>
+        {/* Arizona + process */}
+        <div className="grid md:grid-cols-2 gap-6">
+          <motion.div
+            className="p-6 rounded-2xl bg-white/[0.04] border border-white/10"
+            initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <p className="text-xs font-semibold tracking-wide uppercase text-[#FF477F] mb-3">Arizona practices</p>
+            <p className="text-white/85 leading-relaxed">
+              East Valley clinics, dental offices, and specialty practices need HIPAA-aware IT without a hospital-sized IT department.
+              We operate from Chandler and design controls around how Arizona practices actually staff front desk, providers, and billing.
+            </p>
+          </motion.div>
+          <motion.div
+            className="p-6 rounded-2xl bg-[#D3126A]/10 border border-[#D3126A]/25"
+            initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <p className="text-xs font-semibold tracking-wide uppercase text-[#FF477F] mb-3">How we engage</p>
+            <ol className="space-y-2 text-white/85 list-decimal list-inside">
+              <li>Risk &amp; HIPAA technical gap review (access, email, endpoints, backup)</li>
+              <li>BAA-ready controls and evidence collection paths</li>
+              <li>Ongoing monitoring, training, and incident documentation</li>
+              <li>Audit/insurance packet support when questionnaires arrive</li>
+            </ol>
+          </motion.div>
+        </div>
+
+        <div className="space-y-4 max-w-4xl">
+          <h2 className="text-3xl font-bold text-white">Questions practice owners ask</h2>
+          {[
+            {
+              q: "Do you make us ‘HIPAA certified’?",
+              a: "No vendor certifies you HIPAA. We implement technical and administrative safeguards, support BAAs where appropriate, and keep evidence so you can demonstrate compliance.",
+            },
+            {
+              q: "We already have an EHR vendor — do we still need this?",
+              a: "EHR security is one slice. Email, endpoints, identity, backups, and staff behavior are usually where practices get exposed.",
+            },
+            {
+              q: "What does the free assessment cover?",
+              a: "Current access controls, MFA posture, email risk, backup restore readiness, and the documentation gaps insurers and auditors typically ask about.",
+            },
+          ].map((faq) => (
+            <div key={faq.q} className="p-5 rounded-xl bg-white/[0.04] border border-white/10">
+              <h3 className="text-lg font-semibold text-white mb-2">{faq.q}</h3>
+              <p className="text-white/70 leading-relaxed">{faq.a}</p>
+            </div>
+          ))}
+        </div>
 
         {/* CTA */}
         <motion.div 
@@ -231,36 +262,23 @@ export default function Healthcare() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600" />
-          <div className="absolute inset-0 opacity-20">
-            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="healthcare-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#healthcare-grid)" />
-            </svg>
-          </div>
-          
+          <div className="absolute inset-0 bg-gradient-to-r from-[#D3126A] via-fuchsia-600 to-rose-500" />
           <div className="relative p-8 md:p-12 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Protect Your Patient Data</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Protect patient data with a clear plan</h2>
             <p className="text-lg md:text-xl mb-8 text-white/90 max-w-2xl mx-auto">
-              Get a free HIPAA compliance assessment for your practice.
+              Schedule a free HIPAA-focused cyber risk assessment for your Arizona practice.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
                 href="/book"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-center justify-center bg-white text-violet-700 hover:bg-violet-50 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
+                className="group inline-flex items-center justify-center bg-white text-[#D3126A] hover:bg-pink-50 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
                 data-testid="button-get-assessment"
               >
-                Get Free Assessment
+                Schedule Assessment
               </a>
               <a 
                 href="tel:325-480-9870"
-                className="inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-violet-600 px-8 py-4 rounded-xl font-semibold transition-all"
+                className="inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-[#D3126A] px-8 py-4 rounded-xl font-semibold transition-all"
                 data-testid="button-call-now"
               >
                 <Phone className="mr-2 h-5 w-5" />

@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { pricing } from '@/data/pricing';
 import { useBooking } from '@/contexts/BookingContext';
+import { useOptionalFullPageScroll } from '@/components/FullPageScroll';
 
 const NoiseTexture = ({ id }: { id: string }) => (
   <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.025]" aria-hidden="true">
@@ -143,6 +144,12 @@ export function MegaMenu() {
   const columnRefs = useRef<Map<number, HTMLDivElement>>(new Map());
   const rafRef = useRef<number | null>(null);
   const uniqueId = useId();
+  const scrollContext = useOptionalFullPageScroll();
+  const isMenuOpen = Boolean(activeMenu) || mobileMenuOpen;
+  // Solid dark strip over light page sections so the white/gold logo stays legible.
+  // Keep the live translucent bar over dark hero sections.
+  const isOverLight = scrollContext?.currentTheme === 'light';
+  const useSolidChrome = isOverLight || isMenuOpen;
 
   const handleColumnMouseMove = useCallback((e: React.MouseEvent, columnIdx: number) => {
     if (rafRef.current) return;
@@ -163,7 +170,7 @@ export function MegaMenu() {
     {
       name: 'Solutions',
       featuredPanel: {
-        title: 'Why Digerati?',
+        title: 'Why Digerati Experts?',
         stats: [
           { value: '99.9%', label: 'Uptime SLA' },
           { value: '<15min', label: 'Response Time' },
@@ -240,7 +247,8 @@ export function MegaMenu() {
           title: 'Learn',
           items: [
             { title: 'Case Studies', description: 'Real Arizona success stories', icon: <TrendingUp className="h-5 w-5" />, url: '/resources/case-studies' },
-            { title: 'Blog & News', description: 'Latest security insights', icon: <FileCheck className="h-5 w-5" />, url: '/resources/blog' },
+            { title: 'Digerati Journal', description: 'Cybersecurity & managed IT field notes', icon: <FileCheck className="h-5 w-5" />, url: '/resources/blog' },
+            { title: 'Cyber Facts', description: 'Interactive credibility stats & sources', icon: <Shield className="h-5 w-5" />, url: '/resources/cyber-facts' },
             { title: 'Videos & Webinars', description: 'Educational content library', icon: <Monitor className="h-5 w-5" />, url: '/resources/videos' },
           ]
         },
@@ -497,28 +505,37 @@ export function MegaMenu() {
         </div>
       </div>
 
-      {/* Main Navigation - clean black background */}
+      {/* Main Navigation — live presence + solid chrome only when needed */}
       <nav 
         className={`fixed left-0 right-0 z-50 mega-menu-container transition-all duration-300 ${
-          isScrolled 
-            ? 'top-0 bg-black/95 backdrop-blur-xl border-b border-white/[0.08]' 
-            : 'top-10 bg-black/90 backdrop-blur-xl border-b border-white/[0.05]'
+          isScrolled ? 'top-0' : 'top-10'
+        } ${
+          useSolidChrome
+            ? 'bg-[#050312] border-b border-white/[0.10] shadow-[0_10px_28px_rgba(0,0,0,0.45)]'
+            : isScrolled
+              ? 'bg-black/95 backdrop-blur-xl border-b border-white/[0.08]'
+              : 'bg-black/90 backdrop-blur-xl border-b border-white/[0.05]'
         }`}
         ref={menuContainerRef}
         role="navigation"
         aria-label="Main navigation"
+        data-nav-theme={isOverLight ? 'over-light' : 'over-dark'}
       >
         <div className="max-w-7xl mx-auto">
-          <div className={`flex items-center justify-between px-4 xl:px-8 transition-all duration-300 ${
+          <div className={`flex items-center justify-between gap-3 px-4 xl:px-8 transition-all duration-300 ${
             isScrolled ? 'h-16' : 'h-20'
           }`}>
             {/* Logo */}
-            <a href="/" className="flex items-center flex-shrink-0">
+            <a
+              href="/"
+              className="flex items-center flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded"
+              aria-label="Digerati Experts home"
+            >
               <img 
                 src={logoImage} 
                 alt="Digerati Experts Logo" 
                 className={`transition-all duration-300 ${
-                  isScrolled ? 'h-8' : 'h-12'
+                  isScrolled ? 'h-9' : 'h-12'
                 }`}
                 style={{ width: 'auto', maxWidth: '200px' }}
                 data-testid="logo-header"
@@ -573,19 +590,22 @@ export function MegaMenu() {
                     </button>
                   )}
 
-                  {/* Mega Menu Dropdown */}
+                  {/* Mega Menu Dropdown — opacity-only motion (no transform) so
+                      position:fixed stays viewport-sized, not nav-trigger-sized. */}
                   <AnimatePresence>
                     {item.sections && activeMenu === item.name && (
                       <motion.div
                         ref={(el) => {
                           if (el) dropdownRefs.current.set(item.name, el);
                         }}
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.2 }}
-                        className={`fixed left-0 right-0 top-20 mx-auto ${
-                          item.name === 'Solutions' ? 'w-[98vw] max-w-7xl' : 'w-[90vw] max-w-5xl'
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.15 }}
+                        className={`fixed inset-x-0 top-20 mx-auto ${
+                          item.name === 'Solutions' || item.name === 'About'
+                            ? 'w-[min(98vw,80rem)]'
+                            : 'w-[min(92vw,64rem)]'
                         } bg-[#0a0118] backdrop-blur-xl border border-white/15 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.6),0_0_40px_rgba(139,92,246,0.2)] mega-menu-dropdown overflow-hidden`}
                         onMouseEnter={handleDropdownMouseEnter}
                         onMouseLeave={handleMouseLeave}
@@ -601,7 +621,7 @@ export function MegaMenu() {
                           item.name === 'Solutions' 
                             ? 'grid grid-cols-5 divide-x divide-white/5' 
                             : item.name === 'About'
-                              ? 'p-6 grid grid-cols-4 gap-6 items-start'
+                              ? 'p-6 grid grid-cols-3 gap-6 items-start'
                               : item.name === 'Industries'
                                 ? 'p-6 grid grid-cols-3 gap-6 items-start'
                                 : item.sections.length === 3 
@@ -912,12 +932,12 @@ export function MegaMenu() {
           <div className="flex items-center space-x-2 lg:space-x-4">
             <button
               type="button"
-              className="hidden lg:inline-flex items-center justify-center bg-violet-600 hover:bg-violet-500 text-white px-4 xl:px-5 py-2 rounded-lg text-sm font-semibold whitespace-nowrap shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.4)] transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0a0a0a] border border-white/10"
+              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-4 xl:px-5 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap shadow-[0_0_22px_rgba(236,72,153,0.35)] hover:shadow-[0_0_30px_rgba(236,72,153,0.45)] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black border border-pink-300/25"
               data-testid="nav-cta"
               onClick={() => { handleLinkClick(); openBooking("megamenu"); }}
-              aria-label="Get protected now - Schedule a consultation"
+              aria-label="Schedule Your Assessment"
             >
-              Get Protected
+              Schedule Your Assessment
             </button>
 
             {/* Mobile/Tablet Menu Button */}
@@ -1113,13 +1133,13 @@ export function MegaMenu() {
               >
                 <button
                   type="button"
-                  className="w-full inline-flex items-center justify-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-bold py-4 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0a0a0a] transition-all rounded-xl shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_40px_rgba(139,92,246,0.4)] text-lg"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white font-bold py-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0118] transition-all rounded-xl border border-pink-300/25 shadow-[0_0_30px_rgba(236,72,153,0.35)] hover:shadow-[0_0_40px_rgba(236,72,153,0.45)] text-lg"
                   onClick={() => { setMobileMenuOpen(false); openBooking("megamenu_mobile"); }}
                   data-testid="mobile-cta"
-                  aria-label="Get protected now - Schedule a consultation"
+                  aria-label="Schedule Your Assessment"
                 >
-                  Get Protected Now
-                  <ArrowRight className="w-5 h-5" />
+                  Schedule Your Assessment
+                  <ArrowRight className="w-5 h-5" aria-hidden="true" />
                 </button>
               </div>
               

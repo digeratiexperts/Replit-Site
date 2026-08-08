@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { motion, useReducedMotion } from "framer-motion";
 
-import teamMeetingImg from "@assets/business-colleagues-working-office_1767027918693.png";
+import officeEveningImg from "@assets/de-arizona-office-evening.png";
 
 export const DigeratiAIAssistanceSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -35,36 +35,23 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
           >
             <div className="relative">
               {/* Decorative elements */}
-              <div className="absolute -inset-4 bg-violet-500/15 rounded-3xl blur-2xl" />
+              <div className="absolute -inset-4 bg-pink-500/15 rounded-3xl blur-2xl" />
               
-              {/* Main image */}
+              {/* Main image — Arizona office atmosphere, no invented metrics */}
               <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10">
                 <img 
-                  src={teamMeetingImg} 
-                  alt="Expert team collaboration" 
+                  src={officeEveningImg} 
+                  alt="Arizona professional office where Digerati Experts supports local businesses" 
                   loading="lazy"
                   decoding="async"
                   width={448}
                   height={300}
-                  className="w-full max-w-md object-cover"
+                  className="w-full max-w-md object-cover aspect-[4/3]"
                 />
                 
-                {/* Overlay with stats */}
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6">
-                  <div className="flex gap-6">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-white">0.3s</div>
-                      <div className="text-xs text-gray-300">Detection</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-white">99.9%</div>
-                      <div className="text-xs text-gray-300">Accuracy</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-white">24/7</div>
-                      <div className="text-xs text-gray-300">Monitoring</div>
-                    </div>
-                  </div>
+                  <p className="text-sm font-medium text-white">Local operations. Human judgment.</p>
+                  <p className="text-xs text-white/75 mt-1">Arizona-based · Principal-led · Always-on monitoring</p>
                 </div>
               </div>
 

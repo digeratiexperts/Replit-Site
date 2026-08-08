@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import {
   Card,
@@ -17,97 +17,74 @@ import {
   Loader2,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { portalGet, portalPost } from "@/lib/portalApi";
+import zelleQr from "@assets/qrCode_1763920410167.png";
 
 interface PaymentProps {
   invoiceId: string;
-  invoiceNumber: string;
-  amount: string;
 }
 
-export default function PortalPayment({
-  invoiceId,
-  invoiceNumber,
-  amount,
-}: PaymentProps) {
+interface InvoiceDetail {
+  id: string;
+  invoiceNumber: string;
+  amount: string;
+  balance?: number;
+  status: string;
+  currency?: string;
+}
+
+export default function PortalPayment({ invoiceId }: PaymentProps) {
   const [, navigate] = useLocation();
+  const [invoice, setInvoice] = useState<InvoiceDetail | null>(null);
+  const [loadingInvoice, setLoadingInvoice] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [selectedMethod, setSelectedMethod] = useState<
-    "card" | "zelle" | "zoho" | null
-  >(null);
-  const [zohoEmbedData, setZohoEmbedData] = useState<any>(null);
-  const zohoContainerRef = useRef<HTMLDivElement>(null);
+  const [selectedMethod, setSelectedMethod] = useState<"card" | "zelle" | null>(null);
 
-  const handleCardCheckout = async () => {
-    setLoading(true);
-    setError("");
-
-    try {
-      const response = await fetch("/api/portal/payment/checkout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("portalToken")}`,
-        },
-        body: JSON.stringify({
-          invoiceId,
-          amount: Math.round(parseFloat(amount) * 100),
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to create checkout session");
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setLoadingInvoice(true);
+      setError("");
+      try {
+        const data = await portalGet<InvoiceDetail>(`/api/portal/invoices/${invoiceId}`);
+        if (!cancelled) setInvoice(data);
+      } catch (err) {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Failed to load invoice");
+          setInvoice(null);
+        }
+      } finally {
+        if (!cancelled) setLoadingInvoice(false);
       }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [invoiceId]);
 
-      const data = await response.json();
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Payment failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const amountDue = invoice
+    ? Number(invoice.balance ?? invoice.amount)
+    : 0;
+  const invoiceNumber = invoice?.invoiceNumber || invoiceId;
 
   const handleZohoCheckout = async () => {
+    if (!invoice) return;
     setLoading(true);
     setError("");
 
     try {
-      const response = await fetch("/api/portal/payment/zoho", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("portalToken")}`,
-        },
-        body: JSON.stringify({
-          invoiceId,
-          invoiceNumber,
-          amount: Math.round(parseFloat(amount) * 100),
-        }),
+      const data = await portalPost<{ url?: string }>("/api/portal/payment/zoho", {
+        invoiceId: invoice.id,
+        amount: Math.round(amountDue * 100),
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to initialize Zoho checkout");
+      if (data.url) {
+        window.location.href = data.url;
+        return;
       }
-
-      const data = await response.json();
-      setZohoEmbedData(data);
-
-      // Load Zoho checkout script if not already loaded
-      if (!(window as any).ZohoCheckout) {
-        const script = document.createElement("script");
-        script.src = "https://checkout.zoho.com/checkout.js";
-        script.async = true;
-        script.onload = () => {
-          // Script loaded, widget will be rendered
-          console.log("Zoho checkout script loaded");
-        };
-        document.head.appendChild(script);
-      }
+      throw new Error("Payment session did not return a checkout URL");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Zoho checkout failed");
+      setError(err instanceof Error ? err.message : "Payment failed");
     } finally {
       setLoading(false);
     }
@@ -116,7 +93,6 @@ export default function PortalPayment({
   return (
     <PortalLayout title="Pay Invoice">
       <div className="space-y-6 max-w-2xl">
-        {/* Back Button */}
         <Button
           variant="ghost"
           onClick={() => navigate("/portal/invoices")}
@@ -127,222 +103,146 @@ export default function PortalPayment({
           Back to Invoices
         </Button>
 
-        {/* Error Alert */}
         {error && (
           <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 rounded-lg">
             <div className="flex gap-3">
               <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-red-800 dark:text-red-300">
-                {error}
-              </p>
+              <p className="text-sm text-red-800 dark:text-red-300">{error}</p>
             </div>
           </div>
         )}
 
-        {/* Invoice Summary */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Invoice Payment</CardTitle>
-                <CardDescription>{invoiceNumber}</CardDescription>
-              </div>
-              <Badge className="bg-[#5034ff] hover:bg-[#5034ff]/90 text-white text-lg px-3 py-1">
-                ${parseFloat(amount).toFixed(2)}
-              </Badge>
-            </div>
-          </CardHeader>
-        </Card>
+        {loadingInvoice && (
+          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+            <Loader2 className="h-5 w-5 animate-spin" />
+            Loading invoice…
+          </div>
+        )}
 
-        {/* Payment Methods */}
-        <div className="space-y-3">
-          <h3 className="font-semibold text-lg">Select Payment Method</h3>
-
-          {/* Credit/Debit Card */}
-          <Card
-            className={`cursor-pointer transition-all ${
-              selectedMethod === "card"
-                ? "ring-2 ring-[#5034ff] border-[#5034ff]"
-                : "hover:border-[#5034ff]/50"
-            }`}
-            onClick={() => setSelectedMethod("card")}
-            data-testid="card-payment-method"
-          >
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                  <CreditCard className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-semibold">Credit/Debit Card</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Pay securely via Zoho Payments
-                  </p>
-                </div>
-              </div>
-              {selectedMethod === "card" && (
-                <Button
-                  className="mt-4 w-full bg-[#5034ff] hover:bg-[#5034ff]/90 text-white"
-                  onClick={handleCardCheckout}
-                  disabled={loading}
-                  data-testid="button-card-pay"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Processing...
-                    </>
-                  ) : (
-                    "Pay with Card"
-                  )}
-                </Button>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Zelle */}
-          <Card
-            className={`cursor-pointer transition-all ${
-              selectedMethod === "zelle"
-                ? "ring-2 ring-[#5034ff] border-[#5034ff]"
-                : "hover:border-[#5034ff]/50"
-            }`}
-            onClick={() => setSelectedMethod("zelle")}
-            data-testid="card-zelle-method"
-          >
-            <CardContent className="pt-6">
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                    <QrCode className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+        {!loadingInvoice && invoice && (
+          <>
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Invoice Payment</CardTitle>
+                    <CardDescription>{invoiceNumber}</CardDescription>
                   </div>
-                  <div className="flex-1">
-                    <h4 className="font-semibold">Zelle</h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Bank transfer via Zelle
-                    </p>
-                  </div>
+                  <Badge className="bg-[#5034ff] hover:bg-[#5034ff]/90 text-white text-lg px-3 py-1">
+                    ${amountDue.toFixed(2)}
+                  </Badge>
                 </div>
+              </CardHeader>
+            </Card>
 
-                {selectedMethod === "zelle" && (
-                  <div className="mt-4 p-4 bg-gray-50 dark:bg-slate-800 rounded-lg space-y-3">
-                    <p className="text-sm font-medium">
-                      Scan the QR code below with your banking app:
-                    </p>
-                    <div className="flex justify-center py-2">
-                      <img
-                        src={require("@assets/qrCode_1763920410167.png")}
-                        alt="Zelle QR Code"
-                        className="h-48 w-48"
-                        data-testid="image-zelle-qr"
-                      />
+            <div className="space-y-3">
+              <h3 className="font-semibold text-lg">Select Payment Method</h3>
+
+              <Card
+                className={`cursor-pointer transition-all ${
+                  selectedMethod === "card"
+                    ? "ring-2 ring-[#5034ff] border-[#5034ff]"
+                    : "hover:border-[#5034ff]/50"
+                }`}
+                onClick={() => setSelectedMethod("card")}
+                data-testid="card-payment-method"
+              >
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                      <CreditCard className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                     </div>
-                    <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-900/30 rounded text-sm">
-                      <p className="text-yellow-800 dark:text-yellow-300">
-                        <strong>Amount:</strong> ${parseFloat(amount).toFixed(2)}
-                      </p>
-                      <p className="text-yellow-800 dark:text-yellow-300 mt-1">
-                        Reference: {invoiceNumber}
+                    <div className="flex-1">
+                      <h4 className="font-semibold">Pay Online</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Secure checkout via Zoho Payments
                       </p>
                     </div>
+                  </div>
+                  {selectedMethod === "card" && (
                     <Button
-                      className="w-full"
-                      variant="outline"
-                      onClick={() => navigate("/portal/invoices")}
-                      data-testid="button-zelle-done"
+                      className="mt-4 w-full bg-[#5034ff] hover:bg-[#5034ff]/90 text-white"
+                      onClick={handleZohoCheckout}
+                      disabled={loading || amountDue <= 0}
+                      data-testid="button-card-pay"
                     >
-                      Payment Sent
+                      {loading ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Processing...
+                        </>
+                      ) : (
+                        `Pay $${amountDue.toFixed(2)}`
+                      )}
                     </Button>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+                  )}
+                </CardContent>
+              </Card>
 
-          {/* Zoho Payments */}
-          <Card
-            className={`cursor-pointer transition-all ${
-              selectedMethod === "zoho"
-                ? "ring-2 ring-[#5034ff] border-[#5034ff]"
-                : "hover:border-[#5034ff]/50"
-            }`}
-            onClick={() => setSelectedMethod("zoho")}
-            data-testid="card-zoho-method"
-          >
-            <CardContent className="pt-6">
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
-                    <CreditCard className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-semibold">Zoho Payments</h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Pay with multiple payment methods
-                    </p>
-                  </div>
-                </div>
+              <Card
+                className={`cursor-pointer transition-all ${
+                  selectedMethod === "zelle"
+                    ? "ring-2 ring-[#5034ff] border-[#5034ff]"
+                    : "hover:border-[#5034ff]/50"
+                }`}
+                onClick={() => setSelectedMethod("zelle")}
+                data-testid="card-zelle-method"
+              >
+                <CardContent className="pt-6">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                        <QrCode className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold">Zelle</h4>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          Bank transfer via Zelle
+                        </p>
+                      </div>
+                    </div>
 
-                {selectedMethod === "zoho" && (
-                  <div className="mt-4 space-y-3">
-                    {!zohoEmbedData && (
-                      <Button
-                        className="w-full bg-[#5034ff] hover:bg-[#5034ff]/90 text-white"
-                        onClick={handleZohoCheckout}
-                        disabled={loading}
-                        data-testid="button-zoho-pay"
-                      >
-                        {loading ? (
-                          <>
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                            Initializing...
-                          </>
-                        ) : (
-                          "Proceed to Zoho Checkout"
-                        )}
-                      </Button>
-                    )}
-
-                    {zohoEmbedData && (
-                      <div
-                        ref={zohoContainerRef}
-                        data-testid="div-zoho-widget"
-                        className="p-4 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 min-h-96"
-                      >
-                        <div className="text-center text-gray-600 dark:text-gray-400 py-8">
-                          <p className="font-medium mb-2">Zoho Checkout Widget</p>
-                          <p className="text-sm">
-                            {zohoEmbedData.amount} USD - {zohoEmbedData.orderReference}
+                    {selectedMethod === "zelle" && (
+                      <div className="mt-4 p-4 bg-gray-50 dark:bg-slate-800 rounded-lg space-y-3">
+                        <p className="text-sm font-medium">
+                          Scan the QR code below with your banking app:
+                        </p>
+                        <div className="flex justify-center py-2">
+                          <img
+                            src={zelleQr}
+                            alt="Zelle QR Code"
+                            className="h-48 w-48"
+                            data-testid="image-zelle-qr"
+                          />
+                        </div>
+                        <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-900/30 rounded text-sm">
+                          <p className="text-yellow-800 dark:text-yellow-300">
+                            <strong>Amount:</strong> ${amountDue.toFixed(2)}
                           </p>
-                          <p className="text-xs mt-4 text-gray-500">
-                            The payment widget would render here with Zoho's hosted checkout
+                          <p className="text-yellow-800 dark:text-yellow-300 mt-1">
+                            Reference: {invoiceNumber}
                           </p>
                         </div>
+                        <Button
+                          className="w-full"
+                          variant="outline"
+                          onClick={() => navigate("/portal/invoices")}
+                          data-testid="button-zelle-done"
+                        >
+                          Payment Sent
+                        </Button>
                       </div>
                     )}
-
-                    <div className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-900/30 rounded text-sm">
-                      <p className="text-blue-800 dark:text-blue-300">
-                        <strong>Amount:</strong> ${parseFloat(amount).toFixed(2)}
-                      </p>
-                      <p className="text-blue-800 dark:text-blue-300 mt-1">
-                        Reference: {invoiceNumber}
-                      </p>
-                    </div>
                   </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+                </CardContent>
+              </Card>
+            </div>
+          </>
+        )}
 
-        {/* Info Box */}
-        <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-900/30 rounded-lg">
-          <p className="text-sm text-blue-800 dark:text-blue-300">
-            Your payment is secure and processed through industry-leading payment
-            processors. All data is encrypted and protected.
-          </p>
-        </div>
+        {!loadingInvoice && !invoice && !error && (
+          <p className="text-gray-600 dark:text-gray-400">Invoice not found.</p>
+        )}
       </div>
     </PortalLayout>
   );

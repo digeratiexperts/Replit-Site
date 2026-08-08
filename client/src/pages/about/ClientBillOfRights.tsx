@@ -8,8 +8,8 @@ import {
   DollarSign, 
   Mail, 
   Target,
-  ArrowLeft
 } from "lucide-react";
+import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "../sections/DigeratiEnhancedFooterSection";
 
 interface RightCard {
@@ -72,58 +72,51 @@ const rights: RightCard[] = [
 
 export default function ClientBillOfRights() {
   return (
-    <div className="min-h-screen bg-[#030228]">
-      <header className="border-b border-white/10 bg-[#030228]/95 backdrop-blur-sm">
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <Link href="/" className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors text-sm" data-testid="link-back-home">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Home
-          </Link>
-        </div>
-      </header>
+    <div className="min-h-screen bg-[#050312]">
+      <MegaMenu />
 
-      <section className="py-20 px-6">
+      <section className="pt-32 pb-16 px-6 de-prose-dark">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6" data-testid="heading-bill-of-rights">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight" data-testid="heading-bill-of-rights">
             Client Bill of Rights
           </h1>
-          <p className="text-lg text-white/70 leading-relaxed mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-white/85 leading-relaxed mb-8 max-w-2xl mx-auto">
             We greatly appreciate the trust and confidence our clients have placed in Digerati Experts. 
             Your security is our mission, and exceptional service is our standard.
           </p>
-          <div className="inline-block px-6 py-4 rounded-xl border border-violet-500/40 bg-violet-500/10">
+          <div className="inline-block px-6 py-4 rounded-xl border border-pink-500/35 bg-pink-500/10">
             <p className="text-white/90">
-              We pledge to uphold the <span className="text-violet-400 font-semibold">highest standards</span> of 
+              We pledge to uphold the <span className="text-pink-300 font-semibold">highest standards</span> of 
               technical support, cybersecurity excellence, and customer satisfaction
             </p>
           </div>
         </div>
       </section>
 
-      <section className="pb-20 px-6">
+      <section className="pb-20 px-6 de-prose-dark">
         <div className="max-w-5xl mx-auto">
           <div className="grid gap-6">
             {rights.map((right, index) => (
               <article 
                 key={index}
-                className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8 hover:border-violet-500/30 hover:bg-white/[0.04] transition-all"
+                className="rounded-xl border border-white/10 bg-white/[0.03] p-6 md:p-8 hover:border-pink-500/30 hover:bg-white/[0.05] transition-all"
                 data-testid={`card-right-${index}`}
               >
                 <div className="flex items-start gap-5 mb-5">
-                  <div className="w-12 h-12 rounded-xl bg-violet-500/20 border border-violet-500/30 flex items-center justify-center text-violet-400 flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-pink-500/15 border border-pink-500/30 flex items-center justify-center text-pink-300 flex-shrink-0">
                     {right.icon}
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold text-white mb-3">{right.title}</h3>
-                    <p className="text-white/60 leading-relaxed">
-                      <span className="text-violet-400 font-medium">You have a right</span> {right.rightText.replace(/^You have (a |the )?right ?(to)?/i, '')}
+                    <p className="text-white/85 leading-relaxed">
+                      <span className="text-pink-300 font-medium">You have a right</span> {right.rightText.replace(/^You have (a |the )?right ?(to)?/i, '')}
                     </p>
                   </div>
                 </div>
                 <div className="ml-0 md:ml-17 pl-0 md:pl-[68px]">
                   <div className="pl-4 border-l-2 border-violet-500/50 bg-violet-500/5 py-3 pr-4 rounded-r-lg">
                     <p className="text-white/80 text-sm leading-relaxed">
-                      <span className="text-violet-400 font-semibold">We Pledge</span> {right.pledgeText.replace(/^We Pledge /i, '')}
+                      <span className="text-pink-300 font-semibold">We Pledge</span> {right.pledgeText.replace(/^We Pledge /i, '')}
                     </p>
                   </div>
                 </div>
@@ -138,8 +131,8 @@ export default function ClientBillOfRights() {
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-6" data-testid="heading-commitment">
             Our Commitment to Excellence
           </h2>
-          <p className="text-white/60 leading-relaxed text-lg">
-            Most of our clients come from referrals from satisfied customers. We <span className="text-violet-400 font-medium">want</span> you to recommend us, 
+          <p className="text-white/85 leading-relaxed text-lg">
+            Most of our clients come from referrals from satisfied customers. We <span className="text-pink-300 font-medium">want</span> you to recommend us, 
             but we understand that you will only do this if you are extremely pleased with our services. 
             That's why we work so hard to go above and beyond. The establishment of our Client Bill of Rights, 
             along with our continual investment in people, processes, and technology, clearly demonstrates 

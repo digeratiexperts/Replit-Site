@@ -107,9 +107,69 @@ html {
   }
 }
 
+/* Brand tokens — shared dark cyber + magenta theme */
+:root {
+  --de-bg: #050312;
+  --de-surface: #0a0714;
+  --de-fg: #ffffff;
+  --de-muted: rgba(255, 255, 255, 0.85);
+  --de-muted-soft: rgba(255, 255, 255, 0.72);
+  --de-accent: #ec4899;
+  --de-accent-2: #d946ef;
+}
+
+/* Readable long-form marketing copy on dark pages */
+.de-prose-dark {
+  color: var(--de-muted);
+}
+
+.de-prose-dark p,
+.de-prose-dark li {
+  color: var(--de-muted);
+  line-height: 1.75;
+}
+
+.de-prose-dark h1,
+.de-prose-dark h2,
+.de-prose-dark h3,
+.de-prose-dark h4 {
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.de-prose-dark strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.de-prose-dark a:not([class]) {
+  color: #f9a8d4;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.de-prose-dark a:not([class]):hover {
+  color: #fce7f3;
+}
+
+.de-prose-light p,
+.de-prose-light li {
+  color: #374151;
+  line-height: 1.75;
+}
+
+.de-prose-light h1,
+.de-prose-light h2,
+.de-prose-light h3,
+.de-prose-light h4 {
+  color: #111827;
+  letter-spacing: -0.02em;
+}
+
 /* Improved focus indicators for keyboard navigation */
 :focus-visible {
-  outline: 2px solid rgb(139, 92, 246);
+  outline: 2px solid rgb(236, 72, 153);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -119,7 +179,7 @@ a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid rgb(139, 92, 246);
+  outline: 2px solid rgb(236, 72, 153);
   outline-offset: 2px;
 }
 
@@ -1025,4 +1085,24 @@ button, [role="button"], a {
   --c1: #005BA6;
   --c2: #EF5026;
   --c3: #F7B751;
+}
+
+/* Blog read-aloud word highlight */
+.blog-word {
+  transition: background 120ms ease, box-shadow 120ms ease, color 120ms ease;
+}
+.blog-word--active {
+  background: linear-gradient(180deg, rgba(168, 85, 247, 0.45), rgba(217, 70, 239, 0.45));
+  color: #fff !important;
+  border-radius: 4px;
+  padding: 0 3px;
+  margin: 0 -3px;
+  box-shadow: 0 0 18px rgba(217, 70, 239, 0.45);
+  -webkit-text-fill-color: #fff;
+}
+@media (prefers-reduced-motion: reduce) {
+  .blog-word,
+  .blog-word--active {
+    transition: none;
+  }
 }

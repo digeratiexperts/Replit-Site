@@ -62,7 +62,7 @@ const Checkout = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useSEO({
-    title: "Checkout | Digerati Store",
+    title: "Checkout | Digerati Experts Store",
     description: "Complete your purchase of IT services and solutions from Digerati Experts.",
     canonical: "/store/checkout",
   });

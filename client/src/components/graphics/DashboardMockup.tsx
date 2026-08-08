@@ -1,179 +1,183 @@
-import { motion } from "framer-motion";
-import { Shield, AlertTriangle, CheckCircle, TrendingUp, Lock, Eye, Activity } from "lucide-react";
+import { useReducedMotion, motion } from "framer-motion";
+import { Shield, CheckCircle, Lock, FileCheck, Server, Mail, Activity } from "lucide-react";
 
+/**
+ * Illustrative product preview — not live customer data.
+ * Visual depth inspired by production mockup; content stays honest (no invented metrics).
+ */
 export const DashboardMockup = ({ className = "" }: { className?: string }) => {
-  const threatData = [
-    { level: 85, color: "#22c55e" },
-    { level: 60, color: "#eab308" },
-    { level: 92, color: "#22c55e" },
-    { level: 78, color: "#22c55e" },
-    { level: 45, color: "#ef4444" },
-    { level: 88, color: "#22c55e" },
+  const prefersReducedMotion = useReducedMotion();
+
+  const reviewAreas = [
+    { icon: Lock, label: "Identity & access", tone: "from-violet-500/25 to-purple-600/20" },
+    { icon: Server, label: "Endpoints & devices", tone: "from-indigo-500/25 to-violet-600/20" },
+    { icon: Mail, label: "Email security", tone: "from-fuchsia-500/20 to-violet-600/20" },
+    { icon: FileCheck, label: "Backups & recovery", tone: "from-emerald-500/20 to-teal-600/15" },
+  ];
+
+  const postureBars = [
+    { label: "Identity", level: 78, color: "#8b5cf6" },
+    { label: "Endpoints", level: 84, color: "#a78bfa" },
+    { label: "Email", level: 72, color: "#c084fc" },
+    { label: "Backups", level: 88, color: "#34d399" },
+    { label: "Controls", level: 70, color: "#818cf8" },
+    { label: "Overall", level: 80, color: "#8b5cf6" },
   ];
 
   return (
     <motion.div
       className={`relative ${className}`}
-      initial={{ opacity: 0, y: 50, rotateX: 10, rotateY: -10 }}
-      animate={{ opacity: 1, y: 0, rotateX: 0, rotateY: 0 }}
-      transition={{ duration: 1, ease: "easeOut" }}
-      style={{ perspective: "1000px" }}
+      initial={prefersReducedMotion ? false : { opacity: 0, y: 28 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: prefersReducedMotion ? 0 : 0.55, ease: "easeOut" }}
+      aria-label="Illustrative sample of a Digerati Experts Cyber Risk Assessment report preview"
     >
-      {/* Main dashboard container with glassmorphism */}
-      <div 
-        className="relative rounded-2xl overflow-hidden shadow-2xl"
+      <div
+        className="relative rounded-2xl overflow-hidden border border-white/12"
         style={{
-          background: "linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%)",
-          backdropFilter: "blur(20px)",
-          border: "1px solid rgba(255, 255, 255, 0.1)",
-          transform: "perspective(1000px) rotateX(2deg) rotateY(-2deg)",
+          background:
+            "linear-gradient(145deg, rgba(12, 10, 22, 0.98) 0%, rgba(18, 12, 36, 0.96) 55%, rgba(10, 8, 20, 0.98) 100%)",
+          boxShadow: "0 24px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.06)",
         }}
       >
-        {/* Browser chrome */}
-        <div className="flex items-center gap-2 px-4 py-3 border-b border-white/10 bg-black/20">
-          <div className="flex gap-1.5">
-            <div className="w-3 h-3 rounded-full bg-red-500" />
-            <div className="w-3 h-3 rounded-full bg-yellow-500" />
-            <div className="w-3 h-3 rounded-full bg-green-500" />
+        <div className="flex items-center gap-2 px-4 py-3 border-b border-white/10 bg-black/35">
+          <div className="flex gap-1.5" aria-hidden="true">
+            <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]/90" />
+            <div className="w-2.5 h-2.5 rounded-full bg-[#febc2e]/90" />
+            <div className="w-2.5 h-2.5 rounded-full bg-[#28c840]/90" />
           </div>
           <div className="flex-1 flex justify-center">
-            <div className="px-4 py-1 bg-white/5 rounded-md text-xs text-gray-400 flex items-center gap-2">
-              <Lock className="w-3 h-3 text-green-400" />
-              security.digeratiexperts.com
+            <div className="px-3 py-1 bg-white/5 rounded-md text-[11px] text-white/55 flex items-center gap-2 border border-white/5">
+              <Shield className="w-3 h-3 text-violet-400" aria-hidden="true" />
+              Sample Cyber Risk Assessment
             </div>
           </div>
         </div>
 
-        {/* Dashboard content */}
-        <div className="p-6 space-y-5">
-          {/* Header row */}
-          <div className="flex items-center justify-between">
+        <div className="p-5 sm:p-6 space-y-5">
+          <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-3">
-              <motion.div 
-                className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center"
-                animate={{ boxShadow: ["0 0 20px rgba(139, 92, 246, 0.3)", "0 0 30px rgba(139, 92, 246, 0.6)", "0 0 20px rgba(139, 92, 246, 0.3)"] }}
-                transition={{ duration: 2, repeat: Infinity }}
+              <motion.div
+                className="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-500 via-pink-500 to-violet-600 flex items-center justify-center border border-pink-300/25"
+                aria-hidden="true"
+                animate={
+                  prefersReducedMotion
+                    ? undefined
+                    : {
+                        boxShadow: [
+                          "0 0 16px rgba(236, 72, 153, 0.28)",
+                          "0 0 28px rgba(236, 72, 153, 0.48)",
+                          "0 0 16px rgba(236, 72, 153, 0.28)",
+                        ],
+                      }
+                }
+                transition={
+                  prefersReducedMotion
+                    ? undefined
+                    : { duration: 2.4, repeat: Infinity, ease: "easeInOut" }
+                }
               >
                 <Shield className="w-5 h-5 text-white" />
               </motion.div>
               <div>
-                <div className="text-white font-semibold text-sm">Security Dashboard</div>
-                <div className="text-gray-400 text-xs">Real-time threat monitoring</div>
+                <div className="text-white font-semibold text-sm">Cyber Risk Assessment</div>
+                <div className="text-white/45 text-xs">Illustrative preview · not live customer data</div>
               </div>
             </div>
-            <motion.div 
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/20 border border-green-500/30"
-              animate={{ opacity: [0.7, 1, 0.7] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              <div className="w-2 h-2 rounded-full bg-green-400" />
-              <span className="text-green-400 text-xs font-medium">Protected</span>
-            </motion.div>
+            <span className="shrink-0 text-[10px] uppercase tracking-wider font-semibold text-pink-100/95 bg-pink-500/20 border border-pink-400/35 px-2.5 py-1 rounded-md">
+              Sample
+            </span>
           </div>
 
-          {/* Stats row */}
-          <div className="grid grid-cols-3 gap-3">
-            {[
-              { icon: CheckCircle, label: "Threats Blocked", value: "2,847", color: "from-green-500 to-emerald-600", trend: "+12%" },
-              { icon: Eye, label: "Endpoints Monitored", value: "156", color: "from-violet-500 to-purple-600", trend: "Active" },
-              { icon: AlertTriangle, label: "Risk Score", value: "Low", color: "from-purple-500 to-violet-600", trend: "Optimal" },
-            ].map((stat, index) => (
+          <p className="text-sm text-white leading-relaxed">
+            A practical review of posture across identity, endpoints, email, backups, and
+            controls—sized to your Arizona business.
+          </p>
+
+          <div className="grid grid-cols-2 gap-2.5">
+            {reviewAreas.map((area, index) => (
               <motion.div
-                key={stat.label}
-                className="p-3 rounded-xl bg-white/5 border border-white/10"
-                initial={{ opacity: 0, y: 20 }}
+                key={area.label}
+                className="flex items-center gap-2.5 p-3 rounded-xl bg-white/[0.035] border border-white/10"
+                initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 + index * 0.1, duration: 0.5 }}
+                transition={{
+                  duration: prefersReducedMotion ? 0 : 0.35,
+                  delay: prefersReducedMotion ? 0 : 0.15 + index * 0.06,
+                }}
               >
-                <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center mb-2`}>
-                  <stat.icon className="w-4 h-4 text-white" />
+                <div
+                  className={`w-8 h-8 rounded-lg bg-gradient-to-br ${area.tone} border border-white/10 flex items-center justify-center shrink-0`}
+                >
+                  <area.icon className="w-4 h-4 text-white" aria-hidden="true" />
                 </div>
-                <div className="text-white font-bold text-lg">{stat.value}</div>
-                <div className="text-gray-400 text-xs">{stat.label}</div>
-                <div className="text-green-400 text-xs mt-1 flex items-center gap-1">
-                  <TrendingUp className="w-3 h-3" />
-                  {stat.trend}
-                </div>
+                <span className="text-xs sm:text-sm text-white font-medium">{area.label}</span>
               </motion.div>
             ))}
           </div>
 
-          {/* Activity chart */}
           <motion.div
-            className="p-4 rounded-xl bg-white/5 border border-white/10"
-            initial={{ opacity: 0 }}
+            className="p-4 rounded-xl bg-white/[0.03] border border-white/10"
+            initial={prefersReducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.4, delay: prefersReducedMotion ? 0 : 0.35 }}
           >
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <Activity className="w-4 h-4 text-purple-400" />
-                <span className="text-white text-sm font-medium">Security Health</span>
+                <Activity className="w-4 h-4 text-violet-400" aria-hidden="true" />
+                <span className="text-white text-sm font-medium">Sample posture areas</span>
               </div>
-              <span className="text-xs text-gray-400">Last 7 days</span>
+              <span className="text-[10px] uppercase tracking-wider text-white/40">Illustrative</span>
             </div>
-            <div className="flex items-end gap-2 h-20">
-              {threatData.map((bar, index) => (
+            <div className="flex items-end gap-2 h-[72px]" aria-hidden="true">
+              {postureBars.map((bar, index) => (
                 <motion.div
-                  key={index}
-                  className="flex-1 rounded-t-md"
+                  key={bar.label}
+                  className="flex-1 rounded-t-md opacity-90"
                   style={{ backgroundColor: bar.color }}
-                  initial={{ height: 0 }}
+                  initial={prefersReducedMotion ? false : { height: 0 }}
                   animate={{ height: `${bar.level}%` }}
-                  transition={{ delay: 0.8 + index * 0.1, duration: 0.5, ease: "backOut" }}
+                  transition={{
+                    duration: prefersReducedMotion ? 0 : 0.45,
+                    delay: prefersReducedMotion ? 0 : 0.45 + index * 0.05,
+                    ease: "easeOut",
+                  }}
+                  title={bar.label}
                 />
               ))}
             </div>
             <div className="flex justify-between mt-2">
-              {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-                <span key={day} className="text-xs text-gray-500">{day}</span>
+              {postureBars.map((bar) => (
+                <span key={bar.label} className="text-[9px] text-white/35 truncate max-w-[14%]">
+                  {bar.label}
+                </span>
               ))}
             </div>
           </motion.div>
 
-          {/* Recent alerts */}
-          <motion.div
-            className="space-y-2"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 0.5 }}
-          >
+          <div className="space-y-2">
             {[
-              { text: "Malware attempt blocked from 192.168.1.45", time: "2 min ago", type: "blocked" },
-              { text: "Suspicious login attempt detected", time: "15 min ago", type: "warning" },
-              { text: "Security patch applied successfully", time: "1 hour ago", type: "success" },
-            ].map((alert, index) => (
+              "Prioritized findings with clear business impact",
+              "Recommendations matched to your size and risk",
+              "No obligation follow-up within one business day",
+            ].map((line, index) => (
               <motion.div
-                key={index}
-                className="flex items-center gap-3 p-2.5 rounded-lg bg-white/5 border border-white/5"
-                initial={{ opacity: 0, x: -20 }}
+                key={line}
+                className="flex items-start gap-2.5 text-sm text-white/68"
+                initial={prefersReducedMotion ? false : { opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 1.2 + index * 0.1, duration: 0.3 }}
+                transition={{
+                  duration: prefersReducedMotion ? 0 : 0.3,
+                  delay: prefersReducedMotion ? 0 : 0.55 + index * 0.06,
+                }}
               >
-                <div className={`w-2 h-2 rounded-full ${
-                  alert.type === "blocked" ? "bg-red-500" : 
-                  alert.type === "warning" ? "bg-yellow-500" : "bg-green-500"
-                }`} />
-                <div className="flex-1 text-xs text-gray-300">{alert.text}</div>
-                <div className="text-xs text-gray-500">{alert.time}</div>
+                <CheckCircle className="w-4 h-4 text-emerald-400/95 mt-0.5 shrink-0" aria-hidden="true" />
+                <span>{line}</span>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
-
-      {/* Floating glow effect behind */}
-      <motion.div
-        className="absolute -inset-4 -z-10 rounded-3xl opacity-50"
-        style={{
-          background: "radial-gradient(ellipse at center, rgba(139, 92, 246, 0.3) 0%, transparent 70%)",
-        }}
-        animate={{
-          scale: [1, 1.05, 1],
-          opacity: [0.3, 0.5, 0.3],
-        }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-      />
     </motion.div>
   );
 };

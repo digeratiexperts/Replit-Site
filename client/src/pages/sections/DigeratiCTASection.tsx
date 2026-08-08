@@ -1,6 +1,6 @@
 import { Shield, Award, CheckCircle, Star } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
-import ctaBgImage from "@assets/lucid-origin_a_cinematic_photo_of_ultra_wide_abstract_backgrou_1775876876672.jpg";
+import ctaBgImage from "@assets/de-section-atmosphere.png";
 
 
 const badges = [

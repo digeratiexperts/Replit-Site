@@ -317,7 +317,7 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
         </div>
 
         <motion.div 
-          className="text-center"
+          className="text-center flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-30px" }}
@@ -329,6 +329,14 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
             data-testid="view-all-updates"
           >
             View All Security Updates
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+          <Link 
+            href="/resources/blog"
+            className="px-6 md:px-8 py-2.5 md:py-3 border border-fuchsia-400/40 bg-white/[0.04] text-white rounded-lg hover:bg-fuchsia-500/15 hover:border-fuchsia-300/60 transition-all duration-300 font-semibold inline-flex items-center gap-2 text-sm md:text-base"
+            data-testid="view-digerati-journal"
+          >
+            Read the Digerati Journal
             <ArrowRight className="h-4 w-4" />
           </Link>
         </motion.div>

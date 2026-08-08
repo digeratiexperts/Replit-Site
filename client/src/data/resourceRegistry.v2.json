@@ -1,0 +1,331 @@
+{
+  "version": "2.0",
+  "brand": "Digerati Experts",
+  "created": "2026-05-13",
+  "note": "Expanded content pack. Includes v1 assets plus remaining datasheets/reports requested by the Replit audit. These are draft public resources with no fake customer stories. Blog library finalized to the 16 approved strategic articles (2026-05-13).",
+  "resources": [
+    {
+      "type": "report",
+      "title": "Digerati Experts Cyber Risk Assessment Sample Report",
+      "slug": "cyber-risk-assessment-sample",
+      "file": "/assets/resources/reports/cyber-risk-assessment-sample.pdf",
+      "cover": "/assets/covers/digerati-experts-cyber-risk-assessment-sample-report.png",
+      "route": "/resources/reports/cyber-risk-assessment-sample",
+      "cta": "View Sample",
+      "status": "ready-draft"
+    },
+    {
+      "type": "checklist",
+      "title": "Small Business Cybersecurity Readiness Checklist",
+      "slug": "security-readiness-checklist",
+      "file": "/assets/resources/checklists/security-readiness-checklist.pdf",
+      "cover": "/assets/covers/small-business-cybersecurity-readiness-checklist.png",
+      "route": "/resources/checklists/security-readiness-checklist",
+      "cta": "Download PDF",
+      "status": "ready-draft"
+    },
+    {
+      "type": "checklist",
+      "title": "Backup & Business Continuity Checklist",
+      "slug": "backup-bcdr-checklist",
+      "file": "/assets/resources/checklists/backup-bcdr-checklist.pdf",
+      "cover": "/assets/covers/backup-business-continuity-checklist.png",
+      "route": "/resources/checklists/backup-bcdr-checklist",
+      "cta": "Download PDF",
+      "status": "ready-draft"
+    },
+    {
+      "type": "datasheet",
+      "title": "ProActive IT & Security Ecosystem Overview",
+      "slug": "proactive-ecosystem-overview",
+      "file": "/assets/resources/datasheets/proactive-ecosystem-overview.pdf",
+      "cover": "/assets/covers/proactive-it-security-ecosystem-overview.png",
+      "route": "/resources/datasheets/proactive-ecosystem-overview",
+      "cta": "Download PDF",
+      "status": "ready-draft"
+    },
+    {
+      "type": "datasheet",
+      "title": "Managed Workplace Overview",
+      "slug": "managed-workplace-overview",
+      "file": "/assets/resources/datasheets/managed-workplace-overview.pdf",
+      "cover": "/assets/covers/managed-workplace-overview.png",
+      "route": "/resources/datasheets/managed-workplace-overview",
+      "cta": "Download PDF",
+      "status": "ready-draft"
+    },
+    {
+      "type": "datasheet",
+      "title": "ProActive IT Ecosystem Datasheet",
+      "slug": "proactive-it-ecosystem-datasheet",
+      "file": "/assets/resources/datasheets/proactive-it-ecosystem-datasheet.pdf",
+      "cover": "/assets/covers/proactive-it-ecosystem-datasheet.png",
+      "route": "/resources/datasheets/proactive-it-ecosystem-datasheet",
+      "cta": "Download PDF",
+      "status": "ready-draft"
+    },
+    {
+      "type": "datasheet",
+      "title": "ProActive Office Ecosystem Datasheet",
+      "slug": "proactive-office-ecosystem-datasheet",
+      "file": "/assets/resources/datasheets/proactive-office-ecosystem-datasheet.pdf",
+      "cover": "/assets/covers/proactive-office-ecosystem-datasheet.png",
+      "route": "/resources/datasheets/proactive-office-ecosystem-datasheet",
+      "cta": "Download PDF",
+      "status": "ready-draft"
+    },
+    {
+      "type": "datasheet",
+      "title": "ProActive Business Ecosystem Datasheet",
+      "slug": "proactive-business-ecosystem-datasheet",
+      "file": "/assets/resources/datasheets/proactive-business-ecosystem-datasheet.pdf",
+      "cover": "/assets/covers/proactive-business-ecosystem-datasheet.png",
+      "route": "/resources/datasheets/proactive-business-ecosystem-datasheet",
+      "cta": "Download PDF",
+      "status": "ready-draft"
+    },
+    {
+      "type": "datasheet",
+      "title": "ProActive Enterprise Ecosystem Datasheet",
+      "slug": "proactive-enterprise-ecosystem-datasheet",
+      "file": "/assets/resources/datasheets/proactive-enterprise-ecosystem-datasheet.pdf",
+      "cover": "/assets/covers/proactive-enterprise-ecosystem-datasheet.png",
+      "route": "/resources/datasheets/proactive-enterprise-ecosystem-datasheet",
+      "cta": "Download PDF",
+      "status": "ready-draft"
+    },
+    {
+      "type": "datasheet",
+      "title": "Co-Managed IT Datasheet",
+      "slug": "co-managed-it-datasheet",
+      "file": "/assets/resources/datasheets/co-managed-it-datasheet.pdf",
+      "cover": "/assets/covers/co-managed-it-datasheet.png",
+      "route": "/resources/datasheets/co-managed-it-datasheet",
+      "cta": "Download PDF",
+      "status": "ready-draft"
+    },
+    {
+      "type": "datasheet",
+      "title": "UCaaS / Voice & Meetings Datasheet",
+      "slug": "ucaas-voice-meetings-datasheet",
+      "file": "/assets/resources/datasheets/ucaas-voice-meetings-datasheet.pdf",
+      "cover": "/assets/covers/ucaas-voice-meetings-datasheet.png",
+      "route": "/resources/datasheets/ucaas-voice-meetings-datasheet",
+      "cta": "Download PDF",
+      "status": "ready-draft"
+    },
+    {
+      "type": "report",
+      "title": "Compliance & Risk Reports Overview",
+      "slug": "compliance-risk-reports-overview",
+      "file": "/assets/resources/reports/compliance-risk-reports-overview.pdf",
+      "cover": "/assets/covers/compliance-risk-reports-overview.png",
+      "route": "/resources/reports/compliance-risk-reports-overview",
+      "cta": "Download PDF",
+      "status": "ready-draft"
+    },
+    {
+      "type": "report",
+      "title": "Sample Quarterly Business Review (QBR)",
+      "slug": "sample-quarterly-business-review",
+      "file": "/assets/resources/reports/sample-quarterly-business-review.pdf",
+      "cover": "/assets/covers/sample-quarterly-business-review.png",
+      "route": "/resources/reports/sample-quarterly-business-review",
+      "cta": "Download PDF",
+      "status": "ready-draft"
+    }
+  ],
+  "blogs": [
+    {
+      "title": "What a Cyber Risk Assessment Finds Before Attackers Do",
+      "slug": "what-a-cyber-risk-assessment-finds-before-attackers-do",
+      "excerpt": "Most businesses do not discover their cybersecurity gaps during a planning meeting. They discover them during an outage, a phishing incident, a ransomware event, a failed cyber insurance review, or a stressful vendor questionnaire.",
+      "author": "Digerati Experts",
+      "date": "2026-05-13",
+      "coverImage": "/assets/covers/blog/what-a-cyber-risk-assessment-finds-before-attackers-do.png",
+      "category": "Compliance & Risk",
+      "seoTitle": "What a Cyber Risk Assessment Finds Before Attackers Do | Digerati Experts",
+      "seoDescription": "Learn how a cyber risk assessment helps Arizona businesses uncover identity, email, endpoint, network, backup, and compliance gaps before attackers exploit them."
+    },
+    {
+      "title": "How Arizona Businesses Should Build a Multilayer Ransomware Defense",
+      "slug": "multilayer-ransomware-defense-arizona-businesses",
+      "excerpt": "Ransomware is not just a malware problem. It is an identity problem, an email problem, a device problem, a network problem, a backup problem, and a response problem.",
+      "author": "Digerati Experts",
+      "date": "2026-05-12",
+      "coverImage": "/assets/covers/blog/multilayer-ransomware-defense-arizona-businesses.png",
+      "category": "Cybersecurity",
+      "seoTitle": "Multilayer Ransomware Defense for Arizona Businesses | Digerati Experts",
+      "seoDescription": "Ransomware defense requires more than antivirus. Learn how Arizona businesses can reduce risk with layered identity, email, endpoint, network, backup, monitoring, and response controls."
+    },
+    {
+      "title": "Can Ransomware Encrypt Your Backups?",
+      "slug": "can-ransomware-encrypt-your-backups",
+      "excerpt": "Yes, ransomware can affect backups if they are reachable, poorly protected, improperly configured, or never tested.",
+      "author": "Digerati Experts",
+      "date": "2026-05-11",
+      "coverImage": "/assets/covers/blog/can-ransomware-encrypt-your-backups.png",
+      "category": "Cybersecurity",
+      "seoTitle": "Can Ransomware Encrypt Your Backups? | Digerati Experts",
+      "seoDescription": "Backups are only useful if they can survive ransomware and restore the business. Learn what Arizona businesses should check before relying on backup alone."
+    },
+    {
+      "title": "What to Do in the First 24 Hours After a Ransomware Attack",
+      "slug": "first-24-hours-after-ransomware-attack",
+      "excerpt": "The first 24 hours after a ransomware attack are not the time to invent your response plan.",
+      "author": "Digerati Experts",
+      "date": "2026-05-10",
+      "coverImage": "/assets/covers/blog/first-24-hours-after-ransomware-attack.png",
+      "category": "Cybersecurity",
+      "seoTitle": "What to Do in the First 24 Hours After a Ransomware Attack | Digerati Experts",
+      "seoDescription": "Learn the first steps Arizona businesses should take after a suspected ransomware attack, from containment and communication to recovery planning."
+    },
+    {
+      "title": "Why MFA Alone Does Not Stop Ransomware",
+      "slug": "why-mfa-alone-does-not-stop-ransomware",
+      "excerpt": "Multi-factor authentication is one of the most important security controls a business can enable. But MFA alone does not stop ransomware.",
+      "author": "Digerati Experts",
+      "date": "2026-05-09",
+      "coverImage": "/assets/covers/blog/why-mfa-alone-does-not-stop-ransomware.png",
+      "category": "Cybersecurity",
+      "seoTitle": "Why MFA Alone Does Not Stop Ransomware | Digerati Experts",
+      "seoDescription": "Multi-factor authentication is important, but it is not a complete ransomware defense. Learn how identity, device trust, access control, and monitoring work together."
+    },
+    {
+      "title": "Email Security 101: Why Phishing Protection Requires More Than Spam Filtering",
+      "slug": "email-security-more-than-spam-filtering",
+      "excerpt": "Spam filtering is not the same thing as email security.",
+      "author": "Digerati Experts",
+      "date": "2026-05-08",
+      "coverImage": "/assets/covers/blog/email-security-more-than-spam-filtering.png",
+      "category": "Cybersecurity",
+      "seoTitle": "Email Security Requires More Than Spam Filtering | Digerati Experts",
+      "seoDescription": "Email security protects against phishing, spoofing, impersonation, credential theft, and malware. Learn why spam filtering alone is not enough for Arizona businesses."
+    },
+    {
+      "title": "The Arizona SMB Cybersecurity Checklist: What Actually Matters Before You Buy More Tools",
+      "slug": "arizona-smb-cybersecurity-checklist",
+      "excerpt": "A cybersecurity checklist is only useful if it helps the business prioritize.",
+      "author": "Digerati Experts",
+      "date": "2026-05-07",
+      "coverImage": "/assets/covers/blog/arizona-smb-cybersecurity-checklist.png",
+      "category": "Cybersecurity",
+      "seoTitle": "Arizona SMB Cybersecurity Checklist | Digerati Experts",
+      "seoDescription": "A practical cybersecurity checklist for Arizona small and midsize businesses focused on identity, devices, email, backups, monitoring, response, and risk prioritization."
+    },
+    {
+      "title": "Cyber Insurance Requirements Small Businesses Should Prepare For",
+      "slug": "cyber-insurance-requirements-small-businesses",
+      "excerpt": "Cyber insurance is not a substitute for cybersecurity.",
+      "author": "Digerati Experts",
+      "date": "2026-05-06",
+      "coverImage": "/assets/covers/blog/cyber-insurance-requirements-small-businesses.png",
+      "category": "Compliance & Risk",
+      "seoTitle": "Cyber Insurance Requirements for Small Businesses | Digerati Experts",
+      "seoDescription": "Cyber insurance applications increasingly ask about MFA, endpoint protection, backups, training, incident response, and controls. Learn how to prepare before renewal."
+    },
+    {
+      "title": "Managed IT Pricing in Phoenix and Chandler: What Arizona Businesses Should Expect",
+      "slug": "managed-it-pricing-phoenix-chandler",
+      "excerpt": "Managed IT pricing is not just a per-user number.",
+      "author": "Digerati Experts",
+      "date": "2026-05-05",
+      "coverImage": "/assets/covers/blog/managed-it-pricing-phoenix-chandler.png",
+      "category": "Managed IT",
+      "seoTitle": "Managed IT Pricing in Phoenix and Chandler | Digerati Experts",
+      "seoDescription": "Learn what affects managed IT pricing for Arizona businesses, including users, endpoints, locations, support needs, cybersecurity, backups, compliance, and onboarding."
+    },
+    {
+      "title": "Managed IT vs Break-Fix IT: Why Reactive Support Gets Expensive",
+      "slug": "managed-it-vs-break-fix-it",
+      "excerpt": "Break-fix IT waits until something fails.",
+      "author": "Digerati Experts",
+      "date": "2026-05-04",
+      "coverImage": "/assets/covers/blog/managed-it-vs-break-fix-it.png",
+      "category": "Managed IT",
+      "seoTitle": "Managed IT vs Break-Fix IT | Digerati Experts",
+      "seoDescription": "Break-fix IT waits for problems. Managed IT reduces recurring issues, improves security, and builds a more stable business technology foundation."
+    },
+    {
+      "title": "Co-Managed IT vs Hiring Another IT Employee",
+      "slug": "co-managed-it-vs-hiring-another-it-employee",
+      "excerpt": "When an internal IT team is overloaded, leadership often sees two options: hire another employee or outsource everything.",
+      "author": "Digerati Experts",
+      "date": "2026-05-03",
+      "coverImage": "/assets/covers/blog/co-managed-it-vs-hiring-another-it-employee.png",
+      "category": "Managed IT",
+      "seoTitle": "Co-Managed IT vs Hiring Another IT Employee | Digerati Experts",
+      "seoDescription": "Learn when co-managed IT makes more sense than hiring another internal IT employee, and how Arizona businesses can add security, coverage, and expertise without replacing their team."
+    },
+    {
+      "title": "Standalone IT Services vs Full Managed IT Ownership",
+      "slug": "standalone-it-services-vs-full-managed-it-ownership",
+      "excerpt": "Not every business needs the same IT relationship.",
+      "author": "Digerati Experts",
+      "date": "2026-05-02",
+      "coverImage": "/assets/covers/blog/standalone-it-services-vs-full-managed-it-ownership.png",
+      "category": "Managed IT",
+      "seoTitle": "Standalone IT Services vs Full Managed IT Ownership | Digerati Experts",
+      "seoDescription": "Learn the difference between targeted standalone IT/security services, broader ProActive Ecosystem managed IT ownership, and Co-Managed IT support."
+    },
+    {
+      "title": "The Questions Every Business Should Ask Before Switching IT Providers",
+      "slug": "questions-before-switching-it-providers",
+      "excerpt": "Switching IT providers can fix problems, but it can also expose hidden risk.",
+      "author": "Digerati Experts",
+      "date": "2026-05-01",
+      "coverImage": "/assets/covers/blog/questions-before-switching-it-providers.png",
+      "category": "Managed IT",
+      "seoTitle": "Questions to Ask Before Switching IT Providers | Digerati Experts",
+      "seoDescription": "Before switching IT providers, Arizona businesses should review admin access, documentation, backups, contracts, security tools, licensing, and transition risk."
+    },
+    {
+      "title": "Shadow AI Is the New Shadow IT",
+      "slug": "shadow-ai-is-the-new-shadow-it",
+      "excerpt": "Shadow AI happens when employees use AI tools without approval, policy, or visibility.",
+      "author": "Digerati Experts",
+      "date": "2026-04-30",
+      "coverImage": "/assets/covers/blog/shadow-ai-is-the-new-shadow-it.png",
+      "category": "AI & Business Security",
+      "seoTitle": "Shadow AI Is the New Shadow IT | Digerati Experts",
+      "seoDescription": "Employees are already using AI tools. Learn how Arizona businesses can manage Shadow AI without killing productivity or exposing company data."
+    },
+    {
+      "title": "ChatGPT, Copilot, Gemini, and Claude for Business: How to Use AI Without Leaking Company Data",
+      "slug": "chatgpt-copilot-gemini-claude-business-data-security",
+      "excerpt": "AI tools can improve productivity, but they need rules.",
+      "author": "Digerati Experts",
+      "date": "2026-04-29",
+      "coverImage": "/assets/covers/blog/chatgpt-copilot-gemini-claude-business-data-security.png",
+      "category": "AI & Business Security",
+      "seoTitle": "ChatGPT, Copilot, Gemini, and Claude for Business Data Security | Digerati Experts",
+      "seoDescription": "Learn how businesses can use AI tools like ChatGPT, Copilot, Gemini, and Claude more safely with policies, approved use cases, data rules, and human review."
+    },
+    {
+      "title": "HIPAA, CMMC, NIST, and Cyber Insurance: Why Compliance Starts With Managed IT Discipline",
+      "slug": "hipaa-cmmc-nist-cyber-insurance-managed-it-discipline",
+      "excerpt": "Compliance does not start with paperwork. It starts with operational discipline.",
+      "author": "Digerati Experts",
+      "date": "2026-04-28",
+      "coverImage": "/assets/covers/blog/hipaa-cmmc-nist-cyber-insurance-managed-it-discipline.png",
+      "category": "Compliance & Risk",
+      "seoTitle": "HIPAA, CMMC, NIST, and Cyber Insurance Managed IT Discipline | Digerati Experts",
+      "seoDescription": "Compliance readiness starts with managed IT discipline: identity, endpoint security, backups, documentation, access control, monitoring, and evidence."
+    }
+  ],
+  "pending": {
+    "caseStudies": "Do not publish until real client permission, logos/images, approved scope, and measurable outcomes are approved. No fake client stories.",
+    "optionalFutureAssets": [
+      "HIPAA/compliance checklist",
+      "Onboarding/offboarding checklist",
+      "Additional blog posts",
+      "Approved customer case studies",
+      "Framework-specific compliance samples"
+    ]
+  },
+  "fallbackCtas": {
+    "missingDownload": "/assessment",
+    "missingCaseStudy": "/case-studies",
+    "missingResource": "/contact"
+  }
+}

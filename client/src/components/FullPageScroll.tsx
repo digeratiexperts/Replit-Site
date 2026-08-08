@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef, useCallback, createContext, useContext } from 'react';
-import { ChevronDown, Lock, Unlock, ArrowRight, Shield, Phone } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Shield, Phone } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface ScrollSection {
   id: string;
   label: string;
   theme?: 'dark' | 'light';
+  /** When false, section is tracked for scroll/theme but hidden from the sticky bar. */
+  showInNav?: boolean;
 }
 
 interface FullPageScrollContextType {
@@ -28,6 +30,12 @@ export const useFullPageScroll = () => {
   return context;
 };
 
+/** Safe for MegaMenu / chrome that also render outside the homepage provider. */
+export const useOptionalFullPageScroll = () => useContext(FullPageScrollContext);
+
+/** Viewport Y under the fixed header — logo/nav theme must follow this band, not center. */
+const HEADER_THEME_PROBE_Y = 72;
+
 interface FullPageScrollProviderProps {
   children: React.ReactNode;
   sections: ScrollSection[];
@@ -41,6 +49,9 @@ export function FullPageScrollProvider({
 }: FullPageScrollProviderProps) {
   const [currentSection, setCurrentSection] = useState(0);
   const [sectionProgress, setSectionProgress] = useState(0);
+  const [headerTheme, setHeaderTheme] = useState<'dark' | 'light'>(
+    () => sections[0]?.theme || 'dark'
+  );
   const [isSnapEnabled, setIsSnapEnabled] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -81,7 +92,7 @@ export function FullPageScrollProvider({
     setIsSnapEnabled(prev => !prev);
   }, []);
 
-  // Center-based section tracking for reliable theme switching
+  // Center index for keyboard/progress; header-band theme for nav/logo chrome
   useEffect(() => {
     const findCenterSection = () => {
       if (isScrollingRef.current) return;
@@ -116,17 +127,34 @@ export function FullPageScrollProvider({
         setCurrentSection(closestSection);
       }
     };
+
+    const findHeaderTheme = () => {
+      let matched: 'dark' | 'light' | null = null;
+      for (const section of sections) {
+        const element = document.getElementById(section.id);
+        if (!element) continue;
+        const rect = element.getBoundingClientRect();
+        if (rect.top <= HEADER_THEME_PROBE_Y && rect.bottom > HEADER_THEME_PROBE_Y) {
+          matched = section.theme || 'dark';
+          break;
+        }
+      }
+      const nextTheme = matched ?? sections[currentSection]?.theme ?? 'dark';
+      setHeaderTheme((prev) => (prev === nextTheme ? prev : nextTheme));
+    };
     
-    // Use requestAnimationFrame for smooth updates
     let rafId: number;
     const handleScroll = () => {
       cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(findCenterSection);
+      rafId = requestAnimationFrame(() => {
+        findCenterSection();
+        findHeaderTheme();
+      });
     };
     
     window.addEventListener('scroll', handleScroll, { passive: true });
-    // Initial check
     findCenterSection();
+    findHeaderTheme();
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -248,77 +276,85 @@ export function FullPageScrollProvider({
       scrollToSection,
       isSnapEnabled: effectiveSnapEnabled,
       toggleSnap,
-      currentTheme: sections[currentSection]?.theme || 'dark',
+      currentTheme: headerTheme,
       sectionProgress
     }}>
       <div 
         ref={containerRef}
         className="scroll-smooth"
+        data-header-theme={headerTheme}
       >
         {children}
       </div>
       
-      <NavigationDots 
-        sections={sections} 
-        currentSection={currentSection} 
-        onNavigate={scrollToSection}
-        isSnapEnabled={effectiveSnapEnabled}
-        onToggleSnap={toggleSnap}
-        sectionProgress={sectionProgress}
-      />
-      
-      <ScrollDownIndicator 
-        currentSection={currentSection}
-        totalSections={sections.length}
-        onScrollDown={() => scrollToSection(currentSection + 1)}
-        isVisible={effectiveSnapEnabled && currentSection < sections.length - 1}
-      />
-      
+      {!isMobile && (
+        <SectionNavBar
+          sections={sections}
+          currentSection={currentSection}
+          onNavigate={scrollToSection}
+        />
+      )}
     </FullPageScrollContext.Provider>
   );
 }
 
-interface NavigationDotsProps {
+interface SectionNavBarProps {
   sections: ScrollSection[];
   currentSection: number;
   onNavigate: (index: number) => void;
-  isSnapEnabled: boolean;
-  onToggleSnap: () => void;
-  sectionProgress: number;
 }
 
-function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, onToggleSnap, sectionProgress }: NavigationDotsProps) {
+/** Desktop sticky section bar — matches live digeratexperts.com chrome. */
+function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarProps) {
+  const navSections = sections
+    .map((section, index) => ({ section, index }))
+    .filter(({ section }) => section.showInNav !== false);
+
+  // Highlight the nearest nav-visible section when scrolling a hidden-in-nav block.
+  const activeNavIndex = (() => {
+    if (navSections.some(({ index }) => index === currentSection)) return currentSection;
+    let best = navSections[0]?.index ?? 0;
+    let bestDist = Infinity;
+    for (const { index } of navSections) {
+      const dist = Math.abs(index - currentSection);
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = index;
+      }
+    }
+    return best;
+  })();
+
   return (
-    <div className="fixed bottom-4 left-0 right-0 z-50 hidden lg:flex justify-center pointer-events-none px-4">
+    <div className="fixed bottom-3 left-0 right-0 z-50 hidden lg:flex justify-center pointer-events-none px-3">
       <motion.nav
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 20 }}
-        className="pointer-events-auto flex flex-row items-center gap-1 py-2 px-4 rounded-full bg-black/95 backdrop-blur-xl border-2 border-violet-500/60 shadow-[0_0_24px_rgba(139,92,246,0.35),0_4px_24px_rgba(0,0,0,0.5)]"
+        className="pointer-events-auto flex max-w-[min(100%,1400px)] flex-row items-center gap-0.5 overflow-x-auto py-1.5 px-3 rounded-full bg-black/95 backdrop-blur-xl border-2 border-[#D3126A]/60 shadow-[0_0_24px_rgba(211,18,106,0.35),0_4px_24px_rgba(0,0,0,0.5)] scrollbar-none"
         aria-label="Section navigation"
       >
-        <div className="flex items-center gap-2 pr-3 border-r border-white/20 mr-2">
-          <Shield className="w-5 h-5 text-violet-400" />
-          <span className="text-white font-medium text-sm whitespace-nowrap">Is Your Business Protected?</span>
+        <div className="flex items-center gap-1.5 pr-2.5 border-r border-white/20 mr-1.5 shrink-0">
+          <Shield className="w-4 h-4 text-[#FF477F]" aria-hidden="true" />
+          <span className="text-white font-medium text-xs whitespace-nowrap">Is Your Business Protected?</span>
         </div>
-        
-        {sections.map((section, index) => {
-          const isActive = currentSection === index;
-          
+
+        {navSections.map(({ section, index }) => {
+          const isActive = activeNavIndex === index;
           return (
             <button
               key={section.id}
+              type="button"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 onNavigate(index);
               }}
-              className={`relative px-3 py-1.5 text-sm font-medium rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-violet-400 whitespace-nowrap ${
-                isActive 
-                  ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg shadow-violet-500/40' 
+              className={`relative px-2.5 py-1 text-xs font-medium rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FF477F] whitespace-nowrap shrink-0 ${
+                isActive
+                  ? 'bg-[#D3126A] text-white shadow-lg shadow-[#D3126A]/40'
                   : 'text-white/70 hover:text-white hover:bg-white/10'
               }`}
-              aria-label={`Go to ${section.label} (section ${index + 1} of ${sections.length})`}
+              aria-label={`Go to ${section.label}`}
               aria-current={isActive ? 'true' : undefined}
               data-testid={`nav-dot-${section.id}`}
             >
@@ -326,72 +362,30 @@ function NavigationDots({ sections, currentSection, onNavigate, isSnapEnabled, o
             </button>
           );
         })}
-        
-        <div className="w-px h-6 bg-white/20 mx-2" />
-        
+
+        <div className="w-px h-6 bg-white/20 mx-2" aria-hidden="true" />
+
         <a
           href="tel:325-480-9870"
           className="flex items-center gap-1.5 text-white/70 hover:text-white transition-colors text-sm whitespace-nowrap"
           data-testid="nav-phone"
         >
-          <Phone className="w-4 h-4" />
+          <Phone className="w-4 h-4" aria-hidden="true" />
           <span>325-480-9870</span>
         </a>
-        
+
         <a
           href="/book"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold rounded-full bg-white text-violet-700 hover:bg-violet-50 transition-all duration-300 shadow-lg whitespace-nowrap ml-2"
+          className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold rounded-full bg-white text-[#D3126A] hover:bg-pink-50 transition-all duration-300 shadow-lg whitespace-nowrap ml-2"
           data-testid="nav-cta-assessment"
         >
           Free Assessment
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4" aria-hidden="true" />
         </a>
       </motion.nav>
     </div>
   );
 }
-
-interface ScrollDownIndicatorProps {
-  currentSection: number;
-  totalSections: number;
-  onScrollDown: () => void;
-  isVisible: boolean;
-}
-
-function ScrollDownIndicator({ onScrollDown, isVisible }: ScrollDownIndicatorProps) {
-  return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.button
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          onClick={onScrollDown}
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 p-2 rounded-full group focus:outline-none focus:ring-2 focus:ring-violet-400 hidden lg:flex bg-violet-500/20 backdrop-blur-sm border border-violet-400/30 hover:bg-violet-500/30 hover:border-violet-400/50"
-          style={{
-            boxShadow: '0 2px 8px rgba(0,0,0,0.3), 0 0 12px rgba(167, 139, 250, 0.2)',
-          }}
-          aria-label="Scroll to next section"
-          data-testid="scroll-down-btn"
-        >
-          <motion.div
-            animate={{ y: [0, 3, 0] }}
-            transition={{ 
-              duration: 1.5, 
-              repeat: Infinity, 
-              ease: "easeInOut" 
-            }}
-          >
-            <ChevronDown className="w-4 h-4 text-violet-300 group-hover:text-violet-200 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]" />
-          </motion.div>
-        </motion.button>
-      )}
-    </AnimatePresence>
-  );
-}
-
 
 interface ScrollSectionProps {
   id: string;

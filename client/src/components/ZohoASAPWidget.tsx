@@ -25,7 +25,41 @@ export const ZohoASAPWidget = ({
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [cookieBannerClear, setCookieBannerClear] = useState(() => {
+    try {
+      return !!(
+        localStorage.getItem("de_cookie_consent_v2") ||
+        localStorage.getItem("de_cookie_consent")
+      );
+    } catch {
+      return false;
+    }
+  });
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (cookieBannerClear) return;
+    const check = () => {
+      try {
+        if (
+          localStorage.getItem("de_cookie_consent_v2") ||
+          localStorage.getItem("de_cookie_consent")
+        ) {
+          setCookieBannerClear(true);
+        }
+      } catch {
+        /* ignore */
+      }
+    };
+    window.addEventListener("de-cookie-consent", check);
+    window.addEventListener("storage", check);
+    const id = window.setInterval(check, 800);
+    return () => {
+      window.clearInterval(id);
+      window.removeEventListener("de-cookie-consent", check);
+      window.removeEventListener("storage", check);
+    };
+  }, [cookieBannerClear]);
 
   useEffect(() => {
     // Initialize embedded Zoho ASAP widget if credentials provided
@@ -94,15 +128,15 @@ export const ZohoASAPWidget = ({
 
   return (
     <>
-      {/* Floating Widget Launcher */}
+      {/* Floating Widget Launcher — sit above cookie banner until consent is stored */}
       <div
-        className="fixed bottom-6 right-6 z-40"
+        className={`fixed right-6 ${cookieBannerClear ? "bottom-6" : "bottom-28"} z-[100]`}
         data-testid="widget-zoho-asap-container"
       >
         {!isOpen && (
           <button
             onClick={() => setIsOpen(true)}
-            className="relative w-14 h-14 rounded-full bg-gradient-to-br from-purple-600 to-blue-900 text-white shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-110 flex items-center justify-center"
+            className="relative w-14 h-14 rounded-full bg-gradient-to-br from-fuchsia-600 via-pink-600 to-rose-600 text-white shadow-lg shadow-pink-500/35 hover:shadow-xl hover:shadow-pink-500/45 transform transition-all duration-300 hover:scale-110 flex items-center justify-center"
             data-testid="button-open-asap-widget"
             title="Open Support"
           >
@@ -126,7 +160,7 @@ export const ZohoASAPWidget = ({
                   className="font-bold text-lg"
                   data-testid="text-widget-title"
                 >
-                  Digerati Support
+                  Digerati Experts Support
                 </h3>
                 <p
                   className="text-sm text-purple-100"

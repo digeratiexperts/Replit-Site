@@ -27,22 +27,25 @@ export function CookieConsentBanner() {
     }
   }, []);
 
-  const accept = () => {
-    saveConsent({ analytics: true, marketing: true });
+  const finishConsent = () => {
     setVisible(false);
     setShowPreferences(false);
+    window.dispatchEvent(new Event("de-cookie-consent"));
+  };
+
+  const accept = () => {
+    saveConsent({ analytics: true, marketing: true });
+    finishConsent();
   };
 
   const reject = () => {
     saveConsent({ analytics: false, marketing: false });
-    setVisible(false);
-    setShowPreferences(false);
+    finishConsent();
   };
 
   const savePreferences = () => {
     saveConsent({ analytics: analyticsEnabled, marketing: marketingEnabled });
-    setVisible(false);
-    setShowPreferences(false);
+    finishConsent();
   };
 
   return (

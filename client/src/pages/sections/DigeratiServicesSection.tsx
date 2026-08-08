@@ -137,15 +137,15 @@ export const DigeratiServicesSection = (): JSX.Element => {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4 md:mb-6">
-            <ShieldCheck className="w-3.5 h-3.5 md:w-4 md:h-4 text-violet-400" />
-            <span className="text-xs md:text-sm font-medium text-violet-300">Core Security Services</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-[#D3126A]/15 border border-[#D3126A]/30 mb-4 md:mb-6">
+            <ShieldCheck className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#FF477F]" />
+            <span className="text-xs md:text-sm font-medium text-[#FF477F]">Ways to engage</span>
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-3 md:mb-4 text-white">
-            What We <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">Provide</span>
+            What We <span className="bg-gradient-to-r from-[#FF477F] via-[#D3126A] to-fuchsia-400 bg-clip-text text-transparent">Provide</span>
           </h2>
           <p className="text-base md:text-lg lg:text-xl text-white/60 leading-relaxed max-w-3xl mx-auto px-4">
-            Enterprise-grade security services designed to protect your business at every level.
+            Clear paths into managed security and IT — pick the engagement that fits how you work today.
           </p>
         </motion.div>
 

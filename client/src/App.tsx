@@ -10,6 +10,7 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { ExitIntentPopup } from "@/components/ExitIntentPopup";
 import { StickyCTABar } from "@/components/StickyCTABar";
+import { MarketingChrome } from "@/components/MarketingChrome";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PageLoadingSkeleton } from "@/components/LoadingSkeleton";
 import { AnnouncerProvider } from "@/components/AccessibleAnnouncer";
@@ -43,6 +44,7 @@ const AnimalHospitals = lazy(() => import("@/pages/industries/AnimalHospitals"))
 const CaseStudies = lazy(() => import("@/pages/resources/CaseStudies"));
 const Blog = lazy(() => import("@/pages/resources/Blog"));
 const BlogPost = lazy(() => import("@/pages/resources/BlogPost"));
+const CyberFacts = lazy(() => import("@/pages/resources/CyberFacts"));
 const SecurityUpdates = lazy(() => import("@/pages/resources/SecurityUpdates"));
 const Videos = lazy(() => import("@/pages/resources/Videos"));
 const SecurityChecklist = lazy(() => import("@/pages/resources/SecurityChecklist"));
@@ -214,10 +216,10 @@ function Router() {
           <CoManagedIT />
         </Suspense>
       )} />
-      {Object.entries(servicePageData).filter(([key]) => !['managed-workplace', 'backup-disaster-recovery', 'co-managed-it'].includes(key)).map(([key, data]) => (
+      {Object.entries(servicePageData).filter(([key]) => !['managed-workplace', 'backup-disaster-recovery', 'co-managed-it', 'managed-it-support'].includes(key)).map(([key, data]) => (
         <Route key={key} path={`/solutions/${key}`} component={() => (
           <Suspense fallback={<PageLoadingSkeleton />}>
-            <GenericServicePage {...data} serviceKey={key} />
+            <GenericServicePage {...data} serviceKey={key} canonical={`/solutions/${key}`} />
           </Suspense>
         )} />
       ))}
@@ -305,7 +307,7 @@ function Router() {
       {Object.entries(industryPageData).map(([key, data]) => (
         <Route key={key} path={`/industries/${key}`} component={() => (
           <Suspense fallback={<PageLoadingSkeleton />}>
-            <GenericServicePage {...data} />
+            <GenericServicePage {...data} serviceKey={key} canonical={`/industries/${key}`} />
           </Suspense>
         )} />
       ))}
@@ -324,6 +326,11 @@ function Router() {
       <Route path="/resources/blog/:slug" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <BlogPost />
+        </Suspense>
+      )} />
+      <Route path="/resources/cyber-facts" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <CyberFacts />
         </Suspense>
       )} />
       <Route path="/resources/ebook/defending-digital-realm" component={() => (
@@ -597,22 +604,11 @@ function Router() {
           <PortalOrderDetail />
         </Suspense>
       )} />
-      <Route path="/portal/invoices/:id/pay" component={({ params }) => {
-        const invoice = {
-          id: params.id || "",
-          invoiceNumber: "INV-2024-004",
-          amount: "2600",
-        };
-        return (
-          <Suspense fallback={<PageLoadingSkeleton />}>
-            <PortalPayment
-              invoiceId={invoice.id}
-              invoiceNumber={invoice.invoiceNumber}
-              amount={invoice.amount}
-            />
-          </Suspense>
-        );
-      }} />
+      <Route path="/portal/invoices/:id/pay" component={({ params }) => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <PortalPayment invoiceId={params.id || ""} />
+        </Suspense>
+      )} />
       <Route path="/portal/kb" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalKB />
@@ -815,6 +811,7 @@ function AppContent() {
       <div id="main-content">
         <Router />
       </div>
+      <MarketingChrome />
       <ScrollToTop />
       <StickyCTABar />
       <ExitIntentPopup delay={10000} />
