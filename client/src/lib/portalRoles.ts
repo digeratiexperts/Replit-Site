@@ -79,6 +79,7 @@ export type NavKey =
   | "kb"
   | "settings"
   | "contracts"
+  | "learning"
   | "other";
 
 export function navAllowed(user: PortalUserSession | null, key: NavKey): boolean {
@@ -91,6 +92,7 @@ export function navAllowed(user: PortalUserSession | null, key: NavKey): boolean
     "infrastructure",
     "contracts",
     "kb",
+    "learning",
     "settings",
   ];
   if (role === "staff") return staffKeys.includes(key);

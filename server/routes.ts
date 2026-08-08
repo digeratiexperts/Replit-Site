@@ -89,6 +89,12 @@ import {
   listLifecycleEvents,
 } from "./lifecycleOrchestrator";
 import {
+  buildLearningPayload,
+  resolveLearningAudience,
+  LEARNING_HUB_DOC_SLUGS,
+  LEARNING_LESSONS,
+} from "./portalLearningCatalog";
+import {
   fetchHubCompanyDocuments,
   fetchHubContractDownload,
   resolvePortalCompanyName,
@@ -2972,6 +2978,90 @@ export async function registerRoutes(app: Express) {
     } catch (error: any) {
       console.error("[ERROR] Company fetch failed:", error);
       res.status(500).json({ message: "Failed to load company data" });
+    }
+  });
+
+  // Portal Learning Center — role-personalized curriculum (Hub taxonomy + docs)
+  app.get("/api/portal/learning", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const live = req.user?.email ? portalUsers.get(req.user.email) : null;
+      const audience = resolveLearningAudience({
+        role: live?.role || req.user?.role,
+        orgRole: live?.orgRole || req.user?.orgRole,
+        isCompanyItContact: !!(live?.isCompanyItContact || req.user?.isCompanyItContact),
+      });
+      const payload = buildLearningPayload(audience);
+
+      let hubResources: Array<{
+        slug: string;
+        title: string;
+        category?: string;
+        description?: string;
+        version?: number | string;
+      }> = [];
+      let hubSource: "techsales" | "none" | "unconfigured" = "unconfigured";
+
+      try {
+        const { companyName } = portalCompanyContext(req);
+        if (companyName) {
+          const hub = await fetchHubCompanyDocuments(companyName);
+          if (hub?.library?.length) {
+            hubSource = "techsales";
+            hubResources = hub.library
+              .filter((d: any) => d?.slug && LEARNING_HUB_DOC_SLUGS.has(String(d.slug)))
+              .map((d: any) => ({
+                slug: String(d.slug),
+                title: String(d.title || d.slug),
+                category: d.category,
+                description: d.description,
+                version: d.version,
+              }));
+          } else if (hub) {
+            hubSource = "techsales";
+          } else {
+            hubSource = "none";
+          }
+        } else {
+          hubSource = "none";
+        }
+      } catch {
+        hubSource = "none";
+      }
+
+      // Fallback educational titles when Hub bridge has no match yet
+      if (hubResources.length === 0) {
+        const wanted = new Set(
+          payload.lessons.flatMap((l) => l.hubDocSlugs || []),
+        );
+        hubResources = Array.from(wanted).map((slug) => {
+          const title =
+            slug
+              .replace(/-/g, " ")
+              .replace(/\b\w/g, (c) => c.toUpperCase()) || slug;
+          return {
+            slug,
+            title,
+            category: "service_tier",
+            description: "Referenced from TechSales document catalog — open Contracts when available.",
+          };
+        });
+      }
+
+      const recommendedMinutes = payload.lessons.reduce((n, l) => n + l.minutes, 0);
+
+      return res.json({
+        ...payload,
+        recommendedMinutes,
+        hub: {
+          source: hubSource,
+          resources: hubResources,
+        },
+        catalogVersion: "hub-core36-ecosystem-v1",
+        lessonCountTotal: LEARNING_LESSONS.length,
+      });
+    } catch (error: any) {
+      console.error("[ERROR] portal learning:", error);
+      return res.status(500).json({ message: "Failed to load learning path" });
     }
   });
 

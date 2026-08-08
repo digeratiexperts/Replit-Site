@@ -76,7 +76,7 @@ const navItems: NavItem[] = [
   { href: "/portal/qbr", label: "Business Reviews", icon: BarChart3, key: "other" },
   { href: "/portal/kb", label: "Knowledge Base", icon: BookOpen, key: "kb" },
   { href: "/portal/status", label: "System Status", icon: Activity, key: "other" },
-  { href: "/portal/learning", label: "Learning", icon: GraduationCap, key: "other" },
+  { href: "/portal/learning", label: "Learning", icon: GraduationCap, key: "learning" },
   { href: "/portal/agent", label: "Desktop Agent", icon: Download, key: "other" },
   { href: "/portal/settings", label: "Settings", icon: Settings, key: "settings" },
 ];
