@@ -198,7 +198,7 @@ export default function GenericServicePage({
 
         {narrative?.process && narrative.process.length > 0 && (
           <section data-testid="section-process">
-            <div className="flex items-center gap-3 mb-10">
+            <div className="flex items-center gap-3 mb-8">
               <div className="w-10 h-10 rounded-lg bg-violet-600 flex items-center justify-center">
                 <ArrowRight className="w-5 h-5 text-white" />
               </div>
@@ -207,54 +207,23 @@ export default function GenericServicePage({
                 <p className="text-white/60 text-sm">A clear path — not a black box of tickets.</p>
               </div>
             </div>
-            <div className="space-y-10 md:space-y-14">
-              {narrative.process.map((step, index) => {
-                const reverse = index % 2 === 1;
-                return (
-                  <motion.div
-                    key={step.title}
-                    initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.05, duration: 0.45 }}
-                    className={`grid md:grid-cols-2 gap-6 md:gap-10 items-center ${
-                      reverse ? "md:[direction:rtl]" : ""
-                    }`}
-                    data-testid={`process-beat-${index + 1}`}
-                  >
-                    <div className={reverse ? "md:[direction:ltr]" : ""}>
-                      <div className="text-xs font-semibold tracking-[0.14em] uppercase text-[#FF477F] mb-3">
-                        Step {index + 1}
-                      </div>
-                      <h3 className="text-2xl md:text-3xl font-semibold text-white mb-3">{step.title}</h3>
-                      <p className="text-base md:text-lg text-white/75 leading-relaxed max-w-xl">
-                        {step.description}
-                      </p>
-                    </div>
-                    <div
-                      className={`relative min-h-[160px] md:min-h-[200px] rounded-2xl overflow-hidden border border-white/10 ${
-                        reverse ? "md:[direction:ltr]" : ""
-                      }`}
-                      aria-hidden="true"
-                    >
-                      <div
-                        className={`absolute inset-0 bg-gradient-to-br ${
-                          reverse
-                            ? "from-violet-700/50 via-[#D3126A]/25 to-transparent"
-                            : "from-[#D3126A]/45 via-fuchsia-800/30 to-transparent"
-                        }`}
-                      />
-                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.12),transparent_55%)]" />
-                      <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between gap-3">
-                        <span className="text-5xl font-semibold text-white/20 tabular-nums leading-none">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
-                        <Shield className="w-8 h-8 text-white/35" />
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {narrative.process.map((step, index) => (
+                <motion.div
+                  key={step.title}
+                  initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.08, duration: 0.4 }}
+                  className="relative p-5 rounded-xl bg-white/[0.04] border border-white/10"
+                >
+                  <div className="text-xs font-semibold tracking-wide text-[#FF477F] mb-2">
+                    Step {index + 1}
+                  </div>
+                  <h3 className="text-lg font-semibold text-white mb-2">{step.title}</h3>
+                  <p className="text-sm text-white/70 leading-relaxed">{step.description}</p>
+                </motion.div>
+              ))}
             </div>
           </section>
         )}
