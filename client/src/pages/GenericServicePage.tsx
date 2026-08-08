@@ -56,7 +56,7 @@ const FeatureCard = ({
         </CardTitle>
       </CardHeader>
       <CardContent className="relative">
-        <p className="text-gray-400 leading-relaxed">{feature.description}</p>
+        <p className="text-white/80 leading-relaxed">{feature.description}</p>
       </CardContent>
     </Card>
   </motion.div>
@@ -213,7 +213,7 @@ export default function GenericServicePage({
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-white">Service Tiers</h2>
-                <p className="text-white/60 text-sm">Compare what's included at each tier</p>
+                <p className="text-white/80 text-sm">Compare what's included at each tier</p>
               </div>
             </div>
             <ServiceCapabilityMatrix 
@@ -234,7 +234,7 @@ export default function GenericServicePage({
             <h2 className="text-2xl font-bold text-white mb-2 text-center">
               {recommendedTier ? `Recommended Plan for ${title}` : 'Service Plans'}
             </h2>
-            <p className="text-white/60 text-center">
+            <p className="text-white/80 text-center">
               {recommendedTier ? 'This service is included in the following plan' : 'Choose the plan that fits your needs'}
             </p>
           </div>
@@ -254,7 +254,7 @@ export default function GenericServicePage({
           transition={{ duration: 0.5 }}
         >
           {/* Gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600" />
+          <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500" />
           
           {/* Mesh overlay */}
           <div className="absolute inset-0 opacity-30">
@@ -282,7 +282,7 @@ export default function GenericServicePage({
                 href="/book" 
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center justify-center bg-white text-violet-700 hover:bg-gray-100 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
+                className="group inline-flex items-center justify-center bg-white text-pink-700 hover:bg-pink-50 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
                 data-testid="button-contact"
               >
                 <ArrowRight className="mr-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -290,7 +290,7 @@ export default function GenericServicePage({
               </a>
               <a 
                 href="tel:325-480-9870"
-                className="group inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-violet-700 px-8 py-4 rounded-xl font-semibold transition-all"
+                className="group inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-pink-700 px-8 py-4 rounded-xl font-semibold transition-all"
                 data-testid="button-call"
               >
                 <Phone className="mr-2 h-5 w-5" />

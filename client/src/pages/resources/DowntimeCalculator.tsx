@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ArrowRight, Plus, Minus, Calculator, DollarSign, Clock, TrendingUp, Shield } from "lucide-react";
 import { MegaMenu } from "@/components/MegaMenu";
-import { DigeratiFooterSection } from "@/pages/sections/DigeratiFooterSection";
+import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
 import { useSEO } from "@/hooks/useSEO";
 
 const industryMultipliers: Record<string, { name: string; multiplier: number }> = {
@@ -436,7 +436,7 @@ export default function DowntimeCalculator() {
         </div>
       </section>
 
-      <DigeratiFooterSection />
+      <DigeratiEnhancedFooterSection />
     </div>
   );
 }

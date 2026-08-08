@@ -10,6 +10,7 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { ExitIntentPopup } from "@/components/ExitIntentPopup";
 import { StickyCTABar } from "@/components/StickyCTABar";
+import { MarketingChrome } from "@/components/MarketingChrome";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PageLoadingSkeleton } from "@/components/LoadingSkeleton";
 import { AnnouncerProvider } from "@/components/AccessibleAnnouncer";
@@ -815,6 +816,7 @@ function AppContent() {
       <div id="main-content">
         <Router />
       </div>
+      <MarketingChrome />
       <ScrollToTop />
       <StickyCTABar />
       <ExitIntentPopup delay={10000} />

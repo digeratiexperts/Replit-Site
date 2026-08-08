@@ -1,6 +1,5 @@
 import { MegaMenu } from "@/components/MegaMenu";
 import { SimpleDivider } from "@/components/SimpleDivider";
-import { ZohoASAPWidget } from "@/components/ZohoASAPWidget";
 import { FullPageScrollProvider, ScrollSectionAuto } from "@/components/FullPageScroll";
 import { useState, useEffect } from "react";
 import { useSEO } from "@/hooks/useSEO";
@@ -113,14 +112,7 @@ export const DigeratiHomepage = (): JSX.Element => {
       <div className="min-h-screen bg-[#050312]">
         <OrganizationJsonLd />
         <WebSiteJsonLd />
-        {/* Zoho ASAP Widget */}
-        <ZohoASAPWidget 
-          isEnabled={true}
-          accountId={import.meta.env.VITE_ZOHO_ACCOUNT_ID}
-          portalId={import.meta.env.VITE_ZOHO_PORTAL_ID}
-        />
-
-        {/* Navigation */}
+        {/* Navigation — chat lives in App MarketingChrome sitewide */}
         <MegaMenu />
 
         {/* Modern Hero Section — single dominant Schedule CTA */}

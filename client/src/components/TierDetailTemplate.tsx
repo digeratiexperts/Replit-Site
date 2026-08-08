@@ -41,9 +41,9 @@ const SectionHeading = ({
   icon: typeof CheckCircle;
   children: React.ReactNode;
 }) => (
-  <h2 className="flex items-center gap-3 text-2xl font-bold text-gray-900 mb-5">
-    <span className="w-10 h-10 rounded-lg bg-violet-100 flex items-center justify-center">
-      <Icon className="w-5 h-5 text-violet-600" />
+  <h2 className="flex items-center gap-3 text-2xl font-bold text-white mb-5 tracking-tight">
+    <span className="w-10 h-10 rounded-lg bg-pink-500/15 border border-pink-400/25 flex items-center justify-center">
+      <Icon className="w-5 h-5 text-pink-300" />
     </span>
     {children}
   </h2>
@@ -67,20 +67,20 @@ export function TierDetailTemplate({ config }: { config: TierPageConfig }) {
         { label: config.fullName },
       ]}
     >
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-14">
+      <div className="max-w-5xl mx-auto space-y-14">
         <section>
-          <span className="inline-block px-3 py-1 rounded-full bg-violet-100 text-violet-700 text-sm font-semibold mb-4">
+          <span className="inline-block px-3 py-1 rounded-full bg-pink-500/15 border border-pink-400/30 text-pink-200 text-sm font-semibold mb-4">
             {config.heroBadge}
           </span>
-          <p className="text-lg text-gray-700 leading-relaxed">{config.positioning}</p>
+          <p className="text-lg text-white/85 leading-relaxed">{config.positioning}</p>
         </section>
 
         <section>
           <SectionHeading icon={Users}>Who It's For</SectionHeading>
           <ul className="space-y-3">
             {config.whoFor.map((item) => (
-              <li key={item} className="flex items-start gap-3 text-gray-700">
-                <CheckCircle className="w-5 h-5 text-violet-500 mt-0.5 flex-shrink-0" />
+              <li key={item} className="flex items-start gap-3 text-white/85 leading-relaxed">
+                <CheckCircle className="w-5 h-5 text-pink-400 mt-0.5 flex-shrink-0" />
                 <span>{item}</span>
               </li>
             ))}
@@ -91,8 +91,8 @@ export function TierDetailTemplate({ config }: { config: TierPageConfig }) {
           <SectionHeading icon={Target}>What You Get</SectionHeading>
           <ul className="space-y-3">
             {config.outcomes.map((item) => (
-              <li key={item} className="flex items-start gap-3 text-gray-700">
-                <CheckCircle className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" />
+              <li key={item} className="flex items-start gap-3 text-white/85 leading-relaxed">
+                <CheckCircle className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
                 <span>{item}</span>
               </li>
             ))}
@@ -103,8 +103,8 @@ export function TierDetailTemplate({ config }: { config: TierPageConfig }) {
           <SectionHeading icon={Layers}>What's Included</SectionHeading>
           <div className="grid sm:grid-cols-2 gap-x-8 gap-y-3">
             {config.included.map((item) => (
-              <div key={item} className="flex items-start gap-3 text-gray-700">
-                <CheckCircle className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" />
+              <div key={item} className="flex items-start gap-3 text-white/85 leading-relaxed">
+                <CheckCircle className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
                 <span>{item}</span>
               </div>
             ))}
@@ -116,8 +116,8 @@ export function TierDetailTemplate({ config }: { config: TierPageConfig }) {
             <SectionHeading icon={XCircle}>Not Included at This Level</SectionHeading>
             <ul className="space-y-3">
               {config.notIncluded.map((item) => (
-                <li key={item} className="flex items-start gap-3 text-gray-600">
-                  <XCircle className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                <li key={item} className="flex items-start gap-3 text-white/70 leading-relaxed">
+                  <XCircle className="w-5 h-5 text-white/40 mt-0.5 flex-shrink-0" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -131,41 +131,45 @@ export function TierDetailTemplate({ config }: { config: TierPageConfig }) {
             {config.addOnsOrUpgrades.map((addOn) => (
               <div
                 key={addOn.label}
-                className="rounded-xl border border-violet-200 bg-violet-50/50 p-5"
+                className="rounded-xl border border-white/10 bg-white/[0.03] p-5 hover:border-pink-400/30 transition-colors"
               >
-                <h3 className="font-semibold text-gray-900 mb-2">{addOn.label}</h3>
-                <p className="text-sm text-gray-600 leading-relaxed">{addOn.desc}</p>
+                <h3 className="font-semibold text-white mb-2">{addOn.label}</h3>
+                <p className="text-sm text-white/75 leading-relaxed">{addOn.desc}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="rounded-xl border border-gray-200 bg-gray-50 p-6">
+        <section className="rounded-xl border border-white/10 bg-white/[0.03] p-6">
           <SectionHeading icon={CalendarClock}>Reporting & Review Cadence</SectionHeading>
-          <p className="text-gray-700 leading-relaxed">{config.reviewCadence}</p>
+          <p className="text-white/85 leading-relaxed">{config.reviewCadence}</p>
         </section>
 
-        <section className="rounded-xl border border-violet-200 bg-gradient-to-br from-violet-50 to-purple-50 p-6">
+        <section className="rounded-xl border border-pink-400/25 bg-gradient-to-br from-fuchsia-950/40 via-pink-950/30 to-violet-950/40 p-6">
           <SectionHeading icon={BadgeDollarSign}>Pricing</SectionHeading>
-          <p className="text-gray-700 leading-relaxed mb-6">{config.pricingNote}</p>
+          <p className="text-white/85 leading-relaxed mb-6">{config.pricingNote}</p>
           <div className="flex flex-col sm:flex-row gap-4">
             {isExternalCta ? (
               <a href={config.ctaPrimary.href} target="_blank" rel="noopener noreferrer">
-                <Button size="lg" className="w-full sm:w-auto bg-violet-600 hover:bg-violet-700">
+                <Button size="lg" variant="brand" className="w-full sm:w-auto">
                   {config.ctaPrimary.label}
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </a>
             ) : (
               <Link href={config.ctaPrimary.href}>
-                <Button size="lg" className="w-full sm:w-auto bg-violet-600 hover:bg-violet-700">
+                <Button size="lg" variant="brand" className="w-full sm:w-auto">
                   {config.ctaPrimary.label}
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
             )}
             <Link href="/proactive-ecosystem-pricing">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto">
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full sm:w-auto border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+              >
                 Compare All Packages
               </Button>
             </Link>

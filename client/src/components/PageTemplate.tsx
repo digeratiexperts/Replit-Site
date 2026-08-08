@@ -20,7 +20,7 @@ const FloatingOrbs = ({ prefersReducedMotion }: { prefersReducedMotion: boolean 
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
     <motion.div
       className="absolute -top-20 -right-20 w-96 h-96 rounded-full"
-      style={{ background: "radial-gradient(circle, rgba(139, 92, 246, 0.18) 0%, transparent 65%)" }}
+      style={{ background: "radial-gradient(circle, rgba(236, 72, 153, 0.2) 0%, rgba(139, 92, 246, 0.12) 45%, transparent 68%)" }}
       animate={prefersReducedMotion ? {} : {
         x: [0, 20, 0],
         y: [0, -15, 0],
@@ -30,7 +30,7 @@ const FloatingOrbs = ({ prefersReducedMotion }: { prefersReducedMotion: boolean 
     />
     <motion.div
       className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full"
-      style={{ background: "radial-gradient(circle, rgba(139, 92, 246, 0.14) 0%, transparent 65%)" }}
+      style={{ background: "radial-gradient(circle, rgba(217, 70, 239, 0.16) 0%, transparent 65%)" }}
       animate={prefersReducedMotion ? {} : {
         x: [0, -15, 0],
         y: [0, 20, 0],
@@ -40,7 +40,7 @@ const FloatingOrbs = ({ prefersReducedMotion }: { prefersReducedMotion: boolean 
     />
     <motion.div
       className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full"
-      style={{ background: "radial-gradient(circle, rgba(167, 139, 250, 0.1) 0%, transparent 65%)" }}
+      style={{ background: "radial-gradient(circle, rgba(244, 63, 94, 0.1) 0%, transparent 65%)" }}
       animate={prefersReducedMotion ? {} : {
         scale: [1, 1.12, 1],
         opacity: [0.3, 0.45, 0.3],
@@ -77,7 +77,7 @@ const NoiseTexture = () => (
 const GlowEffects = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
     <div className="absolute top-0 left-1/4 w-96 h-96 bg-white/[0.06] rounded-full blur-3xl" />
-    <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-violet-500/[0.12] rounded-full blur-3xl" />
+    <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-pink-500/[0.14] rounded-full blur-3xl" />
   </div>
 );
 
@@ -89,9 +89,9 @@ const ShieldBadge = () => (
     transition={{ delay: 0.5, duration: 0.6 }}
   >
     <div className="relative">
-      <div className="absolute inset-0 bg-gradient-to-br from-violet-400/40 to-purple-600/40 rounded-full blur-xl" />
+      <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-400/40 to-pink-600/40 rounded-full blur-xl" />
       <div className="relative w-28 h-28 bg-white/[0.07] backdrop-blur-sm rounded-full border border-white/15 flex items-center justify-center">
-        <Shield className="w-14 h-14 text-violet-300/80" />
+        <Shield className="w-14 h-14 text-pink-300/85" />
       </div>
     </div>
   </motion.div>
@@ -102,7 +102,7 @@ export const PageTemplate = ({
   subtitle, 
   children, 
   showBackButton = true,
-  gradientColors = "from-purple-600 via-indigo-600 to-blue-600",
+  gradientColors = "from-[#2a0a32] via-[#1a0b3a] to-[#050312]",
   icon,
   breadcrumbs,
   variant = "dark"
@@ -110,19 +110,19 @@ export const PageTemplate = ({
   const prefersReducedMotion = useReducedMotion() ?? false;
   
   const bgClass = variant === "dark" 
-    ? "bg-[#0a0118]" 
+    ? "bg-[#050312]" 
     : variant === "light" 
       ? "bg-gray-50" 
-      : "bg-[#0a0118]";
+      : "bg-[#050312]";
   
   const contentBgClass = variant === "dark"
-    ? "bg-[#0d0720]"
+    ? "bg-[#0a0714]"
     : variant === "light"
       ? "bg-white"
-      : "bg-[#0d0720]";
+      : "bg-[#0a0714]";
   
   const textClass = variant === "dark" ? "text-white" : "text-gray-900";
-  const subtextClass = variant === "dark" ? "text-gray-400" : "text-gray-600";
+  const proseClass = variant === "dark" ? "de-prose-dark" : "de-prose-light";
 
   return (
     <div className={`min-h-screen ${bgClass}`}>
@@ -221,19 +221,19 @@ export const PageTemplate = ({
         
         {/* Bottom gradient fade */}
         <div className={`absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t ${
-          variant === "dark" ? "from-[#0d0720]" : variant === "light" ? "from-white" : "from-gray-50"
+          variant === "dark" ? "from-[#0a0714]" : variant === "light" ? "from-white" : "from-gray-50"
         } to-transparent`} />
       </section>
 
-      {/* Content Section */}
-      <section className={`py-12 md:py-16 ${contentBgClass}`}>
+      {/* Content Section — readable rhythm for long marketing copy */}
+      <section className={`py-14 md:py-20 ${contentBgClass}`}>
         <motion.div 
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
-          <div className={textClass}>
+          <div className={`${textClass} ${proseClass}`}>
             {children}
           </div>
         </motion.div>

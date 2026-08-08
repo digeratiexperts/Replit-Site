@@ -1,5 +1,5 @@
-import { Link } from "wouter";
-import { ArrowLeft, Phone, Mail, MapPin, Check } from "lucide-react";
+import { Phone, Mail, MapPin, Check } from "lucide-react";
+import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "../sections/DigeratiEnhancedFooterSection";
 
 const questions = [
@@ -28,27 +28,20 @@ const questions = [
 
 export default function TwentyOneQuestions() {
   return (
-    <div className="min-h-screen bg-[#030228]">
-      <header className="border-b border-white/10 bg-[#030228]/95 backdrop-blur-sm">
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <Link href="/" className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors text-sm" data-testid="link-back-home">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Home
-          </Link>
-        </div>
-      </header>
+    <div className="min-h-screen bg-[#050312]">
+      <MegaMenu />
 
-      <section className="py-16 px-6">
+      <section className="pt-32 pb-16 px-6 de-prose-dark">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12 pb-8 border-b-4 border-violet-400">
-            <p className="text-violet-400 font-semibold text-sm uppercase tracking-wider mb-4">
+          <div className="text-center mb-12 pb-8 border-b-4 border-pink-400">
+            <p className="text-pink-300 font-semibold text-sm uppercase tracking-wider mb-4">
               Elite IT & Cybersecurity for Phoenix Businesses
             </p>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6" data-testid="heading-21-questions">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 tracking-tight" data-testid="heading-21-questions">
               21 Questions You MUST Ask Before<br className="hidden md:block" />
               Hiring An IT Support Company
             </h1>
-            <p className="text-white/60 text-lg max-w-3xl mx-auto">
+            <p className="text-white/85 text-lg max-w-3xl mx-auto leading-relaxed">
               A modern MSP is identity-first, security-led, and business-aligned. 
               Use this chart to compare the real difference.
             </p>
