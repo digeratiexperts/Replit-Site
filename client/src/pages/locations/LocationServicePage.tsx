@@ -15,6 +15,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useSEO } from "@/hooks/useSEO";
+import { getCyberFact, formatFactSource } from "@/data/cyberAwarenessFacts";
 
 const assessmentFormSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters").max(50),
@@ -368,6 +369,42 @@ export function LocationServicePage(props: LocationPageProps) {
 
         {/* Bottom gradient fade */}
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a0118] to-transparent z-10" />
+      </section>
+
+      {/* Arizona industry context — sourced awareness, not DE proof */}
+      <section className="py-10 bg-[#0a0118] border-y border-white/5" aria-label="Arizona cybersecurity context">
+        <div className="mx-auto w-[min(94vw,900px)] px-4">
+          {(() => {
+            const azFact = getCyberFact("az-ic3-losses-2024");
+            return (
+              <motion.div
+                className="rounded-2xl border border-violet-500/20 bg-violet-500/5 px-6 py-5 text-center"
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <p className="text-xs uppercase tracking-wider text-violet-300/80 mb-2">Arizona context</p>
+                <p className="text-white/90 text-sm md:text-base leading-relaxed">
+                  <span className="font-bold text-violet-300">{azFact.metric}</span>{" "}
+                  {azFact.statement} — relevant for {props.city} and Greater Phoenix SMBs planning
+                  insurance-ready IT and breach readiness.
+                </p>
+                {azFact.sourceUrl ? (
+                  <a
+                    href={azFact.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block mt-2 text-xs text-white/40 hover:text-violet-300 underline-offset-2 hover:underline"
+                  >
+                    — {formatFactSource(azFact)}
+                  </a>
+                ) : (
+                  <p className="mt-2 text-xs text-white/40">— {formatFactSource(azFact)}</p>
+                )}
+              </motion.div>
+            );
+          })()}
+        </div>
       </section>
 
       {/* Services Section - Dark themed */}

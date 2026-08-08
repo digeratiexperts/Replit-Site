@@ -5,6 +5,7 @@ import { useSEO } from "@/hooks/useSEO";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/JsonLd";
 import { ModernHeroSection } from "./sections/ModernHeroSection";
 import { HomepageTrustRail } from "./sections/HomepageTrustRail";
+import { DigeratiStatsSection } from "./sections/DigeratiStatsSection";
 import { HomepageEngagementSection } from "./sections/HomepageEngagementSection";
 import { HomepageOutcomesSection } from "./sections/HomepageOutcomesSection";
 import { DigeratiPricingSection } from "./sections/DigeratiPricingSection";
@@ -19,6 +20,7 @@ import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooter
 const homepageSections: { id: string; label: string; theme: "dark" | "light"; showInNav?: boolean }[] = [
   { id: "hero", label: "Home", theme: "dark" },
   { id: "trust-rail", label: "Why DE", theme: "dark" },
+  { id: "industry-context", label: "Context", theme: "dark", showInNav: false },
   { id: "engage", label: "Engage", theme: "dark" },
   { id: "outcomes", label: "Outcomes", theme: "dark" },
   { id: "pricing", label: "Packages", theme: "dark" },
@@ -59,6 +61,10 @@ export const DigeratiHomepage = (): JSX.Element => {
 
         <ScrollSectionAuto id="trust-rail">
           <HomepageTrustRail />
+        </ScrollSectionAuto>
+
+        <ScrollSectionAuto id="industry-context">
+          <DigeratiStatsSection />
         </ScrollSectionAuto>
 
         <ScrollSectionAuto id="engage">

@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { AlertTriangle, Shield, TrendingUp, DollarSign, Clock, Users, Lock, Bug } from "lucide-react";
+import { getCyberFact, toDisplayStat } from "@/data/cyberAwarenessFacts";
 
 export interface Stat {
   value: string;
@@ -154,50 +155,41 @@ export const StatGrid = ({ stats, variant = "dark", columns = 3 }: StatGridProps
   );
 };
 
+/** Thin wrappers over canonical cyberAwarenessFacts — prefer importing facts directly. */
+const fromCanonical = (id: string, icon: Stat["icon"]) => {
+  const display = toDisplayStat(getCyberFact(id));
+  return { ...display, icon };
+};
+
 export const cybersecurityStats = {
   ransomware: {
-    smbBreaches: { value: "48%", label: "of breaches involve ransomware", source: "Verizon DBIR 2026", icon: "warning" as const },
+    smbBreaches: fromCanonical("dbir-ransomware-2026", "warning"),
+    smbVictims: fromCanonical("dbir-smb-ransomware-victims-2026", "warning"),
     recoveryCost: { value: "$1.53M", label: "average ransomware recovery cost (excluding ransom)", source: "Sophos 2025", icon: "dollar" as const },
     weekRecovery: { value: "53%", label: "of ransomware victims fully recovered within a week", source: "Sophos 2025", icon: "clock" as const },
     paidRansom: { value: "49%", label: "of ransomware victims paid to get their data back", source: "Sophos 2025", icon: "dollar" as const },
     backupRestore: { value: "54%", label: "used backups to restore encrypted data (lowest in 6 years)", source: "Sophos 2025", icon: "shield" as const },
-    largeOrg: { value: "39%", label: "of breaches at larger organizations involve ransomware", source: "Verizon DBIR 2025", icon: "warning" as const },
   },
   identity: {
-    noMfa: { value: "99.9%+", label: "of compromised accounts in Microsoft’s cited dataset lacked MFA", source: "Microsoft", icon: "lock" as const },
-    vulnInitial: { value: "31%", label: "of breaches begin with exploitation of software vulnerabilities", source: "Verizon DBIR 2026", icon: "bug" as const },
+    mfaBlocks: fromCanonical("microsoft-mfa-blocks-2025", "lock"),
+    vulnInitial: fromCanonical("dbir-vuln-exploit-2026", "bug"),
   },
   humanRisk: {
-    humanElement: { value: "60%", label: "of breaches involve the human element", source: "Verizon DBIR 2025", icon: "users" as const },
-    thirdParty: { value: "30%", label: "of breaches involve third-party vendors (doubled from 15%)", source: "Verizon DBIR 2025", icon: "users" as const },
-    secretsLeak: { value: "94 days", label: "median time to remediate leaked secrets on GitHub", source: "Verizon DBIR 2025", icon: "clock" as const },
+    humanElement: fromCanonical("dbir-human-element-2026", "users"),
   },
-  vulnerabilities: {
-    espionage: { value: "70%", label: "of espionage incidents used vulnerability exploitation as initial access", source: "Verizon DBIR 2025", icon: "bug" as const },
-    ransomwareRoot: { value: "32%", label: "of ransomware attacks started with exploited vulnerabilities", source: "Sophos 2025", icon: "bug" as const },
+  arizona: {
+    ic3Losses: fromCanonical("az-ic3-losses-2024", "dollar"),
+    breachNotify: fromCanonical("az-breach-notify-framing", "clock"),
   },
   costs: {
-    avgBreach: { value: "$4.99M", label: "global average cost of a data breach", source: "IBM Cost of a Data Breach 2026", icon: "dollar" as const },
-    aiSavings: { value: "$1.9M", label: "in cost savings from extensive AI use in security", source: "IBM 2025", icon: "trending" as const },
-    smbBreach: { value: "$3.3M", label: "average breach cost for businesses under 500 employees", source: "IBM 2024", icon: "dollar" as const },
-    downtimeHour: { value: "$53,000", label: "average cost per hour of business downtime", source: "CyVent", icon: "clock" as const },
-  },
-  aiGap: {
-    threatLevel: { value: "83%", label: "say AI/GenAI increases threat level, but only 51% have policies", source: "ConnectWise 2025", icon: "warning" as const },
-    overspend: { value: "58%", label: "spent more on cybersecurity than originally anticipated", source: "ConnectWise 2025", icon: "dollar" as const },
+    usBreach: fromCanonical("ibm-us-breach-cost-2026", "dollar"),
+    avgBreach: fromCanonical("ibm-global-breach-cost-2026", "dollar"),
   },
   crime: {
-    ic3Total: { value: "$16B+", label: "in losses reported to FBI IC3 (up 33% from 2023)", source: "FBI IC3 2024", icon: "dollar" as const },
-    becLosses: { value: "$2.77B", label: "in Business Email Compromise losses", source: "FBI IC3 2024", icon: "dollar" as const },
+    becLosses: fromCanonical("ic3-bec-losses-2024", "dollar"),
   },
   attacks: {
-    targetSmb: { value: "43%", label: "of all cyberattacks target small businesses", source: "Verizon DBIR 2024", icon: "warning" as const },
-    // Removed indefensible "60% close within 6 months" claim — do not reinstate without a primary source.
-    ransomwareShare: { value: "48%", label: "of breaches involve ransomware", source: "Verizon DBIR 2026", icon: "warning" as const },
-    phishingDaily: { value: "3.4B", label: "phishing emails sent daily worldwide", source: "2025 Data", icon: "warning" as const },
-    notPrepared: { value: "83%", label: "of SMBs aren't financially prepared for a cyberattack", source: "ConnectWise", icon: "warning" as const },
-  },
-  msp: {
-    revenueGrowth: { value: "64%", label: "of MSPs reported revenue increases in the past year", source: "Datto Report", icon: "trending" as const },
+    // Removed indefensible small-business closure myth — do not reinstate without a primary source.
+    ransomwareShare: fromCanonical("dbir-ransomware-2026", "warning"),
   },
 };

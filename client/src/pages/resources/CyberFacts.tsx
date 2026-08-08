@@ -7,13 +7,18 @@ import { Button } from "@/components/ui/button";
 import { 
   Shield, AlertTriangle, Users, DollarSign, Clock, 
   ExternalLink, Copy, Check, RefreshCw, Sparkles,
-  Filter, ChevronDown, Lock, Server, Mail, Brain, ArrowLeft
+  Filter, ChevronDown, Lock, MapPin, ArrowLeft
 } from "lucide-react";
 import { FloatingParticles } from "@/components/graphics";
 import { useSEO } from "@/hooks/useSEO";
 import { useToast } from "@/hooks/use-toast";
+import {
+  cyberAwarenessFacts,
+  formatFactSource,
+  type CyberAwarenessFact,
+} from "@/data/cyberAwarenessFacts";
 
-type FactCategory = "ransomware" | "identity" | "human" | "recovery" | "financial" | "ai";
+type FactCategory = "ransomware" | "identity" | "human" | "recovery" | "financial" | "arizona";
 type AccentColor = "violet" | "purple" | "fuchsia";
 
 interface CyberFact {
@@ -33,20 +38,55 @@ const categoryInfo: Record<FactCategory, { icon: React.ReactNode; label: string;
   human: { icon: <Users className="w-4 h-4" />, label: "Human Element", color: "fuchsia" },
   recovery: { icon: <Clock className="w-4 h-4" />, label: "Recovery", color: "purple" },
   financial: { icon: <DollarSign className="w-4 h-4" />, label: "Financial Impact", color: "violet" },
-  ai: { icon: <Brain className="w-4 h-4" />, label: "AI & Emerging", color: "fuchsia" },
+  arizona: { icon: <MapPin className="w-4 h-4" />, label: "Arizona", color: "fuchsia" },
 };
 
-const allFacts: CyberFact[] = [
-  {
-    id: "mfa-gap",
-    stat: "99.9%+",
-    label: "MFA Gap",
-    text: "of compromised accounts didn't have MFA enabled.",
-    source: "Microsoft (Jan 2025)",
-    sourceUrl: "https://learn.microsoft.com/en-us/partner-center/security/security-at-your-organization",
-    category: "identity",
-    accent: "violet"
-  },
+function categorizeFact(fact: CyberAwarenessFact): FactCategory {
+  if (fact.scope === "arizona") return "arizona";
+  if (fact.id.includes("ransomware") || fact.id.includes("smb-ransomware")) return "ransomware";
+  if (fact.id.includes("mfa") || fact.id.includes("vuln")) return "identity";
+  if (fact.id.includes("human")) return "human";
+  if (fact.id.includes("breach") || fact.id.includes("bec") || fact.id.includes("cost") || fact.id.includes("ic3")) {
+    return "financial";
+  }
+  return "financial";
+}
+
+function accentForCategory(category: FactCategory): AccentColor {
+  if (category === "arizona" || category === "human") return "fuchsia";
+  if (category === "identity" || category === "recovery") return "purple";
+  return "violet";
+}
+
+function shortLabel(fact: CyberAwarenessFact): string {
+  if (fact.scope === "arizona") return "Arizona";
+  if (fact.id.includes("ransomware") && fact.id.includes("smb")) return "SMB Ransomware";
+  if (fact.id.includes("ransomware")) return "Ransomware";
+  if (fact.id.includes("mfa")) return "MFA";
+  if (fact.id.includes("vuln")) return "Vulnerabilities";
+  if (fact.id.includes("human")) return "Human Element";
+  if (fact.id.includes("bec")) return "BEC";
+  if (fact.id.includes("breach-cost") || fact.id.includes("ibm")) return "Breach Cost";
+  if (fact.id.includes("breach-notify")) return "AZ Breach Law";
+  return "Industry Fact";
+}
+
+const canonicalFacts: CyberFact[] = cyberAwarenessFacts.map((fact) => {
+  const category = categorizeFact(fact);
+  return {
+    id: fact.id,
+    stat: fact.metric,
+    label: shortLabel(fact),
+    text: fact.statement.endsWith(".") ? fact.statement : `${fact.statement}.`,
+    source: formatFactSource(fact),
+    sourceUrl: fact.sourceUrl || "#",
+    category,
+    accent: accentForCategory(category),
+  };
+});
+
+/** Secondary sourced facts kept for the facts library (not homepage). */
+const secondaryFacts: CyberFact[] = [
   {
     id: "ransomware-recovery",
     stat: "$1.53M",
@@ -55,77 +95,7 @@ const allFacts: CyberFact[] = [
     source: "Sophos State of Ransomware 2025",
     sourceUrl: "https://greymatter.com/wp-content/uploads/2025/06/sophos-state-of-ransomware-2025.pdf",
     category: "financial",
-    accent: "purple"
-  },
-  {
-    id: "smb-ransomware",
-    stat: "88%",
-    label: "Ransomware (SMBs)",
-    text: "of SMB breaches involved ransomware.",
-    source: "Verizon DBIR 2025 Executive Summary",
-    sourceUrl: "https://www.verizon.com/business/resources/reports/2025-dbir-executive-summary.pdf",
-    category: "ransomware",
-    accent: "violet"
-  },
-  {
-    id: "all-org-ransomware",
-    stat: "44%",
-    label: "Ransomware (All Orgs)",
-    text: "of breaches reviewed involved ransomware.",
-    source: "Verizon DBIR 2025 Executive Summary",
-    sourceUrl: "https://www.verizon.com/business/resources/reports/2025-dbir-executive-summary.pdf",
-    category: "ransomware",
-    accent: "violet"
-  },
-  {
-    id: "human-element",
-    stat: "~60%",
-    label: "Human Element",
-    text: "of breaches involved the human element.",
-    source: "Verizon DBIR 2025 Executive Summary",
-    sourceUrl: "https://www.verizon.com/business/resources/reports/2025-dbir-executive-summary.pdf",
-    category: "human",
-    accent: "fuchsia"
-  },
-  {
-    id: "third-party",
-    stat: "30%",
-    label: "Third-Party Risk",
-    text: "of breaches involved a third party (up from 15%).",
-    source: "Verizon DBIR 2025 Executive Summary",
-    sourceUrl: "https://www.verizon.com/business/resources/reports/2025-dbir-executive-summary.pdf",
-    category: "human",
-    accent: "fuchsia"
-  },
-  {
-    id: "leaked-secrets",
-    stat: "94 days",
-    label: "Leaked Secrets",
-    text: "median time to remediate leaked secrets found in GitHub repositories.",
-    source: "Verizon DBIR 2025 Executive Summary",
-    sourceUrl: "https://www.verizon.com/business/resources/reports/2025-dbir-executive-summary.pdf",
-    category: "recovery",
-    accent: "purple"
-  },
-  {
-    id: "recovery-speed",
-    stat: "53%",
-    label: "Recovery Speed",
-    text: "of ransomware victims fully recovered within a week.",
-    source: "Sophos State of Ransomware 2025",
-    sourceUrl: "https://greymatter.com/wp-content/uploads/2025/06/sophos-state-of-ransomware-2025.pdf",
-    category: "recovery",
-    accent: "purple"
-  },
-  {
-    id: "ransom-paid",
-    stat: "49%",
-    label: "Ransom Paid",
-    text: "of ransomware victims paid to get data back.",
-    source: "Sophos State of Ransomware 2025",
-    sourceUrl: "https://greymatter.com/wp-content/uploads/2025/06/sophos-state-of-ransomware-2025.pdf",
-    category: "ransomware",
-    accent: "fuchsia"
+    accent: "purple",
   },
   {
     id: "backup-restores",
@@ -135,52 +105,30 @@ const allFacts: CyberFact[] = [
     source: "Sophos State of Ransomware 2025",
     sourceUrl: "https://greymatter.com/wp-content/uploads/2025/06/sophos-state-of-ransomware-2025.pdf",
     category: "recovery",
-    accent: "purple"
+    accent: "purple",
   },
   {
     id: "internet-crime",
-    stat: "$16B+",
+    stat: "$16.6B",
     label: "Internet Crime",
-    text: "reported losses in 2024 from 859,532 complaints.",
-    source: "FBI IC3 Press Release (Apr 23, 2025)",
-    sourceUrl: "https://www.fbi.gov/news/press-releases/fbi-releases-annual-internet-crime-report",
-    category: "financial",
-    accent: "violet"
-  },
-  {
-    id: "bec-losses",
-    stat: "$2.77B",
-    label: "BEC Losses",
-    text: "business email compromise losses reported in 2024.",
-    source: "FBI IC3 2024 Annual Report",
+    text: "reported losses to FBI IC3 in 2024 from 859,532 complaints.",
+    source: "FBI IC3 Annual Report 2024",
     sourceUrl: "https://www.ic3.gov/AnnualReport/Reports/2024_IC3Report.pdf",
     category: "financial",
-    accent: "fuchsia"
+    accent: "violet",
   },
-  {
-    id: "ai-risk-gap",
-    stat: "83% vs 51%",
-    label: "AI Risk Gap",
-    text: "83% say AI/GenAI raises threat level, but only 51% have related policies.",
-    source: "ConnectWise (2025)",
-    sourceUrl: "https://www.connectwise.com/resources/state-of-smb-cybersecurity",
-    category: "ai",
-    accent: "violet"
-  },
-  {
-    id: "msp-market",
-    stat: "64% / 67%",
-    label: "MSP Growth",
-    text: "64% of MSPs grew revenue last year; 67% expect growth over the next 3 years.",
-    source: "Datto/Kaseya State of the MSP Report",
-    sourceUrl: "https://www.datto.com/wp-content/uploads/dlm_uploads/DAT-2024-State-of-the-MSP-Report-1.pdf",
-    category: "ai",
-    accent: "purple"
-  }
 ];
 
-const featuredFacts = allFacts.filter(f => 
-  ["mfa-gap", "ransomware-recovery", "smb-ransomware", "human-element", "internet-crime"].includes(f.id)
+const allFacts: CyberFact[] = [...canonicalFacts, ...secondaryFacts];
+
+const featuredFacts = allFacts.filter((f) =>
+  [
+    "az-ic3-losses-2024",
+    "dbir-ransomware-2026",
+    "ibm-us-breach-cost-2026",
+    "microsoft-mfa-blocks-2025",
+    "dbir-human-element-2026",
+  ].includes(f.id),
 );
 
 const accentStyles: Record<AccentColor, { bg: string; border: string; glow: string; stat: string }> = {

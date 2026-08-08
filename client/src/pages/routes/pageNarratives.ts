@@ -207,8 +207,9 @@ export const pageNarratives: Record<string, PageNarrative> = {
     arizonaNote:
       "When something looks wrong at 2am, you need response — not a portal ticket. We run detection for Arizona SMBs who can’t staff a SOC and can’t afford to pretend they have one.",
     proof: {
-      quote: "88% of SMB breaches involve ransomware — waiting for ‘next business day’ is not a response plan.",
-      attribution: "Verizon DBIR 2025 (industry context)",
+      quote:
+        "About 96% of ransomware victims (where organization size was known) were SMBs — waiting for ‘next business day’ is not a response plan.",
+      attribution: "Verizon DBIR 2026 (industry context)",
     },
     faqs: [
       {
