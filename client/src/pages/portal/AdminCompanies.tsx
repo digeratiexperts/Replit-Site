@@ -13,6 +13,7 @@ import { portalGet } from "@/lib/portalApi";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useUpload } from "@/hooks/use-upload";
+import { PortalLayout } from "./PortalLayout";
 
 interface Company {
   id: string;
@@ -188,6 +189,7 @@ export function AdminCompanies() {
   };
 
   return (
+    <PortalLayout title="Manage Companies">
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
@@ -704,5 +706,6 @@ export function AdminCompanies() {
         </DialogContent>
       </Dialog>
     </div>
+    </PortalLayout>
   );
 }

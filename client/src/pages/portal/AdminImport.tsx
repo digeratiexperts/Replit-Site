@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { AlertCircle, Mail } from "lucide-react";
+import { PortalLayout } from "./PortalLayout";
 
 interface ImportJob {
   id: string;
@@ -42,6 +43,7 @@ export function AdminImport() {
   const [showContactNote, setShowContactNote] = useState(false);
 
   return (
+    <PortalLayout title="Data Import">
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold">Import Data from External Systems</h2>
@@ -135,5 +137,6 @@ export function AdminImport() {
         </CardContent>
       </Card>
     </div>
+    </PortalLayout>
   );
 }

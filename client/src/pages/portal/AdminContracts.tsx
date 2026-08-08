@@ -18,6 +18,7 @@ import { portalGet, portalPost, portalFetch } from "@/lib/portalApi";
 import { queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
+import { PortalLayout } from "./PortalLayout";
 import { SignatureCapture } from "@/components/portal/SignatureCapture";
 import { PDFViewer } from "@/components/portal/PDFViewer";
 
@@ -205,7 +206,12 @@ export function AdminContracts() {
   };
 
   return (
-    <div className="space-y-6" data-testid="admin-contracts-page">
+    <PortalLayout title="Contracts">
+    {/* Dark surface so existing white/slate-400 contract UI stays readable inside light portal main */}
+    <div
+      className="-m-4 md:-m-6 min-h-full bg-slate-950 p-4 md:p-6 space-y-6"
+      data-testid="admin-contracts-page"
+    >
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Contract Management</h1>
@@ -688,6 +694,7 @@ export function AdminContracts() {
         </DialogContent>
       </Dialog>
     </div>
+    </PortalLayout>
   );
 }
 

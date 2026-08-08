@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Upload, Trash2, Edit, CheckCircle } from "lucide-react";
+import { PortalLayout } from "./PortalLayout";
 
 interface Agent {
   id: string;
@@ -93,6 +94,7 @@ const sampleAgents: Agent[] = [
 export function AdminAgents() {
   const [agents, setAgents] = useState<Agent[]>(sampleAgents);
   const [showUploadForm, setShowUploadForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     type: "custom",
@@ -101,6 +103,19 @@ export function AdminAgents() {
     features: "",
     supportedOS: "",
   });
+
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      type: "custom",
+      version: "",
+      downloadUrl: "",
+      features: "",
+      supportedOS: "",
+    });
+    setEditingId(null);
+    setShowUploadForm(false);
+  };
 
   const handleUploadAgent = () => {
     if (
@@ -112,35 +127,51 @@ export function AdminAgents() {
       return;
     }
 
+    const features = formData.features
+      .split("\n")
+      .filter((f) => f.trim())
+      .map((f) => f.trim());
+    const supportedOS = formData.supportedOS
+      .split(",")
+      .filter((os) => os.trim())
+      .map((os) => os.trim());
+
+    if (editingId) {
+      setAgents((prev) =>
+        prev.map((a) =>
+          a.id === editingId
+            ? {
+                ...a,
+                name: formData.name,
+                type: formData.type as Agent["type"],
+                version: formData.version,
+                downloadUrl: formData.downloadUrl,
+                features,
+                supportedOS,
+              }
+            : a
+        )
+      );
+      resetForm();
+      alert("Agent updated successfully!");
+      return;
+    }
+
     const newAgent: Agent = {
       id: Date.now().toString(),
       name: formData.name,
       type: formData.type as Agent["type"],
       version: formData.version,
       downloadUrl: formData.downloadUrl,
-      features: formData.features
-        .split("\n")
-        .filter((f) => f.trim())
-        .map((f) => f.trim()),
-      supportedOS: formData.supportedOS
-        .split(",")
-        .filter((os) => os.trim())
-        .map((os) => os.trim()),
+      features,
+      supportedOS,
       uploadedBy: "Current User",
       uploadedDate: new Date().toISOString().split("T")[0],
       active: true,
     };
 
     setAgents([...agents, newAgent]);
-    setFormData({
-      name: "",
-      type: "custom",
-      version: "",
-      downloadUrl: "",
-      features: "",
-      supportedOS: "",
-    });
-    setShowUploadForm(false);
+    resetForm();
     alert("Agent uploaded successfully!");
   };
 
@@ -154,6 +185,19 @@ export function AdminAgents() {
     setAgents(
       agents.map((a) => (a.id === id ? { ...a, active: !a.active } : a))
     );
+  };
+
+  const handleEditAgent = (agent: Agent) => {
+    setEditingId(agent.id);
+    setFormData({
+      name: agent.name,
+      type: agent.type,
+      version: agent.version,
+      downloadUrl: agent.downloadUrl,
+      features: agent.features.join("\n"),
+      supportedOS: agent.supportedOS.join(", "),
+    });
+    setShowUploadForm(true);
   };
 
   const getAgentBadgeColor = (type: Agent["type"]) => {
@@ -170,6 +214,7 @@ export function AdminAgents() {
   };
 
   return (
+    <PortalLayout title="Manage Agents">
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
@@ -180,7 +225,7 @@ export function AdminAgents() {
         </div>
         <Button
           onClick={() => setShowUploadForm(!showUploadForm)}
-          className="bg-[#5034ff] hover:bg-[#5034ff]/90"
+          className="bg-[#5034ff] text-white hover:bg-[#5c42ff] hover:text-white"
           data-testid="button-upload-agent"
         >
           <Upload className="h-4 w-4 mr-2" />
@@ -192,7 +237,7 @@ export function AdminAgents() {
       {showUploadForm && (
         <Card className="border-[#5034ff]/50">
           <CardHeader>
-            <CardTitle>Add New Agent</CardTitle>
+            <CardTitle>{editingId ? "Edit Agent" : "Add New Agent"}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
@@ -285,15 +330,15 @@ export function AdminAgents() {
             <div className="flex gap-2 pt-4 border-t">
               <Button
                 onClick={handleUploadAgent}
-                className="flex-1 bg-[#5034ff] hover:bg-[#5034ff]/90"
+                className="flex-1 bg-[#5034ff] text-white hover:bg-[#5c42ff] hover:text-white"
                 data-testid="button-save-agent"
               >
-                Save Agent
+                {editingId ? "Update Agent" : "Save Agent"}
               </Button>
               <Button
                 variant="outline"
-                onClick={() => setShowUploadForm(false)}
-                className="flex-1"
+                onClick={resetForm}
+                className="flex-1 hover:!bg-slate-100 hover:!text-slate-900 dark:hover:!bg-slate-800 dark:hover:!text-white hover:!border-slate-300"
                 data-testid="button-cancel-upload"
               >
                 Cancel
@@ -365,6 +410,7 @@ export function AdminAgents() {
                 <Button
                   size="sm"
                   variant="outline"
+                  className="hover:!bg-slate-100 hover:!text-slate-900 dark:hover:!bg-slate-800 dark:hover:!text-white hover:!border-slate-300"
                   onClick={() => handleToggleAgent(agent.id)}
                   data-testid={`button-toggle-agent-${agent.id}`}
                 >
@@ -373,6 +419,8 @@ export function AdminAgents() {
                 <Button
                   size="sm"
                   variant="outline"
+                  className="hover:!bg-slate-100 hover:!text-slate-900 dark:hover:!bg-slate-800 dark:hover:!text-white hover:!border-slate-300"
+                  onClick={() => handleEditAgent(agent)}
                   data-testid={`button-edit-agent-${agent.id}`}
                 >
                   <Edit className="h-3 w-3 mr-1" />
@@ -381,7 +429,7 @@ export function AdminAgents() {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="text-red-600 hover:text-red-700"
+                  className="text-red-600 hover:!bg-red-50 hover:!text-red-700 hover:!border-red-300 dark:hover:!bg-red-950/40"
                   onClick={() => handleDeleteAgent(agent.id)}
                   data-testid={`button-delete-agent-${agent.id}`}
                 >
@@ -394,5 +442,6 @@ export function AdminAgents() {
         ))}
       </div>
     </div>
+    </PortalLayout>
   );
 }
