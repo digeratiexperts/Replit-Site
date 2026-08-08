@@ -20,12 +20,14 @@ Do these in the Replit UI for **digerati Experts Offical Website**:
 | `preserve/live-pink-sticky-nav` | Pink sticky section bar chrome |
 | `preserve/replit-internal-pages-pre-redact` | Internal sales pages removed in Aug 2026 cleanup |
 
-## Missing assets that may still exist only on Replit
+## Recovered from Replit (do not full-sync)
 
-If a feature is **not** in this git history (example: black blog with read-aloud / TTS + ChatGPT failover modes), recover it from:
+**Digerati Journal + read-aloud** was restored from the live Replit preview into git (not via full Repl sync):
 
-1. Replit **Checkpoints / History** for that Repl session  
-2. Replit Agent conversation that built it  
-3. Any local download / zip from before leaving Replit  
+- `client/src/pages/resources/Blog.tsx` / `BlogPost.tsx`
+- `client/src/components/BlogAudioPlayer.tsx` (OpenAI `/api/tts` + browser `speechSynthesis` failover, word highlight, play/pause/stop/speed/voice)
+- `client/src/data/resourceRegistry.ts` + `resourceRegistry.v2.json` (16 articles)
+- `client/public/assets/covers/blog/*`
+- `server` `POST /api/tts` + `generateSpeech` in `openaiService.ts`
 
-Then import as a branch (`preserve/replit-tts-blog` or similar) — do **not** let a full Replit sync overwrite current HEAD.
+If something else is still missing from git, recover surgically from Replit Checkpoints — never let Replit push over Cursor/git HEAD.

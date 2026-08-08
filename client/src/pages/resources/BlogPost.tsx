@@ -1,232 +1,311 @@
-import { useRef } from "react";
-import { useParams, Link } from "wouter";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useParams, Link, Redirect } from "wouter";
+import { Helmet } from "react-helmet-async";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
 import { ReadingProgressBar } from "@/components/ReadingProgressBar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Calendar, Clock, User, ArrowLeft, Share2, Bookmark, ChevronRight } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  User,
+  ArrowLeft,
+  ChevronRight,
+  ArrowRight,
+  Share2,
+  Linkedin,
+  Twitter,
+  Link2,
+  Check,
+  List,
+  Lightbulb,
+  AlertTriangle,
+  Info,
+  Sparkles,
+  Quote,
+} from "lucide-react";
 import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
+import { BlogAudioPlayer } from "@/components/BlogAudioPlayer";
+import { blogs, blogBySlug, blogBodies } from "@/data/resourceRegistry";
 
-import trendsImg from "@assets/stock_images/cybersecurity_trends_d69267d4.jpg";
-import hipaaImg from "@assets/stock_images/healthcare_medical_r_3bfa1a64.jpg";
-import ransomwareImg from "@assets/stock_images/ransomware_protectio_63d2a35d.jpg";
-import cloudImg from "@assets/stock_images/cloud_backup_server__4ac65288.jpg";
-import realEstateImg from "@assets/stock_images/real_estate_house_ke_f7c5422b.jpg";
-import trainingImg from "@assets/stock_images/employee_security_tr_12ae4644.jpg";
-
-const blogPosts: Record<string, {
-  id: number;
-  title: string;
-  excerpt: string;
-  category: string;
-  author: string;
-  authorRole: string;
-  date: string;
-  readTime: string;
-  image: string;
-  content: string[];
-}> = {
-  "2025-cybersecurity-trends": {
-    id: 1,
-    title: "2025 Cybersecurity Trends: What Arizona Businesses Need to Know",
-    excerpt: "The cybersecurity landscape is evolving rapidly. Learn about the key threats and defensive strategies that will define 2025.",
-    category: "Cybersecurity",
-    author: "Michael Torres",
-    authorRole: "Chief Security Officer",
-    date: "2024-12-01",
-    readTime: "8 min read",
-    image: trendsImg,
-    content: [
-      "The cybersecurity landscape continues to evolve at an unprecedented pace, presenting both new challenges and opportunities for Arizona businesses. As we approach 2025, understanding these trends isn't just important—it's essential for survival in an increasingly digital world.",
-      "## AI-Powered Attacks Are on the Rise",
-      "Artificial intelligence has become a double-edged sword in cybersecurity. While defenders leverage AI for threat detection and response, attackers are using the same technology to create more sophisticated phishing campaigns, automate vulnerability discovery, and generate convincing deepfakes for social engineering attacks.",
-      "For Arizona businesses, this means traditional security awareness training is no longer sufficient. Organizations must implement AI-powered email security solutions that can detect subtle manipulation attempts that would fool human observers.",
-      "## Zero Trust Architecture Becomes Standard",
-      "The perimeter-based security model is officially dead. In 2025, zero trust architecture—where no user or device is trusted by default—will become the standard approach for businesses of all sizes. This shift is driven by the continued growth of remote work and cloud adoption.",
-      "Implementing zero trust requires a fundamental rethinking of how access is granted and verified. Every request must be authenticated, authorized, and encrypted, regardless of where it originates. For small businesses, this can seem daunting, but managed security providers now offer zero trust solutions that are both affordable and manageable.",
-      "## Ransomware Evolution: Double and Triple Extortion",
-      "Ransomware attacks have evolved beyond simple file encryption. Modern ransomware gangs now employ double extortion (threatening to leak stolen data) and triple extortion (targeting customers and partners of the victim). This evolution makes backup strategies alone insufficient as a defense.",
-      "Arizona healthcare practices, legal firms, and financial services are particularly attractive targets due to the sensitive nature of their data. Prevention must focus on multiple layers: email security, endpoint protection, network segmentation, and comprehensive backup solutions.",
-      "## Supply Chain Security Takes Center Stage",
-      "The SolarWinds and Log4j incidents highlighted the vulnerabilities inherent in software supply chains. In 2025, businesses will face increased pressure to verify the security posture of their vendors and the software they use.",
-      "This means implementing vendor risk assessment programs, requiring security certifications from partners, and maintaining detailed software inventories. For businesses using managed IT services, ensure your provider conducts regular security audits and can demonstrate compliance with industry standards.",
-      "## Regulatory Compliance Becomes More Complex",
-      "New privacy regulations continue to emerge at both state and federal levels. Arizona businesses must navigate an increasingly complex compliance landscape that includes HIPAA (for healthcare), PCI DSS (for payment processing), and various state-level privacy laws.",
-      "The key to managing compliance is automation. Manual compliance tracking is no longer feasible given the volume of requirements. Invest in compliance management platforms that can track controls, generate reports, and alert you to gaps before they become violations.",
-      "## Preparing Your Business for 2025",
-      "The threats facing Arizona businesses are real and growing, but they're not insurmountable. Start by conducting a comprehensive security assessment to identify your current vulnerabilities. Then, develop a roadmap that addresses the trends outlined above.",
-      "Consider partnering with a managed security service provider (MSSP) that understands the unique challenges facing Arizona businesses. The right partner can help you implement enterprise-grade security without the enterprise-grade budget.",
-      "Remember: cybersecurity is not a destination but a journey. The threats will continue to evolve, and your defenses must evolve with them. The businesses that thrive in 2025 will be those that treat security as a strategic priority, not an afterthought."
-    ]
-  },
-  "hipaa-compliance-checklist": {
-    id: 2,
-    title: "HIPAA Compliance Checklist for Healthcare Providers",
-    excerpt: "A comprehensive guide to maintaining HIPAA compliance in your medical practice, including technical safeguards and documentation requirements.",
-    category: "Compliance",
-    author: "Sarah Chen",
-    authorRole: "Compliance Director",
-    date: "2024-11-28",
-    readTime: "12 min read",
-    image: hipaaImg,
-    content: [
-      "HIPAA compliance isn't optional for healthcare providers—it's a legal requirement with significant penalties for violations. This comprehensive checklist will help Arizona medical practices ensure they meet all requirements while protecting patient data.",
-      "## Understanding HIPAA Requirements",
-      "The Health Insurance Portability and Accountability Act establishes national standards for protecting sensitive patient health information. Compliance requires implementing administrative, physical, and technical safeguards to ensure the confidentiality, integrity, and availability of protected health information (PHI).",
-      "## Administrative Safeguards",
-      "Administrative safeguards are the policies and procedures that govern how your practice handles PHI. These include designating a HIPAA Privacy Officer and Security Officer, conducting regular risk assessments, developing comprehensive policies and procedures, implementing workforce training programs, and establishing business associate agreements with all vendors who access PHI.",
-      "## Physical Safeguards",
-      "Physical safeguards protect the physical access to systems containing PHI. This includes facility access controls such as badge systems and visitor logs, workstation security policies, device and media controls for laptops and portable devices, and proper disposal procedures for hardware containing PHI.",
-      "## Technical Safeguards",
-      "Technical safeguards are the technology-based protections for PHI. Key requirements include implementing access controls with unique user identification, enabling automatic logoff after periods of inactivity, encrypting PHI both at rest and in transit, maintaining audit controls to track access to PHI, and establishing integrity controls to prevent unauthorized alterations.",
-      "## Documentation Requirements",
-      "HIPAA requires extensive documentation of your compliance efforts. You must maintain written policies and procedures, risk assessment documentation, training records, business associate agreements, breach notification procedures, and incident response plans.",
-      "## Common Compliance Gaps",
-      "Many Arizona healthcare practices struggle with specific areas of compliance. The most common gaps include inadequate encryption of portable devices, missing or outdated business associate agreements, insufficient access controls and audit logging, lack of regular security awareness training, and incomplete or outdated risk assessments.",
-      "## Creating a Compliance Culture",
-      "True HIPAA compliance goes beyond checklists—it requires creating a culture where protecting patient data is everyone's responsibility. This means regular training, clear reporting procedures for potential violations, and leadership commitment to privacy and security.",
-      "## Working with a Compliance Partner",
-      "Given the complexity of HIPAA requirements, many practices benefit from working with a managed IT provider that specializes in healthcare compliance. The right partner can help you implement appropriate technical controls, maintain required documentation, respond to audits, and stay current with regulatory changes.",
-      "Protecting patient data isn't just about avoiding fines—it's about maintaining the trust that's essential to the patient-provider relationship. Use this checklist as a starting point, but remember that compliance is an ongoing process that requires constant attention and improvement."
-    ]
-  },
-  "ransomware-protection": {
-    id: 3,
-    title: "Ransomware Protection: A Multi-Layer Approach",
-    excerpt: "How to build a robust defense against ransomware attacks using endpoint protection, backup strategies, and employee training.",
-    category: "Security",
-    author: "David Martinez",
-    authorRole: "Security Architect",
-    date: "2024-11-25",
-    readTime: "10 min read",
-    image: ransomwareImg,
-    content: [
-      "Ransomware remains one of the most significant threats facing Arizona businesses. A successful attack can cripple operations, destroy years of data, and cost hundreds of thousands of dollars in recovery—or worse, force a business to close permanently.",
-      "## Understanding Modern Ransomware",
-      "Today's ransomware is far more sophisticated than the simple file-encrypting malware of a decade ago. Modern ransomware-as-a-service (RaaS) operations employ advanced evasion techniques, can spread laterally across networks, and often exfiltrate data before encryption for double-extortion purposes.",
-      "## Layer 1: Email Security",
-      "Email remains the primary attack vector for ransomware. Phishing emails containing malicious attachments or links are responsible for the majority of successful attacks. Implement advanced email filtering with sandbox analysis, enable multi-factor authentication for all email accounts, train employees to recognize phishing attempts, and implement DMARC, DKIM, and SPF to prevent email spoofing.",
-      "## Layer 2: Endpoint Protection",
-      "Modern endpoint protection goes far beyond traditional antivirus. Today's solutions use behavioral analysis and machine learning to detect threats. Deploy next-generation endpoint protection on all devices, enable real-time monitoring and automatic response, implement application whitelisting where possible, and keep all systems patched and updated.",
-      "## Layer 3: Network Segmentation",
-      "Proper network segmentation can contain a ransomware outbreak, preventing it from spreading across your entire organization. Separate critical systems from general-use networks, implement micro-segmentation for sensitive data, use next-generation firewalls with deep packet inspection, and monitor east-west traffic for anomalies.",
-      "## Layer 4: Backup and Recovery",
-      "Even with the best defenses, you must prepare for the possibility of a successful attack. A robust backup strategy is your last line of defense. Follow the 3-2-1 rule: three copies, two different media types, one offsite. Test recovery procedures regularly, keep backups isolated from production networks, and consider immutable backup solutions that can't be encrypted.",
-      "## Layer 5: Incident Response",
-      "Having a plan before an attack occurs dramatically reduces recovery time and cost. Develop and document incident response procedures, identify key stakeholders and their roles, establish relationships with forensic and legal resources, and practice your response with tabletop exercises.",
-      "## The Human Element",
-      "Technology alone cannot stop ransomware. Your employees are both your greatest vulnerability and your strongest defense. Regular security awareness training, simulated phishing exercises, and a culture that encourages reporting suspicious activity are essential components of any ransomware defense strategy.",
-      "## Taking Action",
-      "Don't wait for an attack to expose the gaps in your defenses. Conduct a comprehensive security assessment, identify your vulnerabilities, and develop a roadmap for implementing the multi-layer approach described above. The cost of prevention is always less than the cost of recovery."
-    ]
-  },
-  "cloud-backup-best-practices": {
-    id: 4,
-    title: "Cloud Backup Best Practices for Small Businesses",
-    excerpt: "Protect your critical data with these proven cloud backup strategies that won't break the bank.",
-    category: "Backup & Recovery",
-    author: "Jennifer Lee",
-    authorRole: "Cloud Solutions Specialist",
-    date: "2024-11-20",
-    readTime: "6 min read",
-    image: cloudImg,
-    content: [
-      "Data loss can devastate a small business. Whether from ransomware, hardware failure, human error, or natural disaster, losing critical business data can mean losing customers, revenue, and even the business itself. Cloud backup provides affordable, reliable protection—if implemented correctly.",
-      "## Why Cloud Backup Matters",
-      "Traditional on-premise backup solutions require significant upfront investment and ongoing maintenance. Cloud backup eliminates these burdens while providing geographic redundancy, scalability, and accessibility that local solutions simply cannot match.",
-      "## The 3-2-1 Backup Rule",
-      "The foundation of any backup strategy is the 3-2-1 rule: maintain three copies of your data, store them on two different types of media, and keep one copy offsite. Cloud backup naturally satisfies the offsite requirement and, when combined with local backup, provides robust protection.",
-      "## Choosing the Right Cloud Backup Solution",
-      "Not all cloud backup solutions are created equal. When evaluating options, consider security features including encryption and access controls, reliability and uptime guarantees, recovery time objectives (RTO) and recovery point objectives (RPO), compliance certifications for your industry, and total cost of ownership including storage and bandwidth.",
-      "## What to Back Up",
-      "Many businesses make the mistake of backing up everything or nothing. The right approach is to identify and prioritize critical data. Start with customer and financial data, then add intellectual property and business documents, followed by email and communication records, and finally system configurations and application data.",
-      "## Backup Frequency and Retention",
-      "How often you back up and how long you keep backups depends on your business needs. Consider continuous backup for critical, frequently changing data, daily backups for general business data, weekly full backups with daily incrementals, and retention policies that meet regulatory requirements.",
-      "## Testing Your Backups",
-      "A backup that can't be restored is worthless. Regularly test your backup and recovery procedures. Perform test restores at least quarterly, document recovery procedures, measure actual recovery times against objectives, and verify data integrity after restoration.",
-      "## Common Backup Mistakes",
-      "Avoid these common pitfalls: not encrypting backups, storing backup credentials in backed-up systems, failing to include cloud application data (like Microsoft 365), not monitoring backup job success, and assuming cloud services automatically back up your data.",
-      "## Getting Started",
-      "If you don't have a cloud backup strategy, start today. Identify your critical data, evaluate solutions, and implement a pilot program. If you're unsure where to begin, a managed IT provider can assess your needs and recommend appropriate solutions.",
-      "The cost of cloud backup is minimal compared to the cost of data loss. Don't wait for a disaster to discover the gaps in your protection."
-    ]
-  },
-  "wire-fraud-prevention-real-estate": {
-    id: 5,
-    title: "Wire Fraud Prevention for Real Estate Transactions",
-    excerpt: "Real estate professionals are prime targets for wire fraud. Learn how to protect your clients and your business.",
-    category: "Industry Focus",
-    author: "Michael Torres",
-    authorRole: "Chief Security Officer",
-    date: "2024-11-15",
-    readTime: "7 min read",
-    image: realEstateImg,
-    content: [
-      "Wire fraud in real estate transactions has reached epidemic proportions, with losses exceeding $1.9 billion annually. Arizona's active real estate market makes local professionals and their clients particularly attractive targets for sophisticated cybercriminals.",
-      "## How Wire Fraud Works",
-      "Real estate wire fraud typically begins with business email compromise (BEC). Criminals gain access to email accounts of real estate agents, title companies, or attorneys involved in transactions. They monitor communications, waiting for the optimal moment to strike.",
-      "When closing approaches, the criminal sends fraudulent wire instructions, often from a spoofed or compromised email address that appears legitimate. By the time the fraud is discovered, the money has been moved through multiple accounts and is unrecoverable.",
-      "## Why Real Estate Is Targeted",
-      "Several factors make real estate transactions attractive to criminals: large sums of money changing hands, multiple parties involved in each transaction, time pressure that discourages verification, and public records that reveal transaction details.",
-      "## Protecting Your Clients",
-      "Prevention requires a multi-layered approach. Establish verification procedures by creating and communicating a clear policy: wire instructions should never be sent via email and should always be verified by phone using a known number.",
-      "Secure your email with multi-factor authentication, advanced threat protection, and regular security audits. Train your team to recognize phishing attempts and suspicious communications.",
-      "## Warning Signs of Wire Fraud",
-      "Train everyone involved in transactions to recognize red flags: last-minute changes to wire instructions, pressure to complete transfers quickly, slight variations in email addresses, and requests to keep changes confidential.",
-      "## If Fraud Occurs",
-      "Time is critical. If you suspect wire fraud, immediately contact your bank to attempt to recall the wire, report to the FBI's Internet Crime Complaint Center (IC3), notify local law enforcement, and inform all parties to the transaction.",
-      "## Building a Security Culture",
-      "The best protection is a culture where security is everyone's responsibility. Regular training, clear procedures, and open communication about threats can prevent most wire fraud attempts.",
-      "The criminals are sophisticated and persistent, but they rely on speed and confusion. Slow down, verify everything, and trust your instincts when something seems wrong."
-    ]
-  },
-  "security-awareness-training-roi": {
-    id: 6,
-    title: "Employee Security Awareness Training: ROI Analysis",
-    excerpt: "Investing in security training pays dividends. See the data on how training reduces security incidents and costs.",
-    category: "Training",
-    author: "Sarah Chen",
-    authorRole: "Compliance Director",
-    date: "2024-11-10",
-    readTime: "5 min read",
-    image: trainingImg,
-    content: [
-      "Security awareness training is often viewed as a checkbox compliance exercise rather than a strategic investment. However, the data tells a different story: effective training programs deliver substantial returns while significantly reducing security risk.",
-      "## The Cost of Human Error",
-      "Human error is involved in over 80% of security breaches. Phishing attacks, weak passwords, mishandled data, and social engineering all exploit the human element. Without training, employees are your greatest vulnerability.",
-      "## Measuring Training Effectiveness",
-      "The ROI of security training can be measured through several metrics: reduction in successful phishing attempts, decreased security incidents, faster incident reporting, improved compliance audit results, and reduced remediation costs.",
-      "## The Numbers",
-      "Organizations with comprehensive security awareness programs see dramatic improvements. Phishing susceptibility drops from 30-40% to under 5% with regular training. The average cost of a data breach is $4.45 million—training that prevents even one incident delivers massive returns.",
-      "## Elements of Effective Training",
-      "Not all training programs are equally effective. Key elements include regular, ongoing training rather than annual events, simulated phishing exercises with immediate feedback, role-specific content for high-risk positions, engaging formats that maintain attention, and metrics and reporting to track progress.",
-      "## Common Training Mistakes",
-      "Avoid these pitfalls that reduce training effectiveness: treating training as a one-time event, using generic content that doesn't apply to your industry, punishing employees for training failures, not measuring results, and failing to update content as threats evolve.",
-      "## Building a Security Culture",
-      "The ultimate goal of security awareness training is to build a culture where security is everyone's responsibility. This requires leadership commitment, positive reinforcement, clear reporting channels, and integration with business processes.",
-      "## Making the Case for Investment",
-      "When presenting training ROI to leadership, focus on risk reduction, compare training costs to potential breach costs, highlight compliance benefits, and share industry benchmarks and case studies.",
-      "Security awareness training isn't an expense—it's an investment that protects your business, your clients, and your reputation. The question isn't whether you can afford training; it's whether you can afford not to train."
-    ]
-  }
+const LEGACY_SLUG_REDIRECTS: Record<string, string> = {
+  "why-small-businesses-outgrow-reactive-it-support": "managed-it-vs-break-fix-it",
+  "it-support-vs-cybersecurity-first-managed-it": "managed-it-vs-break-fix-it",
+  "what-a-cyber-risk-assessment-should-show-you":
+    "what-a-cyber-risk-assessment-finds-before-attackers-do",
+  "backup-isnt-recovery-what-real-bcdr-looks-like":
+    "can-ransomware-encrypt-your-backups",
+  "co-managed-vs-fully-managed-it":
+    "co-managed-it-vs-hiring-another-it-employee",
+  "ransomware-defense-arizona-businesses":
+    "multilayer-ransomware-defense-arizona-businesses",
+  "ransomware-protection": "multilayer-ransomware-defense-arizona-businesses",
+  ransomware: "multilayer-ransomware-defense-arizona-businesses",
+  "phishing-2026-mfa-alone-isnt-enough":
+    "why-mfa-alone-does-not-stop-ransomware",
 };
+
+function isWordToken(t: string): boolean {
+  return /[A-Za-z0-9\u00C0-\u024F]/.test(t);
+}
+
+function renderTokens(
+  text: string,
+  counter: { value: number },
+): ReactNode {
+  const parts = text.split(/(\s+)/);
+  return parts.map((tok, i) => {
+    if (!tok) return null;
+    if (/^\s+$/.test(tok)) return tok;
+    if (!isWordToken(tok)) return tok;
+    const idx = counter.value++;
+    return (
+      <span key={i} className="blog-word" data-w={idx}>
+        {tok}
+      </span>
+    );
+  });
+}
+
+function countWords(text: string): number {
+  return text.split(/\s+/).filter(isWordToken).length;
+}
+
+function slugifyHeading(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .slice(0, 80);
+}
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
   const articleRef = useRef<HTMLElement>(null);
-  
-  const post = slug ? blogPosts[slug] : null;
-  
-  if (!post) {
+  const [copied, setCopied] = useState(false);
+
+  const post = slug ? blogBySlug(slug) : undefined;
+  const body = slug ? blogBodies[slug] : undefined;
+
+  const relatedPosts = useMemo(() => {
+    if (!post) return [];
+    const sameCategory = blogs.filter(
+      (b) => b.slug !== post.slug && b.category === post.category,
+    );
+    const others = blogs.filter(
+      (b) => b.slug !== post.slug && b.category !== post.category,
+    );
+    return [...sameCategory, ...others].slice(0, 3);
+  }, [post]);
+
+  const hasDualVersion = !!(body?.overviewBlocks && body?.extendedBlocks);
+  const [view, setView] = useState<"overview" | "extended">("overview");
+
+  const activeBlocks = useMemo(() => {
+    if (!body) return [];
+    if (hasDualVersion) {
+      return view === "overview" ? body.overviewBlocks! : body.extendedBlocks!;
+    }
+    return body.blocks ?? [];
+  }, [body, hasDualVersion, view]);
+
+  const activeReadTime = hasDualVersion
+    ? (view === "overview" ? body?.overviewReadTime : body?.extendedReadTime) ??
+      body?.readTime
+    : body?.readTime;
+
+  const audioText = useMemo(() => {
+    const blocks = activeBlocks;
+    return blocks
+      .map((b) => {
+        if (b.kind === "p") {
+          const raw = b.text.trim();
+          if (raw.startsWith("> ")) return raw.slice(2);
+          return raw;
+        }
+        if (b.kind === "h2") return b.text;
+        if (b.kind === "ul") return b.items.join(". ");
+        if (b.kind === "callout") return `${b.title ?? ""}: ${b.text}`.trim();
+        if (b.kind === "quote") return b.text;
+        return "";
+      })
+      .filter(Boolean)
+      .join(". ");
+  }, [activeBlocks]);
+
+  const totalWords = useMemo(() => countWords(audioText), [audioText]);
+
+  const [currentWordIdx, setCurrentWordIdx] = useState(-1);
+  const lastWordElRef = useRef<HTMLElement | null>(null);
+
+  // Auto-scroll respects user control: once the reader manually scrolls
+  // (wheel, touch, arrow keys, etc.) we stop following the highlight until
+  // they've been still for a while. This lets them pause/scroll back without
+  // being yanked down to the active word.
+  const userScrollingRef = useRef(false);
+  const userScrollTimerRef = useRef<number | null>(null);
+  const programmaticScrollRef = useRef(false);
+
+  useEffect(() => {
+    const RESUME_IDLE_MS = 4000;
+
+    const markUserScrolling = () => {
+      // Ignore the brief programmatic scroll we trigger ourselves.
+      if (programmaticScrollRef.current) return;
+      userScrollingRef.current = true;
+      if (userScrollTimerRef.current !== null) {
+        window.clearTimeout(userScrollTimerRef.current);
+      }
+      userScrollTimerRef.current = window.setTimeout(() => {
+        userScrollingRef.current = false;
+        userScrollTimerRef.current = null;
+      }, RESUME_IDLE_MS);
+    };
+
+    // These input events only fire on genuine user interaction, never on
+    // programmatic scrollIntoView, so they're a reliable user-intent signal.
+    window.addEventListener("wheel", markUserScrolling, { passive: true });
+    window.addEventListener("touchmove", markUserScrolling, { passive: true });
+    window.addEventListener("touchstart", markUserScrolling, { passive: true });
+    const onKey = (e: KeyboardEvent) => {
+      if (
+        [
+          "ArrowUp",
+          "ArrowDown",
+          "PageUp",
+          "PageDown",
+          "Home",
+          "End",
+          " ",
+        ].includes(e.key)
+      ) {
+        markUserScrolling();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+
+    return () => {
+      window.removeEventListener("wheel", markUserScrolling);
+      window.removeEventListener("touchmove", markUserScrolling);
+      window.removeEventListener("touchstart", markUserScrolling);
+      window.removeEventListener("keydown", onKey);
+      if (userScrollTimerRef.current !== null) {
+        window.clearTimeout(userScrollTimerRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (lastWordElRef.current) {
+      lastWordElRef.current.classList.remove("blog-word--active");
+      lastWordElRef.current = null;
+    }
+    if (currentWordIdx < 0) return;
+    const el = articleRef.current?.querySelector<HTMLElement>(
+      `[data-w="${currentWordIdx}"]`,
+    );
+    if (!el) return;
+    el.classList.add("blog-word--active");
+    lastWordElRef.current = el;
+
+    // Skip auto-scroll while the user is actively controlling the page.
+    if (userScrollingRef.current) return;
+
+    const rect = el.getBoundingClientRect();
+    const topMargin = 140;
+    const bottomMargin = 180;
+    if (
+      rect.top < topMargin ||
+      rect.bottom > window.innerHeight - bottomMargin
+    ) {
+      // Flag the upcoming scroll as programmatic so our own scrollIntoView
+      // doesn't get mistaken for a user gesture and disable auto-follow.
+      programmaticScrollRef.current = true;
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      window.setTimeout(() => {
+        programmaticScrollRef.current = false;
+      }, 800);
+    }
+  }, [currentWordIdx]);
+
+  useEffect(() => {
+    setCurrentWordIdx(-1);
+  }, [view, slug]);
+
+  const headings = useMemo(
+    () =>
+      activeBlocks
+        .map((b, idx) =>
+          b.kind === "h2"
+            ? { id: `s-${idx}-${slugifyHeading(b.text)}`, text: b.text }
+            : null,
+        )
+        .filter((x): x is { id: string; text: string } => x !== null),
+    [activeBlocks],
+  );
+
+  const [activeHeading, setActiveHeading] = useState<string | null>(null);
+  useEffect(() => {
+    if (headings.length === 0) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveHeading(entry.target.id);
+            break;
+          }
+        }
+      },
+      { rootMargin: "-30% 0px -60% 0px", threshold: 0 },
+    );
+    for (const h of headings) {
+      const el = document.getElementById(h.id);
+      if (el) observer.observe(el);
+    }
+    return () => observer.disconnect();
+  }, [headings]);
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* ignore */
+    }
+  };
+
+  const handleShare = (network: "twitter" | "linkedin") => {
+    const url = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(post?.title ?? "");
+    const link =
+      network === "twitter"
+        ? `https://twitter.com/intent/tweet?url=${url}&text=${title}`
+        : `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+    window.open(link, "_blank", "noopener,noreferrer,width=600,height=520");
+  };
+
+  if (slug && LEGACY_SLUG_REDIRECTS[slug]) {
+    return (
+      <Redirect to={`/resources/blog/${LEGACY_SLUG_REDIRECTS[slug]}`} replace />
+    );
+  }
+
+  if (!post || !body || activeBlocks.length === 0) {
     return (
       <div className="min-h-screen bg-[#0a0a0a]">
         <MegaMenu />
-        <main className="pt-32 pb-20">
+        <main className="pt-36 pb-20">
           <div className="container mx-auto px-4 max-w-4xl text-center">
-            <h1 className="text-4xl font-bold text-white mb-4">Article Not Found</h1>
-            <p className="text-white/70 mb-8">The article you're looking for doesn't exist.</p>
+            <h1 className="text-4xl font-bold text-white mb-4">
+              Article Not Found
+            </h1>
+            <p className="text-white/70 mb-8">
+              The article you’re looking for doesn’t exist.
+            </p>
             <Link href="/resources/blog">
               <Button className="bg-white text-violet-700 hover:bg-white/90">
                 <ArrowLeft className="mr-2 h-4 w-4" />
@@ -240,114 +319,788 @@ export default function BlogPost() {
     );
   }
 
+  // Skip the first paragraph from the body if we want a drop-cap effect
+  let firstParagraphRendered = false;
+  // Word counter for live audio highlighting — increments in render order so
+  // each spoken word can be located via [data-w="N"].
+  const wordCounter = { value: 0 };
+
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
+      <Helmet>
+        <title>{post.seoTitle}</title>
+        <meta name="description" content={post.seoDescription} />
+        <meta property="og:title" content={post.seoTitle} />
+        <meta property="og:description" content={post.seoDescription} />
+        <meta property="og:image" content={post.coverImage} />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Helmet>
       <ArticleJsonLd
         title={post.title}
         description={post.excerpt}
         author={post.author}
         datePublished={post.date}
-        image={post.image}
+        image={post.coverImage}
         url={`/resources/blog/${slug}`}
       />
-      <BreadcrumbJsonLd items={[
-        { name: "Home", url: "/" },
-        { name: "Blog", url: "/resources/blog" },
-        { name: post.title, url: `/resources/blog/${slug}` }
-      ]} />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: "/" },
+          { name: "Blog", url: "/resources/blog" },
+          { name: post.title, url: `/resources/blog/${slug}` },
+        ]}
+      />
       <ReadingProgressBar targetRef={articleRef} />
       <MegaMenu />
-      
-      <main className="pt-32 pb-20">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <nav className="flex items-center gap-2 text-sm text-white/50 mb-8" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-violet-400 transition-colors">Home</Link>
+
+      {/* Cinematic hero */}
+      <section className="relative pt-32 pb-12 overflow-hidden">
+        <div
+          aria-hidden
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage: `url(${post.coverImage})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            filter: "blur(60px) saturate(1.4)",
+          }}
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(179,0,255,0.25), transparent 60%), linear-gradient(180deg, rgba(10,10,10,0.7), #0a0a0a 90%)",
+          }}
+        />
+        <div className="container relative mx-auto px-4 max-w-4xl">
+          <nav
+            className="flex items-center gap-2 text-sm text-white/50 mb-8"
+            aria-label="Breadcrumb"
+          >
+            <Link
+              href="/"
+              className="hover:text-violet-400 transition-colors"
+            >
+              Home
+            </Link>
             <ChevronRight className="h-4 w-4" />
-            <Link href="/resources/blog" className="hover:text-violet-400 transition-colors">Blog</Link>
+            <Link
+              href="/resources/blog"
+              className="hover:text-violet-400 transition-colors"
+            >
+              Blog
+            </Link>
             <ChevronRight className="h-4 w-4" />
-            <span className="text-white/70 truncate max-w-[200px]">{post.title}</span>
+            <span className="text-white/70 truncate max-w-[260px]">
+              {post.title}
+            </span>
           </nav>
-          
-          <Link href="/resources/blog" className="inline-flex items-center text-violet-400 hover:text-violet-300 mb-6 transition-colors" data-testid="link-back-blog">
+
+          <Link
+            href="/resources/blog"
+            className="inline-flex items-center text-violet-300 hover:text-violet-200 mb-8 transition-colors text-sm"
+            data-testid="link-back-blog"
+          >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to all articles
           </Link>
 
           <header className="mb-10">
-            <Badge className="mb-4 bg-violet-500/20 text-violet-400 border-violet-500/30">
+            <Badge className="mb-5 bg-violet-500/15 text-violet-300 border-violet-500/30 backdrop-blur">
               {post.category}
             </Badge>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-[1.1] tracking-tight">
               {post.title}
             </h1>
-            <p className="text-xl text-white/70 mb-6">
+            <p className="text-lg md:text-xl text-white/70 mb-8 leading-relaxed max-w-3xl">
               {post.excerpt}
             </p>
-            
-            <div className="flex flex-wrap items-center gap-6 text-white/60">
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-violet-500 to-purple-500 flex items-center justify-center">
+
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-4 pt-6 border-t border-white/10">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center shadow-[0_0_18px_rgba(179,0,255,0.4)]">
                   <User className="h-5 w-5 text-white" />
                 </div>
                 <div>
-                  <p className="text-white font-medium">{post.author}</p>
-                  <p className="text-sm text-white/50">{post.authorRole}</p>
+                  <p className="text-white font-medium leading-tight">
+                    {post.author}
+                  </p>
+                  <p className="text-xs text-white/50">
+                    Cybersecurity-first managed IT
+                  </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="hidden sm:block w-px h-8 bg-white/10" />
+              <div className="flex items-center gap-2 text-sm text-white/60">
                 <Calendar className="h-4 w-4" />
-                {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                {new Date(post.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 text-sm text-white/60">
                 <Clock className="h-4 w-4" />
-                {post.readTime}
+                {activeReadTime}
+              </div>
+
+              {/* Share buttons */}
+              <div className="ml-auto flex items-center gap-2">
+                <BlogAudioPlayer
+                  title={post.title}
+                  text={audioText}
+                  wordCount={totalWords}
+                  onWordChange={setCurrentWordIdx}
+                />
+                <button
+                  onClick={() => handleShare("twitter")}
+                  className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.03] text-white/60 hover:text-white hover:border-violet-500/50 hover:bg-violet-500/10 transition-all flex items-center justify-center"
+                  aria-label="Share on Twitter"
+                  data-testid="button-share-twitter"
+                >
+                  <Twitter className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => handleShare("linkedin")}
+                  className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.03] text-white/60 hover:text-white hover:border-violet-500/50 hover:bg-violet-500/10 transition-all flex items-center justify-center"
+                  aria-label="Share on LinkedIn"
+                  data-testid="button-share-linkedin"
+                >
+                  <Linkedin className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={handleCopyLink}
+                  className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.03] text-white/60 hover:text-white hover:border-violet-500/50 hover:bg-violet-500/10 transition-all flex items-center justify-center"
+                  aria-label="Copy link"
+                  data-testid="button-share-copy"
+                >
+                  {copied ? (
+                    <Check className="h-4 w-4 text-emerald-400" />
+                  ) : (
+                    <Link2 className="h-4 w-4" />
+                  )}
+                </button>
               </div>
             </div>
+
+            {hasDualVersion && (
+              <div
+                role="tablist"
+                aria-label="Article version"
+                className="mt-8 flex flex-col sm:inline-flex sm:flex-row w-full sm:w-auto gap-1 sm:gap-0 rounded-2xl sm:rounded-full border border-white/10 bg-white/[0.03] p-1 backdrop-blur"
+                data-testid="tabs-blog-version"
+              >
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={view === "overview"}
+                  onClick={() => setView("overview")}
+                  className={`w-full sm:w-auto px-4 sm:px-5 py-2.5 sm:py-2 rounded-xl sm:rounded-full text-sm font-medium transition-all text-center ${
+                    view === "overview"
+                      ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-[0_0_18px_rgba(179,0,255,0.35)]"
+                      : "text-white/60 hover:text-white"
+                  }`}
+                  data-testid="tab-overview"
+                >
+                  Overview
+                  <span className="ml-2 text-[11px] opacity-70">
+                    {body.overviewReadTime}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={view === "extended"}
+                  onClick={() => setView("extended")}
+                  className={`w-full sm:w-auto px-4 sm:px-5 py-2.5 sm:py-2 rounded-xl sm:rounded-full text-sm font-medium transition-all text-center ${
+                    view === "extended"
+                      ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-[0_0_18px_rgba(179,0,255,0.35)]"
+                      : "text-white/60 hover:text-white"
+                  }`}
+                  data-testid="tab-extended"
+                >
+                  Extended Deep Dive
+                  <span className="ml-2 text-[11px] opacity-70">
+                    {body.extendedReadTime}
+                  </span>
+                </button>
+              </div>
+            )}
           </header>
 
-          <div className="aspect-video rounded-xl overflow-hidden mb-10">
-            <img src={post.image} alt={post.title} loading="eager" decoding="async" width={960} height={540} className="w-full h-full object-cover" />
+          {/* Hero image with frame */}
+          <div className="relative aspect-video rounded-2xl overflow-hidden ring-1 ring-white/10 shadow-[0_30px_120px_-30px_rgba(179,0,255,0.5)]">
+            <img
+              src={post.coverImage}
+              alt={post.title}
+              loading="eager"
+              decoding="async"
+              width={960}
+              height={540}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-2xl pointer-events-none" />
           </div>
+        </div>
+      </section>
 
-          <div className="flex gap-4 mb-10 pb-10 border-b border-white/10">
-            <Button variant="outline" size="sm" className="border-white/20 text-white/70 hover:bg-white/10 hover:text-white" data-testid="button-share">
-              <Share2 className="mr-2 h-4 w-4" />
-              Share
-            </Button>
-            <Button variant="outline" size="sm" className="border-white/20 text-white/70 hover:bg-white/10 hover:text-white" data-testid="button-save">
-              <Bookmark className="mr-2 h-4 w-4" />
-              Save
-            </Button>
-          </div>
+      <main className="pb-24">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <div className="lg:grid lg:grid-cols-12 lg:gap-12">
+            {/* TOC sidebar */}
+            {headings.length >= 2 && (
+              <aside className="hidden lg:block lg:col-span-3" aria-label="Table of contents">
+                <div className="sticky top-28">
+                  <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-white/[0.01] p-5 backdrop-blur-sm shadow-[0_10px_40px_-20px_rgba(179,0,255,0.4)]">
+                    <div className="flex items-center gap-2 text-[11px] font-bold text-white/80 mb-5 uppercase tracking-[0.18em]">
+                      <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-violet-500/15 border border-violet-400/30">
+                        <List className="h-3.5 w-3.5 text-violet-300" />
+                      </span>
+                      In this article
+                    </div>
+                    {(() => {
+                      const activeIdx = headings.findIndex(
+                        (h) => h.id === activeHeading,
+                      );
+                      const progressPct =
+                        activeIdx < 0
+                          ? 0
+                          : ((activeIdx + 1) / headings.length) * 100;
+                      return (
+                        <nav className="relative" aria-label="Sections">
+                          {/* Vertical rail with gradient progress fill */}
+                          <span
+                            aria-hidden
+                            className="absolute left-[10px] top-1 bottom-1 w-px bg-white/10"
+                          />
+                          <span
+                            aria-hidden
+                            className="absolute left-[10px] top-1 w-px bg-gradient-to-b from-violet-400 via-fuchsia-400 to-violet-400 transition-all duration-500"
+                            style={{
+                              height: `max(0px, calc(${progressPct}% - 4px))`,
+                            }}
+                          />
+                          <ul className="space-y-1">
+                            {headings.map((h, i) => {
+                              const isActive = activeHeading === h.id;
+                              const isPast = activeIdx > -1 && i < activeIdx;
+                              return (
+                                <li key={h.id} className="relative pl-7">
+                                  {/* Step dot */}
+                                  <span
+                                    aria-hidden
+                                    className={`absolute left-[3px] top-[11px] w-3.5 h-3.5 rounded-full border-2 transition-all duration-300 flex items-center justify-center text-[8px] font-bold ${
+                                      isActive
+                                        ? "bg-gradient-to-br from-violet-400 to-fuchsia-400 border-white/80 shadow-[0_0_12px_rgba(217,70,239,0.7)] scale-110"
+                                        : isPast
+                                          ? "bg-violet-500/70 border-violet-300/60"
+                                          : "bg-[#0a0a0a] border-white/25"
+                                    }`}
+                                  >
+                                    {isPast && (
+                                      <Check className="h-2 w-2 text-white" strokeWidth={4} />
+                                    )}
+                                  </span>
+                                  <a
+                                    href={`#${h.id}`}
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      document.getElementById(h.id)?.scrollIntoView({
+                                        behavior: "smooth",
+                                        block: "start",
+                                      });
+                                    }}
+                                    className={`block text-sm leading-snug transition-all rounded-lg px-3 py-2 ${
+                                      isActive
+                                        ? "bg-violet-500/10 text-white font-medium"
+                                        : isPast
+                                          ? "text-white/45 hover:text-white"
+                                          : "text-white/60 hover:text-white hover:bg-white/[0.04]"
+                                    }`}
+                                    data-testid={`toc-${h.id}`}
+                                  >
+                                    <span className="text-[10px] font-bold opacity-50 mr-2 tabular-nums">
+                                      {String(i + 1).padStart(2, "0")}
+                                    </span>
+                                    {h.text}
+                                  </a>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                          {/* Progress meter */}
+                          <div className="mt-5 pt-4 border-t border-white/10">
+                            <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-wider text-white/50 mb-2">
+                              <span>Progress</span>
+                              <span className="text-violet-300 tabular-nums">
+                                {activeIdx < 0 ? 0 : activeIdx + 1}/{headings.length}
+                              </span>
+                            </div>
+                            <div className="h-1 rounded-full bg-white/10 overflow-hidden">
+                              <div
+                                className="h-full bg-gradient-to-r from-violet-400 via-fuchsia-400 to-violet-400 transition-all duration-500 rounded-full"
+                                style={{ width: `${progressPct}%` }}
+                              />
+                            </div>
+                          </div>
+                        </nav>
+                      );
+                    })()}
+                  </div>
+                </div>
+              </aside>
+            )}
 
-          <article ref={articleRef} className="prose prose-lg prose-invert max-w-none" data-testid="article-content">
-            {post.content.map((paragraph, index) => {
-              if (paragraph.startsWith('## ')) {
-                return (
-                  <h2 key={index} className="text-2xl font-bold text-white mt-10 mb-4">
-                    {paragraph.replace('## ', '')}
-                  </h2>
-                );
+            {/* Article body */}
+            <div
+              className={
+                headings.length >= 2 ? "lg:col-span-9" : "lg:col-span-12 max-w-4xl mx-auto"
               }
-              return (
-                <p key={index} className="text-white/80 text-base leading-relaxed mb-6">
-                  {paragraph}
-                </p>
-              );
-            })}
-          </article>
+            >
+              <article
+                ref={articleRef}
+                className="max-w-[680px] mx-auto"
+                data-testid="article-content"
+                key={view}
+              >
+                {activeBlocks.map((block, idx) => {
+                  if (block.kind === "h2") {
+                    const id = `s-${idx}-${slugifyHeading(block.text)}`;
+                    return (
+                      <h2
+                        key={idx}
+                        id={id}
+                        className="group scroll-mt-28 text-2xl md:text-[34px] font-bold text-white mt-16 mb-6 leading-[1.15] tracking-tight"
+                      >
+                        <span className="bg-gradient-to-r from-white to-violet-100 bg-clip-text text-transparent">
+                          {renderTokens(block.text, wordCounter)}
+                        </span>
+                        <span
+                          aria-hidden
+                          className="block mt-3 h-px w-12 bg-gradient-to-r from-violet-400/70 to-fuchsia-400/0"
+                        />
+                      </h2>
+                    );
+                  }
+                  if (block.kind === "ul") {
+                    return (
+                      <ul
+                        key={idx}
+                        className="my-7 space-y-3.5 text-white/80"
+                      >
+                        {block.items.map((it, i) => (
+                          <li
+                            key={i}
+                            className="flex items-start gap-3 leading-[1.75] text-[17px]"
+                          >
+                            <span className="mt-[10px] inline-block w-1.5 h-1.5 rounded-full bg-gradient-to-r from-violet-400 to-fuchsia-400 flex-shrink-0" />
+                            <span>{renderTokens(it, wordCounter)}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    );
+                  }
+                  if (block.kind === "callout") {
+                    const tone = block.tone ?? "insight";
+                    const toneCfg = {
+                      insight: {
+                        Icon: Sparkles,
+                        ring: "border-violet-400/40",
+                        bg: "from-violet-600/15 to-fuchsia-600/10",
+                        glow: "bg-violet-500/20",
+                        accent: "text-violet-200",
+                        chip: "bg-violet-500/20 text-violet-100 border-violet-400/40",
+                        defaultTitle: "Key insight",
+                      },
+                      warning: {
+                        Icon: AlertTriangle,
+                        ring: "border-fuchsia-400/50",
+                        bg: "from-fuchsia-600/20 to-violet-700/15",
+                        glow: "bg-fuchsia-500/25",
+                        accent: "text-fuchsia-200",
+                        chip: "bg-fuchsia-500/20 text-fuchsia-100 border-fuchsia-400/40",
+                        defaultTitle: "Watch out",
+                      },
+                      note: {
+                        Icon: Info,
+                        ring: "border-violet-400/35",
+                        bg: "from-violet-700/15 to-violet-900/10",
+                        glow: "bg-violet-500/20",
+                        accent: "text-violet-200",
+                        chip: "bg-violet-500/15 text-violet-100 border-violet-400/35",
+                        defaultTitle: "Note",
+                      },
+                      tip: {
+                        Icon: Lightbulb,
+                        ring: "border-violet-300/40",
+                        bg: "from-violet-500/15 to-violet-700/10",
+                        glow: "bg-violet-400/20",
+                        accent: "text-violet-200",
+                        chip: "bg-violet-400/20 text-violet-100 border-violet-300/40",
+                        defaultTitle: "Pro tip",
+                      },
+                    }[tone];
+                    const { Icon } = toneCfg;
+                    return (
+                      <aside
+                        key={idx}
+                        className={`relative my-9 rounded-2xl border ${toneCfg.ring} bg-gradient-to-br ${toneCfg.bg} backdrop-blur-sm overflow-hidden`}
+                        data-testid={`callout-${tone}`}
+                      >
+                        <div
+                          aria-hidden
+                          className={`absolute -top-16 -right-16 w-48 h-48 rounded-full ${toneCfg.glow} blur-3xl pointer-events-none`}
+                        />
+                        <div className="relative p-6 sm:p-7 flex gap-4">
+                          <div className={`flex-shrink-0 w-10 h-10 rounded-xl border ${toneCfg.ring} flex items-center justify-center ${toneCfg.accent} bg-black/30`}>
+                            <Icon className="h-5 w-5" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className={`inline-block text-[10px] font-bold uppercase tracking-[0.14em] mb-2 px-2 py-0.5 rounded-full border ${toneCfg.chip}`}>
+                              {renderTokens(block.title ?? toneCfg.defaultTitle, wordCounter)}
+                            </span>
+                            <p className="text-white/90 text-[16px] leading-[1.7]">
+                              {renderTokens(block.text, wordCounter)}
+                            </p>
+                          </div>
+                        </div>
+                      </aside>
+                    );
+                  }
+                  if (block.kind === "quote") {
+                    return (
+                      <figure
+                        key={idx}
+                        className="relative my-10 pl-6 sm:pl-8 border-l-[3px] border-violet-400/70"
+                        data-testid="pullquote"
+                      >
+                        <Quote
+                          aria-hidden
+                          className="absolute -left-[2px] -top-2 h-5 w-5 text-violet-400 bg-[#0a0a0a] px-0.5"
+                        />
+                        <blockquote className="text-white/90 text-xl sm:text-2xl leading-[1.45] font-serif italic">
+                          “{renderTokens(block.text, wordCounter)}”
+                        </blockquote>
+                        {block.cite && (
+                          <figcaption className="mt-3 text-sm text-white/50 not-italic">
+                            — {block.cite}
+                          </figcaption>
+                        )}
+                      </figure>
+                    );
+                  }
+                  // ---- paragraph ----
+                  // Inline pattern detection so existing posts can opt-in via
+                  // markdown-ish prefixes without changing their data shape.
+                  const raw = block.text.trim();
+                  // Pull-quote: paragraph starting with "> "
+                  if (raw.startsWith("> ")) {
+                    return (
+                      <figure
+                        key={idx}
+                        className="relative my-10 pl-6 sm:pl-8 border-l-[3px] border-violet-400/70"
+                        data-testid="pullquote"
+                      >
+                        <Quote
+                          aria-hidden
+                          className="absolute -left-[2px] -top-2 h-5 w-5 text-violet-400 bg-[#0a0a0a] px-0.5"
+                        />
+                        <blockquote className="text-white/90 text-xl sm:text-2xl leading-[1.45] font-serif italic">
+                          “{renderTokens(raw.slice(2), wordCounter)}”
+                        </blockquote>
+                      </figure>
+                    );
+                  }
+                  // Callout: paragraph starting with a labeled prefix
+                  const calloutMatch = raw.match(
+                    /^(Key insight|Insight|Warning|Watch out|Note|Tip|Pro tip):\s*(.+)$/i,
+                  );
+                  if (calloutMatch) {
+                    const label = calloutMatch[1].toLowerCase();
+                    const tone: "insight" | "warning" | "note" | "tip" =
+                      label.includes("warn") || label.includes("watch")
+                        ? "warning"
+                        : label.includes("note")
+                          ? "note"
+                          : label.includes("tip")
+                            ? "tip"
+                            : "insight";
+                    const toneCfg = {
+                      insight: {
+                        Icon: Sparkles,
+                        ring: "border-violet-400/40",
+                        bg: "from-violet-600/15 to-fuchsia-600/10",
+                        glow: "bg-violet-500/20",
+                        accent: "text-violet-200",
+                        chip: "bg-violet-500/20 text-violet-100 border-violet-400/40",
+                        title: "Key insight",
+                      },
+                      warning: {
+                        Icon: AlertTriangle,
+                        ring: "border-fuchsia-400/50",
+                        bg: "from-fuchsia-600/20 to-violet-700/15",
+                        glow: "bg-fuchsia-500/25",
+                        accent: "text-fuchsia-200",
+                        chip: "bg-fuchsia-500/20 text-fuchsia-100 border-fuchsia-400/40",
+                        title: "Watch out",
+                      },
+                      note: {
+                        Icon: Info,
+                        ring: "border-violet-400/35",
+                        bg: "from-violet-700/15 to-violet-900/10",
+                        glow: "bg-violet-500/20",
+                        accent: "text-violet-200",
+                        chip: "bg-violet-500/15 text-violet-100 border-violet-400/35",
+                        title: "Note",
+                      },
+                      tip: {
+                        Icon: Lightbulb,
+                        ring: "border-violet-300/40",
+                        bg: "from-violet-500/15 to-violet-700/10",
+                        glow: "bg-violet-400/20",
+                        accent: "text-violet-200",
+                        chip: "bg-violet-400/20 text-violet-100 border-violet-300/40",
+                        title: "Pro tip",
+                      },
+                    }[tone];
+                    const { Icon } = toneCfg;
+                    return (
+                      <aside
+                        key={idx}
+                        className={`relative my-9 rounded-2xl border ${toneCfg.ring} bg-gradient-to-br ${toneCfg.bg} backdrop-blur-sm overflow-hidden`}
+                        data-testid={`callout-${tone}`}
+                      >
+                        <div
+                          aria-hidden
+                          className={`absolute -top-16 -right-16 w-48 h-48 rounded-full ${toneCfg.glow} blur-3xl pointer-events-none`}
+                        />
+                        <div className="relative p-6 sm:p-7 flex gap-4">
+                          <div className={`flex-shrink-0 w-10 h-10 rounded-xl border ${toneCfg.ring} flex items-center justify-center ${toneCfg.accent} bg-black/30`}>
+                            <Icon className="h-5 w-5" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className={`inline-block text-[10px] font-bold uppercase tracking-[0.14em] mb-2 px-2 py-0.5 rounded-full border ${toneCfg.chip}`}>
+                              {renderTokens(toneCfg.title, wordCounter)}
+                            </span>
+                            <p className="text-white/90 text-[16px] leading-[1.7]">
+                              {renderTokens(calloutMatch[2], wordCounter)}
+                            </p>
+                          </div>
+                        </div>
+                      </aside>
+                    );
+                  }
+                  // Default paragraph — drop-cap on the first one only
+                  const isFirst = !firstParagraphRendered;
+                  if (isFirst) firstParagraphRendered = true;
+                  return (
+                    <p
+                      key={idx}
+                      className={`text-white/85 text-[18px] leading-[1.85] mb-7 ${
+                        isFirst
+                          ? "first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:text-7xl first-letter:font-bold first-letter:leading-[0.85] first-letter:bg-gradient-to-br first-letter:from-violet-300 first-letter:to-fuchsia-400 first-letter:bg-clip-text first-letter:text-transparent"
+                          : ""
+                      }`}
+                    >
+                      {renderTokens(block.text, wordCounter)}
+                    </p>
+                  );
+                })}
+              </article>
 
-          <Card className="mt-12 bg-gradient-to-r from-violet-600/20 to-purple-600/20 border-violet-500/30">
-            <CardContent className="p-8">
-              <h3 className="text-xl font-bold text-white mb-2">Need help implementing these strategies?</h3>
-              <p className="text-white/70 mb-6">Our team of cybersecurity experts can help protect your Arizona business.</p>
-              <a href="/book">
-                <Button className="bg-white text-violet-700 hover:bg-white/90" data-testid="button-consultation">
-                  Schedule a Free Consultation
-                </Button>
-              </a>
-            </CardContent>
-          </Card>
+              {/* Bottom CTA */}
+              <Card className="mt-14 max-w-3xl border-violet-500/30 bg-gradient-to-br from-violet-600/15 via-[#0a0a0a] to-fuchsia-600/15 overflow-hidden">
+                <CardContent className="p-7 sm:p-9 relative">
+                  <div
+                    aria-hidden
+                    className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-fuchsia-500/15 blur-3xl"
+                  />
+                  <div className="relative">
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">
+                      {body.bottomCta?.headline ??
+                        "Ready to put this into practice?"}
+                    </h3>
+                    <p className="text-white/70 mb-6 leading-relaxed">
+                      {body.bottomCta?.body ??
+                        "A short Cyber Risk Assessment shows where your environment actually stands and what to do first."}
+                    </p>
+                    <div className="flex flex-wrap gap-3">
+                      <Link href={body.bottomCta?.primaryHref ?? "/assessment"}>
+                        <Button data-testid="button-blog-assessment">
+                          {body.bottomCta?.primaryLabel ??
+                            "Schedule a Cyber Risk Assessment"}
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </Link>
+                      {body.bottomCta?.secondaryLabel &&
+                        body.bottomCta?.secondaryHref && (
+                          <Link href={body.bottomCta.secondaryHref}>
+                            <Button
+                              variant="outline"
+                              className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white hover:border-white/50"
+                              data-testid="button-blog-secondary"
+                            >
+                              {body.bottomCta.secondaryLabel}
+                            </Button>
+                          </Link>
+                        )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Author card */}
+              <Card className="mt-8 max-w-3xl border-white/10 bg-white/[0.02]">
+                <CardContent className="p-6 flex items-start gap-5">
+                  <div className="w-14 h-14 flex-shrink-0 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center shadow-[0_0_20px_rgba(179,0,255,0.35)]">
+                    <User className="h-6 w-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-white font-semibold mb-1">
+                      Written by {post.author}
+                    </p>
+                    <p className="text-white/60 text-sm leading-relaxed mb-3">
+                      Digerati Experts is a cybersecurity-first managed IT
+                      partner serving Phoenix, Chandler, and the broader
+                      Arizona SMB market — covering ProActive Ecosystem managed
+                      IT, Standalone Services, Co-Managed IT, vCIO, and AI
+                      governance.
+                    </p>
+                    <div className="flex items-center gap-3">
+                      <Link
+                        href="/about"
+                        className="text-violet-300 hover:text-violet-200 text-sm inline-flex items-center"
+                      >
+                        About Digerati Experts
+                        <ArrowRight className="ml-1 h-3.5 w-3.5" />
+                      </Link>
+                      <span className="text-white/20">•</span>
+                      <Link
+                        href="/contact"
+                        className="text-violet-300 hover:text-violet-200 text-sm inline-flex items-center"
+                      >
+                        Get in touch
+                        <ArrowRight className="ml-1 h-3.5 w-3.5" />
+                      </Link>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Share footer */}
+              <div className="mt-8 max-w-3xl flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+                <div className="flex items-center gap-2 text-white/70">
+                  <Share2 className="h-4 w-4" />
+                  <span className="text-sm font-medium">Share this article</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleShare("twitter")}
+                    className="border-white/20 bg-transparent text-white/90 hover:text-white hover:bg-violet-500/10 hover:border-violet-500/60"
+                    data-testid="button-share-twitter-bottom"
+                  >
+                    <Twitter className="h-4 w-4 mr-2" />
+                    Twitter
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleShare("linkedin")}
+                    className="border-white/20 bg-transparent text-white/90 hover:text-white hover:bg-violet-500/10 hover:border-violet-500/60"
+                    data-testid="button-share-linkedin-bottom"
+                  >
+                    <Linkedin className="h-4 w-4 mr-2" />
+                    LinkedIn
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCopyLink}
+                    className="border-white/20 bg-transparent text-white/90 hover:text-white hover:bg-violet-500/10 hover:border-violet-500/60"
+                    data-testid="button-share-copy-bottom"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="h-4 w-4 mr-2 text-emerald-400" />
+                        Copied
+                      </>
+                    ) : (
+                      <>
+                        <Link2 className="h-4 w-4 mr-2" />
+                        Copy link
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Related articles */}
+          {relatedPosts.length > 0 && (
+            <section
+              className="mt-20 pt-16 border-t border-white/10"
+              data-testid="section-related-articles"
+            >
+              <div className="flex items-end justify-between mb-8">
+                <div>
+                  <h3 className="text-2xl md:text-3xl font-bold text-white">
+                    Continue reading
+                  </h3>
+                  <p className="text-white/50 mt-1 text-sm">
+                    More from the Digerati Experts journal
+                  </p>
+                </div>
+                <Link
+                  href="/resources/blog"
+                  className="hidden sm:inline-flex items-center text-violet-300 hover:text-violet-200 text-sm font-medium"
+                >
+                  All articles
+                  <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
+              </div>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {relatedPosts.map((rp) => (
+                  <Link key={rp.slug} href={`/resources/blog/${rp.slug}`}>
+                    <Card
+                      className="group h-full overflow-hidden border-white/10 bg-white/[0.02] hover:border-violet-500/50 transition-all cursor-pointer"
+                      data-testid={`card-related-${rp.slug}`}
+                    >
+                      <div className="relative aspect-[16/9] overflow-hidden">
+                        <img
+                          src={rp.coverImage}
+                          alt={rp.title}
+                          loading="lazy"
+                          decoding="async"
+                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/90 via-transparent to-transparent" />
+                        <Badge className="absolute top-3 left-3 bg-black/60 text-white border-white/10 backdrop-blur">
+                          {rp.category}
+                        </Badge>
+                      </div>
+                      <CardContent className="p-5">
+                        <h4 className="text-base font-semibold text-white mb-2 leading-snug group-hover:text-violet-300 transition-colors line-clamp-2">
+                          {rp.title}
+                        </h4>
+                        <p className="text-sm text-white/55 line-clamp-2 mb-4 leading-relaxed">
+                          {rp.excerpt}
+                        </p>
+                        <span className="text-violet-300 text-sm inline-flex items-center font-medium">
+                          Read article
+                          <ArrowRight className="ml-1.5 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                        </span>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
       </main>
 

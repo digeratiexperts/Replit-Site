@@ -1086,3 +1086,23 @@ button, [role="button"], a {
   --c2: #EF5026;
   --c3: #F7B751;
 }
+
+/* Blog read-aloud word highlight */
+.blog-word {
+  transition: background 120ms ease, box-shadow 120ms ease, color 120ms ease;
+}
+.blog-word--active {
+  background: linear-gradient(180deg, rgba(168, 85, 247, 0.45), rgba(217, 70, 239, 0.45));
+  color: #fff !important;
+  border-radius: 4px;
+  padding: 0 3px;
+  margin: 0 -3px;
+  box-shadow: 0 0 18px rgba(217, 70, 239, 0.45);
+  -webkit-text-fill-color: #fff;
+}
+@media (prefers-reduced-motion: reduce) {
+  .blog-word,
+  .blog-word--active {
+    transition: none;
+  }
+}

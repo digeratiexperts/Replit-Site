@@ -149,6 +149,14 @@ const widgetTicketRateLimiter = rateLimit({
   message: "Too many support requests. Please try again later.",
 });
 
+const speechRateLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many audio requests. Please wait a moment." },
+});
+
 // Input validation middleware
 const validateInput = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   // Basic size check
@@ -723,6 +731,33 @@ export async function registerRoutes(app: Express) {
       logSecurityEvent("OPENAI_TOGGLED", req, { state: !currentState });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ===== TTS (blog listen / read-aloud) — public with rate limit =====
+  app.post("/api/tts", [speechRateLimiter], async (req: Request, res: Response) => {
+    try {
+      const { text, voice } = req.body;
+      if (!text || typeof text !== "string") {
+        return res.status(400).json({ error: "text is required" });
+      }
+      const { generateSpeech } = await import("./openaiService");
+      const mp3 = await generateSpeech(text, voice || "nova");
+      res.setHeader("Content-Type", "audio/mpeg");
+      res.setHeader(
+        "Cache-Control",
+        "public, max-age=86400, s-maxage=604800, immutable",
+      );
+      res.send(mp3);
+    } catch (error: any) {
+      console.error("TTS error:", error);
+      const msg = error.message || "Failed to generate audio";
+      if (/429|quota|exceeded|rate.limit|billing/i.test(msg)) {
+        return res.status(429).json({
+          error: "Audio quota exceeded. Check your OpenAI billing details.",
+        });
+      }
+      res.status(500).json({ error: msg });
     }
   });
 

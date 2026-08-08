@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { createHash } from "crypto";
 
 let openaiClient: OpenAI | null = null;
 
@@ -148,4 +149,91 @@ export async function summarizeTicket(
     console.error("AI summary failed:", error);
     return "Summary generation failed.";
   }
+}
+
+export type OpenAIVoice = "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer";
+
+const VALID_VOICES: OpenAIVoice[] = ["alloy", "echo", "fable", "onyx", "nova", "shimmer"];
+const MAX_CHUNK = 4000;
+
+// In-memory LRU cache for blog TTS (static article text → repeat listens).
+interface CacheEntry {
+  key: string;
+  buffer: Buffer;
+  bytes: number;
+}
+const ttsCache = new Map<string, CacheEntry>();
+let ttsCacheBytes = 0;
+const TTS_CACHE_MAX_BYTES = 64 * 1024 * 1024;
+
+function ttsCacheKey(text: string, voice: OpenAIVoice): string {
+  return createHash("sha1").update(`${voice}:${text}`).digest("hex");
+}
+
+function ttsCacheGet(key: string): Buffer | null {
+  const entry = ttsCache.get(key);
+  if (!entry) return null;
+  ttsCache.delete(key);
+  ttsCache.set(key, entry);
+  return entry.buffer;
+}
+
+function ttsCacheSet(key: string, buffer: Buffer): void {
+  const bytes = buffer.length;
+  if (bytes > TTS_CACHE_MAX_BYTES) return;
+  ttsCache.set(key, { key, buffer, bytes });
+  ttsCacheBytes += bytes;
+  while (ttsCacheBytes > TTS_CACHE_MAX_BYTES) {
+    const oldestKey = ttsCache.keys().next().value;
+    if (!oldestKey) break;
+    const oldest = ttsCache.get(oldestKey);
+    if (oldest) ttsCacheBytes -= oldest.bytes;
+    ttsCache.delete(oldestKey);
+  }
+}
+
+export async function generateSpeech(
+  text: string,
+  voice: OpenAIVoice = "nova"
+): Promise<Buffer> {
+  // Prefer a direct OpenAI key for audio.speech; some AI gateway proxies
+  // only support chat completions.
+  const directKey = process.env.OPENAI_API_KEY;
+  const client = directKey
+    ? new OpenAI({ apiKey: directKey })
+    : getOpenAI();
+  if (!client) {
+    throw new Error("OpenAI not configured");
+  }
+  if (!VALID_VOICES.includes(voice)) {
+    throw new Error(`Invalid voice. Choose one of: ${VALID_VOICES.join(", ")}`);
+  }
+  if (!text || text.length > 30000) {
+    throw new Error("Text must be between 1 and 30,000 characters");
+  }
+
+  const key = ttsCacheKey(text, voice);
+  const cached = ttsCacheGet(key);
+  if (cached) return cached;
+
+  const chunks: string[] = [];
+  for (let i = 0; i < text.length; i += MAX_CHUNK) {
+    chunks.push(text.slice(i, i + MAX_CHUNK));
+  }
+
+  const buffers = await Promise.all(
+    chunks.map(async (chunk) => {
+      const response = await client.audio.speech.create({
+        model: "tts-1",
+        voice,
+        input: chunk,
+        response_format: "mp3",
+      });
+      return Buffer.from(await response.arrayBuffer());
+    }),
+  );
+
+  const combined = Buffer.concat(buffers);
+  ttsCacheSet(key, combined);
+  return combined;
 }
