@@ -128,7 +128,7 @@ const StoreLanding = () => {
               <span className="text-sm text-violet-300">IT Services & Solutions</span>
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              Digerati{" "}
+              Digerati Experts{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-purple-300 to-fuchsia-300">
                 Store
               </span>

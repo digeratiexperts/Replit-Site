@@ -393,7 +393,7 @@ export default function UCaaS() {
           transition={{ duration: 0.5 }}
         >
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4">DIY vs Digerati UCaaS</h2>
+            <h2 className="text-3xl font-bold text-white mb-4">DIY vs Digerati Experts UCaaS</h2>
             <p className="text-gray-400 max-w-2xl mx-auto">
               See what you're really getting when you partner with us instead of going it alone.
             </p>
@@ -404,7 +404,7 @@ export default function UCaaS() {
               <div className="p-4 font-semibold text-gray-400">Feature</div>
               <div className="p-4 font-semibold text-gray-400 text-center border-l border-white/10">DIY</div>
               <div className="p-4 font-semibold text-violet-400 text-center border-l border-white/10 bg-violet-500/5">
-                Digerati UCaaS
+                Digerati Experts UCaaS
               </div>
             </div>
             {comparisonItems.map((item, index) => (

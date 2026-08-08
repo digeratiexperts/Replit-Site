@@ -41,7 +41,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
   const testimonials: Testimonial[] = [
     {
       rating: 5,
-      text: "Digerati delivered beyond our expectations. Their encryption protocols and risk assessments helped us meet strict compliance standards with ease.",
+      text: "Digerati Experts delivered beyond our expectations. Their encryption protocols and risk assessments helped us meet strict compliance standards with ease.",
       author: "James Torres",
       role: "CEO",
       company: "Phoenix Manufacturing",
@@ -49,7 +49,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
     },
     {
       rating: 5,
-      text: "After a ransomware scare hit a firm down the street, we called Digerati. They implemented 24/7 SOC monitoring and now I actually sleep at night knowing client files are protected.",
+      text: "After a ransomware scare hit a firm down the street, we called Digerati Experts. They implemented 24/7 SOC monitoring and now I actually sleep at night knowing client files are protected.",
       author: "Rebecca Thornton",
       role: "Managing Partner",
       company: "Thornton & Associates Law",
@@ -57,7 +57,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
     },
     {
       rating: 5,
-      text: "We passed our HIPAA audit with zero findings. Digerati's team documented everything, trained our staff, and handled the technical controls. Worth every penny.",
+      text: "We passed our HIPAA audit with zero findings. Digerati Experts' team documented everything, trained our staff, and handled the technical controls. Worth every penny.",
       author: "Dr. David Nguyen",
       role: "Owner",
       company: "East Valley Family Medicine",
@@ -65,7 +65,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
     },
     {
       rating: 5,
-      text: "We had a wire fraud attempt during a $400K closing. Digerati's email security flagged it instantly and saved us from disaster. That alone paid for years of service.",
+      text: "We had a wire fraud attempt during a $400K closing. Digerati Experts' email security flagged it instantly and saved us from disaster. That alone paid for years of service.",
       author: "Mark Rodriguez",
       role: "Broker/Owner",
       company: "Sonoran Realty Partners",

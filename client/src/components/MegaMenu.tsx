@@ -170,7 +170,7 @@ export function MegaMenu() {
     {
       name: 'Solutions',
       featuredPanel: {
-        title: 'Why Digerati?',
+        title: 'Why Digerati Experts?',
         stats: [
           { value: '99.9%', label: 'Uptime SLA' },
           { value: '<15min', label: 'Response Time' },

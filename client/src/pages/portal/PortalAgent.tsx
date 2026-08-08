@@ -212,7 +212,7 @@ export default function PortalAgent() {
                 </li>
                 <li className="flex gap-2">
                   <span className="font-bold text-[#5034ff]">5.</span>
-                  <span>Look for the purple Digerati icon in your notification area (system tray)</span>
+                  <span>Look for the purple Digerati Experts icon in your notification area (system tray)</span>
                 </li>
               </ol>
             </div>

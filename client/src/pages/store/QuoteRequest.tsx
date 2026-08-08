@@ -57,7 +57,7 @@ const QuoteRequest = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useSEO({
-    title: "Request a Quote | Digerati Store",
+    title: "Request a Quote | Digerati Experts Store",
     description: "Request a custom quote for IT services and solutions from Digerati Experts.",
     canonical: "/store/quote-request",
   });
@@ -309,7 +309,7 @@ const QuoteRequest = () => {
                   <ul className="space-y-2 text-white/70 text-sm">
                     <li className="flex items-start gap-2">
                       <span className="text-violet-400">•</span>
-                      A Digerati consultant will review your request
+                      A Digerati Experts consultant will review your request
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-violet-400">•</span>

@@ -45,7 +45,7 @@ const faqData = [
 
 const testimonialData = {
   rating: 5,
-  text: "Digerati delivered beyond our expectations. Their encryption protocols and risk assessments helped us meet strict compliance standards with ease.",
+  text: "Digerati Experts delivered beyond our expectations. Their encryption protocols and risk assessments helped us meet strict compliance standards with ease.",
   customerName: "James Tores",
   customerRole: "CLIENT OF AGENCY",
   customerImage: "/figmaAssets/image-24-png-7.png",

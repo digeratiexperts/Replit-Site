@@ -160,7 +160,7 @@ export const ZohoASAPWidget = ({
                   className="font-bold text-lg"
                   data-testid="text-widget-title"
                 >
-                  Digerati Support
+                  Digerati Experts Support
                 </h3>
                 <p
                   className="text-sm text-purple-100"

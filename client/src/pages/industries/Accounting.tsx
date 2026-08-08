@@ -65,7 +65,7 @@ export default function Accounting() {
 
         {/* Why Choose Section */}
         <div className="space-y-6">
-          <h2 className="text-3xl font-bold text-center text-white">Why Accounting Firms Choose Digerati</h2>
+          <h2 className="text-3xl font-bold text-center text-white">Why Accounting Firms Choose Digerati Experts</h2>
           <p className="text-xl text-gray-300 text-center max-w-3xl mx-auto">
             Accounting firms need IT partners who understand compliance, deadline pressure, and the reality of financial data handling.
           </p>

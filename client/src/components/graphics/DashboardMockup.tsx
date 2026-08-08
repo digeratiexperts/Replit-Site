@@ -30,7 +30,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
       initial={prefersReducedMotion ? false : { opacity: 0, y: 28 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: prefersReducedMotion ? 0 : 0.55, ease: "easeOut" }}
-      aria-label="Illustrative sample of a Digerati Cyber Risk Assessment report preview"
+      aria-label="Illustrative sample of a Digerati Experts Cyber Risk Assessment report preview"
     >
       <div
         className="relative rounded-2xl overflow-hidden border border-white/12"
@@ -89,7 +89,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
             </span>
           </div>
 
-          <p className="text-sm text-white/62 leading-relaxed">
+          <p className="text-sm text-white leading-relaxed">
             A practical review of posture across identity, endpoints, email, backups, and
             controls—sized to your Arizona business.
           </p>
@@ -109,9 +109,9 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
                 <div
                   className={`w-8 h-8 rounded-lg bg-gradient-to-br ${area.tone} border border-white/10 flex items-center justify-center shrink-0`}
                 >
-                  <area.icon className="w-4 h-4 text-violet-300" aria-hidden="true" />
+                  <area.icon className="w-4 h-4 text-white" aria-hidden="true" />
                 </div>
-                <span className="text-xs sm:text-sm text-white/78">{area.label}</span>
+                <span className="text-xs sm:text-sm text-white font-medium">{area.label}</span>
               </motion.div>
             ))}
           </div>

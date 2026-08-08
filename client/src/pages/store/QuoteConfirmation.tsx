@@ -23,7 +23,7 @@ const QuoteConfirmation = () => {
   const quoteId = params?.id;
 
   useSEO({
-    title: "Quote Request Submitted | Digerati Store",
+    title: "Quote Request Submitted | Digerati Experts Store",
     description: "Your quote request has been submitted successfully. Our team will contact you shortly.",
     canonical: `/store/quote-confirmation/${quoteId}`,
   });
@@ -190,7 +190,7 @@ const QuoteConfirmation = () => {
                   <div>
                     <h3 className="text-white font-medium mb-1">Consultation</h3>
                     <p className="text-white/60 text-sm">
-                      A Digerati consultant will contact you to discuss your specific needs and customize the solution.
+                      A Digerati Experts consultant will contact you to discuss your specific needs and customize the solution.
                     </p>
                   </div>
                 </div>

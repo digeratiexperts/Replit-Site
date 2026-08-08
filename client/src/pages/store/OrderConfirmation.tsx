@@ -63,7 +63,7 @@ const OrderConfirmation = () => {
   }, [location]);
 
   useSEO({
-    title: "Order Confirmation | Digerati Store",
+    title: "Order Confirmation | Digerati Experts Store",
     description: "Your order has been received. Thank you for your purchase.",
     canonical: "/store/order-confirmation",
   });
