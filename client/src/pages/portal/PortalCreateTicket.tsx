@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { PortalLayout } from "./PortalLayout";
-import { ArrowLeft, Upload, AlertCircle } from "lucide-react";
+import { ArrowLeft, Upload, AlertCircle, Info } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -23,7 +23,6 @@ export default function PortalCreateTicket() {
     priority: "medium",
     description: "",
   });
-  const [files, setFiles] = useState<File[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -44,14 +43,11 @@ export default function PortalCreateTicket() {
     setError("");
 
     try {
-      // Create ticket with JSON body
-      // Note: File attachments are collected but not yet uploaded (future enhancement)
       const ticketData = {
         subject: formData.subject,
         category: formData.category,
         priority: formData.priority,
         description: formData.description,
-        attachmentCount: files.length, // Track that files were selected for future processing
       };
 
       const response = await fetch("/api/portal/tickets", {
@@ -68,29 +64,15 @@ export default function PortalCreateTicket() {
         throw new Error(errorData.error || "Failed to create ticket");
       }
 
-      // Show success message if files were selected but inform user about upload status
-      if (files.length > 0) {
-        console.log(`Note: ${files.length} file(s) selected. File upload support coming soon.`);
-      }
-
-      // Invalidate tickets cache so the list refreshes
       queryClient.invalidateQueries({ queryKey: ["/api/portal/tickets"] });
       queryClient.invalidateQueries({ queryKey: ["/api/portal/dashboard"] });
 
-      // Reset form and navigate
       setFormData({ subject: "", category: "", priority: "medium", description: "" });
-      setFiles([]);
       navigate("/portal/tickets");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create ticket. Please try again.");
     } finally {
       setSubmitting(false);
-    }
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFiles(Array.from(e.target.files));
     }
   };
 
@@ -215,56 +197,31 @@ export default function PortalCreateTicket() {
                 />
               </div>
 
-              {/* File Upload */}
+              {/* Attachments — disabled: no multipart upload API on ticket create */}
               <div className="space-y-2">
-                <label className="text-sm font-medium">Attachments (Optional)</label>
-                <div className="border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg p-6 text-center">
+                <label className="text-sm font-medium">Attachments</label>
+                <div className="border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg p-6 text-center bg-gray-50/50 dark:bg-slate-900/40 opacity-80">
                   <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                    Click to upload or drag and drop
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    File upload not available on this form
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-500 mb-4">
-                    (Screenshots, logs, documents - Max 10MB)
-                  </p>
-                  <input
-                    type="file"
-                    multiple
-                    onChange={handleFileChange}
-                    className="hidden"
-                    id="file-upload"
-                  />
-                  <label htmlFor="file-upload">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="cursor-pointer"
-                      data-testid="button-choose-files"
-                      asChild
-                    >
-                      <span>Choose Files</span>
-                    </Button>
-                  </label>
-                </div>
-                {files.length > 0 && (
-                  <div className="space-y-2">
-                    <p className="text-sm font-medium">Selected Files:</p>
-                    <div className="space-y-1">
-                      {files.map((file, idx) => (
-                        <div
-                          key={idx}
-                          className="flex items-center justify-between p-2 bg-gray-50 dark:bg-slate-800 rounded text-sm"
-                          data-testid={`file-${idx}`}
-                        >
-                          <span>{file.name}</span>
-                          <span className="text-gray-500 text-xs">
-                            {(file.size / 1024).toFixed(1)}KB
-                          </span>
-                        </div>
-                      ))}
-                    </div>
+                  <div className="flex gap-2 justify-center items-start max-w-md mx-auto text-left">
+                    <Info className="h-4 w-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+                    <p className="text-xs text-gray-600 dark:text-gray-400">
+                      Create the ticket first, then add screenshots or logs by replying on the ticket detail page (or email them to support and reference your ticket ID).
+                    </p>
                   </div>
-                )}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="mt-4 cursor-not-allowed"
+                    disabled
+                    data-testid="button-choose-files"
+                  >
+                    Choose Files (unavailable)
+                  </Button>
+                </div>
               </div>
 
               {/* Submit */}

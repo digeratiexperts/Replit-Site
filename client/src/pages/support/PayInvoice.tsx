@@ -1,32 +1,66 @@
 import { PageTemplate } from "@/components/PageTemplate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, CreditCard, Lock, Download, Eye, Zap, Shield } from "lucide-react";
+import { CheckCircle, CreditCard, Lock, Download, Zap, Shield, ExternalLink, ArrowRight } from "lucide-react";
+
+const PORTAL_LOGIN = "https://portal.digeratiexperts.com/portal/login";
+const PORTAL_INVOICES = "https://portal.digeratiexperts.com/portal/invoices";
 
 export default function PayInvoice() {
   const methods = [
-    { icon: CreditCard, title: "Credit/Debit Card", color: "from-blue-500 to-cyan-500", features: ["Visa, MasterCard, Amex", "Instant processing", "Secure payment gateway"] },
+    { icon: CreditCard, title: "Credit/Debit Card", color: "from-blue-500 to-cyan-500", features: ["Visa, MasterCard, Amex", "Processed in the Client Portal", "Secure payment gateway"] },
     { icon: Lock, title: "Bank Transfer (ACH)", color: "from-green-500 to-emerald-500", features: ["Direct account transfer", "1-3 business days", "No credit card fees"] }
   ];
 
   const features = [
-    { icon: Download, title: "Download Invoices", desc: "View and download all invoices and receipts" },
-    { icon: Zap, title: "Auto-Pay Setup", desc: "Set up automatic monthly payments" },
-    { icon: Shield, title: "Secure Payments", desc: "PCI-DSS compliant encryption" },
-    { icon: CreditCard, title: "Payment History", desc: "Complete transaction records" }
+    { icon: Download, title: "Download Invoices", desc: "View and download all invoices and receipts in the portal" },
+    { icon: Zap, title: "Auto-Pay Setup", desc: "Set up automatic monthly payments where available" },
+    { icon: Shield, title: "Secure Payments", desc: "PCI-DSS compliant encryption via the portal" },
+    { icon: CreditCard, title: "Payment History", desc: "Complete transaction records in your account" }
   ];
 
   return (
     <PageTemplate
       title="Pay Your Invoice"
-      subtitle="Secure online payment portal for Digerati Experts clients"
+      subtitle="Pay invoices securely through the Digerati Experts Client Portal"
       gradientColors="from-green-600 via-emerald-600 to-teal-600"
     >
       <div className="space-y-16">
+        {/* Prominent portal CTA — this page is not a live card form */}
+        <div className="relative rounded-2xl overflow-hidden border border-green-400/40 bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 p-8 md:p-10 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
+            Pay invoices in the Client Portal
+          </h2>
+          <p className="text-white/90 max-w-2xl mx-auto mb-6 leading-relaxed">
+            This marketing page does not process payments. Sign in to the Client Portal to view open invoices and pay securely. If you&apos;re already logged in, go straight to Invoices.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href={PORTAL_LOGIN}
+              className="inline-flex items-center justify-center bg-white text-emerald-700 hover:bg-emerald-50 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg"
+              data-testid="button-portal-login-pay"
+            >
+              Sign in to Client Portal
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </a>
+            <a
+              href={PORTAL_INVOICES}
+              className="inline-flex items-center justify-center border-2 border-white text-white hover:bg-white/10 px-8 py-4 rounded-xl font-semibold transition-all"
+              data-testid="button-portal-invoices"
+            >
+              Go to Invoices
+              <ExternalLink className="ml-2 h-4 w-4" />
+            </a>
+          </div>
+          <p className="text-sm text-white/70 mt-4">
+            Portal login: portal.digeratiexperts.com/portal/login
+          </p>
+        </div>
+
         {/* Intro */}
         <div className="text-center max-w-3xl mx-auto">
           <h2 className="text-3xl font-bold mb-6 text-white">Multiple Payment Options</h2>
           <p className="text-xl text-gray-300 leading-relaxed">
-            We accept credit cards and bank transfers for your convenience. All payments are processed securely and encrypted with enterprise-grade security.
+            Once signed in, you can use credit cards and bank transfers for your convenience. All payments are processed securely through the Client Portal — not on this page.
           </p>
         </div>
 

@@ -176,7 +176,7 @@ export const notificationService = {
         ${itemsHtml}
         <tr style="border-top: 2px solid #8b5cf6;"><td style="padding: 12px;"><strong>Total</strong></td><td style="padding: 12px; text-align: right;"><strong class="highlight">$${data.total.toFixed(2)}</strong></td></tr>
       </table>
-      <a href="https://digeratiexperts.com/portal/orders" class="button">View Order in Portal</a>
+      <a href="https://portal.digeratiexperts.com/portal/orders" class="button">View Order in Portal</a>
     `;
 
     return sendEmail({
@@ -207,7 +207,7 @@ export const notificationService = {
         ${itemsHtml}
         <tr style="border-top: 2px solid #8b5cf6;"><td colspan="2" style="padding: 12px;"><strong>Total</strong></td><td style="padding: 12px; text-align: right;"><strong class="highlight">$${data.total.toFixed(2)}</strong></td></tr>
       </table>
-      <a href="https://digeratiexperts.com/portal/orders" class="button">Track Order</a>
+      <a href="https://portal.digeratiexperts.com/portal/orders" class="button">Track Order</a>
     `;
 
     return sendEmail({
@@ -235,7 +235,7 @@ export const notificationService = {
         <tr><td style="padding: 8px 0; color: #888;">Status:</td><td class="highlight">${data.status}</td></tr>
       </table>
       ${data.message ? `<p><strong>Latest Update:</strong></p><p style="background: #1a1a2e; padding: 15px; border-radius: 6px;">${data.message}</p>` : ''}
-      <a href="https://digeratiexperts.com/portal/tickets/${data.ticketId}" class="button">View Ticket</a>
+      <a href="https://portal.digeratiexperts.com/portal/tickets/${data.ticketId}" class="button">View Ticket</a>
     `;
 
     return sendEmail({
@@ -312,7 +312,7 @@ export const notificationService = {
         <li style="margin: 8px 0;">Track orders and invoices</li>
         <li style="margin: 8px 0;">Download documentation and resources</li>
       </ul>
-      <a href="https://digeratiexperts.com/portal" class="button">Access Your Portal</a>
+      <a href="https://portal.digeratiexperts.com/portal" class="button">Access Your Portal</a>
     `;
 
     return sendEmail({

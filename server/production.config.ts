@@ -8,7 +8,7 @@
 export const productionConfig = {
   // Server Configuration
   server: {
-    port: parseInt(process.env.PORT || '5000', 10),
+    port: parseInt(process.env.PORT || '3300', 10),
     host: '0.0.0.0',
     trustProxy: true, // Enable for reverse proxy (OpenLiteSpeed)
   },

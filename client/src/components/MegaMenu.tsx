@@ -205,6 +205,7 @@ export function MegaMenu() {
           items: [
             { title: 'Threat Detection', description: 'Stop attacks before damage occurs', icon: <Zap className="h-5 w-5" />, url: '/solutions/threat-detection' },
             { title: 'Security Operations', description: '24/7 expert eyes on your systems', icon: <Lock className="h-5 w-5" />, url: '/solutions/security-operations' },
+            { title: 'Data Encryption', description: 'Protect data even if endpoints are compromised', icon: <Shield className="h-5 w-5" />, url: '/solutions/data-encryption' },
             { title: 'Backup & DR', description: 'Recover in hours, not weeks', icon: <Server className="h-5 w-5" />, url: '/solutions/backup-disaster-recovery' },
           ]
         },

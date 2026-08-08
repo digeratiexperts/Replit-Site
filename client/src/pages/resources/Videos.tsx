@@ -4,7 +4,7 @@ import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhanced
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Play, Clock, Calendar, Users, ExternalLink } from "lucide-react";
+import { BookOpen, Calendar, ExternalLink } from "lucide-react";
 
 import trendsImg from "@assets/stock_images/cybersecurity_trends_d69267d4.jpg";
 import hipaaImg from "@assets/stock_images/healthcare_medical_r_3bfa1a64.jpg";
@@ -13,90 +13,66 @@ import cloudImg from "@assets/stock_images/cloud_backup_server__4ac65288.jpg";
 import realEstateImg from "@assets/stock_images/real_estate_house_ke_f7c5422b.jpg";
 import trainingImg from "@assets/stock_images/employee_security_tr_12ae4644.jpg";
 
-const videos = [
+const topics = [
   {
     id: 1,
     title: "Cybersecurity 101 for Small Business",
     description: "Learn the fundamentals of protecting your business from cyber threats in this comprehensive overview.",
-    duration: "45 min",
-    type: "Webinar",
-    date: "2024-11-15",
-    attendees: 234,
+    type: "Topic guide",
     thumbnail: trendsImg,
   },
   {
     id: 2,
     title: "HIPAA Compliance Workshop",
-    description: "Everything healthcare providers need to know about maintaining HIPAA compliance in 2025.",
-    duration: "60 min",
-    type: "Workshop",
-    date: "2024-11-08",
-    attendees: 156,
+    description: "Everything healthcare providers need to know about maintaining HIPAA compliance.",
+    type: "Topic guide",
     thumbnail: hipaaImg,
   },
   {
     id: 3,
     title: "Ransomware Defense Strategies",
     description: "Practical steps to protect your organization from ransomware attacks.",
-    duration: "30 min",
-    type: "Webinar",
-    date: "2024-10-25",
-    attendees: 312,
+    type: "Topic guide",
     thumbnail: ransomwareImg,
   },
   {
     id: 4,
     title: "Cloud Security Best Practices",
-    description: "Secure your cloud infrastructure with these proven strategies and tools.",
-    duration: "40 min",
-    type: "Tutorial",
-    date: "2024-10-18",
-    attendees: 189,
+    description: "Secure your cloud infrastructure with proven strategies and tools.",
+    type: "Topic guide",
     thumbnail: cloudImg,
   },
   {
     id: 5,
     title: "Wire Fraud Prevention for Real Estate",
     description: "Protect your real estate transactions from increasingly sophisticated wire fraud schemes.",
-    duration: "35 min",
-    type: "Webinar",
-    date: "2024-10-10",
-    attendees: 145,
+    type: "Topic guide",
     thumbnail: realEstateImg,
   },
   {
     id: 6,
     title: "Employee Security Training Demo",
-    description: "See how our security awareness training platform helps reduce human error risks.",
-    duration: "20 min",
-    type: "Demo",
-    date: "2024-10-05",
-    attendees: 278,
+    description: "See how security awareness training helps reduce human error risks.",
+    type: "Topic guide",
     thumbnail: trainingImg,
   },
 ];
 
-const upcomingWebinars = [
+const trainingTopics = [
   {
     id: 1,
-    title: "2025 Cybersecurity Predictions",
-    date: "January 15, 2025",
-    time: "11:00 AM MST",
-    presenter: "Michael Torres, CISSP",
+    title: "Cybersecurity Predictions & Planning",
+    summary: "Threat trends and practical planning for Arizona SMBs",
   },
   {
     id: 2,
     title: "Zero Trust Architecture for SMBs",
-    date: "January 22, 2025",
-    time: "2:00 PM MST",
-    presenter: "Sarah Chen, Security Architect",
+    summary: "How smaller teams can adopt Zero Trust without enterprise complexity",
   },
   {
     id: 3,
-    title: "Compliance Updates: What's New in 2025",
-    date: "February 5, 2025",
-    time: "10:00 AM MST",
-    presenter: "David Martinez, Compliance Lead",
+    title: "Compliance Updates That Matter",
+    summary: "HIPAA, cyber insurance, and audit-ready controls for growing firms",
   },
 ];
 
@@ -110,50 +86,37 @@ export default function Videos() {
           {/* Header */}
           <div className="text-center mb-12">
             <Badge className="mb-4 bg-violet-500/20 text-violet-400 border-violet-500/30">
-              Videos & Webinars
+              Learning Topics
             </Badge>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Learn From the Experts
             </h1>
             <p className="text-xl text-white/70 max-w-3xl mx-auto">
-              Watch our on-demand webinars and video tutorials to enhance your cybersecurity knowledge.
+              Explore cybersecurity topics we cover with Arizona businesses. This page is a topic guide — not a live on-demand webinar library. Book a session or continue with related reading from our journal.
             </p>
           </div>
 
-          {/* Upcoming Webinars */}
+          {/* Book a session */}
           <Card className="mb-12 bg-gradient-to-r from-violet-600/20 to-purple-600/20 border-violet-500/30">
             <CardHeader>
               <CardTitle className="text-2xl text-white flex items-center gap-2">
                 <Calendar className="h-6 w-6 text-violet-400" />
-                Upcoming Webinars
+                Request a Live Session
               </CardTitle>
               <CardDescription className="text-white/60">
-                Register for our live sessions and get your questions answered
+                Interested in a briefing or team workshop on these topics? Book a conversation and we&apos;ll schedule it with you.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid md:grid-cols-3 gap-6">
-                {upcomingWebinars.map((webinar) => (
-                  <Card key={webinar.id} className="bg-white/[0.02] border-white/10" data-testid={`card-upcoming-${webinar.id}`}>
+                {trainingTopics.map((topic) => (
+                  <Card key={topic.id} className="bg-white/[0.02] border-white/10" data-testid={`card-upcoming-${topic.id}`}>
                     <CardContent className="p-6">
-                      <h4 className="font-semibold text-white mb-2">{webinar.title}</h4>
-                      <div className="space-y-2 text-sm text-white/50 mb-4">
-                        <p className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4" />
-                          {webinar.date}
-                        </p>
-                        <p className="flex items-center gap-2">
-                          <Clock className="h-4 w-4" />
-                          {webinar.time}
-                        </p>
-                        <p className="flex items-center gap-2">
-                          <Users className="h-4 w-4" />
-                          {webinar.presenter}
-                        </p>
-                      </div>
+                      <h4 className="font-semibold text-white mb-2">{topic.title}</h4>
+                      <p className="text-sm text-white/50 mb-4">{topic.summary}</p>
                       <Link href="/book">
-                        <Button className="w-full bg-violet-600 hover:bg-violet-500 text-white" data-testid={`button-register-${webinar.id}`}>
-                          Register Now
+                        <Button className="w-full bg-violet-600 hover:bg-violet-500 text-white" data-testid={`button-register-${topic.id}`}>
+                          Book a Session
                         </Button>
                       </Link>
                     </CardContent>
@@ -163,56 +126,55 @@ export default function Videos() {
             </CardContent>
           </Card>
 
-          {/* Video Library */}
+          {/* Topic library */}
           <div>
-            <h2 className="text-2xl font-bold text-white mb-6">On-Demand Library</h2>
+            <h2 className="text-2xl font-bold text-white mb-2">Topic Library</h2>
+            <p className="text-white/60 mb-6">
+              Related reading from our journal — these are articles and guides, not playable webinar recordings.
+            </p>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {videos.map((video) => (
-                <Card key={video.id} className="bg-white/[0.02] border-white/10 overflow-hidden hover:border-violet-500/50 transition-colors group" data-testid={`card-video-${video.id}`}>
+              {topics.map((topic) => (
+                <Card key={topic.id} className="bg-white/[0.02] border-white/10 overflow-hidden hover:border-violet-500/50 transition-colors group" data-testid={`card-video-${topic.id}`}>
                   <div className="aspect-video relative overflow-hidden">
                     <img 
-                      src={video.thumbnail} 
-                      alt={video.title} 
+                      src={topic.thumbnail} 
+                      alt={topic.title} 
                       loading="lazy"
                       decoding="async"
                       width={400}
                       height={225}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    <Link
-                      href="/resources/blog"
-                      className="absolute inset-0 bg-black/40 flex items-center justify-center"
-                      aria-label={`Related reading for ${video.title}`}
-                    >
-                      <div className="w-16 h-16 bg-violet-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <Play className="h-8 w-8 text-white ml-1" />
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center pointer-events-none">
+                      <div className="w-16 h-16 bg-violet-600/90 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <BookOpen className="h-8 w-8 text-white" />
                       </div>
-                    </Link>
-                    <Badge className="absolute top-3 right-3 bg-black/50 text-white border-0">
-                      {video.duration}
-                    </Badge>
+                    </div>
                   </div>
                   <CardHeader>
                     <div className="flex items-center gap-2 mb-2">
                       <Badge variant="secondary" className="bg-violet-500/20 text-violet-400">
-                        {video.type}
+                        {topic.type}
                       </Badge>
                     </div>
                     <CardTitle className="text-lg text-white group-hover:text-violet-400 transition-colors">
-                      {video.title}
+                      {topic.title}
                     </CardTitle>
                     <CardDescription className="text-white/60">
-                      {video.description}
+                      {topic.description}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex items-center justify-between text-sm text-white/50">
-                      <span className="flex items-center gap-1">
-                        <Users className="h-4 w-4" />
-                        {video.attendees} views
-                      </span>
-                      <span>{new Date(video.date).toLocaleDateString()}</span>
-                    </div>
+                    <Link href="/resources/blog">
+                      <Button
+                        variant="outline"
+                        className="w-full border-violet-500/40 text-violet-300 hover:bg-violet-500/10 hover:text-violet-200"
+                        data-testid={`button-related-reading-${topic.id}`}
+                      >
+                        <BookOpen className="mr-2 h-4 w-4" />
+                        Related reading
+                      </Button>
+                    </Link>
                   </CardContent>
                 </Card>
               ))}

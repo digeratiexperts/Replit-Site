@@ -1,9 +1,11 @@
+import { Link } from "wouter";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Download, FileText, ExternalLink, Shield, Server, Cloud, Users, Lock, BarChart } from "lucide-react";
+import { resources as registryResources } from "@/data/resourceRegistry";
 
 interface Document {
   id: number;
@@ -12,8 +14,40 @@ interface Document {
   category: string;
   type: "datasheet" | "whitepaper" | "guide" | "infographic";
   pages?: number;
-  fileSize: string;
+  fileSize?: string;
   icon: any;
+  downloadUrl?: string;
+}
+
+/** Map page card titles to registry resource titles when a close match exists */
+const TITLE_TO_REGISTRY: Record<string, string[]> = {
+  "Managed IT Support Services": ["Managed Workplace Overview", "ProActive IT Ecosystem Datasheet"],
+  "Cybersecurity Solutions": ["ProActive IT & Security Ecosystem Overview"],
+  "Cloud Backup & Disaster Recovery": [],
+  "HIPAA Compliance Guide": [],
+  "Security Awareness Training Program": [],
+  "Cost of a Data Breach": [],
+  "Zero Trust Security Framework": [],
+  "Ransomware Defense Infographic": [],
+  "Co-Managed IT Services": ["Co-Managed IT Datasheet"],
+  "Compliance Requirements by Industry": ["Compliance & Risk Reports Overview"],
+  "vCIO Strategic Planning": [],
+  "Endpoint Detection & Response": [],
+};
+
+function resolveDownloadUrl(title: string): string | undefined {
+  const candidates = TITLE_TO_REGISTRY[title] ?? [];
+  for (const candidate of candidates) {
+    const match = registryResources.find(
+      (r) => r.title.toLowerCase() === candidate.toLowerCase()
+    );
+    if (match?.file) return match.file;
+  }
+  const exact = registryResources.find(
+    (r) => r.title.toLowerCase() === title.toLowerCase()
+  );
+  if (exact?.file) return exact.file;
+  return undefined;
 }
 
 const documents: Document[] = [
@@ -24,7 +58,6 @@ const documents: Document[] = [
     category: "Services",
     type: "datasheet",
     pages: 4,
-    fileSize: "2.1 MB",
     icon: Server,
   },
   {
@@ -34,7 +67,6 @@ const documents: Document[] = [
     category: "Security",
     type: "datasheet",
     pages: 6,
-    fileSize: "3.4 MB",
     icon: Shield,
   },
   {
@@ -44,7 +76,6 @@ const documents: Document[] = [
     category: "Backup",
     type: "datasheet",
     pages: 4,
-    fileSize: "1.8 MB",
     icon: Cloud,
   },
   {
@@ -54,7 +85,6 @@ const documents: Document[] = [
     category: "Compliance",
     type: "guide",
     pages: 24,
-    fileSize: "5.2 MB",
     icon: Lock,
   },
   {
@@ -64,7 +94,6 @@ const documents: Document[] = [
     category: "Training",
     type: "datasheet",
     pages: 3,
-    fileSize: "1.5 MB",
     icon: Users,
   },
   {
@@ -74,7 +103,6 @@ const documents: Document[] = [
     category: "Research",
     type: "whitepaper",
     pages: 12,
-    fileSize: "4.1 MB",
     icon: BarChart,
   },
   {
@@ -84,7 +112,6 @@ const documents: Document[] = [
     category: "Security",
     type: "whitepaper",
     pages: 18,
-    fileSize: "4.8 MB",
     icon: Shield,
   },
   {
@@ -93,7 +120,6 @@ const documents: Document[] = [
     description: "Visual guide to ransomware attack vectors and prevention strategies.",
     category: "Security",
     type: "infographic",
-    fileSize: "1.2 MB",
     icon: FileText,
   },
   {
@@ -103,7 +129,6 @@ const documents: Document[] = [
     category: "Services",
     type: "datasheet",
     pages: 4,
-    fileSize: "2.3 MB",
     icon: Users,
   },
   {
@@ -113,7 +138,6 @@ const documents: Document[] = [
     category: "Compliance",
     type: "guide",
     pages: 16,
-    fileSize: "3.8 MB",
     icon: Lock,
   },
   {
@@ -123,7 +147,6 @@ const documents: Document[] = [
     category: "Services",
     type: "datasheet",
     pages: 5,
-    fileSize: "2.6 MB",
     icon: BarChart,
   },
   {
@@ -133,10 +156,12 @@ const documents: Document[] = [
     category: "Security",
     type: "datasheet",
     pages: 6,
-    fileSize: "3.1 MB",
     icon: Shield,
   },
-];
+].map((doc) => ({
+  ...doc,
+  downloadUrl: resolveDownloadUrl(doc.title),
+}));
 
 const categories = ["All", "Services", "Security", "Backup", "Compliance", "Training", "Research"];
 
@@ -151,6 +176,8 @@ const getTypeColor = (type: string) => {
 };
 
 export default function Datasheets() {
+  const downloadableCount = documents.filter((d) => d.downloadUrl).length;
+
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <MegaMenu />
@@ -166,7 +193,8 @@ export default function Datasheets() {
               Datasheets & Documentation
             </h1>
             <p className="text-xl text-white/70 max-w-3xl mx-auto">
-              Download detailed information about our services, solutions, and best practices guides.
+              Browse our service documentation. {downloadableCount} documents are available for immediate PDF download;
+              others can be requested and we&apos;ll send the latest version.
             </p>
           </div>
 
@@ -206,12 +234,32 @@ export default function Datasheets() {
                 <CardContent>
                   <div className="flex items-center justify-between text-sm text-white/50 mb-4">
                     <span>{doc.category}</span>
-                    <span>{doc.pages ? `${doc.pages} pages` : ""} • {doc.fileSize}</span>
+                    <span>{doc.pages ? `${doc.pages} pages` : "Document"}</span>
                   </div>
-                  <Button className="w-full bg-violet-600 hover:bg-violet-500 text-white" data-testid={`button-download-${doc.id}`}>
-                    <Download className="mr-2 h-4 w-4" />
-                    Download PDF
-                  </Button>
+                  {doc.downloadUrl ? (
+                    <Button
+                      asChild
+                      className="w-full bg-violet-600 hover:bg-violet-500 text-white"
+                      data-testid={`button-download-${doc.id}`}
+                    >
+                      <a href={doc.downloadUrl} download target="_blank" rel="noopener noreferrer">
+                        <Download className="mr-2 h-4 w-4" />
+                        Download PDF
+                      </a>
+                    </Button>
+                  ) : (
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="w-full border-violet-500/40 text-violet-300 hover:bg-violet-500/10 hover:text-violet-200"
+                      data-testid={`button-request-${doc.id}`}
+                    >
+                      <Link href="/book">
+                        <ExternalLink className="mr-2 h-4 w-4" />
+                        Request document
+                      </Link>
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             ))}
