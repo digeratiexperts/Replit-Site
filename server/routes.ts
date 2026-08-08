@@ -36,6 +36,14 @@ import {
   createProspectClientForUser,
   saveOrderForm,
 } from "./portalAuthStore";
+import {
+  initPortalChatStore,
+  conversationIdForUser,
+  listMessages as listLiveChatMessages,
+  appendMessage as appendLiveChatMessage,
+  ensureWelcomeMessage,
+  getChatStoreStatus,
+} from "./portalChatStore";
 
 const JWT_SECRET = process.env.JWT_SECRET || randomBytes(32).toString('hex');
 const SALT_ROUNDS = 12;
@@ -205,6 +213,7 @@ export async function registerRoutes(app: Express) {
 
   // Durable portal auth (Neon) — Map-compatible shim for existing handlers
   await initPortalAuthStore();
+  await initPortalChatStore();
   const portalUsers = {
     get: (key: string) => portalAuthGetUser(key),
     has: (key: string) => portalAuthHasUser(key),
@@ -688,56 +697,112 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  // In-memory chat message storage for persistence
-  const chatMessages: Map<string, any[]> = new Map();
-
-  // Live chat messages route (for PortalChat WebSocket fallback)
-  app.post("/api/portal/chat/messages", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  // Live chat status — HTTP poll transport (WebSocket /api/ws is not used in production)
+  app.get("/api/portal/chat/status", [authMiddleware], async (_req: AuthenticatedRequest, res: Response) => {
     try {
-      const { content, ticketId, senderName, senderRole } = req.body;
-      if (!content) {
+      const store = getChatStoreStatus();
+      const openaiConfigured = !!(
+        process.env.OPENAI_API_KEY ||
+        process.env.OPENAI_API ||
+        (process.env.AI_INTEGRATIONS_OPENAI_BASE_URL && process.env.AI_INTEGRATIONS_OPENAI_API_KEY)
+      );
+      res.json({
+        success: true,
+        connected: true,
+        transport: store.transport,
+        durable: store.durable,
+        assistantAvailable: openaiConfigured,
+        supportHours: "Monday - Friday, 9 AM - 6 PM EST",
+      });
+    } catch (error: any) {
+      res.status(500).json({ success: false, connected: false, error: error.message });
+    }
+  });
+
+  // Live chat — send message (persisted + AI support reply)
+  app.post("/api/portal/chat/messages", [authMiddleware, chatRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (!req.userId) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+      const { content, senderName } = req.body;
+      if (!content || typeof content !== "string" || !content.trim()) {
         return res.status(400).json({ error: "Message content required" });
       }
-      
-      const chatId = ticketId || `user-${req.userId}`;
-      const message = {
-        id: randomId(),
-        ticketId: chatId,
+
+      const conversationId = conversationIdForUser(req.userId);
+      await ensureWelcomeMessage(conversationId, req.userId);
+
+      const displayName =
+        (typeof senderName === "string" && senderName.trim()) ||
+        req.user?.fullName ||
+        req.user?.email ||
+        "You";
+
+      const message = await appendLiveChatMessage({
+        conversationId,
         userId: req.userId,
-        senderName: senderName || "User",
-        senderRole: senderRole || "client",
-        content,
-        timestamp: new Date().toISOString(),
-        isRead: false,
-      };
-      
-      // Store message in memory
-      if (!chatMessages.has(chatId)) {
-        chatMessages.set(chatId, []);
+        senderName: displayName,
+        senderRole: "client",
+        content: content.trim(),
+      });
+
+      let reply = null as Awaited<ReturnType<typeof appendLiveChatMessage>> | null;
+      try {
+        const history = await listLiveChatMessages(conversationId, { limit: 20 });
+        const conversationHistory = history
+          .filter((m) => m.id !== message.id)
+          .map((m) => ({
+            role: (m.senderRole === "client" ? "user" : "assistant") as "user" | "assistant",
+            content: m.content,
+          }));
+        const { generateChatResponse } = await import("./openaiService");
+        const aiText = await generateChatResponse(content.trim(), conversationHistory);
+        if (aiText) {
+          reply = await appendLiveChatMessage({
+            conversationId,
+            userId: req.userId!,
+            senderName: "DE Support",
+            senderRole: "support",
+            content: aiText,
+          });
+        }
+      } catch (aiErr: any) {
+        console.warn("[live-chat] AI reply failed:", aiErr?.message || aiErr);
       }
-      chatMessages.get(chatId)!.push(message);
-      
-      // Broadcast to WebSocket clients if available
-      if ((global as any).wsBroadcast) {
-        (global as any).wsBroadcast({ type: "chat_message", data: message });
-      }
-      
-      res.json({ success: true, message });
-      logSecurityEvent("LIVE_CHAT_MESSAGE", req, { ticketId: chatId });
+
+      res.json({
+        success: true,
+        message,
+        reply,
+        conversationId,
+      });
+      logSecurityEvent("LIVE_CHAT_MESSAGE", req, { conversationId });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
   });
 
-  // Get chat message history
+  // Live chat — history / poll (optional ?since=ISO for incremental updates)
   app.get("/api/portal/chat/messages", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const ticketId = req.query.ticketId as string || `user-${req.userId}`;
-      const messages = chatMessages.get(ticketId) || [];
-      
-      res.json({ success: true, messages });
+      if (!req.userId) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+      const conversationId = conversationIdForUser(req.userId);
+      await ensureWelcomeMessage(conversationId, req.userId);
+      const since = typeof req.query.since === "string" ? req.query.since : undefined;
+      const messages = await listLiveChatMessages(conversationId, { since, limit: 200 });
+
+      res.json({
+        success: true,
+        connected: true,
+        conversationId,
+        messages,
+        transport: "http-poll",
+      });
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: error.message, connected: false });
     }
   });
 
