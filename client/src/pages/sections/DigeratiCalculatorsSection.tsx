@@ -58,15 +58,15 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.35 }}
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4 md:mb-6">
-            <Calculator className="w-3.5 h-3.5 md:w-4 md:h-4 text-violet-400" />
-            <span className="text-xs md:text-sm font-medium text-violet-300">Interactive Tools</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-[#D3126A]/15 border border-[#D3126A]/30 mb-4 md:mb-6">
+            <Calculator className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#FF477F]" />
+            <span className="text-xs md:text-sm font-medium text-[#FF477F]">Assessment</span>
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 px-2">
-            Calculate Your <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">Investment</span>
+            Calculate Your <span className="bg-gradient-to-r from-[#FF477F] via-[#D3126A] to-fuchsia-400 bg-clip-text text-transparent">Investment</span>
           </h2>
           <p className="text-base md:text-lg text-white/60 max-w-2xl mx-auto px-4">
-            Use our calculators to understand the cost of downtime and estimate your monthly protection investment.
+            Start with the numbers — downtime risk and monthly protection — then schedule a full cyber risk assessment.
           </p>
         </motion.div>
 

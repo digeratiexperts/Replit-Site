@@ -204,9 +204,9 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.35 }}
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4 md:mb-6">
-            <Building2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-violet-400" />
-            <span className="text-xs md:text-sm font-medium text-violet-300">Client Success Stories</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-[#D3126A]/15 border border-[#D3126A]/30 mb-4 md:mb-6">
+            <Building2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#FF477F]" />
+            <span className="text-xs md:text-sm font-medium text-[#FF477F]">Proof</span>
           </div>
           
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 text-white px-4">

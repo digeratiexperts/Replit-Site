@@ -41,6 +41,9 @@ export const DigeratiStatsSection = (): JSX.Element => {
           transition={{ duration: 0.5 }}
           className="text-center mb-8"
         >
+          <p className="text-xs md:text-sm font-medium text-[#FF477F] tracking-wide uppercase mb-3">
+            Why Digerati Experts
+          </p>
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
             The Threats Are Real
           </h2>
