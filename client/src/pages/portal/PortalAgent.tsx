@@ -98,56 +98,15 @@ export default function PortalAgent() {
   const handleDownload = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    try {
-      // Generate secure token for agent authentication
-      const email = localStorage.getItem("userEmail") || "user@company.com";
-      const tokenResponse = await fetch("/api/portal/auth/token", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password: "portal-auth" }),
-      });
-
-      if (!tokenResponse.ok) throw new Error("Failed to generate token");
-      const { token } = await tokenResponse.json();
-
-      // Request installer package from backend
-      const installerResponse = await fetch("/api/portal/agent/download", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email,
-          token: token,
-          serverUrl: window.location.origin,
-        }),
-      });
-
-      if (!installerResponse.ok) throw new Error("Failed to generate installer");
-
-      // Download the ZIP file
-      const blob = await installerResponse.blob();
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "DigeratiExpertsAgent-Setup.zip";
-      link.style.display = "none";
-      document.body.appendChild(link);
-      link.click();
-      setTimeout(() => {
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-      }, 100);
-
-      alert("✓ Installer downloaded successfully!\n\nSteps to install:\n1. Extract the ZIP file\n2. Right-click 'install.bat' and select 'Run as administrator'\n3. Follow the installation prompts\n\nYour secure token is embedded in the installer and will expire in 24 hours.");
-    } catch (error) {
-      console.error("Error downloading agent:", error);
-      alert("Failed to download installer. Please try again.");
-    }
+    alert(
+      "Desktop Agent installer is not available yet.\n\nPlease use Portal Chat or Support Tickets for assistance, or contact support@digeratiexperts.com.",
+    );
   };
 
   const handleAlternativeDownload = () => {
-    // Alternative download method
-    window.open("#", "_blank");
+    alert(
+      "This agent package is not available for self-service download. Contact your Digerati Experts account team.",
+    );
   };
 
   return (

@@ -71,6 +71,18 @@ const OrderConfirmation = () => {
   const { data: order, isLoading, error } = useQuery<Order>({
     queryKey: ["/api/store/orders", params.orderId],
     enabled: !!params.orderId,
+    queryFn: async () => {
+      const token = localStorage.getItem("portalToken");
+      const response = await fetch(`/api/store/orders/${params.orderId}`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        credentials: "include",
+      });
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`${response.status}: ${text || "Failed to load order"}`);
+      }
+      return response.json();
+    },
   });
 
   useEffect(() => {

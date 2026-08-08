@@ -1,5 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Search, ChevronDown, ChevronRight, X, Zap, Target, Users, Shield, CheckCircle, Clock, FileText, Video, Building2, Calendar, BarChart3, ShieldCheck, MessageSquare, Phone, DollarSign, Briefcase, AlertTriangle, UserCheck, Key } from 'lucide-react';
+import { PortalLayout } from './PortalLayout';
+import { Button } from '@/components/ui/button';
 
 // Prospect & Client Q&A Data
 const qaCategories = [
@@ -628,6 +630,48 @@ export default function SalesProcess() {
   const [showQA, setShowQA] = useState(false);
   const [expandedQACategories, setExpandedQACategories] = useState<string[]>([]);
   const [expandedQAItems, setExpandedQAItems] = useState<string[]>([]);
+
+  const portalUser = (() => {
+    try {
+      return localStorage.getItem("portalUser")
+        ? JSON.parse(localStorage.getItem("portalUser")!)
+        : null;
+    } catch {
+      return null;
+    }
+  })();
+  const isAdmin = portalUser?.role === "admin";
+
+  useEffect(() => {
+    if (!localStorage.getItem("portalToken")) {
+      window.location.href = "/portal/login";
+    }
+  }, []);
+
+  // Internal sales playbook — clients must use TechSales, not the Client Portal
+  if (!isAdmin) {
+    return (
+      <PortalLayout title="Sales Process">
+        <div className="max-w-xl space-y-4 p-2">
+          <h2 className="text-xl font-semibold">Moved to TechSales</h2>
+          <p className="text-gray-600 dark:text-gray-400">
+            The Decision-Ready sales process lives in the Intelligence Hub for internal users.
+            Client Portal accounts do not include sales tooling.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <Button asChild className="bg-[#5034ff] hover:bg-[#5034ff]/90 text-white">
+              <a href="https://techsales.digerati-experts.com/" target="_blank" rel="noreferrer">
+                Open TechSales
+              </a>
+            </Button>
+            <Button variant="outline" asChild>
+              <a href="/portal/dashboard">Back to Portal</a>
+            </Button>
+          </div>
+        </div>
+      </PortalLayout>
+    );
+  }
 
   const toggleQACategory = (id: string) => {
     setExpandedQACategories(prev => 

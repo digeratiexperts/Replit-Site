@@ -305,10 +305,12 @@ function listEndpoints(): Array<{ method: string; path: string }> {
     log(`📦 Serving static files from ${distPath}`);
   }
 
-  // Debug endpoint to see registered routes
-  app.get("/__debug/routes", (_req, res) =>
-    res.json({ routes: listEndpoints() }),
-  );
+  // Debug endpoint — never expose route inventory in production
+  if (process.env.NODE_ENV !== "production") {
+    app.get("/__debug/routes", (_req, res) =>
+      res.json({ routes: listEndpoints() }),
+    );
+  }
 
   // --------- JSON 404 so we can see what path failed
   app.use((req, res) => {
@@ -343,7 +345,9 @@ function listEndpoints(): Array<{ method: string; path: string }> {
     const owner = process.env.REPL_OWNER;
     if (slug && owner) {
       log(`🌍 Try: https://${slug}-${owner}.replit.app/api/health`);
-      log(`🔎 Routes: https://${slug}-${owner}.replit.app/__debug/routes`);
+      if (process.env.NODE_ENV !== "production") {
+        log(`🔎 Routes: https://${slug}-${owner}.replit.app/__debug/routes`);
+      }
     }
   });
 })();

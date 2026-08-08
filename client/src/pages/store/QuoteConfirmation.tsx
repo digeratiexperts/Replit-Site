@@ -31,9 +31,16 @@ const QuoteConfirmation = () => {
   const { data: quoteRequest, isLoading, error } = useQuery({
     queryKey: ['/api/store/quote-requests', quoteId],
     queryFn: async () => {
-      const response = await fetch(`/api/store/quote-requests/${quoteId}`);
+      const token = localStorage.getItem("portalToken");
+      const response = await fetch(`/api/store/quote-requests/${quoteId}`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        credentials: "include",
+      });
+      if (response.status === 401) {
+        throw new Error("Sign in to view this quote request.");
+      }
       if (!response.ok) {
-        throw new Error('Failed to fetch quote request');
+        throw new Error("Failed to fetch quote request");
       }
       return response.json();
     },

@@ -598,22 +598,11 @@ function Router() {
           <PortalOrderDetail />
         </Suspense>
       )} />
-      <Route path="/portal/invoices/:id/pay" component={({ params }) => {
-        const invoice = {
-          id: params.id || "",
-          invoiceNumber: "INV-2024-004",
-          amount: "2600",
-        };
-        return (
-          <Suspense fallback={<PageLoadingSkeleton />}>
-            <PortalPayment
-              invoiceId={invoice.id}
-              invoiceNumber={invoice.invoiceNumber}
-              amount={invoice.amount}
-            />
-          </Suspense>
-        );
-      }} />
+      <Route path="/portal/invoices/:id/pay" component={({ params }) => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <PortalPayment invoiceId={params.id || ""} />
+        </Suspense>
+      )} />
       <Route path="/portal/kb" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalKB />
