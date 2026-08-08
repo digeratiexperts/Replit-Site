@@ -59,7 +59,8 @@ export const ModernHeroSection = (): JSX.Element => {
           data-testid="hero-parallax-orb-1"
           style={{
             y: backgroundY,
-            background: "radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.22) 0%, transparent 55%)",
+            background:
+              "radial-gradient(circle at 100% 0%, rgba(236, 72, 153, 0.22) 0%, rgba(139, 92, 246, 0.16) 42%, transparent 58%)",
           }}
         />
         <motion.div
@@ -67,7 +68,8 @@ export const ModernHeroSection = (): JSX.Element => {
           data-testid="hero-parallax-orb-2"
           style={{
             y: floatingY3,
-            background: "radial-gradient(circle at 0% 100%, rgba(168, 85, 247, 0.12) 0%, transparent 55%)",
+            background:
+              "radial-gradient(circle at 0% 100%, rgba(217, 70, 239, 0.14) 0%, rgba(244, 63, 94, 0.08) 45%, transparent 60%)",
           }}
         />
         <div
@@ -109,7 +111,7 @@ export const ModernHeroSection = (): JSX.Element => {
               transition={{ duration: prefersReducedMotion ? 0 : 0.45, ease: "easeOut" }}
             >
               <motion.p
-                className="text-xs sm:text-sm font-semibold uppercase tracking-[0.22em] text-violet-300/90"
+                className="text-xs sm:text-sm font-semibold uppercase tracking-[0.22em] text-pink-300/95"
                 initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: prefersReducedMotion ? 0 : 0.35, delay: prefersReducedMotion ? 0 : 0.05 }}
@@ -119,12 +121,12 @@ export const ModernHeroSection = (): JSX.Element => {
 
               <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold leading-[1.08] tracking-[-0.02em] text-white">
                 Your Arizona business,{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-violet-400 to-purple-400">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-300 via-pink-400 to-violet-300">
                   protected 24/7.
                 </span>
               </h1>
 
-              <p className="text-base md:text-lg text-white/68 leading-relaxed max-w-xl">
+              <p className="text-base md:text-lg text-white/85 leading-relaxed max-w-xl">
                 Cybersecurity and managed IT for growing businesses—reducing risk, supporting
                 compliance, and keeping your team productive without building an internal IT
                 department.
@@ -142,8 +144,8 @@ export const ModernHeroSection = (): JSX.Element => {
                       delay: prefersReducedMotion ? 0 : 0.12 + index * 0.04,
                     }}
                   >
-                    <feature.icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-violet-400 flex-shrink-0" aria-hidden="true" />
-                    <span className="text-sm sm:text-base text-white/72">{feature.text}</span>
+                    <feature.icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-pink-400 flex-shrink-0" aria-hidden="true" />
+                    <span className="text-sm sm:text-base text-white/80">{feature.text}</span>
                   </motion.div>
                 ))}
               </div>
@@ -154,37 +156,37 @@ export const ModernHeroSection = (): JSX.Element => {
                   size="lg"
                   data-testid="button-hero-schedule"
                   onClick={handleSchedule}
-                  className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-semibold bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white border border-violet-400/25 shadow-lg shadow-violet-500/30 hover:shadow-xl hover:shadow-violet-500/35 transition-all duration-300"
+                  className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-semibold bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white border border-pink-300/35 shadow-lg shadow-pink-500/40 hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300"
                 >
                   Schedule Your Cyber Risk Assessment
                   <ArrowRight className="ml-2 w-5 h-5" aria-hidden="true" />
                 </Button>
 
-                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-white/45">
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-white/70">
                   <span className="inline-flex items-center gap-1.5">
-                    <Check className="w-3.5 h-3.5 text-emerald-500" aria-hidden="true" />
+                    <Check className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
                     No obligation
                   </span>
                   <span className="inline-flex items-center gap-1.5">
-                    <Check className="w-3.5 h-3.5 text-emerald-500" aria-hidden="true" />
+                    <Check className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
                     Response within one business day
                   </span>
                 </div>
 
-                <p className="text-sm text-white/50 max-w-lg leading-relaxed">
+                <p className="text-sm text-white/70 max-w-lg leading-relaxed">
                   Start with a practical review of your identity, endpoints, email, backups, and
                   security posture.
                 </p>
 
-                <p className="text-sm sm:text-base text-white/50">
+                <p className="text-sm sm:text-base text-white/70">
                   Arizona-based · Principal-led · Recommendations sized to your business
-                  <span className="mx-2 text-white/25" aria-hidden="true">
+                  <span className="mx-2 text-white/35" aria-hidden="true">
                     ·
                   </span>
                   Or call{" "}
                   <a
                     href="tel:325-480-9870"
-                    className="text-violet-300 hover:text-violet-200 font-medium underline underline-offset-4 decoration-violet-400/30 hover:decoration-violet-300/60 transition-colors"
+                    className="text-pink-300 hover:text-pink-200 font-medium underline underline-offset-4 decoration-pink-400/40 hover:decoration-pink-300/70 transition-colors"
                     data-testid="link-hero-phone"
                   >
                     325-480-9870
@@ -210,7 +212,7 @@ export const ModernHeroSection = (): JSX.Element => {
                   aria-hidden="true"
                   style={{
                     background:
-                      "radial-gradient(ellipse at center, rgba(139, 92, 246, 0.28) 0%, transparent 68%)",
+                      "radial-gradient(ellipse at center, rgba(236, 72, 153, 0.28) 0%, rgba(139, 92, 246, 0.18) 45%, transparent 70%)",
                   }}
                   animate={
                     prefersReducedMotion

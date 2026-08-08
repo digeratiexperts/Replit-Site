@@ -52,12 +52,12 @@ export function BookingModal() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="relative w-full max-w-4xl max-h-[90vh] bg-[#0d0d1a] rounded-2xl overflow-hidden border border-violet-500/20 shadow-2xl shadow-violet-500/10 flex flex-col"
+            className="relative w-full max-w-4xl max-h-[90vh] bg-[#0d0d1a] rounded-2xl overflow-hidden border border-pink-500/25 shadow-2xl shadow-pink-500/15 flex flex-col"
             data-testid="booking-modal"
           >
-            <div className="flex items-center justify-between px-6 py-4 border-b border-violet-500/20 bg-gradient-to-r from-violet-900/40 to-purple-900/40 flex-shrink-0">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-pink-500/20 bg-gradient-to-r from-fuchsia-900/40 via-pink-900/35 to-violet-900/40 flex-shrink-0">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-500 via-pink-500 to-rose-500 flex items-center justify-center flex-shrink-0">
                   <Calendar className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -72,7 +72,7 @@ export function BookingModal() {
               <div className="flex items-center gap-2">
                 <a
                   href="/book"
-                  className="text-xs text-violet-400 hover:text-violet-300 flex items-center gap-1 mr-2 transition-colors"
+                  className="text-xs text-pink-300 hover:text-pink-200 flex items-center gap-1 mr-2 transition-colors"
                   onClick={closeBooking}
                   data-testid="link-open-booking-page"
                 >

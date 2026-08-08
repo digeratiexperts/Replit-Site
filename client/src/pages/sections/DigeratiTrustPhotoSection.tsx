@@ -34,15 +34,17 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
             transition={{ duration: 0.5 }}
           >
             <div className="flex items-center gap-2 mb-5">
-              <Shield className="w-4 h-4 text-violet-600" aria-hidden="true" />
-              <span className="text-sm font-semibold text-violet-600 uppercase tracking-wider">
+              <Shield className="w-4 h-4 text-pink-600" aria-hidden="true" />
+              <span className="text-sm font-semibold text-pink-600 uppercase tracking-wider">
                 Why Arizona businesses work with us
               </span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-6">
               Protection that fits{" "}
-              <span className="text-violet-600">how you actually operate.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-600 via-pink-600 to-violet-600">
+                how you actually operate.
+              </span>
             </h2>
 
             <p className="text-lg text-gray-600 leading-relaxed mb-8 max-w-lg">
@@ -53,8 +55,8 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
             <div className="space-y-5 mb-10">
               {pillars.map((pillar) => (
                 <div key={pillar.title} className="flex gap-3">
-                  <div className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-violet-50 border border-violet-100">
-                    <pillar.icon className="h-4 w-4 text-violet-600" aria-hidden="true" />
+                  <div className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-pink-50 border border-pink-100">
+                    <pillar.icon className="h-4 w-4 text-pink-600" aria-hidden="true" />
                   </div>
                   <div>
                     <p className="font-semibold text-gray-900">{pillar.title}</p>
@@ -66,7 +68,7 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
 
             <a
               href="/book"
-              className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white font-semibold px-6 py-3 rounded-lg shadow-md shadow-pink-500/25 transition-all duration-200"
               data-testid="link-trust-cta"
             >
               Schedule Your Cyber Risk Assessment

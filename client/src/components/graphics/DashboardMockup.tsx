@@ -58,16 +58,16 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-3">
               <motion.div
-                className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center border border-violet-300/20"
+                className="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-500 via-pink-500 to-violet-600 flex items-center justify-center border border-pink-300/25"
                 aria-hidden="true"
                 animate={
                   prefersReducedMotion
                     ? undefined
                     : {
                         boxShadow: [
-                          "0 0 16px rgba(139, 92, 246, 0.25)",
-                          "0 0 28px rgba(139, 92, 246, 0.45)",
-                          "0 0 16px rgba(139, 92, 246, 0.25)",
+                          "0 0 16px rgba(236, 72, 153, 0.28)",
+                          "0 0 28px rgba(236, 72, 153, 0.48)",
+                          "0 0 16px rgba(236, 72, 153, 0.28)",
                         ],
                       }
                 }
@@ -84,7 +84,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
                 <div className="text-white/45 text-xs">Illustrative preview · not live customer data</div>
               </div>
             </div>
-            <span className="shrink-0 text-[10px] uppercase tracking-wider font-semibold text-violet-200/90 bg-violet-500/15 border border-violet-400/30 px-2.5 py-1 rounded-md">
+            <span className="shrink-0 text-[10px] uppercase tracking-wider font-semibold text-pink-100/95 bg-pink-500/20 border border-pink-400/35 px-2.5 py-1 rounded-md">
               Sample
             </span>
           </div>

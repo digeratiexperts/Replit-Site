@@ -526,7 +526,7 @@ export function MegaMenu() {
           className="pointer-events-none absolute inset-x-0 bottom-0 h-px"
           style={{
             background:
-              'linear-gradient(90deg, transparent 0%, rgba(139,92,246,0.35) 35%, rgba(167,139,250,0.45) 50%, rgba(139,92,246,0.35) 65%, transparent 100%)',
+              'linear-gradient(90deg, transparent 0%, rgba(236,72,153,0.35) 30%, rgba(217,70,239,0.5) 50%, rgba(139,92,246,0.35) 70%, transparent 100%)',
           }}
           aria-hidden="true"
         />
@@ -569,7 +569,7 @@ export function MegaMenu() {
                       aria-label={`Go to ${item.name}`}
                     >
                       {item.name}
-                      <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-violet-400 group-hover:w-[70%] transition-all duration-300 motion-reduce:transition-none" />
+                      <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-fuchsia-400 to-pink-400 group-hover:w-[70%] transition-all duration-300 motion-reduce:transition-none" />
                     </a>
                   ) : (
                     <button
@@ -595,7 +595,7 @@ export function MegaMenu() {
                         }`} 
                         aria-hidden="true"
                       />
-                      <span className={`absolute bottom-0.5 left-1/2 -translate-x-1/2 h-0.5 bg-violet-400 transition-all duration-300 motion-reduce:transition-none ${
+                      <span className={`absolute bottom-0.5 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-fuchsia-400 to-pink-400 transition-all duration-300 motion-reduce:transition-none ${
                         activeMenu === item.name ? 'w-[70%]' : 'w-0 group-hover:w-[70%]'
                       }`} />
                     </button>
@@ -942,7 +942,7 @@ export function MegaMenu() {
           <div className="flex items-center space-x-2 lg:space-x-4">
             <button
               type="button"
-              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white px-4 xl:px-5 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap shadow-[0_0_18px_rgba(139,92,246,0.28)] hover:shadow-[0_0_26px_rgba(139,92,246,0.38)] transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050312] border border-violet-400/25"
+              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-4 xl:px-5 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap shadow-[0_0_20px_rgba(236,72,153,0.35)] hover:shadow-[0_0_28px_rgba(236,72,153,0.45)] transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050312] border border-pink-300/30"
               data-testid="nav-cta"
               onClick={() => { handleLinkClick(); openBooking("megamenu"); }}
               aria-label="Schedule Your Assessment"
@@ -971,12 +971,14 @@ export function MegaMenu() {
         {/* Mobile/Tablet Menu — aligned with restrained desktop nav */}
         <div 
           className={`lg:hidden fixed left-0 right-0 z-40 transition-opacity duration-300 motion-reduce:transition-none ${
-            mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+            mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none invisible'
           }`}
           style={{ 
             top: isScrolled ? '64px' : '104px',
             height: isScrolled ? 'calc(100dvh - 64px)' : 'calc(100dvh - 104px)'
           }}
+          aria-hidden={!mobileMenuOpen}
+          {...(!mobileMenuOpen ? ({ inert: '' } as Record<string, string>) : {})}
         >
           <div 
             className={`absolute inset-0 bg-black/80 transition-opacity duration-300 motion-reduce:transition-none ${
@@ -1139,7 +1141,7 @@ export function MegaMenu() {
               >
                 <button
                   type="button"
-                  className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white font-semibold py-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050312] transition-all duration-300 rounded-lg border border-violet-400/25 shadow-[0_0_24px_rgba(139,92,246,0.28)] text-base"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white font-semibold py-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050312] transition-all duration-300 rounded-lg border border-pink-300/30 shadow-[0_0_24px_rgba(236,72,153,0.35)] text-base"
                   onClick={() => { setMobileMenuOpen(false); openBooking("megamenu_mobile"); }}
                   data-testid="mobile-cta"
                   aria-label="Schedule Your Assessment"

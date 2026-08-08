@@ -136,7 +136,7 @@ export const ZohoASAPWidget = ({
         {!isOpen && (
           <button
             onClick={() => setIsOpen(true)}
-            className="relative w-14 h-14 rounded-full bg-gradient-to-br from-purple-600 to-blue-900 text-white shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-110 flex items-center justify-center"
+            className="relative w-14 h-14 rounded-full bg-gradient-to-br from-fuchsia-600 via-pink-600 to-rose-600 text-white shadow-lg shadow-pink-500/35 hover:shadow-xl hover:shadow-pink-500/45 transform transition-all duration-300 hover:scale-110 flex items-center justify-center"
             data-testid="button-open-asap-widget"
             title="Open Support"
           >
