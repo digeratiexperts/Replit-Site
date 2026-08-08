@@ -107,11 +107,20 @@ const QuoteRequest = () => {
       }));
 
       const portalToken = localStorage.getItem("portalToken");
+      if (!portalToken) {
+        toast({
+          title: "Sign in required",
+          description: "Please sign in to the Client Portal to submit a quote request.",
+          variant: "destructive",
+        });
+        navigate("/portal/login?redirect=/store/quote-request");
+        return;
+      }
       const response = await fetch("/api/store/quote-requests", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(portalToken ? { Authorization: `Bearer ${portalToken}` } : {}),
+          Authorization: `Bearer ${portalToken}`,
         },
         credentials: "include",
         body: JSON.stringify({

@@ -221,23 +221,16 @@ app.use((req, res, next) => {
   next();
 });
 
-// Portal host short paths → canonical /portal/* (avoids SPA 404 on /login).
+// Short paths → canonical /portal/* (avoids SPA 404 on /login).
+// Apply on any host: portal bookmarks and marketing-domain typos both land correctly.
 app.use((req, res, next) => {
-  const host = String(req.headers["x-forwarded-host"] || req.headers.host || "")
-    .split(",")[0]
-    .trim()
-    .toLowerCase()
-    .replace(/:\d+$/, "");
-  const portalHost = (process.env.PORTAL_DOMAIN || "portal.digeratiexperts.com").toLowerCase();
-  if (host === portalHost || host === `www.${portalHost}`) {
-    if (req.path === "/login") {
-      const q = req.url.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
-      return res.redirect(301, `/portal/login${q}`);
-    }
-    if (req.path === "/signup") {
-      const q = req.url.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
-      return res.redirect(301, `/portal/signup${q}`);
-    }
+  if (req.path === "/login") {
+    const q = req.url.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
+    return res.redirect(301, `/portal/login${q}`);
+  }
+  if (req.path === "/signup") {
+    const q = req.url.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
+    return res.redirect(301, `/portal/signup${q}`);
   }
   next();
 });
