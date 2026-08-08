@@ -73,6 +73,72 @@ export async function fetchHubCompanyDocuments(
   }
 }
 
+export type HubCompanyOrder = {
+  id: string;
+  source: "hub_deal" | "hub_quote" | "hub_package" | string;
+  orderNumber: string;
+  title?: string;
+  status: string;
+  hubStatus?: string;
+  amount?: number | null;
+  totalMonthly?: number | null;
+  totalOneTime?: number | null;
+  companyName?: string;
+  dealId?: number | null;
+  quoteId?: number | null;
+  packageId?: number | null;
+  tier?: string | null;
+  stage?: string | null;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
+  detailPath?: string;
+};
+
+export type HubCompanyOrdersResponse = {
+  success?: boolean;
+  companyName?: string;
+  matchedDeals?: Array<{ id: number; accountName: string; accountId: number | null; stage: string }>;
+  orders?: HubCompanyOrder[];
+  counts?: { deals?: number; quotes?: number; packages?: number; total?: number };
+  error?: string;
+};
+
+export async function fetchHubCompanyOrders(
+  companyName: string,
+): Promise<HubCompanyOrdersResponse | null> {
+  const base = hubApiBase();
+  const token = syncToken();
+  if (!base || !token) {
+    logger.warn("TechSales orders bridge skipped — TECHSALES_HUB_URL/SYNC_URL or TOKEN not set");
+    return null;
+  }
+
+  const url = `${base}/webhooks/portal/company-orders?companyName=${encodeURIComponent(companyName)}`;
+  try {
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "x-de-sync-token": token,
+        Accept: "application/json",
+      },
+    });
+    const data = (await res.json().catch(() => ({}))) as HubCompanyOrdersResponse;
+    if (!res.ok) {
+      logger.error("TechSales company-orders failed", {
+        status: res.status,
+        error: data.error,
+        companyName,
+      });
+      return null;
+    }
+    return data;
+  } catch (err: any) {
+    logger.error("TechSales company-orders error", { message: err?.message, companyName });
+    return null;
+  }
+}
+
 export async function fetchHubContractDownload(
   signatureId: number,
   companyName: string,

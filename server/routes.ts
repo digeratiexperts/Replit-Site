@@ -98,6 +98,7 @@ import {
 } from "./portalLearningCatalog";
 import {
   fetchHubCompanyDocuments,
+  fetchHubCompanyOrders,
   fetchHubContractDownload,
   resolvePortalCompanyName,
 } from "./techSalesDocuments";
@@ -3411,41 +3412,159 @@ export async function registerRoutes(app: Express) {
       const { status } = req.query;
       const userId = req.userId;
       const clientId = req.user?.clientId;
-      
-      // Get orders from database for this user/client
+      const statusFilter = typeof status === "string" && status !== "all" ? status : null;
+
+      // --- Store orders ---
       const allOrders = await storage.getStoreOrders();
-      
-      // Filter orders by user or client
-      let userOrders = allOrders.filter(order => 
-        order.userId === userId || order.clientId === clientId
+      let userOrders = allOrders.filter(
+        (order) => order.userId === userId || (clientId && order.clientId === clientId),
       );
-      
-      // Apply status filter if provided
-      if (status && typeof status === "string" && status !== "all") {
-        userOrders = userOrders.filter(order => order.status === status);
+      if (statusFilter) {
+        userOrders = userOrders.filter((order) => order.status === statusFilter);
       }
-      
-      // Sort by creation date (newest first)
       userOrders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      
-      const orders = userOrders.map(order => ({
+
+      const storeOrders = userOrders.map((order) => ({
         id: order.id,
         orderNumber: order.orderNumber,
         status: order.status,
-        total: order.total,
+        total: order.total != null ? String(order.total) : "0",
+        totalMonthly: null as number | null,
+        totalOneTime: null as number | null,
         createdAt: order.createdAt,
         itemCount: Array.isArray(order.lineItems) ? order.lineItems.length : 0,
         billingName: order.billingName,
+        title: order.billingCompany || order.billingName || order.orderNumber,
+        source: "store" as const,
+        detailPath: `/portal/orders/${order.id}`,
+        hubStatus: null as string | null,
       }));
-      
-      logSecurityEvent("ORDERS_LIST_VIEWED", req, { 
+
+      // --- Store quote requests (same account) ---
+      let storeQuotes: typeof storeOrders = [];
+      try {
+        const { storeQuoteRequests } = await import("@shared/schema");
+        const { db: portalDb, dbReady: portalDbReady } = await import("./db");
+        if (portalDbReady && portalDb && (userId || clientId)) {
+          const { eq: dEq, or: dOr } = await import("drizzle-orm");
+          const clauses = [];
+          if (userId) clauses.push(dEq(storeQuoteRequests.userId, userId));
+          if (clientId) clauses.push(dEq(storeQuoteRequests.clientId, clientId));
+          if (req.user?.email) {
+            clauses.push(dEq(storeQuoteRequests.contactEmail, req.user.email));
+          }
+          if (clauses.length) {
+            const rows = await portalDb.select().from(storeQuoteRequests).where(dOr(...clauses));
+            storeQuotes = rows
+              .filter((q) => !statusFilter || String(q.status) === statusFilter || statusFilter === "pending")
+              .map((q) => {
+                const items = Array.isArray(q.requestedItems) ? q.requestedItems : [];
+                return {
+                  id: `sq-${q.id}`,
+                  orderNumber: q.quoteNumber,
+                  status: q.status === "converted" ? "completed" : q.status === "declined" ? "cancelled" : "quote_requested",
+                  total: "0",
+                  totalMonthly: null as number | null,
+                  totalOneTime: null as number | null,
+                  createdAt: q.createdAt,
+                  itemCount: items.length,
+                  billingName: q.contactName,
+                  title: q.companyName || `Quote request ${q.quoteNumber}`,
+                  source: "store_quote" as const,
+                  detailPath: "/store",
+                  hubStatus: q.status,
+                };
+              });
+          }
+        }
+      } catch (e: any) {
+        console.warn("[orders] store quote requests skipped:", e?.message);
+      }
+
+      // --- TechSales Hub commercial items ---
+      let hubOrders: Array<{
+        id: string;
+        orderNumber: string;
+        status: string;
+        total: string;
+        totalMonthly: number | null;
+        totalOneTime: number | null;
+        createdAt: string | Date;
+        itemCount: number;
+        billingName?: string;
+        title: string;
+        source: string;
+        detailPath: string;
+        hubStatus: string | null;
+      }> = [];
+      let hubSource: "ok" | "unavailable" | "skipped" = "skipped";
+      let companyName: string | null = null;
+      let matchedDeals: any[] = [];
+
+      try {
+        const ctx = portalCompanyContext(req);
+        companyName = ctx.companyName;
+        if (companyName) {
+          const hub = await fetchHubCompanyOrders(companyName);
+          if (hub?.orders) {
+            hubSource = "ok";
+            matchedDeals = hub.matchedDeals || [];
+            hubOrders = hub.orders
+              .map((o) => {
+                const monthly = typeof o.totalMonthly === "number" ? o.totalMonthly : null;
+                const oneTime = typeof o.totalOneTime === "number" ? o.totalOneTime : null;
+                const amount =
+                  typeof o.amount === "number"
+                    ? o.amount
+                    : (monthly || 0) + (oneTime || 0);
+                return {
+                  id: o.id,
+                  orderNumber: o.orderNumber,
+                  status: o.status,
+                  total: String(amount || 0),
+                  totalMonthly: monthly,
+                  totalOneTime: oneTime,
+                  createdAt: o.createdAt || o.updatedAt || new Date().toISOString(),
+                  itemCount: 1,
+                  billingName: o.companyName,
+                  title: o.title || o.orderNumber,
+                  source: o.source || "hub",
+                  detailPath: o.detailPath || "/portal/contracts",
+                  hubStatus: o.hubStatus || o.stage || null,
+                };
+              })
+              .filter((o) => !statusFilter || o.status === statusFilter);
+          } else {
+            hubSource = "unavailable";
+          }
+        }
+      } catch (e: any) {
+        hubSource = "unavailable";
+        console.warn("[orders] hub bridge:", e?.message);
+      }
+
+      const orders = [...storeOrders, ...storeQuotes, ...hubOrders].sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
+
+      logSecurityEvent("ORDERS_LIST_VIEWED", req, {
         userId,
         clientId,
         orderCount: orders.length,
-        statusFilter: status || "all"
+        storeCount: storeOrders.length,
+        hubCount: hubOrders.length,
+        statusFilter: statusFilter || "all",
       });
-      
-      res.json({ orders });
+
+      res.json({
+        orders,
+        storeOrders,
+        hubOrders,
+        storeQuotes,
+        companyName,
+        matchedDeals,
+        sources: { store: "ok", hub: hubSource, storeQuotes: storeQuotes.length ? "ok" : "empty" },
+      });
     } catch (error: any) {
       console.error("[ERROR] Failed to fetch orders:", error);
       res.status(500).json({ message: "Failed to load orders" });
