@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import shieldImage from "@assets/lucid-origin_Cybersecurity_ebook_cover_art_dark_navy_blue_to_b_1775876025204.jpg";
+import { AnimatedShield } from "@/components/graphics/AnimatedShield";
 
 interface ExitIntentPopupProps {
   delay?: number;
@@ -153,15 +153,9 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                 {!isSuccess ? (
                   <>
                     <div className="flex items-center justify-center mb-6">
-                      <div className="relative">
-                        <div className="absolute inset-0 bg-violet-500/20 rounded-2xl blur-2xl scale-150" />
-                        <div className="relative w-28 h-36 rounded-xl overflow-hidden ring-2 ring-violet-500/30 shadow-lg shadow-violet-500/20">
-                          <img src={shieldImage} alt="Cybersecurity Checklist" loading="lazy" decoding="async" width={112} height={144} className="w-full h-full object-cover" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent" />
-                          <div className="absolute bottom-2 left-0 right-0 flex justify-center">
-                            <Shield className="w-6 h-6 text-violet-300 drop-shadow-lg" />
-                          </div>
-                        </div>
+                      <div className="relative" aria-hidden="true">
+                        <div className="absolute inset-0 bg-[#D3126A]/25 rounded-full blur-2xl scale-125" />
+                        <AnimatedShield className="relative w-28 h-36 drop-shadow-[0_0_24px_rgba(211,18,106,0.35)]" />
                       </div>
                     </div>
 
