@@ -44,6 +44,14 @@ import {
   ensureWelcomeMessage,
   getChatStoreStatus,
 } from "./portalChatStore";
+import {
+  initPortalSurveyStore,
+  listSurveysForUser,
+  getSurveyById,
+  getUserResponseForSurvey,
+  submitSurveyResponse,
+  getSurveyStoreStatus,
+} from "./portalSurveyStore";
 
 const JWT_SECRET = process.env.JWT_SECRET || randomBytes(32).toString('hex');
 const SALT_ROUNDS = 12;
@@ -214,6 +222,7 @@ export async function registerRoutes(app: Express) {
   // Durable portal auth (Neon) — Map-compatible shim for existing handlers
   await initPortalAuthStore();
   await initPortalChatStore();
+  await initPortalSurveyStore();
   const portalUsers = {
     get: (key: string) => portalAuthGetUser(key),
     has: (key: string) => portalAuthHasUser(key),
@@ -815,6 +824,99 @@ export async function registerRoutes(app: Express) {
       logSecurityEvent("QUESTIONNAIRES_FETCHED", req, {});
     } catch (error: any) {
       res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ===== PORTAL SURVEYS (first-party CSAT / onboarding / awareness) =====
+  app.get("/api/portal/surveys", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (!req.userId) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+      const surveys = await listSurveysForUser(req.userId);
+      const store = getSurveyStoreStatus();
+      res.json({
+        success: true,
+        surveys,
+        durable: store.durable,
+        pendingCount: surveys.filter((s) => s.status === "pending").length,
+        completedCount: surveys.filter((s) => s.status === "completed").length,
+      });
+      logSecurityEvent("SURVEYS_LISTED", req, { count: surveys.length });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/portal/surveys/:id", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (!req.userId) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+      const survey = await getSurveyById(req.params.id);
+      if (!survey) {
+        return res.status(404).json({ error: "Survey not found" });
+      }
+      const response = await getUserResponseForSurvey(req.userId, survey.id);
+      res.json({
+        success: true,
+        survey,
+        status: response ? "completed" : "pending",
+        response: response
+          ? {
+              id: response.id,
+              answers: response.answers,
+              rating: response.rating,
+              submittedAt: response.submittedAt,
+            }
+          : null,
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/portal/surveys/:id/responses", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (!req.userId) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+      const answers = req.body?.answers;
+      if (!answers || typeof answers !== "object" || Array.isArray(answers)) {
+        return res.status(400).json({ error: "answers object is required" });
+      }
+
+      const response = await submitSurveyResponse({
+        surveyId: req.params.id,
+        userId: req.userId,
+        clientId: req.user?.clientId || null,
+        answers,
+      });
+
+      res.json({
+        success: true,
+        response: {
+          id: response.id,
+          surveyId: response.surveyId,
+          rating: response.rating,
+          submittedAt: response.submittedAt,
+        },
+      });
+      logSecurityEvent("SURVEY_SUBMITTED", req, { surveyId: req.params.id });
+    } catch (error: any) {
+      const message = error?.message || "Failed to submit survey";
+      const status =
+        message === "Survey not found"
+          ? 404
+          : message === "Survey already completed"
+            ? 409
+            : message.startsWith("Missing") ||
+                message.startsWith("Select") ||
+                message.startsWith("Rating") ||
+                message.startsWith("Invalid")
+              ? 400
+              : 500;
+      res.status(status).json({ error: message });
     }
   });
 

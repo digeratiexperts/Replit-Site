@@ -45,6 +45,7 @@ export async function portalPost<T>(url: string, data: unknown): Promise<T> {
     try {
       const json = JSON.parse(text);
       if (json.message) message = json.message;
+      else if (json.error) message = json.error;
     } catch {}
     throw new Error(message);
   }

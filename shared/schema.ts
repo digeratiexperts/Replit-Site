@@ -215,6 +215,32 @@ export const portalOrderForms = pgTable("portal_order_forms", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+/** First-party portal surveys (CSAT, onboarding, awareness quizzes) */
+export const portalSurveys = pgTable("portal_surveys", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  slug: text("slug").notNull().unique(),
+  title: text("title").notNull(),
+  description: text("description"),
+  category: text("category").notNull().default("general"),
+  questions: jsonb("questions").$type<Array<Record<string, unknown>>>().notNull(),
+  isActive: boolean("is_active").default(true),
+  sortOrder: integer("sort_order").default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const portalSurveyResponses = pgTable("portal_survey_responses", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  surveyId: varchar("survey_id")
+    .notNull()
+    .references(() => portalSurveys.id, { onDelete: "cascade" }),
+  userId: varchar("user_id").references(() => portalUsers.id, { onDelete: "set null" }),
+  clientId: varchar("client_id").references(() => portalClients.id, { onDelete: "set null" }),
+  answers: jsonb("answers").$type<Record<string, unknown>>().notNull(),
+  rating: integer("rating"),
+  submittedAt: timestamp("submitted_at").defaultNow().notNull(),
+});
+
 // Portal services table
 export const portalServices = pgTable("portal_services", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -601,6 +627,8 @@ export type InsertPortalTicketComment = z.infer<typeof insertPortalTicketComment
 
 export type PortalInvoice = typeof portalInvoices.$inferSelect;
 export type PortalKBArticle = typeof portalKBArticles.$inferSelect;
+export type PortalSurvey = typeof portalSurveys.$inferSelect;
+export type PortalSurveyResponse = typeof portalSurveyResponses.$inferSelect;
 
 // Chat messages table
 export const portalChatMessages = pgTable("portal_chat_messages", {
