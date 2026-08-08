@@ -28,13 +28,20 @@ import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooter
 import { DigeratiStatsSection } from "./sections/DigeratiStatsSection";
 import { DigeratiTrustPhotoSection } from "./sections/DigeratiTrustPhotoSection";
 
+// Themes must match real section backgrounds — drives header/logo chrome while scrolling.
 const homepageSections: { id: string; label: string; theme: 'dark' | 'light' }[] = [
   { id: 'hero', label: 'Home', theme: 'dark' },
-  { id: 'services', label: 'Services', theme: 'light' },
-  { id: 'protection', label: 'How It Works', theme: 'dark' },
+  { id: 'stats', label: 'Results', theme: 'dark' },
+  { id: 'services', label: 'Services', theme: 'dark' },
+  { id: 'protection', label: 'How It Works', theme: 'light' },
+  { id: 'calculators', label: 'Calculators', theme: 'dark' },
+  { id: 'challenges', label: 'Challenges', theme: 'dark' },
   { id: 'industries', label: 'Industries', theme: 'dark' },
-  { id: 'pricing', label: 'Pricing', theme: 'light' },
+  { id: 'trust', label: 'Trust', theme: 'light' },
+  { id: 'pricing', label: 'Pricing', theme: 'dark' },
   { id: 'testimonials', label: 'Reviews', theme: 'dark' },
+  { id: 'insights', label: 'Insights', theme: 'dark' },
+  { id: 'cta', label: 'Get Started', theme: 'dark' },
   { id: 'faq', label: 'FAQ', theme: 'light' },
   { id: 'contact', label: 'Contact', theme: 'dark' },
 ];

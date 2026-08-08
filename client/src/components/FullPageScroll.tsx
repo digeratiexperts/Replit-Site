@@ -26,6 +26,12 @@ export const useFullPageScroll = () => {
   return context;
 };
 
+/** Safe for MegaMenu / chrome that also render outside the homepage provider. */
+export const useOptionalFullPageScroll = () => useContext(FullPageScrollContext);
+
+/** Viewport Y under the fixed header — logo/nav theme must follow this band, not center. */
+const HEADER_THEME_PROBE_Y = 72;
+
 interface FullPageScrollProviderProps {
   children: React.ReactNode;
   sections: ScrollSection[];
@@ -39,6 +45,9 @@ export function FullPageScrollProvider({
 }: FullPageScrollProviderProps) {
   const [currentSection, setCurrentSection] = useState(0);
   const [sectionProgress, setSectionProgress] = useState(0);
+  const [headerTheme, setHeaderTheme] = useState<'dark' | 'light'>(
+    () => sections[0]?.theme || 'dark'
+  );
   const [isSnapEnabled, setIsSnapEnabled] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -79,7 +88,7 @@ export function FullPageScrollProvider({
     setIsSnapEnabled(prev => !prev);
   }, []);
 
-  // Center-based section tracking for reliable theme switching
+  // Center index for keyboard/progress; header-band theme for nav/logo chrome
   useEffect(() => {
     const findCenterSection = () => {
       if (isScrollingRef.current) return;
@@ -114,17 +123,34 @@ export function FullPageScrollProvider({
         setCurrentSection(closestSection);
       }
     };
+
+    const findHeaderTheme = () => {
+      let matched: 'dark' | 'light' | null = null;
+      for (const section of sections) {
+        const element = document.getElementById(section.id);
+        if (!element) continue;
+        const rect = element.getBoundingClientRect();
+        if (rect.top <= HEADER_THEME_PROBE_Y && rect.bottom > HEADER_THEME_PROBE_Y) {
+          matched = section.theme || 'dark';
+          break;
+        }
+      }
+      const nextTheme = matched ?? sections[currentSection]?.theme ?? 'dark';
+      setHeaderTheme((prev) => (prev === nextTheme ? prev : nextTheme));
+    };
     
-    // Use requestAnimationFrame for smooth updates
     let rafId: number;
     const handleScroll = () => {
       cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(findCenterSection);
+      rafId = requestAnimationFrame(() => {
+        findCenterSection();
+        findHeaderTheme();
+      });
     };
     
     window.addEventListener('scroll', handleScroll, { passive: true });
-    // Initial check
     findCenterSection();
+    findHeaderTheme();
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -246,12 +272,13 @@ export function FullPageScrollProvider({
       scrollToSection,
       isSnapEnabled: effectiveSnapEnabled,
       toggleSnap,
-      currentTheme: sections[currentSection]?.theme || 'dark',
+      currentTheme: headerTheme,
       sectionProgress
     }}>
       <div 
         ref={containerRef}
         className="scroll-smooth"
+        data-header-theme={headerTheme}
       >
         {children}
       </div>
