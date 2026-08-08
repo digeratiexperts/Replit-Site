@@ -495,6 +495,18 @@ export function MegaMenu() {
             </a>
 
             <a
+              href="https://assist.zoho.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center text-white/70 hover:text-violet-300 text-xs md:text-sm font-medium transition-colors"
+              data-testid="utility-zoho-assist"
+            >
+              <Monitor className="h-3.5 w-3.5 mr-1.5 text-violet-400" />
+              <span className="hidden sm:inline">Zoho Assist</span>
+              <span className="sm:hidden">Assist</span>
+            </a>
+
+            <a
               href="/portal/login"
               className="flex items-center text-white/70 hover:text-violet-300 text-xs md:text-sm font-medium transition-colors"
               data-testid="utility-portal"
@@ -1104,6 +1116,23 @@ export function MegaMenu() {
                   <div>
                     <div className="text-sm text-gray-400">Call Us</div>
                     <div className="font-semibold text-white group-hover:text-violet-400 transition-colors">325-480-9870</div>
+                  </div>
+                </a>
+
+                <a
+                  href="https://assist.zoho.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl bg-violet-500/10 border border-violet-500/20 hover:border-violet-500/40 transition-all group"
+                  data-testid="mobile-zoho-assist"
+                  aria-label="Open Zoho Assist remote support"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center border border-violet-500/20">
+                    <Monitor className="h-5 w-5 text-violet-400" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <div className="text-sm text-gray-400">Remote Support</div>
+                    <div className="font-semibold text-white group-hover:text-violet-400 transition-colors">Zoho Assist</div>
                   </div>
                 </a>
                 

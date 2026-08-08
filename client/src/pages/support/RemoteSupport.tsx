@@ -103,14 +103,25 @@ export default function RemoteSupport() {
           </div>
         </div>
 
-        {/* CTA */}
+        {/* Zoho Assist CTA */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-8 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Need Immediate Help?</h2>
-          <p className="text-lg mb-6 text-blue-100">Connect with our MSP support team now.</p>
+          <p className="text-lg mb-6 text-blue-100">
+            Join a secure Zoho Assist session with our MSP technicians, or open a ticket if you need us to reach out.
+          </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="https://assist.zoho.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center bg-white text-blue-700 hover:bg-blue-50 px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
+              data-testid="button-zoho-assist-remote"
+            >
+              Open Zoho Assist
+            </a>
             <a 
               href="/support/submit-ticket" 
-              className="inline-flex items-center justify-center bg-white text-blue-700 hover:bg-blue-50 px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
+              className="inline-flex items-center justify-center border-2 border-white bg-transparent text-white hover:bg-white/10 px-8 py-3 rounded-lg font-semibold transition-all"
               data-testid="button-submit-ticket-remote"
             >
               Submit Support Request

@@ -24,18 +24,22 @@ const CircuitOverlay = () => (
   </svg>
 );
 
-const FooterLink = ({ href, children, testId }: { href: string; children: React.ReactNode; testId: string }) => (
-  <a 
-    href={href} 
-    className="group relative text-gray-400 hover:text-white text-sm transition-all duration-300 inline-block"
-    data-testid={testId}
-  >
-    <span className="relative">
-      {children}
-      <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-violet-500 transition-all duration-300 group-hover:w-full" />
-    </span>
-  </a>
-);
+const FooterLink = ({ href, children, testId }: { href: string; children: React.ReactNode; testId: string }) => {
+  const isExternal = /^https?:\/\//i.test(href);
+  return (
+    <a 
+      href={href}
+      {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      className="group relative text-gray-400 hover:text-white text-sm transition-all duration-300 inline-block"
+      data-testid={testId}
+    >
+      <span className="relative">
+        {children}
+        <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-violet-500 transition-all duration-300 group-hover:w-full" />
+      </span>
+    </a>
+  );
+};
 
 const socialButtonVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -72,6 +76,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
     { name: "Digerati Journal", href: "/resources/blog" },
     { name: "Cyber Facts", href: "/resources/cyber-facts" },
     { name: "Submit Ticket", href: "/support/submit-ticket" },
+    { name: "Zoho Assist", href: "https://assist.zoho.com/" },
     { name: "Remote Support", href: "/support/remote-support" },
     { name: "Pay Invoice", href: "/support/pay-invoice" },
     { name: "Knowledge Base", href: "/support/knowledge-base" },
