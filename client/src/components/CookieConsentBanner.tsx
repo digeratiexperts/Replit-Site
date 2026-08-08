@@ -160,8 +160,8 @@ export function CookieConsentBanner() {
                 }}
               />
 
-              <div className="relative z-10 max-w-screen-2xl mx-auto px-4 md:px-8 py-4 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
-                <p className="text-gray-200 text-xs leading-relaxed flex-1 min-w-0">
+              <div className="relative z-10 max-w-screen-2xl mx-auto px-4 md:px-8 py-3 md:py-4 flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-8">
+                <p className="hidden md:block text-gray-200 text-xs leading-relaxed flex-1 min-w-0">
                   Digerati Experts uses cookies and similar tracking technologies to collect information you provide and to capture your interaction with our site. We use this information to enhance site navigation, personalize content, analyze your use of our website, and assist in our marketing efforts and customer service. To deliver the best experience, analytics and hosting service providers may have access to this information. By clicking "Accept All," you consent to our collection, use, and disclosure of such information. For more information about our data processing practices, please see our{" "}
                   <Link
                     href="/legal/privacy-policy"
@@ -173,10 +173,18 @@ export function CookieConsentBanner() {
                   .
                 </p>
 
-                <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
+                <p className="md:hidden text-gray-200 text-xs leading-relaxed">
+                  We use cookies to improve the site and understand what is useful. Choose what you are comfortable with in{" "}
+                  <Link href="/legal/privacy-policy" className="underline underline-offset-2 text-violet-300 font-medium">
+                    our Privacy Policy
+                  </Link>
+                  .
+                </p>
+
+                <div className="grid w-full grid-cols-2 items-center gap-2 flex-shrink-0 md:flex md:w-auto md:flex-wrap">
                   <button
                     onClick={() => setShowPreferences(v => !v)}
-                    className="text-violet-300 hover:text-white text-sm font-semibold underline underline-offset-2 transition-colors whitespace-nowrap px-1"
+                    className="col-span-2 min-h-11 text-left text-violet-300 hover:text-white text-sm font-semibold underline underline-offset-2 transition-colors md:min-h-0 md:text-center md:col-auto md:px-1"
                     data-testid="button-manage-cookie-preferences"
                   >
                     Manage Cookie Preferences
@@ -184,7 +192,7 @@ export function CookieConsentBanner() {
 
                   <button
                     onClick={reject}
-                    className="px-5 py-2 rounded text-sm font-semibold bg-[#0a0a1a] border border-white/20 text-white hover:bg-white/10 transition-colors whitespace-nowrap"
+                    className="min-h-11 px-5 py-2 rounded text-sm font-semibold bg-[#0a0a1a] border border-white/20 text-white hover:bg-white/10 transition-colors whitespace-nowrap"
                     data-testid="button-reject-all-cookies"
                   >
                     Reject All
@@ -192,7 +200,7 @@ export function CookieConsentBanner() {
 
                   <button
                     onClick={accept}
-                    className="px-5 py-2 rounded text-sm font-semibold bg-[#0a0a1a] border border-white/20 text-white hover:bg-white/10 transition-colors whitespace-nowrap"
+                    className="min-h-11 px-5 py-2 rounded text-sm font-semibold bg-[#0a0a1a] border border-white/20 text-white hover:bg-white/10 transition-colors whitespace-nowrap"
                     data-testid="button-accept-all-cookies"
                   >
                     Accept All

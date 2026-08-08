@@ -60,11 +60,10 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
             <span className="text-sm text-gray-300">Threat Protection</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            What We <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-purple-300 to-fuchsia-300">Tackle</span>
+            The Problems That Shouldn’t <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-purple-300 to-fuchsia-300">Follow You Home</span>
           </h2>
           <p className="text-xl text-gray-400 max-w-4xl mx-auto leading-relaxed">
-            Your business faces evolving cyber threats daily. We handle these complex challenges 
-            with enterprise-grade solutions, so you can focus on growth without worry.
+            Some problems are urgent. Others quietly drain time every week. We handle both—then explain what changed in plain English.
           </p>
         </motion.div>
 
@@ -114,7 +113,7 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           <p className="text-lg text-gray-400 mb-6">
-            Don't see your specific challenge? We handle it all.
+            Not sure which category your problem fits? That is our job, not yours.
           </p>
           <a 
             href="/book"
@@ -123,7 +122,7 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
             className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-purple-500 hover:to-indigo-500 transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-105"
             data-testid="tackle-cta"
           >
-            Discuss Your Security Needs
+            Talk Through What’s Going On
             <Shield className="ml-2 h-5 w-5" />
           </a>
         </motion.div>

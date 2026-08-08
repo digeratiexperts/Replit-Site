@@ -2,7 +2,7 @@ import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion
 import { useRef, useState } from "react";
 import { analytics } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle, Building, FileCheck, Check, Loader2, Shield, User, Mail, Clock, Activity, Zap } from "lucide-react";
+import { ArrowRight, CheckCircle, Building, FileCheck, Check, Loader2, Shield, User, Mail, MessageCircle, ClipboardCheck, Handshake } from "lucide-react";
 import { DashboardMockup } from "@/components/graphics";
 import { Input } from "@/components/ui/input";
 import heroBgImage from "@assets/lucid-origin_a_cinematic_photo_of_designed_as_a_background_lay_1775876876671.jpg";
@@ -165,8 +165,7 @@ export const ModernHeroSection = (): JSX.Element => {
 
               {/* Subheadline */}
               <p className="text-base md:text-lg text-white/60 leading-relaxed max-w-lg">
-                Enterprise-grade cybersecurity for small businesses. Get 24/7 protection, 
-                cut cyber liability, and pass compliance checks.
+                Serious IT and cybersecurity, explained clearly and owned by people you can actually reach. We assess first, recommend what fits, and stay accountable after the work begins.
               </p>
 
               {/* Simple feature list - 2 columns on mobile */}
@@ -254,7 +253,7 @@ export const ModernHeroSection = (): JSX.Element => {
                           <Loader2 className="h-5 w-5 animate-spin" />
                         ) : (
                           <>
-                            Get Started
+                            Request My Assessment
                             <ArrowRight className="ml-2 w-5 h-5" />
                           </>
                         )}
@@ -281,7 +280,7 @@ export const ModernHeroSection = (): JSX.Element => {
                 Or call <a href="tel:325-480-9870" className="text-violet-400 hover:text-violet-300 font-medium transition-colors" data-testid="link-hero-phone">325-480-9870</a>
               </p>
 
-              {/* Stats Bar */}
+              {/* Principal-led promise */}
               <motion.div 
                 className="grid grid-cols-3 gap-3 sm:flex sm:flex-wrap sm:gap-6 mt-4 pt-5 sm:pt-6 border-t border-white/10"
                 initial={{ opacity: 0, y: 15 }}
@@ -290,29 +289,29 @@ export const ModernHeroSection = (): JSX.Element => {
               >
                 <div className="flex flex-col sm:flex-row items-center sm:items-center gap-1.5 sm:gap-3 text-center sm:text-left">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
-                    <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-violet-400" />
+                    <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-violet-400" />
                   </div>
                   <div>
-                    <div className="text-lg sm:text-2xl font-bold text-white">99.9%</div>
-                    <div className="text-xs sm:text-sm text-white/50">Uptime SLA</div>
+                    <div className="text-sm sm:text-base font-bold text-white">Clear answers</div>
+                    <div className="text-xs sm:text-sm text-white/50">No scare tactics</div>
                   </div>
                 </div>
                 <div className="flex flex-col sm:flex-row items-center sm:items-center gap-1.5 sm:gap-3 text-center sm:text-left">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
-                    <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-violet-400" />
+                    <ClipboardCheck className="w-4 h-4 sm:w-5 sm:h-5 text-violet-400" />
                   </div>
                   <div>
-                    <div className="text-lg sm:text-2xl font-bold text-white">&lt;15min</div>
-                    <div className="text-xs sm:text-sm text-white/50">Response</div>
+                    <div className="text-sm sm:text-base font-bold text-white">Assessment first</div>
+                    <div className="text-xs sm:text-sm text-white/50">Right-sized plan</div>
                   </div>
                 </div>
                 <div className="flex flex-col sm:flex-row items-center sm:items-center gap-1.5 sm:gap-3 text-center sm:text-left">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
-                    <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-violet-400" />
+                    <Handshake className="w-4 h-4 sm:w-5 sm:h-5 text-violet-400" />
                   </div>
                   <div>
-                    <div className="text-lg sm:text-2xl font-bold text-white">24/7</div>
-                    <div className="text-xs sm:text-sm text-white/50">Monitoring</div>
+                    <div className="text-sm sm:text-base font-bold text-white">Joe stays involved</div>
+                    <div className="text-xs sm:text-sm text-white/50">Accountable delivery</div>
                   </div>
                 </div>
               </motion.div>

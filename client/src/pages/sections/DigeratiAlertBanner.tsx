@@ -100,10 +100,10 @@ export const DigeratiAlertBanner = (): JSX.Element => {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-gray-900">
-            We Exist to Protect and Enable Your Business
+            Technology Should Help You Run the Business—not Become Another Job
           </h2>
           <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
-            If you're like most business leaders, you don't want another vendor — you want a security-first partner who proactively reduces risk, improves uptime, and keeps your team moving.
+            You should know what is protected, what needs attention, and who owns the next step. We make the technical work understandable and stay responsible after the recommendation.
           </p>
         </motion.div>
 
@@ -176,10 +176,10 @@ export const DigeratiAlertBanner = (): JSX.Element => {
             {/* Content */}
             <div className="relative z-10 text-center">
               <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4">
-                Ready to Secure Your Business?
+                Let’s Talk Through What’s Going On
               </h3>
               <p className="text-lg text-white/90 max-w-2xl mx-auto mb-8">
-                Get enterprise-grade protection tailored for Arizona businesses. Let's discuss your security needs.
+                No package pitch before we understand your environment. Bring the recurring problem, the insurance questionnaire, or the thing that keeps getting pushed to next week.
               </p>
               
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -190,7 +190,7 @@ export const DigeratiAlertBanner = (): JSX.Element => {
                     data-testid="button-schedule-consultation-banner"
                   >
                     <ArrowRight className="mr-2 h-5 w-5" />
-                    Schedule Consultation
+                    See Whether We’re a Fit
                   </Button>
                 </a>
                 <a href="tel:325-480-9870">

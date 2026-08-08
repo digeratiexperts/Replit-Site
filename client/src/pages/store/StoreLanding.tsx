@@ -125,17 +125,16 @@ const StoreLanding = () => {
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6">
               <Package className="w-4 h-4 text-violet-400" />
-              <span className="text-sm text-violet-300">IT Services & Solutions</span>
+              <span className="text-sm text-violet-300">Procurement Without the Guesswork</span>
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              Digerati{" "}
+              Know What You Need?{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-purple-300 to-fuchsia-300">
-                Store
+                Start Here.
               </span>
             </h1>
             <p className="text-xl text-white/70 max-w-3xl mx-auto leading-relaxed">
-              Everything your business needs—from complete managed IT packages to individual security tools, 
-              hardware provisioning, and professional services. Choose what fits your organization.
+              Buy a specific service, compare managed packages, or ask us to help sort out the right fit. If the catalog starts sounding like alphabet soup, call—we speak human.
             </p>
           </motion.div>
 
@@ -159,10 +158,9 @@ const StoreLanding = () => {
                   <div className="w-14 h-14 rounded-xl bg-violet-500/20 flex items-center justify-center mb-6">
                     <Building className="w-7 h-7 text-violet-400" />
                   </div>
-                  <h2 className="text-2xl font-bold text-white mb-3">Managed Clients</h2>
+                  <h2 className="text-2xl font-bold text-white mb-3">Want One Team to Own the Whole Stack?</h2>
                   <p className="text-white/60 mb-4 leading-relaxed">
-                    Full-service managed IT packages for businesses seeking comprehensive support. 
-                    Our ProActive Ecosystem plans include everything you need in one predictable monthly subscription.
+                    Our ProActive Ecosystem packages combine day-to-day IT, security, and strategic guidance under one accountable team and one predictable monthly agreement.
                   </p>
                   <div className="flex items-center gap-2 mb-6 text-sm text-violet-300">
                     <Lock className="w-4 h-4" />
@@ -194,10 +192,9 @@ const StoreLanding = () => {
                   <div className="w-14 h-14 rounded-xl bg-violet-500/20 flex items-center justify-center mb-6">
                     <Users className="w-7 h-7 text-violet-400" />
                   </div>
-                  <h2 className="text-2xl font-bold text-white mb-3">Co-Managed Clients</h2>
+                  <h2 className="text-2xl font-bold text-white mb-3">Already Have IT but Need More Coverage?</h2>
                   <p className="text-white/60 mb-4 leading-relaxed">
-                    Flexible solutions for IT teams needing extra support. Add endpoint management, 
-                    security tools, UCaaS, hardware provisioning, or professional services as needed.
+                    Add endpoint management, security tools, communications, hardware provisioning, or project help without replacing the people who already know your environment.
                   </p>
                   <div className="flex items-center gap-2 mb-6 text-sm text-emerald-300">
                     <Shield className="w-4 h-4" />
@@ -230,7 +227,7 @@ const StoreLanding = () => {
           >
             <div className="text-center mb-10">
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">Browse by Category</h2>
-              <p className="text-white/60">Explore our complete catalog of IT services and products.</p>
+              <p className="text-white/60">Browse by the job you need done. We are happy to help if two categories sound suspiciously similar.</p>
             </div>
             
             <motion.div 

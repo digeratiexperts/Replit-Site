@@ -436,6 +436,17 @@ export function MegaMenu() {
     return () => window.removeEventListener('resize', handleResize);
   }, [mobileMenuOpen, activeMenu]);
 
+  // Keep the page from moving behind the mobile navigation. Restoring the
+  // previous value matters when another overlay already manages body scroll.
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [mobileMenuOpen]);
+
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {
@@ -958,11 +969,11 @@ export function MegaMenu() {
           
           {/* Slide-out Panel */}
           <div 
-            className={`absolute right-0 top-0 h-full w-full max-w-md bg-gradient-to-b from-[#0d0720] via-[#0a0118] to-[#050210] border-l border-white/10 shadow-[0_0_60px_rgba(139,92,246,0.3)] transform transition-transform duration-500 ease-out overflow-hidden ${
-              mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-            }`}
+            className="absolute right-0 top-0 h-full w-full max-w-md bg-gradient-to-b from-[#0d0720] via-[#0a0118] to-[#050210] border-l border-white/10 shadow-[0_0_60px_rgba(139,92,246,0.3)] transition-transform duration-500 ease-out overflow-hidden"
+            style={{ transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(100%)' }}
             role="dialog"
             aria-label="Navigation menu"
+            aria-modal="true"
           >
             {/* Decorative gradient orbs */}
             <div className="absolute top-20 -left-20 w-40 h-40 bg-purple-600/20 rounded-full blur-[80px] pointer-events-none" />
@@ -1029,7 +1040,7 @@ export function MegaMenu() {
                                   <a
                                     key={subItem.title}
                                     href={subItem.url || '#'}
-                                    className="group/item flex items-center gap-3 py-2.5 px-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-violet-500 rounded-lg transition-all border border-transparent hover:border-white/10"
+                                    className="group/item flex min-h-11 items-center gap-3 py-2.5 px-3 text-sm text-gray-300 hover:text-white hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-violet-500 rounded-lg transition-all border border-transparent hover:border-white/10"
                                     onClick={() => setMobileMenuOpen(false)}
                                     data-testid={`mobile-submenu-${subItem.title.toLowerCase().replace(/\s+/g, '-')}`}
                                     aria-label={`${subItem.title}: ${subItem.description || ''}`}
@@ -1081,7 +1092,7 @@ export function MegaMenu() {
                     <Phone className="h-5 w-5 text-violet-400" aria-hidden="true" />
                   </div>
                   <div>
-                    <div className="text-sm text-gray-400">Call Us</div>
+                    <div className="text-sm text-gray-400">Talk to a real person</div>
                     <div className="font-semibold text-white group-hover:text-violet-400 transition-colors">325-480-9870</div>
                   </div>
                 </a>
@@ -1118,7 +1129,7 @@ export function MegaMenu() {
                   data-testid="mobile-cta"
                   aria-label="Get protected now - Schedule a consultation"
                 >
-                  Get Protected Now
+                  Talk Through What You Need
                   <ArrowRight className="w-5 h-5" />
                 </button>
               </div>
@@ -1126,7 +1137,7 @@ export function MegaMenu() {
               {/* Bottom Branding */}
               <div className="pt-8 pb-4 text-center">
                 <p className="text-xs text-gray-600">
-                  Digerati Experts • Arizona's MSP Leader
+                  Digerati Experts • Arizona-based. Principal-led. Accountable.
                 </p>
               </div>
             </div>

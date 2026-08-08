@@ -31,10 +31,10 @@ const blogPosts = [
   },
   {
     id: 1,
-    title: "2025 Cybersecurity Trends: What Arizona Businesses Need to Know",
-    excerpt: "The cybersecurity landscape is evolving rapidly. Learn about the key threats and defensive strategies that will define 2025.",
+    title: "Cybersecurity Trends Arizona Businesses Should Keep Watching",
+    excerpt: "A practical look at the threats and defensive habits that continue to matter for Arizona businesses.",
     category: "Cybersecurity",
-    author: "Michael Torres",
+    author: "Joe Petro",
     date: "2024-12-01",
     readTime: "8 min read",
     featured: true,
@@ -46,7 +46,7 @@ const blogPosts = [
     title: "HIPAA Compliance Checklist for Healthcare Providers",
     excerpt: "A comprehensive guide to maintaining HIPAA compliance in your medical practice, including technical safeguards and documentation requirements.",
     category: "Compliance",
-    author: "Sarah Chen",
+    author: "Joe Petro",
     date: "2024-11-28",
     readTime: "12 min read",
     featured: true,
@@ -58,7 +58,7 @@ const blogPosts = [
     title: "Ransomware Protection: A Multi-Layer Approach",
     excerpt: "How to build a robust defense against ransomware attacks using endpoint protection, backup strategies, and employee training.",
     category: "Security",
-    author: "David Martinez",
+    author: "Joe Petro",
     date: "2024-11-25",
     readTime: "10 min read",
     featured: false,
@@ -70,7 +70,7 @@ const blogPosts = [
     title: "Cloud Backup Best Practices for Small Businesses",
     excerpt: "Protect your critical data with these proven cloud backup strategies that won't break the bank.",
     category: "Backup & Recovery",
-    author: "Jennifer Lee",
+    author: "Joe Petro",
     date: "2024-11-20",
     readTime: "6 min read",
     featured: false,
@@ -82,7 +82,7 @@ const blogPosts = [
     title: "Wire Fraud Prevention for Real Estate Transactions",
     excerpt: "Real estate professionals are prime targets for wire fraud. Learn how to protect your clients and your business.",
     category: "Industry Focus",
-    author: "Michael Torres",
+    author: "Joe Petro",
     date: "2024-11-15",
     readTime: "7 min read",
     featured: false,
@@ -94,7 +94,7 @@ const blogPosts = [
     title: "Employee Security Awareness Training: ROI Analysis",
     excerpt: "Investing in security training pays dividends. See the data on how training reduces security incidents and costs.",
     category: "Training",
-    author: "Sarah Chen",
+    author: "Joe Petro",
     date: "2024-11-10",
     readTime: "5 min read",
     featured: false,
@@ -121,10 +121,10 @@ export default function Blog() {
               Blog & News
             </Badge>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Insights & Updates
+              Useful Answers for the People Responsible for the Business
             </h1>
             <p className="text-xl text-white/70 max-w-3xl mx-auto">
-              Stay informed with the latest cybersecurity news, compliance updates, and IT best practices for Arizona businesses.
+              Clear, practical guidance from the same people who assess environments, solve the problems, and stay accountable afterward.
             </p>
           </div>
 
@@ -237,8 +237,8 @@ export default function Blog() {
           {/* Newsletter CTA */}
           <Card className="mt-12 bg-gradient-to-r from-violet-600/20 to-purple-600/20 border-violet-500/30">
             <CardContent className="p-8 text-center">
-              <h3 className="text-2xl font-bold text-white mb-2">Stay Updated</h3>
-              <p className="text-white/70 mb-6">Subscribe to our newsletter for the latest security insights and industry news.</p>
+              <h3 className="text-2xl font-bold text-white mb-2">Get the Useful Stuff</h3>
+              <p className="text-white/70 mb-6">Occasional security and IT guidance written for business owners—not an inbox full of vendor noise.</p>
               <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
                 <Input 
                   placeholder="Enter your email" 

@@ -5,11 +5,11 @@ import professionalImg from "@assets/stock_images/professional_busines_96e20e69.
 import officeManagerImg from "@assets/stock_images/office_manager_profe_89dfed13.jpg";
 import realEstateImg from "@assets/stock_images/real_estate_broker_p_f7fb1c14.jpg";
 
-const stats = [
-  { value: "100+", label: "Arizona businesses protected" },
-  { value: "<15 min", label: "Average incident response" },
-  { value: "99.9%", label: "Uptime on managed networks" },
-  { value: "0", label: "Ransomware payouts by clients" },
+const commitments = [
+  { value: "Assessment first", label: "Recommendations start with your actual environment" },
+  { value: "Plain English", label: "You will understand the risk and the next step" },
+  { value: "Principal-led", label: "Joe stays involved from recommendation through delivery" },
+  { value: "Accountable", label: "We own the follow-through after the sale" },
 ];
 
 export const DigeratiTrustPhotoSection = (): JSX.Element => {
@@ -31,29 +31,27 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
             <div className="flex items-center gap-2 mb-5">
               <Shield className="w-4 h-4 text-violet-600" />
               <span className="text-sm font-semibold text-violet-600 uppercase tracking-wider">
-                Trusted by Arizona Businesses
+                A Local Operator, Not a Faceless Help Desk
               </span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-6">
-              Real businesses.{" "}
-              <span className="text-violet-600">Real protection.</span>
+              You should know who is{" "}
+              <span className="text-violet-600">accountable.</span>
             </h2>
 
             <p className="text-lg text-gray-600 leading-relaxed mb-8 max-w-lg">
-              From medical practices to law firms to family-owned offices, we
-              protect the businesses that Arizona runs on — the ones that can't
-              afford to go down, get breached, or lose client data.
+              Digerati Experts is built around a hands-on promise: understand the business, assess the environment, explain what matters, and remain accountable after the work begins.
             </p>
 
             {/* Stats grid */}
             <div className="grid grid-cols-2 gap-6 mb-10">
-              {stats.map((stat) => (
-                <div key={stat.label} className="border-l-2 border-violet-200 pl-4">
-                  <div className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1" data-testid={`stat-${stat.label.replace(/\s+/g, '-').toLowerCase()}`}>
-                    {stat.value}
+              {commitments.map((commitment) => (
+                <div key={commitment.value} className="border-l-2 border-violet-200 pl-4">
+                  <div className="text-lg sm:text-xl font-bold text-gray-900 mb-1" data-testid={`commitment-${commitment.value.replace(/\s+/g, '-').toLowerCase()}`}>
+                    {commitment.value}
                   </div>
-                  <div className="text-sm text-gray-500 leading-snug">{stat.label}</div>
+                  <div className="text-sm text-gray-500 leading-snug">{commitment.label}</div>
                 </div>
               ))}
             </div>
@@ -63,7 +61,7 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
               className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200"
               data-testid="link-trust-cta"
             >
-              See if you qualify for a free assessment
+              See Whether We’re a Fit
               <ArrowRight className="w-4 h-4" />
             </a>
           </motion.div>

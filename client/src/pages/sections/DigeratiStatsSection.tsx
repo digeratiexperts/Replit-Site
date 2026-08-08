@@ -1,30 +1,26 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { AlertTriangle, DollarSign, Shield, Clock } from "lucide-react";
+import { KeyRound, HardDrive, ShieldCheck, MessageSquareWarning } from "lucide-react";
 
-const stats = [
+const reviewAreas = [
   {
-    value: "88%",
-    label: "of SMB breaches involve ransomware",
-    source: "Verizon DBIR 2025",
-    icon: AlertTriangle,
+    value: "Identity",
+    label: "Who can sign in, how access is protected, and what happens when someone leaves",
+    icon: KeyRound,
   },
   {
-    value: "$4.88M",
-    label: "average cost of a data breach",
-    source: "IBM 2024",
-    icon: DollarSign,
+    value: "Endpoints",
+    label: "Whether laptops, servers, and mobile devices are patched, monitored, and recoverable",
+    icon: ShieldCheck,
   },
   {
-    value: "99.9%",
-    label: "of compromised accounts lacked MFA",
-    source: "Microsoft 2025",
-    icon: Shield,
+    value: "Backup",
+    label: "What is protected, how quickly it can be restored, and whether recovery has been tested",
+    icon: HardDrive,
   },
   {
-    value: "60%",
-    label: "of small businesses close within 6 months of an attack",
-    source: "Industry Data",
-    icon: Clock,
+    value: "The human layer",
+    label: "Email risk, approval habits, security training, and the process people actually follow",
+    icon: MessageSquareWarning,
   },
 ];
 
@@ -42,15 +38,15 @@ export const DigeratiStatsSection = (): JSX.Element => {
           className="text-center mb-8"
         >
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
-            The Threats Are Real
+            We Start With What Is Actually Happening
           </h2>
           <p className="text-white/60 max-w-2xl mx-auto">
-            Don't become a statistic. These numbers show why proactive security matters.
+            No dramatic statistics and no mystery score. We look at the systems and habits that determine whether your business can prevent, detect, and recover from a problem.
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat, index) => (
+          {reviewAreas.map((area, index) => (
             <motion.div
               key={index}
               initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
@@ -63,17 +59,14 @@ export const DigeratiStatsSection = (): JSX.Element => {
               <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-violet-500/30 transition-all duration-300 h-full">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="p-2 rounded-lg bg-violet-500/20">
-                    <stat.icon className="h-5 w-5 text-violet-400" />
+                    <area.icon className="h-5 w-5 text-violet-400" />
                   </div>
                 </div>
                 <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent mb-2">
-                  {stat.value}
+                  {area.value}
                 </div>
                 <p className="text-white/70 text-sm leading-relaxed mb-2">
-                  {stat.label}
-                </p>
-                <p className="text-white/40 text-xs">
-                  — {stat.source}
+                  {area.label}
                 </p>
               </div>
             </motion.div>
