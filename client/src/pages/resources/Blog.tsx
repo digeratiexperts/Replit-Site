@@ -126,6 +126,14 @@ export default function Blog() {
             <p className="text-xl text-white/70 max-w-3xl mx-auto">
               Stay informed with the latest cybersecurity news, compliance updates, and IT best practices for Arizona businesses.
             </p>
+            <div className="mt-6">
+              <Link href="/resources/cyber-facts">
+                <Button variant="outline" className="border-[#D3126A]/40 text-[#FF477F] hover:bg-[#D3126A]/10 hover:text-[#FF477F]" data-testid="link-cyber-facts">
+                  Explore interactive Cyber Facts
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
           </div>
 
           {/* Search and Categories */}

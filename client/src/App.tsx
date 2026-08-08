@@ -44,6 +44,7 @@ const AnimalHospitals = lazy(() => import("@/pages/industries/AnimalHospitals"))
 const CaseStudies = lazy(() => import("@/pages/resources/CaseStudies"));
 const Blog = lazy(() => import("@/pages/resources/Blog"));
 const BlogPost = lazy(() => import("@/pages/resources/BlogPost"));
+const CyberFacts = lazy(() => import("@/pages/resources/CyberFacts"));
 const SecurityUpdates = lazy(() => import("@/pages/resources/SecurityUpdates"));
 const Videos = lazy(() => import("@/pages/resources/Videos"));
 const SecurityChecklist = lazy(() => import("@/pages/resources/SecurityChecklist"));
@@ -325,6 +326,11 @@ function Router() {
       <Route path="/resources/blog/:slug" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <BlogPost />
+        </Suspense>
+      )} />
+      <Route path="/resources/cyber-facts" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <CyberFacts />
         </Suspense>
       )} />
       <Route path="/resources/ebook/defending-digital-realm" component={() => (
