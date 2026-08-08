@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { analytics } from "@/lib/analytics";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Shield, Download, ArrowRight, Mail } from "lucide-react";
+import { X, Download, ArrowRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
