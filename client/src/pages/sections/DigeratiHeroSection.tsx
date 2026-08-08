@@ -44,8 +44,21 @@ export const DigeratiHeroSection = (): JSX.Element => {
     setIsSubmitting(true);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const response = await fetch("/api/assessment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: data.fullName,
+          email: data.email,
+          phone: data.phone || "",
+          company: data.company || "",
+          source: "hero_assessment",
+        }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error((result as { error?: string }).error || "Submission failed");
+      }
       
       toast({
         title: "Assessment Request Submitted!",
@@ -54,10 +67,10 @@ export const DigeratiHeroSection = (): JSX.Element => {
       });
       
       form.reset();
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Something went wrong. Please try again later.",
+        description: error?.message || "Something went wrong. Please try again later.",
         variant: "destructive",
       });
     } finally {

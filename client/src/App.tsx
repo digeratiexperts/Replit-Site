@@ -73,6 +73,7 @@ const TrustCenter = lazy(() => import("@/pages/trust/TrustCenter"));
 const VulnerabilityDisclosure = lazy(() => import("@/pages/trust/VulnerabilityDisclosure"));
 const Accessibility = lazy(() => import("@/pages/trust/Accessibility"));
 const SubmitTicket = lazy(() => import("@/pages/support/SubmitTicket"));
+const TicketConfirmation = lazy(() => import("@/pages/support/TicketConfirmation"));
 const GenericServicePage = lazy(() => import("@/pages/GenericServicePage"));
 
 // Location pages
@@ -419,6 +420,11 @@ function Router() {
       )} />
       
       {/* Support Pages */}
+      <Route path="/support/ticket-confirmation" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <TicketConfirmation />
+        </Suspense>
+      )} />
       <Route path="/support/submit-ticket" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <SubmitTicket />

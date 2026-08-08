@@ -26,6 +26,7 @@ import { DigeratiContactSection } from "./sections/DigeratiContactSection";
 import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooterSection";
 import { DigeratiStatsSection } from "./sections/DigeratiStatsSection";
 import { DigeratiTrustPhotoSection } from "./sections/DigeratiTrustPhotoSection";
+import { pricing } from "@/data/pricing";
 
 // Live digeratexperts.com story order for sticky-bar cleanness.
 // Extra working-branch sections stay on-page with showInNav:false.
@@ -83,12 +84,19 @@ export const DigeratiHomepage = (): JSX.Element => {
     setDowntimeCost(cost);
   }, [employees, hourlyWage, downtime, industry]);
 
-  // Calculate service cost
+  // Calculate service cost (site minimums from shared pricing module)
   useEffect(() => {
     const costPerUser = parseFloat(servicePackage);
     const totalCost = serviceEmployees * costPerUser;
-    // Apply minimum for 5+ users
-    const finalCost = serviceEmployees >= 5 ? Math.max(totalCost, 1200) : totalCost;
+    const siteMin =
+      costPerUser === pricing.office.user
+        ? pricing.office.siteMin
+        : costPerUser === pricing.enterprise.user
+          ? pricing.enterprise.siteMin
+          : costPerUser === pricing.business.user
+            ? pricing.business.siteMin
+            : pricing.business.siteMin;
+    const finalCost = serviceEmployees >= 5 ? Math.max(totalCost, siteMin) : totalCost;
     setServiceCost(finalCost);
   }, [serviceEmployees, servicePackage]);
 

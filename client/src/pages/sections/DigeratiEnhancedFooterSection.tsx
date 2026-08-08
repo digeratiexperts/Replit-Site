@@ -63,11 +63,30 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
+  const [newsletterError, setNewsletterError] = useState("");
+  const [newsletterSubmitting, setNewsletterSubmitting] = useState(false);
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
+    if (!email || newsletterSubmitting) return;
+    setNewsletterSubmitting(true);
+    setNewsletterError("");
+    try {
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error((result as { error?: string }).error || "Failed to subscribe");
+      }
       setIsSubscribed(true);
       setEmail("");
+    } catch (err: any) {
+      setNewsletterError(err?.message || "Failed to subscribe. Please try again.");
+    } finally {
+      setNewsletterSubmitting(false);
     }
   };
 
@@ -292,23 +311,35 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                   <span className="text-sm ">Thank you for subscribing!</span>
                 </div>
               ) : (
-                <form onSubmit={handleNewsletterSubmit} className="flex gap-3 relative z-10">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    className="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition-all duration-300 text-sm"
-                    data-testid="footer-newsletter-input"
-                  />
-                  <button
-                    type="submit"
-                    className="px-6 py-3 bg-violet-600 hover:bg-violet-500 text-white font-semibold rounded-xl shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.4)] transition-all duration-300 flex items-center gap-2"
-                    data-testid="footer-newsletter-submit"
-                  >
-                    <Send className="h-4 w-4" />
-                    <span className="hidden sm:inline ">Subscribe</span>
-                  </button>
+                <form onSubmit={handleNewsletterSubmit} className="relative z-10 space-y-2">
+                  <div className="flex gap-3">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Enter your email"
+                      required
+                      disabled={newsletterSubmitting}
+                      className="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition-all duration-300 text-sm"
+                      data-testid="footer-newsletter-input"
+                    />
+                    <button
+                      type="submit"
+                      disabled={newsletterSubmitting}
+                      className="px-6 py-3 bg-violet-600 hover:bg-violet-500 disabled:opacity-60 text-white font-semibold rounded-xl shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.4)] transition-all duration-300 flex items-center gap-2"
+                      data-testid="footer-newsletter-submit"
+                    >
+                      <Send className="h-4 w-4" />
+                      <span className="hidden sm:inline ">
+                        {newsletterSubmitting ? "Sending…" : "Subscribe"}
+                      </span>
+                    </button>
+                  </div>
+                  {newsletterError ? (
+                    <p className="text-xs text-red-400" data-testid="footer-newsletter-error">
+                      {newsletterError}
+                    </p>
+                  ) : null}
                 </form>
               )}
             </div>

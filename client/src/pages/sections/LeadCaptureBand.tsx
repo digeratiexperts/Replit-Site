@@ -50,7 +50,21 @@ export const LeadCaptureBand = (): JSX.Element => {
     setIsSubmitting(true);
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const response = await fetch("/api/assessment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: data.fullName,
+          email: data.email,
+          phone: data.phone || "",
+          company: data.company || "",
+          source: "lead_capture_band",
+        }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error((result as { error?: string }).error || "Submission failed");
+      }
       
       toast({
         title: "Assessment Request Submitted!",
@@ -59,10 +73,10 @@ export const LeadCaptureBand = (): JSX.Element => {
       });
       
       form.reset();
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Something went wrong. Please try again later.",
+        description: error?.message || "Something went wrong. Please try again later.",
         variant: "destructive",
       });
     } finally {

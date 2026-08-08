@@ -142,14 +142,33 @@ export function LocationServicePage(props: LocationPageProps) {
   const handleSubmit = async (data: AssessmentFormData) => {
     setIsSubmitting(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const response = await fetch("/api/assessment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: data.fullName,
+          email: data.email,
+          phone: data.phone || "",
+          company: data.company || "",
+          source: `location_${props.city.toLowerCase().replace(/\s+/g, "_")}`,
+          message: `${props.city} assessment request — ${props.serviceFocus || props.title}`,
+        }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error((result as { error?: string }).error || "Submission failed");
+      }
       toast({
         title: "Assessment Request Submitted!",
         description: `We'll contact you within 24 hours to schedule your free ${props.city} assessment.`,
       });
       form.reset();
-    } catch {
-      toast({ title: "Error", description: "Something went wrong.", variant: "destructive" });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error?.message || "Something went wrong.",
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }
