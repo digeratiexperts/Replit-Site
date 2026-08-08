@@ -168,8 +168,11 @@ restart_app() {
     log "ERROR: sudo -n $SYSTEMCTL restart $SERVICE_NAME failed"
     return 1
   fi
-  if ! sudo -n "$SYSTEMCTL" is-active --quiet "$SERVICE_NAME"; then
-    log "ERROR: $SERVICE_NAME is not active after restart"
+  # Note: sudoers allows exact `systemctl is-active $SERVICE` (no --quiet).
+  # Using --quiet makes sudo deny the command and falsely looks "inactive".
+  ACTIVE_STATE="$(sudo -n "$SYSTEMCTL" is-active "$SERVICE_NAME" 2>/dev/null || true)"
+  if [ "$ACTIVE_STATE" != "active" ]; then
+    log "ERROR: $SERVICE_NAME is not active after restart (state=${ACTIVE_STATE:-unknown})"
     return 1
   fi
   log "systemd: $SERVICE_NAME is active"
