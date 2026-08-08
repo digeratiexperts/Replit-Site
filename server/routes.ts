@@ -3252,6 +3252,15 @@ export async function registerRoutes(app: Express) {
       console.log("[NEWSLETTER] Subscription:", { email, timestamp: new Date().toISOString() });
       logSecurityEvent("NEWSLETTER_SUBSCRIBED", req, { email });
 
+      eventBus.emit(EventTypes.LEAD_CREATED, {
+        id: subscriptionData.id,
+        name: email.split("@")[0],
+        email,
+        company: "",
+        source: "newsletter",
+        message: "Newsletter signup",
+      }, "newsletter-form");
+
       // Push to Zoho CRM as a lead with newsletter source
       let zohoLeadId = null;
       try {

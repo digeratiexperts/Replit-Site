@@ -78,7 +78,11 @@ app.all("/api/health", async (_req, res) => {
       dbAvailable = true;
     }
   } catch { dbAvailable = false; }
-  const openaiConfigured = !!(process.env.AI_INTEGRATIONS_OPENAI_BASE_URL && process.env.AI_INTEGRATIONS_OPENAI_API_KEY);
+  const openaiConfigured = !!(
+    process.env.OPENAI_API_KEY ||
+    process.env.OPENAI_API ||
+    (process.env.AI_INTEGRATIONS_OPENAI_BASE_URL && process.env.AI_INTEGRATIONS_OPENAI_API_KEY)
+  );
   
   const health = {
     status: "ok",

@@ -24,8 +24,17 @@ export class ZohoPaymentsService {
     this.signingKey = process.env.ZOHO_PAYMENTS_SIGNING_KEY || "";
   }
 
+  private looksConfigured(value: string): boolean {
+    const v = (value || "").trim();
+    if (!v) return false;
+    const lower = v.toLowerCase();
+    if (v.includes("<") || v.includes(">")) return false;
+    if (lower.includes("your ") || lower.includes("placeholder") || lower.includes("changeme")) return false;
+    return true;
+  }
+
   isConfigured(): boolean {
-    return !!(this.apiKey && this.signingKey);
+    return this.looksConfigured(this.apiKey) && this.looksConfigured(this.signingKey);
   }
 
   async createPaymentSession(params: {
