@@ -98,7 +98,7 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
       setIsSuccess(true);
       toast({
         title: "Success!",
-        description: "Check your email for the security checklist."
+        description: "You're on the list — we'll follow up with next steps."
       });
       
       setTimeout(() => {
@@ -164,17 +164,18 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                         Wait! Don't Leave Unprotected
                       </h3>
                       <p className="text-white/70">
-                        Get our free <span className="text-violet-300 font-semibold">2026 Cybersecurity Checklist</span> - 
-                        the same checklist we use with our enterprise clients.
+                        Leave your business email for a{" "}
+                        <span className="text-violet-300 font-semibold">free cyber risk assessment intro</span>
+                        {" "}— an independent look at gaps, with a plan you can run with your current IT or with us.
                       </p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3 mb-6">
                       {[
-                        "25-point security audit",
-                        "Compliance quick-checks",
-                        "Risk assessment guide",
-                        "Action priority matrix"
+                        "Independent findings",
+                        "No switch required",
+                        "Arizona-based experts",
+                        "Practical next steps"
                       ].map((item, i) => (
                         <div key={i} className="flex items-center gap-2 text-sm text-white/60">
                           <Download className="w-4 h-4 text-violet-400" />
@@ -206,7 +207,7 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                           "Sending..."
                         ) : (
                           <>
-                            Get Free Checklist
+                            Request Free Assessment Intro
                             <ArrowRight className="ml-2 h-4 w-4" />
                           </>
                         )}
@@ -222,9 +223,9 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                     <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
                       <Download className="w-8 h-8 text-emerald-400" />
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-2">Check Your Inbox!</h3>
+                    <h3 className="text-xl font-bold text-white mb-2">You're on the list</h3>
                     <p className="text-white/70">
-                      Your security checklist is on its way.
+                      We'll follow up with assessment next steps — no spam.
                     </p>
                   </div>
                 )}

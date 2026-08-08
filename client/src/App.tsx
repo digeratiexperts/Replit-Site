@@ -793,6 +793,14 @@ function Router() {
         </Suspense>
       )} />
 
+      {/* Legacy / shorthand URLs → canonical routes */}
+      <Route path="/assessment">{() => <Redirect to="/book" />}</Route>
+      <Route path="/contact">{() => <Redirect to="/#contact" />}</Route>
+      <Route path="/case-studies">{() => <Redirect to="/resources/case-studies" />}</Route>
+      <Route path="/solutions/endpoint-management">{() => <Redirect to="/solutions/threat-detection" />}</Route>
+      <Route path="/solutions/identity-management">{() => <Redirect to="/solutions/unified-security" />}</Route>
+      <Route path="/solutions/email-security">{() => <Redirect to="/solutions/security-operations" />}</Route>
+
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>

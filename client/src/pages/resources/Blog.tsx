@@ -166,7 +166,7 @@ export default function Blog() {
                   <Search className="h-[18px] w-[18px] relative" />
                 )}
               </button>
-              <Link href="/contact">
+              <Link href="/#contact">
                 <button
                   className="group relative inline-flex items-center gap-2 h-12 px-6 rounded-full font-semibold text-white border border-violet-200/40 backdrop-blur-md transition-all duration-200 bg-gradient-to-b from-violet-400/40 via-violet-500/35 to-violet-700/45 hover:from-violet-300/50 hover:via-fuchsia-400/40 hover:to-violet-700/55 shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(0,0,0,0.2),0_10px_28px_-8px_rgba(179,0,255,0.65)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),inset_0_-1px_0_rgba(0,0,0,0.2),0_14px_36px_-8px_rgba(217,70,239,0.7)] active:translate-y-px"
                   data-testid="button-subscribe"
@@ -434,7 +434,7 @@ export default function Blog() {
                     actually stands and what to do first.
                   </p>
                 </div>
-                <Link href="/assessment">
+                <Link href="/book">
                   <button
                     className="group relative inline-flex items-center gap-3 h-14 px-8 rounded-2xl font-semibold text-white whitespace-nowrap border border-violet-200/40 backdrop-blur-md transition-all duration-200 bg-gradient-to-b from-violet-400/45 via-violet-500/40 to-violet-800/55 hover:from-violet-300/55 hover:via-fuchsia-400/45 hover:to-violet-800/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.45),inset_0_-1px_0_rgba(0,0,0,0.25),0_14px_36px_-10px_rgba(179,0,255,0.7)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.55),inset_0_-1px_0_rgba(0,0,0,0.25),0_18px_44px_-10px_rgba(217,70,239,0.75)] active:translate-y-px"
                     data-testid="button-blog-assessment"

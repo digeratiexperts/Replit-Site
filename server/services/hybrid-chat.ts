@@ -1,4 +1,5 @@
 import { withOpenAIGuard } from "./openai-config";
+import { getOpenAI } from "../openaiService";
 
 export type ChatMode = "human" | "ai" | "hybrid";
 export type ChatTone = "professional" | "friendly" | "technical";
@@ -23,33 +24,57 @@ export interface ChatContext {
 }
 
 /**
- * Generate AI response for chat
- * Gracefully falls back if OpenAI is disabled
+ * Generate AI response for chat.
+ * Uses OpenAI when configured; otherwise returns null so the caller escalates to a human.
  */
 export async function generateAIChatResponse(
   userMessage: string,
   context: ChatContext,
   tone: ChatTone = "professional"
 ): Promise<ChatResponse | null> {
-  const aiResponse = await withOpenAIGuard(async () => {
-    // Mock implementation - will be replaced with real OpenAI call
-    // when integrated with actual API
+  let aiResponse: {
+    content: string;
+    confidence: number;
+    suggestedFollowUp?: string;
+  } | null = null;
 
-    // Simulated OpenAI response generation
-    const systemPrompt = buildSystemPrompt(context, tone);
-    const messages = buildMessageHistory(userMessage, context);
+  try {
+    aiResponse = await withOpenAIGuard(async () => {
+      const client = getOpenAI();
+      if (!client) {
+        return null;
+      }
 
-    // In production: const result = await openai.chat.completions.create({...})
-    // For now, return structured mock response
-    return {
-      content: generateMockResponse(userMessage, tone),
-      confidence: 0.82,
-      suggestedFollowUp: generateFollowUp(userMessage),
-    };
-  });
+      const systemPrompt = buildSystemPrompt(context, tone);
+      const history = buildMessageHistory(userMessage, context);
+
+      const result = await client.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: systemPrompt },
+          ...history,
+        ],
+        max_tokens: 400,
+        temperature: 0.4,
+      });
+
+      const content = result.choices[0]?.message?.content?.trim();
+      if (!content) {
+        return null;
+      }
+
+      return {
+        content,
+        confidence: 0.85,
+        suggestedFollowUp: generateFollowUp(userMessage),
+      };
+    });
+  } catch (error) {
+    console.error("[hybrid-chat] OpenAI chat failed:", error);
+    return null;
+  }
 
   if (!aiResponse) {
-    // OpenAI disabled - return null, will escalate to human
     return null;
   }
 
@@ -172,35 +197,9 @@ function buildMessageHistory(
 }
 
 /**
- * Generate mock AI response (until real OpenAI integration)
- */
-function generateMockResponse(userMessage: string, tone: ChatTone): string {
-  const text = userMessage.toLowerCase();
-
-  // Simple pattern matching for demo
-  if (text.includes("password") || text.includes("login")) {
-    return "I can help you with password issues. To reset your password, please visit the login page and click 'Forgot Password'. If you need additional help, I can escalate this to our support team.";
-  }
-
-  if (text.includes("bill") || text.includes("invoice")) {
-    return "For billing questions, I can help you understand your invoice. What specifically would you like to know about your billing?";
-  }
-
-  if (text.includes("shipping") || text.includes("ship")) {
-    return "We can help you with shipping! You can track packages in the Ship Center. Would you like to track a specific order?";
-  }
-
-  if (text.includes("status") || text.includes("availability")) {
-    return "Our systems are currently operating normally. All services are available. If you're experiencing issues, please provide more details.";
-  }
-
-  return "Thank you for your message. I'm here to help. Could you provide more details about what you need assistance with?";
-}
-
-/**
  * Generate follow-up suggestion
  */
-function generateFollowUp(userMessage: string): string {
+function generateFollowUp(userMessage: string): string | undefined {
   const text = userMessage.toLowerCase();
 
   if (text.includes("password")) {

@@ -11,7 +11,7 @@ export default function Navbar() {
           <Link href="/ecosystem">ProActive Ecosystem</Link>
           <Link href="/services">Services</Link>
           <Link href="/about">About</Link>
-          <Link href="/contact">Contact</Link>
+          <Link href="/#contact">Contact</Link>
         </div>
       </div>
     </nav>

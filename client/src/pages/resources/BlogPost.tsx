@@ -927,7 +927,7 @@ export default function BlogPost() {
                         "A short Cyber Risk Assessment shows where your environment actually stands and what to do first."}
                     </p>
                     <div className="flex flex-wrap gap-3">
-                      <Link href={body.bottomCta?.primaryHref ?? "/assessment"}>
+                      <Link href={body.bottomCta?.primaryHref ?? "/book"}>
                         <Button data-testid="button-blog-assessment">
                           {body.bottomCta?.primaryLabel ??
                             "Schedule a Cyber Risk Assessment"}
@@ -978,7 +978,7 @@ export default function BlogPost() {
                       </Link>
                       <span className="text-white/20">•</span>
                       <Link
-                        href="/contact"
+                        href="/#contact"
                         className="text-violet-300 hover:text-violet-200 text-sm inline-flex items-center"
                       >
                         Get in touch

@@ -5,20 +5,24 @@ let openaiClient: OpenAI | null = null;
 
 export function initOpenAI(): OpenAI | null {
   if (openaiClient) return openaiClient;
-  
-  const baseURL = process.env.AI_INTEGRATIONS_OPENAI_BASE_URL;
-  const apiKey = process.env.AI_INTEGRATIONS_OPENAI_API_KEY;
-  
-  if (!baseURL || !apiKey) {
-    console.log("⚠️ OpenAI integration not configured - AI features disabled");
+
+  // Prefer AI Integrations proxy when both base URL + key are set; else standard OpenAI.
+  const integrationsBase = process.env.AI_INTEGRATIONS_OPENAI_BASE_URL;
+  const integrationsKey = process.env.AI_INTEGRATIONS_OPENAI_API_KEY;
+  const directKey = process.env.OPENAI_API_KEY;
+
+  const apiKey = integrationsKey || directKey;
+  if (!apiKey) {
+    console.log("⚠️ OpenAI not configured (set OPENAI_API_KEY or AI_INTEGRATIONS_OPENAI_*) — AI features disabled");
     return null;
   }
-  
+
   try {
-    openaiClient = new OpenAI({
-      baseURL,
-      apiKey,
-    });
+    openaiClient = new OpenAI(
+      integrationsBase && integrationsKey
+        ? { baseURL: integrationsBase, apiKey: integrationsKey }
+        : { apiKey },
+    );
     console.log("✅ OpenAI client initialized");
     return openaiClient;
   } catch (error) {

@@ -30,7 +30,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
       icon: ShieldCheck,
       title: "Endpoint Security (EDR)",
       description: "Advanced endpoint detection protecting all devices in your environment.",
-      link: "/solutions/endpoint-management",
+      link: "/solutions/threat-detection",
       testId: "card-endpoint",
       gradient: "from-purple-500 to-fuchsia-600"
     },
@@ -38,7 +38,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
       icon: UserCheck,
       title: "SMART Identity (MFA + SSO)",
       description: "Multi-factor authentication and single sign-on for secure access.",
-      link: "/solutions/identity-management",
+      link: "/solutions/unified-security",
       testId: "card-mfa",
       gradient: "from-fuchsia-500 to-pink-600"
     },
@@ -46,7 +46,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
       icon: KeyRound,
       title: "Privileged Access Controls",
       description: "Admin controls, audit logs, and device trust for enterprise security.",
-      link: "/solutions/identity-management",
+      link: "/solutions/unified-security",
       testId: "card-identity",
       gradient: "from-violet-600 to-indigo-600"
     },
@@ -62,7 +62,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
       icon: AlertCircle,
       title: "Email Protection (Anti-Phishing)",
       description: "Advanced email filtering and protection against phishing attacks.",
-      link: "/solutions/email-security",
+      link: "/solutions/security-operations",
       testId: "card-phishing",
       gradient: "from-fuchsia-600 to-purple-600"
     }

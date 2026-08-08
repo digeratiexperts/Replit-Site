@@ -1,6 +1,6 @@
 # Subject-page content brief (magazine pass — deferred)
 
-**Status:** Content + image briefs only. Do **not** implement hero-corner art or left/right magazine layouts until DE green-lights a visual pass against this doc.
+**Status:** Content + image briefs landed. Process steps on `GenericServicePage` now use alternating L/R magazine beats (gradient visual panels — no invented stock/hero-corner art yet). Full hero-corner photography still waits on DE art direction.
 
 **Sources today**
 

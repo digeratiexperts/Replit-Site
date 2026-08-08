@@ -100,6 +100,13 @@ export default function PortalStatus() {
   return (
     <PortalLayout title="System Status">
       <div className="space-y-6">
+        <div
+          className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950 dark:border-amber-700/50 dark:bg-amber-950/30 dark:text-amber-100"
+          data-testid="status-sample-banner"
+        >
+          <strong>Sample preview.</strong> Uptime figures and incident history below are illustrative until a live status feed is connected for your tenant.
+        </div>
+
         {/* Overall Status */}
         <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-900/30 rounded-lg p-6">
           <div className="flex items-center gap-3">

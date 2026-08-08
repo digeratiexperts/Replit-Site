@@ -324,8 +324,8 @@
     ]
   },
   "fallbackCtas": {
-    "missingDownload": "/assessment",
-    "missingCaseStudy": "/case-studies",
-    "missingResource": "/contact"
+    "missingDownload": "/book",
+    "missingCaseStudy": "/resources/case-studies",
+    "missingResource": "/#contact"
   }
 }
