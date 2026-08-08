@@ -12,7 +12,7 @@ import { DigeratiAlertBanner } from "./sections/DigeratiAlertBanner";
 import { DigeratiServicesSection } from "./sections/DigeratiServicesSection";
 import { DigeratiHowWeProtectSection } from "./sections/DigeratiHowWeProtectSection";
 import { DigeratiCalculatorsSection } from "./sections/DigeratiCalculatorsSection";
-// DigeratiLeadFormSection removed - hero already has lead form
+import { DigeratiLeadFormSection } from "./sections/DigeratiLeadFormSection";
 import { DigeratiWhatWeTackleSection } from "./sections/DigeratiWhatWeTackleSection";
 import { DigeratiThreatsInsightsSection } from "./sections/DigeratiThreatsInsightsSection";
 import { DigeratiAIAssistanceSection } from "./sections/DigeratiAIAssistanceSection";
@@ -194,6 +194,9 @@ export const DigeratiHomepage = (): JSX.Element => {
           <DigeratiThreatsInsightsSection />
           <DigeratiAIAssistanceSection />
         </ScrollSectionAuto>
+
+        {/* Lead form lives below the fold — hero keeps a single Schedule CTA */}
+        <DigeratiLeadFormSection />
 
         {/* CTA Section */}
         <ScrollSectionAuto id="cta">

@@ -25,7 +25,41 @@ export const ZohoASAPWidget = ({
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [cookieBannerClear, setCookieBannerClear] = useState(() => {
+    try {
+      return !!(
+        localStorage.getItem("de_cookie_consent_v2") ||
+        localStorage.getItem("de_cookie_consent")
+      );
+    } catch {
+      return false;
+    }
+  });
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (cookieBannerClear) return;
+    const check = () => {
+      try {
+        if (
+          localStorage.getItem("de_cookie_consent_v2") ||
+          localStorage.getItem("de_cookie_consent")
+        ) {
+          setCookieBannerClear(true);
+        }
+      } catch {
+        /* ignore */
+      }
+    };
+    window.addEventListener("de-cookie-consent", check);
+    window.addEventListener("storage", check);
+    const id = window.setInterval(check, 800);
+    return () => {
+      window.clearInterval(id);
+      window.removeEventListener("de-cookie-consent", check);
+      window.removeEventListener("storage", check);
+    };
+  }, [cookieBannerClear]);
 
   useEffect(() => {
     // Initialize embedded Zoho ASAP widget if credentials provided
@@ -94,9 +128,9 @@ export const ZohoASAPWidget = ({
 
   return (
     <>
-      {/* Floating Widget Launcher */}
+      {/* Floating Widget Launcher — sit above cookie banner until consent is stored */}
       <div
-        className="fixed bottom-6 right-6 z-40"
+        className={`fixed right-6 ${cookieBannerClear ? "bottom-6" : "bottom-28"} z-[100]`}
         data-testid="widget-zoho-asap-container"
       >
         {!isOpen && (

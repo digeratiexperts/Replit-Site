@@ -4,19 +4,23 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import testimonialsBgImage from "@assets/lucid-origin_a_cinematic_photo_of_ultra_wide_abstract_backgrou_1775876425988.jpg";
 
-import avatar1 from "@assets/stock_images/professional_busines_96e20e69.jpg";
-import avatar2 from "@assets/stock_images/doctor_physician_med_6ae69a73.jpg";
-import avatar3 from "@assets/stock_images/office_manager_profe_89dfed13.jpg";
-import avatar4 from "@assets/stock_images/real_estate_broker_p_f7fb1c14.jpg";
-import avatar5 from "@assets/stock_images/professional_busines_525b74f5.jpg";
-
 interface Testimonial {
   rating: number;
   text: string;
   author: string;
   role: string;
   company: string;
-  avatar: string;
+  initials: string;
+}
+
+function authorInitials(name: string): string {
+  return name
+    .replace(/^Dr\.?\s+/i, "")
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
 }
 
 export const DigeratiTestimonialsSection = (): JSX.Element => {
@@ -41,7 +45,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
       author: "James Torres",
       role: "CEO",
       company: "Phoenix Manufacturing",
-      avatar: avatar1
+      initials: authorInitials("James Torres"),
     },
     {
       rating: 5,
@@ -49,15 +53,15 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
       author: "Rebecca Thornton",
       role: "Managing Partner",
       company: "Thornton & Associates Law",
-      avatar: avatar2
+      initials: authorInitials("Rebecca Thornton"),
     },
     {
-      rating: 5, 
+      rating: 5,
       text: "We passed our HIPAA audit with zero findings. Digerati's team documented everything, trained our staff, and handled the technical controls. Worth every penny.",
       author: "Dr. David Nguyen",
       role: "Owner",
       company: "East Valley Family Medicine",
-      avatar: avatar3
+      initials: authorInitials("Dr. David Nguyen"),
     },
     {
       rating: 5,
@@ -65,7 +69,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
       author: "Mark Rodriguez",
       role: "Broker/Owner",
       company: "Sonoran Realty Partners",
-      avatar: avatar4
+      initials: authorInitials("Mark Rodriguez"),
     },
     {
       rating: 5,
@@ -73,8 +77,8 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
       author: "Jennifer Blackwood",
       role: "Operations Director",
       company: "Blackwood Veterinary Hospital",
-      avatar: avatar5
-    }
+      initials: authorInitials("Jennifer Blackwood"),
+    },
   ];
 
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -206,24 +210,12 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
           </div>
           
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 text-white px-4">
-            Trusted by <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">100+ Arizona</span> Businesses
+            Trusted by{" "}
+            <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
+              Arizona
+            </span>{" "}
+            businesses
           </h2>
-          
-          <div className="flex items-center justify-center gap-1 mb-2 md:mb-4" role="img" aria-label="5 star rating">
-            {[...Array(5)].map((_, i) => (
-              <Star 
-                key={i} 
-                className="h-5 w-5 md:h-7 md:w-7 fill-current" 
-                style={{
-                  color: '#fbbf24',
-                  filter: 'drop-shadow(0 0 6px rgba(251, 191, 36, 0.6))'
-                }}
-                aria-hidden="true"
-                data-testid={`star-rating-${i}`}
-              />
-            ))}
-            <span className="ml-2 md:ml-3 text-base md:text-lg font-semibold text-amber-400">5.0</span>
-          </div>
         </motion.div>
 
         {/* Testimonial Card */}
@@ -288,19 +280,13 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                         "{testimonials[currentTestimonial].text}"
                       </p>
                       
-                      {/* Author info */}
+                      {/* Author info — initials only (no stock headshots) */}
                       <div className="flex items-center justify-center gap-3 md:gap-4">
-                        <div className="relative">
-                          <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 opacity-70 blur-sm" />
-                          <img 
-                            src={testimonials[currentTestimonial].avatar}
-                            alt={testimonials[currentTestimonial].author}
-                            loading="lazy"
-                            decoding="async"
-                            width={56}
-                            height={56}
-                            className="relative w-10 h-10 md:w-14 md:h-14 rounded-full object-cover border-2 border-white/20"
-                          />
+                        <div
+                          className="relative flex h-10 w-10 md:h-14 md:w-14 items-center justify-center rounded-full border-2 border-white/20 bg-gradient-to-br from-violet-600 to-purple-700 text-sm md:text-base font-semibold text-white"
+                          aria-hidden="true"
+                        >
+                          {testimonials[currentTestimonial].initials}
                         </div>
                         <div className="text-left">
                           <div className="font-bold text-base md:text-lg text-white" data-testid="testimonial-author">
