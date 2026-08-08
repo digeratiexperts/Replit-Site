@@ -235,12 +235,21 @@ app.use((req, res, next) => {
   next();
 });
 
-// SEO files (sitemap.xml, robots.txt) live in the repo-root public/ folder,
-// which is outside Vite's publicDir (client/public) and therefore not copied
-// into dist/public by the build. Serve it directly so /sitemap.xml and
-// /robots.txt work in every deployment.
+// SEO files (sitemap.xml, robots.txt, llms.txt) live in repo-root public/.
+// Serve with short CDN TTL so Cloudflare does not stick old robots for weeks.
+const publicDir = path.resolve(process.cwd(), "public");
+function sendSeoFile(res: import("express").Response, file: string, contentType: string) {
+  res.setHeader("Content-Type", contentType);
+  res.setHeader("Cache-Control", "public, max-age=300, must-revalidate");
+  res.setHeader("CDN-Cache-Control", "max-age=300");
+  res.setHeader("Cloudflare-CDN-Cache-Control", "max-age=300");
+  return res.sendFile(path.join(publicDir, file));
+}
+app.get("/robots.txt", (_req, res) => sendSeoFile(res, "robots.txt", "text/plain; charset=utf-8"));
+app.get("/sitemap.xml", (_req, res) => sendSeoFile(res, "sitemap.xml", "application/xml; charset=utf-8"));
+app.get("/llms.txt", (_req, res) => sendSeoFile(res, "llms.txt", "text/plain; charset=utf-8"));
 app.use(
-  express.static(path.resolve(process.cwd(), "public"), {
+  express.static(publicDir, {
     index: false,
     maxAge: "1h",
   }),
