@@ -115,6 +115,12 @@ export default function PortalQBR() {
   return (
     <PortalLayout title="Quarterly Business Review">
       <div className="space-y-6">
+        <div
+          className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-900 dark:text-amber-200"
+          data-testid="qbr-sample-banner"
+        >
+          <strong>Sample preview.</strong> Metrics and reports below are examples until your live QBR data is connected.
+        </div>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <p className="text-gray-500 dark:text-gray-400">
             Performance metrics, security posture, and strategic recommendations reviewed quarterly with your vCIO.

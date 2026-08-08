@@ -170,6 +170,12 @@ export default function PortalRoadmap() {
   return (
     <PortalLayout title="Strategic IT Roadmap">
       <div className="space-y-6">
+        <div
+          className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-900 dark:text-amber-200"
+          data-testid="roadmap-sample-banner"
+        >
+          <strong>Sample preview.</strong> This roadmap is illustrative until your account team publishes your live vCIO plan.
+        </div>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <p className="text-gray-500 dark:text-gray-400">
