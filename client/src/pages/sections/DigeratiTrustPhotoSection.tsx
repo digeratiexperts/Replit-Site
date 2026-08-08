@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { Shield, ArrowRight, MapPin, UserCheck, Scale } from "lucide-react";
-import { DashboardMockup } from "@/components/graphics";
+import trustDeskImg from "@assets/de-trust-assessment-desk.png";
 
 const pillars = [
   {
@@ -40,7 +40,7 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
               </span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-6">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-6 tracking-tight">
               Protection that fits{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-600 via-pink-600 to-violet-600">
                 how you actually operate.
@@ -83,11 +83,25 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <div className="rounded-2xl border border-gray-200 bg-gradient-to-b from-gray-50 to-white p-4 sm:p-6 shadow-sm">
-              <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500">
-                Sample deliverable preview · not live customer data
-              </p>
-              <DashboardMockup />
+            <div className="relative rounded-2xl overflow-hidden border border-gray-200 shadow-lg shadow-gray-200/60">
+              <img
+                src={trustDeskImg}
+                alt="Principal-led cyber risk assessment work for an Arizona business"
+                loading="lazy"
+                decoding="async"
+                width={960}
+                height={720}
+                className="w-full h-full object-cover aspect-[4/3]"
+                data-testid="img-trust-assessment-desk"
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/75 via-black/35 to-transparent p-5">
+                <p className="text-white text-sm font-medium">
+                  Principal-led assessments — sized to how your business actually runs
+                </p>
+                <p className="text-white/75 text-xs mt-1">
+                  Illustrative scene · not a specific client engagement
+                </p>
+              </div>
             </div>
           </motion.div>
         </div>

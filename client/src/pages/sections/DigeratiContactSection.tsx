@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { analytics } from "@/lib/analytics";
-import contactBgImage from "@assets/lucid-origin_a_cinematic_photo_of_ultra_wide_abstract_backgrou_1775876876673.jpg";
+import contactBgImage from "@assets/de-section-atmosphere.png";
 
 const contactFormSchema = z.object({
   name: z.string()

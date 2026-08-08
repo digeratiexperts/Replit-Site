@@ -4,7 +4,7 @@ import { analytics } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Building, FileCheck, Shield, Check } from "lucide-react";
 import { DashboardMockup } from "@/components/graphics";
-import heroBgImage from "@assets/lucid-origin_a_cinematic_photo_of_designed_as_a_background_lay_1775876876671.jpg";
+import heroBgImage from "@assets/de-hero-arizona-dusk.png";
 import { useBooking } from "@/contexts/BookingContext";
 
 export const ModernHeroSection = (): JSX.Element => {
@@ -48,8 +48,8 @@ export const ModernHeroSection = (): JSX.Element => {
           alt=""
           loading="eager"
           decoding="async"
-          className="absolute inset-0 w-full h-full object-cover opacity-[0.22]"
-          style={{ transform: "rotate(-5deg) scale(1.3)", transformOrigin: "center center" }}
+          className="absolute inset-0 w-full h-full object-cover opacity-[0.38]"
+          style={{ transform: "scale(1.08)", transformOrigin: "center center" }}
         />
       </div>
 

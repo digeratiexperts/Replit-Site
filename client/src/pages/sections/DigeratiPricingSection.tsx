@@ -3,7 +3,7 @@ import { CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { pricing, getPricingFooterText } from "@/data/pricing";
-import pricingBgImage from "@assets/lucid-origin_a_cinematic_photo_of_ultra_wide_abstract_backgrou_1775876876671.jpg";
+import pricingBgImage from "@assets/de-section-atmosphere.png";
 
 
 export const DigeratiPricingSection = (): JSX.Element => {

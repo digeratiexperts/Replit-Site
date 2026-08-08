@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Star, ChevronLeft, ChevronRight, Quote, Building2 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import testimonialsBgImage from "@assets/lucid-origin_a_cinematic_photo_of_ultra_wide_abstract_backgrou_1775876425988.jpg";
+import testimonialsBgImage from "@assets/de-section-atmosphere.png";
 
 interface Testimonial {
   rating: number;
