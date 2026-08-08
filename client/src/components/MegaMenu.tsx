@@ -145,11 +145,11 @@ export function MegaMenu() {
   const rafRef = useRef<number | null>(null);
   const uniqueId = useId();
   const scrollContext = useOptionalFullPageScroll();
-  // White/gold logo needs a solid dark strip over light sections; over dark hero keep live-like depth.
+  const isMenuOpen = Boolean(activeMenu) || mobileMenuOpen;
+  // Solid dark strip over light page sections so the white/gold logo stays legible.
+  // Keep the live translucent bar over dark hero sections.
   const isOverLight = scrollContext?.currentTheme === 'light';
-  const isMenuOpen = !!activeMenu || mobileMenuOpen;
   const useSolidChrome = isOverLight || isMenuOpen;
-  const useDenseChrome = useSolidChrome || isScrolled;
 
   const handleColumnMouseMove = useCallback((e: React.MouseEvent, columnIdx: number) => {
     if (rafRef.current) return;
@@ -504,55 +504,45 @@ export function MegaMenu() {
         </div>
       </div>
 
-      {/* Main Navigation — brand presence from live + solid chrome over light sections */}
+      {/* Main Navigation — live presence + solid chrome only when needed */}
       <nav 
-        className={`fixed left-0 right-0 z-50 mega-menu-container transition-[background-color,border-color,box-shadow,top,backdrop-filter] duration-300 motion-reduce:transition-none ${
+        className={`fixed left-0 right-0 z-50 mega-menu-container transition-all duration-300 ${
           isScrolled ? 'top-0' : 'top-10'
         } ${
           useSolidChrome
-            ? 'bg-[#050312] border-b border-white/[0.10] shadow-[0_10px_28px_rgba(0,0,0,0.4)]'
-            : useDenseChrome
-              ? 'bg-black/95 backdrop-blur-xl border-b border-white/[0.09] shadow-[0_8px_24px_rgba(0,0,0,0.35)]'
-              : 'bg-black/80 backdrop-blur-xl border-b border-white/[0.06]'
+            ? 'bg-[#050312] border-b border-white/[0.10] shadow-[0_10px_28px_rgba(0,0,0,0.45)]'
+            : isScrolled
+              ? 'bg-black/95 backdrop-blur-xl border-b border-white/[0.08]'
+              : 'bg-black/90 backdrop-blur-xl border-b border-white/[0.05]'
         }`}
         ref={menuContainerRef}
         role="navigation"
         aria-label="Main navigation"
         data-nav-theme={isOverLight ? 'over-light' : 'over-dark'}
-        data-nav-open={isMenuOpen ? 'true' : 'false'}
       >
-        {/* Subtle brand accent edge — presence without neon clutter */}
-        <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-px"
-          style={{
-            background:
-              'linear-gradient(90deg, transparent 0%, rgba(236,72,153,0.35) 30%, rgba(217,70,239,0.5) 50%, rgba(139,92,246,0.35) 70%, transparent 100%)',
-          }}
-          aria-hidden="true"
-        />
         <div className="max-w-7xl mx-auto">
-          <div className={`flex items-center justify-between gap-4 px-4 xl:px-8 transition-all duration-300 motion-reduce:transition-none ${
+          <div className={`flex items-center justify-between gap-3 px-4 xl:px-8 transition-all duration-300 ${
             isScrolled ? 'h-16' : 'h-20'
           }`}>
             {/* Logo */}
             <a
               href="/"
-              className="flex items-center flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050312] rounded"
+              className="flex items-center flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded"
               aria-label="Digerati Experts home"
             >
               <img 
                 src={logoImage} 
-                alt="Digerati Experts" 
-                className={`transition-all duration-300 motion-reduce:transition-none ${
+                alt="Digerati Experts Logo" 
+                className={`transition-all duration-300 ${
                   isScrolled ? 'h-9' : 'h-12'
                 }`}
-                style={{ width: 'auto', maxWidth: '230px' }}
+                style={{ width: 'auto', maxWidth: '200px' }}
                 data-testid="logo-header"
               />
             </a>
 
             {/* Desktop Navigation - Center */}
-            <div className="hidden lg:flex items-center gap-0.5 xl:gap-1 mega-menu-nav">
+            <div className="hidden lg:flex items-center space-x-0.5 xl:space-x-1 mega-menu-nav">
               {navItems.map((item, index) => (
                 <div
                   key={item.name}
@@ -563,23 +553,21 @@ export function MegaMenu() {
                   {item.isSimple ? (
                     <a
                       href={item.href}
-                      className="group relative px-2.5 xl:px-3.5 py-2 text-sm xl:text-base tracking-wide text-white/80 hover:text-white font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050312] rounded-md whitespace-nowrap"
+                      className="group relative px-2 xl:px-3 py-2 text-sm xl:text-base text-white/80 hover:text-white font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded whitespace-nowrap"
                       data-testid={`nav-${item.name.toLowerCase()}`}
                       onClick={handleLinkClick}
                       aria-label={`Go to ${item.name}`}
                     >
                       {item.name}
-                      <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-fuchsia-400 to-pink-400 group-hover:w-[70%] transition-all duration-300 motion-reduce:transition-none" />
+                      <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-violet-400 group-hover:w-full transition-all duration-300" />
                     </a>
                   ) : (
                     <button
                       ref={(el) => {
                         if (el) navButtonsRef.current.set(item.name, el);
                       }}
-                      className={`group relative px-2.5 xl:px-3.5 py-2 text-sm xl:text-base tracking-wide font-medium transition-colors duration-200 flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050312] rounded-md whitespace-nowrap ${
-                        activeMenu === item.name
-                          ? 'text-white bg-white/[0.07]'
-                          : 'text-white/80 hover:text-white hover:bg-white/[0.05]'
+                      className={`group relative px-2 xl:px-3 py-2 text-sm xl:text-base text-white/80 hover:text-white font-medium transition-colors flex items-center focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded whitespace-nowrap ${
+                        activeMenu === item.name ? 'text-white' : ''
                       }`}
                       data-testid={`nav-${item.name.toLowerCase()}`}
                       data-menu-trigger="true"
@@ -590,13 +578,13 @@ export function MegaMenu() {
                     >
                       {item.name}
                       <ChevronDown 
-                        className={`ml-1 h-4 w-4 transition-transform duration-200 motion-reduce:transition-none ${
-                          activeMenu === item.name ? 'rotate-180 text-violet-300' : 'text-white/45 group-hover:text-white/75'
+                        className={`ml-1 h-4 w-4 transition-transform ${
+                          activeMenu === item.name ? 'rotate-180' : ''
                         }`} 
                         aria-hidden="true"
                       />
-                      <span className={`absolute bottom-0.5 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-fuchsia-400 to-pink-400 transition-all duration-300 motion-reduce:transition-none ${
-                        activeMenu === item.name ? 'w-[70%]' : 'w-0 group-hover:w-[70%]'
+                      <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-violet-400 transition-all duration-300 ${
+                        activeMenu === item.name ? 'w-full' : 'w-0 group-hover:w-full'
                       }`} />
                     </button>
                   )}
@@ -608,15 +596,13 @@ export function MegaMenu() {
                         ref={(el) => {
                           if (el) dropdownRefs.current.set(item.name, el);
                         }}
-                        initial={{ opacity: 0, y: -6 }}
+                        initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -6 }}
-                        transition={{ duration: 0.18, ease: 'easeOut' }}
-                        className={`fixed left-0 right-0 mx-auto ${
-                          isScrolled ? 'top-16' : 'top-[7.5rem]'
-                        } ${
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className={`fixed left-0 right-0 top-20 mx-auto ${
                           item.name === 'Solutions' ? 'w-[98vw] max-w-7xl' : 'w-[90vw] max-w-5xl'
-                        } bg-[#0a0118]/98 backdrop-blur-xl border border-white/14 rounded-xl shadow-[0_24px_56px_rgba(0,0,0,0.55),0_0_36px_rgba(139,92,246,0.12)] mega-menu-dropdown overflow-hidden`}
+                        } bg-[#0a0118] backdrop-blur-xl border border-white/15 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.6),0_0_40px_rgba(139,92,246,0.2)] mega-menu-dropdown overflow-hidden`}
                         onMouseEnter={handleDropdownMouseEnter}
                         onMouseLeave={handleMouseLeave}
                         role="menu"
@@ -942,7 +928,7 @@ export function MegaMenu() {
           <div className="flex items-center space-x-2 lg:space-x-4">
             <button
               type="button"
-              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-4 xl:px-5 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap shadow-[0_0_20px_rgba(236,72,153,0.35)] hover:shadow-[0_0_28px_rgba(236,72,153,0.45)] transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050312] border border-pink-300/30"
+              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-4 xl:px-5 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap shadow-[0_0_22px_rgba(236,72,153,0.35)] hover:shadow-[0_0_30px_rgba(236,72,153,0.45)] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black border border-pink-300/25"
               data-testid="nav-cta"
               onClick={() => { handleLinkClick(); openBooking("megamenu"); }}
               aria-label="Schedule Your Assessment"
@@ -952,63 +938,65 @@ export function MegaMenu() {
 
             {/* Mobile/Tablet Menu Button */}
             <button
-              className="lg:hidden relative p-2.5 rounded-lg bg-white/5 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-violet-400 border border-white/10 hover:border-white/20 transition-colors duration-200"
+              className="lg:hidden relative p-2.5 rounded-xl bg-violet-600/20 hover:bg-violet-600/30 focus:outline-none focus:ring-2 focus:ring-violet-400 border border-white/10 hover:border-white/20 transition-all group"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               data-testid="mobile-menu-toggle"
               aria-expanded={mobileMenuOpen}
-              aria-controls="mobile-nav-panel"
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             >
-              <div className="relative w-6 h-6 flex items-center justify-center" aria-hidden="true">
-                <span className={`absolute w-5 h-0.5 bg-white rounded-full transform transition-all duration-300 motion-reduce:transition-none ${mobileMenuOpen ? 'rotate-45' : '-translate-y-1.5'}`} />
-                <span className={`absolute w-5 h-0.5 bg-white rounded-full transition-all duration-300 motion-reduce:transition-none ${mobileMenuOpen ? 'opacity-0 scale-0' : 'opacity-100'}`} />
-                <span className={`absolute w-5 h-0.5 bg-white rounded-full transform transition-all duration-300 motion-reduce:transition-none ${mobileMenuOpen ? '-rotate-45' : 'translate-y-1.5'}`} />
+              <div className="relative w-6 h-6 flex items-center justify-center">
+                <span className={`absolute w-5 h-0.5 bg-violet-400 rounded-full transform transition-all duration-300 ${mobileMenuOpen ? 'rotate-45' : '-translate-y-1.5'}`} />
+                <span className={`absolute w-5 h-0.5 bg-violet-400 rounded-full transition-all duration-300 ${mobileMenuOpen ? 'opacity-0 scale-0' : 'opacity-100'}`} />
+                <span className={`absolute w-5 h-0.5 bg-violet-400 rounded-full transform transition-all duration-300 ${mobileMenuOpen ? '-rotate-45' : 'translate-y-1.5'}`} />
               </div>
+              <div className="absolute inset-0 rounded-xl bg-violet-500/0 group-hover:bg-violet-500/10 transition-all duration-300" />
             </button>
           </div>
         </div>
 
-        {/* Mobile/Tablet Menu — aligned with restrained desktop nav */}
+        {/* Mobile/Tablet Menu - Premium Glassmorphism Slide-out */}
         <div 
-          className={`lg:hidden fixed left-0 right-0 z-40 transition-opacity duration-300 motion-reduce:transition-none ${
-            mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none invisible'
+          className={`lg:hidden fixed left-0 right-0 z-40 transition-all duration-500 ${
+            mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
           }`}
           style={{ 
             top: isScrolled ? '64px' : '104px',
             height: isScrolled ? 'calc(100dvh - 64px)' : 'calc(100dvh - 104px)'
           }}
-          aria-hidden={!mobileMenuOpen}
-          {...(!mobileMenuOpen ? ({ inert: '' } as Record<string, string>) : {})}
         >
+          {/* Backdrop with blur */}
           <div 
-            className={`absolute inset-0 bg-black/80 transition-opacity duration-300 motion-reduce:transition-none ${
+            className={`absolute inset-0 bg-[#0a0118]/95 backdrop-blur-md transition-opacity duration-300 ${
               mobileMenuOpen ? 'opacity-100' : 'opacity-0'
             }`}
             onClick={() => setMobileMenuOpen(false)}
-            aria-hidden="true"
           />
           
+          {/* Slide-out Panel */}
           <div 
-            id="mobile-nav-panel"
-            className={`absolute right-0 top-0 h-full w-full max-w-md bg-[#050312] border-l border-white/12 transform transition-transform duration-300 ease-out motion-reduce:transition-none overflow-hidden ${
+            className={`absolute right-0 top-0 h-full w-full max-w-md bg-gradient-to-b from-[#0d0720] via-[#0a0118] to-[#050210] border-l border-white/10 shadow-[0_0_60px_rgba(139,92,246,0.3)] transform transition-transform duration-500 ease-out overflow-hidden ${
               mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
             }`}
             role="dialog"
-            aria-modal="true"
             aria-label="Navigation menu"
           >
+            {/* Decorative gradient orbs */}
+            <div className="absolute top-20 -left-20 w-40 h-40 bg-purple-600/20 rounded-full blur-[80px] pointer-events-none" />
+            <div className="absolute bottom-20 right-0 w-60 h-60 bg-violet-600/15 rounded-full blur-[100px] pointer-events-none" />
+            
             <div className="relative h-full overflow-y-auto overscroll-contain p-6 pb-24 space-y-2">
+              {/* Menu Header */}
               <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
-                <span className="text-base font-semibold text-white tracking-wide">
+                <span className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-purple-400">
                   Menu
                 </span>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-400"
+                  className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all"
                   aria-label="Close menu"
                   data-testid="mobile-menu-close"
                 >
-                  <X className="w-5 h-5 text-white/70" aria-hidden="true" />
+                  <X className="w-5 h-5 text-gray-400" />
                 </button>
               </div>
 
@@ -1141,7 +1129,7 @@ export function MegaMenu() {
               >
                 <button
                   type="button"
-                  className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white font-semibold py-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050312] transition-all duration-300 rounded-lg border border-pink-300/30 shadow-[0_0_24px_rgba(236,72,153,0.35)] text-base"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white font-bold py-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0118] transition-all rounded-xl border border-pink-300/25 shadow-[0_0_30px_rgba(236,72,153,0.35)] hover:shadow-[0_0_40px_rgba(236,72,153,0.45)] text-lg"
                   onClick={() => { setMobileMenuOpen(false); openBooking("megamenu_mobile"); }}
                   data-testid="mobile-cta"
                   aria-label="Schedule Your Assessment"
