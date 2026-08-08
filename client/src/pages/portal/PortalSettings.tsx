@@ -3,14 +3,19 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PortalLayout } from "./PortalLayout";
-import { User, Lock, Bell, Shield } from "lucide-react";
+import { User, Lock, Bell } from "lucide-react";
 import MfaSetup from "@/components/portal/MfaSetup";
+import { portalFetch } from "@/lib/portalApi";
+import { useToast } from "@/hooks/use-toast";
 
 export default function PortalSettings() {
+  const { toast } = useToast();
   const [user, setUser] = useState(() => {
     const stored = localStorage.getItem("portalUser");
     return stored ? JSON.parse(stored) : {};
   });
+  const [savingProfile, setSavingProfile] = useState(false);
+  const [savingPassword, setSavingPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     fullName: user.fullName || "",
@@ -23,14 +28,67 @@ export default function PortalSettings() {
     confirm: "",
   });
 
-  const handleSaveProfile = (e: React.FormEvent) => {
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle profile update
+    setSavingProfile(true);
+    try {
+      const res = await portalFetch("/api/portal/profile", {
+        method: "PATCH",
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          email: formData.email,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to update profile");
+      if (data.user) {
+        setUser(data.user);
+        localStorage.setItem("portalUser", JSON.stringify(data.user));
+      }
+      toast({ title: "Profile updated", description: "Your profile has been saved." });
+    } catch (err: any) {
+      toast({
+        title: "Update failed",
+        description: err.message || "Could not update profile",
+        variant: "destructive",
+      });
+    } finally {
+      setSavingProfile(false);
+    }
   };
 
-  const handleChangePassword = (e: React.FormEvent) => {
+  const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle password change
+    if (passwordData.new !== passwordData.confirm) {
+      toast({
+        title: "Passwords do not match",
+        description: "New password and confirmation must match.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setSavingPassword(true);
+    try {
+      const res = await portalFetch("/api/portal/change-password", {
+        method: "POST",
+        body: JSON.stringify({
+          currentPassword: passwordData.current,
+          newPassword: passwordData.new,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to change password");
+      setPasswordData({ current: "", new: "", confirm: "" });
+      toast({ title: "Password updated", description: "Your password has been changed." });
+    } catch (err: any) {
+      toast({
+        title: "Password change failed",
+        description: err.message || "Could not change password",
+        variant: "destructive",
+      });
+    } finally {
+      setSavingPassword(false);
+    }
   };
 
   return (
@@ -76,8 +134,9 @@ export default function PortalSettings() {
                 type="submit"
                 className="bg-[#5034ff] hover:bg-[#5034ff]/90"
                 data-testid="button-save-profile"
+                disabled={savingProfile}
               >
-                Save Changes
+                {savingProfile ? "Saving…" : "Save Changes"}
               </Button>
             </form>
           </CardContent>
@@ -146,8 +205,9 @@ export default function PortalSettings() {
                 type="submit"
                 className="bg-[#5034ff] hover:bg-[#5034ff]/90"
                 data-testid="button-change-password"
+                disabled={savingPassword}
               >
-                Update Password
+                {savingPassword ? "Updating…" : "Update Password"}
               </Button>
             </form>
           </CardContent>

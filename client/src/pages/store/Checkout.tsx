@@ -128,9 +128,13 @@ const Checkout = () => {
       }));
 
       if (paymentMethod === "zoho") {
+        const portalToken = localStorage.getItem("portalToken");
         const response = await fetch("/api/store/checkout/zoho", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            ...(portalToken ? { Authorization: `Bearer ${portalToken}` } : {}),
+          },
           credentials: "include",
           body: JSON.stringify({
             lineItems,

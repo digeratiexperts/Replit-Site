@@ -533,6 +533,14 @@ function Router() {
         </Suspense>
       )} />
       
+      {/* Short portal aliases (bookmarks / mistyped URLs) */}
+      <Route path="/login">
+        <Redirect to="/portal/login" />
+      </Route>
+      <Route path="/signup">
+        <Redirect to="/portal/signup" />
+      </Route>
+
       {/* Portal root redirect */}
       <Route path="/portal">
         <Redirect to="/portal/login" />

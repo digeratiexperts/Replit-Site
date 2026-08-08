@@ -106,9 +106,14 @@ const QuoteRequest = () => {
         total: item.product.basePrice * item.quantity,
       }));
 
+      const portalToken = localStorage.getItem("portalToken");
       const response = await fetch("/api/store/quote-requests", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(portalToken ? { Authorization: `Bearer ${portalToken}` } : {}),
+        },
+        credentials: "include",
         body: JSON.stringify({
           contactName: data.name,
           contactEmail: data.email,

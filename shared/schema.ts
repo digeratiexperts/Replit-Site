@@ -178,22 +178,41 @@ export const portalClients = pgTable("portal_clients", {
   primaryContact: text("primary_contact"),
   accountManager: text("account_manager"),
   status: text("status").default("active"),
+  /** managed | comanaged | prospect — drives storeRole for linked users */
+  serviceType: text("service_type").default("prospect"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-// Portal users table
+// Portal users table (durable auth — Neon)
 export const portalUsers = pgTable("portal_users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  clientId: varchar("client_id").notNull().references(() => portalClients.id, { onDelete: "cascade" }),
+  clientId: varchar("client_id").references(() => portalClients.id, { onDelete: "set null" }),
   email: text("email").notNull().unique(),
+  username: text("username").unique(),
   password: text("password").notNull(),
   fullName: text("full_name").notNull(),
   role: portalUserRoleEnum("role").default("user"),
+  storeRole: storeRoleEnum("store_role").default("prospect"),
+  emailVerified: boolean("email_verified").default(false),
   isActive: boolean("is_active").default(true),
+  mfaEnabled: boolean("mfa_enabled").default(false),
+  mfaMethod: text("mfa_method"),
+  mfaTotpSecret: text("mfa_totp_secret"),
+  mfaBackupCodes: jsonb("mfa_backup_codes").$type<string[]>().default([]),
   lastLogin: timestamp("last_login"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+/** Service order form submissions from /portal/order-form */
+export const portalOrderForms = pgTable("portal_order_forms", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => portalUsers.id, { onDelete: "set null" }),
+  clientId: varchar("client_id").references(() => portalClients.id, { onDelete: "set null" }),
+  payload: jsonb("payload").$type<Record<string, unknown>>().notNull(),
+  status: text("status").default("submitted"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 // Portal services table

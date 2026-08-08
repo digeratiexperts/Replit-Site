@@ -1432,15 +1432,18 @@ export async function registerRoutes(app: Express) {
         username,
         password,
         role: isMaster ? "admin" : "user",
-        storeRole: (isMaster ? "admin" : "prospect") as StoreRole,
+        storeRole: isMaster ? "admin" : "prospect",
         fullName: profile.fullName || username,
-        clientId: isMaster ? null : undefined,
+        clientId: null,
         emailVerified: true,
         isActive: true,
-        createdVia: "zoho_sso",
       };
       portalUsers.set(email, user);
-      portalUsers.set(username, user);
+      if (!isMaster) {
+        await createProspectClientForUser(user);
+      } else {
+        portalUsers.set(username, user);
+      }
       logSecurityEvent("PORTAL_USER_PROVISIONED_ZOHO", req, {
         email,
         role: user.role,

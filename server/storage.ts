@@ -760,10 +760,10 @@ export class DatabaseStorage implements IStorage {
 
       const bcryptHash = "$2b$12$Bf.sDD1gQ6391SrTebkd4.9BeiteKKOswHl63vyCN0/51CmDldT7K";
       const demoPortalUsers = [
-        { id: "user-001", clientId: "client-1", email: "john.smith@acme.com", password: bcryptHash, fullName: "John Smith", role: "admin" as const },
-        { id: "user-002", clientId: "client-2", email: "sarah.jones@phoenixmedical.com", password: bcryptHash, fullName: "Sarah Jones", role: "user" as const },
-        { id: "user-003", clientId: "client-5", email: "admin@alamoindustries.com", password: "$2b$12$N9Ys4.kLCKht2rMjK4x0TOJHlQlxY7dRzAT6vmC7.mGrjck7TUI7O", fullName: "Maria Garcia", role: "user" as const },
-        { id: "user-004", clientId: "client-6", email: "admin@selmachining.com", password: "$2b$12$m6eyC5YfWBIG4/beE40TxOeG5BG4v/MxsowQ4Ays9RrjhOzcVxx.a", fullName: "Sel Operations", role: "user" as const },
+        { id: "user-001", clientId: "client-1", email: "john.smith@acme.com", username: "johnsmith", password: bcryptHash, fullName: "John Smith", role: "admin" as const, storeRole: "managed" as const, emailVerified: true },
+        { id: "user-002", clientId: "client-2", email: "sarah.jones@phoenixmedical.com", username: "sarahjones", password: bcryptHash, fullName: "Sarah Jones", role: "user" as const, storeRole: "managed" as const, emailVerified: true },
+        { id: "user-003", clientId: "client-5", email: "admin@alamoindustries.com", username: "alamoadmin", password: "$2b$12$N9Ys4.kLCKht2rMjK4x0TOJHlQlxY7dRzAT6vmC7.mGrjck7TUI7O", fullName: "Maria Garcia", role: "user" as const, storeRole: "comanaged" as const, emailVerified: true },
+        { id: "user-004", clientId: "client-6", email: "admin@selmachining.com", username: "seladmin", password: "$2b$12$m6eyC5YfWBIG4/beE40TxOeG5BG4v/MxsowQ4Ays9RrjhOzcVxx.a", fullName: "Sel Operations", role: "user" as const, storeRole: "comanaged" as const, emailVerified: true },
       ];
       for (const user of demoPortalUsers) {
         const [existing] = await db.select().from(portalUsersTable).where(eq(portalUsersTable.id, user.id));
