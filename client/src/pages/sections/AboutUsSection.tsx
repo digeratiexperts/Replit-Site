@@ -16,12 +16,12 @@ export const AboutUsSection = (): JSX.Element => {
         <div className="flex flex-col w-full lg:w-[409.29px] items-center lg:items-start gap-8 lg:gap-[60px]">
           <div className="flex flex-col items-center lg:items-start gap-4 w-full text-center lg:text-left">
             <h2 className="font-normal text-[#020029] text-3xl sm:text-4xl lg:text-[52px] tracking-[0] leading-tight lg:leading-[73px]">
-              Get a $20,000 Pen Test – Free
+              Start with a Cyber Risk Assessment
             </h2>
 
             <p className="font-normal text-[#020029bf] text-sm sm:text-base tracking-[0] leading-[26.4px]">
-              Discover vulnerabilities before attackers do
-              <br />– without paying a cent.
+              Prioritize real gaps in identity, endpoints, email,
+              <br />backup, and recovery — then buy with clarity.
             </p>
           </div>
 
@@ -33,7 +33,7 @@ export const AboutUsSection = (): JSX.Element => {
             />
 
             <p className="font-normal text-[#020029bf] text-sm sm:text-base tracking-[0] leading-[26.4px] text-center lg:text-left">
-              Trusted by 100+ Arizona
+              Built for Arizona
               <br />
               Businesses.
             </p>

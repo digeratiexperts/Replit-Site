@@ -149,7 +149,7 @@ export default function SecurityChecklist() {
                   onClick={() => window.location.href = "/book"}
                   data-testid="button-get-assessment"
                 >
-                  Get Free Assessment
+                  Schedule Cyber Risk Assessment
                   <ExternalLink className="ml-2 h-4 w-4" />
                 </Button>
               </div>

@@ -175,7 +175,7 @@ export function LocationServicePage(props: LocationPageProps) {
   };
 
   const stats = [
-    { icon: Shield, value: "99.9%", label: "Uptime SLA" },
+    { icon: Shield, value: "Security-first", label: "Operating model" },
     { icon: Zap, value: "<15min", label: "Response Time" },
     { icon: Clock, value: "24/7", label: "Monitoring" },
   ];
@@ -457,7 +457,7 @@ export function LocationServicePage(props: LocationPageProps) {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="/book">
                 <Button size="lg" className="px-8 py-6 text-lg font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 shadow-lg shadow-purple-500/25">
-                  Start Your Free Assessment <ArrowRight className="ml-2 w-5 h-5" />
+                  Schedule Cyber Risk Assessment <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </a>
               <a href="tel:325-480-9870">

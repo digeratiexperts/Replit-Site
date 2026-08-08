@@ -83,23 +83,19 @@ export default function RemoteSupport() {
           </div>
         </div>
 
-        {/* MSP Statistics */}
-        <div className="grid md:grid-cols-4 gap-6 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-8 text-white">
+        {/* Support posture — no invented SLAs */}
+        <div className="grid md:grid-cols-3 gap-6 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-8 text-white">
           <div className="text-center">
-            <p className="text-4xl font-bold mb-2">2 mins</p>
-            <p className="text-blue-100">Avg Connection Time</p>
+            <p className="text-2xl font-bold mb-2">Secure remote</p>
+            <p className="text-blue-100">Zoho Assist sessions with your approval</p>
           </div>
           <div className="text-center border-l border-r border-blue-400">
-            <p className="text-4xl font-bold mb-2">15 min</p>
-            <p className="text-blue-100">Response Guarantee</p>
+            <p className="text-2xl font-bold mb-2">Ticketed</p>
+            <p className="text-blue-100">Tracked work with clear ownership</p>
           </div>
           <div className="text-center">
-            <p className="text-4xl font-bold mb-2">99.9%</p>
-            <p className="text-blue-100">Uptime SLA</p>
-          </div>
-          <div className="text-center border-l border-blue-400">
-            <p className="text-4xl font-bold mb-2">24/7</p>
-            <p className="text-blue-100">Availability</p>
+            <p className="text-2xl font-bold mb-2">Arizona team</p>
+            <p className="text-blue-100">Principal-led MSP support</p>
           </div>
         </div>
 

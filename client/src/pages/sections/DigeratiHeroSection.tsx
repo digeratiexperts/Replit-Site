@@ -62,7 +62,7 @@ export const DigeratiHeroSection = (): JSX.Element => {
       
       toast({
         title: "Assessment Request Submitted!",
-        description: "We'll contact you within 24 hours to schedule your free assessment.",
+        description: "We'll contact you within 24 hours to schedule your Cyber Risk Assessment.",
         variant: "default",
       });
       
@@ -127,9 +127,9 @@ export const DigeratiHeroSection = (): JSX.Element => {
                 rel="noopener noreferrer"
                 className="h-12 px-8 rounded-md bg-white text-purple-700 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl inline-flex items-center justify-center gap-2 whitespace-nowrap text-base font-semibold"
                 data-testid="button-hero-start"
-                aria-label="Get free assessment - Schedule with our experts"
+                aria-label="Get Cyber Risk Assessment - Schedule with our experts"
               >
-                Get Free Assessment <ArrowRight className="ml-2 h-5 w-5" />
+                Schedule Cyber Risk Assessment <ArrowRight className="ml-2 h-5 w-5" />
               </a>
               <a
                 href="tel:325-480-9870"
@@ -250,7 +250,7 @@ export const DigeratiHeroSection = (): JSX.Element => {
                             Submitting...
                           </>
                         ) : (
-                          "Get My Free Assessment"
+                          "Schedule Cyber Risk Assessment"
                         )}
                       </Button>
                     </form>

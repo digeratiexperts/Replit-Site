@@ -65,12 +65,12 @@ export const pageNarratives: Record<string, PageNarrative> = {
       },
       {
         q: "How fast do you respond?",
-        a: "Business-hours first response target is 15 minutes for managed clients. After-hours coverage scales with your plan and risk profile.",
+        a: "Response targets are defined in your agreement for the package you buy. After-hours coverage scales with plan and risk profile.",
       },
     ],
     ctaHeadline: "Get a clear picture of your IT — then decide",
     ctaBody:
-      "Schedule a free cyber risk assessment. We’ll show what’s brittle, what’s covered, and what a sane managed-IT month looks like for your office.",
+      "Schedule a Cyber Risk Assessment. We’ll show what’s brittle, what’s covered, and what a sane managed-IT month looks like for your office.",
   },
 
   "managed-workplace": {
@@ -291,7 +291,7 @@ export const pageNarratives: Record<string, PageNarrative> = {
       },
     ],
     ctaHeadline: "Prove your backups can restore — before you need them",
-    ctaBody: "We’ll review backup coverage and restore readiness as part of your free assessment.",
+    ctaBody: "We’ll review backup coverage and restore readiness as part of your Cyber Risk Assessment.",
   },
 
   "backup-disaster-recovery": {
@@ -535,7 +535,7 @@ export const pageNarratives: Record<string, PageNarrative> = {
         a: "EHR security is one slice. Email, endpoints, identity, backups, offboarding, and staff behavior are usually where practices get exposed — and where insurers and auditors ask follow-up questions.",
       },
       {
-        q: "What does the free assessment cover?",
+        q: "What does the Cyber Risk Assessment cover?",
         a: "Access controls, MFA posture, email risk, endpoint hygiene, backup restore readiness, and the documentation gaps insurers and auditors typically ask about — delivered as a prioritized risk summary, not a sales pitch.",
       },
       {

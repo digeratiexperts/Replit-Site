@@ -68,7 +68,7 @@ export const LeadCaptureBand = (): JSX.Element => {
       
       toast({
         title: "Assessment Request Submitted!",
-        description: "We'll contact you within 24 hours to schedule your free assessment.",
+        description: "We'll contact you within 24 hours to schedule your Cyber Risk Assessment.",
         variant: "default",
       });
       
@@ -117,7 +117,7 @@ export const LeadCaptureBand = (): JSX.Element => {
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
               Get Your{" "}
               <span className="bg-gradient-to-r from-violet-300 via-purple-300 to-fuchsia-300 bg-clip-text text-transparent">
-                Free Assessment
+                Cyber Risk Assessment
               </span>
             </h2>
             
@@ -269,7 +269,7 @@ export const LeadCaptureBand = (): JSX.Element => {
                           Submitting...
                         </>
                       ) : (
-                        "Get My Free Assessment"
+                        "Schedule Cyber Risk Assessment"
                       )}
                     </Button>
                   </form>

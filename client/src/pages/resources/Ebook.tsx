@@ -324,7 +324,7 @@ const chapters: Chapter[] = [
       "Chapter 6. Conclusion. Your Journey to Security Resilience.",
       "Cybersecurity risk assessment isn't a one-time project—it's an ongoing discipline that should be embedded in your organization's culture and operations. As threats evolve and your business changes, regular reassessment ensures your defenses remain aligned with your actual risks.",
       "Key Takeaways. One: Risk assessment is the foundation of effective cybersecurity—you can't protect what you don't understand. Two: Common vulnerabilities are common for a reason—address the basics before pursuing advanced solutions. Three: Translate technical findings into business impact to gain leadership support and appropriate resources. Four: Prioritize based on risk, not just severity—consider both likelihood and impact. Five: Make assessment an ongoing process, not a one-time event.",
-      "Ready to assess your security posture? Digerati Experts offers comprehensive cybersecurity risk assessments designed specifically for Arizona businesses. Schedule your free assessment at digeratiexperts.com/book.",
+      "Ready to assess your security posture? Digerati Experts offers comprehensive cybersecurity risk assessments designed specifically for Arizona businesses. Schedule your Cyber Risk Assessment at digeratiexperts.com/book.",
     ].join(" "),
     content: (
       <>
@@ -371,7 +371,7 @@ const chapters: Chapter[] = [
               rel="noopener noreferrer"
               className="inline-block bg-white text-orange-600 font-bold px-8 py-3 rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all"
             >
-              Schedule Your Free Assessment
+              Schedule Cyber Risk Assessment
             </a>
           </div>
         </div>

@@ -235,6 +235,18 @@ app.use((req, res, next) => {
   next();
 });
 
+// Legacy WordPress / junk query URLs — do not index or resurrect Ethos demo content.
+app.use((req, res, next) => {
+  if (req.path === "/" && Object.prototype.hasOwnProperty.call(req.query, "bbp_search")) {
+    res.setHeader("X-Robots-Tag", "noindex, nofollow");
+    return res
+      .status(410)
+      .type("text/plain")
+      .send("Gone. This legacy WordPress search URL is no longer available.");
+  }
+  next();
+});
+
 // SEO files (sitemap.xml, robots.txt, llms.txt) live in repo-root public/.
 // Serve with short CDN TTL so Cloudflare does not stick old robots for weeks.
 const publicDir = path.resolve(process.cwd(), "public");

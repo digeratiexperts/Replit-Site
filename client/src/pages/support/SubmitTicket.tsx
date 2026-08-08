@@ -85,7 +85,7 @@ export default function SubmitTicket() {
   return (
     <PageTemplate
       title="Submit Support Ticket"
-      subtitle="Get help from our expert support team. We typically respond within 15 minutes."
+      subtitle="Get help from our support team. Open a ticket and we’ll track it to resolution."
       gradientColors="from-slate-600 via-slate-700 to-gray-800"
     >
       <div className="grid lg:grid-cols-3 gap-8">
@@ -218,7 +218,7 @@ export default function SubmitTicket() {
               </div>
               <div>
                 <p className="font-semibold text-blue-400">High Priority</p>
-                <p className="text-sm text-gray-400">Within 15 minutes</p>
+                <p className="text-sm text-gray-400">Tracked to resolution</p>
               </div>
               <div>
                 <p className="font-semibold text-green-400">Medium/Low Priority</p>

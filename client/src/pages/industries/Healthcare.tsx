@@ -484,7 +484,7 @@ export default function Healthcare() {
               <div className="w-10 h-10 rounded-lg bg-[#D3126A] flex items-center justify-center">
                 <ListChecks className="w-5 h-5 text-white" />
               </div>
-              <h2 className="text-3xl font-bold text-white">What the free assessment includes</h2>
+              <h2 className="text-3xl font-bold text-white">What the Cyber Risk Assessment includes</h2>
             </div>
             <p className="text-white/75 mb-8 max-w-3xl text-lg">
               A prioritized risk summary — not a sales pitch. You leave knowing what is urgent, what can
