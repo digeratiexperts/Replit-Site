@@ -103,7 +103,7 @@ export const DigeratiHomepage = (): JSX.Element => {
 
   return (
     <FullPageScrollProvider sections={homepageSections} enableOnMobile={false}>
-      <div className="min-h-screen bg-[#050312] pb-20 lg:pb-24">
+      <div className="min-h-screen bg-[#050312]">
         <OrganizationJsonLd />
         <WebSiteJsonLd />
         {/* Zoho ASAP Widget */}
@@ -116,7 +116,7 @@ export const DigeratiHomepage = (): JSX.Element => {
         {/* Navigation */}
         <MegaMenu />
 
-        {/* Modern Hero Section - Includes integrated lead capture form */}
+        {/* Modern Hero Section — single dominant Schedule CTA */}
         <ScrollSectionAuto id="hero">
           <ModernHeroSection />
           <DigeratiAlertBanner />
