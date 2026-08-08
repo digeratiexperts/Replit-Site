@@ -68,19 +68,32 @@ export function StickyCTABar() {
             </button>
 
             <div className="container mx-auto px-4 py-3">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-6 pr-8">
-                <div className="flex items-center gap-3">
-                  <div className="hidden sm:flex w-10 h-10 rounded-full bg-white/10 items-center justify-center">
+              <div className="flex flex-col lg:flex-row items-center justify-between gap-3 lg:gap-5 pr-8">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="hidden sm:flex w-10 h-10 rounded-full bg-white/10 items-center justify-center shrink-0">
                     <Shield className="w-5 h-5 text-violet-300" />
                   </div>
-                  <div className="text-center md:text-left">
+                  <div className="text-center lg:text-left min-w-0">
                     <p className="text-white font-semibold text-sm md:text-base">
-                      Is Your Business Protected?
+                      Independent Risk Assessment
                     </p>
-                    <p className="text-white/60 text-xs md:text-sm hidden sm:block">
-                      Get a free security assessment from our Arizona-based experts
+                    <p className="text-white/65 text-xs md:text-[13px] leading-snug max-w-xl">
+                      Your current provider has a conflict grading their own work.
+                      {" "}
+                      <span className="text-white/85">
+                        We map the gaps, build a plan, and can collaborate with them — switching is optional.
+                      </span>
                     </p>
                   </div>
+                </div>
+
+                <div className="hidden xl:flex items-center">
+                  <span
+                    className="rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[11px] font-medium tracking-wide text-white/75 whitespace-nowrap"
+                    data-testid="sticky-cta-reassurance"
+                  >
+                    No switch required
+                  </span>
                 </div>
 
                 <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
@@ -99,7 +112,7 @@ export function StickyCTABar() {
                     data-testid="button-sticky-cta-assessment"
                     onClick={openBooking}
                   >
-                    Free Assessment
+                    Risk Assessment
                     <ArrowRight className="ml-1.5 h-4 w-4" />
                   </Button>
                 </div>
