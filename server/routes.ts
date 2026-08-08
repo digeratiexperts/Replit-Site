@@ -64,6 +64,8 @@ import {
   createDepartment,
   updateDepartment,
   findUserById,
+  validateManagerApproverEmail,
+  managerSummaryForUser,
   type OrgUserFields,
 } from "./portalOrg";
 import {
@@ -1000,7 +1002,17 @@ export async function registerRoutes(app: Express) {
       if (!live) return res.status(404).json({ error: "User not found" });
       let storeRole: StoreRole = (live.storeRole as StoreRole) || "prospect";
       if (live.role === "admin") storeRole = "admin";
-      res.json({ success: true, user: publicPortalUser(live, storeRole) });
+      const user = publicPortalUser(live, storeRole);
+      const mgr = managerSummaryForUser(live as OrgUserFields);
+      res.json({
+        success: true,
+        user: {
+          ...user,
+          managerUserId: mgr.managerUserId,
+          manager: mgr.manager,
+          companyDomains: mgr.companyDomains,
+        },
+      });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -1150,6 +1162,34 @@ export async function registerRoutes(app: Express) {
       if (!type || !title || !description) {
         return res.status(400).json({ error: "type, title, and description are required" });
       }
+
+      const fields =
+        payload && typeof payload === "object" && (payload as any).fields && typeof (payload as any).fields === "object"
+          ? ((payload as any).fields as Record<string, unknown>)
+          : {};
+      const managerEmailRaw =
+        (typeof fields.managerEmail === "string" && fields.managerEmail) ||
+        (typeof fields.approverEmail === "string" && fields.approverEmail) ||
+        (typeof (payload as any)?.managerEmail === "string" && (payload as any).managerEmail) ||
+        "";
+      const managerEmail = String(managerEmailRaw || "").trim();
+      const accessLevel = String(fields.accessLevel || "");
+      const privileged =
+        /admin|privileged/i.test(accessLevel) ||
+        /privileged|admin/i.test(String(fields.resourceType || ""));
+
+      if (managerEmail) {
+        const check = validateManagerApproverEmail({ requester: org, managerEmail });
+        if (!check.ok) {
+          return res.status(400).json({ error: check.error, companyDomains: check.domains });
+        }
+      } else if (privileged && !org.managerUserId) {
+        return res.status(400).json({
+          error:
+            "Admin / privileged requests need a manager on your profile (People & Org) and their company-domain email in Manager / approver email.",
+        });
+      }
+
       const created = await createApprovalRequest({
         clientId: org.clientId,
         requester: org,
@@ -2601,6 +2641,7 @@ export async function registerRoutes(app: Express) {
     try {
       const user = portalUsers.get(req.user?.email || "");
       if (!user) return res.status(404).json({ message: "User not found" });
+      const mgr = managerSummaryForUser(user as OrgUserFields);
       return res.json({
         id: user.id,
         email: user.email,
@@ -2611,6 +2652,10 @@ export async function registerRoutes(app: Express) {
         clientId: user.clientId || null,
         emailVerified: !!user.emailVerified,
         mfaEnabled: !!user.mfaEnabled,
+        orgRole: user.orgRole || "staff",
+        managerUserId: mgr.managerUserId,
+        manager: mgr.manager,
+        companyDomains: mgr.companyDomains,
       });
     } catch (error: any) {
       return res.status(500).json({ message: "Failed to load profile" });

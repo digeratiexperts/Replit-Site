@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PortalLayout } from "./PortalLayout";
-import { User, Lock, Bell } from "lucide-react";
+import { User, Lock, Bell, Users } from "lucide-react";
 import MfaSetup from "@/components/portal/MfaSetup";
-import { portalFetch } from "@/lib/portalApi";
+import { portalFetch, portalGet } from "@/lib/portalApi";
 import { useToast } from "@/hooks/use-toast";
+import { Link } from "wouter";
+
+type ProfileManager = { id: string; email: string; fullName: string };
 
 export default function PortalSettings() {
   const { toast } = useToast();
@@ -16,11 +19,36 @@ export default function PortalSettings() {
   });
   const [savingProfile, setSavingProfile] = useState(false);
   const [savingPassword, setSavingPassword] = useState(false);
+  const [manager, setManager] = useState<ProfileManager | null>(null);
+  const [companyDomains, setCompanyDomains] = useState<string[]>([]);
 
   const [formData, setFormData] = useState({
     fullName: user.fullName || "",
     email: user.email || "",
   });
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await portalGet<{
+          fullName?: string;
+          email?: string;
+          manager?: ProfileManager | null;
+          companyDomains?: string[];
+        }>("/api/portal/profile");
+        if (data.fullName || data.email) {
+          setFormData((prev) => ({
+            fullName: data.fullName || prev.fullName,
+            email: data.email || prev.email,
+          }));
+        }
+        setManager(data.manager || null);
+        setCompanyDomains(data.companyDomains || []);
+      } catch {
+        /* keep localStorage snapshot */
+      }
+    })();
+  }, []);
 
   const [passwordData, setPasswordData] = useState({
     current: "",
@@ -139,6 +167,38 @@ export default function PortalSettings() {
                 {savingProfile ? "Saving…" : "Save Changes"}
               </Button>
             </form>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Users className="h-5 w-5 text-[#5034ff]" />
+              <div>
+                <CardTitle>Your manager (profile)</CardTitle>
+                <CardDescription>
+                  Used for Access Request approvals. Manager email on forms must match this person and your
+                  company domain
+                  {companyDomains.length ? ` (${companyDomains.join(", ")})` : ""}.
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-2 text-sm">
+            {manager ? (
+              <>
+                <p className="font-medium">{manager.fullName}</p>
+                <p className="text-muted-foreground font-mono text-xs">{manager.email}</p>
+              </>
+            ) : (
+              <p className="text-muted-foreground">
+                No manager assigned on your profile yet. Ask your Company IT Contact to set one under People
+                & Org.
+              </p>
+            )}
+            <Link href="/portal/people" className="text-[#5034ff] text-sm font-medium hover:underline inline-block mt-1">
+              Open People & Org
+            </Link>
           </CardContent>
         </Card>
 

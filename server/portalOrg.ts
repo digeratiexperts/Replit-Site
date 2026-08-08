@@ -8,7 +8,11 @@ import {
   portalDepartments,
   portalUsers as portalUsersTable,
 } from "@shared/schema";
-import { listUniqueUsers, getUser as portalAuthGetUser } from "./portalAuthStore";
+import {
+  listUniqueUsers,
+  getUser as portalAuthGetUser,
+  getClient as portalAuthGetClient,
+} from "./portalAuthStore";
 
 export type OrgRole = "staff" | "manager" | "dept_it_contact" | "company_it_contact";
 
@@ -295,5 +299,124 @@ export function orgPublicUser(user: OrgUserFields) {
       manageOrg: canManageOrg(user),
       clientWide: canViewClientWide(user),
     },
+  };
+}
+
+export function emailDomain(email: string): string | null {
+  const trimmed = (email || "").trim().toLowerCase();
+  const at = trimmed.lastIndexOf("@");
+  if (at < 1 || at === trimmed.length - 1) return null;
+  return trimmed.slice(at + 1);
+}
+
+/** Allowed email domains for a client — from contact email + all portal users. */
+export function companyEmailDomains(
+  clientId: string | null | undefined,
+  fallbackEmail?: string | null,
+): string[] {
+  const domains = new Set<string>();
+  const add = (email?: string | null) => {
+    const d = email ? emailDomain(email) : null;
+    if (d) domains.add(d);
+  };
+  add(fallbackEmail);
+  if (clientId) {
+    const client = portalAuthGetClient(clientId);
+    add(client?.contactEmail);
+    for (const u of listClientUsers(clientId)) add(u.email);
+  }
+  return Array.from(domains).sort();
+}
+
+/**
+ * Manager / approver email must:
+ * 1) be on a company domain, and
+ * 2) match the manager assigned on the requester's People & Org profile card.
+ */
+export function validateManagerApproverEmail(opts: {
+  requester: OrgUserFields;
+  managerEmail: string;
+}): { ok: true; manager: OrgUserFields; domains: string[] } | { ok: false; error: string; domains: string[] } {
+  const email = (opts.managerEmail || "").trim().toLowerCase();
+  const domains = companyEmailDomains(opts.requester.clientId, opts.requester.email);
+
+  if (!email) {
+    return { ok: false, error: "Manager email is empty.", domains };
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { ok: false, error: "Enter a valid manager / approver email address.", domains };
+  }
+
+  const domain = emailDomain(email);
+  if (!domain || !domains.includes(domain)) {
+    return {
+      ok: false,
+      error: domains.length
+        ? `Manager email must use your company domain (${domains.join(", ")}).`
+        : "Manager email must use your company domain.",
+      domains,
+    };
+  }
+
+  if (!opts.requester.managerUserId) {
+    return {
+      ok: false,
+      error:
+        "No manager is listed on your profile. Ask your Company IT Contact to assign your manager under People & Org before naming them here.",
+      domains,
+    };
+  }
+
+  const assigned = findUserById(opts.requester.managerUserId);
+  if (!assigned) {
+    return {
+      ok: false,
+      error: "Your assigned manager could not be found. Contact your Company IT Contact.",
+      domains,
+    };
+  }
+
+  if ((assigned.email || "").toLowerCase() !== email) {
+    return {
+      ok: false,
+      error: `Manager email must match your assigned manager on your profile (${assigned.email}).`,
+      domains,
+    };
+  }
+
+  const mgrDomain = emailDomain(assigned.email);
+  if (!mgrDomain || !domains.includes(mgrDomain)) {
+    return {
+      ok: false,
+      error:
+        "Your assigned manager's email is not on the company domain. Ask your Company IT Contact to correct the manager profile.",
+      domains,
+    };
+  }
+
+  if (opts.requester.clientId && assigned.clientId && assigned.clientId !== opts.requester.clientId) {
+    return {
+      ok: false,
+      error: "Assigned manager must belong to the same company account.",
+      domains,
+    };
+  }
+
+  return { ok: true, manager: assigned, domains };
+}
+
+export function managerSummaryForUser(user: OrgUserFields): {
+  managerUserId: string | null;
+  manager: { id: string; email: string; fullName: string } | null;
+  companyDomains: string[];
+} {
+  const domains = companyEmailDomains(user.clientId, user.email);
+  const mgr = user.managerUserId ? findUserById(user.managerUserId) : null;
+  return {
+    managerUserId: user.managerUserId || null,
+    manager: mgr
+      ? { id: mgr.id, email: mgr.email, fullName: mgr.fullName || mgr.email }
+      : null,
+    companyDomains: domains,
   };
 }

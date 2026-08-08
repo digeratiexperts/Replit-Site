@@ -11,6 +11,8 @@ export type PortalUserSession = {
   clientId?: string | null;
   departmentId?: string | null;
   managerUserId?: string | null;
+  manager?: { id: string; email: string; fullName: string } | null;
+  companyDomains?: string[];
   isCompanyItContact?: boolean;
   capabilities?: {
     chat?: boolean;

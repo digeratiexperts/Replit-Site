@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +10,31 @@ import { Label } from "@/components/ui/label";
 import { AlertCircle, CheckCircle, Info } from "lucide-react";
 import { PortalLayout } from "./PortalLayout";
 import { queryClient } from "@/lib/queryClient";
+import { portalGet } from "@/lib/portalApi";
+import { Link } from "wouter";
+
+type MeResponse = {
+  success?: boolean;
+  user?: {
+    email?: string;
+    managerUserId?: string | null;
+    manager?: { id: string; email: string; fullName: string } | null;
+    companyDomains?: string[];
+  };
+};
+
+function emailDomain(email: string): string | null {
+  const t = email.trim().toLowerCase();
+  const at = t.lastIndexOf("@");
+  if (at < 1 || at === t.length - 1) return null;
+  return t.slice(at + 1);
+}
+
+function isPrivilegedAccess(formData: Record<string, unknown>): boolean {
+  const level = String(formData.accessLevel || "");
+  const resource = String(formData.resourceType || "");
+  return /admin|privileged/i.test(level) || /privileged|admin/i.test(resource);
+}
 
 interface FormField {
   id: string;
@@ -159,13 +185,13 @@ const formTemplates: FormTemplate[] = [
           "Why is this access required? Include role, project, or business process that depends on it.",
       },
       {
-        id: "approverEmail",
-        label: "Additional approver note (optional)",
-        type: "text",
+        id: "managerEmail",
+        label: "Manager / approver email",
+        type: "email",
         required: false,
-        placeholder: "Context for your manager or IT Contact",
+        placeholder: "manager@yourcompany.com",
         helperText:
-          "Approval routes automatically to your manager (and skip-level when required), then your Company/Department IT Contact — configured under People & Org.",
+          "Optional but recommended for admin/privileged requests. DE may route for client approval before provisioning. Must be your company domain and must match the manager listed on your profile (People & Org).",
       },
       {
         id: "urgency",
@@ -339,10 +365,28 @@ export function PortalAdvancedForms() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
+  const { data: meData } = useQuery<MeResponse>({
+    queryKey: ["/api/portal/me"],
+    queryFn: () => portalGet<MeResponse>("/api/portal/me"),
+  });
+  const manager = meData?.user?.manager || null;
+  const companyDomains = meData?.user?.companyDomains || [];
+  const hasManagerOnProfile = !!meData?.user?.managerUserId && !!manager?.email;
+
+  useEffect(() => {
+    if (selectedTemplate?.id !== "FT-001") return;
+    if (formData.managerEmail) return;
+    if (manager?.email) {
+      setFormData((prev) => ({ ...prev, managerEmail: manager.email }));
+    }
+  }, [selectedTemplate?.id, manager?.email]);
+
   const visibleFields = useMemo(() => {
     if (!selectedTemplate) return [];
     return selectedTemplate.fields.filter((f) => fieldIsVisible(f, formData));
   }, [selectedTemplate, formData]);
+
+  const privileged = selectedTemplate?.id === "FT-001" && isPrivilegedAccess(formData);
 
   const handleFieldChange = (fieldId: string, value: unknown) => {
     setFormData((prev) => ({ ...prev, [fieldId]: value }));
@@ -379,6 +423,33 @@ export function PortalAdvancedForms() {
       String(formData.endDate) < String(formData.startDate)
     ) {
       errors.endDate = "End date must be on or after the start date.";
+    }
+
+    if (selectedTemplate.id === "FT-001") {
+      const mgrEmail = String(formData.managerEmail || "").trim().toLowerCase();
+      const priv = isPrivilegedAccess(formData);
+
+      // Privileged: manager must exist on profile; email field optional but validated when present
+      if (priv && !hasManagerOnProfile) {
+        errors.managerEmail =
+          "Admin / privileged requests require a manager on your profile (People & Org). Then enter their company-domain email here.";
+      }
+
+      if (mgrEmail) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mgrEmail)) {
+          errors.managerEmail = "Enter a valid manager / approver email.";
+        } else {
+          const domain = emailDomain(mgrEmail);
+          if (companyDomains.length && domain && !companyDomains.includes(domain)) {
+            errors.managerEmail = `Must use your company domain (${companyDomains.join(", ")}).`;
+          } else if (!hasManagerOnProfile) {
+            errors.managerEmail =
+              "No manager is listed on your profile. Ask your Company IT Contact to assign one under People & Org.";
+          } else if (manager && mgrEmail !== manager.email.toLowerCase()) {
+            errors.managerEmail = `Must match your assigned manager (${manager.email}).`;
+          }
+        }
+      }
     }
 
     setFieldErrors(errors);
@@ -544,11 +615,41 @@ export function PortalAdvancedForms() {
           <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-900/30 rounded-lg">
             <div className="flex gap-3">
               <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" aria-hidden />
-              <p className="text-sm text-blue-800 dark:text-blue-300">
-                Submitting starts an approval workflow (your manager → optional skip-level → IT Contact) before
-                Digerati provisions access. Use this form for systems DE manages (Microsoft 365 / Entra ID,
-                VPN/remote access, apps, shared mailboxes, file storage, privileged access, network resources,
-                UCaaS, and Client Portal). For break/fix issues, open a regular support ticket instead.
+              <div className="text-sm text-blue-800 dark:text-blue-300 space-y-2">
+                <p>
+                  Submitting starts an approval workflow (your manager → optional skip-level → IT Contact) before
+                  Digerati provisions access. For break/fix issues, open a regular support ticket instead.
+                </p>
+                <p>
+                  <strong>Manager / approver email</strong> is optional but recommended for admin/privileged
+                  requests. DE may route for client approval before provisioning. The address must be on your
+                  company domain
+                  {companyDomains.length ? ` (${companyDomains.join(", ")})` : ""} and must match the manager
+                  listed on your profile
+                  {manager?.email ? ` — currently ${manager.fullName} (${manager.email})` : ""}.
+                  {!hasManagerOnProfile && (
+                    <>
+                      {" "}
+                      No manager is assigned yet — ask your Company IT Contact to set one under{" "}
+                      <Link href="/portal/people" className="underline font-medium">
+                        People & Org
+                      </Link>
+                      .
+                    </>
+                  )}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {selectedTemplate.id === "FT-001" && privileged && (
+          <div className="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 rounded-lg">
+            <div className="flex gap-3">
+              <AlertCircle className="h-5 w-5 text-amber-700 dark:text-amber-300 flex-shrink-0 mt-0.5" aria-hidden />
+              <p className="text-sm text-amber-900 dark:text-amber-100">
+                Admin / privileged access: confirm <strong>Manager / approver email</strong> matches your
+                profile manager on the company domain so DE can route client approval before provisioning.
               </p>
             </div>
           </div>
