@@ -5,16 +5,18 @@
 #   sudo systemctl daemon-reload
 #   sudo systemctl enable --now digeratiexperts-site
 #
+# Deploy user diger7051 restarts this unit via least-privilege passwordless sudo:
+#   sudo -n /usr/bin/systemctl restart digeratiexperts-site
+#   sudo -n /usr/bin/systemctl is-active digeratiexperts-site
+#
 # For STAGING, copy this file to digeratiexperts-staging.service and change:
 #   User/Group        -> the staging.digeratiexperts.com CyberPanel site user
 #   WorkingDirectory  -> /home/staging.digeratiexperts.com/current
 #   EnvironmentFile   -> /home/staging.digeratiexperts.com/shared/.env
 #   PORT              -> 3200
 #
-# NOTE: replace CYBERPANEL_SITE_USER with the actual website user CyberPanel
-# created for the domain (visible in CyberPanel -> Websites -> List Websites,
-# or `ls -l /home/digeratiexperts.com`). Port 3100 is NOT available on this
-# VPS — it is used by the Intelligence Hub (techsales).
+# Port 3100 is NOT available on this VPS — it is used by the Intelligence Hub
+# (techsales). Do NOT run this app under PM2 or from /root/Replit-Site.
 
 [Unit]
 Description=Digerati Experts public website (Node/Express)
@@ -22,8 +24,8 @@ After=network.target
 
 [Service]
 Type=simple
-User=CYBERPANEL_SITE_USER
-Group=CYBERPANEL_SITE_USER
+User=diger7051
+Group=diger7051
 WorkingDirectory=/home/digeratiexperts.com/current
 EnvironmentFile=/home/digeratiexperts.com/shared/.env
 Environment=NODE_ENV=production

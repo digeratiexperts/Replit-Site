@@ -1,24 +1,35 @@
 # VPS deployment — Digerati Experts public website
 
-Migration of digeratiexperts.com from Replit Autoscale to the
-CyberPanel/OpenLiteSpeed VPS (192.227.158.46), staging first.
+Production runtime for https://digeratiexperts.com (and Client Portal on
+portal.digeratiexperts.com) on the CyberPanel/OpenLiteSpeed VPS
+(192.227.158.46).
+
+## Authoritative production layout
+
+| Item | Value |
+|---|---|
+| Deploy / app user | `diger7051` |
+| Active code | `/home/digeratiexperts.com/current` |
+| Releases | `/home/digeratiexperts.com/releases/<timestamp>/` |
+| Shared secrets | `/home/digeratiexperts.com/shared/.env` |
+| Process manager | **systemd** unit `digeratiexperts-site` (NOT PM2) |
+| Private port | `127.0.0.1:3300` |
+| Public health | https://digeratiexperts.com/healthz |
+
+**Do not** deploy from `/root/Replit-Site`. **Do not** use PM2 for this site.
+**Do not** rsync build output into `public_html` — OLS proxies to Node.
 
 **Ownership split**
 
 - **CyberPanel** owns the domain: website entry, OLS virtual host, SSL,
-  domain logs, backups, file ownership, redirects/proxy. The site must appear
-  normally under CyberPanel → Websites → List Websites.
-- **This kit** (run by Cursor or an admin) owns the app: clone, `npm ci`,
-  build, systemd service, deploys, health checks, rollback.
-
-**Do not** copy files manually into `public_html`, and do not install
-Coolify/Dokploy/Docker panels. Everything runs inside the existing
-CyberPanel installation.
+  domain logs, backups, file ownership, redirects/proxy.
+- **This kit** (run as `diger7051`) owns the app: clone, `npm ci`, build,
+  systemd restart (via least-privilege sudo), health checks, rollback.
 
 ## Directory layout (per site)
 
 ```
-/home/staging.digeratiexperts.com/     (production: /home/digeratiexperts.com/)
+/home/digeratiexperts.com/             (staging: /home/staging.digeratiexperts.com/)
 ├── public_html/          # CyberPanel-managed; placeholder only (app is proxied)
 ├── app/                  # bare git mirror of digeratiexperts/Replit-Site
 ├── releases/<timestamp>/ # built releases (last 3 kept)
@@ -36,6 +47,48 @@ CyberPanel installation.
 | Website staging | 127.0.0.1:3200 |
 | Website production | 127.0.0.1:3300 |
 
+## Least-privilege sudoers (production)
+
+`diger7051` must restart the unit without a password prompt, and without
+unrestricted sudo. Install via `visudo -f /etc/sudoers.d/digeratiexperts-site`:
+
+```
+diger7051 ALL=(root) NOPASSWD: /usr/bin/systemctl restart digeratiexperts-site, /usr/bin/systemctl is-active digeratiexperts-site, /usr/bin/systemctl status digeratiexperts-site
+```
+
+Do **not** grant `NOPASSWD: ALL`.
+
+## Deploying updates (normal path)
+
+As `diger7051` (no manual root SSH restart required):
+
+```bash
+sudo -u diger7051 bash -lc 'DEPLOY_BRANCH=main bash /home/digeratiexperts.com/current/deploy/vps/deploy.sh production'
+```
+
+Or from a checked-out tree the site user can read:
+
+```bash
+sudo -u diger7051 bash deploy/vps/deploy.sh production
+```
+
+The script:
+
+1. Fetches `DEPLOY_BRANCH` (default `main`) into the bare mirror
+2. Builds a fresh release under `releases/<timestamp>/`
+3. Validates the build and scans the bundle for internal/credential leaks
+4. Flips `current` → new release
+5. Runs `sudo -n /usr/bin/systemctl restart digeratiexperts-site`
+6. Verifies `sudo -n /usr/bin/systemctl is-active digeratiexperts-site`
+7. Health-checks `http://127.0.0.1:3300/healthz` + `/`, then
+   `https://digeratiexperts.com/healthz`
+8. On any restart/inactive/health failure: rolls back the symlink, restarts,
+   and **exits non-zero** (failed deployment — never treated as optional)
+
+Automatic deploys: either a cron entry polling `main`, or CyberPanel's Git
+Manager webhook calling the script. Choose ONE mechanism — if this script
+is the deployer, disable any competing timer/webhook.
+
 ## One-time setup (staging)
 
 ```bash
@@ -43,6 +96,7 @@ CyberPanel installation.
 #    - Node.js 20 LTS installed system-wide (node --version)
 #    - CyberPanel website created: staging.digeratiexperts.com + SSL issued
 #    - Cloudflare: staging A record -> 192.227.158.46 (proxied)
+#    - sudoers entry for the staging site user (mirror production pattern)
 
 SITE=/home/staging.digeratiexperts.com
 SITE_USER=<cyberpanel-site-user>       # see CyberPanel or: ls -ld $SITE
@@ -67,52 +121,30 @@ sudo -u $SITE_USER bash deploy/vps/deploy.sh staging
 # 4. OLS proxy — see deploy/vps/openlitespeed-proxy.md
 ```
 
-## Deploying updates
+## Production cutover notes
 
-```bash
-sudo -u <site-user> bash deploy/vps/deploy.sh staging      # or: production
-```
+Production is already on this layout (`diger7051` + `digeratiexperts-site`).
+For a fresh host: install `digeratiexperts-site.service` with
+`User=diger7051`, create the sudoers snippet above, then run
+`deploy.sh production`.
 
-The script fetches the deploy branch (default `main`, override with
-`DEPLOY_BRANCH=`), builds a fresh release, validates the build, **scans the
-bundle for internal content and credential patterns**, flips the `current`
-symlink, restarts the systemd service, health-checks `/healthz` and `/`,
-and **rolls back to the previous release automatically** if the health
-check fails.
+## Verification checklist
 
-Automatic deploys: either a cron entry polling `main`, or CyberPanel's Git
-Manager webhook calling the script. Choose ONE mechanism — if this script
-becomes the deployer, disable any competing timer/webhook so there are
-never two systems deploying the same site.
-
-## Verification checklist (staging, before DNS cutover)
-
-- [ ] `curl -I https://staging.digeratiexperts.com/` → 200, valid SSL
-- [ ] All sitemap routes return 200 (`deploy/vps/verify.sh staging.digeratiexperts.com`)
+- [ ] `curl -fsS https://digeratiexperts.com/healthz` → 200
+- [ ] `sudo -n /usr/bin/systemctl is-active digeratiexperts-site` → `active`
+- [ ] All sitemap routes return 200 (`deploy/vps/verify.sh digeratiexperts.com`)
 - [ ] `/internal` and `/internal/pricing-tiers` → 301 to `/`
 - [ ] Built JS contains no internal page content or credentials
-      (deploy script enforces this at build time)
-- [ ] `http://` redirects to `https://`
 - [ ] Lead forms, Turnstile, analytics fire correctly
-- [ ] `systemctl kill --signal=SIGKILL digeratiexperts-staging` → app
-      auto-restarts (Restart=always) and site recovers
+- [ ] `systemctl kill --signal=SIGKILL digeratiexperts-site` → app
+      auto-restarts (`Restart=always`) and site recovers
 - [ ] `reboot` → service comes back automatically
 
-## Production cutover (after staging verified)
+## Obsolete paths (do not use)
 
-1. Create/finalize the `digeratiexperts.com` website entry in CyberPanel
-   (it may already exist), issue SSL.
-2. Repeat setup with `deploy.sh production` (port 3300,
-   `digeratiexperts-site.service`).
-3. Cloudflare: point apex + `www` A records at 192.227.158.46 (proxied),
-   confirm SSL mode Full, then purge the zone cache.
-4. Re-run the verification checklist against https://digeratiexperts.com.
-5. Watch logs (`journalctl -u digeratiexperts-site -f`) through the first
-   hours; retire the Replit deployment only after verification.
-
-## Database note
-
-The app requires `DATABASE_URL` (Postgres/Drizzle). For the initial
-migration keep pointing at the existing production database used by the
-Replit deployment, so cutover involves no data migration. Moving Postgres
-onto the VPS is a separate decision — do not bundle it into this cutover.
+| Obsolete | Why |
+|---|---|
+| `/root/Replit-Site` + PM2 | Former layout; not production |
+| `scripts/deploy.sh` (rsync to `public_html`) | Conflicts with OLS→Node proxy |
+| `ecosystem.config.js` | PM2 config; superseded by systemd |
+| Manual root `systemctl restart` after every deploy | `deploy.sh` performs restart + verify |

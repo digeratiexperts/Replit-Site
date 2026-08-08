@@ -1,27 +1,17 @@
 #!/usr/bin/env bash
+# OBSOLETE — do not use.
+#
+# This script previously assumed /root/Replit-Site + rsync into public_html.
+# Production is systemd `digeratiexperts-site` as user diger7051 under:
+#   /home/digeratiexperts.com/current
+#
+# Canonical deploy:
+#   sudo -u diger7051 bash -lc \
+#     'DEPLOY_BRANCH=main bash /home/digeratiexperts.com/current/deploy/vps/deploy.sh production'
+#
+# See deploy/vps/README.md
 set -euo pipefail
-
-APP_DIR="/root/Replit-Site"
-LIVE_DOCROOT="/home/digeratiexperts.com/public_html"
-
-cd "$APP_DIR"
-
-npm ci
-npm run build
-
-if [ -d "$APP_DIR/dist/public" ]; then
-  OUT="$APP_DIR/dist/public"
-elif [ -d "$APP_DIR/dist" ]; then
-  OUT="$APP_DIR/dist"
-elif [ -d "$APP_DIR/build" ]; then
-  OUT="$APP_DIR/build"
-else
-  echo "ERROR: build output dir not found (dist/public, dist, build)."
-  exit 1
-fi
-
-rsync -av --delete "$OUT"/ "$LIVE_DOCROOT"/
-
-GIT_SHA="$(git rev-parse --short HEAD 2>/dev/null || echo unknown)"
-date -u +"%Y-%m-%dT%H:%M:%SZ" | awk -v sha="$GIT_SHA" '{print "{\n  \"git_sha\": \""sha"\",\n  \"built_at_utc\": \""$0"\"\n}"}' \
-  > "$LIVE_DOCROOT/build-info.json"
+echo "ERROR: scripts/deploy.sh is obsolete (no /root/Replit-Site, no PM2, no public_html rsync)." >&2
+echo "Use: sudo -u diger7051 bash deploy/vps/deploy.sh production" >&2
+echo "Docs: deploy/vps/README.md" >&2
+exit 1

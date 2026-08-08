@@ -1,12 +1,14 @@
+/**
+ * OBSOLETE — do not use PM2 for the public website.
+ *
+ * Production process manager: systemd unit `digeratiexperts-site`
+ *   User: diger7051
+ *   WorkingDirectory: /home/digeratiexperts.com/current
+ *   Restart: sudo -n /usr/bin/systemctl restart digeratiexperts-site
+ *
+ * Deploy: sudo -u diger7051 bash deploy/vps/deploy.sh production
+ * Docs:   deploy/vps/README.md
+ */
 module.exports = {
-  apps: [{
-    name: 'digeratiexperts-site',
-    script: 'dist/index.js',
-    cwd: '/root/Replit-Site',
-    env: {
-      NODE_ENV: 'production',
-      PORT: 3300
-    },
-    node_args: '--env-file=.env'
-  }]
+  apps: [],
 };
