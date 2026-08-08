@@ -6,10 +6,36 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { registerObjectStorageRoutes, ObjectStorageService } from "./replit_integrations/object_storage";
 import { zohoClient, zohoDeskService, zohoCRMService, zohoBillingService } from "./zoho";
+import {
+  clearZohoPkceCookie,
+  createZohoStartPayload,
+  exchangeZohoAuthCode,
+  fetchZohoUserInfo,
+  getZohoPortalConfig,
+  isEmailAllowedForPortalOAuth,
+  isMasterPortalEmail,
+  portalLoginErrorRedirect,
+  readZohoPkceCookie,
+  sanitizeReturnTo,
+  setZohoPkceCookie,
+  verifyZohoOAuthState,
+} from "./portalZohoAuth";
 import { verifyTurnstile } from "./middleware/security";
 import { eventBus, EventTypes } from "./eventBus";
 import { notificationService } from "./services/notificationService";
 import { logger } from "./logger";
+import {
+  initPortalAuthStore,
+  getUser as portalAuthGetUser,
+  hasUser as portalAuthHasUser,
+  setUser as portalAuthSetUser,
+  listUniqueUsers as portalAuthListUsers,
+  getClient as portalAuthGetClient,
+  setClient as portalAuthSetClient,
+  listClients as portalAuthListClients,
+  createProspectClientForUser,
+  saveOrderForm,
+} from "./portalAuthStore";
 
 const JWT_SECRET = process.env.JWT_SECRET || randomBytes(32).toString('hex');
 const SALT_ROUNDS = 12;
@@ -176,6 +202,26 @@ const logSecurityEvent = (event: string, req: AuthenticatedRequest, data: any) =
 export async function registerRoutes(app: Express) {
   // Register object storage routes for file uploads
   registerObjectStorageRoutes(app);
+
+  // Durable portal auth (Neon) — Map-compatible shim for existing handlers
+  await initPortalAuthStore();
+  const portalUsers = {
+    get: (key: string) => portalAuthGetUser(key),
+    has: (key: string) => portalAuthHasUser(key),
+    set: (_key: string, user: any) => {
+      portalAuthSetUser(user);
+      return portalUsers;
+    },
+    values: () => portalAuthListUsers(),
+  };
+  const portalClients = {
+    get: (id: string) => portalAuthGetClient(id),
+    set: (_id: string, client: any) => {
+      portalAuthSetClient(client);
+      return portalClients;
+    },
+    values: () => portalAuthListClients(),
+  };
   
   // ===== AUTHENTICATION ROUTES =====
   
@@ -955,11 +1001,8 @@ export async function registerRoutes(app: Express) {
   });
 
   // ===== PORTAL AUTHENTICATION =====
-  // In-memory user and client storage for demo (replace with database in production)
-  const portalUsers: Map<string, any> = new Map();
-  const portalClients: Map<string, any> = new Map();
-  
-  // Note: sessionStore is now at module level for authMiddleware access
+  // Note: portalUsers / portalClients are durable via portalAuthStore (initialized above)
+  // sessionStore is module-level for authMiddleware access
   
   // Email verification tokens storage
   const emailVerificationTokens = new Map<string, { 
@@ -995,116 +1038,11 @@ export async function registerRoutes(app: Express) {
     secret: string;
     createdAt: number;
   }>();
-  
-  // MSP company (Digerati Experts) - separate from client companies
-  const mspCompany = { 
-    id: "msp-digerati", 
-    companyName: "Digerati Experts (Internal)", 
-    contactEmail: "admin@digeratiexperts.com", 
-    contactPhone: "(480) 555-1000", 
-    industry: "MSP/MSSP", 
-    primaryContact: "Digerati Admin", 
-    status: "active", 
-    type: "msp", // MSP's own account
-    createdAt: new Date() 
-  };
-  portalClients.set(mspCompany.id, mspCompany);
-  
-  // Demo client companies - Password: ClientDemo1!
-  // serviceType: "managed" = full managed services, "comanaged" = co-managed IT
-  const demoCompanies = [
-    { id: "client-1", companyName: "Acme Corp", contactEmail: "admin@acme.com", contactPhone: "(480) 555-1001", industry: "Manufacturing", primaryContact: "John Smith", status: "active", type: "client", serviceType: "managed", createdAt: new Date() },
-    { id: "client-2", companyName: "Phoenix Medical Group", contactEmail: "it@phoenixmedical.com", contactPhone: "(480) 555-1002", industry: "Healthcare", primaryContact: "Sarah Jones", status: "active", type: "client", serviceType: "managed", createdAt: new Date() },
-    { id: "client-3", companyName: "Desert Law Partners", contactEmail: "admin@desertlaw.com", contactPhone: "(480) 555-1003", industry: "Legal", primaryContact: "Mike Davis", status: "active", type: "client", serviceType: "comanaged", createdAt: new Date() },
-    { id: "client-4", companyName: "Scottsdale Realty", contactEmail: "tech@scottsdalereal.com", contactPhone: "(480) 555-1004", industry: "Real Estate", primaryContact: "Lisa Wilson", status: "active", type: "client", serviceType: "comanaged", createdAt: new Date() },
-    { id: "client-5", companyName: "Alamo Industries", contactEmail: "support@alamoindustries.com", contactPhone: "(480) 555-1005", industry: "Manufacturing", primaryContact: "Maria Garcia", status: "active", type: "client", serviceType: "comanaged", createdAt: new Date() },
-    { id: "client-6", companyName: "Sel Machining", contactEmail: "support@selmachining.com", contactPhone: "(480) 555-1006", industry: "Manufacturing", primaryContact: "Operations Manager", status: "active", type: "client", serviceType: "comanaged", createdAt: new Date() },
-  ];
-  demoCompanies.forEach(c => portalClients.set(c.id, c));
-  
-  // Admin credentials - CHANGE THESE IN PRODUCTION
-  // Password: Admin123! (bcrypt 12 rounds)
-  const adminUser = {
-    id: "admin-001",
-    email: "admin@digeratiexperts.com",
-    username: "admin",
-    password: "$2b$12$Bf.sDD1gQ6391SrTebkd4.9BeiteKKOswHl63vyCN0/51CmDldT7K",
-    role: "admin",
-    storeRole: "admin" as StoreRole,
-    fullName: "Administrator",
-    clientId: null,
-  };
-  
-  // Demo client users - Password: Admin123! (same as admin for demo)
-  // storeRole is derived from client's serviceType: managed -> managed, comanaged -> comanaged
-  const demoUser1 = {
-    id: "user-001",
-    email: "john.smith@acme.com",
-    username: "johnsmith",
-    password: "$2b$12$Bf.sDD1gQ6391SrTebkd4.9BeiteKKOswHl63vyCN0/51CmDldT7K",
-    role: "user",
-    storeRole: "managed" as StoreRole,
-    fullName: "John Smith",
-    clientId: "client-1",
-    isActive: true,
-  };
-  
-  const demoUser2 = {
-    id: "user-002",
-    email: "sarah.jones@phoenixmedical.com",
-    username: "sarahjones",
-    password: "$2b$12$Bf.sDD1gQ6391SrTebkd4.9BeiteKKOswHl63vyCN0/51CmDldT7K",
-    role: "user",
-    storeRole: "managed" as StoreRole,
-    fullName: "Sarah Jones",
-    clientId: "client-2",
-    isActive: true,
-  };
-  
-  // Alamo Industries user - Password: AlamoUser123!
-  // Alamo is a comanaged client (client-5), so they can purchase products
-  const alamoUser = {
-    id: "user-003",
-    email: "admin@alamoindustries.com",
-    username: "alamoadmin",
-    password: "$2b$12$N9Ys4.kLCKht2rMjK4x0TOJHlQlxY7dRzAT6vmC7.mGrjck7TUI7O",
-    role: "user",
-    storeRole: "comanaged" as StoreRole,
-    fullName: "Maria Garcia",
-    clientId: "client-5",
-    isActive: true,
-  };
-  
-  // Sel Machining user - Password: SelUser123!
-  // Sel Machining is a comanaged client (client-6)
-  const selUser = {
-    id: "user-004",
-    email: "admin@selmachining.com",
-    username: "seladmin",
-    password: "$2b$12$m6eyC5YfWBIG4/beE40TxOeG5BG4v/MxsowQ4Ays9RrjhOzcVxx.a",
-    role: "user",
-    storeRole: "comanaged" as StoreRole,
-    fullName: "Sel Operations",
-    clientId: "client-6",
-    isActive: true,
-  };
-  
-  // Initialize with admin and demo users
-  portalUsers.set(adminUser.email, adminUser);
-  portalUsers.set(adminUser.username, adminUser);
-  portalUsers.set(demoUser1.email, demoUser1);
-  portalUsers.set(demoUser1.username, demoUser1);
-  portalUsers.set(demoUser2.email, demoUser2);
-  portalUsers.set(demoUser2.username, demoUser2);
-  portalUsers.set(alamoUser.email, alamoUser);
-  portalUsers.set(alamoUser.username, alamoUser);
-  portalUsers.set(selUser.email, selUser);
-  portalUsers.set(selUser.username, selUser);
 
-  // Portal Register Endpoint
+  // Portal Register Endpoint — creates prospect client + durable user
   app.post("/api/portal/register", [verifyTurnstile, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { email, username, password } = req.body;
+      const { email, username, password, companyName, fullName } = req.body;
 
       if (!email || !username || !password) {
         return res.status(400).json({ message: "Email, username, and password are required" });
@@ -1123,23 +1061,27 @@ export async function registerRoutes(app: Express) {
       }
 
       // Hash password with bcrypt
-      const bcrypt = await import('bcrypt');
-      const hashedPassword = await bcrypt.hash(password, 12);
+      const bcryptMod = await import('bcrypt');
+      const hashedPassword = await bcryptMod.hash(password, 12);
       
-      // Create new user with emailVerified: false
       const newUser = {
         id: randomId(),
         email,
         username,
         password: hashedPassword,
         role: "user",
-        fullName: username,
+        storeRole: "prospect" as StoreRole,
+        fullName: fullName || username,
         emailVerified: false,
+        isActive: true,
+        clientId: null as string | null,
         createdAt: new Date(),
       };
 
       portalUsers.set(email, newUser);
-      portalUsers.set(username, newUser);
+      await createProspectClientForUser(newUser, companyName);
+      // Reload after client link
+      const saved = portalUsers.get(email) || newUser;
 
       // Generate email verification token
       const verificationToken = randomId();
@@ -1147,8 +1089,8 @@ export async function registerRoutes(app: Express) {
       const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
       
       emailVerificationTokens.set(verificationToken, {
-        email: newUser.email,
-        userId: newUser.id,
+        email: saved.email,
+        userId: saved.id,
         createdAt: now,
         expiresAt: now + TWENTY_FOUR_HOURS,
       });
@@ -1157,23 +1099,31 @@ export async function registerRoutes(app: Express) {
       const baseUrl = process.env.APP_URL || "https://digeratiexperts.com";
       const verificationLink = `${baseUrl}/api/portal/verify-email?token=${verificationToken}`;
       notificationService.sendEmailVerification({
-        email: newUser.email,
-        name: newUser.fullName,
+        email: saved.email,
+        name: saved.fullName,
         verificationLink,
       }).catch(err => logger.warn("Failed to send verification email", err));
 
-      logSecurityEvent("PORTAL_USER_REGISTERED", req, { userId: newUser.id, email, emailVerified: false });
+      logSecurityEvent("PORTAL_USER_REGISTERED", req, {
+        userId: saved.id,
+        email,
+        clientId: saved.clientId,
+        storeRole: saved.storeRole,
+        emailVerified: false,
+      });
 
       return res.json({
         success: true,
         message: "Account created successfully. Please check your email to verify your account.",
         requiresVerification: true,
         user: {
-          id: newUser.id,
-          email: newUser.email,
-          username: newUser.username,
-          fullName: newUser.fullName,
-          role: newUser.role,
+          id: saved.id,
+          email: saved.email,
+          username: saved.username,
+          fullName: saved.fullName,
+          role: saved.role,
+          storeRole: saved.storeRole || "prospect",
+          clientId: saved.clientId || null,
           emailVerified: false,
         },
       });
@@ -1409,6 +1359,183 @@ export async function registerRoutes(app: Express) {
       },
     });
   }
+
+  function completeLoginRedirect(user: any, req: AuthenticatedRequest, res: Response, returnTo: string) {
+    const sessionId = randomId();
+    const now = Date.now();
+    sessionStore.set(sessionId, { userId: user.id, createdAt: now, lastRotated: now });
+
+    let storeRole: StoreRole = "prospect";
+    if (user.storeRole) {
+      storeRole = user.storeRole as StoreRole;
+    } else if (user.role === "admin") {
+      storeRole = "admin";
+    } else if (user.clientId) {
+      const client = portalClients.get(user.clientId);
+      if (client?.serviceType === "managed") storeRole = "managed";
+      else if (client?.serviceType === "comanaged") storeRole = "comanaged";
+    }
+
+    const token = jwt.sign(
+      { userId: user.id, email: user.email, role: user.role, storeRole, clientId: user.clientId || null },
+      JWT_SECRET,
+      { expiresIn: "24h" },
+    );
+
+    res.cookie("sessionId", sessionId, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000,
+      path: "/",
+    });
+
+    logSecurityEvent("PORTAL_USER_LOGIN", req, {
+      userId: user.id,
+      email: user.email,
+      role: user.role,
+      storeRole,
+      sessionId,
+      method: "zoho_sso",
+    });
+
+    const params = new URLSearchParams({
+      zoho_sso: "1",
+      token,
+      returnTo: sanitizeReturnTo(returnTo),
+    });
+    return res.redirect(`/portal/login?${params.toString()}`);
+  }
+
+  async function resolveOrProvisionZohoPortalUser(
+    profile: { email: string; fullName: string },
+    req: AuthenticatedRequest,
+  ) {
+    const email = profile.email.trim().toLowerCase();
+    let user = portalUsers.get(email);
+
+    if (!user) {
+      if (!isEmailAllowedForPortalOAuth(email)) {
+        return null;
+      }
+      const isMaster = isMasterPortalEmail(email);
+      const usernameBase = email.split("@")[0].replace(/[^a-zA-Z0-9._-]/g, "").slice(0, 24) || "zoho";
+      let username = usernameBase;
+      let n = 1;
+      while (portalUsers.has(username)) {
+        username = `${usernameBase}${n++}`;
+      }
+      const password = await bcrypt.hash(randomBytes(32).toString("hex"), SALT_ROUNDS);
+      user = {
+        id: randomId(),
+        email,
+        username,
+        password,
+        role: isMaster ? "admin" : "user",
+        storeRole: (isMaster ? "admin" : "prospect") as StoreRole,
+        fullName: profile.fullName || username,
+        clientId: isMaster ? null : undefined,
+        emailVerified: true,
+        isActive: true,
+        createdVia: "zoho_sso",
+      };
+      portalUsers.set(email, user);
+      portalUsers.set(username, user);
+      logSecurityEvent("PORTAL_USER_PROVISIONED_ZOHO", req, {
+        email,
+        role: user.role,
+      });
+    } else if (isMasterPortalEmail(email) && user.role !== "admin") {
+      user.role = "admin";
+      user.storeRole = "admin";
+      portalUsers.set(email, user);
+      if (user.username) portalUsers.set(user.username, user);
+    }
+
+    return user;
+  }
+
+  async function handlePortalZohoCallback(req: AuthenticatedRequest, res: Response) {
+    const cfg = getZohoPortalConfig();
+    if (!cfg.configured) {
+      return res.redirect(portalLoginErrorRedirect("zoho_not_configured", "Zoho sign-in is not configured"));
+    }
+
+    const err = typeof req.query.error === "string" ? req.query.error : "";
+    if (err) {
+      clearZohoPkceCookie(res);
+      return res.redirect(portalLoginErrorRedirect("zoho_denied", err));
+    }
+
+    const code = typeof req.query.code === "string" ? req.query.code : "";
+    const state = typeof req.query.state === "string" ? req.query.state : "";
+    const verified = state ? verifyZohoOAuthState(state) : null;
+    const codeVerifier = readZohoPkceCookie(req);
+    clearZohoPkceCookie(res);
+
+    if (!code || !verified || !codeVerifier) {
+      return res.redirect(portalLoginErrorRedirect("zoho_invalid_state", "Zoho sign-in session expired. Please try again."));
+    }
+
+    try {
+      const tokens = await exchangeZohoAuthCode({ code, codeVerifier });
+      const profile = await fetchZohoUserInfo(tokens.accessToken);
+
+      if (!isEmailAllowedForPortalOAuth(profile.email) && !portalUsers.get(profile.email)) {
+        return res.redirect(
+          portalLoginErrorRedirect(
+            "zoho_not_allowed",
+            "This Zoho account is not authorized for the Client Portal.",
+          ),
+        );
+      }
+
+      const user = await resolveOrProvisionZohoPortalUser(profile, req);
+      if (!user) {
+        return res.redirect(
+          portalLoginErrorRedirect(
+            "zoho_not_allowed",
+            "This Zoho account is not authorized for the Client Portal.",
+          ),
+        );
+      }
+
+      if (user.isActive === false) {
+        return res.redirect(portalLoginErrorRedirect("zoho_disabled", "This portal account is disabled."));
+      }
+
+      return completeLoginRedirect(user, req, res, verified.returnTo);
+    } catch (error: any) {
+      console.error("[ERROR] Portal Zoho SSO failed:", error?.message || error);
+      return res.redirect(portalLoginErrorRedirect("zoho_failed", "Zoho sign-in failed. Please try again."));
+    }
+  }
+
+  // Zoho Public Platform SSO for Client Portal (not Hub)
+  app.get("/api/portal/auth/zoho/status", (_req: AuthenticatedRequest, res: Response) => {
+    const cfg = getZohoPortalConfig();
+    return res.json({
+      configured: cfg.configured,
+      provider: "zoho",
+      // Public-safe hint only — never expose client secret
+      redirectConfigured: Boolean(cfg.redirectUri),
+    });
+  });
+
+  app.get("/api/portal/auth/zoho/start", (req: AuthenticatedRequest, res: Response) => {
+    const cfg = getZohoPortalConfig();
+    if (!cfg.configured) {
+      return res.redirect(portalLoginErrorRedirect("zoho_not_configured", "Zoho sign-in is not configured"));
+    }
+    const returnTo = sanitizeReturnTo(req.query.returnTo);
+    const { authorizeUrl, codeVerifier } = createZohoStartPayload(returnTo);
+    setZohoPkceCookie(res, codeVerifier);
+    return res.redirect(authorizeUrl);
+  });
+
+  app.get("/api/portal/auth/zoho/callback", handlePortalZohoCallback);
+  // Alias for VPS ZOHO_PORTAL_OIDC_REDIRECT_URI / Zoho console registration
+  app.get("/api/zoho/oauth/callback", handlePortalZohoCallback);
 
   app.post("/api/portal/login", [verifyTurnstile, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
@@ -1778,6 +1905,140 @@ export async function registerRoutes(app: Express) {
     } catch (error: any) {
       logger.error("Backup code regeneration failed", error);
       return res.status(500).json({ message: "Failed to regenerate backup codes" });
+    }
+  });
+
+  // ===== PORTAL SETTINGS =====
+  app.get("/api/portal/profile", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const user = portalUsers.get(req.user?.email || "");
+      if (!user) return res.status(404).json({ message: "User not found" });
+      return res.json({
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        fullName: user.fullName,
+        role: user.role,
+        storeRole: user.storeRole,
+        clientId: user.clientId || null,
+        emailVerified: !!user.emailVerified,
+        mfaEnabled: !!user.mfaEnabled,
+      });
+    } catch (error: any) {
+      return res.status(500).json({ message: "Failed to load profile" });
+    }
+  });
+
+  app.patch("/api/portal/profile", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const user = portalUsers.get(req.user?.email || "");
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      const { fullName, email } = req.body;
+      if (fullName && typeof fullName === "string") {
+        user.fullName = fullName.trim();
+      }
+      if (email && typeof email === "string" && email.toLowerCase() !== user.email.toLowerCase()) {
+        const nextEmail = email.trim().toLowerCase();
+        if (portalUsers.has(nextEmail)) {
+          return res.status(400).json({ message: "Email already in use" });
+        }
+        user.email = nextEmail;
+        user.emailVerified = false;
+      }
+      portalUsers.set(user.email, user);
+      if (user.username) portalUsers.set(user.username, user);
+
+      logSecurityEvent("PORTAL_PROFILE_UPDATED", req, { userId: user.id });
+      return res.json({
+        success: true,
+        user: {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          fullName: user.fullName,
+          role: user.role,
+          storeRole: user.storeRole,
+          clientId: user.clientId || null,
+          emailVerified: !!user.emailVerified,
+        },
+      });
+    } catch (error: any) {
+      logger.error("Profile update failed", error);
+      return res.status(500).json({ message: "Failed to update profile" });
+    }
+  });
+
+  app.post("/api/portal/change-password", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { currentPassword, newPassword } = req.body;
+      if (!currentPassword || !newPassword) {
+        return res.status(400).json({ message: "Current and new password are required" });
+      }
+      if (newPassword.length < 8 || !/[A-Z]/.test(newPassword) || !/[0-9]/.test(newPassword)) {
+        return res.status(400).json({
+          message: "Password must be at least 8 characters with 1 uppercase letter and 1 number",
+        });
+      }
+
+      const user = portalUsers.get(req.user?.email || "");
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      const bcryptMod = await import("bcrypt");
+      const valid = await bcryptMod.compare(currentPassword, user.password);
+      if (!valid) return res.status(401).json({ message: "Current password is incorrect" });
+
+      user.password = await bcryptMod.hash(newPassword, 12);
+      portalUsers.set(user.email, user);
+      if (user.username) portalUsers.set(user.username, user);
+
+      logSecurityEvent("PORTAL_PASSWORD_CHANGED", req, { userId: user.id });
+      return res.json({ success: true, message: "Password updated successfully" });
+    } catch (error: any) {
+      logger.error("Change password failed", error);
+      return res.status(500).json({ message: "Failed to change password" });
+    }
+  });
+
+  app.post("/api/portal/order-form", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const user = portalUsers.get(req.user?.email || "");
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      const payload = req.body || {};
+      const saved = await saveOrderForm({
+        userId: user.id,
+        clientId: user.clientId || null,
+        payload,
+      });
+
+      const company = payload?.clientInfo?.legalName || user.fullName || user.email;
+      logger.info("Portal order form submitted", { orderFormId: saved.id, email: user.email, company });
+
+      try {
+        await eventBus.emit(EventTypes.LEAD_CREATED, {
+          source: "portal-order-form",
+          email: user.email,
+          name: user.fullName || user.username,
+          company,
+          orderFormId: saved.id,
+        }, "portal-order-form");
+      } catch {
+        /* non-fatal */
+      }
+
+      logSecurityEvent("PORTAL_ORDER_FORM_SUBMITTED", req, { userId: user.id, orderFormId: saved.id });
+
+      return res.json({
+        success: true,
+        message: "Order submitted successfully",
+        packet: { id: saved.id, status: "submitted" },
+        items: payload.selectedServices || [],
+        orderFormId: saved.id,
+      });
+    } catch (error: any) {
+      logger.error("Order form submit failed", error);
+      return res.status(500).json({ message: "Failed to submit order form" });
     }
   });
 
