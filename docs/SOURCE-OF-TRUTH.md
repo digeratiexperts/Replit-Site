@@ -18,7 +18,7 @@ Do these in the Replit UI for **digerati Experts Offical Website**:
 | Branch | Why |
 |--------|-----|
 | `preserve/live-pink-sticky-nav` | Pink sticky section bar chrome |
-| `preserve/replit-internal-pages-pre-redact` | Internal sales pages removed in Aug 2026 cleanup |
+| `preserve/internal-pages-pre-redact` | Internal sales pages removed in Aug 2026 cleanup (renamed from replit-prefixed branch) |
 
 ## Recovered from Replit (do not full-sync)
 
