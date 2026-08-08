@@ -1,9 +1,13 @@
 import { useState, useEffect, useRef, useCallback, createContext, useContext } from 'react';
+import { ArrowRight, Shield, Phone } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface ScrollSection {
   id: string;
   label: string;
   theme?: 'dark' | 'light';
+  /** When false, section is tracked for scroll/theme but hidden from the sticky bar. */
+  showInNav?: boolean;
 }
 
 interface FullPageScrollContextType {
@@ -283,8 +287,103 @@ export function FullPageScrollProvider({
         {children}
       </div>
       
-      {/* Desktop bottom sticky section nav removed — it covered the hero CTA and competed with primary navigation. */}
+      {!isMobile && (
+        <SectionNavBar
+          sections={sections}
+          currentSection={currentSection}
+          onNavigate={scrollToSection}
+        />
+      )}
     </FullPageScrollContext.Provider>
+  );
+}
+
+interface SectionNavBarProps {
+  sections: ScrollSection[];
+  currentSection: number;
+  onNavigate: (index: number) => void;
+}
+
+/** Desktop sticky section bar — matches live digeratexperts.com chrome. */
+function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarProps) {
+  const navSections = sections
+    .map((section, index) => ({ section, index }))
+    .filter(({ section }) => section.showInNav !== false);
+
+  // Highlight the nearest nav-visible section when scrolling a hidden-in-nav block.
+  const activeNavIndex = (() => {
+    if (navSections.some(({ index }) => index === currentSection)) return currentSection;
+    let best = navSections[0]?.index ?? 0;
+    let bestDist = Infinity;
+    for (const { index } of navSections) {
+      const dist = Math.abs(index - currentSection);
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = index;
+      }
+    }
+    return best;
+  })();
+
+  return (
+    <div className="fixed bottom-4 left-0 right-0 z-50 hidden lg:flex justify-center pointer-events-none px-4">
+      <motion.nav
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="pointer-events-auto flex flex-row items-center gap-1 py-2 px-4 rounded-full bg-black/95 backdrop-blur-xl border-2 border-[#D3126A]/60 shadow-[0_0_24px_rgba(211,18,106,0.35),0_4px_24px_rgba(0,0,0,0.5)]"
+        aria-label="Section navigation"
+      >
+        <div className="flex items-center gap-2 pr-3 border-r border-white/20 mr-2">
+          <Shield className="w-5 h-5 text-[#FF477F]" aria-hidden="true" />
+          <span className="text-white font-medium text-sm whitespace-nowrap">Is Your Business Protected?</span>
+        </div>
+
+        {navSections.map(({ section, index }) => {
+          const isActive = activeNavIndex === index;
+          return (
+            <button
+              key={section.id}
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onNavigate(index);
+              }}
+              className={`relative px-3 py-1.5 text-sm font-medium rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FF477F] whitespace-nowrap ${
+                isActive
+                  ? 'bg-gradient-to-r from-[#D3126A] to-[#D3126A] text-white shadow-lg shadow-[#D3126A]/40'
+                  : 'text-white/70 hover:text-white hover:bg-white/10'
+              }`}
+              aria-label={`Go to ${section.label} (section ${index + 1} of ${sections.length})`}
+              aria-current={isActive ? 'true' : undefined}
+              data-testid={`nav-dot-${section.id}`}
+            >
+              {section.label}
+            </button>
+          );
+        })}
+
+        <div className="w-px h-6 bg-white/20 mx-2" aria-hidden="true" />
+
+        <a
+          href="tel:325-480-9870"
+          className="flex items-center gap-1.5 text-white/70 hover:text-white transition-colors text-sm whitespace-nowrap"
+          data-testid="nav-phone"
+        >
+          <Phone className="w-4 h-4" aria-hidden="true" />
+          <span>325-480-9870</span>
+        </a>
+
+        <a
+          href="/book"
+          className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold rounded-full bg-white text-[#D3126A] hover:bg-pink-50 transition-all duration-300 shadow-lg whitespace-nowrap ml-2"
+          data-testid="nav-cta-assessment"
+        >
+          Free Assessment
+          <ArrowRight className="w-4 h-4" aria-hidden="true" />
+        </a>
+      </motion.nav>
+    </div>
   );
 }
 

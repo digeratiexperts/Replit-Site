@@ -27,20 +27,21 @@ import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooter
 import { DigeratiStatsSection } from "./sections/DigeratiStatsSection";
 import { DigeratiTrustPhotoSection } from "./sections/DigeratiTrustPhotoSection";
 
-// Themes must match real section backgrounds — drives header/logo chrome while scrolling.
-const homepageSections: { id: string; label: string; theme: 'dark' | 'light' }[] = [
+// DOM order for scroll tracking. Bar labels match live digeratexperts.com;
+// showInNav:false keeps intermediate sections out of the sticky bar.
+const homepageSections: { id: string; label: string; theme: 'dark' | 'light'; showInNav?: boolean }[] = [
   { id: 'hero', label: 'Home', theme: 'dark' },
-  { id: 'stats', label: 'Results', theme: 'dark' },
-  { id: 'services', label: 'Services', theme: 'dark' },
-  { id: 'protection', label: 'How It Works', theme: 'light' },
-  { id: 'calculators', label: 'Calculators', theme: 'dark' },
-  { id: 'challenges', label: 'Challenges', theme: 'dark' },
+  { id: 'stats', label: 'Why DE', theme: 'dark' },
+  { id: 'services', label: 'Engage', theme: 'dark' },
+  { id: 'protection', label: 'Protect', theme: 'light', showInNav: false },
+  { id: 'calculators', label: 'Assessment', theme: 'dark' },
+  { id: 'challenges', label: 'Problems', theme: 'dark' },
   { id: 'industries', label: 'Industries', theme: 'dark' },
-  { id: 'trust', label: 'Trust', theme: 'light' },
-  { id: 'pricing', label: 'Pricing', theme: 'dark' },
-  { id: 'testimonials', label: 'Reviews', theme: 'dark' },
-  { id: 'insights', label: 'Insights', theme: 'dark' },
-  { id: 'cta', label: 'Get Started', theme: 'dark' },
+  { id: 'trust', label: 'Trust', theme: 'light', showInNav: false },
+  { id: 'pricing', label: 'Packages', theme: 'dark' },
+  { id: 'testimonials', label: 'Proof', theme: 'dark' },
+  { id: 'insights', label: 'Insights', theme: 'dark', showInNav: false },
+  { id: 'cta', label: 'Next step', theme: 'dark' },
   { id: 'faq', label: 'FAQ', theme: 'light' },
   { id: 'contact', label: 'Contact', theme: 'dark' },
 ];
@@ -109,7 +110,7 @@ export const DigeratiHomepage = (): JSX.Element => {
 
   return (
     <FullPageScrollProvider sections={homepageSections} enableOnMobile={false}>
-      <div className="min-h-screen bg-[#050312]">
+      <div className="min-h-screen bg-[#050312] pb-20 lg:pb-24">
         <OrganizationJsonLd />
         <WebSiteJsonLd />
         {/* Navigation — chat lives in App MarketingChrome sitewide */}
