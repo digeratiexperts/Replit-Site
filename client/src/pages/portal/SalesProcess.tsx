@@ -772,7 +772,8 @@ export default function SalesProcess() {
   };
 
   return (
-    <div className="min-h-screen bg-[#151515] text-white" data-testid="sales-process-page">
+    <PortalLayout title="Sales Process">
+    <div className="-m-4 md:-m-6 min-h-full bg-[#151515] text-white" data-testid="sales-process-page">
       <div className="max-w-[1320px] mx-auto p-4 md:p-6">
         <div className="rounded-[26px] border border-white/10 overflow-hidden"
           style={{
@@ -1408,5 +1409,6 @@ export default function SalesProcess() {
         </div>
       </div>
     </div>
+    </PortalLayout>
   );
 }

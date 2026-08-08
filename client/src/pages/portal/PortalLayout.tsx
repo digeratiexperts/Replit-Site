@@ -31,6 +31,7 @@ import {
   Map,
   BarChart3,
   AlertTriangle,
+  Briefcase,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
@@ -87,9 +88,19 @@ const adminItems = [
   { href: "/portal/admin/lifecycle", label: "Onboard / Offboard", icon: Users },
   { href: "/portal/admin/contracts", label: "Contracts", icon: FileSignature },
   { href: "/portal/admin/import", label: "Data Import", icon: Upload },
-  { href: "/portal/admin/agents", label: "Manage Agents", icon: Users },
+  { href: "/portal/admin/agents", label: "Manage Agents", icon: Download },
   { href: "/portal/admin/openai", label: "OpenAI Billing", icon: Settings },
+  { href: "/portal/sales-process", label: "Sales Process", icon: Briefcase },
 ];
+
+/** Sidebar link styles for dark navy rail — avoid accent/pink Button hover bleed. */
+const navLinkBase =
+  "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors";
+const navLinkIdle =
+  "text-white/70 hover:bg-white/15 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5034ff]/60";
+const navLinkActive = "bg-[#5034ff] text-white hover:bg-[#5c42ff] hover:text-white";
+const sidebarGhostBtn =
+  "text-white/70 hover:!bg-white/15 hover:!text-white focus-visible:ring-[#5034ff]";
 
 export function PortalLayout({ children, title }: PortalLayoutProps) {
   const [location] = useLocation();
@@ -151,16 +162,15 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
           <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
             {visibleNav.map((item) => {
               const Icon = item.icon;
-              const isActive = location === item.href || location.startsWith(item.href + "/");
+              // Avoid /portal/orders stealing active from /portal/order-form (and similar prefixes).
+              const isActive =
+                location === item.href ||
+                (item.href !== "/portal/orders" && location.startsWith(item.href + "/"));
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
-                    isActive
-                      ? "bg-fuchsia-600/80 text-white"
-                      : "text-white/70 hover:bg-white/10 hover:text-white"
-                  }`}
+                  className={`${navLinkBase} ${isActive ? navLinkActive : navLinkIdle}`}
                   onClick={() => setSidebarOpen(false)}
                 >
                   <Icon className="w-4 h-4 shrink-0" />
@@ -175,16 +185,13 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
                 <p className="px-3 text-xs uppercase tracking-wide text-white/40">Admin</p>
                 {adminItems.map((item) => {
                   const Icon = item.icon;
-                  const isActive = location === item.href;
+                  const isActive =
+                    location === item.href || location.startsWith(item.href + "/");
                   return (
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
-                        isActive
-                          ? "bg-fuchsia-600/80 text-white"
-                          : "text-white/70 hover:bg-white/10 hover:text-white"
-                      }`}
+                      className={`${navLinkBase} ${isActive ? navLinkActive : navLinkIdle}`}
                       onClick={() => setSidebarOpen(false)}
                     >
                       <Icon className="w-4 h-4 shrink-0" />
@@ -199,7 +206,7 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
           <div className="p-4 border-t border-white/10">
             <Button
               variant="ghost"
-              className="w-full justify-start text-white/70 hover:text-white hover:bg-white/10"
+              className={`w-full justify-start ${sidebarGhostBtn}`}
               onClick={handleLogout}
             >
               <LogOut className="w-4 h-4 mr-2" />
@@ -222,7 +229,7 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden text-white"
+              className={`md:hidden ${sidebarGhostBtn}`}
               onClick={() => setSidebarOpen(true)}
               aria-label="Open menu"
             >
@@ -231,7 +238,9 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
             <h1 className="text-lg font-semibold">{title}</h1>
           </div>
           <div className="flex items-center gap-3">
-            {user?.role === "admin" && <TenantSelector />}
+            {user?.role === "admin" && (
+              <TenantSelector currentTenant={impersonatingCompany} />
+            )}
             {impersonatingCompany && (
               <Button size="sm" variant="secondary" onClick={handleStopImpersonation}>
                 Exit {impersonatingCompany.companyName || "company"}
