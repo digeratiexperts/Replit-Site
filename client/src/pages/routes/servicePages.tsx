@@ -381,8 +381,8 @@ export const industryPageData = {
 
 export const resourcePageData = {
   'blog': {
-    title: "Blog & News",
-    subtitle: "Latest security insights and IT best practices",
+    title: "Digerati Journal",
+    subtitle: "Cybersecurity & managed IT field notes for Arizona businesses",
     description: "Stay informed with our latest articles on cybersecurity threats, IT best practices, and technology trends affecting Arizona businesses.",
     features: [
       { title: "Security Alerts", description: "Latest threat intelligence and security advisories" },

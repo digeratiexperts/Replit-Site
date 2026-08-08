@@ -1,11 +1,11 @@
 module.exports = {
   apps: [{
-    name: 'digerati',
+    name: 'digeratiexperts-site',
     script: 'dist/index.js',
     cwd: '/root/Replit-Site',
     env: {
       NODE_ENV: 'production',
-      PORT: 5000
+      PORT: 3300
     },
     node_args: '--env-file=.env'
   }]

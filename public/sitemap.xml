@@ -37,7 +37,24 @@
 
   <!-- Resources -->
   <url><loc>https://digeratiexperts.com/resources/case-studies</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://digeratiexperts.com/resources/blog</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/blog</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/cyber-facts</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/blog/what-a-cyber-risk-assessment-finds-before-attackers-do</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/blog/multilayer-ransomware-defense-arizona-businesses</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/blog/can-ransomware-encrypt-your-backups</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/blog/first-24-hours-after-ransomware-attack</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/blog/why-mfa-alone-does-not-stop-ransomware</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/blog/email-security-more-than-spam-filtering</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/blog/arizona-smb-cybersecurity-checklist</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/blog/cyber-insurance-requirements-small-businesses</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/blog/managed-it-pricing-phoenix-chandler</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/blog/managed-it-vs-break-fix-it</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/blog/co-managed-it-vs-hiring-another-it-employee</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/blog/standalone-it-services-vs-full-managed-it-ownership</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/blog/questions-before-switching-it-providers</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/blog/shadow-ai-is-the-new-shadow-it</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/blog/chatgpt-copilot-gemini-claude-business-data-security</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://digeratiexperts.com/resources/blog/hipaa-cmmc-nist-cyber-insurance-managed-it-discipline</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://digeratiexperts.com/resources/security-updates</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://digeratiexperts.com/resources/videos</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://digeratiexperts.com/resources/security-checklist</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>

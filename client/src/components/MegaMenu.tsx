@@ -247,7 +247,7 @@ export function MegaMenu() {
           title: 'Learn',
           items: [
             { title: 'Case Studies', description: 'Real Arizona success stories', icon: <TrendingUp className="h-5 w-5" />, url: '/resources/case-studies' },
-            { title: 'Blog & News', description: 'Latest security insights', icon: <FileCheck className="h-5 w-5" />, url: '/resources/blog' },
+            { title: 'Digerati Journal', description: 'Cybersecurity & managed IT field notes', icon: <FileCheck className="h-5 w-5" />, url: '/resources/blog' },
             { title: 'Cyber Facts', description: 'Interactive credibility stats & sources', icon: <Shield className="h-5 w-5" />, url: '/resources/cyber-facts' },
             { title: 'Videos & Webinars', description: 'Educational content library', icon: <Monitor className="h-5 w-5" />, url: '/resources/videos' },
           ]
