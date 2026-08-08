@@ -60,7 +60,7 @@ const navItems: NavItem[] = [
   { href: "/portal/people", label: "People & Org", icon: Users, key: "people" },
   { href: "/portal/questionnaires", label: "DE Questionnaires", icon: Calendar, key: "other" },
   { href: "/portal/surveys", label: "Surveys", icon: CheckSquare, key: "surveys" },
-  { href: "/portal/contracts", label: "Contracts", icon: FileSignature, key: "other" },
+  { href: "/portal/contracts", label: "Contracts", icon: FileSignature, key: "contracts" },
   { href: "/portal/order-form", label: "New Order", icon: FilePlus, key: "other" },
   { href: "/portal/services", label: "My Services", icon: Package, key: "services" },
   { href: "/portal/billing", label: "Billing", icon: FileText, key: "billing" },

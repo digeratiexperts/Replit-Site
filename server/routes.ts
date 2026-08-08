@@ -74,6 +74,11 @@ import {
   actOnApproval,
   attachFulfillmentTicket,
 } from "./portalApprovalsStore";
+import {
+  fetchHubCompanyDocuments,
+  fetchHubContractDownload,
+  resolvePortalCompanyName,
+} from "./techSalesDocuments";
 
 const JWT_SECRET = process.env.JWT_SECRET || randomBytes(32).toString('hex');
 const SALT_ROUNDS = 12;
@@ -133,6 +138,8 @@ export function authMiddleware(req: AuthenticatedRequest, res: Response, next: N
       managerUserId: live?.managerUserId ?? decoded.managerUserId ?? null,
       isCompanyItContact: live?.isCompanyItContact ?? decoded.isCompanyItContact ?? false,
       fullName: live?.fullName,
+      impersonatingCompanyId: (decoded as any).impersonatingCompanyId || null,
+      impersonatingCompanyName: (decoded as any).impersonatingCompanyName || null,
     };
     req.userId = decoded.userId;
     
@@ -3377,39 +3384,131 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  // ===== CONTRACTS =====
+  // ===== CONTRACTS (TechSales Hub document library + company-specific) =====
 
-  // List contracts for the current user's company
+  function portalCompanyContext(req: AuthenticatedRequest) {
+    const impersonatingCompanyId =
+      (req.user as any)?.impersonatingCompanyId ||
+      (typeof (req.user as any)?.impersonatingCompanyId === "string"
+        ? (req.user as any).impersonatingCompanyId
+        : null);
+    // JWT may carry impersonation from admin switch
+    let jwtImpersonation: string | null = null;
+    try {
+      const authHeader = req.headers.authorization || "";
+      const token = authHeader.split(" ")[1];
+      if (token) {
+        const decoded = jwt.verify(token, JWT_SECRET) as any;
+        jwtImpersonation = decoded.impersonatingCompanyId || null;
+        if (decoded.impersonatingCompanyName && !req.user?.clientId) {
+          /* keep */
+        }
+      }
+    } catch {
+      /* ignore */
+    }
+    const companyId = jwtImpersonation || impersonatingCompanyId || req.user?.clientId || null;
+    const companyName = resolvePortalCompanyName({
+      clientId: companyId,
+      impersonatingCompanyId: jwtImpersonation || impersonatingCompanyId,
+      getClient: (id) => portalClients.get(id),
+    });
+    return { companyId, companyName };
+  }
+
   app.get("/api/portal/contracts", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      // Demo contracts data — in production these come from Zoho or DB
-      const contracts: any[] = [];
-      return res.json(contracts);
+      const { companyId, companyName } = portalCompanyContext(req);
+      if (!companyName) {
+        return res.json({
+          contracts: [],
+          library: [],
+          companyName: null,
+          matchedDeals: [],
+          source: "none",
+          message: "No company profile on this portal user. Contact your Company IT Contact or Digerati.",
+        });
+      }
+
+      const hub = await fetchHubCompanyDocuments(companyName);
+      if (!hub) {
+        return res.json({
+          contracts: [],
+          library: [],
+          companyName,
+          companyId,
+          matchedDeals: [],
+          source: "hub_unavailable",
+          message:
+            "Could not reach TechSales document library. Ensure TECHSALES_SYNC_URL/TOKEN are configured.",
+        });
+      }
+
+      const contracts = (hub.contracts || []).map((c: any) => ({
+        ...c,
+        pdfUrl: c.hubSignatureId
+          ? `/api/portal/contracts/${c.hubSignatureId}/download`
+          : null,
+        pdfContent: null,
+      }));
+
+      return res.json({
+        contracts,
+        library: hub.library || [],
+        companyName: hub.companyName || companyName,
+        companyId,
+        matchedDeals: hub.matchedDeals || [],
+        source: "techsales_hub",
+      });
     } catch (error: any) {
       logger.error("Failed to load contracts", error);
       return res.status(500).json({ message: "Failed to load contracts" });
     }
   });
 
-  // Sign a contract
+  app.get("/api/portal/contracts/:signatureId/download", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const signatureId = parseInt(req.params.signatureId, 10);
+      if (Number.isNaN(signatureId)) {
+        return res.status(400).json({ message: "Invalid contract id" });
+      }
+      const { companyName } = portalCompanyContext(req);
+      if (!companyName) {
+        return res.status(400).json({ message: "No company profile loaded" });
+      }
+      const kind = typeof req.query.kind === "string" ? req.query.kind : "signed_pdf";
+      const file = await fetchHubContractDownload(signatureId, companyName, kind);
+      if (!file) {
+        return res.status(404).json({ message: "Document not available" });
+      }
+      res.setHeader("Content-Type", file.contentType);
+      res.setHeader("Content-Disposition", `inline; filename="${file.fileName.replace(/"/g, "")}"`);
+      return res.send(file.buffer);
+    } catch (error: any) {
+      logger.error("Failed to download contract", error);
+      return res.status(500).json({ message: "Failed to download contract" });
+    }
+  });
+
+  // Signing remains Zoho Sign / TechSales-owned; portal does not counterfeit signatures locally.
   app.post("/api/portal/contracts/:id/sign", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { id } = req.params;
-      const { signerName, signerTitle, signatureData } = req.body;
-      if (!signerName || !signatureData) {
-        return res.status(400).json({ message: "Signer name and signature are required" });
-      }
-      return res.status(404).json({ message: "Contract not found. Contracts integration is being configured." });
+      return res.status(501).json({
+        message:
+          "E-signature is completed through the Zoho Sign link sent for this document (managed in TechSales). Contact your Company IT Contact or Digerati if you need the signing link resent.",
+      });
     } catch (error: any) {
       logger.error("Failed to sign contract", error);
       return res.status(500).json({ message: "Failed to sign contract" });
     }
   });
 
-  // Decline a contract
   app.post("/api/portal/contracts/:id/decline", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      return res.status(404).json({ message: "Contract not found. Contracts integration is being configured." });
+      return res.status(501).json({
+        message:
+          "To decline a pending agreement, use the Zoho Sign email link or ask Digerati / your Company IT Contact to recall the request in TechSales.",
+      });
     } catch (error: any) {
       logger.error("Failed to decline contract", error);
       return res.status(500).json({ message: "Failed to decline contract" });

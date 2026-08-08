@@ -78,12 +78,21 @@ export type NavKey =
   | "files"
   | "kb"
   | "settings"
+  | "contracts"
   | "other";
 
 export function navAllowed(user: PortalUserSession | null, key: NavKey): boolean {
   if (isDeAdmin(user)) return true;
   const role = resolveOrgRole(user);
-  const staffKeys: NavKey[] = ["dashboard", "tickets", "forms", "infrastructure", "kb", "settings"];
+  const staffKeys: NavKey[] = [
+    "dashboard",
+    "tickets",
+    "forms",
+    "infrastructure",
+    "contracts",
+    "kb",
+    "settings",
+  ];
   if (role === "staff") return staffKeys.includes(key);
   if (role === "manager") {
     return [...staffKeys, "approvals"].includes(key);
