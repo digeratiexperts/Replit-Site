@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Link } from "wouter";
 import { Helmet } from "react-helmet-async";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
+import { BlogAudioPlayer } from "@/components/BlogAudioPlayer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -27,7 +28,13 @@ interface Chapter {
   id: number;
   title: string;
   subtitle: string;
+  /** Plain text for Listen / TTS (current chapter). */
+  narrationText: string;
   content: React.ReactNode;
+}
+
+function countWords(text: string): number {
+  return (text.match(/[A-Za-z0-9\u00C0-\u024F]+/g) || []).length;
 }
 
 const chapters: Chapter[] = [
@@ -35,6 +42,16 @@ const chapters: Chapter[] = [
     id: 1,
     title: "Understanding Cybersecurity Risk Assessment",
     subtitle: "The Foundation of Digital Defense",
+    narrationText: [
+      "Chapter 1. Understanding Cybersecurity Risk Assessment. The Foundation of Digital Defense.",
+      "In today's interconnected world, cybersecurity risk assessment isn't just a technical exercise—it's a business imperative. As digital threats continue to evolve in sophistication and frequency, organizations of all sizes must understand their vulnerabilities and take proactive steps to protect their assets, data, and reputation.",
+      "What Is Cybersecurity Risk Assessment?",
+      "A cybersecurity risk assessment is a systematic process of identifying, analyzing, and evaluating risks to your organization's information systems and data. It helps you understand what assets you have, what threats they face, what vulnerabilities exist, and what the potential impact of a security incident could be.",
+      "Case Study: The Wake-Up Call.",
+      "A mid-sized manufacturing company in Arizona believed they were too small to be a target. Their IT infrastructure had grown organically over 15 years, with minimal security oversight. When they finally conducted their first risk assessment, they discovered: 147 devices connected to their network—40 more than they knew existed; 23 systems running outdated, unpatched software; no multi-factor authentication on their email or financial systems; and backup systems that hadn't been tested in over two years.",
+      "Three months after the assessment, they successfully defended against a ransomware attack that had encrypted files at a competitor. The difference? They had addressed their critical vulnerabilities.",
+      "Key Lesson: The organizations that survive cyber attacks aren't necessarily the ones with the biggest budgets—they're the ones that understand their risks and address them systematically.",
+    ].join(" "),
     content: (
       <>
         <div className="bg-gradient-to-r from-slate-800 to-slate-900 border-l-4 border-orange-500 p-6 rounded-r-lg mb-8">
@@ -78,6 +95,16 @@ const chapters: Chapter[] = [
     id: 2,
     title: "The Risk Assessment Framework",
     subtitle: "A Structured Approach to Security",
+    narrationText: [
+      "Chapter 2. The Risk Assessment Framework. A Structured Approach to Security.",
+      "Effective risk assessment follows a structured framework that ensures no critical areas are overlooked. While various frameworks exist—NIST, ISO 27001, FAIR—they all share common elements that form the foundation of a comprehensive assessment.",
+      "Asset Identification: Catalog all hardware, software, data, and processes that support your business operations. You can't protect what you don't know exists.",
+      "Threat Identification: Identify potential threat actors and scenarios: external hackers, insider threats, natural disasters, system failures, and human error.",
+      "Vulnerability Assessment: Evaluate weaknesses in your systems, processes, and human factors that could be exploited by identified threats.",
+      "Impact Analysis: Determine the potential business impact of different security incidents, including financial, operational, legal, and reputational consequences.",
+      "Risk Prioritization: Rank risks based on their likelihood and potential impact to focus resources on the most critical areas.",
+      "Key Assessment Areas include network security, endpoint protection, identity and access, data protection, and human factors such as security awareness, policies, and incident response training.",
+    ].join(" "),
     content: (
       <>
         <p className="text-slate-300 mb-6 leading-relaxed">
@@ -131,6 +158,19 @@ const chapters: Chapter[] = [
     id: 3,
     title: "Common Vulnerabilities",
     subtitle: "What We Find in Most Assessments",
+    narrationText: [
+      "Chapter 3. Common Vulnerabilities. What We Find in Most Assessments.",
+      "After conducting hundreds of risk assessments for Arizona businesses, certain patterns emerge. Understanding these common vulnerabilities can help you identify areas that likely need attention in your own organization.",
+      "Weak Authentication: Single-factor authentication remains the norm for many business applications, leaving them vulnerable to credential theft and brute force attacks.",
+      "Unpatched Systems: Many organizations struggle to maintain current patches, leaving known vulnerabilities exposed for weeks or months.",
+      "Inadequate Backups: Backups exist but are rarely tested. When disaster strikes, organizations discover their backups are incomplete or corrupted.",
+      "Poor Network Segmentation: Flat networks allow attackers to move laterally, turning a single compromised device into a complete network breach.",
+      "Shadow IT: Employees use unauthorized cloud services and applications, creating data leakage risks and compliance violations.",
+      "Insufficient Logging: Many organizations can't answer basic questions about their security events because they lack adequate logging and monitoring.",
+      "Case Study: The Email Compromise.",
+      "A real estate title company lost 1.2 million dollars when attackers compromised their email system and redirected a closing wire transfer. The post-incident assessment revealed: no multi-factor authentication on email accounts; no email filtering for suspicious attachments or links; no procedures for verifying wire transfer instructions; and no employee training on business email compromise tactics.",
+      "Each of these vulnerabilities could have been identified and addressed through a proper risk assessment—at a fraction of the cost of the eventual loss.",
+    ].join(" "),
     content: (
       <>
         <p className="text-slate-300 mb-6 leading-relaxed">
@@ -177,6 +217,13 @@ const chapters: Chapter[] = [
     id: 4,
     title: "Quantifying Risk",
     subtitle: "From Technical Findings to Business Impact",
+    narrationText: [
+      "Chapter 4. Quantifying Risk. From Technical Findings to Business Impact.",
+      "Technical vulnerabilities mean little to business leaders until they're translated into business terms. Effective risk assessment quantifies potential impacts in ways that support decision-making and resource allocation.",
+      "The Risk Equation: Risk equals Likelihood times Impact. This simple formula guides all risk prioritization decisions.",
+      "Impact Categories include financial impact—direct costs, recovery costs, and ongoing costs; operational impact—downtime, productivity losses, and supply chain disruptions; reputational impact—customer trust and brand damage; and legal and regulatory impact—compliance violations, fines, and litigation.",
+      "Pro Tip: When quantifying risk, don't just consider the worst-case scenario. Calculate expected annual loss by multiplying the impact by the annual probability of occurrence. This provides a more realistic basis for investment decisions.",
+    ].join(" "),
     content: (
       <>
         <p className="text-slate-300 mb-6 leading-relaxed">
@@ -220,6 +267,13 @@ const chapters: Chapter[] = [
     id: 5,
     title: "Building Your Security Roadmap",
     subtitle: "From Assessment to Action",
+    narrationText: [
+      "Chapter 5. Building Your Security Roadmap. From Assessment to Action.",
+      "A risk assessment is only valuable if it leads to action. The assessment findings should inform a prioritized security roadmap that addresses the most critical risks while respecting budget and resource constraints.",
+      "Prioritization Principles: Critical items need immediate attention within 24 to 72 hours. High risks should be remediated within 30 days. Medium risks within 90 days. Low items belong in regular maintenance cycles.",
+      "Balance your roadmap between quick wins that demonstrate progress and build momentum, and strategic initiatives that address fundamental security gaps.",
+      "Sample 90-Day Roadmap. Days 1 to 30: Enable MFA on all critical systems, update endpoint protection, patch critical vulnerabilities. Days 31 to 60: Implement network segmentation, deploy email security, begin security awareness training. Days 61 to 90: Establish backup testing procedures, implement logging and monitoring, develop an incident response plan.",
+    ].join(" "),
     content: (
       <>
         <p className="text-slate-300 mb-6 leading-relaxed">
@@ -266,6 +320,12 @@ const chapters: Chapter[] = [
     id: 6,
     title: "Conclusion",
     subtitle: "Your Journey to Security Resilience",
+    narrationText: [
+      "Chapter 6. Conclusion. Your Journey to Security Resilience.",
+      "Cybersecurity risk assessment isn't a one-time project—it's an ongoing discipline that should be embedded in your organization's culture and operations. As threats evolve and your business changes, regular reassessment ensures your defenses remain aligned with your actual risks.",
+      "Key Takeaways. One: Risk assessment is the foundation of effective cybersecurity—you can't protect what you don't understand. Two: Common vulnerabilities are common for a reason—address the basics before pursuing advanced solutions. Three: Translate technical findings into business impact to gain leadership support and appropriate resources. Four: Prioritize based on risk, not just severity—consider both likelihood and impact. Five: Make assessment an ongoing process, not a one-time event.",
+      "Ready to assess your security posture? Digerati Experts offers comprehensive cybersecurity risk assessments designed specifically for Arizona businesses. Schedule your free assessment at digeratiexperts.com/book.",
+    ].join(" "),
     content: (
       <>
         <p className="text-slate-300 mb-6 leading-relaxed text-lg">
@@ -400,6 +460,16 @@ export default function Ebook() {
 
   const isBookmarked = bookmarks.includes(currentChapter);
 
+  const chapterAudioText = useMemo(() => {
+    const chapter = chapters[currentChapter];
+    return chapter?.narrationText ?? "";
+  }, [currentChapter]);
+
+  const chapterWordCount = useMemo(
+    () => countWords(chapterAudioText),
+    [chapterAudioText],
+  );
+
   const pageVariants = {
     enter: (direction: 'left' | 'right') => ({
       x: direction === 'right' ? 100 : -100,
@@ -487,7 +557,7 @@ export default function Ebook() {
               </p>
               <p className="text-white/50 mb-8">Joe Petro — Founder, Digerati Experts</p>
               
-              <div className="flex flex-wrap justify-center gap-4 mb-8">
+              <div className="flex flex-wrap justify-center items-center gap-4 mb-8">
                 <Button 
                   onClick={() => setShowCover(false)}
                   className="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold px-8 py-6 text-lg hover:shadow-xl hover:shadow-orange-500/30 hover:-translate-y-1 transition-all"
@@ -505,6 +575,19 @@ export default function Ebook() {
                   <Download className="mr-2 h-5 w-5" />
                   Save as PDF
                 </Button>
+              </div>
+              <div className="flex justify-center mb-10">
+                <div className="flex flex-col items-center gap-2">
+                  <p className="text-xs uppercase tracking-wider text-white/45">
+                    Read Chapter 1 to you
+                  </p>
+                  <BlogAudioPlayer
+                    key="ebook-cover-ch1"
+                    title={`${chapters[0].title} — Defending the Digital Realm`}
+                    text={chapters[0].narrationText}
+                    wordCount={countWords(chapters[0].narrationText)}
+                  />
+                </div>
               </div>
 
               <div className="mt-12 grid md:grid-cols-3 gap-6 text-left">
@@ -663,6 +746,14 @@ export default function Ebook() {
                         {isBookmarked ? <BookMarked className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
                       </button>
                     </div>
+                  </div>
+                  <div className="flex justify-center px-4 pb-3 border-t border-slate-700/40">
+                    <BlogAudioPlayer
+                      key={`ebook-audio-${currentChapter}`}
+                      title={`${chapters[currentChapter].title} — Defending the Digital Realm`}
+                      text={chapterAudioText}
+                      wordCount={chapterWordCount}
+                    />
                   </div>
                 </div>
 
