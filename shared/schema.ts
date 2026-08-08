@@ -12,6 +12,37 @@ export const viewTypeEnum = pgEnum("view_type", ["board", "list", "calendar", "t
 // Portal enums
 export const portalUserRoleEnum = pgEnum("portal_user_role", ["admin", "user", "viewer"]);
 
+/** Client-org hierarchy (separate from DE portal role + store commerce role) */
+export const portalOrgRoleEnum = pgEnum("portal_org_role", [
+  "staff",
+  "manager",
+  "dept_it_contact",
+  "company_it_contact",
+]);
+
+export const approvalRequestStatusEnum = pgEnum("portal_approval_request_status", [
+  "pending",
+  "approved",
+  "rejected",
+  "info_requested",
+  "cancelled",
+]);
+
+export const approvalStepTypeEnum = pgEnum("portal_approval_step_type", [
+  "manager",
+  "skip_level",
+  "dept_it",
+  "company_it",
+]);
+
+export const approvalStepStatusEnum = pgEnum("portal_approval_step_status", [
+  "pending",
+  "approved",
+  "rejected",
+  "info_requested",
+  "skipped",
+]);
+
 // Store role enum for RBAC - determines what users can do in the store
 // - public: Anonymous visitors (not logged in)
 // - prospect: Registered but unverified users
@@ -184,6 +215,18 @@ export const portalClients = pgTable("portal_clients", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+/** Client departments — optional Dept IT Contact per department */
+export const portalDepartments = pgTable("portal_departments", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clientId: varchar("client_id")
+    .notNull()
+    .references(() => portalClients.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  itContactUserId: varchar("it_contact_user_id"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // Portal users table (durable auth — Neon)
 export const portalUsers = pgTable("portal_users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -194,6 +237,11 @@ export const portalUsers = pgTable("portal_users", {
   fullName: text("full_name").notNull(),
   role: portalUserRoleEnum("role").default("user"),
   storeRole: storeRoleEnum("store_role").default("prospect"),
+  /** Client org hierarchy role (ignored for DE portal admins) */
+  orgRole: portalOrgRoleEnum("org_role").default("staff"),
+  departmentId: varchar("department_id").references(() => portalDepartments.id, { onDelete: "set null" }),
+  managerUserId: varchar("manager_user_id"),
+  isCompanyItContact: boolean("is_company_it_contact").default(false),
   emailVerified: boolean("email_verified").default(false),
   isActive: boolean("is_active").default(true),
   mfaEnabled: boolean("mfa_enabled").default(false),
@@ -203,6 +251,44 @@ export const portalUsers = pgTable("portal_users", {
   lastLogin: timestamp("last_login"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const portalApprovalRequests = pgTable("portal_approval_requests", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  requestNumber: text("request_number").notNull().unique(),
+  clientId: varchar("client_id")
+    .notNull()
+    .references(() => portalClients.id, { onDelete: "cascade" }),
+  requesterUserId: varchar("requester_user_id")
+    .notNull()
+    .references(() => portalUsers.id, { onDelete: "cascade" }),
+  type: text("type").notNull(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  priority: ticketPriorityEnum("priority").default("medium"),
+  amountCents: integer("amount_cents"),
+  status: approvalRequestStatusEnum("status").default("pending"),
+  payload: jsonb("payload").$type<Record<string, unknown>>().default({}),
+  fulfillmentTicketId: varchar("fulfillment_ticket_id"),
+  noManagerAssigned: boolean("no_manager_assigned").default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const portalApprovalSteps = pgTable("portal_approval_steps", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  requestId: varchar("request_id")
+    .notNull()
+    .references(() => portalApprovalRequests.id, { onDelete: "cascade" }),
+  stepOrder: integer("step_order").notNull(),
+  stepType: approvalStepTypeEnum("step_type").notNull(),
+  approverUserId: varchar("approver_user_id").references(() => portalUsers.id, {
+    onDelete: "set null",
+  }),
+  status: approvalStepStatusEnum("status").default("pending"),
+  note: text("note"),
+  actedAt: timestamp("acted_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 /** Service order form submissions from /portal/order-form */

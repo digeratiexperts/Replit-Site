@@ -4,7 +4,7 @@ import path from "node:path";
 export default defineConfig({
   test: {
     environment: "node",
-    include: ["client/src/**/*.test.ts", "scripts/**/*.test.ts"],
+    include: ["client/src/**/*.test.ts", "server/**/*.test.ts", "scripts/**/*.test.ts"],
   },
   resolve: {
     alias: {

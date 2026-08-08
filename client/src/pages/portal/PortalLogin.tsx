@@ -46,33 +46,50 @@ export default function PortalLogin() {
     }
 
     if (zohoSso === "1" && token) {
-      try {
-        const payloadPart = token.split(".")[1];
-        const payload = payloadPart
-          ? JSON.parse(atob(payloadPart.replace(/-/g, "+").replace(/_/g, "/")))
-          : null;
-        const user = {
-          id: payload?.userId || "portal-user",
-          email: payload?.email || "",
-          role: payload?.role || "user",
-          storeRole: payload?.storeRole || "prospect",
-          clientId: payload?.clientId ?? null,
-          fullName: payload?.email?.split("@")[0] || "Portal User",
-        };
-        localStorage.setItem("portalUser", JSON.stringify(user));
-        localStorage.setItem("portalToken", token);
-        localStorage.setItem("portalUserId", user.id);
-        if (user.email) localStorage.setItem("userEmail", user.email);
-        const dest =
-          returnTo.startsWith("/portal") && !returnTo.startsWith("//")
-            ? returnTo
-            : "/portal/dashboard";
-        window.history.replaceState({}, "", "/portal/login");
-        navigate(dest);
-        return;
-      } catch {
-        setError("Zoho sign-in completed but session handoff failed. Please try again.");
-      }
+      (async () => {
+        try {
+          const payloadPart = token.split(".")[1];
+          const payload = payloadPart
+            ? JSON.parse(atob(payloadPart.replace(/-/g, "+").replace(/_/g, "/")))
+            : null;
+          localStorage.setItem("portalToken", token);
+          try {
+            const meRes = await fetch("/api/portal/me", {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            const meData = await meRes.json();
+            if (meRes.ok && meData.user) {
+              localStorage.setItem("portalUser", JSON.stringify(meData.user));
+              localStorage.setItem("portalUserId", meData.user.id);
+              if (meData.user.email) localStorage.setItem("userEmail", meData.user.email);
+            } else {
+              const user = {
+                id: payload?.userId || "portal-user",
+                email: payload?.email || "",
+                role: payload?.role || "user",
+                storeRole: payload?.storeRole || "prospect",
+                clientId: payload?.clientId ?? null,
+                orgRole: payload?.orgRole || "staff",
+                fullName: payload?.email?.split("@")[0] || "Portal User",
+              };
+              localStorage.setItem("portalUser", JSON.stringify(user));
+              localStorage.setItem("portalUserId", user.id);
+              if (user.email) localStorage.setItem("userEmail", user.email);
+            }
+          } catch {
+            /* navigate with token; capabilities refresh on next /me */
+          }
+          const dest =
+            returnTo.startsWith("/portal") && !returnTo.startsWith("//")
+              ? returnTo
+              : "/portal/dashboard";
+          window.history.replaceState({}, "", "/portal/login");
+          navigate(dest);
+        } catch {
+          setError("Zoho sign-in completed but session handoff failed. Please try again.");
+        }
+      })();
+      return;
     }
 
     let cancelled = false;

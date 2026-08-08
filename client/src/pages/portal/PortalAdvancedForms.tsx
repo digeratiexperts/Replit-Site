@@ -160,12 +160,12 @@ const formTemplates: FormTemplate[] = [
       },
       {
         id: "approverEmail",
-        label: "Manager / approver email",
-        type: "email",
+        label: "Additional approver note (optional)",
+        type: "text",
         required: false,
-        placeholder: "manager@company.com",
+        placeholder: "Context for your manager or IT Contact",
         helperText:
-          "Optional but recommended for admin/privileged requests. DE may route for client approval before provisioning.",
+          "Approval routes automatically to your manager (and skip-level when required), then your Company/Department IT Contact — configured under People & Org.",
       },
       {
         id: "urgency",
@@ -403,14 +403,32 @@ export function PortalAdvancedForms() {
 
     try {
       const payload = buildTicketPayload(selectedTemplate, formData, visibleFields);
-      const response = await fetch("/api/portal/tickets", {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("portalToken")}`,
+      const needsApproval =
+        selectedTemplate.id === "FT-001" ||
+        selectedTemplate.id === "FT-002" ||
+        /access|device|license|hardware/i.test(selectedTemplate.name);
+
+      const response = await fetch(
+        needsApproval ? "/api/portal/approvals" : "/api/portal/tickets",
+        {
+          method: "POST",
+          body: JSON.stringify(
+            needsApproval
+              ? {
+                  type: selectedTemplate.ticketCategory || selectedTemplate.name,
+                  title: payload.subject,
+                  description: payload.description,
+                  priority: payload.priority,
+                  payload: { formId: selectedTemplate.id, fields: formData },
+                }
+              : payload,
+          ),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("portalToken")}`,
+          },
         },
-      });
+      );
 
       const result = await response.json().catch(() => ({}));
       if (!response.ok) {
@@ -418,14 +436,17 @@ export function PortalAdvancedForms() {
       }
 
       queryClient.invalidateQueries({ queryKey: ["/api/portal/tickets"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/portal/approvals"] });
       queryClient.invalidateQueries({ queryKey: ["/api/portal/dashboard"] });
 
-      setTicketNumber(result.ticket?.ticketNumber || null);
+      setTicketNumber(
+        result.request?.requestNumber || result.ticket?.ticketNumber || null,
+      );
       setSubmitted(true);
       setTimeout(() => {
         setSubmitted(false);
         resetForm();
-        navigate("/portal/tickets");
+        navigate(needsApproval ? "/portal/approvals" : "/portal/tickets");
       }, 2500);
     } catch (err) {
       setSubmitError(
@@ -447,11 +468,11 @@ export function PortalAdvancedForms() {
             </p>
             <p className="text-sm text-green-600 dark:text-green-400 mt-1">
               {ticketNumber
-                ? `Ticket ${ticketNumber} was created and queued for processing.`
-                : "A support ticket was created and queued for processing."}
+                ? `Reference ${ticketNumber} was created.`
+                : "Your request was created."}
             </p>
             <p className="text-xs text-green-600/80 dark:text-green-400/80 mt-2">
-              Redirecting to your tickets…
+              Redirecting…
             </p>
           </CardContent>
         </Card>
@@ -524,7 +545,8 @@ export function PortalAdvancedForms() {
             <div className="flex gap-3">
               <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" aria-hidden />
               <p className="text-sm text-blue-800 dark:text-blue-300">
-                Use this form for access to systems DE manages for your organization (Microsoft 365 / Entra ID,
+                Submitting starts an approval workflow (your manager → optional skip-level → IT Contact) before
+                Digerati provisions access. Use this form for systems DE manages (Microsoft 365 / Entra ID,
                 VPN/remote access, apps, shared mailboxes, file storage, privileged access, network resources,
                 UCaaS, and Client Portal). For break/fix issues, open a regular support ticket instead.
               </p>

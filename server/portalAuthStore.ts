@@ -21,6 +21,10 @@ export type PortalAuthUser = {
   role: string;
   storeRole?: StoreRole | string | null;
   clientId?: string | null;
+  orgRole?: "staff" | "manager" | "dept_it_contact" | "company_it_contact" | string | null;
+  departmentId?: string | null;
+  managerUserId?: string | null;
+  isCompanyItContact?: boolean;
   emailVerified?: boolean;
   isActive?: boolean;
   mfaEnabled?: boolean;
@@ -67,6 +71,10 @@ function rowToUser(row: typeof portalUsersTable.$inferSelect): PortalAuthUser {
     role: row.role || "user",
     storeRole: row.storeRole,
     clientId: row.clientId,
+    orgRole: (row as any).orgRole || "staff",
+    departmentId: (row as any).departmentId || null,
+    managerUserId: (row as any).managerUserId || null,
+    isCompanyItContact: !!(row as any).isCompanyItContact,
     emailVerified: row.emailVerified ?? false,
     isActive: row.isActive ?? true,
     mfaEnabled: row.mfaEnabled ?? false,
@@ -116,6 +124,12 @@ async function ensureSchema() {
         created_at timestamp DEFAULT now() NOT NULL
       )
     `);
+    try {
+      const { ensureOrgSchema } = await import("./portalOrg");
+      await ensureOrgSchema();
+    } catch {
+      /* org schema optional at boot */
+    }
   } catch (err: any) {
     console.warn("[portalAuthStore] schema ensure:", err?.message);
   }
@@ -133,6 +147,10 @@ async function upsertUserDb(user: PortalAuthUser) {
       role: (user.role as "admin" | "user" | "viewer") || "user",
       storeRole: (user.storeRole as StoreRole) || "prospect",
       clientId: user.clientId || null,
+      orgRole: (user.orgRole as "staff" | "manager" | "dept_it_contact" | "company_it_contact") || "staff",
+      departmentId: user.departmentId || null,
+      managerUserId: user.managerUserId || null,
+      isCompanyItContact: user.isCompanyItContact ?? false,
       emailVerified: user.emailVerified ?? false,
       isActive: user.isActive ?? true,
       mfaEnabled: user.mfaEnabled ?? false,
@@ -154,6 +172,10 @@ async function upsertUserDb(user: PortalAuthUser) {
           role: values.role,
           storeRole: values.storeRole,
           clientId: values.clientId,
+          orgRole: values.orgRole,
+          departmentId: values.departmentId,
+          managerUserId: values.managerUserId,
+          isCompanyItContact: values.isCompanyItContact,
           emailVerified: values.emailVerified,
           isActive: values.isActive,
           mfaEnabled: values.mfaEnabled,
@@ -267,14 +289,50 @@ function seedDemoIfNotProduction() {
   for (const c of demoCompanies) setClient(c);
 
   const demos: PortalAuthUser[] = [
-    { id: "user-001", email: "john.smith@acme.com", username: "johnsmith", password: ADMIN_HASH, role: "user", storeRole: "managed", fullName: "John Smith", clientId: "client-1", emailVerified: true, isActive: true },
-    { id: "user-002", email: "sarah.jones@phoenixmedical.com", username: "sarahjones", password: ADMIN_HASH, role: "user", storeRole: "managed", fullName: "Sarah Jones", clientId: "client-2", emailVerified: true, isActive: true },
-    { id: "user-003", email: "admin@alamoindustries.com", username: "alamoadmin", password: "$2b$12$N9Ys4.kLCKht2rMjK4x0TOJHlQlxY7dRzAT6vmC7.mGrjck7TUI7O", role: "user", storeRole: "comanaged", fullName: "Maria Garcia", clientId: "client-5", emailVerified: true, isActive: true },
-    { id: "user-004", email: "admin@selmachining.com", username: "seladmin", password: "$2b$12$m6eyC5YfWBIG4/beE40TxOeG5BG4v/MxsowQ4Ays9RrjhOzcVxx.a", role: "user", storeRole: "comanaged", fullName: "Sel Operations", clientId: "client-6", emailVerified: true, isActive: true },
+    { id: "user-001", email: "john.smith@acme.com", username: "johnsmith", password: ADMIN_HASH, role: "user", storeRole: "managed", fullName: "John Smith", clientId: "client-1", orgRole: "company_it_contact", isCompanyItContact: true, emailVerified: true, isActive: true },
+    { id: "user-002", email: "sarah.jones@phoenixmedical.com", username: "sarahjones", password: ADMIN_HASH, role: "user", storeRole: "managed", fullName: "Sarah Jones", clientId: "client-2", orgRole: "company_it_contact", isCompanyItContact: true, emailVerified: true, isActive: true },
+    { id: "user-003", email: "admin@alamoindustries.com", username: "alamoadmin", password: "$2b$12$N9Ys4.kLCKht2rMjK4x0TOJHlQlxY7dRzAT6vmC7.mGrjck7TUI7O", role: "user", storeRole: "comanaged", fullName: "Maria Garcia", clientId: "client-5", orgRole: "company_it_contact", isCompanyItContact: true, emailVerified: true, isActive: true },
+    { id: "user-004", email: "admin@selmachining.com", username: "seladmin", password: "$2b$12$m6eyC5YfWBIG4/beE40TxOeG5BG4v/MxsowQ4Ays9RrjhOzcVxx.a", role: "user", storeRole: "comanaged", fullName: "Sel Operations", clientId: "client-6", orgRole: "company_it_contact", isCompanyItContact: true, emailVerified: true, isActive: true },
   ];
   for (const u of demos) {
     if (!getUser(u.email)) setUser(u);
   }
+}
+
+/** Update org hierarchy fields for a portal user (People & org admin). */
+export function updateUserOrgFields(
+  userId: string,
+  patch: {
+    orgRole?: PortalAuthUser["orgRole"];
+    departmentId?: string | null;
+    managerUserId?: string | null;
+    isCompanyItContact?: boolean;
+    fullName?: string;
+  },
+): PortalAuthUser | null {
+  const existing = listUniqueUsers().find((u) => u.id === userId);
+  if (!existing) return null;
+  if (patch.isCompanyItContact && existing.clientId) {
+    for (const u of listUniqueUsers()) {
+      if (u.clientId === existing.clientId && u.id !== userId && u.isCompanyItContact) {
+        u.isCompanyItContact = false;
+        if (u.orgRole === "company_it_contact") u.orgRole = "staff";
+        setUser(u);
+      }
+    }
+  }
+  const next: PortalAuthUser = {
+    ...existing,
+    ...patch,
+    orgRole: patch.orgRole !== undefined ? patch.orgRole : existing.orgRole,
+    departmentId: patch.departmentId !== undefined ? patch.departmentId : existing.departmentId,
+    managerUserId: patch.managerUserId !== undefined ? patch.managerUserId : existing.managerUserId,
+    isCompanyItContact:
+      patch.isCompanyItContact !== undefined ? patch.isCompanyItContact : existing.isCompanyItContact,
+  };
+  if (next.isCompanyItContact) next.orgRole = "company_it_contact";
+  setUser(next);
+  return next;
 }
 
 export async function initPortalAuthStore(): Promise<void> {

@@ -35,6 +35,7 @@ import {
   listClients as portalAuthListClients,
   createProspectClientForUser,
   saveOrderForm,
+  updateUserOrgFields,
 } from "./portalAuthStore";
 import {
   initPortalChatStore,
@@ -52,6 +53,27 @@ import {
   submitSurveyResponse,
   getSurveyStoreStatus,
 } from "./portalSurveyStore";
+import {
+  initPortalOrg,
+  canInitiateChat,
+  canAccessApprovals,
+  canManageOrg,
+  orgPublicUser,
+  listClientUsers,
+  listDepartments,
+  createDepartment,
+  updateDepartment,
+  findUserById,
+  type OrgUserFields,
+} from "./portalOrg";
+import {
+  initPortalApprovals,
+  createApprovalRequest,
+  listApprovalsForUser,
+  getApprovalWithSteps,
+  actOnApproval,
+  attachFulfillmentTicket,
+} from "./portalApprovalsStore";
 
 const JWT_SECRET = process.env.JWT_SECRET || randomBytes(32).toString('hex');
 const SALT_ROUNDS = 12;
@@ -71,6 +93,10 @@ interface JWTPayload {
   role: string;
   storeRole?: string;
   clientId?: string | null;
+  orgRole?: string | null;
+  departmentId?: string | null;
+  managerUserId?: string | null;
+  isCompanyItContact?: boolean;
   iat?: number;
   exp?: number;
 }
@@ -95,7 +121,19 @@ export function authMiddleware(req: AuthenticatedRequest, res: Response, next: N
   
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
-    req.user = { id: decoded.userId, email: decoded.email, role: decoded.role, storeRole: decoded.storeRole || 'public', clientId: decoded.clientId || null };
+    const live = portalAuthGetUser(decoded.email) || (decoded.userId ? findUserById(decoded.userId) : null);
+    req.user = {
+      id: decoded.userId,
+      email: decoded.email,
+      role: decoded.role,
+      storeRole: decoded.storeRole || "public",
+      clientId: live?.clientId ?? decoded.clientId ?? null,
+      orgRole: live?.orgRole ?? decoded.orgRole ?? "staff",
+      departmentId: live?.departmentId ?? decoded.departmentId ?? null,
+      managerUserId: live?.managerUserId ?? decoded.managerUserId ?? null,
+      isCompanyItContact: live?.isCompanyItContact ?? decoded.isCompanyItContact ?? false,
+      fullName: live?.fullName,
+    };
     req.userId = decoded.userId;
     
     // Optional session validation from cookies
@@ -155,6 +193,83 @@ export function requireAdmin(req: AuthenticatedRequest, res: Response, next: Nex
     return res.status(403).json({ error: 'Admin access required' });
   }
   next();
+}
+
+function asOrgUser(req: AuthenticatedRequest): OrgUserFields {
+  return {
+    id: req.user?.id || req.userId || "",
+    email: req.user?.email || "",
+    fullName: req.user?.fullName || req.user?.email || "",
+    role: req.user?.role || "user",
+    orgRole: req.user?.orgRole || "staff",
+    clientId: req.user?.clientId || null,
+    departmentId: req.user?.departmentId || null,
+    managerUserId: req.user?.managerUserId || null,
+    isCompanyItContact: !!req.user?.isCompanyItContact,
+  };
+}
+
+function requireChatAccess(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  if (!req.user) return res.status(401).json({ error: "Authentication required" });
+  if (!canInitiateChat(asOrgUser(req))) {
+    return res.status(403).json({
+      error: "Live Chat is limited to your company's IT Contact. Submit a ticket or request instead.",
+      code: "CHAT_IT_CONTACT_ONLY",
+    });
+  }
+  next();
+}
+
+function requireApprovalsAccess(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  if (!req.user) return res.status(401).json({ error: "Authentication required" });
+  // Staff may view their own submissions; mutating actions check assignee in store
+  next();
+}
+
+function requireOrgManage(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  if (!req.user) return res.status(401).json({ error: "Authentication required" });
+  if (!canManageOrg(asOrgUser(req))) {
+    return res.status(403).json({ error: "Company IT Contact or DE admin required" });
+  }
+  next();
+}
+
+function buildPortalJwtClaims(user: any, storeRole: StoreRole) {
+  return {
+    userId: user.id,
+    email: user.email,
+    role: user.role,
+    storeRole,
+    clientId: user.clientId || null,
+    orgRole: user.orgRole || (user.role === "admin" ? "company_it_contact" : "staff"),
+    departmentId: user.departmentId || null,
+    managerUserId: user.managerUserId || null,
+    isCompanyItContact: !!user.isCompanyItContact || user.role === "admin",
+  };
+}
+
+function publicPortalUser(user: any, storeRole: StoreRole) {
+  const org = {
+    id: user.id,
+    email: user.email,
+    fullName: user.fullName,
+    role: user.role,
+    orgRole: user.orgRole || "staff",
+    clientId: user.clientId || null,
+    departmentId: user.departmentId || null,
+    managerUserId: user.managerUserId || null,
+    isCompanyItContact: !!user.isCompanyItContact,
+  };
+  return {
+    id: user.id,
+    email: user.email,
+    username: user.username,
+    fullName: user.fullName,
+    role: user.role,
+    storeRole,
+    clientId: user.clientId || null,
+    ...orgPublicUser(org),
+  };
 }
 
 // Generate JWT token
@@ -221,6 +336,8 @@ export async function registerRoutes(app: Express) {
 
   // Durable portal auth (Neon) — Map-compatible shim for existing handlers
   await initPortalAuthStore();
+  await initPortalOrg();
+  await initPortalApprovals();
   await initPortalChatStore();
   await initPortalSurveyStore();
   const portalUsers = {
@@ -707,8 +824,10 @@ export async function registerRoutes(app: Express) {
   });
 
   // Live chat status — HTTP poll transport (WebSocket /api/ws is not used in production)
-  app.get("/api/portal/chat/status", [authMiddleware], async (_req: AuthenticatedRequest, res: Response) => {
+  app.get("/api/portal/chat/status", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
+      const org = asOrgUser(req);
+      const allowed = canInitiateChat(org);
       const store = getChatStoreStatus();
       const openaiConfigured = !!(
         process.env.OPENAI_API_KEY ||
@@ -717,11 +836,15 @@ export async function registerRoutes(app: Express) {
       );
       res.json({
         success: true,
-        connected: true,
+        connected: allowed,
+        allowed,
         transport: store.transport,
         durable: store.durable,
         assistantAvailable: openaiConfigured,
         supportHours: "Monday - Friday, 9 AM - 6 PM EST",
+        message: allowed
+          ? undefined
+          : "Live Chat is limited to your Company or Department IT Contact. Submit a ticket, request, or infrastructure issue instead.",
       });
     } catch (error: any) {
       res.status(500).json({ success: false, connected: false, error: error.message });
@@ -729,7 +852,7 @@ export async function registerRoutes(app: Express) {
   });
 
   // Live chat — send message (persisted + AI support reply)
-  app.post("/api/portal/chat/messages", [authMiddleware, chatRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  app.post("/api/portal/chat/messages", [authMiddleware, requireChatAccess, chatRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
       if (!req.userId) {
         return res.status(401).json({ error: "Authentication required" });
@@ -793,7 +916,7 @@ export async function registerRoutes(app: Express) {
   });
 
   // Live chat — history / poll (optional ?since=ISO for incremental updates)
-  app.get("/api/portal/chat/messages", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+  app.get("/api/portal/chat/messages", [authMiddleware, requireChatAccess], async (req: AuthenticatedRequest, res: Response) => {
     try {
       if (!req.userId) {
         return res.status(401).json({ error: "Authentication required" });
@@ -812,6 +935,267 @@ export async function registerRoutes(app: Express) {
       });
     } catch (error: any) {
       res.status(500).json({ error: error.message, connected: false });
+    }
+  });
+
+  // ----- Portal org / multi-role -----
+  app.get("/api/portal/me", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const live = portalAuthGetUser(req.user!.email) || findUserById(req.userId!);
+      if (!live) return res.status(404).json({ error: "User not found" });
+      let storeRole: StoreRole = (live.storeRole as StoreRole) || "prospect";
+      if (live.role === "admin") storeRole = "admin";
+      res.json({ success: true, user: publicPortalUser(live, storeRole) });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/portal/org/people", [authMiddleware, requireOrgManage], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const clientId = req.user!.clientId;
+      if (!clientId && req.user!.role !== "admin") {
+        return res.status(400).json({ error: "No client associated" });
+      }
+      const targetClient = (req.query.clientId as string) || clientId;
+      if (!targetClient) return res.status(400).json({ error: "clientId required" });
+      if (req.user!.role !== "admin" && targetClient !== clientId) {
+        return res.status(403).json({ error: "Forbidden" });
+      }
+      const people = listClientUsers(targetClient).map((u) => orgPublicUser(u));
+      const departments = await listDepartments(targetClient);
+      res.json({ success: true, people, departments });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.patch("/api/portal/org/people/:userId", [authMiddleware, requireOrgManage, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const target = findUserById(req.params.userId);
+      if (!target) return res.status(404).json({ error: "User not found" });
+      if (req.user!.role !== "admin" && target.clientId !== req.user!.clientId) {
+        return res.status(403).json({ error: "Forbidden" });
+      }
+      const { orgRole, departmentId, managerUserId, isCompanyItContact, fullName } = req.body || {};
+      if (managerUserId) {
+        const mgr = findUserById(managerUserId);
+        if (!mgr || mgr.clientId !== target.clientId) {
+          return res.status(400).json({ error: "Manager must be in the same company" });
+        }
+        if (managerUserId === target.id) {
+          return res.status(400).json({ error: "User cannot be their own manager" });
+        }
+      }
+      const updated = updateUserOrgFields(target.id, {
+        orgRole,
+        departmentId: departmentId === undefined ? undefined : departmentId || null,
+        managerUserId: managerUserId === undefined ? undefined : managerUserId || null,
+        isCompanyItContact,
+        fullName,
+      });
+      res.json({ success: true, user: orgPublicUser(updated as OrgUserFields) });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/portal/org/departments", [authMiddleware, requireOrgManage, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const clientId = req.user!.clientId;
+      if (!clientId && req.user!.role !== "admin") {
+        return res.status(400).json({ error: "No client associated" });
+      }
+      const targetClient = req.body.clientId || clientId;
+      if (!targetClient) return res.status(400).json({ error: "clientId required" });
+      if (req.user!.role !== "admin" && targetClient !== clientId) {
+        return res.status(403).json({ error: "Forbidden" });
+      }
+      const name = String(req.body.name || "").trim();
+      if (!name) return res.status(400).json({ error: "Department name required" });
+      const dept = await createDepartment(targetClient, name, req.body.itContactUserId || null);
+      res.status(201).json({ success: true, department: dept });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.patch("/api/portal/org/departments/:id", [authMiddleware, requireOrgManage, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const clientId = req.user!.clientId;
+      if (!clientId && req.user!.role !== "admin") {
+        return res.status(400).json({ error: "No client associated" });
+      }
+      const targetClient = req.body.clientId || clientId;
+      if (!targetClient) return res.status(400).json({ error: "clientId required" });
+      const dept = await updateDepartment(req.params.id, targetClient, {
+        name: req.body.name,
+        itContactUserId: req.body.itContactUserId,
+      });
+      if (!dept) return res.status(404).json({ error: "Department not found" });
+      res.json({ success: true, department: dept });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ----- Approvals -----
+  app.get("/api/portal/approvals", [authMiddleware, requireApprovalsAccess], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const scope = (req.query.scope as "mine" | "team" | "company") || "mine";
+      const org = asOrgUser(req);
+      if (scope !== "mine" && !canAccessApprovals(org) && org.role !== "admin") {
+        return res.status(403).json({ error: "Approvals queue requires manager or IT Contact role" });
+      }
+      const items = await listApprovalsForUser(org, scope);
+      res.json({ success: true, approvals: items });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/portal/approvals/:id", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const bundle = await getApprovalWithSteps(req.params.id);
+      if (!bundle) return res.status(404).json({ error: "Not found" });
+      const org = asOrgUser(req);
+      if (org.role !== "admin" && bundle.request.clientId !== org.clientId) {
+        return res.status(403).json({ error: "Forbidden" });
+      }
+      const isParty =
+        bundle.request.requesterUserId === org.id ||
+        bundle.steps.some((s) => s.approverUserId === org.id) ||
+        canAccessApprovals(org) ||
+        org.role === "admin";
+      if (!isParty) return res.status(403).json({ error: "Forbidden" });
+      const requester = findUserById(bundle.request.requesterUserId);
+      res.json({
+        success: true,
+        approval: {
+          ...bundle.request,
+          requesterName: requester?.fullName,
+          steps: bundle.steps.map((s) => ({
+            ...s,
+            approverName: s.approverUserId ? findUserById(s.approverUserId)?.fullName : null,
+          })),
+        },
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/portal/approvals", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const org = asOrgUser(req);
+      if (!org.clientId) {
+        return res.status(400).json({ error: "No client account associated with this user." });
+      }
+      const { type, title, description, priority, amountCents, payload } = req.body || {};
+      if (!type || !title || !description) {
+        return res.status(400).json({ error: "type, title, and description are required" });
+      }
+      const created = await createApprovalRequest({
+        clientId: org.clientId,
+        requester: org,
+        type: String(type),
+        title: String(title),
+        description: String(description),
+        priority: priority || "medium",
+        amountCents: typeof amountCents === "number" ? amountCents : null,
+        payload: payload && typeof payload === "object" ? payload : {},
+      });
+      res.status(201).json({ success: true, ...created });
+      logSecurityEvent("APPROVAL_CREATED", req, { requestId: created.request.id });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  async function fulfillApprovedRequest(requestId: string, req: AuthenticatedRequest) {
+    const bundle = await getApprovalWithSteps(requestId);
+    if (!bundle || bundle.request.status !== "approved") return null;
+    if (bundle.request.fulfillmentTicketId) return bundle.request.fulfillmentTicketId;
+
+    const ticketNumber = `TKT-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 5).toUpperCase()}`;
+    const ticket = await storage.createPortalTicket({
+      clientId: bundle.request.clientId,
+      createdBy: bundle.request.requesterUserId,
+      ticketNumber,
+      subject: `[Approved] ${bundle.request.title}`,
+      description:
+        `${bundle.request.description}\n\n---\nApproved via portal workflow ${bundle.request.requestNumber}.\nType: ${bundle.request.type}\n` +
+        `Payload: ${JSON.stringify(bundle.request.payload || {}, null, 2)}`,
+      status: "open",
+      priority: bundle.request.priority || "medium",
+      category: bundle.request.type || "Access & Security",
+    });
+    await attachFulfillmentTicket(requestId, ticket.id);
+
+    try {
+      const { zohoDeskService } = await import("./zoho/zohoDesk");
+      const { zohoClient } = await import("./zoho/zohoClient");
+      if (zohoClient.isConfigured()) {
+        const requester = findUserById(bundle.request.requesterUserId);
+        await zohoDeskService.createTicket({
+          subject: `[Approved] ${bundle.request.title}`,
+          description: bundle.request.description,
+          email: requester?.email,
+          priority: bundle.request.priority === "critical" || bundle.request.priority === "high" ? "High" : "Medium",
+        });
+      }
+    } catch (e: any) {
+      console.warn("[approvals] Zoho sync failed:", e?.message);
+    }
+    return ticket.id;
+  }
+
+  app.post("/api/portal/approvals/:id/approve", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const result = await actOnApproval({
+        requestId: req.params.id,
+        actor: asOrgUser(req),
+        action: "approve",
+        note: req.body?.note,
+      });
+      let fulfillmentTicketId: string | null = null;
+      if (result.finalized && !result.rejected) {
+        fulfillmentTicketId = await fulfillApprovedRequest(req.params.id, req);
+      }
+      res.json({ success: true, ...result, fulfillmentTicketId });
+    } catch (error: any) {
+      const status = /Forbidden|not the current/i.test(error.message) ? 403 : 400;
+      res.status(status).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/portal/approvals/:id/reject", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const result = await actOnApproval({
+        requestId: req.params.id,
+        actor: asOrgUser(req),
+        action: "reject",
+        note: req.body?.note,
+      });
+      res.json({ success: true, ...result });
+    } catch (error: any) {
+      const status = /Forbidden|not the current/i.test(error.message) ? 403 : 400;
+      res.status(status).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/portal/approvals/:id/request-info", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const result = await actOnApproval({
+        requestId: req.params.id,
+        actor: asOrgUser(req),
+        action: "request-info",
+        note: req.body?.note,
+      });
+      res.json({ success: true, ...result });
+    } catch (error: any) {
+      const status = /Forbidden|not the current/i.test(error.message) ? 403 : 400;
+      res.status(status).json({ error: error.message });
     }
   });
 
@@ -1495,11 +1879,7 @@ export async function registerRoutes(app: Express) {
       else if (client?.serviceType === 'comanaged') storeRole = 'comanaged';
     }
 
-    const token = jwt.sign(
-      { userId: user.id, email: user.email, role: user.role, storeRole, clientId: user.clientId || null },
-      JWT_SECRET,
-      { expiresIn: '24h' }
-    );
+    const token = jwt.sign(buildPortalJwtClaims(user, storeRole), JWT_SECRET, { expiresIn: "24h" });
 
     res.cookie('sessionId', sessionId, {
       httpOnly: true,
@@ -1515,15 +1895,7 @@ export async function registerRoutes(app: Express) {
       success: true,
       token,
       sessionId,
-      user: {
-        id: user.id,
-        email: user.email,
-        username: user.username,
-        fullName: user.fullName,
-        role: user.role,
-        storeRole,
-        clientId: user.clientId || null,
-      },
+      user: publicPortalUser(user, storeRole),
     });
   }
 
@@ -1543,11 +1915,7 @@ export async function registerRoutes(app: Express) {
       else if (client?.serviceType === "comanaged") storeRole = "comanaged";
     }
 
-    const token = jwt.sign(
-      { userId: user.id, email: user.email, role: user.role, storeRole, clientId: user.clientId || null },
-      JWT_SECRET,
-      { expiresIn: "24h" },
-    );
+    const token = jwt.sign(buildPortalJwtClaims(user, storeRole), JWT_SECRET, { expiresIn: "24h" });
 
     res.cookie("sessionId", sessionId, {
       httpOnly: true,

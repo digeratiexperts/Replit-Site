@@ -42,8 +42,21 @@ Master emails (always admin on SSO): `admin@digeratiexperts.com`, `admin@digerat
 
 | Layer | Values |
 |-------|--------|
-| Portal role | admin / user / viewer |
+| Portal role | admin / user / viewer (DE `admin` = MSP operator) |
 | Store role | public / prospect / managed / comanaged / admin |
+| **Org role** (client hierarchy) | staff / manager / dept_it_contact / company_it_contact |
+
+### Org hierarchy (multi-tenant + multi-role)
+
+- Each `portal_clients` company has users with `orgRole`, optional `departmentId`, and `managerUserId` (boss).
+- **Company IT Contact** (`isCompanyItContact` / `company_it_contact`): primary liaison for day-to-day IT communication with Digerati; can manage People & Org; can use Live Chat.
+- **Department IT Contact** (optional): dept-scoped liaison + chat.
+- **Manager**: approves direct reports’ access/spend-style requests; optional skip-level when priority is high/critical or amount ≥ $1,000.
+- **Staff**: Support Tickets, Request Forms, Infrastructure Issues only (no Live Chat initiate, no Approvals queue, no org admin).
+
+Approval flow: requester → manager → (skip-level) → dept IT / company IT → on final approve, fulfillment ticket for DE.
+
+APIs: `/api/portal/me`, `/api/portal/approvals*`, `/api/portal/org/people`, `/api/portal/org/departments`.
 
 Checkout requires comanaged or admin. Admin APIs use requireAdmin.
 
