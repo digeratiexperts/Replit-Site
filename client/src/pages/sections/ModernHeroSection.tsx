@@ -24,10 +24,10 @@ export const ModernHeroSection = (): JSX.Element => {
   const floatingY3 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -20]);
 
   const features = [
-    { icon: FileCheck, text: "Insurance & Compliance-Ready" },
-    { icon: Shield, text: "24/7 Human-Led Monitoring" },
-    { icon: Building, text: "Built for Small Businesses" },
-    { icon: CheckCircle, text: "Easy-to-Read Risk Reports" },
+    { icon: Building, text: "Arizona-based" },
+    { icon: CheckCircle, text: "Principal-led" },
+    { icon: FileCheck, text: "Client-owned access" },
+    { icon: Shield, text: "No vendor lock-in" },
   ];
 
   const handleSchedule = () => {
@@ -116,20 +116,20 @@ export const ModernHeroSection = (): JSX.Element => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: prefersReducedMotion ? 0 : 0.35, delay: prefersReducedMotion ? 0 : 0.05 }}
               >
-                Arizona MSP · Cybersecurity &amp; Managed IT
+                Arizona cybersecurity-first managed IT
               </motion.p>
 
               <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold leading-[1.08] tracking-[-0.02em] text-white">
-                Your Arizona business,{" "}
+                Managed IT and cybersecurity, built to{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-300 via-pink-400 to-violet-300">
-                  protected 24/7.
+                  reduce risk and keep your business moving.
                 </span>
               </h1>
 
               <p className="text-base md:text-lg text-white/85 leading-relaxed max-w-xl">
-                Cybersecurity and managed IT for growing businesses—reducing risk, supporting
-                compliance, and keeping your team productive without building an internal IT
-                department.
+                Digerati Experts brings day-to-day IT, identity, endpoint, email, backup, network,
+                security operations, and strategic guidance into one accountable operating model for
+                Arizona businesses.
               </p>
 
               <div className="grid grid-cols-1 xs:grid-cols-2 gap-x-4 gap-y-2.5 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-2.5">
@@ -158,31 +158,30 @@ export const ModernHeroSection = (): JSX.Element => {
                   onClick={handleSchedule}
                   className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-semibold bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white border border-pink-300/35 shadow-lg shadow-pink-500/40 hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300"
                 >
-                  Schedule Your Cyber Risk Assessment
+                  Schedule a Cyber Risk Assessment
                   <ArrowRight className="ml-2 w-5 h-5" aria-hidden="true" />
                 </Button>
 
-                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-white/70">
-                  <span className="inline-flex items-center gap-1.5">
-                    <Check className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
-                    No obligation
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <Check className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
-                    Response within one business day
-                  </span>
+                <a
+                  href="/proactive-ecosystem-pricing"
+                  className="text-sm font-medium text-pink-300 hover:text-pink-200 underline underline-offset-4"
+                  data-testid="link-hero-pricing"
+                >
+                  See ProActive Ecosystem Pricing
+                </a>
+
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-white/70">
+                  {["Arizona-based", "Principal-led", "Client-owned access", "No vendor lock-in"].map(
+                    (label) => (
+                      <span key={label} className="inline-flex items-center gap-1.5">
+                        <Check className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
+                        {label}
+                      </span>
+                    ),
+                  )}
                 </div>
 
-                <p className="text-sm text-white/70 max-w-lg leading-relaxed">
-                  Start with a practical review of your identity, endpoints, email, backups, and
-                  security posture.
-                </p>
-
                 <p className="text-sm sm:text-base text-white/70">
-                  Arizona-based · Principal-led · Recommendations sized to your business
-                  <span className="mx-2 text-white/35" aria-hidden="true">
-                    ·
-                  </span>
                   Or call{" "}
                   <a
                     href="tel:325-480-9870"

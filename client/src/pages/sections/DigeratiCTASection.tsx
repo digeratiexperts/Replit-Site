@@ -35,11 +35,11 @@ export const DigeratiCTASection = (): JSX.Element => {
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight mb-6 relative overflow-hidden">
             <span className="relative z-10">
-              Get a{" "}
+              Know your{" "}
               <span className="text-violet-400">
-                $20,000 Pen Test
+                cyber risk
               </span>
-              {" "}– Free
+              {" "}before you buy
             </span>
             {/* Light sweep animation - hidden for reduced motion */}
             {!prefersReducedMotion && (
@@ -65,7 +65,7 @@ export const DigeratiCTASection = (): JSX.Element => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-lg md:text-xl text-gray-300 leading-relaxed mb-2"
         >
-          Discover vulnerabilities before attackers do – without paying a cent.
+          A Cyber Risk Assessment prioritizes identity, endpoint, email, backup, and recovery gaps — then maps a clear path into the right ProActive package.
         </motion.p>
         <motion.p
           initial={{ opacity: 0 }}
@@ -74,7 +74,7 @@ export const DigeratiCTASection = (): JSX.Element => {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="text-sm text-gray-400 mb-6"
         >
-          *With qualifying managed services package. Limited availability.
+          No invented freebies — assessment-led recommendations, then scoped pricing.
         </motion.p>
         
         {/* Stars */}
@@ -105,7 +105,7 @@ export const DigeratiCTASection = (): JSX.Element => {
           transition={{ duration: 0.5, delay: 0.6 }}
           className="text-gray-300 mb-10 font-semibold"
         >
-          Trusted by 100+ Arizona Businesses.
+          Arizona-based · Principal-led · Assessment-led recommendations
         </motion.p>
         
         {/* CTA Button with intense glow */}
@@ -115,17 +115,15 @@ export const DigeratiCTASection = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.7 }}
         >
-          <motion.button
+          <motion.a
+            href="/book"
             className="h-14 px-10 rounded-xl bg-white text-black text-lg font-semibold inline-flex items-center justify-center gap-2 whitespace-nowrap transition-all duration-300 hover:bg-white/90"
             data-testid="button-cta-assessment"
-            onClick={() => {
-              document.getElementById('assessment-form')?.scrollIntoView({ behavior: 'smooth' });
-            }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            Get My Free Assessment
-          </motion.button>
+            Schedule a Cyber Risk Assessment
+          </motion.a>
         </motion.div>
         
         {/* Floating Badge Strip */}

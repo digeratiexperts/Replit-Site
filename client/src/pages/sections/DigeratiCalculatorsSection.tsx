@@ -335,6 +335,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent className="bg-[#1a1a1a] border-white/10 rounded-xl">
+                                <SelectItem value={String(pricing.it.user)} className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white rounded-lg" data-testid="option-it">IT - ${pricing.it.user}/user/mo</SelectItem>
                                 <SelectItem value={String(pricing.office.user)} className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white rounded-lg" data-testid="option-office">Office - ${pricing.office.user}/user/mo</SelectItem>
                                 <SelectItem value={String(pricing.business.user)} className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white rounded-lg" data-testid="option-business">Business - ${pricing.business.user}/user/mo</SelectItem>
                                 <SelectItem value={String(pricing.enterprise.user)} className="text-white hover:bg-white/10 focus:bg-white/10 focus:text-white rounded-lg" data-testid="option-enterprise">Enterprise - ${pricing.enterprise.user}/user/mo</SelectItem>

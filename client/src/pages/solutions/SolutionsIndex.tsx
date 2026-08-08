@@ -8,7 +8,7 @@ import {
   BarChart3, Clock, Phone, Award
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
-import { pricing, getPricingFooterText } from "@/data/pricing";
+import { pricing, pricingTiers, getPricingFooterText } from "@/data/pricing";
 
 const SolutionsIndex = () => {
   const prefersReducedMotion = useReducedMotion();
@@ -19,59 +19,22 @@ const SolutionsIndex = () => {
     canonical: '/solutions',
   });
 
-  const plans = [
-    {
-      name: pricing.office.name,
-      tier: pricing.office.tier,
-      price: pricing.office.user,
-      description: "A clean, managed IT baseline for businesses ready to get organized.",
-      highlight: false,
-      features: [
-        "Email + Calendar + Team Chat",
-        "MFA + SSO + Password Manager",
-        "Endpoint Security (EDR)",
-        "Email Protection (Anti-Phishing)",
-        "Managed Network + Internet",
-        "Service Desk + Backup Strategy"
-      ]
-    },
-    {
-      name: pricing.business.name,
-      tier: pricing.business.tier,
-      price: pricing.business.user,
-      description: "Adds stronger protection, 24/7 monitoring, and proactive threat response.",
-      highlight: true,
-      features: [
-        "Everything in Office",
-        "SOC / MDR Monitoring + Response",
-        "SMART HR + Onboarding Workflows",
-        "Security Awareness Training",
-        "vCIO + Technology Business Reviews",
-        "Cyber Insurance Readiness"
-      ]
-    },
-    {
-      name: pricing.enterprise.name,
-      tier: pricing.enterprise.tier,
-      price: pricing.enterprise.user,
-      description: "Full governance, audit readiness, and regulatory compliance support.",
-      highlight: false,
-      features: [
-        "Everything in Business",
-        "HIPAA / GDPR Compliance Modules",
-        "Penetration Testing (scoped)",
-        "Disaster Recovery Runbooks",
-        "Privileged Access + Audit Logs",
-        "AI & Cloud Automation"
-      ]
-    }
-  ];
+  const plans = pricingTiers.map((tier) => ({
+    name: tier.name,
+    tier: tier.label,
+    price: tier.user,
+    monthlyMinimum: tier.monthlyMinimum,
+    description: tier.note,
+    highlight: !!tier.recommended,
+    features: [...tier.inclusions],
+    learnMoreUrl: tier.learnMoreUrl,
+  }));
 
   const foundationServices = [
     {
       icon: Headphones,
       title: "Service Desk & Support",
-      description: "Fast help for day-to-day issues, questions, and requests—plus escalation when it's more complex. Response times under 15 minutes guaranteed."
+      description: "Fast help for day-to-day issues, questions, and requests—plus escalation when it's more complex. Response targets are defined in your service agreement."
     },
     {
       icon: Wifi,
@@ -416,10 +379,10 @@ const SolutionsIndex = () => {
             
             <div className="grid md:grid-cols-4 gap-6">
               {[
-                { icon: Clock, value: "<15 min", label: "Response Time", description: "Guaranteed SLA" },
-                { icon: Shield, value: "99.9%", label: "Uptime SLA", description: "Enterprise reliability" },
-                { icon: Phone, value: "24/7", label: "Support", description: "Real humans, always" },
-                { icon: Award, value: "$50K+", label: "Avg. Savings", description: "Per client annually" }
+                { icon: Clock, value: "Assessment-led", label: "Engagement", description: "Prioritize before you buy" },
+                { icon: Shield, value: "Client-owned", label: "Access model", description: "Credentials & tenants stay yours" },
+                { icon: Phone, value: "Human support", label: "Service desk", description: "Accountable issue ownership" },
+                { icon: Award, value: "Security-first", label: "Operating model", description: "IT + cyber together" }
               ].map((stat, index) => (
                 <div key={index} className="text-center p-4">
                   <div className="w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center mx-auto mb-3">
