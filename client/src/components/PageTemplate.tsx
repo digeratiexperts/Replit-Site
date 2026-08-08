@@ -14,6 +14,8 @@ interface PageTemplateProps {
   icon?: React.ReactNode;
   breadcrumbs?: { label: string; href?: string }[];
   variant?: "default" | "dark" | "light";
+  /** Optional CTA group rendered under the hero subtitle (conversion pages). */
+  actions?: React.ReactNode;
 }
 
 const FloatingOrbs = ({ prefersReducedMotion }: { prefersReducedMotion: boolean }) => (
@@ -105,7 +107,8 @@ export const PageTemplate = ({
   gradientColors = "from-[#2a0a32] via-[#1a0b3a] to-[#050312]",
   icon,
   breadcrumbs,
-  variant = "dark"
+  variant = "dark",
+  actions,
 }: PageTemplateProps): JSX.Element => {
   const prefersReducedMotion = useReducedMotion() ?? false;
   
@@ -212,6 +215,17 @@ export const PageTemplate = ({
                 >
                   {subtitle}
                 </motion.p>
+              )}
+
+              {actions && (
+                <motion.div
+                  className="mt-8"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2, duration: 0.45 }}
+                >
+                  {actions}
+                </motion.div>
               )}
             </div>
 
