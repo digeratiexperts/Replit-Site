@@ -163,7 +163,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
             ].map((line, index) => (
               <motion.div
                 key={line}
-                className="flex items-start gap-2.5 text-sm text-white/68"
+                className="flex items-start gap-2.5 text-sm text-white selection:bg-violet-500 selection:text-white"
                 initial={prefersReducedMotion ? false : { opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{

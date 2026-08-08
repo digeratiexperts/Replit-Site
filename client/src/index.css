@@ -504,15 +504,16 @@ input:-webkit-autofill:active {
   touch-action: pan-y;
 }
 
-/* Selection styling */
+/* Selection styling — force opaque white text (rgba/opacity colors otherwise stay muted on violet) */
 ::selection {
-  background: rgba(139, 92, 246, 0.4);
-  color: white;
+  background: hsl(262, 83%, 58%);
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
 }
 
 ::-moz-selection {
-  background: rgba(139, 92, 246, 0.4);
-  color: white;
+  background: hsl(262, 83%, 58%);
+  color: #ffffff;
 }
 
 /* Print styles */
@@ -949,12 +950,6 @@ button, [role="button"], a {
 
 .glow-hover:hover {
   box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
-}
-
-/* Better text selection colors */
-::selection {
-  background-color: hsl(262, 83%, 58%);
-  color: white;
 }
 
 /* Preserve gradient text on selection */
