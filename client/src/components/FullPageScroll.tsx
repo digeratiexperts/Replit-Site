@@ -54,6 +54,7 @@ export function FullPageScrollProvider({
   );
   const [isSnapEnabled, setIsSnapEnabled] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const isScrollingRef = useRef(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -70,13 +71,27 @@ export function FullPageScrollProvider({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const apply = () => {
+      setPrefersReducedMotion(mq.matches);
+      if (mq.matches) setIsSnapEnabled(false);
+    };
+    apply();
+    mq.addEventListener('change', apply);
+    return () => mq.removeEventListener('change', apply);
+  }, []);
+
   const scrollToSection = useCallback((index: number) => {
     if (index < 0 || index >= sections.length) return;
     
     const sectionElement = document.getElementById(sections[index].id);
     if (sectionElement) {
       isScrollingRef.current = true;
-      sectionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      sectionElement.scrollIntoView({
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+        block: 'start',
+      });
       setCurrentSection(index);
       
       if (scrollTimeoutRef.current) {
@@ -84,9 +99,9 @@ export function FullPageScrollProvider({
       }
       scrollTimeoutRef.current = setTimeout(() => {
         isScrollingRef.current = false;
-      }, 800);
+      }, prefersReducedMotion ? 100 : 800);
     }
-  }, [sections]);
+  }, [sections, prefersReducedMotion]);
 
   const toggleSnap = useCallback(() => {
     setIsSnapEnabled(prev => !prev);
@@ -267,7 +282,7 @@ export function FullPageScrollProvider({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isMobile, enableOnMobile, currentSection, sections.length, scrollToSection]);
 
-  const effectiveSnapEnabled = isSnapEnabled && (!isMobile || enableOnMobile);
+  const effectiveSnapEnabled = isSnapEnabled && !prefersReducedMotion && (!isMobile || enableOnMobile);
 
   return (
     <FullPageScrollContext.Provider value={{
@@ -281,7 +296,7 @@ export function FullPageScrollProvider({
     }}>
       <div 
         ref={containerRef}
-        className="scroll-smooth"
+        className={prefersReducedMotion ? undefined : "scroll-smooth"}
         data-header-theme={headerTheme}
       >
         {children}
@@ -379,7 +394,7 @@ function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarPr
           className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold rounded-full bg-white text-[#D3126A] hover:bg-pink-50 transition-all duration-300 shadow-lg whitespace-nowrap ml-2"
           data-testid="nav-cta-assessment"
         >
-          Free Assessment
+          Cyber Risk Assessment
           <ArrowRight className="w-4 h-4" aria-hidden="true" />
         </a>
       </motion.nav>

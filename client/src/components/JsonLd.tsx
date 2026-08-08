@@ -51,7 +51,7 @@ const LOCAL_BUSINESS = {
   "@type": "ITService",
   "name": "Digerati Experts",
   "alternateName": "Digerati Experts MSP",
-  "description": "Enterprise-grade managed IT, cybersecurity, and compliance services for Arizona businesses. 24/7 SOC monitoring, HIPAA/PCI compliance, and proactive IT management.",
+  "description": "Cybersecurity-first managed IT for Arizona businesses. Partner-backed monitoring, identity/endpoint protection, and accountable day-to-day IT in one operating model.",
   "url": SITE_URL,
   "telephone": "+1-325-480-9870",
   "email": "info@digeratiexperts.com",
@@ -104,7 +104,8 @@ const LOCAL_BUSINESS = {
     "@type": "Person",
     "name": "Michael Torres"
   },
-  ...ORGANIZATION
+  "sameAs": ORGANIZATION.sameAs,
+  "contactPoint": ORGANIZATION.contactPoint,
 };
 
 export function OrganizationJsonLd() {

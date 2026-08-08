@@ -62,21 +62,51 @@ export const ZohoASAPWidget = ({
   }, [cookieBannerClear]);
 
   useEffect(() => {
-    // Initialize embedded Zoho ASAP widget if credentials provided
-    if (isEnabled && accountId && portalId) {
-      const script = document.createElement("script");
-      script.innerHTML = `
+    // Lazy-load Zoho ASAP after idle / first interaction so it doesn't compete with LCP.
+    if (!isEnabled || !accountId || !portalId) return;
+    if (typeof document === "undefined") return;
+    if (document.querySelector('script[data-zoho-asap="1"]')) return;
+
+    let loaded = false;
+    const load = () => {
+      if (loaded) return;
+      loaded = true;
+      const config = document.createElement("script");
+      config.innerHTML = `
         window.ZohoDeskAsapConfig = {
           accountId: "${accountId}",
           portalId: "${portalId}"
         };
       `;
-      document.head.appendChild(script);
+      document.head.appendChild(config);
 
       const asapScript = document.createElement("script");
       asapScript.src = "https://static.zohocdn.com/desk/web-client/asap/v1/api.js";
+      asapScript.async = true;
+      asapScript.dataset.zohoAsap = "1";
       document.head.appendChild(asapScript);
-    }
+    };
+
+    const idle =
+      "requestIdleCallback" in window
+        ? (window as Window & { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback(load, {
+            timeout: 4000,
+          })
+        : window.setTimeout(load, 2500);
+
+    const onInteract = () => load();
+    window.addEventListener("pointerdown", onInteract, { once: true, passive: true });
+    window.addEventListener("keydown", onInteract, { once: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", onInteract);
+      window.removeEventListener("keydown", onInteract);
+      if ("cancelIdleCallback" in window && typeof idle === "number") {
+        (window as Window & { cancelIdleCallback: (id: number) => void }).cancelIdleCallback(idle);
+      } else {
+        window.clearTimeout(idle as number);
+      }
+    };
   }, [isEnabled, accountId, portalId]);
 
   const handleSubmitTicket = async () => {

@@ -156,7 +156,7 @@ export const StatGrid = ({ stats, variant = "dark", columns = 3 }: StatGridProps
 
 export const cybersecurityStats = {
   ransomware: {
-    smbBreaches: { value: "88%", label: "of SMB breaches involve ransomware", source: "Verizon DBIR 2025", icon: "warning" as const },
+    smbBreaches: { value: "48%", label: "of breaches involve ransomware", source: "Verizon DBIR 2026", icon: "warning" as const },
     recoveryCost: { value: "$1.53M", label: "average ransomware recovery cost (excluding ransom)", source: "Sophos 2025", icon: "dollar" as const },
     weekRecovery: { value: "53%", label: "of ransomware victims fully recovered within a week", source: "Sophos 2025", icon: "clock" as const },
     paidRansom: { value: "49%", label: "of ransomware victims paid to get their data back", source: "Sophos 2025", icon: "dollar" as const },
@@ -164,7 +164,8 @@ export const cybersecurityStats = {
     largeOrg: { value: "39%", label: "of breaches at larger organizations involve ransomware", source: "Verizon DBIR 2025", icon: "warning" as const },
   },
   identity: {
-    noMfa: { value: "99.9%", label: "of compromised accounts didn't have MFA enabled", source: "Microsoft 2025", icon: "lock" as const },
+    noMfa: { value: "99.9%+", label: "of compromised accounts in Microsoft’s cited dataset lacked MFA", source: "Microsoft", icon: "lock" as const },
+    vulnInitial: { value: "31%", label: "of breaches begin with exploitation of software vulnerabilities", source: "Verizon DBIR 2026", icon: "bug" as const },
   },
   humanRisk: {
     humanElement: { value: "60%", label: "of breaches involve the human element", source: "Verizon DBIR 2025", icon: "users" as const },
@@ -176,7 +177,7 @@ export const cybersecurityStats = {
     ransomwareRoot: { value: "32%", label: "of ransomware attacks started with exploited vulnerabilities", source: "Sophos 2025", icon: "bug" as const },
   },
   costs: {
-    avgBreach: { value: "$4.88M", label: "global average cost of a data breach", source: "IBM 2024", icon: "dollar" as const },
+    avgBreach: { value: "$4.99M", label: "global average cost of a data breach", source: "IBM Cost of a Data Breach 2026", icon: "dollar" as const },
     aiSavings: { value: "$1.9M", label: "in cost savings from extensive AI use in security", source: "IBM 2025", icon: "trending" as const },
     smbBreach: { value: "$3.3M", label: "average breach cost for businesses under 500 employees", source: "IBM 2024", icon: "dollar" as const },
     downtimeHour: { value: "$53,000", label: "average cost per hour of business downtime", source: "CyVent", icon: "clock" as const },
@@ -191,7 +192,8 @@ export const cybersecurityStats = {
   },
   attacks: {
     targetSmb: { value: "43%", label: "of all cyberattacks target small businesses", source: "Verizon DBIR 2024", icon: "warning" as const },
-    closeAfter: { value: "60%", label: "of small businesses close within 6 months of a cyberattack", source: "Industry Data", icon: "warning" as const },
+    // Removed indefensible "60% close within 6 months" claim — do not reinstate without a primary source.
+    ransomwareShare: { value: "48%", label: "of breaches involve ransomware", source: "Verizon DBIR 2026", icon: "warning" as const },
     phishingDaily: { value: "3.4B", label: "phishing emails sent daily worldwide", source: "2025 Data", icon: "warning" as const },
     notPrepared: { value: "83%", label: "of SMBs aren't financially prepared for a cyberattack", source: "ConnectWise", icon: "warning" as const },
   },

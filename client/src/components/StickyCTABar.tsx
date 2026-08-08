@@ -110,7 +110,7 @@ export function StickyCTABar() {
                     size="sm"
                     className="bg-white text-pink-700 hover:bg-pink-50 font-semibold shadow-lg"
                     data-testid="button-sticky-cta-assessment"
-                    onClick={openBooking}
+                    onClick={() => openBooking("sticky-cta")}
                   >
                     Risk Assessment
                     <ArrowRight className="ml-1.5 h-4 w-4" />

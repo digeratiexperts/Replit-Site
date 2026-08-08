@@ -172,52 +172,44 @@ export function MegaMenu() {
       featuredPanel: {
         title: 'Why Digerati Experts?',
         stats: [
-          { value: '99.9%', label: 'Uptime SLA' },
-          { value: '<15min', label: 'Response Time' },
-          { value: '$50K+', label: 'Avg. Savings' },
+          { value: 'Security-first', label: 'IT + cyber as one model' },
+          { value: 'Client-owned', label: 'Credentials & tenants' },
+          { value: 'Assessment-led', label: 'Prioritize before you buy' },
         ],
-        cta: { text: 'Get Free Assessment', url: '/book' },
+        cta: { text: 'Schedule Cyber Risk Assessment', url: '/book' },
       },
       sections: [
         {
-          title: 'Most Popular',
+          title: 'ProActive Packages',
           featured: true,
-          viewAllUrl: '/solutions',
+          viewAllUrl: '/proactive-ecosystem-pricing',
           items: [
-            { title: 'ProActive Ecosystem', description: 'Everything your office needs in one plan', icon: <Monitor className="h-5 w-5" />, url: '/solutions/ProActive-Ecosystem-Packages', badge: 'Best Value', price: `From $${pricing.office.user}/user` },
-            { title: 'Co-Managed IT', description: 'Extend your IT team without hiring', icon: <Users className="h-5 w-5" />, url: '/solutions/co-managed-it', badge: 'Popular', price: 'Custom' },
-            { title: 'Managed IT Support', description: 'End recurring IT headaches for good', icon: <HeadphonesIcon className="h-5 w-5" />, url: '/solutions/managed-it-support' },
+            { title: 'ProActive IT', description: `From $${pricing.it.user}/user · $${pricing.it.monthlyMinimum.toLocaleString()}/mo min`, icon: <Monitor className="h-5 w-5" />, url: pricing.it.learnMoreUrl },
+            { title: 'ProActive Office', description: `From $${pricing.office.user}/user · $${pricing.office.monthlyMinimum.toLocaleString()}/mo min`, icon: <Building className="h-5 w-5" />, url: pricing.office.learnMoreUrl, badge: 'Recommended' },
+            { title: 'ProActive Business', description: `From $${pricing.business.user}/user · $${pricing.business.monthlyMinimum.toLocaleString()}/mo min`, icon: <Shield className="h-5 w-5" />, url: pricing.business.learnMoreUrl },
+            { title: 'ProActive Enterprise', description: `From $${pricing.enterprise.user}/user · $${pricing.enterprise.monthlyMinimum.toLocaleString()}/mo min`, icon: <Layers className="h-5 w-5" />, url: pricing.enterprise.learnMoreUrl },
           ]
         },
         {
-          title: 'Managed Services',
+          title: 'Cybersecurity',
           viewAllUrl: '/solutions',
           items: [
-            { title: 'Managed Workplace', description: 'Focus on work, not technology', icon: <Building className="h-5 w-5" />, url: '/solutions/managed-workplace' },
-            { title: 'Cloud Backup', description: 'Never lose critical business data', icon: <Cloud className="h-5 w-5" />, url: '/solutions/cloud-backup' },
-            { title: 'Security Training', description: 'Turn staff into security assets', icon: <Shield className="h-5 w-5" />, url: '/solutions/security-awareness' },
-            { title: 'UCaaS: Voice & Meetings', description: 'Unified phone and meeting systems', icon: <Phone className="h-5 w-5" />, url: '/services/ucaas' },
+            { title: 'Threat Detection', description: 'Detect and contain threats earlier', icon: <Zap className="h-5 w-5" />, url: '/solutions/threat-detection' },
+            { title: 'Security Operations', description: 'Partner-backed monitoring & response', icon: <Lock className="h-5 w-5" />, url: '/solutions/security-operations' },
+            { title: 'Backup & DR', description: 'Tested recovery when something fails', icon: <Server className="h-5 w-5" />, url: '/solutions/backup-disaster-recovery' },
+            { title: 'Compliance Reports', description: 'Evidence for audits & insurance', icon: <ClipboardCheck className="h-5 w-5" />, url: '/solutions/compliance-reports' },
           ]
         },
         {
-          title: 'Security',
+          title: 'Also available',
           viewAllUrl: '/solutions',
           items: [
-            { title: 'Threat Detection', description: 'Stop attacks before damage occurs', icon: <Zap className="h-5 w-5" />, url: '/solutions/threat-detection' },
-            { title: 'Security Operations', description: '24/7 expert eyes on your systems', icon: <Lock className="h-5 w-5" />, url: '/solutions/security-operations' },
-            { title: 'Data Encryption', description: 'Protect data even if endpoints are compromised', icon: <Shield className="h-5 w-5" />, url: '/solutions/data-encryption' },
-            { title: 'Backup & DR', description: 'Recover in hours, not weeks', icon: <Server className="h-5 w-5" />, url: '/solutions/backup-disaster-recovery' },
+            { title: 'Co-Managed IT', description: 'Extend your internal IT team', icon: <Users className="h-5 w-5" />, url: '/solutions/co-managed-it', badge: 'Popular' },
+            { title: 'Managed IT Support', description: 'Day-to-day IT ownership', icon: <HeadphonesIcon className="h-5 w-5" />, url: '/solutions/managed-it-support' },
+            { title: 'Managed Workplace', description: 'Identity, devices, and workspace ops', icon: <Cloud className="h-5 w-5" />, url: '/solutions/managed-workplace' },
+            { title: 'All Solutions', description: 'Full solutions index', icon: <LayoutGrid className="h-5 w-5" />, url: '/solutions' },
           ]
         },
-        {
-          title: 'Compliance',
-          viewAllUrl: '/solutions',
-          items: [
-            { title: 'vCIO & Strategy', description: 'Executive IT guidance on demand', icon: <BarChart3 className="h-5 w-5" />, url: '/solutions/vcio-strategy', badge: 'For Compliance' },
-            { title: 'Compliance Reports', description: 'Pass audits with confidence', icon: <ClipboardCheck className="h-5 w-5" />, url: '/solutions/compliance-reports' },
-            { title: 'Unified Security', description: 'Complete security visibility', icon: <Layers className="h-5 w-5" />, url: '/solutions/unified-security' },
-          ]
-        }
       ]
     },
     {
@@ -809,8 +801,6 @@ export function MegaMenu() {
                               </div>
                               <a
                                 href={item.featuredPanel.cta.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
                                 className="relative z-10 mt-4 w-full inline-flex items-center justify-center px-3 py-2 bg-violet-600 hover:bg-violet-500 text-white text-[11px] font-bold rounded-lg transition-all shadow-lg shadow-violet-500/20 uppercase tracking-wider"
                                 onClick={handleLinkClick}
                               >
@@ -841,18 +831,18 @@ export function MegaMenu() {
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0826] via-transparent to-transparent" />
                                 <div className="absolute top-2 left-2">
-                                  <span className="bg-violet-600/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Case Study</span>
+                                  <span className="bg-violet-600/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Industries</span>
                                 </div>
                               </div>
                               <div className="p-3 flex flex-col flex-1">
-                                <h4 className="text-sm font-semibold text-white mb-1 leading-tight">How We Stopped a Ransomware Attack on an AZ Medical Practice</h4>
-                                <p className="text-xs text-gray-400 mb-3 flex-1">Our 24/7 SOC detected and neutralized the threat in under 4 minutes, saving $2.3M in potential damages.</p>
+                                <h4 className="text-sm font-semibold text-white mb-1 leading-tight">Industry-focused managed IT & cyber</h4>
+                                <p className="text-xs text-gray-400 mb-3 flex-1">Healthcare, law, accounting, and other Arizona SMBs — assess risk first, then operate IT and security as one model.</p>
                                 <a 
                                   href="/resources/case-studies" 
                                   className="inline-flex items-center text-xs font-semibold text-violet-400 hover:text-violet-300 transition-colors"
                                   data-testid="link-featured-case-study-industries"
                                 >
-                                  Read the Full Story
+                                  View case studies
                                   <ArrowRight className="w-3 h-3 ml-1.5" />
                                 </a>
                               </div>
@@ -884,8 +874,8 @@ export function MegaMenu() {
                                 </div>
                               </div>
                               <div className="p-3 flex flex-col flex-1">
-                                <h4 className="text-sm font-semibold text-white mb-1 leading-tight">Your Dedicated Arizona Security Operations Team</h4>
-                                <p className="text-xs text-gray-400 mb-3 flex-1">Certified experts monitoring your business 24/7 from our Chandler, AZ operations center.</p>
+                                <h4 className="text-sm font-semibold text-white mb-1 leading-tight">Arizona principal-led MSP / MSSP team</h4>
+                                <p className="text-xs text-gray-400 mb-3 flex-1">Chandler-based operators with partner-backed monitoring — accountable ownership, not a ticket black hole.</p>
                                 <a 
                                   href="/about/team" 
                                   className="inline-flex items-center text-xs font-semibold text-violet-400 hover:text-violet-300 transition-colors"
