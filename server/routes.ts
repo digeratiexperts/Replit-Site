@@ -1881,16 +1881,7 @@ export async function registerRoutes(app: Express) {
         }
       }
       
-      // Fallback to placeholder services if no Zoho services found
-      // This ensures the dashboard always shows something meaningful
-      if (services.length === 0) {
-        services = [
-          { id: "svc-placeholder-1", serviceName: "Managed IT Support", status: "active" },
-          { id: "svc-placeholder-2", serviceName: "Endpoint Protection", status: "active" },
-          { id: "svc-placeholder-3", serviceName: "Email Security", status: "active" },
-        ];
-      }
-      
+      // Do not invent active services when Zoho returns none — empty is honest.
       const dashboardStats = {
         openTickets,
         resolvedTickets,
@@ -2108,15 +2099,45 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  // Portal Services List
-  app.get("/api/portal/services", [authMiddleware], async (_req: AuthenticatedRequest, res: Response) => {
+  // Portal Services List — Zoho subscriptions only (no invented catalog)
+  app.get("/api/portal/services", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const services = [
-        { id: "svc-001", serviceName: "Managed IT Support", status: "active", userCount: 25 },
-        { id: "svc-002", serviceName: "Cloud Backup", status: "active", userCount: 25 },
-        { id: "svc-003", serviceName: "Security Monitoring", status: "active", userCount: 25 },
-      ];
-      res.json(services);
+      const { zohoBillingService } = await import("./zoho/zohoBilling");
+      const { zohoClient } = await import("./zoho/zohoClient");
+
+      if (!zohoClient.isConfigured()) {
+        return res.json([]);
+      }
+
+      const userEmail = req.user?.email;
+      if (!userEmail) {
+        return res.json([]);
+      }
+
+      try {
+        const customer = await zohoBillingService.getCustomerByEmail(userEmail);
+        if (!customer) {
+          return res.json([]);
+        }
+
+        const subscriptions = await zohoBillingService.getSubscriptionsByCustomer(customer.customer_id);
+        const services = subscriptions
+          .filter((sub) => sub.status === "live" || sub.status === "active")
+          .map((sub) => ({
+            id: sub.subscription_id,
+            serviceName: sub.plan?.name || sub.name || "Subscription",
+            description: sub.plan?.description || "",
+            status: sub.status === "live" ? "active" : sub.status,
+            monthlyPrice: sub.amount != null ? String(sub.amount) : "",
+            userCount: undefined,
+            startDate: sub.current_term_starts_at || sub.created_at || "",
+          }));
+
+        return res.json(services);
+      } catch (zohoErr) {
+        console.warn("[portal/services] Zoho fetch failed:", zohoErr);
+        return res.json([]);
+      }
     } catch (error: any) {
       res.status(500).json({ message: "Failed to load services" });
     }

@@ -159,6 +159,13 @@ export function PortalQuestionnaireCalendar() {
           </div>
         </div>
 
+        <div
+          className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950 dark:border-amber-700/50 dark:bg-amber-950/30 dark:text-amber-100"
+          data-testid="questionnaire-sample-banner"
+        >
+          <strong>Sample preview.</strong> Events below are illustrative until your live assessment calendar is connected.
+        </div>
+
         {/* Tabs */}
         <Tabs defaultValue="calendar" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
