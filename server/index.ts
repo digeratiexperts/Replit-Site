@@ -143,15 +143,37 @@ app.post(
             .where(eq(storeOrders.zohoPaymentSessionId, sessionId)).limit(1);
 
           const oldStatus = existingOrder?.status || "unknown";
+          const alreadyPastPaid = ["paid", "processing", "provisioning", "completed"].includes(
+            existingOrder?.status || ""
+          );
 
-          await db.update(storeOrders)
-            .set({
-              status: "paid",
-              zohoPaymentId: paymentId || sessionId,
-              paidAt: new Date(),
-              updatedAt: new Date(),
-            })
-            .where(eq(storeOrders.zohoPaymentSessionId, sessionId));
+          // Do not downgrade provisioning/completed back to paid on webhook retries
+          if (!alreadyPastPaid) {
+            await db.update(storeOrders)
+              .set({
+                status: "paid",
+                zohoPaymentId: paymentId || sessionId,
+                paidAt: new Date(),
+                updatedAt: new Date(),
+              })
+              .where(eq(storeOrders.zohoPaymentSessionId, sessionId));
+
+            console.log(`[SECURITY] ORDER_STATUS_CHANGED`, {
+              orderId: existingOrder?.id,
+              orderNumber: existingOrder?.orderNumber,
+              oldStatus,
+              newStatus: "paid",
+              triggeredBy: "zoho_payments_webhook"
+            });
+          } else if (existingOrder && !existingOrder.zohoPaymentId && paymentId) {
+            await db.update(storeOrders)
+              .set({
+                zohoPaymentId: paymentId,
+                paidAt: existingOrder.paidAt || new Date(),
+                updatedAt: new Date(),
+              })
+              .where(eq(storeOrders.id, existingOrder.id));
+          }
 
           console.log(`[ZOHO PAYMENTS WEBHOOK] Order paid: session=${sessionId}`);
           console.log(`[SECURITY] CHECKOUT_COMPLETED`, {
@@ -162,13 +184,13 @@ app.post(
             zohoPaymentSessionId: sessionId,
             zohoPaymentId: paymentId
           });
-          console.log(`[SECURITY] ORDER_STATUS_CHANGED`, {
-            orderId: existingOrder?.id,
-            orderNumber: existingOrder?.orderNumber,
-            oldStatus,
-            newStatus: "paid",
-            triggeredBy: "zoho_payments_webhook"
-          });
+
+          if (existingOrder?.id) {
+            const { fulfillPaidOrder } = await import("./services/orderFulfillment");
+            fulfillPaidOrder(existingOrder.id).catch((err) => {
+              console.error("[ZOHO PAYMENTS WEBHOOK] fulfillPaidOrder failed:", err);
+            });
+          }
         }
       }
 
