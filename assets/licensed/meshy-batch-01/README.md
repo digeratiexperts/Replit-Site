@@ -2,7 +2,7 @@
 
 Private exports from Cursor MCP (`user-meshy`). Binary formats under `ORIGINAL/` are **gitignored**.
 
-**Status:** Generated 2026-08-08 — see `docs/MESHY-BATCH-01.md` for prompts, task IDs, and credits.
+**Status:** Endpoint / Email / Network / Backup approved. Identity regenerated as v4 — **await DE re-approval** before refine. See `docs/MESHY-BATCH-01.md`.
 
 ```
 assets/licensed/meshy-batch-01/ORIGINAL/<concept-slug>/
