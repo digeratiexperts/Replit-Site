@@ -37,31 +37,27 @@ Do **not** subscribe yet. Inventory Envato #1 first.
 
 - FreeVector / Magnific (Freepik) — free catalogs exist; brand/license/quality not worth the detour until paid packs are in.
 
-### Meshy.ai — Pro monthly for API / Cursor MCP (DE decision 2026-08-08)
+### Meshy.ai — Premium + Cursor MCP (confirmed 2026-08-08)
 
-**Envato `4THD2PH` remains the primary stock pack.** Meshy is complementary: custom / brand-unique 3D via API so Cursor can generate through the official Meshy MCP — not a replacement for the Envato library.
+**Envato `4THD2PH` remains the primary stock pack.** Meshy is complementary: controlled custom / brand-unique 3D (target **10–20 Digerati concepts**), not a replacement for the Envato library.
 
-Verified 2026-08-08 from [meshy.ai/pricing](https://www.meshy.ai/pricing), [API pricing](https://docs.meshy.ai/en/api/pricing), [API auth](https://docs.meshy.ai/en/api/authentication), [AI / MCP docs](https://docs.meshy.ai/en/api/ai), and [meshy-mcp-server](https://github.com/meshy-dev/meshy-mcp-server):
-
-| Topic | Finding |
+| Topic | Status |
 |---|---|
-| Plan for this workflow | **Pro monthly** (~$20/mo, **1,000 credits/mo**) — includes **API access**. Skip Premium / Ultra / yearly for now. |
-| API key requirement | Official MCP README: API key requires **Pro plan or above**. Create key at [meshy.ai/settings/api](https://www.meshy.ai/settings/api) (name e.g. `Digerati-Cursor`). |
-| Commercial license | **Paid plans (Pro+):** full commercial use + private ownership (no CC BY attribution). **Free:** CC BY 4.0 — not for DE brand work. |
-| API credit burn (Meshy-6) | Text→3D preview / Image→3D mesh ≈ **20 credits**; with texture ≈ **30**; refine/retexture ≈ **10** (2k/4k). MCP tools cost the same as REST. |
-| MCP package | Official npm: `@meshy-ai/meshy-mcp-server` · env var: `MESHY_API_KEY` · never commit the key. |
-| Training / proprietary | Non-Enterprise data **may** be used anonymized for future training. Enterprise is the contractual opt-out. Marketing 3D for the website does **not** require Enterprise. |
+| Plan | **Meshy Premium** — ~**3,100 credits** available (not Pro@1k) |
+| Cursor MCP | Connected as server **`user-meshy`** (`serverStatus: ready`, 24 Meshy tools) |
+| API key | Configured locally for key name **Digerati-Cursor** — **never commit**; **rotate** if the full key was posted in chat (see `docs/MESHY-MCP.md`) |
+| Commercial license | Paid plans (Pro+): commercial use + private ownership. Free = CC BY — do not use for DE brand work. |
+| Credit burn (Meshy-6) | Image→3D ≈ **5–30** (meshy-5 cheaper / meshy-6 ~20; textured toward upper end); Text→3D preview ≈ **5–20**; refine/retexture ≈ **10**. Confirm cost before any generate call. |
+| Export path | `assets/licensed/meshy-<batch>/ORIGINAL/` (gitignored binaries) — never `client/public` / `public/` |
 
-**Buy recommendation (current):**
+**Workflow (current):**
 
-1. Keep **Envato `4THD2PH`** as the stock pack (download entire ZIP when ready).
-2. Subscribe **Meshy Pro monthly** (not yearly, not Premium/Ultra) for API + Cursor MCP.
-3. Create API key `Digerati-Cursor` — **do not paste the key in chat**. Say “I have the Meshy key” and use the prepared PowerShell template to store it in the user env + wire `~/.cursor/mcp.json`.
-4. Skip Free. Skip Enterprise for this project. Upgrade credits later only if Pro@1k is too tight in practice.
+1. Keep **Envato `4THD2PH`** as the stock pack — drop the entire ZIP when ready.
+2. Use **Meshy** only for approved Digerati concepts (soft plastic, dark premium, violet/fuchsia — **not** hooded-hacker).
+3. **No generation until DE approves** the first brief in `docs/MESHY-MCP.md`.
+4. Never paste API keys in chat; rotate any key that was exposed.
 
-**Cursor + Meshy (MCP):** With Pro + `MESHY_API_KEY`, Cursor can call Meshy tools via MCP (`meshy_text_to_3d`, download, balance check, etc.). Still drop finished exports under `assets/licensed/meshy-<batch>/ORIGINAL/` for inventory — do not put sources in `client/public` or `public/`.
-
-Rough credit burn on Pro@1k (Meshy-6, some retries): ~50 mesh previews or fewer textured assets per month — enough for targeted gap-fill; Envato covers the bulk icon set.
+See **`docs/MESHY-MCP.md`** for MCP tool list, rotation steps, and the first-generation brief.
 
 ---
 
@@ -83,7 +79,7 @@ Rough credit burn on Pro@1k (Meshy-6, some retries): ~50 mesh previews or fewer 
 | Source | Can Cursor use DE’s subscription directly? |
 |---|---|
 | Envato / IconScout / LottieFiles | **No** — DE downloads ZIPs / exports → drop locally → agent inventories. |
-| Meshy (Pro + API key + MCP) | **Yes, via MCP** — after `MESHY_API_KEY` is stored in the user environment and `@meshy-ai/meshy-mcp-server` is enabled in Cursor MCP. Never paste the key in chat; never commit it. |
+| Meshy (Premium + API key + MCP) | **Yes, via MCP** — Cursor server **`user-meshy`** (ready). Never paste the key in chat; never commit it; rotate if exposed. See `docs/MESHY-MCP.md`. |
 
 Drop pattern (stock packs):
 
