@@ -37,6 +37,30 @@ Do **not** subscribe yet. Inventory Envato #1 first.
 
 - FreeVector / Magnific (Freepik) — free catalogs exist; brand/license/quality not worth the detour until paid packs are in.
 
+### Meshy.ai — AFTER Envato inventory (optional gap-fill only)
+
+**Do not buy Meshy before Envato `4THD2PH` is dropped and inventoried.** Meshy is complementary (custom / brand-unique derivatives), not the whole visual system.
+
+Verified 2026-08-08 from [meshy.ai/pricing](https://www.meshy.ai/pricing), [docs pricing](https://docs.meshy.ai/en/webapp/pricing), and Help Center:
+
+| Topic | Finding |
+|---|---|
+| Commercial license | **Paid plans (Pro+):** full commercial use + private ownership (no CC BY attribution). **Free:** CC BY 4.0 — not for DE brand work. |
+| “Private Mode” vs public storage | Live Help: generated assets are **private by default** unless you publish to Community or share a link. “Private” on paid plans primarily means **license/ownership**, not a Max-only vault. Screenshot “Pro = public storage / Max = Private Mode” looks **stale** vs current docs — confirm the live plan matrix before paying. |
+| Training / proprietary | Non-Enterprise data **may** be used anonymized for future training. Enterprise is the contractual opt-out. Marketing 3D for the website does **not** require Enterprise. |
+| Live plan names | Individual tiers are now **Pro / Premium / Ultra** (credits ~1k / 3k / 8k). Older “Max” labels may still appear in some UIs — match **credits + commercial ownership**, not the nickname. |
+
+**Buy recommendation (when needed):**
+
+1. **Envato first** (already the TODAY action).
+2. Then **one month of Pro** if the checkout still shows ~2,000 credits + commercial ownership — enough for hero composition + ~10–15 concept icons with light iteration.
+3. If live Pro is only **~1,000 credits/mo**, prefer **Premium (~3,000)** for that first production month (Meshy 6 Text/Image→3D ≈ **20 credits** each; texturing ≈ **10**; remesh/rig free). Ultra/Max is overkill for this scope.
+4. Skip Free. Skip Enterprise for this project.
+
+**Cursor + Meshy:** Cursor cannot log into DE’s Meshy account. DE generates/exports (GLB/FBX/OBJ/BLEND) → drop under `assets/licensed/meshy-<batch>/ORIGINAL/` → agent inventories and integrates.
+
+Rough credit burn (hero ecosystem + 10–15 icons, Meshy 6, some retries): **~600–1,600**. Pro@2k comfortable; Pro@1k tight; Premium safer for messy iteration.
+
 ---
 
 ## Pack comparison (public pages)
@@ -54,7 +78,7 @@ Do **not** subscribe yet. Inventory Envato #1 first.
 
 ## Cursor + subscriptions
 
-**No.** Cursor cannot sign into Envato / IconScout / LottieFiles or download licensed ZIPs with DE’s subscription. Cursor can only read **public** catalog pages and inventory files **after** DE drops them locally.
+**No.** Cursor cannot sign into Envato / IconScout / LottieFiles / Meshy or download licensed ZIPs / exports with DE’s subscription. Cursor can only read **public** catalog pages and inventory files **after** DE drops them locally.
 
 Drop pattern:
 
