@@ -8,8 +8,8 @@
 
 | Asset | Public derivative | Placed |
 |---|---|---|
-| Endpoint / Email / Network / Backup | `client/public/images/visual-system/meshy-batch-01/*` | Homepage outcomes (3 cards) + Solutions index (network / threat / backup) |
-| Identity v4 | Not published | **Await DE approval** — registry marks `awaiting-approval` |
+| Endpoint / Email / Network / Backup / Identity | `client/public/images/visual-system/meshy-batch-01/*` | Homepage outcomes (Identity / Backup / Network) + engagement Email + How-it-works Network + Solutions (network / threat / backup) |
+| Batch 01 refine | Done (5 × 10 cr) | Dark charcoal + violet/fuchsia materials on all five |
 | Hero `DashboardMockup` | — | **Deferred** (needs composed ecosystem, Batch 10) |
 | Mega-menu / portal | — | Stay Lucide |
 
@@ -59,16 +59,16 @@ Threat / problem assets (Batch 09) must stay **clean and abstract** — containm
 
 | Step | Action | Gate |
 |---|---|---|
-| **1** | Regenerate **Identity** (Batch 01) | In flight separately — do not block docs |
-| **2** | Refine four approved Batch 01 shapes (+ Identity when approved) | DE Identity approval |
-| **3** | Generate **Batch 02** | After Batch 01 refine |
+| **1** | Regenerate **Identity** (Batch 01) | **Done** (v4 approved) |
+| **2** | Refine all five Batch 01 shapes | **Done** |
+| **3** | Generate **Batch 02** | **Next** — DE go-ahead / credit comfort |
 | **4** | Assessment, SOC, and hero ecosystem **compositions** (Batch 10 subset) | After Batch 02 core exists |
 | **5** | Compliance + managed IT (Batches 04–05) | As page work needs them |
 | **6** | Industry (Batch 08) **only** for pages being redesigned | Per-page redesign |
 | **7** | Threat / problem (Batch 09) **sparingly** | Prefer abstract containment |
 | **8** | Communications + secondary (Batches 06–07 leftovers) **last** | Lowest priority |
 
-**Next gate after Identity approval:** refine Batch 01 (four approved + new Identity) → then generate Batch 02.
+**Next gate:** generate Batch 02 (Essential security) when DE is ready — prefer finishing Batch 01 polish over starting 12 new assets.
 
 ---
 
@@ -76,7 +76,7 @@ Threat / problem assets (Batch 09) must stay **clean and abstract** — containm
 
 | Batch | Name | Status |
 |---|---|---|
-| 01 | Core protection | In progress — Identity regenerating; four shapes approved |
+| 01 | Core protection | **Complete** — five approved, refined, derivatives published |
 | 02 | Essential security | Planned |
 | 03 | Business continuity | Planned |
 | 04 | Compliance and risk | Planned |
@@ -93,14 +93,14 @@ Threat / problem assets (Batch 09) must stay **clean and abstract** — containm
 
 | Asset | Visual concept | Status |
 |---|---|---|
-| Identity & access | ID badge or profile card with shield/check | **Regenerating** (separate agent; reject dish/ring/portal reads) |
-| Endpoint security | Laptop with shield | **Approved shape** |
-| Email security | Envelope with lock | **Approved shape** |
-| Network security | Connected node cluster | **Approved shape** |
-| Backup & recovery | Cloud over storage stack | **Approved shape** |
+| Identity & access | ID badge with shield/keyhole | **Approved + refined** — placed on outcomes |
+| Endpoint security | Laptop with shield | **Approved + refined** |
+| Email security | Envelope with lock | **Approved + refined** |
+| Network security | Connected node cluster | **Approved + refined** |
+| Backup & recovery | Cloud over storage stack | **Approved + refined** |
 
 Generation log / task IDs: `docs/MESHY-BATCH-01.md`.  
-Refine: deferred until Identity is approved, then refine all five together for consistent violet/fuchsia materials.
+Refine: **done** (all five; dark charcoal + violet/fuchsia).
 
 ---
 
@@ -269,4 +269,4 @@ Larger scene assets (not small icons). Prioritize assessment, SOC, and hero ecos
 
 1. **Identity regen** — separate agent; no refine until DE approves the new shape.
 2. **Docs / workflow** — this file + build order in `MESHY-MCP.md` / `VISUAL-SHOPPING-LIST.md`.
-3. **After Identity approval** — refine Batch 01 → generate Batch 02 → compositions (assessment / SOC / hero).
+3. **Next** — generate Batch 02 → compositions (assessment / SOC / hero) when DE is ready.

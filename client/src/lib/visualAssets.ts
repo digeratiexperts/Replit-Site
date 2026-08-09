@@ -3,7 +3,7 @@
  *
  * Rules:
  * - Only optimized derivatives under `/images/...` (never licensed ORIGINAL paths)
- * - Meshy Batch 01 Identity is awaiting DE approval — do not place until approved
+ * - Meshy Batch 01 (all five) approved + refined — place selectively, not icon salad
  * - Portal / mega-menu chrome stays Lucide
  */
 
@@ -35,7 +35,7 @@ const meshy01 = (slug: string, label: string, alt: string, status: VisualStill["
   source: "meshy-batch-01",
 });
 
-/** Approved Batch 01 shapes + Identity (blocked) */
+/** Approved + refined Batch 01 shapes (dark charcoal + violet/fuchsia) */
 export const meshyBatch01 = {
   endpoint: meshy01(
     "endpoint",
@@ -61,12 +61,12 @@ export const meshyBatch01 = {
     "3D icon of a cloud over storage drives representing backup and recovery",
     "approved",
   ),
-  /** v4 ID badge on disk — await DE re-approval before site use */
+  /** v4 ID badge — approved after refine (dark + violet accents) */
   identity: meshy01(
     "identity",
     "Identity and access",
-    "3D icon of an ID badge with shield representing identity and access",
-    "awaiting-approval",
+    "3D icon of an ID badge with shield and keyhole representing identity and access",
+    "approved",
   ),
 } as const;
 
@@ -100,7 +100,7 @@ export function isApprovedStill(still: VisualStill | undefined): still is Visual
 
 /** Homepage outcomes → optional Meshy still (selective; not every card) */
 export const outcomeVisualByTitle: Record<string, VisualStill | undefined> = {
-  "Protect identities and devices": meshyBatch01.endpoint,
+  "Protect identities and devices": meshyBatch01.identity,
   "Keep the business recoverable": meshyBatch01.backup,
   "Protect and monitor the environment": meshyBatch01.network,
 };

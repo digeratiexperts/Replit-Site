@@ -4,7 +4,7 @@ import path from "path";
 
 const srcRoot = "assets/licensed/meshy-batch-01/ORIGINAL";
 const outRoot = "client/public/images/visual-system/meshy-batch-01";
-const approved = ["endpoint", "email", "network", "backup"];
+const approved = ["endpoint", "email", "network", "backup", "identity"];
 
 /** Knock out near-black studio backdrop → real transparency for dark UI. */
 async function knockoutBlack(inputPath) {

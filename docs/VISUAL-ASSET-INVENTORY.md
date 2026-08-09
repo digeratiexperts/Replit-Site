@@ -10,10 +10,10 @@
 
 | Source | Status |
 |---|---|
-| Meshy Batch 01 (4 approved) | **Ready** — interim clay preview derivatives published + placed selectively |
-| Meshy Identity v4 | On disk under licensed ORIGINAL — **await DE re-approval** (not on site) |
-| Envato `4THD2PH` | **Not arrived** — scaffold only under `assets/licensed/envato-4THD2PH/` |
-| DE / Joseph Petro headshots | **Missing** — no real founder photos in repo; drop path prepared |
+| Meshy Batch 01 (all 5) | **Complete** — refined dark + violet/fuchsia; public derivatives published + placed selectively |
+| Meshy Identity v4 | **Approved** — on outcomes “Protect identities and devices” |
+| Envato `4THD2PH` | **Not arrived** — scaffold / drop zone only under `assets/licensed/envato-4THD2PH/` |
+| DE / Joseph Petro headshots | **Missing** — founder spotlight stays gated; drop path prepared |
 
 ---
 
@@ -23,14 +23,14 @@ Path: `assets/licensed/meshy-batch-01/ORIGINAL/{identity,endpoint,email,network,
 
 | Concept | Formats on disk | Preview PNG | DE status | Public derivative |
 |---|---|---|---|---|
-| Endpoint | glb/fbx/obj + preview | yes (~81 KB) | **Approved** | `/images/visual-system/meshy-batch-01/endpoint.{webp,png}` + `-256.webp` |
-| Email | glb/fbx/obj + preview | yes (~90 KB) | **Approved** | `.../email.*` |
-| Network | glb/fbx/obj + preview | yes (~114 KB) | **Approved** | `.../network.*` |
-| Backup | glb/fbx/obj + preview | yes (~107 KB) | **Approved** | `.../backup.*` |
-| Identity (v4) | glb/fbx/obj + preview | yes (~75 KB) | **Await re-approval** | **Not published** |
+| Endpoint | clay + `*-refined.glb` + textures | refined | **Approved + refined** | `/images/visual-system/meshy-batch-01/endpoint.{webp,png}` + `-256.webp` |
+| Email | clay + refined | refined | **Approved + refined** | `.../email.*` |
+| Network | clay + refined | refined | **Approved + refined** | `.../network.*` |
+| Backup | clay + refined | refined | **Approved + refined** | `.../backup.*` |
+| Identity (v4) | clay + refined | refined | **Approved + refined** | `.../identity.*` |
 | Identity v3 | under `_rejected/v3-checkmark-shield-019fe3f2/` | archived | Rejected | Never use |
 
-Licensed binaries/PNGs are **gitignored**. Derivatives were built from preview-alpha PNGs with near-black knockout → true transparency (interim until Meshy refine adds violet/fuchsia materials).
+Licensed binaries/PNGs are **gitignored**. Public derivatives rebuilt from refined preview-alpha PNGs with near-black knockout → true transparency.
 
 Optimize script: `scripts/optimize-meshy-batch01.mjs` (uses local `sharp`; not a permanent dependency).
 
@@ -84,7 +84,7 @@ C:\Users\Joe\Projects\Replit-Site\assets\licensed\envato-4THD2PH\ORIGINAL\4THD2P
 | Surface | File | Current visuals | Action this pass |
 |---|---|---|---|
 | Homepage hero | `ModernHeroSection.tsx` | Arizona dusk photo + Lucide trust chips + `DashboardMockup` SVG | **Left alone** — refined DashboardMockup beats a corny Meshy icon swarm; ecosystem composition = later stage |
-| Homepage outcomes | `HomepageOutcomesSection.tsx` | Endpoint / Backup / Network on 3 matching cards | **Polished** — shared `MeshyStillAccent` (smaller, opacity ~85%, soft frame, no heavy glow) |
+| Homepage outcomes | `HomepageOutcomesSection.tsx` | Identity / Backup / Network on 3 matching cards | **Polished** — shared `MeshyStillAccent` (refined stills; opacity ~85%, soft frame) |
 | Homepage engagement | `HomepageEngagementSection.tsx` | Lucide on relationship cards | **+1** Email still on assessment band only (copy names email); cards stay Lucide |
 | Homepage process | `HomepageHowItWorks.tsx` | Numbered steps | **+1** Network still as section intro accent only — not on each step |
 | Homepage trust rail / proof / stats | various | Lucide | Unchanged (selective rule) |
@@ -105,11 +105,11 @@ Registry accents: `homepageSectionAccents` in `visualAssets.ts`
 
 | Concept | Public path | Primary placement | Secondary | Blocked / next |
 |---|---|---|---|---|
-| Endpoint | `/images/visual-system/meshy-batch-01/endpoint.webp` | Outcomes: “Protect identities and devices” | Solutions: Threat Detection | Refine materials later |
-| Email | `.../email.webp` | Engagement assessment band (homepage) | Future email-security page | Do not duplicate on outcomes (endpoint already leads that card) |
-| Network | `.../network.webp` | Outcomes: “Protect and monitor…” | Process section intro + Solutions: Managed Network | — |
-| Backup | `.../backup.webp` | Outcomes: “Keep the business recoverable” | Solutions: Backup & DR | — |
-| Identity | — | — | — | DE approve v4 → publish derivative → outcomes / identity cards |
+| Identity | `/images/visual-system/meshy-batch-01/identity.webp` | Outcomes: “Protect identities and devices” | Future identity pages | Done for Batch 01 |
+| Endpoint | `.../endpoint.webp` | Solutions: Threat Detection | — | Done for Batch 01 |
+| Email | `.../email.webp` | Engagement assessment band (homepage) | Future email-security page | Done for Batch 01 |
+| Network | `.../network.webp` | Outcomes: “Protect and monitor…” | Process intro + Solutions: Managed Network | Done for Batch 01 |
+| Backup | `.../backup.webp` | Outcomes: “Keep the business recoverable” | Solutions: Backup & DR | Done for Batch 01 |
 | Founder headshot | `/images/team/joseph-petro-headshot.webp` | `/about/team` founder spotlight | Ebook / trust / About | Waiting for DE drop |
 | Hero ecosystem | composed still / GLB | `ModernHeroSection` replace/augment `DashboardMockup` | ProActive pages | Needs Batch 10 composition + inventory support |
 | Envato pack | TBD derivatives | Selective fill for gaps Meshy doesn’t cover | — | Waiting for ZIP |
@@ -120,10 +120,10 @@ Registry: `client/src/lib/visualAssets.ts`
 
 ## 6. What’s still needed from DE
 
-1. **Approve or reject Identity v4** (`identity-preview.png` under licensed ORIGINAL).
-2. **Drop founder headshot(s)** into `assets/photography/de-headshots/ORIGINAL/`.
-3. **Drop Envato `4THD2PH` ZIP** into `assets/licensed/envato-4THD2PH/ORIGINAL/` when ready.
-4. After Identity approval: refine Batch 01 (5×) for violet/fuchsia materials — then re-export public stills.
+1. **Drop founder headshot(s)** into `assets/photography/de-headshots/ORIGINAL/` (spotlight stays gated).
+2. **Drop Envato `4THD2PH` ZIP** into `assets/licensed/envato-4THD2PH/ORIGINAL/` when ready.
+3. **Rotate Meshy API key** if it was exposed in chat — do not leave the old key active.
+4. **Go-ahead for Batch 02** when ready (Essential security — large set; next phase).
 
 ---
 
@@ -132,5 +132,6 @@ Registry: `client/src/lib/visualAssets.ts`
 - No homepage redesign / no CTA / form / SEO removal
 - No mega-menu or portal Lucide replacement
 - Licensed sources stay private; only optimized derivatives public
-- Identity not placed pending approval
+- Identity placed once (outcomes card) — not icon salad
 - Hero mockup left for composition stage
+- Founder / Envato still waiting on DE drops — no invented photos or fake ZIP

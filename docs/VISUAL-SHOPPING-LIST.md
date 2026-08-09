@@ -54,7 +54,7 @@ Do **not** subscribe yet. Inventory Envato #1 first.
 **Recommended Meshy build order:**
 
 1. Regenerate **Identity** (in flight separately).
-2. Refine four approved Batch 01 shapes (+ Identity when approved).
+2. Refine Batch 01 — **done** (all five).
 3. Generate **Batch 02**.
 4. Assessment, SOC, and hero ecosystem compositions.
 5. Compliance + managed IT.
@@ -62,7 +62,7 @@ Do **not** subscribe yet. Inventory Envato #1 first.
 7. Threat / problem sparingly.
 8. Communications / secondary last.
 
-**Next gate after Identity approval:** refine Batch 01 → then Batch 02.
+**Next gate:** Batch 02 Essential security (when DE is ready).
 
 See **`docs/MESHY-ASSET-BACKLOG.md`** for Batches 01–10 and **`docs/MESHY-MCP.md`** for MCP tools / prompts.
 
