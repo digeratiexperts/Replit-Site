@@ -1,8 +1,8 @@
 # Meshy MCP — Digerati Cursor workflow
 
 **Date:** 2026-08-08  
-**Status:** Connected — **batch-01 Text-to-3D complete** (see `docs/MESHY-BATCH-01.md`).  
-**Related:** `docs/VISUAL-SHOPPING-LIST.md` (Envato primary + Meshy complementary)
+**Status:** Connected — Batch 01 preview meshes done; **Identity regenerating**; refine deferred.  
+**Related:** `docs/MESHY-ASSET-BACKLOG.md` (Batches 01–10), `docs/MESHY-BATCH-01.md`, `docs/VISUAL-SHOPPING-LIST.md`
 
 ---
 
@@ -10,12 +10,13 @@
 
 | Item | Value |
 |---|---|
-| Plan | **Meshy Premium** (~**3,100** credits) |
+| Plan | **Meshy Premium** (~**3,100** credits; ~140 used on batch-01 first pass) |
 | Cursor MCP server | **`user-meshy`** |
 | Server status | `ready` (verified via GetMcpTools) |
 | Tools | 24 `meshy_*` tools (+ `mcp_auth`) |
 | Key name | `Digerati-Cursor` (local only) |
-| Role vs Envato | Envato `4THD2PH` = primary stock; Meshy = **10–20** controlled brand concepts |
+| Role vs Envato | Envato `4THD2PH` = primary stock; Meshy = controlled brand library (~**40** core, selective page use) |
+| Highest-value set | ~**25** security/IT + ~**10** industry + ~**10** compositions |
 
 ### Tools available (do not call generate until approved)
 
@@ -35,8 +36,9 @@
 
 - Dark premium MSP look; accent **violet / fuchsia**
 - Soft plastic / clay 3D (Envato-adjacent), clean marketing iconography
-- **Not** hooded hacker, skull, malware bug, carding, or threat-porn aesthetics
+- **Global avoid list:** threatening humans, masks, hoods, faces, skulls, insects, weapons — threat assets stay clean/abstract
 - Sources stay under `assets/licensed/meshy-*/` — gitignored; never under `client/public` or `public/`
+- Derivatives only for the Digerati site after inventory + DE approval
 
 ### Export layout
 
@@ -47,6 +49,25 @@ C:\Users\Joe\Projects\Replit-Site\assets\licensed\meshy-batch-01\ORIGINAL\
 ```
 
 Website-ready derivatives only after inventory + approval (same rules as Envato packs).
+
+---
+
+## Recommended build order (production)
+
+Full backlog: **`docs/MESHY-ASSET-BACKLOG.md`**.
+
+| Step | Action | Notes |
+|---|---|---|
+| **1** | Regenerate **Identity** | In flight separately; badge/card + shield/keyhole/MFA — no people/rings/bowls |
+| **2** | Refine four approved Batch 01 (+ Identity when approved) | Endpoint, Email, Network, Backup shapes already approved |
+| **3** | Generate **Batch 02** | Essential security (MFA, Zero Trust, Firewall, EDR, etc.) |
+| **4** | Assessment, SOC, hero ecosystem **compositions** | Batch 10 priority subset |
+| **5** | Compliance + managed IT | Batches 04–05 |
+| **6** | Industry only for pages being redesigned | Batch 08 — do not pre-build all |
+| **7** | Threat / problem **sparingly** | Batch 09 — abstract containment only |
+| **8** | Communications / secondary **last** | Batches 06–07 |
+
+**Next gate after Identity approval:** refine Batch 01 → then Batch 02. Do **not** auto-spend credits without DE go-ahead per step.
 
 ---
 
@@ -125,4 +146,5 @@ Write-Host "Updated local env. Restart Cursor, then revoke the OLD key in Meshy 
 ## Reminder
 
 - Still drop **Envato `4THD2PH`** ZIP → `assets/licensed/envato-4THD2PH/ORIGINAL/` when ready.
-- Next Meshy spend: optional **refine** (~10/asset) or Image-to-3D Identity after DE reviews batch-01 previews — do not auto-spend.
+- Identity regen is separate; **do not refine** Batch 01 until DE approves the new Identity shape.
+- After Identity approval: refine Batch 01 (~10/asset) → Batch 02 — see `docs/MESHY-ASSET-BACKLOG.md`. Do not auto-spend.

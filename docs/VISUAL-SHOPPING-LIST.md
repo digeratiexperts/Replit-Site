@@ -39,25 +39,32 @@ Do **not** subscribe yet. Inventory Envato #1 first.
 
 ### Meshy.ai — Premium + Cursor MCP (confirmed 2026-08-08)
 
-**Envato `4THD2PH` remains the primary stock pack.** Meshy is complementary: controlled custom / brand-unique 3D (target **10–20 Digerati concepts**), not a replacement for the Envato library.
+**Envato `4THD2PH` remains the primary stock pack.** Meshy is complementary: a reusable Digerati library of ~**40 core assets** with **selective page use** — not a dump of every mesh onto every page. Highest-value set ≈ **25** security/IT + **10** industry + **10** compositions. Full backlog: **`docs/MESHY-ASSET-BACKLOG.md`**.
 
 | Topic | Status |
 |---|---|
-| Plan | **Meshy Premium** — ~**3,100 credits** available (not Pro@1k) |
+| Plan | **Meshy Premium** — ~**3,100 credits** at start (batch-01 first pass used ~140) |
 | Cursor MCP | Connected as server **`user-meshy`** (`serverStatus: ready`, 24 Meshy tools) |
 | API key | Configured locally for key name **Digerati-Cursor** — **never commit**; **rotate** if the full key was posted in chat (see `docs/MESHY-MCP.md`) |
-| Commercial license | Paid plans (Pro+): commercial use + private ownership. Free = CC BY — do not use for DE brand work. |
+| Commercial license | Paid plans (Pro+): commercial use + private ownership. Free = CC BY — do not use for DE brand work. Sources under `assets/licensed/` only; derivatives for the site only — never `public/`. |
 | Credit burn (Meshy-6) | Image→3D ≈ **5–30** (meshy-5 cheaper / meshy-6 ~20; textured toward upper end); Text→3D preview ≈ **5–20**; refine/retexture ≈ **10**. Confirm cost before any generate call. |
 | Export path | `assets/licensed/meshy-<batch>/ORIGINAL/` (gitignored binaries) — never `client/public` / `public/` |
+| Avoid list | Threatening humans, masks, hoods, faces, skulls, insects, weapons; threat assets clean/abstract |
 
-**Workflow (current):**
+**Recommended Meshy build order:**
 
-1. Keep **Envato `4THD2PH`** as the stock pack — drop the entire ZIP when ready.
-2. Use **Meshy** only for approved Digerati concepts (soft plastic, dark premium, violet/fuchsia — **not** hooded-hacker).
-3. **No generation until DE approves** the first brief in `docs/MESHY-MCP.md`.
-4. Never paste API keys in chat; rotate any key that was exposed.
+1. Regenerate **Identity** (in flight separately).
+2. Refine four approved Batch 01 shapes (+ Identity when approved).
+3. Generate **Batch 02**.
+4. Assessment, SOC, and hero ecosystem compositions.
+5. Compliance + managed IT.
+6. Industry only for pages being redesigned.
+7. Threat / problem sparingly.
+8. Communications / secondary last.
 
-See **`docs/MESHY-MCP.md`** for MCP tool list, rotation steps, and the first-generation brief.
+**Next gate after Identity approval:** refine Batch 01 → then Batch 02.
+
+See **`docs/MESHY-ASSET-BACKLOG.md`** for Batches 01–10 and **`docs/MESHY-MCP.md`** for MCP tools / prompts.
 
 ---
 
