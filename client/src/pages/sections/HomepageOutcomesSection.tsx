@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { ArrowRight } from "lucide-react";
+import { isApprovedStill, outcomeVisualByTitle } from "@/lib/visualAssets";
 
 const groups = [
   {
@@ -49,28 +50,50 @@ export function HomepageOutcomesSection() {
           the sales story by themselves.
         </p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {groups.map((g) => (
-            <div key={g.title} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-              <h3 className="text-lg font-semibold text-white mb-3">{g.title}</h3>
-              <ul className="space-y-2 mb-5">
-                {g.items.map((item) => (
-                  <li key={item} className="text-sm text-white/65 flex gap-2">
-                    <span className="text-pink-400" aria-hidden>
-                      ·
-                    </span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href={g.href}
-                className="inline-flex items-center gap-2 text-sm font-medium text-pink-300 hover:text-pink-200"
-              >
-                {g.cta}
-                <ArrowRight className="h-4 w-4" aria-hidden />
-              </Link>
-            </div>
-          ))}
+          {groups.map((g) => {
+            const visual = outcomeVisualByTitle[g.title];
+            const showVisual = isApprovedStill(visual);
+
+            return (
+              <div key={g.title} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+                {showVisual && (
+                  <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500/15 via-fuchsia-500/10 to-transparent border border-white/10">
+                    <picture>
+                      <source srcSet={visual.srcThumb} type="image/webp" />
+                      <img
+                        src={visual.srcPng}
+                        alt=""
+                        width={72}
+                        height={72}
+                        loading="lazy"
+                        decoding="async"
+                        className="h-[72px] w-[72px] object-contain drop-shadow-[0_8px_20px_rgba(139,92,246,0.25)]"
+                        aria-hidden
+                      />
+                    </picture>
+                  </div>
+                )}
+                <h3 className="text-lg font-semibold text-white mb-3">{g.title}</h3>
+                <ul className="space-y-2 mb-5">
+                  {g.items.map((item) => (
+                    <li key={item} className="text-sm text-white/65 flex gap-2">
+                      <span className="text-pink-400" aria-hidden>
+                        ·
+                      </span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href={g.href}
+                  className="inline-flex items-center gap-2 text-sm font-medium text-pink-300 hover:text-pink-200"
+                >
+                  {g.cta}
+                  <ArrowRight className="h-4 w-4" aria-hidden />
+                </Link>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

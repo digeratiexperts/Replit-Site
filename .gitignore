@@ -46,3 +46,9 @@ assets/licensed/**/*.pdf
 !assets/licensed/**/LICENSE*
 !assets/licensed/**/license*
 !assets/licensed/**/*.txt
+
+# Private photography originals (publish only optimized derivatives under client/public)
+assets/photography/**/ORIGINAL/**
+!assets/photography/**/ORIGINAL/.gitkeep
+!assets/photography/**/README.md
+assets/photography/**/*.{jpg,jpeg,png,webp,avif,heic,tif,tiff,raw,cr2,nef}

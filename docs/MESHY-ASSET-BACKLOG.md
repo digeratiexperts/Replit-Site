@@ -2,7 +2,18 @@
 
 **Date:** 2026-08-08  
 **Source:** DE production backlog (full Batches 01–10)  
-**Related:** `docs/MESHY-BATCH-01.md`, `docs/MESHY-MCP.md`, `docs/VISUAL-SHOPPING-LIST.md`
+**Related:** `docs/MESHY-BATCH-01.md`, `docs/MESHY-MCP.md`, `docs/VISUAL-SHOPPING-LIST.md`, `docs/VISUAL-ASSET-INVENTORY.md`
+
+### Site placement (2026-08-08)
+
+| Asset | Public derivative | Placed |
+|---|---|---|
+| Endpoint / Email / Network / Backup | `client/public/images/visual-system/meshy-batch-01/*` | Homepage outcomes (3 cards) + Solutions index (network / threat / backup) |
+| Identity v4 | Not published | **Await DE approval** — registry marks `awaiting-approval` |
+| Hero `DashboardMockup` | — | **Deferred** (needs composed ecosystem, Batch 10) |
+| Mega-menu / portal | — | Stay Lucide |
+
+Registry: `client/src/lib/visualAssets.ts`. Do not overwrite this backlog’s batch tables when updating placement notes.
 
 ---
 

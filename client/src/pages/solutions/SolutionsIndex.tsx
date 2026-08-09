@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { pricing, pricingTiers, getPricingFooterText } from "@/data/pricing";
+import { isApprovedStill, solutionVisualByTitle } from "@/lib/visualAssets";
 
 const SolutionsIndex = () => {
   const prefersReducedMotion = useReducedMotion();
@@ -260,20 +261,42 @@ const SolutionsIndex = () => {
               whileInView="visible"
               viewport={{ once: true }}
             >
-              {foundationServices.map((service, index) => (
+              {foundationServices.map((service, index) => {
+                const visual = solutionVisualByTitle[service.title];
+                const showVisual = isApprovedStill(visual);
+                return (
                 <motion.div
                   key={service.title}
                   variants={itemVariants}
                   className="p-5 rounded-xl bg-white/[0.03] border border-white/10 hover:border-violet-500/30 transition-all duration-300"
                   data-testid={`foundation-${index}`}
                 >
-                  <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center mb-4">
-                    <service.icon className="w-5 h-5 text-violet-400" />
-                  </div>
+                  {showVisual ? (
+                    <div className="w-14 h-14 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center mb-4 overflow-hidden">
+                      <picture>
+                        <source srcSet={visual.srcThumb} type="image/webp" />
+                        <img
+                          src={visual.srcPng}
+                          alt=""
+                          width={48}
+                          height={48}
+                          loading="lazy"
+                          decoding="async"
+                          className="h-12 w-12 object-contain"
+                          aria-hidden
+                        />
+                      </picture>
+                    </div>
+                  ) : (
+                    <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center mb-4">
+                      <service.icon className="w-5 h-5 text-violet-400" />
+                    </div>
+                  )}
                   <h3 className="text-white font-semibold mb-2">{service.title}</h3>
                   <p className="text-white/60 text-sm leading-relaxed">{service.description}</p>
                 </motion.div>
-              ))}
+                );
+              })}
             </motion.div>
           </motion.section>
 
@@ -297,16 +320,37 @@ const SolutionsIndex = () => {
               whileInView="visible"
               viewport={{ once: true }}
             >
-              {securityServices.map((service, index) => (
+              {securityServices.map((service, index) => {
+                const visual = solutionVisualByTitle[service.title];
+                const showVisual = isApprovedStill(visual);
+                return (
                 <motion.div
                   key={service.title}
                   variants={itemVariants}
                   className="flex gap-4 p-5 rounded-xl bg-white/[0.03] border border-white/10 hover:border-violet-500/30 transition-all duration-300"
                   data-testid={`security-${index}`}
                 >
-                  <div className="w-12 h-12 rounded-lg bg-violet-500/20 flex items-center justify-center flex-shrink-0">
-                    <service.icon className="w-6 h-6 text-violet-400" />
-                  </div>
+                  {showVisual ? (
+                    <div className="w-14 h-14 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                      <picture>
+                        <source srcSet={visual.srcThumb} type="image/webp" />
+                        <img
+                          src={visual.srcPng}
+                          alt=""
+                          width={48}
+                          height={48}
+                          loading="lazy"
+                          decoding="async"
+                          className="h-12 w-12 object-contain"
+                          aria-hidden
+                        />
+                      </picture>
+                    </div>
+                  ) : (
+                    <div className="w-12 h-12 rounded-lg bg-violet-500/20 flex items-center justify-center flex-shrink-0">
+                      <service.icon className="w-6 h-6 text-violet-400" />
+                    </div>
+                  )}
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <h3 className="text-white font-semibold">{service.title}</h3>
@@ -317,7 +361,8 @@ const SolutionsIndex = () => {
                     <p className="text-white/60 text-sm leading-relaxed">{service.description}</p>
                   </div>
                 </motion.div>
-              ))}
+                );
+              })}
             </motion.div>
           </motion.section>
 

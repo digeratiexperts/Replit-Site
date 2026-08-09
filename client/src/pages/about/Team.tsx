@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Shield, Award, Briefcase, Users, Star, Trophy, CheckCircle } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
+import { photography } from "@/lib/visualAssets";
 
 export default function Team() {
   const prefersReducedMotion = useReducedMotion() ?? false;
@@ -96,6 +97,43 @@ export default function Team() {
             We're passionate about protecting Arizona businesses and helping them succeed with technology.
           </p>
         </motion.div>
+
+        {/* Founder — only when a real DE headshot is published (no stock / no invented photos) */}
+        {photography.founderHeadshot.available && (
+          <motion.div
+            className="max-w-3xl mx-auto"
+            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            data-testid="founder-spotlight"
+          >
+            <div className="flex flex-col sm:flex-row items-center gap-6 rounded-2xl border border-white/10 bg-white/5 p-6 md:p-8">
+              <picture>
+                <source srcSet={photography.founderHeadshot.src} type="image/webp" />
+                <img
+                  src={photography.founderHeadshot.srcPng}
+                  alt={photography.founderHeadshot.alt}
+                  width={160}
+                  height={160}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-36 w-36 sm:h-40 sm:w-40 rounded-2xl object-cover border border-violet-500/30 shadow-lg shadow-violet-500/20"
+                />
+              </picture>
+              <div className="text-center sm:text-left">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-pink-300/90 mb-2">
+                  Founder
+                </p>
+                <h2 className="text-2xl font-bold text-white mb-2">Joseph Petro</h2>
+                <p className="text-gray-300 leading-relaxed">
+                  Principal-led cybersecurity and managed IT for Arizona businesses — accountable
+                  recommendations from the people who stand behind the work.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
         {/* Team Cards */}
         <div className="grid md:grid-cols-2 gap-6">
