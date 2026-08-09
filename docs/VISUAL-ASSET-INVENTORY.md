@@ -83,9 +83,11 @@ C:\Users\Joe\Projects\Replit-Site\assets\licensed\envato-4THD2PH\ORIGINAL\4THD2P
 
 | Surface | File | Current visuals | Action this pass |
 |---|---|---|---|
-| Homepage hero | `ModernHeroSection.tsx` | Arizona dusk photo + Lucide trust chips + `DashboardMockup` SVG | **No change** — hero ecosystem composition = next stage |
-| Homepage outcomes | `HomepageOutcomesSection.tsx` | Text-only cards | **Placed** Endpoint / Backup / Network stills on 3 matching cards |
-| Homepage trust rail / engage / proof | various | Lucide | Unchanged (selective rule) |
+| Homepage hero | `ModernHeroSection.tsx` | Arizona dusk photo + Lucide trust chips + `DashboardMockup` SVG | **Left alone** — refined DashboardMockup beats a corny Meshy icon swarm; ecosystem composition = later stage |
+| Homepage outcomes | `HomepageOutcomesSection.tsx` | Endpoint / Backup / Network on 3 matching cards | **Polished** — shared `MeshyStillAccent` (smaller, opacity ~85%, soft frame, no heavy glow) |
+| Homepage engagement | `HomepageEngagementSection.tsx` | Lucide on relationship cards | **+1** Email still on assessment band only (copy names email); cards stay Lucide |
+| Homepage process | `HomepageHowItWorks.tsx` | Numbered steps | **+1** Network still as section intro accent only — not on each step |
+| Homepage trust rail / proof / stats | various | Lucide | Unchanged (selective rule) |
 | Mega-menu | `MegaMenu` | Lucide | **Do not replace** |
 | Portal menus | portal | Lucide | **Do not replace** |
 | Services section (legacy) | `DigeratiServicesSection.tsx` | Lucide — **not mounted** on current homepage | Untouched |
@@ -94,6 +96,9 @@ C:\Users\Joe\Projects\Replit-Site\assets\licensed\envato-4THD2PH\ORIGINAL\4THD2P
 | Trust photo | `DigeratiTrustPhotoSection.tsx` | `de-trust-assessment-desk.png` atmosphere | Keep (real scene, not founder) |
 | ProActive ecosystem pages | `solutions/ProActive*EcosystemPage.tsx` | mostly Lucide / layout | Deferred — need more Batch 02+ concepts |
 
+Shared accent component: `client/src/components/visual/MeshyStillAccent.tsx`  
+Registry accents: `homepageSectionAccents` in `visualAssets.ts`
+
 ---
 
 ## 5. Destination map
@@ -101,8 +106,8 @@ C:\Users\Joe\Projects\Replit-Site\assets\licensed\envato-4THD2PH\ORIGINAL\4THD2P
 | Concept | Public path | Primary placement | Secondary | Blocked / next |
 |---|---|---|---|---|
 | Endpoint | `/images/visual-system/meshy-batch-01/endpoint.webp` | Outcomes: “Protect identities and devices” | Solutions: Threat Detection | Refine materials later |
-| Email | `.../email.webp` | Registry only (outcomes card already uses endpoint as lead visual) | Future email-security page / services card | Optional second still on outcomes |
-| Network | `.../network.webp` | Outcomes: “Protect and monitor…” | Solutions: Managed Network | — |
+| Email | `.../email.webp` | Engagement assessment band (homepage) | Future email-security page | Do not duplicate on outcomes (endpoint already leads that card) |
+| Network | `.../network.webp` | Outcomes: “Protect and monitor…” | Process section intro + Solutions: Managed Network | — |
 | Backup | `.../backup.webp` | Outcomes: “Keep the business recoverable” | Solutions: Backup & DR | — |
 | Identity | — | — | — | DE approve v4 → publish derivative → outcomes / identity cards |
 | Founder headshot | `/images/team/joseph-petro-headshot.webp` | `/about/team` founder spotlight | Ebook / trust / About | Waiting for DE drop |

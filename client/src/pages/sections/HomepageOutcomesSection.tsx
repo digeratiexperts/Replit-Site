@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { ArrowRight } from "lucide-react";
-import { isApprovedStill, outcomeVisualByTitle } from "@/lib/visualAssets";
+import { MeshyStillAccent } from "@/components/visual/MeshyStillAccent";
+import { outcomeVisualByTitle } from "@/lib/visualAssets";
 
 const groups = [
   {
@@ -52,26 +53,11 @@ export function HomepageOutcomesSection() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {groups.map((g) => {
             const visual = outcomeVisualByTitle[g.title];
-            const showVisual = isApprovedStill(visual);
 
             return (
               <div key={g.title} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-                {showVisual && (
-                  <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500/15 via-fuchsia-500/10 to-transparent border border-white/10">
-                    <picture>
-                      <source srcSet={visual.srcThumb} type="image/webp" />
-                      <img
-                        src={visual.srcPng}
-                        alt=""
-                        width={72}
-                        height={72}
-                        loading="lazy"
-                        decoding="async"
-                        className="h-[72px] w-[72px] object-contain drop-shadow-[0_8px_20px_rgba(139,92,246,0.25)]"
-                        aria-hidden
-                      />
-                    </picture>
-                  </div>
+                {visual && (
+                  <MeshyStillAccent still={visual} size="md" className="mb-4" />
                 )}
                 <h3 className="text-lg font-semibold text-white mb-3">{g.title}</h3>
                 <ul className="space-y-2 mb-5">

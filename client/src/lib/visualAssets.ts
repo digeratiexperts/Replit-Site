@@ -105,6 +105,17 @@ export const outcomeVisualByTitle: Record<string, VisualStill | undefined> = {
   "Protect and monitor the environment": meshyBatch01.network,
 };
 
+/**
+ * Homepage single-accent placements (one still per section — not card grids).
+ * Hero keeps Arizona dusk + DashboardMockup; no Meshy swarm there.
+ */
+export const homepageSectionAccents = {
+  /** Engagement assessment band — copy names email explicitly */
+  engagementAssessment: meshyBatch01.email,
+  /** Process intro — environment / operating-model cue */
+  howItWorks: meshyBatch01.network,
+} as const;
+
 /** Solutions index cards that map cleanly to approved Batch 01 */
 export const solutionVisualByTitle: Record<string, VisualStill | undefined> = {
   "Managed Network Security": meshyBatch01.network,

@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { MeshyStillAccent } from "@/components/visual/MeshyStillAccent";
+import { homepageSectionAccents } from "@/lib/visualAssets";
 import { useBooking } from "@/contexts/BookingContext";
 import { analytics } from "@/lib/analytics";
 
@@ -31,12 +33,17 @@ export function HomepageHowItWorks() {
   return (
     <section id="how-it-works" className="py-14 lg:py-20 bg-[#050312]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-pink-300/90 mb-3">
-          How engagement works
-        </p>
-        <h2 className="text-2xl md:text-4xl font-bold text-white mb-10 max-w-2xl">
-          A clear path from uncertainty to an accountable operating model
-        </h2>
+        <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-6">
+          <MeshyStillAccent still={homepageSectionAccents.howItWorks} size="lg" />
+          <div className="min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-pink-300/90 mb-3">
+              How engagement works
+            </p>
+            <h2 className="text-2xl md:text-4xl font-bold text-white max-w-2xl">
+              A clear path from uncertainty to an accountable operating model
+            </h2>
+          </div>
+        </div>
         <ol className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
           {steps.map((s) => (
             <li key={s.n} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">

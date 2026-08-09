@@ -1,6 +1,8 @@
 import { Link } from "wouter";
-import { ArrowRight, Layers, Users, Wrench, ClipboardList } from "lucide-react";
+import { ArrowRight, Layers, Users, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { MeshyStillAccent } from "@/components/visual/MeshyStillAccent";
+import { homepageSectionAccents } from "@/lib/visualAssets";
 import { useBooking } from "@/contexts/BookingContext";
 import { analytics } from "@/lib/analytics";
 
@@ -66,7 +68,11 @@ export function HomepageEngagementSection() {
         </div>
 
         <div className="rounded-2xl border border-pink-400/25 bg-gradient-to-r from-pink-500/10 via-violet-500/10 to-transparent p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-5">
-          <ClipboardList className="h-8 w-8 text-pink-300 shrink-0" aria-hidden />
+          <MeshyStillAccent
+            still={homepageSectionAccents.engagementAssessment}
+            size="lg"
+            className="self-start md:self-center"
+          />
           <div className="flex-1">
             <h3 className="text-lg font-semibold text-white">Not sure? Start with a Cyber Risk Assessment</h3>
             <p className="text-sm text-white/65 mt-1">
