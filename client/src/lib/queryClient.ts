@@ -7,15 +7,34 @@ async function throwIfResNotOk(res: Response) {
   }
 }
 
+function authHeaders(hasJsonBody: boolean): Record<string, string> {
+  const headers: Record<string, string> = {};
+  if (hasJsonBody) headers["Content-Type"] = "application/json";
+  const token = localStorage.getItem("portalToken");
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  return headers;
+}
+
+/** Supports both (method, url, data) and legacy (url, method, data) call sites. */
 export async function apiRequest(
-  method: string,
-  url: string,
+  methodOrUrl: string,
+  urlOrMethod: string,
   data?: unknown | undefined,
 ): Promise<Response> {
+  let method: string;
+  let url: string;
+  if (methodOrUrl.startsWith("/") || methodOrUrl.startsWith("http")) {
+    url = methodOrUrl;
+    method = urlOrMethod;
+  } else {
+    method = methodOrUrl;
+    url = urlOrMethod;
+  }
+
   const res = await fetch(url, {
     method,
-    headers: data ? { "Content-Type": "application/json" } : {},
-    body: data ? JSON.stringify(data) : undefined,
+    headers: authHeaders(data !== undefined),
+    body: data !== undefined ? JSON.stringify(data) : undefined,
     credentials: "include",
   });
 
@@ -30,6 +49,7 @@ export const getQueryFn: <T>(options: {
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
     const res = await fetch(queryKey.join("/") as string, {
+      headers: authHeaders(false),
       credentials: "include",
     });
 

@@ -106,6 +106,42 @@ import {
 const JWT_SECRET = process.env.JWT_SECRET || randomBytes(32).toString('hex');
 const SALT_ROUNDS = 12;
 
+/** HttpOnly JWT cookie — survives localStorage loss; shared across digeratexperts.com hosts. */
+const PORTAL_AUTH_COOKIE = "portalAuth";
+
+function portalCookieOptions(maxAgeMs = 24 * 60 * 60 * 1000) {
+  const isProd = process.env.NODE_ENV === "production";
+  const opts: {
+    httpOnly: boolean;
+    secure: boolean;
+    sameSite: "lax";
+    maxAge: number;
+    path: string;
+    domain?: string;
+  } = {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: "lax",
+    maxAge: maxAgeMs,
+    path: "/",
+  };
+  // Share session between digeratexperts.com and portal.digeratiexperts.com
+  if (isProd) {
+    opts.domain = ".digeratiexperts.com";
+  }
+  return opts;
+}
+
+function setPortalAuthCookie(res: Response, token: string, maxAgeMs?: number) {
+  res.cookie(PORTAL_AUTH_COOKIE, token, portalCookieOptions(maxAgeMs));
+}
+
+function clearPortalAuthCookies(res: Response) {
+  const opts = portalCookieOptions();
+  res.clearCookie("sessionId", opts);
+  res.clearCookie(PORTAL_AUTH_COOKIE, opts);
+}
+
 // Utility function for generating IDs
 const randomId = () => randomBytes(16).toString('hex');
 
@@ -135,16 +171,20 @@ const SESSION_EXPIRY_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 // ========== MIDDLEWARE ==========
 
-// JWT-based auth middleware with proper validation and optional session validation
+// JWT-based auth: Authorization Bearer and/or httpOnly portalAuth cookie
 export function authMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({ error: "Authentication required" });
-  }
-  
-  const token = authHeader.split(" ")[1];
+  const bearer =
+    authHeader && authHeader.startsWith("Bearer ")
+      ? authHeader.slice("Bearer ".length).trim()
+      : "";
+  const cookieToken =
+    typeof req.cookies?.[PORTAL_AUTH_COOKIE] === "string"
+      ? req.cookies[PORTAL_AUTH_COOKIE]
+      : "";
+  const token = bearer || cookieToken;
   if (!token) {
-    return res.status(401).json({ error: "Invalid authorization header" });
+    return res.status(401).json({ error: "Authentication required" });
   }
   
   try {
@@ -1977,13 +2017,8 @@ export async function registerRoutes(app: Express) {
 
     const token = jwt.sign(buildPortalJwtClaims(user, storeRole), JWT_SECRET, { expiresIn: "24h" });
 
-    res.cookie('sessionId', sessionId, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 24 * 60 * 60 * 1000,
-      path: '/',
-    });
+    res.cookie("sessionId", sessionId, portalCookieOptions());
+    setPortalAuthCookie(res, token);
 
     logSecurityEvent("PORTAL_USER_LOGIN", req, { userId: user.id, email: user.email, role: user.role, storeRole, sessionId });
 
@@ -2013,13 +2048,8 @@ export async function registerRoutes(app: Express) {
 
     const token = jwt.sign(buildPortalJwtClaims(user, storeRole), JWT_SECRET, { expiresIn: "24h" });
 
-    res.cookie("sessionId", sessionId, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 24 * 60 * 60 * 1000,
-      path: "/",
-    });
+    res.cookie("sessionId", sessionId, portalCookieOptions());
+    setPortalAuthCookie(res, token);
 
     logSecurityEvent("PORTAL_USER_LOGIN", req, {
       userId: user.id,
@@ -2415,7 +2445,7 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  // Portal Logout Endpoint - Clears session cookie
+  // Portal Logout Endpoint - Clears session + portalAuth cookies
   app.post("/api/portal/logout", [validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const sessionId = req.cookies?.sessionId;
@@ -2426,13 +2456,7 @@ export async function registerRoutes(app: Express) {
         logSecurityEvent("SESSION_TERMINATED", req, { sessionId });
       }
 
-      // Clear the session cookie
-      res.clearCookie('sessionId', {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        path: '/',
-      });
+      clearPortalAuthCookies(res);
 
       logSecurityEvent("PORTAL_USER_LOGOUT", req, { userId: req.user?.id || "unknown" });
 
@@ -4065,6 +4089,8 @@ export async function registerRoutes(app: Express) {
         JWT_SECRET, 
         { expiresIn: '4h' }
       );
+
+      setPortalAuthCookie(res, impersonationToken, 4 * 60 * 60 * 1000);
       
       res.json({ 
         success: true, 
@@ -4093,6 +4119,8 @@ export async function registerRoutes(app: Express) {
         JWT_SECRET, 
         { expiresIn: '24h' }
       );
+
+      setPortalAuthCookie(res, adminToken);
       
       res.json({ success: true, token: adminToken });
       logSecurityEvent("ADMIN_IMPERSONATION_STOP", req, {});

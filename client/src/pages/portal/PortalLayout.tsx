@@ -33,11 +33,12 @@ import {
   AlertTriangle,
   Briefcase,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
 import { TenantSelector } from "@/components/portal/TenantSelector";
 import { useSEO } from "@/hooks/useSEO";
 import { navAllowed, readPortalUser, type NavKey } from "@/lib/portalRoles";
+import { portalGet, redirectToPortalLogin } from "@/lib/portalApi";
 
 interface PortalLayoutProps {
   children: React.ReactNode;
@@ -105,15 +106,43 @@ const sidebarGhostBtn =
 export function PortalLayout({ children, title }: PortalLayoutProps) {
   const [location] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sessionReady, setSessionReady] = useState(false);
   useSEO({
     title: `${title} | Client Portal`,
     description: "Digerati Experts Client Portal — secure access for existing clients.",
     noIndex: true,
   });
-  const user = readPortalUser();
+  const [user, setUser] = useState(() => readPortalUser());
   const impersonatingCompany = localStorage.getItem("impersonatingCompany")
     ? JSON.parse(localStorage.getItem("impersonatingCompany")!)
     : null;
+
+  // Ensure session is real: Bearer localStorage and/or httpOnly portalAuth cookie
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const me = await portalGet<{ user: any }>("/api/portal/me");
+        if (cancelled) return;
+        if (me?.user) {
+          localStorage.setItem("portalUser", JSON.stringify(me.user));
+          localStorage.setItem("portalUserId", me.user.id || "portal-user");
+          if (me.user.email) localStorage.setItem("userEmail", me.user.email);
+          setUser(me.user);
+        }
+        setSessionReady(true);
+      } catch {
+        if (!cancelled) {
+          redirectToPortalLogin(
+            `${window.location.pathname}${window.location.search || ""}`,
+          );
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const visibleNav = useMemo(
     () => navItems.filter((item) => navAllowed(user, item.key)),
@@ -129,6 +158,7 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
+        credentials: "include",
       });
       if (response.ok) {
         const data = await response.json();
@@ -141,11 +171,26 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/portal/logout", { method: "POST", credentials: "include" });
+    } catch {
+      /* still clear local */
+    }
     localStorage.removeItem("portalUser");
     localStorage.removeItem("portalToken");
+    localStorage.removeItem("portalUserId");
+    localStorage.removeItem("impersonatingCompany");
     window.location.href = "/portal/login";
   };
+
+  if (!sessionReady) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-white dark:bg-slate-950 text-sm text-slate-500">
+        Checking session…
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-white dark:bg-slate-950">

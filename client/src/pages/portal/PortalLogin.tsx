@@ -58,15 +58,22 @@ export default function PortalLogin() {
 
     if (zohoSso === "1" && token) {
       (async () => {
+        // Persist token first — JWT decode must never block session handoff
+        localStorage.setItem("portalToken", token);
         try {
-          const payloadPart = token.split(".")[1];
-          const payload = payloadPart
-            ? JSON.parse(atob(payloadPart.replace(/-/g, "+").replace(/_/g, "/")))
-            : null;
-          localStorage.setItem("portalToken", token);
+          let payload: any = null;
+          try {
+            const payloadPart = token.split(".")[1];
+            payload = payloadPart
+              ? JSON.parse(atob(payloadPart.replace(/-/g, "+").replace(/_/g, "/")))
+              : null;
+          } catch {
+            /* non-fatal */
+          }
           try {
             const meRes = await fetch("/api/portal/me", {
               headers: { Authorization: `Bearer ${token}` },
+              credentials: "include",
             });
             const meData = await meRes.json();
             if (meRes.ok && meData.user) {
@@ -128,6 +135,7 @@ export default function PortalLogin() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, turnstileToken }),
+        credentials: "include",
       });
 
       const data = await response.json();
@@ -149,7 +157,12 @@ export default function PortalLogin() {
       localStorage.setItem("portalToken", data.token);
       localStorage.setItem("portalUserId", data.user?.id || "portal-user");
       localStorage.setItem("userEmail", email);
-      navigate("/portal/dashboard");
+      const returnTo = readQueryParam("returnTo");
+      const dest =
+        returnTo.startsWith("/portal") && !returnTo.startsWith("//")
+          ? returnTo
+          : "/portal/dashboard";
+      navigate(dest);
     } catch (err) {
       setError("Connection error. Please try again.");
     } finally {
@@ -167,6 +180,7 @@ export default function PortalLogin() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mfaToken, code: mfaCode }),
+        credentials: "include",
       });
 
       const data = await response.json();
@@ -180,7 +194,12 @@ export default function PortalLogin() {
       localStorage.setItem("portalToken", data.token);
       localStorage.setItem("portalUserId", data.user?.id || "portal-user");
       localStorage.setItem("userEmail", email);
-      navigate("/portal/dashboard");
+      const returnTo = readQueryParam("returnTo");
+      const dest =
+        returnTo.startsWith("/portal") && !returnTo.startsWith("//")
+          ? returnTo
+          : "/portal/dashboard";
+      navigate(dest);
     } catch (err) {
       setError("Connection error. Please try again.");
     } finally {
@@ -188,7 +207,11 @@ export default function PortalLogin() {
     }
   };
 
-  const zohoStartHref = "/api/portal/auth/zoho/start?returnTo=/portal/dashboard";
+  const returnToForZoho = (() => {
+    const r = readQueryParam("returnTo");
+    return r.startsWith("/portal") && !r.startsWith("//") ? r : "/portal/dashboard";
+  })();
+  const zohoStartHref = `/api/portal/auth/zoho/start?returnTo=${encodeURIComponent(returnToForZoho)}`;
   const showZoho = zohoConfigured !== false;
 
   return (
