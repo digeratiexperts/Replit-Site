@@ -1,7 +1,7 @@
 # Meshy MCP — Digerati Cursor workflow
 
 **Date:** 2026-08-08  
-**Status:** Connected — **no generation until DE approves** the first brief below.  
+**Status:** Connected — **batch-01 Text-to-3D complete** (see `docs/MESHY-BATCH-01.md`).  
 **Related:** `docs/VISUAL-SHOPPING-LIST.md` (Envato primary + Meshy complementary)
 
 ---
@@ -50,9 +50,9 @@ Website-ready derivatives only after inventory + approval (same rules as Envato 
 
 ---
 
-## FIRST generation brief — awaiting DE approval
+## FIRST generation brief — APPROVED & RUN (batch-01)
 
-**Do not spend credits until DE confirms which concepts (and mode) to run.**
+DE approved Text-to-3D batch-01 on 2026-08-08. Full prompts, task IDs, paths, and credit log: **`docs/MESHY-BATCH-01.md`**.
 
 ### Recommended first batch (5 concepts)
 
@@ -125,4 +125,4 @@ Write-Host "Updated local env. Restart Cursor, then revoke the OLD key in Meshy 
 ## Reminder
 
 - Still drop **Envato `4THD2PH`** ZIP → `assets/licensed/envato-4THD2PH/ORIGINAL/` when ready.
-- Meshy spends only after DE approves concepts above (or a shortened list).
+- Next Meshy spend: optional **refine** (~10/asset) or Image-to-3D Identity after DE reviews batch-01 previews — do not auto-spend.
