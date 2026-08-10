@@ -1,10 +1,21 @@
-import { useEffect, useState } from "react";
-import { MessageCircle, X, Send, AlertCircle } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import {
+  Bot,
+  BookOpen,
+  CheckCircle2,
+  ExternalLink,
+  FileText,
+  LifeBuoy,
+  MessageCircle,
+  Send,
+  ShieldCheck,
+  Sparkles,
+  X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { motion } from "framer-motion";
 
 interface ZohoASAPWidgetProps {
   isEnabled?: boolean;
@@ -13,6 +24,55 @@ interface ZohoASAPWidgetProps {
   customCSS?: string;
 }
 
+type ActiveTab = "chat" | "ticket" | "resources";
+type ChatRole = "user" | "assistant";
+
+type ChatMessage = {
+  id: string;
+  role: ChatRole;
+  content: string;
+};
+
+type TicketResult = {
+  ticketNumber?: string;
+  message: string;
+};
+
+const CHAT_WELCOME: ChatMessage = {
+  id: "welcome",
+  role: "assistant",
+  content:
+    "Hi, I’m the Digerati Support Assistant. I can help troubleshoot an issue, answer service questions, or point you to the right next step.",
+};
+
+const QUICK_CHAT_PROMPTS = [
+  "I can’t sign in",
+  "I have an email or Microsoft 365 issue",
+  "I have a security concern",
+  "What services do you offer?",
+];
+
+const RESOURCE_LINKS = [
+  {
+    title: "Knowledge Base",
+    description: "Setup guides, troubleshooting, and security help",
+    href: "/support/knowledge-base",
+    icon: BookOpen,
+  },
+  {
+    title: "Remote Support",
+    description: "Start a remote support session with our team",
+    href: "/support/remote-support",
+    icon: LifeBuoy,
+  },
+  {
+    title: "Client Portal",
+    description: "Tickets, services, billing, approvals, and account tools",
+    href: "/portal/login",
+    icon: ShieldCheck,
+  },
+];
+
 export const ZohoASAPWidget = ({
   isEnabled = true,
   accountId,
@@ -20,11 +80,21 @@ export const ZohoASAPWidget = ({
   customCSS,
 }: ZohoASAPWidgetProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<"support" | "kb" | "status">("support");
+  const [activeTab, setActiveTab] = useState<ActiveTab>("chat");
+
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([CHAT_WELCOME]);
+  const [chatInput, setChatInput] = useState("");
+  const [isChatSending, setIsChatSending] = useState(false);
+  const [assistantAvailable, setAssistantAvailable] = useState<boolean | null>(null);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [priority, setPriority] = useState<"Low" | "Medium" | "High" | "Urgent">("Medium");
+  const [isTicketSending, setIsTicketSending] = useState(false);
+  const [ticketResult, setTicketResult] = useState<TicketResult | null>(null);
+
   const [cookieBannerClear, setCookieBannerClear] = useState(() => {
     try {
       return !!(
@@ -35,6 +105,7 @@ export const ZohoASAPWidget = ({
       return false;
     }
   });
+
   const { toast } = useToast();
 
   useEffect(() => {
@@ -48,12 +119,14 @@ export const ZohoASAPWidget = ({
           setCookieBannerClear(true);
         }
       } catch {
-        /* ignore */
+        /* ignore storage access failures */
       }
     };
+
     window.addEventListener("de-cookie-consent", check);
     window.addEventListener("storage", check);
     const id = window.setInterval(check, 800);
+
     return () => {
       window.clearInterval(id);
       window.removeEventListener("de-cookie-consent", check);
@@ -62,7 +135,8 @@ export const ZohoASAPWidget = ({
   }, [cookieBannerClear]);
 
   useEffect(() => {
-    // Lazy-load Zoho ASAP after idle / first interaction so it doesn't compete with LCP.
+    // Keep the existing Zoho ASAP bootstrap available for Desk integrations, but
+    // do not make it responsible for the custom Digerati support experience.
     if (!isEnabled || !accountId || !portalId) return;
     if (typeof document === "undefined") return;
     if (document.querySelector('script[data-zoho-asap="1"]')) return;
@@ -71,6 +145,7 @@ export const ZohoASAPWidget = ({
     const load = () => {
       if (loaded) return;
       loaded = true;
+
       const config = document.createElement("script");
       config.innerHTML = `
         window.ZohoDeskAsapConfig = {
@@ -89,9 +164,9 @@ export const ZohoASAPWidget = ({
 
     const idle =
       "requestIdleCallback" in window
-        ? (window as Window & { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback(load, {
-            timeout: 4000,
-          })
+        ? (window as Window & {
+            requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number;
+          }).requestIdleCallback(load, { timeout: 4000 })
         : window.setTimeout(load, 2500);
 
     const onInteract = () => load();
@@ -109,48 +184,173 @@ export const ZohoASAPWidget = ({
     };
   }, [isEnabled, accountId, portalId]);
 
-  const handleSubmitTicket = async () => {
-    if (!email || !subject || !message) {
+  useEffect(() => {
+    if (!isOpen) return;
+
+    let cancelled = false;
+    void fetch("/api/portal/zoho/chat/status")
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Status unavailable");
+        return response.json();
+      })
+      .then((data) => {
+        if (!cancelled) setAssistantAvailable(Boolean(data.assistantAvailable));
+      })
+      .catch(() => {
+        if (!cancelled) setAssistantAvailable(null);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (activeTab !== "chat") return;
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [activeTab, chatMessages]);
+
+  const handleSendChat = async (prompt?: string) => {
+    const content = (prompt ?? chatInput).trim();
+    if (!content || isChatSending) return;
+
+    if (content.length > 2000) {
       toast({
-        title: "Missing Information",
-        description: "Please fill in all fields",
+        title: "Message is too long",
+        description: "Please keep chat messages under 2,000 characters.",
         variant: "destructive",
       });
       return;
     }
 
-    setIsLoading(true);
+    const userMessage: ChatMessage = {
+      id: `user-${Date.now()}`,
+      role: "user",
+      content,
+    };
+
+    const conversationHistory = chatMessages
+      .filter((item) => item.id !== CHAT_WELCOME.id)
+      .slice(-10)
+      .map(({ role, content: historyContent }) => ({
+        role,
+        content: historyContent,
+      }));
+
+    setChatMessages((current) => [...current, userMessage]);
+    setChatInput("");
+    setIsChatSending(true);
+
+    try {
+      const response = await fetch("/api/portal/zoho/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: content,
+          conversationHistory,
+        }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.error || "The support assistant could not answer right now.");
+      }
+
+      const replyContent = data.message?.content;
+      if (!replyContent || typeof replyContent !== "string") {
+        throw new Error("The support assistant returned an invalid response.");
+      }
+
+      setAssistantAvailable(true);
+      setChatMessages((current) => [
+        ...current,
+        {
+          id: data.message.id || `assistant-${Date.now()}`,
+          role: "assistant",
+          content: replyContent,
+        },
+      ]);
+    } catch (error) {
+      const description = error instanceof Error ? error.message : "Chat is temporarily unavailable.";
+      setChatMessages((current) => [
+        ...current,
+        {
+          id: `assistant-error-${Date.now()}`,
+          role: "assistant",
+          content: `${description} You can create a support ticket here and the team will follow up.`,
+        },
+      ]);
+      toast({
+        title: "Chat unavailable",
+        description: "Your message was not submitted as a ticket. Use the Ticket tab if you need team follow-up.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsChatSending(false);
+    }
+  };
+
+  const handleSubmitTicket = async () => {
+    if (!email || !subject || !message) {
+      toast({
+        title: "Missing information",
+        description: "Please enter your email, subject, and message.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email.trim())) {
+      toast({
+        title: "Check your email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsTicketSending(true);
+    setTicketResult(null);
+
     try {
       const response = await fetch("/api/portal/zoho/ticket", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email,
-          subject,
-          description: message,
-          priority: "Medium",
+          email: email.trim(),
+          subject: subject.trim(),
+          description: message.trim(),
+          priority,
         }),
       });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to create ticket");
+      }
 
-      if (!response.ok) throw new Error("Failed to create ticket");
-
-      toast({
-        title: "Success",
-        description: "Support ticket created. We'll be in touch shortly!",
+      setTicketResult({
+        ticketNumber: data.ticketNumber,
+        message: data.message || "Your support request has been received.",
       });
-
       setEmail("");
       setSubject("");
       setMessage("");
-      setIsOpen(false);
-    } catch (error: any) {
+      setPriority("Medium");
+
       toast({
-        title: "Error",
-        description: error.message,
+        title: "Ticket created",
+        description: data.ticketNumber
+          ? `Reference ${data.ticketNumber}`
+          : "We’ll be in touch shortly.",
+      });
+    } catch (error) {
+      toast({
+        title: "Couldn’t create the ticket",
+        description: error instanceof Error ? error.message : "Please try again.",
         variant: "destructive",
       });
     } finally {
-      setIsLoading(false);
+      setIsTicketSending(false);
     }
   };
 
@@ -158,235 +358,387 @@ export const ZohoASAPWidget = ({
 
   return (
     <>
-      {/* Floating Widget Launcher — sit above cookie banner until consent is stored */}
       <div
-        className={`fixed right-6 ${cookieBannerClear ? "bottom-6" : "bottom-28"} z-[100]`}
+        className={`fixed right-4 sm:right-6 ${cookieBannerClear ? "bottom-4 sm:bottom-6" : "bottom-28"} z-[100]`}
         data-testid="widget-zoho-asap-container"
       >
         {!isOpen && (
           <button
+            type="button"
             onClick={() => setIsOpen(true)}
-            className="relative w-14 h-14 rounded-full bg-gradient-to-br from-fuchsia-600 via-pink-600 to-rose-600 text-white shadow-lg shadow-pink-500/35 hover:shadow-xl hover:shadow-pink-500/45 transform transition-all duration-300 hover:scale-110 flex items-center justify-center"
+            className="group flex h-14 items-center gap-2 rounded-full border border-white/10 bg-slate-950 px-4 text-white shadow-xl shadow-slate-950/25 transition duration-200 hover:-translate-y-0.5 hover:bg-slate-900 hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2"
             data-testid="button-open-asap-widget"
-            title="Open Support"
+            aria-label="Open Digerati help and chat"
+            aria-expanded={isOpen}
           >
-            <MessageCircle size={24} />
-            <span
-              className="absolute -top-1 -right-1 w-5 h-5 bg-yellow-400 text-black text-xs rounded-full flex items-center justify-center font-bold"
-              data-testid="badge-support-indicator"
-            >
-              ?
+            <span className="relative flex h-9 w-9 items-center justify-center rounded-full bg-violet-600">
+              <MessageCircle size={20} aria-hidden="true" />
+              <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-slate-950 bg-emerald-400" />
+            </span>
+            <span className="hidden text-left sm:block">
+              <span className="block text-sm font-semibold leading-4">Help & Chat</span>
+              <span className="block text-[11px] leading-4 text-slate-300">Answers now, team follow-up</span>
             </span>
           </button>
         )}
 
-        {/* Widget Panel */}
         {isOpen && (
-          <div className="absolute bottom-0 right-0 w-[420px] max-w-[90vw] max-h-[80vh] bg-white rounded-lg shadow-2xl overflow-hidden transform transition-all border border-gray-200 flex flex-col">
-            {/* Header */}
-            <div className="bg-gradient-to-r from-purple-600 to-blue-900 text-white p-4 flex justify-between items-center flex-shrink-0">
-              <div>
-                <h3
-                  className="font-bold text-lg"
-                  data-testid="text-widget-title"
-                >
-                  Digerati Experts Support
-                </h3>
-                <p
-                  className="text-sm text-purple-100"
-                  data-testid="text-widget-status"
-                >
-                  We typically reply in minutes
+          <section
+            className="absolute bottom-0 right-0 flex h-[680px] max-h-[80vh] w-[460px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-slate-950/20"
+            role="dialog"
+            aria-modal="false"
+            aria-label="Digerati Experts help and chat"
+          >
+            <header className="flex flex-shrink-0 items-start justify-between gap-4 bg-slate-950 px-5 py-4 text-white">
+              <div className="min-w-0">
+                <div className="mb-1 flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-600">
+                    <Sparkles className="h-4 w-4" aria-hidden="true" />
+                  </div>
+                  <h2 className="truncate text-base font-semibold" data-testid="text-widget-title">
+                    Digerati Experts
+                  </h2>
+                </div>
+                <p className="text-xs text-slate-300" data-testid="text-widget-status">
+                  Support, answers, and next steps in one place
                 </p>
               </div>
               <button
+                type="button"
                 onClick={() => setIsOpen(false)}
-                className="p-1 hover:bg-white/20 rounded"
+                className="rounded-lg p-2 text-slate-300 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 data-testid="button-close-widget"
+                aria-label="Close help and chat"
               >
-                <X size={20} />
+                <X size={19} aria-hidden="true" />
               </button>
-            </div>
+            </header>
 
-            {/* Tabs */}
-            <div className="border-b flex bg-gray-50 flex-shrink-0">
+            <nav className="grid flex-shrink-0 grid-cols-3 border-b border-slate-200 bg-slate-50" aria-label="Support options">
               {(
-                ["support", "kb", "status"] as const
-              ).map((tab) => (
+                [
+                  { id: "chat" as const, label: "Chat", icon: Bot },
+                  { id: "ticket" as const, label: "Ticket", icon: FileText },
+                  { id: "resources" as const, label: "Resources", icon: BookOpen },
+                ]
+              ).map(({ id, label, icon: Icon }) => (
                 <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`flex-1 py-3 px-2 text-[13px] font-semibold transition-all flex flex-col items-center gap-1 ${
-                    activeTab === tab
-                      ? "text-purple-600 bg-white"
-                      : "text-gray-500 hover:text-gray-900 hover:bg-gray-100/50"
+                  key={id}
+                  type="button"
+                  onClick={() => setActiveTab(id)}
+                  className={`relative flex min-h-14 items-center justify-center gap-1.5 px-2 text-xs font-semibold transition ${
+                    activeTab === id
+                      ? "bg-white text-violet-700"
+                      : "text-slate-500 hover:bg-white/70 hover:text-slate-900"
                   }`}
-                  data-testid={`button-tab-${tab}`}
+                  data-testid={`button-tab-${id}`}
+                  aria-current={activeTab === id ? "page" : undefined}
                 >
-                  <span>
-                    {tab === "support"
-                      ? "Support"
-                      : tab === "kb"
-                        ? "Knowledge Base"
-                        : "Status"}
-                  </span>
-                  {activeTab === tab && (
-                    <motion.div 
-                      layoutId="activeTab"
-                      className="h-0.5 w-12 bg-purple-600 rounded-full"
-                    />
+                  <Icon className="h-4 w-4" aria-hidden="true" />
+                  <span>{label}</span>
+                  {activeTab === id && (
+                    <span className="absolute inset-x-5 bottom-0 h-0.5 rounded-full bg-violet-600" />
                   )}
                 </button>
               ))}
-            </div>
+            </nav>
 
-            {/* Content */}
-            <div className="p-4 overflow-y-auto flex-1">
-              {activeTab === "support" && (
-                <div className="space-y-3">
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 block mb-1">
-                      Email
-                    </label>
-                    <Input
-                      type="email"
-                      placeholder="your@email.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      data-testid="input-support-email"
-                      className="text-sm h-9"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 block mb-1">
-                      Subject
-                    </label>
-                    <Input
-                      placeholder="Brief description"
-                      value={subject}
-                      onChange={(e) => setSubject(e.target.value)}
-                      data-testid="input-support-subject"
-                      className="text-sm h-9"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 block mb-1">
-                      Message
-                    </label>
-                    <Textarea
-                      placeholder="How can we help?"
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      data-testid="input-support-message"
-                      rows={3}
-                      className="text-sm resize-none min-h-[80px]"
-                    />
-                  </div>
-
-                  <Button
-                    onClick={handleSubmitTicket}
-                    disabled={isLoading}
-                    className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 h-10 mt-2"
-                    data-testid="button-submit-support"
-                  >
-                    {isLoading ? "Sending..." : "Send Message"}
-                    <Send size={16} className="ml-2" />
-                  </Button>
-                </div>
-              )}
-
-              {activeTab === "kb" && (
-                <div className="space-y-3">
-                  <p
-                    className="text-sm text-gray-600 mb-3"
-                    data-testid="text-kb-intro"
-                  >
-                    Browse our knowledge base:
-                  </p>
-                  <div className="space-y-2">
-                    {[
-                      { title: "Getting Started", url: "/support/knowledge-base" },
-                      { title: "Security Best Practices", url: "/resources/security-checklist" },
-                      { title: "Troubleshooting", url: "/support/knowledge-base" },
-                      { title: "Account Management", url: "/portal/settings" },
-                    ].map((article) => (
-                      <a
-                        key={article.title}
-                        href={article.url}
-                        className="block p-2 text-sm text-purple-600 hover:bg-purple-50 rounded transition-colors"
-                        data-testid={`link-kb-${article.title.toLowerCase().replace(/\s+/g, "-")}`}
+            <div className="min-h-0 flex-1">
+              {activeTab === "chat" && (
+                <div className="flex h-full min-h-0 flex-col" data-testid="panel-support-chat">
+                  <div className="border-b border-slate-100 bg-white px-4 py-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2 text-xs font-medium text-slate-700">
+                        <span
+                          className={`h-2 w-2 rounded-full ${
+                            assistantAvailable === false ? "bg-amber-400" : "bg-emerald-500"
+                          }`}
+                        />
+                        {assistantAvailable === false ? "Ticket support available" : "Support assistant available"}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab("ticket")}
+                        className="text-xs font-semibold text-violet-700 hover:text-violet-900"
                       >
-                        → {article.title}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {activeTab === "status" && (
-                <div className="space-y-3">
-                  <div
-                    className="flex items-start space-x-2 p-2 bg-green-50 rounded"
-                    data-testid="status-all-systems"
-                  >
-                    <div className="w-2 h-2 bg-green-500 rounded-full mt-1.5 flex-shrink-0" />
-                    <div>
-                      <p className="text-sm font-medium text-green-900">
-                        All Systems Operational
-                      </p>
-                      <p className="text-xs text-green-700">
-                        Last updated 2 minutes ago
-                      </p>
+                        Need a person?
+                      </button>
                     </div>
                   </div>
 
-                  <div className="space-y-2 text-sm">
-                    {[
-                      { service: "Support Portal", status: "Operational" },
-                      { service: "Portal API", status: "Operational" },
-                      { service: "Desktop Agents", status: "Operational" },
-                    ].map((item) => (
+                  <div className="min-h-0 flex-1 space-y-3 overflow-y-auto bg-slate-50/70 px-4 py-4" aria-live="polite">
+                    {chatMessages.map((chatMessage) => (
                       <div
-                        key={item.service}
-                        className="flex justify-between p-2 border rounded text-gray-600"
-                        data-testid={`status-item-${item.service.toLowerCase().replace(/\s+/g, "-")}`}
+                        key={chatMessage.id}
+                        className={`flex ${chatMessage.role === "user" ? "justify-end" : "justify-start"}`}
                       >
-                        <span>{item.service}</span>
-                        <span className="text-green-600 font-medium">
-                          {item.status}
-                        </span>
+                        <div
+                          className={`max-w-[86%] rounded-2xl px-3.5 py-2.5 text-sm leading-5 ${
+                            chatMessage.role === "user"
+                              ? "rounded-br-md bg-violet-600 text-white"
+                              : "rounded-bl-md border border-slate-200 bg-white text-slate-800 shadow-sm"
+                          }`}
+                        >
+                          {chatMessage.role === "assistant" && (
+                            <div className="mb-1 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-violet-700">
+                              <Bot className="h-3.5 w-3.5" aria-hidden="true" />
+                              Digerati Assistant
+                            </div>
+                          )}
+                          <p className="whitespace-pre-wrap">{chatMessage.content}</p>
+                        </div>
                       </div>
                     ))}
+
+                    {chatMessages.length === 1 && (
+                      <div className="grid grid-cols-1 gap-2 pt-1 sm:grid-cols-2">
+                        {QUICK_CHAT_PROMPTS.map((prompt) => (
+                          <button
+                            key={prompt}
+                            type="button"
+                            onClick={() => void handleSendChat(prompt)}
+                            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-left text-xs font-medium text-slate-700 transition hover:border-violet-300 hover:bg-violet-50 hover:text-violet-800"
+                          >
+                            {prompt}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
+                    {isChatSending && (
+                      <div className="flex justify-start">
+                        <div className="rounded-2xl rounded-bl-md border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-500 shadow-sm">
+                          <span className="inline-flex items-center gap-1.5">
+                            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-violet-500" />
+                            Digerati Assistant is responding…
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                    <div ref={chatEndRef} />
+                  </div>
+
+                  <div className="flex-shrink-0 border-t border-slate-200 bg-white p-3">
+                    <div className="flex items-end gap-2">
+                      <Textarea
+                        value={chatInput}
+                        onChange={(event) => setChatInput(event.target.value)}
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter" && !event.shiftKey) {
+                            event.preventDefault();
+                            void handleSendChat();
+                          }
+                        }}
+                        maxLength={2000}
+                        rows={2}
+                        placeholder="Ask a question or describe the issue…"
+                        className="min-h-[52px] resize-none rounded-xl text-sm"
+                        disabled={isChatSending}
+                        data-testid="input-support-chat"
+                        aria-label="Chat message"
+                      />
+                      <Button
+                        type="button"
+                        onClick={() => void handleSendChat()}
+                        disabled={!chatInput.trim() || isChatSending}
+                        className="h-[52px] w-[52px] flex-shrink-0 rounded-xl bg-violet-600 p-0 text-white hover:bg-violet-700"
+                        data-testid="button-send-support-chat"
+                        aria-label="Send chat message"
+                      >
+                        <Send className="h-4 w-4" aria-hidden="true" />
+                      </Button>
+                    </div>
+                    <p className="mt-2 text-[11px] leading-4 text-slate-500">
+                      AI-assisted. Don’t share passwords, MFA codes, recovery codes, or private keys.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "ticket" && (
+                <div className="h-full overflow-y-auto p-4" data-testid="panel-support-ticket">
+                  {ticketResult ? (
+                    <div className="flex h-full flex-col items-center justify-center px-2 text-center">
+                      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                        <CheckCircle2 className="h-6 w-6" aria-hidden="true" />
+                      </div>
+                      <h3 className="text-base font-semibold text-slate-900">Support request received</h3>
+                      {ticketResult.ticketNumber && (
+                        <p className="mt-2 rounded-lg bg-slate-100 px-3 py-1.5 font-mono text-xs font-semibold text-slate-700">
+                          {ticketResult.ticketNumber}
+                        </p>
+                      )}
+                      <p className="mt-3 max-w-sm text-sm leading-5 text-slate-600">{ticketResult.message}</p>
+                      <div className="mt-5 flex flex-wrap justify-center gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => {
+                            setTicketResult(null);
+                            setActiveTab("chat");
+                          }}
+                        >
+                          Back to chat
+                        </Button>
+                        <Button
+                          type="button"
+                          onClick={() => setTicketResult(null)}
+                          className="bg-violet-600 text-white hover:bg-violet-700"
+                        >
+                          Create another ticket
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="text-sm font-semibold text-slate-900">Create a support ticket</h3>
+                        <p className="mt-1 text-xs leading-5 text-slate-500">
+                          Use this when you need team follow-up, account changes, or work performed on your systems.
+                        </p>
+                      </div>
+
+                      <div>
+                        <label htmlFor="support-email" className="mb-1.5 block text-xs font-semibold text-slate-700">
+                          Email
+                        </label>
+                        <Input
+                          id="support-email"
+                          type="email"
+                          autoComplete="email"
+                          placeholder="you@company.com"
+                          value={email}
+                          onChange={(event) => setEmail(event.target.value)}
+                          data-testid="input-support-email"
+                          className="h-10 rounded-xl text-sm"
+                        />
+                      </div>
+
+                      <div className="grid gap-3 sm:grid-cols-[1fr_130px]">
+                        <div>
+                          <label htmlFor="support-subject" className="mb-1.5 block text-xs font-semibold text-slate-700">
+                            Subject
+                          </label>
+                          <Input
+                            id="support-subject"
+                            maxLength={200}
+                            placeholder="Brief description"
+                            value={subject}
+                            onChange={(event) => setSubject(event.target.value)}
+                            data-testid="input-support-subject"
+                            className="h-10 rounded-xl text-sm"
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="support-priority" className="mb-1.5 block text-xs font-semibold text-slate-700">
+                            Priority
+                          </label>
+                          <select
+                            id="support-priority"
+                            value={priority}
+                            onChange={(event) =>
+                              setPriority(event.target.value as "Low" | "Medium" | "High" | "Urgent")
+                            }
+                            className="h-10 w-full rounded-xl border border-input bg-background px-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                            data-testid="select-support-priority"
+                          >
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                            <option value="Urgent">Urgent</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label htmlFor="support-message" className="mb-1.5 block text-xs font-semibold text-slate-700">
+                          What’s happening?
+                        </label>
+                        <Textarea
+                          id="support-message"
+                          maxLength={5000}
+                          placeholder="Include the device, service, error message, and what you already tried. Please do not include passwords or security codes."
+                          value={message}
+                          onChange={(event) => setMessage(event.target.value)}
+                          rows={5}
+                          className="min-h-[118px] resize-none rounded-xl text-sm"
+                          data-testid="input-support-message"
+                        />
+                      </div>
+
+                      <Button
+                        type="button"
+                        onClick={() => void handleSubmitTicket()}
+                        disabled={isTicketSending}
+                        className="h-11 w-full rounded-xl bg-violet-600 text-white hover:bg-violet-700"
+                        data-testid="button-submit-support"
+                      >
+                        {isTicketSending ? "Creating ticket…" : "Create support ticket"}
+                        {!isTicketSending && <Send size={15} className="ml-2" aria-hidden="true" />}
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {activeTab === "resources" && (
+                <div className="h-full overflow-y-auto p-4" data-testid="panel-support-resources">
+                  <div className="mb-4">
+                    <h3 className="text-sm font-semibold text-slate-900">Get where you need to go</h3>
+                    <p className="mt-1 text-xs leading-5 text-slate-500">
+                      Direct links to the support tools clients use most.
+                    </p>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    {RESOURCE_LINKS.map(({ title, description, href, icon: Icon }) => (
+                      <a
+                        key={title}
+                        href={href}
+                        className="group flex items-center gap-3 rounded-xl border border-slate-200 p-3 transition hover:border-violet-300 hover:bg-violet-50/60"
+                      >
+                        <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700 transition group-hover:bg-violet-100 group-hover:text-violet-700">
+                          <Icon className="h-4.5 w-4.5" aria-hidden="true" />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-sm font-semibold text-slate-900">{title}</span>
+                          <span className="mt-0.5 block text-xs leading-4 text-slate-500">{description}</span>
+                        </span>
+                        <ExternalLink className="h-4 w-4 flex-shrink-0 text-slate-400 transition group-hover:text-violet-600" aria-hidden="true" />
+                      </a>
+                    ))}
+                  </div>
+
+                  <div className="mt-4 rounded-xl border border-violet-100 bg-violet-50 p-3">
+                    <div className="flex gap-2.5">
+                      <ShieldCheck className="mt-0.5 h-4 w-4 flex-shrink-0 text-violet-700" aria-hidden="true" />
+                      <div>
+                        <p className="text-xs font-semibold text-violet-950">Security-sensitive issue?</p>
+                        <p className="mt-1 text-xs leading-4 text-violet-800">
+                          Don’t paste credentials or secret keys into chat. Create a ticket with the minimum details needed and the team can move the conversation to an appropriate secure channel.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Footer */}
-            <div className="bg-gray-50 p-3 border-t text-center">
-              <p className="text-xs text-gray-500">
-                Powered by{" "}
-                <a
-                  href="https://www.zoho.com/desk/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-purple-600 hover:underline"
-                  data-testid="link-zoho-powered"
-                >
-                  Zoho Desk & Flow
-                </a>
-              </p>
-            </div>
-          </div>
+            <footer className="flex flex-shrink-0 items-center justify-between gap-3 border-t border-slate-200 bg-white px-4 py-2.5 text-[11px] text-slate-500">
+              <span>Support powered by Digerati + Zoho Desk</span>
+              <button
+                type="button"
+                onClick={() => setActiveTab("ticket")}
+                className="font-semibold text-violet-700 hover:text-violet-900"
+              >
+                Create ticket
+              </button>
+            </footer>
+          </section>
         )}
       </div>
 
-      {/* Custom CSS */}
-      {customCSS && (
-        <style dangerouslySetInnerHTML={{ __html: customCSS }} />
-      )}
+      {customCSS && <style dangerouslySetInnerHTML={{ __html: customCSS }} />}
     </>
   );
 };
