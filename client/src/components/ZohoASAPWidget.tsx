@@ -162,12 +162,14 @@ export const ZohoASAPWidget = ({
       document.head.appendChild(asapScript);
     };
 
-    const idle =
-      "requestIdleCallback" in window
-        ? (window as Window & {
-            requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number;
-          }).requestIdleCallback(load, { timeout: 4000 })
-        : window.setTimeout(load, 2500);
+    type IdleWindow = Window & {
+      requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    const idleWindow = window as IdleWindow;
+    const idle = idleWindow.requestIdleCallback
+      ? idleWindow.requestIdleCallback(load, { timeout: 4000 })
+      : window.setTimeout(load, 2500);
 
     const onInteract = () => load();
     window.addEventListener("pointerdown", onInteract, { once: true, passive: true });
@@ -176,10 +178,10 @@ export const ZohoASAPWidget = ({
     return () => {
       window.removeEventListener("pointerdown", onInteract);
       window.removeEventListener("keydown", onInteract);
-      if ("cancelIdleCallback" in window && typeof idle === "number") {
-        (window as Window & { cancelIdleCallback: (id: number) => void }).cancelIdleCallback(idle);
+      if (idleWindow.requestIdleCallback && idleWindow.cancelIdleCallback) {
+        idleWindow.cancelIdleCallback(idle);
       } else {
-        window.clearTimeout(idle as number);
+        window.clearTimeout(idle);
       }
     };
   }, [isEnabled, accountId, portalId]);
@@ -451,10 +453,18 @@ export const ZohoASAPWidget = ({
                       <div className="flex items-center gap-2 text-xs font-medium text-slate-700">
                         <span
                           className={`h-2 w-2 rounded-full ${
-                            assistantAvailable === false ? "bg-amber-400" : "bg-emerald-500"
+                            assistantAvailable === true
+                              ? "bg-emerald-500"
+                              : assistantAvailable === false
+                                ? "bg-amber-400"
+                                : "bg-slate-300"
                           }`}
                         />
-                        {assistantAvailable === false ? "Ticket support available" : "Support assistant available"}
+                        {assistantAvailable === true
+                          ? "Support assistant available"
+                          : assistantAvailable === false
+                            ? "Ticket support available"
+                            : "Checking assistant…"}
                       </div>
                       <button
                         type="button"
@@ -698,7 +708,7 @@ export const ZohoASAPWidget = ({
                         className="group flex items-center gap-3 rounded-xl border border-slate-200 p-3 transition hover:border-violet-300 hover:bg-violet-50/60"
                       >
                         <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700 transition group-hover:bg-violet-100 group-hover:text-violet-700">
-                          <Icon className="h-4.5 w-4.5" aria-hidden="true" />
+                          <Icon className="h-4 w-4" aria-hidden="true" />
                         </span>
                         <span className="min-w-0 flex-1">
                           <span className="block text-sm font-semibold text-slate-900">{title}</span>
