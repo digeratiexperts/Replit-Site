@@ -4,6 +4,7 @@ dotenv.config();
 import express, { type Request, Response, NextFunction } from "express";
 import { createServer } from "http";
 import { registerRoutes } from "./routes";
+import { registerPublicSupportChat } from "./publicSupportChat";
 import { createServer as createViteServer } from "vite";
 import path from "path";
 import fs from "fs";
@@ -295,6 +296,7 @@ function listEndpoints(): Array<{ method: string; path: string }> {
 (async () => {
   // Register your API routes (these should mount under /api)
   await registerRoutes(app);
+  registerPublicSupportChat(app);
 
   // Vite in dev, Static in prod (NEVER touch /api/*)
   if (app.get("env") === "development") {
