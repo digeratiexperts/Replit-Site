@@ -162,13 +162,15 @@ export const ZohoASAPWidget = ({
       document.head.appendChild(asapScript);
     };
 
-    type IdleWindow = Window & {
+    const idleApi = window as unknown as {
       requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number;
       cancelIdleCallback?: (id: number) => void;
     };
-    const idleWindow = window as IdleWindow;
-    const idle = idleWindow.requestIdleCallback
-      ? idleWindow.requestIdleCallback(load, { timeout: 4000 })
+    const requestIdle = idleApi.requestIdleCallback;
+    const cancelIdle = idleApi.cancelIdleCallback;
+    const usedIdleCallback = typeof requestIdle === "function";
+    const idle = usedIdleCallback
+      ? requestIdle(load, { timeout: 4000 })
       : window.setTimeout(load, 2500);
 
     const onInteract = () => load();
@@ -178,8 +180,8 @@ export const ZohoASAPWidget = ({
     return () => {
       window.removeEventListener("pointerdown", onInteract);
       window.removeEventListener("keydown", onInteract);
-      if (idleWindow.requestIdleCallback && idleWindow.cancelIdleCallback) {
-        idleWindow.cancelIdleCallback(idle);
+      if (usedIdleCallback && typeof cancelIdle === "function") {
+        cancelIdle(idle);
       } else {
         window.clearTimeout(idle);
       }
