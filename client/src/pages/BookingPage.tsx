@@ -63,12 +63,12 @@ export default function BookingPage() {
                 Prefer to Call?
               </h3>
               <a
-                href="tel:+13254809870"
+                href="tel:+14805195892"
                 className="flex items-center gap-3 text-violet-400 hover:text-violet-300 transition-colors"
                 data-testid="link-phone-booking"
               >
                 <Phone className="w-5 h-5" />
-                <span className="text-lg font-medium">(325) 480-9870</span>
+                <span className="text-lg font-medium">(480) 519-5892</span>
               </a>
             </div>
 

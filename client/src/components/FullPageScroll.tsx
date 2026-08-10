@@ -381,12 +381,12 @@ function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarPr
         <div className="w-px h-6 bg-white/20 mx-2" aria-hidden="true" />
 
         <a
-          href="tel:325-480-9870"
+          href="tel:480-519-5892"
           className="flex items-center gap-1.5 text-white/70 hover:text-white transition-colors text-sm whitespace-nowrap"
           data-testid="nav-phone"
         >
           <Phone className="w-4 h-4" aria-hidden="true" />
-          <span>325-480-9870</span>
+          <span>480-519-5892</span>
         </a>
 
         <a

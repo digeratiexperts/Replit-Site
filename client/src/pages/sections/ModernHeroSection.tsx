@@ -184,11 +184,11 @@ export const ModernHeroSection = (): JSX.Element => {
                 <p className="text-sm sm:text-base text-white/70">
                   Or call{" "}
                   <a
-                    href="tel:325-480-9870"
+                    href="tel:480-519-5892"
                     className="text-pink-300 hover:text-pink-200 font-medium underline underline-offset-4 decoration-pink-400/40 hover:decoration-pink-300/70 transition-colors"
                     data-testid="link-hero-phone"
                   >
-                    325-480-9870
+                    480-519-5892
                   </a>
                 </p>
               </div>

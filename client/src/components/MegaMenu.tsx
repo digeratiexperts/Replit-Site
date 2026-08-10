@@ -477,12 +477,12 @@ export function MegaMenu() {
         <div className="container mx-auto px-4 lg:px-8 h-full flex flex-col md:flex-row items-center justify-end py-2 md:py-0 relative z-10">
           <div className="flex items-center flex-wrap gap-3 md:gap-8 justify-center md:justify-end">
             <a
-              href="tel:325-480-9870"
+              href="tel:480-519-5892"
               className="flex items-center text-white/70 hover:text-violet-300 text-xs md:text-sm font-medium transition-colors"
               data-testid="utility-phone"
             >
               <Phone className="h-3.5 w-3.5 mr-1.5 text-violet-400" />
-              <span className="hidden sm:inline">325-480-9870</span>
+              <span className="hidden sm:inline">480-519-5892</span>
               <span className="sm:hidden">Call</span>
             </a>
 
@@ -1095,17 +1095,17 @@ export function MegaMenu() {
                 }}
               >
                 <a
-                  href="tel:325-480-9870"
+                  href="tel:480-519-5892"
                   className="flex items-center gap-3 px-4 py-3 rounded-xl bg-violet-500/10 border border-violet-500/20 hover:border-violet-500/40 transition-all group"
                   data-testid="mobile-call"
-                  aria-label="Call us at 325-480-9870"
+                  aria-label="Call us at 480-519-5892"
                 >
                   <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center border border-violet-500/20">
                     <Phone className="h-5 w-5 text-violet-400" aria-hidden="true" />
                   </div>
                   <div>
                     <div className="text-sm text-gray-400">Call Us</div>
-                    <div className="font-semibold text-white group-hover:text-violet-400 transition-colors">325-480-9870</div>
+                    <div className="font-semibold text-white group-hover:text-violet-400 transition-colors">480-519-5892</div>
                   </div>
                 </a>
 

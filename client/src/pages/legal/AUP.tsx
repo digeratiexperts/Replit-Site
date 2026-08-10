@@ -75,9 +75,9 @@ export default function AUP() {
               <Button 
                 variant="outline"
                 className="border-white/20 text-white hover:bg-white/10"
-                onClick={() => window.location.href = 'tel:325-480-9870'}
+                onClick={() => window.location.href = 'tel:480-519-5892'}
               >
-                Call 325-480-9870
+                Call 480-519-5892
               </Button>
             </div>
           </div>

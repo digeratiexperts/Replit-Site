@@ -276,14 +276,14 @@ const ManagedStore = () => {
                   Schedule Consultation
                 </Button>
               </a>
-              <a href="tel:325-480-9870">
+              <a href="tel:480-519-5892">
                 <Button
                   size="lg"
                   className="h-14 px-8 text-lg font-semibold bg-transparent border-2 border-white/30 text-white hover:bg-white/10"
                   data-testid="button-call-us"
                 >
                   <Phone className="w-5 h-5 mr-2" />
-                  325-480-9870
+                  480-519-5892
                 </Button>
               </a>
             </div>

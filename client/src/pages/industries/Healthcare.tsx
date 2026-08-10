@@ -602,12 +602,12 @@ export default function Healthcare() {
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </a>
               <a
-                href="tel:325-480-9870"
+                href="tel:480-519-5892"
                 className="inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-[#D3126A] px-8 py-4 rounded-xl font-semibold transition-all"
                 data-testid="button-call-now"
               >
                 <Phone className="mr-2 h-5 w-5" />
-                Call 325-480-9870
+                Call 480-519-5892
               </a>
             </div>
           </div>

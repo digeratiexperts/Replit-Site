@@ -193,7 +193,7 @@ export const DigeratiAlertBanner = (): JSX.Element => {
                     Schedule Consultation
                   </Button>
                 </a>
-                <a href="tel:325-480-9870">
+                <a href="tel:480-519-5892">
                   <Button 
                     variant="outline"
                     size="lg"
@@ -201,7 +201,7 @@ export const DigeratiAlertBanner = (): JSX.Element => {
                     data-testid="button-call-banner"
                   >
                     <Phone className="mr-2 h-5 w-5" />
-                    Call 325-480-9870
+                    Call 480-519-5892
                   </Button>
                 </a>
               </div>

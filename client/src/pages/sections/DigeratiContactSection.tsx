@@ -85,7 +85,7 @@ export const DigeratiContactSection = (): JSX.Element => {
 
   const contactInfo = [
     { icon: Mail, label: "info@digeratiexperts.com", href: "mailto:info@digeratiexperts.com" },
-    { icon: Phone, label: "325-480-9870", href: "tel:325-480-9870" },
+    { icon: Phone, label: "480-519-5892", href: "tel:480-519-5892" },
     { icon: MapPin, label: "3165 S Alma School Rd Suite 29, Chandler, AZ 85248", href: "#" },
   ];
 

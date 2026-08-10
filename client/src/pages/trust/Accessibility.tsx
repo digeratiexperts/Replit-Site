@@ -208,7 +208,7 @@ export default function Accessibility() {
             </div>
             <div className="flex items-center gap-3 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
               <Phone className="w-5 h-5 text-purple-400" />
-              <span className="text-gray-300">325-480-9870</span>
+              <span className="text-gray-300">480-519-5892</span>
             </div>
             <div className="flex items-center gap-3 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
               <MapPin className="w-5 h-5 text-purple-400" />

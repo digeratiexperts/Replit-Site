@@ -661,9 +661,9 @@ export default function OfficePage() {
                     className="bg-transparent border border-white/30 text-white hover:bg-white/10"
                     data-testid="btn-final-call"
                   >
-                    <a href="tel:325-480-9870">
+                    <a href="tel:480-519-5892">
                       <Phone className="mr-2 h-5 w-5" />
-                      Call 325-480-9870
+                      Call 480-519-5892
                     </a>
                   </Button>
                 </div>
