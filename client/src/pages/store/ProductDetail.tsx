@@ -18,6 +18,10 @@ import {
   getProductTags,
   isConfigurableProduct,
   configUnitLabel,
+  getIncludedInHint,
+  getProductRelationships,
+  getProductBySku,
+  getRelatedProducts,
 } from "@/data/storeMerchandising";
 import { getProductVisual } from "@/data/productImages";
 import {
@@ -34,11 +38,15 @@ import {
   Tag,
   Lock,
   Settings2,
+  Phone,
+  Layers,
+  Sparkles,
 } from "lucide-react";
 import { useStoreAuth } from "@/hooks/useStoreAuth";
 import { CartButton } from "@/components/store/CartButton";
 import { ProductMedia } from "@/components/store/ProductMedia";
 import { ConfigureProductDrawer } from "@/components/store/ConfigureProductDrawer";
+import { StoreTrustStrip } from "@/components/store/StoreTrustStrip";
 
 const ProductDetail = () => {
   const { sku } = useParams<{ sku: string }>();
@@ -59,11 +67,10 @@ const ProductDetail = () => {
 
   const relatedProducts = useMemo(() => {
     if (!product) return [];
-    let related = storeProducts.filter(
-      (p) => p.category === product.category && p.id !== product.id
-    );
-    if (!isLoggedIn) related = related.filter((p) => !p.isClientOnly);
-    return related.slice(0, 4);
+    return getRelatedProducts(product, {
+      limit: 4,
+      excludeClientOnly: !isLoggedIn,
+    });
   }, [product, isLoggedIn]);
 
   useSEO({
@@ -102,6 +109,15 @@ const ProductDetail = () => {
   const productPricing = getProductPrice(product.id, product.basePrice);
   const storeLink = product.isContractOnly ? "/store/managed" : "/store/co-managed";
   const storeLabel = product.isContractOnly ? "Managed Services" : "Co-Managed Products";
+  const includedHint = getIncludedInHint(product.sku);
+  const relationships = getProductRelationships(product.sku);
+  const worksWithProducts = (relationships?.worksWith || [])
+    .map((s) => getProductBySku(s))
+    .filter((p): p is NonNullable<typeof p> => !!p)
+    .slice(0, 4);
+  const upgradeProducts = (relationships?.upgradeTo || [])
+    .map((s) => getProductBySku(s))
+    .filter((p): p is NonNullable<typeof p> => !!p);
   const seoImage = visual.heroUrl.startsWith("http")
     ? visual.heroUrl
     : `https://digeratiexperts.com${visual.heroUrl}`;
@@ -154,7 +170,7 @@ const ProductDetail = () => {
       />
       <MegaMenu />
 
-      <main className="de-nav-clear pb-20">
+      <main className="de-nav-clear pb-28 lg:pb-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-4 flex items-center justify-between">
             {isLoggedIn && user ? (
@@ -227,7 +243,7 @@ const ProductDetail = () => {
             </ol>
           </nav>
 
-          <div className="mb-20 grid gap-8 lg:grid-cols-2 lg:gap-12">
+          <div className="mb-12 grid gap-8 lg:grid-cols-2 lg:gap-12">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -283,6 +299,24 @@ const ProductDetail = () => {
                       {tag}
                     </span>
                   ))}
+                </div>
+              )}
+
+              {(includedHint || relationships?.includedIn) && (
+                <div
+                  className="mb-6 flex items-start gap-3 rounded-xl border border-[#5034ff]/25 bg-[#5034ff]/10 px-4 py-3"
+                  data-testid="product-included-in"
+                >
+                  <Layers className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#a78bfa]" />
+                  <div>
+                    <p className="text-sm font-medium text-white">How it fits</p>
+                    <p className="mt-0.5 text-sm text-white/65">
+                      {includedHint ||
+                        (relationships?.includedIn
+                          ? `Included in ${relationships.includedIn}`
+                          : null)}
+                    </p>
+                  </div>
                 </div>
               )}
 
@@ -366,6 +400,14 @@ const ProductDetail = () => {
                       Schedule Consultant
                       <ExternalLink className="ml-2 h-4 w-4" />
                     </Button>
+                  </a>
+                  <a
+                    href="tel:325-480-9870"
+                    className="flex h-12 w-full items-center justify-center gap-2 rounded-md border border-white/15 text-white/80 transition-colors hover:bg-white/5 hover:text-white"
+                    data-testid="button-call-product"
+                  >
+                    <Phone className="h-5 w-5" />
+                    Call 325-480-9870
                   </a>
                 </div>
               ) : (
@@ -469,10 +511,103 @@ const ProductDetail = () => {
                       )}
                     </>
                   )}
+
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    <a
+                      href="tel:325-480-9870"
+                      className="flex h-11 items-center justify-center gap-2 rounded-md border border-white/15 text-sm text-white/75 transition-colors hover:bg-white/5 hover:text-white"
+                      data-testid="button-call-product"
+                    >
+                      <Phone className="h-4 w-4" />
+                      325-480-9870
+                    </a>
+                    <a
+                      href="/book"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-11 items-center justify-center gap-2 rounded-md border border-white/15 text-sm text-white/75 transition-colors hover:bg-white/5 hover:text-white"
+                      data-testid="button-book-architect"
+                    >
+                      <Calendar className="h-4 w-4" />
+                      Talk to an architect
+                    </a>
+                  </div>
                 </div>
               )}
             </motion.div>
           </div>
+
+          <StoreTrustStrip />
+
+          {(worksWithProducts.length > 0 || upgradeProducts.length > 0) && (
+            <motion.section
+              className="mb-16"
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45 }}
+              data-testid="product-relationships"
+            >
+              <div className="mb-6 flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-[#a78bfa]" />
+                <h2 className="text-2xl font-bold text-white">Solution relationships</h2>
+              </div>
+              <div className="grid gap-6 lg:grid-cols-2">
+                {worksWithProducts.length > 0 && (
+                  <div className="rounded-xl border border-white/10 bg-[#121212] p-5">
+                    <h3 className="mb-4 text-sm font-medium uppercase tracking-wide text-white/50">
+                      Works great with
+                    </h3>
+                    <ul className="space-y-3">
+                      {worksWithProducts.map((related) => (
+                        <li key={related.id}>
+                          <Link href={`/store/product/${related.sku}`}>
+                            <span className="group flex items-center justify-between gap-3 rounded-lg border border-transparent px-2 py-2 transition-colors hover:border-white/10 hover:bg-white/[0.03]">
+                              <span>
+                                <span className="block font-medium text-white group-hover:text-[#c4b5fd]">
+                                  {related.name}
+                                </span>
+                                <span className="block text-sm text-white/45 line-clamp-1">
+                                  {getOutcomeLead(related)}
+                                </span>
+                              </span>
+                              <ArrowRight className="h-4 w-4 flex-shrink-0 text-white/30 group-hover:text-[#a78bfa]" />
+                            </span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {upgradeProducts.length > 0 && (
+                  <div className="rounded-xl border border-white/10 bg-[#121212] p-5">
+                    <h3 className="mb-4 text-sm font-medium uppercase tracking-wide text-white/50">
+                      Upgrade to
+                    </h3>
+                    <ul className="space-y-3">
+                      {upgradeProducts.map((related) => (
+                        <li key={related.id}>
+                          <Link href={`/store/product/${related.sku}`}>
+                            <span className="group flex items-center justify-between gap-3 rounded-lg border border-transparent px-2 py-2 transition-colors hover:border-white/10 hover:bg-white/[0.03]">
+                              <span>
+                                <span className="block font-medium text-white group-hover:text-[#c4b5fd]">
+                                  {related.name}
+                                </span>
+                                <span className="block text-sm text-white/45">
+                                  {formatPrice(related)}
+                                </span>
+                              </span>
+                              <ArrowRight className="h-4 w-4 flex-shrink-0 text-white/30 group-hover:text-[#a78bfa]" />
+                            </span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </motion.section>
+          )}
 
           {relatedProducts.length > 0 && (
             <motion.section
@@ -481,7 +616,7 @@ const ProductDetail = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <h2 className="mb-6 text-2xl font-bold text-white">Related Products</h2>
+              <h2 className="mb-6 text-2xl font-bold text-white">Related products</h2>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 {relatedProducts.map((related) => (
                   <Link key={related.id} href={`/store/product/${related.sku}`}>
@@ -502,7 +637,7 @@ const ProductDetail = () => {
                           {related.name}
                         </h3>
                         <p className="mb-3 line-clamp-2 text-sm text-white/50">
-                          {related.shortDescription}
+                          {getOutcomeLead(related)}
                         </p>
                         <div className="flex items-center justify-between">
                           <span className="font-semibold text-[#a78bfa]">
@@ -519,6 +654,35 @@ const ProductDetail = () => {
           )}
         </div>
       </main>
+
+      {!product.isContractOnly && !(product.isClientOnly && !isLoggedIn) && (
+        <div
+          className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0a0a0a]/95 px-4 py-3 backdrop-blur-md lg:hidden"
+          data-testid="product-mobile-cta-bar"
+        >
+          <div className="mx-auto flex max-w-7xl items-center gap-3">
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-medium text-white">{product.name}</p>
+              <p className="text-sm text-[#a78bfa]">{formatPrice(product)}</p>
+            </div>
+            {configurable ? (
+              <Button
+                className="bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                onClick={() => setConfigureOpen(true)}
+              >
+                Configure
+              </Button>
+            ) : (
+              <Button
+                className="bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                onClick={handleAddToCart}
+              >
+                Add
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
 
       <ConfigureProductDrawer
         product={configureOpen ? product : null}

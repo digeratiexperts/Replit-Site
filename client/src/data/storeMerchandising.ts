@@ -486,6 +486,45 @@ export function getProductRelationships(sku: string): ProductRelationship | unde
   return productRelationships[sku];
 }
 
+/**
+ * Related catalog picks: relationship SKUs first (works-with / upgrade),
+ * then same-category fillers. Never invents products outside the catalog.
+ */
+export function getRelatedProducts(
+  product: StoreProduct,
+  opts: { limit?: number; excludeClientOnly?: boolean } = {}
+): StoreProduct[] {
+  const limit = opts.limit ?? 4;
+  const rel = getProductRelationships(product.sku);
+  const seen = new Set<string>([product.id]);
+  const out: StoreProduct[] = [];
+
+  const pushSku = (sku: string) => {
+    if (out.length >= limit) return;
+    const p = getProductBySku(sku);
+    if (!p || seen.has(p.id)) return;
+    if (opts.excludeClientOnly && p.isClientOnly) return;
+    seen.add(p.id);
+    out.push(p);
+  };
+
+  for (const sku of rel?.worksWith || []) pushSku(sku);
+  for (const sku of rel?.upgradeTo || []) pushSku(sku);
+  for (const sku of rel?.required || []) pushSku(sku);
+
+  if (out.length < limit) {
+    for (const p of storeProducts) {
+      if (out.length >= limit) break;
+      if (p.category !== product.category || seen.has(p.id)) continue;
+      if (opts.excludeClientOnly && p.isClientOnly) continue;
+      seen.add(p.id);
+      out.push(p);
+    }
+  }
+
+  return out;
+}
+
 const CONFIGURABLE_PRICING: PricingType[] = [
   "per_endpoint",
   "per_user",

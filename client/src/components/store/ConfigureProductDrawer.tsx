@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Minus, Plus, Settings2, X } from "lucide-react";
+import { Check, Minus, Phone, Plus, Settings2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formatPrice, type StoreProduct } from "@/data/storeProducts";
-import { configUnitLabel, getOutcomeLead } from "@/data/storeMerchandising";
+import {
+  configUnitLabel,
+  getIncludedInHint,
+  getOutcomeLead,
+  getProductBySku,
+  getProductRelationships,
+} from "@/data/storeMerchandising";
+import { ProductMedia } from "@/components/store/ProductMedia";
 
 interface ConfigureProductDrawerProps {
   product: StoreProduct | null;
@@ -34,6 +41,15 @@ export function ConfigureProductDrawer({
   const unit = configUnitLabel(product);
   const lineTotal = unitPrice * qty;
   const isRecurring = !["one_time", "per_hour"].includes(product.pricingType);
+  const includedHint = getIncludedInHint(product.sku);
+  const relationships = getProductRelationships(product.sku);
+  const upgradeName = relationships?.upgradeTo?.[0]
+    ? getProductBySku(relationships.upgradeTo[0])?.name
+    : undefined;
+  const worksWithNames = (relationships?.worksWith || [])
+    .map((sku) => getProductBySku(sku)?.name)
+    .filter(Boolean)
+    .slice(0, 3) as string[];
 
   return (
     <AnimatePresence>
@@ -62,7 +78,9 @@ export function ConfigureProductDrawer({
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold text-white">Configure</h2>
-                  <p className="text-sm text-white/50">Set quantity, then add to your solution</p>
+                  <p className="text-sm text-white/50">
+                    Set {unit}, review fit, then add to your solution
+                  </p>
                 </div>
               </div>
               <Button
@@ -77,13 +95,48 @@ export function ConfigureProductDrawer({
             </div>
 
             <div className="flex-1 space-y-6 overflow-y-auto p-6">
-              <div>
-                <h3 className="text-xl font-semibold text-white">{product.name}</h3>
-                <p className="mt-2 text-base leading-relaxed text-white/65">
-                  {getOutcomeLead(product)}
-                </p>
-                <p className="mt-3 text-sm text-white/45">{formatPrice(product)}</p>
+              <div className="flex gap-4">
+                <ProductMedia
+                  product={product}
+                  variant="thumb"
+                  className="h-20 w-20 flex-shrink-0"
+                />
+                <div className="min-w-0">
+                  <h3 className="text-xl font-semibold text-white">{product.name}</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-white/65">
+                    {getOutcomeLead(product)}
+                  </p>
+                  <p className="mt-2 text-sm text-white/45">{formatPrice(product)}</p>
+                </div>
               </div>
+
+              {product.features.length > 0 && (
+                <div className="rounded-xl border border-white/10 bg-[#141414] p-4">
+                  <p className="mb-3 text-sm font-medium text-white/70">What you get</p>
+                  <ul className="space-y-2">
+                    {product.features.slice(0, 4).map((feature) => (
+                      <li key={feature} className="flex items-start gap-2 text-sm text-white/60">
+                        <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#a78bfa]" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {(includedHint || worksWithNames.length > 0 || upgradeName) && (
+                <div className="space-y-1.5 text-sm text-white/50">
+                  {includedHint && (
+                    <p className="text-[#a78bfa]/90" data-testid="configure-included-hint">
+                      {includedHint}
+                    </p>
+                  )}
+                  {worksWithNames.length > 0 && (
+                    <p>Works with: {worksWithNames.join(", ")}</p>
+                  )}
+                  {upgradeName && <p>Upgrade path: {upgradeName}</p>}
+                </div>
+              )}
 
               <div className="rounded-xl border border-white/10 bg-[#141414] p-5">
                 <label className="mb-3 block text-sm font-medium text-white/70">
@@ -143,7 +196,7 @@ export function ConfigureProductDrawer({
               </div>
             </div>
 
-            <div className="border-t border-white/10 p-6">
+            <div className="space-y-3 border-t border-white/10 p-6">
               <Button
                 className="h-12 w-full bg-[#5034ff] text-base text-white hover:bg-[#6548ff]"
                 onClick={() => onConfirm(product, qty, unitPrice)}
@@ -151,6 +204,14 @@ export function ConfigureProductDrawer({
               >
                 Add configured service
               </Button>
+              <a
+                href="tel:325-480-9870"
+                className="flex h-11 w-full items-center justify-center gap-2 rounded-md border border-white/15 text-sm text-white/75 transition-colors hover:bg-white/5 hover:text-white"
+                data-testid="link-configure-call"
+              >
+                <Phone className="h-4 w-4" />
+                Need help sizing? 325-480-9870
+              </a>
             </div>
           </motion.aside>
         </>

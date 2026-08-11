@@ -11,6 +11,8 @@ import {
 import { categoryLabels, type ProductCategory, type PricingType } from "@/data/storeProducts";
 import {
   billingTypeLabels,
+  storeOutcomes,
+  type StoreOutcomeId,
   type StoreSortOption,
 } from "@/data/storeMerchandising";
 
@@ -23,6 +25,8 @@ interface StoreCatalogToolbarProps {
   billingType: PricingType | "all";
   onBillingTypeChange: (value: PricingType | "all") => void;
   billingTypes: PricingType[];
+  outcome?: StoreOutcomeId | "all" | null;
+  onOutcomeChange?: (value: StoreOutcomeId | "all") => void;
   sort: StoreSortOption;
   onSortChange: (value: StoreSortOption) => void;
   resultCount: number;
@@ -38,11 +42,20 @@ export function StoreCatalogToolbar({
   billingType,
   onBillingTypeChange,
   billingTypes,
+  outcome = "all",
+  onOutcomeChange,
   sort,
   onSortChange,
   resultCount,
   totalCount,
 }: StoreCatalogToolbarProps) {
+  const outcomeValue = outcome && outcome !== null ? outcome : "all";
+  const hasActiveFilters =
+    search ||
+    category !== "all" ||
+    billingType !== "all" ||
+    (onOutcomeChange && outcomeValue !== "all");
+
   return (
     <div
       className="mb-7 space-y-4 rounded-xl border border-white/10 bg-[#121212] p-5"
@@ -83,6 +96,28 @@ export function StoreCatalogToolbar({
               ))}
             </SelectContent>
           </Select>
+
+          {onOutcomeChange && (
+            <Select
+              value={outcomeValue}
+              onValueChange={(v) => onOutcomeChange(v as StoreOutcomeId | "all")}
+            >
+              <SelectTrigger
+                className="h-11 w-[180px] border-white/15 bg-[#0a0a0a] text-base text-white"
+                data-testid="select-outcome"
+              >
+                <SelectValue placeholder="Outcome" />
+              </SelectTrigger>
+              <SelectContent className="border-white/10 bg-[#141414] text-white">
+                <SelectItem value="all">All outcomes</SelectItem>
+                {storeOutcomes.map((o) => (
+                  <SelectItem key={o.id} value={o.id}>
+                    {o.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
 
           <Select
             value={billingType}
@@ -129,7 +164,7 @@ export function StoreCatalogToolbar({
           Showing <span className="font-medium text-white">{resultCount}</span> of{" "}
           <span className="text-white/80">{totalCount}</span> products
         </p>
-        {(search || category !== "all" || billingType !== "all") && (
+        {hasActiveFilters && (
           <Button
             type="button"
             variant="ghost"
@@ -139,6 +174,7 @@ export function StoreCatalogToolbar({
               onSearchChange("");
               onCategoryChange("all");
               onBillingTypeChange("all");
+              onOutcomeChange?.("all");
             }}
             data-testid="button-clear-filters"
           >

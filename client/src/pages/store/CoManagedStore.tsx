@@ -397,6 +397,8 @@ const CoManagedStore = () => {
                   billingType={billingType}
                   onBillingTypeChange={setBillingType}
                   billingTypes={billingTypes}
+                  outcome={selectedOutcome || "all"}
+                  onOutcomeChange={(v) => setSelectedOutcome(v === "all" ? null : v)}
                   sort={sort}
                   onSortChange={setSort}
                   resultCount={filteredProducts.length}
