@@ -1,9 +1,9 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "../sections/DigeratiEnhancedFooterSection";
 import { Button } from "@/components/ui/button";
-import { Link, useSearch } from "wouter";
+import { Link, useSearch, useLocation } from "wouter";
 import {
   ArrowRight,
   Users,
@@ -30,14 +30,27 @@ import {
   productMatchesVendor,
   productMatchesCompliance,
   productMatchesSize,
+  productMatchesPriceBand,
+  productMatchesPurchasePath,
+  productMatchesCoverage,
   listVendorsForProducts,
   searchProducts,
   sortProducts,
   isConfigurableProduct,
+  storeOutcomes,
+  storeComplianceFilters,
+  storeSizeFilters,
+  storePriceBandFilters,
+  storePurchasePathFilters,
+  billingTypeLabels,
+  coverageDimensions,
   type StoreOutcomeId,
   type StoreComplianceId,
   type StoreSizeId,
+  type StorePriceBandId,
+  type StorePurchasePathId,
   type StoreSortOption,
+  type CoverageDimension,
 } from "@/data/storeMerchandising";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
@@ -52,7 +65,10 @@ import { StoreProductCard } from "@/components/store/StoreProductCard";
 import { StoreCatalogToolbar } from "@/components/store/StoreCatalogToolbar";
 import { StoreAssessmentPanel } from "@/components/store/StoreAssessmentPanel";
 import { StoreBundlesSection } from "@/components/store/StoreBundlesSection";
-import { ConfigureProductDrawer } from "@/components/store/ConfigureProductDrawer";
+import {
+  ConfigureProductDrawer,
+  type ConfigureConfirmPayload,
+} from "@/components/store/ConfigureProductDrawer";
 import { GuidedBuyingWizard } from "@/components/store/GuidedBuyingWizard";
 import {
   ProductCompareBar,
@@ -62,9 +78,48 @@ import {
 } from "@/components/store/ProductCompare";
 import { CoverageScorePanel } from "@/components/store/CoverageScorePanel";
 
+const SORT_OPTIONS: StoreSortOption[] = ["recommended", "popular", "price_asc", "price_desc"];
+const PRICE_BAND_IDS = new Set(storePriceBandFilters.map((b) => b.id));
+const PURCHASE_PATH_IDS = new Set(storePurchasePathFilters.map((p) => p.id));
+const COVERAGE_IDS = new Set(coverageDimensions.map((d) => d.id));
+const COMPLIANCE_IDS = new Set(storeComplianceFilters.map((c) => c.id));
+const SIZE_IDS = new Set(storeSizeFilters.map((s) => s.id));
+const OUTCOME_IDS = new Set(storeOutcomes.map((o) => o.id));
+
+function parseCatalogSearch(searchString: string) {
+  const urlParams = new URLSearchParams(searchString);
+  const category = urlParams.get("category") as ProductCategory | null;
+  const outcome = urlParams.get("outcome") as StoreOutcomeId | null;
+  const vendor = urlParams.get("vendor") || "";
+  const compliance = urlParams.get("compliance") as StoreComplianceId | null;
+  const size = urlParams.get("size") as StoreSizeId | null;
+  const q = urlParams.get("q") || "";
+  const billing = (urlParams.get("billing") || urlParams.get("billingType")) as PricingType | null;
+  const sortRaw = urlParams.get("sort") as StoreSortOption | null;
+  const priceBand = urlParams.get("price") as StorePriceBandId | null;
+  const purchasePath = urlParams.get("path") as StorePurchasePathId | null;
+  const coverage = urlParams.get("coverage") as CoverageDimension | null;
+
+  return {
+    category: category && categoryLabels[category] ? category : ("all" as const),
+    outcome: outcome && OUTCOME_IDS.has(outcome) ? outcome : null,
+    vendor: vendor || "all",
+    compliance: compliance && COMPLIANCE_IDS.has(compliance) ? compliance : ("all" as const),
+    size: size && SIZE_IDS.has(size) ? size : ("all" as const),
+    q,
+    billing: billing || ("all" as const),
+    sort: sortRaw && SORT_OPTIONS.includes(sortRaw) ? sortRaw : ("recommended" as const),
+    priceBand: priceBand && PRICE_BAND_IDS.has(priceBand) ? priceBand : ("all" as const),
+    purchasePath:
+      purchasePath && PURCHASE_PATH_IDS.has(purchasePath) ? purchasePath : ("all" as const),
+    coverage: coverage && COVERAGE_IDS.has(coverage) ? coverage : ("all" as const),
+  };
+}
+
 const CoManagedStore = () => {
   const prefersReducedMotion = useReducedMotion();
   const searchString = useSearch();
+  const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { addToCart, openCart, setClientPricing, items } = useCart();
   const {
@@ -78,32 +133,32 @@ const CoManagedStore = () => {
   } = useStoreAuth();
 
   const catalogRef = useRef<HTMLDivElement>(null);
-  const urlParams = new URLSearchParams(searchString);
-  const initialCategory = urlParams.get("category") as ProductCategory | null;
-  const initialOutcome = urlParams.get("outcome") as StoreOutcomeId | null;
-  const initialVendor = urlParams.get("vendor") || "";
-  const initialCompliance = urlParams.get("compliance") as StoreComplianceId | null;
-  const initialSize = urlParams.get("size") as StoreSizeId | null;
-  const initialQ = urlParams.get("q") || "";
+  const initial = parseCatalogSearch(searchString);
+  const urlSyncSkip = useRef(true);
 
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | "all">(
-    initialCategory && categoryLabels[initialCategory] ? initialCategory : "all"
+    initial.category
   );
-  const [selectedOutcome, setSelectedOutcome] = useState<StoreOutcomeId | null>(
-    initialOutcome || null
-  );
-  const [selectedVendor, setSelectedVendor] = useState<string | "all">(
-    initialVendor || "all"
-  );
+  const [selectedOutcome, setSelectedOutcome] = useState<StoreOutcomeId | null>(initial.outcome);
+  const [selectedVendor, setSelectedVendor] = useState<string | "all">(initial.vendor);
   const [selectedCompliance, setSelectedCompliance] = useState<StoreComplianceId | "all">(
-    initialCompliance || "all"
+    initial.compliance
   );
-  const [selectedSize, setSelectedSize] = useState<StoreSizeId | "all">(
-    initialSize || "all"
+  const [selectedSize, setSelectedSize] = useState<StoreSizeId | "all">(initial.size);
+  const [searchQuery, setSearchQuery] = useState(initial.q);
+  const [billingType, setBillingType] = useState<PricingType | "all">(
+    initial.billing === "all" ? "all" : initial.billing
   );
-  const [searchQuery, setSearchQuery] = useState(initialQ);
-  const [billingType, setBillingType] = useState<PricingType | "all">("all");
-  const [sort, setSort] = useState<StoreSortOption>("recommended");
+  const [sort, setSort] = useState<StoreSortOption>(initial.sort);
+  const [selectedPriceBand, setSelectedPriceBand] = useState<StorePriceBandId | "all">(
+    initial.priceBand
+  );
+  const [selectedPurchasePath, setSelectedPurchasePath] = useState<StorePurchasePathId | "all">(
+    initial.purchasePath
+  );
+  const [selectedCoverage, setSelectedCoverage] = useState<CoverageDimension | "all">(
+    initial.coverage
+  );
   const [compareList, setCompareList] = useState<StoreProduct[]>([]);
   const [compareOpen, setCompareOpen] = useState(false);
   const [configureProduct, setConfigureProduct] = useState<StoreProduct | null>(null);
@@ -114,6 +169,46 @@ const CoManagedStore = () => {
       setClientPricing(clientPricing);
     }
   }, [clientPricing, setClientPricing]);
+
+  /** Bidirectional URL sync — shareable filtered views */
+  useEffect(() => {
+    if (urlSyncSkip.current) {
+      urlSyncSkip.current = false;
+      return;
+    }
+    const params = new URLSearchParams();
+    if (selectedCategory !== "all") params.set("category", selectedCategory);
+    if (selectedOutcome) params.set("outcome", selectedOutcome);
+    if (selectedVendor !== "all") params.set("vendor", selectedVendor);
+    if (selectedCompliance !== "all") params.set("compliance", selectedCompliance);
+    if (selectedSize !== "all") params.set("size", selectedSize);
+    if (searchQuery.trim()) params.set("q", searchQuery.trim());
+    if (billingType !== "all") params.set("billing", billingType);
+    if (sort !== "recommended") params.set("sort", sort);
+    if (selectedPriceBand !== "all") params.set("price", selectedPriceBand);
+    if (selectedPurchasePath !== "all") params.set("path", selectedPurchasePath);
+    if (selectedCoverage !== "all") params.set("coverage", selectedCoverage);
+    const qs = params.toString();
+    const next = qs ? `/store/co-managed?${qs}` : "/store/co-managed";
+    const current = `/store/co-managed${searchString ? `?${searchString}` : ""}`;
+    if (next !== current) {
+      setLocation(next, { replace: true });
+    }
+  }, [
+    selectedCategory,
+    selectedOutcome,
+    selectedVendor,
+    selectedCompliance,
+    selectedSize,
+    searchQuery,
+    billingType,
+    sort,
+    selectedPriceBand,
+    selectedPurchasePath,
+    selectedCoverage,
+    searchString,
+    setLocation,
+  ]);
 
   useSEO({
     title: "IT Store Catalog | Digerati Experts",
@@ -146,6 +241,20 @@ const CoManagedStore = () => {
 
   const vendors = useMemo(() => listVendorsForProducts(visibleBase), [visibleBase]);
 
+  const clearAllFilters = useCallback(() => {
+    setSearchQuery("");
+    setSelectedCategory("all");
+    setBillingType("all");
+    setSelectedOutcome(null);
+    setSelectedVendor("all");
+    setSelectedCompliance("all");
+    setSelectedSize("all");
+    setSelectedPriceBand("all");
+    setSelectedPurchasePath("all");
+    setSelectedCoverage("all");
+    setSort("recommended");
+  }, []);
+
   const filteredProducts = useMemo(() => {
     let products = visibleBase;
 
@@ -167,6 +276,15 @@ const CoManagedStore = () => {
     if (selectedSize !== "all") {
       products = products.filter((p) => productMatchesSize(p, selectedSize));
     }
+    if (selectedPriceBand !== "all") {
+      products = products.filter((p) => productMatchesPriceBand(p, selectedPriceBand));
+    }
+    if (selectedPurchasePath !== "all") {
+      products = products.filter((p) => productMatchesPurchasePath(p, selectedPurchasePath));
+    }
+    if (selectedCoverage !== "all") {
+      products = products.filter((p) => productMatchesCoverage(p, selectedCoverage));
+    }
     products = searchProducts(products, searchQuery);
     return sortProducts(products, sort);
   }, [
@@ -177,8 +295,105 @@ const CoManagedStore = () => {
     selectedVendor,
     selectedCompliance,
     selectedSize,
+    selectedPriceBand,
+    selectedPurchasePath,
+    selectedCoverage,
     searchQuery,
     sort,
+  ]);
+
+  const activeChips = useMemo(() => {
+    const chips: { key: string; label: string; onClear: () => void }[] = [];
+    if (searchQuery.trim()) {
+      chips.push({
+        key: "q",
+        label: `Search: ${searchQuery.trim()}`,
+        onClear: () => setSearchQuery(""),
+      });
+    }
+    if (selectedCategory !== "all") {
+      chips.push({
+        key: "category",
+        label: categoryLabels[selectedCategory],
+        onClear: () => setSelectedCategory("all"),
+      });
+    }
+    if (selectedOutcome) {
+      chips.push({
+        key: "outcome",
+        label: storeOutcomes.find((o) => o.id === selectedOutcome)?.label || selectedOutcome,
+        onClear: () => setSelectedOutcome(null),
+      });
+    }
+    if (billingType !== "all") {
+      chips.push({
+        key: "billing",
+        label: billingTypeLabels[billingType] ?? billingType,
+        onClear: () => setBillingType("all"),
+      });
+    }
+    if (selectedVendor !== "all") {
+      chips.push({
+        key: "vendor",
+        label: vendors.find((v) => v.slug === selectedVendor)?.name || selectedVendor,
+        onClear: () => setSelectedVendor("all"),
+      });
+    }
+    if (selectedCompliance !== "all") {
+      chips.push({
+        key: "compliance",
+        label:
+          storeComplianceFilters.find((c) => c.id === selectedCompliance)?.label ||
+          selectedCompliance,
+        onClear: () => setSelectedCompliance("all"),
+      });
+    }
+    if (selectedSize !== "all") {
+      chips.push({
+        key: "size",
+        label: storeSizeFilters.find((s) => s.id === selectedSize)?.label || selectedSize,
+        onClear: () => setSelectedSize("all"),
+      });
+    }
+    if (selectedPriceBand !== "all") {
+      chips.push({
+        key: "price",
+        label:
+          storePriceBandFilters.find((b) => b.id === selectedPriceBand)?.label ||
+          selectedPriceBand,
+        onClear: () => setSelectedPriceBand("all"),
+      });
+    }
+    if (selectedPurchasePath !== "all") {
+      chips.push({
+        key: "path",
+        label:
+          storePurchasePathFilters.find((p) => p.id === selectedPurchasePath)?.label ||
+          selectedPurchasePath,
+        onClear: () => setSelectedPurchasePath("all"),
+      });
+    }
+    if (selectedCoverage !== "all") {
+      chips.push({
+        key: "coverage",
+        label:
+          coverageDimensions.find((d) => d.id === selectedCoverage)?.label || selectedCoverage,
+        onClear: () => setSelectedCoverage("all"),
+      });
+    }
+    return chips;
+  }, [
+    searchQuery,
+    selectedCategory,
+    selectedOutcome,
+    billingType,
+    selectedVendor,
+    vendors,
+    selectedCompliance,
+    selectedSize,
+    selectedPriceBand,
+    selectedPurchasePath,
+    selectedCoverage,
   ]);
 
   const handleAddToCart = (product: StoreProduct, e: React.MouseEvent) => {
@@ -198,14 +413,53 @@ const CoManagedStore = () => {
     openCart();
   };
 
-  const handleConfigureConfirm = (product: StoreProduct, quantity: number, unitPrice: number) => {
+  const handleConfigureConfirm = (payload: ConfigureConfirmPayload) => {
+    const { product, quantity, unitPrice, addons, environmentNotes } = payload;
     addToCart(product, quantity, unitPrice);
+    addons.forEach((addon) => {
+      const { price } = getProductPrice(addon.id, addon.basePrice);
+      const addonQty = isConfigurableProduct(addon) ? quantity : 1;
+      addToCart(addon, addonQty, price);
+    });
     setConfigureProduct(null);
     toast({
       title: "Configured service added",
-      description: `${quantity} × ${product.name}`,
+      description: environmentNotes
+        ? `${quantity} × ${product.name}${addons.length ? ` + ${addons.length} add-on(s)` : ""}. Notes saved for your team.`
+        : `${quantity} × ${product.name}${addons.length ? ` + ${addons.length} add-on(s)` : ""}`,
     });
     openCart();
+  };
+
+  const handleConfigureQuote = (payload: ConfigureConfirmPayload) => {
+    const { product, quantity, unitPrice, addons, environmentNotes } = payload;
+    addToCart(product, quantity, unitPrice);
+    addons.forEach((addon) => {
+      const { price } = getProductPrice(addon.id, addon.basePrice);
+      const addonQty = isConfigurableProduct(addon) ? quantity : 1;
+      addToCart(addon, addonQty, price);
+    });
+    setConfigureProduct(null);
+    if (environmentNotes && typeof sessionStorage !== "undefined") {
+      try {
+        sessionStorage.setItem(
+          "digerati-configure-notes",
+          JSON.stringify({
+            sku: product.sku,
+            notes: environmentNotes,
+            at: Date.now(),
+          })
+        );
+      } catch {
+        /* ignore */
+      }
+    }
+    toast({
+      title: "Ready for quote",
+      description: "Items added to Your Solution — continue to request a quote.",
+    });
+    openCart();
+    setLocation("/store/checkout");
   };
 
   const toggleCompare = (product: StoreProduct) => {
@@ -438,10 +692,18 @@ const CoManagedStore = () => {
                   onComplianceChange={setSelectedCompliance}
                   size={selectedSize}
                   onSizeChange={setSelectedSize}
+                  priceBand={selectedPriceBand}
+                  onPriceBandChange={setSelectedPriceBand}
+                  purchasePath={selectedPurchasePath}
+                  onPurchasePathChange={setSelectedPurchasePath}
+                  coverage={selectedCoverage}
+                  onCoverageChange={setSelectedCoverage}
                   sort={sort}
                   onSortChange={setSort}
                   resultCount={filteredProducts.length}
                   totalCount={visibleBase.length}
+                  activeChips={activeChips}
+                  onClearAll={clearAllFilters}
                 />
 
                 {/* Category chips — restored for scannability (toolbar Select remains) */}
@@ -498,7 +760,7 @@ const CoManagedStore = () => {
                   variants={containerVariants}
                   initial="hidden"
                   animate="visible"
-                  key={`${selectedCategory}-${selectedOutcome}-${selectedVendor}-${selectedCompliance}-${selectedSize}-${searchQuery}-${billingType}-${sort}`}
+                  key={`${selectedCategory}-${selectedOutcome}-${selectedVendor}-${selectedCompliance}-${selectedSize}-${selectedPriceBand}-${selectedPurchasePath}-${selectedCoverage}-${searchQuery}-${billingType}-${sort}`}
                 >
                   {filteredProducts.map((product) => {
                     const pricing = getProductPrice(product.id, product.basePrice);
@@ -526,23 +788,24 @@ const CoManagedStore = () => {
                 </motion.div>
 
                 {filteredProducts.length === 0 && (
-                  <div className="mb-10 rounded-xl border border-white/10 bg-[#121212] py-16 text-center">
+                  <div
+                    className="mb-10 rounded-xl border border-white/10 bg-[#121212] py-16 text-center"
+                    data-testid="catalog-empty-state"
+                  >
                     <p className="text-lg text-white/50">No products match these filters.</p>
+                    <p className="mt-2 text-sm text-white/40">
+                      Showing 0 of {visibleBase.length} products
+                    </p>
                     <Button
                       className="mt-4 bg-[#5034ff] text-white hover:bg-[#6548ff]"
-                      onClick={() => {
-                        setSearchQuery("");
-                        setSelectedCategory("all");
-                        setBillingType("all");
-                        setSelectedOutcome(null);
-                      }}
+                      onClick={clearAllFilters}
+                      data-testid="button-empty-clear-filters"
                     >
-                      Reset filters
+                      Clear filters
                     </Button>
                   </div>
                 )}
               </div>
-
               <div className="hidden lg:block">
                 <StoreAssessmentPanel
                   variant="sticky"
@@ -681,7 +944,9 @@ const CoManagedStore = () => {
         }
         open={!!configureProduct}
         onClose={() => setConfigureProduct(null)}
+        getAddonPrice={(p) => getProductPrice(p.id, p.basePrice).price}
         onConfirm={handleConfigureConfirm}
+        onRequestQuote={handleConfigureQuote}
       />
 
       <GuidedBuyingWizard

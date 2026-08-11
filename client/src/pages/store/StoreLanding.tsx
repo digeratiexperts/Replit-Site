@@ -505,12 +505,32 @@ const StoreLanding = () => {
         }
         open={!!configureProduct}
         onClose={() => setConfigureProduct(null)}
-        onConfirm={(product, quantity, unitPrice) => {
+        getAddonPrice={(p) => getProductPrice(p.id, p.basePrice).price}
+        onConfirm={(payload) => {
+          const { product, quantity, unitPrice, addons } = payload;
           addToCart(product, quantity, unitPrice);
+          addons.forEach((addon) => {
+            const { price } = getProductPrice(addon.id, addon.basePrice);
+            addToCart(addon, isConfigurableProduct(addon) ? quantity : 1, price);
+          });
           setConfigureProduct(null);
           toast({
             title: "Configured service added",
             description: `${quantity} × ${product.name}`,
+          });
+          openCart();
+        }}
+        onRequestQuote={(payload) => {
+          const { product, quantity, unitPrice, addons } = payload;
+          addToCart(product, quantity, unitPrice);
+          addons.forEach((addon) => {
+            const { price } = getProductPrice(addon.id, addon.basePrice);
+            addToCart(addon, isConfigurableProduct(addon) ? quantity : 1, price);
+          });
+          setConfigureProduct(null);
+          toast({
+            title: "Ready for quote",
+            description: "Items added — open Your Solution to request a quote.",
           });
           openCart();
         }}

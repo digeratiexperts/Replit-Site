@@ -45,7 +45,10 @@ import {
 import { useStoreAuth } from "@/hooks/useStoreAuth";
 import { CartButton } from "@/components/store/CartButton";
 import { ProductMedia } from "@/components/store/ProductMedia";
-import { ConfigureProductDrawer } from "@/components/store/ConfigureProductDrawer";
+import {
+  ConfigureProductDrawer,
+  type ConfigureConfirmPayload,
+} from "@/components/store/ConfigureProductDrawer";
 import { StoreTrustStrip } from "@/components/store/StoreTrustStrip";
 
 const ProductDetail = () => {
@@ -135,12 +138,13 @@ const ProductDetail = () => {
     openCart();
   };
 
-  const handleConfigureConfirm = (
-    configured: typeof product,
-    qty: number,
-    unitPrice: number
-  ) => {
+  const handleConfigureConfirm = (payload: ConfigureConfirmPayload) => {
+    const { product: configured, quantity: qty, unitPrice, addons } = payload;
     addToCart(configured, qty, unitPrice);
+    addons.forEach((addon) => {
+      const { price } = getProductPrice(addon.id, addon.basePrice);
+      addToCart(addon, isConfigurableProduct(addon) ? qty : 1, price);
+    });
     toast({
       title: "Added to Cart",
       description: `${qty}x ${configured.name} has been added to your cart.`,
@@ -689,7 +693,11 @@ const ProductDetail = () => {
         open={configureOpen}
         onClose={() => setConfigureOpen(false)}
         unitPrice={productPricing.price}
+        getAddonPrice={(p) => getProductPrice(p.id, p.basePrice).price}
         onConfirm={handleConfigureConfirm}
+        onRequestQuote={(payload) => {
+          handleConfigureConfirm(payload);
+        }}
       />
 
       <DigeratiEnhancedFooterSection />

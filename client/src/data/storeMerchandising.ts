@@ -39,6 +39,12 @@ export type StoreComplianceId =
 
 export type StoreSizeId = "small" | "mid" | "large";
 
+/** List-price bands for catalog refine (basePrice / unit — not cart totals). */
+export type StorePriceBandId = "under_50" | "50_150" | "150_500" | "500_plus";
+
+/** Buy path: instant checkout vs quote-first / high-touch. */
+export type StorePurchasePathId = "checkout" | "quote";
+
 export const storeComplianceFilters: { id: StoreComplianceId; label: string; blurb: string }[] = [
   { id: "cyber_insurance", label: "Cyber insurance", blurb: "Controls insurers commonly ask about" },
   { id: "policy_docs", label: "Policies & docs", blurb: "Templates and documented controls" },
@@ -51,6 +57,28 @@ export const storeSizeFilters: { id: StoreSizeId; label: string; blurb: string }
   { id: "small", label: "Small (≈1–49)", blurb: "Starter onboardings, Office-scale stacks" },
   { id: "mid", label: "Mid-size (≈50–199)", blurb: "Business-scale and multi-site ready" },
   { id: "large", label: "Large / multi-site", blurb: "Enterprise, large onboardings, multi-site" },
+];
+
+export const storePriceBandFilters: {
+  id: StorePriceBandId;
+  label: string;
+  blurb: string;
+  min: number;
+  max: number;
+}[] = [
+  { id: "under_50", label: "Under $50", blurb: "Entry unit rates", min: 0, max: 50 },
+  { id: "50_150", label: "$50 – $149", blurb: "Common per-unit services", min: 50, max: 150 },
+  { id: "150_500", label: "$150 – $499", blurb: "Mid-tier services & kits", min: 150, max: 500 },
+  { id: "500_plus", label: "$500+", blurb: "Projects, hardware, blocks", min: 500, max: Number.POSITIVE_INFINITY },
+];
+
+export const storePurchasePathFilters: {
+  id: StorePurchasePathId;
+  label: string;
+  blurb: string;
+}[] = [
+  { id: "checkout", label: "Can checkout", blurb: "Add to cart and purchase online" },
+  { id: "quote", label: "Quote first", blurb: "Custom, zero-list, or high-touch SKUs" },
 ];
 
 export interface StoreOutcome {
@@ -449,6 +477,31 @@ export function productMatchesSize(product: StoreProduct, sizeId: StoreSizeId): 
 
   // Size-agnostic building blocks (most co-managed / digital / hardware) fit all bands.
   return true;
+}
+
+export function productMatchesPriceBand(
+  product: StoreProduct,
+  bandId: StorePriceBandId
+): boolean {
+  const band = storePriceBandFilters.find((b) => b.id === bandId);
+  if (!band) return false;
+  const price = product.basePrice;
+  return price >= band.min && price < band.max;
+}
+
+/** Checkout = online purchasable with a list price; quote = custom / zero-list / contract. */
+export function productMatchesPurchasePath(
+  product: StoreProduct,
+  pathId: StorePurchasePathId
+): boolean {
+  const isQuoteFirst =
+    product.isContractOnly ||
+    product.basePrice === 0 ||
+    !product.isCheckoutEnabled ||
+    product.category === "professional_services" ||
+    product.category === "contract_services";
+  if (pathId === "quote") return isQuoteFirst;
+  return product.isCheckoutEnabled && !product.isContractOnly && product.basePrice > 0;
 }
 
 export function getProductBySku(sku: string): StoreProduct | undefined {
@@ -1012,6 +1065,14 @@ export const coverageDimensions: {
     improveSku: "DE-DIG-ASMT-CSRA-OT",
   },
 ];
+
+export function productMatchesCoverage(
+  product: StoreProduct,
+  coverageId: CoverageDimension
+): boolean {
+  const dim = coverageDimensions.find((d) => d.id === coverageId);
+  return dim ? dim.match(product) : false;
+}
 
 export interface CoverageScore {
   total: number;
