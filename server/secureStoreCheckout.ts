@@ -205,12 +205,9 @@ export function registerSecureZohoStoreCheckout(
             totalAmount: trustedTotal,
             successUrl: `${baseUrl}/store/order-confirmation?orderId=${order.id}`,
             cancelUrl: `${baseUrl}/store/checkout`,
+            // Zoho metadata is deliberately limited to non-sensitive identifiers.
             metadata: {
-              orderNumber,
               orderId: order.id,
-              billingName,
-              billingEmail,
-              billingCompany,
             },
           });
 
