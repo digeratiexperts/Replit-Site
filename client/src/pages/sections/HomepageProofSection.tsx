@@ -25,8 +25,8 @@ export function HomepageProofSection() {
             <Star className="h-6 w-6 text-violet-300 mb-3" aria-hidden />
             <h3 className="text-lg font-semibold text-white mb-2">Google reviews</h3>
             <p className="text-sm text-white/65 mb-4">
-              Live Business Profile reviews on the homepage Client Proof section — verbatim, never
-              fabricated quotes.
+              Client Proof links to our Google listing and shows verbatim reviews when available —
+              never fabricated quotes.
             </p>
             <a
               href="/#google-reviews"
