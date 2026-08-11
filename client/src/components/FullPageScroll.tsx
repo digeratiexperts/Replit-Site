@@ -270,7 +270,7 @@ const SECTION_NAV_PRIMARY = new Set([
   'contact',
 ]);
 
-/** Desktop sticky section bar — compact primary row + More; leaves room for Ask DE. */
+/** Desktop sticky section bar — primary row + More; roomy padding with FAB clearance on the right. */
 function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarProps) {
   const [moreOpen, setMoreOpen] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
@@ -333,7 +333,7 @@ function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarPr
           setMoreOpen(false);
           onNavigate(index);
         }}
-        className={`${opts?.block ? 'w-full justify-start text-left' : ''} relative inline-flex items-center px-3 py-1.5 text-sm font-semibold rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FF477F] whitespace-nowrap shrink-0 ${
+        className={`${opts?.block ? 'w-full justify-start text-left' : ''} relative inline-flex items-center px-3.5 py-1.5 text-sm font-semibold rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FF477F] whitespace-nowrap shrink-0 ${
           isActive
             ? 'bg-[#D3126A] text-white shadow-lg shadow-[#D3126A]/40'
             : 'text-white/75 hover:text-white hover:bg-white/10'
@@ -348,19 +348,19 @@ function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarPr
   };
 
   return (
-    <div className="fixed bottom-3 left-3 right-[13.5rem] xl:right-[15rem] z-40 hidden lg:flex justify-center pointer-events-none">
+    <div className="fixed bottom-3 left-3 right-[16rem] xl:left-4 xl:right-[17.5rem] 2xl:right-[18.5rem] z-40 hidden lg:flex justify-center pointer-events-none">
       <motion.nav
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="pointer-events-auto flex max-w-full flex-row items-center gap-0.5 overflow-visible py-1.5 px-2.5 rounded-full bg-black/95 backdrop-blur-xl border-2 border-[#D3126A]/60 shadow-[0_0_24px_rgba(211,18,106,0.35),0_4px_24px_rgba(0,0,0,0.5)]"
+        className="pointer-events-auto flex w-max max-w-full flex-row items-center gap-1 overflow-visible py-2 px-3.5 rounded-full bg-black/95 backdrop-blur-xl border-2 border-[#D3126A]/60 shadow-[0_0_24px_rgba(211,18,106,0.35),0_4px_24px_rgba(0,0,0,0.5)]"
         aria-label="Section navigation"
       >
-        <div className="hidden xl:flex items-center gap-2 pr-2.5 border-r border-white/20 mr-1.5 shrink-0">
+        <div className="hidden xl:flex items-center gap-2 pr-3 border-r border-white/20 mr-2 shrink-0">
           <Shield className="w-4 h-4 text-[#FF477F]" aria-hidden="true" />
           <span className="text-white font-semibold text-sm whitespace-nowrap">Protected?</span>
         </div>
 
-        <div className="flex items-center gap-0.5 min-w-0 overflow-x-auto scrollbar-none">
+        <div className="flex items-center gap-1 min-w-0 overflow-x-auto scrollbar-none">
           {primary.map(({ section, index }) => renderNavButton(section, index))}
         </div>
 
@@ -369,7 +369,7 @@ function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarPr
             <button
               type="button"
               onClick={() => setMoreOpen((open) => !open)}
-              className={`inline-flex items-center gap-1 px-3 py-1.5 text-sm font-semibold rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-[#FF477F] ${
+              className={`inline-flex items-center gap-1 px-3.5 py-1.5 text-sm font-semibold rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-[#FF477F] ${
                 moreOpen || moreContainsActive
                   ? 'bg-white/15 text-white'
                   : 'text-white/75 hover:text-white hover:bg-white/10'
@@ -392,7 +392,7 @@ function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarPr
           </div>
         )}
 
-        <div className="w-px h-6 bg-white/20 mx-1.5 shrink-0" aria-hidden="true" />
+        <div className="w-px h-6 bg-white/20 mx-2 shrink-0" aria-hidden="true" />
 
         <a
           href="tel:325-480-9870"
@@ -406,7 +406,7 @@ function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarPr
 
         <a
           href="/book"
-          className="flex items-center gap-1 px-3.5 py-1.5 text-sm font-semibold rounded-full bg-white text-[#D3126A] hover:bg-pink-50 transition-all duration-300 shadow-lg whitespace-nowrap shrink-0"
+          className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold rounded-full bg-white text-[#D3126A] hover:bg-pink-50 transition-all duration-300 shadow-lg whitespace-nowrap shrink-0"
           data-testid="nav-cta-assessment"
         >
           Assessment
