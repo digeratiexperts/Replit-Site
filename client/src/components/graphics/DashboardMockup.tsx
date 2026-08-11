@@ -40,51 +40,35 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
           boxShadow: "0 24px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.06)",
         }}
       >
-        <div className="flex items-center gap-2 px-4 py-3 border-b border-white/10 bg-black/35">
-          <div className="flex gap-1.5" aria-hidden="true">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]/90" />
-            <div className="w-2.5 h-2.5 rounded-full bg-[#febc2e]/90" />
-            <div className="w-2.5 h-2.5 rounded-full bg-[#28c840]/90" />
+        <div className="flex items-center gap-2 px-3.5 py-2.5 border-b border-white/8 bg-black/25">
+          <div className="flex gap-1" aria-hidden="true">
+            <div className="w-2 h-2 rounded-full bg-white/20" />
+            <div className="w-2 h-2 rounded-full bg-white/15" />
+            <div className="w-2 h-2 rounded-full bg-white/10" />
           </div>
           <div className="flex-1 flex justify-center">
-            <div className="px-3 py-1 bg-white/5 rounded-md text-[11px] text-white/55 flex items-center gap-2 border border-white/5">
-              <Shield className="w-3 h-3 text-violet-400" aria-hidden="true" />
+            <div className="px-2.5 py-0.5 text-[11px] text-white/50 flex items-center gap-1.5">
+              <Shield className="w-3 h-3 text-pink-400/80" aria-hidden="true" />
               Sample Cyber Risk Assessment
             </div>
           </div>
         </div>
 
-        <div className="p-5 sm:p-6 space-y-5">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <motion.div
-                className="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-500 via-pink-500 to-violet-600 flex items-center justify-center border border-pink-300/25"
+        <div className="p-4 sm:p-5 space-y-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <div
+                className="w-9 h-9 rounded-xl bg-gradient-to-br from-fuchsia-500/90 via-pink-500/90 to-violet-600/90 flex items-center justify-center border border-pink-300/20"
                 aria-hidden="true"
-                animate={
-                  prefersReducedMotion
-                    ? undefined
-                    : {
-                        boxShadow: [
-                          "0 0 16px rgba(236, 72, 153, 0.28)",
-                          "0 0 28px rgba(236, 72, 153, 0.48)",
-                          "0 0 16px rgba(236, 72, 153, 0.28)",
-                        ],
-                      }
-                }
-                transition={
-                  prefersReducedMotion
-                    ? undefined
-                    : { duration: 2.4, repeat: Infinity, ease: "easeInOut" }
-                }
               >
-                <Shield className="w-5 h-5 text-white" />
-              </motion.div>
+                <Shield className="w-4 h-4 text-white" />
+              </div>
               <div>
                 <div className="text-white font-semibold text-sm">Cyber Risk Assessment</div>
                 <div className="text-white/45 text-xs">Illustrative preview · not live customer data</div>
               </div>
             </div>
-            <span className="shrink-0 text-[10px] uppercase tracking-wider font-semibold text-pink-100/95 bg-pink-500/20 border border-pink-400/35 px-2.5 py-1 rounded-md">
+            <span className="shrink-0 text-[10px] uppercase tracking-wider font-medium text-white/55 bg-white/5 border border-white/10 px-2 py-0.5 rounded">
               Sample
             </span>
           </div>

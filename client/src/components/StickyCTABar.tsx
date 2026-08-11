@@ -98,12 +98,12 @@ export function StickyCTABar() {
 
                 <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
                   <a
-                    href="tel:325-480-9870"
+                    href="tel:480-519-5892"
                     className="hidden md:flex items-center gap-2 text-white/75 hover:text-white transition-colors text-base"
                     data-testid="link-phone-sticky"
                   >
                     <Phone className="w-4 h-4" />
-                    <span>325-480-9870</span>
+                    <span>480-519-5892</span>
                   </a>
                   
                   <Button

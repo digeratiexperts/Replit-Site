@@ -535,14 +535,14 @@ export function MegaMenu() {
           }}
         />
         <div className="max-w-[100rem] mx-auto px-3 lg:px-5 flex flex-col md:flex-row items-center justify-end py-2 md:py-2.5 relative z-10 w-full">
-          <div className="flex items-center flex-wrap gap-x-5 gap-y-1.5 md:gap-x-8 justify-center md:justify-end">
+          <div className="flex items-center flex-wrap gap-x-5 gap-y-1.5 md:gap-x-7 justify-center md:justify-end">
             <a
-              href="tel:325-480-9870"
-              className="flex items-center text-white/75 hover:text-violet-300 text-sm md:text-base font-medium leading-none transition-colors"
+              href="tel:480-519-5892"
+              className="flex items-center text-white/95 hover:text-pink-300 text-sm md:text-base font-semibold leading-none tracking-wide transition-colors"
               data-testid="utility-phone"
             >
-              <Phone className="h-4 w-4 mr-1.5 text-violet-400 shrink-0" />
-              <span className="hidden sm:inline">325-480-9870</span>
+              <Phone className="h-4 w-4 mr-1.5 text-pink-400 shrink-0" />
+              <span className="hidden sm:inline">480-519-5892</span>
               <span className="sm:hidden">Call</span>
             </a>
 
@@ -551,17 +551,17 @@ export function MegaMenu() {
               href="https://assist.zoho.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center text-white/75 hover:text-violet-300 text-sm md:text-base font-medium leading-none transition-colors"
+              className="flex items-center text-white/90 hover:text-pink-300 text-sm md:text-base font-medium leading-none transition-colors"
               data-testid="utility-zoho-assist"
             >
-              <Monitor className="h-4 w-4 mr-1.5 text-violet-400 shrink-0" />
+              <Monitor className="h-4 w-4 mr-1.5 text-pink-400 shrink-0" />
               <span className="hidden sm:inline">Zoho Assist</span>
               <span className="sm:hidden">Assist</span>
             </a>
 
             <a
               href={PORTAL_LOGIN}
-              className="flex items-center text-white/75 hover:text-violet-300 text-sm md:text-base font-medium leading-none transition-colors"
+              className="flex items-center text-white/90 hover:text-pink-300 text-sm md:text-base font-medium leading-none transition-colors"
               data-testid="utility-portal"
             >
               <span className="hidden sm:inline">Client Portal</span>
@@ -996,16 +996,17 @@ export function MegaMenu() {
               ))}
             </div>
 
-            {/* Right Side Actions */}
-          <div className="flex items-center space-x-2 lg:space-x-4">
+            {/* Right Side Actions — short label on lg so Schedule isn’t truncated */}
+          <div className="flex items-center space-x-2 lg:space-x-3 flex-shrink-0">
             <button
               type="button"
-              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-7 xl:px-8 py-4 rounded-lg text-xl font-semibold whitespace-nowrap shadow-[0_0_22px_rgba(236,72,153,0.35)] hover:shadow-[0_0_30px_rgba(236,72,153,0.45)] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black border border-pink-300/25"
+              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-3.5 xl:px-5 py-2.5 rounded-lg text-sm xl:text-base font-semibold whitespace-nowrap shadow-[0_0_22px_rgba(236,72,153,0.35)] hover:shadow-[0_0_30px_rgba(236,72,153,0.45)] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black border border-pink-300/25"
               data-testid="nav-cta"
               onClick={() => { handleLinkClick(); openBooking("megamenu"); }}
-              aria-label="Schedule Your Assessment"
+              aria-label="Schedule Assessment"
             >
-              Schedule Your Assessment
+              <span className="xl:hidden">Schedule</span>
+              <span className="hidden xl:inline">Schedule Assessment</span>
             </button>
 
             {/* Mobile/Tablet Menu Button */}
@@ -1160,17 +1161,17 @@ export function MegaMenu() {
                 }}
               >
                 <a
-                  href="tel:325-480-9870"
+                  href="tel:480-519-5892"
                   className="flex items-center gap-3 px-4 py-3 rounded-xl bg-violet-500/10 border border-violet-500/20 hover:border-violet-500/40 transition-all group"
                   data-testid="mobile-call"
-                  aria-label="Call us at 325-480-9870"
+                  aria-label="Call us at 480-519-5892"
                 >
                   <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center border border-violet-500/20">
                     <Phone className="h-5 w-5 text-violet-400" aria-hidden="true" />
                   </div>
                   <div>
                     <div className="text-sm text-gray-400">Call Us</div>
-                    <div className="font-semibold text-white group-hover:text-violet-400 transition-colors">325-480-9870</div>
+                    <div className="font-semibold text-white group-hover:text-violet-400 transition-colors">480-519-5892</div>
                   </div>
                 </a>
 

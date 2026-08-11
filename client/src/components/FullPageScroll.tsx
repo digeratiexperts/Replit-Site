@@ -260,13 +260,13 @@ interface SectionNavBarProps {
 }
 
 /** Primary sticky links — rest live under More so the pill does not overflow. */
+/** Slim primary row — Team/FAQ/etc. stay under More to cut dock clutter vs top nav. */
 const SECTION_NAV_PRIMARY = new Set([
   'hero',
   'stats',
   'services',
   'pricing',
   'industries',
-  'team',
   'contact',
 ]);
 
@@ -395,13 +395,14 @@ function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarPr
         <div className="w-px h-6 bg-white/20 mx-2 shrink-0" aria-hidden="true" />
 
         <a
-          href="tel:325-480-9870"
-          className="flex items-center justify-center w-9 h-9 rounded-full text-white/75 hover:text-white hover:bg-white/10 transition-colors shrink-0"
+          href="tel:480-519-5892"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-white/90 hover:text-white hover:bg-white/10 transition-colors shrink-0 text-sm font-medium"
           data-testid="nav-phone"
-          aria-label="Call 325-480-9870"
-          title="325-480-9870"
+          aria-label="Call 480-519-5892"
+          title="480-519-5892"
         >
-          <Phone className="w-4 h-4" aria-hidden="true" />
+          <Phone className="w-4 h-4 text-[#FF477F]" aria-hidden="true" />
+          <span className="hidden xl:inline">480-519-5892</span>
         </a>
 
         <a

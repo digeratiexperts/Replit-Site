@@ -85,7 +85,7 @@ export default function ThankYouSuccess() {
                 </h3>
                 <p className="text-slate-600 text-sm mb-6">
                   Thank you for your interest. Click below to book a time that works for you.<br />
-                  Call our office at <a href="tel:325-480-9870" className="text-purple-600 hover:underline">325-480-9870</a> if you have any questions.
+                  Call our office at <a href="tel:480-519-5892" className="text-purple-600 hover:underline">480-519-5892</a> if you have any questions.
                 </p>
                 
                 {/* Meeting Details */}

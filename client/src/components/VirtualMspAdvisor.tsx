@@ -196,7 +196,7 @@ export function VirtualMspAdvisor() {
           role: "assistant",
           content:
             e?.message ||
-            "I'm having trouble responding right now. Call 325-480-9870 or book at meet.digerati-experts.com.",
+            "I'm having trouble responding right now. Call 480-519-5892 or book at meet.digerati-experts.com.",
         },
       ]);
     } finally {
@@ -502,7 +502,7 @@ export function VirtualMspAdvisor() {
             </Button>
           </form>
           <div className="px-3 pb-2 bg-white text-[10px] text-slate-400 text-center">
-            Not a general chatbot · Digerati Experts · 325-480-9870
+            Not a general chatbot · Digerati Experts · 480-519-5892
           </div>
         </div>
       )}

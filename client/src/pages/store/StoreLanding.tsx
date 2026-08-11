@@ -481,14 +481,14 @@ const StoreLanding = () => {
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </a>
-              <a href="tel:325-480-9870">
+              <a href="tel:480-519-5892">
                 <Button
                   size="lg"
                   className="h-12 border-2 border-white/30 bg-transparent px-6 text-white hover:bg-white/10"
                   data-testid="button-call-us"
                 >
                   <Phone className="mr-2 h-4 w-4" />
-                  325-480-9870
+                  480-519-5892
                 </Button>
               </a>
             </div>

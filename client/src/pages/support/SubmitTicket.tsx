@@ -237,10 +237,10 @@ export default function SubmitTicket() {
                 For urgent issues, call us directly:
               </p>
               <a
-                href="tel:325-480-9870"
+                href="tel:480-519-5892"
                 className="text-2xl font-bold text-purple-400 hover:text-purple-300"
               >
-                325-480-9870
+                480-519-5892
               </a>
             </CardContent>
           </Card>

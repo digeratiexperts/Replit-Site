@@ -38,7 +38,7 @@ const ORGANIZATION = {
   ],
   "contactPoint": {
     "@type": "ContactPoint",
-    "telephone": "+1-325-480-9870",
+    "telephone": "+1-480-519-5892",
     "contactType": "sales",
     "email": "info@digeratiexperts.com",
     "areaServed": "US",
@@ -53,7 +53,7 @@ const LOCAL_BUSINESS = {
   "alternateName": "Digerati Experts MSP",
   "description": "Cybersecurity-first managed IT for Arizona businesses. Partner-backed monitoring, identity/endpoint protection, and accountable day-to-day IT in one operating model.",
   "url": SITE_URL,
-  "telephone": "+1-325-480-9870",
+  "telephone": "+1-480-519-5892",
   "email": "info@digeratiexperts.com",
   "logo": `${SITE_URL}/favicon-512x512.png`,
   "image": `${SITE_URL}/favicon-512x512.png`,

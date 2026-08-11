@@ -97,12 +97,12 @@ export default function TwentyOneQuestions() {
               Ready to experience the Digerati Experts difference?
             </h2>
             <a 
-              href="tel:+13254809870" 
+              href="tel:+14805195892" 
               className="text-3xl md:text-4xl font-bold text-violet-400 hover:text-violet-300 transition-colors block mb-6"
               data-testid="link-phone"
             >
               <Phone className="w-8 h-8 inline-block mr-3 -mt-1" />
-              325-480-9870
+              480-519-5892
             </a>
             <p className="text-white/80 text-lg font-medium leading-relaxed">
               Call now for your FREE 30-Day Risk-Free Pilot<br />
@@ -123,7 +123,7 @@ export default function TwentyOneQuestions() {
 
           <div className="text-center py-8 border-t border-white/10">
             <p className="text-white font-semibold mb-2">
-              DIGERATI EXPERTS | 325-480-9870 | info@digeratiexperts.com
+              DIGERATI EXPERTS | 480-519-5892 | info@digeratiexperts.com
             </p>
             <p className="text-white/50 text-sm flex items-center justify-center gap-2">
               <MapPin className="w-4 h-4" />

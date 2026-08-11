@@ -338,7 +338,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
         </div>
         <p className="mt-4 text-center text-sm text-white/45">
           Serving professional services, healthcare, construction, nonprofit, and regulated
-          organizations across Greater Phoenix · 325-480-9870
+          organizations across Greater Phoenix · 480-519-5892
         </p>
       </div>
     </section>

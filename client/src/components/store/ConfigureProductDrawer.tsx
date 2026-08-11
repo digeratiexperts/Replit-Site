@@ -411,12 +411,12 @@ export function ConfigureProductDrawer({
                 </Button>
               )}
               <a
-                href="tel:325-480-9870"
+                href="tel:480-519-5892"
                 className="flex h-11 w-full items-center justify-center gap-2 rounded-md border border-white/15 text-sm text-white/75 transition-colors hover:bg-white/5 hover:text-white"
                 data-testid="link-configure-call"
               >
                 <Phone className="h-4 w-4" />
-                Need help sizing? 325-480-9870
+                Need help sizing? 480-519-5892
               </a>
             </div>
           </motion.aside>

@@ -32,17 +32,17 @@ import { DigeratiTrustPhotoSection } from "./sections/DigeratiTrustPhotoSection"
 const homepageSections: { id: string; label: string; theme: 'dark' | 'light'; showInNav?: boolean }[] = [
   { id: 'hero', label: 'Home', theme: 'dark' },
   { id: 'stats', label: 'Why DE', theme: 'dark' },
-  { id: 'challenges', label: 'Problems', theme: 'dark' },
+  { id: 'challenges', label: 'Problems', theme: 'dark', showInNav: false },
   { id: 'services', label: 'Engage', theme: 'dark' },
-  { id: 'protection', label: 'Protect', theme: 'light' },
+  { id: 'protection', label: 'Protect', theme: 'light', showInNav: false },
   { id: 'pricing', label: 'Packages', theme: 'dark' },
   { id: 'industries', label: 'Industries', theme: 'dark' },
   { id: 'trust', label: 'Trust', theme: 'light', showInNav: false },
-  { id: 'team', label: 'Team', theme: 'dark' },
-  { id: 'testimonials', label: 'Proof', theme: 'dark' },
+  { id: 'team', label: 'Team', theme: 'dark', showInNav: false },
+  { id: 'testimonials', label: 'Proof', theme: 'dark', showInNav: false },
   { id: 'insights', label: 'Insights', theme: 'dark', showInNav: false },
-  { id: 'faq', label: 'FAQ', theme: 'light' },
-  { id: 'cta', label: 'Next step', theme: 'dark' },
+  { id: 'faq', label: 'FAQ', theme: 'light', showInNav: false },
+  { id: 'cta', label: 'Next step', theme: 'dark', showInNav: false },
   { id: 'contact', label: 'Contact', theme: 'dark' },
 ];
 
@@ -71,7 +71,8 @@ export const DigeratiHomepage = (): JSX.Element => {
 
   return (
     <FullPageScrollProvider sections={homepageSections} enableOnMobile={false}>
-      <div className="min-h-screen bg-[#050312] pb-20 lg:pb-24">
+      {/* pb clears fixed bottom section dock so content isn't clipped */}
+      <div className="min-h-screen bg-[#050312] pb-28 lg:pb-32">
         <OrganizationJsonLd />
         <WebSiteJsonLd />
         {/* Navigation — chat lives in App MarketingChrome sitewide */}
@@ -83,56 +84,56 @@ export const DigeratiHomepage = (): JSX.Element => {
           <DigeratiAlertBanner />
         </ScrollSectionAuto>
 
-        {/* Why DE */}
-        <ScrollSectionAuto id="stats">
+        {/* Why DE — dock clearance on each section */}
+        <ScrollSectionAuto id="stats" className="pb-20 lg:pb-24">
           <DigeratiStatsSection />
         </ScrollSectionAuto>
 
         {/* Problems */}
-        <ScrollSectionAuto id="challenges">
+        <ScrollSectionAuto id="challenges" className="pb-20 lg:pb-24">
           <DigeratiWhatWeTackleSection />
         </ScrollSectionAuto>
 
         {/* Engage */}
-        <ScrollSectionAuto id="services">
+        <ScrollSectionAuto id="services" className="pb-20 lg:pb-24">
           <DigeratiServicesSection />
         </ScrollSectionAuto>
 
         {/* Kept from working branch — not in live sticky bar */}
-        <ScrollSectionAuto id="protection">
+        <ScrollSectionAuto id="protection" className="pb-20 lg:pb-24">
           <DigeratiHowWeProtectSection />
         </ScrollSectionAuto>
 
         {/* Packages */}
-        <ScrollSectionAuto id="pricing">
+        <ScrollSectionAuto id="pricing" className="pb-20 lg:pb-24">
           <DigeratiPricingSection />
         </ScrollSectionAuto>
 
         {/* Pricing tools relocated to /proactive-ecosystem-pricing#pricing-tools */}
 
         {/* Industries */}
-        <ScrollSectionAuto id="industries">
+        <ScrollSectionAuto id="industries" className="pb-20 lg:pb-24">
           <DigeratiIndustriesSection />
         </ScrollSectionAuto>
 
         {/* Trust imagery — feeds Proof story, hidden from sticky bar */}
-        <ScrollSectionAuto id="trust">
+        <ScrollSectionAuto id="trust" className="pb-20 lg:pb-24">
           <DigeratiTrustPhotoSection />
         </ScrollSectionAuto>
 
         {/* Meet the Experts — human trust */}
-        <ScrollSectionAuto id="team">
+        <ScrollSectionAuto id="team" className="pb-20 lg:pb-24">
           <DigeratiMeetExpertsSection />
         </ScrollSectionAuto>
 
         {/* Proof — honest shells (no fabricated quotes) */}
-        <ScrollSectionAuto id="testimonials">
+        <ScrollSectionAuto id="testimonials" className="pb-20 lg:pb-24">
           <DigeratiTestimonialsSection />
           <HomepageProofSection />
         </ScrollSectionAuto>
 
         {/* Kept from working branch — not in live sticky bar */}
-        <ScrollSectionAuto id="insights">
+        <ScrollSectionAuto id="insights" className="pb-20 lg:pb-24">
           <DigeratiThreatsInsightsSection />
           <DigeratiAIAssistanceSection />
         </ScrollSectionAuto>
@@ -141,18 +142,18 @@ export const DigeratiHomepage = (): JSX.Element => {
         <DigeratiLeadFormSection />
 
         {/* FAQ before Next step — live cleanness */}
-        <ScrollSectionAuto id="faq">
+        <ScrollSectionAuto id="faq" className="pb-20 lg:pb-24">
           <DigeratiFAQSection />
           <DigeratiNewsletterSection />
         </ScrollSectionAuto>
 
         {/* Next step */}
-        <ScrollSectionAuto id="cta">
+        <ScrollSectionAuto id="cta" className="pb-20 lg:pb-24">
           <DigeratiCTASection />
         </ScrollSectionAuto>
 
         {/* Contact */}
-        <ScrollSectionAuto id="contact" className="scroll-mt-20 pt-8">
+        <ScrollSectionAuto id="contact" className="scroll-mt-20 pt-8 pb-20 lg:pb-24">
           <DigeratiContactSection />
           <DigeratiEnhancedFooterSection />
         </ScrollSectionAuto>
