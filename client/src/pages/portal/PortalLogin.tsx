@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,10 +6,25 @@ import { AlertCircle, Mail, Lock, ArrowRight, ShieldCheck, ArrowLeft } from "luc
 import { useLocation } from "wouter";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
 import TurnstileWidget from "@/components/TurnstileWidget";
+import { useSEO } from "@/hooks/useSEO";
 
 type LoginStep = "credentials" | "mfa";
 
+function readQueryParam(name: string): string {
+  if (typeof window === "undefined") return "";
+  return new URLSearchParams(window.location.search).get(name) || "";
+}
+
+function safePortalReturnTo(raw: string): string {
+  return raw.startsWith("/portal") && !raw.startsWith("//") ? raw : "/portal/dashboard";
+}
+
 export default function PortalLogin() {
+  useSEO({
+    title: "Client Portal Login",
+    description: "Sign in to the Digerati Experts Client Portal. For existing clients only.",
+    noIndex: true,
+  });
   const [step, setStep] = useState<LoginStep>("credentials");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +35,60 @@ export default function PortalLogin() {
   const [turnstileToken, setTurnstileToken] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [zohoConfigured, setZohoConfigured] = useState<boolean | null>(null);
   const [, navigate] = useLocation();
+
+  useEffect(() => {
+    const token = readQueryParam("token");
+    const zohoSso = readQueryParam("zoho_sso");
+    const err = readQueryParam("error");
+    const message = readQueryParam("message");
+    const returnTo = readQueryParam("returnTo") || "/portal/dashboard";
+
+    if (err) {
+      setError(message || "Sign-in failed. Please try again.");
+    }
+
+    if (zohoSso === "1" && token) {
+      try {
+        const payloadPart = token.split(".")[1];
+        const payload = payloadPart
+          ? JSON.parse(atob(payloadPart.replace(/-/g, "+").replace(/_/g, "/")))
+          : null;
+        const user = {
+          id: payload?.userId || "portal-user",
+          email: payload?.email || "",
+          role: payload?.role || "user",
+          storeRole: payload?.storeRole || "prospect",
+          clientId: payload?.clientId ?? null,
+          fullName: payload?.email?.split("@")[0] || "Portal User",
+        };
+        localStorage.setItem("portalUser", JSON.stringify(user));
+        localStorage.setItem("portalToken", token);
+        localStorage.setItem("portalUserId", user.id);
+        if (user.email) localStorage.setItem("userEmail", user.email);
+        window.history.replaceState({}, "", "/portal/login");
+        navigate(safePortalReturnTo(returnTo));
+        return;
+      } catch {
+        setError("Zoho sign-in completed but session handoff failed. Please try again.");
+      }
+    }
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/portal/auth/zoho/status");
+        const data = await res.json().catch(() => ({}));
+        if (!cancelled) setZohoConfigured(Boolean(data?.configured));
+      } catch {
+        if (!cancelled) setZohoConfigured(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,6 +100,7 @@ export default function PortalLogin() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, turnstileToken }),
+        credentials: "include",
       });
 
       const data = await response.json();
@@ -53,7 +122,7 @@ export default function PortalLogin() {
       localStorage.setItem("portalToken", data.token);
       localStorage.setItem("portalUserId", data.user?.id || "portal-user");
       localStorage.setItem("userEmail", email);
-      navigate("/portal/dashboard");
+      navigate(safePortalReturnTo(readQueryParam("returnTo")));
     } catch (err) {
       setError("Connection error. Please try again.");
     } finally {
@@ -71,6 +140,7 @@ export default function PortalLogin() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mfaToken, code: mfaCode }),
+        credentials: "include",
       });
 
       const data = await response.json();
@@ -84,13 +154,17 @@ export default function PortalLogin() {
       localStorage.setItem("portalToken", data.token);
       localStorage.setItem("portalUserId", data.user?.id || "portal-user");
       localStorage.setItem("userEmail", email);
-      navigate("/portal/dashboard");
+      navigate(safePortalReturnTo(readQueryParam("returnTo")));
     } catch (err) {
       setError("Connection error. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+
+  const returnToForZoho = safePortalReturnTo(readQueryParam("returnTo"));
+  const zohoStartHref = `/api/portal/auth/zoho/start?returnTo=${encodeURIComponent(returnToForZoho)}`;
+  const showZoho = zohoConfigured !== false;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#030228] to-[#0f0d2e] flex items-center justify-center p-4">
@@ -110,6 +184,33 @@ export default function PortalLogin() {
               </CardHeader>
 
               <CardContent>
+                {showZoho && (
+                  <div className="mb-6 space-y-3">
+                    <Button
+                      type="button"
+                      asChild
+                      className="w-full bg-white text-[#0f0d2e] hover:bg-white/90 font-semibold"
+                      data-testid="button-zoho-login"
+                    >
+                      <a href={zohoStartHref}>
+                        Sign in with Zoho
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </a>
+                    </Button>
+                    {zohoConfigured === null && (
+                      <p className="text-xs text-gray-500 text-center">Checking Zoho sign-in…</p>
+                    )}
+                    <div className="relative py-1">
+                      <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-white/10" />
+                      </div>
+                      <div className="relative flex justify-center text-xs uppercase">
+                        <span className="bg-transparent px-2 text-gray-400">or use email</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <form onSubmit={handleLogin} className="space-y-4">
                   {error && (
                     <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
@@ -177,7 +278,7 @@ export default function PortalLogin() {
                     </a>
                   </p>
                   <p className="text-xs text-gray-400 text-center">
-                    Need help? Contact support@digeratiexperts.com
+                    Need help? Contact support@digeratiexperts.com · 325-480-9870
                   </p>
                 </div>
               </CardContent>

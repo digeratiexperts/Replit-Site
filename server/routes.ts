@@ -6,6 +6,20 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { registerObjectStorageRoutes, ObjectStorageService } from "./replit_integrations/object_storage";
 import { zohoClient, zohoDeskService, zohoCRMService, zohoBillingService } from "./zoho";
+import {
+  clearZohoPkceCookie,
+  createZohoStartPayload,
+  exchangeZohoAuthCode,
+  fetchZohoUserInfo,
+  getZohoPortalConfig,
+  isEmailAllowedForPortalOAuth,
+  isMasterPortalEmail,
+  portalLoginErrorRedirect,
+  readZohoPkceCookie,
+  sanitizeReturnTo,
+  setZohoPkceCookie,
+  verifyZohoOAuthState,
+} from "./portalZohoAuth";
 import { verifyTurnstile } from "./middleware/security";
 import { eventBus, EventTypes } from "./eventBus";
 import { notificationService } from "./services/notificationService";
@@ -1425,6 +1439,195 @@ export async function registerRoutes(app: Express) {
       },
     });
   }
+
+  function completeLoginRedirect(user: any, req: AuthenticatedRequest, res: Response, returnTo: string) {
+    const sessionId = randomId();
+    const now = Date.now();
+    sessionStore.set(sessionId, { userId: user.id, createdAt: now, lastRotated: now });
+
+    let storeRole: StoreRole = "prospect";
+    if (user.storeRole) {
+      storeRole = user.storeRole as StoreRole;
+    } else if (user.role === "admin") {
+      storeRole = "admin";
+    } else if (user.clientId) {
+      const client = portalClients.get(user.clientId);
+      if (client?.serviceType === "managed") storeRole = "managed";
+      else if (client?.serviceType === "comanaged") storeRole = "comanaged";
+    }
+
+    const token = jwt.sign(
+      { userId: user.id, email: user.email, role: user.role, storeRole, clientId: user.clientId || null },
+      JWT_SECRET,
+      { expiresIn: "24h" },
+    );
+
+    res.cookie("sessionId", sessionId, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000,
+      path: "/",
+    });
+
+    logSecurityEvent("PORTAL_USER_LOGIN", req, {
+      userId: user.id,
+      email: user.email,
+      role: user.role,
+      storeRole,
+      sessionId,
+      method: "zoho_sso",
+    });
+
+    const params = new URLSearchParams({
+      zoho_sso: "1",
+      token,
+      returnTo: sanitizeReturnTo(returnTo),
+    });
+    return res.redirect(`/portal/login?${params.toString()}`);
+  }
+
+  async function resolveOrProvisionZohoPortalUser(
+    profile: { email: string; fullName: string },
+    req: AuthenticatedRequest,
+  ) {
+    const email = profile.email.trim().toLowerCase();
+    let user = portalUsers.get(email);
+
+    if (!user) {
+      if (!isEmailAllowedForPortalOAuth(email)) {
+        return null;
+      }
+      const isMaster = isMasterPortalEmail(email);
+      const usernameBase = email.split("@")[0].replace(/[^a-zA-Z0-9._-]/g, "").slice(0, 24) || "zoho";
+      let username = usernameBase;
+      let n = 1;
+      while (portalUsers.has(username)) {
+        username = `${usernameBase}${n++}`;
+      }
+      const password = await bcrypt.hash(randomBytes(32).toString("hex"), SALT_ROUNDS);
+      user = {
+        id: randomId(),
+        email,
+        username,
+        password,
+        role: isMaster ? "admin" : "user",
+        storeRole: isMaster ? "admin" : "prospect",
+        fullName: profile.fullName || username,
+        clientId: null as string | null,
+        emailVerified: true,
+        isActive: true,
+      };
+      if (!isMaster) {
+        const clientId = `prospect-${user.id.slice(0, 12)}`;
+        portalClients.set(clientId, {
+          id: clientId,
+          companyName: `${user.fullName || user.username || "Prospect"} (Prospect)`,
+          contactEmail: user.email,
+          primaryContact: user.fullName || user.username || user.email,
+          status: "prospect",
+          type: "client",
+          serviceType: "prospect",
+          createdAt: new Date(),
+        });
+        user.clientId = clientId;
+      }
+      portalUsers.set(email, user);
+      portalUsers.set(username, user);
+      logSecurityEvent("PORTAL_USER_PROVISIONED_ZOHO", req, {
+        email,
+        role: user.role,
+      });
+    } else if (isMasterPortalEmail(email) && user.role !== "admin") {
+      user.role = "admin";
+      user.storeRole = "admin";
+      portalUsers.set(email, user);
+      if (user.username) portalUsers.set(user.username, user);
+    }
+
+    return user;
+  }
+
+  async function handlePortalZohoCallback(req: AuthenticatedRequest, res: Response) {
+    const cfg = getZohoPortalConfig();
+    if (!cfg.configured) {
+      return res.redirect(portalLoginErrorRedirect("zoho_not_configured", "Zoho sign-in is not configured"));
+    }
+
+    const err = typeof req.query.error === "string" ? req.query.error : "";
+    if (err) {
+      clearZohoPkceCookie(res);
+      return res.redirect(portalLoginErrorRedirect("zoho_denied", err));
+    }
+
+    const code = typeof req.query.code === "string" ? req.query.code : "";
+    const state = typeof req.query.state === "string" ? req.query.state : "";
+    const verified = state ? verifyZohoOAuthState(state) : null;
+    const codeVerifier = readZohoPkceCookie(req);
+    clearZohoPkceCookie(res);
+
+    if (!code || !verified || !codeVerifier) {
+      return res.redirect(portalLoginErrorRedirect("zoho_invalid_state", "Zoho sign-in session expired. Please try again."));
+    }
+
+    try {
+      const tokens = await exchangeZohoAuthCode({ code, codeVerifier });
+      const profile = await fetchZohoUserInfo(tokens.accessToken);
+
+      if (!isEmailAllowedForPortalOAuth(profile.email) && !portalUsers.get(profile.email)) {
+        return res.redirect(
+          portalLoginErrorRedirect(
+            "zoho_not_allowed",
+            "This Zoho account is not authorized for the Client Portal.",
+          ),
+        );
+      }
+
+      const user = await resolveOrProvisionZohoPortalUser(profile, req);
+      if (!user) {
+        return res.redirect(
+          portalLoginErrorRedirect(
+            "zoho_not_allowed",
+            "This Zoho account is not authorized for the Client Portal.",
+          ),
+        );
+      }
+
+      if (user.isActive === false) {
+        return res.redirect(portalLoginErrorRedirect("zoho_disabled", "This portal account is disabled."));
+      }
+
+      return completeLoginRedirect(user, req, res, verified.returnTo);
+    } catch (error: any) {
+      console.error("[ERROR] Portal Zoho SSO failed:", error?.message || error);
+      return res.redirect(portalLoginErrorRedirect("zoho_failed", "Zoho sign-in failed. Please try again."));
+    }
+  }
+
+  // Zoho Public Platform SSO for Client Portal (not Hub)
+  app.get("/api/portal/auth/zoho/status", (_req: AuthenticatedRequest, res: Response) => {
+    const cfg = getZohoPortalConfig();
+    return res.json({
+      configured: cfg.configured,
+      provider: "zoho",
+      redirectConfigured: Boolean(cfg.redirectUri),
+    });
+  });
+
+  app.get("/api/portal/auth/zoho/start", (req: AuthenticatedRequest, res: Response) => {
+    const cfg = getZohoPortalConfig();
+    if (!cfg.configured) {
+      return res.redirect(portalLoginErrorRedirect("zoho_not_configured", "Zoho sign-in is not configured"));
+    }
+    const returnTo = sanitizeReturnTo(req.query.returnTo);
+    const { authorizeUrl, codeVerifier } = createZohoStartPayload(returnTo);
+    setZohoPkceCookie(res, codeVerifier);
+    return res.redirect(authorizeUrl);
+  });
+
+  app.get("/api/portal/auth/zoho/callback", handlePortalZohoCallback);
+  // Alias for VPS ZOHO_PORTAL_OIDC_REDIRECT_URI / Zoho console registration
+  app.get("/api/zoho/oauth/callback", handlePortalZohoCallback);
 
   app.post("/api/portal/login", [verifyTurnstile, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
