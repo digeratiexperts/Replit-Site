@@ -40,7 +40,6 @@ function isPurchasableForRole(product: StoreProduct, role: StoreRole): boolean {
   if (!product.isCheckoutEnabled || product.isContractOnly) return false;
   if (role === "admin") return true;
   if (role !== "comanaged") return false;
-
   return product.requiredClientType === "public" || product.requiredClientType === "comanaged";
 }
 
@@ -227,7 +226,7 @@ export function registerSecureZohoStoreCheckout(
         } catch (error) {
           await db
             .update(storeOrders)
-            .set({ status: "payment_failed", updatedAt: new Date() })
+            .set({ status: "pending", updatedAt: new Date() })
             .where(eq(storeOrders.id, order.id))
             .catch(() => undefined);
           throw error;
