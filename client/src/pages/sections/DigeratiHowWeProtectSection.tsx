@@ -73,7 +73,6 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
   return (
     <section 
       ref={sectionRef}
-      id="protection"
       className="py-10 md:py-14 lg:py-16 relative overflow-hidden bg-white"
       style={{ position: 'relative' }}
     >

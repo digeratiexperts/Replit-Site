@@ -39,6 +39,7 @@ import { CartButton } from "@/components/store/CartButton";
 import { useStoreAuth } from "@/hooks/useStoreAuth";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
+import { PORTAL_LOGIN } from "@/lib/portalUrls";
 import { StoreTrustStrip } from "@/components/store/StoreTrustStrip";
 import { ShopByOutcome } from "@/components/store/ShopByOutcome";
 import { MerchandisingRails } from "@/components/store/MerchandisingRails";
@@ -155,7 +156,7 @@ const StoreLanding = () => {
                 </Button>
               </div>
             ) : (
-              <Link href="/portal/login">
+              <Link href={PORTAL_LOGIN}>
                 <Button
                   variant="outline"
                   size="sm"

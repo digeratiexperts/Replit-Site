@@ -130,12 +130,26 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
           </button>
         </div>
 
-        <p className="mt-6 text-center text-sm text-white/45">
-          Serving professional services, healthcare, construction, nonprofit, and regulated organizations
-          across Greater Phoenix.{" "}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm">
+          <Link href="/about/client-bill-of-rights">
+            <span className="text-violet-300 hover:text-violet-200" data-testid="link-proof-bill-of-rights">
+              Client Bill of Rights
+            </span>
+          </Link>
+          <span className="text-white/25" aria-hidden="true">·</span>
+          <Link href="/about/guarantee">
+            <span className="text-violet-300 hover:text-violet-200" data-testid="link-proof-guarantee">
+              100% Guarantee
+            </span>
+          </Link>
+          <span className="text-white/25" aria-hidden="true">·</span>
           <Link href="/industries/healthcare">
             <span className="text-violet-300 hover:text-violet-200">Browse industries</span>
           </Link>
+        </div>
+        <p className="mt-4 text-center text-sm text-white/45">
+          Serving professional services, healthcare, construction, nonprofit, and regulated organizations
+          across Greater Phoenix.
         </p>
       </div>
     </section>

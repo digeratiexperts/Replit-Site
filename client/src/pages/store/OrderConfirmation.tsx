@@ -359,12 +359,12 @@ const OrderConfirmation = () => {
             <p className="text-white/60 mb-4">Need help with your order?</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="tel:+14803544927"
+                href="tel:+13254809870"
                 className="inline-flex items-center gap-2 text-violet-400 hover:text-violet-300 transition-colors"
                 data-testid="link-phone-support"
               >
                 <Phone className="w-4 h-4" />
-                (480) 354-4927
+                325-480-9870
               </a>
               <Link href="/support/submit-ticket">
                 <span className="inline-flex items-center gap-2 text-violet-400 hover:text-violet-300 transition-colors cursor-pointer" data-testid="link-submit-ticket">

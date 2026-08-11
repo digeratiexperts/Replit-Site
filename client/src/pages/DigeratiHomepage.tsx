@@ -35,7 +35,7 @@ const homepageSections: { id: string; label: string; theme: 'dark' | 'light'; sh
   { id: 'stats', label: 'Why DE', theme: 'dark' },
   { id: 'challenges', label: 'Problems', theme: 'dark' },
   { id: 'services', label: 'Engage', theme: 'dark' },
-  { id: 'protection', label: 'Protect', theme: 'light', showInNav: false },
+  { id: 'protection', label: 'Protect', theme: 'light' },
   { id: 'pricing', label: 'Packages', theme: 'dark' },
   { id: 'calculators', label: 'Assessment', theme: 'dark' },
   { id: 'industries', label: 'Industries', theme: 'dark' },

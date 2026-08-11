@@ -220,12 +220,12 @@ const QuoteConfirmation = () => {
               <h3 className="text-lg font-semibold text-white mb-4">Need Immediate Assistance?</h3>
               <div className="flex flex-col md:flex-row gap-4">
                 <a
-                  href="tel:+14806244149"
+                  href="tel:+13254809870"
                   className="flex items-center gap-3 text-white/70 hover:text-violet-400 transition-colors"
                   data-testid="link-phone"
                 >
                   <Phone className="w-5 h-5" />
-                  <span>(480) 624-4149</span>
+                  <span>325-480-9870</span>
                 </a>
                 <a
                   href="mailto:sales@digerati-experts.com"

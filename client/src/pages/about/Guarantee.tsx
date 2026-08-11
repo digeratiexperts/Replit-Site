@@ -93,7 +93,7 @@ export default function Guarantee() {
             Call us today to see what Elite IT & Cybersecurity is all about
           </p>
           <a 
-            href="tel:+14805195892" 
+            href="tel:+13254809870" 
             className="inline-flex items-center gap-3 text-2xl md:text-3xl font-bold text-violet-400 hover:text-violet-300 transition-colors"
             data-testid="link-phone"
           >

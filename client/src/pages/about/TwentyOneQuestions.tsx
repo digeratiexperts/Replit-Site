@@ -97,7 +97,7 @@ export default function TwentyOneQuestions() {
               Ready to experience the Digerati Experts difference?
             </h2>
             <a 
-              href="tel:+14805195892" 
+              href="tel:+13254809870" 
               className="text-3xl md:text-4xl font-bold text-violet-400 hover:text-violet-300 transition-colors block mb-6"
               data-testid="link-phone"
             >

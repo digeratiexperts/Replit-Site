@@ -17,6 +17,7 @@ import { useSEO } from "@/hooks/useSEO";
 import {
   storeProducts,
   categoryLabels,
+  categoryDescriptions,
   getCheckoutEnabledProducts,
   type ProductCategory,
   type PricingType,
@@ -33,6 +34,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
 import { CartButton } from "@/components/store/CartButton";
 import { useStoreAuth } from "@/hooks/useStoreAuth";
+import { PORTAL_LOGIN } from "@/lib/portalUrls";
 import { StoreTrustStrip } from "@/components/store/StoreTrustStrip";
 import { ShopByOutcome } from "@/components/store/ShopByOutcome";
 import { MerchandisingRails } from "@/components/store/MerchandisingRails";
@@ -324,11 +326,52 @@ const CoManagedStore = () => {
                   totalCount={visibleBase.length}
                 />
 
+                {/* Category chips — restored for scannability (toolbar Select remains) */}
+                <div className="mb-6 flex flex-wrap items-center gap-2">
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant={selectedCategory === "all" ? "default" : "outline"}
+                    className={
+                      selectedCategory === "all"
+                        ? "bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                        : "border-white/15 bg-transparent text-white/80 hover:bg-white/5"
+                    }
+                    onClick={() => setSelectedCategory("all")}
+                    data-testid="filter-all"
+                  >
+                    All ({visibleBase.length})
+                  </Button>
+                  {categories.map((category) => {
+                    const count = visibleBase.filter((p) => p.category === category).length;
+                    return (
+                      <Button
+                        key={category}
+                        type="button"
+                        size="sm"
+                        variant={selectedCategory === category ? "default" : "outline"}
+                        className={
+                          selectedCategory === category
+                            ? "bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                            : "border-white/15 bg-transparent text-white/80 hover:bg-white/5"
+                        }
+                        onClick={() => setSelectedCategory(category)}
+                        data-testid={`filter-${category}`}
+                      >
+                        {categoryLabels[category]} ({count})
+                      </Button>
+                    );
+                  })}
+                </div>
+
                 {selectedCategory !== "all" && (
-                  <div className="mb-6 rounded-xl border border-white/10 bg-[#141414] p-4">
-                    <h3 className="font-semibold text-white">
+                  <div className="mb-6 rounded-xl border border-[#5034ff]/20 bg-[#5034ff]/10 p-4">
+                    <h3 className="mb-1 font-semibold text-white">
                       {categoryLabels[selectedCategory]}
                     </h3>
+                    <p className="text-sm text-white/60">
+                      {categoryDescriptions[selectedCategory]}
+                    </p>
                   </div>
                 )}
 
@@ -420,7 +463,7 @@ const CoManagedStore = () => {
                   <h3 className="mb-2 font-semibold text-white">Client-only products</h3>
                   <p className="text-sm text-white/60">
                     Some products require an existing client relationship.{" "}
-                    <Link href="/portal/login" className="text-[#a78bfa] hover:text-[#c4b5fd]">
+                    <Link href={PORTAL_LOGIN} className="text-[#a78bfa] hover:text-[#c4b5fd]">
                       Log in to your portal
                     </Link>{" "}
                     for exclusive pricing.
