@@ -17,6 +17,7 @@ interface MerchandisingRailsProps {
     discountPercent: number;
   };
   onAddToCart: (product: StoreProduct, e: MouseEvent) => void;
+  onConfigure?: (product: StoreProduct) => void;
   onLoginRequired: () => void;
   /** Hide rails that only contain client-only items when logged out */
   showClientOnly?: boolean;
@@ -30,6 +31,7 @@ function RailScroller({
   isLoggedIn,
   getPrice,
   onAddToCart,
+  onConfigure,
   onLoginRequired,
 }: {
   title: string;
@@ -38,6 +40,7 @@ function RailScroller({
   isLoggedIn: boolean;
   getPrice: MerchandisingRailsProps["getPrice"];
   onAddToCart: MerchandisingRailsProps["onAddToCart"];
+  onConfigure?: MerchandisingRailsProps["onConfigure"];
   onLoginRequired: () => void;
 }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -101,6 +104,7 @@ function RailScroller({
                 isLoggedIn={isLoggedIn}
                 compact
                 onAddToCart={onAddToCart}
+                onConfigure={onConfigure}
                 onLoginRequired={onLoginRequired}
               />
             </div>
@@ -115,6 +119,7 @@ export function MerchandisingRails({
   isLoggedIn,
   getPrice,
   onAddToCart,
+  onConfigure,
   onLoginRequired,
   showClientOnly = false,
   railIds,
@@ -136,7 +141,6 @@ export function MerchandisingRails({
         if (!showClientOnly && !isLoggedIn) {
           products = products.filter((p) => !p.isClientOnly);
         }
-        // Prefer checkout-enabled for add-to-cart rails; keep contract SKUs if present
         return (
           <RailScroller
             key={rail.id}
@@ -146,6 +150,7 @@ export function MerchandisingRails({
             isLoggedIn={isLoggedIn}
             getPrice={getPrice}
             onAddToCart={onAddToCart}
+            onConfigure={onConfigure}
             onLoginRequired={onLoginRequired}
           />
         );

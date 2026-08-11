@@ -37,7 +37,7 @@ export function ShopByOutcome({ selected, onSelect }: ShopByOutcomeProps) {
           Start with the result you need — we map it to real catalog categories.
         </p>
       </div>
-      <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-7">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-7">
         {storeOutcomes.map((outcome) => {
           const Icon = outcomeIcons[outcome.id];
           const isActive = selected === outcome.id;
@@ -46,7 +46,7 @@ export function ShopByOutcome({ selected, onSelect }: ShopByOutcomeProps) {
               key={outcome.id}
               type="button"
               onClick={() => onSelect(isActive ? null : outcome.id)}
-              className={`group rounded-xl border p-5 text-left transition-all duration-200 ${
+              className={`group rounded-xl border p-5 md:p-6 text-left transition-all duration-200 ${
                 isActive
                   ? "border-[#5034ff]/60 bg-[#5034ff]/15 shadow-[0_0_24px_rgba(80,52,255,0.18)]"
                   : "border-white/10 bg-[#121212] hover:border-white/20 hover:bg-[#161616]"

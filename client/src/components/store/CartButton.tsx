@@ -1,4 +1,4 @@
-import { ShoppingCart } from "lucide-react";
+import { Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 
@@ -10,15 +10,16 @@ export function CartButton() {
     <Button
       variant="ghost"
       size="icon"
-      className="relative text-white/70 hover:text-white hover:bg-white/10"
+      className="relative text-white/70 hover:bg-white/10 hover:text-white"
       onClick={toggleCart}
       data-testid="button-cart"
-      aria-label={`Shopping cart with ${itemCount} items`}
+      aria-label={`Your solution with ${itemCount} services`}
+      title="Your Solution"
     >
-      <ShoppingCart className="w-5 h-5" />
+      <Layers className="h-5 w-5" />
       {itemCount > 0 && (
         <span
-          className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-violet-500 text-white text-xs font-medium flex items-center justify-center"
+          className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#5034ff] text-xs font-medium text-white"
           data-testid="cart-item-count"
         >
           {itemCount > 99 ? "99+" : itemCount}

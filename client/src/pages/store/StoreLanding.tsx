@@ -23,28 +23,35 @@ import {
   Server,
   User,
   LogOut,
+  MessageCircle,
+  Sparkles,
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import {
   storeProducts,
   categoryLabels,
-  formatPrice,
   getContractOnlyProducts,
   getCheckoutEnabledProducts,
   type ProductCategory,
   type StoreProduct,
 } from "@/data/storeProducts";
-import type { StoreOutcomeId } from "@/data/storeMerchandising";
+import {
+  isConfigurableProduct,
+  type StoreOutcomeId,
+} from "@/data/storeMerchandising";
 import { CartButton } from "@/components/store/CartButton";
 import { useStoreAuth } from "@/hooks/useStoreAuth";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import { PORTAL_LOGIN } from "@/lib/portalUrls";
+import { openMspAdvisor } from "@/lib/openMspAdvisor";
 import { StoreTrustStrip } from "@/components/store/StoreTrustStrip";
 import { ShopByOutcome } from "@/components/store/ShopByOutcome";
 import { MerchandisingRails } from "@/components/store/MerchandisingRails";
 import { StoreAssessmentPanel } from "@/components/store/StoreAssessmentPanel";
 import { StoreBundlesSection } from "@/components/store/StoreBundlesSection";
+import { StoreProductCard } from "@/components/store/StoreProductCard";
+import { ConfigureProductDrawer } from "@/components/store/ConfigureProductDrawer";
 
 const categoryIcons: Record<ProductCategory, typeof Shield> = {
   contract_services: Building,
@@ -70,6 +77,7 @@ const StoreLanding = () => {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [outcomeHighlight, setOutcomeHighlight] = useState<StoreOutcomeId | null>(null);
+  const [configureProduct, setConfigureProduct] = useState<StoreProduct | null>(null);
 
   useSEO({
     title: "IT Services Store | Digerati Experts",
@@ -105,11 +113,15 @@ const StoreLanding = () => {
     e.preventDefault();
     e.stopPropagation();
     if (!product.isCheckoutEnabled || product.isContractOnly) return;
+    if (isConfigurableProduct(product)) {
+      setConfigureProduct(product);
+      return;
+    }
     const { price } = getProductPrice(product.id, product.basePrice);
     addToCart(product, 1, price);
     toast({
-      title: "Added to Cart",
-      description: `${product.name} has been added to your cart.`,
+      title: "Added to your solution",
+      description: `${product.name} has been added.`,
     });
     openCart();
   };
@@ -184,36 +196,41 @@ const StoreLanding = () => {
                   <span className="text-sm text-[#c4b5fd]">IT Services & Solutions</span>
                 </div>
                 <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl lg:text-6xl xl:text-7xl">
-                  Digerati Experts{" "}
-                  <span className="text-[#a78bfa]">Store</span>
+                  Tell us what you&apos;re trying to{" "}
+                  <span className="text-[#a78bfa]">accomplish</span>
                 </h1>
                 <p className="max-w-3xl text-xl leading-relaxed text-white/70 md:text-2xl">
                   Guided storefront for managed packages and à la carte services — shop by outcome,
-                  then buy from the live catalog.
+                  ask Digerati to build a stack, then buy from the live catalog.
                 </p>
                 <div className="mt-7 flex flex-wrap gap-3">
+                  <Button
+                    className="h-12 bg-[#5034ff] px-6 text-base text-white hover:bg-[#6548ff]"
+                    onClick={() => openMspAdvisor({ context: "store" })}
+                    data-testid="button-build-solution"
+                  >
+                    <Sparkles className="mr-2 h-5 w-5" />
+                    Build my solution
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="h-12 border-white/20 bg-transparent px-6 text-base text-white hover:bg-white/5"
+                    onClick={() => openMspAdvisor({ context: "store" })}
+                    data-testid="button-ask-digerati"
+                  >
+                    <MessageCircle className="mr-2 h-5 w-5" />
+                    Ask Digerati
+                  </Button>
                   <Link href="/store/co-managed">
                     <Button
-                      className="h-12 bg-[#5034ff] px-6 text-base text-white hover:bg-[#6548ff]"
+                      variant="ghost"
+                      className="h-12 px-6 text-base text-white/70 hover:bg-white/5 hover:text-white"
                       data-testid="button-browse-catalog"
                     >
                       Browse full catalog
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                   </Link>
-                  <Button
-                    variant="outline"
-                    className="h-12 border-white/20 bg-transparent px-6 text-base text-white hover:bg-white/5"
-                    onClick={() => {
-                      const btn = document.querySelector(
-                        '[data-testid="button-open-msp-advisor"]'
-                      ) as HTMLButtonElement | null;
-                      btn?.click();
-                    }}
-                    data-testid="button-build-solution"
-                  >
-                    Build my solution
-                  </Button>
                 </div>
               </motion.div>
 
@@ -322,6 +339,7 @@ const StoreLanding = () => {
             isLoggedIn={isLoggedIn}
             getPrice={getProductPrice}
             onAddToCart={handleAddToCart}
+            onConfigure={(p) => setConfigureProduct(p)}
             onLoginRequired={loginRedirect}
             railIds={["popular", "microsoft365", "cyber_insurance", "best_value"]}
           />
@@ -335,7 +353,7 @@ const StoreLanding = () => {
               });
               toast({
                 title: "Bundle items added",
-                description: `${products.length} products added to your cart.`,
+                description: `${products.length} products added to your solution.`,
               });
               openCart();
             }}
@@ -412,47 +430,26 @@ const StoreLanding = () => {
             </div>
 
             <motion.div
-              className="grid gap-5 md:grid-cols-2 lg:grid-cols-3"
+              className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
             >
               {featuredProducts.map((product) => {
-                const Icon = categoryIcons[product.category];
+                const pricing = getProductPrice(product.id, product.basePrice);
                 return (
-                  <motion.div
-                    key={product.id}
-                    variants={itemVariants}
-                    className="group rounded-xl border border-white/10 bg-[#141414] p-5 transition-all duration-300 hover:border-[#5034ff]/30"
-                    data-testid={`product-${product.id}`}
-                  >
-                    <div className="mb-4 flex items-start gap-4">
-                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04]">
-                        <Icon className="h-5 w-5 text-[#a78bfa]" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <h3 className="mb-1 truncate font-semibold text-white" title={product.name}>
-                          {product.name}
-                        </h3>
-                        <p className="text-xs text-white/50">{categoryLabels[product.category]}</p>
-                      </div>
-                    </div>
-                    <p className="mb-4 line-clamp-2 text-sm text-white/60">
-                      {product.shortDescription}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold text-[#a78bfa]">{formatPrice(product)}</span>
-                      <Link href={`/store/product/${product.sku}`}>
-                        <Button
-                          size="sm"
-                          className="bg-[#5034ff]/90 text-xs text-white hover:bg-[#5034ff]"
-                          data-testid={`button-add-${product.id}`}
-                        >
-                          View Details
-                        </Button>
-                      </Link>
-                    </div>
+                  <motion.div key={product.id} variants={itemVariants}>
+                    <StoreProductCard
+                      product={product}
+                      price={pricing.price}
+                      hasDiscount={pricing.hasDiscount}
+                      discountPercent={pricing.discountPercent}
+                      isLoggedIn={isLoggedIn}
+                      onAddToCart={handleAddToCart}
+                      onConfigure={(p) => setConfigureProduct(p)}
+                      onLoginRequired={loginRedirect}
+                    />
                   </motion.div>
                 );
               })}
@@ -496,6 +493,26 @@ const StoreLanding = () => {
           </motion.section>
         </div>
       </main>
+
+      <ConfigureProductDrawer
+        product={configureProduct}
+        unitPrice={
+          configureProduct
+            ? getProductPrice(configureProduct.id, configureProduct.basePrice).price
+            : 0
+        }
+        open={!!configureProduct}
+        onClose={() => setConfigureProduct(null)}
+        onConfirm={(product, quantity, unitPrice) => {
+          addToCart(product, quantity, unitPrice);
+          setConfigureProduct(null);
+          toast({
+            title: "Configured service added",
+            description: `${quantity} × ${product.name}`,
+          });
+          openCart();
+        }}
+      />
 
       <DigeratiEnhancedFooterSection />
     </div>

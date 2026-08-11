@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { ArrowRight, Calendar, ClipboardList, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { openMspAdvisor } from "@/lib/openMspAdvisor";
 
 interface StoreAssessmentPanelProps {
   variant?: "sticky" | "inline";
@@ -14,10 +15,7 @@ export function StoreAssessmentPanel({
   variant = "sticky",
   onFilterAssessments,
 }: StoreAssessmentPanelProps) {
-  const shell =
-    variant === "sticky"
-      ? "lg:sticky lg:top-28 space-y-4"
-      : "mb-10";
+  const shell = variant === "sticky" ? "lg:sticky lg:top-28 space-y-4" : "mb-10";
 
   return (
     <aside className={shell} data-testid="store-assessment-panel">
@@ -27,8 +25,8 @@ export function StoreAssessmentPanel({
         </div>
         <h3 className="text-lg font-semibold text-white">Not sure where to start?</h3>
         <p className="mt-2 text-sm leading-relaxed text-white/55">
-          Book a free cyber risk assessment or open the Virtual MSP Advisor. We will map
-          gaps to catalog items — no obligation.
+          Book a free cyber risk assessment or open Ask Digerati (Virtual MSP Advisor). We map gaps
+          to catalog items — no obligation.
         </p>
         <div className="mt-4 flex flex-col gap-2">
           <a href="/book">
@@ -54,12 +52,7 @@ export function StoreAssessmentPanel({
           <Button
             variant="ghost"
             className="h-10 w-full text-white/70 hover:bg-white/5 hover:text-white"
-            onClick={() => {
-              const btn = document.querySelector(
-                '[data-testid="button-open-msp-advisor"]'
-              ) as HTMLButtonElement | null;
-              btn?.click();
-            }}
+            onClick={() => openMspAdvisor({ context: "store" })}
             data-testid="button-open-advisor-from-store"
           >
             <MessageCircle className="mr-2 h-4 w-4" />

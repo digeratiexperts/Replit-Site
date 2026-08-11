@@ -12,6 +12,8 @@ import {
   Phone,
   User,
   LogOut,
+  MessageCircle,
+  Sparkles,
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import {
@@ -27,6 +29,7 @@ import {
   productMatchesOutcome,
   searchProducts,
   sortProducts,
+  isConfigurableProduct,
   type StoreOutcomeId,
   type StoreSortOption,
 } from "@/data/storeMerchandising";
@@ -35,6 +38,7 @@ import { useCart } from "@/contexts/CartContext";
 import { CartButton } from "@/components/store/CartButton";
 import { useStoreAuth } from "@/hooks/useStoreAuth";
 import { PORTAL_LOGIN } from "@/lib/portalUrls";
+import { openMspAdvisor } from "@/lib/openMspAdvisor";
 import { StoreTrustStrip } from "@/components/store/StoreTrustStrip";
 import { ShopByOutcome } from "@/components/store/ShopByOutcome";
 import { MerchandisingRails } from "@/components/store/MerchandisingRails";
@@ -42,12 +46,20 @@ import { StoreProductCard } from "@/components/store/StoreProductCard";
 import { StoreCatalogToolbar } from "@/components/store/StoreCatalogToolbar";
 import { StoreAssessmentPanel } from "@/components/store/StoreAssessmentPanel";
 import { StoreBundlesSection } from "@/components/store/StoreBundlesSection";
+import { ConfigureProductDrawer } from "@/components/store/ConfigureProductDrawer";
+import {
+  ProductCompareBar,
+  ProductCompareDrawer,
+  canAddToCompare,
+  MAX_COMPARE,
+} from "@/components/store/ProductCompare";
+import { CoverageScorePanel } from "@/components/store/CoverageScorePanel";
 
 const CoManagedStore = () => {
   const prefersReducedMotion = useReducedMotion();
   const searchString = useSearch();
   const { toast } = useToast();
-  const { addToCart, openCart, setClientPricing } = useCart();
+  const { addToCart, openCart, setClientPricing, items } = useCart();
   const {
     isLoggedIn,
     user,
@@ -73,6 +85,9 @@ const CoManagedStore = () => {
   const [searchQuery, setSearchQuery] = useState(initialQ);
   const [billingType, setBillingType] = useState<PricingType | "all">("all");
   const [sort, setSort] = useState<StoreSortOption>("recommended");
+  const [compareList, setCompareList] = useState<StoreProduct[]>([]);
+  const [compareOpen, setCompareOpen] = useState(false);
+  const [configureProduct, setConfigureProduct] = useState<StoreProduct | null>(null);
 
   useEffect(() => {
     if (clientPricing.length > 0) {
@@ -136,13 +151,43 @@ const CoManagedStore = () => {
     e.preventDefault();
     e.stopPropagation();
     if (!product.isCheckoutEnabled || product.isContractOnly) return;
+    if (isConfigurableProduct(product)) {
+      setConfigureProduct(product);
+      return;
+    }
     const { price } = getProductPrice(product.id, product.basePrice);
     addToCart(product, 1, price);
     toast({
-      title: "Added to Cart",
-      description: `${product.name} has been added to your cart.`,
+      title: "Added to your solution",
+      description: `${product.name} has been added.`,
     });
     openCart();
+  };
+
+  const handleConfigureConfirm = (product: StoreProduct, quantity: number, unitPrice: number) => {
+    addToCart(product, quantity, unitPrice);
+    setConfigureProduct(null);
+    toast({
+      title: "Configured service added",
+      description: `${quantity} × ${product.name}`,
+    });
+    openCart();
+  };
+
+  const toggleCompare = (product: StoreProduct) => {
+    setCompareList((prev) => {
+      if (prev.some((p) => p.id === product.id)) {
+        return prev.filter((p) => p.id !== product.id);
+      }
+      if (!canAddToCompare(prev, product)) {
+        toast({
+          title: "Compare limit",
+          description: `Select up to ${MAX_COMPARE} products.`,
+        });
+        return prev;
+      }
+      return [...prev, product];
+    });
   };
 
   const handleAddBundle = (products: StoreProduct[]) => {
@@ -152,7 +197,7 @@ const CoManagedStore = () => {
     });
     toast({
       title: "Bundle items added",
-      description: `${products.length} products added to your cart.`,
+      description: `${products.length} products added to your solution.`,
     });
     openCart();
   };
@@ -241,7 +286,7 @@ const CoManagedStore = () => {
             <span className="text-white">Catalog</span>
           </div>
 
-          {/* Hero */}
+          {/* Hero — guided selling first */}
           <motion.div
             className="mb-8 max-w-4xl"
             initial={{ opacity: 0, y: 20 }}
@@ -253,13 +298,41 @@ const CoManagedStore = () => {
               <span className="text-sm text-[#c4b5fd]">Guided IT Storefront</span>
             </div>
             <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl lg:text-6xl">
-              Shop outcomes.{" "}
-              <span className="text-[#a78bfa]">Buy real services.</span>
+              Tell us what you&apos;re trying to{" "}
+              <span className="text-[#a78bfa]">accomplish.</span>
             </h1>
             <p className="text-lg leading-relaxed text-white/70 md:text-xl">
-              Browse curated rails, filter by outcome or billing type, then add products to your
-              cart. Existing pricing and checkout stay the same.
+              Shop by outcome, build a recommended stack with Ask Digerati, then buy from the live
+              catalog when you know what you need.
             </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Button
+                className="h-12 bg-[#5034ff] px-6 text-base text-white hover:bg-[#6548ff]"
+                onClick={() => openMspAdvisor({ context: "store" })}
+                data-testid="button-build-solution"
+              >
+                <Sparkles className="mr-2 h-5 w-5" />
+                Build my solution
+              </Button>
+              <Button
+                variant="outline"
+                className="h-12 border-white/20 bg-transparent px-6 text-base text-white hover:bg-white/5"
+                onClick={() => openMspAdvisor({ context: "store" })}
+                data-testid="button-ask-digerati"
+              >
+                <MessageCircle className="mr-2 h-5 w-5" />
+                Ask Digerati
+              </Button>
+              <Button
+                variant="ghost"
+                className="h-12 text-base text-white/70 hover:bg-white/5 hover:text-white"
+                onClick={scrollToCatalog}
+                data-testid="button-browse-everything"
+              >
+                Browse everything
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
           </motion.div>
 
           <StoreTrustStrip />
@@ -282,6 +355,7 @@ const CoManagedStore = () => {
             isLoggedIn={isLoggedIn}
             getPrice={getProductPrice}
             onAddToCart={handleAddToCart}
+            onConfigure={(p) => setConfigureProduct(p)}
             onLoginRequired={loginRedirect}
           />
 
@@ -393,7 +467,14 @@ const CoManagedStore = () => {
                           discountPercent={pricing.discountPercent}
                           isLoggedIn={isLoggedIn}
                           onAddToCart={handleAddToCart}
+                          onConfigure={(p) => setConfigureProduct(p)}
                           onLoginRequired={loginRedirect}
+                          compareSelected={compareList.some((p) => p.id === product.id)}
+                          compareDisabled={
+                            compareList.length >= MAX_COMPARE &&
+                            !compareList.some((p) => p.id === product.id)
+                          }
+                          onCompareToggle={toggleCompare}
                         />
                       </motion.div>
                     );
@@ -433,44 +514,58 @@ const CoManagedStore = () => {
 
           {/* Info — elevated, not deleted */}
           <motion.section
-            className="mb-16 grid gap-6 md:grid-cols-2"
+            className="mb-10 grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]"
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.45 }}
           >
-            <div className="rounded-xl border border-white/10 bg-[#141414] p-6">
-              <div className="flex items-start gap-4">
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-[#5034ff]/25 bg-[#5034ff]/15">
-                  <ShoppingCart className="h-5 w-5 text-[#a78bfa]" />
-                </div>
-                <div>
-                  <h3 className="mb-2 font-semibold text-white">Checkout enabled</h3>
-                  <p className="text-sm text-white/60">
-                    Catalog products can be purchased directly. Add items to your cart and complete
-                    checkout to get started.
-                  </p>
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="rounded-xl border border-white/10 bg-[#141414] p-6">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-[#5034ff]/25 bg-[#5034ff]/15">
+                    <ShoppingCart className="h-5 w-5 text-[#a78bfa]" />
+                  </div>
+                  <div>
+                    <h3 className="mb-2 font-semibold text-white">Checkout enabled</h3>
+                    <p className="text-sm text-white/60">
+                      Catalog products can be purchased directly. Configure unit counts where needed,
+                      then checkout or save a quote from Your Solution.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="rounded-xl border border-white/10 bg-[#141414] p-6">
-              <div className="flex items-start gap-4">
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-[#5034ff]/25 bg-[#5034ff]/15">
-                  <Lock className="h-5 w-5 text-[#a78bfa]" />
-                </div>
-                <div>
-                  <h3 className="mb-2 font-semibold text-white">Client-only products</h3>
-                  <p className="text-sm text-white/60">
-                    Some products require an existing client relationship.{" "}
-                    <Link href={PORTAL_LOGIN} className="text-[#a78bfa] hover:text-[#c4b5fd]">
-                      Log in to your portal
-                    </Link>{" "}
-                    for exclusive pricing.
-                  </p>
+              <div className="rounded-xl border border-white/10 bg-[#141414] p-6">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-[#5034ff]/25 bg-[#5034ff]/15">
+                    <Lock className="h-5 w-5 text-[#a78bfa]" />
+                  </div>
+                  <div>
+                    <h3 className="mb-2 font-semibold text-white">Client-only products</h3>
+                    <p className="text-sm text-white/60">
+                      Some products require an existing client relationship.{" "}
+                      <Link href={PORTAL_LOGIN} className="text-[#a78bfa] hover:text-[#c4b5fd]">
+                        Log in to your portal
+                      </Link>{" "}
+                      for exclusive pricing.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
+            <CoverageScorePanel
+              products={items.map((i) => i.product)}
+              onAddSuggestion={(product) => {
+                if (isConfigurableProduct(product)) {
+                  setConfigureProduct(product);
+                  return;
+                }
+                const { price } = getProductPrice(product.id, product.basePrice);
+                addToCart(product, 1, price);
+                openCart();
+              }}
+            />
           </motion.section>
 
           <motion.section
@@ -485,7 +580,7 @@ const CoManagedStore = () => {
             </h2>
             <p className="mx-auto mb-8 max-w-xl text-white/60">
               Looking for full-service managed IT instead of à la carte products? Explore ProActive
-              Ecosystem plans for all-inclusive support.
+              Ecosystem plans for all-inclusive support — or ask Digerati to recommend a stack.
             </p>
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <Link href="/store/managed">
@@ -498,6 +593,15 @@ const CoManagedStore = () => {
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
+              <Button
+                size="lg"
+                className="h-12 border-2 border-white/25 bg-transparent px-6 text-white hover:bg-white/10"
+                onClick={() => openMspAdvisor({ context: "store" })}
+                data-testid="button-advisor-cta"
+              >
+                <MessageCircle className="mr-2 h-4 w-4" />
+                Ask Digerati
+              </Button>
               <a href="/book">
                 <Button
                   size="lg"
@@ -512,6 +616,28 @@ const CoManagedStore = () => {
           </motion.section>
         </div>
       </main>
+
+      <ProductCompareBar
+        selected={compareList}
+        onClear={() => setCompareList([])}
+        onOpen={() => setCompareOpen(true)}
+      />
+      <ProductCompareDrawer
+        selected={compareList}
+        open={compareOpen}
+        onOpenChange={setCompareOpen}
+      />
+      <ConfigureProductDrawer
+        product={configureProduct}
+        unitPrice={
+          configureProduct
+            ? getProductPrice(configureProduct.id, configureProduct.basePrice).price
+            : 0
+        }
+        open={!!configureProduct}
+        onClose={() => setConfigureProduct(null)}
+        onConfirm={handleConfigureConfirm}
+      />
 
       <DigeratiEnhancedFooterSection />
     </div>

@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLocation } from "wouter";
 import { analytics } from "@/lib/analytics";
+import type { OpenMspAdvisorDetail } from "@/lib/openMspAdvisor";
+import { STORE_ADVISOR_SEED } from "@/lib/openMspAdvisor";
 
 type PageType =
   | "home"
@@ -85,6 +87,7 @@ export function VirtualMspAdvisor() {
       return false;
     }
   });
+  const [pendingSeed, setPendingSeed] = useState<string | null>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const abandonedRef = useRef(false);
 
@@ -115,6 +118,22 @@ export function VirtualMspAdvisor() {
   useEffect(() => {
     scrollerRef.current?.scrollTo({ top: scrollerRef.current.scrollHeight, behavior: "smooth" });
   }, [turns, loading, leadForm]);
+
+  useEffect(() => {
+    const onOpen = (event: Event) => {
+      const detail = (event as CustomEvent<OpenMspAdvisorDetail>).detail || {};
+      setIsOpen(true);
+      const seed =
+        detail.seedMessage ||
+        (detail.context === "store" ||
+        (typeof window !== "undefined" && window.location.pathname.includes("/store"))
+          ? STORE_ADVISOR_SEED
+          : undefined);
+      if (seed) setPendingSeed(seed);
+    };
+    window.addEventListener("de-open-msp-advisor", onOpen as EventListener);
+    return () => window.removeEventListener("de-open-msp-advisor", onOpen as EventListener);
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -184,6 +203,14 @@ export function VirtualMspAdvisor() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!pendingSeed || !isOpen || loading) return;
+    const seed = pendingSeed;
+    setPendingSeed(null);
+    void sendMessage(seed);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingSeed, isOpen]);
 
   const runAction = async (action: AdvisorAction) => {
     if (!sessionId) {
