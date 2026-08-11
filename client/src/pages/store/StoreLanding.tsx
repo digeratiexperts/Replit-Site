@@ -1,26 +1,49 @@
+import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "../sections/DigeratiEnhancedFooterSection";
 import { Button } from "@/components/ui/button";
-import { Link } from "wouter";
-import { 
-  ArrowRight, Shield, Users, Building, Phone, Monitor, Wifi, 
-  Headphones, Cloud, Lock, FileCheck, GraduationCap, Wrench, 
-  Package, Settings, Server, User, LogOut
+import { Link, useLocation } from "wouter";
+import {
+  ArrowRight,
+  Shield,
+  Users,
+  Building,
+  Phone,
+  Monitor,
+  Wifi,
+  Headphones,
+  Cloud,
+  Lock,
+  FileCheck,
+  GraduationCap,
+  Wrench,
+  Package,
+  Settings,
+  Server,
+  User,
+  LogOut,
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
-import { 
-  storeProducts, 
-  categoryLabels, 
-  categoryDescriptions, 
+import {
+  storeProducts,
+  categoryLabels,
   formatPrice,
   getContractOnlyProducts,
   getCheckoutEnabledProducts,
-  type ProductCategory 
+  type ProductCategory,
+  type StoreProduct,
 } from "@/data/storeProducts";
+import type { StoreOutcomeId } from "@/data/storeMerchandising";
 import { CartButton } from "@/components/store/CartButton";
 import { useStoreAuth } from "@/hooks/useStoreAuth";
-import { PORTAL_LOGIN } from "@/lib/portalUrls";
+import { useCart } from "@/contexts/CartContext";
+import { useToast } from "@/hooks/use-toast";
+import { StoreTrustStrip } from "@/components/store/StoreTrustStrip";
+import { ShopByOutcome } from "@/components/store/ShopByOutcome";
+import { MerchandisingRails } from "@/components/store/MerchandisingRails";
+import { StoreAssessmentPanel } from "@/components/store/StoreAssessmentPanel";
+import { StoreBundlesSection } from "@/components/store/StoreBundlesSection";
 
 const categoryIcons: Record<ProductCategory, typeof Shield> = {
   contract_services: Building,
@@ -41,51 +64,81 @@ const categoryIcons: Record<ProductCategory, typeof Shield> = {
 
 const StoreLanding = () => {
   const prefersReducedMotion = useReducedMotion();
-  const { isLoggedIn, user, clientType, logout } = useStoreAuth();
+  const { isLoggedIn, user, clientType, logout, getProductPrice, loginRedirect } = useStoreAuth();
+  const { addToCart, openCart } = useCart();
+  const { toast } = useToast();
+  const [, setLocation] = useLocation();
+  const [outcomeHighlight, setOutcomeHighlight] = useState<StoreOutcomeId | null>(null);
 
   useSEO({
-    title: 'IT Services Store | Digerati Experts',
-    description: 'Browse and purchase IT services, security solutions, hardware provisioning, and professional services from Digerati Experts. Managed IT packages and co-managed solutions available.',
-    canonical: '/store',
+    title: "IT Services Store | Digerati Experts",
+    description:
+      "Guided IT storefront from Digerati Experts — shop by outcome, curated merchandising rails, managed packages, and co-managed products with live catalog pricing.",
+    canonical: "/store",
   });
 
   const contractOnlyProducts = getContractOnlyProducts();
   const checkoutProducts = getCheckoutEnabledProducts();
 
   const featuredProducts = storeProducts
-    .filter(p => p.isCheckoutEnabled && !p.isClientOnly)
+    .filter((p) => p.isCheckoutEnabled && !p.isClientOnly)
     .slice(0, 6);
 
   const categories = Object.keys(categoryLabels) as ProductCategory[];
 
-  const containerVariants = prefersReducedMotion ? undefined : {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.06 } }
+  const containerVariants = prefersReducedMotion
+    ? undefined
+    : {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { staggerChildren: 0.06 } },
+      };
+
+  const itemVariants = prefersReducedMotion
+    ? undefined
+    : {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+      };
+
+  const handleAddToCart = (product: StoreProduct, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!product.isCheckoutEnabled || product.isContractOnly) return;
+    const { price } = getProductPrice(product.id, product.basePrice);
+    addToCart(product, 1, price);
+    toast({
+      title: "Added to Cart",
+      description: `${product.name} has been added to your cart.`,
+    });
+    openCart();
   };
 
-  const itemVariants = prefersReducedMotion ? undefined : {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
+  const handleOutcomeSelect = (id: StoreOutcomeId | null) => {
+    setOutcomeHighlight(id);
+    if (id) {
+      setLocation(`/store/co-managed?outcome=${id}`);
+    }
   };
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <MegaMenu />
-      
-      <main className="pt-28 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* Auth & Cart Header */}
-          <div className="flex items-center justify-between mb-4">
+
+      <main className="pb-20 pt-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-4 flex items-center justify-between">
             {isLoggedIn && user ? (
               <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-violet-500/10 border border-violet-500/20">
-                  <User className="w-4 h-4 text-violet-400" />
+                <div className="flex items-center gap-2 rounded-lg border border-[#5034ff]/20 bg-[#5034ff]/10 px-3 py-2">
+                  <User className="h-4 w-4 text-[#a78bfa]" />
                   <span className="text-sm text-white" data-testid="text-user-greeting">
-                    Welcome, <span className="font-semibold text-violet-300">{user.fullName || user.username}</span>
+                    Welcome,{" "}
+                    <span className="font-semibold text-[#c4b5fd]">
+                      {user.fullName || user.username}
+                    </span>
                   </span>
                   {clientType !== "public" && (
-                    <span className="ml-2 px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 text-xs font-medium">
+                    <span className="ml-2 rounded-full bg-[#5034ff]/20 px-2 py-0.5 text-xs font-medium text-[#c4b5fd]">
                       {clientType === "managed" ? "Managed Client" : "Co-Managed Client"}
                     </span>
                   )}
@@ -94,22 +147,22 @@ const StoreLanding = () => {
                   variant="ghost"
                   size="sm"
                   onClick={logout}
-                  className="text-white/60 hover:text-white hover:bg-violet-500/10"
+                  className="text-white/60 hover:bg-[#5034ff]/10 hover:text-white"
                   data-testid="button-store-logout"
                 >
-                  <LogOut className="w-4 h-4 mr-1" />
+                  <LogOut className="mr-1 h-4 w-4" />
                   Logout
                 </Button>
               </div>
             ) : (
-              <Link href={PORTAL_LOGIN}>
-                <Button 
+              <Link href="/portal/login">
+                <Button
                   variant="outline"
                   size="sm"
-                  className="bg-violet-600 hover:bg-violet-500 text-white border-none"
+                  className="border-none bg-[#5034ff] text-white hover:bg-[#6548ff]"
                   data-testid="button-store-login"
                 >
-                  <User className="w-4 h-4 mr-2" />
+                  <User className="mr-2 h-4 w-4" />
                   Login for Client Pricing
                 </Button>
               </Link>
@@ -117,102 +170,145 @@ const StoreLanding = () => {
             <CartButton />
           </div>
 
-          {/* Hero Section */}
-          <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6">
-              <Package className="w-4 h-4 text-violet-400" />
-              <span className="text-sm text-violet-300">IT Services & Solutions</span>
-            </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              Digerati Experts{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-purple-300 to-fuchsia-300">
-                Store
-              </span>
-            </h1>
-            <p className="text-xl text-white/70 max-w-3xl mx-auto leading-relaxed">
-              Everything your business needs—from complete managed IT packages to individual security tools, 
-              hardware provisioning, and professional services. Choose what fits your organization.
-            </p>
-          </motion.div>
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
+            <div>
+              <motion.div
+                className="mb-10"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#5034ff]/25 bg-[#5034ff]/10 px-4 py-2">
+                  <Package className="h-4 w-4 text-[#a78bfa]" />
+                  <span className="text-sm text-[#c4b5fd]">IT Services & Solutions</span>
+                </div>
+                <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl lg:text-6xl">
+                  Digerati Experts{" "}
+                  <span className="text-[#a78bfa]">Store</span>
+                </h1>
+                <p className="max-w-2xl text-xl leading-relaxed text-white/65">
+                  Guided storefront for managed packages and à la carte services — shop by outcome,
+                  then buy from the live catalog.
+                </p>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <Link href="/store/co-managed">
+                    <Button
+                      className="bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                      data-testid="button-browse-catalog"
+                    >
+                      Browse full catalog
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="outline"
+                    className="border-white/20 bg-transparent text-white hover:bg-white/5"
+                    onClick={() => {
+                      const btn = document.querySelector(
+                        '[data-testid="button-open-msp-advisor"]'
+                      ) as HTMLButtonElement | null;
+                      btn?.click();
+                    }}
+                    data-testid="button-build-solution"
+                  >
+                    Build my solution
+                  </Button>
+                </div>
+              </motion.div>
 
-          {/* Two Client Type Cards */}
-          <motion.section 
-            className="mb-20"
+              <StoreTrustStrip />
+              <ShopByOutcome selected={outcomeHighlight} onSelect={handleOutcomeSelect} />
+            </div>
+
+            <div className="hidden lg:block">
+              <StoreAssessmentPanel variant="sticky" />
+            </div>
+          </div>
+
+          <div className="mb-10 lg:hidden">
+            <StoreAssessmentPanel variant="inline" />
+          </div>
+
+          {/* Two Client Type Cards — elevated, not deleted */}
+          <motion.section
+            className="mb-16"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
           >
-            <div className="grid md:grid-cols-2 gap-8">
-              {/* Managed Clients Card */}
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-white md:text-3xl">How do you buy?</h2>
+              <p className="mt-1 text-white/55">
+                Full-service packages or flexible co-managed products — same store, clearer paths.
+              </p>
+            </div>
+            <div className="grid gap-8 md:grid-cols-2">
               <motion.div
                 variants={itemVariants}
-                className="relative rounded-2xl p-8 bg-gradient-to-br from-violet-900/30 to-purple-900/20 border border-violet-500/30 shadow-[0_0_40px_rgba(139,92,246,0.15)] overflow-hidden group hover:-translate-y-1 transition-all duration-300"
+                className="group relative overflow-hidden rounded-2xl border border-[#5034ff]/30 bg-[#141414] p-8 transition-all duration-300 hover:-translate-y-1"
                 data-testid="card-managed-clients"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="relative z-10">
-                  <div className="w-14 h-14 rounded-xl bg-violet-500/20 flex items-center justify-center mb-6">
-                    <Building className="w-7 h-7 text-violet-400" />
+                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl border border-[#5034ff]/30 bg-[#5034ff]/15">
+                    <Building className="h-7 w-7 text-[#a78bfa]" />
                   </div>
-                  <h2 className="text-2xl font-bold text-white mb-3">Managed Clients</h2>
-                  <p className="text-white/60 mb-4 leading-relaxed">
-                    Full-service managed IT packages for businesses seeking comprehensive support. 
-                    Our ProActive Ecosystem plans include everything you need in one predictable monthly subscription.
+                  <h2 className="mb-3 text-2xl font-bold text-white">Managed Clients</h2>
+                  <p className="mb-4 leading-relaxed text-white/60">
+                    Full-service managed IT packages for businesses seeking comprehensive support.
+                    ProActive Ecosystem plans include everything you need in one predictable monthly
+                    subscription.
                   </p>
-                  <div className="flex items-center gap-2 mb-6 text-sm text-violet-300">
-                    <Lock className="w-4 h-4" />
-                    <span>Contract-based services • Schedule a consultation</span>
+                  <div className="mb-6 flex items-center gap-2 text-sm text-[#c4b5fd]">
+                    <Lock className="h-4 w-4" />
+                    <span>Contract-based services · Schedule a consultation</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-white/50 text-sm">{contractOnlyProducts.length} packages available</span>
+                    <span className="text-sm text-white/50">
+                      {contractOnlyProducts.length} packages available
+                    </span>
                     <Link href="/store/managed">
-                      <Button 
-                        className="bg-violet-600 hover:bg-violet-500 text-white"
+                      <Button
+                        className="bg-[#5034ff] text-white hover:bg-[#6548ff]"
                         data-testid="button-view-managed"
                       >
                         View Packages
-                        <ArrowRight className="w-4 h-4 ml-2" />
+                        <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
                     </Link>
                   </div>
                 </div>
               </motion.div>
 
-              {/* Co-Managed Clients Card */}
               <motion.div
                 variants={itemVariants}
-                className="relative rounded-2xl p-8 bg-white/[0.03] border border-white/10 hover:border-violet-500/30 overflow-hidden group hover:-translate-y-1 transition-all duration-300"
+                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#141414] p-8 transition-all duration-300 hover:-translate-y-1 hover:border-[#5034ff]/30"
                 data-testid="card-comanaged-clients"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="relative z-10">
-                  <div className="w-14 h-14 rounded-xl bg-violet-500/20 flex items-center justify-center mb-6">
-                    <Users className="w-7 h-7 text-violet-400" />
+                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl border border-[#5034ff]/30 bg-[#5034ff]/15">
+                    <Users className="h-7 w-7 text-[#a78bfa]" />
                   </div>
-                  <h2 className="text-2xl font-bold text-white mb-3">Co-Managed Clients</h2>
-                  <p className="text-white/60 mb-4 leading-relaxed">
-                    Flexible solutions for IT teams needing extra support. Add endpoint management, 
+                  <h2 className="mb-3 text-2xl font-bold text-white">Co-Managed Clients</h2>
+                  <p className="mb-4 leading-relaxed text-white/60">
+                    Flexible solutions for IT teams needing extra support. Add endpoint management,
                     security tools, UCaaS, hardware provisioning, or professional services as needed.
                   </p>
-                  <div className="flex items-center gap-2 mb-6 text-sm text-emerald-300">
-                    <Shield className="w-4 h-4" />
-                    <span>Checkout enabled • Purchase directly</span>
+                  <div className="mb-6 flex items-center gap-2 text-sm text-emerald-300">
+                    <Shield className="h-4 w-4" />
+                    <span>Checkout enabled · Purchase directly</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-white/50 text-sm">{checkoutProducts.length} products available</span>
+                    <span className="text-sm text-white/50">
+                      {checkoutProducts.length} products available
+                    </span>
                     <Link href="/store/co-managed">
-                      <Button 
-                        className="bg-violet-600 hover:bg-violet-500 text-white border-none"
+                      <Button
+                        className="border-none bg-[#5034ff] text-white hover:bg-[#6548ff]"
                         data-testid="button-view-comanaged"
                       >
                         Browse Products
-                        <ArrowRight className="w-4 h-4 ml-2" />
+                        <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
                     </Link>
                   </div>
@@ -221,21 +317,44 @@ const StoreLanding = () => {
             </div>
           </motion.section>
 
-          {/* Category Grid */}
-          <motion.section 
+          <MerchandisingRails
+            isLoggedIn={isLoggedIn}
+            getPrice={getProductPrice}
+            onAddToCart={handleAddToCart}
+            onLoginRequired={loginRedirect}
+            railIds={["popular", "microsoft365", "cyber_insurance", "best_value"]}
+          />
+
+          <StoreBundlesSection
+            isLoggedIn={isLoggedIn}
+            onAddBundle={(products) => {
+              products.forEach((product) => {
+                const { price } = getProductPrice(product.id, product.basePrice);
+                addToCart(product, 1, price);
+              });
+              toast({
+                title: "Bundle items added",
+                description: `${products.length} products added to your cart.`,
+              });
+              openCart();
+            }}
+          />
+
+          {/* Category Grid — elevated */}
+          <motion.section
             className="mb-20"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="text-center mb-10">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">Browse by Category</h2>
+            <div className="mb-10 text-center">
+              <h2 className="mb-3 text-2xl font-bold text-white md:text-3xl">Browse by Category</h2>
               <p className="text-white/60">Explore our complete catalog of IT services and products.</p>
             </div>
-            
-            <motion.div 
-              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+
+            <motion.div
+              className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
@@ -243,22 +362,21 @@ const StoreLanding = () => {
             >
               {categories.map((category) => {
                 const Icon = categoryIcons[category];
-                const productCount = storeProducts.filter(p => p.category === category).length;
+                const productCount = storeProducts.filter((p) => p.category === category).length;
                 return (
-                  <motion.div
-                    key={category}
-                    variants={itemVariants}
-                  >
+                  <motion.div key={category} variants={itemVariants}>
                     <Link href={`/store/co-managed?category=${category}`}>
-                      <div 
-                        className="p-4 rounded-xl bg-white/[0.03] border border-white/10 hover:border-violet-500/30 hover:bg-white/[0.05] transition-all duration-300 cursor-pointer group text-center h-full"
+                      <div
+                        className="group h-full cursor-pointer rounded-xl border border-white/10 bg-[#141414] p-4 text-center transition-all duration-300 hover:border-[#5034ff]/30 hover:bg-[#171717]"
                         data-testid={`category-${category}`}
                       >
-                        <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center mx-auto mb-3 group-hover:bg-violet-500/30 transition-colors">
-                          <Icon className="w-5 h-5 text-violet-400" />
+                        <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04] transition-colors group-hover:border-[#5034ff]/30 group-hover:bg-[#5034ff]/15">
+                          <Icon className="h-5 w-5 text-[#a78bfa]" />
                         </div>
-                        <h3 className="text-white font-medium text-sm mb-1">{categoryLabels[category]}</h3>
-                        <p className="text-white/40 text-xs">{productCount} items</p>
+                        <h3 className="mb-1 text-sm font-medium text-white">
+                          {categoryLabels[category]}
+                        </h3>
+                        <p className="text-xs text-white/40">{productCount} items</p>
                       </div>
                     </Link>
                   </motion.div>
@@ -267,33 +385,33 @@ const StoreLanding = () => {
             </motion.div>
           </motion.section>
 
-          {/* Featured Products */}
-          <motion.section 
+          {/* Featured Products — elevated */}
+          <motion.section
             className="mb-20"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="flex items-center justify-between mb-8">
+            <div className="mb-8 flex items-center justify-between">
               <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Featured Products</h2>
+                <h2 className="mb-2 text-2xl font-bold text-white md:text-3xl">Featured Products</h2>
                 <p className="text-white/60">Popular items available for immediate purchase.</p>
               </div>
               <Link href="/store/co-managed">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="border-white/20 text-white hover:bg-white/10"
                   data-testid="button-view-all-products"
                 >
                   View All
-                  <ArrowRight className="w-4 h-4 ml-2" />
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </div>
-            
-            <motion.div 
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-5"
+
+            <motion.div
+              className="grid gap-5 md:grid-cols-2 lg:grid-cols-3"
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
@@ -305,25 +423,29 @@ const StoreLanding = () => {
                   <motion.div
                     key={product.id}
                     variants={itemVariants}
-                    className="p-5 rounded-xl bg-white/[0.03] border border-white/10 hover:border-violet-500/30 transition-all duration-300 group"
+                    className="group rounded-xl border border-white/10 bg-[#141414] p-5 transition-all duration-300 hover:border-[#5034ff]/30"
                     data-testid={`product-${product.id}`}
                   >
-                    <div className="flex items-start gap-4 mb-4">
-                      <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center flex-shrink-0">
-                        <Icon className="w-5 h-5 text-violet-400" />
+                    <div className="mb-4 flex items-start gap-4">
+                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04]">
+                        <Icon className="h-5 w-5 text-[#a78bfa]" />
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-white font-semibold mb-1 truncate" title={product.name}>{product.name}</h3>
-                        <p className="text-white/50 text-xs">{categoryLabels[product.category]}</p>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="mb-1 truncate font-semibold text-white" title={product.name}>
+                          {product.name}
+                        </h3>
+                        <p className="text-xs text-white/50">{categoryLabels[product.category]}</p>
                       </div>
                     </div>
-                    <p className="text-white/60 text-sm mb-4 line-clamp-2">{product.shortDescription}</p>
+                    <p className="mb-4 line-clamp-2 text-sm text-white/60">
+                      {product.shortDescription}
+                    </p>
                     <div className="flex items-center justify-between">
-                      <span className="text-violet-400 font-semibold">{formatPrice(product)}</span>
-                      <Link href="/store/co-managed">
-                        <Button 
-                          size="sm" 
-                          className="bg-violet-600/80 hover:bg-violet-600 text-white text-xs"
+                      <span className="font-semibold text-[#a78bfa]">{formatPrice(product)}</span>
+                      <Link href={`/store/product/${product.sku}`}>
+                        <Button
+                          size="sm"
+                          className="bg-[#5034ff]/90 text-xs text-white hover:bg-[#5034ff]"
                           data-testid={`button-add-${product.id}`}
                         >
                           View Details
@@ -336,45 +458,41 @@ const StoreLanding = () => {
             </motion.div>
           </motion.section>
 
-          {/* CTA Section */}
-          <motion.section 
-            className="rounded-2xl p-8 md:p-12 bg-gradient-to-br from-violet-900/30 to-purple-900/20 border border-violet-500/20 text-center"
+          <motion.section
+            className="rounded-2xl border border-white/10 bg-[#141414] p-8 text-center md:p-12"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-              Need Help Choosing?
-            </h2>
-            <p className="text-white/60 mb-8 max-w-xl mx-auto">
-              Not sure which services fit your business? Schedule a free consultation with our team 
+            <h2 className="mb-4 text-2xl font-bold text-white md:text-3xl">Need Help Choosing?</h2>
+            <p className="mx-auto mb-8 max-w-xl text-white/60">
+              Not sure which services fit your business? Schedule a free consultation with our team
               to discuss your IT needs and find the right solution.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <a href="/book">
-                <Button 
+                <Button
                   size="lg"
-                  className="h-12 px-6 bg-violet-600 hover:bg-violet-500 text-white"
+                  className="h-12 bg-[#5034ff] px-6 text-white hover:bg-[#6548ff]"
                   data-testid="button-schedule-consult"
                 >
                   Schedule Free Consultation
-                  <ArrowRight className="w-4 h-4 ml-2" />
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </a>
               <a href="tel:325-480-9870">
-                <Button 
+                <Button
                   size="lg"
-                  className="h-12 px-6 bg-transparent border-2 border-white/30 text-white hover:bg-white/10"
+                  className="h-12 border-2 border-white/30 bg-transparent px-6 text-white hover:bg-white/10"
                   data-testid="button-call-us"
                 >
-                  <Phone className="w-4 h-4 mr-2" />
+                  <Phone className="mr-2 h-4 w-4" />
                   325-480-9870
                 </Button>
               </a>
             </div>
           </motion.section>
-
         </div>
       </main>
 
