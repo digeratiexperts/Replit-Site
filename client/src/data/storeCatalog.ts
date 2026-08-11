@@ -2,6 +2,7 @@ import {
   categoryLabels,
   formatPrice,
   storeProducts as rawStoreProducts,
+  type ProductCategory,
   type StoreProduct,
 } from "./storeProducts";
 import { pricingTiers, type ProActiveTierKey } from "./pricing";
@@ -82,4 +83,4 @@ export const getRelatedStoreProducts = (
     .slice(0, limit);
 
 export { categoryLabels, formatPrice };
-export type { StoreProduct };
+export type { ProductCategory, StoreProduct };
