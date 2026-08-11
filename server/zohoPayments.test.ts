@@ -39,7 +39,7 @@ describe("ZohoPaymentsService", () => {
     }
   });
 
-  it("uses OAuth, account_id, decimal dollars, and hosted checkout access_key", async () => {
+  it("uses OAuth, account_id, decimal dollars, hosted checkout access_key, and non-PII metadata", async () => {
     const fetchMock = vi.spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(new Response(JSON.stringify({
         access_token: "access_abc",
@@ -62,7 +62,14 @@ describe("ZohoPaymentsService", () => {
       totalAmount: 117,
       successUrl: "https://digeratiexperts.com/store/order-confirmation?orderId=123",
       cancelUrl: "https://digeratiexperts.com/store/checkout",
-      metadata: { orderId: "123" },
+      metadata: {
+        orderId: "123",
+        "identifier-key-that-is-longer-than-20": "truncated-key-value",
+        thirdId: "3",
+        fourthId: "4",
+        fifthId: "5",
+        sixthId: "must-be-dropped",
+      },
     });
 
     expect(fetchMock).toHaveBeenCalledTimes(2);
@@ -83,6 +90,16 @@ describe("ZohoPaymentsService", () => {
     expect(payload.invoice_number).toBe("ORD-123");
     expect(payload.configurations.hosted_checkout_parameters.success_url).toContain("order-confirmation");
     expect(payload.configurations.hosted_checkout_parameters.failure_url).toContain("/store/checkout");
+    expect(payload.configurations.hosted_checkout_parameters.name).toBe("Buyer Example");
+    expect(payload.configurations.hosted_checkout_parameters.email).toBe("buyer@example.com");
+
+    expect(payload.meta_data).toHaveLength(5);
+    expect(payload.meta_data).toContainEqual({ key: "orderNumber", value: "ORD-123" });
+    expect(payload.meta_data).toContainEqual({ key: "orderId", value: "123" });
+    expect(payload.meta_data.every((item: { key: string }) => item.key.length <= 20)).toBe(true);
+    expect(JSON.stringify(payload.meta_data)).not.toContain("buyer@example.com");
+    expect(JSON.stringify(payload.meta_data)).not.toContain("Buyer Example");
+    expect(JSON.stringify(payload.meta_data)).not.toContain("must-be-dropped");
 
     expect(session.payment_session_id).toBe("ps_123");
     expect(session.url).toBe("https://payments.zoho.com/hostedcheckout/ak_456");
