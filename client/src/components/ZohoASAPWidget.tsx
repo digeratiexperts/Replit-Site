@@ -669,9 +669,8 @@ export const ZohoASAPWidget = ({
                           placeholder="you@company.com"
                           value={email}
                           onChange={(event) => setEmail(event.target.value)}
-                          className="border-white/10 bg-[#141418] text-white placeholder:text-white/35"
                           data-testid="input-support-email"
-                          className="h-10 rounded-xl text-sm"
+                          className="h-10 rounded-xl border-white/10 bg-[#141418] text-sm text-white placeholder:text-white/35"
                         />
                       </div>
 

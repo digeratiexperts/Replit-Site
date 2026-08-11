@@ -89,13 +89,11 @@ export default function PortalOrderDetail() {
       case "stripe":
         return "Credit Card";
       case "zoho":
-        return "Credit Card";
+        return "Zoho Payments";
       case "invoice":
         return "Invoice";
       case "quote_request":
         return "Quote Request";
-      case "zoho":
-        return "Zoho Payments";
       default:
         return method || "N/A";
     }
