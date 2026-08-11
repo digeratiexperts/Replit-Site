@@ -139,6 +139,19 @@ html {
   padding-top: var(--de-nav-offset);
 }
 
+/* Primary nav labels must never crop glyphs when type/logo scale up */
+.mega-menu-container,
+.mega-menu-nav,
+.mega-menu-nav a,
+.mega-menu-nav button {
+  overflow: visible;
+}
+
+.mega-menu-nav a,
+.mega-menu-nav button {
+  line-height: 1.35;
+}
+
 /* Readable long-form marketing copy on dark pages */
 .de-prose-dark {
   color: var(--de-muted);

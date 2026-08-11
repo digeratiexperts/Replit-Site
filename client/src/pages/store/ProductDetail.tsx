@@ -99,7 +99,7 @@ const ProductDetail = () => {
     return (
       <div className="min-h-screen bg-[#0a0a0a]">
         <MegaMenu />
-        <main className="pt-28 pb-20">
+        <main className="de-nav-clear pb-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-3xl font-bold text-white mb-4">Product Not Found</h1>
             <p className="text-white/60 mb-8">The product you're looking for doesn't exist.</p>
@@ -156,7 +156,7 @@ const ProductDetail = () => {
       ]} />
       <MegaMenu />
 
-      <main className="pt-28 pb-20">
+      <main className="de-nav-clear pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Auth & Cart Header */}
           <div className="flex items-center justify-between mb-4">

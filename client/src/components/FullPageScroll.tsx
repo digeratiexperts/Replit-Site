@@ -34,7 +34,7 @@ export const useFullPageScroll = () => {
 export const useOptionalFullPageScroll = () => useContext(FullPageScrollContext);
 
 /** Viewport Y under the fixed header — logo/nav theme must follow this band, not center. */
-const HEADER_THEME_PROBE_Y = 72;
+const HEADER_THEME_PROBE_Y = 96;
 
 interface FullPageScrollProviderProps {
   children: React.ReactNode;

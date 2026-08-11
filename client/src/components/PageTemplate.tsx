@@ -137,7 +137,7 @@ export const PageTemplate = ({
         <NoiseTexture />
         <GlowEffects />
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-16 md:pt-36 md:pb-20">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-[calc(var(--de-nav-offset)+1rem)] pb-16 md:pt-[calc(var(--de-nav-offset)+1.5rem)] md:pb-20">
           {/* Breadcrumbs */}
           {breadcrumbs && breadcrumbs.length > 0 && (
             <motion.nav
