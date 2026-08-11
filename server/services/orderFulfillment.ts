@@ -1,10 +1,15 @@
 /**
  * Post-payment order fulfillment orchestrator.
- * Called after store_orders is marked paid (Zoho Payments webhook).
- * Fail-soft: never throws to the caller; webhook must still return 200.
+ *
+ * Reliability model:
+ * - the payment webhook durably marks an order `paid`
+ * - exactly one worker atomically claims `paid -> provisioning`
+ * - completed/cancelled/refunded orders are terminal
+ * - a fatal exception returns our still-owned `provisioning` claim to `paid`
+ * - a bounded reconciler recovers paid orders and stale provisioning claims
  */
 
-import { eq } from "drizzle-orm";
+import { and, eq, lt } from "drizzle-orm";
 import { db } from "../db";
 import { storeOrders, type StoreOrder } from "@shared/schema";
 import { notificationService } from "./notificationService";
@@ -12,9 +17,15 @@ import { zohoClient } from "../zoho/zohoClient";
 import { zohoDeskService } from "../zoho/zohoDesk";
 import { eventBus, EventTypes } from "../eventBus";
 
-const FULFILLED_STATUSES = new Set(["provisioning", "processing", "completed"]);
-const SKIP_STATUSES = new Set(["cancelled", "refunded"]);
+const ACTIVE_FULFILLMENT_STATUSES = new Set(["provisioning", "processing"]);
+const TERMINAL_FULFILLMENT_STATUSES = new Set(["completed", "cancelled", "refunded"]);
 const FULFILLED_NOTE_MARKER = "[FULFILLED]";
+const STALE_PROVISIONING_MS = 30 * 60 * 1000;
+const RECONCILE_INTERVAL_MS = 5 * 60 * 1000;
+const RECONCILE_BATCH_SIZE = 25;
+
+let reconciliationRunning = false;
+let reconciliationTimer: NodeJS.Timeout | null = null;
 
 type LineItem = {
   name?: string;
@@ -28,10 +39,27 @@ function logSecurity(event: string, data: Record<string, unknown>) {
   console.log(`[SECURITY] ${event}`, data);
 }
 
-function alreadyFulfilled(order: StoreOrder): boolean {
-  if (FULFILLED_STATUSES.has(order.status || "")) return true;
-  if ((order.notes || "").includes(FULFILLED_NOTE_MARKER)) return true;
-  return false;
+export function isFulfillmentTerminalStatus(status: string | null | undefined): boolean {
+  return TERMINAL_FULFILLMENT_STATUSES.has(status || "");
+}
+
+export function isFulfillmentActiveStatus(status: string | null | undefined): boolean {
+  return ACTIVE_FULFILLMENT_STATUSES.has(status || "");
+}
+
+export function isStaleProvisioning(
+  status: string | null | undefined,
+  updatedAt: Date | string | null | undefined,
+  nowMs = Date.now(),
+): boolean {
+  if (status !== "provisioning" || !updatedAt) return false;
+  const updatedMs = new Date(updatedAt).getTime();
+  return Number.isFinite(updatedMs) && nowMs - updatedMs >= STALE_PROVISIONING_MS;
+}
+
+function alreadyCompleted(order: StoreOrder): boolean {
+  if (order.status === "completed") return true;
+  return (order.notes || "").includes(FULFILLED_NOTE_MARKER);
 }
 
 function parseLineItems(raw: unknown): LineItem[] {
@@ -111,7 +139,7 @@ async function createFulfillmentDeskTicket(order: StoreOrder, items: LineItem[])
   } catch (err: any) {
     console.warn(
       "[ORDER FULFILLMENT] Zoho Desk ticket failed:",
-      err?.response?.data || err?.message || err
+      err?.response?.data || err?.message || err,
     );
     return null;
   }
@@ -146,68 +174,85 @@ async function sendConfirmation(order: StoreOrder, items: LineItem[]): Promise<v
   }
 }
 
+async function loadOrder(id: string): Promise<StoreOrder | null> {
+  const [order] = await db.select().from(storeOrders).where(eq(storeOrders.id, id)).limit(1);
+  return order || null;
+}
+
 /**
- * Fulfill a paid store order: confirm email + Zoho Desk ticket + status progression.
- * Idempotent via status (provisioning/processing/completed) or notes marker.
+ * Atomically claim a paid order. Returning null means another worker owns it,
+ * it is already complete/terminal, or it is not yet eligible for fulfillment.
  */
-export async function fulfillPaidOrder(orderId: string | number): Promise<void> {
+async function claimPaidOrder(id: string): Promise<StoreOrder | null> {
+  const [claimed] = await db
+    .update(storeOrders)
+    .set({ status: "provisioning", updatedAt: new Date() })
+    .where(and(eq(storeOrders.id, id), eq(storeOrders.status, "paid")))
+    .returning();
+  return claimed || null;
+}
+
+async function releaseFailedClaim(id: string): Promise<void> {
+  const [released] = await db
+    .update(storeOrders)
+    .set({ status: "paid", updatedAt: new Date() })
+    .where(and(eq(storeOrders.id, id), eq(storeOrders.status, "provisioning")))
+    .returning({ id: storeOrders.id, orderNumber: storeOrders.orderNumber });
+
+  if (released) {
+    logSecurity("ORDER_FULFILLMENT_CLAIM_RELEASED", {
+      orderId: released.id,
+      orderNumber: released.orderNumber,
+      reason: "fatal_error",
+      newStatus: "paid",
+    });
+  }
+}
+
+/**
+ * Fulfill one durably paid order.
+ *
+ * The atomic `paid -> provisioning` update is the concurrency lock. Orders in
+ * `awaiting_payment` are never eligible; provider confirmation must first mark
+ * them paid. A fatal exception releases our claim back to paid for reconciliation.
+ */
+export async function fulfillPaidOrder(orderId: string | number): Promise<boolean> {
   const id = String(orderId);
+  let claimed = false;
 
   try {
-    const [order] = await db.select().from(storeOrders).where(eq(storeOrders.id, id)).limit(1);
-
+    const order = await claimPaidOrder(id);
     if (!order) {
-      console.error("[ORDER FULFILLMENT] Order not found", { orderId: id });
-      logSecurity("ORDER_FULFILLMENT_SKIPPED", { orderId: id, reason: "not_found" });
-      return;
-    }
+      const latest = await loadOrder(id);
+      if (!latest) {
+        logSecurity("ORDER_FULFILLMENT_SKIPPED", { orderId: id, reason: "not_found" });
+        return false;
+      }
 
-    if (SKIP_STATUSES.has(order.status || "")) {
+      const reason = alreadyCompleted(latest)
+        ? "already_completed"
+        : isFulfillmentTerminalStatus(latest.status)
+          ? "terminal_status"
+          : isFulfillmentActiveStatus(latest.status)
+            ? "already_claimed"
+            : "not_paid";
+
       logSecurity("ORDER_FULFILLMENT_SKIPPED", {
-        orderId: order.id,
-        orderNumber: order.orderNumber,
-        reason: "terminal_status",
-        status: order.status,
+        orderId: latest.id,
+        orderNumber: latest.orderNumber,
+        reason,
+        status: latest.status,
       });
-      return;
+      return false;
     }
 
-    if (alreadyFulfilled(order)) {
-      logSecurity("ORDER_FULFILLMENT_SKIPPED", {
-        orderId: order.id,
-        orderNumber: order.orderNumber,
-        reason: "already_fulfilled",
-        status: order.status,
-      });
-      return;
-    }
-
-    // Allow paid (and awaiting_payment in case webhook race left status briefly stale)
-    if (order.status !== "paid" && order.status !== "awaiting_payment") {
-      logSecurity("ORDER_FULFILLMENT_SKIPPED", {
-        orderId: order.id,
-        orderNumber: order.orderNumber,
-        reason: "unexpected_status",
-        status: order.status,
-      });
-      return;
-    }
-
-    const oldStatus = order.status;
+    claimed = true;
     const items = parseLineItems(order.lineItems);
-
-    await db
-      .update(storeOrders)
-      .set({
-        status: "provisioning",
-        updatedAt: new Date(),
-      })
-      .where(eq(storeOrders.id, order.id));
 
     logSecurity("ORDER_STATUS_CHANGED", {
       orderId: order.id,
       orderNumber: order.orderNumber,
-      oldStatus,
+      oldStatus: "paid",
       newStatus: "provisioning",
       triggeredBy: "order_fulfillment",
     });
@@ -215,7 +260,6 @@ export async function fulfillPaidOrder(orderId: string | number): Promise<void> 
     await sendConfirmation(order, items);
     const deskTicketId = await createFulfillmentDeskTicket(order, items);
 
-    // Push paid purchase into TechSales (same website-lead webhook path as marketing leads)
     try {
       await eventBus.emit(EventTypes.LEAD_CREATED, {
         id: String(order.id),
@@ -229,7 +273,7 @@ export async function fulfillPaidOrder(orderId: string | number): Promise<void> 
     } catch (syncErr: any) {
       console.warn(
         "[ORDER FULFILLMENT] TechSales purchase sync emit failed:",
-        syncErr?.message || syncErr
+        syncErr?.message || syncErr,
       );
     }
 
@@ -240,15 +284,21 @@ export async function fulfillPaidOrder(orderId: string | number): Promise<void> 
       deskTicketId ? `deskTicket:${deskTicketId}` : "deskTicket:skipped",
     ].filter(Boolean);
 
-    await db
+    const [completed] = await db
       .update(storeOrders)
       .set({
         status: "completed",
         notes: noteParts.join(" | "),
         updatedAt: new Date(),
       })
-      .where(eq(storeOrders.id, order.id));
+      .where(and(eq(storeOrders.id, order.id), eq(storeOrders.status, "provisioning")))
+      .returning({ id: storeOrders.id });
 
+    if (!completed) {
+      throw new Error("Fulfillment claim was lost before completion");
+    }
+
+    claimed = false;
     logSecurity("ORDER_STATUS_CHANGED", {
       orderId: order.id,
       orderNumber: order.orderNumber,
@@ -264,6 +314,7 @@ export async function fulfillPaidOrder(orderId: string | number): Promise<void> 
       deskTicketId,
       total: order.total,
     });
+    return true;
   } catch (error: any) {
     console.error("[ORDER FULFILLMENT ERROR]", {
       orderId: id,
@@ -273,5 +324,89 @@ export async function fulfillPaidOrder(orderId: string | number): Promise<void> 
       orderId: id,
       error: error?.message || String(error),
     });
+
+    if (claimed) {
+      try {
+        await releaseFailedClaim(id);
+      } catch (releaseError: any) {
+        console.error("[ORDER FULFILLMENT CLAIM RELEASE ERROR]", {
+          orderId: id,
+          message: releaseError?.message || String(releaseError),
+        });
+      }
+    }
+    return false;
   }
+}
+
+/**
+ * Recover work after restarts/crashes and pick up paid orders whose webhook-side
+ * asynchronous fulfillment did not run. The overlap guard prevents one process
+ * from stacking reconciliation passes; atomic claims protect across processes.
+ */
+export async function reconcilePaidOrders(): Promise<{ recovered: number; attempted: number; fulfilled: number }> {
+  if (reconciliationRunning) {
+    return { recovered: 0, attempted: 0, fulfilled: 0 };
+  }
+
+  reconciliationRunning = true;
+  try {
+    const now = new Date();
+    const staleCutoff = new Date(now.getTime() - STALE_PROVISIONING_MS);
+
+    const recoveredRows = await db
+      .update(storeOrders)
+      .set({ status: "paid", updatedAt: now })
+      .where(and(eq(storeOrders.status, "provisioning"), lt(storeOrders.updatedAt, staleCutoff)))
+      .returning({ id: storeOrders.id, orderNumber: storeOrders.orderNumber });
+
+    for (const recovered of recoveredRows) {
+      logSecurity("ORDER_FULFILLMENT_STALE_CLAIM_RECOVERED", {
+        orderId: recovered.id,
+        orderNumber: recovered.orderNumber,
+        newStatus: "paid",
+      });
+    }
+
+    const pending = await db
+      .select({ id: storeOrders.id })
+      .from(storeOrders)
+      .where(eq(storeOrders.status, "paid"))
+      .limit(RECONCILE_BATCH_SIZE);
+
+    let fulfilled = 0;
+    for (const order of pending) {
+      if (await fulfillPaidOrder(order.id)) fulfilled += 1;
+    }
+
+    if (recoveredRows.length > 0 || pending.length > 0) {
+      logSecurity("ORDER_FULFILLMENT_RECONCILED", {
+        recovered: recoveredRows.length,
+        attempted: pending.length,
+        fulfilled,
+      });
+    }
+
+    return {
+      recovered: recoveredRows.length,
+      attempted: pending.length,
+      fulfilled,
+    };
+  } catch (error: any) {
+    console.error("[ORDER FULFILLMENT RECONCILIATION ERROR]", error?.message || error);
+    return { recovered: 0, attempted: 0, fulfilled: 0 };
+  } finally {
+    reconciliationRunning = false;
+  }
+}
+
+/** Start production recovery once after boot, then every five minutes. */
+export function startOrderFulfillmentReconciliation(): void {
+  if (process.env.NODE_ENV !== "production" || reconciliationTimer) return;
+
+  void reconcilePaidOrders();
+  reconciliationTimer = setInterval(() => {
+    void reconcilePaidOrders();
+  }, RECONCILE_INTERVAL_MS);
+  reconciliationTimer.unref?.();
 }
