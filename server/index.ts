@@ -3,7 +3,8 @@ dotenv.config();
 
 import express, { type Request, Response, NextFunction } from "express";
 import { createServer } from "http";
-import { registerRoutes } from "./routes";
+import { registerRoutes, authMiddleware, requireRole } from "./routes";
+import { registerSecureZohoStoreCheckout } from "./secureStoreCheckout";
 import { registerPublicSupportChat } from "./publicSupportChat";
 import { createServer as createViteServer } from "vite";
 import path from "path";
@@ -111,7 +112,7 @@ app.all("/ready", (_req, res) => res.status(200).json({ ready: true }));
 if (zohoPayments.isConfigured()) {
   log("✅ Zoho Payments configured");
 } else {
-  log("⚠️ Zoho Payments not configured - set ZOHO_PAYMENTS_API_KEY and ZOHO_PAYMENTS_SIGNING_KEY");
+  log("⚠️ Zoho Payments not configured - set ZOHO_PAYMENTS_ACCOUNT_ID, OAuth refresh credentials, and ZOHO_PAYMENTS_SIGNING_KEY");
 }
 
 // --------- Zoho Payments Webhook Route BEFORE JSON middleware (needs raw body for signature verification)
@@ -120,9 +121,9 @@ app.post(
   express.raw({ type: "application/json" }),
   async (req, res) => {
     try {
-      const signature = req.headers["x-zoho-webhook-signature"] as string || req.headers["x-webhook-signature"] as string;
+      const signature = req.headers["x-zoho-webhook-signature"] as string;
       if (!signature) {
-        console.error("[ZOHO PAYMENTS WEBHOOK] Missing signature header");
+        console.error("[ZOHO PAYMENTS WEBHOOK] Missing X-Zoho-Webhook-Signature header");
         return res.status(400).json({ error: "Missing webhook signature" });
       }
 
@@ -133,70 +134,86 @@ app.post(
       }
 
       const event = JSON.parse(req.body.toString("utf-8"));
-      const eventType = event.event_type || event.type;
+      const parsed = zohoPayments.parseWebhookEvent(event);
+      const metadata = Object.fromEntries(parsed.metadata.map((item) => [item.key, item.value]));
 
-      if (eventType === "payment.completed" || eventType === "paymentsession.completed" || eventType === "payment_session.success") {
-        const sessionId = event.data?.payment_session_id || event.payment_session_id || event.data?.id;
-        const paymentId = event.data?.payment_id || event.payment_id;
+      if (parsed.eventType === "payment.succeeded") {
+        const { db } = await import("./db");
+        const { storeOrders } = await import("@shared/schema");
+        const { eq } = await import("drizzle-orm");
 
-        if (sessionId) {
-          const { db } = await import("./db");
-          const { storeOrders } = await import("@shared/schema");
-          const { eq } = await import("drizzle-orm");
+        const metadataOrderId = metadata.orderId || null;
+        const orderNumber = metadata.orderNumber || parsed.referenceNumber || parsed.invoiceNumber || null;
+        let existingOrder: any = null;
 
-          const [existingOrder] = await db.select().from(storeOrders)
-            .where(eq(storeOrders.zohoPaymentSessionId, sessionId)).limit(1);
+        if (metadataOrderId) {
+          [existingOrder] = await db.select().from(storeOrders)
+            .where(eq(storeOrders.id, metadataOrderId)).limit(1);
+        }
+        if (!existingOrder && orderNumber) {
+          [existingOrder] = await db.select().from(storeOrders)
+            .where(eq(storeOrders.orderNumber, orderNumber)).limit(1);
+        }
 
-          const oldStatus = existingOrder?.status || "unknown";
-          const alreadyPastPaid = ["paid", "processing", "provisioning", "completed"].includes(
-            existingOrder?.status || ""
-          );
+        if (existingOrder) {
+          const oldStatus = existingOrder.status || "unknown";
+          const alreadyPastPaid = ["paid", "processing", "provisioning", "completed"].includes(oldStatus);
 
-          // Do not downgrade provisioning/completed back to paid on webhook retries
           if (!alreadyPastPaid) {
             await db.update(storeOrders)
               .set({
                 status: "paid",
-                zohoPaymentId: paymentId || sessionId,
+                zohoPaymentId: parsed.paymentId || existingOrder.zohoPaymentId || null,
                 paidAt: new Date(),
                 updatedAt: new Date(),
               })
-              .where(eq(storeOrders.zohoPaymentSessionId, sessionId));
+              .where(eq(storeOrders.id, existingOrder.id));
 
-            console.log(`[SECURITY] ORDER_STATUS_CHANGED`, {
-              orderId: existingOrder?.id,
-              orderNumber: existingOrder?.orderNumber,
+            console.log("[SECURITY] ORDER_STATUS_CHANGED", {
+              orderId: existingOrder.id,
+              orderNumber: existingOrder.orderNumber,
               oldStatus,
               newStatus: "paid",
-              triggeredBy: "zoho_payments_webhook"
+              triggeredBy: "zoho_payments_webhook",
             });
-          } else if (existingOrder && !existingOrder.zohoPaymentId && paymentId) {
+          } else if (!existingOrder.zohoPaymentId && parsed.paymentId) {
             await db.update(storeOrders)
               .set({
-                zohoPaymentId: paymentId,
+                zohoPaymentId: parsed.paymentId,
                 paidAt: existingOrder.paidAt || new Date(),
                 updatedAt: new Date(),
               })
               .where(eq(storeOrders.id, existingOrder.id));
           }
 
-          console.log(`[ZOHO PAYMENTS WEBHOOK] Order paid: session=${sessionId}`);
-          console.log(`[SECURITY] CHECKOUT_COMPLETED`, {
-            orderId: existingOrder?.id,
-            orderNumber: existingOrder?.orderNumber,
+          console.log("[SECURITY] CHECKOUT_COMPLETED", {
+            orderId: existingOrder.id,
+            orderNumber: existingOrder.orderNumber,
             paymentMethod: "zoho",
-            total: existingOrder?.total,
-            zohoPaymentSessionId: sessionId,
-            zohoPaymentId: paymentId
+            total: existingOrder.total,
+            zohoPaymentId: parsed.paymentId,
           });
 
-          if (existingOrder?.id) {
-            const { fulfillPaidOrder } = await import("./services/orderFulfillment");
-            fulfillPaidOrder(existingOrder.id).catch((err) => {
-              console.error("[ZOHO PAYMENTS WEBHOOK] fulfillPaidOrder failed:", err);
-            });
-          }
+          const { fulfillPaidOrder } = await import("./services/orderFulfillment");
+          fulfillPaidOrder(existingOrder.id).catch((err) => {
+            console.error("[ZOHO PAYMENTS WEBHOOK] fulfillPaidOrder failed:", err);
+          });
+        } else {
+          // Portal invoice payments are not StoreOrder records; Zoho remains the billing system of record.
+          console.info("[ZOHO PAYMENTS WEBHOOK] Verified payment succeeded with no local store order", {
+            paymentId: parsed.paymentId,
+            referenceNumber: parsed.referenceNumber,
+            invoiceNumber: parsed.invoiceNumber,
+          });
         }
+      } else if (parsed.eventType === "payment.failed" || parsed.eventType === "payment.pending") {
+        // A failed/pending attempt can later succeed. Never fulfill or permanently fail the order here.
+        console.info("[ZOHO PAYMENTS WEBHOOK] Payment attempt update", {
+          eventType: parsed.eventType,
+          paymentId: parsed.paymentId,
+          referenceNumber: parsed.referenceNumber,
+          status: parsed.status,
+        });
       }
 
       res.json({ received: true });
@@ -211,6 +228,11 @@ app.post(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+// Register the hardened checkout route before the legacy routes module so browser-supplied
+// prices can never reach the older checkout implementation. The legacy handler remains
+// temporarily for a small, reviewable security patch and can be removed in a follow-up cleanup.
+registerSecureZohoStoreCheckout(app, authMiddleware as any, requireRole as any);
 
 // Internal DE sales pages were removed from the public site (they now live in
 // the Intelligence Hub behind auth). Redirect any old /internal URL to home so
