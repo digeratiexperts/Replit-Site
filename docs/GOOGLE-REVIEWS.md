@@ -10,6 +10,7 @@ quotes, star scores, or review counts.
 |----------|--------|---------|
 | `GOOGLE_PLACES_API_KEY` | `/home/digeratiexperts.com/shared/.env` (prod) or local `.env` | Google Cloud API key with **Places API** enabled |
 | `GOOGLE_PLACE_ID` | same | Place ID for the Digerati Experts Google Business Profile |
+| `GOOGLE_MAPS_CID` | same | Optional decimal CID from Maps (`?cid=` / `0x…:0x…`). **Not** a substitute for `GOOGLE_PLACE_ID` |
 
 Aliases also accepted: `GOOGLE_MAPS_API_KEY` / `GBP_API_KEY` / `PLACES_API_KEY`
 and `GBP_PLACE_ID` / `PLACES_PLACE_ID`.
@@ -35,6 +36,24 @@ Digerati Experts is a **verified service-area** Google Business Profile (no publ
    - the `!1s0x…:0x…` token **and** ask engineering to resolve it — still prefer an explicit `ChIJ…` when available.
 4. Or open **Ask for reviews** / share review link — many review URLs include `placeid=ChIJ…`.
 5. Paste the Maps or review URL to engineering, or set `GOOGLE_PLACE_ID=ChIJ…` in shared `.env` yourself.
+
+### Investigation note (2026-08-11) — DE Maps URL / CID
+
+DE supplied:
+
+`https://www.google.com/maps/place/Digerati+Experts/data=!4m2!3m1!1s0x0:0x17be2ec96c8733eb?...`
+
+| Token | Value | Result |
+|-------|--------|--------|
+| Feature / data id | `0x0:0x17be2ec96c8733eb` (also known as `0x6fc32c129c8ec5bb:0x17be2ec96c8733eb`) | Confirms listing name **Digerati Experts** + phone **(325) 480-9870** in Maps preview |
+| Decimal CID | `1710856351091471339` → `https://maps.google.com/?cid=1710856351091471339` | Stored as optional `GOOGLE_MAPS_CID` for maps links only |
+| Maps-derived ChIJ | `ChIJu8WOnBIsw28R6zOHbMkuvhc` | **Rejected** by Place Details (`NOT_FOUND` / no longer valid) |
+| Places Find Place (`+13254809870`) | — | `ZERO_RESULTS` |
+| Places Text Search / Autocomplete for this listing | — | Does not return DE’s service-area GBP (wrong “Digerati*” storefronts only) |
+
+Maps preview also surfaces: *“Our policies do not permit contributions to this type of place”* / *“Posting is currently turned off”* for this listing type. There is **no supported CID→reviews** path on the official Places API. Scraping Maps HTML for reviews is not implemented.
+
+**Still needed from DE:** a Maps / review URL that contains a Place Details–valid `placeid=ChIJ…` or `query_place_id=ChIJ…` (GBP → **See your profile** or **Ask for reviews**). Until then `/api/google-reviews` stays `unconfigured` even if `GOOGLE_MAPS_CID` is set.
 
 ### Storefront listings (general)
 
