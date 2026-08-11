@@ -5,7 +5,7 @@ import { ZohoASAPWidget } from "@/components/ZohoASAPWidget";
  * Sitewide marketing chrome (not Client Portal).
  *
  * Restored upgraded multi-tab support modal (Chat · Ticket · Resources):
- * - Chat tab = Virtual MSP Advisor (`/api/public/advisor/chat`)
+ * - Desk tab = DE Desk advisor (`/api/public/advisor/chat`)
  * - Ticket tab = Zoho Desk ticket create
  * - Resources = Zoho Assist, Remote Support, KB, Client Portal
  *

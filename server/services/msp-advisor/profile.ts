@@ -185,7 +185,7 @@ export function knownFactsList(profile: ConversationProfile): string[] {
 export function buildLeadSummary(profile: ConversationProfile, messages: Array<{ role: string; content: string }>): string {
   const recent = messages.slice(-12).map((m) => `${m.role}: ${m.content}`).join("\n");
   return [
-    "Website Virtual MSP Advisor lead summary",
+    "Website DE Desk lead summary",
     `Company: ${profile.companyName || "n/a"}`,
     `Contact: ${profile.contactName || "n/a"}`,
     `Email: ${profile.email || "n/a"}`,

@@ -1,5 +1,5 @@
 /**
- * Open the sitewide Virtual MSP Advisor with optional store-context seed.
+ * Open the sitewide DE Desk (advisor) with optional store-context seed.
  * Do not invent a second chatbot — this only deeplinks the existing advisor.
  */
 export type OpenMspAdvisorDetail = {

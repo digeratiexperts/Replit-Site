@@ -3200,7 +3200,7 @@ export async function registerRoutes(app: Express) {
           email,
           company: company || "Advisor chat",
           phone: phone || "",
-          source: "Virtual MSP Advisor",
+          source: "DE Desk",
           message: `${visitorMessage}\n\n${summary}`,
         });
         logSecurityEvent("ADVISOR_LEAVE_MESSAGE", req, { email });
@@ -3218,10 +3218,10 @@ export async function registerRoutes(app: Express) {
       const leadId = randomId();
       const sourceLabel =
         action === "request_assessment"
-          ? "Virtual MSP Advisor — Assessment"
+          ? "DE Desk — Assessment"
           : action === "request_callback"
-            ? "Virtual MSP Advisor — Callback"
-            : "Virtual MSP Advisor — Lead";
+            ? "DE Desk — Callback"
+            : "DE Desk — Lead";
 
       eventBus.emit(
         EventTypes.LEAD_CREATED,

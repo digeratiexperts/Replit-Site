@@ -58,7 +58,7 @@ function buildPageContext(pathname: string) {
 const WELCOME: ChatTurn = {
   role: "assistant",
   content:
-    "Hi — I'm the Digerati Experts Virtual MSP Advisor. I can help with business IT, cybersecurity, compliance, Microsoft 365, and whether managed services are a fit. What are you working through?",
+    "DE Desk here. Tell me what broke, what you're evaluating, or what you're trying to protect — I'll give you a clear read and the sensible next step.",
 };
 
 export function VirtualMspAdvisor() {
@@ -331,15 +331,13 @@ export function VirtualMspAdvisor() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="relative w-14 h-14 rounded-full bg-gradient-to-br from-violet-700 via-indigo-700 to-slate-900 text-white shadow-lg shadow-violet-900/30 hover:shadow-xl transform transition-all duration-300 hover:scale-105 flex items-center justify-center"
+          className="relative flex h-14 w-14 items-center justify-center rounded-full border border-white/12 bg-[#0a0a0a] text-sm font-bold tracking-tight text-white shadow-[0_12px_40px_rgba(0,0,0,0.45)] transition hover:-translate-y-0.5"
           data-testid="button-open-msp-advisor"
-          title="Chat with Digerati Experts"
-          aria-label="Open Virtual MSP Advisor"
+          title="Ask DE"
+          aria-label="Open DE Desk"
         >
-          <MessageCircle size={24} />
-          <span className="absolute -top-1 -right-1 w-5 h-5 bg-amber-300 text-slate-900 text-[10px] rounded-full flex items-center justify-center font-bold">
-            AI
-          </span>
+          DE
+          <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#0a0a0a] bg-emerald-400" />
         </button>
       )}
 
@@ -351,7 +349,7 @@ export function VirtualMspAdvisor() {
           <div className="bg-gradient-to-r from-violet-800 to-slate-900 text-white p-4 flex justify-between items-start flex-shrink-0">
             <div>
               <h3 className="font-semibold text-base" data-testid="text-advisor-title">
-                Virtual MSP Advisor
+                DE Desk
               </h3>
               <p className="text-xs text-violet-100 mt-0.5">
                 Digerati Experts · IT, cybersecurity & compliance
