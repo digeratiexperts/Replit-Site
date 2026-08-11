@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { Shield } from "lucide-react";
+import { Check, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { StoreProduct } from "@/data/storeProducts";
 import { computeCoverageScore } from "@/data/storeMerchandising";
@@ -29,35 +29,50 @@ export function CoverageScorePanel({
       <div className="mb-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <Shield className="h-4 w-4 text-[#a78bfa]" />
-          <h3 className="text-sm font-semibold text-white">Protection coverage</h3>
+          <h3 className="text-sm font-semibold text-white">Solution coverage</h3>
         </div>
-        <span className="text-lg font-bold text-white" data-testid="text-coverage-score">
-          {score.total}
-          <span className="text-sm font-medium text-white/45"> / 100</span>
-        </span>
+        <div className="text-right">
+          <span className="text-lg font-bold text-white" data-testid="text-coverage-score">
+            {score.total}
+            <span className="text-sm font-medium text-white/45"> / 100</span>
+          </span>
+          <p className="text-[11px] text-white/45" data-testid="text-coverage-areas">
+            {score.coveredCount} of {score.dimensionCount} areas
+          </p>
+        </div>
       </div>
       <p className="mb-4 text-xs leading-relaxed text-white/45">
-        Heuristic coverage of cart categories (endpoint, identity, email, backup, network,
-        compliance) — not a security audit.
+        Heuristic stack coverage (endpoint, identity, email, backup, network, compliance) —
+        not a security audit or certification claim.
       </p>
 
       <div className="space-y-2.5">
         {score.bars.map((bar) => (
           <div key={bar.id} className="flex items-center gap-3">
-            <span className="w-20 text-xs text-white/55">{bar.label}</span>
+            <span className="flex w-20 items-center gap-1 text-xs text-white/55">
+              {bar.covered && <Check className="h-3 w-3 shrink-0 text-emerald-400" />}
+              {bar.label}
+            </span>
             <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/10">
               <div
-                className={`h-full rounded-full ${bar.covered ? "bg-[#5034ff]" : "bg-white/15"}`}
+                className={`h-full rounded-full transition-all ${
+                  bar.covered ? "bg-[#5034ff]" : "bg-white/15"
+                }`}
                 style={{ width: bar.covered ? "100%" : "18%" }}
               />
             </div>
+            {bar.coveredBy && (
+              <span className="hidden w-28 truncate text-[10px] text-white/35 sm:inline">
+                {bar.coveredBy}
+              </span>
+            )}
           </div>
         ))}
       </div>
 
-      {score.suggestions.length > 0 && (
+      {score.suggestions.length > 0 ? (
         <div className="mt-4 space-y-2 border-t border-white/10 pt-4">
-          <p className="text-xs font-medium text-white/70">Improve your protection</p>
+          <p className="text-xs font-medium text-white/70">Close coverage gaps</p>
           {score.suggestions.map((s) =>
             s.product ? (
               <div
@@ -65,6 +80,7 @@ export function CoverageScorePanel({
                 className="flex items-start justify-between gap-2 rounded-lg border border-white/10 bg-white/[0.03] p-3"
               >
                 <div className="min-w-0">
+                  <p className="text-[10px] uppercase tracking-wide text-white/40">{s.label}</p>
                   <p className="truncate text-sm text-white">{s.product.name}</p>
                   <p className="text-xs text-white/45">
                     Coverage {s.from} → {s.to}
@@ -88,6 +104,10 @@ export function CoverageScorePanel({
             ) : null
           )}
         </div>
+      ) : (
+        <p className="mt-4 border-t border-white/10 pt-4 text-xs text-emerald-400/90">
+          All six coverage areas are represented in this solution.
+        </p>
       )}
     </div>
   );

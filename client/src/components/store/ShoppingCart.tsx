@@ -12,11 +12,12 @@ import {
   CreditCard,
   Calendar,
   FileText,
+  Phone,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart, isRecurringPricing } from "@/contexts/CartContext";
 import { formatPrice } from "@/data/storeProducts";
-import { solutionGroupFor } from "@/data/storeMerchandising";
+import { solutionGroupFor, getCartComplements } from "@/data/storeMerchandising";
 import { Link, useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -58,6 +59,9 @@ export function ShoppingCart() {
     );
 
   const savings = getSavings();
+
+  const cartProducts = useMemo(() => items.map((i) => i.product), [items]);
+  const complements = useMemo(() => getCartComplements(cartProducts, { limit: 3 }), [cartProducts]);
 
   const grouped = useMemo(() => {
     const map = new Map<string, typeof items>();
@@ -197,7 +201,7 @@ export function ShoppingCart() {
                 ) : (
                   <>
                     <CoverageScorePanel
-                      products={items.map((i) => i.product)}
+                      products={cartProducts}
                       onAddSuggestion={(product) => {
                         addToCart(product, Math.max(1, product.minimumQuantity), product.basePrice);
                         toast({
@@ -224,6 +228,9 @@ export function ShoppingCart() {
                                   <h4 className="line-clamp-1 font-medium text-white">
                                     {item.product.name}
                                   </h4>
+                                  <p className="truncate text-[11px] text-white/35">
+                                    {item.product.sku}
+                                  </p>
                                   <p className="text-sm text-white/50">
                                     {formatPrice(item.product)}
                                   </p>
@@ -284,9 +291,59 @@ export function ShoppingCart() {
                       </div>
                     ))}
 
+                    {complements.length > 0 && (
+                      <div
+                        className="rounded-xl border border-white/10 bg-white/[0.02] p-4"
+                        data-testid="cart-complements"
+                      >
+                        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-white/45">
+                          Works with your stack
+                        </p>
+                        <div className="space-y-2">
+                          {complements.map((product) => (
+                            <div
+                              key={product.sku}
+                              className="flex items-center justify-between gap-2"
+                            >
+                              <div className="min-w-0">
+                                <p className="truncate text-sm text-white">{product.name}</p>
+                                <p className="text-xs text-white/40">{formatPrice(product)}</p>
+                              </div>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="h-8 shrink-0 border-white/15 bg-transparent text-xs text-white hover:bg-white/5"
+                                onClick={() => {
+                                  addToCart(
+                                    product,
+                                    Math.max(1, product.minimumQuantity),
+                                    product.basePrice
+                                  );
+                                  toast({
+                                    title: "Added to solution",
+                                    description: product.name,
+                                  });
+                                }}
+                                data-testid={`button-complement-${product.id}`}
+                              >
+                                Add
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     <p className="text-xs text-white/40">
                       Estimated onboarding: typically 7–10 business days after kickoff (varies by
-                      stack).
+                      stack). Questions?{" "}
+                      <a
+                        href="tel:3254809870"
+                        className="inline-flex items-center gap-1 text-[#a78bfa] hover:text-[#c4b5fd]"
+                      >
+                        <Phone className="h-3 w-3" />
+                        325-480-9870
+                      </a>
                     </p>
                   </>
                 )}

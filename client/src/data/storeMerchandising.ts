@@ -9,6 +9,7 @@ import {
   type PricingType,
   type StoreProduct,
 } from "./storeProducts";
+import { getVendorForSku } from "./vendorLogos";
 
 export type StoreOutcomeId =
   | "protect"
@@ -27,6 +28,30 @@ export type MerchandisingRailId =
   | "best_value";
 
 export type StoreSortOption = "recommended" | "price_asc" | "price_desc" | "popular";
+
+/** Catalog toolbar — vendor / compliance focus / org size (elevate, do not replace category/billing/outcome). */
+export type StoreComplianceId =
+  | "cyber_insurance"
+  | "policy_docs"
+  | "risk_assessment"
+  | "awareness"
+  | "continuity";
+
+export type StoreSizeId = "small" | "mid" | "large";
+
+export const storeComplianceFilters: { id: StoreComplianceId; label: string; blurb: string }[] = [
+  { id: "cyber_insurance", label: "Cyber insurance", blurb: "Controls insurers commonly ask about" },
+  { id: "policy_docs", label: "Policies & docs", blurb: "Templates and documented controls" },
+  { id: "risk_assessment", label: "Risk assessment", blurb: "CSRA, quick scans, DMARC" },
+  { id: "awareness", label: "Awareness training", blurb: "Phishing + security habits" },
+  { id: "continuity", label: "Continuity / IR", blurb: "BCP, IR runbooks, BCDR" },
+];
+
+export const storeSizeFilters: { id: StoreSizeId; label: string; blurb: string }[] = [
+  { id: "small", label: "Small (≈1–49)", blurb: "Starter onboardings, Office-scale stacks" },
+  { id: "mid", label: "Mid-size (≈50–199)", blurb: "Business-scale and multi-site ready" },
+  { id: "large", label: "Large / multi-site", blurb: "Enterprise, large onboardings, multi-site" },
+];
 
 export interface StoreOutcome {
   id: StoreOutcomeId;
@@ -266,6 +291,166 @@ export const billingTypeLabels: Partial<Record<PricingType, string>> = {
   per_seat: "Per seat",
 };
 
+/** Soft compliance focus tags — maps real SKUs / categories, does not invent certs. */
+const complianceSkuHints: Record<StoreComplianceId, string[]> = {
+  cyber_insurance: [
+    "DE-DIG-ASMT-CSRA-OT",
+    "DE-SVC-CM-ENDPOINT-EDR-MO",
+    "DE-SVC-CM-EMAIL-SEC-MO",
+    "DE-DIG-ASMT-PHISH-MO",
+    "DE-DIG-TPL-IR-RUNBOOK-OT",
+    "DE-DIG-TRN-AWARE-BASIC-YR",
+    "DE-SVC-CM-IDENTITY-CORE-MO",
+  ],
+  policy_docs: [
+    "DE-DIG-TPL-POLICY-CORE-OT",
+    "DE-DIG-TPL-POLICY-ADV-OT",
+    "DE-SVC-CM-DOC-PACK-OT",
+    "DE-DIG-TPL-IR-RUNBOOK-OT",
+    "DE-DIG-TPL-BCP-OT",
+  ],
+  risk_assessment: [
+    "DE-DIG-ASMT-QUICK-OT",
+    "DE-DIG-ASMT-CSRA-OT",
+    "DE-DIG-ASMT-DMARC-OT",
+    "DE-DIG-ASMT-PHISH-MO",
+  ],
+  awareness: [
+    "DE-DIG-TRN-AWARE-BASIC-YR",
+    "DE-DIG-TRN-AWARE-PRO-YR",
+    "DE-DIG-TRN-ONBOARD-OT",
+    "DE-DIG-ASMT-PHISH-MO",
+  ],
+  continuity: [
+    "DE-DIG-TPL-BCP-OT",
+    "DE-DIG-TPL-IR-RUNBOOK-OT",
+    "DE-SVC-MGD-BCDR-MO",
+    "DE-SVC-NET-CUTOVER-OT",
+  ],
+};
+
+/** Org-size fit hints — tier / onboarding size naming already in catalog. */
+const sizeSkuHints: Record<StoreSizeId, string[]> = {
+  small: [
+    "DE-SVC-MGD-OFFICE-MO",
+    "DE-SVC-MGD-WORKPLACE-MO",
+    "DE-SVC-CM-ONBOARD-S-OT",
+    "DE-SVC-UC-ONBOARD-S-OT",
+    "DE-SVC-BLK-5HR-OT",
+    "DE-DIG-ASMT-QUICK-OT",
+    "DE-DIG-TPL-POLICY-CORE-OT",
+    "DE-SVC-UC-SEAT-STD-MO",
+    "DE-SVC-CM-ENDPOINT-CORE-MO",
+    "DE-HW-NET-FW-SMB-OT",
+  ],
+  mid: [
+    "DE-SVC-MGD-BUSINESS-MO",
+    "DE-SVC-MGD-CYBER-MO",
+    "DE-SVC-CM-ONBOARD-M-OT",
+    "DE-SVC-UC-ONBOARD-M-OT",
+    "DE-SVC-BLK-10HR-OT",
+    "DE-SVC-CM-ENDPOINT-EDR-MO",
+    "DE-SVC-CM-EMAIL-SEC-MO",
+    "DE-SVC-CM-IDENTITY-CORE-MO",
+    "DE-SVC-NET-MANAGED-CORE-MO",
+    "DE-DIG-ASMT-CSRA-OT",
+    "DE-DIG-TRN-AWARE-BASIC-YR",
+  ],
+  large: [
+    "DE-SVC-MGD-ENTERPRISE-MO",
+    "DE-SVC-CM-ONBOARD-L-OT",
+    "DE-SVC-UC-ONBOARD-L-OT",
+    "DE-SVC-BLK-20HR-OT",
+    "DE-SVC-NET-MANAGED-ADV-MO",
+    "DE-SVC-NET-MANAGED-MSITE-MO",
+    "DE-DIG-TRN-AWARE-PRO-YR",
+    "DE-DIG-TPL-POLICY-ADV-OT",
+    "DE-SVC-CONSULT-VCIO-HR",
+    "DE-SVC-COMANAGED-CUSTOM-MO",
+  ],
+};
+
+export function getProductVendorSlug(product: StoreProduct): string | null {
+  return getVendorForSku(product.sku, product.category)?.slug ?? null;
+}
+
+export function getProductVendorName(product: StoreProduct): string | null {
+  return getVendorForSku(product.sku, product.category)?.name ?? null;
+}
+
+/** Vendors present in a product list — for toolbar options. */
+export function listVendorsForProducts(
+  products: StoreProduct[]
+): { slug: string; name: string }[] {
+  const map = new Map<string, string>();
+  for (const p of products) {
+    const v = getVendorForSku(p.sku, p.category);
+    if (v) map.set(v.slug, v.name);
+  }
+  return Array.from(map.entries())
+    .map(([slug, name]) => ({ slug, name }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export function productMatchesVendor(product: StoreProduct, vendorSlug: string): boolean {
+  return getProductVendorSlug(product) === vendorSlug;
+}
+
+export function productMatchesCompliance(
+  product: StoreProduct,
+  complianceId: StoreComplianceId
+): boolean {
+  const hints = complianceSkuHints[complianceId];
+  if (hints?.includes(product.sku)) return true;
+  const hay = `${product.name} ${product.shortDescription} ${product.description} ${product.features.join(" ")}`.toLowerCase();
+  switch (complianceId) {
+    case "cyber_insurance":
+      return /insurance|underwriter|csra|edr|phishing|mfa|identity/i.test(hay);
+    case "policy_docs":
+      return (
+        product.category === "digital_templates" ||
+        /policy|documentation|runbook|playbook/i.test(hay)
+      );
+    case "risk_assessment":
+      return product.category === "digital_assessments" || /assessment|dmarc|risk/i.test(hay);
+    case "awareness":
+      return product.category === "digital_training" || /awareness|phishing|training/i.test(hay);
+    case "continuity":
+      return /bcdr|backup|continuity|disaster|incident response|cutover|ir-runbook|bcp/i.test(
+        `${hay} ${product.sku}`
+      );
+    default:
+      return false;
+  }
+}
+
+export function productMatchesSize(product: StoreProduct, sizeId: StoreSizeId): boolean {
+  if (sizeSkuHints[sizeId]?.includes(product.sku)) return true;
+
+  const sku = product.sku;
+  // Exclude SKUs that are clearly sized for a different band.
+  if (sizeId === "small") {
+    if (/ONBOARD-L-OT|MGD-ENTERPRISE|MSITE|BLK-20HR|AWARE-PRO|POLICY-ADV|UC-ONBOARD-L/i.test(sku)) {
+      return false;
+    }
+  } else if (sizeId === "mid") {
+    if (
+      /ONBOARD-S-OT|ONBOARD-L-OT|MGD-OFFICE|MGD-WORKPLACE|MGD-ENTERPRISE|BLK-5HR|BLK-20HR|MSITE|UC-ONBOARD-[SL]/i.test(
+        sku
+      )
+    ) {
+      return false;
+    }
+  } else if (sizeId === "large") {
+    if (/ONBOARD-S-OT|MGD-OFFICE|MGD-WORKPLACE|FW-SMB|BLK-5HR|UC-ONBOARD-S/i.test(sku)) {
+      return false;
+    }
+  }
+
+  // Size-agnostic building blocks (most co-managed / digital / hardware) fit all bands.
+  return true;
+}
+
 export function getProductBySku(sku: string): StoreProduct | undefined {
   return storeProducts.find((p) => p.sku === sku);
 }
@@ -445,40 +630,250 @@ export const productRelationships: Record<string, ProductRelationship> = {
     upgradeTo: ["DE-SVC-CM-ENDPOINT-EDR-MO"],
   },
   "DE-SVC-CM-ENDPOINT-EDR-MO": {
-    worksWith: ["DE-SVC-CM-EMAIL-SEC-MO", "DE-SVC-CM-IDENTITY-CORE-MO", "DE-DIG-TRN-AWARE-BASIC-YR"],
+    worksWith: [
+      "DE-SVC-CM-EMAIL-SEC-MO",
+      "DE-SVC-CM-IDENTITY-CORE-MO",
+      "DE-DIG-TRN-AWARE-BASIC-YR",
+      "DE-HW-PROV-ENDPOINT-OT",
+    ],
     includedIn: "ProActive Ecosystem – Business+",
   },
   "DE-SVC-CM-EMAIL-SEC-MO": {
-    worksWith: ["DE-SVC-CM-IDENTITY-CORE-MO", "DE-DIG-ASMT-PHISH-MO", "DE-DIG-ASMT-DMARC-OT"],
+    worksWith: [
+      "DE-SVC-CM-IDENTITY-CORE-MO",
+      "DE-DIG-ASMT-PHISH-MO",
+      "DE-DIG-ASMT-DMARC-OT",
+      "DE-DIG-TRN-AWARE-BASIC-YR",
+    ],
     includedIn: "ProActive Ecosystem – Business+",
   },
   "DE-SVC-CM-IDENTITY-CORE-MO": {
-    worksWith: ["DE-SVC-CM-EMAIL-SEC-MO", "DE-SVC-CM-SAAS-MGMT-MO", "DE-SVC-CM-ENDPOINT-CORE-MO"],
+    worksWith: [
+      "DE-SVC-CM-EMAIL-SEC-MO",
+      "DE-SVC-CM-SAAS-MGMT-MO",
+      "DE-SVC-CM-ENDPOINT-CORE-MO",
+    ],
     includedIn: "ProActive Ecosystem – Office+",
   },
   "DE-SVC-CM-SAAS-MGMT-MO": {
-    worksWith: ["DE-SVC-CM-IDENTITY-CORE-MO", "DE-SVC-CM-EMAIL-SEC-MO"],
+    worksWith: ["DE-SVC-CM-IDENTITY-CORE-MO", "DE-SVC-CM-EMAIL-SEC-MO", "DE-DIG-ASMT-DMARC-OT"],
   },
   "DE-SVC-CM-HELPDESK-ASSIST-MO": {
-    worksWith: ["DE-SVC-CM-ENDPOINT-CORE-MO", "DE-SVC-CM-SERVER-MON-MO"],
+    worksWith: [
+      "DE-SVC-CM-ENDPOINT-CORE-MO",
+      "DE-SVC-CM-SERVER-MON-MO",
+      "DE-SVC-BLK-5HR-OT",
+    ],
+    upgradeTo: ["DE-SVC-BLK-10HR-OT"],
+  },
+  "DE-SVC-CM-SERVER-MON-MO": {
+    worksWith: [
+      "DE-SVC-CM-HELPDESK-ASSIST-MO",
+      "DE-SVC-CM-ENDPOINT-EDR-MO",
+      "DE-SVC-MGD-BCDR-MO",
+    ],
+  },
+  "DE-SVC-CM-ONBOARD-S-OT": {
+    worksWith: ["DE-SVC-CM-DOC-PACK-OT", "DE-SVC-CM-ENDPOINT-CORE-MO"],
+    upgradeTo: ["DE-SVC-CM-ONBOARD-M-OT"],
+  },
+  "DE-SVC-CM-ONBOARD-M-OT": {
+    worksWith: ["DE-SVC-CM-DOC-PACK-OT", "DE-SVC-CM-ENDPOINT-EDR-MO"],
+    upgradeTo: ["DE-SVC-CM-ONBOARD-L-OT"],
+  },
+  "DE-SVC-CM-ONBOARD-L-OT": {
+    worksWith: ["DE-SVC-CM-DOC-PACK-OT", "DE-SVC-CONSULT-VCIO-HR"],
+  },
+  "DE-SVC-CM-DOC-PACK-OT": {
+    worksWith: ["DE-DIG-TPL-POLICY-CORE-OT", "DE-SVC-CM-ONBOARD-S-OT"],
+  },
+  "DE-SVC-MGD-OFFICE-MO": {
+    worksWith: ["DE-SVC-MGD-BCDR-MO", "DE-DIG-ASMT-QUICK-OT"],
+    upgradeTo: ["DE-SVC-MGD-BUSINESS-MO"],
+  },
+  "DE-SVC-MGD-BUSINESS-MO": {
+    worksWith: ["DE-SVC-MGD-BCDR-MO", "DE-DIG-ASMT-CSRA-OT", "DE-DIG-TRN-AWARE-BASIC-YR"],
+    upgradeTo: ["DE-SVC-MGD-ENTERPRISE-MO"],
+  },
+  "DE-SVC-MGD-ENTERPRISE-MO": {
+    worksWith: ["DE-SVC-CONSULT-VCIO-HR", "DE-DIG-TPL-POLICY-ADV-OT", "DE-SVC-MGD-BCDR-MO"],
+  },
+  "DE-SVC-MGD-WORKPLACE-MO": {
+    worksWith: ["DE-SVC-CM-IDENTITY-CORE-MO", "DE-HW-PROV-ENDPOINT-OT"],
+    upgradeTo: ["DE-SVC-MGD-OFFICE-MO"],
+  },
+  "DE-SVC-MGD-CYBER-MO": {
+    worksWith: ["DE-DIG-ASMT-CSRA-OT", "DE-DIG-TRN-AWARE-PRO-YR", "DE-SVC-MGD-BCDR-MO"],
+    upgradeTo: ["DE-SVC-MGD-BUSINESS-MO"],
   },
   "DE-SVC-MGD-BCDR-MO": {
     worksWith: ["DE-DIG-TPL-BCP-OT", "DE-DIG-TPL-IR-RUNBOOK-OT"],
     includedIn: "ProActive Ecosystem – Business+",
   },
+  "DE-SVC-COMANAGED-CUSTOM-MO": {
+    worksWith: [
+      "DE-SVC-CM-ENDPOINT-EDR-MO",
+      "DE-SVC-CM-HELPDESK-ASSIST-MO",
+      "DE-SVC-CONSULT-VCIO-HR",
+    ],
+  },
+  "DE-DIG-ASMT-QUICK-OT": {
+    worksWith: ["DE-DIG-ASMT-CSRA-OT", "DE-SVC-CM-ENDPOINT-CORE-MO", "DE-DIG-TPL-POLICY-CORE-OT"],
+    upgradeTo: ["DE-DIG-ASMT-CSRA-OT"],
+  },
   "DE-DIG-ASMT-CSRA-OT": {
-    worksWith: ["DE-SVC-CM-ENDPOINT-EDR-MO", "DE-DIG-TPL-IR-RUNBOOK-OT", "DE-DIG-ASMT-PHISH-MO"],
+    worksWith: [
+      "DE-SVC-CM-ENDPOINT-EDR-MO",
+      "DE-DIG-TPL-IR-RUNBOOK-OT",
+      "DE-DIG-ASMT-PHISH-MO",
+      "DE-DIG-TPL-POLICY-CORE-OT",
+    ],
+  },
+  "DE-DIG-ASMT-DMARC-OT": {
+    worksWith: ["DE-SVC-CM-EMAIL-SEC-MO", "DE-SVC-CM-IDENTITY-CORE-MO", "DE-DIG-ASMT-PHISH-MO"],
   },
   "DE-DIG-ASMT-PHISH-MO": {
-    worksWith: ["DE-DIG-TRN-AWARE-BASIC-YR", "DE-SVC-CM-EMAIL-SEC-MO"],
+    worksWith: ["DE-DIG-TRN-AWARE-BASIC-YR", "DE-SVC-CM-EMAIL-SEC-MO", "DE-DIG-ASMT-DMARC-OT"],
+    upgradeTo: ["DE-DIG-TRN-AWARE-PRO-YR"],
+  },
+  "DE-DIG-TPL-POLICY-CORE-OT": {
+    worksWith: ["DE-DIG-TPL-POLICY-ADV-OT", "DE-DIG-TPL-IR-RUNBOOK-OT", "DE-DIG-ASMT-CSRA-OT"],
+    upgradeTo: ["DE-DIG-TPL-POLICY-ADV-OT"],
+  },
+  "DE-DIG-TPL-POLICY-ADV-OT": {
+    worksWith: ["DE-DIG-TPL-IR-RUNBOOK-OT", "DE-DIG-TPL-BCP-OT", "DE-SVC-CONSULT-SEC-HR"],
+  },
+  "DE-DIG-TPL-IR-RUNBOOK-OT": {
+    worksWith: ["DE-DIG-TPL-BCP-OT", "DE-SVC-MGD-BCDR-MO", "DE-DIG-ASMT-CSRA-OT"],
+  },
+  "DE-DIG-TPL-BCP-OT": {
+    worksWith: ["DE-DIG-TPL-IR-RUNBOOK-OT", "DE-SVC-MGD-BCDR-MO"],
+  },
+  "DE-DIG-TRN-AWARE-BASIC-YR": {
+    worksWith: ["DE-DIG-ASMT-PHISH-MO", "DE-SVC-CM-EMAIL-SEC-MO", "DE-DIG-TRN-ONBOARD-OT"],
+    upgradeTo: ["DE-DIG-TRN-AWARE-PRO-YR"],
+    includedIn: "ProActive Ecosystem – Business+",
+  },
+  "DE-DIG-TRN-AWARE-PRO-YR": {
+    worksWith: ["DE-DIG-ASMT-PHISH-MO", "DE-DIG-ASMT-CSRA-OT", "DE-SVC-CM-EMAIL-SEC-MO"],
+    includedIn: "ProActive Ecosystem – Enterprise",
+  },
+  "DE-DIG-TRN-ONBOARD-OT": {
+    worksWith: ["DE-DIG-TRN-AWARE-BASIC-YR", "DE-SVC-CM-ONBOARD-S-OT"],
   },
   "DE-SVC-UC-SEAT-STD-MO": {
-    worksWith: ["DE-SVC-UC-SEAT-PRO-MO", "DE-SVC-UC-AUTOATT-MO"],
+    worksWith: ["DE-SVC-UC-SEAT-PRO-MO", "DE-SVC-UC-AUTOATT-MO", "DE-HW-UC-PHONE-STD-OT"],
     upgradeTo: ["DE-SVC-UC-SEAT-PRO-MO"],
   },
+  "DE-SVC-UC-SEAT-PRO-MO": {
+    worksWith: ["DE-SVC-UC-AUTOATT-MO", "DE-SVC-UC-SMS-MO", "DE-HW-UC-PHONE-EXEC-OT"],
+  },
+  "DE-SVC-UC-AUTOATT-MO": {
+    worksWith: ["DE-SVC-UC-SEAT-STD-MO", "DE-SVC-UC-CALLFLOW-OT", "DE-SVC-UC-SMS-MO"],
+  },
+  "DE-SVC-UC-SMS-MO": {
+    worksWith: ["DE-SVC-UC-SEAT-PRO-MO", "DE-SVC-UC-AUTOATT-MO"],
+  },
+  "DE-SVC-UC-ONBOARD-S-OT": {
+    worksWith: ["DE-SVC-UC-SEAT-STD-MO", "DE-SVC-UC-PORT-OT"],
+    upgradeTo: ["DE-SVC-UC-ONBOARD-M-OT"],
+  },
+  "DE-SVC-UC-ONBOARD-M-OT": {
+    worksWith: ["DE-SVC-UC-SEAT-PRO-MO", "DE-SVC-UC-CALLFLOW-OT"],
+    upgradeTo: ["DE-SVC-UC-ONBOARD-L-OT"],
+  },
+  "DE-SVC-UC-ONBOARD-L-OT": {
+    worksWith: ["DE-SVC-UC-SEAT-PRO-MO", "DE-SVC-UC-CALLFLOW-OT", "DE-SVC-UC-PORT-OT"],
+  },
+  "DE-SVC-UC-PORT-OT": {
+    worksWith: ["DE-SVC-UC-ONBOARD-S-OT", "DE-SVC-UC-SEAT-STD-MO"],
+  },
+  "DE-SVC-UC-CALLFLOW-OT": {
+    worksWith: ["DE-SVC-UC-AUTOATT-MO", "DE-SVC-UC-SEAT-PRO-MO"],
+  },
   "DE-SVC-NET-MANAGED-CORE-MO": {
-    worksWith: ["DE-SVC-NET-MANAGED-ADV-MO", "DE-HW-NET-FW-SMB-OT"],
+    worksWith: ["DE-SVC-NET-MANAGED-ADV-MO", "DE-HW-NET-FW-SMB-OT", "DE-HW-NET-AP-BIZ-OT"],
     upgradeTo: ["DE-SVC-NET-MANAGED-ADV-MO"],
+  },
+  "DE-SVC-NET-MANAGED-ADV-MO": {
+    worksWith: ["DE-SVC-NET-MANAGED-MSITE-MO", "DE-HW-NET-FW-SMB-OT", "DE-SVC-NET-ENG-HR"],
+    upgradeTo: ["DE-SVC-NET-MANAGED-MSITE-MO"],
+  },
+  "DE-SVC-NET-MANAGED-MSITE-MO": {
+    worksWith: ["DE-SVC-NET-CUTOVER-OT", "DE-HW-NET-SW-24-OT", "DE-SVC-NET-ONSITE-HR"],
+  },
+  "DE-SVC-NET-ENG-HR": {
+    worksWith: ["DE-SVC-NET-ONSITE-HR", "DE-HW-PROV-NET-OT", "DE-SVC-NET-MANAGED-CORE-MO"],
+  },
+  "DE-SVC-NET-ONSITE-HR": {
+    worksWith: ["DE-SVC-NET-ENG-HR", "DE-SVC-FIELD-INSTALL-HR", "DE-HW-NET-FW-SMB-OT"],
+  },
+  "DE-SVC-NET-CUTOVER-OT": {
+    worksWith: ["DE-SVC-NET-MANAGED-CORE-MO", "DE-DIG-TPL-BCP-OT"],
+  },
+  "DE-HW-PROV-ENDPOINT-OT": {
+    worksWith: ["DE-HW-ENDPOINT-LT-BASE-OT", "DE-SVC-CM-ENDPOINT-CORE-MO", "DE-HW-SHIP-HANDLE-OT"],
+  },
+  "DE-HW-PROV-NET-OT": {
+    worksWith: ["DE-HW-NET-FW-SMB-OT", "DE-SVC-NET-MANAGED-CORE-MO", "DE-SVC-FIELD-INSTALL-HR"],
+  },
+  "DE-HW-PROV-VOIP-OT": {
+    worksWith: ["DE-HW-UC-PHONE-STD-OT", "DE-SVC-UC-SEAT-STD-MO", "DE-SVC-UC-ONBOARD-S-OT"],
+  },
+  "DE-HW-NET-FW-SMB-OT": {
+    worksWith: ["DE-HW-NET-SW-24-OT", "DE-HW-NET-AP-BIZ-OT", "DE-SVC-NET-MANAGED-CORE-MO"],
+  },
+  "DE-HW-NET-SW-24-OT": {
+    worksWith: ["DE-HW-NET-FW-SMB-OT", "DE-HW-NET-AP-BIZ-OT", "DE-SVC-FIELD-INSTALL-HR"],
+  },
+  "DE-HW-NET-AP-BIZ-OT": {
+    worksWith: ["DE-HW-NET-FW-SMB-OT", "DE-SVC-NET-MANAGED-CORE-MO"],
+  },
+  "DE-HW-ENDPOINT-PC-BASE-OT": {
+    worksWith: ["DE-HW-PROV-ENDPOINT-OT", "DE-SVC-CM-ENDPOINT-CORE-MO"],
+    upgradeTo: ["DE-HW-ENDPOINT-LT-BASE-OT"],
+  },
+  "DE-HW-ENDPOINT-LT-BASE-OT": {
+    worksWith: ["DE-HW-PROV-ENDPOINT-OT", "DE-SVC-CM-ENDPOINT-EDR-MO", "DE-HW-SHIP-HANDLE-OT"],
+  },
+  "DE-HW-UC-PHONE-STD-OT": {
+    worksWith: ["DE-SVC-UC-SEAT-STD-MO", "DE-HW-UC-HDST-STD-OT"],
+    upgradeTo: ["DE-HW-UC-PHONE-EXEC-OT"],
+  },
+  "DE-HW-UC-PHONE-EXEC-OT": {
+    worksWith: ["DE-SVC-UC-SEAT-PRO-MO", "DE-HW-UC-HDST-STD-OT", "DE-HW-PROV-VOIP-OT"],
+  },
+  "DE-HW-UC-HDST-STD-OT": {
+    worksWith: ["DE-HW-UC-PHONE-STD-OT", "DE-SVC-UC-SEAT-STD-MO"],
+  },
+  "DE-HW-SHIP-HANDLE-OT": {
+    worksWith: ["DE-HW-PROV-ENDPOINT-OT", "DE-SVC-FIELD-INSTALL-HR"],
+  },
+  "DE-HW-INFRA-UPS-1500-OT": {
+    worksWith: ["DE-HW-NET-FW-SMB-OT", "DE-SVC-FIELD-INSTALL-HR"],
+  },
+  "DE-SVC-FIELD-INSTALL-HR": {
+    worksWith: ["DE-HW-SHIP-HANDLE-OT", "DE-SVC-NET-ONSITE-HR", "DE-HW-PROV-NET-OT"],
+  },
+  "DE-SVC-CONSULT-VCIO-HR": {
+    worksWith: ["DE-SVC-CONSULT-SEC-HR", "DE-DIG-ASMT-CSRA-OT", "DE-SVC-BLK-10HR-OT"],
+  },
+  "DE-SVC-CONSULT-SEC-HR": {
+    worksWith: ["DE-DIG-ASMT-CSRA-OT", "DE-DIG-TPL-POLICY-ADV-OT", "DE-SVC-CONSULT-VCIO-HR"],
+  },
+  "DE-SVC-CONSULT-SYS-HR": {
+    worksWith: ["DE-SVC-CM-SERVER-MON-MO", "DE-SVC-BLK-5HR-OT", "DE-SVC-CONSULT-VCIO-HR"],
+  },
+  "DE-SVC-BLK-5HR-OT": {
+    worksWith: ["DE-SVC-CM-HELPDESK-ASSIST-MO", "DE-SVC-CONSULT-SYS-HR"],
+    upgradeTo: ["DE-SVC-BLK-10HR-OT"],
+  },
+  "DE-SVC-BLK-10HR-OT": {
+    worksWith: ["DE-SVC-CM-HELPDESK-ASSIST-MO", "DE-SVC-CONSULT-VCIO-HR"],
+    upgradeTo: ["DE-SVC-BLK-20HR-OT"],
+  },
+  "DE-SVC-BLK-20HR-OT": {
+    worksWith: ["DE-SVC-CONSULT-VCIO-HR", "DE-SVC-CONSULT-SEC-HR", "DE-SVC-CM-HELPDESK-ASSIST-MO"],
   },
 };
 
@@ -621,21 +1016,33 @@ export const coverageDimensions: {
 export interface CoverageScore {
   total: number;
   max: number;
-  bars: { id: CoverageDimension; label: string; covered: boolean; improveSku: string }[];
-  suggestions: { sku: string; product?: StoreProduct; from: number; to: number }[];
+  coveredCount: number;
+  dimensionCount: number;
+  bars: {
+    id: CoverageDimension;
+    label: string;
+    covered: boolean;
+    improveSku: string;
+    coveredBy?: string;
+  }[];
+  suggestions: { sku: string; product?: StoreProduct; from: number; to: number; label: string }[];
 }
 
 /** Heuristic cart coverage — category presence, not a fake security audit. */
 export function computeCoverageScore(products: StoreProduct[]): CoverageScore {
-  const bars = coverageDimensions.map((d) => ({
-    id: d.id,
-    label: d.label,
-    covered: products.some((p) => d.match(p)),
-    improveSku: d.improveSku,
-  }));
+  const bars = coverageDimensions.map((d) => {
+    const hit = products.find((p) => d.match(p));
+    return {
+      id: d.id,
+      label: d.label,
+      covered: !!hit,
+      improveSku: d.improveSku,
+      coveredBy: hit?.name,
+    };
+  });
   const coveredCount = bars.filter((b) => b.covered).length;
-  const max = bars.length;
-  const total = Math.round((coveredCount / max) * 100);
+  const dimensionCount = bars.length;
+  const total = Math.round((coveredCount / dimensionCount) * 100);
   const suggestions = bars
     .filter((b) => !b.covered)
     .map((b) => {
@@ -645,23 +1052,61 @@ export function computeCoverageScore(products: StoreProduct[]): CoverageScore {
         sku: b.improveSku,
         product,
         from: total,
-        to: Math.round((nextCovered / max) * 100),
+        to: Math.round((nextCovered / dimensionCount) * 100),
+        label: b.label,
       };
     })
     .filter((s) => !!s.product)
     .slice(0, 3);
 
-  return { total, max: 100, bars, suggestions };
+  return { total, max: 100, coveredCount, dimensionCount, bars, suggestions };
+}
+
+/**
+ * Stack complements from cart relationships — SKUs not already in the cart.
+ * Prefer worksWith / upgradeTo from items already chosen.
+ */
+export function getCartComplements(
+  products: StoreProduct[],
+  opts: { limit?: number } = {}
+): StoreProduct[] {
+  const limit = opts.limit ?? 3;
+  const inCart = new Set(products.map((p) => p.sku));
+  const seen = new Set<string>();
+  const out: StoreProduct[] = [];
+
+  const push = (sku: string) => {
+    if (out.length >= limit || inCart.has(sku) || seen.has(sku)) return;
+    const p = getProductBySku(sku);
+    if (!p || p.isContractOnly || !p.isCheckoutEnabled) return;
+    seen.add(sku);
+    out.push(p);
+  };
+
+  for (const product of products) {
+    const rel = getProductRelationships(product.sku);
+    for (const sku of rel?.upgradeTo || []) push(sku);
+    for (const sku of rel?.worksWith || []) push(sku);
+  }
+
+  return out;
 }
 
 /** Solution cart grouping labels. */
 export function solutionGroupFor(product: StoreProduct): string {
   if (
+    product.category === "digital_templates" ||
+    product.category === "digital_assessments"
+  ) {
+    return "Compliance & Docs";
+  }
+  if (product.category === "digital_training") {
+    return "Awareness & Training";
+  }
+  if (
     /security|endpoint|edr|email|identity|phish|mdr|threat/i.test(
       `${product.name} ${product.category}`
-    ) ||
-    product.category === "digital_assessments" ||
-    product.category === "digital_training"
+    )
   ) {
     return "Security";
   }
@@ -680,9 +1125,6 @@ export function solutionGroupFor(product: StoreProduct): string {
   }
   if (product.category === "professional_services" || product.category === "comanaged_onboarding") {
     return "Services & Onboarding";
-  }
-  if (product.category === "digital_templates") {
-    return "Compliance & Docs";
   }
   return categoryLabels[product.category];
 }

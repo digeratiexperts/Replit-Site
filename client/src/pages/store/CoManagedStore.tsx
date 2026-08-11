@@ -27,10 +27,16 @@ import {
 } from "@/data/storeProducts";
 import {
   productMatchesOutcome,
+  productMatchesVendor,
+  productMatchesCompliance,
+  productMatchesSize,
+  listVendorsForProducts,
   searchProducts,
   sortProducts,
   isConfigurableProduct,
   type StoreOutcomeId,
+  type StoreComplianceId,
+  type StoreSizeId,
   type StoreSortOption,
 } from "@/data/storeMerchandising";
 import { useToast } from "@/hooks/use-toast";
@@ -75,6 +81,9 @@ const CoManagedStore = () => {
   const urlParams = new URLSearchParams(searchString);
   const initialCategory = urlParams.get("category") as ProductCategory | null;
   const initialOutcome = urlParams.get("outcome") as StoreOutcomeId | null;
+  const initialVendor = urlParams.get("vendor") || "";
+  const initialCompliance = urlParams.get("compliance") as StoreComplianceId | null;
+  const initialSize = urlParams.get("size") as StoreSizeId | null;
   const initialQ = urlParams.get("q") || "";
 
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | "all">(
@@ -82,6 +91,15 @@ const CoManagedStore = () => {
   );
   const [selectedOutcome, setSelectedOutcome] = useState<StoreOutcomeId | null>(
     initialOutcome || null
+  );
+  const [selectedVendor, setSelectedVendor] = useState<string | "all">(
+    initialVendor || "all"
+  );
+  const [selectedCompliance, setSelectedCompliance] = useState<StoreComplianceId | "all">(
+    initialCompliance || "all"
+  );
+  const [selectedSize, setSelectedSize] = useState<StoreSizeId | "all">(
+    initialSize || "all"
   );
   const [searchQuery, setSearchQuery] = useState(initialQ);
   const [billingType, setBillingType] = useState<PricingType | "all">("all");
@@ -126,6 +144,8 @@ const CoManagedStore = () => {
     return Array.from(new Set(visibleBase.map((p) => p.pricingType))) as PricingType[];
   }, [visibleBase]);
 
+  const vendors = useMemo(() => listVendorsForProducts(visibleBase), [visibleBase]);
+
   const filteredProducts = useMemo(() => {
     let products = visibleBase;
 
@@ -138,6 +158,15 @@ const CoManagedStore = () => {
     if (selectedOutcome) {
       products = products.filter((p) => productMatchesOutcome(p, selectedOutcome));
     }
+    if (selectedVendor !== "all") {
+      products = products.filter((p) => productMatchesVendor(p, selectedVendor));
+    }
+    if (selectedCompliance !== "all") {
+      products = products.filter((p) => productMatchesCompliance(p, selectedCompliance));
+    }
+    if (selectedSize !== "all") {
+      products = products.filter((p) => productMatchesSize(p, selectedSize));
+    }
     products = searchProducts(products, searchQuery);
     return sortProducts(products, sort);
   }, [
@@ -145,6 +174,9 @@ const CoManagedStore = () => {
     selectedCategory,
     billingType,
     selectedOutcome,
+    selectedVendor,
+    selectedCompliance,
+    selectedSize,
     searchQuery,
     sort,
   ]);
@@ -399,6 +431,13 @@ const CoManagedStore = () => {
                   billingTypes={billingTypes}
                   outcome={selectedOutcome || "all"}
                   onOutcomeChange={(v) => setSelectedOutcome(v === "all" ? null : v)}
+                  vendor={selectedVendor}
+                  onVendorChange={setSelectedVendor}
+                  vendors={vendors}
+                  compliance={selectedCompliance}
+                  onComplianceChange={setSelectedCompliance}
+                  size={selectedSize}
+                  onSizeChange={setSelectedSize}
                   sort={sort}
                   onSortChange={setSort}
                   resultCount={filteredProducts.length}
@@ -459,7 +498,7 @@ const CoManagedStore = () => {
                   variants={containerVariants}
                   initial="hidden"
                   animate="visible"
-                  key={`${selectedCategory}-${selectedOutcome}-${searchQuery}-${billingType}-${sort}`}
+                  key={`${selectedCategory}-${selectedOutcome}-${selectedVendor}-${selectedCompliance}-${selectedSize}-${searchQuery}-${billingType}-${sort}`}
                 >
                   {filteredProducts.map((product) => {
                     const pricing = getProductPrice(product.id, product.basePrice);

@@ -12,7 +12,11 @@ import { categoryLabels, type ProductCategory, type PricingType } from "@/data/s
 import {
   billingTypeLabels,
   storeOutcomes,
+  storeComplianceFilters,
+  storeSizeFilters,
   type StoreOutcomeId,
+  type StoreComplianceId,
+  type StoreSizeId,
   type StoreSortOption,
 } from "@/data/storeMerchandising";
 
@@ -27,6 +31,13 @@ interface StoreCatalogToolbarProps {
   billingTypes: PricingType[];
   outcome?: StoreOutcomeId | "all" | null;
   onOutcomeChange?: (value: StoreOutcomeId | "all") => void;
+  vendor?: string | "all";
+  onVendorChange?: (value: string | "all") => void;
+  vendors?: { slug: string; name: string }[];
+  compliance?: StoreComplianceId | "all";
+  onComplianceChange?: (value: StoreComplianceId | "all") => void;
+  size?: StoreSizeId | "all";
+  onSizeChange?: (value: StoreSizeId | "all") => void;
   sort: StoreSortOption;
   onSortChange: (value: StoreSortOption) => void;
   resultCount: number;
@@ -44,17 +55,33 @@ export function StoreCatalogToolbar({
   billingTypes,
   outcome = "all",
   onOutcomeChange,
+  vendor = "all",
+  onVendorChange,
+  vendors = [],
+  compliance = "all",
+  onComplianceChange,
+  size = "all",
+  onSizeChange,
   sort,
   onSortChange,
   resultCount,
   totalCount,
 }: StoreCatalogToolbarProps) {
   const outcomeValue = outcome && outcome !== null ? outcome : "all";
+  const vendorValue = vendor || "all";
+  const complianceValue = compliance || "all";
+  const sizeValue = size || "all";
   const hasActiveFilters =
     search ||
     category !== "all" ||
     billingType !== "all" ||
-    (onOutcomeChange && outcomeValue !== "all");
+    (onOutcomeChange && outcomeValue !== "all") ||
+    (onVendorChange && vendorValue !== "all") ||
+    (onComplianceChange && complianceValue !== "all") ||
+    (onSizeChange && sizeValue !== "all");
+
+  const showExtended =
+    onVendorChange || onComplianceChange || onSizeChange;
 
   return (
     <div
@@ -159,6 +186,77 @@ export function StoreCatalogToolbar({
         </div>
       </div>
 
+      {showExtended && (
+        <div className="flex flex-wrap items-center gap-2.5 border-t border-white/10 pt-4">
+          <span className="text-sm text-white/45">Refine</span>
+          {onVendorChange && (
+            <Select
+              value={vendorValue}
+              onValueChange={(v) => onVendorChange(v as string | "all")}
+            >
+              <SelectTrigger
+                className="h-11 w-[170px] border-white/15 bg-[#0a0a0a] text-base text-white"
+                data-testid="select-vendor"
+              >
+                <SelectValue placeholder="Vendor" />
+              </SelectTrigger>
+              <SelectContent className="border-white/10 bg-[#141414] text-white">
+                <SelectItem value="all">All vendors</SelectItem>
+                {vendors.map((v) => (
+                  <SelectItem key={v.slug} value={v.slug}>
+                    {v.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+
+          {onComplianceChange && (
+            <Select
+              value={complianceValue}
+              onValueChange={(v) => onComplianceChange(v as StoreComplianceId | "all")}
+            >
+              <SelectTrigger
+                className="h-11 w-[190px] border-white/15 bg-[#0a0a0a] text-base text-white"
+                data-testid="select-compliance"
+              >
+                <SelectValue placeholder="Compliance" />
+              </SelectTrigger>
+              <SelectContent className="border-white/10 bg-[#141414] text-white">
+                <SelectItem value="all">All compliance focus</SelectItem>
+                {storeComplianceFilters.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>
+                    {c.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+
+          {onSizeChange && (
+            <Select
+              value={sizeValue}
+              onValueChange={(v) => onSizeChange(v as StoreSizeId | "all")}
+            >
+              <SelectTrigger
+                className="h-11 w-[200px] border-white/15 bg-[#0a0a0a] text-base text-white"
+                data-testid="select-size"
+              >
+                <SelectValue placeholder="Company size" />
+              </SelectTrigger>
+              <SelectContent className="border-white/10 bg-[#141414] text-white">
+                <SelectItem value="all">All company sizes</SelectItem>
+                {storeSizeFilters.map((s) => (
+                  <SelectItem key={s.id} value={s.id}>
+                    {s.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        </div>
+      )}
+
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-base text-white/60" data-testid="text-product-count">
           Showing <span className="font-medium text-white">{resultCount}</span> of{" "}
@@ -175,6 +273,9 @@ export function StoreCatalogToolbar({
               onCategoryChange("all");
               onBillingTypeChange("all");
               onOutcomeChange?.("all");
+              onVendorChange?.("all");
+              onComplianceChange?.("all");
+              onSizeChange?.("all");
             }}
             data-testid="button-clear-filters"
           >
