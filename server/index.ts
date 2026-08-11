@@ -103,6 +103,49 @@ app.all("/healthz", (_req, res) => res.status(200).send("ok"));
 // Readiness check for deployments
 app.all("/ready", (_req, res) => res.status(200).json({ ready: true }));
 
+/**
+ * Portal routing heal — Cloudflare on digeratexperts.com strips `/portal` when
+ * bouncing to the portal host, producing portal…//login. Heal inbound broken
+ * paths; never invent //login in app redirects.
+ */
+app.use((req, res, next) => {
+  const host = String(req.headers.host || "")
+    .toLowerCase()
+    .split(":")[0];
+  const rawUrl = req.url || "/";
+  const pathOnly = rawUrl.split("?")[0] || "/";
+  const qs = rawUrl.includes("?") ? rawUrl.slice(rawUrl.indexOf("?")) : "";
+
+  const isPortalHost =
+    host === "portal.digeratiexperts.com" || host.startsWith("portal.");
+
+  // CF currently emits portal…//login — collapse and land on canonical login
+  if (isPortalHost) {
+    const collapsed = "/" + pathOnly.replace(/^\/+/, "");
+    if (collapsed === "/login" || collapsed === "/login/") {
+      return res.redirect(301, `/portal/login${qs}`);
+    }
+  }
+
+  if (pathOnly.startsWith("//")) {
+    const collapsed = "/" + pathOnly.replace(/^\/+/, "");
+    return res.redirect(301, `${collapsed}${qs}`);
+  }
+
+  if (isPortalHost && (pathOnly === "/login" || pathOnly === "/login/")) {
+    return res.redirect(301, `/portal/login${qs}`);
+  }
+
+  if (
+    (host === "digeratiexperts.com" || host === "www.digeratiexperts.com") &&
+    (pathOnly === "/portal" || pathOnly.startsWith("/portal/"))
+  ) {
+    return res.redirect(301, `https://portal.digeratiexperts.com${pathOnly}${qs}`);
+  }
+
+  next();
+});
+
 if (zohoPayments.isConfigured()) {
   log("✅ Zoho Payments configured");
 } else {

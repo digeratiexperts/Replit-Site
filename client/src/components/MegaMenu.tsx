@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { pricing } from '@/data/pricing';
 import { useBooking } from '@/contexts/BookingContext';
+import { PORTAL_LOGIN } from '@/lib/portalUrls';
 import { useOptionalFullPageScroll } from '@/components/FullPageScroll';
 
 const NoiseTexture = ({ id }: { id: string }) => (
@@ -495,7 +496,7 @@ export function MegaMenu() {
             </a>
 
             <a
-              href="/portal/login"
+              href={PORTAL_LOGIN}
               className="flex items-center text-white/70 hover:text-violet-300 text-xs md:text-sm font-medium transition-colors"
               data-testid="utility-portal"
             >
@@ -1108,7 +1109,7 @@ export function MegaMenu() {
                 </a>
                 
                 <a
-                  href="/portal/login"
+                  href={PORTAL_LOGIN}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all group"
                   data-testid="mobile-portal"
                   aria-label="Access client portal"

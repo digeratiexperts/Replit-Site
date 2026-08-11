@@ -23,6 +23,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
 import { CartButton } from "@/components/store/CartButton";
 import { useStoreAuth } from "@/hooks/useStoreAuth";
+import { PORTAL_LOGIN } from "@/lib/portalUrls";
 
 const categoryIcons: Record<ProductCategory, typeof Shield> = {
   contract_services: Building,
@@ -416,7 +417,7 @@ const CoManagedStore = () => {
                   <h3 className="text-white font-semibold mb-2">Client-Only Products</h3>
                   <p className="text-white/60 text-sm">
                     Some products require an existing client relationship. 
-                    <Link href="/portal/login" className="text-violet-400 hover:text-violet-300 ml-1">
+                    <Link href={PORTAL_LOGIN} className="text-violet-400 hover:text-violet-300 ml-1">
                       Log in to your portal
                     </Link>
                     {" "}to access exclusive pricing and products.

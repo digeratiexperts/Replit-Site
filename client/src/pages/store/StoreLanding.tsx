@@ -20,6 +20,7 @@ import {
 } from "@/data/storeProducts";
 import { CartButton } from "@/components/store/CartButton";
 import { useStoreAuth } from "@/hooks/useStoreAuth";
+import { PORTAL_LOGIN } from "@/lib/portalUrls";
 
 const categoryIcons: Record<ProductCategory, typeof Shield> = {
   contract_services: Building,
@@ -101,7 +102,7 @@ const StoreLanding = () => {
                 </Button>
               </div>
             ) : (
-              <Link href="/portal/login">
+              <Link href={PORTAL_LOGIN}>
                 <Button 
                   variant="outline"
                   size="sm"
