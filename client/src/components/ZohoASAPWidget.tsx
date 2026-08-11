@@ -361,6 +361,7 @@ export const ZohoASAPWidget = ({
           subject: subject.trim(),
           description: message.trim(),
           priority,
+          sessionId: advisorSessionId || undefined,
         }),
       });
       const data = await response.json().catch(() => ({}));

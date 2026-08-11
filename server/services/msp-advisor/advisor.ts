@@ -14,12 +14,34 @@ import {
   getOrCreateSession,
   updateProfile,
 } from "./session";
+import { appendDeskMessage } from "./persist";
 import type {
   AdvisorChatRequest,
   AdvisorChatResponse,
   AdvisorMode,
   ModelAdvisorOutput,
 } from "./types";
+
+async function persistTurn(
+  sessionId: string,
+  userMessage: string,
+  assistantReply: string,
+  profile: { email?: string | null; contactName?: string | null; companyName?: string | null },
+  pagePath?: string,
+): Promise<void> {
+  try {
+    const meta = {
+      email: profile.email || null,
+      contactName: profile.contactName || null,
+      companyName: profile.companyName || null,
+      pagePath: pagePath || null,
+    };
+    await appendDeskMessage({ sessionId, role: "user", content: userMessage, ...meta });
+    await appendDeskMessage({ sessionId, role: "assistant", content: assistantReply, ...meta });
+  } catch (err: any) {
+    console.warn("[msp-advisor] persist failed (non-blocking):", err?.message || err);
+  }
+}
 
 function parseModelJson(raw: string): ModelAdvisorOutput | null {
   try {
@@ -118,6 +140,7 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
     appendMessage(session, "user", message);
     appendMessage(session, "assistant", reply);
     session.lastMode = mode === "off_topic" ? "msp_discovery" : mode;
+    void persistTurn(session.id, message, reply, profile, page?.pathname);
     return {
       sessionId: session.id,
       reply,
@@ -195,6 +218,8 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
 
   appendMessage(session, "assistant", modelOut.reply);
   session.lastMode = mode;
+
+  void persistTurn(session.id, message, modelOut.reply, profile, page?.pathname);
 
   return {
     sessionId: session.id,

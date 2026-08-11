@@ -57,7 +57,7 @@ const navItems: NavItem[] = [
   { href: "/portal/tickets", label: "Support Tickets", icon: Ticket, key: "tickets" },
   { href: "/portal/forms", label: "Request Forms", icon: ClipboardList, key: "forms" },
   { href: "/portal/infrastructure", label: "Infrastructure Issues", icon: AlertTriangle, key: "infrastructure" },
-  { href: "/portal/chat", label: "Live Chat", icon: MessageCircle, key: "chat" },
+  { href: "/portal/chat", label: "Chats / DE Desk", icon: MessageCircle, key: "chat" },
   { href: "/portal/approvals", label: "Approvals", icon: FileStack, key: "approvals" },
   { href: "/portal/people", label: "People & Org", icon: Users, key: "people" },
   { href: "/portal/questionnaires", label: "DE Questionnaires", icon: Calendar, key: "other" },

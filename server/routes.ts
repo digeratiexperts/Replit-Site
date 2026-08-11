@@ -376,6 +376,22 @@ const widgetTicketRateLimiter = rateLimit({
   message: "Too many support requests. Please try again later.",
 });
 
+const advisorChatRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many chat messages. Please try again shortly." },
+});
+
+const advisorActionRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests. Please try again shortly." },
+});
+
 const speechRateLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 5,
@@ -464,6 +480,12 @@ export async function registerRoutes(app: Express) {
   await initPortalOrg();
   await initPortalApprovals();
   await initPortalChatStore();
+  try {
+    const { initDeskChatStore } = await import("./services/msp-advisor");
+    await initDeskChatStore();
+  } catch (err: any) {
+    console.warn("[msp-advisor] desk store init skipped:", err?.message || err);
+  }
   await initPortalSurveyStore();
   await initPortalLoginKnocks();
   await initLifecycleOrchestrator();
@@ -1065,6 +1087,47 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  // DE Desk (public site advisor) conversations visible in portal
+  app.get("/api/portal/desk-chats", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { listDeskSessions, getDeskStoreStatus } = await import("./services/msp-advisor");
+      const isAdmin = req.user?.role === "admin";
+      const email = req.user?.email;
+      const sessions = await listDeskSessions({
+        email: isAdmin ? undefined : email,
+        limit: isAdmin ? 100 : 50,
+      });
+      // Non-admin: only sessions linked to their email (listDeskSessions already filtered)
+      res.json({
+        success: true,
+        sessions,
+        durable: getDeskStoreStatus().durable,
+        scope: isAdmin ? "all" : "email",
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message || "Failed to load DE Desk chats" });
+    }
+  });
+
+  app.get("/api/portal/desk-chats/:sessionId", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { getDeskSessionMessages } = await import("./services/msp-advisor");
+      const { session, messages } = await getDeskSessionMessages(req.params.sessionId);
+      if (!session) return res.status(404).json({ error: "Conversation not found" });
+      const isAdmin = req.user?.role === "admin";
+      const userEmail = (req.user?.email || "").toLowerCase();
+      if (!isAdmin && session.email && session.email.toLowerCase() !== userEmail) {
+        return res.status(403).json({ error: "Not allowed to view this conversation" });
+      }
+      if (!isAdmin && !session.email) {
+        return res.status(403).json({ error: "Conversation is not linked to an account email yet" });
+      }
+      res.json({ success: true, session, messages });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message || "Failed to load conversation" });
+    }
+  });
+
   // ----- Portal org / multi-role -----
   app.get("/api/portal/me", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
@@ -1524,10 +1587,11 @@ export async function registerRoutes(app: Express) {
   });
 
   // ===== PORTAL TICKET ROUTES =====
-  // Get all tickets for user
+  // Get all tickets for user (admins see all local tickets)
   app.get("/api/portal/tickets", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const tickets = await storage.getPortalTickets(req.userId || "");
+      const isAdmin = req.user?.role === "admin";
+      const tickets = await storage.getPortalTickets(isAdmin ? undefined : req.userId || "");
       res.json({
         tickets: tickets.map(t => ({
           id: t.id,
@@ -4419,6 +4483,215 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  // ===== PUBLIC VIRTUAL MSP ADVISOR (DE Desk) =====
+  app.post("/api/public/advisor/chat", [advisorChatRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { handleAdvisorChat } = await import("./services/msp-advisor");
+      const { sessionId, message, pageContext } = req.body || {};
+      if (!message || typeof message !== "string") {
+        return res.status(400).json({ error: "message is required" });
+      }
+      const result = await handleAdvisorChat({
+        sessionId: typeof sessionId === "string" ? sessionId : undefined,
+        message,
+        pageContext:
+          pageContext && typeof pageContext === "object"
+            ? {
+                pathname: String(pageContext.pathname || "/").slice(0, 200),
+                pageTitle: pageContext.pageTitle ? String(pageContext.pageTitle).slice(0, 200) : undefined,
+                pageType: pageContext.pageType || "other",
+                serviceContext: pageContext.serviceContext
+                  ? String(pageContext.serviceContext).slice(0, 120)
+                  : undefined,
+                campaignSource: pageContext.campaignSource
+                  ? String(pageContext.campaignSource).slice(0, 80)
+                  : undefined,
+              }
+            : undefined,
+      });
+      res.json(result);
+    } catch (error: any) {
+      const status = error?.status || 500;
+      console.error("[msp-advisor] chat failed:", error?.message || error);
+      res.status(status).json({ error: error?.message || "Advisor unavailable" });
+    }
+  });
+
+  app.get("/api/public/advisor/session/:id", [advisorChatRateLimiter], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { getSession, publicSessionView } = await import("./services/msp-advisor");
+      const session = getSession(req.params.id);
+      if (!session) return res.status(404).json({ error: "Session not found" });
+      res.json(publicSessionView(session));
+    } catch (error: any) {
+      res.status(500).json({ error: "Failed to load session" });
+    }
+  });
+
+  app.post("/api/public/advisor/action", [advisorActionRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const {
+        getSession,
+        buildLeadSummary,
+        isAllowedActionType,
+        materializeAction,
+        DE_COMPANY,
+        upsertDeskSession,
+      } = await import("./services/msp-advisor");
+      const { sessionId, action, payload } = req.body || {};
+      if (!sessionId || typeof sessionId !== "string") {
+        return res.status(400).json({ error: "sessionId is required" });
+      }
+      if (!isAllowedActionType(action)) {
+        return res.status(400).json({ error: "Invalid action" });
+      }
+
+      const session = getSession(sessionId);
+      if (!session) return res.status(404).json({ error: "Session not found" });
+
+      const honeypot = req.body?.website_url;
+      if (honeypot) {
+        logSecurityEvent("SPAM_DETECTED_HONEYPOT", req, { source: "advisor_action" });
+        return res.status(400).json({ error: "Invalid request" });
+      }
+
+      if (
+        action === "schedule_consultation" ||
+        action === "open_portal" ||
+        action === "existing_client_support" ||
+        action === "contact_sales" ||
+        action === "navigate"
+      ) {
+        const materialized = materializeAction(action, undefined, payload?.path);
+        if (!materialized) return res.status(400).json({ error: "Action not allowed" });
+        return res.json({ success: true, action: materialized });
+      }
+
+      const name = String(payload?.name || session.profile.contactName || "").trim();
+      const email = String(payload?.email || session.profile.email || "").trim();
+      const phone = String(payload?.phone || session.profile.phone || "").trim();
+      const company = String(payload?.company || session.profile.companyName || "").trim();
+      const visitorMessage = String(payload?.message || "").trim();
+
+      if (email) {
+        try {
+          await upsertDeskSession({
+            sessionId,
+            email,
+            contactName: name || null,
+            companyName: company || null,
+            pagePath: session.pageContext?.pathname || null,
+          });
+        } catch {}
+      }
+
+      if (action === "leave_message") {
+        if (!email || !visitorMessage) {
+          return res.status(400).json({ error: "email and message are required" });
+        }
+        const summary = buildLeadSummary(session.profile, session.messages);
+        try {
+          if (zohoDeskService?.createTicket) {
+            await zohoDeskService.createTicket({
+              subject: `Advisor chat message from ${email}`,
+              description: `${visitorMessage}\n\n---\n${summary}`,
+              email,
+              priority: "Medium",
+            } as any);
+          }
+        } catch (e: any) {
+          console.error("[msp-advisor] desk ticket failed (non-blocking):", e?.message);
+        }
+        await notificationService.sendNewLeadNotification({
+          name: name || email,
+          email,
+          company: company || "Advisor chat",
+          phone: phone || "",
+          source: "Virtual MSP Advisor",
+          message: `${visitorMessage}\n\n${summary}`,
+        });
+        logSecurityEvent("ADVISOR_LEAVE_MESSAGE", req, { email });
+        return res.json({ success: true, message: "Message received" });
+      }
+
+      if (!email || !name) {
+        return res.status(400).json({
+          error: "name and email are required",
+          needs: ["name", "email"],
+        });
+      }
+
+      const summary = buildLeadSummary(session.profile, session.messages);
+      const leadId = randomId();
+      const sourceLabel =
+        action === "request_assessment"
+          ? "Virtual MSP Advisor — Assessment"
+          : action === "request_callback"
+            ? "Virtual MSP Advisor — Callback"
+            : "Virtual MSP Advisor — Lead";
+
+      eventBus.emit(
+        EventTypes.LEAD_CREATED,
+        {
+          id: leadId,
+          name,
+          email,
+          company: company || "",
+          source: sourceLabel,
+          message: summary,
+        },
+        "msp-advisor",
+      );
+
+      let zohoLeadId = null;
+      try {
+        const nameParts = name.trim().split(/\s+/);
+        const firstName = nameParts[0] || "";
+        const lastName = nameParts.slice(1).join(" ") || name;
+        const zohoLead = await zohoCRMService.createLead({
+          First_Name: firstName,
+          Last_Name: lastName,
+          Email: email,
+          Phone: phone || "",
+          Company: company || "Not Specified",
+          Lead_Source: sourceLabel,
+          Lead_Status: "New",
+          Description: summary.slice(0, 32000),
+        });
+        zohoLeadId = zohoLead?.details?.id || zohoLead?.id;
+      } catch (zohoError: any) {
+        console.error("[msp-advisor] Zoho lead failed (non-blocking):", zohoError?.message);
+      }
+
+      await notificationService.sendNewLeadNotification({
+        name,
+        email,
+        company: company || "Not Specified",
+        phone: phone || "",
+        source: sourceLabel,
+        message: summary,
+      });
+
+      session.profile.contactName = name;
+      session.profile.email = email;
+      if (phone) session.profile.phone = phone;
+      if (company) session.profile.companyName = company;
+
+      logSecurityEvent("ADVISOR_LEAD_CREATED", req, { email, action, leadId });
+      return res.json({
+        success: true,
+        leadId,
+        zohoLeadId,
+        phone: DE_COMPANY.phoneDisplay,
+        bookingUrl: DE_COMPANY.bookingUrl,
+        message: "Thanks — our team will follow up with this conversation context.",
+      });
+    } catch (error: any) {
+      console.error("[msp-advisor] action failed:", error?.message || error);
+      res.status(500).json({ error: "Failed to execute action" });
+    }
+  });
+
   // ===== ASSESSMENT / LEAD CAPTURE FORM =====
   app.post("/api/assessment", [leadQuoteRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
@@ -5187,10 +5460,10 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  // Public support widget ticket submission (Zoho ASAP fallback)
+  // Public support widget ticket submission (Zoho ASAP fallback + local portal ticket)
   app.post("/api/portal/zoho/ticket", [widgetTicketRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { email, subject, description, priority } = req.body;
+      const { email, subject, description, priority, sessionId: advisorSessionId } = req.body;
 
       if (!email || !subject || !description) {
         return res.status(400).json({ error: "Email, subject, and description are required" });
@@ -5226,21 +5499,35 @@ export async function registerRoutes(app: Express) {
         console.warn("Could not create Zoho Desk ticket from widget:", zohoErr?.message || zohoErr);
       }
 
-      // 2. Try to create ticket in local portal system
+      // Persist local portal ticket when the email maps to a portal account (FK-safe).
+      // Guests still get Zoho Desk (if configured) + notification; DE Desk session is linked by email.
       let localTicket = null;
       try {
-        // Check if the email belongs to a portal user
+        if (typeof advisorSessionId === "string" && advisorSessionId.trim()) {
+          try {
+            const { upsertDeskSession } = await import("./services/msp-advisor");
+            await upsertDeskSession({
+              sessionId: advisorSessionId.trim(),
+              email: String(email).toLowerCase(),
+            });
+          } catch {}
+        }
+
         const portalUser = portalUsers.get(email);
-        if (portalUser && portalUser.clientId) {
+        if (portalUser?.clientId && portalUser?.id) {
+          let descriptionWithChat = description;
+          if (typeof advisorSessionId === "string" && advisorSessionId.trim()) {
+            descriptionWithChat = `${description}\n\n---\nDE Desk session: ${advisorSessionId.trim()}`;
+          }
           localTicket = await storage.createPortalTicket({
             clientId: portalUser.clientId,
             createdBy: portalUser.id,
             ticketNumber,
             subject,
-            description,
+            description: descriptionWithChat,
             status: "open",
             priority: priorityLower === "high" || priorityLower === "urgent" ? "high" : priorityLower === "low" ? "low" : "medium",
-            category: "general",
+            category: "de-desk",
           });
 
           if (zohoTicketId) {

@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PortalLayout } from "./PortalLayout";
-import { Send, AlertCircle } from "lucide-react";
+import { Send, AlertCircle, MessageSquare, Ticket } from "lucide-react";
+import { Link } from "wouter";
+import { portalGet } from "@/lib/portalApi";
 
 interface ChatMessage {
   id: string;
@@ -14,141 +16,116 @@ interface ChatMessage {
   isRead: boolean;
 }
 
-const POLL_MS = 2500;
-const FAIL_THRESHOLD = 3;
+interface DeskSession {
+  sessionId: string;
+  email: string | null;
+  contactName: string | null;
+  companyName: string | null;
+  pagePath: string | null;
+  messageCount: number;
+  preview: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface DeskMessage {
+  id: string;
+  sessionId: string;
+  role: "user" | "assistant";
+  content: string;
+  createdAt: string;
+}
 
 export default function PortalChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [messageText, setMessageText] = useState("");
   const [sending, setSending] = useState(false);
-  const [connected, setConnected] = useState(false);
-  const [statusNote, setStatusNote] = useState<string>("");
+  const [connected, setConnected] = useState(true);
+  const [chatAllowed, setChatAllowed] = useState(true);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [token, setToken] = useState<string>("");
+  const [deskSessions, setDeskSessions] = useState<DeskSession[]>([]);
+  const [selectedDesk, setSelectedDesk] = useState<string | null>(null);
+  const [deskMessages, setDeskMessages] = useState<DeskMessage[]>([]);
+  const [deskLoading, setDeskLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const failCountRef = useRef(0);
-  const lastTimestampRef = useRef<string | null>(null);
-  const knownIdsRef = useRef<Set<string>>(new Set());
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const mergeMessages = useCallback((incoming: ChatMessage[]) => {
-    if (!incoming.length) return;
-    setMessages((prev) => {
-      const next = [...prev];
-      let changed = false;
-      for (const msg of incoming) {
-        if (knownIdsRef.current.has(msg.id)) continue;
-        // Drop optimistic temp duplicates with same content/time window
-        const tempIdx = next.findIndex(
-          (m) =>
-            m.id.startsWith("temp-") &&
-            m.content === msg.content &&
-            m.senderRole === msg.senderRole
-        );
-        if (tempIdx >= 0) {
-          next[tempIdx] = msg;
-        } else {
-          next.push(msg);
-        }
-        knownIdsRef.current.add(msg.id);
-        changed = true;
-        if (!lastTimestampRef.current || msg.timestamp > lastTimestampRef.current) {
-          lastTimestampRef.current = msg.timestamp;
-        }
-      }
-      return changed ? next : prev;
+  const loadLiveMessages = useCallback(async (authToken: string, since?: string) => {
+    const url = since
+      ? `/api/portal/chat/messages?since=${encodeURIComponent(since)}`
+      : "/api/portal/chat/messages";
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${authToken}` },
+      credentials: "include",
     });
-  }, []);
-
-  const authHeaders = useCallback(
-    (authToken: string) => ({
-      Authorization: `Bearer ${authToken}`,
-    }),
-    []
-  );
-
-  // Initial load + HTTP polling (works behind Cloudflare/OLS; no WebSocket)
-  useEffect(() => {
-    const authToken = localStorage.getItem("portalToken");
-    if (!authToken) {
+    if (res.status === 403) {
+      setChatAllowed(false);
+      const data = await res.json().catch(() => ({}));
+      setStatusMessage(data.error || "Live Chat is limited to your company IT contact.");
       setConnected(false);
-      setStatusNote("Sign in to use Live Chat.");
       return;
     }
+    if (!res.ok) throw new Error("Failed to load chat");
+    const data = await res.json();
+    if (data.success && Array.isArray(data.messages)) {
+      if (since) {
+        setMessages((prev) => {
+          const known = new Set(prev.map((m) => m.id));
+          const incoming = data.messages.filter((m: ChatMessage) => !known.has(m.id));
+          return incoming.length ? [...prev, ...incoming] : prev;
+        });
+      } else {
+        setMessages(data.messages);
+      }
+      setConnected(true);
+      setChatAllowed(true);
+    }
+  }, []);
+
+  const loadDeskSessions = useCallback(async () => {
+    try {
+      const data = await portalGet<{ success: boolean; sessions: DeskSession[] }>(
+        "/api/portal/desk-chats",
+      );
+      if (data.success) setDeskSessions(data.sessions || []);
+    } catch (err) {
+      console.error("Failed to load DE Desk chats:", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    const authToken = localStorage.getItem("portalToken");
+    if (!authToken) return;
     setToken(authToken);
 
-    let cancelled = false;
-    let timer: ReturnType<typeof setInterval> | null = null;
-
-    const markOk = () => {
-      failCountRef.current = 0;
-      if (!cancelled) setConnected(true);
-    };
-
-    const markFail = () => {
-      failCountRef.current += 1;
-      if (!cancelled && failCountRef.current >= FAIL_THRESHOLD) {
-        setConnected(false);
-      }
-    };
-
-    const loadStatus = async () => {
-      try {
-        const res = await fetch("/api/portal/chat/status", {
-          headers: authHeaders(authToken),
-        });
-        if (!res.ok) throw new Error(`status ${res.status}`);
-        const data = await res.json();
-        if (cancelled) return;
-        if (data.connected) markOk();
-        if (data.assistantAvailable) {
-          setStatusNote("Assistant online — team monitors Mon–Fri, 9 AM–6 PM EST.");
-        } else {
-          setStatusNote("Chat connected. Messages are saved; team replies during business hours.");
+    fetch("/api/portal/chat/status", {
+      headers: { Authorization: `Bearer ${authToken}` },
+      credentials: "include",
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.allowed === false) {
+          setChatAllowed(false);
+          setConnected(false);
+          setStatusMessage(data.message || "Live Chat is limited to IT contacts.");
         }
-      } catch {
-        markFail();
-      }
-    };
+      })
+      .catch(() => {});
 
-    const pollMessages = async (incremental: boolean) => {
-      try {
-        const params = new URLSearchParams();
-        if (incremental && lastTimestampRef.current) {
-          params.set("since", lastTimestampRef.current);
-        }
-        const qs = params.toString();
-        const res = await fetch(`/api/portal/chat/messages${qs ? `?${qs}` : ""}`, {
-          headers: authHeaders(authToken),
-        });
-        if (!res.ok) throw new Error(`messages ${res.status}`);
-        const data = await res.json();
-        if (cancelled) return;
-        markOk();
-        if (Array.isArray(data.messages)) {
-          if (!incremental) {
-            knownIdsRef.current = new Set(data.messages.map((m: ChatMessage) => m.id));
-            setMessages(data.messages);
-            const last = data.messages[data.messages.length - 1];
-            lastTimestampRef.current = last?.timestamp || null;
-          } else {
-            mergeMessages(data.messages);
-          }
-        }
-      } catch {
-        markFail();
-      }
-    };
+    loadLiveMessages(authToken).catch((err) => console.error(err));
+    loadDeskSessions();
 
-    void loadStatus();
-    void pollMessages(false);
-    timer = setInterval(() => {
-      void pollMessages(true);
-    }, POLL_MS);
+    pollRef.current = setInterval(() => {
+      const last = messages[messages.length - 1]?.timestamp;
+      loadLiveMessages(authToken, last).catch(() => {});
+    }, 8000);
 
     return () => {
-      cancelled = true;
-      if (timer) clearInterval(timer);
+      if (pollRef.current) clearInterval(pollRef.current);
     };
-  }, [authHeaders, mergeMessages]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadLiveMessages, loadDeskSessions]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -158,10 +135,27 @@ export default function PortalChat() {
     scrollToBottom();
   }, [messages]);
 
+  const openDeskSession = async (sessionId: string) => {
+    setSelectedDesk(sessionId);
+    setDeskLoading(true);
+    try {
+      const data = await portalGet<{
+        success: boolean;
+        messages: DeskMessage[];
+      }>(`/api/portal/desk-chats/${sessionId}`);
+      if (data.success) setDeskMessages(data.messages || []);
+    } catch (err) {
+      console.error("Failed to load DE Desk thread:", err);
+      setDeskMessages([]);
+    } finally {
+      setDeskLoading(false);
+    }
+  };
+
   const handleSendMessage = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      if (!messageText.trim() || sending || !token) return;
+      if (!messageText.trim() || sending || !chatAllowed) return;
 
       const currentMessage = messageText;
       setSending(true);
@@ -184,151 +178,232 @@ export default function PortalChat() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
+          credentials: "include",
           body: JSON.stringify({
-            content: currentMessage,
             senderName: "You",
-            senderRole: "client",
+            content: currentMessage,
           }),
         });
 
         if (!response.ok) throw new Error("Failed to send message");
 
         const data = await response.json();
-        failCountRef.current = 0;
-        setConnected(true);
-
         if (data.success && data.message) {
-          knownIdsRef.current.add(data.message.id);
-          setMessages((prev) =>
-            prev.map((m) => (m.id === tempMessage.id ? data.message : m))
-          );
-          if (
-            !lastTimestampRef.current ||
-            data.message.timestamp > lastTimestampRef.current
-          ) {
-            lastTimestampRef.current = data.message.timestamp;
-          }
-        }
-        if (data.reply) {
-          mergeMessages([data.reply]);
+          setMessages((prev) => {
+            const withoutTemp = prev.filter((m) => m.id !== tempMessage.id);
+            const next = [...withoutTemp, data.message];
+            if (data.reply) next.push(data.reply);
+            return next;
+          });
         }
       } catch (error) {
         console.error("Error sending message:", error);
         setMessages((prev) => prev.filter((m) => m.id !== tempMessage.id));
-        setMessageText(currentMessage);
-        failCountRef.current += 1;
-        if (failCountRef.current >= FAIL_THRESHOLD) setConnected(false);
       } finally {
         setSending(false);
       }
     },
-    [messageText, sending, token, mergeMessages]
+    [messageText, sending, token, chatAllowed],
   );
 
   return (
-    <PortalLayout title="Live Chat Support">
-      <div className="space-y-6 max-w-2xl">
-        {!connected && (
-          <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 rounded-lg">
-            <div className="flex gap-3">
-              <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-red-800 dark:text-red-300">
-                {statusNote ||
-                  "Unable to reach chat service. Check your connection and refresh — if the site is up, try signing in again."}
+    <PortalLayout title="Chats / DE Desk">
+      <div className="space-y-8 max-w-4xl">
+        <div className="space-y-1">
+          <h2 className="text-2xl font-bold">Chats &amp; DE Desk</h2>
+          <p className="text-gray-600 dark:text-gray-400">
+            Portal live chat plus public-site DE Desk conversations linked to your account.
+            Tickets stay under{" "}
+            <Link href="/portal/tickets" className="text-[#5034ff] underline-offset-2 hover:underline">
+              Support Tickets
+            </Link>
+            .
+          </p>
+        </div>
+
+        {/* DE Desk history */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <MessageSquare className="h-5 w-5" />
+              DE Desk conversations
+            </CardTitle>
+            <CardDescription>
+              Chats from the website DE Desk widget. Sessions appear here once an email is
+              attached (ticket or lead), or for admins across all recent activity.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {deskSessions.length === 0 ? (
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                No DE Desk conversations yet. Use the site widget or create a ticket from DE Desk
+                with your portal email.
               </p>
+            ) : (
+              <div className="space-y-2">
+                {deskSessions.map((s) => (
+                  <button
+                    key={s.sessionId}
+                    type="button"
+                    onClick={() => openDeskSession(s.sessionId)}
+                    className={`w-full text-left rounded-lg border px-4 py-3 transition ${
+                      selectedDesk === s.sessionId
+                        ? "border-[#5034ff] bg-[#5034ff]/10"
+                        : "border-gray-200 dark:border-slate-700 hover:border-[#5034ff]/50"
+                    }`}
+                  >
+                    <div className="flex justify-between gap-3 text-sm">
+                      <span className="font-medium truncate">
+                        {s.preview || "DE Desk conversation"}
+                      </span>
+                      <span className="text-xs text-gray-500 shrink-0">
+                        {new Date(s.updatedAt).toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="mt-1 text-xs text-gray-500">
+                      {s.email || "no email yet"} · {s.messageCount} messages
+                      {s.pagePath ? ` · ${s.pagePath}` : ""}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {selectedDesk && (
+              <div className="rounded-lg border border-gray-200 dark:border-slate-700 p-4 max-h-80 overflow-y-auto space-y-3 bg-gray-50 dark:bg-slate-900/40">
+                {deskLoading ? (
+                  <p className="text-sm text-gray-500">Loading thread…</p>
+                ) : deskMessages.length === 0 ? (
+                  <p className="text-sm text-gray-500">No messages in this session.</p>
+                ) : (
+                  deskMessages.map((m) => (
+                    <div
+                      key={m.id}
+                      className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
+                    >
+                      <div
+                        className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
+                          m.role === "user"
+                            ? "bg-[#5034ff] text-white"
+                            : "bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700"
+                        }`}
+                      >
+                        <p className="text-xs opacity-70 mb-1">
+                          {m.role === "user" ? "Visitor" : "DE Desk"}
+                        </p>
+                        <p className="whitespace-pre-wrap">{m.content}</p>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+
+            <div className="flex gap-2">
+              <Link href="/portal/tickets">
+                <Button variant="outline" size="sm" className="gap-2">
+                  <Ticket className="h-4 w-4" />
+                  View tickets
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Live chat */}
+        {!chatAllowed && statusMessage && (
+          <div className="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-900/30 rounded-lg">
+            <div className="flex gap-3">
+              <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-amber-900 dark:text-amber-200">{statusMessage}</p>
             </div>
           </div>
         )}
 
-        <Card className="flex flex-col h-[600px]">
-          <CardHeader className="border-b dark:border-slate-700">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">Live Chat Support</CardTitle>
-              <div className="flex items-center gap-2">
-                <div
-                  className={`h-2 w-2 rounded-full ${connected ? "bg-green-500" : "bg-red-500"}`}
-                />
-                <span className="text-xs text-gray-600 dark:text-gray-400">
-                  {connected ? "Online" : "Offline"}
-                </span>
-              </div>
-            </div>
-            {connected && statusNote && (
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{statusNote}</p>
-            )}
-          </CardHeader>
-
-          <CardContent className="flex-1 overflow-y-auto py-4 space-y-4">
-            {messages.length === 0 && connected && (
-              <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">
-                Starting conversation…
-              </p>
-            )}
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${message.senderRole === "client" ? "justify-end" : "justify-start"}`}
-                data-testid={`message-${message.id}`}
-              >
-                <div
-                  className={`max-w-xs px-4 py-2 rounded-lg ${
-                    message.senderRole === "client"
-                      ? "bg-[#5034ff] text-white rounded-br-none"
-                      : "bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-gray-100 rounded-bl-none"
-                  }`}
-                >
-                  <p className="text-sm font-medium mb-1">{message.senderName}</p>
-                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                  <p
-                    className={`text-xs mt-1 ${
-                      message.senderRole === "client"
-                        ? "text-blue-100"
-                        : "text-gray-500 dark:text-gray-400"
-                    }`}
-                  >
-                    {new Date(message.timestamp).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
+        {chatAllowed && (
+          <Card className="flex flex-col h-[600px]">
+            <CardHeader className="border-b dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg">Portal live chat</CardTitle>
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`h-2 w-2 rounded-full ${connected ? "bg-green-500" : "bg-red-500"}`}
+                  />
+                  <span className="text-xs text-gray-600 dark:text-gray-400">
+                    {connected ? "Online" : "Offline"}
+                  </span>
                 </div>
               </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </CardContent>
+            </CardHeader>
 
-          <div className="border-t dark:border-slate-700 p-4">
-            <form onSubmit={handleSendMessage} className="flex gap-2">
-              <Input
-                placeholder="Type your message..."
-                value={messageText}
-                onChange={(e) => setMessageText(e.target.value)}
-                disabled={!token || sending}
-                className="flex-1"
-                data-testid="input-message"
-              />
-              <Button
-                type="submit"
-                disabled={!messageText.trim() || !token || sending}
-                className="bg-[#5034ff] hover:bg-[#5034ff]/90 text-white"
-                data-testid="button-send-message"
-              >
-                <Send className="h-4 w-4" />
-              </Button>
-            </form>
-          </div>
-        </Card>
+            <CardContent className="flex-1 overflow-y-auto py-4 space-y-4">
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex ${message.senderRole === "client" ? "justify-end" : "justify-start"}`}
+                  data-testid={`message-${message.id}`}
+                >
+                  <div
+                    className={`max-w-xs px-4 py-2 rounded-lg ${
+                      message.senderRole === "client"
+                        ? "bg-[#5034ff] text-white rounded-br-none"
+                        : "bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-gray-100 rounded-bl-none"
+                    }`}
+                  >
+                    <p className="text-sm font-medium mb-1">{message.senderName}</p>
+                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                    <p
+                      className={`text-xs mt-1 ${
+                        message.senderRole === "client"
+                          ? "text-blue-100"
+                          : "text-gray-500 dark:text-gray-400"
+                      }`}
+                    >
+                      {new Date(message.timestamp).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                  </div>
+                </div>
+              ))}
+              <div ref={messagesEndRef} />
+            </CardContent>
+
+            <div className="border-t dark:border-slate-700 p-4">
+              <form onSubmit={handleSendMessage} className="flex gap-2">
+                <Input
+                  placeholder="Type your message..."
+                  value={messageText}
+                  onChange={(e) => setMessageText(e.target.value)}
+                  disabled={!connected || sending}
+                  className="flex-1"
+                  data-testid="input-message"
+                />
+                <Button
+                  type="submit"
+                  disabled={!messageText.trim() || !connected || sending}
+                  className="bg-[#5034ff] hover:bg-[#5034ff]/90 text-white"
+                  data-testid="button-send-message"
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </form>
+            </div>
+          </Card>
+        )}
 
         <Card>
           <CardContent className="pt-6">
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
               <strong>Support Hours:</strong> Monday - Friday, 9 AM - 6 PM EST
             </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-              <strong>Response Time:</strong> Assistant replies immediately; team follow-up during business hours
-            </p>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              <strong>Outside hours?</strong> Create a ticket at any time and we'll respond within 24 hours.
+              <strong>Outside hours?</strong> Create a ticket anytime from DE Desk or{" "}
+              <Link href="/portal/tickets/create" className="text-[#5034ff] hover:underline">
+                /portal/tickets/create
+              </Link>
+              .
             </p>
           </CardContent>
         </Card>
