@@ -46,6 +46,8 @@ export interface StoreProduct {
   minimumQuantity: number;
   features: string[];
   sortOrder: number;
+  /** Optional custom product art; prefer getProductVisual() over reading directly. */
+  imageUrl?: string;
 }
 
 export const categoryLabels: Record<ProductCategory, string> = {

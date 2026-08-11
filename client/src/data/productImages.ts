@@ -2,8 +2,8 @@
  * Store / site product imagery resolver.
  *
  * Assets: /images/store/{categories,outcomes,site}/
- * Branded ink/stone + magenta #D3126A fallbacks (Meshy API key not in env yet).
- * Populate skuImageOverrides when richer Meshy art arrives.
+ * Category PNG heroes + vendor logos. Meshy key not in env — branded PNG fallbacks.
+ * Populate skuImageOverrides when richer product art arrives.
  */
 
 import type { ProductCategory, StoreProduct } from "./storeProducts";
@@ -16,7 +16,7 @@ import type { StoreOutcomeId } from "./storeMerchandising";
 
 export const STORE_IMAGE_BASE = "/images/store";
 
-export type ProductVisualSource = "category" | "sku_override";
+export type ProductVisualSource = "product" | "sku_override" | "category";
 
 export type ProductVendorMark = {
   slug: string;
@@ -63,7 +63,7 @@ export const skuImageOverrides: Partial<Record<string, string>> = {};
 type ProductImageInput = Pick<
   StoreProduct,
   "sku" | "category" | "name" | "shortDescription" | "description" | "features"
->;
+> & { imageUrl?: string };
 
 function resolveVendor(product: ProductImageInput): ProductVendorMark | null {
   return (
@@ -78,21 +78,45 @@ function resolveVendor(product: ProductImageInput): ProductVendorMark | null {
 export function getProductVisual(product: ProductImageInput): ProductVisual {
   const vendor = resolveVendor(product);
   const override = skuImageOverrides[product.sku];
-  const heroUrl = override || categoryHeroUrl(product.category);
-  const cardUrl = override || categoryCardUrl(product.category);
+  const custom = product.imageUrl;
+
+  if (custom) {
+    return {
+      heroUrl: custom,
+      cardUrl: custom,
+      logoUrl: vendor?.logoUrl ?? null,
+      vendor,
+      source: "product",
+      alt: `${product.name} product image`,
+    };
+  }
+
+  if (override) {
+    return {
+      heroUrl: override,
+      cardUrl: override,
+      logoUrl: vendor?.logoUrl ?? null,
+      vendor,
+      source: "sku_override",
+      alt: vendor
+        ? `${product.name} — ${vendor.name}`
+        : `${product.name} — Digerati Experts`,
+    };
+  }
 
   return {
-    heroUrl,
-    cardUrl,
+    heroUrl: categoryHeroUrl(product.category),
+    cardUrl: categoryCardUrl(product.category),
     logoUrl: vendor?.logoUrl ?? null,
     vendor,
-    source: override ? "sku_override" : "category",
+    source: "category",
     alt: vendor
       ? `${product.name} — ${vendor.name}`
       : `${product.name} — Digerati Experts`,
   };
 }
 
+/** Alias used by cards/detail — same as getProductVisual. */
 export function getProductImage(product: ProductImageInput): ProductVisual {
   return getProductVisual(product);
 }
