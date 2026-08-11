@@ -25,9 +25,11 @@ and `GBP_PLACE_ID` / `PLACES_PLACE_ID`.
 ## How to create the API key
 
 1. Google Cloud Console → enable **Places API** (legacy Place Details is fine).
-2. Create an API key; restrict by IP (VPS egress) and API (Places only).
-3. Set `GOOGLE_PLACES_API_KEY=…` in shared `.env`.
-4. Restart the site service (deploy script does this) so Node picks up env.
+2. Create an API key; restrict by **IP** and API (Places only).
+   - Production VPS egress / server IP for key restriction: `192.227.158.46`
+   - Do **not** use HTTP referrer restrictions for this server-side key — Place Details runs from Node on the VPS, not the browser. Referrer-only keys typically return `REQUEST_DENIED`.
+3. Set `GOOGLE_PLACES_API_KEY=…` in shared `.env` (never commit the key; never put it in the client bundle).
+4. Restart the site service (`systemctl restart digeratiexperts-site` or a full deploy) so Node picks up env via `EnvironmentFile=/home/digeratiexperts.com/shared/.env`.
 
 ## Verify
 
