@@ -42,7 +42,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
   const [pricingExpanded, setPricingExpanded] = useState(false);
 
   return (
-    <section id="calculators" className="py-10 md:py-14 lg:py-16 relative overflow-hidden bg-[#0a0a0a]">
+    <section id="calculators" className="py-14 md:py-18 lg:py-20 relative overflow-hidden bg-[#0a0a0a]">
       {/* Subtle background accent */}
       <div 
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] pointer-events-none opacity-30"
@@ -60,12 +60,12 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
         >
           <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-[#D3126A]/15 border border-[#D3126A]/30 mb-4 md:mb-6">
             <Calculator className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#FF477F]" />
-            <span className="text-xs md:text-sm font-medium text-[#FF477F]">Assessment</span>
+            <span className="text-sm md:text-base font-medium text-[#FF477F]">Assessment</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 px-2">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-bold text-white mb-3 md:mb-4 px-2">
             Calculate Your <span className="bg-gradient-to-r from-[#FF477F] via-[#D3126A] to-fuchsia-400 bg-clip-text text-transparent">Investment</span>
           </h2>
-          <p className="text-base md:text-lg text-white/60 max-w-2xl mx-auto px-4">
+          <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto px-4">
             Start with the numbers — downtime risk and monthly protection — then schedule a full cyber risk assessment.
           </p>
         </motion.div>
@@ -92,7 +92,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                   </div>
                   <div className="text-left">
                     <h3 className="text-lg md:text-xl font-bold text-white">Downtime Cost Calculator</h3>
-                    <p className="text-sm text-white/50">See what IT outages really cost your business</p>
+                    <p className="text-base text-white/50">See what IT outages really cost your business</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -270,7 +270,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                   </div>
                   <div className="text-left">
                     <h3 className="text-lg md:text-xl font-bold text-white">Monthly Investment Estimator</h3>
-                    <p className="text-sm text-white/50">Transparent pricing based on your team size</p>
+                    <p className="text-base text-white/50">Transparent pricing based on your team size</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">

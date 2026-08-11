@@ -77,7 +77,7 @@ export function StickyCTABar() {
                     <p className="text-white font-semibold text-base md:text-lg">
                       Independent Risk Assessment
                     </p>
-                    <p className="text-white/70 text-sm md:text-base leading-snug max-w-xl">
+                    <p className="text-white/70 text-base md:text-base leading-snug max-w-xl">
                       Your current provider has a conflict grading their own work.
                       {" "}
                       <span className="text-white/90">
@@ -110,7 +110,7 @@ export function StickyCTABar() {
                     size="sm"
                     className="h-11 bg-white px-5 text-base text-pink-700 hover:bg-pink-50 font-semibold shadow-lg"
                     data-testid="button-sticky-cta-assessment"
-                    onClick={openBooking}
+                    onClick={() => openBooking("sticky_cta")}
                   >
                     Risk Assessment
                     <ArrowRight className="ml-1.5 h-4 w-4" />

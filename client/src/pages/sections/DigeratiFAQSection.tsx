@@ -36,7 +36,7 @@ export const DigeratiFAQSection = (): JSX.Element => {
   };
 
   return (
-    <section className="py-10 md:py-14 lg:py-16 bg-[#F7FAFC]">
+    <section className="py-14 md:py-18 lg:py-20 bg-[#F7FAFC]">
       <FAQJsonLd faqs={faqs} />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
@@ -45,12 +45,12 @@ export const DigeratiFAQSection = (): JSX.Element => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.35 }}
-          className="text-center mb-6 md:mb-8"
+          className="text-center mb-8 md:mb-10"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 md:mb-4 px-2">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 md:mb-5 px-2">
             Frequently Asked Questions
           </h2>
-          <p className="text-base md:text-lg text-gray-500 px-4">
+          <p className="text-lg md:text-xl text-gray-500 px-4">
             Find answers to common queries about us.
           </p>
         </motion.div>
@@ -77,7 +77,7 @@ export const DigeratiFAQSection = (): JSX.Element => {
                   }`}
                 >
                   <button
-                    className="w-full px-5 py-5 md:px-6 md:py-6 flex items-center justify-between text-left group"
+                    className="w-full px-6 py-6 md:px-8 md:py-7 flex items-center justify-between text-left group"
                     onClick={() => toggleAccordion(index)}
                     aria-expanded={isOpen}
                     data-testid={`faq-trigger-${index}`}

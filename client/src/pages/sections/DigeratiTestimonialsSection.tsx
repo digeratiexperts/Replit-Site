@@ -30,7 +30,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
   return (
     <section
       id="testimonials"
-      className="relative py-10 md:py-14 lg:py-16 overflow-hidden"
+      className="relative py-14 md:py-18 lg:py-20 overflow-hidden"
       style={{
         background: "linear-gradient(180deg, #0a0a0a 0%, #0f0f1a 50%, #0a0a0a 100%)",
       }}
@@ -38,19 +38,19 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          className="text-center mb-8 md:mb-12"
+          className="text-center mb-10 md:mb-14"
           initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
         >
-          <p className="text-xs md:text-sm font-medium text-[#FF477F] tracking-wide uppercase mb-3">
+          <p className="text-sm md:text-base font-medium text-[#FF477F] tracking-wide uppercase mb-3">
             Client proof
           </p>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
             Trust built on outcomes — not invented quotes
           </h2>
-          <p className="text-white/60 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
+          <p className="text-white/60 max-w-2xl mx-auto text-lg md:text-xl leading-relaxed">
             We are assembling verified Google reviews and approved Arizona client stories here.
             Until those are published, here is what clients consistently hire us to improve.
           </p>
@@ -61,7 +61,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
             initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 lg:col-span-1"
+            className="rounded-2xl border border-white/10 bg-white/[0.04] p-7 md:p-8 lg:col-span-1"
             data-testid="proof-google-slot"
           >
             <div className="flex items-center gap-1 text-amber-300 mb-3" aria-hidden="true">
@@ -70,7 +70,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
               ))}
             </div>
             <p className="text-white font-semibold mb-1">Google Business reviews</p>
-            <p className="text-sm text-white/55 leading-relaxed mb-4">
+            <p className="text-base text-white/55 leading-relaxed mb-4">
               Live rating and verbatim reviews will render here once connected to the Digerati Experts
               Google Business Profile — no placeholder star scores.
             </p>
@@ -90,7 +90,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.05 }}
-            className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 lg:col-span-2"
+            className="rounded-2xl border border-white/10 bg-white/[0.04] p-7 md:p-8 lg:col-span-2"
             data-testid="proof-outcomes"
           >
             <div className="flex items-start gap-3 mb-4">
@@ -100,8 +100,8 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
             <ul className="space-y-4">
               {outcomes.map((o) => (
                 <li key={o.title} className="border-t border-white/8 pt-4 first:border-0 first:pt-0">
-                  <p className="text-white text-sm font-medium">{o.title}</p>
-                  <p className="text-white/55 text-sm leading-relaxed">{o.detail}</p>
+                  <p className="text-white text-base font-medium">{o.title}</p>
+                  <p className="text-white/55 text-base leading-relaxed">{o.detail}</p>
                 </li>
               ))}
             </ul>
@@ -122,7 +122,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
           <button
             type="button"
             onClick={() => openBooking("proof_section")}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-sm font-semibold px-4 py-2.5 flex-shrink-0"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-base font-semibold px-5 py-3 flex-shrink-0"
             data-testid="button-proof-assessment"
           >
             Schedule Your Assessment

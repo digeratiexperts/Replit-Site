@@ -73,7 +73,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
   return (
     <section 
       ref={sectionRef}
-      className="py-10 md:py-14 lg:py-16 relative overflow-hidden bg-white"
+      className="py-14 md:py-18 lg:py-20 relative overflow-hidden bg-white"
       style={{ position: 'relative' }}
     >
       {/* Subtle background gradient */}
@@ -102,12 +102,12 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
         >
           <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-50 border border-violet-200 mb-4 md:mb-6">
             <Shield className="w-3.5 h-3.5 md:w-4 md:h-4 text-violet-400" />
-            <span className="text-xs md:text-sm font-medium text-violet-600">Our Process</span>
+            <span className="text-sm md:text-base font-medium text-violet-600">Our Process</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-3 md:mb-4 px-2">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-4 md:mb-5 px-2">
             How We Protect Your Business
           </h2>
-          <p className="text-base md:text-lg lg:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto px-4">
+          <p className="text-lg md:text-xl lg:text-2xl text-gray-600 leading-relaxed max-w-3xl mx-auto px-4">
             Our proven 4-step process ensures your business stays secure and compliant
           </p>
         </motion.div>
@@ -160,7 +160,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
 
         <div className="mt-12 md:mt-16 max-w-6xl mx-auto" id="protection-stack">
           <div className="text-center mb-6 md:mb-8">
-            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
+            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
               Security stack we manage
             </h3>
             <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
@@ -180,12 +180,12 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
               const Icon = item.icon;
               return (
                 <Link key={item.title} href={item.link}>
-                  <div className="h-full rounded-xl border border-gray-200 bg-white p-4 hover:border-violet-300 hover:shadow-md transition-all cursor-pointer">
+                  <div className="h-full rounded-xl border border-gray-200 bg-white p-5 md:p-6 hover:border-violet-300 hover:shadow-md transition-all cursor-pointer">
                     <div className="flex items-center gap-2 mb-2">
                       <Icon className="w-4 h-4 text-violet-500" aria-hidden="true" />
-                      <p className="text-sm font-semibold text-gray-900">{item.title}</p>
+                      <p className="text-base md:text-lg font-semibold text-gray-900">{item.title}</p>
                     </div>
-                    <p className="text-xs text-gray-600 leading-relaxed">{item.desc}</p>
+                    <p className="text-sm md:text-base text-gray-600 leading-relaxed">{item.desc}</p>
                   </div>
                 </Link>
               );
