@@ -24,18 +24,22 @@ const CircuitOverlay = () => (
   </svg>
 );
 
-const FooterLink = ({ href, children, testId }: { href: string; children: React.ReactNode; testId: string }) => (
-  <a 
-    href={href} 
-    className="group relative text-gray-400 hover:text-white text-base transition-all duration-300 inline-block"
-    data-testid={testId}
-  >
-    <span className="relative">
-      {children}
-      <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-violet-500 transition-all duration-300 group-hover:w-full" />
-    </span>
-  </a>
-);
+const FooterLink = ({ href, children, testId }: { href: string; children: React.ReactNode; testId: string }) => {
+  const isExternal = /^https?:\/\//i.test(href);
+  return (
+    <a
+      href={href}
+      {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      className="group relative text-gray-400 hover:text-white text-base transition-all duration-300 inline-block"
+      data-testid={testId}
+    >
+      <span className="relative">
+        {children}
+        <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-violet-500 transition-all duration-300 group-hover:w-full" />
+      </span>
+    </a>
+  );
+};
 
 const socialButtonVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -72,6 +76,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
     { name: "Digerati Journal", href: "/resources/blog" },
     { name: "Cyber Facts", href: "/resources/cyber-facts" },
     { name: "Submit Ticket", href: "/support/submit-ticket" },
+    { name: "Zoho Assist", href: "https://assist.zoho.com/" },
     { name: "Remote Support", href: "/support/remote-support" },
     { name: "Pay Invoice", href: "/support/pay-invoice" },
     { name: "Knowledge Base", href: "/support/knowledge-base" },
@@ -115,8 +120,8 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
   ];
 
   const complianceSeals = [
-    { name: "Audit readiness support", icon: Shield, verified: true },
-    { name: "HIPAA-minded controls", icon: Lock, verified: true },
+    { name: "SOC 2 Type II", icon: Shield, verified: true },
+    { name: "HIPAA Compliant", icon: Lock, verified: true },
     { name: "Microsoft Partner", icon: CheckCircle, verified: true },
     { name: "Apple Consultants", icon: CheckCircle, verified: true }
   ];
@@ -147,7 +152,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           {/* Quick Access - Dark Style */}
           <div className="p-8 bg-[#0a0a0a] relative group border-r border-white/10 transition-colors hover:bg-[#0d0d0d]">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(139,92,246,0.08)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <h4 className="text-white font-semibold mb-6 text-base uppercase tracking-wider relative z-10">Quick Access</h4>
+            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider relative z-10">Quick Access</h4>
             <ul className="space-y-3 relative z-10">
               {quickAccess.map((item, index) => (
                 <li key={index}>
@@ -162,7 +167,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           {/* Services - Glassmorphism Style */}
           <div className="p-8 bg-white/[0.02] backdrop-blur-xl relative group border-r border-white/10 transition-colors hover:bg-white/[0.04]">
             <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(139,92,246,0.04)_0%,transparent_100%)]" />
-            <h4 className="text-white font-semibold mb-6 text-base uppercase tracking-wider relative z-10">Services</h4>
+            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider relative z-10">Services</h4>
             <ul className="space-y-3 relative z-10">
               {services.map((item, index) => (
                 <li key={index}>
@@ -177,13 +182,13 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           {/* Legal - Dark Style (same as Quick Access) */}
           <div className="p-8 bg-[#0a0a0a] relative group border-r border-white/10 transition-colors hover:bg-[#0d0d0d]">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,rgba(139,92,246,0.08)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <h4 className="text-white font-semibold mb-6 text-base uppercase tracking-wider relative z-10">Legal</h4>
+            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider relative z-10">Legal</h4>
             <ul className="space-y-3 relative z-10">
               {legal.map((item, index) => (
                 <li key={index}>
                   <a 
                     href={item.href} 
-                    className="group/link relative text-gray-400 hover:text-white text-base transition-all duration-300 inline-flex items-center gap-2 font-normal"
+                    className="group/link relative text-gray-400 hover:text-white text-sm transition-all duration-300 inline-flex items-center gap-2 font-normal"
                     data-testid={`footer-legal-${index}`}
                   >
                     <span className="relative">
@@ -204,7 +209,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           {/* Trust - Glassmorphism Style (same as Services) */}
           <div className="p-8 bg-white/[0.02] backdrop-blur-xl relative group transition-colors hover:bg-white/[0.04]">
             <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(139,92,246,0.04)_0%,transparent_100%)]" />
-            <h4 className="text-white font-semibold mb-6 text-base uppercase tracking-wider relative z-10">Trust</h4>
+            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider relative z-10">Trust</h4>
             <ul className="space-y-3 relative z-10">
               {trust.map((item, index) => (
                 <li key={index}>
@@ -228,10 +233,10 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                   <h3 className="text-white font-semibold mb-1 flex items-center gap-2 ">
                     COMPLIANCE READY
                   </h3>
-                  <p className="text-gray-400 text-base font-normal">
+                  <p className="text-gray-400 text-sm font-normal">
                     Need SOC 2 or Security Documentation?
                   </p>
-                  <p className="text-gray-500 text-base mt-1 font-normal">
+                  <p className="text-gray-500 text-sm mt-1 font-normal">
                     Request compliance documents for vendor onboarding and security reviews
                   </p>
                 </div>

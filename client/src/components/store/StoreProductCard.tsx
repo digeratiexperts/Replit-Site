@@ -37,6 +37,7 @@ import {
   getProductTags,
   isConfigurableProduct,
 } from "@/data/storeMerchandising";
+import { getVendorForSku, inferVendorFromText } from "@/data/vendorLogos";
 
 const categoryIcons: Record<ProductCategory, LucideIcon> = {
   contract_services: Building,
@@ -113,6 +114,11 @@ export function StoreProductCard({
     .map((sku) => getProductBySku(sku)?.name)
     .filter(Boolean)
     .slice(0, 2) as string[];
+  const vendor =
+    getVendorForSku(product.sku) ||
+    inferVendorFromText(
+      `${product.name} ${product.shortDescription} ${product.description} ${product.features.join(" ")}`
+    );
 
   return (
     <article
@@ -136,11 +142,26 @@ export function StoreProductCard({
       )}
 
       <div className={`mb-4 flex items-start gap-3.5 ${onCompareToggle ? "pr-20" : ""}`}>
-        <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04]">
-          <Icon className={`h-7 w-7 ${accent}`} />
+        <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/[0.06]">
+          {vendor ? (
+            <img
+              src={vendor.logoUrl}
+              alt=""
+              className="h-10 w-10 object-contain"
+              loading="lazy"
+              data-testid={`vendor-logo-${product.id}`}
+            />
+          ) : (
+            <Icon className={`h-7 w-7 ${accent}`} />
+          )}
         </div>
         <div className="min-w-0 flex-1">
           <div className="mb-2 flex flex-wrap items-center gap-1.5">
+            {vendor && (
+              <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-[11px] font-medium text-white/70">
+                {vendor.name}
+              </span>
+            )}
             <span
               className={`rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-wide ${accent}`}
             >

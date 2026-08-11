@@ -12,6 +12,7 @@ import * as Tooltip from '@radix-ui/react-tooltip';
 import { pricing } from '@/data/pricing';
 import { useBooking } from '@/contexts/BookingContext';
 import { useOptionalFullPageScroll } from '@/components/FullPageScroll';
+import { PORTAL_LOGIN } from '@/lib/portalUrls';
 
 const NoiseTexture = ({ id }: { id: string }) => (
   <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.025]" aria-hidden="true">
@@ -494,8 +495,21 @@ export function MegaMenu() {
               <span className="sm:hidden">Call</span>
             </a>
 
+            {/* Restored from 61f25fc / live release 20260810193831 — Assist near Portal */}
             <a
-              href="/portal/login"
+              href="https://assist.zoho.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center text-white/75 hover:text-violet-300 text-sm md:text-base font-medium transition-colors"
+              data-testid="utility-zoho-assist"
+            >
+              <Monitor className="h-3.5 w-3.5 mr-1.5 text-violet-400" />
+              <span className="hidden sm:inline">Zoho Assist</span>
+              <span className="sm:hidden">Assist</span>
+            </a>
+
+            <a
+              href={PORTAL_LOGIN}
               className="flex items-center text-white/75 hover:text-violet-300 text-sm md:text-base font-medium transition-colors"
               data-testid="utility-portal"
             >
@@ -1106,9 +1120,26 @@ export function MegaMenu() {
                     <div className="font-semibold text-white group-hover:text-violet-400 transition-colors">325-480-9870</div>
                   </div>
                 </a>
+
+                <a
+                  href="https://assist.zoho.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl bg-violet-500/10 border border-violet-500/20 hover:border-violet-500/40 transition-all group"
+                  data-testid="mobile-zoho-assist"
+                  aria-label="Open Zoho Assist remote support"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center border border-violet-500/20">
+                    <Monitor className="h-5 w-5 text-violet-400" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <div className="text-sm text-gray-400">Remote Support</div>
+                    <div className="font-semibold text-white group-hover:text-violet-400 transition-colors">Zoho Assist</div>
+                  </div>
+                </a>
                 
                 <a
-                  href="/portal/login"
+                  href={PORTAL_LOGIN}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all group"
                   data-testid="mobile-portal"
                   aria-label="Access client portal"
