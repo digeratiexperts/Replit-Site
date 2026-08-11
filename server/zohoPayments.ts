@@ -3,6 +3,9 @@ import crypto from "crypto";
 const ZOHO_PAYMENTS_BASE_URL = "https://payments.zoho.com/api/v1";
 const ZOHO_ACCOUNTS_TOKEN_URL = "https://accounts.zoho.com/oauth/v2/token";
 const ZOHO_HOSTED_CHECKOUT_URL = "https://payments.zoho.com/hostedcheckout";
+const ZOHO_METADATA_MAX_ITEMS = 5;
+const ZOHO_METADATA_KEY_MAX_LENGTH = 20;
+const ZOHO_METADATA_VALUE_MAX_LENGTH = 500;
 
 interface ZohoPaymentSession {
   payment_session_id: string;
@@ -161,6 +164,7 @@ export class ZohoPaymentsService {
     currency?: string;
     successUrl: string;
     cancelUrl: string;
+    /** Non-sensitive identifiers only. Do not include names, email addresses, phone numbers, or other PII. */
     metadata?: Record<string, string>;
   }): Promise<ZohoPaymentSession> {
     if (!Number.isFinite(params.totalAmount) || params.totalAmount <= 0) {
@@ -180,10 +184,10 @@ export class ZohoPaymentsService {
 
     const metaData = Object.entries({ orderNumber, ...(params.metadata || {}) })
       .filter(([key, value]) => key && value !== undefined && value !== null)
-      .slice(0, 20)
+      .slice(0, ZOHO_METADATA_MAX_ITEMS)
       .map(([key, value]) => ({
-        key: safeText(key, 100),
-        value: safeText(value, 500),
+        key: safeText(key, ZOHO_METADATA_KEY_MAX_LENGTH),
+        value: safeText(value, ZOHO_METADATA_VALUE_MAX_LENGTH),
       }));
 
     const payload = {
