@@ -1,4 +1,5 @@
 import { TierDetailTemplate, type TierPageConfig } from "@/components/TierDetailTemplate";
+import { pricing, formatPrice, formatUserPrice } from "@/data/pricing";
 
 const config: TierPageConfig = {
   id: "enterprise",
@@ -7,7 +8,7 @@ const config: TierPageConfig = {
   canonicalPath: "/solutions/proactive-enterprise-ecosystem",
   seoTitle: "ProActive Enterprise Ecosystem | Digerati Experts",
   seoDescription:
-    "Governance-grade managed security for Arizona organizations with regulated data, mature security needs, or board-level risk reporting. Unified Security Posture, advanced compliance/risk reporting, custom BCDR, and quarterly executive reviews. Custom after assessment.",
+    `Governance-grade managed security for Arizona organizations. Starts at ${formatUserPrice("enterprise")} with a ${formatPrice(pricing.enterprise.monthlyMin)}/mo minimum. Unified Security Posture, advanced compliance/risk reporting, custom BCDR, and quarterly executive reviews. Custom after assessment.`,
   heroBadge: "Governance & mature security",
   tagline: "Governance-grade managed security — for organizations where risk reports go to the board.",
   positioning:
@@ -55,7 +56,7 @@ const config: TierPageConfig = {
   reviewCadence:
     "ProActive Enterprise clients receive monthly operational and security reporting, ongoing posture dashboards, and a fixed quarterly executive review with vCIO and vCISO involvement covering risk posture, framework status, incidents, roadmap, and budget.",
   pricingNote:
-    "ProActive Enterprise Ecosystem starts at $345/user/mo and is custom after assessment. Engagements are scoped to your environment, regulatory requirements, security operations maturity, and reporting cadence — and documented in a written statement of work before any change to your environment.",
+    `ProActive Enterprise Ecosystem starts at ${formatUserPrice("enterprise")} with a ${formatPrice(pricing.enterprise.monthlyMin)}/mo minimum and is custom after assessment. Engagements are scoped to your environment, regulatory requirements, security operations maturity, and reporting cadence — and documented in a written statement of work before any change to your environment.`,
   ctaPrimary: { label: "Schedule Risk Assessment", href: "https://meet.digerati-experts.com/" },
 };
 

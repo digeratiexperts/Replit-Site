@@ -1,4 +1,5 @@
 import { TierDetailTemplate, type TierPageConfig } from "@/components/TierDetailTemplate";
+import { pricing, formatPrice, formatUserPrice } from "@/data/pricing";
 
 const config: TierPageConfig = {
   id: "business",
@@ -7,7 +8,7 @@ const config: TierPageConfig = {
   canonicalPath: "/solutions/proactive-business-ecosystem",
   seoTitle: "ProActive Business Ecosystem | Digerati Experts",
   seoDescription:
-    "Security-first managed IT for Arizona SMBs. Includes 24/7 SOC, MDR, Security Awareness Training, full backup and BCDR, compliance/risk reporting, and semi-annual technology + security reviews. Assessment-based pricing.",
+    `Security-first managed IT for Arizona SMBs. Starts at ${formatUserPrice("business")} with a ${formatPrice(pricing.business.monthlyMin)}/mo minimum. Includes 24/7 SOC, MDR, Security Awareness Training, full backup and BCDR, compliance/risk reporting, and semi-annual technology + security reviews.`,
   heroBadge: "Security-first business package",
   tagline: "Security-first managed IT — built for businesses that cannot afford a quiet breach.",
   positioning:
@@ -63,7 +64,7 @@ const config: TierPageConfig = {
   reviewCadence:
     "ProActive Business clients receive a monthly health and security report, plus a semi-annual technology + security review with leadership covering risk posture, incidents, roadmap, and budget. Quarterly executive reviews are standard at the Enterprise level.",
   pricingNote:
-    "ProActive Business Ecosystem starts at $245/user/mo. Final pricing is confirmed after a Cyber Risk Assessment that scopes user count, environment complexity, compliance exposure, and any required accelerators.",
+    `ProActive Business Ecosystem starts at ${formatUserPrice("business")} with a ${formatPrice(pricing.business.monthlyMin)}/mo minimum. Final pricing is confirmed after a Cyber Risk Assessment that scopes user count, environment complexity, compliance exposure, and any required accelerators.`,
   ctaPrimary: { label: "View Pricing & Matrix", href: "/proactive-ecosystem-pricing" },
 };
 

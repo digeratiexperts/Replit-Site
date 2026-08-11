@@ -2,7 +2,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
-import { pricing } from "@/data/pricing";
+import { pricing, formatPrice, estimateMonthly } from "@/data/pricing";
 
 interface PricingPlan {
   name: string;
@@ -19,7 +19,7 @@ const defaultPlans: PricingPlan[] = [
   {
     name: pricing.office.name,
     tier: pricing.office.tier,
-    monthlyPrice: pricing.office.siteMin,
+    monthlyPrice: estimateMonthly("office", 1),
     perUserPrice: pricing.office.user,
     note: "A clean, managed IT baseline.",
     learnMoreUrl: "/solutions/managed-it-support",
@@ -35,7 +35,7 @@ const defaultPlans: PricingPlan[] = [
   {
     name: pricing.business.name,
     tier: pricing.business.tier,
-    monthlyPrice: pricing.business.siteMin,
+    monthlyPrice: estimateMonthly("business", 1),
     perUserPrice: pricing.business.user,
     note: "Adds stronger protection and response.",
     learnMoreUrl: pricing.business.learnMoreUrl,
@@ -52,7 +52,7 @@ const defaultPlans: PricingPlan[] = [
   {
     name: pricing.enterprise.name,
     tier: pricing.enterprise.tier,
-    monthlyPrice: pricing.enterprise.siteMin,
+    monthlyPrice: estimateMonthly("enterprise", 1),
     perUserPrice: pricing.enterprise.user,
     note: pricing.enterprise.note,
     learnMoreUrl: pricing.enterprise.learnMoreUrl,
@@ -198,12 +198,13 @@ export function ServiceMatrix({
             <div className="text-white/60 text-xs uppercase tracking-wide mb-1">{plan.tier}</div>
             
             <div className="flex items-baseline gap-2 mb-2">
-              <span className="text-white font-black text-4xl">${plan.monthlyPrice.toLocaleString()}</span>
+              <span className="text-white/50 text-sm mr-1">From</span>
+              <span className="text-white font-black text-4xl">{formatPrice(plan.monthlyPrice)}</span>
               <span className="text-white/50">/mo</span>
             </div>
             
             <div className="text-white/50 text-sm mb-4">
-              5 users • ${plan.perUserPrice}/user
+              ${plan.perUserPrice}/user/mo · monthly minimum
             </div>
             
             <p className="text-white/70 text-sm mb-6">{plan.note}</p>

@@ -1,4 +1,4 @@
-import { pricing, formatUserPrice, formatSiteMin } from "../../../client/src/data/pricing";
+import { pricing, formatUserPrice, formatMonthlyMin } from "../../../client/src/data/pricing";
 import { serviceCatalog } from "../../../client/src/data/serviceCatalog";
 import { PORTAL_LOGIN, PORTAL_HOME } from "../../../client/src/lib/portalUrls";
 import type { AdvisorMode, PageContext } from "./types";
@@ -25,16 +25,12 @@ export const COMPLIANCE_DISCLAIMER =
 export function getCanonicalPricingKnowledge(): string {
   const lines = (Object.keys(pricing) as Array<keyof typeof pricing>).map((key) => {
     const tier = pricing[key];
-    const min =
-      tier.siteMin > 0
-        ? `; site minimum ${formatSiteMin(key)}`
-        : "; no site minimum (entry managed IT)";
-    return `- ${tier.name} (${tier.tier}): ${formatUserPrice(key)}${min}. ${tier.note} Learn more: ${tier.learnMoreUrl}`;
+    return `- ${tier.name} (${tier.tier}): ${formatUserPrice(key)}; ${formatMonthlyMin(key)}. ${tier.note} Learn more: ${tier.learnMoreUrl}`;
   });
   return [
     "ProActive Ecosystem packages (canonical floors from pricing.ts):",
     ...lines,
-    "Do not invent other package prices, discounts, SLAs, or tiers.",
+    "Estimate = max(users × rate, monthly minimum × sites). Do not invent other package prices, discounts, SLAs, or tiers.",
     "Do not use storeProducts/serviceCatalog dollar amounts for ProActive floors.",
   ].join("\n");
 }
