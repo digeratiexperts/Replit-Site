@@ -9,7 +9,7 @@ interface SEOProps {
 }
 
 const BASE_TITLE = 'Digerati Experts';
-const DEFAULT_DESCRIPTION = "Arizona's trusted MSP/MSSP. Get 24/7 cybersecurity monitoring, managed IT services, and compliance support.";
+const DEFAULT_DESCRIPTION = "Cybersecurity-first managed IT for Arizona businesses. Assessment-led recommendations, partner-backed monitoring, and accountable day-to-day IT.";
 const SITE_URL = 'https://digeratiexperts.com';
 const DEFAULT_IMAGE = `${SITE_URL}/favicon-512x512.png`;
 

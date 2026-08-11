@@ -111,7 +111,7 @@ const workplaceData = {
     },
     {
       question: "What's the minimum user count?",
-      answer: `Pricing starts at $${pricing.office.user}/user/month. Minimum billing applies if the per-user total is below the tier minimum: Office $${pricing.office.siteMin}/site/mo, Business $${pricing.business.siteMin.toLocaleString()}/site/mo.`
+      answer: `Pricing starts at $${pricing.office.user}/user/month. Minimum billing applies if the per-user total is below the tier minimum: Office $${pricing.office.monthlyMinimum.toLocaleString()}/mo, Business $${pricing.business.monthlyMinimum.toLocaleString()}/mo, Enterprise $${pricing.enterprise.monthlyMinimum.toLocaleString()}/mo.`
     },
     {
       question: "How fast can you onboard/offboard?",

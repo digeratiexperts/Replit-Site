@@ -2,8 +2,15 @@ import { PageTemplate } from "@/components/PageTemplate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, AlertCircle, DollarSign, Shield, Lock, TrendingDown, Zap } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function RealEstate() {
+  useSEO({
+    title: "IT & Cybersecurity for Real Estate",
+    description:
+      "Protect Arizona brokerages from wire fraud and BEC with managed email security, MFA, and accountable IT support.",
+    canonical: "/industries/real-estate",
+  });
   const wirefraudStats = [
     { stat: "$1.9B", label: "Annual Fraud Losses", icon: DollarSign, color: "text-red-600" },
     { stat: "45%", label: "Year-over-Year Increase", icon: TrendingDown, color: "text-orange-600" },

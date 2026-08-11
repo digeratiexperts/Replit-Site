@@ -1,3 +1,5 @@
+import { getCyberFact, toDisplayStat } from "@/data/cyberAwarenessFacts";
+
 export const servicePageData = {
   'ProActive-Ecosystem-Packages': {
     title: "ProActive Ecosystem Packages",
@@ -113,7 +115,7 @@ export const servicePageData = {
       "Lower breach risk from insider mistakes"
     ],
     gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
-    stat: { value: "60%", label: "of breaches involve the human element", source: "Verizon DBIR 2025" },
+    stat: toDisplayStat(getCyberFact("dbir-human-element-2026")),
     recommendedTier: "business" as const,
   },
   'co-managed-it': {
@@ -160,7 +162,7 @@ export const servicePageData = {
       "24/7 detection + real response, not 'good luck with alerts'"
     ],
     gradientColors: "from-violet-700 via-purple-700 to-fuchsia-700",
-    stat: { value: "88%", label: "of SMB breaches involve ransomware", source: "Verizon DBIR 2025" },
+    stat: toDisplayStat(getCyberFact("dbir-smb-ransomware-victims-2026")),
     recommendedTier: "business" as const,
   },
   'security-operations': {

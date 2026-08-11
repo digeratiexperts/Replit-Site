@@ -12,6 +12,37 @@ export const viewTypeEnum = pgEnum("view_type", ["board", "list", "calendar", "t
 // Portal enums
 export const portalUserRoleEnum = pgEnum("portal_user_role", ["admin", "user", "viewer"]);
 
+/** Client-org hierarchy (separate from DE portal role + store commerce role) */
+export const portalOrgRoleEnum = pgEnum("portal_org_role", [
+  "staff",
+  "manager",
+  "dept_it_contact",
+  "company_it_contact",
+]);
+
+export const approvalRequestStatusEnum = pgEnum("portal_approval_request_status", [
+  "pending",
+  "approved",
+  "rejected",
+  "info_requested",
+  "cancelled",
+]);
+
+export const approvalStepTypeEnum = pgEnum("portal_approval_step_type", [
+  "manager",
+  "skip_level",
+  "dept_it",
+  "company_it",
+]);
+
+export const approvalStepStatusEnum = pgEnum("portal_approval_step_status", [
+  "pending",
+  "approved",
+  "rejected",
+  "info_requested",
+  "skipped",
+]);
+
 // Store role enum for RBAC - determines what users can do in the store
 // - public: Anonymous visitors (not logged in)
 // - prospect: Registered but unverified users
@@ -178,22 +209,122 @@ export const portalClients = pgTable("portal_clients", {
   primaryContact: text("primary_contact"),
   accountManager: text("account_manager"),
   status: text("status").default("active"),
+  /** managed | comanaged | prospect — drives storeRole for linked users */
+  serviceType: text("service_type").default("prospect"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-// Portal users table
+/** Client departments — optional Dept IT Contact per department */
+export const portalDepartments = pgTable("portal_departments", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clientId: varchar("client_id")
+    .notNull()
+    .references(() => portalClients.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  itContactUserId: varchar("it_contact_user_id"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Portal users table (durable auth — Neon)
 export const portalUsers = pgTable("portal_users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  clientId: varchar("client_id").notNull().references(() => portalClients.id, { onDelete: "cascade" }),
+  clientId: varchar("client_id").references(() => portalClients.id, { onDelete: "set null" }),
   email: text("email").notNull().unique(),
+  username: text("username").unique(),
   password: text("password").notNull(),
   fullName: text("full_name").notNull(),
   role: portalUserRoleEnum("role").default("user"),
+  storeRole: storeRoleEnum("store_role").default("prospect"),
+  /** Client org hierarchy role (ignored for DE portal admins) */
+  orgRole: portalOrgRoleEnum("org_role").default("staff"),
+  departmentId: varchar("department_id").references(() => portalDepartments.id, { onDelete: "set null" }),
+  managerUserId: varchar("manager_user_id"),
+  isCompanyItContact: boolean("is_company_it_contact").default(false),
+  emailVerified: boolean("email_verified").default(false),
   isActive: boolean("is_active").default(true),
+  mfaEnabled: boolean("mfa_enabled").default(false),
+  mfaMethod: text("mfa_method"),
+  mfaTotpSecret: text("mfa_totp_secret"),
+  mfaBackupCodes: jsonb("mfa_backup_codes").$type<string[]>().default([]),
   lastLogin: timestamp("last_login"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const portalApprovalRequests = pgTable("portal_approval_requests", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  requestNumber: text("request_number").notNull().unique(),
+  clientId: varchar("client_id")
+    .notNull()
+    .references(() => portalClients.id, { onDelete: "cascade" }),
+  requesterUserId: varchar("requester_user_id")
+    .notNull()
+    .references(() => portalUsers.id, { onDelete: "cascade" }),
+  type: text("type").notNull(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  priority: ticketPriorityEnum("priority").default("medium"),
+  amountCents: integer("amount_cents"),
+  status: approvalRequestStatusEnum("status").default("pending"),
+  payload: jsonb("payload").$type<Record<string, unknown>>().default({}),
+  fulfillmentTicketId: varchar("fulfillment_ticket_id"),
+  noManagerAssigned: boolean("no_manager_assigned").default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const portalApprovalSteps = pgTable("portal_approval_steps", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  requestId: varchar("request_id")
+    .notNull()
+    .references(() => portalApprovalRequests.id, { onDelete: "cascade" }),
+  stepOrder: integer("step_order").notNull(),
+  stepType: approvalStepTypeEnum("step_type").notNull(),
+  approverUserId: varchar("approver_user_id").references(() => portalUsers.id, {
+    onDelete: "set null",
+  }),
+  status: approvalStepStatusEnum("status").default("pending"),
+  note: text("note"),
+  actedAt: timestamp("acted_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+/** Service order form submissions from /portal/order-form */
+export const portalOrderForms = pgTable("portal_order_forms", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => portalUsers.id, { onDelete: "set null" }),
+  clientId: varchar("client_id").references(() => portalClients.id, { onDelete: "set null" }),
+  payload: jsonb("payload").$type<Record<string, unknown>>().notNull(),
+  status: text("status").default("submitted"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+/** First-party portal surveys (CSAT, onboarding, awareness quizzes) */
+export const portalSurveys = pgTable("portal_surveys", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  slug: text("slug").notNull().unique(),
+  title: text("title").notNull(),
+  description: text("description"),
+  category: text("category").notNull().default("general"),
+  questions: jsonb("questions").$type<Array<Record<string, unknown>>>().notNull(),
+  isActive: boolean("is_active").default(true),
+  sortOrder: integer("sort_order").default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const portalSurveyResponses = pgTable("portal_survey_responses", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  surveyId: varchar("survey_id")
+    .notNull()
+    .references(() => portalSurveys.id, { onDelete: "cascade" }),
+  userId: varchar("user_id").references(() => portalUsers.id, { onDelete: "set null" }),
+  clientId: varchar("client_id").references(() => portalClients.id, { onDelete: "set null" }),
+  answers: jsonb("answers").$type<Record<string, unknown>>().notNull(),
+  rating: integer("rating"),
+  submittedAt: timestamp("submitted_at").defaultNow().notNull(),
 });
 
 // Portal services table
@@ -582,6 +713,8 @@ export type InsertPortalTicketComment = z.infer<typeof insertPortalTicketComment
 
 export type PortalInvoice = typeof portalInvoices.$inferSelect;
 export type PortalKBArticle = typeof portalKBArticles.$inferSelect;
+export type PortalSurvey = typeof portalSurveys.$inferSelect;
+export type PortalSurveyResponse = typeof portalSurveyResponses.$inferSelect;
 
 // Chat messages table
 export const portalChatMessages = pgTable("portal_chat_messages", {

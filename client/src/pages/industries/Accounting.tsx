@@ -2,8 +2,15 @@ import { PageTemplate } from "@/components/PageTemplate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Shield, Lock, FileText, AlertCircle, DollarSign, TrendingUp, Activity } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function Accounting() {
+  useSEO({
+    title: "IT & Cybersecurity for Accounting Firms",
+    description:
+      "Managed IT and security for Arizona accounting and finance firms — stop BEC, protect tax season systems, and meet cyber-insurance expectations.",
+    canonical: "/industries/accounting-finance",
+  });
   const metrics = [
     { label: "Compliance Pass Rate", value: "99.8%", icon: CheckCircle, color: "text-emerald-500" },
     { label: "Avg. Audit Findings", value: "0.2", icon: TrendingUp, color: "text-violet-400" },
@@ -173,7 +180,7 @@ export default function Accounting() {
               className="inline-flex items-center justify-center bg-white text-violet-700 hover:bg-violet-50 px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
               data-testid="button-schedule-accounting"
             >
-              Schedule Free Assessment
+              Schedule Cyber Risk Assessment
             </a>
             <a 
               href="tel:325-480-9870"

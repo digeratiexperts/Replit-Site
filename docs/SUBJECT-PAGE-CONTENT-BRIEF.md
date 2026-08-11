@@ -258,7 +258,7 @@ Until that pass: keep shipping narrative copy into `pageNarratives` / this brief
 
 **Gaps**
 
-- DBIR 88% is industry context — keep source; never present as DE client metric.
+- DBIR ransomware / SMB victim stats are industry context — keep source + year; never present as DE client metric. Prefer Verizon DBIR 2026 wording over older 88% SMB-breach phrasing.
 
 ---
 

@@ -9,7 +9,7 @@ export function initOpenAI(): OpenAI | null {
   // Prefer AI Integrations proxy when both base URL + key are set; else standard OpenAI.
   const integrationsBase = process.env.AI_INTEGRATIONS_OPENAI_BASE_URL;
   const integrationsKey = process.env.AI_INTEGRATIONS_OPENAI_API_KEY;
-  const directKey = process.env.OPENAI_API_KEY;
+  const directKey = process.env.OPENAI_API_KEY || process.env.OPENAI_API;
 
   const apiKey = integrationsKey || directKey;
   if (!apiKey) {
@@ -202,7 +202,7 @@ export async function generateSpeech(
 ): Promise<Buffer> {
   // Prefer a direct OpenAI key for audio.speech; some AI gateway proxies
   // only support chat completions.
-  const directKey = process.env.OPENAI_API_KEY;
+  const directKey = process.env.OPENAI_API_KEY || process.env.OPENAI_API;
   const client = directKey
     ? new OpenAI({ apiKey: directKey })
     : getOpenAI();

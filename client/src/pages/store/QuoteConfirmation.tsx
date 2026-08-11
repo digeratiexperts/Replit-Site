@@ -26,6 +26,7 @@ const QuoteConfirmation = () => {
     title: "Quote Request Submitted | Digerati Experts Store",
     description: "Your quote request has been submitted successfully. Our team will contact you shortly.",
     canonical: `/store/quote-confirmation/${quoteId}`,
+    noIndex: true,
   });
 
   const { data: quoteRequest, isLoading, error } = useQuery({

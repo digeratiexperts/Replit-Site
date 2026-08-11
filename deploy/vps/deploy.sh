@@ -7,27 +7,37 @@
 #   GitHub <branch>
 #        ↓  git fetch (bare mirror in $SITE_HOME/app)
 #   releases/<timestamp>/   (checkout + npm ci + npm run build)
-#        ↓  build validation
+#        ↓  build validation + release.txt commit marker
 #   current -> releases/<timestamp>   (atomic symlink flip)
-#        ↓  systemctl restart $SERVICE_NAME
-#   health check (/healthz + /)
+#        ↓  sudo -n /usr/bin/systemctl restart $SERVICE_NAME
+#        ↓  sudo -n /usr/bin/systemctl is-active $SERVICE_NAME
+#   health check (127.0.0.1 + public HTTPS) AND exact deployed commit verification
 #        ↓  on failure: flip symlink back, restart, exit 1
+#
+# Production (authoritative):
+#   User:        diger7051
+#   Code:        /home/digeratiexperts.com/current
+#   Service:     digeratiexperts-site (systemd — NOT PM2)
+#   Do NOT deploy from /root/Replit-Site
 #
 # Usage:
 #   deploy.sh staging          # deploys to /home/staging.digeratiexperts.com
 #   deploy.sh production       # deploys to /home/digeratiexperts.com
 #
 # Overridable environment variables (defaults set per target below):
-#   DEPLOY_BRANCH   git branch to deploy            (default: main)
-#   SITE_HOME       website home directory
-#   APP_PORT        private 127.0.0.1 port the app listens on
-#   SERVICE_NAME    systemd service to restart
-#   REPO_URL        git remote
-#   KEEP_RELEASES   how many old releases to keep   (default: 3)
-#   NO_SYSTEMD=1    test mode: start node directly instead of systemd
-#                   (used for local/CI validation only)
+#   DEPLOY_BRANCH        git branch to deploy            (default: main)
+#   SITE_HOME            website home directory
+#   APP_PORT             private 127.0.0.1 port the app listens on
+#   SERVICE_NAME         systemd service to restart
+#   PUBLIC_HEALTH_URL    public HTTPS healthz URL (production default set)
+#   REPO_URL             git remote
+#   KEEP_RELEASES        how many old releases to keep   (default: 3)
+#   NO_SYSTEMD=1         test mode: start node directly instead of systemd
+#                        (used for local/CI validation only)
 #
 set -euo pipefail
+
+SYSTEMCTL="/usr/bin/systemctl"
 
 TARGET="${1:-}"
 case "$TARGET" in
@@ -35,11 +45,13 @@ case "$TARGET" in
     SITE_HOME="${SITE_HOME:-/home/staging.digeratiexperts.com}"
     APP_PORT="${APP_PORT:-3200}"
     SERVICE_NAME="${SERVICE_NAME:-digeratiexperts-staging}"
+    PUBLIC_HEALTH_URL="${PUBLIC_HEALTH_URL:-https://staging.digeratiexperts.com/healthz}"
     ;;
   production)
     SITE_HOME="${SITE_HOME:-/home/digeratiexperts.com}"
     APP_PORT="${APP_PORT:-3300}"
     SERVICE_NAME="${SERVICE_NAME:-digeratiexperts-site}"
+    PUBLIC_HEALTH_URL="${PUBLIC_HEALTH_URL:-https://digeratiexperts.com/healthz}"
     ;;
   *)
     echo "Usage: $0 staging|production" >&2
@@ -72,6 +84,23 @@ NODE_MAJOR="$(node -p 'process.versions.node.split(".")[0]')"
 [ -f "$SHARED_ENV" ] || fail "$SHARED_ENV missing — create it before deploying (see deploy/vps/env.production.example)"
 mkdir -p "$RELEASES_DIR" "$LOG_DIR"
 
+if [ "$NO_SYSTEMD" != "1" ]; then
+  # Fail fast if passwordless least-privilege sudo is missing (do not prompt).
+  # Note: do NOT probe with `sudo -n true` — diger7051 sudoers only allows
+  # specific systemctl verbs for this unit.
+  set +e
+  SUDO_PROBE_ERR="$(sudo -n "$SYSTEMCTL" is-active "$SERVICE_NAME" 2>&1 >/dev/null)"
+  SUDO_PROBE_RC=$?
+  set -e
+  if printf '%s' "$SUDO_PROBE_ERR" | grep -Eqi 'password is required|a password is required|not allowed|not permitted|a terminal is required'; then
+    fail "passwordless sudo required for: $SYSTEMCTL restart|is-active|status $SERVICE_NAME (deploy as diger7051 — not root/PM2//root/Replit-Site)"
+  fi
+  # rc 0 = active; rc 3 = inactive (both mean sudo worked). Other unexpected codes: warn only.
+  if [ "$SUDO_PROBE_RC" -ne 0 ] && [ "$SUDO_PROBE_RC" -ne 3 ]; then
+    log "WARN: systemctl is-active probe returned $SUDO_PROBE_RC ($SUDO_PROBE_ERR) — continuing; restart step will enforce success"
+  fi
+fi
+
 # ---------------------------------------------------------------- fetch
 if [ ! -d "$MIRROR_DIR" ]; then
   log "Cloning $REPO_URL (bare mirror) into $MIRROR_DIR"
@@ -101,6 +130,10 @@ npm run build
 JS_COUNT="$(find dist/public/assets -name '*.js' | wc -l)"
 [ "$JS_COUNT" -gt 0 ] || fail "build validation failed: no JS assets emitted"
 
+# Publish an immutable-by-content release identity into the built site. Health checks
+# request it with a cache-busting query string and compare it to the exact Git commit.
+printf '%s\n' "$COMMIT" > "$NEW_RELEASE/dist/public/release.txt"
+
 log "Scanning built bundle for internal content and secret patterns"
 if grep -rqE 'internal/(pricing-tiers|sales-process|security-stack|usp-worksheet)' dist/public/assets/; then
   fail "bundle contains internal page routes — refusing to deploy"
@@ -114,8 +147,12 @@ ln -sfn "$SHARED_ENV" "$NEW_RELEASE/.env"
 
 # ---------------------------------------------------------------- switch
 PREVIOUS_RELEASE=""
+PREVIOUS_COMMIT=""
 if [ -L "$CURRENT_LINK" ]; then
   PREVIOUS_RELEASE="$(readlink -f "$CURRENT_LINK")"
+  if [ -f "$PREVIOUS_RELEASE/dist/public/release.txt" ]; then
+    PREVIOUS_COMMIT="$(tr -d '\r\n' < "$PREVIOUS_RELEASE/dist/public/release.txt")"
+  fi
 fi
 
 log "Activating release $TS"
@@ -131,16 +168,45 @@ restart_app() {
       && NODE_ENV=production PORT="$APP_PORT" setsid nohup node "$CURRENT_LINK/dist/index.js" \
          >> "$LOG_DIR/app.log" 2>&1 < /dev/null &) &
     wait $! 2>/dev/null || true
-  else
-    sudo systemctl restart "$SERVICE_NAME"
+    return 0
   fi
+
+  # Least-privilege passwordless restart — failure is a failed deployment.
+  if ! sudo -n "$SYSTEMCTL" restart "$SERVICE_NAME"; then
+    log "ERROR: sudo -n $SYSTEMCTL restart $SERVICE_NAME failed"
+    return 1
+  fi
+  # Note: sudoers allows exact `systemctl is-active $SERVICE` (no --quiet).
+  # Using --quiet makes sudo deny the command and falsely looks "inactive".
+  ACTIVE_STATE="$(sudo -n "$SYSTEMCTL" is-active "$SERVICE_NAME" 2>/dev/null || true)"
+  if [ "$ACTIVE_STATE" != "active" ]; then
+    log "ERROR: $SERVICE_NAME is not active after restart (state=${ACTIVE_STATE:-unknown})"
+    return 1
+  fi
+  log "systemd: $SERVICE_NAME is active"
+  return 0
 }
 
-health_check() {
+release_matches() {
+  local url="$1"
+  local expected_sha="$2"
+  local seen_sha
+
+  # An empty expected SHA is allowed only for rollback to a release created before
+  # commit markers existed. New deployments always pass COMMIT and are strict.
+  [ -z "$expected_sha" ] && return 0
+
+  seen_sha="$(curl -fsS -m 5 "${url}?sha=${expected_sha}&ts=${TS}" 2>/dev/null | tr -d '\r\n' || true)"
+  [ "$seen_sha" = "$expected_sha" ]
+}
+
+local_health_check() {
+  local expected_sha="${1:-}"
   local tries=15
   for i in $(seq 1 "$tries"); do
     if curl -sf -o /dev/null -m 5 "http://127.0.0.1:$APP_PORT/healthz" \
-       && [ "$(curl -s -o /dev/null -m 5 -w '%{http_code}' "http://127.0.0.1:$APP_PORT/")" = "200" ]; then
+       && [ "$(curl -s -o /dev/null -m 5 -w '%{http_code}' "http://127.0.0.1:$APP_PORT/")" = "200" ] \
+       && release_matches "http://127.0.0.1:$APP_PORT/release.txt" "$expected_sha"; then
       return 0
     fi
     sleep 2
@@ -148,19 +214,50 @@ health_check() {
   return 1
 }
 
-restart_app
-log "Waiting for health check on 127.0.0.1:$APP_PORT"
-if health_check; then
-  log "Health check passed"
+public_health_check() {
+  local expected_sha="${1:-}"
+  # Skip when NO_SYSTEMD or PUBLIC_HEALTH_URL explicitly emptied.
+  [ "$NO_SYSTEMD" = "1" ] && return 0
+  [ -z "${PUBLIC_HEALTH_URL:-}" ] && return 0
+
+  local public_base="${PUBLIC_HEALTH_URL%/healthz}"
+  local tries=10
+  for i in $(seq 1 "$tries"); do
+    if curl -fsS -m 10 "${PUBLIC_HEALTH_URL}?sha=${expected_sha}&ts=${TS}" >/dev/null \
+       && release_matches "${public_base}/release.txt" "$expected_sha"; then
+      return 0
+    fi
+    sleep 2
+  done
+  return 1
+}
+
+health_check() {
+  local expected_sha="${1:-}"
+  local_health_check "$expected_sha" || return 1
+  public_health_check "$expected_sha" || return 1
+  return 0
+}
+
+restart_app || fail "service restart failed — deployment aborted (no silent continue)"
+log "Waiting for health check and exact release verification on 127.0.0.1:$APP_PORT (and public HTTPS if configured)"
+if health_check "$COMMIT"; then
+  log "Health check passed; verified live release SHA $COMMIT"
 else
-  log "Health check FAILED — rolling back"
+  log "Health/release verification FAILED — rolling back"
   if [ -n "$PREVIOUS_RELEASE" ] && [ -d "$PREVIOUS_RELEASE" ]; then
     ln -sfn "$PREVIOUS_RELEASE" "$CURRENT_LINK"
-    restart_app
-    if health_check; then
-      log "Rollback to $(basename "$PREVIOUS_RELEASE") succeeded"
+    if [ -z "$PREVIOUS_COMMIT" ]; then
+      log "WARN: previous release predates release markers; rollback will verify service health but cannot verify its commit SHA"
+    fi
+    if restart_app && health_check "$PREVIOUS_COMMIT"; then
+      if [ -n "$PREVIOUS_COMMIT" ]; then
+        log "Rollback to $(basename "$PREVIOUS_RELEASE") @ $PREVIOUS_COMMIT succeeded"
+      else
+        log "Rollback to $(basename "$PREVIOUS_RELEASE") succeeded"
+      fi
     else
-      log "Rollback restart ALSO failing — manual intervention required"
+      log "Rollback restart/health ALSO failing — manual intervention required"
     fi
   else
     log "No previous release available to roll back to"
@@ -176,4 +273,4 @@ ls -1dt "$RELEASES_DIR"/*/ 2>/dev/null | tail -n "+$((KEEP_RELEASES + 1))" | whi
   rm -rf "$old"
 done
 
-log "Deploy complete: $DEPLOY_BRANCH @ $COMMIT is live on 127.0.0.1:$APP_PORT"
+log "Deploy complete: $DEPLOY_BRANCH @ $COMMIT is verified live on 127.0.0.1:$APP_PORT and public HTTPS"

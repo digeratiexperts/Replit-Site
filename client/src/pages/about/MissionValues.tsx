@@ -162,9 +162,9 @@ export default function MissionValues() {
         >
           {[
             { value: "10+", label: "Years Experience" },
-            { value: "100+", label: "Arizona Clients" },
-            { value: "99.9%", label: "Uptime SLA" },
-            { value: "15 min", label: "Response Time" }
+            { value: "AZ", label: "Based in Arizona" },
+            { value: "1", label: "Accountable operating model" },
+            { value: "MSP+MSSP", label: "IT + security together" }
           ].map((stat, idx) => (
             <div key={idx} className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
               <p className="text-3xl font-bold mb-1">{stat.value}</p>

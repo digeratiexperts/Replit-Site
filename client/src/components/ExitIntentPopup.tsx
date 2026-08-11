@@ -207,7 +207,7 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                           "Sending..."
                         ) : (
                           <>
-                            Request Free Assessment Intro
+                            Request Cyber Risk Assessment
                             <ArrowRight className="ml-2 h-4 w-4" />
                           </>
                         )}

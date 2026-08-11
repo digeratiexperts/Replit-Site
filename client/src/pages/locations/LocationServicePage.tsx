@@ -15,6 +15,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useSEO } from "@/hooks/useSEO";
+import { getCyberFact, formatFactSource } from "@/data/cyberAwarenessFacts";
 
 const assessmentFormSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters").max(50),
@@ -142,21 +143,40 @@ export function LocationServicePage(props: LocationPageProps) {
   const handleSubmit = async (data: AssessmentFormData) => {
     setIsSubmitting(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const response = await fetch("/api/assessment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: data.fullName,
+          email: data.email,
+          phone: data.phone || "",
+          company: data.company || "",
+          source: `location_${props.city.toLowerCase().replace(/\s+/g, "_")}`,
+          message: `${props.city} assessment request — ${props.serviceFocus || props.title}`,
+        }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error((result as { error?: string }).error || "Submission failed");
+      }
       toast({
         title: "Assessment Request Submitted!",
         description: `We'll contact you within 24 hours to schedule your free ${props.city} assessment.`,
       });
       form.reset();
-    } catch {
-      toast({ title: "Error", description: "Something went wrong.", variant: "destructive" });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error?.message || "Something went wrong.",
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const stats = [
-    { icon: Shield, value: "99.9%", label: "Uptime SLA" },
+    { icon: Shield, value: "Security-first", label: "Operating model" },
     { icon: Zap, value: "<15min", label: "Response Time" },
     { icon: Clock, value: "24/7", label: "Monitoring" },
   ];
@@ -351,6 +371,42 @@ export function LocationServicePage(props: LocationPageProps) {
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a0118] to-transparent z-10" />
       </section>
 
+      {/* Arizona industry context — sourced awareness, not DE proof */}
+      <section className="py-10 bg-[#0a0118] border-y border-white/5" aria-label="Arizona cybersecurity context">
+        <div className="mx-auto w-[min(94vw,900px)] px-4">
+          {(() => {
+            const azFact = getCyberFact("az-ic3-losses-2024");
+            return (
+              <motion.div
+                className="rounded-2xl border border-violet-500/20 bg-violet-500/5 px-6 py-5 text-center"
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <p className="text-xs uppercase tracking-wider text-violet-300/80 mb-2">Arizona context</p>
+                <p className="text-white/90 text-sm md:text-base leading-relaxed">
+                  <span className="font-bold text-violet-300">{azFact.metric}</span>{" "}
+                  {azFact.statement} — relevant for {props.city} and Greater Phoenix SMBs planning
+                  insurance-ready IT and breach readiness.
+                </p>
+                {azFact.sourceUrl ? (
+                  <a
+                    href={azFact.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block mt-2 text-xs text-white/40 hover:text-violet-300 underline-offset-2 hover:underline"
+                  >
+                    — {formatFactSource(azFact)}
+                  </a>
+                ) : (
+                  <p className="mt-2 text-xs text-white/40">— {formatFactSource(azFact)}</p>
+                )}
+              </motion.div>
+            );
+          })()}
+        </div>
+      </section>
+
       {/* Services Section - Dark themed */}
       <section className="py-20 bg-gradient-to-b from-[#0a0118] via-[#0d0720] to-[#0a0118]">
         <div className="mx-auto w-[min(94vw,1400px)] px-4">
@@ -438,7 +494,7 @@ export function LocationServicePage(props: LocationPageProps) {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="/book">
                 <Button size="lg" className="px-8 py-6 text-lg font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 shadow-lg shadow-purple-500/25">
-                  Start Your Free Assessment <ArrowRight className="ml-2 w-5 h-5" />
+                  Schedule Cyber Risk Assessment <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </a>
               <a href="tel:325-480-9870">

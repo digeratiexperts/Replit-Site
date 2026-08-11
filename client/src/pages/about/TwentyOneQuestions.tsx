@@ -116,7 +116,7 @@ export default function TwentyOneQuestions() {
                 className="inline-flex items-center gap-2 bg-violet-500 hover:bg-violet-400 text-white font-semibold px-8 py-4 rounded-lg transition-colors"
                 data-testid="button-schedule"
               >
-                Schedule Your Free Assessment
+                Schedule Cyber Risk Assessment
               </a>
             </div>
           </div>

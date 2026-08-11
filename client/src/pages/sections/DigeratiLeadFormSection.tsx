@@ -58,7 +58,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
       
       toast({
         title: "Assessment Request Submitted!",
-        description: "We'll contact you within 24 hours to schedule your free assessment.",
+        description: "We'll contact you within 24 hours to schedule your Cyber Risk Assessment.",
         variant: "default",
       });
       
@@ -221,7 +221,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                     </>
                   ) : (
                     <>
-                      Get Free Assessment
+                      Schedule Cyber Risk Assessment
                       <ArrowRight className="w-5 h-5" />
                     </>
                   )}
@@ -248,7 +248,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
           >
             Prefer to call?{" "}
             <a 
-              href="tel:325-480-9870" 
+              href="tel:325-480-9870"
               data-testid="link-lead-phone"
               className="text-purple-600 hover:text-purple-700 font-medium transition-colors"
             >

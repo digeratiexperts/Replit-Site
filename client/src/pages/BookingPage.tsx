@@ -68,7 +68,7 @@ export default function BookingPage() {
                 data-testid="link-phone-booking"
               >
                 <Phone className="w-5 h-5" />
-                <span className="text-lg font-medium">(325) 480-9870</span>
+                <span className="text-lg font-medium">(480) 519-5892</span>
               </a>
             </div>
 

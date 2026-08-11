@@ -375,7 +375,7 @@ export default function ComplianceCertifications() {
                   data-testid="button-schedule-assessment"
                 >
                   <a href="/book">
-                    Schedule Free Assessment
+                    Schedule Cyber Risk Assessment
                     <ExternalLink className="ml-2 h-4 w-4" />
                   </a>
                 </Button>

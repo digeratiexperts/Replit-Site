@@ -3,7 +3,9 @@ dotenv.config();
 
 import express, { type Request, Response, NextFunction } from "express";
 import { createServer } from "http";
-import { registerRoutes } from "./routes";
+import { registerRoutes, authMiddleware, requireRole } from "./routes";
+import { registerSecureZohoStoreCheckout } from "./secureStoreCheckout";
+import { registerPublicSupportChat } from "./publicSupportChat";
 import { createServer as createViteServer } from "vite";
 import path from "path";
 import fs from "fs";
@@ -47,26 +49,21 @@ app.use(compression({
   }
 }));
 
-// Initialize cross-service communication
 setupCrossServiceHandlers();
 
-// Simple logging utility
 const log = (message: string) => {
   const timestamp = new Date().toISOString().split("T")[1].split(".")[0];
   console.log(`[${timestamp}] ${message}`);
 };
 
-// --------- Security headers (OWASP recommended) - applied globally before all routes
 import { setSecurityHeaders } from "./middleware/security";
 app.use(setSecurityHeaders);
 
-// --------- EARLY, LOUD TRACE so we know what URL actually hit Express
 app.use((req, _res, next) => {
   log(`→ ${req.method} ${req.originalUrl}`);
   next();
 });
 
-// --------- COMPREHENSIVE HEALTH CHECK
 app.all("/api/health", async (_req, res) => {
   const port = process.env.REPLIT_SERVER_PORT || process.env.PORT || "unknown";
   let dbAvailable = false;
@@ -78,7 +75,11 @@ app.all("/api/health", async (_req, res) => {
       dbAvailable = true;
     }
   } catch { dbAvailable = false; }
-  const openaiConfigured = !!(process.env.AI_INTEGRATIONS_OPENAI_BASE_URL && process.env.AI_INTEGRATIONS_OPENAI_API_KEY);
+  const openaiConfigured = !!(
+    process.env.OPENAI_API_KEY ||
+    process.env.OPENAI_API ||
+    (process.env.AI_INTEGRATIONS_OPENAI_BASE_URL && process.env.AI_INTEGRATIONS_OPENAI_API_KEY)
+  );
   
   const health = {
     status: "ok",
@@ -97,10 +98,7 @@ app.all("/api/health", async (_req, res) => {
   res.status(200).json(health);
 });
 
-// Backup simple health for load balancers
 app.all("/healthz", (_req, res) => res.status(200).send("ok"));
-
-// Readiness check for deployments
 app.all("/ready", (_req, res) => res.status(200).json({ ready: true }));
 
 /**
@@ -149,18 +147,17 @@ app.use((req, res, next) => {
 if (zohoPayments.isConfigured()) {
   log("✅ Zoho Payments configured");
 } else {
-  log("⚠️ Zoho Payments not configured - set ZOHO_PAYMENTS_API_KEY and ZOHO_PAYMENTS_SIGNING_KEY");
+  log("⚠️ Zoho Payments not configured - set ZOHO_PAYMENTS_ACCOUNT_ID, OAuth refresh credentials, and ZOHO_PAYMENTS_SIGNING_KEY");
 }
 
-// --------- Zoho Payments Webhook Route BEFORE JSON middleware (needs raw body for signature verification)
 app.post(
   "/api/webhooks/zoho-payments",
   express.raw({ type: "application/json" }),
   async (req, res) => {
     try {
-      const signature = req.headers["x-zoho-webhook-signature"] as string || req.headers["x-webhook-signature"] as string;
+      const signature = req.headers["x-zoho-webhook-signature"] as string;
       if (!signature) {
-        console.error("[ZOHO PAYMENTS WEBHOOK] Missing signature header");
+        console.error("[ZOHO PAYMENTS WEBHOOK] Missing X-Zoho-Webhook-Signature header");
         return res.status(400).json({ error: "Missing webhook signature" });
       }
 
@@ -171,88 +168,107 @@ app.post(
       }
 
       const event = JSON.parse(req.body.toString("utf-8"));
-      const eventType = event.event_type || event.type;
+      const parsed = zohoPayments.parseWebhookEvent(event);
+      const metadata = Object.fromEntries(parsed.metadata.map((item) => [item.key, item.value]));
+      let fulfillOrderId: string | null = null;
 
-      if (eventType === "payment.completed" || eventType === "paymentsession.completed" || eventType === "payment_session.success") {
-        const sessionId = event.data?.payment_session_id || event.payment_session_id || event.data?.id;
-        const paymentId = event.data?.payment_id || event.payment_id;
+      if (parsed.eventType === "payment.succeeded") {
+        const { db } = await import("./db");
+        const { storeOrders } = await import("@shared/schema");
+        const { eq } = await import("drizzle-orm");
 
-        if (sessionId) {
-          const { db } = await import("./db");
-          const { storeOrders } = await import("@shared/schema");
-          const { eq } = await import("drizzle-orm");
+        const metadataOrderId = metadata.orderId || null;
+        const orderNumber = metadata.orderNumber || parsed.referenceNumber || parsed.invoiceNumber || null;
+        let existingOrder: any = null;
 
-          const [existingOrder] = await db.select().from(storeOrders)
-            .where(eq(storeOrders.zohoPaymentSessionId, sessionId)).limit(1);
+        if (metadataOrderId) {
+          [existingOrder] = await db.select().from(storeOrders)
+            .where(eq(storeOrders.id, metadataOrderId)).limit(1);
+        }
+        if (!existingOrder && orderNumber) {
+          [existingOrder] = await db.select().from(storeOrders)
+            .where(eq(storeOrders.orderNumber, orderNumber)).limit(1);
+        }
 
-          const oldStatus = existingOrder?.status || "unknown";
-          const alreadyPastPaid = ["paid", "processing", "provisioning", "completed"].includes(
-            existingOrder?.status || ""
-          );
+        if (existingOrder) {
+          const oldStatus = existingOrder.status || "unknown";
+          const alreadyPastPaid = ["paid", "processing", "provisioning", "completed"].includes(oldStatus);
 
-          // Do not downgrade provisioning/completed back to paid on webhook retries
           if (!alreadyPastPaid) {
             await db.update(storeOrders)
               .set({
                 status: "paid",
-                zohoPaymentId: paymentId || sessionId,
+                zohoPaymentId: parsed.paymentId || existingOrder.zohoPaymentId || null,
                 paidAt: new Date(),
                 updatedAt: new Date(),
               })
-              .where(eq(storeOrders.zohoPaymentSessionId, sessionId));
+              .where(eq(storeOrders.id, existingOrder.id));
 
-            console.log(`[SECURITY] ORDER_STATUS_CHANGED`, {
-              orderId: existingOrder?.id,
-              orderNumber: existingOrder?.orderNumber,
+            console.log("[SECURITY] ORDER_STATUS_CHANGED", {
+              orderId: existingOrder.id,
+              orderNumber: existingOrder.orderNumber,
               oldStatus,
               newStatus: "paid",
-              triggeredBy: "zoho_payments_webhook"
+              triggeredBy: "zoho_payments_webhook",
             });
-          } else if (existingOrder && !existingOrder.zohoPaymentId && paymentId) {
+          } else if (!existingOrder.zohoPaymentId && parsed.paymentId) {
             await db.update(storeOrders)
               .set({
-                zohoPaymentId: paymentId,
+                zohoPaymentId: parsed.paymentId,
                 paidAt: existingOrder.paidAt || new Date(),
                 updatedAt: new Date(),
               })
               .where(eq(storeOrders.id, existingOrder.id));
           }
 
-          console.log(`[ZOHO PAYMENTS WEBHOOK] Order paid: session=${sessionId}`);
-          console.log(`[SECURITY] CHECKOUT_COMPLETED`, {
-            orderId: existingOrder?.id,
-            orderNumber: existingOrder?.orderNumber,
+          console.log("[SECURITY] CHECKOUT_COMPLETED", {
+            orderId: existingOrder.id,
+            orderNumber: existingOrder.orderNumber,
             paymentMethod: "zoho",
-            total: existingOrder?.total,
-            zohoPaymentSessionId: sessionId,
-            zohoPaymentId: paymentId
+            total: existingOrder.total,
+            zohoPaymentId: parsed.paymentId,
           });
-
-          if (existingOrder?.id) {
-            const { fulfillPaidOrder } = await import("./services/orderFulfillment");
-            fulfillPaidOrder(existingOrder.id).catch((err) => {
-              console.error("[ZOHO PAYMENTS WEBHOOK] fulfillPaidOrder failed:", err);
-            });
-          }
+          fulfillOrderId = existingOrder.id;
+        } else {
+          console.info("[ZOHO PAYMENTS WEBHOOK] Verified payment succeeded with no local store order", {
+            paymentId: parsed.paymentId,
+            referenceNumber: parsed.referenceNumber,
+            invoiceNumber: parsed.invoiceNumber,
+          });
         }
+      } else if (parsed.eventType === "payment.failed" || parsed.eventType === "payment.pending") {
+        console.info("[ZOHO PAYMENTS WEBHOOK] Payment attempt update", {
+          eventType: parsed.eventType,
+          paymentId: parsed.paymentId,
+          referenceNumber: parsed.referenceNumber,
+          status: parsed.status,
+        });
       }
 
       res.json({ received: true });
+
+      if (fulfillOrderId) {
+        const orderId = fulfillOrderId;
+        void import("./services/orderFulfillment")
+          .then(({ fulfillPaidOrder }) => fulfillPaidOrder(orderId))
+          .catch((error) => {
+            console.error("[ZOHO PAYMENTS WEBHOOK FULFILLMENT ERROR]", error);
+          });
+      }
+      return;
     } catch (error: any) {
       console.error("[ZOHO PAYMENTS WEBHOOK ERROR]", error);
-      res.status(500).json({ error: error.message || "Webhook handler failed" });
+      return res.status(500).json({ error: "Webhook processing failed" });
     }
   }
 );
 
-// --------- Basic parsers (after health and webhook so nothing delays them)
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-// Internal DE sales pages were removed from the public site (they now live in
-// the Intelligence Hub behind auth). Redirect any old /internal URL to home so
-// stale links and crawlers never reach the SPA catch-all.
+registerSecureZohoStoreCheckout(app, authMiddleware as any, requireRole as any);
+
 app.use((req, res, next) => {
   if (req.path === "/internal" || req.path.startsWith("/internal/")) {
     return res.redirect(301, "/");
@@ -260,18 +276,47 @@ app.use((req, res, next) => {
   next();
 });
 
-// SEO files (sitemap.xml, robots.txt) live in the repo-root public/ folder,
-// which is outside Vite's publicDir (client/public) and therefore not copied
-// into dist/public by the build. Serve it directly so /sitemap.xml and
-// /robots.txt work in every deployment.
+app.use((req, res, next) => {
+  if (req.path === "/login") {
+    const q = req.url.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
+    return res.redirect(301, `/portal/login${q}`);
+  }
+  if (req.path === "/signup") {
+    const q = req.url.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
+    return res.redirect(301, `/portal/signup${q}`);
+  }
+  next();
+});
+
+app.use((req, res, next) => {
+  if (req.path === "/" && Object.prototype.hasOwnProperty.call(req.query, "bbp_search")) {
+    res.setHeader("X-Robots-Tag", "noindex, nofollow");
+    return res
+      .status(410)
+      .type("text/plain")
+      .send("Gone. This legacy WordPress search URL is no longer available.");
+  }
+  next();
+});
+
+const publicDir = path.resolve(process.cwd(), "public");
+function sendSeoFile(res: import("express").Response, file: string, contentType: string) {
+  res.setHeader("Content-Type", contentType);
+  res.setHeader("Cache-Control", "public, max-age=300, must-revalidate");
+  res.setHeader("CDN-Cache-Control", "max-age=300");
+  res.setHeader("Cloudflare-CDN-Cache-Control", "max-age=300");
+  return res.sendFile(path.join(publicDir, file));
+}
+app.get("/robots.txt", (_req, res) => sendSeoFile(res, "robots.txt", "text/plain; charset=utf-8"));
+app.get("/sitemap.xml", (_req, res) => sendSeoFile(res, "sitemap.xml", "application/xml; charset=utf-8"));
+app.get("/llms.txt", (_req, res) => sendSeoFile(res, "llms.txt", "text/plain; charset=utf-8"));
 app.use(
-  express.static(path.resolve(process.cwd(), "public"), {
+  express.static(publicDir, {
     index: false,
     maxAge: "1h",
   }),
 );
 
-/** Utility to list routes for debugging */
 function listEndpoints(): Array<{ method: string; path: string }> {
   const routes: Array<{ method: string; path: string }> = [];
   const stack: any[] = (app as any)?._router?.stack || [];
@@ -295,23 +340,18 @@ function listEndpoints(): Array<{ method: string; path: string }> {
   return routes;
 }
 
-// --------- Setup async initialization
 (async () => {
-  // Register your API routes (these should mount under /api)
   await registerRoutes(app);
+  registerPublicSupportChat(app);
 
-  // Vite in dev, Static in prod (NEVER touch /api/*)
   if (app.get("env") === "development") {
-    // Middleware to fix Host header for Vite compatibility with Replit proxies
     app.use((req, _res, next) => {
-      // Rewrite Host header to localhost for Vite's host checking
       if (req.headers.host && req.headers.host.includes('.replit.dev')) {
         req.headers.host = 'localhost:5000';
       }
       next();
     });
 
-    // Set up Vite development server
     const vite = await createViteServer({
       server: {
         middlewareMode: true,
@@ -323,39 +363,31 @@ function listEndpoints(): Array<{ method: string; path: string }> {
     app.use(vite.middlewares);
     log("✨ Vite development server middleware attached");
   } else {
-    // Serve static files in production with caching
     const distPath = path.resolve(process.cwd(), "dist/public");
     const indexPath = path.join(distPath, "index.html");
     
-    // Serve static files with aggressive caching for assets
     app.use(express.static(distPath, {
       maxAge: '1y',
       etag: true,
       lastModified: true,
       setHeaders: (res, filePath) => {
-        // Cache JS/CSS/fonts for 1 year (they have hashes in filenames)
         if (filePath.match(/\.(js|css|woff2?|ttf|eot)$/)) {
           res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
         }
-        // Cache images for 1 month
         else if (filePath.match(/\.(png|jpg|jpeg|gif|svg|webp|ico)$/)) {
           res.setHeader('Cache-Control', 'public, max-age=2592000');
         }
-        // HTML files - no cache (always fresh)
         else if (filePath.endsWith('.html')) {
           res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
         }
       }
     }));
     
-    // SPA fallback - send index.html for all non-API routes
     app.get("*", (req, res, next) => {
-      // Skip API routes
       if (req.path.startsWith("/api")) {
         return next();
       }
       
-      // Check if index.html exists
       if (fs.existsSync(indexPath)) {
         res.sendFile(indexPath);
       } else {
@@ -370,14 +402,12 @@ function listEndpoints(): Array<{ method: string; path: string }> {
     log(`📦 Serving static files from ${distPath}`);
   }
 
-  // Debug endpoint — never expose route inventory in production
   if (process.env.NODE_ENV !== "production") {
     app.get("/__debug/routes", (_req, res) =>
       res.json({ routes: listEndpoints() }),
     );
   }
 
-  // --------- JSON 404 so we can see what path failed
   app.use((req, res) => {
     res.status(404).json({
       error: "Not Found",
@@ -386,14 +416,12 @@ function listEndpoints(): Array<{ method: string; path: string }> {
     });
   });
 
-  // --------- Central error handler
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     log(`✖ ${status} ${err.message || "Internal Server Error"}`);
     res.status(status).json({ message: err.message || "Internal Server Error" });
   });
 
-  // --------- Port + listen
   const port = parseInt(
     process.env.REPLIT_SERVER_PORT || process.env.PORT || "8080",
     10,

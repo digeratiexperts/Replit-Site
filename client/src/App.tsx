@@ -1,11 +1,12 @@
-import { Switch, Route, Redirect } from "wouter";
+import { Switch, Route, Redirect, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { HelmetProvider } from "react-helmet-async";
 import NotFound from "@/pages/not-found";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
+import { analytics } from "@/lib/analytics";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { ExitIntentPopup } from "@/components/ExitIntentPopup";
@@ -62,6 +63,7 @@ const ComplianceCertifications = lazy(() => import("@/pages/about/ComplianceCert
 const ClientBillOfRights = lazy(() => import("@/pages/about/ClientBillOfRights"));
 const Guarantee = lazy(() => import("@/pages/about/Guarantee"));
 const TwentyOneQuestions = lazy(() => import("@/pages/about/TwentyOneQuestions"));
+const Press = lazy(() => import("@/pages/about/Press"));
 const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy"));
 const TermsOfUse = lazy(() => import("@/pages/legal/TermsOfUse"));
 const MSA = lazy(() => import("@/pages/legal/MSA"));
@@ -73,6 +75,7 @@ const TrustCenter = lazy(() => import("@/pages/trust/TrustCenter"));
 const VulnerabilityDisclosure = lazy(() => import("@/pages/trust/VulnerabilityDisclosure"));
 const Accessibility = lazy(() => import("@/pages/trust/Accessibility"));
 const SubmitTicket = lazy(() => import("@/pages/support/SubmitTicket"));
+const TicketConfirmation = lazy(() => import("@/pages/support/TicketConfirmation"));
 const GenericServicePage = lazy(() => import("@/pages/GenericServicePage"));
 
 // Location pages
@@ -106,6 +109,8 @@ const PortalProcurementStore = lazy(() => import("@/pages/portal/PortalProcureme
 const PortalAdvancedForms = lazy(() => import("@/pages/portal/PortalAdvancedForms").then(m => ({ default: m.PortalAdvancedForms })));
 const PortalSatisfactionSurvey = lazy(() => import("@/pages/portal/PortalSatisfactionSurvey").then(m => ({ default: m.PortalSatisfactionSurvey })));
 const PortalApprovals = lazy(() => import("@/pages/portal/PortalApprovals").then(m => ({ default: m.PortalApprovals })));
+const PortalPeople = lazy(() => import("@/pages/portal/PortalPeople").then(m => ({ default: m.PortalPeople })));
+const PortalInfrastructure = lazy(() => import("@/pages/portal/PortalInfrastructure").then(m => ({ default: m.PortalInfrastructure })));
 const PortalQuestionnaireCalendar = lazy(() => import("@/pages/portal/PortalQuestionnaireCalendar").then(m => ({ default: m.PortalQuestionnaireCalendar })));
 const PortalVPN = lazy(() => import("@/pages/portal/PortalVPN"));
 const PortalCytracom = lazy(() => import("@/pages/portal/PortalCytracom"));
@@ -118,6 +123,8 @@ const AdminImportPage = lazy(() => import("@/pages/portal/AdminImport").then(m =
 const AdminAgentsPage = lazy(() => import("@/pages/portal/AdminAgents").then(m => ({ default: m.AdminAgents })));
 const AdminOpenAIPage = lazy(() => import("@/pages/portal/AdminOpenAI").then(m => ({ default: m.AdminOpenAI })));
 const AdminCompaniesPage = lazy(() => import("@/pages/portal/AdminCompanies").then(m => ({ default: m.AdminCompanies })));
+const AdminLoginKnocksPage = lazy(() => import("@/pages/portal/AdminLoginKnocks").then(m => ({ default: m.AdminLoginKnocks })));
+const AdminLifecyclePage = lazy(() => import("@/pages/portal/AdminLifecycle").then(m => ({ default: m.AdminLifecycle })));
 const AdminContractsPage = lazy(() => import("@/pages/portal/AdminContracts").then(m => ({ default: m.AdminContracts })));
 const PortalContracts = lazy(() => import("@/pages/portal/PortalContracts").then(m => ({ default: m.PortalContracts })));
 const OrderForm = lazy(() => import("@/pages/portal/OrderForm").then(m => ({ default: m.OrderForm })));
@@ -417,8 +424,18 @@ function Router() {
           <TwentyOneQuestions />
         </Suspense>
       )} />
+      <Route path="/about/press" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <Press />
+        </Suspense>
+      )} />
       
       {/* Support Pages */}
+      <Route path="/support/ticket-confirmation" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <TicketConfirmation />
+        </Suspense>
+      )} />
       <Route path="/support/submit-ticket" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <SubmitTicket />
@@ -533,6 +550,14 @@ function Router() {
         </Suspense>
       )} />
       
+      {/* Short portal aliases (bookmarks / mistyped URLs) */}
+      <Route path="/login">
+        <Redirect to="/portal/login" />
+      </Route>
+      <Route path="/signup">
+        <Redirect to="/portal/signup" />
+      </Route>
+
       {/* Portal root redirect */}
       <Route path="/portal">
         <Redirect to="/portal/login" />
@@ -674,6 +699,16 @@ function Router() {
           <PortalApprovals />
         </Suspense>
       )} />
+      <Route path="/portal/people" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <PortalPeople />
+        </Suspense>
+      )} />
+      <Route path="/portal/infrastructure" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <PortalInfrastructure />
+        </Suspense>
+      )} />
       <Route path="/portal/vpn" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalVPN />
@@ -707,6 +742,16 @@ function Router() {
       <Route path="/portal/admin/companies" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <AdminCompaniesPage />
+        </Suspense>
+      )} />
+      <Route path="/portal/admin/login-knocks" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <AdminLoginKnocksPage />
+        </Suspense>
+      )} />
+      <Route path="/portal/admin/lifecycle" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <AdminLifecyclePage />
         </Suspense>
       )} />
       <Route path="/portal/admin/contracts" component={() => (
@@ -807,6 +852,14 @@ function Router() {
   );
 }
 
+function SpaPageViews() {
+  const [location] = useLocation();
+  useEffect(() => {
+    analytics.pageView(location, document.title);
+  }, [location]);
+  return null;
+}
+
 function AppContent() {
   useGlobalShortcuts();
   
@@ -816,6 +869,7 @@ function AppContent() {
         Skip to main content
       </a>
       <ScrollProgress />
+      <SpaPageViews />
       <div id="main-content">
         <Router />
       </div>

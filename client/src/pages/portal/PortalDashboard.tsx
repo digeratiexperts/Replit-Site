@@ -3,9 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PortalLayout } from "./PortalLayout";
-import { AlertCircle, CheckCircle2, Clock, Ticket, Package, FileText, TrendingUp, ArrowRight, ExternalLink } from "lucide-react";
+import { AlertCircle, CheckCircle2, Clock, Ticket, Package, FileText, TrendingUp, ArrowRight, ExternalLink, DoorOpen } from "lucide-react";
 import { Link } from "wouter";
 import { portalGet } from "@/lib/portalApi";
+import { readPortalUser } from "@/lib/portalRoles";
 
 interface DashboardStats {
   openTickets: number;
@@ -17,14 +18,46 @@ interface DashboardStats {
 }
 
 export default function PortalDashboard() {
+  const portalUser = readPortalUser();
+  const isAdmin = portalUser?.role === "admin";
   const { data: stats, isLoading, isError, error } = useQuery<DashboardStats>({
     queryKey: ["/api/portal/dashboard"],
     queryFn: () => portalGet<DashboardStats>("/api/portal/dashboard"),
+  });
+  const { data: knocks } = useQuery<{
+    summary: { total: number; failed: number; bots: number; pageHits: number; success: number };
+  }>({
+    queryKey: ["/api/portal/admin/login-knocks", 24],
+    queryFn: () => portalGet("/api/portal/admin/login-knocks?hours=24"),
+    enabled: isAdmin,
+    refetchInterval: 60_000,
   });
 
   return (
     <PortalLayout title="Dashboard">
       <div className="space-y-6">
+        {isAdmin && knocks?.summary && (
+          <Card className="border-amber-200/80 dark:border-amber-900/40">
+            <CardContent className="pt-4 pb-4 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-start gap-3">
+                <DoorOpen className="h-5 w-5 text-amber-600 mt-0.5 shrink-0" />
+                <div>
+                  <p className="text-sm font-medium">Login door (24h)</p>
+                  <p className="text-sm text-muted-foreground">
+                    {knocks.summary.total} knocks · {knocks.summary.failed} failed · {knocks.summary.bots} bot-likely ·{" "}
+                    {knocks.summary.success} success
+                  </p>
+                </div>
+              </div>
+              <Link href="/portal/admin/login-knocks">
+                <Button size="sm" variant="outline">
+                  Open alerts
+                  <ArrowRight className="h-4 w-4 ml-1" />
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        )}
         {/* Error State */}
         {isError && (
           <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 rounded-lg">

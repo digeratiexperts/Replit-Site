@@ -131,7 +131,7 @@ export function TenantSelector({ currentTenant, onTenantChange }: TenantSelector
       <DropdownMenuTrigger asChild>
         <Button 
           variant="outline" 
-          className="gap-2 min-w-[200px] justify-between bg-white/5 border-white/20 text-white hover:bg-white/10"
+          className="gap-2 min-w-[200px] justify-between bg-white/5 border-white/20 text-white hover:!bg-white/15 hover:!text-white hover:!border-white/30"
           disabled={isLoading || isPending}
           data-testid="dropdown-tenant-selector"
         >

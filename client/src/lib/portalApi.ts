@@ -1,35 +1,92 @@
-export async function portalFetch(url: string, options: RequestInit = {}) {
+import { PORTAL_LOGIN } from "./portalUrls";
+
+/** Path-only login route for same-host pathname checks (never compare against absolute URL). */
+const PORTAL_LOGIN_PATH = "/portal/login";
+
+function portalAuthHeaders(extra?: HeadersInit): Record<string, string> {
+  const headers: Record<string, string> = {};
+  if (extra) {
+    if (extra instanceof Headers) {
+      extra.forEach((value, key) => {
+        headers[key] = value;
+      });
+    } else if (Array.isArray(extra)) {
+      for (const [key, value] of extra) headers[key] = value;
+    } else {
+      Object.assign(headers, extra);
+    }
+  }
   const token = localStorage.getItem("portalToken");
-  
-  const headers: HeadersInit = {
-    ...options.headers,
-  };
-  
   if (token) {
-    (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
-  
-  if (options.body && typeof options.body === "string") {
-    (headers as Record<string, string>)["Content-Type"] = "application/json";
+  return headers;
+}
+
+function clearPortalLocalSession() {
+  localStorage.removeItem("portalToken");
+  localStorage.removeItem("portalUser");
+  localStorage.removeItem("portalUserId");
+  localStorage.removeItem("impersonatingCompany");
+}
+
+/** Redirect to canonical portal login (absolute host — never //login). */
+export function redirectToPortalLogin(returnTo?: string) {
+  if (typeof window === "undefined") return;
+  const path = window.location.pathname || "";
+  if (path === PORTAL_LOGIN_PATH || path.startsWith(`${PORTAL_LOGIN_PATH}?`)) return;
+
+  const dest =
+    returnTo && returnTo.startsWith("/portal") && !returnTo.startsWith("//")
+      ? returnTo
+      : `${path}${window.location.search || ""}`;
+  const safeReturn =
+    dest.startsWith("/portal") && !dest.startsWith("//") && dest !== PORTAL_LOGIN_PATH
+      ? dest
+      : "/portal/dashboard";
+
+  clearPortalLocalSession();
+  const qs = new URLSearchParams({ returnTo: safeReturn });
+  window.location.href = `${PORTAL_LOGIN}?${qs.toString()}`;
+}
+
+function handlePortalAuthFailure(status: number) {
+  if (status === 401 || status === 403) {
+    redirectToPortalLogin();
   }
-  
+}
+
+export async function portalFetch(url: string, options: RequestInit = {}) {
+  const headers = portalAuthHeaders(options.headers);
+
+  if (options.body && typeof options.body === "string" && !headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
+
   const response = await fetch(url, {
     ...options,
     headers,
     credentials: "include",
   });
-  
+
+  if (response.status === 401 && typeof window !== "undefined") {
+    const path = window.location.pathname || "";
+    if (path.startsWith("/portal") && path !== PORTAL_LOGIN_PATH) {
+      handlePortalAuthFailure(401);
+    }
+  }
+
   return response;
 }
 
 export async function portalGet<T>(url: string): Promise<T> {
   const response = await portalFetch(url);
-  
+
   if (!response.ok) {
     const text = await response.text();
     throw new Error(`${response.status}: ${text}`);
   }
-  
+
   return response.json();
 }
 
@@ -38,16 +95,17 @@ export async function portalPost<T>(url: string, data: unknown): Promise<T> {
     method: "POST",
     body: JSON.stringify(data),
   });
-  
+
   if (!response.ok) {
     const text = await response.text();
     let message = text;
     try {
       const json = JSON.parse(text);
       if (json.message) message = json.message;
+      else if (json.error) message = json.error;
     } catch {}
     throw new Error(message);
   }
-  
+
   return response.json();
 }

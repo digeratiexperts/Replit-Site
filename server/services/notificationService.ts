@@ -15,6 +15,8 @@ interface EmailOptions {
   subject: string;
   htmlBody: string;
   textBody?: string;
+  /** When true, add List-Unsubscribe headers (marketing/newsletter). */
+  listUnsubscribe?: boolean;
 }
 
 interface ZeptoMailResponse {
@@ -36,7 +38,10 @@ async function sendEmail(options: EmailOptions): Promise<boolean> {
 
   const recipients = Array.isArray(options.to) ? options.to : [options.to];
   
-  const payload = {
+  const unsubMailto = `mailto:${ADMIN_EMAIL}?subject=${encodeURIComponent("Unsubscribe")}`;
+  const unsubUrl = `${process.env.APP_URL || "https://digeratiexperts.com"}/legal/privacy-policy#email-preferences`;
+
+  const payload: Record<string, unknown> = {
     from: {
       address: FROM_EMAIL,
       name: FROM_NAME,
@@ -49,7 +54,17 @@ async function sendEmail(options: EmailOptions): Promise<boolean> {
     subject: options.subject,
     htmlbody: options.htmlBody,
     textbody: options.textBody || options.htmlBody.replace(/<[^>]*>/g, ''),
+    track_clicks: false,
+    track_opens: false,
   };
+
+  // Deliverability: List-Unsubscribe for marketing/newsletter only (not transactional auth mail)
+  if (options.listUnsubscribe) {
+    payload.additional_headers = [
+      { header_name: "List-Unsubscribe", header_value: `<${unsubMailto}>, <${unsubUrl}>` },
+      { header_name: "List-Unsubscribe-Post", header_value: "List-Unsubscribe=One-Click" },
+    ];
+  }
 
   try {
     const response = await fetch(ZEPTOMAIL_API_URL, {
@@ -361,6 +376,25 @@ export const notificationService = {
       to: data.email,
       subject: "Verify your email — Digerati Experts Portal",
       htmlBody: baseEmailTemplate(content, "Email Verification"),
+    });
+  },
+
+  async sendNewsletterWelcome(data: { email: string }): Promise<boolean> {
+    const content = `
+      <h2>You're on the list</h2>
+      <p>Thanks for subscribing to Digerati Experts updates — practical IT and cybersecurity notes for Arizona businesses.</p>
+      <p>We'll only send useful content. Prefer a free risk assessment instead?</p>
+      <a href="https://digeratiexperts.com/book" class="button">Schedule My Assessment</a>
+      <p style="color: #888; font-size: 12px; margin-top: 24px;">
+        To stop receiving these emails, reply with Unsubscribe or email
+        <a href="mailto:${ADMIN_EMAIL}?subject=Unsubscribe" style="color:#a855f7;">${ADMIN_EMAIL}</a>.
+      </p>
+    `;
+    return sendEmail({
+      to: data.email,
+      subject: "Welcome — Digerati Experts insights",
+      htmlBody: baseEmailTemplate(content, "Newsletter Welcome"),
+      listUnsubscribe: true,
     });
   },
 

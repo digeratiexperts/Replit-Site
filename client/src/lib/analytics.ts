@@ -44,6 +44,48 @@ function updateClarityConsent(config: ConsentConfig) {
   } catch {}
 }
 
+function updateMetaConsent(config: ConsentConfig) {
+  try {
+    const f = window as any;
+    if (!f.fbq) return;
+    f.fbq("consent", config.marketing ? "grant" : "revoke");
+  } catch {}
+}
+
+function updateBingConsent(config: ConsentConfig) {
+  try {
+    const w = window as any;
+    w.uetq = w.uetq || [];
+    w.uetq.push("consent", "update", {
+      ad_storage: config.marketing ? "granted" : "denied",
+    });
+  } catch {}
+}
+
+/** Inject Google / Bing webmaster verification tags when build env provides them. */
+export function injectSearchVerificationTags() {
+  const google = import.meta.env.VITE_GOOGLE_SITE_VERIFICATION as string | undefined;
+  const bing = import.meta.env.VITE_BING_SITE_VERIFICATION as string | undefined;
+  if (google) {
+    let tag = document.querySelector('meta[name="google-site-verification"]');
+    if (!tag) {
+      tag = document.createElement("meta");
+      tag.setAttribute("name", "google-site-verification");
+      document.head.appendChild(tag);
+    }
+    tag.setAttribute("content", google);
+  }
+  if (bing) {
+    let tag = document.querySelector('meta[name="msvalidate.01"]');
+    if (!tag) {
+      tag = document.createElement("meta");
+      tag.setAttribute("name", "msvalidate.01");
+      document.head.appendChild(tag);
+    }
+    tag.setAttribute("content", bing);
+  }
+}
+
 export function saveConsent(config: ConsentConfig) {
   try {
     localStorage.setItem(
@@ -54,23 +96,21 @@ export function saveConsent(config: ConsentConfig) {
   } catch {}
   updateGtagConsent(config);
   updateClarityConsent(config);
-
-  // Placeholder: LinkedIn Insight Tag
-  // When VITE_LINKEDIN_PARTNER_ID is set, LinkedIn is initialized in main.tsx
-  // and controlled here via window._linkedin_data_partner_ids
-
-  // Placeholder: Meta Pixel
-  // When VITE_META_PIXEL_ID is set, fbq is initialized in main.tsx
-  // window.fbq && window.fbq("consent", config.marketing ? "grant" : "revoke");
+  updateMetaConsent(config);
+  updateBingConsent(config);
+  if (config.marketing || config.analytics) {
+    initAnalytics();
+  }
 }
 
 export function initAnalytics() {
+  injectSearchVerificationTags();
   const consent = getConsent();
   updateGtagConsent(consent);
 
-  // Initialize Microsoft Clarity (analytics-gated)
+  // Microsoft Clarity (analytics-gated)
   const clarityId = import.meta.env.VITE_CLARITY_ID;
-  if (clarityId && consent.analytics) {
+  if (clarityId && consent.analytics && !(window as any).__CLARITY_ID__) {
     (function (c: any, l: any, a: any, r: any, i: any) {
       c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
       const t = l.createElement(r);
@@ -82,9 +122,9 @@ export function initAnalytics() {
     })(window, document, "clarity", "script", clarityId);
   }
 
-  // Initialize LinkedIn Insight Tag (marketing-gated)
+  // LinkedIn Insight Tag (marketing-gated)
   const linkedinId = import.meta.env.VITE_LINKEDIN_PARTNER_ID;
-  if (linkedinId && consent.marketing) {
+  if (linkedinId && consent.marketing && !(window as any).__LI_INIT__) {
     (window as any)._linkedin_partner_id = linkedinId;
     (window as any)._linkedin_data_partner_ids = (window as any)._linkedin_data_partner_ids || [];
     (window as any)._linkedin_data_partner_ids.push(linkedinId);
@@ -94,27 +134,61 @@ export function initAnalytics() {
     b.async = true;
     b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js";
     s.parentNode?.insertBefore(b, s);
+    (window as any).__LI_INIT__ = true;
   }
 
-  // Initialize Meta Pixel (marketing-gated)
+  // Meta Pixel (marketing-gated)
   const metaPixelId = import.meta.env.VITE_META_PIXEL_ID;
-  if (metaPixelId && consent.marketing) {
+  if (metaPixelId && consent.marketing && !(window as any).__FB_INIT__) {
     const f = window as any;
-    const fbq = function (...args: any[]) { fbq.callMethod ? fbq.callMethod(...args) : fbq.queue.push(args); };
-    (fbq as any).push = fbq;
-    (fbq as any).loaded = true;
-    (fbq as any).version = "2.0";
-    (fbq as any).queue = [];
+    const fbq: any = function (...args: any[]) {
+      fbq.callMethod ? fbq.callMethod(...args) : fbq.queue.push(args);
+    };
+    fbq.push = fbq;
+    fbq.loaded = true;
+    fbq.version = "2.0";
+    fbq.queue = [];
     f.fbq = fbq;
     f._fbq = fbq;
     const n = document.createElement("script");
     n.async = true;
     n.src = "https://connect.facebook.net/en_US/fbevents.js";
     document.head.appendChild(n);
-    setTimeout(() => {
-      f.fbq?.("init", metaPixelId);
-      f.fbq?.("track", "PageView");
-    }, 200);
+    fbq("consent", "grant");
+    fbq("init", metaPixelId);
+    fbq("track", "PageView");
+    f.__FB_INIT__ = true;
+  }
+
+  // Bing UET (marketing-gated)
+  const bingUet = import.meta.env.VITE_BING_UET_TAG_ID as string | undefined;
+  if (bingUet && consent.marketing && !(window as any).__BING_UET__) {
+    const w = window as any;
+    w.uetq = w.uetq || [];
+    (function (w: any, d: Document, t: string, r: string, u: string) {
+      let f: any, n: any, i: any;
+      w[u] = w[u] || [];
+      f = function () {
+        const o: any = { ti: bingUet, enableAutoSpaTracking: true };
+        o.q = w[u];
+        // UET is defined globally by bat.js
+        w[u] = new (w as any).UET(o);
+        w[u].push("pageLoad");
+      };
+      n = d.createElement(t);
+      n.src = r;
+      n.async = 1;
+      n.onload = n.onreadystatechange = function (this: any) {
+        const s = this.readyState;
+        if (!s || s === "loaded" || s === "complete") {
+          f();
+          n.onload = n.onreadystatechange = null;
+        }
+      };
+      i = d.getElementsByTagName(t)[0];
+      i.parentNode?.insertBefore(n, i);
+    })(window, document, "script", "https://bat.bing.com/bat.js", "uetq");
+    w.__BING_UET__ = true;
   }
 }
 
@@ -133,6 +207,14 @@ function fireMetaPixel(event: string, params?: Record<string, any>) {
   } catch {}
 }
 
+function fireBing(event: string, params?: Record<string, any>) {
+  try {
+    const w = window as any;
+    if (!w.uetq) return;
+    w.uetq.push("event", event, params || {});
+  } catch {}
+}
+
 function track(event: string, params?: Record<string, any>) {
   const consent = getConsent();
   if (!consent.analytics) return;
@@ -142,7 +224,10 @@ function track(event: string, params?: Record<string, any>) {
 function trackMarketing(gaEvent: string, metaEvent: string, params?: Record<string, any>) {
   const consent = getConsent();
   if (consent.analytics) fireGtag(gaEvent, params);
-  if (consent.marketing) fireMetaPixel(metaEvent, params);
+  if (consent.marketing) {
+    fireMetaPixel(metaEvent, params);
+    fireBing(metaEvent, params);
+  }
 }
 
 export const analytics = {
@@ -153,7 +238,10 @@ export const analytics = {
   bookingOpened(source: string) {
     track("book_appointment", { source, event_category: "engagement" });
     const consent = getConsent();
-    if (consent.marketing) fireMetaPixel("Schedule", { source });
+    if (consent.marketing) {
+      fireMetaPixel("Schedule", { source });
+      fireBing("schedule", { source });
+    }
   },
 
   contactFormSubmitted(subject: string) {
@@ -202,7 +290,26 @@ export const analytics = {
   },
 
   pageView(path: string, title: string) {
-    track("page_view", { page_path: path, page_title: title });
+    const consent = getConsent();
+    if (consent.analytics) {
+      try {
+        if (typeof gtag !== "undefined") {
+          gtag("event", "page_view", {
+            page_path: path,
+            page_title: title,
+            send_to: "G-1YDMJ38SXD",
+          });
+        }
+      } catch {}
+    }
+    if (consent.marketing) {
+      fireMetaPixel("PageView");
+      try {
+        const w = window as any;
+        w.uetq = w.uetq || [];
+        w.uetq.push("event", "page_view", { page_path: path });
+      } catch {}
+    }
   },
 
   storeAddToCart(productName: string, price: number, productId: string) {
@@ -228,8 +335,6 @@ export const analytics = {
       currency: "USD",
       event_category: "ecommerce",
     });
-    const consent = getConsent();
-    if (consent.marketing) fireMetaPixel("Purchase", { value, currency: "USD" });
   },
 
   chatOpened() {

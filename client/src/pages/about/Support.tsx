@@ -4,24 +4,24 @@ export default function Support() {
   return (
     <GenericServicePage
       title="Fast, Reliable Support & Response"
-      subtitle="15-minute response guarantee for your peace of mind"
-      description="Digerati Experts commits to rapid response and expert support. We don't just answer calls—we resolve issues quickly with our proven stack and experienced team, backed by clear SLAs and accountability."
+      subtitle="Ticketed ownership with clear escalation — not a black hole"
+      description="Digerati Experts commits to accountable support. We track work to resolution with remote and onsite options, vendor coordination, and response targets defined in your agreement — not marketing SLAs we can’t prove on a brochure page."
       canonical="/about/support"
       features={[
-        { title: "15-Minute Response SLA", description: "Guaranteed response to critical issues within 15 minutes, 24/7/365" },
-        { title: "Expert Support Team", description: "Certified technicians with deep knowledge of your IT environment" },
+        { title: "Defined response targets", description: "Response expectations are written into your MSA/SOW for the package you buy" },
+        { title: "Expert Support Team", description: "Technicians with deep knowledge of your IT environment" },
         { title: "Remote & Onsite Support", description: "Fast remote troubleshooting with onsite visits when needed" },
         { title: "Escalation Procedures", description: "Clear escalation paths to specialists and management when needed" },
         { title: "Support Ticket Tracking", description: "Full visibility into your support requests with transparent status updates" },
         { title: "Vendor Coordination", description: "We handle vendor escalations and third-party issue management" }
       ]}
       benefits={[
-        "Rapid issue resolution minimizes downtime",
-        "Predictable SLA compliance you can rely on",
+        "Owned tickets instead of endless reopen cycles",
+        "Response targets you can hold us to in writing",
         "Expert support without the headcount costs",
-        "Weekend and after-hours coverage included",
+        "Coverage options that match your package",
         "Reduced repeat incidents through root-cause analysis",
-        "Peace of mind knowing help is always available"
+        "A principal-led team that stays accountable"
       ]}
       gradientColors="from-blue-600 via-cyan-600 to-teal-600"
     />

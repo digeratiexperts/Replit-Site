@@ -60,6 +60,7 @@ const QuoteRequest = () => {
     title: "Request a Quote | Digerati Experts Store",
     description: "Request a custom quote for IT services and solutions from Digerati Experts.",
     canonical: "/store/quote-request",
+    noIndex: true,
   });
 
   const {
@@ -106,9 +107,23 @@ const QuoteRequest = () => {
         total: item.product.basePrice * item.quantity,
       }));
 
+      const portalToken = localStorage.getItem("portalToken");
+      if (!portalToken) {
+        toast({
+          title: "Sign in required",
+          description: "Please sign in to the Client Portal to submit a quote request.",
+          variant: "destructive",
+        });
+        navigate("/portal/login?redirect=/store/quote-request");
+        return;
+      }
       const response = await fetch("/api/store/quote-requests", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${portalToken}`,
+        },
+        credentials: "include",
         body: JSON.stringify({
           contactName: data.name,
           contactEmail: data.email,

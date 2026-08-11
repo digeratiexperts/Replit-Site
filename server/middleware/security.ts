@@ -67,6 +67,17 @@ export async function verifyTurnstile(req: Request, res: Response, next: NextFun
   }
   
   if (!turnstileToken) {
+    try {
+      const { recordLoginKnock, clientIpFromReq } = await import('../portalLoginKnocksStore');
+      void recordLoginKnock({
+        kind: 'turnstile_failed',
+        email: typeof req.body?.email === 'string' ? req.body.email : null,
+        ip: clientIpFromReq(req),
+        userAgent: typeof req.headers?.['user-agent'] === 'string' ? req.headers['user-agent'] : null,
+        path: req.originalUrl || req.url || null,
+        meta: { turnstileFailed: true, reason: 'missing_token' },
+      });
+    } catch { /* non-blocking */ }
     return res.status(400).json({ error: 'Bot verification required' });
   }
   
@@ -84,6 +95,17 @@ export async function verifyTurnstile(req: Request, res: Response, next: NextFun
     const data = await response.json();
     if (!data.success) {
       logSecurityEvent('TURNSTILE_FAILED', req, { error: data['error-codes'] });
+      try {
+        const { recordLoginKnock, clientIpFromReq } = await import('../portalLoginKnocksStore');
+        void recordLoginKnock({
+          kind: 'turnstile_failed',
+          email: typeof req.body?.email === 'string' ? req.body.email : null,
+          ip: clientIpFromReq(req),
+          userAgent: typeof req.headers?.['user-agent'] === 'string' ? req.headers['user-agent'] : null,
+          path: req.originalUrl || req.url || null,
+          meta: { turnstileFailed: true, errorCodes: data['error-codes'] },
+        });
+      } catch { /* non-blocking */ }
       return res.status(400).json({ error: 'Bot verification failed' });
     }
     
@@ -341,15 +363,15 @@ export function setSecurityHeaders(req: Request, res: Response, next: NextFuncti
   // HSTS: Enforce HTTPS (2 years, includeSubDomains, preload-ready)
   res.setHeader("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
 
-  // Content Security Policy
+  // Content Security Policy — marketing pixels (Meta, LinkedIn, Bing, Clarity, GA) + Zoho
   const cspDirectives = [
     "default-src 'self'",
-    `script-src 'self' 'unsafe-inline'${isProduction ? "" : " 'unsafe-eval'"} https://challenges.cloudflare.com https://salesiq.zoho.com https://*.clarity.ms https://www.googletagmanager.com`,
+    `script-src 'self' 'unsafe-inline'${isProduction ? "" : " 'unsafe-eval'"} https://challenges.cloudflare.com https://salesiq.zoho.com https://*.clarity.ms https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://snap.licdn.com https://bat.bing.com`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: https: blob:",
-    "frame-src https://challenges.cloudflare.com https://meet.digerati-experts.com https://*.zoho.com https://payments.zoho.com",
-    "connect-src 'self' https://*.zoho.com https://payments.zoho.com https://*.clarity.ms https://www.google-analytics.com" + (isProduction ? "" : " wss://*.replit.dev ws://localhost:*"),
+    "frame-src https://challenges.cloudflare.com https://meet.digerati-experts.com https://*.zoho.com https://payments.zoho.com https://www.facebook.com https://td.doubleclick.net",
+    "connect-src 'self' https://*.zoho.com https://payments.zoho.com https://*.clarity.ms https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.googletagmanager.com https://connect.facebook.net https://www.facebook.com https://bat.bing.com https://px.ads.linkedin.com https://www.linkedin.com" + (isProduction ? "" : " wss://*.replit.dev ws://localhost:*"),
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self' https://payments.zoho.com",
@@ -357,6 +379,21 @@ export function setSecurityHeaders(req: Request, res: Response, next: NextFuncti
     "upgrade-insecure-requests"
   ];
   res.setHeader("Content-Security-Policy", cspDirectives.join("; "));
+
+  // Portal + transactional store paths must not rank
+  const p = req.path || "";
+  if (
+    p.startsWith("/portal") ||
+    p === "/login" ||
+    p === "/signup" ||
+    p.startsWith("/store/checkout") ||
+    p.startsWith("/store/cart") ||
+    p.startsWith("/store/order-confirmation") ||
+    p.startsWith("/store/quote-confirmation") ||
+    p.startsWith("/store/quote-request")
+  ) {
+    res.setHeader("X-Robots-Tag", "noindex, nofollow");
+  }
 
   // Prevent clickjacking
   res.setHeader("X-Frame-Options", "SAMEORIGIN");

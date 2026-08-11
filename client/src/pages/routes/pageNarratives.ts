@@ -65,12 +65,12 @@ export const pageNarratives: Record<string, PageNarrative> = {
       },
       {
         q: "How fast do you respond?",
-        a: "Business-hours first response target is 15 minutes for managed clients. After-hours coverage scales with your plan and risk profile.",
+        a: "Response targets are defined in your agreement for the package you buy. After-hours coverage scales with plan and risk profile.",
       },
     ],
     ctaHeadline: "Get a clear picture of your IT — then decide",
     ctaBody:
-      "Schedule a free cyber risk assessment. We’ll show what’s brittle, what’s covered, and what a sane managed-IT month looks like for your office.",
+      "Schedule a Cyber Risk Assessment. We’ll show what’s brittle, what’s covered, and what a sane managed-IT month looks like for your office.",
   },
 
   "managed-workplace": {
@@ -207,8 +207,9 @@ export const pageNarratives: Record<string, PageNarrative> = {
     arizonaNote:
       "When something looks wrong at 2am, you need response — not a portal ticket. We run detection for Arizona SMBs who can’t staff a SOC and can’t afford to pretend they have one.",
     proof: {
-      quote: "88% of SMB breaches involve ransomware — waiting for ‘next business day’ is not a response plan.",
-      attribution: "Verizon DBIR 2025 (industry context)",
+      quote:
+        "About 96% of ransomware victims (where organization size was known) were SMBs — waiting for ‘next business day’ is not a response plan.",
+      attribution: "Verizon DBIR 2026 (industry context)",
     },
     faqs: [
       {
@@ -291,7 +292,7 @@ export const pageNarratives: Record<string, PageNarrative> = {
       },
     ],
     ctaHeadline: "Prove your backups can restore — before you need them",
-    ctaBody: "We’ll review backup coverage and restore readiness as part of your free assessment.",
+    ctaBody: "We’ll review backup coverage and restore readiness as part of your Cyber Risk Assessment.",
   },
 
   "backup-disaster-recovery": {
@@ -493,6 +494,63 @@ export const pageNarratives: Record<string, PageNarrative> = {
     ],
     ctaHeadline: "See which ProActive tier fits your office",
     ctaBody: "Assessment first — then a package recommendation you can take to ownership.",
+  },
+
+  healthcare: {
+    whoFor:
+      "Arizona medical, dental, and specialty practices that need HIPAA-aware IT, cybersecurity, and documentation — without building a hospital IT department.",
+    painPoints: [
+      "Ransomware or phishing could lock scheduling, imaging, or billing mid-day",
+      "PHI lives across EHR, email, shared drives, and personal devices with unclear access",
+      "Former employees or vendors may still have lingering accounts",
+      "Backups exist on paper — restore readiness is unproven",
+      "Cyber-insurance questionnaires ask for controls the current IT partner can’t evidence",
+      "Current IT resets passwords and tickets — but does not own security or compliance evidence",
+    ],
+    process: [
+      {
+        title: "Assess",
+        description:
+          "Map access, MFA, email risk, endpoints, backup restore readiness, and documentation gaps — then prioritize what matters first.",
+      },
+      {
+        title: "Stabilize",
+        description:
+          "Close urgent exposure: identity hygiene, BAA-ready controls where appropriate, backup verification, and staff reporting paths.",
+      },
+      {
+        title: "Operate",
+        description:
+          "Ongoing IT + cybersecurity + compliance evidence as one program — so owners can focus on patients, not tool sprawl.",
+      },
+    ],
+    arizonaNote:
+      "We operate from Chandler and work with East Valley clinics, dental offices, and specialty practices that need HIPAA-aware controls without hospital-sized headcount.",
+    faqs: [
+      {
+        q: "Do you make us ‘HIPAA certified’?",
+        a: "No vendor certifies you HIPAA. We implement technical and administrative safeguards, support BAAs where appropriate, and keep evidence so you can demonstrate a reasonable compliance posture.",
+      },
+      {
+        q: "We already have an EHR vendor — do we still need this?",
+        a: "EHR security is one slice. Email, endpoints, identity, backups, offboarding, and staff behavior are usually where practices get exposed — and where insurers and auditors ask follow-up questions.",
+      },
+      {
+        q: "What does the Cyber Risk Assessment cover?",
+        a: "Access controls, MFA posture, email risk, endpoint hygiene, backup restore readiness, and the documentation gaps insurers and auditors typically ask about — delivered as a prioritized risk summary, not a sales pitch.",
+      },
+      {
+        q: "Will you replace our current IT person or vendor?",
+        a: "Not by default. The assessment is independent. We can collaborate with your existing provider or take ownership when that is the clearer path — switching is optional.",
+      },
+      {
+        q: "Who is a good fit?",
+        a: "Growing Arizona practices — typically clinics and specialty offices in the roughly 10–75 employee range — that need more than break/fix support without enterprise hospital IT.",
+      },
+    ],
+    ctaHeadline: "Know your exposure before an incident forces the conversation",
+    ctaBody:
+      "Schedule a free HIPAA-focused risk assessment. You’ll leave with a prioritized summary of what to fix first — not a product dump.",
   },
 
   "professional-services": {

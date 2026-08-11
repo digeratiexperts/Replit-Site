@@ -15,10 +15,6 @@ function readQueryParam(name: string): string {
   return new URLSearchParams(window.location.search).get(name) || "";
 }
 
-function safePortalReturnTo(raw: string): string {
-  return raw.startsWith("/portal") && !raw.startsWith("//") ? raw : "/portal/dashboard";
-}
-
 export default function PortalLogin() {
   useSEO({
     title: "Client Portal Login",
@@ -39,6 +35,17 @@ export default function PortalLogin() {
   const [, navigate] = useLocation();
 
   useEffect(() => {
+    // Door-knock beacon — counts login page visits (bots + people)
+    fetch("/api/portal/login-knocks/ping", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path: "/portal/login" }),
+      credentials: "include",
+      keepalive: true,
+    }).catch(() => {});
+  }, []);
+
+  useEffect(() => {
     const token = readQueryParam("token");
     const zohoSso = readQueryParam("zoho_sso");
     const err = readQueryParam("error");
@@ -50,29 +57,57 @@ export default function PortalLogin() {
     }
 
     if (zohoSso === "1" && token) {
-      try {
-        const payloadPart = token.split(".")[1];
-        const payload = payloadPart
-          ? JSON.parse(atob(payloadPart.replace(/-/g, "+").replace(/_/g, "/")))
-          : null;
-        const user = {
-          id: payload?.userId || "portal-user",
-          email: payload?.email || "",
-          role: payload?.role || "user",
-          storeRole: payload?.storeRole || "prospect",
-          clientId: payload?.clientId ?? null,
-          fullName: payload?.email?.split("@")[0] || "Portal User",
-        };
-        localStorage.setItem("portalUser", JSON.stringify(user));
+      (async () => {
+        // Persist token first — JWT decode must never block session handoff
         localStorage.setItem("portalToken", token);
-        localStorage.setItem("portalUserId", user.id);
-        if (user.email) localStorage.setItem("userEmail", user.email);
-        window.history.replaceState({}, "", "/portal/login");
-        navigate(safePortalReturnTo(returnTo));
-        return;
-      } catch {
-        setError("Zoho sign-in completed but session handoff failed. Please try again.");
-      }
+        try {
+          let payload: any = null;
+          try {
+            const payloadPart = token.split(".")[1];
+            payload = payloadPart
+              ? JSON.parse(atob(payloadPart.replace(/-/g, "+").replace(/_/g, "/")))
+              : null;
+          } catch {
+            /* non-fatal */
+          }
+          try {
+            const meRes = await fetch("/api/portal/me", {
+              headers: { Authorization: `Bearer ${token}` },
+              credentials: "include",
+            });
+            const meData = await meRes.json();
+            if (meRes.ok && meData.user) {
+              localStorage.setItem("portalUser", JSON.stringify(meData.user));
+              localStorage.setItem("portalUserId", meData.user.id);
+              if (meData.user.email) localStorage.setItem("userEmail", meData.user.email);
+            } else {
+              const user = {
+                id: payload?.userId || "portal-user",
+                email: payload?.email || "",
+                role: payload?.role || "user",
+                storeRole: payload?.storeRole || "prospect",
+                clientId: payload?.clientId ?? null,
+                orgRole: payload?.orgRole || "staff",
+                fullName: payload?.email?.split("@")[0] || "Portal User",
+              };
+              localStorage.setItem("portalUser", JSON.stringify(user));
+              localStorage.setItem("portalUserId", user.id);
+              if (user.email) localStorage.setItem("userEmail", user.email);
+            }
+          } catch {
+            /* navigate with token; capabilities refresh on next /me */
+          }
+          const dest =
+            returnTo.startsWith("/portal") && !returnTo.startsWith("//")
+              ? returnTo
+              : "/portal/dashboard";
+          window.history.replaceState({}, "", "/portal/login");
+          navigate(dest);
+        } catch {
+          setError("Zoho sign-in completed but session handoff failed. Please try again.");
+        }
+      })();
+      return;
     }
 
     let cancelled = false;
@@ -122,7 +157,12 @@ export default function PortalLogin() {
       localStorage.setItem("portalToken", data.token);
       localStorage.setItem("portalUserId", data.user?.id || "portal-user");
       localStorage.setItem("userEmail", email);
-      navigate(safePortalReturnTo(readQueryParam("returnTo")));
+      const returnTo = readQueryParam("returnTo");
+      const dest =
+        returnTo.startsWith("/portal") && !returnTo.startsWith("//")
+          ? returnTo
+          : "/portal/dashboard";
+      navigate(dest);
     } catch (err) {
       setError("Connection error. Please try again.");
     } finally {
@@ -154,7 +194,12 @@ export default function PortalLogin() {
       localStorage.setItem("portalToken", data.token);
       localStorage.setItem("portalUserId", data.user?.id || "portal-user");
       localStorage.setItem("userEmail", email);
-      navigate(safePortalReturnTo(readQueryParam("returnTo")));
+      const returnTo = readQueryParam("returnTo");
+      const dest =
+        returnTo.startsWith("/portal") && !returnTo.startsWith("//")
+          ? returnTo
+          : "/portal/dashboard";
+      navigate(dest);
     } catch (err) {
       setError("Connection error. Please try again.");
     } finally {
@@ -162,7 +207,10 @@ export default function PortalLogin() {
     }
   };
 
-  const returnToForZoho = safePortalReturnTo(readQueryParam("returnTo"));
+  const returnToForZoho = (() => {
+    const r = readQueryParam("returnTo");
+    return r.startsWith("/portal") && !r.startsWith("//") ? r : "/portal/dashboard";
+  })();
   const zohoStartHref = `/api/portal/auth/zoho/start?returnTo=${encodeURIComponent(returnToForZoho)}`;
   const showZoho = zohoConfigured !== false;
 
@@ -278,7 +326,7 @@ export default function PortalLogin() {
                     </a>
                   </p>
                   <p className="text-xs text-gray-400 text-center">
-                    Need help? Contact support@digeratiexperts.com · 325-480-9870
+                    Need help? Contact support@digeratiexperts.com
                   </p>
                 </div>
               </CardContent>

@@ -24,9 +24,123 @@ import { verifyTurnstile } from "./middleware/security";
 import { eventBus, EventTypes } from "./eventBus";
 import { notificationService } from "./services/notificationService";
 import { logger } from "./logger";
+import {
+  initPortalAuthStore,
+  getUser as portalAuthGetUser,
+  hasUser as portalAuthHasUser,
+  setUser as portalAuthSetUser,
+  listUniqueUsers as portalAuthListUsers,
+  getClient as portalAuthGetClient,
+  setClient as portalAuthSetClient,
+  listClients as portalAuthListClients,
+  createProspectClientForUser,
+  saveOrderForm,
+  updateUserOrgFields,
+} from "./portalAuthStore";
+import {
+  initPortalChatStore,
+  conversationIdForUser,
+  listMessages as listLiveChatMessages,
+  appendMessage as appendLiveChatMessage,
+  ensureWelcomeMessage,
+  getChatStoreStatus,
+} from "./portalChatStore";
+import {
+  initPortalSurveyStore,
+  listSurveysForUser,
+  getSurveyById,
+  getUserResponseForSurvey,
+  submitSurveyResponse,
+  getSurveyStoreStatus,
+} from "./portalSurveyStore";
+import {
+  initPortalOrg,
+  canInitiateChat,
+  canAccessApprovals,
+  canManageOrg,
+  orgPublicUser,
+  listClientUsers,
+  listDepartments,
+  createDepartment,
+  updateDepartment,
+  findUserById,
+  validateManagerApproverEmail,
+  managerSummaryForUser,
+  type OrgUserFields,
+} from "./portalOrg";
+import {
+  initPortalApprovals,
+  createApprovalRequest,
+  listApprovalsForUser,
+  getApprovalWithSteps,
+  actOnApproval,
+  attachFulfillmentTicket,
+} from "./portalApprovalsStore";
+import {
+  initPortalLoginKnocks,
+  recordLoginKnock,
+  listLoginKnocks,
+  summarizeLoginKnocks,
+  clientIpFromReq,
+  type KnockKind,
+} from "./portalLoginKnocksStore";
+import {
+  initLifecycleOrchestrator,
+  lifecycleIntegrationStatus,
+  runLifecycle,
+  listLifecycleEvents,
+} from "./lifecycleOrchestrator";
+import {
+  buildLearningPayload,
+  resolveLearningAudience,
+  LEARNING_HUB_DOC_SLUGS,
+  LEARNING_LESSONS,
+} from "./portalLearningCatalog";
+import {
+  fetchHubCompanyDocuments,
+  fetchHubCompanyOrders,
+  fetchHubContractDownload,
+  resolvePortalCompanyName,
+} from "./techSalesDocuments";
 
 const JWT_SECRET = process.env.JWT_SECRET || randomBytes(32).toString('hex');
 const SALT_ROUNDS = 12;
+
+/** HttpOnly JWT cookie — survives localStorage loss; shared across digeratexperts.com hosts. */
+const PORTAL_AUTH_COOKIE = "portalAuth";
+
+function portalCookieOptions(maxAgeMs = 24 * 60 * 60 * 1000) {
+  const isProd = process.env.NODE_ENV === "production";
+  const opts: {
+    httpOnly: boolean;
+    secure: boolean;
+    sameSite: "lax";
+    maxAge: number;
+    path: string;
+    domain?: string;
+  } = {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: "lax",
+    maxAge: maxAgeMs,
+    path: "/",
+  };
+  // Share session between digeratexperts.com and portal.digeratiexperts.com
+  if (isProd) {
+    opts.domain = ".digeratiexperts.com";
+  }
+  return opts;
+}
+
+function setPortalAuthCookie(res: Response, token: string, maxAgeMs?: number) {
+  res.cookie(PORTAL_AUTH_COOKIE, token, portalCookieOptions(maxAgeMs));
+}
+
+function clearPortalAuthCookies(res: Response) {
+  const opts = portalCookieOptions();
+  res.clearCookie("sessionId", opts);
+  res.clearCookie(PORTAL_AUTH_COOKIE, opts);
+}
 
 // Utility function for generating IDs
 const randomId = () => randomBytes(16).toString('hex');
@@ -43,6 +157,10 @@ interface JWTPayload {
   role: string;
   storeRole?: string;
   clientId?: string | null;
+  orgRole?: string | null;
+  departmentId?: string | null;
+  managerUserId?: string | null;
+  isCompanyItContact?: boolean;
   iat?: number;
   exp?: number;
 }
@@ -53,21 +171,39 @@ const SESSION_EXPIRY_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 // ========== MIDDLEWARE ==========
 
-// JWT-based auth middleware with proper validation and optional session validation
+// JWT-based auth: Authorization Bearer and/or httpOnly portalAuth cookie
 export function authMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({ error: "Authentication required" });
-  }
-  
-  const token = authHeader.split(" ")[1];
+  const bearer =
+    authHeader && authHeader.startsWith("Bearer ")
+      ? authHeader.slice("Bearer ".length).trim()
+      : "";
+  const cookieToken =
+    typeof req.cookies?.[PORTAL_AUTH_COOKIE] === "string"
+      ? req.cookies[PORTAL_AUTH_COOKIE]
+      : "";
+  const token = bearer || cookieToken;
   if (!token) {
-    return res.status(401).json({ error: "Invalid authorization header" });
+    return res.status(401).json({ error: "Authentication required" });
   }
   
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
-    req.user = { id: decoded.userId, email: decoded.email, role: decoded.role, storeRole: decoded.storeRole || 'public', clientId: decoded.clientId || null };
+    const live = portalAuthGetUser(decoded.email) || (decoded.userId ? findUserById(decoded.userId) : null);
+    req.user = {
+      id: decoded.userId,
+      email: decoded.email,
+      role: decoded.role,
+      storeRole: decoded.storeRole || "public",
+      clientId: live?.clientId ?? decoded.clientId ?? null,
+      orgRole: live?.orgRole ?? decoded.orgRole ?? "staff",
+      departmentId: live?.departmentId ?? decoded.departmentId ?? null,
+      managerUserId: live?.managerUserId ?? decoded.managerUserId ?? null,
+      isCompanyItContact: live?.isCompanyItContact ?? decoded.isCompanyItContact ?? false,
+      fullName: live?.fullName,
+      impersonatingCompanyId: (decoded as any).impersonatingCompanyId || null,
+      impersonatingCompanyName: (decoded as any).impersonatingCompanyName || null,
+    };
     req.userId = decoded.userId;
     
     // Optional session validation from cookies
@@ -129,6 +265,83 @@ export function requireAdmin(req: AuthenticatedRequest, res: Response, next: Nex
   next();
 }
 
+function asOrgUser(req: AuthenticatedRequest): OrgUserFields {
+  return {
+    id: req.user?.id || req.userId || "",
+    email: req.user?.email || "",
+    fullName: req.user?.fullName || req.user?.email || "",
+    role: req.user?.role || "user",
+    orgRole: req.user?.orgRole || "staff",
+    clientId: req.user?.clientId || null,
+    departmentId: req.user?.departmentId || null,
+    managerUserId: req.user?.managerUserId || null,
+    isCompanyItContact: !!req.user?.isCompanyItContact,
+  };
+}
+
+function requireChatAccess(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  if (!req.user) return res.status(401).json({ error: "Authentication required" });
+  if (!canInitiateChat(asOrgUser(req))) {
+    return res.status(403).json({
+      error: "Live Chat is limited to your company's IT Contact. Submit a ticket or request instead.",
+      code: "CHAT_IT_CONTACT_ONLY",
+    });
+  }
+  next();
+}
+
+function requireApprovalsAccess(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  if (!req.user) return res.status(401).json({ error: "Authentication required" });
+  // Staff may view their own submissions; mutating actions check assignee in store
+  next();
+}
+
+function requireOrgManage(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  if (!req.user) return res.status(401).json({ error: "Authentication required" });
+  if (!canManageOrg(asOrgUser(req))) {
+    return res.status(403).json({ error: "Company IT Contact or DE admin required" });
+  }
+  next();
+}
+
+function buildPortalJwtClaims(user: any, storeRole: StoreRole) {
+  return {
+    userId: user.id,
+    email: user.email,
+    role: user.role,
+    storeRole,
+    clientId: user.clientId || null,
+    orgRole: user.orgRole || (user.role === "admin" ? "company_it_contact" : "staff"),
+    departmentId: user.departmentId || null,
+    managerUserId: user.managerUserId || null,
+    isCompanyItContact: !!user.isCompanyItContact || user.role === "admin",
+  };
+}
+
+function publicPortalUser(user: any, storeRole: StoreRole) {
+  const org = {
+    id: user.id,
+    email: user.email,
+    fullName: user.fullName,
+    role: user.role,
+    orgRole: user.orgRole || "staff",
+    clientId: user.clientId || null,
+    departmentId: user.departmentId || null,
+    managerUserId: user.managerUserId || null,
+    isCompanyItContact: !!user.isCompanyItContact,
+  };
+  return {
+    id: user.id,
+    email: user.email,
+    username: user.username,
+    fullName: user.fullName,
+    role: user.role,
+    storeRole,
+    clientId: user.clientId || null,
+    ...orgPublicUser(org),
+  };
+}
+
 // Generate JWT token
 function generateToken(userId: string, email: string, role: string = "user"): string {
   return jwt.sign({ userId, email, role }, JWT_SECRET, { expiresIn: '24h' });
@@ -163,22 +376,6 @@ const widgetTicketRateLimiter = rateLimit({
   message: "Too many support requests. Please try again later.",
 });
 
-const advisorChatRateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 20,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { error: "Too many chat messages. Please try again shortly." },
-});
-
-const advisorActionRateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 10,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { error: "Too many requests. Please try again shortly." },
-});
-
 const speechRateLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 5,
@@ -196,9 +393,35 @@ const validateInput = (req: AuthenticatedRequest, res: Response, next: NextFunct
   next();
 };
 
-// Security event logger
+// Security event logger (+ durable login-door knocks for auth-related events)
+const SECURITY_KNOCK_MAP: Record<string, KnockKind> = {
+  PORTAL_LOGIN_FAILED: "login_failed",
+  PORTAL_USER_LOGIN: "login_success",
+  PORTAL_LOGIN_UNVERIFIED: "login_failed",
+  MFA_VERIFICATION_FAILED: "mfa_failed",
+  MFA_VERIFICATION_SUCCESS: "mfa_success",
+  MFA_LOCKED_OUT: "locked_out",
+  TURNSTILE_FAILED: "turnstile_failed",
+};
+
 const logSecurityEvent = (event: string, req: AuthenticatedRequest, data: any) => {
   console.log(`[SECURITY] ${event}`, { userId: req.user?.id, ...data });
+  const kind = SECURITY_KNOCK_MAP[event];
+  if (!kind) return;
+  const email = data?.email || req.user?.email || null;
+  void recordLoginKnock({
+    kind,
+    email,
+    ip: clientIpFromReq(req),
+    userAgent: typeof req.headers?.["user-agent"] === "string" ? req.headers["user-agent"] : null,
+    path: req.originalUrl || req.url || null,
+    meta: {
+      event,
+      method: data?.method,
+      userId: data?.userId || req.user?.id,
+      turnstileFailed: kind === "turnstile_failed",
+    },
+  });
 };
 
 // ========== ROUTES ==========
@@ -206,6 +429,32 @@ const logSecurityEvent = (event: string, req: AuthenticatedRequest, data: any) =
 export async function registerRoutes(app: Express) {
   // Register object storage routes for file uploads
   registerObjectStorageRoutes(app);
+
+  // Durable portal auth (Neon) — Map-compatible shim for existing handlers
+  await initPortalAuthStore();
+  await initPortalOrg();
+  await initPortalApprovals();
+  await initPortalChatStore();
+  await initPortalSurveyStore();
+  await initPortalLoginKnocks();
+  await initLifecycleOrchestrator();
+  const portalUsers = {
+    get: (key: string) => portalAuthGetUser(key),
+    has: (key: string) => portalAuthHasUser(key),
+    set: (_key: string, user: any) => {
+      portalAuthSetUser(user);
+      return portalUsers;
+    },
+    values: () => portalAuthListUsers(),
+  };
+  const portalClients = {
+    get: (id: string) => portalAuthGetClient(id),
+    set: (_id: string, client: any) => {
+      portalAuthSetClient(client);
+      return portalClients;
+    },
+    values: () => portalAuthListClients(),
+  };
   
   // ===== AUTHENTICATION ROUTES =====
   
@@ -672,56 +921,417 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  // In-memory chat message storage for persistence
-  const chatMessages: Map<string, any[]> = new Map();
-
-  // Live chat messages route (for PortalChat WebSocket fallback)
-  app.post("/api/portal/chat/messages", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+  // Live chat status — HTTP poll transport (WebSocket /api/ws is not used in production)
+  app.get("/api/portal/chat/status", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { content, ticketId, senderName, senderRole } = req.body;
-      if (!content) {
+      const org = asOrgUser(req);
+      const allowed = canInitiateChat(org);
+      const store = getChatStoreStatus();
+      const openaiConfigured = !!(
+        process.env.OPENAI_API_KEY ||
+        process.env.OPENAI_API ||
+        (process.env.AI_INTEGRATIONS_OPENAI_BASE_URL && process.env.AI_INTEGRATIONS_OPENAI_API_KEY)
+      );
+      res.json({
+        success: true,
+        connected: allowed,
+        allowed,
+        transport: store.transport,
+        durable: store.durable,
+        assistantAvailable: openaiConfigured,
+        supportHours: "Monday - Friday, 9 AM - 6 PM EST",
+        message: allowed
+          ? undefined
+          : "Live Chat is limited to your Company or Department IT Contact. Submit a ticket, request, or infrastructure issue instead.",
+      });
+    } catch (error: any) {
+      res.status(500).json({ success: false, connected: false, error: error.message });
+    }
+  });
+
+  // Live chat — send message (persisted + AI support reply)
+  app.post("/api/portal/chat/messages", [authMiddleware, requireChatAccess, chatRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (!req.userId) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+      const { content, senderName } = req.body;
+      if (!content || typeof content !== "string" || !content.trim()) {
         return res.status(400).json({ error: "Message content required" });
       }
-      
-      const chatId = ticketId || `user-${req.userId}`;
-      const message = {
-        id: randomId(),
-        ticketId: chatId,
+
+      const conversationId = conversationIdForUser(req.userId);
+      await ensureWelcomeMessage(conversationId, req.userId);
+
+      const displayName =
+        (typeof senderName === "string" && senderName.trim()) ||
+        req.user?.fullName ||
+        req.user?.email ||
+        "You";
+
+      const message = await appendLiveChatMessage({
+        conversationId,
         userId: req.userId,
-        senderName: senderName || "User",
-        senderRole: senderRole || "client",
-        content,
-        timestamp: new Date().toISOString(),
-        isRead: false,
-      };
-      
-      // Store message in memory
-      if (!chatMessages.has(chatId)) {
-        chatMessages.set(chatId, []);
+        senderName: displayName,
+        senderRole: "client",
+        content: content.trim(),
+      });
+
+      let reply = null as Awaited<ReturnType<typeof appendLiveChatMessage>> | null;
+      try {
+        const history = await listLiveChatMessages(conversationId, { limit: 20 });
+        const conversationHistory = history
+          .filter((m) => m.id !== message.id)
+          .map((m) => ({
+            role: (m.senderRole === "client" ? "user" : "assistant") as "user" | "assistant",
+            content: m.content,
+          }));
+        const { generateChatResponse } = await import("./openaiService");
+        const aiText = await generateChatResponse(content.trim(), conversationHistory);
+        if (aiText) {
+          reply = await appendLiveChatMessage({
+            conversationId,
+            userId: req.userId!,
+            senderName: "DE Support",
+            senderRole: "support",
+            content: aiText,
+          });
+        }
+      } catch (aiErr: any) {
+        console.warn("[live-chat] AI reply failed:", aiErr?.message || aiErr);
       }
-      chatMessages.get(chatId)!.push(message);
-      
-      // Broadcast to WebSocket clients if available
-      if ((global as any).wsBroadcast) {
-        (global as any).wsBroadcast({ type: "chat_message", data: message });
-      }
-      
-      res.json({ success: true, message });
-      logSecurityEvent("LIVE_CHAT_MESSAGE", req, { ticketId: chatId });
+
+      res.json({
+        success: true,
+        message,
+        reply,
+        conversationId,
+      });
+      logSecurityEvent("LIVE_CHAT_MESSAGE", req, { conversationId });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
   });
 
-  // Get chat message history
-  app.get("/api/portal/chat/messages", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+  // Live chat — history / poll (optional ?since=ISO for incremental updates)
+  app.get("/api/portal/chat/messages", [authMiddleware, requireChatAccess], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const ticketId = req.query.ticketId as string || `user-${req.userId}`;
-      const messages = chatMessages.get(ticketId) || [];
-      
-      res.json({ success: true, messages });
+      if (!req.userId) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+      const conversationId = conversationIdForUser(req.userId);
+      await ensureWelcomeMessage(conversationId, req.userId);
+      const since = typeof req.query.since === "string" ? req.query.since : undefined;
+      const messages = await listLiveChatMessages(conversationId, { since, limit: 200 });
+
+      res.json({
+        success: true,
+        connected: true,
+        conversationId,
+        messages,
+        transport: "http-poll",
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message, connected: false });
+    }
+  });
+
+  // ----- Portal org / multi-role -----
+  app.get("/api/portal/me", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const live = portalAuthGetUser(req.user!.email) || findUserById(req.userId!);
+      if (!live) return res.status(404).json({ error: "User not found" });
+      let storeRole: StoreRole = (live.storeRole as StoreRole) || "prospect";
+      if (live.role === "admin") storeRole = "admin";
+      const user = publicPortalUser(live, storeRole);
+      const mgr = managerSummaryForUser(live as OrgUserFields);
+      res.json({
+        success: true,
+        user: {
+          ...user,
+          managerUserId: mgr.managerUserId,
+          manager: mgr.manager,
+          companyDomains: mgr.companyDomains,
+        },
+      });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/portal/org/people", [authMiddleware, requireOrgManage], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const clientId = req.user!.clientId;
+      if (!clientId && req.user!.role !== "admin") {
+        return res.status(400).json({ error: "No client associated" });
+      }
+      const targetClient = (req.query.clientId as string) || clientId;
+      if (!targetClient) return res.status(400).json({ error: "clientId required" });
+      if (req.user!.role !== "admin" && targetClient !== clientId) {
+        return res.status(403).json({ error: "Forbidden" });
+      }
+      const people = listClientUsers(targetClient).map((u) => orgPublicUser(u));
+      const departments = await listDepartments(targetClient);
+      res.json({ success: true, people, departments });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.patch("/api/portal/org/people/:userId", [authMiddleware, requireOrgManage, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const target = findUserById(req.params.userId);
+      if (!target) return res.status(404).json({ error: "User not found" });
+      if (req.user!.role !== "admin" && target.clientId !== req.user!.clientId) {
+        return res.status(403).json({ error: "Forbidden" });
+      }
+      const { orgRole, departmentId, managerUserId, isCompanyItContact, fullName } = req.body || {};
+      if (managerUserId) {
+        const mgr = findUserById(managerUserId);
+        if (!mgr || mgr.clientId !== target.clientId) {
+          return res.status(400).json({ error: "Manager must be in the same company" });
+        }
+        if (managerUserId === target.id) {
+          return res.status(400).json({ error: "User cannot be their own manager" });
+        }
+      }
+      const updated = updateUserOrgFields(target.id, {
+        orgRole,
+        departmentId: departmentId === undefined ? undefined : departmentId || null,
+        managerUserId: managerUserId === undefined ? undefined : managerUserId || null,
+        isCompanyItContact,
+        fullName,
+      });
+      res.json({ success: true, user: orgPublicUser(updated as OrgUserFields) });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/portal/org/departments", [authMiddleware, requireOrgManage, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const clientId = req.user!.clientId;
+      if (!clientId && req.user!.role !== "admin") {
+        return res.status(400).json({ error: "No client associated" });
+      }
+      const targetClient = req.body.clientId || clientId;
+      if (!targetClient) return res.status(400).json({ error: "clientId required" });
+      if (req.user!.role !== "admin" && targetClient !== clientId) {
+        return res.status(403).json({ error: "Forbidden" });
+      }
+      const name = String(req.body.name || "").trim();
+      if (!name) return res.status(400).json({ error: "Department name required" });
+      const dept = await createDepartment(targetClient, name, req.body.itContactUserId || null);
+      res.status(201).json({ success: true, department: dept });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.patch("/api/portal/org/departments/:id", [authMiddleware, requireOrgManage, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const clientId = req.user!.clientId;
+      if (!clientId && req.user!.role !== "admin") {
+        return res.status(400).json({ error: "No client associated" });
+      }
+      const targetClient = req.body.clientId || clientId;
+      if (!targetClient) return res.status(400).json({ error: "clientId required" });
+      const dept = await updateDepartment(req.params.id, targetClient, {
+        name: req.body.name,
+        itContactUserId: req.body.itContactUserId,
+      });
+      if (!dept) return res.status(404).json({ error: "Department not found" });
+      res.json({ success: true, department: dept });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ----- Approvals -----
+  app.get("/api/portal/approvals", [authMiddleware, requireApprovalsAccess], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const scope = (req.query.scope as "mine" | "team" | "company") || "mine";
+      const org = asOrgUser(req);
+      if (scope !== "mine" && !canAccessApprovals(org) && org.role !== "admin") {
+        return res.status(403).json({ error: "Approvals queue requires manager or IT Contact role" });
+      }
+      const items = await listApprovalsForUser(org, scope);
+      res.json({ success: true, approvals: items });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/portal/approvals/:id", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const bundle = await getApprovalWithSteps(req.params.id);
+      if (!bundle) return res.status(404).json({ error: "Not found" });
+      const org = asOrgUser(req);
+      if (org.role !== "admin" && bundle.request.clientId !== org.clientId) {
+        return res.status(403).json({ error: "Forbidden" });
+      }
+      const isParty =
+        bundle.request.requesterUserId === org.id ||
+        bundle.steps.some((s) => s.approverUserId === org.id) ||
+        canAccessApprovals(org) ||
+        org.role === "admin";
+      if (!isParty) return res.status(403).json({ error: "Forbidden" });
+      const requester = findUserById(bundle.request.requesterUserId);
+      res.json({
+        success: true,
+        approval: {
+          ...bundle.request,
+          requesterName: requester?.fullName,
+          steps: bundle.steps.map((s) => ({
+            ...s,
+            approverName: s.approverUserId ? findUserById(s.approverUserId)?.fullName : null,
+          })),
+        },
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/portal/approvals", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const org = asOrgUser(req);
+      if (!org.clientId) {
+        return res.status(400).json({ error: "No client account associated with this user." });
+      }
+      const { type, title, description, priority, amountCents, payload } = req.body || {};
+      if (!type || !title || !description) {
+        return res.status(400).json({ error: "type, title, and description are required" });
+      }
+
+      const fields =
+        payload && typeof payload === "object" && (payload as any).fields && typeof (payload as any).fields === "object"
+          ? ((payload as any).fields as Record<string, unknown>)
+          : {};
+      const managerEmailRaw =
+        (typeof fields.managerEmail === "string" && fields.managerEmail) ||
+        (typeof fields.approverEmail === "string" && fields.approverEmail) ||
+        (typeof (payload as any)?.managerEmail === "string" && (payload as any).managerEmail) ||
+        "";
+      const managerEmail = String(managerEmailRaw || "").trim();
+      const accessLevel = String(fields.accessLevel || "");
+      const privileged =
+        /admin|privileged/i.test(accessLevel) ||
+        /privileged|admin/i.test(String(fields.resourceType || ""));
+
+      if (managerEmail) {
+        const check = validateManagerApproverEmail({ requester: org, managerEmail });
+        if (!check.ok) {
+          return res.status(400).json({ error: check.error, companyDomains: check.domains });
+        }
+      } else if (privileged && !org.managerUserId) {
+        return res.status(400).json({
+          error:
+            "Admin / privileged requests need a manager on your profile (People & Org) and their company-domain email in Manager / approver email.",
+        });
+      }
+
+      const created = await createApprovalRequest({
+        clientId: org.clientId,
+        requester: org,
+        type: String(type),
+        title: String(title),
+        description: String(description),
+        priority: priority || "medium",
+        amountCents: typeof amountCents === "number" ? amountCents : null,
+        payload: payload && typeof payload === "object" ? payload : {},
+      });
+      res.status(201).json({ success: true, ...created });
+      logSecurityEvent("APPROVAL_CREATED", req, { requestId: created.request.id });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  async function fulfillApprovedRequest(requestId: string, req: AuthenticatedRequest) {
+    const bundle = await getApprovalWithSteps(requestId);
+    if (!bundle || bundle.request.status !== "approved") return null;
+    if (bundle.request.fulfillmentTicketId) return bundle.request.fulfillmentTicketId;
+
+    const ticketNumber = `TKT-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 5).toUpperCase()}`;
+    const ticket = await storage.createPortalTicket({
+      clientId: bundle.request.clientId,
+      createdBy: bundle.request.requesterUserId,
+      ticketNumber,
+      subject: `[Approved] ${bundle.request.title}`,
+      description:
+        `${bundle.request.description}\n\n---\nApproved via portal workflow ${bundle.request.requestNumber}.\nType: ${bundle.request.type}\n` +
+        `Payload: ${JSON.stringify(bundle.request.payload || {}, null, 2)}`,
+      status: "open",
+      priority: bundle.request.priority || "medium",
+      category: bundle.request.type || "Access & Security",
+    });
+    await attachFulfillmentTicket(requestId, ticket.id);
+
+    try {
+      const { zohoDeskService } = await import("./zoho/zohoDesk");
+      const { zohoClient } = await import("./zoho/zohoClient");
+      if (zohoClient.isConfigured()) {
+        const requester = findUserById(bundle.request.requesterUserId);
+        await zohoDeskService.createTicket({
+          subject: `[Approved] ${bundle.request.title}`,
+          description: bundle.request.description,
+          email: requester?.email,
+          priority: bundle.request.priority === "critical" || bundle.request.priority === "high" ? "High" : "Medium",
+        });
+      }
+    } catch (e: any) {
+      console.warn("[approvals] Zoho sync failed:", e?.message);
+    }
+    return ticket.id;
+  }
+
+  app.post("/api/portal/approvals/:id/approve", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const result = await actOnApproval({
+        requestId: req.params.id,
+        actor: asOrgUser(req),
+        action: "approve",
+        note: req.body?.note,
+      });
+      let fulfillmentTicketId: string | null = null;
+      if (result.finalized && !result.rejected) {
+        fulfillmentTicketId = await fulfillApprovedRequest(req.params.id, req);
+      }
+      res.json({ success: true, ...result, fulfillmentTicketId });
+    } catch (error: any) {
+      const status = /Forbidden|not the current/i.test(error.message) ? 403 : 400;
+      res.status(status).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/portal/approvals/:id/reject", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const result = await actOnApproval({
+        requestId: req.params.id,
+        actor: asOrgUser(req),
+        action: "reject",
+        note: req.body?.note,
+      });
+      res.json({ success: true, ...result });
+    } catch (error: any) {
+      const status = /Forbidden|not the current/i.test(error.message) ? 403 : 400;
+      res.status(status).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/portal/approvals/:id/request-info", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const result = await actOnApproval({
+        requestId: req.params.id,
+        actor: asOrgUser(req),
+        action: "request-info",
+        note: req.body?.note,
+      });
+      res.json({ success: true, ...result });
+    } catch (error: any) {
+      const status = /Forbidden|not the current/i.test(error.message) ? 403 : 400;
+      res.status(status).json({ error: error.message });
     }
   });
 
@@ -734,6 +1344,99 @@ export async function registerRoutes(app: Express) {
       logSecurityEvent("QUESTIONNAIRES_FETCHED", req, {});
     } catch (error: any) {
       res.status(500).json({ error: error.message });
+    }
+  });
+
+  // ===== PORTAL SURVEYS (first-party CSAT / onboarding / awareness) =====
+  app.get("/api/portal/surveys", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (!req.userId) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+      const surveys = await listSurveysForUser(req.userId);
+      const store = getSurveyStoreStatus();
+      res.json({
+        success: true,
+        surveys,
+        durable: store.durable,
+        pendingCount: surveys.filter((s) => s.status === "pending").length,
+        completedCount: surveys.filter((s) => s.status === "completed").length,
+      });
+      logSecurityEvent("SURVEYS_LISTED", req, { count: surveys.length });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/portal/surveys/:id", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (!req.userId) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+      const survey = await getSurveyById(req.params.id);
+      if (!survey) {
+        return res.status(404).json({ error: "Survey not found" });
+      }
+      const response = await getUserResponseForSurvey(req.userId, survey.id);
+      res.json({
+        success: true,
+        survey,
+        status: response ? "completed" : "pending",
+        response: response
+          ? {
+              id: response.id,
+              answers: response.answers,
+              rating: response.rating,
+              submittedAt: response.submittedAt,
+            }
+          : null,
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/portal/surveys/:id/responses", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      if (!req.userId) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+      const answers = req.body?.answers;
+      if (!answers || typeof answers !== "object" || Array.isArray(answers)) {
+        return res.status(400).json({ error: "answers object is required" });
+      }
+
+      const response = await submitSurveyResponse({
+        surveyId: req.params.id,
+        userId: req.userId,
+        clientId: req.user?.clientId || null,
+        answers,
+      });
+
+      res.json({
+        success: true,
+        response: {
+          id: response.id,
+          surveyId: response.surveyId,
+          rating: response.rating,
+          submittedAt: response.submittedAt,
+        },
+      });
+      logSecurityEvent("SURVEY_SUBMITTED", req, { surveyId: req.params.id });
+    } catch (error: any) {
+      const message = error?.message || "Failed to submit survey";
+      const status =
+        message === "Survey not found"
+          ? 404
+          : message === "Survey already completed"
+            ? 409
+            : message.startsWith("Missing") ||
+                message.startsWith("Select") ||
+                message.startsWith("Rating") ||
+                message.startsWith("Invalid")
+              ? 400
+              : 500;
+      res.status(status).json({ error: message });
     }
   });
 
@@ -985,11 +1688,8 @@ export async function registerRoutes(app: Express) {
   });
 
   // ===== PORTAL AUTHENTICATION =====
-  // In-memory user and client storage for demo (replace with database in production)
-  const portalUsers: Map<string, any> = new Map();
-  const portalClients: Map<string, any> = new Map();
-  
-  // Note: sessionStore is now at module level for authMiddleware access
+  // Note: portalUsers / portalClients are durable via portalAuthStore (initialized above)
+  // sessionStore is module-level for authMiddleware access
   
   // Email verification tokens storage
   const emailVerificationTokens = new Map<string, { 
@@ -1025,116 +1725,11 @@ export async function registerRoutes(app: Express) {
     secret: string;
     createdAt: number;
   }>();
-  
-  // MSP company (Digerati Experts) - separate from client companies
-  const mspCompany = { 
-    id: "msp-digerati", 
-    companyName: "Digerati Experts (Internal)", 
-    contactEmail: "admin@digeratiexperts.com", 
-    contactPhone: "(480) 555-1000", 
-    industry: "MSP/MSSP", 
-    primaryContact: "Digerati Admin", 
-    status: "active", 
-    type: "msp", // MSP's own account
-    createdAt: new Date() 
-  };
-  portalClients.set(mspCompany.id, mspCompany);
-  
-  // Demo client companies - Password: ClientDemo1!
-  // serviceType: "managed" = full managed services, "comanaged" = co-managed IT
-  const demoCompanies = [
-    { id: "client-1", companyName: "Acme Corp", contactEmail: "admin@acme.com", contactPhone: "(480) 555-1001", industry: "Manufacturing", primaryContact: "John Smith", status: "active", type: "client", serviceType: "managed", createdAt: new Date() },
-    { id: "client-2", companyName: "Phoenix Medical Group", contactEmail: "it@phoenixmedical.com", contactPhone: "(480) 555-1002", industry: "Healthcare", primaryContact: "Sarah Jones", status: "active", type: "client", serviceType: "managed", createdAt: new Date() },
-    { id: "client-3", companyName: "Desert Law Partners", contactEmail: "admin@desertlaw.com", contactPhone: "(480) 555-1003", industry: "Legal", primaryContact: "Mike Davis", status: "active", type: "client", serviceType: "comanaged", createdAt: new Date() },
-    { id: "client-4", companyName: "Scottsdale Realty", contactEmail: "tech@scottsdalereal.com", contactPhone: "(480) 555-1004", industry: "Real Estate", primaryContact: "Lisa Wilson", status: "active", type: "client", serviceType: "comanaged", createdAt: new Date() },
-    { id: "client-5", companyName: "Alamo Industries", contactEmail: "support@alamoindustries.com", contactPhone: "(480) 555-1005", industry: "Manufacturing", primaryContact: "Maria Garcia", status: "active", type: "client", serviceType: "comanaged", createdAt: new Date() },
-    { id: "client-6", companyName: "Sel Machining", contactEmail: "support@selmachining.com", contactPhone: "(480) 555-1006", industry: "Manufacturing", primaryContact: "Operations Manager", status: "active", type: "client", serviceType: "comanaged", createdAt: new Date() },
-  ];
-  demoCompanies.forEach(c => portalClients.set(c.id, c));
-  
-  // Admin credentials - CHANGE THESE IN PRODUCTION
-  // Password: Admin123! (bcrypt 12 rounds)
-  const adminUser = {
-    id: "admin-001",
-    email: "admin@digeratiexperts.com",
-    username: "admin",
-    password: "$2b$12$Bf.sDD1gQ6391SrTebkd4.9BeiteKKOswHl63vyCN0/51CmDldT7K",
-    role: "admin",
-    storeRole: "admin" as StoreRole,
-    fullName: "Administrator",
-    clientId: null,
-  };
-  
-  // Demo client users - Password: Admin123! (same as admin for demo)
-  // storeRole is derived from client's serviceType: managed -> managed, comanaged -> comanaged
-  const demoUser1 = {
-    id: "user-001",
-    email: "john.smith@acme.com",
-    username: "johnsmith",
-    password: "$2b$12$Bf.sDD1gQ6391SrTebkd4.9BeiteKKOswHl63vyCN0/51CmDldT7K",
-    role: "user",
-    storeRole: "managed" as StoreRole,
-    fullName: "John Smith",
-    clientId: "client-1",
-    isActive: true,
-  };
-  
-  const demoUser2 = {
-    id: "user-002",
-    email: "sarah.jones@phoenixmedical.com",
-    username: "sarahjones",
-    password: "$2b$12$Bf.sDD1gQ6391SrTebkd4.9BeiteKKOswHl63vyCN0/51CmDldT7K",
-    role: "user",
-    storeRole: "managed" as StoreRole,
-    fullName: "Sarah Jones",
-    clientId: "client-2",
-    isActive: true,
-  };
-  
-  // Alamo Industries user - Password: AlamoUser123!
-  // Alamo is a comanaged client (client-5), so they can purchase products
-  const alamoUser = {
-    id: "user-003",
-    email: "admin@alamoindustries.com",
-    username: "alamoadmin",
-    password: "$2b$12$N9Ys4.kLCKht2rMjK4x0TOJHlQlxY7dRzAT6vmC7.mGrjck7TUI7O",
-    role: "user",
-    storeRole: "comanaged" as StoreRole,
-    fullName: "Maria Garcia",
-    clientId: "client-5",
-    isActive: true,
-  };
-  
-  // Sel Machining user - Password: SelUser123!
-  // Sel Machining is a comanaged client (client-6)
-  const selUser = {
-    id: "user-004",
-    email: "admin@selmachining.com",
-    username: "seladmin",
-    password: "$2b$12$m6eyC5YfWBIG4/beE40TxOeG5BG4v/MxsowQ4Ays9RrjhOzcVxx.a",
-    role: "user",
-    storeRole: "comanaged" as StoreRole,
-    fullName: "Sel Operations",
-    clientId: "client-6",
-    isActive: true,
-  };
-  
-  // Initialize with admin and demo users
-  portalUsers.set(adminUser.email, adminUser);
-  portalUsers.set(adminUser.username, adminUser);
-  portalUsers.set(demoUser1.email, demoUser1);
-  portalUsers.set(demoUser1.username, demoUser1);
-  portalUsers.set(demoUser2.email, demoUser2);
-  portalUsers.set(demoUser2.username, demoUser2);
-  portalUsers.set(alamoUser.email, alamoUser);
-  portalUsers.set(alamoUser.username, alamoUser);
-  portalUsers.set(selUser.email, selUser);
-  portalUsers.set(selUser.username, selUser);
 
-  // Portal Register Endpoint
+  // Portal Register Endpoint — creates prospect client + durable user
   app.post("/api/portal/register", [verifyTurnstile, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { email, username, password } = req.body;
+      const { email, username, password, companyName, fullName } = req.body;
 
       if (!email || !username || !password) {
         return res.status(400).json({ message: "Email, username, and password are required" });
@@ -1153,23 +1748,27 @@ export async function registerRoutes(app: Express) {
       }
 
       // Hash password with bcrypt
-      const bcrypt = await import('bcrypt');
-      const hashedPassword = await bcrypt.hash(password, 12);
+      const bcryptMod = await import('bcrypt');
+      const hashedPassword = await bcryptMod.hash(password, 12);
       
-      // Create new user with emailVerified: false
       const newUser = {
         id: randomId(),
         email,
         username,
         password: hashedPassword,
         role: "user",
-        fullName: username,
+        storeRole: "prospect" as StoreRole,
+        fullName: fullName || username,
         emailVerified: false,
+        isActive: true,
+        clientId: null as string | null,
         createdAt: new Date(),
       };
 
       portalUsers.set(email, newUser);
-      portalUsers.set(username, newUser);
+      await createProspectClientForUser(newUser, companyName);
+      // Reload after client link
+      const saved = portalUsers.get(email) || newUser;
 
       // Generate email verification token
       const verificationToken = randomId();
@@ -1177,8 +1776,8 @@ export async function registerRoutes(app: Express) {
       const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
       
       emailVerificationTokens.set(verificationToken, {
-        email: newUser.email,
-        userId: newUser.id,
+        email: saved.email,
+        userId: saved.id,
         createdAt: now,
         expiresAt: now + TWENTY_FOUR_HOURS,
       });
@@ -1187,23 +1786,31 @@ export async function registerRoutes(app: Express) {
       const baseUrl = process.env.APP_URL || "https://digeratiexperts.com";
       const verificationLink = `${baseUrl}/api/portal/verify-email?token=${verificationToken}`;
       notificationService.sendEmailVerification({
-        email: newUser.email,
-        name: newUser.fullName,
+        email: saved.email,
+        name: saved.fullName,
         verificationLink,
       }).catch(err => logger.warn("Failed to send verification email", err));
 
-      logSecurityEvent("PORTAL_USER_REGISTERED", req, { userId: newUser.id, email, emailVerified: false });
+      logSecurityEvent("PORTAL_USER_REGISTERED", req, {
+        userId: saved.id,
+        email,
+        clientId: saved.clientId,
+        storeRole: saved.storeRole,
+        emailVerified: false,
+      });
 
       return res.json({
         success: true,
         message: "Account created successfully. Please check your email to verify your account.",
         requiresVerification: true,
         user: {
-          id: newUser.id,
-          email: newUser.email,
-          username: newUser.username,
-          fullName: newUser.fullName,
-          role: newUser.role,
+          id: saved.id,
+          email: saved.email,
+          username: saved.username,
+          fullName: saved.fullName,
+          role: saved.role,
+          storeRole: saved.storeRole || "prospect",
+          clientId: saved.clientId || null,
           emailVerified: false,
         },
       });
@@ -1408,19 +2015,10 @@ export async function registerRoutes(app: Express) {
       else if (client?.serviceType === 'comanaged') storeRole = 'comanaged';
     }
 
-    const token = jwt.sign(
-      { userId: user.id, email: user.email, role: user.role, storeRole, clientId: user.clientId || null },
-      JWT_SECRET,
-      { expiresIn: '24h' }
-    );
+    const token = jwt.sign(buildPortalJwtClaims(user, storeRole), JWT_SECRET, { expiresIn: "24h" });
 
-    res.cookie('sessionId', sessionId, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 24 * 60 * 60 * 1000,
-      path: '/',
-    });
+    res.cookie("sessionId", sessionId, portalCookieOptions());
+    setPortalAuthCookie(res, token);
 
     logSecurityEvent("PORTAL_USER_LOGIN", req, { userId: user.id, email: user.email, role: user.role, storeRole, sessionId });
 
@@ -1428,15 +2026,7 @@ export async function registerRoutes(app: Express) {
       success: true,
       token,
       sessionId,
-      user: {
-        id: user.id,
-        email: user.email,
-        username: user.username,
-        fullName: user.fullName,
-        role: user.role,
-        storeRole,
-        clientId: user.clientId || null,
-      },
+      user: publicPortalUser(user, storeRole),
     });
   }
 
@@ -1456,19 +2046,10 @@ export async function registerRoutes(app: Express) {
       else if (client?.serviceType === "comanaged") storeRole = "comanaged";
     }
 
-    const token = jwt.sign(
-      { userId: user.id, email: user.email, role: user.role, storeRole, clientId: user.clientId || null },
-      JWT_SECRET,
-      { expiresIn: "24h" },
-    );
+    const token = jwt.sign(buildPortalJwtClaims(user, storeRole), JWT_SECRET, { expiresIn: "24h" });
 
-    res.cookie("sessionId", sessionId, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 24 * 60 * 60 * 1000,
-      path: "/",
-    });
+    res.cookie("sessionId", sessionId, portalCookieOptions());
+    setPortalAuthCookie(res, token);
 
     logSecurityEvent("PORTAL_USER_LOGIN", req, {
       userId: user.id,
@@ -1514,26 +2095,16 @@ export async function registerRoutes(app: Express) {
         role: isMaster ? "admin" : "user",
         storeRole: isMaster ? "admin" : "prospect",
         fullName: profile.fullName || username,
-        clientId: null as string | null,
+        clientId: null,
         emailVerified: true,
         isActive: true,
       };
-      if (!isMaster) {
-        const clientId = `prospect-${user.id.slice(0, 12)}`;
-        portalClients.set(clientId, {
-          id: clientId,
-          companyName: `${user.fullName || user.username || "Prospect"} (Prospect)`,
-          contactEmail: user.email,
-          primaryContact: user.fullName || user.username || user.email,
-          status: "prospect",
-          type: "client",
-          serviceType: "prospect",
-          createdAt: new Date(),
-        });
-        user.clientId = clientId;
-      }
       portalUsers.set(email, user);
-      portalUsers.set(username, user);
+      if (!isMaster) {
+        await createProspectClientForUser(user);
+      } else {
+        portalUsers.set(username, user);
+      }
       logSecurityEvent("PORTAL_USER_PROVISIONED_ZOHO", req, {
         email,
         role: user.role,
@@ -1610,6 +2181,7 @@ export async function registerRoutes(app: Express) {
     return res.json({
       configured: cfg.configured,
       provider: "zoho",
+      // Public-safe hint only — never expose client secret
       redirectConfigured: Boolean(cfg.redirectUri),
     });
   });
@@ -1617,12 +2189,107 @@ export async function registerRoutes(app: Express) {
   app.get("/api/portal/auth/zoho/start", (req: AuthenticatedRequest, res: Response) => {
     const cfg = getZohoPortalConfig();
     if (!cfg.configured) {
+      void recordLoginKnock({
+        kind: "zoho_failed",
+        ip: clientIpFromReq(req),
+        userAgent: typeof req.headers?.["user-agent"] === "string" ? req.headers["user-agent"] : null,
+        path: "/api/portal/auth/zoho/start",
+        meta: { reason: "not_configured" },
+      });
       return res.redirect(portalLoginErrorRedirect("zoho_not_configured", "Zoho sign-in is not configured"));
     }
+    void recordLoginKnock({
+      kind: "zoho_start",
+      ip: clientIpFromReq(req),
+      userAgent: typeof req.headers?.["user-agent"] === "string" ? req.headers["user-agent"] : null,
+      path: "/api/portal/auth/zoho/start",
+    });
     const returnTo = sanitizeReturnTo(req.query.returnTo);
     const { authorizeUrl, codeVerifier } = createZohoStartPayload(returnTo);
     setZohoPkceCookie(res, codeVerifier);
     return res.redirect(authorizeUrl);
+  });
+
+  /** Public beacon: login page loaded (door knock). Rate-limited lightly via no auth. */
+  app.post("/api/portal/login-knocks/ping", async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      await recordLoginKnock({
+        kind: "page_hit",
+        ip: clientIpFromReq(req),
+        userAgent: typeof req.headers?.["user-agent"] === "string" ? req.headers["user-agent"] : null,
+        path: typeof req.body?.path === "string" ? req.body.path : "/portal/login",
+        meta: { source: "login_page_beacon" },
+      });
+      return res.json({ ok: true });
+    } catch {
+      return res.json({ ok: true });
+    }
+  });
+
+  app.get("/api/portal/admin/login-knocks", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const sinceHours = Math.min(Number(req.query.hours) || 24, 168);
+      const [summary, knocks] = await Promise.all([
+        summarizeLoginKnocks(sinceHours),
+        listLoginKnocks({ limit: 200, sinceHours }),
+      ]);
+      return res.json({ summary, knocks });
+    } catch (error: any) {
+      console.error("[ERROR] login-knocks list:", error);
+      return res.status(500).json({ message: "Failed to load login knocks" });
+    }
+  });
+
+  app.get("/api/portal/admin/lifecycle/status", [authMiddleware, requireAdmin], async (_req: AuthenticatedRequest, res: Response) => {
+    try {
+      const status = await lifecycleIntegrationStatus();
+      const events = await listLifecycleEvents(40);
+      return res.json({ status, events });
+    } catch (error: any) {
+      console.error("[ERROR] lifecycle status:", error);
+      return res.status(500).json({ message: "Failed to load lifecycle status" });
+    }
+  });
+
+  app.post("/api/portal/admin/lifecycle/onboard", [authMiddleware, requireAdmin, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { email, companyName, firstName, lastName } = req.body || {};
+      if (!email || typeof email !== "string") {
+        return res.status(400).json({ message: "email is required" });
+      }
+      const event = await runLifecycle({
+        action: "onboard",
+        email,
+        companyName,
+        firstName,
+        lastName,
+        requestedBy: req.user?.email || null,
+      });
+      return res.json({ success: event.success, event });
+    } catch (error: any) {
+      console.error("[ERROR] lifecycle onboard:", error);
+      return res.status(500).json({ message: "Onboard failed" });
+    }
+  });
+
+  app.post("/api/portal/admin/lifecycle/offboard", [authMiddleware, requireAdmin, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { email, companyName, deleteJumpCloudUser } = req.body || {};
+      if (!email || typeof email !== "string") {
+        return res.status(400).json({ message: "email is required" });
+      }
+      const event = await runLifecycle({
+        action: "offboard",
+        email,
+        companyName,
+        deleteJumpCloudUser: !!deleteJumpCloudUser,
+        requestedBy: req.user?.email || null,
+      });
+      return res.json({ success: event.success, event });
+    } catch (error: any) {
+      console.error("[ERROR] lifecycle offboard:", error);
+      return res.status(500).json({ message: "Offboard failed" });
+    }
   });
 
   app.get("/api/portal/auth/zoho/callback", handlePortalZohoCallback);
@@ -1778,7 +2445,7 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  // Portal Logout Endpoint - Clears session cookie
+  // Portal Logout Endpoint - Clears session + portalAuth cookies
   app.post("/api/portal/logout", [validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const sessionId = req.cookies?.sessionId;
@@ -1789,13 +2456,7 @@ export async function registerRoutes(app: Express) {
         logSecurityEvent("SESSION_TERMINATED", req, { sessionId });
       }
 
-      // Clear the session cookie
-      res.clearCookie('sessionId', {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        path: '/',
-      });
+      clearPortalAuthCookies(res);
 
       logSecurityEvent("PORTAL_USER_LOGOUT", req, { userId: req.user?.id || "unknown" });
 
@@ -1997,6 +2658,145 @@ export async function registerRoutes(app: Express) {
     } catch (error: any) {
       logger.error("Backup code regeneration failed", error);
       return res.status(500).json({ message: "Failed to regenerate backup codes" });
+    }
+  });
+
+  // ===== PORTAL SETTINGS =====
+  app.get("/api/portal/profile", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const user = portalUsers.get(req.user?.email || "");
+      if (!user) return res.status(404).json({ message: "User not found" });
+      const mgr = managerSummaryForUser(user as OrgUserFields);
+      return res.json({
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        fullName: user.fullName,
+        role: user.role,
+        storeRole: user.storeRole,
+        clientId: user.clientId || null,
+        emailVerified: !!user.emailVerified,
+        mfaEnabled: !!user.mfaEnabled,
+        orgRole: user.orgRole || "staff",
+        managerUserId: mgr.managerUserId,
+        manager: mgr.manager,
+        companyDomains: mgr.companyDomains,
+      });
+    } catch (error: any) {
+      return res.status(500).json({ message: "Failed to load profile" });
+    }
+  });
+
+  app.patch("/api/portal/profile", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const user = portalUsers.get(req.user?.email || "");
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      const { fullName, email } = req.body;
+      if (fullName && typeof fullName === "string") {
+        user.fullName = fullName.trim();
+      }
+      if (email && typeof email === "string" && email.toLowerCase() !== user.email.toLowerCase()) {
+        const nextEmail = email.trim().toLowerCase();
+        if (portalUsers.has(nextEmail)) {
+          return res.status(400).json({ message: "Email already in use" });
+        }
+        user.email = nextEmail;
+        user.emailVerified = false;
+      }
+      portalUsers.set(user.email, user);
+      if (user.username) portalUsers.set(user.username, user);
+
+      logSecurityEvent("PORTAL_PROFILE_UPDATED", req, { userId: user.id });
+      return res.json({
+        success: true,
+        user: {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          fullName: user.fullName,
+          role: user.role,
+          storeRole: user.storeRole,
+          clientId: user.clientId || null,
+          emailVerified: !!user.emailVerified,
+        },
+      });
+    } catch (error: any) {
+      logger.error("Profile update failed", error);
+      return res.status(500).json({ message: "Failed to update profile" });
+    }
+  });
+
+  app.post("/api/portal/change-password", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { currentPassword, newPassword } = req.body;
+      if (!currentPassword || !newPassword) {
+        return res.status(400).json({ message: "Current and new password are required" });
+      }
+      if (newPassword.length < 8 || !/[A-Z]/.test(newPassword) || !/[0-9]/.test(newPassword)) {
+        return res.status(400).json({
+          message: "Password must be at least 8 characters with 1 uppercase letter and 1 number",
+        });
+      }
+
+      const user = portalUsers.get(req.user?.email || "");
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      const bcryptMod = await import("bcrypt");
+      const valid = await bcryptMod.compare(currentPassword, user.password);
+      if (!valid) return res.status(401).json({ message: "Current password is incorrect" });
+
+      user.password = await bcryptMod.hash(newPassword, 12);
+      portalUsers.set(user.email, user);
+      if (user.username) portalUsers.set(user.username, user);
+
+      logSecurityEvent("PORTAL_PASSWORD_CHANGED", req, { userId: user.id });
+      return res.json({ success: true, message: "Password updated successfully" });
+    } catch (error: any) {
+      logger.error("Change password failed", error);
+      return res.status(500).json({ message: "Failed to change password" });
+    }
+  });
+
+  app.post("/api/portal/order-form", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const user = portalUsers.get(req.user?.email || "");
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      const payload = req.body || {};
+      const saved = await saveOrderForm({
+        userId: user.id,
+        clientId: user.clientId || null,
+        payload,
+      });
+
+      const company = payload?.clientInfo?.legalName || user.fullName || user.email;
+      logger.info("Portal order form submitted", { orderFormId: saved.id, email: user.email, company });
+
+      try {
+        await eventBus.emit(EventTypes.LEAD_CREATED, {
+          source: "portal-order-form",
+          email: user.email,
+          name: user.fullName || user.username,
+          company,
+          orderFormId: saved.id,
+        }, "portal-order-form");
+      } catch {
+        /* non-fatal */
+      }
+
+      logSecurityEvent("PORTAL_ORDER_FORM_SUBMITTED", req, { userId: user.id, orderFormId: saved.id });
+
+      return res.json({
+        success: true,
+        message: "Order submitted successfully",
+        packet: { id: saved.id, status: "submitted" },
+        items: payload.selectedServices || [],
+        orderFormId: saved.id,
+      });
+    } catch (error: any) {
+      logger.error("Order form submit failed", error);
+      return res.status(500).json({ message: "Failed to submit order form" });
     }
   });
 
@@ -2248,6 +3048,90 @@ export async function registerRoutes(app: Express) {
     } catch (error: any) {
       console.error("[ERROR] Company fetch failed:", error);
       res.status(500).json({ message: "Failed to load company data" });
+    }
+  });
+
+  // Portal Learning Center — role-personalized curriculum (Hub taxonomy + docs)
+  app.get("/api/portal/learning", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const live = req.user?.email ? portalUsers.get(req.user.email) : null;
+      const audience = resolveLearningAudience({
+        role: live?.role || req.user?.role,
+        orgRole: live?.orgRole || req.user?.orgRole,
+        isCompanyItContact: !!(live?.isCompanyItContact || req.user?.isCompanyItContact),
+      });
+      const payload = buildLearningPayload(audience);
+
+      let hubResources: Array<{
+        slug: string;
+        title: string;
+        category?: string;
+        description?: string;
+        version?: number | string;
+      }> = [];
+      let hubSource: "techsales" | "none" | "unconfigured" = "unconfigured";
+
+      try {
+        const { companyName } = portalCompanyContext(req);
+        if (companyName) {
+          const hub = await fetchHubCompanyDocuments(companyName);
+          if (hub?.library?.length) {
+            hubSource = "techsales";
+            hubResources = hub.library
+              .filter((d: any) => d?.slug && LEARNING_HUB_DOC_SLUGS.has(String(d.slug)))
+              .map((d: any) => ({
+                slug: String(d.slug),
+                title: String(d.title || d.slug),
+                category: d.category,
+                description: d.description,
+                version: d.version,
+              }));
+          } else if (hub) {
+            hubSource = "techsales";
+          } else {
+            hubSource = "none";
+          }
+        } else {
+          hubSource = "none";
+        }
+      } catch {
+        hubSource = "none";
+      }
+
+      // Fallback educational titles when Hub bridge has no match yet
+      if (hubResources.length === 0) {
+        const wanted = new Set(
+          payload.lessons.flatMap((l) => l.hubDocSlugs || []),
+        );
+        hubResources = Array.from(wanted).map((slug) => {
+          const title =
+            slug
+              .replace(/-/g, " ")
+              .replace(/\b\w/g, (c) => c.toUpperCase()) || slug;
+          return {
+            slug,
+            title,
+            category: "service_tier",
+            description: "Referenced from TechSales document catalog — open Contracts when available.",
+          };
+        });
+      }
+
+      const recommendedMinutes = payload.lessons.reduce((n, l) => n + l.minutes, 0);
+
+      return res.json({
+        ...payload,
+        recommendedMinutes,
+        hub: {
+          source: hubSource,
+          resources: hubResources,
+        },
+        catalogVersion: "hub-core36-ecosystem-v1",
+        lessonCountTotal: LEARNING_LESSONS.length,
+      });
+    } catch (error: any) {
+      console.error("[ERROR] portal learning:", error);
+      return res.status(500).json({ message: "Failed to load learning path" });
     }
   });
 
@@ -2552,41 +3436,159 @@ export async function registerRoutes(app: Express) {
       const { status } = req.query;
       const userId = req.userId;
       const clientId = req.user?.clientId;
-      
-      // Get orders from database for this user/client
+      const statusFilter = typeof status === "string" && status !== "all" ? status : null;
+
+      // --- Store orders ---
       const allOrders = await storage.getStoreOrders();
-      
-      // Filter orders by user or client
-      let userOrders = allOrders.filter(order => 
-        order.userId === userId || order.clientId === clientId
+      let userOrders = allOrders.filter(
+        (order) => order.userId === userId || (clientId && order.clientId === clientId),
       );
-      
-      // Apply status filter if provided
-      if (status && typeof status === "string" && status !== "all") {
-        userOrders = userOrders.filter(order => order.status === status);
+      if (statusFilter) {
+        userOrders = userOrders.filter((order) => order.status === statusFilter);
       }
-      
-      // Sort by creation date (newest first)
       userOrders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      
-      const orders = userOrders.map(order => ({
+
+      const storeOrders = userOrders.map((order) => ({
         id: order.id,
         orderNumber: order.orderNumber,
         status: order.status,
-        total: order.total,
+        total: order.total != null ? String(order.total) : "0",
+        totalMonthly: null as number | null,
+        totalOneTime: null as number | null,
         createdAt: order.createdAt,
         itemCount: Array.isArray(order.lineItems) ? order.lineItems.length : 0,
         billingName: order.billingName,
+        title: order.billingCompany || order.billingName || order.orderNumber,
+        source: "store" as const,
+        detailPath: `/portal/orders/${order.id}`,
+        hubStatus: null as string | null,
       }));
-      
-      logSecurityEvent("ORDERS_LIST_VIEWED", req, { 
+
+      // --- Store quote requests (same account) ---
+      let storeQuotes: typeof storeOrders = [];
+      try {
+        const { storeQuoteRequests } = await import("@shared/schema");
+        const { db: portalDb, dbReady: portalDbReady } = await import("./db");
+        if (portalDbReady && portalDb && (userId || clientId)) {
+          const { eq: dEq, or: dOr } = await import("drizzle-orm");
+          const clauses = [];
+          if (userId) clauses.push(dEq(storeQuoteRequests.userId, userId));
+          if (clientId) clauses.push(dEq(storeQuoteRequests.clientId, clientId));
+          if (req.user?.email) {
+            clauses.push(dEq(storeQuoteRequests.contactEmail, req.user.email));
+          }
+          if (clauses.length) {
+            const rows = await portalDb.select().from(storeQuoteRequests).where(dOr(...clauses));
+            storeQuotes = rows
+              .filter((q) => !statusFilter || String(q.status) === statusFilter || statusFilter === "pending")
+              .map((q) => {
+                const items = Array.isArray(q.requestedItems) ? q.requestedItems : [];
+                return {
+                  id: `sq-${q.id}`,
+                  orderNumber: q.quoteNumber,
+                  status: q.status === "converted" ? "completed" : q.status === "declined" ? "cancelled" : "quote_requested",
+                  total: "0",
+                  totalMonthly: null as number | null,
+                  totalOneTime: null as number | null,
+                  createdAt: q.createdAt,
+                  itemCount: items.length,
+                  billingName: q.contactName,
+                  title: q.companyName || `Quote request ${q.quoteNumber}`,
+                  source: "store_quote" as const,
+                  detailPath: "/store",
+                  hubStatus: q.status,
+                };
+              });
+          }
+        }
+      } catch (e: any) {
+        console.warn("[orders] store quote requests skipped:", e?.message);
+      }
+
+      // --- TechSales Hub commercial items ---
+      let hubOrders: Array<{
+        id: string;
+        orderNumber: string;
+        status: string;
+        total: string;
+        totalMonthly: number | null;
+        totalOneTime: number | null;
+        createdAt: string | Date;
+        itemCount: number;
+        billingName?: string;
+        title: string;
+        source: string;
+        detailPath: string;
+        hubStatus: string | null;
+      }> = [];
+      let hubSource: "ok" | "unavailable" | "skipped" = "skipped";
+      let companyName: string | null = null;
+      let matchedDeals: any[] = [];
+
+      try {
+        const ctx = portalCompanyContext(req);
+        companyName = ctx.companyName;
+        if (companyName) {
+          const hub = await fetchHubCompanyOrders(companyName);
+          if (hub?.orders) {
+            hubSource = "ok";
+            matchedDeals = hub.matchedDeals || [];
+            hubOrders = hub.orders
+              .map((o) => {
+                const monthly = typeof o.totalMonthly === "number" ? o.totalMonthly : null;
+                const oneTime = typeof o.totalOneTime === "number" ? o.totalOneTime : null;
+                const amount =
+                  typeof o.amount === "number"
+                    ? o.amount
+                    : (monthly || 0) + (oneTime || 0);
+                return {
+                  id: o.id,
+                  orderNumber: o.orderNumber,
+                  status: o.status,
+                  total: String(amount || 0),
+                  totalMonthly: monthly,
+                  totalOneTime: oneTime,
+                  createdAt: o.createdAt || o.updatedAt || new Date().toISOString(),
+                  itemCount: 1,
+                  billingName: o.companyName,
+                  title: o.title || o.orderNumber,
+                  source: o.source || "hub",
+                  detailPath: o.detailPath || "/portal/contracts",
+                  hubStatus: o.hubStatus || o.stage || null,
+                };
+              })
+              .filter((o) => !statusFilter || o.status === statusFilter);
+          } else {
+            hubSource = "unavailable";
+          }
+        }
+      } catch (e: any) {
+        hubSource = "unavailable";
+        console.warn("[orders] hub bridge:", e?.message);
+      }
+
+      const orders = [...storeOrders, ...storeQuotes, ...hubOrders].sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
+
+      logSecurityEvent("ORDERS_LIST_VIEWED", req, {
         userId,
         clientId,
         orderCount: orders.length,
-        statusFilter: status || "all"
+        storeCount: storeOrders.length,
+        hubCount: hubOrders.length,
+        statusFilter: statusFilter || "all",
       });
-      
-      res.json({ orders });
+
+      res.json({
+        orders,
+        storeOrders,
+        hubOrders,
+        storeQuotes,
+        companyName,
+        matchedDeals,
+        sources: { store: "ok", hub: hubSource, storeQuotes: storeQuotes.length ? "ok" : "empty" },
+      });
     } catch (error: any) {
       console.error("[ERROR] Failed to fetch orders:", error);
       res.status(500).json({ message: "Failed to load orders" });
@@ -2797,39 +3799,131 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  // ===== CONTRACTS =====
+  // ===== CONTRACTS (TechSales Hub document library + company-specific) =====
 
-  // List contracts for the current user's company
+  function portalCompanyContext(req: AuthenticatedRequest) {
+    const impersonatingCompanyId =
+      (req.user as any)?.impersonatingCompanyId ||
+      (typeof (req.user as any)?.impersonatingCompanyId === "string"
+        ? (req.user as any).impersonatingCompanyId
+        : null);
+    // JWT may carry impersonation from admin switch
+    let jwtImpersonation: string | null = null;
+    try {
+      const authHeader = req.headers.authorization || "";
+      const token = authHeader.split(" ")[1];
+      if (token) {
+        const decoded = jwt.verify(token, JWT_SECRET) as any;
+        jwtImpersonation = decoded.impersonatingCompanyId || null;
+        if (decoded.impersonatingCompanyName && !req.user?.clientId) {
+          /* keep */
+        }
+      }
+    } catch {
+      /* ignore */
+    }
+    const companyId = jwtImpersonation || impersonatingCompanyId || req.user?.clientId || null;
+    const companyName = resolvePortalCompanyName({
+      clientId: companyId,
+      impersonatingCompanyId: jwtImpersonation || impersonatingCompanyId,
+      getClient: (id) => portalClients.get(id),
+    });
+    return { companyId, companyName };
+  }
+
   app.get("/api/portal/contracts", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      // Demo contracts data — in production these come from Zoho or DB
-      const contracts: any[] = [];
-      return res.json(contracts);
+      const { companyId, companyName } = portalCompanyContext(req);
+      if (!companyName) {
+        return res.json({
+          contracts: [],
+          library: [],
+          companyName: null,
+          matchedDeals: [],
+          source: "none",
+          message: "No company profile on this portal user. Contact your Company IT Contact or Digerati.",
+        });
+      }
+
+      const hub = await fetchHubCompanyDocuments(companyName);
+      if (!hub) {
+        return res.json({
+          contracts: [],
+          library: [],
+          companyName,
+          companyId,
+          matchedDeals: [],
+          source: "hub_unavailable",
+          message:
+            "Could not reach TechSales document library. Ensure TECHSALES_SYNC_URL/TOKEN are configured.",
+        });
+      }
+
+      const contracts = (hub.contracts || []).map((c: any) => ({
+        ...c,
+        pdfUrl: c.hubSignatureId
+          ? `/api/portal/contracts/${c.hubSignatureId}/download`
+          : null,
+        pdfContent: null,
+      }));
+
+      return res.json({
+        contracts,
+        library: hub.library || [],
+        companyName: hub.companyName || companyName,
+        companyId,
+        matchedDeals: hub.matchedDeals || [],
+        source: "techsales_hub",
+      });
     } catch (error: any) {
       logger.error("Failed to load contracts", error);
       return res.status(500).json({ message: "Failed to load contracts" });
     }
   });
 
-  // Sign a contract
+  app.get("/api/portal/contracts/:signatureId/download", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const signatureId = parseInt(req.params.signatureId, 10);
+      if (Number.isNaN(signatureId)) {
+        return res.status(400).json({ message: "Invalid contract id" });
+      }
+      const { companyName } = portalCompanyContext(req);
+      if (!companyName) {
+        return res.status(400).json({ message: "No company profile loaded" });
+      }
+      const kind = typeof req.query.kind === "string" ? req.query.kind : "signed_pdf";
+      const file = await fetchHubContractDownload(signatureId, companyName, kind);
+      if (!file) {
+        return res.status(404).json({ message: "Document not available" });
+      }
+      res.setHeader("Content-Type", file.contentType);
+      res.setHeader("Content-Disposition", `inline; filename="${file.fileName.replace(/"/g, "")}"`);
+      return res.send(file.buffer);
+    } catch (error: any) {
+      logger.error("Failed to download contract", error);
+      return res.status(500).json({ message: "Failed to download contract" });
+    }
+  });
+
+  // Signing remains Zoho Sign / TechSales-owned; portal does not counterfeit signatures locally.
   app.post("/api/portal/contracts/:id/sign", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { id } = req.params;
-      const { signerName, signerTitle, signatureData } = req.body;
-      if (!signerName || !signatureData) {
-        return res.status(400).json({ message: "Signer name and signature are required" });
-      }
-      return res.status(404).json({ message: "Contract not found. Contracts integration is being configured." });
+      return res.status(501).json({
+        message:
+          "E-signature is completed through the Zoho Sign link sent for this document (managed in TechSales). Contact your Company IT Contact or Digerati if you need the signing link resent.",
+      });
     } catch (error: any) {
       logger.error("Failed to sign contract", error);
       return res.status(500).json({ message: "Failed to sign contract" });
     }
   });
 
-  // Decline a contract
   app.post("/api/portal/contracts/:id/decline", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      return res.status(404).json({ message: "Contract not found. Contracts integration is being configured." });
+      return res.status(501).json({
+        message:
+          "To decline a pending agreement, use the Zoho Sign email link or ask Digerati / your Company IT Contact to recall the request in TechSales.",
+      });
     } catch (error: any) {
       logger.error("Failed to decline contract", error);
       return res.status(500).json({ message: "Failed to decline contract" });
@@ -2995,6 +4089,8 @@ export async function registerRoutes(app: Express) {
         JWT_SECRET, 
         { expiresIn: '4h' }
       );
+
+      setPortalAuthCookie(res, impersonationToken, 4 * 60 * 60 * 1000);
       
       res.json({ 
         success: true, 
@@ -3023,6 +4119,8 @@ export async function registerRoutes(app: Express) {
         JWT_SECRET, 
         { expiresIn: '24h' }
       );
+
+      setPortalAuthCookie(res, adminToken);
       
       res.json({ success: true, token: adminToken });
       logSecurityEvent("ADMIN_IMPERSONATION_STOP", req, {});
@@ -3292,202 +4390,6 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  // ===== PUBLIC VIRTUAL MSP ADVISOR =====
-  app.post("/api/public/advisor/chat", [advisorChatRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
-    try {
-      const { handleAdvisorChat } = await import("./services/msp-advisor");
-      const { sessionId, message, pageContext } = req.body || {};
-      if (!message || typeof message !== "string") {
-        return res.status(400).json({ error: "message is required" });
-      }
-      const result = await handleAdvisorChat({
-        sessionId: typeof sessionId === "string" ? sessionId : undefined,
-        message,
-        pageContext:
-          pageContext && typeof pageContext === "object"
-            ? {
-                pathname: String(pageContext.pathname || "/").slice(0, 200),
-                pageTitle: pageContext.pageTitle ? String(pageContext.pageTitle).slice(0, 200) : undefined,
-                pageType: pageContext.pageType || "other",
-                serviceContext: pageContext.serviceContext
-                  ? String(pageContext.serviceContext).slice(0, 120)
-                  : undefined,
-                campaignSource: pageContext.campaignSource
-                  ? String(pageContext.campaignSource).slice(0, 80)
-                  : undefined,
-              }
-            : undefined,
-      });
-      res.json(result);
-    } catch (error: any) {
-      const status = error?.status || 500;
-      console.error("[msp-advisor] chat failed:", error?.message || error);
-      res.status(status).json({ error: error?.message || "Advisor unavailable" });
-    }
-  });
-
-  app.get("/api/public/advisor/session/:id", [advisorChatRateLimiter], async (req: AuthenticatedRequest, res: Response) => {
-    try {
-      const { getSession, publicSessionView } = await import("./services/msp-advisor");
-      const session = getSession(req.params.id);
-      if (!session) return res.status(404).json({ error: "Session not found" });
-      res.json(publicSessionView(session));
-    } catch (error: any) {
-      res.status(500).json({ error: "Failed to load session" });
-    }
-  });
-
-  app.post("/api/public/advisor/action", [advisorActionRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
-    try {
-      const {
-        getSession,
-        buildLeadSummary,
-        isAllowedActionType,
-        materializeAction,
-        DE_COMPANY,
-      } = await import("./services/msp-advisor");
-      const { sessionId, action, payload } = req.body || {};
-      if (!sessionId || typeof sessionId !== "string") {
-        return res.status(400).json({ error: "sessionId is required" });
-      }
-      if (!isAllowedActionType(action)) {
-        return res.status(400).json({ error: "Invalid action" });
-      }
-
-      const session = getSession(sessionId);
-      if (!session) return res.status(404).json({ error: "Session not found" });
-
-      const honeypot = req.body?.website_url;
-      if (honeypot) {
-        logSecurityEvent("SPAM_DETECTED_HONEYPOT", req, { source: "advisor_action" });
-        return res.status(400).json({ error: "Invalid request" });
-      }
-
-      if (
-        action === "schedule_consultation" ||
-        action === "open_portal" ||
-        action === "existing_client_support" ||
-        action === "contact_sales" ||
-        action === "navigate"
-      ) {
-        const materialized = materializeAction(action, undefined, payload?.path);
-        if (!materialized) return res.status(400).json({ error: "Action not allowed" });
-        return res.json({ success: true, action: materialized });
-      }
-
-      const name = String(payload?.name || session.profile.contactName || "").trim();
-      const email = String(payload?.email || session.profile.email || "").trim();
-      const phone = String(payload?.phone || session.profile.phone || "").trim();
-      const company = String(payload?.company || session.profile.companyName || "").trim();
-      const visitorMessage = String(payload?.message || "").trim();
-
-      if (action === "leave_message") {
-        if (!email || !visitorMessage) {
-          return res.status(400).json({ error: "email and message are required" });
-        }
-        const summary = buildLeadSummary(session.profile, session.messages);
-        try {
-          if (zohoDeskService?.createTicket) {
-            await zohoDeskService.createTicket({
-              subject: `Advisor chat message from ${email}`,
-              description: `${visitorMessage}\n\n---\n${summary}`,
-              email,
-              priority: "Medium",
-            } as any);
-          }
-        } catch (e: any) {
-          console.error("[msp-advisor] desk ticket failed (non-blocking):", e?.message);
-        }
-        await notificationService.sendNewLeadNotification({
-          name: name || email,
-          email,
-          company: company || "Advisor chat",
-          phone: phone || "",
-          source: "DE Desk",
-          message: `${visitorMessage}\n\n${summary}`,
-        });
-        logSecurityEvent("ADVISOR_LEAVE_MESSAGE", req, { email });
-        return res.json({ success: true, message: "Message received" });
-      }
-
-      if (!email || !name) {
-        return res.status(400).json({
-          error: "name and email are required",
-          needs: ["name", "email"],
-        });
-      }
-
-      const summary = buildLeadSummary(session.profile, session.messages);
-      const leadId = randomId();
-      const sourceLabel =
-        action === "request_assessment"
-          ? "DE Desk — Assessment"
-          : action === "request_callback"
-            ? "DE Desk — Callback"
-            : "DE Desk — Lead";
-
-      eventBus.emit(
-        EventTypes.LEAD_CREATED,
-        {
-          id: leadId,
-          name,
-          email,
-          company: company || "",
-          source: sourceLabel,
-          message: summary,
-        },
-        "msp-advisor",
-      );
-
-      let zohoLeadId = null;
-      try {
-        const nameParts = name.trim().split(/\s+/);
-        const firstName = nameParts[0] || "";
-        const lastName = nameParts.slice(1).join(" ") || name;
-        const zohoLead = await zohoCRMService.createLead({
-          First_Name: firstName,
-          Last_Name: lastName,
-          Email: email,
-          Phone: phone || "",
-          Company: company || "Not Specified",
-          Lead_Source: sourceLabel,
-          Lead_Status: "New",
-          Description: summary.slice(0, 32000),
-        });
-        zohoLeadId = zohoLead?.details?.id || zohoLead?.id;
-      } catch (zohoError: any) {
-        console.error("[msp-advisor] Zoho lead failed (non-blocking):", zohoError?.message);
-      }
-
-      await notificationService.sendNewLeadNotification({
-        name,
-        email,
-        company: company || "Not Specified",
-        phone: phone || "",
-        source: sourceLabel,
-        message: summary,
-      });
-
-      session.profile.contactName = name;
-      session.profile.email = email;
-      if (phone) session.profile.phone = phone;
-      if (company) session.profile.companyName = company;
-
-      logSecurityEvent("ADVISOR_LEAD_CREATED", req, { email, action, leadId });
-      return res.json({
-        success: true,
-        leadId,
-        zohoLeadId,
-        phone: DE_COMPANY.phoneDisplay,
-        bookingUrl: DE_COMPANY.bookingUrl,
-        message: "Thanks — our team will follow up with this conversation context.",
-      });
-    } catch (error: any) {
-      console.error("[msp-advisor] action failed:", error?.message || error);
-      res.status(500).json({ error: "Failed to execute action" });
-    }
-  });
-
   // ===== ASSESSMENT / LEAD CAPTURE FORM =====
   app.post("/api/assessment", [leadQuoteRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
@@ -3667,6 +4569,15 @@ export async function registerRoutes(app: Express) {
       console.log("[NEWSLETTER] Subscription:", { email, timestamp: new Date().toISOString() });
       logSecurityEvent("NEWSLETTER_SUBSCRIBED", req, { email });
 
+      eventBus.emit(EventTypes.LEAD_CREATED, {
+        id: subscriptionData.id,
+        name: email.split("@")[0],
+        email,
+        company: "",
+        source: "newsletter",
+        message: "Newsletter signup",
+      }, "newsletter-form");
+
       // Push to Zoho CRM as a lead with newsletter source
       let zohoLeadId = null;
       try {
@@ -3689,6 +4600,11 @@ export async function registerRoutes(app: Express) {
         console.error("[ZOHO] Failed to create newsletter lead (non-blocking):", zohoError.message);
         // Don't fail the request if Zoho fails
       }
+
+      // Confirmation / welcome email (ZeptoMail) — warms engagement + List-Unsubscribe
+      notificationService.sendNewsletterWelcome({ email }).catch((err) => {
+        console.warn("[NEWSLETTER] Welcome email failed (non-blocking):", err?.message || err);
+      });
 
       res.json({
         success: true,

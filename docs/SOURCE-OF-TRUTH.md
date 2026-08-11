@@ -9,7 +9,7 @@
 Do these in the Replit UI for **digerati Experts Offical Website**:
 
 1. **Pause or disconnect GitHub sync** (Settings → Git / Version control) so Replit cannot push to `main` or `fix/*` from the Repl.
-2. **Do not click “Publish / Deploy from Replit”** for production — production is CyberPanel + PM2 on de-vps (`digeratiexperts.com` :3300).
+2. **Do not click “Publish / Deploy from Replit”** for production — production is CyberPanel + systemd `digeratiexperts-site` as `diger7051` on de-vps (`/home/digeratiexperts.com/current` → :3300). See `deploy/vps/README.md`.
 3. If the Repl must stay open for reference, treat it as **read-only**. Pull from GitHub into Replit only when you explicitly want a preview; never let Replit be the push source.
 4. Prefer working on GitHub branches (`fix/homepage-hero-nav-2026-08-08`, `preserve/*`) and merge via PR.
 

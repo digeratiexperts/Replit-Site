@@ -1,13 +1,9 @@
+# Digerati Experts — index website + store products. Keep portal/checkout out of SERPs.
 User-agent: *
 Allow: /
-
-# Allow key static assets
-Allow: /favicon.png
-Allow: /favicon-512x512.png
-Allow: /assets/
+Allow: /llms.txt
 Allow: /sitemap.xml
 
-# Block authenticated, transactional, and internal-only pages from indexing
 Disallow: /api/
 Disallow: /portal/
 Disallow: /admin/
@@ -15,10 +11,12 @@ Disallow: /internal/
 Disallow: /store/checkout
 Disallow: /store/cart
 Disallow: /store/order-confirmation
+Disallow: /store/quote-request
 Disallow: /store/quote-confirmation/
 Disallow: /thanks
 Disallow: /quote-confirmation
 Disallow: /404
+Disallow: /login
+Disallow: /signup
 
-# Sitemap
 Sitemap: https://digeratiexperts.com/sitemap.xml
