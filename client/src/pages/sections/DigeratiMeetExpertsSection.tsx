@@ -23,7 +23,6 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
 
   return (
     <section
-      id="team"
       className="relative py-10 md:py-14 lg:py-16 bg-[#0a0a0a] overflow-hidden"
       data-testid="section-meet-experts"
     >
@@ -51,14 +50,16 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
             initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="lg:col-span-5 rounded-2xl overflow-hidden border border-white/10 bg-[#111]"
+            className="lg:col-span-5 rounded-2xl overflow-hidden border border-white/10 bg-[#111] self-stretch"
           >
             <img
               src="/images/founder/joe-petro-studio-blazer-white.jpg"
               alt="Joseph Petro, Founder of Digerati Experts"
-              className="w-full h-64 sm:h-80 lg:h-full object-cover object-top"
+              className="w-full aspect-[4/5] sm:aspect-[3/4] lg:aspect-auto lg:h-full lg:min-h-[28rem] object-cover object-[center_12%] sm:object-top"
               loading="lazy"
               decoding="async"
+              width={800}
+              height={1000}
               data-testid="img-founder-joe"
             />
           </motion.div>

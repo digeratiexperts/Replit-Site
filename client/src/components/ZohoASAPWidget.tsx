@@ -399,7 +399,11 @@ export const ZohoASAPWidget = ({
   return (
     <>
       <div
-        className={`fixed right-20 sm:right-24 ${cookieBannerClear ? "bottom-4 sm:bottom-6" : "bottom-28"} z-[100]`}
+        className={`fixed z-[100] ${
+          cookieBannerClear
+            ? "bottom-4 right-4 sm:right-6 lg:bottom-[4.75rem] lg:right-5"
+            : "bottom-28 right-4 sm:right-6 lg:bottom-[4.75rem] lg:right-5"
+        }`}
         data-testid="widget-zoho-asap-container"
       >
         {!isOpen && (
@@ -424,9 +428,9 @@ export const ZohoASAPWidget = ({
 
         {isOpen && (
           <section
-            className="absolute bottom-0 right-0 flex h-[700px] max-h-[82vh] w-[440px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a] shadow-[0_24px_80px_rgba(0,0,0,0.55)]"
+            className="fixed inset-x-3 top-[max(0.75rem,env(safe-area-inset-top))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[100] flex max-h-[100dvh] w-auto flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a] shadow-[0_24px_80px_rgba(0,0,0,0.55)] sm:absolute sm:inset-auto sm:bottom-0 sm:right-0 sm:top-auto sm:h-[min(700px,calc(100dvh-6rem))] sm:max-h-[min(82vh,calc(100dvh-5rem))] sm:w-[440px] sm:max-w-[calc(100vw-2rem)]"
             role="dialog"
-            aria-modal="false"
+            aria-modal="true"
             aria-label="DE Desk help"
           >
             <header className="relative flex flex-shrink-0 items-start justify-between gap-4 overflow-hidden border-b border-white/10 px-5 py-4">

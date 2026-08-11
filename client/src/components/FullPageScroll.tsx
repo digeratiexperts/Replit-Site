@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, createContext, useContext } from 'react';
-import { ArrowRight, Shield, Phone } from 'lucide-react';
+import { ArrowRight, Shield, Phone, ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface ScrollSection {
@@ -57,9 +57,6 @@ export function FullPageScrollProvider({
   const containerRef = useRef<HTMLDivElement>(null);
   const isScrollingRef = useRef(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const snapTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const lastScrollY = useRef(0);
-  const sectionVisibility = useRef<Map<string, number>>(new Map());
 
   useEffect(() => {
     const checkMobile = () => {
@@ -182,62 +179,20 @@ export function FullPageScrollProvider({
     return () => window.removeEventListener('scroll', handleScroll);
   }, [sections, currentSection]);
 
-  // Debounced snap-to-section on scroll end
+  // CSS proximity snap only (html.de-section-snap). No JS scrollIntoView on scroll —
+  // that fought the wheel/trackpad and felt like the page was yanking position.
   useEffect(() => {
-    if (!isSnapEnabled || isMobile) return;
-    
-    const handleScrollEnd = () => {
-      if (isScrollingRef.current) return;
-      
-      // Clear any existing snap timeout
-      if (snapTimeoutRef.current) {
-        clearTimeout(snapTimeoutRef.current);
-      }
-      
-      // Debounce: wait for scroll to settle
-      snapTimeoutRef.current = setTimeout(() => {
-        // Find the section closest to the viewport center
-        const viewportCenter = window.scrollY + window.innerHeight / 2;
-        let closestSection = 0;
-        let closestDistance = Infinity;
-        
-        sections.forEach((section, index) => {
-          const element = document.getElementById(section.id);
-          if (element) {
-            const sectionCenter = element.offsetTop + element.offsetHeight / 2;
-            const distance = Math.abs(viewportCenter - sectionCenter);
-            if (distance < closestDistance) {
-              closestDistance = distance;
-              closestSection = index;
-            }
-          }
-        });
-        
-        // Only snap if we're not already at the closest section
-        const currentElement = document.getElementById(sections[closestSection]?.id);
-        if (currentElement) {
-          const rect = currentElement.getBoundingClientRect();
-          // Only snap if section is partially visible but not well-aligned
-          if (Math.abs(rect.top) > 50 && Math.abs(rect.top) < window.innerHeight * 0.4) {
-            scrollToSection(closestSection);
-          }
-        }
-      }, 150); // 150ms debounce
-    };
-    
-    const handleScroll = () => {
-      lastScrollY.current = window.scrollY;
-      handleScrollEnd();
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (snapTimeoutRef.current) {
-        clearTimeout(snapTimeoutRef.current);
+    const root = document.documentElement;
+    const apply = () => {
+      if (isSnapEnabled && (!isMobile || enableOnMobile)) {
+        root.classList.add('de-section-snap');
+      } else {
+        root.classList.remove('de-section-snap');
       }
     };
-  }, [isSnapEnabled, isMobile, sections, scrollToSection]);
+    apply();
+    return () => root.classList.remove('de-section-snap');
+  }, [isSnapEnabled, isMobile, enableOnMobile]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -304,11 +259,28 @@ interface SectionNavBarProps {
   onNavigate: (index: number) => void;
 }
 
-/** Desktop sticky section bar — matches live digeratexperts.com chrome. */
+/** Primary sticky links — rest live under More so the pill does not overflow. */
+const SECTION_NAV_PRIMARY = new Set([
+  'hero',
+  'stats',
+  'services',
+  'pricing',
+  'industries',
+  'team',
+  'contact',
+]);
+
+/** Desktop sticky section bar — compact primary row + More; leaves room for Ask DE. */
 function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarProps) {
+  const [moreOpen, setMoreOpen] = useState(false);
+  const moreRef = useRef<HTMLDivElement>(null);
+
   const navSections = sections
     .map((section, index) => ({ section, index }))
     .filter(({ section }) => section.showInNav !== false);
+
+  const primary = navSections.filter(({ section }) => SECTION_NAV_PRIMARY.has(section.id));
+  const moreItems = navSections.filter(({ section }) => !SECTION_NAV_PRIMARY.has(section.id));
 
   // Highlight the nearest nav-visible section when scrolling a hidden-in-nav block.
   const activeNavIndex = (() => {
@@ -325,67 +297,126 @@ function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarPr
     return best;
   })();
 
+  const moreContainsActive = moreItems.some(({ index }) => index === activeNavIndex);
+
+  useEffect(() => {
+    if (!moreOpen) return;
+    const onPointer = (event: MouseEvent) => {
+      if (moreRef.current && !moreRef.current.contains(event.target as Node)) {
+        setMoreOpen(false);
+      }
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMoreOpen(false);
+    };
+    document.addEventListener('mousedown', onPointer);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onPointer);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [moreOpen]);
+
+  const renderNavButton = (
+    section: ScrollSection,
+    index: number,
+    opts?: { block?: boolean }
+  ) => {
+    const isActive = activeNavIndex === index;
+    return (
+      <button
+        key={section.id}
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setMoreOpen(false);
+          onNavigate(index);
+        }}
+        className={`${opts?.block ? 'w-full justify-start text-left' : ''} relative inline-flex items-center px-3 py-1.5 text-sm font-semibold rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FF477F] whitespace-nowrap shrink-0 ${
+          isActive
+            ? 'bg-[#D3126A] text-white shadow-lg shadow-[#D3126A]/40'
+            : 'text-white/75 hover:text-white hover:bg-white/10'
+        }`}
+        aria-label={`Go to ${section.label}`}
+        aria-current={isActive ? 'true' : undefined}
+        data-testid={`nav-dot-${section.id}`}
+      >
+        {section.label}
+      </button>
+    );
+  };
+
   return (
-    <div className="fixed bottom-3 left-0 right-0 z-50 hidden lg:flex justify-center pointer-events-none px-3">
+    <div className="fixed bottom-3 left-3 right-[13.5rem] xl:right-[15rem] z-40 hidden lg:flex justify-center pointer-events-none">
       <motion.nav
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="pointer-events-auto flex max-w-[min(100%,1480px)] flex-row items-center gap-1 overflow-x-auto py-2 px-3.5 rounded-full bg-black/95 backdrop-blur-xl border-2 border-[#D3126A]/60 shadow-[0_0_24px_rgba(211,18,106,0.35),0_4px_24px_rgba(0,0,0,0.5)] scrollbar-none"
+        className="pointer-events-auto flex max-w-full flex-row items-center gap-0.5 overflow-visible py-1.5 px-2.5 rounded-full bg-black/95 backdrop-blur-xl border-2 border-[#D3126A]/60 shadow-[0_0_24px_rgba(211,18,106,0.35),0_4px_24px_rgba(0,0,0,0.5)]"
         aria-label="Section navigation"
       >
-        <div className="flex items-center gap-2 pr-3 border-r border-white/20 mr-2 shrink-0">
-          <Shield className="w-5 h-5 text-[#FF477F]" aria-hidden="true" />
-          <span className="text-white font-semibold text-base whitespace-nowrap">Is Your Business Protected?</span>
+        <div className="hidden xl:flex items-center gap-2 pr-2.5 border-r border-white/20 mr-1.5 shrink-0">
+          <Shield className="w-4 h-4 text-[#FF477F]" aria-hidden="true" />
+          <span className="text-white font-semibold text-sm whitespace-nowrap">Protected?</span>
         </div>
 
-        {navSections.map(({ section, index }) => {
-          const isActive = activeNavIndex === index;
-          return (
+        <div className="flex items-center gap-0.5 min-w-0 overflow-x-auto scrollbar-none">
+          {primary.map(({ section, index }) => renderNavButton(section, index))}
+        </div>
+
+        {moreItems.length > 0 && (
+          <div className="relative shrink-0" ref={moreRef}>
             <button
-              key={section.id}
               type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onNavigate(index);
-              }}
-              className={`relative px-3.5 py-2 text-base font-semibold rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FF477F] whitespace-nowrap shrink-0 ${
-                isActive
-                  ? 'bg-[#D3126A] text-white shadow-lg shadow-[#D3126A]/40'
+              onClick={() => setMoreOpen((open) => !open)}
+              className={`inline-flex items-center gap-1 px-3 py-1.5 text-sm font-semibold rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-[#FF477F] ${
+                moreOpen || moreContainsActive
+                  ? 'bg-white/15 text-white'
                   : 'text-white/75 hover:text-white hover:bg-white/10'
               }`}
-              aria-label={`Go to ${section.label}`}
-              aria-current={isActive ? 'true' : undefined}
-              data-testid={`nav-dot-${section.id}`}
+              aria-expanded={moreOpen}
+              aria-haspopup="menu"
+              data-testid="nav-section-more"
             >
-              {section.label}
+              More
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${moreOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
             </button>
-          );
-        })}
+            {moreOpen && (
+              <div
+                role="menu"
+                className="absolute bottom-[calc(100%+0.5rem)] right-0 min-w-[11rem] rounded-2xl border border-white/15 bg-black/95 backdrop-blur-xl p-2 shadow-2xl z-50"
+              >
+                {moreItems.map(({ section, index }) => renderNavButton(section, index, { block: true }))}
+              </div>
+            )}
+          </div>
+        )}
 
-        <div className="w-px h-7 bg-white/20 mx-2" aria-hidden="true" />
+        <div className="w-px h-6 bg-white/20 mx-1.5 shrink-0" aria-hidden="true" />
 
         <a
           href="tel:325-480-9870"
-          className="flex items-center gap-1.5 text-white/75 hover:text-white transition-colors text-base whitespace-nowrap"
+          className="flex items-center justify-center w-9 h-9 rounded-full text-white/75 hover:text-white hover:bg-white/10 transition-colors shrink-0"
           data-testid="nav-phone"
+          aria-label="Call 325-480-9870"
+          title="325-480-9870"
         >
           <Phone className="w-4 h-4" aria-hidden="true" />
-          <span>325-480-9870</span>
         </a>
 
         <a
           href="/book"
-          className="flex items-center gap-1.5 px-5 py-2 text-base font-semibold rounded-full bg-white text-[#D3126A] hover:bg-pink-50 transition-all duration-300 shadow-lg whitespace-nowrap ml-2"
+          className="flex items-center gap-1 px-3.5 py-1.5 text-sm font-semibold rounded-full bg-white text-[#D3126A] hover:bg-pink-50 transition-all duration-300 shadow-lg whitespace-nowrap shrink-0"
           data-testid="nav-cta-assessment"
         >
-          Free Assessment
-          <ArrowRight className="w-4 h-4" aria-hidden="true" />
+          Assessment
+          <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
         </a>
       </motion.nav>
     </div>
   );
 }
+
 
 interface ScrollSectionProps {
   id: string;

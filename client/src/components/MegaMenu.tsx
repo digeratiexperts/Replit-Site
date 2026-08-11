@@ -509,8 +509,12 @@ export function MegaMenu() {
         {/* Top Utility Bar - solid dark violet with fade effect */}
       <div 
         ref={utilityBarRef}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? 'h-0 overflow-hidden opacity-0' : 'h-auto md:h-[var(--de-utility-h)]'
+        className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-300 ${
+          /* Never lock height to --de-utility-h: that chicken-eggs measurement and
+             clips enlarged utility glyphs above the viewport (only letter bottoms show). */
+          isScrolled
+            ? 'h-0 min-h-0 overflow-hidden opacity-0 pointer-events-none'
+            : 'h-auto min-h-[var(--de-utility-h)] overflow-visible opacity-100'
         }`}
         style={{
           background: '#0a0a0a',
@@ -530,14 +534,14 @@ export function MegaMenu() {
             background: 'linear-gradient(90deg, transparent 0%, transparent 50%, rgba(139, 92, 246, 0.3) 80%, rgba(139, 92, 246, 0.2) 100%)',
           }}
         />
-        <div className="max-w-[100rem] mx-auto px-3 lg:px-5 h-full flex flex-col md:flex-row items-center justify-end py-2.5 md:py-0 relative z-10 w-full">
-          <div className="flex items-center flex-wrap gap-4 md:gap-8 justify-center md:justify-end">
+        <div className="max-w-[100rem] mx-auto px-3 lg:px-5 flex flex-col md:flex-row items-center justify-end py-2 md:py-2.5 relative z-10 w-full">
+          <div className="flex items-center flex-wrap gap-x-5 gap-y-1.5 md:gap-x-8 justify-center md:justify-end">
             <a
               href="tel:325-480-9870"
-              className="flex items-center text-white/75 hover:text-violet-300 text-base md:text-lg font-medium transition-colors"
+              className="flex items-center text-white/75 hover:text-violet-300 text-sm md:text-base font-medium leading-none transition-colors"
               data-testid="utility-phone"
             >
-              <Phone className="h-4 w-4 mr-1.5 text-violet-400" />
+              <Phone className="h-4 w-4 mr-1.5 text-violet-400 shrink-0" />
               <span className="hidden sm:inline">325-480-9870</span>
               <span className="sm:hidden">Call</span>
             </a>
@@ -547,17 +551,17 @@ export function MegaMenu() {
               href="https://assist.zoho.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center text-white/75 hover:text-violet-300 text-base md:text-lg font-medium transition-colors"
+              className="flex items-center text-white/75 hover:text-violet-300 text-sm md:text-base font-medium leading-none transition-colors"
               data-testid="utility-zoho-assist"
             >
-              <Monitor className="h-4 w-4 mr-1.5 text-violet-400" />
+              <Monitor className="h-4 w-4 mr-1.5 text-violet-400 shrink-0" />
               <span className="hidden sm:inline">Zoho Assist</span>
               <span className="sm:hidden">Assist</span>
             </a>
 
             <a
               href={PORTAL_LOGIN}
-              className="flex items-center text-white/75 hover:text-violet-300 text-base md:text-lg font-medium transition-colors"
+              className="flex items-center text-white/75 hover:text-violet-300 text-sm md:text-base font-medium leading-none transition-colors"
               data-testid="utility-portal"
             >
               <span className="hidden sm:inline">Client Portal</span>
@@ -569,7 +573,7 @@ export function MegaMenu() {
 
       {/* Main Navigation — live presence + solid chrome only when needed */}
       <nav 
-        className={`fixed left-0 right-0 z-50 mega-menu-container transition-all duration-300 ${
+        className={`fixed left-0 right-0 z-[55] mega-menu-container transition-all duration-300 ${
           isScrolled ? 'top-0' : 'top-[var(--de-utility-h)]'
         } ${
           useSolidChrome
@@ -685,12 +689,12 @@ export function MegaMenu() {
                           item.name === 'Solutions' 
                             ? 'grid grid-cols-5 divide-x divide-white/5' 
                             : item.name === 'About'
-                              ? 'p-6 grid grid-cols-3 gap-6 items-start'
+                              ? 'p-8 grid grid-cols-3 gap-8 items-start'
                               : item.name === 'Industries'
-                                ? 'p-6 grid grid-cols-3 gap-6 items-start'
+                                ? 'p-8 grid grid-cols-3 gap-8 items-start'
                                 : item.sections.length === 3 
-                                  ? 'p-6 grid grid-cols-3 gap-6 items-start' 
-                                  : 'p-6 flex gap-6 items-start'
+                                  ? 'p-8 grid grid-cols-3 gap-8 items-start' 
+                                  : 'p-8 flex gap-8 items-start'
                         }`}>
                           {item.sections.map((section, sectionIdx) => (
                             <motion.div 
@@ -703,7 +707,7 @@ export function MegaMenu() {
                               transition={{ delay: sectionIdx * 0.05 }}
                               className={`relative overflow-hidden ${
                                 item.name === 'Solutions' 
-                                  ? 'min-w-0 p-4' 
+                                  ? 'min-w-0 p-6' 
                                   : 'flex-1 min-w-0'
                               }`}
                               onMouseMove={(e) => item.name === 'Solutions' && handleColumnMouseMove(e, sectionIdx)}
@@ -721,16 +725,16 @@ export function MegaMenu() {
                                 />
                               )}
                               {/* Section Header */}
-                              <div className="mb-3">
+                              <div className="mb-4">
                                 <h3 
-                                  className={`font-bold text-[11px] uppercase tracking-[0.2em] flex items-center gap-2 ${
-                                    section.featured ? 'text-violet-400' : 'text-gray-500'
+                                  className={`font-bold text-xs uppercase tracking-[0.18em] flex items-center gap-2 ${
+                                    section.featured ? 'text-violet-400' : 'text-gray-400'
                                   }`}
                                   id={`menu-section-${section.title.replace(/\s+/g, '-')}`}
                                 >
                                   {section.title}
                                 </h3>
-                                <div className={`h-px mt-1.5 ${
+                                <div className={`h-px mt-2 ${
                                   section.featured 
                                     ? 'bg-violet-500/30' 
                                     : 'bg-white/5'
@@ -738,7 +742,7 @@ export function MegaMenu() {
                               </div>
                               
                               <ul 
-                                className="space-y-0.5"
+                                className="space-y-1"
                                 role="menu"
                                 aria-labelledby={`menu-section-${section.title.replace(/\s+/g, '-')}`}
                                 onMouseLeave={() => setHoveredItem(null)}
@@ -759,7 +763,7 @@ export function MegaMenu() {
                                       <Tooltip.Trigger asChild>
                                         <a
                                           href={subItem.url || '#'}
-                                          className={`group/item flex items-start gap-3 p-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-violet-500/50 border ${
+                                          className={`group/item flex items-start gap-3.5 px-3 py-3 rounded-xl transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-violet-500/50 border ${
                                             isHovered 
                                               ? 'bg-violet-600/10 border-violet-500/20' 
                                               : 'border-transparent hover:bg-white/[0.03]'
@@ -772,13 +776,13 @@ export function MegaMenu() {
                                             <span className={`mt-0.5 transition-colors flex-shrink-0 ${
                                               isHovered ? 'text-violet-400' : 'text-violet-400/60 group-hover/item:text-violet-400'
                                             }`} aria-hidden="true">
-                                              <div className="scale-90">{subItem.icon}</div>
+                                              <div className="scale-100">{subItem.icon}</div>
                                             </span>
                                           )}
                                           <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 flex-wrap">
-                                              <span className={`font-semibold transition-colors text-[13px] ${
-                                                isHovered ? 'text-white' : 'text-gray-300 group-hover/item:text-white'
+                                              <span className={`font-semibold transition-colors text-[15px] leading-snug ${
+                                                isHovered ? 'text-white' : 'text-gray-200 group-hover/item:text-white'
                                               }`}>
                                                 {subItem.title}
                                               </span>
@@ -793,7 +797,7 @@ export function MegaMenu() {
                                               )}
                                             </div>
                                             {subItem.description && (
-                                              <p className="text-[11px] text-gray-500 group-hover/item:text-gray-400 mt-0.5 transition-colors leading-tight line-clamp-1">
+                                              <p className="text-[13px] text-gray-500 group-hover/item:text-gray-400 mt-1 transition-colors leading-snug line-clamp-2">
                                                 {subItem.description}
                                               </p>
                                             )}
@@ -822,11 +826,11 @@ export function MegaMenu() {
                               {section.viewAllUrl && (
                                 <a
                                   href={section.viewAllUrl}
-                                  className="inline-flex items-center gap-1 mt-2 px-2 text-[10px] font-bold text-gray-600 hover:text-violet-400 transition-colors group/view uppercase tracking-wider"
+                                  className="inline-flex items-center gap-1.5 mt-3 px-3 text-xs font-bold text-gray-500 hover:text-violet-400 transition-colors group/view uppercase tracking-wider"
                                   onClick={handleLinkClick}
                                 >
                                   Explore
-                                  <ArrowRight className="w-2.5 h-2.5 group-hover/view:translate-x-0.5 transition-transform" />
+                                  <ArrowRight className="w-3.5 h-3.5 group-hover/view:translate-x-0.5 transition-transform" />
                                 </a>
                               )}
                             </motion.div>
@@ -835,7 +839,7 @@ export function MegaMenu() {
                           {/* Featured Panel for Solutions */}
                           {item.featuredPanel && (
                             <motion.div 
-                              className="relative bg-white/[0.02] p-4 flex flex-col justify-between overflow-hidden"
+                              className="relative bg-white/[0.02] p-6 flex flex-col justify-between overflow-hidden min-h-[22rem]"
                               initial={{ opacity: 0, scale: 0.95 }}
                               animate={{ opacity: 1, scale: 1 }}
                               transition={{ delay: 0.15 }}
@@ -845,15 +849,15 @@ export function MegaMenu() {
                               <img src={officeRecoveryImage} alt="" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-[0.08]" />
                               
                               <div className="relative z-10">
-                                <h4 className="font-bold text-white text-[13px] mb-3 flex items-center gap-2">
-                                  <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
+                                <h4 className="font-bold text-white text-base mb-4 flex items-center gap-2">
+                                  <CheckCircle className="w-4 h-4 text-emerald-500" />
                                   {item.featuredPanel.title}
                                 </h4>
-                                <div className="space-y-2">
+                                <div className="space-y-3">
                                   {item.featuredPanel.stats.map((stat, idx) => (
-                                    <div key={idx} className="flex items-center justify-between py-1 border-b border-white/5 last:border-0">
-                                      <span className="text-gray-500 text-[10px] uppercase tracking-wider font-semibold">{stat.label}</span>
-                                      <span className="text-violet-400 font-bold text-xs">{stat.value}</span>
+                                    <div key={idx} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
+                                      <span className="text-gray-400 text-xs uppercase tracking-wider font-semibold">{stat.label}</span>
+                                      <span className="text-violet-300 font-bold text-base">{stat.value}</span>
                                     </div>
                                   ))}
                                 </div>
@@ -862,7 +866,7 @@ export function MegaMenu() {
                                 href={item.featuredPanel.cta.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="relative z-10 mt-4 w-full inline-flex items-center justify-center px-3 py-2 bg-violet-600 hover:bg-violet-500 text-white text-[11px] font-bold rounded-lg transition-all shadow-lg shadow-violet-500/20 uppercase tracking-wider"
+                                className="relative z-10 mt-6 w-full inline-flex items-center justify-center px-4 py-3 bg-violet-600 hover:bg-violet-500 text-white text-sm font-bold rounded-lg transition-all shadow-lg shadow-violet-500/20"
                                 onClick={handleLinkClick}
                               >
                                 {item.featuredPanel.cta.text}
@@ -874,13 +878,13 @@ export function MegaMenu() {
                           {/* Featured Case Study for Industries */}
                           {item.name === 'Industries' && (
                             <motion.div 
-                              className="bg-gradient-to-br from-purple-900/30 to-violet-900/20 border border-white/10 rounded-xl overflow-hidden flex flex-col flex-1 min-h-[200px] hover:border-violet-500/40 transition-colors group"
+                              className="bg-gradient-to-br from-purple-900/30 to-violet-900/20 border border-white/10 rounded-xl overflow-hidden flex flex-col flex-1 min-h-[240px] hover:border-violet-500/40 transition-colors group"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: 0.2 }}
                               data-testid="menu-featured-industries"
                             >
-                              <div className="relative h-32 overflow-hidden">
+                              <div className="relative h-40 overflow-hidden">
                                 <img 
                                   src={socImage} 
                                   alt="Cybersecurity Operations Center" 
@@ -913,13 +917,13 @@ export function MegaMenu() {
                           {/* Featured Team Spotlight for About */}
                           {item.name === 'About' && (
                             <motion.div 
-                              className="bg-gradient-to-br from-purple-900/30 to-violet-900/20 border border-white/10 rounded-xl overflow-hidden flex flex-col flex-1 min-h-[200px] hover:border-violet-500/40 transition-colors group"
+                              className="bg-gradient-to-br from-purple-900/30 to-violet-900/20 border border-white/10 rounded-xl overflow-hidden flex flex-col flex-1 min-h-[240px] hover:border-violet-500/40 transition-colors group"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: 0.2 }}
                               data-testid="menu-featured-about"
                             >
-                              <div className="relative h-32 overflow-hidden">
+                              <div className="relative h-40 overflow-hidden">
                                 <img 
                                   src={socTeamImage} 
                                   alt="Digerati Experts Security Operations Team" 
@@ -952,7 +956,7 @@ export function MegaMenu() {
                           {/* Ebook Feature for Resources */}
                           {item.name === 'Resources' && (
                             <motion.div 
-                              className="bg-gradient-to-br from-orange-900/20 to-amber-900/10 border border-orange-500/20 rounded-xl p-4 flex flex-col flex-1 min-h-[200px] hover:border-orange-500/40 transition-colors"
+                              className="bg-gradient-to-br from-orange-900/20 to-amber-900/10 border border-orange-500/20 rounded-xl p-5 flex flex-col flex-1 min-h-[240px] hover:border-orange-500/40 transition-colors"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: 0.2 }}

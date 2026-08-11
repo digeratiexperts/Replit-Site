@@ -121,17 +121,35 @@ html {
 
   /*
    * Sticky MegaMenu clearance (utility bar + main nav).
-   * At html font-size 14px: utility 2.75rem≈38.5px, nav 6.5rem≈91px,
-   * chrome≈129.5px, offset (+0.75rem breathing)≈140px.
-   * MegaMenu may raise --de-nav-offset when mobile utility wraps taller.
-   * Prior page pt-28 (7rem≈98px) was shorter than chrome → titles under nav.
+   * Utility must clear enlarged text-lg links (~3.25rem); never fix utility
+   * height below content or glyphs clip above the viewport.
+   * MegaMenu publishes live --de-utility-h / --de-nav-offset from ResizeObserver.
    */
-  --de-utility-h: 2.75rem;
+  --de-utility-h: 3.25rem;
   --de-nav-h: 6.5rem;
   --de-nav-h-scrolled: 5.25rem;
   --de-nav-chrome: calc(var(--de-utility-h) + var(--de-nav-h));
   --de-nav-offset: calc(var(--de-nav-chrome) + 0.75rem);
   --de-nav-current-bottom: var(--de-nav-chrome);
+}
+
+/* Homepage section snap — proximity only (no JS scroll hijack). */
+@media (min-width: 1024px) {
+  html.de-section-snap {
+    scroll-snap-type: y proximity;
+  }
+
+  html.de-section-snap .scroll-snap-section,
+  html.de-section-snap .scroll-snap-section-auto {
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+  }
+}
+
+@media (max-width: 1023px), (prefers-reduced-motion: reduce) {
+  html.de-section-snap {
+    scroll-snap-type: none;
+  }
 }
 
 /* Shared top padding so marketing/store pages clear the sticky MegaMenu */
