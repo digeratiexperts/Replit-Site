@@ -348,11 +348,11 @@ function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarPr
   };
 
   return (
-    <div className="fixed bottom-3 left-3 right-[16rem] xl:left-4 xl:right-[17.5rem] 2xl:right-[18.5rem] z-40 hidden lg:flex justify-center pointer-events-none">
+    <div className="fixed bottom-3 left-3 right-[17rem] xl:left-4 xl:right-[17.5rem] 2xl:right-[18.5rem] z-40 hidden lg:flex justify-center pointer-events-none min-w-0">
       <motion.nav
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="pointer-events-auto flex w-max max-w-full flex-row items-center gap-1 overflow-visible py-2 px-3.5 rounded-full bg-black/95 backdrop-blur-xl border-2 border-[#D3126A]/60 shadow-[0_0_24px_rgba(211,18,106,0.35),0_4px_24px_rgba(0,0,0,0.5)]"
+        className="pointer-events-auto flex w-max min-w-0 max-w-full flex-row items-center gap-1 overflow-visible py-2 px-3.5 rounded-full bg-black/95 backdrop-blur-xl border-2 border-[#D3126A]/60 shadow-[0_0_24px_rgba(211,18,106,0.35),0_4px_24px_rgba(0,0,0,0.5)]"
         aria-label="Section navigation"
       >
         <div className="hidden xl:flex items-center gap-2 pr-3 border-r border-white/20 mr-2 shrink-0">
