@@ -51,38 +51,38 @@ function RailScroller({
   if (products.length === 0) return null;
 
   return (
-    <div className="mb-10" data-testid={`rail-${title.toLowerCase().replace(/\s+/g, "-")}`}>
-      <div className="mb-4 flex items-end justify-between gap-4">
+    <div className="mb-12" data-testid={`rail-${title.toLowerCase().replace(/\s+/g, "-")}`}>
+      <div className="mb-5 flex items-end justify-between gap-4">
         <div>
-          <h3 className="text-xl font-semibold text-white">{title}</h3>
-          <p className="text-sm text-white/50">{subtitle}</p>
+          <h3 className="text-2xl font-semibold text-white">{title}</h3>
+          <p className="mt-1 text-base text-white/55">{subtitle}</p>
         </div>
         <div className="hidden gap-2 sm:flex">
           <Button
             type="button"
             size="icon"
             variant="outline"
-            className="h-8 w-8 border-white/15 bg-transparent text-white hover:bg-white/5"
+            className="h-10 w-10 border-white/15 bg-transparent text-white hover:bg-white/5"
             onClick={() => scroll(-1)}
             aria-label={`Scroll ${title} left`}
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-5 w-5" />
           </Button>
           <Button
             type="button"
             size="icon"
             variant="outline"
-            className="h-8 w-8 border-white/15 bg-transparent text-white hover:bg-white/5"
+            className="h-10 w-10 border-white/15 bg-transparent text-white hover:bg-white/5"
             onClick={() => scroll(1)}
             aria-label={`Scroll ${title} right`}
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-5 w-5" />
           </Button>
         </div>
       </div>
       <div
         ref={scrollerRef}
-        className="flex gap-4 overflow-x-auto pb-2 scrollbar-thin"
+        className="flex gap-5 overflow-x-auto pb-2 scrollbar-thin"
         style={{ scrollSnapType: "x mandatory" }}
       >
         {products.map((product) => {
@@ -90,7 +90,7 @@ function RailScroller({
           return (
             <div
               key={product.id}
-              className="w-[280px] flex-shrink-0 sm:w-[300px]"
+              className="w-[300px] flex-shrink-0 sm:w-[320px]"
               style={{ scrollSnapAlign: "start" }}
             >
               <StoreProductCard
@@ -125,9 +125,9 @@ export function MerchandisingRails({
 
   return (
     <section className="mb-4" data-testid="merchandising-rails">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-white md:text-3xl">Curated for you</h2>
-        <p className="mt-1 text-white/55">
+      <div className="mb-7">
+        <h2 className="text-3xl font-bold text-white md:text-4xl">Curated for you</h2>
+        <p className="mt-2 text-base text-white/60 md:text-lg">
           Merchandising rails mapped to real SKUs — browse before the full catalog.
         </p>
       </div>

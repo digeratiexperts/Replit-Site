@@ -188,7 +188,7 @@ const CoManagedStore = () => {
       <MegaMenu />
 
       <main className="pb-20 pt-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
           {/* Auth & Cart */}
           <div className="mb-4 flex items-center justify-between">
             {isLoggedIn && user ? (
@@ -223,7 +223,7 @@ const CoManagedStore = () => {
                 variant="outline"
                 size="sm"
                 onClick={loginRedirect}
-                className="border-none bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                className="h-11 border-none bg-[#5034ff] px-5 text-base text-white hover:bg-[#6548ff]"
                 data-testid="button-store-login"
               >
                 <User className="mr-2 h-4 w-4" />
@@ -233,7 +233,7 @@ const CoManagedStore = () => {
             <CartButton />
           </div>
 
-          <div className="mb-8 flex items-center gap-2 text-sm text-white/50">
+          <div className="mb-8 flex items-center gap-2 text-base text-white/50">
             <Link href="/store" className="transition-colors hover:text-white">
               Store
             </Link>
@@ -243,7 +243,7 @@ const CoManagedStore = () => {
 
           {/* Hero */}
           <motion.div
-            className="mb-8 max-w-3xl"
+            className="mb-8 max-w-4xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
@@ -252,11 +252,11 @@ const CoManagedStore = () => {
               <Users className="h-4 w-4 text-[#a78bfa]" />
               <span className="text-sm text-[#c4b5fd]">Guided IT Storefront</span>
             </div>
-            <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl">
+            <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl lg:text-6xl">
               Shop outcomes.{" "}
               <span className="text-[#a78bfa]">Buy real services.</span>
             </h1>
-            <p className="text-lg leading-relaxed text-white/65">
+            <p className="text-lg leading-relaxed text-white/70 md:text-xl">
               Browse curated rails, filter by outcome or billing type, then add products to your
               cart. Existing pricing and checkout stay the same.
             </p>
@@ -291,8 +291,8 @@ const CoManagedStore = () => {
           <div ref={catalogRef} className="scroll-mt-28">
             <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-white md:text-3xl">Full catalog</h2>
-                <p className="mt-1 text-white/55">
+                <h2 className="text-3xl font-bold text-white md:text-4xl">Full catalog</h2>
+                <p className="mt-2 text-base text-white/60">
                   Larger cards · outcome-first blurbs · technical bullets · Add to cart
                 </p>
               </div>
@@ -300,7 +300,7 @@ const CoManagedStore = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-white/15 bg-transparent text-white hover:bg-white/5"
+                  className="h-10 border-white/15 bg-transparent text-base text-white hover:bg-white/5"
                   onClick={() => setSelectedOutcome(null)}
                   data-testid="button-clear-outcome"
                 >
@@ -309,7 +309,7 @@ const CoManagedStore = () => {
               )}
             </div>
 
-            <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
+            <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
               <div>
                 <StoreCatalogToolbar
                   search={searchQuery}
@@ -376,7 +376,7 @@ const CoManagedStore = () => {
                 )}
 
                 <motion.div
-                  className="mb-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3"
+                  className="mb-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3"
                   variants={containerVariants}
                   initial="hidden"
                   animate="visible"

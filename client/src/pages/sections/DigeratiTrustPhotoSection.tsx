@@ -40,14 +40,14 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
               </span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-6 tracking-tight">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight mb-6 tracking-tight">
               Protection that fits{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-600 via-pink-600 to-violet-600">
                 how you actually operate.
               </span>
             </h2>
 
-            <p className="text-lg text-gray-600 leading-relaxed mb-8 max-w-lg">
+            <p className="text-lg md:text-xl text-gray-600 leading-relaxed mb-8 max-w-xl">
               From medical practices to law firms to family-owned offices, we protect the businesses
               Arizona runs on—the ones that cannot afford downtime, a breach, or lost client data.
             </p>
@@ -68,7 +68,7 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
 
             <a
               href="/book"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white font-semibold px-6 py-3 rounded-lg shadow-md shadow-pink-500/25 transition-all duration-200"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white font-semibold px-7 py-3.5 text-base rounded-lg shadow-md shadow-pink-500/25 transition-all duration-200"
               data-testid="link-trust-cta"
             >
               Schedule Your Cyber Risk Assessment

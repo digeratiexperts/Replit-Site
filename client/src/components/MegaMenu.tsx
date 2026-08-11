@@ -11,7 +11,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { pricing } from '@/data/pricing';
 import { useBooking } from '@/contexts/BookingContext';
-import { PORTAL_LOGIN } from '@/lib/portalUrls';
 import { useOptionalFullPageScroll } from '@/components/FullPageScroll';
 
 const NoiseTexture = ({ id }: { id: string }) => (
@@ -487,7 +486,7 @@ export function MegaMenu() {
           <div className="flex items-center flex-wrap gap-3 md:gap-8 justify-center md:justify-end">
             <a
               href="tel:325-480-9870"
-              className="flex items-center text-white/70 hover:text-violet-300 text-xs md:text-sm font-medium transition-colors"
+              className="flex items-center text-white/75 hover:text-violet-300 text-sm md:text-base font-medium transition-colors"
               data-testid="utility-phone"
             >
               <Phone className="h-3.5 w-3.5 mr-1.5 text-violet-400" />
@@ -496,8 +495,8 @@ export function MegaMenu() {
             </a>
 
             <a
-              href={PORTAL_LOGIN}
-              className="flex items-center text-white/70 hover:text-violet-300 text-xs md:text-sm font-medium transition-colors"
+              href="/portal/login"
+              className="flex items-center text-white/75 hover:text-violet-300 text-sm md:text-base font-medium transition-colors"
               data-testid="utility-portal"
             >
               <span className="hidden sm:inline">Client Portal</span>
@@ -523,9 +522,9 @@ export function MegaMenu() {
         aria-label="Main navigation"
         data-nav-theme={isOverLight ? 'over-light' : 'over-dark'}
       >
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[90rem] mx-auto">
           <div className={`flex items-center justify-between gap-3 px-4 xl:px-8 transition-all duration-300 ${
-            isScrolled ? 'h-16' : 'h-20'
+            isScrolled ? 'h-[4.25rem]' : 'h-[5.25rem]'
           }`}>
             {/* Logo */}
             <a
@@ -537,9 +536,9 @@ export function MegaMenu() {
                 src={logoImage} 
                 alt="Digerati Experts Logo" 
                 className={`transition-all duration-300 ${
-                  isScrolled ? 'h-9' : 'h-12'
+                  isScrolled ? 'h-10' : 'h-14'
                 }`}
-                style={{ width: 'auto', maxWidth: '200px' }}
+                style={{ width: 'auto', maxWidth: '220px' }}
                 data-testid="logo-header"
               />
             </a>
@@ -556,7 +555,7 @@ export function MegaMenu() {
                   {item.isSimple ? (
                     <a
                       href={item.href}
-                      className="group relative px-2 xl:px-3 py-2 text-sm xl:text-base text-white/80 hover:text-white font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded whitespace-nowrap"
+                      className="group relative px-2.5 xl:px-3.5 py-2 text-base xl:text-lg text-white/85 hover:text-white font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded whitespace-nowrap"
                       data-testid={`nav-${item.name.toLowerCase()}`}
                       onClick={handleLinkClick}
                       aria-label={`Go to ${item.name}`}
@@ -569,7 +568,7 @@ export function MegaMenu() {
                       ref={(el) => {
                         if (el) navButtonsRef.current.set(item.name, el);
                       }}
-                      className={`group relative px-2 xl:px-3 py-2 text-sm xl:text-base text-white/80 hover:text-white font-medium transition-colors flex items-center focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded whitespace-nowrap ${
+                      className={`group relative px-2.5 xl:px-3.5 py-2 text-base xl:text-lg text-white/85 hover:text-white font-medium transition-colors flex items-center focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded whitespace-nowrap ${
                         activeMenu === item.name ? 'text-white' : ''
                       }`}
                       data-testid={`nav-${item.name.toLowerCase()}`}
@@ -934,7 +933,7 @@ export function MegaMenu() {
           <div className="flex items-center space-x-2 lg:space-x-4">
             <button
               type="button"
-              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-4 xl:px-5 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap shadow-[0_0_22px_rgba(236,72,153,0.35)] hover:shadow-[0_0_30px_rgba(236,72,153,0.45)] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black border border-pink-300/25"
+              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-5 xl:px-6 py-3 rounded-lg text-base font-semibold whitespace-nowrap shadow-[0_0_22px_rgba(236,72,153,0.35)] hover:shadow-[0_0_30px_rgba(236,72,153,0.45)] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black border border-pink-300/25"
               data-testid="nav-cta"
               onClick={() => { handleLinkClick(); openBooking("megamenu"); }}
               aria-label="Schedule Your Assessment"
@@ -1109,7 +1108,7 @@ export function MegaMenu() {
                 </a>
                 
                 <a
-                  href={PORTAL_LOGIN}
+                  href="/portal/login"
                   className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all group"
                   data-testid="mobile-portal"
                   aria-label="Access client portal"

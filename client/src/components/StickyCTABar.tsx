@@ -74,13 +74,13 @@ export function StickyCTABar() {
                     <Shield className="w-5 h-5 text-violet-300" />
                   </div>
                   <div className="text-center lg:text-left min-w-0">
-                    <p className="text-white font-semibold text-sm md:text-base">
+                    <p className="text-white font-semibold text-base md:text-lg">
                       Independent Risk Assessment
                     </p>
-                    <p className="text-white/65 text-xs md:text-[13px] leading-snug max-w-xl">
+                    <p className="text-white/70 text-sm md:text-base leading-snug max-w-xl">
                       Your current provider has a conflict grading their own work.
                       {" "}
-                      <span className="text-white/85">
+                      <span className="text-white/90">
                         We map the gaps, build a plan, and can collaborate with them — switching is optional.
                       </span>
                     </p>
@@ -89,7 +89,7 @@ export function StickyCTABar() {
 
                 <div className="hidden xl:flex items-center">
                   <span
-                    className="rounded-full border border-white/20 bg-white/5 px-3 py-1 text-[11px] font-medium tracking-wide text-white/75 whitespace-nowrap"
+                    className="rounded-full border border-white/20 bg-white/5 px-3.5 py-1.5 text-xs font-medium tracking-wide text-white/80 whitespace-nowrap"
                     data-testid="sticky-cta-reassurance"
                   >
                     No switch required
@@ -99,7 +99,7 @@ export function StickyCTABar() {
                 <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
                   <a
                     href="tel:325-480-9870"
-                    className="hidden md:flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm"
+                    className="hidden md:flex items-center gap-2 text-white/75 hover:text-white transition-colors text-base"
                     data-testid="link-phone-sticky"
                   >
                     <Phone className="w-4 h-4" />
@@ -108,7 +108,7 @@ export function StickyCTABar() {
                   
                   <Button
                     size="sm"
-                    className="bg-white text-pink-700 hover:bg-pink-50 font-semibold shadow-lg"
+                    className="h-11 bg-white px-5 text-base text-pink-700 hover:bg-pink-50 font-semibold shadow-lg"
                     data-testid="button-sticky-cta-assessment"
                     onClick={openBooking}
                   >

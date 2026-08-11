@@ -330,12 +330,12 @@ function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarPr
       <motion.nav
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="pointer-events-auto flex max-w-[min(100%,1400px)] flex-row items-center gap-0.5 overflow-x-auto py-1.5 px-3 rounded-full bg-black/95 backdrop-blur-xl border-2 border-[#D3126A]/60 shadow-[0_0_24px_rgba(211,18,106,0.35),0_4px_24px_rgba(0,0,0,0.5)] scrollbar-none"
+        className="pointer-events-auto flex max-w-[min(100%,1480px)] flex-row items-center gap-1 overflow-x-auto py-2 px-3.5 rounded-full bg-black/95 backdrop-blur-xl border-2 border-[#D3126A]/60 shadow-[0_0_24px_rgba(211,18,106,0.35),0_4px_24px_rgba(0,0,0,0.5)] scrollbar-none"
         aria-label="Section navigation"
       >
-        <div className="flex items-center gap-1.5 pr-2.5 border-r border-white/20 mr-1.5 shrink-0">
-          <Shield className="w-4 h-4 text-[#FF477F]" aria-hidden="true" />
-          <span className="text-white font-medium text-xs whitespace-nowrap">Is Your Business Protected?</span>
+        <div className="flex items-center gap-2 pr-3 border-r border-white/20 mr-2 shrink-0">
+          <Shield className="w-5 h-5 text-[#FF477F]" aria-hidden="true" />
+          <span className="text-white font-medium text-sm whitespace-nowrap">Is Your Business Protected?</span>
         </div>
 
         {navSections.map(({ section, index }) => {
@@ -349,10 +349,10 @@ function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarPr
                 e.stopPropagation();
                 onNavigate(index);
               }}
-              className={`relative px-2.5 py-1 text-xs font-medium rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FF477F] whitespace-nowrap shrink-0 ${
+              className={`relative px-3 py-1.5 text-sm font-medium rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FF477F] whitespace-nowrap shrink-0 ${
                 isActive
                   ? 'bg-[#D3126A] text-white shadow-lg shadow-[#D3126A]/40'
-                  : 'text-white/70 hover:text-white hover:bg-white/10'
+                  : 'text-white/75 hover:text-white hover:bg-white/10'
               }`}
               aria-label={`Go to ${section.label}`}
               aria-current={isActive ? 'true' : undefined}
@@ -363,11 +363,11 @@ function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarPr
           );
         })}
 
-        <div className="w-px h-6 bg-white/20 mx-2" aria-hidden="true" />
+        <div className="w-px h-7 bg-white/20 mx-2" aria-hidden="true" />
 
         <a
           href="tel:325-480-9870"
-          className="flex items-center gap-1.5 text-white/70 hover:text-white transition-colors text-sm whitespace-nowrap"
+          className="flex items-center gap-1.5 text-white/75 hover:text-white transition-colors text-base whitespace-nowrap"
           data-testid="nav-phone"
         >
           <Phone className="w-4 h-4" aria-hidden="true" />
@@ -376,7 +376,7 @@ function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarPr
 
         <a
           href="/book"
-          className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold rounded-full bg-white text-[#D3126A] hover:bg-pink-50 transition-all duration-300 shadow-lg whitespace-nowrap ml-2"
+          className="flex items-center gap-1.5 px-5 py-2 text-base font-semibold rounded-full bg-white text-[#D3126A] hover:bg-pink-50 transition-all duration-300 shadow-lg whitespace-nowrap ml-2"
           data-testid="nav-cta-assessment"
         >
           Free Assessment

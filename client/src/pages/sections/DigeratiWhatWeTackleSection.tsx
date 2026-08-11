@@ -68,7 +68,7 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7 max-w-7xl mx-auto">
           {challenges.map((challenge, index) => (
             <motion.div 
               key={index} 
@@ -80,10 +80,10 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               {/* Card */}
-              <div className="relative bg-white/5 rounded-2xl p-6 h-full border border-white/10 hover:border-white/20 transition-all duration-300 group-hover:bg-white/[0.07]">
+              <div className="relative bg-white/5 rounded-2xl p-7 lg:p-8 h-full border border-white/10 hover:border-white/20 transition-all duration-300 group-hover:bg-white/[0.07]">
                 {/* Icon container with gradient */}
                 <div className="mb-5">
-                  <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br ${challenge.gradient} bg-opacity-20 border border-white/10 group-hover:scale-110 transition-transform duration-300`}>
+                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-xl bg-gradient-to-br ${challenge.gradient} bg-opacity-20 border border-white/10 group-hover:scale-110 transition-transform duration-300`}>
                     <div className="text-white">
                       {challenge.icon}
                     </div>
@@ -91,10 +91,10 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
                 </div>
                 
                 {/* Content */}
-                <h3 className="text-xl font-semibold text-white mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-300 transition-all">
+                <h3 className="text-xl md:text-2xl font-semibold text-white mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-300 transition-all">
                   {challenge.title}
                 </h3>
-                <p className="text-gray-400 text-base leading-relaxed">
+                <p className="text-gray-400 text-base md:text-lg leading-relaxed">
                   {challenge.description}
                 </p>
 
@@ -120,7 +120,7 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
             href="/book"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-purple-500 hover:to-indigo-500 transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-105"
+            className="inline-flex items-center px-10 py-4 text-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-purple-500 hover:to-indigo-500 transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-105"
             data-testid="tackle-cta"
           >
             Discuss Your Security Needs

@@ -126,7 +126,7 @@ const StoreLanding = () => {
       <MegaMenu />
 
       <main className="pb-20 pt-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
           <div className="mb-4 flex items-center justify-between">
             {isLoggedIn && user ? (
               <div className="flex items-center gap-3">
@@ -160,7 +160,7 @@ const StoreLanding = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-none bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                  className="h-11 border-none bg-[#5034ff] px-5 text-base text-white hover:bg-[#6548ff]"
                   data-testid="button-store-login"
                 >
                   <User className="mr-2 h-4 w-4" />
@@ -171,7 +171,7 @@ const StoreLanding = () => {
             <CartButton />
           </div>
 
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
             <div>
               <motion.div
                 className="mb-10"
@@ -183,27 +183,27 @@ const StoreLanding = () => {
                   <Package className="h-4 w-4 text-[#a78bfa]" />
                   <span className="text-sm text-[#c4b5fd]">IT Services & Solutions</span>
                 </div>
-                <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl lg:text-6xl">
+                <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl lg:text-6xl xl:text-7xl">
                   Digerati Experts{" "}
                   <span className="text-[#a78bfa]">Store</span>
                 </h1>
-                <p className="max-w-2xl text-xl leading-relaxed text-white/65">
+                <p className="max-w-3xl text-xl leading-relaxed text-white/70 md:text-2xl">
                   Guided storefront for managed packages and à la carte services — shop by outcome,
                   then buy from the live catalog.
                 </p>
-                <div className="mt-6 flex flex-wrap gap-3">
+                <div className="mt-7 flex flex-wrap gap-3">
                   <Link href="/store/co-managed">
                     <Button
-                      className="bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                      className="h-12 bg-[#5034ff] px-6 text-base text-white hover:bg-[#6548ff]"
                       data-testid="button-browse-catalog"
                     >
                       Browse full catalog
-                      <ArrowRight className="ml-2 h-4 w-4" />
+                      <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                   </Link>
                   <Button
                     variant="outline"
-                    className="border-white/20 bg-transparent text-white hover:bg-white/5"
+                    className="h-12 border-white/20 bg-transparent px-6 text-base text-white hover:bg-white/5"
                     onClick={() => {
                       const btn = document.querySelector(
                         '[data-testid="button-open-msp-advisor"]'
@@ -239,42 +239,42 @@ const StoreLanding = () => {
             viewport={{ once: true }}
           >
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-white md:text-3xl">How do you buy?</h2>
-              <p className="mt-1 text-white/55">
+              <h2 className="text-3xl font-bold text-white md:text-4xl">How do you buy?</h2>
+              <p className="mt-2 text-base text-white/60 md:text-lg">
                 Full-service packages or flexible co-managed products — same store, clearer paths.
               </p>
             </div>
             <div className="grid gap-8 md:grid-cols-2">
               <motion.div
                 variants={itemVariants}
-                className="group relative overflow-hidden rounded-2xl border border-[#5034ff]/30 bg-[#141414] p-8 transition-all duration-300 hover:-translate-y-1"
+                className="group relative overflow-hidden rounded-2xl border border-[#5034ff]/30 bg-[#141414] p-9 transition-all duration-300 hover:-translate-y-1"
                 data-testid="card-managed-clients"
               >
                 <div className="relative z-10">
-                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl border border-[#5034ff]/30 bg-[#5034ff]/15">
-                    <Building className="h-7 w-7 text-[#a78bfa]" />
+                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-xl border border-[#5034ff]/30 bg-[#5034ff]/15">
+                    <Building className="h-8 w-8 text-[#a78bfa]" />
                   </div>
-                  <h2 className="mb-3 text-2xl font-bold text-white">Managed Clients</h2>
-                  <p className="mb-4 leading-relaxed text-white/60">
+                  <h2 className="mb-3 text-2xl font-bold text-white md:text-3xl">Managed Clients</h2>
+                  <p className="mb-4 text-base leading-relaxed text-white/65 md:text-lg">
                     Full-service managed IT packages for businesses seeking comprehensive support.
                     ProActive Ecosystem plans include everything you need in one predictable monthly
                     subscription.
                   </p>
-                  <div className="mb-6 flex items-center gap-2 text-sm text-[#c4b5fd]">
+                  <div className="mb-6 flex items-center gap-2 text-base text-[#c4b5fd]">
                     <Lock className="h-4 w-4" />
                     <span>Contract-based services · Schedule a consultation</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-white/50">
+                    <span className="text-base text-white/50">
                       {contractOnlyProducts.length} packages available
                     </span>
                     <Link href="/store/managed">
                       <Button
-                        className="bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                        className="h-11 bg-[#5034ff] px-5 text-base text-white hover:bg-[#6548ff]"
                         data-testid="button-view-managed"
                       >
                         View Packages
-                        <ArrowRight className="ml-2 h-4 w-4" />
+                        <ArrowRight className="ml-2 h-5 w-5" />
                       </Button>
                     </Link>
                   </div>
@@ -283,29 +283,29 @@ const StoreLanding = () => {
 
               <motion.div
                 variants={itemVariants}
-                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#141414] p-8 transition-all duration-300 hover:-translate-y-1 hover:border-[#5034ff]/30"
+                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#141414] p-9 transition-all duration-300 hover:-translate-y-1 hover:border-[#5034ff]/30"
                 data-testid="card-comanaged-clients"
               >
                 <div className="relative z-10">
-                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl border border-[#5034ff]/30 bg-[#5034ff]/15">
-                    <Users className="h-7 w-7 text-[#a78bfa]" />
+                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-xl border border-[#5034ff]/30 bg-[#5034ff]/15">
+                    <Users className="h-8 w-8 text-[#a78bfa]" />
                   </div>
-                  <h2 className="mb-3 text-2xl font-bold text-white">Co-Managed Clients</h2>
-                  <p className="mb-4 leading-relaxed text-white/60">
+                  <h2 className="mb-3 text-2xl font-bold text-white md:text-3xl">Co-Managed Clients</h2>
+                  <p className="mb-4 text-base leading-relaxed text-white/65 md:text-lg">
                     Flexible solutions for IT teams needing extra support. Add endpoint management,
                     security tools, UCaaS, hardware provisioning, or professional services as needed.
                   </p>
-                  <div className="mb-6 flex items-center gap-2 text-sm text-emerald-300">
+                  <div className="mb-6 flex items-center gap-2 text-base text-emerald-300">
                     <Shield className="h-4 w-4" />
                     <span>Checkout enabled · Purchase directly</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-white/50">
+                    <span className="text-base text-white/50">
                       {checkoutProducts.length} products available
                     </span>
                     <Link href="/store/co-managed">
                       <Button
-                        className="border-none bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                        className="h-11 border-none bg-[#5034ff] px-5 text-base text-white hover:bg-[#6548ff]"
                         data-testid="button-view-comanaged"
                       >
                         Browse Products

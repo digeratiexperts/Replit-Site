@@ -99,11 +99,11 @@ export const ModernHeroSection = (): JSX.Element => {
       />
 
       <motion.div
-        className="relative z-10 w-full px-4 sm:px-6 lg:px-12 xl:px-16 pt-32 pb-16 sm:pt-36 sm:pb-16 lg:pt-40 lg:pb-20 xl:pt-44"
+        className="relative z-10 w-full px-4 sm:px-6 lg:px-10 xl:px-14 pt-28 pb-14 sm:pt-32 sm:pb-16 lg:pt-36 lg:pb-16 xl:pt-40"
         style={{ y }}
       >
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 xl:gap-20 items-center">
+        <div className="mx-auto max-w-[90rem]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 xl:gap-16 items-center">
             <motion.div
               className="flex flex-col gap-5 sm:gap-6 w-full"
               initial={prefersReducedMotion ? false : { opacity: 0, y: 22 }}
@@ -111,32 +111,32 @@ export const ModernHeroSection = (): JSX.Element => {
               transition={{ duration: prefersReducedMotion ? 0 : 0.45, ease: "easeOut" }}
             >
               <motion.p
-                className="text-xs sm:text-sm font-semibold uppercase tracking-[0.22em] text-pink-300/95"
+                className="text-sm sm:text-base font-semibold uppercase tracking-[0.2em] text-pink-300/95"
                 initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: prefersReducedMotion ? 0 : 0.35, delay: prefersReducedMotion ? 0 : 0.05 }}
               >
-                Cybersecurity-First Managed IT · Greater Phoenix
+                Arizona MSP · Cybersecurity &amp; Managed IT
               </motion.p>
 
-              <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold leading-[1.08] tracking-[-0.02em] text-white">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-bold leading-[1.05] tracking-[-0.02em] text-white">
                 Your Arizona business,{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-300 via-pink-400 to-violet-300">
                   protected 24/7.
                 </span>
               </h1>
 
-              <p className="text-base md:text-lg text-white/85 leading-relaxed max-w-xl">
-                Fully managed IT and cybersecurity for growing businesses — delivered through our
-                ProActive Ecosystem. Reduce risk, support compliance readiness, and keep teams
-                productive without building an internal IT department.
+              <p className="text-lg md:text-xl text-white/85 leading-relaxed max-w-2xl">
+                Cybersecurity and managed IT for growing businesses—reducing risk, supporting
+                compliance, and keeping your team productive without building an internal IT
+                department.
               </p>
 
-              <div className="grid grid-cols-1 xs:grid-cols-2 gap-x-4 gap-y-2.5 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-2.5">
+              <div className="grid grid-cols-1 xs:grid-cols-2 gap-x-4 gap-y-3 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-3">
                 {features.map((feature, index) => (
                   <motion.div
                     key={feature.text}
-                    className="flex items-center gap-1.5 sm:gap-2"
+                    className="flex items-center gap-2 sm:gap-2.5"
                     initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{
@@ -144,53 +144,41 @@ export const ModernHeroSection = (): JSX.Element => {
                       delay: prefersReducedMotion ? 0 : 0.12 + index * 0.04,
                     }}
                   >
-                    <feature.icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-pink-400 flex-shrink-0" aria-hidden="true" />
-                    <span className="text-sm sm:text-base text-white/80">{feature.text}</span>
+                    <feature.icon className="h-4 w-4 sm:h-5 sm:w-5 text-pink-400 flex-shrink-0" aria-hidden="true" />
+                    <span className="text-base sm:text-lg text-white/85">{feature.text}</span>
                   </motion.div>
                 ))}
               </div>
 
               <div className="mt-1 sm:mt-2 flex flex-col items-start gap-4" id="assessment-cta">
-                <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 w-full">
-                  <Button
-                    type="button"
-                    size="lg"
-                    data-testid="button-hero-schedule"
-                    onClick={handleSchedule}
-                    className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-semibold bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white border border-pink-300/35 shadow-lg shadow-pink-500/40 hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300"
-                  >
-                    Schedule Your Cyber Risk Assessment
-                    <ArrowRight className="ml-2 w-5 h-5" aria-hidden="true" />
-                  </Button>
-                  <Button
-                    type="button"
-                    size="lg"
-                    variant="outline"
-                    data-testid="button-hero-talk-expert"
-                    onClick={() => openBooking("hero_talk_expert")}
-                    className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-semibold border-white/30 bg-white/5 text-white hover:bg-white/10 hover:text-white"
-                  >
-                    Talk to an Expert
-                  </Button>
-                </div>
+                <Button
+                  type="button"
+                  size="lg"
+                  data-testid="button-hero-schedule"
+                  onClick={handleSchedule}
+                  className="h-14 sm:h-16 px-7 sm:px-10 text-lg sm:text-xl font-semibold bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white border border-pink-300/35 shadow-lg shadow-pink-500/40 hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300"
+                >
+                  Schedule Your Cyber Risk Assessment
+                  <ArrowRight className="ml-2 w-6 h-6" aria-hidden="true" />
+                </Button>
 
-                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-white/70">
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-base text-white/75">
                   <span className="inline-flex items-center gap-1.5">
-                    <Check className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
+                    <Check className="w-4 h-4 text-emerald-400" aria-hidden="true" />
                     No obligation
                   </span>
                   <span className="inline-flex items-center gap-1.5">
-                    <Check className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
+                    <Check className="w-4 h-4 text-emerald-400" aria-hidden="true" />
                     Response within one business day
                   </span>
                 </div>
 
-                <p className="text-sm text-white/70 max-w-lg leading-relaxed">
+                <p className="text-base text-white/75 max-w-xl leading-relaxed">
                   Start with a practical review of your identity, endpoints, email, backups, and
                   security posture.
                 </p>
 
-                <p className="text-sm sm:text-base text-white/70">
+                <p className="text-base sm:text-lg text-white/75">
                   Arizona-based · Principal-led · Recommendations sized to your business
                   <span className="mx-2 text-white/35" aria-hidden="true">
                     ·
@@ -209,7 +197,7 @@ export const ModernHeroSection = (): JSX.Element => {
 
             <div className="hidden lg:flex relative justify-end w-full">
               <motion.div
-                className="relative w-full max-w-[520px] xl:max-w-[560px]"
+                className="relative w-full max-w-[560px] xl:max-w-[620px]"
                 initial={prefersReducedMotion ? false : { opacity: 0, x: 28, rotateY: -6 }}
                 animate={{ opacity: 1, x: 0, rotateY: 0 }}
                 transition={{

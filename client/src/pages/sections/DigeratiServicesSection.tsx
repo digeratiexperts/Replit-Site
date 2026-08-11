@@ -43,29 +43,29 @@ export const DigeratiServicesSection = (): JSX.Element => {
   return (
     <section
       id="services"
-      className="relative py-10 md:py-14 lg:py-16 bg-[#0a0a0a] overflow-hidden"
+      className="relative py-12 md:py-16 lg:py-20 bg-[#0a0a0a] overflow-hidden"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
-          className="text-center mb-8 md:mb-12"
+          className="text-center mb-10 md:mb-14"
           initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.45 }}
         >
-          <p className="text-xs md:text-sm font-medium text-[#FF477F] tracking-wide uppercase mb-3">
+          <p className="text-sm md:text-base font-medium text-[#FF477F] tracking-wide uppercase mb-3">
             How to work with us
           </p>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
             Cybersecurity-First Managed IT
           </h2>
-          <p className="text-base md:text-lg text-white/60 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-white/65 max-w-3xl mx-auto leading-relaxed">
             Three clear paths. Depth lives on the service pages — including the ProActive
             Ecosystem packages, standalone services, and full security stack.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {paths.map((path, index) => {
             const Icon = path.icon;
             return (
@@ -75,20 +75,20 @@ export const DigeratiServicesSection = (): JSX.Element => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.08 }}
-                className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 lg:p-8 flex flex-col h-full"
+                className="rounded-2xl border border-white/10 bg-white/[0.03] p-7 lg:p-9 flex flex-col h-full"
                 data-testid={path.testId}
               >
-                <div className="w-11 h-11 rounded-xl bg-violet-500/20 flex items-center justify-center mb-5">
-                  <Icon className="w-5 h-5 text-violet-300" aria-hidden="true" />
+                <div className="w-14 h-14 rounded-xl bg-violet-500/20 flex items-center justify-center mb-6">
+                  <Icon className="w-7 h-7 text-violet-300" aria-hidden="true" />
                 </div>
-                <h3 className="text-lg lg:text-xl font-semibold text-white mb-2">{path.title}</h3>
-                <p className="text-sm lg:text-base text-white/60 leading-relaxed flex-1 mb-6">
+                <h3 className="text-xl lg:text-2xl font-semibold text-white mb-3">{path.title}</h3>
+                <p className="text-base lg:text-lg text-white/65 leading-relaxed flex-1 mb-7">
                   {path.description}
                 </p>
                 <Link href={path.link} data-testid={`link-${path.testId}`}>
-                  <span className="inline-flex items-center gap-2 text-sm font-medium text-violet-300 hover:text-violet-200">
+                  <span className="inline-flex items-center gap-2 text-base font-medium text-violet-300 hover:text-violet-200">
                     {path.cta}
-                    <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                    <ArrowRight className="w-5 h-5" aria-hidden="true" />
                   </span>
                 </Link>
               </motion.div>
@@ -96,10 +96,10 @@ export const DigeratiServicesSection = (): JSX.Element => {
           })}
         </div>
 
-        <div className="mt-8 md:mt-10 flex flex-wrap items-center justify-center gap-4 text-sm">
+        <div className="mt-10 md:mt-12 flex flex-wrap items-center justify-center gap-4 text-base">
           <Link href="/#protection" data-testid="link-see-security-stack">
-            <span className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors">
-              <Layers className="w-4 h-4 text-pink-400" aria-hidden="true" />
+            <span className="inline-flex items-center gap-2 text-white/75 hover:text-white transition-colors">
+              <Layers className="w-5 h-5 text-pink-400" aria-hidden="true" />
               See the security stack we manage
             </span>
           </Link>
@@ -107,9 +107,9 @@ export const DigeratiServicesSection = (): JSX.Element => {
             ·
           </span>
           <Link href="/solutions/proactive-office-ecosystem" data-testid="link-proactive-ecosystem">
-            <span className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors">
+            <span className="inline-flex items-center gap-2 text-white/75 hover:text-white transition-colors">
               How the ProActive Ecosystem works
-              <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              <ArrowRight className="w-5 h-5" aria-hidden="true" />
             </span>
           </Link>
         </div>

@@ -111,7 +111,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
   return (
     <section 
       id="pricing" 
-      className="relative py-10 md:py-14 lg:py-16 overflow-hidden bg-[#0a0a0a]"
+      className="relative py-12 md:py-16 lg:py-20 overflow-hidden bg-[#0a0a0a]"
     >
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <img src={pricingBgImage} alt="" loading="lazy" className="absolute top-0 left-0 w-full h-auto opacity-[0.15]" />
@@ -131,7 +131,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
           <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4 md:mb-6">
             <span className="text-xs md:text-sm font-medium text-violet-300">Transparent Pricing</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-3 md:mb-4 text-white">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-3 md:mb-4 text-white">
             ProActive Ecosystem <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">Pricing</span>
           </h2>
           <p className="text-base md:text-lg lg:text-xl text-white/60 leading-relaxed max-w-3xl mx-auto px-4">
@@ -222,7 +222,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                 <div className="flex flex-col gap-3 mt-auto pt-2">
                   <a href={plan.learnMoreUrl} className="block">
                     <Button 
-                      className="w-full h-9 text-sm border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-600 hover:text-white active:bg-violet-700 active:text-white focus:bg-violet-600 focus:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all duration-200" 
+                      className="w-full h-11 text-base border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-600 hover:text-white active:bg-violet-700 active:text-white focus:bg-violet-600 focus:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all duration-200" 
                       variant="outline"
                       data-testid={`button-learn-more-${plan.name.toLowerCase()}`}
                     >
@@ -231,7 +231,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                   </a>
                   <a href="/book" className="block">
                     <Button 
-                      className={`w-full h-9 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 ${
+                      className={`w-full h-11 text-base font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 ${
                         plan.isPopular 
                           ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-500 hover:to-purple-500 active:bg-violet-700 border-0' 
                           : 'border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-50 active:bg-violet-100 active:text-violet-700 focus:text-violet-600'
@@ -266,7 +266,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
             <motion.div
               key={index}
               variants={cardVariants}
-              className={`relative rounded-2xl p-6 md:p-8 transition-all duration-300 flex flex-col ${
+              className={`relative rounded-2xl p-7 md:p-9 transition-all duration-300 flex flex-col ${
                 plan.isPopular 
                   ? 'bg-white border-2 border-violet-500 ring-2 ring-violet-500/30 shadow-xl shadow-violet-500/10' 
                   : 'bg-white border border-gray-200 hover:border-violet-300 hover:shadow-lg'
@@ -282,7 +282,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
               )}
               
               <div className="mb-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">{plan.name}</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">{plan.name}</h3>
                 
                 <div className="mb-2">
                   <span className="text-sm font-medium text-gray-500 uppercase tracking-wide">Starting at</span>
@@ -314,7 +314,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
               <div className="flex flex-col gap-4 mt-auto pt-2">
                 <a href={plan.learnMoreUrl} className="block">
                   <Button 
-                    className="w-full border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-600 hover:text-white active:bg-violet-700 active:text-white focus:bg-violet-600 focus:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all duration-200" 
+                    className="w-full h-12 text-base border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-600 hover:text-white active:bg-violet-700 active:text-white focus:bg-violet-600 focus:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 transition-all duration-200" 
                     variant="outline"
                     data-testid={`button-learn-more-${plan.name.toLowerCase()}`}
                   >
@@ -323,7 +323,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                 </a>
                 <a href="/book" className="block">
                   <Button 
-                    className={`w-full font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 ${
+                    className={`w-full h-12 text-base font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 ${
                       plan.isPopular 
                         ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-500 hover:to-purple-500 active:bg-violet-700 active:text-white border-0' 
                         : 'border-2 border-violet-600 text-violet-600 bg-transparent hover:bg-violet-50 active:bg-violet-100 active:text-violet-700 focus:text-violet-600'
