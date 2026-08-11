@@ -1,0 +1,159 @@
+{
+  "generatedAt": "2026-08-11T21:01:30.614Z",
+  "model": "nano-banana",
+  "okCount": 25,
+  "failCount": 0,
+  "generated": [
+    {
+      "dir": "categories",
+      "id": "contract_services",
+      "taskId": "019ff292-058e-72ec-9e1a-9a1a22bb5d29",
+      "credits": 3
+    },
+    {
+      "dir": "categories",
+      "id": "comanaged_subscriptions",
+      "taskId": "019ff292-365f-7d55-a6b0-87c964ea320c",
+      "credits": 3
+    },
+    {
+      "dir": "categories",
+      "id": "comanaged_onboarding",
+      "taskId": "019ff294-37e2-7c02-9692-66ce6dbf2cb1",
+      "credits": 3
+    },
+    {
+      "dir": "categories",
+      "id": "networking_managed",
+      "taskId": "019ff296-3b1d-7c6b-9e6a-7f2ffea00cce",
+      "credits": 3
+    },
+    {
+      "dir": "categories",
+      "id": "networking_projects",
+      "taskId": "019ff298-3d93-7cc1-8122-37348b68d36f",
+      "credits": 3
+    },
+    {
+      "dir": "categories",
+      "id": "ucaas_subscriptions",
+      "taskId": "019ff299-8f9d-730f-9844-3c2dc675b49f",
+      "credits": 3
+    },
+    {
+      "dir": "categories",
+      "id": "ucaas_setup",
+      "taskId": "019ff299-bebc-7f03-83ee-8964d90cfb49",
+      "credits": 3
+    },
+    {
+      "dir": "categories",
+      "id": "hardware_provisioning",
+      "taskId": "019ff299-ef56-7d2a-b391-9d6232217782",
+      "credits": 3
+    },
+    {
+      "dir": "categories",
+      "id": "hardware_physical",
+      "taskId": "019ff29a-1ea2-7f35-be51-fb7b77162368",
+      "credits": 3
+    },
+    {
+      "dir": "categories",
+      "id": "hardware_handling",
+      "taskId": "019ff29a-4d28-7323-ab8f-45190a31f990",
+      "credits": 3
+    },
+    {
+      "dir": "categories",
+      "id": "digital_assessments",
+      "taskId": "019ff29a-842a-732e-ad97-fcce80c73aa7",
+      "credits": 3
+    },
+    {
+      "dir": "categories",
+      "id": "digital_templates",
+      "taskId": "019ff29a-ba94-7f49-9c58-90d8acea6049",
+      "credits": 3
+    },
+    {
+      "dir": "categories",
+      "id": "digital_training",
+      "taskId": "019ff29a-eb63-7d78-bde8-02fc2fd4a1e9",
+      "credits": 3
+    },
+    {
+      "dir": "categories",
+      "id": "professional_services",
+      "taskId": "019ff29c-0c9c-74fa-91a6-4ab832eb4cbd",
+      "credits": 3
+    },
+    {
+      "dir": "outcomes",
+      "id": "protect",
+      "taskId": "019ff29c-3b75-750c-a85e-a86e6663aa05",
+      "credits": 3
+    },
+    {
+      "dir": "outcomes",
+      "id": "modernize",
+      "taskId": "019ff29d-cd3f-7e22-be3b-5d3b76783dc6",
+      "credits": 3
+    },
+    {
+      "dir": "outcomes",
+      "id": "compliance",
+      "taskId": "019ff29d-ffe7-7427-b4fe-35778deb12d5",
+      "credits": 3
+    },
+    {
+      "dir": "outcomes",
+      "id": "recover",
+      "taskId": "019ff29e-863a-758e-a83a-17885215a4b6",
+      "credits": 3
+    },
+    {
+      "dir": "outcomes",
+      "id": "support_it",
+      "taskId": "019ff29f-1761-75bd-9acd-8bf9f53fbc62",
+      "credits": 3
+    },
+    {
+      "dir": "outcomes",
+      "id": "outsource",
+      "taskId": "019ff2a0-4148-7e89-8ee2-6e338062568a",
+      "credits": 3
+    },
+    {
+      "dir": "outcomes",
+      "id": "secure_remote",
+      "taskId": "019ff2a0-67e9-74bf-a08a-afb5b6c1b36e",
+      "credits": 3
+    },
+    {
+      "dir": "site",
+      "id": "trust-security",
+      "taskId": "019ff2a0-96ac-7e96-9e1c-0cbc3e3c1606",
+      "credits": 3
+    },
+    {
+      "dir": "site",
+      "id": "trust-microsoft",
+      "taskId": "019ff2a0-c51d-763a-8d5f-e49c0e338f87",
+      "credits": 3
+    },
+    {
+      "dir": "site",
+      "id": "trust-audit",
+      "taskId": "019ff2a1-0440-707a-94f2-7e17f0fb335e",
+      "credits": 3
+    },
+    {
+      "dir": "site",
+      "id": "pricing-ecosystem",
+      "taskId": "019ff2a1-331a-7eb8-99ae-30e051b43856",
+      "credits": 3
+    }
+  ],
+  "lastRunFailures": []
+}
