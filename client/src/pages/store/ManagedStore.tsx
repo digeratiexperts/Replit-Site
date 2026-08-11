@@ -3,19 +3,18 @@ import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "../sections/DigeratiEnhancedFooterSection";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { 
-  ArrowRight, Shield, Building, Calendar, CheckCircle, Phone, 
+import {
+  ArrowRight, Shield, Building, Calendar, CheckCircle, Phone,
   Star, Clock, Award, Lock
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
-import { 
-  getContractOnlyProducts,
+import {
+  getContractOnlyStoreProducts,
   categoryLabels,
-  formatPrice,
   type StoreProduct
-} from "@/data/storeProducts";
+} from "@/data/storeCatalog";
 import { CartButton } from "@/components/store/CartButton";
-import { pricing, getPricingFooterText } from "@/data/pricing";
+import { getPricingFooterText } from "@/data/pricing";
 
 const ManagedStore = () => {
   const prefersReducedMotion = useReducedMotion();
@@ -26,13 +25,13 @@ const ManagedStore = () => {
     canonical: '/store/managed',
   });
 
-  const contractOnlyProducts = getContractOnlyProducts();
+  const contractOnlyProducts = getContractOnlyStoreProducts();
 
-  const proactiveEcosystemProducts = contractOnlyProducts.filter(p => 
+  const proactiveEcosystemProducts = contractOnlyProducts.filter(p =>
     p.name.includes("ProActive Ecosystem")
   );
-  
-  const otherManagedProducts = contractOnlyProducts.filter(p => 
+
+  const otherManagedProducts = contractOnlyProducts.filter(p =>
     !p.name.includes("ProActive Ecosystem")
   );
 
@@ -51,8 +50,8 @@ const ManagedStore = () => {
       <motion.div
         variants={itemVariants}
         className={`relative rounded-2xl p-6 border transition-all duration-300 hover:-translate-y-1 cursor-pointer ${
-          featured 
-            ? 'bg-violet-500/10 border-violet-500/40 shadow-[0_0_40px_rgba(139,92,246,0.2)]' 
+          featured
+            ? 'bg-violet-500/10 border-violet-500/40 shadow-[0_0_40px_rgba(139,92,246,0.2)]'
             : 'bg-white/[0.03] border-white/10 hover:border-violet-500/30'
         }`}
         data-testid={`product-${product.id}`}
@@ -63,7 +62,7 @@ const ManagedStore = () => {
           Most Popular
         </div>
       )}
-      
+
       <div className="mb-4">
         <span className="text-xs text-white/40 uppercase tracking-wider">{categoryLabels[product.category]}</span>
         <h3 className="text-xl font-bold text-white mt-1">{product.name}</h3>
@@ -93,10 +92,10 @@ const ManagedStore = () => {
         ))}
       </ul>
 
-      <Button 
+      <Button
         className={`w-full ${
-          featured 
-            ? 'bg-violet-600 hover:bg-violet-500 text-white' 
+          featured
+            ? 'bg-violet-600 hover:bg-violet-500 text-white'
             : 'bg-white/10 hover:bg-white/20 text-white border border-white/20'
         }`}
         onClick={(e) => {
@@ -116,10 +115,10 @@ const ManagedStore = () => {
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <MegaMenu />
-      
+
       <main className="pt-28 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+
           {/* Breadcrumb with Cart Button */}
           <div className="mb-8 flex items-center justify-between">
             <div className="flex items-center gap-2 text-sm text-white/50">
@@ -131,7 +130,7 @@ const ManagedStore = () => {
           </div>
 
           {/* Hero Section */}
-          <motion.div 
+          <motion.div
             className="text-center mb-16"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -148,13 +147,13 @@ const ManagedStore = () => {
               </span>
             </h1>
             <p className="text-xl text-white/70 max-w-3xl mx-auto leading-relaxed">
-              Complete managed IT packages designed for businesses that want predictable costs and comprehensive support. 
+              Complete managed IT packages designed for businesses that want predictable costs and comprehensive support.
               Everything you need in one subscription—no surprise bills, no nickel-and-diming.
             </p>
           </motion.div>
 
           {/* Contract Notice */}
-          <motion.div 
+          <motion.div
             className="mb-12 p-4 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-start gap-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -164,14 +163,14 @@ const ManagedStore = () => {
             <div>
               <h3 className="text-white font-semibold mb-1">Contract-Based Services</h3>
               <p className="text-white/60 text-sm">
-                These managed IT packages require a consultation and service agreement. 
+                These managed IT packages require a consultation and service agreement.
                 Schedule a call to discuss your needs and receive a customized quote tailored to your organization.
               </p>
             </div>
           </motion.div>
 
           {/* ProActive Ecosystem Plans */}
-          <motion.section 
+          <motion.section
             className="mb-20"
             variants={containerVariants}
             initial="hidden"
@@ -182,17 +181,17 @@ const ManagedStore = () => {
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">ProActive Ecosystem Plans</h2>
               <p className="text-white/60">All-inclusive managed IT packages. Choose the tier that fits your security and compliance needs.</p>
             </div>
-            
-            <div className="grid md:grid-cols-3 gap-6">
-              {proactiveEcosystemProducts.map((product, idx) => (
-                <ProductCard 
-                  key={product.id} 
-                  product={product} 
-                  featured={idx === 1} 
+
+            <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
+              {proactiveEcosystemProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  featured={product.sku === "DE-SVC-MGD-OFFICE-MO"}
                 />
               ))}
             </div>
-            
+
             <p className="text-center text-white/40 text-sm mt-6">
               {getPricingFooterText()}. Final pricing tailored to your users, sites, and compliance needs.
             </p>
@@ -200,7 +199,7 @@ const ManagedStore = () => {
 
           {/* Other Managed Services */}
           {otherManagedProducts.length > 0 && (
-            <motion.section 
+            <motion.section
               className="mb-20"
               variants={containerVariants}
               initial="hidden"
@@ -211,7 +210,7 @@ const ManagedStore = () => {
                 <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">Additional Managed Services</h2>
                 <p className="text-white/60">Specialized managed services for specific needs.</p>
               </div>
-              
+
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {otherManagedProducts.map((product) => (
                   <ProductCard key={product.id} product={product} />
@@ -221,7 +220,7 @@ const ManagedStore = () => {
           )}
 
           {/* Why Choose Managed */}
-          <motion.section 
+          <motion.section
             className="mb-20 rounded-2xl p-8 bg-gradient-to-br from-violet-900/20 to-purple-900/20 border border-violet-500/20"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -231,7 +230,7 @@ const ManagedStore = () => {
             <div className="text-center mb-10">
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">Why Choose Managed IT?</h2>
             </div>
-            
+
             <div className="grid md:grid-cols-4 gap-6">
               {[
                 { icon: Clock, value: "Assessment-led", label: "Engagement", description: "Prioritize before you buy" },
@@ -252,7 +251,7 @@ const ManagedStore = () => {
           </motion.section>
 
           {/* Final CTA */}
-          <motion.section 
+          <motion.section
             className="text-center"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -263,12 +262,12 @@ const ManagedStore = () => {
               Ready to Get Started?
             </h2>
             <p className="text-white/60 mb-8 max-w-xl mx-auto">
-              Schedule a free 15-minute call to discuss your needs. We'll help you choose the right plan 
+              Schedule a free 15-minute call to discuss your needs. We'll help you choose the right plan
               and provide a customized quote for your organization.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="/book">
-                <Button 
+                <Button
                   size="lg"
                   className="h-14 px-8 text-lg font-semibold bg-violet-600 hover:bg-violet-500 text-white shadow-lg shadow-violet-500/25"
                   data-testid="button-final-cta"
@@ -278,7 +277,7 @@ const ManagedStore = () => {
                 </Button>
               </a>
               <a href="tel:325-480-9870">
-                <Button 
+                <Button
                   size="lg"
                   className="h-14 px-8 text-lg font-semibold bg-transparent border-2 border-white/30 text-white hover:bg-white/10"
                   data-testid="button-call-us"
@@ -288,11 +287,11 @@ const ManagedStore = () => {
                 </Button>
               </a>
             </div>
-            
+
             <div className="mt-8">
               <Link href="/store/co-managed">
-                <Button 
-                  variant="link" 
+                <Button
+                  variant="link"
                   className="text-violet-400 hover:text-violet-300"
                   data-testid="button-browse-comanaged"
                 >
