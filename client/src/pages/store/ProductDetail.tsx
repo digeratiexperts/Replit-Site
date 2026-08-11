@@ -9,12 +9,12 @@ import { ProductJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import {
-  storeProducts,
+  getRelatedStoreProducts,
+  getStoreProductBySku,
   categoryLabels,
   formatPrice,
-  type StoreProduct,
   type ProductCategory,
-} from "@/data/storeProducts";
+} from "@/data/storeCatalog";
 import {
   ArrowRight,
   ArrowLeft,
@@ -76,17 +76,11 @@ const ProductDetail = () => {
     }
   }, [clientPricing, setClientPricing]);
 
-  const product = useMemo(() => {
-    return storeProducts.find((p) => p.sku === sku);
-  }, [sku]);
+  const product = useMemo(() => getStoreProductBySku(sku), [sku]);
 
   const relatedProducts = useMemo(() => {
     if (!product) return [];
-    let related = storeProducts.filter((p) => p.category === product.category && p.id !== product.id);
-    if (!isLoggedIn) {
-      related = related.filter((p) => !p.isClientOnly);
-    }
-    return related.slice(0, 4);
+    return getRelatedStoreProducts(product, isLoggedIn);
   }, [product, isLoggedIn]);
 
   useSEO({
@@ -123,10 +117,9 @@ const ProductDetail = () => {
     setQuantity((prev) => Math.max(minQty, prev + delta));
   };
 
-  const productPricing = product ? getProductPrice(product.id, product.basePrice) : { price: 0, hasDiscount: false, discountPercent: 0 };
+  const productPricing = getProductPrice(product.id, product.basePrice);
 
   const handleAddToCart = () => {
-    if (!product) return;
     addToCart(product, quantity, productPricing.price);
     toast({
       title: "Added to Cart",
@@ -152,7 +145,7 @@ const ProductDetail = () => {
         { name: "Home", url: "/" },
         { name: "Store", url: "/store" },
         { name: storeLabel, url: storeLink },
-        { name: product.name, url: `/store/product/${product.id}` }
+        { name: product.name, url: `/store/product/${product.sku}` }
       ]} />
       <MegaMenu />
 
@@ -185,7 +178,7 @@ const ProductDetail = () => {
                 </Button>
               </div>
             ) : (
-              <Button 
+              <Button
                 variant="outline"
                 size="sm"
                 onClick={loginRedirect}
@@ -278,7 +271,7 @@ const ProductDetail = () => {
                     )}
                     {!isLoggedIn && (
                       <div className="mt-2">
-                        <Button 
+                        <Button
                           variant="link"
                           size="sm"
                           onClick={loginRedirect}
