@@ -139,7 +139,7 @@ const StoreLanding = () => {
     <div className="min-h-screen bg-[#0a0a0a]">
       <MegaMenu />
 
-      <main className="pb-20 pt-28">
+      <main className="pb-20 de-nav-clear">
         <div className="mx-auto max-w-[100rem] px-3 sm:px-4 lg:px-6">
           <div className="mb-4 flex items-center justify-between">
             {isLoggedIn && user ? (

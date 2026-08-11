@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" role="img" aria-label="Managed Network">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0a0a"/>
+      <stop offset="45%" stop-color="#061820"/>
+      <stop offset="100%" stop-color="#0891b2" stop-opacity="0.55"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="70%" cy="30%" r="55%">
+      <stop offset="0%" stop-color="#67e8f9" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#67e8f9" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0891b2"/>
+      <stop offset="100%" stop-color="#67e8f9"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <rect width="800" height="600" fill="url(#glow)"/>
+  <g opacity="0.12">
+    <circle cx="120" cy="480" r="160" fill="#0891b2"/>
+    <circle cx="700" cy="100" r="120" fill="#67e8f9"/>
+  </g>
+  <g stroke="#67e8f9" stroke-width="2.5" opacity="0.35" fill="none"><path d="M200 220 H600 M200 300 H600 M200 380 H600"/><path d="M260 160 V440 M340 160 V440 M420 160 V440 M500 160 V440 M580 160 V440"/></g><circle cx="340" cy="300" r="28" fill="#0891b2" opacity="0.35"/><circle cx="500" cy="220" r="20" fill="#67e8f9" opacity="0.4"/><circle cx="260" cy="380" r="16" fill="#67e8f9" opacity="0.35"/>
+  <rect x="0" y="560" width="800" height="6" fill="url(#bar)"/>
+  <text x="40" y="54" fill="#67e8f9" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="2" opacity="0.85">DIGERATI EXPERTS</text>
+  <text x="40" y="92" fill="#ffffff" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="28" font-weight="700" opacity="0.92">Managed Network</text>
+</svg>

@@ -155,7 +155,7 @@ export default function SecurityUpdates() {
     <div className="min-h-screen bg-gradient-to-b from-[#030228] to-[#0f0d2e]">
       <MegaMenu />
       
-      <main className="pt-32 pb-20">
+      <main className="de-nav-clear pb-20">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="text-center mb-12">
             <Badge className="mb-4 bg-red-500/20 text-red-400 border-red-500/30">

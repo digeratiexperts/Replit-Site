@@ -117,7 +117,7 @@ const ManagedStore = () => {
     <div className="min-h-screen bg-[#0a0a0a]">
       <MegaMenu />
       
-      <main className="pt-28 pb-20">
+      <main className="de-nav-clear pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Breadcrumb with Cart Button */}

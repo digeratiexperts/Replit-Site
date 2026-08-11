@@ -108,7 +108,7 @@ export default function SecurityChecklist() {
     <div className="min-h-screen bg-[#0a0a0a]">
       <MegaMenu />
       
-      <main className="pt-32 pb-20">
+      <main className="de-nav-clear pb-20">
         <div className="container mx-auto px-4 max-w-5xl">
           {/* Header */}
           <div className="text-center mb-12">

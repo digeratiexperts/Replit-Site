@@ -75,7 +75,7 @@ export default function ClientBillOfRights() {
     <div className="min-h-screen bg-[#050312]">
       <MegaMenu />
 
-      <section className="pt-32 pb-16 px-6 de-prose-dark">
+      <section className="de-nav-clear pb-16 px-6 de-prose-dark">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight" data-testid="heading-bill-of-rights">
             Client Bill of Rights

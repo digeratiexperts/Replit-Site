@@ -99,7 +99,7 @@ export const ModernHeroSection = (): JSX.Element => {
       />
 
       <motion.div
-        className="relative z-10 w-full px-3 sm:px-4 lg:px-6 xl:px-8 pt-28 pb-14 sm:pt-32 sm:pb-16 lg:pt-36 lg:pb-16 xl:pt-40"
+        className="relative z-10 w-full px-3 sm:px-4 lg:px-6 xl:px-8 pt-[calc(var(--de-nav-offset)+0.5rem)] pb-14 sm:pt-[calc(var(--de-nav-offset)+1.25rem)] sm:pb-16 lg:pt-[calc(var(--de-nav-offset)+2rem)] lg:pb-16 xl:pt-[calc(var(--de-nav-offset)+2.75rem)]"
         style={{ y }}
       >
         <div className="mx-auto max-w-[100rem]">

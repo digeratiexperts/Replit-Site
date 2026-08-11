@@ -76,7 +76,7 @@ export const DigeratiHeroSection = (): JSX.Element => {
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-400 rounded-full opacity-30 blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
       </div>
 
-      <div className="relative max-w-[100rem] mx-auto px-3 sm:px-4 lg:px-6 pt-28 pb-24 lg:pt-36 lg:pb-32">
+      <div className="relative max-w-[100rem] mx-auto px-3 sm:px-4 lg:px-6 pt-[calc(var(--de-nav-offset)+0.5rem)] pb-24 lg:pt-[calc(var(--de-nav-offset)+2rem)] lg:pb-32">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="text-white">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">

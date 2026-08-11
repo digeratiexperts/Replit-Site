@@ -13,6 +13,8 @@ html {
   /* Scale down overall sizing - 14px base instead of 16px default */
   /* This makes 100% zoom look similar to previous 87.5% zoom */
   font-size: 14px;
+  /* Keep in-page anchors clear of fixed MegaMenu chrome */
+  scroll-padding-top: var(--de-nav-offset);
 }
 
 /* Slightly larger on very wide screens */
@@ -116,6 +118,25 @@ html {
   --de-muted-soft: rgba(255, 255, 255, 0.72);
   --de-accent: #ec4899;
   --de-accent-2: #d946ef;
+
+  /*
+   * Sticky MegaMenu clearance (utility bar + main nav).
+   * At html font-size 14px: utility 2.75rem≈38.5px, nav 6.5rem≈91px,
+   * chrome≈129.5px, offset (+0.75rem breathing)≈140px.
+   * MegaMenu may raise --de-nav-offset when mobile utility wraps taller.
+   * Prior page pt-28 (7rem≈98px) was shorter than chrome → titles under nav.
+   */
+  --de-utility-h: 2.75rem;
+  --de-nav-h: 6.5rem;
+  --de-nav-h-scrolled: 5.25rem;
+  --de-nav-chrome: calc(var(--de-utility-h) + var(--de-nav-h));
+  --de-nav-offset: calc(var(--de-nav-chrome) + 0.75rem);
+  --de-nav-current-bottom: var(--de-nav-chrome);
+}
+
+/* Shared top padding so marketing/store pages clear the sticky MegaMenu */
+.de-nav-clear {
+  padding-top: var(--de-nav-offset);
 }
 
 /* Readable long-form marketing copy on dark pages */

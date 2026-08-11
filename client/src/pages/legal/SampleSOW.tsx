@@ -8,7 +8,7 @@ export default function SampleSOW() {
     <div className="min-h-screen bg-slate-900">
       <MegaMenu />
       
-      <section className="bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 text-white py-20">
+      <section className="bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 text-white de-nav-clear pb-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
             <div className="flex items-center gap-3 mb-6">

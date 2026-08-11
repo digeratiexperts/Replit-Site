@@ -108,7 +108,7 @@ export default function DowntimeCalculator() {
       <MegaMenu />
       
       {/* Hero Section */}
-      <section className="pt-32 pb-16 relative overflow-hidden">
+      <section className="de-nav-clear pb-16 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#FFB800]/10 rounded-full blur-[120px]" />
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#FFB800]/5 rounded-full blur-[120px]" />

@@ -20,7 +20,7 @@ export default function ThankYouSuccess() {
       <MegaMenu />
       
       {/* Dark Header Section */}
-      <section className="bg-gradient-to-b from-slate-800 to-slate-900 pt-32 pb-20 px-4">
+      <section className="bg-gradient-to-b from-slate-800 to-slate-900 de-nav-clear pb-20 px-4">
         <div className="max-w-2xl mx-auto text-center">
           {/* Logo */}
           <div className="mb-8">

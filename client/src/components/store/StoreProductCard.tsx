@@ -5,22 +5,7 @@ import {
   LogIn,
   Tag,
   Eye,
-  Building,
-  Users,
-  Settings,
-  Wifi,
-  Server,
-  Phone,
-  Headphones,
-  Monitor,
-  Package,
-  Wrench,
-  Shield,
-  FileCheck,
-  GraduationCap,
-  Cloud,
   Settings2,
-  type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,26 +22,10 @@ import {
   getProductTags,
   isConfigurableProduct,
 } from "@/data/storeMerchandising";
-import { getVendorForSku, inferVendorFromText } from "@/data/vendorLogos";
+import { getProductVisual } from "@/data/productImages";
+import { ProductMedia } from "@/components/store/ProductMedia";
 
-const categoryIcons: Record<ProductCategory, LucideIcon> = {
-  contract_services: Building,
-  comanaged_subscriptions: Users,
-  comanaged_onboarding: Settings,
-  networking_managed: Wifi,
-  networking_projects: Server,
-  ucaas_subscriptions: Phone,
-  ucaas_setup: Headphones,
-  hardware_provisioning: Monitor,
-  hardware_physical: Package,
-  hardware_handling: Wrench,
-  digital_assessments: Shield,
-  digital_templates: FileCheck,
-  digital_training: GraduationCap,
-  professional_services: Cloud,
-};
-
-/** Soft accent colors — pills/icons only, not whole-card rainbow. */
+/** Soft accent colors — pills only, not whole-card rainbow. */
 const categoryAccent: Record<ProductCategory, string> = {
   contract_services: "text-amber-300",
   comanaged_subscriptions: "text-violet-300",
@@ -103,7 +72,6 @@ export function StoreProductCard({
   onConfigure,
   onLoginRequired,
 }: StoreProductCardProps) {
-  const Icon = categoryIcons[product.category];
   const accent = categoryAccent[product.category];
   const includedHint = getIncludedInHint(product.sku);
   const isContract = product.isContractOnly || !product.isCheckoutEnabled;
@@ -114,80 +82,70 @@ export function StoreProductCard({
     .map((sku) => getProductBySku(sku)?.name)
     .filter(Boolean)
     .slice(0, 2) as string[];
-  const vendor =
-    getVendorForSku(product.sku, product.category) ||
-    inferVendorFromText(
-      `${product.name} ${product.shortDescription} ${product.description} ${product.features.join(" ")}`
-    );
+  const visual = getProductVisual(product);
+  const vendor = visual.vendor;
 
   return (
     <article
-      className={`relative flex h-full flex-col rounded-2xl border border-white/10 bg-[#141414] transition-all duration-200 hover:border-[#5034ff]/35 hover:bg-[#171717] ${
-        compact ? "p-5" : "p-7 md:p-8"
-      }`}
+      className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#141414] transition-all duration-200 hover:border-[#D3126A]/35 hover:bg-[#171717]"
       data-testid={`product-${product.id}`}
     >
       {onCompareToggle && !isContract && (
-        <label className="absolute right-4 top-4 z-10 flex cursor-pointer items-center gap-1.5 text-xs text-white/50 hover:text-white/80">
+        <label className="absolute right-3 top-3 z-20 flex cursor-pointer items-center gap-1.5 rounded-full border border-white/15 bg-black/55 px-2.5 py-1 text-xs text-white/70 backdrop-blur-sm hover:text-white">
           <input
             type="checkbox"
             checked={compareSelected}
             disabled={!compareSelected && compareDisabled}
             onChange={() => onCompareToggle(product)}
-            className="h-4 w-4 rounded border-white/30 bg-transparent accent-[#5034ff]"
+            className="h-4 w-4 rounded border-white/30 bg-transparent accent-[#D3126A]"
             data-testid={`compare-check-${product.id}`}
           />
           Compare
         </label>
       )}
 
-      <div className={`mb-4 flex items-start gap-3.5 ${onCompareToggle ? "pr-20" : ""}`}>
-        <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/[0.06]">
-          {vendor ? (
-            <img
-              src={vendor.logoUrl}
-              alt=""
-              className="h-10 w-10 object-contain"
-              loading="lazy"
-              data-testid={`vendor-logo-${product.id}`}
-            />
-          ) : (
-            <Icon className={`h-7 w-7 ${accent}`} />
+      <Link href={`/store/product/${product.sku}`}>
+        <ProductMedia
+          product={product}
+          variant={compact ? "thumb" : "card"}
+          className="rounded-none border-0 border-b border-white/10"
+          categoryBadge={categoryLabels[product.category]}
+        />
+      </Link>
+
+      <div className={`flex flex-1 flex-col ${compact ? "p-5" : "p-6 md:p-7"}`}>
+      <div className="mb-4">
+        <div className="mb-2 flex flex-wrap items-center gap-1.5">
+          {vendor && (
+            <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-[11px] font-medium text-white/70">
+              {vendor.name}
+            </span>
+          )}
+          <span
+            className={`rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-wide ${accent}`}
+          >
+            {categoryLabels[product.category]}
+          </span>
+          {product.isClientOnly && (
+            <span className="rounded-full border border-[#D3126A]/30 bg-[#D3126A]/15 px-2.5 py-0.5 text-[11px] font-medium text-[#f5a3c4]">
+              Client pricing
+            </span>
+          )}
+          {isContract && (
+            <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[11px] font-medium text-amber-200">
+              Consult
+            </span>
           )}
         </div>
-        <div className="min-w-0 flex-1">
-          <div className="mb-2 flex flex-wrap items-center gap-1.5">
-            {vendor && (
-              <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-[11px] font-medium text-white/70">
-                {vendor.name}
-              </span>
-            )}
-            <span
-              className={`rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-wide ${accent}`}
-            >
-              {categoryLabels[product.category]}
+        <h3
+          className={`font-semibold leading-snug text-white ${compact ? "text-lg" : "text-xl md:text-2xl"}`}
+        >
+          <Link href={`/store/product/${product.sku}`}>
+            <span className="transition-colors hover:text-[#f5a3c4]" title={product.name}>
+              {product.name}
             </span>
-            {product.isClientOnly && (
-              <span className="rounded-full border border-[#5034ff]/30 bg-[#5034ff]/15 px-2.5 py-0.5 text-[11px] font-medium text-[#c4b5fd]">
-                Client pricing
-              </span>
-            )}
-            {isContract && (
-              <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[11px] font-medium text-amber-200">
-                Consult
-              </span>
-            )}
-          </div>
-          <h3
-            className={`font-semibold leading-snug text-white ${compact ? "text-lg" : "text-xl md:text-2xl"}`}
-          >
-            <Link href={`/store/product/${product.sku}`}>
-              <span className="transition-colors hover:text-[#c4b5fd]" title={product.name}>
-                {product.name}
-              </span>
-            </Link>
-          </h3>
-        </div>
+          </Link>
+        </h3>
       </div>
 
       {/* Outcome-first lead, then features */}

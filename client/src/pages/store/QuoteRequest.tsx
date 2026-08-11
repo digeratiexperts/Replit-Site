@@ -143,7 +143,7 @@ const QuoteRequest = () => {
     return (
       <div className="min-h-screen bg-[#0a0a0a]">
         <MegaMenu />
-        <main className="pt-28 pb-20">
+        <main className="de-nav-clear pb-20">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -175,7 +175,7 @@ const QuoteRequest = () => {
     <div className="min-h-screen bg-[#0a0a0a]">
       <MegaMenu />
 
-      <main className="pt-28 pb-20">
+      <main className="de-nav-clear pb-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="mb-8" aria-label="Breadcrumb">
             <ol className="flex items-center gap-2 text-sm text-white/50">

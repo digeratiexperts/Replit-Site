@@ -31,7 +31,7 @@ export default function TwentyOneQuestions() {
     <div className="min-h-screen bg-[#050312]">
       <MegaMenu />
 
-      <section className="pt-32 pb-16 px-6 de-prose-dark">
+      <section className="de-nav-clear pb-16 px-6 de-prose-dark">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 pb-8 border-b-4 border-pink-400">
             <p className="text-pink-300 font-semibold text-sm uppercase tracking-wider mb-4">

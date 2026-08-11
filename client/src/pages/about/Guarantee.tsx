@@ -8,7 +8,7 @@ export default function Guarantee() {
     <div className="min-h-screen bg-[#050312]">
       <MegaMenu />
 
-      <section className="pt-32 pb-20 px-6 de-prose-dark">
+      <section className="de-nav-clear pb-20 px-6 de-prose-dark">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight" data-testid="heading-guarantee">

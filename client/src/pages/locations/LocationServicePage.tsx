@@ -200,7 +200,7 @@ export function LocationServicePage(props: LocationPageProps) {
         </div>
 
         {/* Main content */}
-        <div className="relative z-10 w-full px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 2xl:px-24 pt-28 pb-12 sm:pt-32 lg:pt-36 xl:pt-40 lg:pb-16 xl:pb-20">
+        <div className="relative z-10 w-full px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 2xl:px-24 pt-[calc(var(--de-nav-offset)+0.5rem)] pb-12 sm:pt-[calc(var(--de-nav-offset)+1.25rem)] lg:pt-[calc(var(--de-nav-offset)+2rem)] xl:pt-[calc(var(--de-nav-offset)+2.75rem)] lg:pb-16 xl:pb-20">
           <div className="mx-auto w-[min(94vw,1680px)]">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
               

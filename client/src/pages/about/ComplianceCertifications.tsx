@@ -153,7 +153,7 @@ export default function ComplianceCertifications() {
       <MegaMenu />
 
         {/* Hero Section */}
-        <section className="relative pt-32 pb-20 overflow-hidden">
+        <section className="relative de-nav-clear pb-20 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-violet-900/20 via-slate-950 to-purple-900/20" />
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl" />
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl" />

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" role="img" aria-label="Digerati Experts Store">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0a0a"/>
+      <stop offset="50%" stop-color="#1a1035"/>
+      <stop offset="100%" stop-color="#5034ff" stop-opacity="0.5"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <circle cx="650" cy="120" r="140" fill="#7c5cff" opacity="0.2"/>
+  <circle cx="150" cy="480" r="180" fill="#5034ff" opacity="0.15"/>
+  <text x="40" y="54" fill="#a78bfa" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="2">DIGERATI EXPERTS</text>
+  <text x="40" y="100" fill="#ffffff" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="32" font-weight="700">Store</text>
+  <rect x="0" y="560" width="800" height="6" fill="#5034ff"/>
+</svg>

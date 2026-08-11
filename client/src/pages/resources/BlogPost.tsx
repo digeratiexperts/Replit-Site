@@ -298,7 +298,7 @@ export default function BlogPost() {
     return (
       <div className="min-h-screen bg-[#0a0a0a]">
         <MegaMenu />
-        <main className="pt-36 pb-20">
+        <main className="de-nav-clear pb-20">
           <div className="container mx-auto px-4 max-w-4xl text-center">
             <h1 className="text-4xl font-bold text-white mb-4">
               Article Not Found
@@ -355,7 +355,7 @@ export default function BlogPost() {
       <MegaMenu />
 
       {/* Cinematic hero */}
-      <section className="relative pt-32 pb-12 overflow-hidden">
+      <section className="relative de-nav-clear pb-12 overflow-hidden">
         <div
           aria-hidden
           className="absolute inset-0 opacity-30"

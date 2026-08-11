@@ -99,7 +99,7 @@ export default function Blog() {
 
       {/* Branded publication banner */}
       <section
-        className="relative pt-24 overflow-hidden"
+        className="relative de-nav-clear overflow-hidden"
         aria-label="The Digerati Journal masthead"
       >
         <div

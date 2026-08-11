@@ -73,7 +73,7 @@ export default function Ecosystem() {
   ];
 
   return (
-    <section className="min-h-screen pt-28 pb-16 px-6 bg-gradient-to-br from-[#07041a] via-[#0f0b2c] to-[#1a1143] text-white">
+    <section className="min-h-screen de-nav-clear pb-16 px-6 bg-gradient-to-br from-[#07041a] via-[#0f0b2c] to-[#1a1143] text-white">
       <div className="max-w-7xl mx-auto">
         <motion.div 
           className="text-center mb-16"

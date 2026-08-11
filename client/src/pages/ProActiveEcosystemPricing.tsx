@@ -281,7 +281,7 @@ export default function ProActiveEcosystemPricing() {
       <div className="relative z-10">
         <MegaMenu />
 
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 de-nav-clear pb-20">
           {/* Hero */}
           <motion.header
             className="text-center max-w-3xl mx-auto mb-14"

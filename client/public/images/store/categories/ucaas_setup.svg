@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" role="img" aria-label="UCaaS Setup">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0a0a"/>
+      <stop offset="45%" stop-color="#0a1a14"/>
+      <stop offset="100%" stop-color="#047857" stop-opacity="0.55"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="70%" cy="30%" r="55%">
+      <stop offset="0%" stop-color="#34d399" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#34d399" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#047857"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <rect width="800" height="600" fill="url(#glow)"/>
+  <g opacity="0.12">
+    <circle cx="120" cy="480" r="160" fill="#047857"/>
+    <circle cx="700" cy="100" r="120" fill="#34d399"/>
+  </g>
+  <path d="M280 300 C280 220 330 170 400 170 C470 170 520 220 520 300" stroke="#34d399" stroke-width="14" fill="none" opacity="0.45" stroke-linecap="round"/><rect x="250" y="290" width="50" height="90" rx="16" fill="#047857" opacity="0.45"/><rect x="500" y="290" width="50" height="90" rx="16" fill="#047857" opacity="0.45"/><path d="M400 340 V390" stroke="#34d399" stroke-width="8" opacity="0.4"/><circle cx="400" cy="410" r="18" fill="#34d399" opacity="0.35"/>
+  <rect x="0" y="560" width="800" height="6" fill="url(#bar)"/>
+  <text x="40" y="54" fill="#34d399" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="2" opacity="0.85">DIGERATI EXPERTS</text>
+  <text x="40" y="92" fill="#ffffff" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="28" font-weight="700" opacity="0.92">UCaaS Setup</text>
+</svg>

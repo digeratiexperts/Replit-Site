@@ -55,7 +55,7 @@ const QuoteConfirmation = () => {
     return (
       <div className="min-h-screen bg-[#0a0a0a]">
         <MegaMenu />
-        <main className="pt-28 pb-20">
+        <main className="de-nav-clear pb-20">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <Loader2 className="w-12 h-12 text-violet-400 animate-spin mx-auto" />
             <p className="text-white/60 mt-4">Loading quote details...</p>
@@ -70,7 +70,7 @@ const QuoteConfirmation = () => {
     return (
       <div className="min-h-screen bg-[#0a0a0a]">
         <MegaMenu />
-        <main className="pt-28 pb-20">
+        <main className="de-nav-clear pb-20">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -101,7 +101,7 @@ const QuoteConfirmation = () => {
     <div className="min-h-screen bg-[#0a0a0a]">
       <MegaMenu />
 
-      <main className="pt-28 pb-20">
+      <main className="de-nav-clear pb-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
