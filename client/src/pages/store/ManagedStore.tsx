@@ -16,6 +16,8 @@ import {
 } from "@/data/storeProducts";
 import { CartButton } from "@/components/store/CartButton";
 import { pricing, getPricingFooterText } from "@/data/pricing";
+import { ProductMedia } from "@/components/store/ProductMedia";
+import { getProductVisual } from "@/data/productImages";
 
 const ManagedStore = () => {
   const prefersReducedMotion = useReducedMotion();
@@ -46,11 +48,13 @@ const ManagedStore = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
   };
 
-  const ProductCard = ({ product, featured = false }: { product: StoreProduct; featured?: boolean }) => (
+  const ProductCard = ({ product, featured = false }: { product: StoreProduct; featured?: boolean }) => {
+    const visual = getProductVisual(product);
+    return (
     <Link href={`/store/product/${product.sku}`}>
       <motion.div
         variants={itemVariants}
-        className={`relative rounded-2xl p-6 border transition-all duration-300 hover:-translate-y-1 cursor-pointer ${
+        className={`relative overflow-hidden rounded-2xl border transition-all duration-300 hover:-translate-y-1 cursor-pointer ${
           featured 
             ? 'bg-violet-500/10 border-violet-500/40 shadow-[0_0_40px_rgba(139,92,246,0.2)]' 
             : 'bg-white/[0.03] border-white/10 hover:border-violet-500/30'
@@ -58,14 +62,25 @@ const ManagedStore = () => {
         data-testid={`product-${product.id}`}
       >
       {featured && (
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-violet-600 text-white text-xs font-bold rounded-full flex items-center gap-1">
+        <div className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 px-3 py-1 bg-violet-600 text-white text-xs font-bold rounded-full flex items-center gap-1">
           <Star className="w-3 h-3" />
           Most Popular
         </div>
       )}
-      
+
+      <ProductMedia
+        product={product}
+        variant="card"
+        className="rounded-none border-0 border-b border-white/10"
+        categoryBadge={categoryLabels[product.category]}
+      />
+
+      <div className="p-6">
       <div className="mb-4">
         <span className="text-xs text-white/40 uppercase tracking-wider">{categoryLabels[product.category]}</span>
+        {visual.vendor && (
+          <span className="ml-2 text-xs text-white/50">{visual.vendor.name}</span>
+        )}
         <h3 className="text-xl font-bold text-white mt-1">{product.name}</h3>
       </div>
 
@@ -109,9 +124,11 @@ const ManagedStore = () => {
         <Calendar className="w-4 h-4 mr-2" />
         Schedule Consultation
       </Button>
+      </div>
       </motion.div>
     </Link>
   );
+  };
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
