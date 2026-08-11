@@ -115,7 +115,7 @@ export function StoreProductCard({
     .filter(Boolean)
     .slice(0, 2) as string[];
   const vendor =
-    getVendorForSku(product.sku) ||
+    getVendorForSku(product.sku, product.category) ||
     inferVendorFromText(
       `${product.name} ${product.shortDescription} ${product.description} ${product.features.join(" ")}`
     );

@@ -47,6 +47,7 @@ import { StoreCatalogToolbar } from "@/components/store/StoreCatalogToolbar";
 import { StoreAssessmentPanel } from "@/components/store/StoreAssessmentPanel";
 import { StoreBundlesSection } from "@/components/store/StoreBundlesSection";
 import { ConfigureProductDrawer } from "@/components/store/ConfigureProductDrawer";
+import { GuidedBuyingWizard } from "@/components/store/GuidedBuyingWizard";
 import {
   ProductCompareBar,
   ProductCompareDrawer,
@@ -88,6 +89,7 @@ const CoManagedStore = () => {
   const [compareList, setCompareList] = useState<StoreProduct[]>([]);
   const [compareOpen, setCompareOpen] = useState(false);
   const [configureProduct, setConfigureProduct] = useState<StoreProduct | null>(null);
+  const [guidedOpen, setGuidedOpen] = useState(false);
 
   useEffect(() => {
     if (clientPricing.length > 0) {
@@ -308,7 +310,7 @@ const CoManagedStore = () => {
             <div className="mt-6 flex flex-wrap gap-3">
               <Button
                 className="h-12 bg-[#5034ff] px-6 text-base text-white hover:bg-[#6548ff]"
-                onClick={() => openMspAdvisor({ context: "store" })}
+                onClick={() => setGuidedOpen(true)}
                 data-testid="button-build-solution"
               >
                 <Sparkles className="mr-2 h-5 w-5" />
@@ -343,6 +345,7 @@ const CoManagedStore = () => {
           <div className="mb-10 lg:hidden">
             <StoreAssessmentPanel
               variant="inline"
+              onBuildSolution={() => setGuidedOpen(true)}
               onFilterAssessments={() => {
                 setSelectedCategory("digital_assessments");
                 setSelectedOutcome(null);
@@ -502,6 +505,7 @@ const CoManagedStore = () => {
               <div className="hidden lg:block">
                 <StoreAssessmentPanel
                   variant="sticky"
+                  onBuildSolution={() => setGuidedOpen(true)}
                   onFilterAssessments={() => {
                     setSelectedCategory("digital_assessments");
                     setSelectedOutcome(null);
@@ -637,6 +641,29 @@ const CoManagedStore = () => {
         open={!!configureProduct}
         onClose={() => setConfigureProduct(null)}
         onConfirm={handleConfigureConfirm}
+      />
+
+      <GuidedBuyingWizard
+        open={guidedOpen}
+        onClose={() => setGuidedOpen(false)}
+        onAddStack={(products, seatHint) => {
+          products.forEach((product) => {
+            const { price } = getProductPrice(product.id, product.basePrice);
+            const qty =
+              product.pricingType === "per_endpoint" ||
+              product.pricingType === "per_user" ||
+              product.pricingType === "per_seat" ||
+              product.pricingType === "per_device"
+                ? seatHint
+                : 1;
+            addToCart(product, qty, price);
+          });
+          toast({
+            title: "Recommended stack added",
+            description: `${products.length} catalog items added to Your Solution.`,
+          });
+          openCart();
+        }}
       />
 
       <DigeratiEnhancedFooterSection />

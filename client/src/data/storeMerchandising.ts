@@ -456,12 +456,29 @@ export const productRelationships: Record<string, ProductRelationship> = {
     worksWith: ["DE-SVC-CM-EMAIL-SEC-MO", "DE-SVC-CM-SAAS-MGMT-MO", "DE-SVC-CM-ENDPOINT-CORE-MO"],
     includedIn: "ProActive Ecosystem – Office+",
   },
+  "DE-SVC-CM-SAAS-MGMT-MO": {
+    worksWith: ["DE-SVC-CM-IDENTITY-CORE-MO", "DE-SVC-CM-EMAIL-SEC-MO"],
+  },
+  "DE-SVC-CM-HELPDESK-ASSIST-MO": {
+    worksWith: ["DE-SVC-CM-ENDPOINT-CORE-MO", "DE-SVC-CM-SERVER-MON-MO"],
+  },
+  "DE-SVC-MGD-BCDR-MO": {
+    worksWith: ["DE-DIG-TPL-BCP-OT", "DE-DIG-TPL-IR-RUNBOOK-OT"],
+    includedIn: "ProActive Ecosystem – Business+",
+  },
   "DE-DIG-ASMT-CSRA-OT": {
     worksWith: ["DE-SVC-CM-ENDPOINT-EDR-MO", "DE-DIG-TPL-IR-RUNBOOK-OT", "DE-DIG-ASMT-PHISH-MO"],
   },
+  "DE-DIG-ASMT-PHISH-MO": {
+    worksWith: ["DE-DIG-TRN-AWARE-BASIC-YR", "DE-SVC-CM-EMAIL-SEC-MO"],
+  },
   "DE-SVC-UC-SEAT-STD-MO": {
-    worksWith: ["DE-SVC-UC-SEAT-PRO-MO"],
+    worksWith: ["DE-SVC-UC-SEAT-PRO-MO", "DE-SVC-UC-AUTOATT-MO"],
     upgradeTo: ["DE-SVC-UC-SEAT-PRO-MO"],
+  },
+  "DE-SVC-NET-MANAGED-CORE-MO": {
+    worksWith: ["DE-SVC-NET-MANAGED-ADV-MO", "DE-HW-NET-FW-SMB-OT"],
+    upgradeTo: ["DE-SVC-NET-MANAGED-ADV-MO"],
   },
 };
 
@@ -667,3 +684,143 @@ export const storeBundles = [
     ],
   },
 ] as const;
+
+/** Guided buying answers (brief point 4). */
+export type GuidedBuyingAnswers = {
+  companySize: "1-10" | "11-49" | "50-199" | "200+";
+  industry: "professional" | "healthcare" | "finance" | "nonprofit" | "other";
+  locations: "1" | "2-5" | "6+";
+  productivity: "m365" | "google" | "mixed" | "unsure";
+  itStaff: "internal" | "none" | "partial";
+  objective: "protect" | "modernize" | "compliance" | "recover" | "support_it" | "outsource";
+};
+
+export type GuidedRecommendation = {
+  headline: string;
+  summary: string;
+  products: StoreProduct[];
+  seatHint: number;
+  recurringEstimate: number;
+  oneTimeEstimate: number;
+};
+
+function sizeToSeats(size: GuidedBuyingAnswers["companySize"]): number {
+  switch (size) {
+    case "1-10":
+      return 8;
+    case "11-49":
+      return 24;
+    case "50-199":
+      return 75;
+    default:
+      return 150;
+  }
+}
+
+/**
+ * Recommend a co-managed stack from the live catalog — soft estimates only.
+ * Prefer checkout-enabled SKUs; skip inventing products or discounts.
+ */
+export function buildGuidedRecommendation(answers: GuidedBuyingAnswers): GuidedRecommendation {
+  const seats = sizeToSeats(answers.companySize);
+  const skus: string[] = [];
+
+  if (answers.itStaff === "none" || answers.objective === "outsource") {
+    // Full managed packages are consult/contract — recommend a buyable co-managed starter instead.
+    skus.push(
+      "DE-SVC-CM-ENDPOINT-CORE-MO",
+      "DE-SVC-CM-ENDPOINT-EDR-MO",
+      "DE-SVC-CM-EMAIL-SEC-MO",
+      "DE-SVC-CM-IDENTITY-CORE-MO",
+      "DE-SVC-CM-HELPDESK-ASSIST-MO"
+    );
+  } else {
+    skus.push("DE-SVC-CM-ENDPOINT-CORE-MO", "DE-SVC-CM-ENDPOINT-EDR-MO");
+    if (answers.objective === "protect" || answers.objective === "compliance" || answers.itStaff === "internal") {
+      skus.push("DE-SVC-CM-EMAIL-SEC-MO", "DE-SVC-CM-IDENTITY-CORE-MO");
+    }
+    if (answers.productivity === "m365" || answers.productivity === "mixed") {
+      skus.push("DE-SVC-CM-SAAS-MGMT-MO");
+    }
+    if (answers.itStaff === "partial" || answers.objective === "support_it") {
+      skus.push("DE-SVC-CM-HELPDESK-ASSIST-MO");
+    }
+  }
+
+  if (answers.objective === "recover") {
+    skus.push("DE-DIG-TPL-BCP-OT", "DE-DIG-TPL-IR-RUNBOOK-OT");
+  }
+  if (answers.objective === "modernize") {
+    skus.push("DE-SVC-UC-SEAT-STD-MO", "DE-SVC-NET-MANAGED-CORE-MO");
+  }
+  if (
+    answers.objective === "compliance" ||
+    answers.industry === "healthcare" ||
+    answers.industry === "finance"
+  ) {
+    skus.push("DE-DIG-ASMT-CSRA-OT", "DE-DIG-TRN-AWARE-BASIC-YR");
+  } else if (answers.objective === "protect") {
+    skus.push("DE-DIG-ASMT-QUICK-OT", "DE-DIG-ASMT-PHISH-MO");
+  }
+
+  if (answers.locations !== "1") {
+    skus.push("DE-SVC-NET-MANAGED-MSITE-MO");
+  }
+
+  const unique = Array.from(new Set(skus));
+  const products = unique
+    .map((sku) => getProductBySku(sku))
+    .filter((p): p is StoreProduct => !!p && p.isCheckoutEnabled && !p.isContractOnly);
+
+  const recurringEstimate = products
+    .filter((p) => !["one_time", "per_hour"].includes(p.pricingType))
+    .reduce((sum, p) => {
+      const qty =
+        p.pricingType === "per_endpoint" ||
+        p.pricingType === "per_user" ||
+        p.pricingType === "per_seat" ||
+        p.pricingType === "per_device"
+          ? seats
+          : 1;
+      return sum + p.basePrice * qty;
+    }, 0);
+
+  const oneTimeEstimate = products
+    .filter((p) => p.pricingType === "one_time")
+    .reduce((sum, p) => sum + p.basePrice, 0);
+
+  const sizeLabel =
+    answers.companySize === "1-10"
+      ? "small team"
+      : answers.companySize === "11-49"
+        ? `${seats}-person firm`
+        : answers.companySize === "50-199"
+          ? "mid-size organization"
+          : "larger organization";
+
+  const industryLabel =
+    answers.industry === "healthcare"
+      ? "healthcare"
+      : answers.industry === "finance"
+        ? "finance"
+        : answers.industry === "nonprofit"
+          ? "nonprofit"
+          : answers.industry === "professional"
+            ? "professional services"
+            : "business";
+
+  return {
+    headline: `Recommended for your ${sizeLabel}`,
+    summary: `${
+      answers.itStaff === "none" || answers.objective === "outsource"
+        ? "Checkout-ready co-managed starter (full managed packages are consultative). "
+        : ""
+    }Starting stack for a ${industryLabel} shop${
+      answers.productivity === "m365" ? " on Microsoft 365" : ""
+    } — drawn from the live catalog. Estimates use list rates × ~${seats} seats where unit-priced; final pricing confirms at checkout or with an architect.`,
+    products,
+    seatHint: seats,
+    recurringEstimate: Math.round(recurringEstimate),
+    oneTimeEstimate: Math.round(oneTimeEstimate),
+  };
+}

@@ -6,6 +6,7 @@ import { openMspAdvisor } from "@/lib/openMspAdvisor";
 interface StoreAssessmentPanelProps {
   variant?: "sticky" | "inline";
   onFilterAssessments?: () => void;
+  onBuildSolution?: () => void;
 }
 
 /**
@@ -14,6 +15,7 @@ interface StoreAssessmentPanelProps {
 export function StoreAssessmentPanel({
   variant = "sticky",
   onFilterAssessments,
+  onBuildSolution,
 }: StoreAssessmentPanelProps) {
   const shell = variant === "sticky" ? "lg:sticky lg:top-28 space-y-4" : "mb-10";
 
@@ -25,7 +27,7 @@ export function StoreAssessmentPanel({
         </div>
         <h3 className="text-lg font-semibold text-white">Not sure where to start?</h3>
         <p className="mt-2 text-sm leading-relaxed text-white/55">
-          Book a free cyber risk assessment or open Ask Digerati (Virtual MSP Advisor). We map gaps
+          Book a free cyber risk assessment, build a guided stack, or open Ask Digerati. We map gaps
           to catalog items — no obligation.
         </p>
         <div className="mt-4 flex flex-col gap-2">
@@ -52,7 +54,10 @@ export function StoreAssessmentPanel({
           <Button
             variant="ghost"
             className="h-10 w-full text-white/70 hover:bg-white/5 hover:text-white"
-            onClick={() => openMspAdvisor({ context: "store" })}
+            onClick={() => {
+              if (onBuildSolution) onBuildSolution();
+              else openMspAdvisor({ context: "store" });
+            }}
             data-testid="button-open-advisor-from-store"
           >
             <MessageCircle className="mr-2 h-4 w-4" />

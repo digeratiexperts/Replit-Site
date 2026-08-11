@@ -64,6 +64,15 @@ export const vendorLogoCatalog: Record<string, string> = {
 
 /** SKU → vendor slug (DE architecture stack, not invented products). */
 export const skuVendorMap: Record<string, string> = {
+  // Managed packages — stack vendors as merchandising identity
+  "DE-SVC-MGD-OFFICE-MO": "ninjaone",
+  "DE-SVC-MGD-BUSINESS-MO": "blackpoint",
+  "DE-SVC-MGD-ENTERPRISE-MO": "blackpoint",
+  "DE-SVC-MGD-WORKPLACE-MO": "ninjaone",
+  "DE-SVC-MGD-CYBER-MO": "blackpoint",
+  "DE-SVC-MGD-BCDR-MO": "opti9",
+  "DE-SVC-COMANAGED-CUSTOM-MO": "ninjaone",
+  // Co-managed
   "DE-SVC-CM-ENDPOINT-CORE-MO": "coro",
   "DE-SVC-CM-ENDPOINT-EDR-MO": "coro",
   "DE-SVC-CM-EMAIL-SEC-MO": "mimecast",
@@ -71,27 +80,95 @@ export const skuVendorMap: Record<string, string> = {
   "DE-SVC-CM-SAAS-MGMT-MO": "augmentt",
   "DE-SVC-CM-HELPDESK-ASSIST-MO": "ninjaone",
   "DE-SVC-CM-SERVER-MON-MO": "ninjaone",
-  "DE-SVC-MGD-BCDR-MO": "opti9",
-  "DE-SVC-MGD-CYBER-MO": "blackpoint",
+  "DE-SVC-CM-ONBOARD-S-OT": "hudu",
+  "DE-SVC-CM-ONBOARD-M-OT": "hudu",
+  "DE-SVC-CM-ONBOARD-L-OT": "hudu",
+  "DE-SVC-CM-DOC-PACK-OT": "hudu",
+  // Network / SASE
   "DE-SVC-NET-MANAGED-CORE-MO": "todyl",
   "DE-SVC-NET-MANAGED-ADV-MO": "todyl",
+  "DE-SVC-NET-MANAGED-MSITE-MO": "todyl",
+  "DE-SVC-NET-ENG-HR": "sonicwall",
+  "DE-SVC-NET-ONSITE-HR": "sonicwall",
+  "DE-SVC-NET-CUTOVER-OT": "todyl",
+  // UCaaS
   "DE-SVC-UC-SEAT-STD-MO": "cytracom",
   "DE-SVC-UC-SEAT-PRO-MO": "cytracom",
+  "DE-SVC-UC-AUTOATT-MO": "cytracom",
+  "DE-SVC-UC-SMS-MO": "cytracom",
+  "DE-SVC-UC-ONBOARD-S-OT": "cytracom",
+  "DE-SVC-UC-ONBOARD-M-OT": "cytracom",
+  "DE-SVC-UC-ONBOARD-L-OT": "cytracom",
+  "DE-SVC-UC-PORT-OT": "cytracom",
+  "DE-SVC-UC-CALLFLOW-OT": "cytracom",
+  // Hardware
+  "DE-HW-PROV-ENDPOINT-OT": "lenovo",
+  "DE-HW-PROV-NET-OT": "sonicwall",
+  "DE-HW-PROV-VOIP-OT": "cytracom",
+  "DE-HW-NET-FW-SMB-OT": "sonicwall",
+  "DE-HW-NET-SW-24-OT": "sonicwall",
+  "DE-HW-NET-AP-BIZ-OT": "sonicwall",
+  "DE-HW-ENDPOINT-PC-BASE-OT": "lenovo",
+  "DE-HW-ENDPOINT-LT-BASE-OT": "lenovo",
+  "DE-HW-UC-PHONE-STD-OT": "cytracom",
+  "DE-HW-UC-PHONE-EXEC-OT": "cytracom",
+  "DE-HW-SHIP-HANDLE-OT": "d-h-distributing",
+  // Digital / awareness / assessments
   "DE-DIG-TRN-AWARE-BASIC-YR": "ninjio",
   "DE-DIG-TRN-AWARE-PRO-YR": "ninjio",
+  "DE-DIG-TRN-ONBOARD-OT": "ninjio",
   "DE-DIG-ASMT-PHISH-MO": "ninjio",
   "DE-DIG-ASMT-CSRA-OT": "telivy",
   "DE-DIG-ASMT-QUICK-OT": "seedpodcyber",
-  "DE-HW-NET-FW-SMB-OT": "sonicwall",
-  "DE-HW-PROV-ENDPOINT-OT": "lenovo",
+  "DE-DIG-ASMT-DMARC-OT": "mimecast",
+  "DE-DIG-TPL-POLICY-CORE-OT": "cis",
+  "DE-DIG-TPL-POLICY-ADV-OT": "cis",
+  "DE-DIG-TPL-IR-RUNBOOK-OT": "blackpoint",
+  "DE-DIG-TPL-BCP-OT": "opti9",
+  // Professional
+  "DE-SVC-CONSULT-VCIO-HR": "zoho",
+};
+
+/** Soft category defaults when a SKU is unmapped (still real DE stack vendors). */
+export const categoryVendorFallback: Partial<Record<string, string>> = {
+  contract_services: "ninjaone",
+  comanaged_subscriptions: "coro",
+  comanaged_onboarding: "hudu",
+  networking_managed: "todyl",
+  networking_projects: "sonicwall",
+  ucaas_subscriptions: "cytracom",
+  ucaas_setup: "cytracom",
+  hardware_provisioning: "lenovo",
+  hardware_physical: "lenovo",
+  hardware_handling: "d-h-distributing",
+  digital_assessments: "seedpodcyber",
+  digital_templates: "cis",
+  digital_training: "ninjio",
+  professional_services: "zoho",
 };
 
 export function vendorLogoUrl(slug: string): string {
   return `${VENDOR_LOGO_BASE}/${slug}.png`;
 }
 
-export function getVendorForSku(sku: string): { slug: string; name: string; logoUrl: string } | null {
-  const slug = skuVendorMap[sku];
+export function resolveVendorSlug(
+  sku: string,
+  category?: string
+): string | null {
+  const mapped = skuVendorMap[sku];
+  if (mapped && vendorLogoCatalog[mapped]) return mapped;
+  if (category) {
+    const fallback = categoryVendorFallback[category];
+    if (fallback && vendorLogoCatalog[fallback]) return fallback;
+  }
+  return null;
+}
+
+export function getVendorForSku(
+  sku: string,
+  category?: string
+): { slug: string; name: string; logoUrl: string } | null {
+  const slug = resolveVendorSlug(sku, category);
   if (!slug || !vendorLogoCatalog[slug]) return null;
   return { slug, name: vendorLogoCatalog[slug], logoUrl: vendorLogoUrl(slug) };
 }
