@@ -16,9 +16,31 @@ and `GBP_PLACE_ID` / `PLACES_PLACE_ID`.
 
 ## How to find the Place ID
 
+### Service-area businesses (Digerati Experts)
+
+Digerati Experts is a **verified service-area** Google Business Profile (no public storefront pin). The Place ID Finder and Places Text Search often return **zero results** even when GBP is live — that does **not** mean the listing is missing.
+
+**Do not** use:
+
+- GBP Manager **store code** (e.g. `10476793252274999960`) — that is not a Places `place_id`
+- Phone-only Text Search matches in the `325` area code — can hit unrelated Texas businesses
+- Hex feature IDs from Google Search `stick=` params (e.g. `0x…:0x…`) as `GOOGLE_PLACE_ID`
+
+**Reliable ways to get the `ChIJ…` Place ID:**
+
+1. In [Business Profile Manager](https://business.google.com/), open **Digerati Experts** → **See your profile**.
+2. Prefer the resulting **`https://maps.google.com/...`** (or Maps) URL, not only `google.com/search?...&stick=...`.
+3. From that Maps URL, copy either:
+   - a `query_place_id=ChIJ…` / `place_id=ChIJ…` query param, or
+   - the `!1s0x…:0x…` token **and** ask engineering to resolve it — still prefer an explicit `ChIJ…` when available.
+4. Or open **Ask for reviews** / share review link — many review URLs include `placeid=ChIJ…`.
+5. Paste the Maps or review URL to engineering, or set `GOOGLE_PLACE_ID=ChIJ…` in shared `.env` yourself.
+
+### Storefront listings (general)
+
 1. Open [Google Place ID Finder](https://developers.google.com/maps/documentation/javascript/examples/places-placeid-finder)
    or search the business in Google Maps.
-2. Confirm the listing is **Digerati Experts** (Chandler / Greater Phoenix).
+2. Confirm the listing name + phone match.
 3. Copy the Place ID (starts with `ChIJ…`).
 4. Add it to shared `.env` as `GOOGLE_PLACE_ID=…`.
 

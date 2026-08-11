@@ -206,15 +206,24 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                   {reviewsPayload?.status === "unconfigured"
                     ? "Reviews loading from Google Business Profile — Connect Place ID"
                     : reviewsPayload?.status === "empty"
-                      ? "Google listing is connected, but no public review text is available yet."
+                      ? (reviewsPayload.userRatingsTotal === 0 ||
+                          reviewsPayload.userRatingsTotal == null
+                          ? "No reviews yet — ask customers for a Google review. We never invent testimonials."
+                          : "Google listing is connected, but no public review text is available yet.")
                       : "Reviews loading from Google Business Profile. Live ratings appear once Place ID and API key are connected."}
                 </p>
                 {reviewsPayload?.status === "unconfigured" && (
                   <p className="text-xs text-white/40 mb-4 leading-relaxed">
-                    DE: add <code className="text-white/55">GOOGLE_PLACE_ID</code> and{" "}
-                    <code className="text-white/55">GOOGLE_PLACES_API_KEY</code> to shared{" "}
+                    Service-area listings often need a Maps / “Ask for reviews” URL (Place ID Finder can
+                    miss them). Add <code className="text-white/55">GOOGLE_PLACE_ID</code> to shared{" "}
                     <code className="text-white/55">.env</code> — see{" "}
                     <span className="text-white/55">docs/GOOGLE-REVIEWS.md</span>.
+                  </p>
+                )}
+                {reviewsPayload?.status === "empty" && (
+                  <p className="text-xs text-white/40 mb-4 leading-relaxed">
+                    Place ID is connected. When the first Google reviews publish, they appear here
+                    verbatim.
                   </p>
                 )}
                 <a
@@ -223,7 +232,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                   rel="noopener noreferrer"
                   className="text-sm text-violet-300 hover:text-violet-200 inline-flex items-center gap-1"
                 >
-                  Find us on Google
+                  {reviewsPayload?.status === "empty" ? "Ask for reviews on Google" : "Find us on Google"}
                   <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </>
