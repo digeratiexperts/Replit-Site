@@ -1,3 +1,4 @@
+// Regression contract for the production Zoho Payments hosted-checkout integration.
 import crypto from "crypto";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ZohoPaymentsService } from "./zohoPayments";
