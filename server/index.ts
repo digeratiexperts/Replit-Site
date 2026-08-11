@@ -119,7 +119,7 @@ if (zohoPayments.isConfigured()) {
 app.post(
   "/api/webhooks/zoho-payments",
   express.raw({ type: "application/json" }),
-  (req, res) => {
+  async (req, res) => {
     try {
       const signature = req.headers["x-zoho-webhook-signature"] as string;
       if (!signature) {
@@ -136,96 +136,101 @@ app.post(
       const event = JSON.parse(req.body.toString("utf-8"));
       const parsed = zohoPayments.parseWebhookEvent(event);
       const metadata = Object.fromEntries(parsed.metadata.map((item) => [item.key, item.value]));
+      let fulfillOrderId: string | null = null;
 
-      // Zoho expects a prompt 2xx response. Signature verification and parsing happen first;
-      // database transitions and fulfillment continue after the event has been acknowledged.
-      res.json({ received: true });
+      if (parsed.eventType === "payment.succeeded") {
+        // Persist the durable/idempotent paid state before acknowledging Zoho.
+        // Fulfillment itself runs only after the 2xx response so provider retries
+        // are about payment-state durability, not slow provisioning work.
+        const { db } = await import("./db");
+        const { storeOrders } = await import("@shared/schema");
+        const { eq } = await import("drizzle-orm");
 
-      void (async () => {
-        if (parsed.eventType === "payment.succeeded") {
-          const { db } = await import("./db");
-          const { storeOrders } = await import("@shared/schema");
-          const { eq } = await import("drizzle-orm");
+        const metadataOrderId = metadata.orderId || null;
+        const orderNumber = metadata.orderNumber || parsed.referenceNumber || parsed.invoiceNumber || null;
+        let existingOrder: any = null;
 
-          const metadataOrderId = metadata.orderId || null;
-          const orderNumber = metadata.orderNumber || parsed.referenceNumber || parsed.invoiceNumber || null;
-          let existingOrder: any = null;
+        if (metadataOrderId) {
+          [existingOrder] = await db.select().from(storeOrders)
+            .where(eq(storeOrders.id, metadataOrderId)).limit(1);
+        }
+        if (!existingOrder && orderNumber) {
+          [existingOrder] = await db.select().from(storeOrders)
+            .where(eq(storeOrders.orderNumber, orderNumber)).limit(1);
+        }
 
-          if (metadataOrderId) {
-            [existingOrder] = await db.select().from(storeOrders)
-              .where(eq(storeOrders.id, metadataOrderId)).limit(1);
-          }
-          if (!existingOrder && orderNumber) {
-            [existingOrder] = await db.select().from(storeOrders)
-              .where(eq(storeOrders.orderNumber, orderNumber)).limit(1);
-          }
+        if (existingOrder) {
+          const oldStatus = existingOrder.status || "unknown";
+          const alreadyPastPaid = ["paid", "processing", "provisioning", "completed"].includes(oldStatus);
 
-          if (existingOrder) {
-            const oldStatus = existingOrder.status || "unknown";
-            const alreadyPastPaid = ["paid", "processing", "provisioning", "completed"].includes(oldStatus);
+          if (!alreadyPastPaid) {
+            await db.update(storeOrders)
+              .set({
+                status: "paid",
+                zohoPaymentId: parsed.paymentId || existingOrder.zohoPaymentId || null,
+                paidAt: new Date(),
+                updatedAt: new Date(),
+              })
+              .where(eq(storeOrders.id, existingOrder.id));
 
-            if (!alreadyPastPaid) {
-              await db.update(storeOrders)
-                .set({
-                  status: "paid",
-                  zohoPaymentId: parsed.paymentId || existingOrder.zohoPaymentId || null,
-                  paidAt: new Date(),
-                  updatedAt: new Date(),
-                })
-                .where(eq(storeOrders.id, existingOrder.id));
-
-              console.log("[SECURITY] ORDER_STATUS_CHANGED", {
-                orderId: existingOrder.id,
-                orderNumber: existingOrder.orderNumber,
-                oldStatus,
-                newStatus: "paid",
-                triggeredBy: "zoho_payments_webhook",
-              });
-            } else if (!existingOrder.zohoPaymentId && parsed.paymentId) {
-              await db.update(storeOrders)
-                .set({
-                  zohoPaymentId: parsed.paymentId,
-                  paidAt: existingOrder.paidAt || new Date(),
-                  updatedAt: new Date(),
-                })
-                .where(eq(storeOrders.id, existingOrder.id));
-            }
-
-            console.log("[SECURITY] CHECKOUT_COMPLETED", {
+            console.log("[SECURITY] ORDER_STATUS_CHANGED", {
               orderId: existingOrder.id,
               orderNumber: existingOrder.orderNumber,
-              paymentMethod: "zoho",
-              total: existingOrder.total,
-              zohoPaymentId: parsed.paymentId,
+              oldStatus,
+              newStatus: "paid",
+              triggeredBy: "zoho_payments_webhook",
             });
-
-            const { fulfillPaidOrder } = await import("./services/orderFulfillment");
-            await fulfillPaidOrder(existingOrder.id);
-          } else {
-            // Portal invoice payments are not StoreOrder records; Zoho remains the billing system of record.
-            console.info("[ZOHO PAYMENTS WEBHOOK] Verified payment succeeded with no local store order", {
-              paymentId: parsed.paymentId,
-              referenceNumber: parsed.referenceNumber,
-              invoiceNumber: parsed.invoiceNumber,
-            });
+          } else if (!existingOrder.zohoPaymentId && parsed.paymentId) {
+            await db.update(storeOrders)
+              .set({
+                zohoPaymentId: parsed.paymentId,
+                paidAt: existingOrder.paidAt || new Date(),
+                updatedAt: new Date(),
+              })
+              .where(eq(storeOrders.id, existingOrder.id));
           }
-        } else if (parsed.eventType === "payment.failed" || parsed.eventType === "payment.pending") {
-          // A failed/pending attempt can later succeed. Never fulfill or permanently fail the order here.
-          console.info("[ZOHO PAYMENTS WEBHOOK] Payment attempt update", {
-            eventType: parsed.eventType,
+
+          console.log("[SECURITY] CHECKOUT_COMPLETED", {
+            orderId: existingOrder.id,
+            orderNumber: existingOrder.orderNumber,
+            paymentMethod: "zoho",
+            total: existingOrder.total,
+            zohoPaymentId: parsed.paymentId,
+          });
+          fulfillOrderId = existingOrder.id;
+        } else {
+          // Portal invoice payments are not StoreOrder records; Zoho remains the billing system of record.
+          console.info("[ZOHO PAYMENTS WEBHOOK] Verified payment succeeded with no local store order", {
             paymentId: parsed.paymentId,
             referenceNumber: parsed.referenceNumber,
-            status: parsed.status,
+            invoiceNumber: parsed.invoiceNumber,
           });
         }
-      })().catch((error) => {
-        console.error("[ZOHO PAYMENTS WEBHOOK ASYNC ERROR]", error);
-      });
+      } else if (parsed.eventType === "payment.failed" || parsed.eventType === "payment.pending") {
+        // A failed/pending attempt can later succeed. Never fulfill or permanently fail the order here.
+        console.info("[ZOHO PAYMENTS WEBHOOK] Payment attempt update", {
+          eventType: parsed.eventType,
+          paymentId: parsed.paymentId,
+          referenceNumber: parsed.referenceNumber,
+          status: parsed.status,
+        });
+      }
 
+      // Acknowledge only after signature parsing and durable payment-state work.
+      res.json({ received: true });
+
+      if (fulfillOrderId) {
+        const orderId = fulfillOrderId;
+        void import("./services/orderFulfillment")
+          .then(({ fulfillPaidOrder }) => fulfillPaidOrder(orderId))
+          .catch((error) => {
+            console.error("[ZOHO PAYMENTS WEBHOOK FULFILLMENT ERROR]", error);
+          });
+      }
       return;
     } catch (error: any) {
       console.error("[ZOHO PAYMENTS WEBHOOK ERROR]", error);
-      return res.status(400).json({ error: "Malformed webhook payload" });
+      return res.status(500).json({ error: "Webhook processing failed" });
     }
   }
 );
