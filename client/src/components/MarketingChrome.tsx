@@ -1,9 +1,12 @@
 import { useLocation } from "wouter";
-import { ZohoASAPWidget } from "@/components/ZohoASAPWidget";
+import { VirtualMspAdvisor } from "@/components/VirtualMspAdvisor";
 
 /**
  * Sitewide marketing chrome that should appear on every public page
  * (not the Client Portal). Homepage previously owned chat alone.
+ *
+ * ZohoASAPWidget remains in the repo as a ticket-form fallback component
+ * but the public launcher is now the Virtual MSP Advisor.
  */
 export function MarketingChrome() {
   const [location] = useLocation();
@@ -12,11 +15,5 @@ export function MarketingChrome() {
     return null;
   }
 
-  return (
-    <ZohoASAPWidget
-      isEnabled={true}
-      accountId={import.meta.env.VITE_ZOHO_ACCOUNT_ID}
-      portalId={import.meta.env.VITE_ZOHO_PORTAL_ID}
-    />
-  );
+  return <VirtualMspAdvisor />;
 }

@@ -231,4 +231,43 @@ export const analytics = {
     const consent = getConsent();
     if (consent.marketing) fireMetaPixel("Purchase", { value, currency: "USD" });
   },
+
+  chatOpened() {
+    track("chat_opened", { event_category: "advisor_chat" });
+  },
+  chatConversationStarted() {
+    track("conversation_started", { event_category: "advisor_chat" });
+  },
+  chatQualifiedQuestion() {
+    track("qualified_question", { event_category: "advisor_chat" });
+  },
+  chatServiceRecommended() {
+    track("service_recommended", { event_category: "advisor_chat" });
+  },
+  chatAssessmentOffered() {
+    track("assessment_offered", { event_category: "advisor_chat" });
+  },
+  chatLeadCaptureStarted() {
+    track("lead_capture_started", { event_category: "advisor_chat" });
+  },
+  chatLeadCreated() {
+    trackMarketing("generate_lead", "Lead", {
+      source: "virtual_msp_advisor",
+      method: "chat",
+      event_category: "conversion",
+    });
+    track("lead_created", { event_category: "advisor_chat" });
+  },
+  chatBookingClicked() {
+    track("booking_clicked", { event_category: "advisor_chat" });
+  },
+  chatSupportRouted() {
+    track("support_routed", { event_category: "advisor_chat" });
+  },
+  chatAbandoned() {
+    track("conversation_abandoned", { event_category: "advisor_chat" });
+  },
+  chatOffTopicRedirected() {
+    track("off_topic_redirected", { event_category: "advisor_chat" });
+  },
 };
