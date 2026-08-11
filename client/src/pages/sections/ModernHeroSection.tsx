@@ -99,10 +99,10 @@ export const ModernHeroSection = (): JSX.Element => {
       />
 
       <motion.div
-        className="relative z-10 w-full px-4 sm:px-6 lg:px-10 xl:px-14 pt-28 pb-14 sm:pt-32 sm:pb-16 lg:pt-36 lg:pb-16 xl:pt-40"
+        className="relative z-10 w-full px-3 sm:px-4 lg:px-6 xl:px-8 pt-28 pb-14 sm:pt-32 sm:pb-16 lg:pt-36 lg:pb-16 xl:pt-40"
         style={{ y }}
       >
-        <div className="mx-auto max-w-[90rem]">
+        <div className="mx-auto max-w-[100rem]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 xl:gap-16 items-center">
             <motion.div
               className="flex flex-col gap-5 sm:gap-6 w-full"

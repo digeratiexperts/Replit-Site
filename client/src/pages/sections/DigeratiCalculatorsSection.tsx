@@ -49,7 +49,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
         style={{ background: "radial-gradient(ellipse, rgba(139, 92, 246, 0.1) 0%, transparent 60%)" }}
       />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
         {/* Section header */}
         <motion.div 
           className="text-center mb-8 md:mb-10"

@@ -97,7 +97,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
       {/* Accent glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-purple-300/10 rounded-full blur-[100px] pointer-events-none z-0" />
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
         <div className="max-w-4xl mx-auto">
           <motion.div 
             className="text-center mb-10"

@@ -25,7 +25,7 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
 
   return (
     <section className="bg-white py-14 md:py-20 lg:py-24 overflow-hidden" data-testid="section-trust-photo">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[100rem] mx-auto px-3 sm:px-4 lg:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <motion.div
             initial={prefersReducedMotion ? {} : { opacity: 0, x: -20 }}

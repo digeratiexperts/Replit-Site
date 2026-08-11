@@ -483,11 +483,11 @@ export function MegaMenu() {
             background: 'linear-gradient(90deg, transparent 0%, transparent 50%, rgba(139, 92, 246, 0.3) 80%, rgba(139, 92, 246, 0.2) 100%)',
           }}
         />
-        <div className="container mx-auto px-4 lg:px-8 h-full flex flex-col md:flex-row items-center justify-end py-2 md:py-0 relative z-10">
+        <div className="max-w-[100rem] mx-auto px-3 lg:px-5 h-full flex flex-col md:flex-row items-center justify-end py-2 md:py-0 relative z-10 w-full">
           <div className="flex items-center flex-wrap gap-3 md:gap-8 justify-center md:justify-end">
             <a
               href="tel:325-480-9870"
-              className="flex items-center text-white/75 hover:text-violet-300 text-sm md:text-base font-medium transition-colors"
+              className="flex items-center text-white/75 hover:text-violet-300 text-base md:text-lg font-medium transition-colors"
               data-testid="utility-phone"
             >
               <Phone className="h-3.5 w-3.5 mr-1.5 text-violet-400" />
@@ -500,7 +500,7 @@ export function MegaMenu() {
               href="https://assist.zoho.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center text-white/75 hover:text-violet-300 text-sm md:text-base font-medium transition-colors"
+              className="flex items-center text-white/75 hover:text-violet-300 text-base md:text-lg font-medium transition-colors"
               data-testid="utility-zoho-assist"
             >
               <Monitor className="h-3.5 w-3.5 mr-1.5 text-violet-400" />
@@ -510,7 +510,7 @@ export function MegaMenu() {
 
             <a
               href={PORTAL_LOGIN}
-              className="flex items-center text-white/75 hover:text-violet-300 text-sm md:text-base font-medium transition-colors"
+              className="flex items-center text-white/75 hover:text-violet-300 text-base md:text-lg font-medium transition-colors"
               data-testid="utility-portal"
             >
               <span className="hidden sm:inline">Client Portal</span>
@@ -536,9 +536,9 @@ export function MegaMenu() {
         aria-label="Main navigation"
         data-nav-theme={isOverLight ? 'over-light' : 'over-dark'}
       >
-        <div className="max-w-[90rem] mx-auto">
-          <div className={`flex items-center justify-between gap-3 px-4 xl:px-8 transition-all duration-300 ${
-            isScrolled ? 'h-[4.25rem]' : 'h-[5.25rem]'
+        <div className="max-w-[100rem] mx-auto w-full">
+          <div className={`flex items-center justify-between gap-3 px-3 xl:px-5 transition-all duration-300 ${
+            isScrolled ? 'h-[4.75rem]' : 'h-[5.75rem]'
           }`}>
             {/* Logo */}
             <a
@@ -569,7 +569,7 @@ export function MegaMenu() {
                   {item.isSimple ? (
                     <a
                       href={item.href}
-                      className="group relative px-2.5 xl:px-3.5 py-2 text-base xl:text-lg text-white/85 hover:text-white font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded whitespace-nowrap"
+                      className="group relative px-3 xl:px-4 py-2.5 text-lg xl:text-xl text-white/85 hover:text-white font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded whitespace-nowrap"
                       data-testid={`nav-${item.name.toLowerCase()}`}
                       onClick={handleLinkClick}
                       aria-label={`Go to ${item.name}`}
@@ -582,7 +582,7 @@ export function MegaMenu() {
                       ref={(el) => {
                         if (el) navButtonsRef.current.set(item.name, el);
                       }}
-                      className={`group relative px-2.5 xl:px-3.5 py-2 text-base xl:text-lg text-white/85 hover:text-white font-medium transition-colors flex items-center focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded whitespace-nowrap ${
+                      className={`group relative px-3 xl:px-4 py-2.5 text-lg xl:text-xl text-white/85 hover:text-white font-semibold transition-colors flex items-center focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded whitespace-nowrap ${
                         activeMenu === item.name ? 'text-white' : ''
                       }`}
                       data-testid={`nav-${item.name.toLowerCase()}`}
@@ -619,8 +619,8 @@ export function MegaMenu() {
                         transition={{ duration: 0.15 }}
                         className={`fixed inset-x-0 top-20 mx-auto ${
                           item.name === 'Solutions' || item.name === 'About'
-                            ? 'w-[min(98vw,80rem)]'
-                            : 'w-[min(92vw,64rem)]'
+                            ? 'w-[min(98vw,92rem)]'
+                            : 'w-[min(96vw,72rem)]'
                         } bg-[#0a0118] backdrop-blur-xl border border-white/15 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.6),0_0_40px_rgba(139,92,246,0.2)] mega-menu-dropdown overflow-hidden`}
                         onMouseEnter={handleDropdownMouseEnter}
                         onMouseLeave={handleMouseLeave}
@@ -947,7 +947,7 @@ export function MegaMenu() {
           <div className="flex items-center space-x-2 lg:space-x-4">
             <button
               type="button"
-              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-5 xl:px-6 py-3 rounded-lg text-base font-semibold whitespace-nowrap shadow-[0_0_22px_rgba(236,72,153,0.35)] hover:shadow-[0_0_30px_rgba(236,72,153,0.45)] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black border border-pink-300/25"
+              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-6 xl:px-7 py-3.5 rounded-lg text-lg font-semibold whitespace-nowrap shadow-[0_0_22px_rgba(236,72,153,0.35)] hover:shadow-[0_0_30px_rgba(236,72,153,0.45)] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black border border-pink-300/25"
               data-testid="nav-cta"
               onClick={() => { handleLinkClick(); openBooking("megamenu"); }}
               aria-label="Schedule Your Assessment"

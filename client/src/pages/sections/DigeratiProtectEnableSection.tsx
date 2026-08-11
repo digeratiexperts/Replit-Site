@@ -80,7 +80,7 @@ export const DigeratiProtectEnableSection = (): JSX.Element => {
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-fuchsia-100/50 rounded-full blur-[150px]" />
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
         <motion.div 
           className="max-w-3xl mx-auto text-center mb-12 md:mb-16"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}

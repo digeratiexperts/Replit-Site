@@ -166,7 +166,7 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
         style={{ y: floatingY2 }}
       />
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
         <motion.div 
           className="text-center mb-8 md:mb-12 lg:mb-16"
           initial="hidden"

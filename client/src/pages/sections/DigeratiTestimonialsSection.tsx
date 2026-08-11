@@ -36,7 +36,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
       }}
       data-testid="section-client-proof"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[100rem] mx-auto px-3 sm:px-4 lg:px-6">
         <motion.div
           className="text-center mb-10 md:mb-14"
           initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}

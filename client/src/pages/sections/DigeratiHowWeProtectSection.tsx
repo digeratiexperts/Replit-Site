@@ -92,7 +92,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
         }}
       />
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
         <motion.div 
           className="text-center mb-8 md:mb-12 lg:mb-16"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 15 }}
@@ -113,7 +113,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
         </motion.div>
 
         <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 max-w-6xl mx-auto"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 max-w-[92rem] mx-auto"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -158,7 +158,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
           })}
         </motion.div>
 
-        <div className="mt-12 md:mt-16 max-w-6xl mx-auto" id="protection-stack">
+        <div className="mt-12 md:mt-16 max-w-[92rem] mx-auto" id="protection-stack">
           <div className="text-center mb-6 md:mb-8">
             <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
               Security stack we manage

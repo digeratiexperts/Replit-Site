@@ -235,7 +235,7 @@ const CoManagedStore = () => {
       <MegaMenu />
 
       <main className="pb-20 pt-28">
-        <div className="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[100rem] px-3 sm:px-4 lg:px-6">
           {/* Auth & Cart */}
           <div className="mb-4 flex items-center justify-between">
             {isLoggedIn && user ? (

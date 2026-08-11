@@ -91,7 +91,7 @@ export const DigeratiAlertBanner = (): JSX.Element => {
         style={{ y: floatingY1 }}
       />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
         <motion.div 
           className="text-center mb-12 md:mb-16"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}

@@ -138,7 +138,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
       <CircuitOverlay />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.08),transparent_50%)] pointer-events-none" />
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-16 max-w-[1440px] relative z-10">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 pt-16 max-w-[1440px] relative z-10">
         <div className="mb-12 pl-4 md:pl-8 lg:pl-0">
           <img 
             src={logoImage} 

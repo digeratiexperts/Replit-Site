@@ -120,7 +120,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
       <div className="absolute inset-0 pointer-events-none"
            style={{ background: "radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.06) 0%, transparent 60%)" }} />
       
-      <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
         <motion.div 
           className="text-center mb-6 md:mb-8 lg:mb-10"
           initial={{ opacity: 0, y: 20 }}

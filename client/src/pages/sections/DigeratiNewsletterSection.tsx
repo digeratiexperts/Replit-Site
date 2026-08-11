@@ -79,7 +79,7 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
         <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-violet-200/30 rounded-full blur-[120px]" />
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
         <div className="max-w-4xl mx-auto">
           <motion.div 
             className="text-center"

@@ -335,7 +335,7 @@ function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarPr
       >
         <div className="flex items-center gap-2 pr-3 border-r border-white/20 mr-2 shrink-0">
           <Shield className="w-5 h-5 text-[#FF477F]" aria-hidden="true" />
-          <span className="text-white font-medium text-sm whitespace-nowrap">Is Your Business Protected?</span>
+          <span className="text-white font-semibold text-base whitespace-nowrap">Is Your Business Protected?</span>
         </div>
 
         {navSections.map(({ section, index }) => {
@@ -349,7 +349,7 @@ function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarPr
                 e.stopPropagation();
                 onNavigate(index);
               }}
-              className={`relative px-3 py-1.5 text-sm font-medium rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FF477F] whitespace-nowrap shrink-0 ${
+              className={`relative px-3.5 py-2 text-base font-semibold rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FF477F] whitespace-nowrap shrink-0 ${
                 isActive
                   ? 'bg-[#D3126A] text-white shadow-lg shadow-[#D3126A]/40'
                   : 'text-white/75 hover:text-white hover:bg-white/10'

@@ -27,7 +27,7 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
       className="relative py-10 md:py-14 lg:py-16 bg-[#0a0a0a] overflow-hidden"
       data-testid="section-meet-experts"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[100rem] mx-auto px-3 sm:px-4 lg:px-6">
         <motion.div
           className="text-center mb-8 md:mb-10"
           initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}

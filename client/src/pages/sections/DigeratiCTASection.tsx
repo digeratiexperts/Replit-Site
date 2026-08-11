@@ -24,7 +24,7 @@ export const DigeratiCTASection = (): JSX.Element => {
         style={{ background: "radial-gradient(ellipse at 50% 50%, rgba(139, 92, 246, 0.10) 0%, transparent 60%)" }}
       />
       
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-6 text-center relative z-10">
         {/* Animated headline with light sweep */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}

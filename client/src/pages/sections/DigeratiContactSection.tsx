@@ -103,7 +103,7 @@ export const DigeratiContactSection = (): JSX.Element => {
         style={{ background: "radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.08) 0%, transparent 50%)" }}
       />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Left column - Info */}
           <motion.div

@@ -74,7 +74,7 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
-    container: { center: true, padding: "2rem", screens: { "2xl": "1400px" } },
+    container: { center: true, padding: "1rem", screens: { "2xl": "1680px" } },
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
   darkMode: ["class"],

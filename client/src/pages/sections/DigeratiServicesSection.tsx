@@ -65,7 +65,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
       id="services"
       className="relative overflow-hidden bg-[#0a0a0a] py-14 md:py-18 lg:py-22"
     >
-      <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
         <motion.div
           className="mb-10 text-center md:mb-14"
           initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
