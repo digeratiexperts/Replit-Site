@@ -1,27 +1,8 @@
 import {
-  Shield,
-  Sparkles,
-  FileCheck,
-  RotateCcw,
-  Headphones,
-  Building2,
-  Laptop,
-  type LucideIcon,
-} from "lucide-react";
-import {
   storeOutcomes,
   type StoreOutcomeId,
 } from "@/data/storeMerchandising";
-
-const outcomeIcons: Record<StoreOutcomeId, LucideIcon> = {
-  protect: Shield,
-  modernize: Sparkles,
-  compliance: FileCheck,
-  recover: RotateCcw,
-  support_it: Headphones,
-  outsource: Building2,
-  secure_remote: Laptop,
-};
+import { outcomeCardUrl } from "@/data/productImages";
 
 interface ShopByOutcomeProps {
   selected?: StoreOutcomeId | null;
@@ -39,7 +20,6 @@ export function ShopByOutcome({ selected, onSelect }: ShopByOutcomeProps) {
       </div>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-7">
         {storeOutcomes.map((outcome) => {
-          const Icon = outcomeIcons[outcome.id];
           const isActive = selected === outcome.id;
           return (
             <button
@@ -48,20 +28,24 @@ export function ShopByOutcome({ selected, onSelect }: ShopByOutcomeProps) {
               onClick={() => onSelect(isActive ? null : outcome.id)}
               className={`group rounded-xl border p-5 md:p-6 text-left transition-all duration-200 ${
                 isActive
-                  ? "border-[#5034ff]/60 bg-[#5034ff]/15 shadow-[0_0_24px_rgba(80,52,255,0.18)]"
+                  ? "border-[#D3126A]/55 bg-[#D3126A]/10 shadow-[0_0_24px_rgba(211,18,106,0.12)]"
                   : "border-white/10 bg-[#121212] hover:border-white/20 hover:bg-[#161616]"
               }`}
               data-testid={`outcome-${outcome.id}`}
               aria-pressed={isActive}
             >
               <div
-                className={`mb-3.5 flex h-11 w-11 items-center justify-center rounded-lg border ${
-                  isActive
-                    ? "border-[#5034ff]/40 bg-[#5034ff]/20"
-                    : "border-white/10 bg-white/[0.04]"
+                className={`mb-3.5 overflow-hidden rounded-lg border ${
+                  isActive ? "border-[#D3126A]/40" : "border-white/10"
                 }`}
               >
-                <Icon className={`h-5 w-5 ${isActive ? "text-[#c4b5fd]" : outcome.accent}`} />
+                <img
+                  src={outcomeCardUrl(outcome.id)}
+                  alt=""
+                  className="h-14 w-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
               <p className="text-base font-semibold text-white">{outcome.label}</p>
               <p className="mt-1.5 line-clamp-2 text-sm text-white/50">{outcome.blurb}</p>

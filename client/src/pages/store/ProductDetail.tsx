@@ -12,9 +12,14 @@ import {
   storeProducts,
   categoryLabels,
   formatPrice,
-  type StoreProduct,
-  type ProductCategory,
 } from "@/data/storeProducts";
+import {
+  getOutcomeLead,
+  getProductTags,
+  isConfigurableProduct,
+  configUnitLabel,
+} from "@/data/storeMerchandising";
+import { getProductVisual } from "@/data/productImages";
 import {
   ArrowRight,
   ArrowLeft,
@@ -23,52 +28,26 @@ import {
   Minus,
   Plus,
   Check,
-  Shield,
-  Users,
-  Building,
-  Phone,
-  Monitor,
-  Wifi,
-  Headphones,
-  Cloud,
-  FileCheck,
-  GraduationCap,
-  Wrench,
-  Package,
-  Settings,
-  Server,
   ExternalLink,
   User,
   LogOut,
   Tag,
   Lock,
+  Settings2,
 } from "lucide-react";
 import { useStoreAuth } from "@/hooks/useStoreAuth";
 import { CartButton } from "@/components/store/CartButton";
-
-const categoryIcons: Record<ProductCategory, typeof Shield> = {
-  contract_services: Building,
-  comanaged_subscriptions: Users,
-  comanaged_onboarding: Settings,
-  networking_managed: Wifi,
-  networking_projects: Server,
-  ucaas_subscriptions: Phone,
-  ucaas_setup: Headphones,
-  hardware_provisioning: Monitor,
-  hardware_physical: Package,
-  hardware_handling: Wrench,
-  digital_assessments: Shield,
-  digital_templates: FileCheck,
-  digital_training: GraduationCap,
-  professional_services: Cloud,
-};
+import { ProductMedia } from "@/components/store/ProductMedia";
+import { ConfigureProductDrawer } from "@/components/store/ConfigureProductDrawer";
 
 const ProductDetail = () => {
   const { sku } = useParams<{ sku: string }>();
   const { addToCart, openCart, setClientPricing } = useCart();
   const { toast } = useToast();
   const [quantity, setQuantity] = useState(1);
-  const { isLoggedIn, user, clientType, clientPricing, getProductPrice, loginRedirect, logout } = useStoreAuth();
+  const [configureOpen, setConfigureOpen] = useState(false);
+  const { isLoggedIn, user, clientType, clientPricing, getProductPrice, loginRedirect, logout } =
+    useStoreAuth();
 
   useEffect(() => {
     if (clientPricing.length > 0) {
@@ -76,22 +55,22 @@ const ProductDetail = () => {
     }
   }, [clientPricing, setClientPricing]);
 
-  const product = useMemo(() => {
-    return storeProducts.find((p) => p.sku === sku);
-  }, [sku]);
+  const product = useMemo(() => storeProducts.find((p) => p.sku === sku), [sku]);
 
   const relatedProducts = useMemo(() => {
     if (!product) return [];
-    let related = storeProducts.filter((p) => p.category === product.category && p.id !== product.id);
-    if (!isLoggedIn) {
-      related = related.filter((p) => !p.isClientOnly);
-    }
+    let related = storeProducts.filter(
+      (p) => p.category === product.category && p.id !== product.id
+    );
+    if (!isLoggedIn) related = related.filter((p) => !p.isClientOnly);
     return related.slice(0, 4);
   }, [product, isLoggedIn]);
 
   useSEO({
     title: product ? `${product.name} | Store` : "Product Not Found | Store",
-    description: product?.description || "Product details for Digerati Experts IT services and solutions.",
+    description:
+      product?.description ||
+      "Product details for Digerati Experts IT services and solutions.",
     canonical: `/store/product/${sku}`,
   });
 
@@ -100,12 +79,12 @@ const ProductDetail = () => {
       <div className="min-h-screen bg-[#0a0a0a]">
         <MegaMenu />
         <main className="de-nav-clear pb-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-3xl font-bold text-white mb-4">Product Not Found</h1>
-            <p className="text-white/60 mb-8">The product you're looking for doesn't exist.</p>
+          <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+            <h1 className="mb-4 text-3xl font-bold text-white">Product Not Found</h1>
+            <p className="mb-8 text-white/60">The product you're looking for doesn't exist.</p>
             <Link href="/store">
-              <Button className="bg-violet-600 hover:bg-violet-500 text-white">
-                <ArrowLeft className="w-4 h-4 mr-2" />
+              <Button className="bg-[#5034ff] text-white hover:bg-[#6548ff]">
+                <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to Store
               </Button>
             </Link>
@@ -116,17 +95,22 @@ const ProductDetail = () => {
     );
   }
 
-  const Icon = categoryIcons[product.category];
+  const visual = getProductVisual(product);
   const minQty = product.minimumQuantity;
+  const tags = getProductTags(product);
+  const configurable = isConfigurableProduct(product);
+  const productPricing = getProductPrice(product.id, product.basePrice);
+  const storeLink = product.isContractOnly ? "/store/managed" : "/store/co-managed";
+  const storeLabel = product.isContractOnly ? "Managed Services" : "Co-Managed Products";
+  const seoImage = visual.heroUrl.startsWith("http")
+    ? visual.heroUrl
+    : `https://digeratiexperts.com${visual.heroUrl}`;
 
   const handleQuantityChange = (delta: number) => {
     setQuantity((prev) => Math.max(minQty, prev + delta));
   };
 
-  const productPricing = product ? getProductPrice(product.id, product.basePrice) : { price: 0, hasDiscount: false, discountPercent: 0 };
-
   const handleAddToCart = () => {
-    if (!product) return;
     addToCart(product, quantity, productPricing.price);
     toast({
       title: "Added to Cart",
@@ -135,8 +119,19 @@ const ProductDetail = () => {
     openCart();
   };
 
-  const storeLink = product.isContractOnly ? "/store/managed" : "/store/co-managed";
-  const storeLabel = product.isContractOnly ? "Managed Services" : "Co-Managed Products";
+  const handleConfigureConfirm = (
+    configured: typeof product,
+    qty: number,
+    unitPrice: number
+  ) => {
+    addToCart(configured, qty, unitPrice);
+    toast({
+      title: "Added to Cart",
+      description: `${qty}x ${configured.name} has been added to your cart.`,
+    });
+    openCart();
+    setConfigureOpen(false);
+  };
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
@@ -144,31 +139,36 @@ const ProductDetail = () => {
         name={product.name}
         description={product.description}
         price={productPricing.price.toFixed(2)}
-        url={`/store/product/${product.id}`}
-        sku={product.id}
+        image={seoImage}
+        url={`/store/product/${product.sku}`}
+        sku={product.sku}
         category={product.category}
       />
-      <BreadcrumbJsonLd items={[
-        { name: "Home", url: "/" },
-        { name: "Store", url: "/store" },
-        { name: storeLabel, url: storeLink },
-        { name: product.name, url: `/store/product/${product.id}` }
-      ]} />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: "/" },
+          { name: "Store", url: "/store" },
+          { name: storeLabel, url: storeLink },
+          { name: product.name, url: `/store/product/${product.sku}` },
+        ]}
+      />
       <MegaMenu />
 
       <main className="de-nav-clear pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Auth & Cart Header */}
-          <div className="flex items-center justify-between mb-4">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-4 flex items-center justify-between">
             {isLoggedIn && user ? (
               <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-violet-500/10 border border-violet-500/20">
-                  <User className="w-4 h-4 text-violet-400" />
+                <div className="flex items-center gap-2 rounded-lg border border-[#5034ff]/20 bg-[#5034ff]/10 px-3 py-2">
+                  <User className="h-4 w-4 text-[#a78bfa]" />
                   <span className="text-sm text-white" data-testid="text-user-greeting">
-                    Welcome, <span className="font-semibold text-violet-300">{user.fullName || user.username}</span>
+                    Welcome,{" "}
+                    <span className="font-semibold text-[#c4b5fd]">
+                      {user.fullName || user.username}
+                    </span>
                   </span>
                   {clientType !== "public" && (
-                    <span className="ml-2 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-medium">
+                    <span className="ml-2 rounded-full bg-emerald-500/20 px-2 py-0.5 text-xs font-medium text-emerald-300">
                       {clientType === "managed" ? "Managed Client" : "Co-Managed Client"}
                     </span>
                   )}
@@ -177,22 +177,22 @@ const ProductDetail = () => {
                   variant="ghost"
                   size="sm"
                   onClick={logout}
-                  className="text-white/60 hover:text-white hover:bg-violet-500/10"
+                  className="text-white/60 hover:bg-[#5034ff]/10 hover:text-white"
                   data-testid="button-store-logout"
                 >
-                  <LogOut className="w-4 h-4 mr-1" />
+                  <LogOut className="mr-1 h-4 w-4" />
                   Logout
                 </Button>
               </div>
             ) : (
-              <Button 
+              <Button
                 variant="outline"
                 size="sm"
                 onClick={loginRedirect}
-                className="bg-violet-600 hover:bg-violet-500 text-white border-none"
+                className="border-none bg-[#5034ff] text-white hover:bg-[#6548ff]"
                 data-testid="button-store-login"
               >
-                <User className="w-4 h-4 mr-2" />
+                <User className="mr-2 h-4 w-4" />
                 Login for Client Pricing
               </Button>
             )}
@@ -202,36 +202,48 @@ const ProductDetail = () => {
           <nav className="mb-8" aria-label="Breadcrumb">
             <ol className="flex items-center gap-2 text-sm text-white/50">
               <li>
-                <Link href="/store" className="hover:text-white transition-colors" data-testid="breadcrumb-store">
+                <Link
+                  href="/store"
+                  className="transition-colors hover:text-white"
+                  data-testid="breadcrumb-store"
+                >
                   Store
                 </Link>
               </li>
               <li>/</li>
               <li>
-                <Link href={storeLink} className="hover:text-white transition-colors" data-testid="breadcrumb-category">
+                <Link
+                  href={storeLink}
+                  className="transition-colors hover:text-white"
+                  data-testid="breadcrumb-category"
+                >
                   {storeLabel}
                 </Link>
               </li>
               <li>/</li>
-              <li className="text-white" data-testid="breadcrumb-product">{product.name}</li>
+              <li className="text-white" data-testid="breadcrumb-product">
+                {product.name}
+              </li>
             </ol>
           </nav>
 
-          <div className="grid lg:grid-cols-2 gap-12 mb-20">
+          <div className="mb-20 grid gap-8 lg:grid-cols-2 lg:gap-12">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              className="relative"
             >
-              <div className="aspect-square rounded-2xl bg-gradient-to-br from-violet-900/30 to-purple-900/20 border border-violet-500/20 flex items-center justify-center">
-                <Icon className="w-32 h-32 text-violet-400/50" />
-              </div>
-              <div className="absolute top-4 left-4">
-                <span className="px-3 py-1.5 rounded-full bg-violet-500/20 text-violet-300 text-xs font-medium border border-violet-500/30">
-                  {categoryLabels[product.category]}
-                </span>
-              </div>
+              <ProductMedia
+                product={product}
+                variant="detail"
+                categoryBadge={categoryLabels[product.category]}
+              />
+              {visual.vendor && (
+                <p className="mt-3 text-sm text-white/45">
+                  Powered with <span className="text-white/70">{visual.vendor.name}</span> in the DE
+                  stack
+                </p>
+              )}
             </motion.div>
 
             <motion.div
@@ -239,30 +251,60 @@ const ProductDetail = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <span className="text-white/40 text-sm font-mono mb-2 block" data-testid="product-sku">
+              <span
+                className="mb-2 block font-mono text-sm text-white/40"
+                data-testid="product-sku"
+              >
                 SKU: {product.sku}
               </span>
-              <h1 className="text-3xl md:text-4xl font-bold text-white mb-4" data-testid="product-name">
+              <h1
+                className="mb-3 text-3xl font-bold text-white md:text-4xl"
+                data-testid="product-name"
+              >
                 {product.name}
               </h1>
-              <p className="text-white/70 text-lg mb-6 leading-relaxed" data-testid="product-description">
+              <p className="mb-3 text-lg font-medium leading-relaxed text-white/85">
+                {getOutcomeLead(product)}
+              </p>
+              <p
+                className="mb-6 text-base leading-relaxed text-white/60"
+                data-testid="product-description"
+              >
                 {product.description}
               </p>
+
+              {tags.length > 0 && (
+                <div className="mb-6 flex flex-wrap gap-1.5">
+                  {tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-[11px] text-white/55"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
 
               <div className="mb-8">
                 {productPricing.hasDiscount ? (
                   <div className="space-y-2">
-                    <div className="flex items-center gap-3">
-                      <span className="text-3xl font-bold text-violet-400" data-testid="product-price">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span
+                        className="text-3xl font-bold text-[#a78bfa]"
+                        data-testid="product-price"
+                      >
                         ${productPricing.price.toFixed(2)}
                       </span>
-                      <span className="text-xl text-white/40 line-through">${product.basePrice.toFixed(2)}</span>
+                      <span className="text-xl text-white/40 line-through">
+                        ${product.basePrice.toFixed(2)}
+                      </span>
                       {product.pricingUnit && (
-                        <span className="text-white/50 text-sm">per {product.pricingUnit}</span>
+                        <span className="text-sm text-white/50">per {product.pricingUnit}</span>
                       )}
                     </div>
-                    <div className="flex items-center gap-2 text-violet-400">
-                      <Tag className="w-4 h-4" />
+                    <div className="flex items-center gap-2 text-[#a78bfa]">
+                      <Tag className="h-4 w-4" />
                       <span className="text-sm font-medium" data-testid="discount-badge">
                         {productPricing.discountPercent}% client discount applied
                       </span>
@@ -270,22 +312,25 @@ const ProductDetail = () => {
                   </div>
                 ) : (
                   <div>
-                    <span className="text-3xl font-bold text-violet-400" data-testid="product-price">
+                    <span
+                      className="text-3xl font-bold text-[#a78bfa]"
+                      data-testid="product-price"
+                    >
                       {formatPrice(product)}
                     </span>
                     {product.pricingUnit && (
-                      <span className="text-white/50 text-sm ml-2">per {product.pricingUnit}</span>
+                      <span className="ml-2 text-sm text-white/50">per {product.pricingUnit}</span>
                     )}
                     {!isLoggedIn && (
                       <div className="mt-2">
-                        <Button 
+                        <Button
                           variant="link"
                           size="sm"
                           onClick={loginRedirect}
-                          className="text-violet-400 hover:text-violet-300 p-0 h-auto"
+                          className="h-auto p-0 text-[#a78bfa] hover:text-[#c4b5fd]"
                           data-testid="button-login-for-pricing"
                         >
-                          <User className="w-3 h-3 mr-1" />
+                          <User className="mr-1 h-3 w-3" />
                           Log in for potential client pricing
                         </Button>
                       </div>
@@ -295,11 +340,11 @@ const ProductDetail = () => {
               </div>
 
               <div className="mb-8">
-                <h3 className="text-white font-semibold mb-4">Features</h3>
+                <h3 className="mb-4 font-semibold text-white">Features</h3>
                 <ul className="space-y-3">
                   {product.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-3" data-testid={`feature-${idx}`}>
-                      <Check className="w-5 h-5 text-violet-400 flex-shrink-0 mt-0.5" />
+                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#a78bfa]" />
                       <span className="text-white/70">{feature}</span>
                     </li>
                   ))}
@@ -308,87 +353,117 @@ const ProductDetail = () => {
 
               {product.isContractOnly ? (
                 <div className="space-y-4">
-                  <p className="text-white/60 text-sm">
-                    This is a contract-based service. Schedule a consultation to discuss your needs and receive a custom quote.
+                  <p className="text-sm text-white/60">
+                    This is a contract-based service. Schedule a consultation to discuss your needs
+                    and receive a custom quote.
                   </p>
-                  <a
-                    href="/book"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href="/book" target="_blank" rel="noopener noreferrer">
                     <Button
-                      className="w-full bg-violet-600 hover:bg-violet-500 text-white py-6 text-lg"
+                      className="w-full bg-[#5034ff] py-6 text-lg text-white hover:bg-[#6548ff]"
                       data-testid="button-schedule-consultant"
                     >
-                      <Calendar className="w-5 h-5 mr-2" />
+                      <Calendar className="mr-2 h-5 w-5" />
                       Schedule Consultant
-                      <ExternalLink className="w-4 h-4 ml-2" />
+                      <ExternalLink className="ml-2 h-4 w-4" />
                     </Button>
                   </a>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="flex items-center gap-4">
-                    <span className="text-white/60 text-sm">Quantity:</span>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => handleQuantityChange(-1)}
-                        disabled={quantity <= minQty}
-                        className="bg-violet-500/10 border-violet-500/30 text-white hover:bg-violet-500/20"
-                        data-testid="button-decrease-qty"
-                      >
-                        <Minus className="w-4 h-4" />
-                      </Button>
-                      <span className="w-14 text-center text-white font-medium text-lg" data-testid="product-quantity">
-                        {quantity}
-                      </span>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => handleQuantityChange(1)}
-                        className="bg-violet-500/10 border-violet-500/30 text-white hover:bg-violet-500/20"
-                        data-testid="button-increase-qty"
-                      >
-                        <Plus className="w-4 h-4" />
-                      </Button>
+                  {!configurable && (
+                    <div className="flex flex-wrap items-center gap-4">
+                      <span className="text-sm text-white/60">Quantity:</span>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => handleQuantityChange(-1)}
+                          disabled={quantity <= minQty}
+                          className="border-[#5034ff]/30 bg-[#5034ff]/10 text-white hover:bg-[#5034ff]/20"
+                          data-testid="button-decrease-qty"
+                        >
+                          <Minus className="h-4 w-4" />
+                        </Button>
+                        <span
+                          className="w-14 text-center text-lg font-medium text-white"
+                          data-testid="product-quantity"
+                        >
+                          {quantity}
+                        </span>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => handleQuantityChange(1)}
+                          className="border-[#5034ff]/30 bg-[#5034ff]/10 text-white hover:bg-[#5034ff]/20"
+                          data-testid="button-increase-qty"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      {minQty > 1 && (
+                        <span className="text-xs text-white/40">Min: {minQty}</span>
+                      )}
                     </div>
-                    {minQty > 1 && (
-                      <span className="text-white/40 text-xs">Min: {minQty}</span>
-                    )}
-                  </div>
+                  )}
 
                   {product.isClientOnly && !isLoggedIn ? (
                     <div className="space-y-3">
                       <Button
-                        className="w-full bg-violet-600 hover:bg-violet-500 text-white py-6 text-lg"
+                        className="w-full bg-[#5034ff] py-6 text-lg text-white hover:bg-[#6548ff]"
                         onClick={loginRedirect}
                         data-testid="button-login-to-purchase"
                       >
-                        <Lock className="w-5 h-5 mr-2" />
+                        <Lock className="mr-2 h-5 w-5" />
                         Login to Purchase
                       </Button>
-                      <p className="text-amber-400/80 text-sm text-center">
-                        This is a client-only product. Please log in to your portal account to purchase.
+                      <p className="text-center text-sm text-amber-400/80">
+                        This is a client-only product. Please log in to your portal account to
+                        purchase.
                       </p>
+                    </div>
+                  ) : configurable ? (
+                    <div className="space-y-3">
+                      <Button
+                        className="w-full bg-[#5034ff] py-6 text-lg text-white hover:bg-[#6548ff]"
+                        onClick={() => setConfigureOpen(true)}
+                        data-testid="button-configure"
+                      >
+                        <Settings2 className="mr-2 h-5 w-5" />
+                        Configure {configUnitLabel(product)} &amp; Add
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="w-full border-white/15 bg-transparent py-5 text-white hover:bg-white/5"
+                        onClick={handleAddToCart}
+                        data-testid="button-add-to-cart"
+                      >
+                        <ShoppingCart className="mr-2 h-5 w-5" />
+                        Quick add · ${(productPricing.price * quantity).toFixed(2)}
+                      </Button>
                     </div>
                   ) : (
                     <>
                       <Button
-                        className="w-full bg-violet-600 hover:bg-violet-500 text-white py-6 text-lg"
+                        className="w-full bg-[#5034ff] py-6 text-lg text-white hover:bg-[#6548ff]"
                         onClick={handleAddToCart}
                         data-testid="button-add-to-cart"
                       >
-                        <ShoppingCart className="w-5 h-5 mr-2" />
+                        <ShoppingCart className="mr-2 h-5 w-5" />
                         Add to Cart - ${(productPricing.price * quantity).toFixed(2)}
                         {productPricing.hasDiscount && (
-                          <span className="ml-2 text-violet-300 text-sm">(You save ${((product.basePrice - productPricing.price) * quantity).toFixed(2)})</span>
+                          <span className="ml-2 text-sm text-[#c4b5fd]">
+                            (You save $
+                            {(
+                              (product.basePrice - productPricing.price) *
+                              quantity
+                            ).toFixed(2)}
+                            )
+                          </span>
                         )}
                       </Button>
                       {product.isClientOnly && (
-                        <p className="text-violet-400/80 text-sm text-center flex items-center justify-center gap-1">
-                          <Check className="w-4 h-4" />
+                        <p className="flex items-center justify-center gap-1 text-center text-sm text-[#a78bfa]/80">
+                          <Check className="h-4 w-4" />
                           Client-only product - You have access
                         </p>
                       )}
@@ -406,40 +481,52 @@ const ProductDetail = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <h2 className="text-2xl font-bold text-white mb-6">Related Products</h2>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {relatedProducts.map((related) => {
-                  const RelatedIcon = categoryIcons[related.category];
-                  return (
-                    <Link key={related.id} href={`/store/product/${related.sku}`}>
-                      <div
-                        className="p-5 rounded-xl bg-white/[0.03] border border-white/10 hover:border-violet-500/30 transition-all duration-300 group cursor-pointer h-full"
-                        data-testid={`related-${related.id}`}
-                      >
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-violet-500/30 transition-colors">
-                            <RelatedIcon className="w-5 h-5 text-violet-400" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-white font-semibold line-clamp-1 group-hover:text-violet-300 transition-colors" title={related.name}>
-                              {related.name}
-                            </h3>
-                          </div>
-                        </div>
-                        <p className="text-white/50 text-sm line-clamp-2 mb-3">{related.shortDescription}</p>
+              <h2 className="mb-6 text-2xl font-bold text-white">Related Products</h2>
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                {relatedProducts.map((related) => (
+                  <Link key={related.id} href={`/store/product/${related.sku}`}>
+                    <div
+                      className="group h-full cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] transition-all duration-300 hover:border-[#5034ff]/30"
+                      data-testid={`related-${related.id}`}
+                    >
+                      <ProductMedia
+                        product={related}
+                        variant="card"
+                        className="rounded-none border-0 border-b border-white/10"
+                      />
+                      <div className="p-5">
+                        <h3
+                          className="mb-2 line-clamp-1 font-semibold text-white transition-colors group-hover:text-[#c4b5fd]"
+                          title={related.name}
+                        >
+                          {related.name}
+                        </h3>
+                        <p className="mb-3 line-clamp-2 text-sm text-white/50">
+                          {related.shortDescription}
+                        </p>
                         <div className="flex items-center justify-between">
-                          <span className="text-violet-400 font-semibold">{formatPrice(related)}</span>
-                          <ArrowRight className="w-4 h-4 text-white/30 group-hover:text-violet-400 transition-colors" />
+                          <span className="font-semibold text-[#a78bfa]">
+                            {formatPrice(related)}
+                          </span>
+                          <ArrowRight className="h-4 w-4 text-white/30 transition-colors group-hover:text-[#a78bfa]" />
                         </div>
                       </div>
-                    </Link>
-                  );
-                })}
+                    </div>
+                  </Link>
+                ))}
               </div>
             </motion.section>
           )}
         </div>
       </main>
+
+      <ConfigureProductDrawer
+        product={configureOpen ? product : null}
+        open={configureOpen}
+        onClose={() => setConfigureOpen(false)}
+        unitPrice={productPricing.price}
+        onConfirm={handleConfigureConfirm}
+      />
 
       <DigeratiEnhancedFooterSection />
     </div>
