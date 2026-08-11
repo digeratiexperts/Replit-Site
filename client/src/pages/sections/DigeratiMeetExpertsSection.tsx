@@ -55,11 +55,11 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
             <img
               src="/images/founder/joe-petro-studio-blazer-white.jpg"
               alt="Joseph Petro, Founder of Digerati Experts"
-              className="w-full aspect-[4/5] sm:aspect-[3/4] lg:aspect-auto lg:h-full lg:min-h-[28rem] object-cover object-[center_12%] sm:object-top"
+              className="w-full aspect-[3/4] lg:aspect-auto lg:h-full lg:min-h-[28rem] object-cover object-center lg:object-top"
               loading="lazy"
               decoding="async"
-              width={800}
-              height={1000}
+              width={768}
+              height={1024}
               data-testid="img-founder-joe"
             />
           </motion.div>
