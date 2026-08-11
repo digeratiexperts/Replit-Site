@@ -1,7 +1,6 @@
 import { MegaMenu } from "@/components/MegaMenu";
-import { SimpleDivider } from "@/components/SimpleDivider";
 import { FullPageScrollProvider, ScrollSectionAuto } from "@/components/FullPageScroll";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useSEO } from "@/hooks/useSEO";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/JsonLd";
 
@@ -10,7 +9,6 @@ import { ModernHeroSection } from "./sections/ModernHeroSection";
 import { DigeratiAlertBanner } from "./sections/DigeratiAlertBanner";
 import { DigeratiServicesSection } from "./sections/DigeratiServicesSection";
 import { DigeratiHowWeProtectSection } from "./sections/DigeratiHowWeProtectSection";
-import { DigeratiCalculatorsSection } from "./sections/DigeratiCalculatorsSection";
 import { DigeratiLeadFormSection } from "./sections/DigeratiLeadFormSection";
 import { DigeratiWhatWeTackleSection } from "./sections/DigeratiWhatWeTackleSection";
 import { DigeratiThreatsInsightsSection } from "./sections/DigeratiThreatsInsightsSection";
@@ -37,7 +35,6 @@ const homepageSections: { id: string; label: string; theme: 'dark' | 'light'; sh
   { id: 'services', label: 'Engage', theme: 'dark' },
   { id: 'protection', label: 'Protect', theme: 'light' },
   { id: 'pricing', label: 'Packages', theme: 'dark' },
-  { id: 'calculators', label: 'Assessment', theme: 'dark' },
   { id: 'industries', label: 'Industries', theme: 'dark' },
   { id: 'trust', label: 'Trust', theme: 'light', showInNav: false },
   { id: 'team', label: 'Team', theme: 'dark' },
@@ -48,51 +45,12 @@ const homepageSections: { id: string; label: string; theme: 'dark' | 'light'; sh
   { id: 'contact', label: 'Contact', theme: 'dark' },
 ];
 
-// Industry multiplier lookup table - maps unique keys to exact multiplier values
-const industryMultipliers: Record<string, number> = {
-  'law-firm': 2.0,
-  'cpa-firm': 1.8,
-  'medical': 2.5,
-  'general-office': 1.6,
-  'real-estate': 1.6,
-  'animal-hospital': 2.2,
-  'retail': 1.7,
-  'manufacturing': 2.0,
-  'nonprofit': 1.5,
-};
-
 export const DigeratiHomepage = (): JSX.Element => {
   useSEO({
     title: 'Managed Security Service Provider',
     description: "Arizona's trusted MSP/MSSP. Get 24/7 cybersecurity monitoring, managed IT services, and compliance support for small-to-medium businesses. Free penetration test available.",
     canonical: '/',
   });
-
-  // State for calculators - managed here as it's shared between calculator sections
-  const [employees, setEmployees] = useState(10);
-  const [hourlyWage, setHourlyWage] = useState(50);
-  const [downtime, setDowntime] = useState(4);
-  const [industry, setIndustry] = useState("general-office");
-  const [downtimeCost, setDowntimeCost] = useState(0);
-  const [serviceEmployees, setServiceEmployees] = useState(10);
-  const [servicePackage, setServicePackage] = useState("165");
-  const [serviceCost, setServiceCost] = useState(0);
-
-  // Calculate downtime cost using lookup table
-  useEffect(() => {
-    const multiplier = industryMultipliers[industry] || 1.6;
-    const cost = employees * hourlyWage * downtime * multiplier;
-    setDowntimeCost(cost);
-  }, [employees, hourlyWage, downtime, industry]);
-
-  // Calculate service cost
-  useEffect(() => {
-    const costPerUser = parseFloat(servicePackage);
-    const totalCost = serviceEmployees * costPerUser;
-    // Apply minimum for 5+ users
-    const finalCost = serviceEmployees >= 5 ? Math.max(totalCost, 1200) : totalCost;
-    setServiceCost(finalCost);
-  }, [serviceEmployees, servicePackage]);
 
   // Handle hash navigation - scroll to anchor when navigating from other pages
   useEffect(() => {
@@ -149,25 +107,7 @@ export const DigeratiHomepage = (): JSX.Element => {
           <DigeratiPricingSection />
         </ScrollSectionAuto>
 
-        {/* Assessment */}
-        <ScrollSectionAuto id="calculators">
-          <DigeratiCalculatorsSection
-            employees={employees}
-            setEmployees={setEmployees}
-            hourlyWage={hourlyWage}
-            setHourlyWage={setHourlyWage}
-            downtime={downtime}
-            setDowntime={setDowntime}
-            industry={industry}
-            setIndustry={setIndustry}
-            downtimeCost={downtimeCost}
-            serviceEmployees={serviceEmployees}
-            setServiceEmployees={setServiceEmployees}
-            servicePackage={servicePackage}
-            setServicePackage={setServicePackage}
-            serviceCost={serviceCost}
-          />
-        </ScrollSectionAuto>
+        {/* Pricing tools relocated to /proactive-ecosystem-pricing#pricing-tools */}
 
         {/* Industries */}
         <ScrollSectionAuto id="industries">

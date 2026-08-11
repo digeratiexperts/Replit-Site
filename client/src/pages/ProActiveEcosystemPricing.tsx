@@ -10,7 +10,8 @@ import {
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { Link } from "wouter";
-import { pricing } from "@/data/pricing";
+import { pricing, estimateMonthly, PRICING_SCOPE_NOTE, NO_BLACK_BOX_TAGLINE, type PricingTierKey } from "@/data/pricing";
+import { PricingToolsSection } from "./sections/PricingToolsSection";
 
 type CellValue = boolean | string;
 
@@ -135,6 +136,7 @@ const plans: PlanCard[] = [
     pricePerUser: pricing.it.user,
     priceLabel: `Starting at $${pricing.it.user}/user/mo`,
     minUsers: 5,
+    siteMin: pricing.it.monthlyMin,
     bullets: [
       "Managed IT Support + Service Desk",
       "Microsoft 365 / Google Workspace / Zoho workspace support",
@@ -157,7 +159,7 @@ const plans: PlanCard[] = [
     pricePerUser: pricing.office.user,
     priceLabel: `Starting at $${pricing.office.user}/user/mo`,
     minUsers: 5,
-    siteMin: pricing.office.siteMin,
+    siteMin: pricing.office.monthlyMin,
     bullets: [
       "Everything in IT, plus:",
       "Managed Network & Connectivity",
@@ -178,9 +180,10 @@ const plans: PlanCard[] = [
     name: "ProActive Business Ecosystem",
     shortName: "Business",
     tagline: "Security-first business package",
-    pricePerUser: null,
-    priceLabel: "Estimated after assessment",
-    priceNote: "Business pricing depends on sites, endpoints, backup scope, SOC requirements, cloud storage backup, compliance needs, and selected infrastructure.",
+    pricePerUser: pricing.business.user,
+    priceLabel: `Starting at $${pricing.business.user}/user/mo`,
+    priceNote: "Final scope confirmed after Cyber Risk Assessment — users, sites, backup, SOC, and compliance can change the total.",
+    siteMin: pricing.business.monthlyMin,
     bullets: [
       "Everything in Office, plus:",
       "Enhanced Managed Workplace",
@@ -200,9 +203,10 @@ const plans: PlanCard[] = [
     name: "ProActive Enterprise Ecosystem",
     shortName: "Enterprise",
     tagline: "Governance, compliance, mature security",
-    pricePerUser: null,
-    priceLabel: "Custom after assessment",
-    priceNote: "Tailored to governance, compliance scope, and multi-site / complex network needs.",
+    pricePerUser: pricing.enterprise.user,
+    priceLabel: `Starting at $${pricing.enterprise.user}/user/mo`,
+    priceNote: "Custom after assessment for governance, multi-site, and advanced compliance — published floor applies as the starting point.",
+    siteMin: pricing.enterprise.monthlyMin,
     bullets: [
       "Everything in Business, plus:",
       "Advanced / custom Managed Workplace",
@@ -257,12 +261,12 @@ export default function ProActiveEcosystemPricing() {
         if (plan.pricePerUser == null) {
           return { ...plan, monthlyEstimate: null as number | null };
         }
+        const key = plan.id as PricingTierKey;
         const users = Math.max(effectiveUsers, plan.minUsers ?? 1);
-        let estimate = users * plan.pricePerUser;
-        if (plan.siteMin) {
-          estimate = Math.max(estimate, effectiveSites * plan.siteMin);
-        }
-        return { ...plan, monthlyEstimate: estimate as number | null };
+        return {
+          ...plan,
+          monthlyEstimate: estimateMonthly(key, users, effectiveSites) as number | null,
+        };
       }),
     [effectiveUsers, effectiveSites],
   );
@@ -461,6 +465,17 @@ export default function ProActiveEcosystemPricing() {
               Digerati Experts provides audit readiness, evidence support, framework mapping, and risk reporting. We do
               not provide legal compliance signoff or certification.
             </p>
+          </section>
+
+          {/* Relocated from homepage — keep tools, deepen pricing page */}
+          <section className="mb-16" aria-label="Pricing calculators">
+            <div className="mb-6 text-center">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#FF477F]">Pricing tools</p>
+              <h2 className="mt-2 text-3xl font-bold text-white">Calculate investment &amp; downtime risk</h2>
+              <p className="mx-auto mt-2 max-w-2xl text-sm text-white/55">{PRICING_SCOPE_NOTE}</p>
+              <p className="mx-auto mt-2 max-w-2xl text-sm text-white/40">{NO_BLACK_BOX_TAGLINE}</p>
+            </div>
+            <PricingToolsSection />
           </section>
 
           {/* CTA */}

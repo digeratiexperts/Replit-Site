@@ -1,3 +1,4 @@
+import { pricing } from "@/data/pricing";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,9 +24,10 @@ const industryMultipliers: Record<string, { name: string; multiplier: number }> 
 };
 
 const servicePackages: Record<string, { name: string; price: number }> = {
-  '165': { name: 'Office', price: 165 },
-  '245': { name: 'Business', price: 245 },
-  '345': { name: 'Enterprise', price: 345 },
+  [String(pricing.it.user)]: { name: 'IT', price: pricing.it.user },
+  [String(pricing.office.user)]: { name: 'Office', price: pricing.office.user },
+  [String(pricing.business.user)]: { name: 'Business', price: pricing.business.user },
+  [String(pricing.enterprise.user)]: { name: 'Enterprise', price: pricing.enterprise.user },
 };
 
 export default function DowntimeCalculator() {

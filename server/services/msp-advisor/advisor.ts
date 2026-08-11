@@ -60,7 +60,7 @@ function heuristicReply(mode: AdvisorMode, message: string): ModelAdvisorOutput 
   }
   if (mode === "pricing") {
     return {
-      reply: `Our ProActive packages are sized by users and outcomes — for example Office starts at $165/user/mo with a $750/site/mo minimum, Business at $245/user/mo ($1,200 site min), and Enterprise at $345/user/mo ($1,725 site min). The right fit depends on your team size, security needs, and any compliance requirements. About how many users do you support?`,
+      reply: `Our ProActive packages are sized by users and outcomes — IT from $125/user/mo ($1,600/mo minimum), Office $165/user/mo ($2,400/mo minimum), Business $245/user/mo ($5,400/mo minimum), and Enterprise $345/user/mo ($9,000/mo minimum). The right fit depends on your team size, security needs, and compliance requirements. About how many users do you support?`,
       mode,
       proposedActions: [{ type: "request_assessment" }, { type: "schedule_consultation" }],
       analyticsEvents: ["qualified_question", "service_recommended"],

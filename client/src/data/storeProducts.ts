@@ -1,3 +1,5 @@
+import { pricing } from "./pricing";
+
 export type ProductCategory = 
   | "contract_services"
   | "comanaged_subscriptions"
@@ -90,7 +92,7 @@ export const storeProducts: StoreProduct[] = [
     description: "A clean, managed IT baseline for businesses ready to get organized. Includes email, calendar, team chat, MFA, SSO, and password management.",
     category: "contract_services",
     pricingType: "per_user",
-    basePrice: 129,
+    basePrice: pricing.office.user,
     pricingUnit: "user",
     isContractOnly: true,
     isCheckoutEnabled: false,
@@ -108,7 +110,7 @@ export const storeProducts: StoreProduct[] = [
     description: "Enhanced security package with advanced threat protection, EDR, and compliance foundations for security-conscious organizations.",
     category: "contract_services",
     pricingType: "per_user",
-    basePrice: 189,
+    basePrice: pricing.business.user,
     pricingUnit: "user",
     isContractOnly: true,
     isCheckoutEnabled: false,
@@ -126,7 +128,7 @@ export const storeProducts: StoreProduct[] = [
     description: "Complete compliance and enterprise security package with 24/7 SOC, compliance reporting, and dedicated vCISO support.",
     category: "contract_services",
     pricingType: "per_user",
-    basePrice: 249,
+    basePrice: pricing.enterprise.user,
     pricingUnit: "user",
     isContractOnly: true,
     isCheckoutEnabled: false,
