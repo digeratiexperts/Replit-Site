@@ -16,6 +16,7 @@ import { DigeratiAIAssistanceSection } from "./sections/DigeratiAIAssistanceSect
 import { DigeratiIndustriesSection } from "./sections/DigeratiIndustriesSection";
 import { DigeratiPricingSection } from "./sections/DigeratiPricingSection";
 import { DigeratiTestimonialsSection } from "./sections/DigeratiTestimonialsSection";
+import { HomepageProofSection } from "./sections/HomepageProofSection";
 import { DigeratiMeetExpertsSection } from "./sections/DigeratiMeetExpertsSection";
 import { DigeratiFAQSection } from "./sections/DigeratiFAQSection";
 import { DigeratiCTASection } from "./sections/DigeratiCTASection";
@@ -127,6 +128,7 @@ export const DigeratiHomepage = (): JSX.Element => {
         {/* Proof — honest shells (no fabricated quotes) */}
         <ScrollSectionAuto id="testimonials">
           <DigeratiTestimonialsSection />
+          <HomepageProofSection />
         </ScrollSectionAuto>
 
         {/* Kept from working branch — not in live sticky bar */}

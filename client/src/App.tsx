@@ -43,6 +43,7 @@ const RealEstate = lazy(() => import("@/pages/industries/RealEstate"));
 const Nonprofits = lazy(() => import("@/pages/industries/Nonprofits"));
 const AnimalHospitals = lazy(() => import("@/pages/industries/AnimalHospitals"));
 const CaseStudies = lazy(() => import("@/pages/resources/CaseStudies"));
+const CaseStudyDetail = lazy(() => import("@/pages/resources/CaseStudyDetail"));
 const Blog = lazy(() => import("@/pages/resources/Blog"));
 const BlogPost = lazy(() => import("@/pages/resources/BlogPost"));
 const CyberFacts = lazy(() => import("@/pages/resources/CyberFacts"));
@@ -320,6 +321,11 @@ function Router() {
       ))}
       
       {/* Resources Pages */}
+      <Route path="/resources/case-studies/:slug" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <CaseStudyDetail />
+        </Suspense>
+      )} />
       <Route path="/resources/case-studies" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <CaseStudies />
@@ -502,6 +508,7 @@ function Router() {
       )} />
       
       {/* Trust Pages */}
+      <Route path="/trust">{() => <Redirect to="/trust/trust-center" />}</Route>
       <Route path="/trust/trust-center" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <TrustCenter />

@@ -20,8 +20,10 @@ const routes = [
   "/industries/healthcare",
   "/industries/law-firms",
   "/resources/case-studies",
+  "/resources/case-studies/healthcare-hipaa-readiness",
   "/resources/blog",
   "/about/client-bill-of-rights",
+  "/trust",
   "/trust/trust-center",
   "/contact",
   "/store",
@@ -34,6 +36,7 @@ for (const path of routes) {
   const url = `${BASE}${path}`;
   try {
     const res = await fetch(url, { redirect: "manual" });
+    // SPA client redirects may return 200 with shell; allow 3xx for /trust shorthand
     if (res.status >= 400) {
       fails.push(`${path} → HTTP ${res.status}`);
       continue;
@@ -51,6 +54,22 @@ for (const path of routes) {
   }
 }
 
+// API: Google reviews (soft trust — unconfigured is OK)
+{
+  try {
+    const res = await fetch(`${BASE}/api/google-reviews`);
+    if (!res.ok) fails.push(`/api/google-reviews → HTTP ${res.status}`);
+    else {
+      const data = await res.json();
+      if (!data || !["ok", "unconfigured", "empty", "error"].includes(data.status)) {
+        fails.push(`/api/google-reviews → unexpected payload`);
+      }
+    }
+  } catch (err) {
+    fails.push(`/api/google-reviews → ${err.message}`);
+  }
+}
+
 // Legacy junk must be Gone
 {
   const res = await fetch(`${BASE}/?bbp_search=ethos`, { redirect: "manual" });
@@ -62,4 +81,4 @@ if (fails.length) {
   for (const f of fails) console.error(" -", f);
   process.exit(1);
 }
-console.log(`Public route smoke OK (${routes.length} routes + bbp_search 410) against ${BASE}`);
+console.log(`Public route smoke OK (${routes.length} routes + google-reviews + bbp_search 410) against ${BASE}`);

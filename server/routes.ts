@@ -430,6 +430,35 @@ export async function registerRoutes(app: Express) {
   // Register object storage routes for file uploads
   registerObjectStorageRoutes(app);
 
+  // Public Google Business reviews (soft trust — never invents quotes)
+  app.get("/api/google-reviews", async (_req: Request, res: Response) => {
+    try {
+      const { getGoogleReviews } = await import("./googleReviews");
+      const payload = await getGoogleReviews();
+      const cacheControl =
+        payload.status === "ok" || payload.status === "empty"
+          ? "public, max-age=300, stale-while-revalidate=3600"
+          : "public, max-age=60";
+      res.setHeader("Cache-Control", cacheControl);
+      res.json(payload);
+    } catch (error: any) {
+      console.error("google-reviews error:", error);
+      res.status(500).json({
+        status: "error",
+        configured: false,
+        missing: [],
+        message: "Unable to load Google reviews",
+        placeIdMasked: null,
+        placeName: null,
+        rating: null,
+        userRatingsTotal: null,
+        reviews: [],
+        mapsUri: null,
+        fetchedAt: null,
+      });
+    }
+  });
+
   // Durable portal auth (Neon) — Map-compatible shim for existing handlers
   await initPortalAuthStore();
   await initPortalOrg();

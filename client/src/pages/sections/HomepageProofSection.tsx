@@ -1,9 +1,9 @@
 import { Link } from "wouter";
-import { ArrowRight, ShieldCheck, FileText, Scale } from "lucide-react";
+import { ArrowRight, ShieldCheck, FileText, Scale, Star } from "lucide-react";
 
 /**
  * Honest proof section — operating principles and verifiable pages.
- * Do not invent customer counts, logos, or savings metrics here.
+ * Do not invent customer counts, logos, savings metrics, or hard SOC2 claims here.
  */
 export function HomepageProofSection() {
   return (
@@ -16,11 +16,27 @@ export function HomepageProofSection() {
           Proof should be about Digerati — not recycled cybercrime headlines
         </h2>
         <p className="text-white/65 max-w-2xl mb-10">
-          We publish how we operate. We do not invent client logos, savings percentages, or
-          “100+ businesses” claims to look larger than the evidence supports.
+          We publish how we operate and link to verifiable surfaces. We do not invent client logos,
+          savings percentages, or “100+ businesses” claims to look larger than the evidence supports.
         </p>
 
-        <div className="grid md:grid-cols-3 gap-5">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+            <Star className="h-6 w-6 text-violet-300 mb-3" aria-hidden />
+            <h3 className="text-lg font-semibold text-white mb-2">Google reviews</h3>
+            <p className="text-sm text-white/65 mb-4">
+              Live Business Profile reviews on the homepage Client Proof section — verbatim, never
+              fabricated quotes.
+            </p>
+            <a
+              href="/#google-reviews"
+              className="inline-flex items-center gap-2 text-sm text-pink-300 hover:text-pink-200"
+              data-testid="link-proof-google-reviews"
+            >
+              See Google reviews
+              <ArrowRight className="h-4 w-4" aria-hidden />
+            </a>
+          </div>
           <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
             <Scale className="h-6 w-6 text-violet-300 mb-3" aria-hidden />
             <h3 className="text-lg font-semibold text-white mb-2">Client Bill of Rights</h3>
@@ -53,10 +69,10 @@ export function HomepageProofSection() {
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
             <FileText className="h-6 w-6 text-violet-300 mb-3" aria-hidden />
-            <h3 className="text-lg font-semibold text-white mb-2">Case studies & resources</h3>
+            <h3 className="text-lg font-semibold text-white mb-2">Case studies</h3>
             <p className="text-sm text-white/65 mb-4">
-              Qualitative outcome stories and practical guidance for Arizona organizations evaluating
-              managed security.
+              Challenge / approach / outcome / stack templates — published stories only with client
+              permission.
             </p>
             <Link
               href="/resources/case-studies"
