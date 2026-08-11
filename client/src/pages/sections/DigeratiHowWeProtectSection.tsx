@@ -1,6 +1,7 @@
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { Shield, Search, FileText, Settings, Activity } from "lucide-react";
+import { Shield, Search, FileText, Settings, Activity, Eye, ShieldCheck, UserCheck, KeyRound, Cloud, AlertCircle } from "lucide-react";
 import { useRef } from "react";
+import { Link } from "wouter";
 
 
 export const DigeratiHowWeProtectSection = (): JSX.Element => {
@@ -72,6 +73,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
   return (
     <section 
       ref={sectionRef}
+      id="protection"
       className="py-10 md:py-14 lg:py-16 relative overflow-hidden bg-white"
       style={{ position: 'relative' }}
     >
@@ -156,6 +158,41 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
             );
           })}
         </motion.div>
+
+        <div className="mt-12 md:mt-16 max-w-6xl mx-auto" id="protection-stack">
+          <div className="text-center mb-6 md:mb-8">
+            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
+              Security stack we manage
+            </h3>
+            <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
+              Technical depth lives here and on each solution page — so the homepage stays clear
+              without losing capability.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+            {[
+              { icon: Eye, title: "SOC / MDR Monitoring", link: "/solutions/security-operations", desc: "24/7 detection and response." },
+              { icon: ShieldCheck, title: "Endpoint Security (EDR)", link: "/solutions/threat-detection", desc: "Protect devices across the environment." },
+              { icon: UserCheck, title: "SMART Identity (MFA + SSO)", link: "/solutions/unified-security", desc: "Stronger access without user chaos." },
+              { icon: KeyRound, title: "Privileged Access Controls", link: "/solutions/unified-security", desc: "Admin controls and audit visibility." },
+              { icon: Cloud, title: "Backup & Disaster Recovery", link: "/solutions/backup-disaster-recovery", desc: "Recovery planning and restore discipline." },
+              { icon: AlertCircle, title: "Email Protection", link: "/solutions/security-operations", desc: "Anti-phishing and mailbox defenses." },
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link key={item.title} href={item.link}>
+                  <div className="h-full rounded-xl border border-gray-200 bg-white p-4 hover:border-violet-300 hover:shadow-md transition-all cursor-pointer">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Icon className="w-4 h-4 text-violet-500" aria-hidden="true" />
+                      <p className="text-sm font-semibold text-gray-900">{item.title}</p>
+                    </div>
+                    <p className="text-xs text-gray-600 leading-relaxed">{item.desc}</p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </section>
   );

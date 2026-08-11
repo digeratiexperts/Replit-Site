@@ -115,8 +115,8 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
   ];
 
   const complianceSeals = [
-    { name: "SOC 2 Type II", icon: Shield, verified: true },
-    { name: "HIPAA Compliant", icon: Lock, verified: true },
+    { name: "Audit readiness support", icon: Shield, verified: true },
+    { name: "HIPAA-minded controls", icon: Lock, verified: true },
     { name: "Microsoft Partner", icon: CheckCircle, verified: true },
     { name: "Apple Consultants", icon: CheckCircle, verified: true }
   ];

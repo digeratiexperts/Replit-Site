@@ -4,10 +4,10 @@ import ctaBgImage from "@assets/de-section-atmosphere.png";
 
 
 const badges = [
-  { name: "SOC 2 Type II", icon: Shield },
-  { name: "Microsoft Partner", icon: Award },
-  { name: "HIPAA Compliant", icon: CheckCircle },
-  { name: "ISO 27001", icon: Shield },
+  { name: "Audit readiness support", icon: Shield },
+  { name: "Microsoft-aligned stack", icon: Award },
+  { name: "HIPAA-minded controls", icon: CheckCircle },
+  { name: "Documented standards", icon: Shield },
 ];
 
 export const DigeratiCTASection = (): JSX.Element => {
@@ -105,7 +105,7 @@ export const DigeratiCTASection = (): JSX.Element => {
           transition={{ duration: 0.5, delay: 0.6 }}
           className="text-gray-300 mb-10 font-semibold"
         >
-          Trusted by 100+ Arizona Businesses.
+          Serving Arizona professional services, healthcare, and growing SMBs.
         </motion.p>
         
         {/* CTA Button with intense glow */}

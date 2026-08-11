@@ -33,7 +33,7 @@ export const AboutUsSection = (): JSX.Element => {
             />
 
             <p className="font-normal text-[#020029bf] text-sm sm:text-base tracking-[0] leading-[26.4px] text-center lg:text-left">
-              Trusted by 100+ Arizona
+              Serving Arizona businesses across
               <br />
               Businesses.
             </p>

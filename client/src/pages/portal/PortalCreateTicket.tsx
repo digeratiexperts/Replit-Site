@@ -107,7 +107,7 @@ export default function PortalCreateTicket() {
           <div className="flex gap-3">
             <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
             <p className="text-sm text-blue-800 dark:text-blue-300">
-              For urgent issues, please call our support team at (480) 519-5892. Response time: Critical (1 hour), High (4 hours), Medium (24 hours).
+              For urgent issues, please call our support team at 325-480-9870. Response time: Critical (1 hour), High (4 hours), Medium (24 hours).
             </p>
           </div>
         </div>

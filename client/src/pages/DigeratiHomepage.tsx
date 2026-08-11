@@ -18,6 +18,7 @@ import { DigeratiAIAssistanceSection } from "./sections/DigeratiAIAssistanceSect
 import { DigeratiIndustriesSection } from "./sections/DigeratiIndustriesSection";
 import { DigeratiPricingSection } from "./sections/DigeratiPricingSection";
 import { DigeratiTestimonialsSection } from "./sections/DigeratiTestimonialsSection";
+import { DigeratiMeetExpertsSection } from "./sections/DigeratiMeetExpertsSection";
 import { DigeratiFAQSection } from "./sections/DigeratiFAQSection";
 import { DigeratiCTASection } from "./sections/DigeratiCTASection";
 import { DigeratiNewsletterSection } from "./sections/DigeratiNewsletterSection";
@@ -39,6 +40,7 @@ const homepageSections: { id: string; label: string; theme: 'dark' | 'light'; sh
   { id: 'calculators', label: 'Assessment', theme: 'dark' },
   { id: 'industries', label: 'Industries', theme: 'dark' },
   { id: 'trust', label: 'Trust', theme: 'light', showInNav: false },
+  { id: 'team', label: 'Team', theme: 'dark' },
   { id: 'testimonials', label: 'Proof', theme: 'dark' },
   { id: 'insights', label: 'Insights', theme: 'dark', showInNav: false },
   { id: 'faq', label: 'FAQ', theme: 'light' },
@@ -116,7 +118,7 @@ export const DigeratiHomepage = (): JSX.Element => {
         {/* Navigation — chat lives in App MarketingChrome sitewide */}
         <MegaMenu />
 
-        {/* Home — Arizona hero + single Schedule CTA (working branch) */}
+        {/* Home — Cybersecurity-First hero + Assessment / Talk to Expert CTAs */}
         <ScrollSectionAuto id="hero">
           <ModernHeroSection />
           <DigeratiAlertBanner />
@@ -177,7 +179,12 @@ export const DigeratiHomepage = (): JSX.Element => {
           <DigeratiTrustPhotoSection />
         </ScrollSectionAuto>
 
-        {/* Proof */}
+        {/* Meet the Experts — human trust */}
+        <ScrollSectionAuto id="team">
+          <DigeratiMeetExpertsSection />
+        </ScrollSectionAuto>
+
+        {/* Proof — honest shells (no fabricated quotes) */}
         <ScrollSectionAuto id="testimonials">
           <DigeratiTestimonialsSection />
         </ScrollSectionAuto>

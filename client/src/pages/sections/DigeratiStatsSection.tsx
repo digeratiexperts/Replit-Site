@@ -22,8 +22,8 @@ const stats = [
   },
   {
     value: "60%",
-    label: "of small businesses close within 6 months of an attack",
-    source: "Industry Data",
+    label: "of small businesses are often cited as closing within 6 months of a major cyber incident",
+    source: "Widely cited industry estimate — treat as directional risk context",
     icon: Clock,
   },
 ];

@@ -98,7 +98,7 @@ export default function Guarantee() {
             data-testid="link-phone"
           >
             <Phone className="w-6 h-6" />
-            (480) 519-5892
+            325-480-9870
           </a>
         </div>
       </section>

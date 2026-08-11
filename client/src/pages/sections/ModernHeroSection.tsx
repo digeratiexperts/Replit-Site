@@ -116,7 +116,7 @@ export const ModernHeroSection = (): JSX.Element => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: prefersReducedMotion ? 0 : 0.35, delay: prefersReducedMotion ? 0 : 0.05 }}
               >
-                Arizona MSP · Cybersecurity &amp; Managed IT
+                Cybersecurity-First Managed IT · Greater Phoenix
               </motion.p>
 
               <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold leading-[1.08] tracking-[-0.02em] text-white">
@@ -127,9 +127,9 @@ export const ModernHeroSection = (): JSX.Element => {
               </h1>
 
               <p className="text-base md:text-lg text-white/85 leading-relaxed max-w-xl">
-                Cybersecurity and managed IT for growing businesses—reducing risk, supporting
-                compliance, and keeping your team productive without building an internal IT
-                department.
+                Fully managed IT and cybersecurity for growing businesses — delivered through our
+                ProActive Ecosystem. Reduce risk, support compliance readiness, and keep teams
+                productive without building an internal IT department.
               </p>
 
               <div className="grid grid-cols-1 xs:grid-cols-2 gap-x-4 gap-y-2.5 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-2.5">
@@ -151,16 +151,28 @@ export const ModernHeroSection = (): JSX.Element => {
               </div>
 
               <div className="mt-1 sm:mt-2 flex flex-col items-start gap-4" id="assessment-cta">
-                <Button
-                  type="button"
-                  size="lg"
-                  data-testid="button-hero-schedule"
-                  onClick={handleSchedule}
-                  className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-semibold bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white border border-pink-300/35 shadow-lg shadow-pink-500/40 hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300"
-                >
-                  Schedule Your Cyber Risk Assessment
-                  <ArrowRight className="ml-2 w-5 h-5" aria-hidden="true" />
-                </Button>
+                <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 w-full">
+                  <Button
+                    type="button"
+                    size="lg"
+                    data-testid="button-hero-schedule"
+                    onClick={handleSchedule}
+                    className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-semibold bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white border border-pink-300/35 shadow-lg shadow-pink-500/40 hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300"
+                  >
+                    Schedule Your Cyber Risk Assessment
+                    <ArrowRight className="ml-2 w-5 h-5" aria-hidden="true" />
+                  </Button>
+                  <Button
+                    type="button"
+                    size="lg"
+                    variant="outline"
+                    data-testid="button-hero-talk-expert"
+                    onClick={() => openBooking("hero_talk_expert")}
+                    className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-semibold border-white/30 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+                  >
+                    Talk to an Expert
+                  </Button>
+                </div>
 
                 <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-white/70">
                   <span className="inline-flex items-center gap-1.5">
