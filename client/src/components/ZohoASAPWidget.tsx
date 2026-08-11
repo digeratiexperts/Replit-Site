@@ -401,7 +401,7 @@ export const ZohoASAPWidget = ({
   return (
     <>
       <div
-        className={`fixed right-4 sm:right-6 ${cookieBannerClear ? "bottom-4 sm:bottom-6" : "bottom-28"} z-[100]`}
+        className={`fixed right-20 sm:right-24 ${cookieBannerClear ? "bottom-4 sm:bottom-6" : "bottom-28"} z-[100]`}
         data-testid="widget-zoho-asap-container"
       >
         {!isOpen && (
