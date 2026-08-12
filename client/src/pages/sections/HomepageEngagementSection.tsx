@@ -5,6 +5,7 @@ import { MeshyStillAccent } from "@/components/visual/MeshyStillAccent";
 import { homepageSectionAccents } from "@/lib/visualAssets";
 import { useBooking } from "@/contexts/BookingContext";
 import { analytics } from "@/lib/analytics";
+import { CTA } from "@/lib/ctaCopy";
 
 const cards = [
   {
@@ -88,7 +89,7 @@ export function HomepageEngagementSection() {
             }}
             className="bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white shrink-0"
           >
-            Schedule assessment
+            {CTA.primary}
             <ArrowRight className="ml-2 h-4 w-4" aria-hidden />
           </Button>
         </div>

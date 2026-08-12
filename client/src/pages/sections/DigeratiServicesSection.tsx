@@ -13,6 +13,7 @@ import {
   Cloud,
   AlertCircle,
 } from "lucide-react";
+import { CTA } from "@/lib/ctaCopy";
 
 /**
  * Homepage engagement paths — three primary choices.
@@ -43,7 +44,7 @@ const paths = [
     description:
       "Start with a practical review of identity, endpoints, email, backups, and security posture — then choose what to own together.",
     link: "/#assessment-cta",
-    cta: "Schedule assessment",
+    cta: CTA.primary,
     testId: "engage-assessment",
   },
 ];

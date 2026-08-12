@@ -371,7 +371,7 @@ export function setSecurityHeaders(req: Request, res: Response, next: NextFuncti
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: https: blob:",
     "frame-src https://challenges.cloudflare.com https://meet.digerati-experts.com https://*.zoho.com https://payments.zoho.com https://www.facebook.com https://td.doubleclick.net",
-    "connect-src 'self' https://*.zoho.com https://payments.zoho.com https://cloudflareinsights.com https://*.cloudflareinsights.com https://*.clarity.ms https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.googletagmanager.com https://connect.facebook.net https://www.facebook.com https://bat.bing.com https://px.ads.linkedin.com https://www.linkedin.com" + (isProduction ? "" : " wss://*.replit.dev ws://localhost:*"),
+    "connect-src 'self' https://*.zoho.com https://payments.zoho.com https://cloudflareinsights.com https://*.cloudflareinsights.com https://*.clarity.ms https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.google.com https://www.googletagmanager.com https://connect.facebook.net https://www.facebook.com https://bat.bing.com https://px.ads.linkedin.com https://www.linkedin.com" + (isProduction ? "" : " wss://*.replit.dev ws://localhost:*"),
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self' https://payments.zoho.com",
