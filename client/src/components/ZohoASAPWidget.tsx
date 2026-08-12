@@ -92,8 +92,9 @@ const RESOURCE_LINKS: Array<{
     external: true,
     tags: ["Live help", "Screen share"],
     cta: "Start session",
-    accent: "text-[#c4b5fd]",
-    iconBg: "bg-[#7c3aed]/20 ring-[#7c3aed]/35",
+    accent: "text-[#e9d5ff]",
+    iconBg:
+      "bg-gradient-to-br from-[#a855f7]/45 to-[#7c3aed]/30 ring-[#c084fc]/55 shadow-[0_0_20px_rgba(168,85,247,0.35)]",
   },
   {
     title: "Remote support guide",
@@ -102,8 +103,9 @@ const RESOURCE_LINKS: Array<{
     icon: LifeBuoy,
     tags: ["Support process", "Quick guide"],
     cta: "View guide",
-    accent: "text-[#7dd3fc]",
-    iconBg: "bg-[#0284c7]/20 ring-[#0284c7]/35",
+    accent: "text-[#bae6fd]",
+    iconBg:
+      "bg-gradient-to-br from-[#38bdf8]/40 to-[#0284c7]/25 ring-[#7dd3fc]/50 shadow-[0_0_20px_rgba(56,189,248,0.3)]",
   },
   {
     title: "Knowledge base",
@@ -112,8 +114,9 @@ const RESOURCE_LINKS: Array<{
     icon: BookOpen,
     tags: ["Guides", "Troubleshooting"],
     cta: "Browse articles",
-    accent: "text-[#86efac]",
-    iconBg: "bg-[#16a34a]/20 ring-[#16a34a]/35",
+    accent: "text-[#bbf7d0]",
+    iconBg:
+      "bg-gradient-to-br from-[#4ade80]/40 to-[#16a34a]/25 ring-[#86efac]/50 shadow-[0_0_20px_rgba(74,222,128,0.28)]",
   },
   {
     title: "Client portal",
@@ -122,8 +125,9 @@ const RESOURCE_LINKS: Array<{
     icon: ShieldCheck,
     tags: ["Account access", "Self-service"],
     cta: "Open portal",
-    accent: "text-[#fdba74]",
-    iconBg: "bg-[#ea580c]/20 ring-[#ea580c]/35",
+    accent: "text-[#fed7aa]",
+    iconBg:
+      "bg-gradient-to-br from-[#fb923c]/45 to-[#ea580c]/25 ring-[#fdba74]/55 shadow-[0_0_20px_rgba(251,146,60,0.3)]",
   },
 ];
 
@@ -865,52 +869,71 @@ export const ZohoASAPWidget = ({
                     ) : (
                       <>
                         <div
-                          className="relative overflow-hidden rounded-2xl border border-[#7c3aed]/25 p-4"
+                          className="relative overflow-hidden rounded-2xl border border-[#c084fc]/45 p-4 shadow-[0_0_40px_rgba(168,85,247,0.22)]"
                           style={{
                             background:
-                              "linear-gradient(135deg, rgba(91,69,224,0.28) 0%, rgba(18,20,28,0.98) 52%, rgba(211,18,106,0.14) 100%)",
+                              "linear-gradient(135deg, rgba(168,85,247,0.55) 0%, rgba(91,69,224,0.42) 38%, rgba(26,11,51,0.96) 72%, rgba(211,18,106,0.28) 100%)",
                           }}
                         >
-                          <div className="flex items-start gap-3">
-                            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-[#5B45E0]/25 text-[#c4b5fd] ring-1 ring-[#5B45E0]/40 shadow-[0_0_24px_rgba(91,69,224,0.35)]">
+                          <div
+                            className="pointer-events-none absolute -right-6 -top-8 h-28 w-28 rounded-full bg-[#F0B4CC]/20 blur-2xl"
+                            aria-hidden="true"
+                          />
+                          <div className="relative flex items-start gap-3">
+                            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#e9d5ff] to-[#a855f7] text-[#3b0764] ring-2 ring-white/30 shadow-[0_0_28px_rgba(232,121,249,0.55)]">
                               <Sparkles className="h-5 w-5" aria-hidden="true" />
                             </div>
                             <div className="min-w-0 flex-1">
-                              <h3 className="text-[16px] font-semibold text-white">How can we help?</h3>
-                              <p className="mt-1 text-[12px] leading-5 text-white/60">
+                              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#F0B4CC]">
+                                Support ticket
+                              </p>
+                              <h3 className="mt-0.5 text-[16px] font-semibold text-white">How can we help?</h3>
+                              <p className="mt-1 text-[12px] leading-5 text-white/80">
                                 Tell us what broke, what you&apos;re evaluating, or what you&apos;re trying to protect — we&apos;ll guide the next step.
                               </p>
                             </div>
-                            <Shield className="mt-1 hidden h-9 w-9 flex-shrink-0 text-[#D3126A]/30 sm:block" aria-hidden="true" />
+                            <Shield className="mt-1 hidden h-10 w-10 flex-shrink-0 text-[#F0B4CC]/50 sm:block" aria-hidden="true" />
                           </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                          {QUICK_CHAT_PROMPTS.map(({ label, icon: Icon }) => (
-                            <button
-                              key={label}
-                              type="button"
-                              onClick={() => setSubject(label)}
-                              className="group rounded-xl border border-white/10 bg-[#171922] p-2.5 text-left transition hover:border-[#D3126A]/40 hover:bg-[#1c1524]"
-                            >
-                              <div className="mb-2 flex items-center justify-between">
-                                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/[0.05] text-[#c4b5fd]">
-                                  <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-                                </span>
-                                <ChevronRight className="h-3 w-3 text-white/25 group-hover:text-[#F0B4CC]" aria-hidden="true" />
-                              </div>
-                              <span className="block text-[10.5px] font-medium leading-3.5 text-white/80">{label}</span>
-                            </button>
-                          ))}
+                          {QUICK_CHAT_PROMPTS.map(({ label, icon: Icon }, idx) => {
+                            const chipTone = [
+                              "from-[#f472b6]/35 to-[#D3126A]/20 text-[#fda4af] ring-[#fb7185]/45",
+                              "from-[#a78bfa]/40 to-[#7c3aed]/25 text-[#ddd6fe] ring-[#c4b5fd]/50",
+                              "from-[#38bdf8]/35 to-[#0284c7]/20 text-[#bae6fd] ring-[#7dd3fc]/45",
+                              "from-[#fbbf24]/35 to-[#f59e0b]/20 text-[#fde68a] ring-[#fcd34d]/45",
+                            ][idx]!;
+                            return (
+                              <button
+                                key={label}
+                                type="button"
+                                onClick={() => setSubject(label)}
+                                className="group rounded-xl border border-white/15 bg-[#1c1528] p-2.5 text-left transition hover:border-[#F0B4CC]/45 hover:bg-[#241833]"
+                              >
+                                <div className="mb-2 flex items-center justify-between">
+                                  <span
+                                    className={`flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br ring-1 shadow-[0_0_16px_rgba(168,85,247,0.2)] ${chipTone}`}
+                                  >
+                                    <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+                                  </span>
+                                  <ChevronRight className="h-3 w-3 text-white/30 group-hover:text-[#F0B4CC]" aria-hidden="true" />
+                                </div>
+                                <span className="block text-[10.5px] font-medium leading-3.5 text-white/90">{label}</span>
+                              </button>
+                            );
+                          })}
                         </div>
 
-                        <div className="rounded-2xl border border-white/10 bg-[#171922] p-4">
+                        <div className="rounded-2xl border border-[#a78bfa]/30 bg-[#171022] p-4 shadow-[inset_0_1px_0_rgba(196,181,253,0.12)]">
                           <div className="mb-4 flex items-center justify-between gap-2">
                             <div className="flex items-center gap-2">
-                              <FileText className="h-4 w-4 text-[#c4b5fd]" aria-hidden="true" />
+                              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#a78bfa]/50 to-[#7c3aed]/30 text-[#ede9fe] ring-1 ring-[#c4b5fd]/45">
+                                <FileText className="h-4 w-4" aria-hidden="true" />
+                              </span>
                               <h3 className="text-[14px] font-semibold text-white">Create a support ticket</h3>
                             </div>
-                            <span className="inline-flex items-center gap-1 rounded-full border border-[#5B45E0]/30 bg-[#5B45E0]/15 px-2 py-0.5 text-[10px] font-semibold text-[#c4b5fd]">
+                            <span className="inline-flex items-center gap-1 rounded-full border border-[#c084fc]/40 bg-[#7c3aed]/25 px-2 py-0.5 text-[10px] font-semibold text-[#e9d5ff]">
                               <Lock className="h-2.5 w-2.5" aria-hidden="true" />
                               Secure & Private
                             </span>
@@ -1045,31 +1068,41 @@ export const ZohoASAPWidget = ({
                   data-testid="panel-support-resources"
                 >
                   <div
-                    className="relative overflow-hidden rounded-2xl border border-[#5B45E0]/25 p-4"
+                    className="relative overflow-hidden rounded-2xl border border-[#c084fc]/45 p-4 shadow-[0_0_40px_rgba(168,85,247,0.22)]"
                     style={{
                       background:
-                        "linear-gradient(145deg, rgba(37,99,235,0.25) 0%, rgba(18,20,28,0.96) 48%, rgba(211,18,106,0.18) 100%)",
+                        "linear-gradient(145deg, rgba(96,165,250,0.42) 0%, rgba(124,58,237,0.48) 36%, rgba(26,11,51,0.95) 68%, rgba(211,18,106,0.32) 100%)",
                     }}
                   >
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#F0B4CC]">
+                    <div
+                      className="pointer-events-none absolute -left-4 top-0 h-24 w-24 rounded-full bg-[#38bdf8]/25 blur-2xl"
+                      aria-hidden="true"
+                    />
+                    <div
+                      className="pointer-events-none absolute -right-6 bottom-0 h-28 w-28 rounded-full bg-[#D3126A]/25 blur-2xl"
+                      aria-hidden="true"
+                    />
+                    <p className="relative text-[10px] font-semibold uppercase tracking-[0.18em] text-[#F0B4CC]">
                       Your AI help desk
                     </p>
-                    <h3 className="mt-1.5 text-[18px] font-semibold tracking-tight text-white">
+                    <h3 className="relative mt-1.5 text-[18px] font-semibold tracking-tight text-white">
                       Get clear answers, fast.
                     </h3>
-                    <p className="mt-1.5 max-w-[90%] text-[12px] leading-5 text-white/65">
+                    <p className="relative mt-1.5 max-w-[90%] text-[12px] leading-5 text-white/80">
                       Find tools, client info, and step-by-step help — all in one place.
                     </p>
-                    <p className="mt-2 text-[12px] italic text-[#c4b5fd]">Same team. Faster support.</p>
-                    <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                    <p className="relative mt-2 text-[12px] italic text-[#e9d5ff]">Same team. Faster support.</p>
+                    <div className="relative mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
                       {[
-                        { icon: Zap, label: "Faster answers" },
-                        { icon: Shield, label: "Trusted info" },
-                        { icon: Users, label: "Built for DE" },
-                        { icon: Clock, label: "24/7 available" },
-                      ].map(({ icon: Icon, label }) => (
-                        <div key={label} className="flex items-center gap-1.5 text-[10px] font-medium text-white/70">
-                          <Icon className="h-3 w-3 text-[#F0B4CC]" aria-hidden="true" />
+                        { icon: Zap, label: "Faster answers", tone: "text-[#fde68a] bg-[#fbbf24]/20 ring-[#fcd34d]/40" },
+                        { icon: Shield, label: "Trusted info", tone: "text-[#e9d5ff] bg-[#a855f7]/25 ring-[#c084fc]/45" },
+                        { icon: Users, label: "Built for DE", tone: "text-[#bae6fd] bg-[#38bdf8]/20 ring-[#7dd3fc]/40" },
+                        { icon: Clock, label: "24/7 available", tone: "text-[#bbf7d0] bg-[#4ade80]/20 ring-[#86efac]/40" },
+                      ].map(({ icon: Icon, label, tone }) => (
+                        <div key={label} className="flex items-center gap-1.5 text-[10px] font-medium text-white/85">
+                          <span className={`flex h-6 w-6 items-center justify-center rounded-md ring-1 ${tone}`}>
+                            <Icon className="h-3 w-3" aria-hidden="true" />
+                          </span>
                           {label}
                         </div>
                       ))}
@@ -1094,22 +1127,22 @@ export const ZohoASAPWidget = ({
                         {...(external || href.startsWith("http")
                           ? { target: "_blank", rel: "noopener noreferrer" }
                           : {})}
-                        className="group flex items-center gap-3 rounded-2xl border border-white/10 bg-[#171922] p-3 transition hover:border-[#D3126A]/35 hover:bg-[#1c1524]"
+                        className="group flex items-center gap-3 rounded-2xl border border-white/12 bg-[#1a1228] p-3 transition hover:border-[#F0B4CC]/40 hover:bg-[#231633]"
                         data-testid={`resource-link-${title.toLowerCase().replace(/\s+/g, "-")}`}
                       >
                         <span
-                          className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl ring-1 ${iconBg} ${accent}`}
+                          className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl ring-1 ${iconBg} ${accent}`}
                         >
                           <Icon className="h-5 w-5" aria-hidden="true" />
                         </span>
                         <span className="min-w-0 flex-1">
                           <span className="block text-[13.5px] font-semibold text-white">{title}</span>
-                          <span className="mt-0.5 block text-[11.5px] leading-4 text-white/55">{description}</span>
+                          <span className="mt-0.5 block text-[11.5px] leading-4 text-white/60">{description}</span>
                           <span className="mt-1.5 flex flex-wrap gap-1.5">
                             {tags.map((tag) => (
                               <span
                                 key={tag}
-                                className="rounded-md bg-white/[0.06] px-1.5 py-0.5 text-[10px] font-medium text-white/55"
+                                className="rounded-md bg-white/[0.08] px-1.5 py-0.5 text-[10px] font-medium text-white/70"
                               >
                                 {tag}
                               </span>
@@ -1125,15 +1158,15 @@ export const ZohoASAPWidget = ({
                     ))}
                   </div>
 
-                  <div className="rounded-2xl border border-[#D3126A]/35 bg-[#171922] p-3">
+                  <div className="rounded-2xl border border-[#fb7185]/40 bg-gradient-to-r from-[#D3126A]/20 via-[#1a1228] to-[#7c3aed]/20 p-3">
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                       <div className="flex min-w-0 flex-1 gap-2.5">
-                        <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#D3126A]/15 text-[#F0B4CC] ring-1 ring-[#D3126A]/35">
+                        <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#fb7185]/50 to-[#D3126A]/35 text-[#fecdd3] ring-1 ring-[#fda4af]/50 shadow-[0_0_18px_rgba(211,18,106,0.35)]">
                           <ShieldCheck className="h-4 w-4" aria-hidden="true" />
                         </span>
                         <div>
                           <p className="text-[12px] font-semibold text-white">Security-sensitive issue?</p>
-                          <p className="mt-0.5 text-[11.5px] leading-4 text-white/55">
+                          <p className="mt-0.5 text-[11.5px] leading-4 text-white/60">
                             Don&apos;t paste credentials into chat. Open a ticket and we&apos;ll move to a secure channel.
                           </p>
                         </div>
@@ -1141,7 +1174,7 @@ export const ZohoASAPWidget = ({
                       <Button
                         type="button"
                         onClick={() => setActiveTab("ticket")}
-                        className="h-9 flex-shrink-0 rounded-xl bg-[#D3126A] px-3 text-white hover:bg-[#c01060]"
+                        className="h-9 flex-shrink-0 rounded-xl bg-[#D3126A] px-3 text-white shadow-[0_0_18px_rgba(211,18,106,0.35)] hover:bg-[#c01060]"
                       >
                         Create ticket
                       </Button>
