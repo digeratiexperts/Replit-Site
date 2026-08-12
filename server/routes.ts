@@ -485,6 +485,43 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  // Multi-source reviews (live Google when available + curated catalog)
+  app.get("/api/public/reviews", async (_req: Request, res: Response) => {
+    try {
+      const { getPublicReviews } = await import("./reviews");
+      const payload = await getPublicReviews();
+      const cacheControl =
+        payload.status === "ok" || payload.status === "partial"
+          ? "public, max-age=300, stale-while-revalidate=3600"
+          : "public, max-age=60";
+      res.setHeader("Cache-Control", cacheControl);
+      res.json(payload);
+    } catch (error: any) {
+      console.error("public-reviews error:", error);
+      res.status(500).json({
+        status: "empty",
+        message: "Unable to load reviews",
+        sources: [],
+        reviews: [],
+        mapsUri: "https://maps.google.com/?cid=1710856351091471339",
+        google: {
+          status: "error",
+          configured: false,
+          missing: [],
+          message: "Unable to load Google reviews",
+          placeIdMasked: null,
+          placeName: null,
+          rating: null,
+          userRatingsTotal: null,
+          reviews: [],
+          mapsUri: null,
+          fetchedAt: null,
+        },
+        fetchedAt: new Date().toISOString(),
+      });
+    }
+  });
+
   // Durable portal auth (Neon) — Map-compatible shim for existing handlers
   await initPortalAuthStore();
   await initPortalOrg();

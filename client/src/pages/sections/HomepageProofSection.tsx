@@ -22,18 +22,18 @@ export function HomepageProofSection() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
           <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-            <Star className="h-6 w-6 text-violet-300 mb-3" aria-hidden />
-            <h3 className="text-lg font-semibold text-white mb-2">Google reviews</h3>
-            <p className="text-sm text-white/65 mb-4">
-              Read client feedback on our Google Business Profile, and see recent reviews highlighted
-              above when available.
+            <Star className="mb-3 h-6 w-6 text-violet-300" aria-hidden />
+            <h3 className="mb-2 text-lg font-semibold text-white">Client reviews</h3>
+            <p className="mb-4 text-sm text-white/65">
+              Real client feedback from Google and other approved sources — shown only when we have
+              live API data or verbatim published reviews.
             </p>
             <a
               href="/#google-reviews"
               className="inline-flex items-center gap-2 text-sm text-pink-300 hover:text-pink-200"
               data-testid="link-proof-google-reviews"
             >
-              See Google reviews
+              See reviews
               <ArrowRight className="h-4 w-4" aria-hidden />
             </a>
           </div>
