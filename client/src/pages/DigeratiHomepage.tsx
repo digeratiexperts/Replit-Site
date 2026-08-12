@@ -85,55 +85,55 @@ export const DigeratiHomepage = (): JSX.Element => {
         </ScrollSectionAuto>
 
         {/* Why DE — dock clearance on each section */}
-        <ScrollSectionAuto id="stats" className="pb-20 lg:pb-24">
+        <ScrollSectionAuto id="stats" className="de-dock-clear">
           <DigeratiStatsSection />
         </ScrollSectionAuto>
 
         {/* Problems */}
-        <ScrollSectionAuto id="challenges" className="pb-20 lg:pb-24">
+        <ScrollSectionAuto id="challenges" className="de-dock-clear">
           <DigeratiWhatWeTackleSection />
         </ScrollSectionAuto>
 
         {/* Engage */}
-        <ScrollSectionAuto id="services" className="pb-20 lg:pb-24">
+        <ScrollSectionAuto id="services" className="de-dock-clear">
           <DigeratiServicesSection />
         </ScrollSectionAuto>
 
         {/* Kept from working branch — not in live sticky bar */}
-        <ScrollSectionAuto id="protection" className="pb-20 lg:pb-24">
+        <ScrollSectionAuto id="protection" className="de-dock-clear">
           <DigeratiHowWeProtectSection />
         </ScrollSectionAuto>
 
         {/* Packages */}
-        <ScrollSectionAuto id="pricing" className="pb-20 lg:pb-24">
+        <ScrollSectionAuto id="pricing" className="de-dock-clear">
           <DigeratiPricingSection />
         </ScrollSectionAuto>
 
         {/* Pricing tools relocated to /proactive-ecosystem-pricing#pricing-tools */}
 
         {/* Industries */}
-        <ScrollSectionAuto id="industries" className="pb-20 lg:pb-24">
+        <ScrollSectionAuto id="industries" className="de-dock-clear">
           <DigeratiIndustriesSection />
         </ScrollSectionAuto>
 
         {/* Trust imagery — feeds Proof story, hidden from sticky bar */}
-        <ScrollSectionAuto id="trust" className="pb-20 lg:pb-24">
+        <ScrollSectionAuto id="trust" className="de-dock-clear">
           <DigeratiTrustPhotoSection />
         </ScrollSectionAuto>
 
         {/* Meet the Experts — human trust */}
-        <ScrollSectionAuto id="team" className="pb-20 lg:pb-24">
+        <ScrollSectionAuto id="team" className="de-dock-clear">
           <DigeratiMeetExpertsSection />
         </ScrollSectionAuto>
 
         {/* Proof — honest shells (no fabricated quotes) */}
-        <ScrollSectionAuto id="testimonials" className="pb-20 lg:pb-24">
+        <ScrollSectionAuto id="testimonials" className="de-dock-clear">
           <DigeratiTestimonialsSection />
           <HomepageProofSection />
         </ScrollSectionAuto>
 
         {/* Kept from working branch — not in live sticky bar */}
-        <ScrollSectionAuto id="insights" className="pb-20 lg:pb-24">
+        <ScrollSectionAuto id="insights" className="de-dock-clear">
           <DigeratiThreatsInsightsSection />
           <DigeratiAIAssistanceSection />
         </ScrollSectionAuto>
@@ -142,18 +142,18 @@ export const DigeratiHomepage = (): JSX.Element => {
         <DigeratiLeadFormSection />
 
         {/* FAQ before Next step — live cleanness */}
-        <ScrollSectionAuto id="faq" className="pb-20 lg:pb-24">
+        <ScrollSectionAuto id="faq" className="de-dock-clear">
           <DigeratiFAQSection />
           <DigeratiNewsletterSection />
         </ScrollSectionAuto>
 
         {/* Next step */}
-        <ScrollSectionAuto id="cta" className="pb-20 lg:pb-24">
+        <ScrollSectionAuto id="cta" className="de-dock-clear">
           <DigeratiCTASection />
         </ScrollSectionAuto>
 
         {/* Contact */}
-        <ScrollSectionAuto id="contact" className="scroll-mt-20 pt-8 pb-20 lg:pb-24">
+        <ScrollSectionAuto id="contact" className="scroll-mt-20 pt-8 de-dock-clear">
           <DigeratiContactSection />
           <DigeratiEnhancedFooterSection />
         </ScrollSectionAuto>

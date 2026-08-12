@@ -3,7 +3,8 @@
  *
  * Rules:
  * - Only optimized derivatives under `/images/...` (never licensed ORIGINAL paths)
- * - Meshy Batch 01 (all five) approved + refined — place selectively, not icon salad
+ * - Public marketing: sculpture set for path/section stages; Lucide for small cards
+ * - Meshy Batch 01 is retired from public marketing (laptop/robot/lock/envelope)
  * - Portal / mega-menu chrome stays Lucide
  */
 
@@ -21,7 +22,7 @@ export type VisualStill = {
   alt: string;
   /** Placement readiness */
   status: "approved" | "awaiting-approval" | "missing";
-  source: "meshy-batch-01" | "photography" | "envato";
+  source: "meshy-batch-01" | "photography" | "envato" | "engage-sculpture-set";
 };
 
 const meshy01 = (slug: string, label: string, alt: string, status: VisualStill["status"]): VisualStill => ({
@@ -98,57 +99,71 @@ export function isApprovedStill(still: VisualStill | undefined): still is Visual
   return !!still && still.status === "approved";
 }
 
-/** Homepage outcomes → optional Meshy still (selective; not every card) */
-export const outcomeVisualByTitle: Record<string, VisualStill | undefined> = {
-  "Protect identities and devices": meshyBatch01.identity,
-  "Keep the business recoverable": meshyBatch01.backup,
-  "Protect and monitor the environment": meshyBatch01.network,
-};
+/** Homepage outcomes — Lucide on cards; no 3D on every tile */
+export const outcomeVisualByTitle: Record<string, VisualStill | undefined> = {};
+
+/** Tackle cards use Lucide wells — no per-card 3D */
+export const tackleVisualByTitle: Record<string, VisualStill | undefined> = {};
+
+const engageSculpture = (
+  slug: string,
+  label: string,
+  alt: string,
+): VisualStill => ({
+  id: slug,
+  label,
+  src: `/images/visual-system/engage-paths/${slug}.webp`,
+  // Photographic stills compress better as JPEG than PNG.
+  srcPng: `/images/visual-system/engage-paths/${slug}.jpg`,
+  srcThumb: `/images/visual-system/engage-paths/${slug}-640.webp`,
+  alt,
+  status: "approved",
+  source: "engage-sculpture-set",
+});
 
 /**
- * Homepage single-accent placements (one still per section — not card grids).
- * Hero keeps Arizona dusk + DashboardMockup; no Meshy swarm there.
+ * Homepage engage-path sculptures — one locked visual system.
+ * Graphite / smoked glass / violet-as-light. Not Meshy Batch 01 icons.
  */
-export const homepageSectionAccents = {
-  /** Stats / threat reality — endpoint as editorial stage */
-  statsThreats: meshyBatch01.endpoint,
-  /** Engagement assessment band — copy names email explicitly */
-  engagementAssessment: meshyBatch01.email,
-  /** Process intro — environment / operating-model cue */
-  howItWorks: meshyBatch01.network,
-  /** Protect section header */
-  protectProcess: meshyBatch01.network,
-  /** Pricing operating-model band */
-  pricingEcosystem: meshyBatch01.backup,
+export const engageSculptureSet = {
+  fullyManaged: engageSculpture(
+    "fully-managed",
+    "Fully managed IT",
+    "Dark graphite sculpture of a central security core connected to endpoint and network nodes",
+  ),
+  coManaged: engageSculpture(
+    "co-managed",
+    "Co-managed IT",
+    "Two interlocking technical systems sharing one infrastructure spine",
+  ),
+  cyberRisk: engageSculpture(
+    "cyber-risk",
+    "Cyber risk assessment",
+    "Network lattice illuminated by a scanning arc highlighting selected nodes",
+  ),
 } as const;
-
-/** Live "What We Tackle" cards — selective only (not every Lucide) */
-export const tackleVisualByTitle: Record<string, VisualStill | undefined> = {
-  "Ransomware & Malware": meshyBatch01.endpoint,
-  "Data Loss Prevention": meshyBatch01.backup,
-  "Phishing & Social Engineering": meshyBatch01.email,
-  "Insider Threats": meshyBatch01.identity,
-};
 
 /** Engage path cards — one still each, mapped to copy */
 export const engagePathVisualByTitle: Record<string, VisualStill | undefined> = {
-  "Fully Managed IT & Cybersecurity": meshyBatch01.endpoint,
-  "Co-Managed IT": meshyBatch01.network,
-  "Cyber Risk Assessment": meshyBatch01.email,
+  "Fully Managed IT & Cybersecurity": engageSculptureSet.fullyManaged,
+  "Co-Managed IT": engageSculptureSet.coManaged,
+  "Cyber Risk Assessment": engageSculptureSet.cyberRisk,
 };
 
-/** Security stack preview / Protect stack */
-export const stackVisualByTitle: Record<string, VisualStill | undefined> = {
-  "Endpoint Security (EDR)": meshyBatch01.endpoint,
-  "SMART Identity (MFA + SSO)": meshyBatch01.identity,
-  "Backup & Disaster Recovery": meshyBatch01.backup,
-  "Email Protection": meshyBatch01.email,
-  "SOC / MDR Monitoring": meshyBatch01.network,
+/**
+ * Homepage section editorials — one sculpture max, never Meshy clip-art.
+ * Stats uses the scan lattice (threats). Other sections stay Lucide-only
+ * so the three path cards remain the sculpture set, not a repeated icon salad.
+ */
+export const homepageSectionAccents = {
+  statsThreats: engageSculptureSet.cyberRisk,
+  engagementAssessment: engageSculptureSet.cyberRisk,
+  howItWorks: engageSculptureSet.fullyManaged,
+  protectProcess: undefined as VisualStill | undefined,
+  pricingEcosystem: undefined as VisualStill | undefined,
 };
 
-/** Solutions index cards that map cleanly to approved Batch 01 */
-export const solutionVisualByTitle: Record<string, VisualStill | undefined> = {
-  "Managed Network Security": meshyBatch01.network,
-  "Threat Detection & Response": meshyBatch01.endpoint,
-  "Backup & Disaster Recovery": meshyBatch01.backup,
-};
+/** Security stack / solutions cards — Lucide wells, not Meshy */
+export const stackVisualByTitle: Record<string, VisualStill | undefined> = {};
+
+export const solutionVisualByTitle: Record<string, VisualStill | undefined> = {};

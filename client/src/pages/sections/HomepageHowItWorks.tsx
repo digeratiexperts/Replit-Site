@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { MeshyStillAccent } from "@/components/visual/MeshyStillAccent";
+import { VisualStage } from "@/components/visual/VisualStage";
 import { homepageSectionAccents } from "@/lib/visualAssets";
 import { useBooking } from "@/contexts/BookingContext";
 import { analytics } from "@/lib/analytics";
+import { CTA } from "@/lib/ctaCopy";
 
 const steps = [
   {
@@ -34,7 +35,12 @@ export function HomepageHowItWorks() {
     <section id="how-it-works" className="py-14 lg:py-20 bg-[#050312]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-6">
-          <MeshyStillAccent still={homepageSectionAccents.howItWorks} size="lg" />
+          <VisualStage
+            still={homepageSectionAccents.howItWorks}
+            layout="editorial"
+            className="max-w-xs shrink-0"
+            alt="Central security core connected to endpoint and network nodes"
+          />
           <div className="min-w-0">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-pink-300/90 mb-3">
               How engagement works
@@ -46,7 +52,7 @@ export function HomepageHowItWorks() {
         </div>
         <ol className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
           {steps.map((s) => (
-            <li key={s.n} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+            <li key={s.n} className="rounded-2xl border border-white/10 bg-[#151217] p-6">
               <span className="text-pink-300 font-bold text-sm tracking-widest">STEP {s.n}</span>
               <h3 className="text-xl font-semibold text-white mt-2 mb-2">{s.title}</h3>
               <p className="text-sm text-white/65 leading-relaxed">{s.body}</p>
@@ -60,9 +66,10 @@ export function HomepageHowItWorks() {
             analytics.bookingOpened("homepage-how-it-works");
             openBooking("homepage-how-it-works");
           }}
-          className="bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white"
+          variant="brand"
+          className="text-white"
         >
-          Schedule a Cyber Risk Assessment
+          {CTA.primary}
         </Button>
       </div>
     </section>

@@ -2,18 +2,25 @@
 
 ## Why
 
-Live homepage sections (Stats, Tackle, Engage, Protect, Pricing) were Lucide-only
-while approved Meshy Batch 01 stills lived on unmounted working-branch sections.
+Live homepage sections mixed Meshy Batch 01 clip-art (laptop / robot / lock)
+with the locked engage-path sculpture set.
 
-## What shipped
+## P0 (Phase A)
 
-- `SectionVisualStage` for editorial section-level stills
-- Selective Meshy on live Stats / Tackle / Engage / Protect / Pricing
-- Pricing operating-model band uses existing Meshy site accent art
-- Industries: descriptions always visible (not hover-only)
+- `VisualStage` / `EngagePathVisual` for sculptures only (path cards + Stats editorial)
+- Small cards (Tackle, capabilities, Protect stack, `/solutions`) use Lucide `IconWell`
+- Meshy Batch 01 retired from public marketing placement
+- Sticky dock publishes `--de-dock-offset`; sections use `.de-dock-clear`
+- Assessment CTA uses the same brand gradient as MegaMenu (`from-fuchsia-600 via-pink-600 to-rose-500`)
 
 ## Rules kept
 
 - Hero unchanged (Arizona dusk + DashboardMockup)
-- No Meshy icon salad on every card
-- Engage capability strip stays Lucide (stills reserved for path cards + Protect)
+- No sculpture on every card
+- Protect (light section) stays Lucide — no dark sculptures on white
+- Engage path cards use the locked **dark technical sculpture** set
+  (`client/public/images/visual-system/engage-paths/`) — graphite / smoked glass /
+  violet-as-light — full-bleed into the card
+- Industries: descriptions always visible (not hover-only)
+- SOC 2 / HIPAA badges unchanged pending DE confirmation
+- Featured package badges unchanged pending DE pick

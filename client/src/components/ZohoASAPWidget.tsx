@@ -545,8 +545,8 @@ export const ZohoASAPWidget = ({
       <div
         className={`fixed z-[100] ${
           cookieBannerClear
-            ? "bottom-5 right-3 sm:right-4 lg:bottom-[5.25rem] lg:right-[4.75rem]"
-            : "bottom-28 right-3 sm:right-4 lg:bottom-[5.25rem] lg:right-[4.75rem]"
+            ? "bottom-5 right-3 sm:right-4 lg:bottom-[max(5.25rem,calc(var(--de-dock-offset)+0.5rem))] lg:right-[4.75rem]"
+            : "bottom-28 right-3 sm:right-4 lg:bottom-[max(5.25rem,calc(var(--de-dock-offset)+0.5rem))] lg:right-[4.75rem]"
         }`}
         data-testid="widget-zoho-asap-container"
       >

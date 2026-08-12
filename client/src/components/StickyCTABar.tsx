@@ -109,7 +109,8 @@ export function StickyCTABar() {
                   
                   <Button
                     size="sm"
-                    className="h-11 bg-white px-5 text-base text-pink-700 hover:bg-pink-50 font-semibold shadow-lg"
+                    className="h-11 px-5 text-base font-semibold"
+                    variant="brand"
                     data-testid="button-sticky-cta-assessment"
                     onClick={() => openBooking("sticky_cta")}
                     aria-label={CTA.primary}

@@ -8,9 +8,6 @@ import {
   NO_BLACK_BOX_TAGLINE,
   type PricingTierKey,
 } from "@/data/pricing";
-import { siteAccentImages } from "@/data/productImages";
-import { SectionVisualStage } from "@/components/visual/SectionVisualStage";
-import { homepageSectionAccents } from "@/lib/visualAssets";
 
 const tierKeys: PricingTierKey[] = ["it", "office", "business", "enterprise"];
 
@@ -40,30 +37,21 @@ export const DigeratiPricingSection = (): JSX.Element => {
 
       <div className="relative z-10 mx-auto max-w-[100rem] px-3 sm:px-4 lg:px-6">
         <motion.div
-          className="mx-auto mb-8 grid max-w-5xl items-center gap-6 md:mb-12 lg:grid-cols-12"
+          className="mx-auto mb-8 max-w-5xl text-center md:mb-12 lg:text-left"
           initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <div className="text-center lg:col-span-8 lg:text-left">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF477F] md:text-sm">
-              No Black-Box IT
-            </p>
-            <h2 className="mb-3 text-3xl font-bold text-white sm:text-4xl md:text-5xl">
-              Transparent pricing.{" "}
-              <span className="bg-gradient-to-r from-[#FF477F] to-fuchsia-400 bg-clip-text text-transparent">
-                No mystery quote.
-              </span>
-            </h2>
-            <p className="text-base text-white/60 md:text-lg">{NO_BLACK_BOX_TAGLINE}</p>
-          </div>
-          <div className="hidden justify-end lg:col-span-4 lg:flex">
-            <SectionVisualStage
-              still={homepageSectionAccents.pricingEcosystem}
-              size="md"
-              alt="Backup and recovery visual representing recoverable ProActive packages"
-            />
-          </div>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF477F] md:text-sm">
+            No Black-Box IT
+          </p>
+          <h2 className="mb-3 text-3xl font-bold text-white sm:text-4xl md:text-5xl">
+            Transparent pricing.{" "}
+            <span className="bg-gradient-to-r from-[#FF477F] to-fuchsia-400 bg-clip-text text-transparent">
+              No mystery quote.
+            </span>
+          </h2>
+          <p className="text-base text-white/60 md:text-lg">{NO_BLACK_BOX_TAGLINE}</p>
         </motion.div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -117,21 +105,9 @@ export const DigeratiPricingSection = (): JSX.Element => {
           })}
         </div>
 
-        <div className="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] md:mt-10">
-          <div className="grid gap-0 lg:grid-cols-12 lg:items-stretch">
-            <div className="relative hidden min-h-[12rem] lg:col-span-4 lg:block">
-              <img
-                src={siteAccentImages.pricingEcosystem}
-                alt=""
-                className="absolute inset-0 h-full w-full object-cover opacity-80"
-                loading="lazy"
-                decoding="async"
-                aria-hidden
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#0a0a0a]/20 to-[#0a0a0a]/85" />
-            </div>
-            <div className="flex flex-col justify-center gap-6 p-6 md:p-8 lg:col-span-8 lg:flex-row lg:items-center lg:justify-between">
-              <div className="max-w-xl">
+        <div className="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-[#151217] md:mt-10">
+          <div className="flex flex-col justify-center gap-6 p-6 md:p-8 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-xl">
                 <h3 className="text-xl font-semibold text-white md:text-2xl">
                   Not just IT support — one operating model
                 </h3>
@@ -161,7 +137,6 @@ export const DigeratiPricingSection = (): JSX.Element => {
                   </span>
                 </Link>
               </div>
-            </div>
           </div>
         </div>
       </div>

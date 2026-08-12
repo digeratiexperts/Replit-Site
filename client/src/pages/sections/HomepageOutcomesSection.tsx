@@ -1,38 +1,49 @@
 import { Link } from "wouter";
-import { ArrowRight } from "lucide-react";
-import { MeshyStillAccent } from "@/components/visual/MeshyStillAccent";
-import { outcomeVisualByTitle } from "@/lib/visualAssets";
+import { ArrowRight, Headphones, ShieldCheck, Cloud, Activity, ClipboardCheck } from "lucide-react";
+import { IconWell } from "@/components/visual/IconWell";
+import type { LucideIcon } from "lucide-react";
 
-const groups = [
+const groups: {
+  title: string;
+  items: string[];
+  href: string;
+  cta: string;
+  icon: LucideIcon;
+}[] = [
   {
     title: "Keep people productive",
     items: ["Support & issue ownership", "Onboarding / offboarding", "Workspace management"],
     href: "/solutions/managed-it-support",
     cta: "Explore managed IT",
+    icon: Headphones,
   },
   {
     title: "Protect identities and devices",
     items: ["Identity & MFA", "Endpoint protection", "Email security"],
     href: "/solutions/security-operations",
     cta: "Explore managed security",
+    icon: ShieldCheck,
   },
   {
     title: "Keep the business recoverable",
     items: ["Backup readiness", "BCDR planning", "Cloud data protection"],
     href: "/solutions/backup-disaster-recovery",
     cta: "See backup & recovery",
+    icon: Cloud,
   },
   {
     title: "Protect and monitor the environment",
     items: ["Network operations", "Security operations", "Vulnerability / risk visibility"],
     href: "/solutions/threat-detection",
     cta: "See threat detection",
+    icon: Activity,
   },
   {
     title: "Stay prepared",
     items: ["Compliance readiness", "Reporting", "vCIO / business reviews"],
     href: "/solutions/vcio-strategy",
     cta: "Explore strategic guidance",
+    icon: ClipboardCheck,
   },
 ];
 
@@ -51,14 +62,11 @@ export function HomepageOutcomesSection() {
           the sales story by themselves.
         </p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {groups.map((g) => {
-            const visual = outcomeVisualByTitle[g.title];
-
-            return (
-              <div key={g.title} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-                {visual && (
-                  <MeshyStillAccent still={visual} size="md" className="mb-4" />
-                )}
+          {groups.map((g) => (
+              <div key={g.title} className="rounded-2xl border border-white/10 bg-[#151217] p-6">
+                <div className="mb-4">
+                  <IconWell icon={g.icon} size="md" surface="dark" />
+                </div>
                 <h3 className="text-lg font-semibold text-white mb-3">{g.title}</h3>
                 <ul className="space-y-2 mb-5">
                   {g.items.map((item) => (
@@ -78,8 +86,7 @@ export function HomepageOutcomesSection() {
                   <ArrowRight className="h-4 w-4" aria-hidden />
                 </Link>
               </div>
-            );
-          })}
+          ))}
         </div>
       </div>
     </section>

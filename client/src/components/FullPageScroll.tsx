@@ -275,6 +275,7 @@ const SECTION_NAV_PRIMARY = new Set([
 function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarProps) {
   const [moreOpen, setMoreOpen] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
+  const dockRef = useRef<HTMLDivElement>(null);
 
   const navSections = sections
     .map((section, index) => ({ section, index }))
@@ -318,6 +319,31 @@ function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarPr
     };
   }, [moreOpen]);
 
+  useEffect(() => {
+    const el = dockRef.current;
+    if (!el) return;
+
+    const publish = () => {
+      const root = document.documentElement;
+      const rect = el.getBoundingClientRect();
+      const visible = rect.height > 0 && window.getComputedStyle(el).display !== "none";
+      const offset = visible
+        ? Math.round(window.innerHeight - rect.top + 8)
+        : 0;
+      root.style.setProperty("--de-dock-offset", `${offset}px`);
+    };
+
+    publish();
+    const ro = new ResizeObserver(publish);
+    ro.observe(el);
+    window.addEventListener("resize", publish);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", publish);
+      document.documentElement.style.setProperty("--de-dock-offset", "0px");
+    };
+  }, []);
+
   const renderNavButton = (
     section: ScrollSection,
     index: number,
@@ -349,7 +375,11 @@ function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarPr
   };
 
   return (
-    <div className="fixed bottom-3 left-3 right-[17rem] xl:left-4 xl:right-[17.5rem] 2xl:right-[18.5rem] z-40 hidden lg:flex justify-center pointer-events-none min-w-0">
+    <div
+      ref={dockRef}
+      data-de-section-dock
+      className="fixed bottom-3 left-3 right-[17rem] xl:left-4 xl:right-[17.5rem] 2xl:right-[18.5rem] z-40 hidden lg:flex justify-center pointer-events-none min-w-0"
+    >
       <motion.nav
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -408,7 +438,7 @@ function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarPr
 
         <a
           href="/book"
-          className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold rounded-full bg-white text-[#D3126A] hover:bg-pink-50 transition-all duration-300 shadow-lg whitespace-nowrap shrink-0"
+          className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold rounded-lg bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white border border-pink-300/25 shadow-lg shadow-pink-500/30 whitespace-nowrap shrink-0"
           data-testid="nav-cta-assessment"
           aria-label={CTA.primary}
         >

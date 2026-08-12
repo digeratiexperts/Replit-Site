@@ -47,9 +47,14 @@ Locked engage-path files: `client/public/images/visual-system/engage-paths/`.
 
 Do not default to: generic shields, padlocks, laptops, robots, hacker hoodies, generic server racks, binary code, cyberpunk, neon grids, rainbow gradients, excessive glow, toy-like 3D, cartoon illustrations, random AI objects.
 
-Meshy Batch 01 stills remain on Stats / Tackle / Protect / Pricing until those sections get their own sculpture set. Do not mix Meshy icon-salad into engage-path cards.
+Meshy Batch 01 stills remain in the asset inventory only. Do not place laptop / robot / lock / envelope stills on Stats, Tackle, Protect, Pricing, `/solutions`, or other public marketing cards.
 
 Portal / mega-menu chrome stays Lucide.
+
+Public marketing placement:
+
+- **Sculptures** — engage-path cards and at most one editorial stage per section (`VisualStage` / `EngagePathVisual`). Field `#151217`. No inner purple square.
+- **Small cards** — Lucide in a muted violet `IconWell`. Not 40px 3D toys.
 
 ## Consistency (locked camera / materials)
 

@@ -15,7 +15,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { CTA } from "@/lib/ctaCopy";
-import { SectionVisualStage } from "@/components/visual/SectionVisualStage";
+import { EngagePathVisual } from "@/components/visual/EngagePathVisual";
+import { IconWell } from "@/components/visual/IconWell";
 import { engagePathVisualByTitle } from "@/lib/visualAssets";
 
 /**
@@ -142,28 +143,28 @@ export const DigeratiServicesSection = (): JSX.Element => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.08 }}
-                className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-8 lg:p-10"
+                className="flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#151217]"
                 data-testid={path.testId}
               >
-                <div className="mb-6">
-                  {visual ? (
-                    <SectionVisualStage still={visual} size="md" />
-                  ) : (
-                    <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-violet-500/20">
-                      <Icon className="h-8 w-8 text-violet-300" aria-hidden="true" />
-                    </div>
-                  )}
+                {visual ? (
+                  <EngagePathVisual still={visual} alt={visual.alt} />
+                ) : (
+                  <div className="flex aspect-[5/3] items-center justify-center bg-[#151217]">
+                    <IconWell icon={Icon} size="md" surface="dark" />
+                  </div>
+                )}
+                <div className="flex flex-1 flex-col px-8 pb-8 pt-2 lg:px-10 lg:pb-10">
+                  <h3 className="mb-3 text-2xl font-semibold text-white lg:text-3xl">{path.title}</h3>
+                  <p className="mb-7 flex-1 text-lg leading-relaxed text-white/65 lg:text-xl">
+                    {path.description}
+                  </p>
+                  <Link href={path.link} data-testid={`link-${path.testId}`}>
+                    <span className="inline-flex items-center gap-2 text-lg font-medium text-violet-300 hover:text-violet-200">
+                      {path.cta}
+                      <ArrowRight className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                  </Link>
                 </div>
-                <h3 className="mb-3 text-2xl font-semibold text-white lg:text-3xl">{path.title}</h3>
-                <p className="mb-7 flex-1 text-lg leading-relaxed text-white/65 lg:text-xl">
-                  {path.description}
-                </p>
-                <Link href={path.link} data-testid={`link-${path.testId}`}>
-                  <span className="inline-flex items-center gap-2 text-lg font-medium text-violet-300 hover:text-violet-200">
-                    {path.cta}
-                    <ArrowRight className="h-5 w-5" aria-hidden="true" />
-                  </span>
-                </Link>
               </motion.div>
             );
           })}
@@ -189,9 +190,9 @@ export const DigeratiServicesSection = (): JSX.Element => {
               const Icon = item.icon;
               return (
                 <Link key={item.title} href={item.link}>
-                  <div className="h-full cursor-pointer rounded-xl border border-white/10 bg-white/[0.04] p-5 transition-all hover:border-violet-400/40 hover:bg-white/[0.06]">
-                    <div className="mb-2 flex items-center gap-2.5">
-                      <Icon className="h-5 w-5 text-violet-300" aria-hidden="true" />
+                  <div className="h-full cursor-pointer rounded-2xl border border-white/10 bg-[#151217] p-5 transition-all hover:border-violet-400/40 md:p-6">
+                    <div className="mb-2 flex items-center gap-3">
+                      <IconWell icon={Icon} size="sm" surface="dark" />
                       <p className="text-base font-semibold text-white md:text-lg">{item.title}</p>
                     </div>
                     <p className="text-sm leading-relaxed text-white/55 md:text-base">{item.desc}</p>

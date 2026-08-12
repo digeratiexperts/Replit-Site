@@ -1,7 +1,8 @@
 import { Link } from "wouter";
 import { ArrowRight, Layers, Users, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { MeshyStillAccent } from "@/components/visual/MeshyStillAccent";
+import { VisualStage } from "@/components/visual/VisualStage";
+import { IconWell } from "@/components/visual/IconWell";
 import { homepageSectionAccents } from "@/lib/visualAssets";
 import { useBooking } from "@/contexts/BookingContext";
 import { analytics } from "@/lib/analytics";
@@ -52,9 +53,9 @@ export function HomepageEngagementSection() {
           {cards.map((card) => (
             <div
               key={card.title}
-              className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 flex flex-col"
+              className="rounded-2xl border border-white/10 bg-[#151217] p-6 flex flex-col"
             >
-              <card.icon className="h-6 w-6 text-violet-300 mb-4" aria-hidden />
+              <IconWell icon={card.icon} size="md" surface="dark" className="mb-4" />
               <h3 className="text-xl font-semibold text-white mb-2">{card.title}</h3>
               <p className="text-sm text-white/65 leading-relaxed flex-1 mb-5">{card.body}</p>
               <Link
@@ -69,10 +70,11 @@ export function HomepageEngagementSection() {
         </div>
 
         <div className="rounded-2xl border border-pink-400/25 bg-gradient-to-r from-pink-500/10 via-violet-500/10 to-transparent p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-5">
-          <MeshyStillAccent
+          <VisualStage
             still={homepageSectionAccents.engagementAssessment}
-            size="lg"
-            className="self-start md:self-center"
+            layout="editorial"
+            className="max-w-xs shrink-0 self-start md:self-center"
+            alt="Network lattice scanned by a lavender arc — assessment, not a padlock"
           />
           <div className="flex-1">
             <h3 className="text-lg font-semibold text-white">Not sure? Start with a Cyber Risk Assessment</h3>
@@ -87,7 +89,8 @@ export function HomepageEngagementSection() {
               analytics.bookingOpened("homepage-engagement");
               openBooking("homepage-engagement");
             }}
-            className="bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white shrink-0"
+            variant="brand"
+            className="shrink-0"
           >
             {CTA.primary}
             <ArrowRight className="ml-2 h-4 w-4" aria-hidden />

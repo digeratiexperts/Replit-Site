@@ -15,6 +15,7 @@ html {
   font-size: 14px;
   /* Keep in-page anchors clear of fixed MegaMenu chrome */
   scroll-padding-top: var(--de-nav-offset);
+  scroll-padding-bottom: var(--de-dock-offset);
 }
 
 /* Slightly larger on very wide screens */
@@ -131,6 +132,8 @@ html {
   --de-nav-chrome: calc(var(--de-utility-h) + var(--de-nav-h));
   --de-nav-offset: calc(var(--de-nav-chrome) + 0.75rem);
   --de-nav-current-bottom: var(--de-nav-chrome);
+  /* Homepage sticky section dock — published live from SectionNavBar ResizeObserver */
+  --de-dock-offset: 0px;
 }
 
 /* Homepage section snap — proximity only (no JS scroll hijack). */
@@ -155,6 +158,17 @@ html {
 /* Shared top padding so marketing/store pages clear the sticky MegaMenu */
 .de-nav-clear {
   padding-top: var(--de-nav-offset);
+}
+
+/* Homepage sections — keep last cards above the sticky dock */
+.de-dock-clear {
+  padding-bottom: max(5rem, calc(var(--de-dock-offset) + 1.5rem));
+}
+
+@media (min-width: 1024px) {
+  .de-dock-clear {
+    padding-bottom: max(6rem, calc(var(--de-dock-offset) + 2rem));
+  }
 }
 
 /* Primary nav labels must never crop glyphs when type/logo scale up */

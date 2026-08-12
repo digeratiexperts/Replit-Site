@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { AlertTriangle, DollarSign, Shield, Clock } from "lucide-react";
-import { SectionVisualStage } from "@/components/visual/SectionVisualStage";
+import { VisualStage } from "@/components/visual/VisualStage";
+import { IconWell } from "@/components/visual/IconWell";
 import { homepageSectionAccents } from "@/lib/visualAssets";
 
 const stats = [
@@ -71,10 +72,10 @@ export const DigeratiStatsSection = (): JSX.Element => {
             transition={{ duration: 0.45, delay: 0.08 }}
             className="flex justify-center lg:col-span-5 lg:justify-end"
           >
-            <SectionVisualStage
+            <VisualStage
               still={homepageSectionAccents.statsThreats}
-              size="xl"
-              alt="Endpoint protection visual representing ransomware and device risk"
+              layout="editorial"
+              alt="Network lattice illuminated by a scanning arc — threat visibility, not a laptop"
             />
           </motion.div>
         </div>
@@ -90,11 +91,9 @@ export const DigeratiStatsSection = (): JSX.Element => {
               className="group relative"
               data-testid={`homepage-stat-${index}`}
             >
-              <div className="h-full rounded-2xl border border-white/10 bg-white/[0.03] p-7 transition-all duration-300 hover:border-violet-500/30 lg:p-8">
+              <div className="h-full rounded-2xl border border-white/10 bg-[#151217] p-7 transition-all duration-300 hover:border-violet-500/30 lg:p-8">
                 <div className="mb-5 flex items-center gap-3">
-                  <div className="rounded-lg bg-violet-500/20 p-2.5">
-                    <stat.icon className="h-6 w-6 text-violet-400" aria-hidden />
-                  </div>
+                  <IconWell icon={stat.icon} size="md" surface="dark" />
                 </div>
                 <div className="mb-3 bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-4xl font-bold text-transparent md:text-5xl">
                   {stat.value}
