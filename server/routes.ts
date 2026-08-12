@@ -384,6 +384,16 @@ const advisorChatRateLimiter = rateLimit({
   message: { error: "Too many chat messages. Please try again shortly." },
 });
 
+// Widget polls every ~2.5s for portal agent replies — must NOT share the chat budget
+// (20/15min would exhaust in ~50s and silently drop agent messages).
+const advisorPollRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 400,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many poll requests. Please try again shortly." },
+});
+
 const advisorActionRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 10,
@@ -4602,7 +4612,7 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  app.get("/api/public/advisor/session/:id", [advisorChatRateLimiter], async (req: AuthenticatedRequest, res: Response) => {
+  app.get("/api/public/advisor/session/:id", [advisorPollRateLimiter], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { getSession, publicSessionView } = await import("./services/msp-advisor");
       const session = getSession(req.params.id);
@@ -4614,7 +4624,7 @@ export async function registerRoutes(app: Express) {
   });
 
   // Public poll so the website widget receives portal agent replies
-  app.get("/api/public/advisor/chat/:sessionId/messages", [advisorChatRateLimiter], async (req: AuthenticatedRequest, res: Response) => {
+  app.get("/api/public/advisor/chat/:sessionId/messages", [advisorPollRateLimiter], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { getDeskMessagesSince } = await import("./services/msp-advisor");
       const sessionId = String(req.params.sessionId || "").trim();

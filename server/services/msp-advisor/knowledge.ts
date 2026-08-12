@@ -5,8 +5,8 @@ import type { AdvisorMode, PageContext } from "./types";
 
 export const DE_COMPANY = {
   name: "Digerati Experts",
-  phoneDisplay: "325-480-9870",
-  phoneE164: "+13254809870",
+  phoneDisplay: "480-519-5892",
+  phoneE164: "+14805195892",
   email: "info@digeratiexperts.com",
   address: "3165 S Alma School Rd Suite 29, Chandler, AZ 85248",
   area: "Arizona and Greater Phoenix (Chandler, Phoenix, Scottsdale, Tempe, Mesa, Gilbert)",

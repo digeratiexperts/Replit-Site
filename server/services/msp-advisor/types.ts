@@ -105,6 +105,9 @@ export interface AdvisorChatResponse {
   /** True when a portal agent has claimed this session and AI is paused. */
   agentLive?: boolean;
   agentName?: string | null;
+  /** Server-persisted assistant/ack message — widget uses these to avoid poll duplicates. */
+  messageId?: string;
+  messageCreatedAt?: string;
 }
 
 export interface AdvisorActionRequest {

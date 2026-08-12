@@ -289,6 +289,12 @@ export const ZohoASAPWidget = ({
       if (!incoming.length) return;
       setChatMessages((current) => {
         const next = [...current];
+        const recentAssistantContent = new Set(
+          current
+            .filter((m) => m.role === "assistant")
+            .slice(-8)
+            .map((m) => m.content.trim()),
+        );
         for (const msg of incoming) {
           if (knownMsgIdsRef.current.has(msg.id)) continue;
           // Skip echoing the visitor's own turns (already rendered optimistically)
@@ -297,8 +303,16 @@ export const ZohoASAPWidget = ({
             if (msg.createdAt) pollSinceRef.current = msg.createdAt;
             continue;
           }
+          // Skip AI bubbles already shown from the chat POST (different server id).
+          // Never content-dedupe agent messages — those are the live handoff.
+          if (msg.role === "assistant" && recentAssistantContent.has(msg.content.trim())) {
+            knownMsgIdsRef.current.add(msg.id);
+            if (msg.createdAt) pollSinceRef.current = msg.createdAt;
+            continue;
+          }
           knownMsgIdsRef.current.add(msg.id);
           if (msg.createdAt) pollSinceRef.current = msg.createdAt;
+          if (msg.role === "assistant") recentAssistantContent.add(msg.content.trim());
           next.push({
             id: msg.id,
             role: msg.role,
@@ -395,20 +409,25 @@ export const ZohoASAPWidget = ({
 
       if (data.sessionId) {
         setAdvisorSessionId(data.sessionId);
-        // Only poll for messages newer than this turn (avoid duplicating local AI bubbles)
-        if (!pollSinceRef.current) {
-          pollSinceRef.current = new Date().toISOString();
-        }
       }
       setAssistantAvailable(true);
       if (data.agentLive) {
         setAgentLive(true);
         if (data.agentName) setAgentName(String(data.agentName));
       }
-      const assistantId = `assistant-${Date.now()}`;
+
+      // Prefer server ids/timestamps so poll won't re-add this bubble
+      const assistantId =
+        typeof data.messageId === "string" && data.messageId
+          ? data.messageId
+          : `assistant-${Date.now()}`;
+      const createdAt =
+        typeof data.messageCreatedAt === "string" && data.messageCreatedAt
+          ? data.messageCreatedAt
+          : new Date().toISOString();
       knownMsgIdsRef.current.add(assistantId);
-      const createdAt = new Date().toISOString();
       pollSinceRef.current = createdAt;
+
       setChatMessages((current) => [
         ...current,
         {

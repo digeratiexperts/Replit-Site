@@ -28,7 +28,7 @@ async function persistTurn(
   assistantReply: string,
   profile: { email?: string | null; contactName?: string | null; companyName?: string | null },
   pagePath?: string,
-): Promise<void> {
+): Promise<{ messageId?: string; messageCreatedAt?: string }> {
   try {
     const meta = {
       email: profile.email || null,
@@ -37,9 +37,16 @@ async function persistTurn(
       pagePath: pagePath || null,
     };
     await appendDeskMessage({ sessionId, role: "user", content: userMessage, ...meta });
-    await appendDeskMessage({ sessionId, role: "assistant", content: assistantReply, ...meta });
+    const assistant = await appendDeskMessage({
+      sessionId,
+      role: "assistant",
+      content: assistantReply,
+      ...meta,
+    });
+    return { messageId: assistant.id, messageCreatedAt: assistant.createdAt };
   } catch (err: any) {
     console.warn("[msp-advisor] persist failed (non-blocking):", err?.message || err);
+    return {};
   }
 }
 
@@ -150,9 +157,29 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
       console.warn("[msp-advisor] agent-live persist failed:", err?.message || err);
     }
     const agentLabel = agentStatus.agentName || "a Digerati specialist";
+    const reply = `${agentLabel} is with you now — your message was delivered. They’ll reply in this chat shortly.`;
+    // Persist the ack so portal sees it; visitor already shows it from this response.
+    let messageId: string | undefined;
+    let messageCreatedAt: string | undefined;
+    try {
+      const ack = await appendDeskMessage({
+        sessionId: session.id,
+        role: "assistant",
+        content: reply,
+        senderName: agentStatus.agentName || "DE Desk",
+        email: profile.email || null,
+        contactName: profile.contactName || null,
+        companyName: profile.companyName || null,
+        pagePath: page?.pathname || null,
+      });
+      messageId = ack.id;
+      messageCreatedAt = ack.createdAt;
+    } catch (err: any) {
+      console.warn("[msp-advisor] agent-live ack persist failed:", err?.message || err);
+    }
     return {
       sessionId: session.id,
-      reply: `${agentLabel} is with you now — your message was delivered. They’ll reply in this chat shortly.`,
+      reply,
       mode: session.lastMode || "existing_client",
       profile,
       actions: defaultActionsForMode(session.lastMode || "existing_client"),
@@ -160,6 +187,8 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
       knownFacts: knownFactsList(profile),
       agentLive: true,
       agentName: agentStatus.agentName,
+      messageId,
+      messageCreatedAt,
     };
   }
 
@@ -171,7 +200,7 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
     appendMessage(session, "user", message);
     appendMessage(session, "assistant", reply);
     session.lastMode = mode === "off_topic" ? "msp_discovery" : mode;
-    void persistTurn(session.id, message, reply, profile, page?.pathname);
+    const persisted = await persistTurn(session.id, message, reply, profile, page?.pathname);
     return {
       sessionId: session.id,
       reply,
@@ -180,6 +209,7 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
       actions: defaultActionsForMode(session.lastMode),
       analyticsEvents: ["qualified_question"],
       knownFacts: knownFactsList(profile),
+      ...persisted,
     };
   }
 
@@ -250,7 +280,7 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
   appendMessage(session, "assistant", modelOut.reply);
   session.lastMode = mode;
 
-  void persistTurn(session.id, message, modelOut.reply, profile, page?.pathname);
+  const persisted = await persistTurn(session.id, message, modelOut.reply, profile, page?.pathname);
 
   return {
     sessionId: session.id,
@@ -260,5 +290,6 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
     actions,
     analyticsEvents,
     knownFacts: knownFactsList(profile),
+    ...persisted,
   };
 }
