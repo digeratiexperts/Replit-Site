@@ -1,0 +1,36 @@
+---
+description: DE Desk widget visual + copy playbook (dark glass shell, dual-tone Desk, function labels)
+globs: client/src/components/ZohoASAPWidget.tsx,client/src/pages/portal/PortalChat.tsx
+alwaysApply: false
+---
+
+# DE Desk design
+
+Primary file: `client/src/components/ZohoASAPWidget.tsx`. Full playbook: `.cursor/skills/de-desk-ui/SKILL.md`.
+
+## Shell (all tabs)
+
+- One **dark glass** frame for Desk / Ticket / Resources — shared header, underline tabs, status row, footer.
+- Brand magenta `#D3126A`; violet `#5B45E0` / `#7c3aed` accents; soft magenta/violet radial glow — no generic purple-on-white SaaS look.
+- Active tab: pink/magenta label + glowing underline. Inactive: muted white/45.
+- High contrast text always. Never white-on-white (`outline` Button needs explicit `bg-*` on dark pages).
+
+## Tab content
+
+| Tab | Panel inside shell |
+|-----|--------------------|
+| **Resources** | Dark nested cards — **approved reference**. Hero + tagged resource rows + security CTA. |
+| **Desk** | **Light nested chat card** (readable bubbles/chips/composer) inside the dark shell. |
+| **Ticket** | **Dark nested panel** matching Resources language (hero, quick chips, form card, optional ask bar). |
+
+Do not invent a third unrelated theme per tab. Elevate in place; ask DE before removing CTAs, tabs, disclaimers, or resource links.
+
+## Copy
+
+- Label **functions**, not vendor products (e.g. “Remote session”, not “Zoho Assist”).
+- Keep links/endpoints; change visible titles/tags only.
+- Portal login via `PORTAL_LOGIN` — never invent `//login`.
+
+## Logic
+
+Preserve chat send/poll, agent live, ticket submit, resources links, analytics, ASAP bootstrap, cookie offset, `de-open-msp-advisor`. Visual restyle only unless DE asks for behavior change.
