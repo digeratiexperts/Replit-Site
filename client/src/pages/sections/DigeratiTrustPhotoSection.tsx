@@ -97,10 +97,10 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
               />
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/75 via-black/35 to-transparent p-5">
                 <p className="text-white text-sm font-medium">
-                  Principal-led assessments — sized to how your business actually runs
+                  Principal-led assessments sized to how your business runs
                 </p>
                 <p className="text-white/75 text-xs mt-1">
-                  Illustrative scene · not a specific client engagement
+                  Arizona MSP · Cybersecurity & Managed IT
                 </p>
               </div>
             </div>

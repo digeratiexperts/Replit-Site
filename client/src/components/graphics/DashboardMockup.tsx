@@ -2,8 +2,8 @@ import { useReducedMotion, motion } from "framer-motion";
 import { Shield, CheckCircle, Lock, FileCheck, Server, Mail, Activity } from "lucide-react";
 
 /**
- * Illustrative product preview — not live customer data.
- * Visual depth inspired by production mockup; content stays honest (no invented metrics).
+ * Hero product preview for the Cyber Risk Assessment experience.
+ * Decorative posture bars are unlabeled example levels — not customer metrics.
  */
 export const DashboardMockup = ({ className = "" }: { className?: string }) => {
   const prefersReducedMotion = useReducedMotion();
@@ -30,7 +30,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
       initial={prefersReducedMotion ? false : { opacity: 0, y: 28 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: prefersReducedMotion ? 0 : 0.55, ease: "easeOut" }}
-      aria-label="Illustrative sample of a Digerati Experts Cyber Risk Assessment report preview"
+      aria-label="Preview of a Digerati Experts Cyber Risk Assessment report"
     >
       <div
         className="relative rounded-2xl overflow-hidden border border-white/12"
@@ -49,7 +49,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
           <div className="flex-1 flex justify-center">
             <div className="px-2.5 py-0.5 text-[11px] text-white/50 flex items-center gap-1.5">
               <Shield className="w-3 h-3 text-pink-400/80" aria-hidden="true" />
-              Sample Cyber Risk Assessment
+              Cyber Risk Assessment
             </div>
           </div>
         </div>
@@ -64,18 +64,15 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
                 <Shield className="w-4 h-4 text-white" />
               </div>
               <div>
-                <div className="text-white font-semibold text-sm">Cyber Risk Assessment</div>
-                <div className="text-white/45 text-xs">Illustrative preview · not live customer data</div>
+                <div className="text-white font-semibold text-sm">Assessment overview</div>
+                <div className="text-white/45 text-xs">Identity · endpoints · email · backups</div>
               </div>
             </div>
-            <span className="shrink-0 text-[10px] uppercase tracking-wider font-medium text-white/55 bg-white/5 border border-white/10 px-2 py-0.5 rounded">
-              Sample
-            </span>
           </div>
 
-          <p className="text-sm text-white leading-relaxed">
+          <p className="text-sm text-white/85 leading-relaxed">
             A practical review of posture across identity, endpoints, email, backups, and
-            controls—sized to your Arizona business.
+            controls — sized to your Arizona business.
           </p>
 
           <div className="grid grid-cols-2 gap-2.5">
@@ -106,12 +103,9 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
             animate={{ opacity: 1 }}
             transition={{ duration: prefersReducedMotion ? 0 : 0.4, delay: prefersReducedMotion ? 0 : 0.35 }}
           >
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <Activity className="w-4 h-4 text-violet-400" aria-hidden="true" />
-                <span className="text-white text-sm font-medium">Sample posture areas</span>
-              </div>
-              <span className="text-[10px] uppercase tracking-wider text-white/40">Illustrative</span>
+            <div className="flex items-center gap-2 mb-3">
+              <Activity className="w-4 h-4 text-violet-400" aria-hidden="true" />
+              <span className="text-white text-sm font-medium">Posture areas reviewed</span>
             </div>
             <div className="flex items-end gap-2 h-[72px]" aria-hidden="true">
               {postureBars.map((bar, index) => (
@@ -130,7 +124,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
                 />
               ))}
             </div>
-            <div className="flex justify-between mt-2">
+            <div className="flex justify-between mt-2" aria-hidden="true">
               {postureBars.map((bar) => (
                 <span key={bar.label} className="text-[9px] text-white/35 truncate max-w-[14%]">
                   {bar.label}
@@ -143,11 +137,11 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
             {[
               "Prioritized findings with clear business impact",
               "Recommendations matched to your size and risk",
-              "No obligation follow-up within one business day",
+              "No-obligation follow-up within one business day",
             ].map((line, index) => (
               <motion.div
                 key={line}
-                className="flex items-start gap-2.5 text-sm text-white selection:bg-violet-500 selection:text-white"
+                className="flex items-start gap-2.5 text-sm text-white"
                 initial={prefersReducedMotion ? false : { opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{

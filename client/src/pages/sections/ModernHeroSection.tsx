@@ -124,9 +124,7 @@ export const ModernHeroSection = (): JSX.Element => {
 
               <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-[3.25rem] font-bold leading-[1.08] tracking-[-0.02em] text-white">
                 Your Arizona business,{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-300 via-pink-400 to-violet-300">
-                  protected 24/7.
-                </span>
+                <span className="text-[#FF6B9D]">protected 24/7.</span>
               </h1>
 
               <p className="text-base md:text-lg text-white/85 leading-relaxed max-w-xl">

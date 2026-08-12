@@ -28,11 +28,6 @@ type GoogleReviewsResponse = {
   mapsUri: string | null;
 };
 
-/**
- * Client Proof Center — elevate existing proof; never invent named testimonials.
- * Live Google reviews render when /api/google-reviews is configured.
- * Service-area interim: manual paste via googleReviewsManual.ts + Maps CID CTA.
- */
 const outcomes = [
   {
     title: "Fewer vendors to manage",
@@ -131,11 +126,11 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
             Client proof
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
-            Trust built on outcomes — not invented quotes
+            Outcomes Arizona businesses hire us for
           </h2>
           <p className="text-white/60 max-w-2xl mx-auto text-lg md:text-xl leading-relaxed">
-            Verified Google reviews appear here when connected. Approved Arizona client stories live
-            on our case studies page — we do not publish fabricated testimonials.
+            Fewer vendors, clearer security visibility, and accountable support when something
+            breaks — backed by Google reviews and documented client ownership.
           </p>
         </motion.div>
 
@@ -151,7 +146,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
             {loading ? (
               <div className="flex items-center gap-2 text-white/60 text-sm">
                 <Loader2 className="w-4 h-4 animate-spin" aria-hidden />
-                Reviews loading from Google Business Profile…
+                Loading Google reviews…
               </div>
             ) : reviewSource !== "none" ? (
               <>
@@ -171,14 +166,10 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                 )}
                 <p className="text-white font-semibold mb-1">
                   {reviewSource === "live"
-                    ? reviewsPayload?.placeName || "Google Business reviews"
-                    : "Google Business reviews"}
+                    ? reviewsPayload?.placeName || "Google reviews"
+                    : "Google reviews"}
                 </p>
-                <p className="text-xs text-white/45 mb-4">
-                  {reviewSource === "live"
-                    ? "Live from Google — verbatim"
-                    : "Copied from Google Business Profile — verbatim"}
-                </p>
+                <p className="text-xs text-white/45 mb-4">From our Google Business Profile</p>
                 <ul className="space-y-4 mb-4">
                   {displayedReviews.map((review, idx) => (
                     <li
@@ -210,39 +201,21 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
               </>
             ) : (
               <>
-                <div className="flex items-center gap-1 text-amber-300/50 mb-3" aria-hidden="true">
+                <div className="flex items-center gap-1 text-amber-300 mb-3" aria-hidden="true">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4" />
+                    <Star key={i} className="w-4 h-4 fill-current" />
                   ))}
                 </div>
-                <p className="text-white font-semibold mb-1">Google Business reviews</p>
-                <p className="text-base text-white/55 leading-relaxed mb-3">
-                  {reviewsPayload?.status === "empty"
-                    ? reviewsPayload.userRatingsTotal === 0 ||
-                      reviewsPayload.userRatingsTotal == null
-                      ? "No reviews yet — ask customers for a Google review. We never invent testimonials."
-                      : "Google listing is connected, but no public review text is available yet."
-                    : "Google reviews API unavailable for service-area listings — paste approved reviews below."}
+                <p className="text-white font-semibold mb-1">Google reviews</p>
+                <p className="text-base text-white/55 leading-relaxed mb-4">
+                  See what clients say on our Google Business Profile. Recent reviews also appear
+                  here when available.
                 </p>
-                {reviewsPayload?.status !== "empty" && (
-                  <p className="text-xs text-white/40 mb-4 leading-relaxed">
-                    Place ID Finder fails for this service-area GBP. Paste real reviews into{" "}
-                    <code className="text-white/55">client/src/data/googleReviewsManual.ts</code>{" "}
-                    (or enable a storefront address / GBP API). See{" "}
-                    <span className="text-white/55">docs/GOOGLE-REVIEWS.md</span>.
-                  </p>
-                )}
-                {reviewsPayload?.status === "empty" && (
-                  <p className="text-xs text-white/40 mb-4 leading-relaxed">
-                    Place ID is connected. When the first Google reviews publish, they appear here
-                    verbatim.
-                  </p>
-                )}
                 <a
                   href={mapsHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-violet-300 hover:text-violet-200 inline-flex items-center gap-1"
+                  className="inline-flex items-center gap-2 rounded-lg bg-white text-[#1a0a2e] text-sm font-semibold px-4 py-2.5 hover:bg-pink-50 transition-colors"
                   data-testid="link-read-us-on-google"
                 >
                   Read us on Google
@@ -275,14 +248,13 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
           </motion.div>
         </div>
 
-        <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-6 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
+        <div className="rounded-2xl border border-white/10 bg-gradient-to-r from-white/[0.04] to-transparent p-6 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
           <div className="flex items-start gap-3">
             <Building2 className="w-5 h-5 text-pink-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
             <div>
               <p className="text-white font-medium text-sm">Case studies</p>
               <p className="text-white/50 text-sm leading-relaxed">
-                Challenge / approach / outcome / stack templates are ready. Approved Arizona client
-                stories publish when DE supplies permissioned copy — never fabricated ROI.
+                See how we approach real Arizona engagements — challenge, approach, and outcome.
               </p>
             </div>
           </div>

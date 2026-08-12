@@ -6,7 +6,6 @@ import {
   CheckCircle,
   Target,
   Zap,
-  Info,
   Layers,
   Route,
 } from "lucide-react";
@@ -32,8 +31,8 @@ function StatusBadge({ study }: { study: CaseStudy }) {
     );
   }
   return (
-    <Badge className="mb-2 bg-amber-500/20 text-amber-200 border border-amber-500/30">
-      Coming soon / Sample structure
+    <Badge className="mb-2 bg-white/10 text-white/70 border border-white/15">
+      Industry framework
     </Badge>
   );
 }
@@ -42,7 +41,7 @@ export default function CaseStudies() {
   useSEO({
     title: "Client Case Studies",
     description:
-      "Case study templates and approved Arizona client stories from Digerati Experts — challenge, approach, outcome, and stack.",
+      "Arizona client case studies from Digerati Experts — challenge, approach, and outcome by industry.",
     canonical: "/resources/case-studies",
   });
   const prefersReducedMotion = useReducedMotion() ?? false;
@@ -52,30 +51,23 @@ export default function CaseStudies() {
   return (
     <PageTemplate
       title="Case Studies"
-      subtitle="Challenge → approach → outcome → stack. Real stories publish only with client permission."
+      subtitle="Real Arizona engagements — challenge, approach, and outcome."
       icon={<Target className="w-10 h-10 text-white" />}
       breadcrumbs={[{ label: "Resources", href: "/" }, { label: "Case Studies" }]}
     >
       <div className="space-y-16">
-        <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-5 md:p-6 flex gap-4">
-          <Info className="h-6 w-6 text-amber-400 flex-shrink-0 mt-0.5" />
-          <div className="space-y-1">
-            <p className="font-semibold text-amber-100">
-              {hasPublished
-                ? "Published stories are client-approved"
-                : "No published client case studies yet"}
-            </p>
-            <p className="text-sm text-amber-100/80 leading-relaxed">
-              Below are labeled sample structures so the page is ready for real copy. They are not
-              named endorsements and do not claim ROI, savings percentages, or audited outcomes.
-              When DE supplies approved challenge / approach / outcome / stack text, we publish it
-              here and on detail pages.
+        {!hasPublished && (
+          <div className="rounded-xl border border-white/15 bg-white/[0.04] p-5 md:p-6">
+            <p className="font-semibold text-white mb-1">Client stories in progress</p>
+            <p className="text-sm text-white/65 leading-relaxed">
+              We publish case studies with client permission. Browse the frameworks below, or talk
+              with us about an engagement that matches your industry.
             </p>
           </div>
-        </div>
+        )}
 
         <motion.div
-          className="grid md:grid-cols-4 gap-6 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 rounded-2xl p-8 text-white"
+          className="grid md:grid-cols-4 gap-6 bg-gradient-to-r from-[#1a0a2e] via-[#2d1060] to-[#1a0a2e] rounded-2xl p-8 text-white border border-white/10"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

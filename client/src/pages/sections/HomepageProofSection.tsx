@@ -2,22 +2,22 @@ import { Link } from "wouter";
 import { ArrowRight, ShieldCheck, FileText, Scale, Star } from "lucide-react";
 
 /**
- * Honest proof section — operating principles and verifiable pages.
- * Do not invent customer counts, logos, savings metrics, or hard SOC2 claims here.
+ * Trust surfaces — Bill of Rights, reviews, Trust Center, case studies.
+ * Keep copy client-facing; never invent logos, ratings, or case-study results.
  */
 export function HomepageProofSection() {
   return (
     <section id="proof" className="py-14 lg:py-20 bg-[#0a0a0a]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-pink-300/90 mb-3">
-          How we earn trust
+          Trust & transparency
         </p>
         <h2 className="text-2xl md:text-4xl font-bold text-white mb-3 max-w-3xl">
-          Proof should be about Digerati — not recycled cybercrime headlines
+          Built for accountability you can verify
         </h2>
         <p className="text-white/65 max-w-2xl mb-10">
-          We publish how we operate and link to verifiable surfaces. We do not invent client logos,
-          savings percentages, or “100+ businesses” claims to look larger than the evidence supports.
+          Ownership clarity, documented operations, and public surfaces you can open before you
+          engage — not marketing claims you have to take on faith.
         </p>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -25,8 +25,8 @@ export function HomepageProofSection() {
             <Star className="h-6 w-6 text-violet-300 mb-3" aria-hidden />
             <h3 className="text-lg font-semibold text-white mb-2">Google reviews</h3>
             <p className="text-sm text-white/65 mb-4">
-              Client Proof links to our Google listing and shows verbatim reviews when available —
-              never fabricated quotes.
+              Read client feedback on our Google Business Profile, and see recent reviews highlighted
+              above when available.
             </p>
             <a
               href="/#google-reviews"
@@ -41,8 +41,8 @@ export function HomepageProofSection() {
             <Scale className="h-6 w-6 text-violet-300 mb-3" aria-hidden />
             <h3 className="text-lg font-semibold text-white mb-2">Client Bill of Rights</h3>
             <p className="text-sm text-white/65 mb-4">
-              Client-owned credentials, tenants, and licenses — with access transparency and no
-              artificial lock-in.
+              Your credentials, tenants, and licenses stay yours — with access transparency and a
+              clear path if you ever need to transition.
             </p>
             <Link
               href="/about/client-bill-of-rights"
@@ -56,8 +56,8 @@ export function HomepageProofSection() {
             <ShieldCheck className="h-6 w-6 text-violet-300 mb-3" aria-hidden />
             <h3 className="text-lg font-semibold text-white mb-2">Trust Center</h3>
             <p className="text-sm text-white/65 mb-4">
-              Security documentation and expectations in one place for diligence and cyber-insurance
-              conversations.
+              Security documentation and operating expectations in one place for diligence and
+              cyber-insurance conversations.
             </p>
             <Link
               href="/trust/trust-center"
@@ -71,7 +71,7 @@ export function HomepageProofSection() {
             <FileText className="h-6 w-6 text-violet-300 mb-3" aria-hidden />
             <h3 className="text-lg font-semibold text-white mb-2">Case studies</h3>
             <p className="text-sm text-white/65 mb-4">
-              Challenge / approach / outcome / stack templates — published stories only with client
+              Real engagements with challenge, approach, and outcome — published with client
               permission.
             </p>
             <Link
