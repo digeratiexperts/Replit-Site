@@ -4084,7 +4084,7 @@ export async function registerRoutes(app: Express) {
 
   <div class="footer">
     <p>Thank you for your business!</p>
-    <p>Digerati Experts | support@digeratiexperts.com | (480) 555-1000</p>
+    <p>Digerati Experts | support@digeratiexperts.com | 480-519-5892</p>
   </div>
 </body>
 </html>

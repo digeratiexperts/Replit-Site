@@ -40,6 +40,9 @@
 | P0.4 | Multiple phone identities (480-519-5892 vs 325-480-9870 vs fake 555) | P0 | sitewide / advisor / portal | Centralize in `companyContact.ts`; normalize advisor + portal fake number | **Partial — registry + advisor/portal fixes; bulk UI literals remain** | Grep for alternate numbers; unit tests |
 | P0.5 | Unsupported “60% close within 6 months” claim on homepage | P0 | Homepage stats | Use `cyberAwarenessFacts` / `getHomepageCyberFacts()` | **Fixed** | Unit tests ban substrings; UI uses sourced facts |
 | P0.6 | “Recent Threats” presented stale items as current | P0 | Homepage threats | Shared feed + 45-day freshness + empty state | **Fixed** | `securityUpdates.test.ts`; empty state on homepage as of Aug 2026 |
+| P0.7 | Wrong founder in Organization JSON-LD (`Michael Torres`) | P0 | Schema / homepage | Set founder to Joseph R. Petro | **Fixed** (audit follow-up) | Grep JsonLd; Rich Results test after deploy |
+| P0.8 | Dev/file-path notes leaked in Google reviews UI | P0 | Homepage testimonials | Public-safe empty/unavailable copy only | **Fixed** (audit follow-up) | Visual check; no `googleReviewsManual` / docs paths in DOM |
+| P0.9 | Placeholder `(480) 555-1000` in receipt HTML + portal seed | P0 | Orders / portal seed | Use primary `480-519-5892` | **Fixed** (audit follow-up) | Grep `555-1000` |
 | P1.x | CTA hierarchy, reviews, case studies, Bill of Rights, homepage restructure, store framing | P1 | marketing | Deferred to Sprint 2–4 | **Pending** | — |
 | P2.x | Find My Best Fit, assessment preview, resources, industries | P2 | conversion | Deferred to Sprint 5 | **Pending** | — |
 | SEO/A11y/Perf/Sec | Full technical excellence pass | P2 | global | Deferred to Sprint 6 | **Pending** | — |
@@ -58,6 +61,7 @@
 6. **P0.3** — Production Enterprise page verified loading; route-level `ErrorBoundary`; `useSEO` no longer doubles brand title.
 7. **Smoke** — Extended `scripts/public-route-smoke.mjs` for security-updates + internal-tool noindex checks.
 8. **Tests** — `companyContact.test.ts`, `securityUpdates.test.ts`.
+9. **P0.7–P0.9 (audit follow-up)** — Correct JSON-LD founder to Joseph R. Petro; remove review-integration file paths from public UI; replace receipt/portal `(480) 555-1000` with primary phone.
 
 ### Content Movement Map (Sprint 1)
 

@@ -103,7 +103,7 @@ const LOCAL_BUSINESS = {
   },
   "founder": {
     "@type": "Person",
-    "name": "Michael Torres"
+    "name": "Joseph R. Petro"
   },
   "sameAs": ORGANIZATION.sameAs,
   "contactPoint": ORGANIZATION.contactPoint,
