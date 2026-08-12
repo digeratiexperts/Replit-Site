@@ -1,0 +1,75 @@
+---
+description: Frontend implementation standards
+globs: ["**/*.tsx", "**/*.jsx", "**/*.css", "**/*.scss"]
+alwaysApply: true
+---
+# FRONTEND ENGINEERING STANDARD
+Build reusable, maintainable interfaces.
+## BEFORE ADDING CODE
+Search the codebase for:
+- existing components
+- existing tokens
+- existing utility classes
+- existing responsive patterns
+- existing animations
+- existing typography
+- existing image components
+Reuse before creating.
+## DESIGN TOKENS
+Prefer centralized tokens for:
+- colors
+- spacing
+- typography
+- radii
+- shadows
+- transitions
+- breakpoints
+Do not scatter arbitrary values throughout components.
+If repeated values appear, consider promoting them into the design system.
+## COMPONENTS
+Create components around meaningful UI patterns.
+Do not over-abstract tiny elements.
+Do not duplicate substantial UI.
+## CSS
+Prefer:
+- predictable layout systems
+- CSS variables/tokens
+- grid/flex
+- responsive constraints
+- fluid sizing where appropriate
+- component-level consistency
+Avoid:
+- arbitrary magic numbers
+- excessive absolute positioning
+- unnecessary z-index layers
+- viewport-specific hacks
+- duplicated media queries
+## RESPONSIVE
+Test meaningful breakpoints.
+Pay special attention to:
+- navigation
+- typography
+- card grids
+- hero sections
+- imagery
+- horizontal overflow
+- button sizing
+- section spacing
+## PERFORMANCE
+Do not add expensive effects without reason.
+Optimize large images.
+Avoid unnecessary client-side rendering.
+Do not introduce libraries just to solve a small styling problem.
+## ACCESSIBILITY
+Use semantic HTML.
+Maintain keyboard navigation.
+Maintain focus visibility.
+Use appropriate labels.
+Respect reduced motion.
+## FINAL CHECK
+After implementation:
+- check console errors
+- check layout
+- check responsiveness
+- check interaction
+- inspect the actual rendered UI

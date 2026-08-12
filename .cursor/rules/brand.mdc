@@ -1,0 +1,139 @@
+---
+description: Brand and visual identity system
+globs: ["**/*"]
+alwaysApply: true
+---
+# BRAND SYSTEM
+The website represents a premium enterprise managed IT and cybersecurity company.
+The visual identity should communicate:
+- trust
+- competence
+- technical sophistication
+- security
+- reliability
+- maturity
+- precision
+- premium service
+The website should NOT feel:
+- childish
+- gimmicky
+- cyberpunk
+- hacker-themed
+- overly futuristic
+- generic SaaS
+- AI-generated
+- stock-photo driven
+- visually noisy
+# VISUAL LANGUAGE
+The core visual direction is:
+PREMIUM ENTERPRISE TECHNOLOGY
++
+DARK TECHNICAL ENVIRONMENT
++
+RESTRAINED VIOLET ACCENTS
++
+SOPHISTICATED 3D / DIGITAL VISUALIZATION
+Think high-end enterprise technology product visualization rather than generic cybersecurity artwork.
+## COLOR
+Primary environment:
+- near black `#0a0a0a`
+- charcoal `#151217`
+- graphite `--de-bg` `#050312` / `--de-surface` `#0a0714`
+- dark gray
+Accent:
+- deep violet `#5B45E0` / `#7c3aed`
+- restrained purple `#8B5CF6`
+- subtle lavender `#A78BFA`
+- brand magenta `#D3126A` (primary CTA, brand mark, active glow)
+Purple should primarily function as an accent or source of illumination.
+Avoid large areas of saturated neon purple.
+Avoid rainbow gradients.
+Avoid excessive bright white.
+## MATERIALS
+Preferred:
+- graphite
+- gunmetal
+- smoked glass
+- dark metal
+- subtle translucent materials
+- controlled reflective surfaces
+Avoid:
+- toy-like plastic
+- excessive chrome
+- cheap glossy surfaces
+- cartoon materials
+## LIGHTING
+Preferred:
+- controlled studio lighting
+- subtle rim lighting
+- soft violet illumination
+- deep shadows
+- restrained highlights
+- cinematic but clean lighting
+Avoid:
+- blown-out highlights
+- excessive bloom
+- giant neon glows
+- cyberpunk lighting
+- rainbow lighting
+## TYPOGRAPHY
+Typography should feel:
+- modern
+- highly legible
+- confident
+- restrained
+- professional
+Use hierarchy intentionally.
+Do not compensate for weak hierarchy by making everything larger or bolder.
+Live type: Space Grotesk (headings), Inter (body), Oxanium / JetBrains Mono (stats).
+## CARDS
+Cards should feel like part of a coherent interface.
+Avoid:
+- excessive floating cards
+- excessive rounded containers
+- random card treatments
+- inconsistent border radii
+- inconsistent padding
+Prefer:
+- consistent spacing
+- subtle borders
+- controlled contrast
+- clear hierarchy
+- strong internal composition
+## IMAGERY
+Do not automatically represent concepts literally.
+Avoid default imagery such as:
+- shield for cybersecurity
+- padlock for security
+- laptop for IT
+- robot for AI/IT
+- hacker in hoodie
+- generic server rack
+- glowing binary code
+Instead communicate the underlying concept.
+Example:
+Managed IT:
+centralized infrastructure and orchestration
+Co-managed IT:
+two complementary systems working together
+Risk assessment:
+infrastructure being analyzed/scanned
+Monitoring:
+technical telemetry and system state
+Identity:
+controlled access architecture
+Backup:
+redundancy and layered infrastructure
+## DESIGN PRINCIPLE
+Every visual element should have a reason to exist.
+When choosing between:
+"more visual effects"
+and
+"better composition"
+choose better composition.
+When choosing between:
+"more decoration"
+and
+"better hierarchy"
+choose better hierarchy.
+Premium design should feel intentional, not busy.

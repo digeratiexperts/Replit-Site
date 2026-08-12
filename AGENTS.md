@@ -1,15 +1,18 @@
 # Agent workflow (Digerati Experts)
 
-Authoritative policy: **`.cursorrules`** (sections 1–42). Always-applied pointer: `.cursor/rules/00-follow-cursorrules.mdc`.
+Authoritative policy: **`.cursorrules`** (sections 1?42). Always-applied pointer: `.cursor/rules/00-follow-cursorrules.mdc`.
+
+Design OS (execution layer, does not replace `.cursorrules`): `.cursor/rules/ui-ux.mdc`, `brand.mdc`, `frontend.mdc` + `design/DESIGN_SYSTEM.md`. Never judge UI from source code alone.
 
 ## Closed loop (UI work)
 
-1. **Inspect** — existing components, tokens, routes, content (preserve ? elevate ? consolidate).
-2. **Implement** — reuse before inventing; no content destruction without DE approval.
-3. **Browser verify** — Playwright/browser tooling; desktop + tablet + mobile as required.
-4. **Critique** — separate UI/UX pass against `.cursorrules` + `design/approved|rejected`.
-5. **Repair** — fix issues found; re-verify.
-6. **Report done** — only after verification + critique + fixes (completion report per §40–41).
+0. **Visual audit first** ? read `.cursor/skills/visual-audit/SKILL.md` (and premium-saas-ui / responsive-review / image-art-direction as needed) before changing UI.
+1. **Inspect** ? existing components, tokens, routes, content (preserve ? elevate ? consolidate).
+2. **Implement** ? reuse before inventing; no content destruction without DE approval.
+3. **Browser verify** ? Playwright/browser tooling; desktop + tablet + mobile as required (390 / 768 / 1440 minimum).
+4. **Critique** ? separate UI/UX pass against `.cursorrules` + `design/approved|rejected`.
+5. **Repair** ? fix issues found; re-verify.
+6. **Report done** ? only after verification + critique + fixes (completion report per §40?41).
 
 ## Role separation (same agent, distinct passes)
 

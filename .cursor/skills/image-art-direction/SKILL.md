@@ -1,0 +1,84 @@
+---
+name: image-art-direction
+description: Create and evaluate cohesive image concepts and visual art direction for the entire website.
+---
+# IMAGE ART DIRECTION
+Images are part of the brand identity.
+Never treat website imagery as isolated assets.
+## PRIMARY OBJECTIVE
+Create a coherent visual family across the entire site.
+All imagery should feel as though it came from the same art director, renderer, and brand system.
+## ART DIRECTION
+Default visual direction:
+PREMIUM ENTERPRISE TECHNOLOGY
+Characteristics:
+- dark environments
+- graphite
+- gunmetal
+- smoked glass
+- subtle metallic materials
+- deep violet illumination
+- controlled studio lighting
+- subtle rim lighting
+- sophisticated shadows
+- realistic/stylized 3D
+- architectural/product visualization
+- restrained composition
+- generous negative space
+## AVOID
+Do not default to:
+- generic shields
+- padlocks
+- laptops
+- robots
+- hacker hoodies
+- generic server racks
+- binary code
+- cyberpunk
+- neon grids
+- rainbow gradients
+- excessive glow
+- toy-like 3D
+- cartoon illustrations
+- random AI objects
+## CONCEPTUAL REPRESENTATION
+Represent the underlying idea rather than the literal noun.
+Example:
+BAD:
+"Cyber risk assessment"
+→ purple shield with lock
+BETTER:
+"Cyber risk assessment"
+→ sophisticated infrastructure being scanned and analyzed, with subtle areas of anomaly/risk highlighted.
+## CONSISTENCY
+Across all images maintain:
+- camera perspective
+- lighting direction
+- materials
+- environment
+- color palette
+- contrast
+- visual density
+- scale
+- negative space
+Only the conceptual subject should significantly change.
+## COMPOSITION
+Images must work within the actual website component.
+Consider:
+- card dimensions
+- available negative space
+- text placement
+- crop
+- focal point
+- responsive behavior
+Do not create beautiful images that become unusable when cropped.
+## EVALUATION
+Before approving an image ask:
+1. Does it look like generic AI art?
+2. Does it belong to the brand?
+3. Does it communicate the concept?
+4. Does it work at the actual rendered size?
+5. Does it match neighboring imagery?
+6. Does it complement rather than compete with typography?
+7. Would this image still look intentional in six months?
+If not, regenerate/rethink the concept.

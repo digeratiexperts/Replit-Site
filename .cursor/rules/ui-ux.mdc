@@ -1,0 +1,121 @@
+---
+description: Site-wide UI/UX and visual quality standards
+globs: ["**/*.tsx", "**/*.jsx", "**/*.css", "**/*.scss", "**/*.html"]
+alwaysApply: true
+---
+# UI/UX DESIGN STANDARD
+Act as a senior product designer, UX designer, visual designer, and frontend engineer.
+Do not optimize only for code correctness.
+Optimize for the final rendered experience.
+A page can have technically correct code and still be considered a failure if the visual result feels generic, amateur, cluttered, inconsistent, or poorly composed.
+## DESIGN FIRST
+Before making meaningful UI changes:
+1. Inspect the existing page.
+2. Inspect related components.
+3. Understand the current design system.
+4. Identify existing reusable patterns.
+5. Consider desktop, tablet, and mobile.
+6. Consider hierarchy, spacing, typography, imagery, interaction, and visual rhythm.
+7. Then implement.
+Do not make isolated changes that create inconsistency elsewhere.
+## VISUAL QUALITY
+Prioritize:
+- clear hierarchy
+- sophisticated typography
+- intentional whitespace
+- strong composition
+- restrained color
+- consistent spacing
+- subtle borders
+- controlled contrast
+- meaningful imagery
+- purposeful interaction
+- consistent visual language
+Avoid generic AI/SaaS aesthetics:
+- excessive gradients
+- excessive glow
+- glassmorphism everywhere
+- random rounded cards
+- giant floating blobs
+- cyberpunk aesthetics
+- meaningless particles
+- excessive animations
+- generic 3D illustrations
+- stock-looking imagery
+- arbitrary shadows
+- decorative elements without purpose
+## COMPONENT CONSISTENCY
+If multiple components perform the same visual/function role:
+- reuse the existing component
+- extend the component
+- or create a shared component
+Do not create several slightly different implementations of the same UI pattern.
+Before introducing a new value, check whether an existing design token already exists.
+## UX STATES
+Do not design only the happy path.
+Consider:
+- default
+- hover
+- focus
+- active
+- disabled
+- loading
+- empty
+- error
+- success
+Interactive elements must communicate their state clearly.
+## ACCESSIBILITY
+Maintain:
+- sufficient contrast
+- visible focus states
+- keyboard accessibility
+- appropriate semantic HTML
+- accessible labels
+- usable touch targets
+- reduced-motion support
+Never sacrifice accessibility for aesthetics.
+## RESPONSIVENESS
+Never simply shrink desktop layouts.
+Consider whether components should:
+- stack
+- reorder
+- resize
+- simplify
+- change alignment
+- change navigation behavior
+- alter imagery
+- change interaction patterns
+for smaller screens.
+## IMAGERY
+Imagery is part of the brand system.
+Do not treat images as interchangeable decorations.
+Images should have:
+- consistent art direction
+- consistent lighting
+- consistent color language
+- intentional composition
+- appropriate negative space
+- strong cropping
+- relationship to the surrounding UI
+Avoid literal cybersecurity clichés unless strategically appropriate.
+## VISUAL QA
+For meaningful UI work:
+1. Run the application.
+2. Inspect the rendered page.
+3. Capture/inspect the result at relevant viewport sizes.
+4. Look for visual problems.
+5. Fix them.
+6. Re-inspect.
+Never assume the UI is correct because the code compiles.
+## DEFINITION OF DONE
+A UI task is not complete merely because:
+- the code compiles
+- the component renders
+- the requested element exists
+It is complete when the rendered experience is visually coherent, responsive, accessible, and consistent with the site's design system.
+
+## DE execution layer
+Root `.cursorrules` remains authoritative (sections 1–42). This file is the UI/UX execution layer — do not dilute or contradict it.
+Canonical portal login: `https://portal.digeratiexperts.com/portal/login` — never invent `//login`.
+Preserve existing DE content, CTAs, nav, and stats unless DE explicitly approves removal.
+Inspect rendered UI at 390 / 768 / 1440 at minimum. Never judge UI from source code alone.
