@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, createContext, useContext } from 'react';
 import { ArrowRight, Shield, Phone, ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { CTA } from '@/lib/ctaCopy';
 
 interface ScrollSection {
   id: string;
@@ -409,8 +410,9 @@ function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarPr
           href="/book"
           className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold rounded-full bg-white text-[#D3126A] hover:bg-pink-50 transition-all duration-300 shadow-lg whitespace-nowrap shrink-0"
           data-testid="nav-cta-assessment"
+          aria-label={CTA.primary}
         >
-          Assessment
+          {CTA.primaryNavCompact}
           <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
         </a>
       </motion.nav>

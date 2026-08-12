@@ -13,6 +13,7 @@ import { pricing } from '@/data/pricing';
 import { useBooking } from '@/contexts/BookingContext';
 import { useOptionalFullPageScroll } from '@/components/FullPageScroll';
 import { PORTAL_LOGIN } from '@/lib/portalUrls';
+import { CTA } from '@/lib/ctaCopy';
 
 const NoiseTexture = ({ id }: { id: string }) => (
   <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.025]" aria-hidden="true">
@@ -1000,13 +1001,13 @@ export function MegaMenu() {
           <div className="flex items-center space-x-2 lg:space-x-3 flex-shrink-0">
             <button
               type="button"
-              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-3.5 xl:px-5 py-2.5 rounded-lg text-sm xl:text-base font-semibold whitespace-nowrap shadow-[0_0_22px_rgba(236,72,153,0.35)] hover:shadow-[0_0_30px_rgba(236,72,153,0.45)] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black border border-pink-300/25"
+              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-3.5 xl:px-5 py-2.5 rounded-lg text-sm xl:text-base font-semibold whitespace-nowrap shadow-[0_0_18px_rgba(236,72,153,0.28)] hover:shadow-[0_0_24px_rgba(236,72,153,0.36)] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black border border-pink-300/25"
               data-testid="nav-cta"
               onClick={() => { handleLinkClick(); openBooking("megamenu"); }}
-              aria-label="Schedule Assessment"
+              aria-label={CTA.primary}
             >
-              <span className="xl:hidden">Schedule</span>
-              <span className="hidden xl:inline">Schedule Assessment</span>
+              <span className="xl:hidden">{CTA.primaryNavCompact}</span>
+              <span className="hidden xl:inline">{CTA.primaryShort}</span>
             </button>
 
             {/* Mobile/Tablet Menu Button */}
@@ -1219,12 +1220,12 @@ export function MegaMenu() {
               >
                 <button
                   type="button"
-                  className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white font-bold py-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0118] transition-all rounded-xl border border-pink-300/25 shadow-[0_0_30px_rgba(236,72,153,0.35)] hover:shadow-[0_0_40px_rgba(236,72,153,0.45)] text-xl"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white font-bold py-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0118] transition-all rounded-xl border border-pink-300/25 shadow-[0_0_24px_rgba(236,72,153,0.28)] hover:shadow-[0_0_32px_rgba(236,72,153,0.36)] text-lg sm:text-xl"
                   onClick={() => { setMobileMenuOpen(false); openBooking("megamenu_mobile"); }}
                   data-testid="mobile-cta"
-                  aria-label="Schedule Your Assessment"
+                  aria-label={CTA.primary}
                 >
-                  Schedule Your Assessment
+                  {CTA.primary}
                   <ArrowRight className="w-5 h-5" aria-hidden="true" />
                 </button>
               </div>

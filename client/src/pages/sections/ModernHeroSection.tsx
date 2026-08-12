@@ -1,11 +1,13 @@
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useRef } from "react";
+import { Link } from "wouter";
 import { analytics } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Building, FileCheck, Shield, Check } from "lucide-react";
 import { DashboardMockup } from "@/components/graphics";
 import heroBgImage from "@assets/de-hero-arizona-dusk.png";
 import { useBooking } from "@/contexts/BookingContext";
+import { CTA } from "@/lib/ctaCopy";
 
 export const ModernHeroSection = (): JSX.Element => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -60,7 +62,7 @@ export const ModernHeroSection = (): JSX.Element => {
           style={{
             y: backgroundY,
             background:
-              "radial-gradient(circle at 100% 0%, rgba(236, 72, 153, 0.22) 0%, rgba(139, 92, 246, 0.16) 42%, transparent 58%)",
+              "radial-gradient(circle at 100% 0%, rgba(236, 72, 153, 0.12) 0%, rgba(139, 92, 246, 0.08) 42%, transparent 58%)",
           }}
         />
         <motion.div
@@ -69,7 +71,7 @@ export const ModernHeroSection = (): JSX.Element => {
           style={{
             y: floatingY3,
             background:
-              "radial-gradient(circle at 0% 100%, rgba(217, 70, 239, 0.14) 0%, rgba(244, 63, 94, 0.08) 45%, transparent 60%)",
+              "radial-gradient(circle at 0% 100%, rgba(217, 70, 239, 0.08) 0%, rgba(244, 63, 94, 0.05) 45%, transparent 60%)",
           }}
         />
         <div
@@ -152,16 +154,28 @@ export const ModernHeroSection = (): JSX.Element => {
               </div>
 
               <div className="mt-0.5 flex flex-col items-start gap-2.5 sm:gap-3" id="assessment-cta">
-                <Button
-                  type="button"
-                  size="lg"
-                  data-testid="button-hero-schedule"
-                  onClick={handleSchedule}
-                  className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-semibold bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white border border-pink-300/35 shadow-lg shadow-pink-500/40 hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300"
-                >
-                  Schedule Your Cyber Risk Assessment
-                  <ArrowRight className="ml-2 w-5 h-5" aria-hidden="true" />
-                </Button>
+                <div className="flex w-full flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
+                  <Button
+                    type="button"
+                    size="lg"
+                    data-testid="button-hero-schedule"
+                    onClick={handleSchedule}
+                    className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-semibold bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white border border-pink-300/30 shadow-lg shadow-pink-500/25 hover:shadow-xl hover:shadow-pink-500/35 transition-all duration-300"
+                  >
+                    {CTA.primary}
+                    <ArrowRight className="ml-2 w-5 h-5" aria-hidden="true" />
+                  </Button>
+                  <Button
+                    asChild
+                    type="button"
+                    size="lg"
+                    variant="outline"
+                    data-testid="button-hero-pricing"
+                    className="h-12 sm:h-14 px-6 sm:px-7 text-base font-semibold border-white/25 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+                  >
+                    <Link href={CTA.secondaryHref}>{CTA.secondary}</Link>
+                  </Button>
+                </div>
 
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-white/75">
                   <span className="inline-flex items-center gap-1.5">
@@ -213,12 +227,12 @@ export const ModernHeroSection = (): JSX.Element => {
                   aria-hidden="true"
                   style={{
                     background:
-                      "radial-gradient(ellipse at center, rgba(236, 72, 153, 0.22) 0%, rgba(139, 92, 246, 0.12) 45%, transparent 70%)",
+                      "radial-gradient(ellipse at center, rgba(236, 72, 153, 0.12) 0%, rgba(139, 92, 246, 0.08) 45%, transparent 70%)",
                   }}
                   animate={
                     prefersReducedMotion
                       ? undefined
-                      : { opacity: [0.3, 0.45, 0.3], scale: [1, 1.02, 1] }
+                      : { opacity: [0.22, 0.34, 0.22], scale: [1, 1.015, 1] }
                   }
                   transition={
                     prefersReducedMotion
