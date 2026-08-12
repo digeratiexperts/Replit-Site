@@ -20,10 +20,6 @@ export const ModernHeroSection = (): JSX.Element => {
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 28]);
-  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["0%", "10%"]);
-  const floatingY1 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -36]);
-  const floatingY2 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -24]);
-  const floatingY3 = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -14]);
 
   const features = [
     { icon: FileCheck, text: "Insurance & Compliance-Ready" },
@@ -55,50 +51,7 @@ export const ModernHeroSection = (): JSX.Element => {
         />
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/70 to-[#050312]/95">
-        <motion.div
-          className="absolute top-0 right-0 w-[560px] h-[560px] pointer-events-none"
-          data-testid="hero-parallax-orb-1"
-          style={{
-            y: backgroundY,
-            background:
-              "radial-gradient(circle at 100% 0%, rgba(236, 72, 153, 0.12) 0%, rgba(139, 92, 246, 0.08) 42%, transparent 58%)",
-          }}
-        />
-        <motion.div
-          className="absolute bottom-0 left-0 w-[420px] h-[420px] pointer-events-none"
-          data-testid="hero-parallax-orb-2"
-          style={{
-            y: floatingY3,
-            background:
-              "radial-gradient(circle at 0% 100%, rgba(217, 70, 239, 0.08) 0%, rgba(244, 63, 94, 0.05) 45%, transparent 60%)",
-          }}
-        />
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.035]"
-          style={{
-            backgroundImage: "radial-gradient(circle at center, rgba(255,255,255,0.9) 1px, transparent 1px)",
-            backgroundSize: "22px 22px",
-          }}
-          aria-hidden="true"
-        />
-      </div>
-
-      <motion.div
-        className="absolute top-28 right-16 w-3 h-3 rounded-full bg-violet-500/25 pointer-events-none hidden xl:block"
-        style={{ y: floatingY1 }}
-        data-testid="hero-floating-element-1"
-      />
-      <motion.div
-        className="absolute top-40 right-36 w-2 h-2 rounded-full bg-purple-400/35 pointer-events-none hidden xl:block"
-        style={{ y: floatingY2 }}
-        data-testid="hero-floating-element-2"
-      />
-      <motion.div
-        className="absolute bottom-36 left-16 w-2.5 h-2.5 rounded-full bg-fuchsia-500/25 pointer-events-none hidden xl:block"
-        style={{ y: floatingY3 }}
-        data-testid="hero-floating-element-3"
-      />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/70 to-[#050312]/95" />
 
       {/* pb clears sticky section dock so hero features aren't clipped */}
       <motion.div
@@ -220,23 +173,13 @@ export const ModernHeroSection = (): JSX.Element => {
                 }}
                 style={{ perspective: 1200 }}
               >
-                <motion.div
+                <div
                   className="absolute -inset-4 -z-10 rounded-[2rem] pointer-events-none"
                   aria-hidden="true"
                   style={{
                     background:
-                      "radial-gradient(ellipse at center, rgba(236, 72, 153, 0.12) 0%, rgba(139, 92, 246, 0.08) 45%, transparent 70%)",
+                      "radial-gradient(ellipse at center, rgba(236, 72, 153, 0.1) 0%, transparent 70%)",
                   }}
-                  animate={
-                    prefersReducedMotion
-                      ? undefined
-                      : { opacity: [0.22, 0.34, 0.22], scale: [1, 1.015, 1] }
-                  }
-                  transition={
-                    prefersReducedMotion
-                      ? undefined
-                      : { duration: 4.5, repeat: Infinity, ease: "easeInOut" }
-                  }
                 />
                 <div
                   className="relative rounded-2xl overflow-hidden border border-white/12 shadow-2xl shadow-violet-950/50"

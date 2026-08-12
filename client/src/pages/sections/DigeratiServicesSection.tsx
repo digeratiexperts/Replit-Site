@@ -114,19 +114,19 @@ export const DigeratiServicesSection = (): JSX.Element => {
     >
       <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
         <motion.div
-          className="mb-10 text-center md:mb-14"
+          className="mb-10 max-w-2xl md:mb-14"
           initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.45 }}
         >
-          <p className="mb-3 text-base font-medium uppercase tracking-wide text-[#FF477F] md:text-lg">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF477F]">
             How to work with us
           </p>
-          <h2 className="mb-4 text-4xl font-bold text-white sm:text-5xl md:text-6xl">
+          <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
             Cybersecurity-First Managed IT
           </h2>
-          <p className="mx-auto max-w-3xl text-xl leading-relaxed text-white/65 md:text-2xl">
+          <p className="max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">
             Three clear paths. Capability depth stays available here and under Protect — nothing
             removed.
           </p>
@@ -153,15 +153,15 @@ export const DigeratiServicesSection = (): JSX.Element => {
                     <IconWell icon={Icon} size="md" surface="dark" />
                   </div>
                 )}
-                <div className="flex flex-1 flex-col px-8 pb-8 pt-2 lg:px-10 lg:pb-10">
-                  <h3 className="mb-3 text-2xl font-semibold text-white lg:text-3xl">{path.title}</h3>
-                  <p className="mb-7 flex-1 text-lg leading-relaxed text-white/65 lg:text-xl">
+                <div className="flex flex-1 flex-col px-6 pb-7 pt-1 lg:px-8 lg:pb-8">
+                  <h3 className="mb-2 text-xl font-semibold text-white lg:text-2xl">{path.title}</h3>
+                  <p className="mb-5 flex-1 text-base leading-relaxed text-white/65">
                     {path.description}
                   </p>
                   <Link href={path.link} data-testid={`link-${path.testId}`}>
-                    <span className="inline-flex items-center gap-2 text-lg font-medium text-violet-300 hover:text-violet-200">
+                    <span className="inline-flex items-center gap-2 text-sm font-medium text-violet-300 hover:text-violet-200">
                       {path.cta}
-                      <ArrowRight className="h-5 w-5" aria-hidden="true" />
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
                     </span>
                   </Link>
                 </div>
@@ -170,32 +170,32 @@ export const DigeratiServicesSection = (): JSX.Element => {
           })}
         </div>
 
-        <div className="mt-12 md:mt-16" data-testid="engage-capability-preview">
-          <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+        <div className="mt-14 md:mt-16" data-testid="engage-capability-preview">
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
             <div>
-              <h3 className="text-2xl font-bold text-white md:text-3xl">Security capabilities</h3>
-              <p className="mt-2 text-base text-white/55 md:text-lg">
+              <h3 className="text-lg font-semibold text-white md:text-xl">Security capabilities</h3>
+              <p className="mt-1 text-sm text-white/50 md:text-base">
                 Preview of the stack we manage — also detailed under Protect.
               </p>
             </div>
             <Link href="/#protection" data-testid="link-see-security-stack">
-              <span className="inline-flex items-center gap-2 text-base text-white/75 hover:text-white">
-                <Layers className="h-5 w-5 text-pink-400" aria-hidden="true" />
+              <span className="inline-flex items-center gap-2 text-sm text-white/65 hover:text-white">
+                <Layers className="h-4 w-4 text-pink-400" aria-hidden="true" />
                 See full Protect process
               </span>
             </Link>
           </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
             {capabilityPreview.map((item) => {
               const Icon = item.icon;
               return (
                 <Link key={item.title} href={item.link}>
-                  <div className="h-full cursor-pointer rounded-2xl border border-white/10 bg-[#151217] p-5 transition-all hover:border-violet-400/40 md:p-6">
-                    <div className="mb-2 flex items-center gap-3">
-                      <IconWell icon={Icon} size="sm" surface="dark" />
-                      <p className="text-base font-semibold text-white md:text-lg">{item.title}</p>
+                  <div className="flex cursor-pointer items-start gap-3">
+                    <IconWell icon={Icon} size="sm" surface="dark" />
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-white md:text-base">{item.title}</p>
+                      <p className="mt-0.5 text-sm leading-relaxed text-white/50">{item.desc}</p>
                     </div>
-                    <p className="text-sm leading-relaxed text-white/55 md:text-base">{item.desc}</p>
                   </div>
                 </Link>
               );
@@ -203,7 +203,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-4 text-base md:mt-12 md:text-lg">
+        <div className="mt-10 flex flex-wrap items-center gap-4 text-sm md:mt-12 md:text-base">
           <Link href="/solutions/proactive-office-ecosystem" data-testid="link-proactive-ecosystem">
             <span className="inline-flex items-center gap-2 text-white/75 transition-colors hover:text-white">
               How the ProActive Ecosystem works

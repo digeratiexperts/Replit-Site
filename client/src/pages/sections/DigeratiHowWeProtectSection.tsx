@@ -1,22 +1,11 @@
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { Shield, Search, FileText, Settings, Activity, Eye, ShieldCheck, UserCheck, KeyRound, Cloud, AlertCircle } from "lucide-react";
-import { useRef } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Search, FileText, Settings, Activity, Eye, ShieldCheck, UserCheck, KeyRound, Cloud, AlertCircle } from "lucide-react";
 import { Link } from "wouter";
 import { IconWell } from "@/components/visual/IconWell";
 
-
 export const DigeratiHowWeProtectSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
-  const sectionRef = useRef<HTMLElement>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
-
-  // Parallax transforms - subtle depth effect for light section
-  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-3%", "3%"]);
-  
   const steps = [
     {
       number: 1,
@@ -48,126 +37,60 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
     }
   ];
 
-  const containerVariants = prefersReducedMotion ? undefined : {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.05
-      }
-    }
-  };
-
-  const stepVariants = prefersReducedMotion ? undefined : {
-    hidden: { opacity: 0, y: 15 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.35,
-        ease: "easeOut"
-      }
-    }
-  };
-
   return (
-    <section 
-      ref={sectionRef}
-      className="py-14 md:py-18 lg:py-20 relative overflow-hidden bg-white"
-      style={{ position: 'relative' }}
-    >
-      {/* Subtle background gradient */}
-      <div 
-        className="absolute inset-0 pointer-events-none"
-        style={{ 
-          background: "linear-gradient(180deg, #fafafa 0%, #ffffff 50%, #fafafa 100%)"
-        }}
-      />
-      {/* Subtle parallax accent */}
-      <motion.div 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] pointer-events-none opacity-50"
-        style={{ 
-          y: backgroundY,
-          background: "radial-gradient(ellipse, rgba(139, 92, 246, 0.05) 0%, transparent 70%)" 
-        }}
-      />
-      
-      <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
+    <section className="relative bg-white py-16 lg:py-24">
+      <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
         <motion.div
-          className="mb-8 text-center md:mb-12 lg:mb-16"
+          className="mb-12 max-w-2xl md:mb-16"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.35 }}
         >
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 md:mb-6 md:px-4 md:py-2">
-            <Shield className="h-3.5 w-3.5 text-violet-400 md:h-4 md:w-4" aria-hidden />
-            <span className="text-sm font-medium text-violet-600 md:text-base">Our Process</span>
-          </div>
-          <h2 className="mb-4 px-2 text-3xl font-bold leading-tight text-gray-900 sm:text-4xl md:mb-5 md:text-5xl lg:px-0 lg:text-6xl">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-violet-600">
+            Our Process
+          </p>
+          <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-gray-900 md:text-4xl">
             How We Protect Your Business
           </h2>
-          <p className="mx-auto max-w-3xl px-4 text-lg leading-relaxed text-gray-600 md:text-xl lg:px-0 lg:text-2xl">
+          <p className="text-base leading-relaxed text-gray-600 md:text-lg">
             Our proven 4-step process ensures your business stays secure and compliant
           </p>
         </motion.div>
 
-        <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 max-w-[92rem] mx-auto"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-        >
+        <ol className="mx-auto grid max-w-[92rem] grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {steps.map((step) => {
             const IconComponent = step.icon;
             return (
-              <motion.div 
-                key={step.number}
-                className="relative group"
-                variants={stepVariants}
-                data-testid={step.testId}
-              >
-                <div className="h-full bg-white border border-gray-200 rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6 shadow-sm transition-all duration-300 hover:border-violet-300 hover:shadow-xl hover:shadow-violet-500/10">
-                  {/* Step number badge */}
-                  <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                    <div className="w-8 h-8 sm:w-9 md:w-10 sm:h-9 md:h-10 rounded-lg md:rounded-xl bg-violet-400 flex items-center justify-center shadow-lg shadow-violet-400/25">
-                      <span className="text-sm sm:text-base md:text-lg font-bold text-white">
-                        {step.number}
-                      </span>
-                    </div>
-                    <IconWell icon={IconComponent} size="sm" surface="light" />
-                  </div>
-
-                  <h3 className="text-base sm:text-lg md:text-lg lg:text-xl font-bold text-gray-900 mb-2 sm:mb-3 group-hover:text-violet-400 transition-colors duration-300">
-                    {step.title}
-                  </h3>
-                  <p className="text-base text-gray-600 leading-relaxed">
-                    {step.description}
-                  </p>
+              <li key={step.number} data-testid={step.testId}>
+                <p className="font-mono text-xs font-semibold tracking-[0.18em] text-violet-500">
+                  {String(step.number).padStart(2, "0")}
+                </p>
+                <div className="mt-3 mb-3">
+                  <IconWell icon={IconComponent} size="sm" surface="light" />
                 </div>
-
-                {/* Connector line for desktop (except last item) */}
-                {step.number < 4 && (
-                  <div className="hidden lg:block absolute top-12 -right-3 w-6 h-0.5 bg-gradient-to-r from-violet-300 to-violet-100" />
-                )}
-              </motion.div>
+                <h3 className="mb-2 text-lg font-semibold text-gray-900">
+                  {step.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-gray-600 md:text-base">
+                  {step.description}
+                </p>
+              </li>
             );
           })}
-        </motion.div>
+        </ol>
 
-        <div className="mt-12 md:mt-16 max-w-[92rem] mx-auto" id="protection-stack">
-          <div className="text-center mb-6 md:mb-8">
-            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+        <div className="mx-auto mt-16 max-w-[92rem] border-t border-gray-200 pt-12 md:mt-20" id="protection-stack">
+          <div className="mb-8 max-w-2xl">
+            <h3 className="mb-2 text-lg font-semibold text-gray-900 md:text-xl">
               Security stack we manage
             </h3>
-            <p className="text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
+            <p className="text-sm leading-relaxed text-gray-600 md:text-base">
               Technical depth lives here and on each solution page — so the homepage stays clear
               without losing capability.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+          <div className="grid grid-cols-1 gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
               { icon: Eye, title: "SOC / MDR Monitoring", link: "/solutions/security-operations", desc: "24/7 detection and response." },
               { icon: ShieldCheck, title: "Endpoint Security (EDR)", link: "/solutions/threat-detection", desc: "Protect devices across the environment." },
@@ -179,12 +102,12 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
               const Icon = item.icon;
               return (
                 <Link key={item.title} href={item.link}>
-                  <div className="h-full cursor-pointer rounded-2xl border border-gray-200 bg-white p-5 transition-all hover:border-violet-300 hover:shadow-md md:p-6">
-                    <div className="mb-2 flex items-center gap-3">
-                      <IconWell icon={Icon} size="sm" surface="light" />
-                      <p className="text-base font-semibold text-gray-900 md:text-lg">{item.title}</p>
+                  <div className="flex cursor-pointer items-start gap-3">
+                    <IconWell icon={Icon} size="sm" surface="light" />
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-gray-900 md:text-base">{item.title}</p>
+                      <p className="mt-0.5 text-sm leading-relaxed text-gray-600">{item.desc}</p>
                     </div>
-                    <p className="text-sm leading-relaxed text-gray-600 md:text-base">{item.desc}</p>
                   </div>
                 </Link>
               );

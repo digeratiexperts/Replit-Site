@@ -151,12 +151,11 @@ export const engagePathVisualByTitle: Record<string, VisualStill | undefined> = 
 };
 
 /**
- * Homepage section editorials — one sculpture max, never Meshy clip-art.
- * Stats uses the scan lattice (threats). Other sections stay Lucide-only
- * so the three path cards remain the sculpture set, not a repeated icon salad.
+ * Homepage section editorials — sculptures stay on engage-path cards.
+ * Stats / Protect / Pricing are Lucide + type, not repeated stills.
  */
 export const homepageSectionAccents = {
-  statsThreats: engageSculptureSet.cyberRisk,
+  statsThreats: undefined as VisualStill | undefined,
   engagementAssessment: engageSculptureSet.cyberRisk,
   howItWorks: engageSculptureSet.fullyManaged,
   protectProcess: undefined as VisualStill | undefined,

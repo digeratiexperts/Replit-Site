@@ -21,6 +21,8 @@ with the locked engage-path sculpture set.
 - Engage path cards use the locked **dark technical sculpture** set
   (`client/public/images/visual-system/engage-paths/`) — graphite / smoked glass /
   violet-as-light — full-bleed into the card
+- Stats / Tackle / Protect stack / capabilities are composed lists and number strips — not identical card grids
+- Decorative radial blobs and floating dots removed from hero / stats / pricing
 - Industries: descriptions always visible (not hover-only)
 - SOC 2 / HIPAA badges unchanged pending DE confirmation
 - Featured package badges unchanged pending DE pick

@@ -26,30 +26,20 @@ export const DigeratiPricingSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section id="pricing" className="relative overflow-hidden bg-[#0a0a0a] py-12 md:py-16 lg:py-20">
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(211,18,106,0.12) 0%, transparent 55%)",
-        }}
-      />
-
+    <section id="pricing" className="relative bg-[#0a0a0a] py-16 md:py-20 lg:py-24">
       <div className="relative z-10 mx-auto max-w-[100rem] px-3 sm:px-4 lg:px-6">
         <motion.div
-          className="mx-auto mb-8 max-w-5xl text-center md:mb-12 lg:text-left"
+          className="mx-auto mb-12 max-w-5xl md:mb-14 lg:text-left"
           initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF477F] md:text-sm">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF477F]">
             No Black-Box IT
           </p>
-          <h2 className="mb-3 text-3xl font-bold text-white sm:text-4xl md:text-5xl">
+          <h2 className="mb-3 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
             Transparent pricing.{" "}
-            <span className="bg-gradient-to-r from-[#FF477F] to-fuchsia-400 bg-clip-text text-transparent">
-              No mystery quote.
-            </span>
+            <span className="text-[#FF477F]">No mystery quote.</span>
           </h2>
           <p className="text-base text-white/60 md:text-lg">{NO_BLACK_BOX_TAGLINE}</p>
         </motion.div>
