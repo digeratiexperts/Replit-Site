@@ -85,19 +85,19 @@ const RESOURCE_LINKS: Array<{
   iconBg: string;
 }> = [
   {
-    title: "Zoho Assist",
-    description: "Join a secure remote support session with our technicians",
+    title: "Join a remote session",
+    description: "Connect securely with a technician for live screen sharing and support",
     href: "https://assist.zoho.com/",
     icon: Monitor,
     external: true,
-    tags: ["Remote Support", "Zoho"],
+    tags: ["Live Help", "Screen Share"],
     cta: "Start session",
     accent: "text-[#c4b5fd]",
     iconBg: "bg-[#7c3aed]/20 ring-[#7c3aed]/35",
   },
   {
-    title: "Remote Support",
-    description: "How remote sessions work and what to expect",
+    title: "How remote support works",
+    description: "What to expect before, during, and after a remote support session",
     href: "/support/remote-support",
     icon: LifeBuoy,
     tags: ["Support Process", "Quick Guide"],
@@ -120,7 +120,7 @@ const RESOURCE_LINKS: Array<{
     description: "Tickets, services, billing, approvals, and account tools",
     href: PORTAL_LOGIN,
     icon: ShieldCheck,
-    tags: ["Client Access", "Portal Help"],
+    tags: ["Account Access", "Self-Service"],
     cta: "Open portal",
     accent: "text-[#fdba74]",
     iconBg: "bg-[#ea580c]/20 ring-[#ea580c]/35",
