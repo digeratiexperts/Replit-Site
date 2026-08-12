@@ -22,6 +22,7 @@ const routes = [
   "/resources/case-studies",
   "/resources/case-studies/healthcare-hipaa-readiness",
   "/resources/blog",
+  "/resources/security-updates",
   "/about/client-bill-of-rights",
   "/trust",
   "/trust/trust-center",
@@ -76,9 +77,37 @@ for (const path of routes) {
   if (res.status !== 410) fails.push(`/?bbp_search= → expected 410, got ${res.status}`);
 }
 
+// Internal commercial tools must not be indexable
+{
+  try {
+    const robots = await fetch(`${BASE}/robots.txt`);
+    const robotsText = await robots.text();
+    if (!/Disallow:\s*\/official-network-planner/i.test(robotsText)) {
+      fails.push(`robots.txt → missing Disallow /official-network-planner`);
+    }
+    if (!/Disallow:\s*\/de-ecosystem-matrix-offical/i.test(robotsText)) {
+      fails.push(`robots.txt → missing Disallow /de-ecosystem-matrix-offical`);
+    }
+
+    const planner = await fetch(`${BASE}/official-network-planner`, { redirect: "manual" });
+    const robotsTag = planner.headers.get("x-robots-tag") || "";
+    // Production may 302 to portal login; local/dev may 200 with X-Robots-Tag
+    if (planner.status === 200 && !/noindex/i.test(robotsTag)) {
+      fails.push(`/official-network-planner → missing X-Robots-Tag noindex (got status ${planner.status})`);
+    }
+    if (planner.status >= 400 && planner.status !== 401 && planner.status !== 403) {
+      fails.push(`/official-network-planner → unexpected HTTP ${planner.status}`);
+    }
+  } catch (err) {
+    fails.push(`internal-tool checks → ${err.message}`);
+  }
+}
+
 if (fails.length) {
   console.error("Public route smoke FAILED:");
   for (const f of fails) console.error(" -", f);
   process.exit(1);
 }
-console.log(`Public route smoke OK (${routes.length} routes + google-reviews + bbp_search 410) against ${BASE}`);
+console.log(
+  `Public route smoke OK (${routes.length} routes + google-reviews + bbp_search 410 + internal-tool noindex) against ${BASE}`,
+);

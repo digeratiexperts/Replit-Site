@@ -6,93 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Calendar, Clock, ArrowRight, User, Search, AlertCircle, Shield, Lock, ExternalLink } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import {
+  formatUpdateDisplayDate,
+  getSecurityUpdatesSorted,
+} from "@/data/securityUpdates";
 
-const securityUpdates = [
-  {
-    id: 1,
-    category: "CISA Alert",
-    date: "2026-01-07",
-    title: "KEV Added: HPE OneView Remote Code Execution (CVE-2025-37164)",
-    excerpt: "CISA added an HPE OneView code injection/RCE issue to the Known Exploited Vulnerabilities catalog. Apply vendor mitigations and patch per guidance.",
-    author: "Security Team",
-    readTime: "3 min read",
-    urgent: true,
-    slug: "kev-hpe-oneview-cve-2025-37164",
-    sourceUrl: "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
-  },
-  {
-    id: 2,
-    category: "Threat Analysis",
-    date: "2025-12-05",
-    title: "Active Exploitation: React Server Components RCE Added to KEV (CVE-2025-55182)",
-    excerpt: "CISA KEV lists an RCE risk tied to React Server Components endpoints. Prioritize exposure review and patch/mitigation guidance immediately.",
-    author: "Security Team",
-    readTime: "5 min read",
-    urgent: true,
-    slug: "kev-react-server-components-cve-2025-55182",
-    sourceUrl: "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
-  },
-  {
-    id: 3,
-    category: "Compliance Update",
-    date: "2025-12-16",
-    title: "HIPAA Enforcement: OCR Settlement Includes $112,500 Payment (Right of Access)",
-    excerpt: "HHS OCR announced a HIPAA Right of Access enforcement action resolved via settlement and payment. Good reminder to verify access request workflows.",
-    author: "Compliance Team",
-    readTime: "4 min read",
-    urgent: false,
-    slug: "hhs-ocr-right-of-access-concentra-2025-12-16",
-    sourceUrl: "https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/index.html"
-  },
-  {
-    id: 4,
-    category: "CISA Alert",
-    date: "2026-01-07",
-    title: "KEV Added: Microsoft Office PowerPoint RCE (CVE-2009-0556)",
-    excerpt: "CISA KEV added a Microsoft Office PowerPoint code injection/RCE vulnerability. Patch/mitigate per vendor guidance.",
-    author: "Security Team",
-    readTime: "3 min read",
-    urgent: true,
-    slug: "kev-microsoft-office-ppt-cve-2009-0556",
-    sourceUrl: "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
-  },
-  {
-    id: 5,
-    category: "CISA Alert",
-    date: "2025-12-16",
-    title: "KEV Added: Fortinet SAML Auth Bypass (CVE-2025-59718)",
-    excerpt: "KEV entry impacts FortiOS / FortiProxy / FortiWeb related to SAML message handling. Patch and review SSO exposure paths.",
-    author: "Security Team",
-    readTime: "4 min read",
-    urgent: true,
-    slug: "kev-fortinet-cve-2025-59718",
-    sourceUrl: "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
-  },
-  {
-    id: 6,
-    category: "Compliance Update",
-    date: "2025-03-06",
-    title: "HIPAA Right of Access: OCR Imposes $200,000 Civil Monetary Penalty (OHSU)",
-    excerpt: "HHS OCR announced a $200,000 penalty tied to delayed access to medical records. Reinforces strict handling of access requests and timelines.",
-    author: "Compliance Team",
-    readTime: "4 min read",
-    urgent: false,
-    slug: "hhs-ocr-ohsu-200k-right-of-access-2025-03-06",
-    sourceUrl: "https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/index.html"
-  },
-  {
-    id: 7,
-    category: "Compliance Update",
-    date: "2025-02-20",
-    title: "HIPAA Security Rule: OCR Issues $1.5M Penalty After Cyberattack (Warby Parker)",
-    excerpt: "HHS OCR announced a $1.5M civil money penalty following a hacking investigation involving unauthorized access to customer accounts.",
-    author: "Compliance Team",
-    readTime: "4 min read",
-    urgent: false,
-    slug: "hhs-ocr-warby-parker-1-5m-2025-02-20",
-    sourceUrl: "https://www.hhs.gov/hipaa/for-professionals/compliance-enforcement/agreements/index.html"
-  }
-];
+const securityUpdates = getSecurityUpdatesSorted();
 
 const categories = ["All", "CISA Alert", "Threat Analysis", "Compliance Update"];
 
@@ -146,10 +65,7 @@ export default function SecurityUpdates() {
     return matchesCategory && matchesSearch;
   });
 
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  };
+  const formatDate = (dateStr: string) => formatUpdateDisplayDate(dateStr);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#030228] to-[#0f0d2e]">

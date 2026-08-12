@@ -207,9 +207,11 @@ function Router() {
         </Suspense>
       )} />
       <Route path="/solutions/proactive-enterprise-ecosystem" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <ProActiveEnterpriseEcosystemPage />
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense fallback={<PageLoadingSkeleton />}>
+            <ProActiveEnterpriseEcosystemPage />
+          </Suspense>
+        </ErrorBoundary>
       )} />
       <Route path="/solutions/standalone-services" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
@@ -244,8 +246,7 @@ function Router() {
         <Suspense fallback={<PageLoadingSkeleton />}>
           <CoManagedStore />
         </Suspense>
-      )} />
-      <Route path="/store/product/:sku" component={() => (
+      )} />      <Route path="/store/product/:sku" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <ProductDetail />
         </Suspense>

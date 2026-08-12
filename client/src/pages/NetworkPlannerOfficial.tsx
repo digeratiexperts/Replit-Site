@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { 
   Shield, 
@@ -6,7 +6,8 @@ import {
   Printer, 
   RotateCcw,
   Check,
-  Info
+  Info,
+  Lock
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +26,74 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { portalLoginWithReturn } from "@/lib/portalUrls";
+
+type GateState = "checking" | "allowed" | "denied";
+
+function InternalToolGate({ children }: { children: React.ReactNode }) {
+  const [gate, setGate] = useState<GateState>("checking");
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/portal/me", { credentials: "include" });
+        if (!cancelled) setGate(res.ok ? "allowed" : "denied");
+      } catch {
+        if (!cancelled) setGate("denied");
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (gate === "checking") {
+    return (
+      <div className="min-h-screen bg-[#0a1020] text-white flex items-center justify-center p-8">
+        <Helmet>
+          <title>Networking Planner | Digerati Experts</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
+        <p className="text-slate-400">Checking authorization…</p>
+      </div>
+    );
+  }
+
+  if (gate === "denied") {
+    const loginUrl = portalLoginWithReturn(
+      typeof window !== "undefined" ? window.location.pathname : "/official-network-planner",
+    );
+    return (
+      <div className="min-h-screen bg-[#0a1020] text-white flex items-center justify-center p-8">
+        <Helmet>
+          <title>Internal Tool | Digerati Experts</title>
+          <meta name="robots" content="noindex, nofollow" />
+          <meta name="description" content="Internal Digerati Experts tooling. Authentication required." />
+        </Helmet>
+        <div className="max-w-md text-center space-y-4 border border-white/10 rounded-2xl p-8 bg-[#141b2b]">
+          <div className="mx-auto w-12 h-12 rounded-full bg-amber-500/15 flex items-center justify-center">
+            <Lock className="w-6 h-6 text-amber-300" aria-hidden="true" />
+          </div>
+          <h1 className="text-xl font-bold">Internal tool — sign-in required</h1>
+          <p className="text-slate-400 text-sm leading-relaxed">
+            The Networking Planner is for authorized Digerati staff and partners. It is not a public
+            marketing calculator. Sign in through the Client Portal to continue.
+          </p>
+          <a
+            href={loginUrl}
+            className="inline-flex items-center justify-center rounded-lg bg-violet-600 hover:bg-violet-500 px-5 py-2.5 font-semibold"
+            data-testid="network-planner-login"
+          >
+            Sign in to continue
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
+}
 
 interface GatewayOption {
   id: string;
@@ -43,6 +112,14 @@ const gatewayOptions: GatewayOption[] = [
 ];
 
 export default function NetworkPlannerOfficial() {
+  return (
+    <InternalToolGate>
+      <NetworkPlannerOfficialApp />
+    </InternalToolGate>
+  );
+}
+
+function NetworkPlannerOfficialApp() {
   const [cloudShield, setCloudShield] = useState(true);
   const [coreStack, setCoreStack] = useState(true);
   const [sites, setSites] = useState(1);
