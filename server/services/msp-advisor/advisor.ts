@@ -14,7 +14,7 @@ import {
   getOrCreateSession,
   updateProfile,
 } from "./session";
-import { appendDeskMessage } from "./persist";
+import { appendDeskMessage, isDeskAgentLive } from "./persist";
 import type {
   AdvisorChatRequest,
   AdvisorChatResponse,
@@ -131,6 +131,37 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
   // Merge heuristic extraction before model so known facts are available
   let profile = mergeProfile(session.profile, extractProfileFromText(message));
   updateProfile(session, profile);
+
+  // When a portal agent has joined, skip AI and hand the turn to the human.
+  const agentStatus = await isDeskAgentLive(session.id);
+  if (agentStatus.live) {
+    appendMessage(session, "user", message);
+    try {
+      await appendDeskMessage({
+        sessionId: session.id,
+        role: "user",
+        content: message,
+        email: profile.email || null,
+        contactName: profile.contactName || null,
+        companyName: profile.companyName || null,
+        pagePath: page?.pathname || null,
+      });
+    } catch (err: any) {
+      console.warn("[msp-advisor] agent-live persist failed:", err?.message || err);
+    }
+    const agentLabel = agentStatus.agentName || "a Digerati specialist";
+    return {
+      sessionId: session.id,
+      reply: `${agentLabel} is with you now — your message was delivered. They’ll reply in this chat shortly.`,
+      mode: session.lastMode || "existing_client",
+      profile,
+      actions: defaultActionsForMode(session.lastMode || "existing_client"),
+      analyticsEvents: ["support_routed"],
+      knownFacts: knownFactsList(profile),
+      agentLive: true,
+      agentName: agentStatus.agentName,
+    };
+  }
 
   let mode = classifyMode(message, page);
 

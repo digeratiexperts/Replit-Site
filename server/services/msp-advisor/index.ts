@@ -9,8 +9,14 @@ export {
   initDeskChatStore,
   listDeskSessions,
   getDeskSessionMessages,
+  getDeskMessagesSince,
   upsertDeskSession,
   appendDeskMessage,
+  claimDeskSession,
+  releaseDeskSession,
+  isDeskAgentLive,
   getDeskStoreStatus,
+  AGENT_LIVE_MS,
 } from "./persist";
+export type { DeskChatRole, DeskChatMessage, DeskChatSessionSummary } from "./persist";
 export type * from "./types";

@@ -29,12 +29,14 @@ interface ZohoASAPWidgetProps {
 }
 
 type ActiveTab = "chat" | "ticket" | "resources";
-type ChatRole = "user" | "assistant";
+type ChatRole = "user" | "assistant" | "agent";
 
 type ChatMessage = {
   id: string;
   role: ChatRole;
   content: string;
+  senderName?: string | null;
+  createdAt?: string;
 };
 
 type TicketResult = {
@@ -106,7 +108,11 @@ export const ZohoASAPWidget = ({
   const [chatInput, setChatInput] = useState("");
   const [isChatSending, setIsChatSending] = useState(false);
   const [assistantAvailable, setAssistantAvailable] = useState<boolean | null>(null);
+  const [agentLive, setAgentLive] = useState(false);
+  const [agentName, setAgentName] = useState<string | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const pollSinceRef = useRef<string | null>(null);
+  const knownMsgIdsRef = useRef<Set<string>>(new Set(["welcome"]));
 
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
@@ -237,6 +243,66 @@ export const ZohoASAPWidget = ({
     chatEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [activeTab, chatMessages]);
 
+  // Pull portal agent (and any missed) messages into the website desk
+  useEffect(() => {
+    if (!advisorSessionId || !isOpen) return;
+    let cancelled = false;
+
+    const mergeIncoming = (incoming: ChatMessage[], live?: boolean, name?: string | null) => {
+      if (typeof live === "boolean") setAgentLive(live);
+      if (name) setAgentName(name);
+      if (!incoming.length) return;
+      setChatMessages((current) => {
+        const next = [...current];
+        for (const msg of incoming) {
+          if (knownMsgIdsRef.current.has(msg.id)) continue;
+          // Skip echoing the visitor's own turns (already rendered optimistically)
+          if (msg.role === "user") {
+            knownMsgIdsRef.current.add(msg.id);
+            if (msg.createdAt) pollSinceRef.current = msg.createdAt;
+            continue;
+          }
+          knownMsgIdsRef.current.add(msg.id);
+          if (msg.createdAt) pollSinceRef.current = msg.createdAt;
+          next.push({
+            id: msg.id,
+            role: msg.role,
+            content: msg.content,
+            senderName: msg.senderName,
+            createdAt: msg.createdAt,
+          });
+        }
+        return next;
+      });
+    };
+
+    const poll = async () => {
+      try {
+        const qs = pollSinceRef.current
+          ? `?since=${encodeURIComponent(pollSinceRef.current)}`
+          : "";
+        const res = await fetch(`/api/public/advisor/chat/${encodeURIComponent(advisorSessionId)}/messages${qs}`);
+        if (!res.ok || cancelled) return;
+        const data = await res.json();
+        if (!data.success || cancelled) return;
+        mergeIncoming(
+          Array.isArray(data.messages) ? data.messages : [],
+          !!data.agentLive,
+          data.agentName || null,
+        );
+      } catch {
+        /* ignore transient poll errors */
+      }
+    };
+
+    void poll();
+    const id = window.setInterval(poll, 2500);
+    return () => {
+      cancelled = true;
+      window.clearInterval(id);
+    };
+  }, [advisorSessionId, isOpen]);
+
   const handleSendChat = async (prompt?: string) => {
     const content = (prompt ?? chatInput).trim();
     if (!content || isChatSending) return;
@@ -254,7 +320,9 @@ export const ZohoASAPWidget = ({
       id: `user-${Date.now()}`,
       role: "user",
       content,
+      createdAt: new Date().toISOString(),
     };
+    knownMsgIdsRef.current.add(userMessage.id);
 
     setChatMessages((current) => [...current, userMessage]);
     setChatInput("");
@@ -290,14 +358,30 @@ export const ZohoASAPWidget = ({
         throw new Error("The advisor returned an invalid response.");
       }
 
-      if (data.sessionId) setAdvisorSessionId(data.sessionId);
+      if (data.sessionId) {
+        setAdvisorSessionId(data.sessionId);
+        // Only poll for messages newer than this turn (avoid duplicating local AI bubbles)
+        if (!pollSinceRef.current) {
+          pollSinceRef.current = new Date().toISOString();
+        }
+      }
       setAssistantAvailable(true);
+      if (data.agentLive) {
+        setAgentLive(true);
+        if (data.agentName) setAgentName(String(data.agentName));
+      }
+      const assistantId = `assistant-${Date.now()}`;
+      knownMsgIdsRef.current.add(assistantId);
+      const createdAt = new Date().toISOString();
+      pollSinceRef.current = createdAt;
       setChatMessages((current) => [
         ...current,
         {
-          id: `assistant-${Date.now()}`,
+          id: assistantId,
           role: "assistant",
           content: replyContent,
+          createdAt,
+          senderName: data.agentLive ? data.agentName || "DE Desk" : null,
         },
       ]);
     } catch (error) {
@@ -455,7 +539,9 @@ export const ZohoASAPWidget = ({
                       DE Desk
                     </h2>
                     <p className="text-[11px] text-pink-100/70" data-testid="text-widget-status">
-                      Sharp answers · tickets · Assist
+                      {agentLive
+                        ? `${agentName || "Specialist"} joined · live handoff`
+                        : "Sharp answers · tickets · Assist"}
                     </p>
                   </div>
                 </div>
@@ -509,18 +595,22 @@ export const ZohoASAPWidget = ({
                       <div className="flex items-center gap-2 text-xs font-medium text-slate-700">
                         <span
                           className={`h-2 w-2 rounded-full ${
-                            assistantAvailable === true
-                              ? "bg-emerald-500"
-                              : assistantAvailable === false
-                                ? "bg-amber-400"
-                                : "bg-slate-300"
+                            agentLive
+                              ? "bg-sky-500"
+                              : assistantAvailable === true
+                                ? "bg-emerald-500"
+                                : assistantAvailable === false
+                                  ? "bg-amber-400"
+                                  : "bg-slate-300"
                           }`}
                         />
-                        {assistantAvailable === true
-                          ? "DE Desk online"
-                          : assistantAvailable === false
-                            ? "Ticket desk available"
-                            : "Connecting…"}
+                        {agentLive
+                          ? `${agentName || "Specialist"} on desk`
+                          : assistantAvailable === true
+                            ? "DE Desk online"
+                            : assistantAvailable === false
+                              ? "Ticket desk available"
+                              : "Connecting…"}
                       </div>
                       <button
                         type="button"
@@ -534,30 +624,44 @@ export const ZohoASAPWidget = ({
 
                   {/* Light message body */}
                   <div className="min-h-0 flex-1 space-y-3.5 overflow-y-auto bg-slate-50 px-4 py-4" aria-live="polite">
-                    {chatMessages.map((chatMessage) => (
-                      <div
-                        key={chatMessage.id}
-                        className={`flex ${chatMessage.role === "user" ? "justify-end" : "justify-start"}`}
-                      >
+                    {chatMessages.map((chatMessage) => {
+                      const isUser = chatMessage.role === "user";
+                      const isAgent = chatMessage.role === "agent";
+                      return (
                         <div
-                          className={`max-w-[88%] px-3.5 py-2.5 text-sm leading-relaxed ${
-                            chatMessage.role === "user"
-                              ? "rounded-2xl rounded-br-md bg-[#D3126A] text-white"
-                              : "rounded-2xl rounded-bl-md border border-slate-200 bg-white text-slate-800 shadow-sm"
-                          }`}
+                          key={chatMessage.id}
+                          className={`flex ${isUser ? "justify-end" : "justify-start"}`}
                         >
-                          {chatMessage.role === "assistant" && (
-                            <div className="mb-1.5 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#D3126A]">
-                              <span className="flex h-4 w-4 items-center justify-center rounded bg-[#D3126A] text-[8px] font-bold tracking-normal text-white">
-                                DE
-                              </span>
-                              Desk
-                            </div>
-                          )}
-                          <p className="whitespace-pre-wrap">{chatMessage.content}</p>
+                          <div
+                            className={`max-w-[88%] px-3.5 py-2.5 text-sm leading-relaxed ${
+                              isUser
+                                ? "rounded-2xl rounded-br-md bg-[#D3126A] text-white"
+                                : isAgent
+                                  ? "rounded-2xl rounded-bl-md border border-sky-200 bg-sky-50 text-slate-800 shadow-sm"
+                                  : "rounded-2xl rounded-bl-md border border-slate-200 bg-white text-slate-800 shadow-sm"
+                            }`}
+                          >
+                            {!isUser && (
+                              <div
+                                className={`mb-1.5 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] ${
+                                  isAgent ? "text-sky-700" : "text-[#D3126A]"
+                                }`}
+                              >
+                                <span
+                                  className={`flex h-4 w-4 items-center justify-center rounded text-[8px] font-bold tracking-normal text-white ${
+                                    isAgent ? "bg-sky-600" : "bg-[#D3126A]"
+                                  }`}
+                                >
+                                  {isAgent ? "AG" : "DE"}
+                                </span>
+                                {isAgent ? chatMessage.senderName || agentName || "Agent" : "Desk"}
+                              </div>
+                            )}
+                            <p className="whitespace-pre-wrap">{chatMessage.content}</p>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
 
                     {chatMessages.length === 1 && (
                       <div className="grid grid-cols-1 gap-2 pt-1 sm:grid-cols-2">
@@ -579,7 +683,7 @@ export const ZohoASAPWidget = ({
                         <div className="rounded-2xl rounded-bl-md border border-slate-200 bg-white px-3.5 py-2.5 text-xs text-slate-500 shadow-sm">
                           <span className="inline-flex items-center gap-2">
                             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#D3126A]" />
-                            Thinking it through…
+                            {agentLive ? "Delivering to specialist…" : "Thinking it through…"}
                           </span>
                         </div>
                       </div>
@@ -601,7 +705,11 @@ export const ZohoASAPWidget = ({
                         }}
                         maxLength={2000}
                         rows={2}
-                        placeholder="Ask about risk, stack, pricing, or an outage…"
+                        placeholder={
+                          agentLive
+                            ? `Message ${agentName || "the specialist"}…`
+                            : "Ask about risk, stack, pricing, or an outage…"
+                        }
                         className="min-h-[52px] resize-none rounded-xl border-white/15 bg-white/10 text-sm text-white placeholder:text-pink-100/45 focus-visible:ring-[#D3126A]"
                         disabled={isChatSending}
                         data-testid="input-support-chat"
@@ -619,7 +727,9 @@ export const ZohoASAPWidget = ({
                       </Button>
                     </div>
                     <p className="mt-2 text-[11px] leading-4 text-pink-100/55">
-                      Operator-grade answers. Never share passwords, MFA codes, or private keys.
+                      {agentLive
+                        ? "A Digerati agent is in this thread. Never share passwords or MFA codes."
+                        : "Operator-grade answers. Never share passwords, MFA codes, or private keys."}
                     </p>
                   </div>
                 </div>

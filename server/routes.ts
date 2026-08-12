@@ -1128,6 +1128,91 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  // Portal agent reply → appears in the public website DE Desk widget
+  app.post("/api/portal/desk-chats/:sessionId/reply", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const {
+        getDeskSessionMessages,
+        appendDeskMessage,
+        claimDeskSession,
+      } = await import("./services/msp-advisor");
+      const sessionId = req.params.sessionId;
+      const content = String(req.body?.content || "").trim();
+      if (!content) return res.status(400).json({ error: "content is required" });
+      if (content.length > 8000) return res.status(400).json({ error: "Message too long" });
+
+      const { session } = await getDeskSessionMessages(sessionId);
+      if (!session) return res.status(404).json({ error: "Conversation not found" });
+
+      const isAdmin = req.user?.role === "admin";
+      const userEmail = (req.user?.email || "").toLowerCase();
+      if (!isAdmin && session.email && session.email.toLowerCase() !== userEmail) {
+        return res.status(403).json({ error: "Not allowed to reply to this conversation" });
+      }
+      if (!isAdmin && !session.email) {
+        return res.status(403).json({ error: "Conversation is not linked to an account email yet" });
+      }
+
+      const agentName =
+        String(req.body?.senderName || req.user?.fullName || req.user?.email || "DE Agent")
+          .trim()
+          .slice(0, 120) || "DE Agent";
+
+      await claimDeskSession(sessionId, agentName);
+      const message = await appendDeskMessage({
+        sessionId,
+        role: "agent",
+        content,
+        senderName: agentName,
+      });
+
+      res.json({ success: true, message, agentLive: true, agentName });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message || "Failed to send reply" });
+    }
+  });
+
+  app.post("/api/portal/desk-chats/:sessionId/claim", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { getDeskSessionMessages, claimDeskSession } = await import("./services/msp-advisor");
+      const { session } = await getDeskSessionMessages(req.params.sessionId);
+      if (!session) return res.status(404).json({ error: "Conversation not found" });
+      const isAdmin = req.user?.role === "admin";
+      const userEmail = (req.user?.email || "").toLowerCase();
+      if (!isAdmin && session.email && session.email.toLowerCase() !== userEmail) {
+        return res.status(403).json({ error: "Not allowed" });
+      }
+      if (!isAdmin && !session.email) {
+        return res.status(403).json({ error: "Conversation is not linked to an account email yet" });
+      }
+      const agentName =
+        String(req.body?.senderName || req.user?.fullName || req.user?.email || "DE Agent")
+          .trim()
+          .slice(0, 120) || "DE Agent";
+      const updated = await claimDeskSession(req.params.sessionId, agentName);
+      res.json({ success: true, session: updated });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message || "Failed to claim conversation" });
+    }
+  });
+
+  app.post("/api/portal/desk-chats/:sessionId/release", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { getDeskSessionMessages, releaseDeskSession } = await import("./services/msp-advisor");
+      const { session } = await getDeskSessionMessages(req.params.sessionId);
+      if (!session) return res.status(404).json({ error: "Conversation not found" });
+      const isAdmin = req.user?.role === "admin";
+      const userEmail = (req.user?.email || "").toLowerCase();
+      if (!isAdmin && session.email && session.email.toLowerCase() !== userEmail) {
+        return res.status(403).json({ error: "Not allowed" });
+      }
+      const updated = await releaseDeskSession(req.params.sessionId);
+      res.json({ success: true, session: updated });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message || "Failed to release conversation" });
+    }
+  });
+
   // ----- Portal org / multi-role -----
   app.get("/api/portal/me", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
@@ -4525,6 +4610,34 @@ export async function registerRoutes(app: Express) {
       res.json(publicSessionView(session));
     } catch (error: any) {
       res.status(500).json({ error: "Failed to load session" });
+    }
+  });
+
+  // Public poll so the website widget receives portal agent replies
+  app.get("/api/public/advisor/chat/:sessionId/messages", [advisorChatRateLimiter], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { getDeskMessagesSince } = await import("./services/msp-advisor");
+      const sessionId = String(req.params.sessionId || "").trim();
+      if (!sessionId) return res.status(400).json({ error: "sessionId is required" });
+      const since = typeof req.query.since === "string" ? req.query.since : undefined;
+      const result = await getDeskMessagesSince(sessionId, since);
+      if (!result.session) return res.status(404).json({ error: "Session not found" });
+      res.json({
+        success: true,
+        sessionId,
+        messages: result.messages.map((m) => ({
+          id: m.id,
+          role: m.role,
+          content: m.content,
+          senderName: m.senderName,
+          createdAt: m.createdAt,
+        })),
+        agentLive: result.agentLive,
+        agentName: result.agentName,
+        updatedAt: result.session.updatedAt,
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error?.message || "Failed to poll messages" });
     }
   });
 

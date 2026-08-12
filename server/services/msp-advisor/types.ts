@@ -102,6 +102,9 @@ export interface AdvisorChatResponse {
   actions: AdvisorAction[];
   analyticsEvents: string[];
   knownFacts: string[];
+  /** True when a portal agent has claimed this session and AI is paused. */
+  agentLive?: boolean;
+  agentName?: string | null;
 }
 
 export interface AdvisorActionRequest {
