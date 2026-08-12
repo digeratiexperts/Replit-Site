@@ -1,0 +1,14 @@
+---
+description: Mandatory pointer — follow root .cursorrules (full 42-section DE policy)
+alwaysApply: true
+---
+
+# Follow `.cursorrules`
+
+The authoritative project policy is the root **`.cursorrules`** file (DIGERATI EXPERTS — CURSOR PROJECT RULES, sections 1–42).
+
+- Treat every section as mandatory project policy.
+- Do not dilute, summarize-away, or skip sections when doing UI/product work.
+- For all UI work: inspect existing system ? implement ? launch and visually inspect with browser tooling ? separate UI/UX critique ? fix issues ? only then report completion.
+- Preserve existing DE website content/CTAs/nav/stats unless DE explicitly approves removal.
+- Canonical portal login: `https://portal.digeratiexperts.com/portal/login` — never invent `//login`.
