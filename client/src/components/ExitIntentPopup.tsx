@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { AnimatedShield } from "@/components/graphics/AnimatedShield";
+import { CTA } from "@/lib/ctaCopy";
 
 interface ExitIntentPopupProps {
   delay?: number;
@@ -207,7 +208,7 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                           "Sending..."
                         ) : (
                           <>
-                            Request Cyber Risk Assessment
+                            {CTA.primary}
                             <ArrowRight className="ml-2 h-4 w-4" />
                           </>
                         )}

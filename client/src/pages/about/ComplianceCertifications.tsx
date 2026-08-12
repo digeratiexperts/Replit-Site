@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
 import { motion } from "framer-motion";
+import { CTA } from "@/lib/ctaCopy";
 
 const complianceFrameworks = [
   {
@@ -375,7 +376,7 @@ export default function ComplianceCertifications() {
                   data-testid="button-schedule-assessment"
                 >
                   <a href="/book">
-                    Schedule Cyber Risk Assessment
+                    {CTA.primary}
                     <ExternalLink className="ml-2 h-4 w-4" />
                   </a>
                 </Button>

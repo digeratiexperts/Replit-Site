@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { CTA } from "@/lib/ctaCopy";
 
 const features = [
   {
@@ -111,7 +112,7 @@ export const ServicesSection = (): JSX.Element => {
               <div className="flex flex-col items-center gap-4 w-full">
                 <Button className="w-full h-auto bg-[#5034ff] rounded-[100px] border border-solid px-4 py-2 hover:bg-[#5034ff]/90">
                   <span className="font-normal text-white text-base tracking-[-0.05px] leading-6">
-                    Get My Risk Assessment
+                    {CTA.primary}
                   </span>
                   <img
                     className="w-8 h-8 ml-2"

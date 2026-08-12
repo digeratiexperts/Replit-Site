@@ -18,6 +18,7 @@ import { useSEO } from "@/hooks/useSEO";
 import { ServiceMatrix } from "@/components/ServiceMatrix";
 import { ServiceCapabilityMatrix } from "@/components/ServiceCapabilityMatrix";
 import { pageNarratives, type PageNarrative } from "@/pages/routes/pageNarratives";
+import { CTA } from "@/lib/ctaCopy";
 
 interface ServiceFeature {
   title: string;
@@ -384,7 +385,7 @@ export default function GenericServicePage({
                 data-testid="button-contact"
               >
                 <ArrowRight className="mr-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                Schedule Assessment
+                {CTA.primary}
               </a>
               <a
                 href="tel:480-519-5892"

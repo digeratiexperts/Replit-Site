@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Star, Quote, Building2, ArrowRight, Loader2 } from "lucide-react";
 import { Link } from "wouter";
 import { useBooking } from "@/contexts/BookingContext";
+import { CTA } from "@/lib/ctaCopy";
 import {
   GOOGLE_MAPS_CID_URL,
   googleReviewsManual,
@@ -301,7 +302,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-base font-semibold px-5 py-3"
               data-testid="button-proof-assessment"
             >
-              Schedule Your Assessment
+              {CTA.primary}
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>

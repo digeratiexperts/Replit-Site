@@ -1,6 +1,7 @@
 import { Shield, Award, CheckCircle, Star } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import ctaBgImage from "@assets/de-section-atmosphere.png";
+import { CTA } from "@/lib/ctaCopy";
 
 
 const badges = [
@@ -124,7 +125,7 @@ export const DigeratiCTASection = (): JSX.Element => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            Get My Free Assessment
+            {CTA.primary}
           </motion.button>
         </motion.div>
         

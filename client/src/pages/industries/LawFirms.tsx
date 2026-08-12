@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Lock, Eye, Briefcase, AlertCircle, Scale, Shield, Clock } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
+import { CTA } from "@/lib/ctaCopy";
 
 export default function LawFirms() {
   useSEO({
@@ -193,7 +194,7 @@ export default function LawFirms() {
               className="inline-flex items-center justify-center bg-white text-[#D3126A] hover:bg-pink-50 px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
               data-testid="button-schedule-law"
             >
-              Schedule Assessment
+              {CTA.primary}
             </a>
             <a 
               href="tel:480-519-5892"

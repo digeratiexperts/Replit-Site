@@ -1,6 +1,7 @@
 import { Phone, Mail, MapPin, Check } from "lucide-react";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "../sections/DigeratiEnhancedFooterSection";
+import { CTA } from "@/lib/ctaCopy";
 
 const questions = [
   "Do they answer calls live and provide multiple ways to reach support with clear escalation?",
@@ -116,7 +117,7 @@ export default function TwentyOneQuestions() {
                 className="inline-flex items-center gap-2 bg-violet-500 hover:bg-violet-400 text-white font-semibold px-8 py-4 rounded-lg transition-colors"
                 data-testid="button-schedule"
               >
-                Schedule Cyber Risk Assessment
+                {CTA.primary}
               </a>
             </div>
           </div>

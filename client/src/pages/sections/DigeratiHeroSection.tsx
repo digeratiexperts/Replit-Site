@@ -9,6 +9,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { CTA } from "@/lib/ctaCopy";
 
 // Form validation schema
 const assessmentFormSchema = z.object({
@@ -129,7 +130,7 @@ export const DigeratiHeroSection = (): JSX.Element => {
                 data-testid="button-hero-start"
                 aria-label="Get Cyber Risk Assessment - Schedule with our experts"
               >
-                Schedule Cyber Risk Assessment <ArrowRight className="ml-2 h-5 w-5" />
+                {CTA.primary} <ArrowRight className="ml-2 h-5 w-5" />
               </a>
               <a
                 href="tel:480-519-5892"
@@ -250,7 +251,7 @@ export const DigeratiHeroSection = (): JSX.Element => {
                             Submitting...
                           </>
                         ) : (
-                          "Schedule Cyber Risk Assessment"
+                          CTA.primary
                         )}
                       </Button>
                     </form>

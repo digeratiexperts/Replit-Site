@@ -12,6 +12,7 @@ import { useSEO } from "@/hooks/useSEO";
 import { Link } from "wouter";
 import { pricing, estimateMonthly, PRICING_SCOPE_NOTE, NO_BLACK_BOX_TAGLINE, type PricingTierKey } from "@/data/pricing";
 import { PricingToolsSection } from "./sections/PricingToolsSection";
+import { CTA } from "@/lib/ctaCopy";
 
 type CellValue = boolean | string;
 
@@ -491,7 +492,7 @@ export default function ProActiveEcosystemPricing() {
             </p>
             <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
               <Button size="lg" className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white">
-                Schedule Cyber Risk Assessment
+                {CTA.primary}
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </a>

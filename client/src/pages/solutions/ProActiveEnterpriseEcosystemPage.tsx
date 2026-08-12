@@ -1,5 +1,6 @@
 import { TierDetailTemplate, type TierPageConfig } from "@/components/TierDetailTemplate";
 import { pricing, formatPrice, formatUserPrice } from "@/data/pricing";
+import { CTA } from "@/lib/ctaCopy";
 
 const config: TierPageConfig = {
   id: "enterprise",
@@ -57,7 +58,7 @@ const config: TierPageConfig = {
     "ProActive Enterprise clients receive monthly operational and security reporting, ongoing posture dashboards, and a fixed quarterly executive review with vCIO and vCISO involvement covering risk posture, framework status, incidents, roadmap, and budget.",
   pricingNote:
     `ProActive Enterprise Ecosystem starts at ${formatUserPrice("enterprise")} with a ${formatPrice(pricing.enterprise.monthlyMin)}/mo minimum and is custom after assessment. Engagements are scoped to your environment, regulatory requirements, security operations maturity, and reporting cadence — and documented in a written statement of work before any change to your environment.`,
-  ctaPrimary: { label: "Schedule Risk Assessment", href: "https://meet.digerati-experts.com/" },
+  ctaPrimary: { label: CTA.primary, href: "https://meet.digerati-experts.com/" },
 };
 
 export default function ProActiveEnterpriseEcosystemPage() {

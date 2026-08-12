@@ -182,7 +182,7 @@ export function MegaMenu() {
           { value: '<15min', label: 'Response Time' },
           { value: '$50K+', label: 'Avg. Savings' },
         ],
-        cta: { text: 'Get Free Assessment', url: '/book' },
+        cta: { text: CTA.primary, url: '/book' },
       },
       sections: [
         {

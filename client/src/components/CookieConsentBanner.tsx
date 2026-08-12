@@ -163,8 +163,8 @@ export function CookieConsentBanner() {
                 }}
               />
 
-              <div className="relative z-10 max-w-screen-2xl mx-auto px-4 md:px-8 py-4 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
-                <p className="text-gray-200 text-xs leading-relaxed flex-1 min-w-0">
+              <div className="relative z-10 max-w-screen-2xl mx-auto px-4 md:px-8 py-3 md:py-4 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-8">
+                <p className="hidden md:block text-gray-200 text-xs leading-relaxed flex-1 min-w-0">
                   Digerati Experts uses cookies and similar tracking technologies to collect information you provide and to capture your interaction with our site. We use this information to enhance site navigation, personalize content, analyze your use of our website, and assist in our marketing efforts and customer service. To deliver the best experience, analytics and hosting service providers may have access to this information. By clicking "Accept All," you consent to our collection, use, and disclosure of such information. For more information about our data processing practices, please see our{" "}
                   <Link
                     href="/legal/privacy-policy"
@@ -175,31 +175,44 @@ export function CookieConsentBanner() {
                   </Link>
                   .
                 </p>
+                <p className="md:hidden text-gray-200 text-xs leading-snug flex-1 min-w-0">
+                  We use cookies to run the site, measure performance, and support marketing. Details in our{" "}
+                  <Link
+                    href="/legal/privacy-policy"
+                    className="underline underline-offset-2 text-violet-300 hover:text-white transition-colors font-medium"
+                    data-testid="link-privacy-policy-cookie-mobile"
+                  >
+                    Privacy Policy
+                  </Link>
+                  .
+                </p>
 
-                <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
+                <div className="flex items-center gap-2 flex-shrink-0 flex-wrap w-full md:w-auto justify-between md:justify-end">
                   <button
                     onClick={() => setShowPreferences(v => !v)}
-                    className="text-violet-300 hover:text-white text-sm font-semibold underline underline-offset-2 transition-colors whitespace-nowrap px-1"
+                    className="text-violet-300 hover:text-white text-sm font-semibold underline underline-offset-2 transition-colors whitespace-nowrap px-1 min-h-11"
                     data-testid="button-manage-cookie-preferences"
                   >
                     Manage Cookie Preferences
                   </button>
 
-                  <button
-                    onClick={reject}
-                    className="px-5 py-2 rounded text-sm font-semibold bg-[#0a0a1a] border border-white/20 text-white hover:bg-white/10 transition-colors whitespace-nowrap"
-                    data-testid="button-reject-all-cookies"
-                  >
-                    Reject All
-                  </button>
+                  <div className="flex items-center gap-2 ml-auto md:ml-0">
+                    <button
+                      onClick={reject}
+                      className="min-h-11 px-5 py-2 rounded text-sm font-semibold bg-[#0a0a1a] border border-white/20 text-white hover:bg-white/10 transition-colors whitespace-nowrap"
+                      data-testid="button-reject-all-cookies"
+                    >
+                      Reject All
+                    </button>
 
-                  <button
-                    onClick={accept}
-                    className="px-5 py-2 rounded text-sm font-semibold bg-[#0a0a1a] border border-white/20 text-white hover:bg-white/10 transition-colors whitespace-nowrap"
-                    data-testid="button-accept-all-cookies"
-                  >
-                    Accept All
-                  </button>
+                    <button
+                      onClick={accept}
+                      className="min-h-11 px-5 py-2 rounded text-sm font-semibold bg-[#0a0a1a] border border-white/20 text-white hover:bg-white/10 transition-colors whitespace-nowrap"
+                      data-testid="button-accept-all-cookies"
+                    >
+                      Accept All
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

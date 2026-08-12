@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Shield, ArrowRight, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useBooking } from "@/contexts/BookingContext";
+import { CTA } from "@/lib/ctaCopy";
 
 export function StickyCTABar() {
   const [isVisible, setIsVisible] = useState(false);
@@ -111,8 +112,9 @@ export function StickyCTABar() {
                     className="h-11 bg-white px-5 text-base text-pink-700 hover:bg-pink-50 font-semibold shadow-lg"
                     data-testid="button-sticky-cta-assessment"
                     onClick={() => openBooking("sticky_cta")}
+                    aria-label={CTA.primary}
                   >
-                    Risk Assessment
+                    {CTA.primaryNavCompact}
                     <ArrowRight className="ml-1.5 h-4 w-4" />
                   </Button>
                 </div>

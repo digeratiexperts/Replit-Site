@@ -16,6 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useSEO } from "@/hooks/useSEO";
 import { getCyberFact, formatFactSource } from "@/data/cyberAwarenessFacts";
+import { CTA } from "@/lib/ctaCopy";
 
 const assessmentFormSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters").max(50),
@@ -494,7 +495,7 @@ export function LocationServicePage(props: LocationPageProps) {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="/book">
                 <Button size="lg" className="px-8 py-6 text-lg font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 shadow-lg shadow-purple-500/25">
-                  Schedule Cyber Risk Assessment <ArrowRight className="ml-2 w-5 h-5" />
+                  {CTA.primary} <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </a>
               <a href="tel:480-519-5892">

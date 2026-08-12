@@ -24,6 +24,7 @@ import {
 import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
 import { pageNarratives } from "@/pages/routes/pageNarratives";
+import { CTA } from "@/lib/ctaCopy";
 
 const narrative = pageNarratives.healthcare;
 
@@ -146,7 +147,7 @@ export default function Healthcare() {
             className="inline-flex items-center justify-center bg-white text-[#D3126A] hover:bg-pink-50 px-7 py-3.5 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl"
             data-testid="button-hero-assessment"
           >
-            Schedule My Free Risk Assessment
+            {CTA.primary}
             <ArrowRight className="ml-2 h-4 w-4" />
           </a>
           <a
@@ -508,7 +509,7 @@ export default function Healthcare() {
               className="inline-flex items-center justify-center bg-white text-[#D3126A] hover:bg-pink-50 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl"
               data-testid="button-assessment-module-cta"
             >
-              Schedule My Free Risk Assessment
+              {CTA.primary}
               <ArrowRight className="ml-2 h-4 w-4" />
             </a>
           </div>
@@ -598,7 +599,7 @@ export default function Healthcare() {
                 className="group inline-flex items-center justify-center bg-white text-[#D3126A] hover:bg-pink-50 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
                 data-testid="button-get-assessment"
               >
-                Schedule My Free Risk Assessment
+                {CTA.primary}
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </a>
               <a

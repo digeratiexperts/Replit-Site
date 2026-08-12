@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Shield, Download, ExternalLink, Lock, Server, Users, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
+import { CTA } from "@/lib/ctaCopy";
 
 interface ChecklistItem {
   id: string;
@@ -149,7 +150,7 @@ export default function SecurityChecklist() {
                   onClick={() => window.location.href = "/book"}
                   data-testid="button-get-assessment"
                 >
-                  Schedule Cyber Risk Assessment
+                  {CTA.primary}
                   <ExternalLink className="ml-2 h-4 w-4" />
                 </Button>
               </div>

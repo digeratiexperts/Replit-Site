@@ -9,6 +9,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { PatternOverlay, DiagonalDivider } from "@/components/SectionPatterns";
+import { CTA } from "@/lib/ctaCopy";
 
 const formSchema = z.object({
   fullName: z.string()
@@ -221,7 +222,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                     </>
                   ) : (
                     <>
-                      Schedule Cyber Risk Assessment
+                      {CTA.primary}
                       <ArrowRight className="w-5 h-5" />
                     </>
                   )}

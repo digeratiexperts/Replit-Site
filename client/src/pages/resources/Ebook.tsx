@@ -23,6 +23,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 import ebookCover from "@/assets/images/ebook-defending-digital-realm-cover.png";
+import { CTA } from "@/lib/ctaCopy";
 
 interface Chapter {
   id: number;
@@ -371,7 +372,7 @@ const chapters: Chapter[] = [
               rel="noopener noreferrer"
               className="inline-block bg-white text-orange-600 font-bold px-8 py-3 rounded-lg hover:shadow-lg hover:-translate-y-1 transition-all"
             >
-              Schedule Cyber Risk Assessment
+              {CTA.primary}
             </a>
           </div>
         </div>

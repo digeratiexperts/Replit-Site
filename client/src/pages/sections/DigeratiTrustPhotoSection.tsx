@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { Shield, ArrowRight, MapPin, UserCheck, Scale } from "lucide-react";
 import trustDeskImg from "@assets/de-trust-assessment-desk.png";
+import { CTA } from "@/lib/ctaCopy";
 
 const pillars = [
   {
@@ -71,7 +72,7 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
               className="inline-flex items-center gap-2 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white font-semibold px-7 py-3.5 text-base rounded-lg shadow-md shadow-pink-500/25 transition-all duration-200"
               data-testid="link-trust-cta"
             >
-              Schedule Your Cyber Risk Assessment
+              {CTA.primary}
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </a>
           </motion.div>

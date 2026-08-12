@@ -14,6 +14,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
 import { Link } from "wouter";
 import { allCaseStudiesForListing, type CaseStudy } from "@/data/caseStudies";
+import { CTA } from "@/lib/ctaCopy";
 
 const focusAreas = [
   { value: "Healthcare", label: "HIPAA & patient data" },
@@ -194,7 +195,7 @@ export default function CaseStudies() {
               className="inline-flex items-center justify-center bg-white text-purple-700 hover:bg-purple-50 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
               data-testid="button-contact-us"
             >
-              Schedule assessment
+              {CTA.primary}
               <ArrowRight className="ml-2 h-5 w-5" />
             </a>
           </div>

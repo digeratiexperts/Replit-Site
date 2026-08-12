@@ -9,6 +9,7 @@ import { Loader2, Shield, CheckCircle, Clock, Award } from "lucide-react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { CTA } from "@/lib/ctaCopy";
 
 const assessmentFormSchema = z.object({
   fullName: z.string()
@@ -269,7 +270,7 @@ export const LeadCaptureBand = (): JSX.Element => {
                           Submitting...
                         </>
                       ) : (
-                        "Schedule Cyber Risk Assessment"
+                        CTA.primary
                       )}
                     </Button>
                   </form>

@@ -366,12 +366,12 @@ export function setSecurityHeaders(req: Request, res: Response, next: NextFuncti
   // Content Security Policy — marketing pixels (Meta, LinkedIn, Bing, Clarity, GA) + Zoho
   const cspDirectives = [
     "default-src 'self'",
-    `script-src 'self' 'unsafe-inline'${isProduction ? "" : " 'unsafe-eval'"} https://challenges.cloudflare.com https://salesiq.zoho.com https://*.clarity.ms https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://snap.licdn.com https://bat.bing.com`,
+    `script-src 'self' 'unsafe-inline'${isProduction ? "" : " 'unsafe-eval'"} https://challenges.cloudflare.com https://static.cloudflareinsights.com https://salesiq.zoho.com https://*.clarity.ms https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://snap.licdn.com https://bat.bing.com`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: https: blob:",
     "frame-src https://challenges.cloudflare.com https://meet.digerati-experts.com https://*.zoho.com https://payments.zoho.com https://www.facebook.com https://td.doubleclick.net",
-    "connect-src 'self' https://*.zoho.com https://payments.zoho.com https://*.clarity.ms https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.googletagmanager.com https://connect.facebook.net https://www.facebook.com https://bat.bing.com https://px.ads.linkedin.com https://www.linkedin.com" + (isProduction ? "" : " wss://*.replit.dev ws://localhost:*"),
+    "connect-src 'self' https://*.zoho.com https://payments.zoho.com https://cloudflareinsights.com https://*.cloudflareinsights.com https://*.clarity.ms https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.googletagmanager.com https://connect.facebook.net https://www.facebook.com https://bat.bing.com https://px.ads.linkedin.com https://www.linkedin.com" + (isProduction ? "" : " wss://*.replit.dev ws://localhost:*"),
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self' https://payments.zoho.com",
