@@ -946,7 +946,7 @@ export const ZohoASAPWidget = ({
                                   Email
                                 </label>
                                 <div className="relative">
-                                  <Mail className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/30" aria-hidden="true" />
+                                  <Mail className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]/70" aria-hidden="true" />
                                   <Input
                                     id="support-email"
                                     type="email"
@@ -955,7 +955,7 @@ export const ZohoASAPWidget = ({
                                     value={email}
                                     onChange={(event) => setEmail(event.target.value)}
                                     data-testid="input-support-email"
-                                    className="h-10 rounded-xl border-white/10 bg-[#0b0c10] pl-9 text-[13.5px] text-white placeholder:text-white/30 focus-visible:ring-[#5B45E0]/70"
+                                    className="h-10 rounded-xl border border-[#c4b5fd]/55 bg-[#faf7ff] pl-9 text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
                                   />
                                 </div>
                               </div>
@@ -964,14 +964,14 @@ export const ZohoASAPWidget = ({
                                   Priority
                                 </label>
                                 <div className="relative">
-                                  <Flag className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/30" aria-hidden="true" />
+                                  <Flag className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]/70" aria-hidden="true" />
                                   <select
                                     id="support-priority"
                                     value={priority}
                                     onChange={(event) =>
                                       setPriority(event.target.value as "Low" | "Medium" | "High" | "Urgent")
                                     }
-                                    className="h-10 w-full appearance-none rounded-xl border border-white/10 bg-[#0b0c10] pl-9 pr-2 text-[13px] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5B45E0]/70"
+                                    className="h-10 w-full appearance-none rounded-xl border border-[#c4b5fd]/55 bg-[#faf7ff] pl-9 pr-2 text-[13px] text-[#1a1228] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7c3aed]/65"
                                     data-testid="select-support-priority"
                                   >
                                     <option value="Low">Low</option>
@@ -988,7 +988,7 @@ export const ZohoASAPWidget = ({
                                 Subject
                               </label>
                               <div className="relative">
-                                <Tag className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/30" aria-hidden="true" />
+                                <Tag className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]/70" aria-hidden="true" />
                                 <Input
                                   id="support-subject"
                                   maxLength={200}
@@ -996,7 +996,7 @@ export const ZohoASAPWidget = ({
                                   value={subject}
                                   onChange={(event) => setSubject(event.target.value)}
                                   data-testid="input-support-subject"
-                                  className="h-10 rounded-xl border-white/10 bg-[#0b0c10] pl-9 text-[13.5px] text-white placeholder:text-white/30 focus-visible:ring-[#5B45E0]/70"
+                                  className="h-10 rounded-xl border border-[#c4b5fd]/55 bg-[#faf7ff] pl-9 text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
                                 />
                               </div>
                             </div>
@@ -1012,7 +1012,7 @@ export const ZohoASAPWidget = ({
                                 value={message}
                                 onChange={(event) => setMessage(event.target.value)}
                                 rows={3}
-                                className="min-h-[88px] resize-none rounded-xl border-white/10 bg-[#0b0c10] text-[13.5px] text-white placeholder:text-white/30 focus-visible:ring-[#5B45E0]/70"
+                                className="min-h-[88px] resize-none rounded-xl border border-[#c4b5fd]/55 bg-[#faf7ff] text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
                                 data-testid="input-support-message"
                               />
                             </div>

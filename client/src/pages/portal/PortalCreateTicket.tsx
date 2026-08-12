@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/select";
 import { queryClient } from "@/lib/queryClient";
 
+const DESK_TICKET_DRAFT_KEY = "de-portal-desk-ticket-draft";
+
 export default function PortalCreateTicket() {
   const [, navigate] = useLocation();
   const [formData, setFormData] = useState({
@@ -25,6 +27,36 @@ export default function PortalCreateTicket() {
   });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [draftNotice, setDraftNotice] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(DESK_TICKET_DRAFT_KEY);
+      if (!raw) return;
+      const draft = JSON.parse(raw) as {
+        subject?: string;
+        description?: string;
+        priority?: string;
+      };
+      sessionStorage.removeItem(DESK_TICKET_DRAFT_KEY);
+      setFormData((prev) => ({
+        ...prev,
+        subject: typeof draft.subject === "string" ? draft.subject.slice(0, 200) : prev.subject,
+        description:
+          typeof draft.description === "string" ? draft.description.slice(0, 5000) : prev.description,
+        priority:
+          draft.priority === "low" ||
+          draft.priority === "medium" ||
+          draft.priority === "high" ||
+          draft.priority === "urgent"
+            ? draft.priority
+            : prev.priority,
+      }));
+      setDraftNotice(true);
+    } catch {
+      sessionStorage.removeItem(DESK_TICKET_DRAFT_KEY);
+    }
+  }, []);
 
   const categories = [
     "Email",
@@ -86,6 +118,18 @@ export default function PortalCreateTicket() {
               <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
               <p className="text-sm text-red-800 dark:text-red-300" data-testid="error-message">
                 {error}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {draftNotice && (
+          <div className="rounded-lg border border-violet-200 bg-violet-50 p-4 dark:border-violet-500/30 dark:bg-violet-500/10">
+            <div className="flex gap-3">
+              <Info className="mt-0.5 h-5 w-5 shrink-0 text-violet-700 dark:text-violet-300" />
+              <p className="text-sm text-violet-900 dark:text-violet-100">
+                Prefilled from a website DE Desk session. Choose a category, add your notes, then
+                submit.
               </p>
             </div>
           </div>

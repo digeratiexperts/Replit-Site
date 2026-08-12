@@ -3,6 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { PortalLayout } from "./PortalLayout";
 import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
+import {
   Send,
   AlertCircle,
   MessageSquare,
@@ -15,9 +22,13 @@ import {
   Clock3,
   Headphones,
   RefreshCw,
+  Copy,
+  UserCheck,
+  Bot,
 } from "lucide-react";
-import { Link } from "wouter";
-import { portalGet } from "@/lib/portalApi";
+import { Link, useLocation } from "wouter";
+import { portalGet, portalPost } from "@/lib/portalApi";
+import { useToast } from "@/hooks/use-toast";
 
 interface ChatMessage {
   id: string;
@@ -53,6 +64,25 @@ interface DeskMessage {
 
 type OpsChannel = "website" | "portal";
 
+type DeskSessionAction =
+  | "open"
+  | "claim"
+  | "release"
+  | "copy-id"
+  | "copy-email"
+  | "copy-path"
+  | "create-ticket"
+  | "close-tab";
+
+type FloatingSessionMenu = {
+  session: DeskSession;
+  x: number;
+  y: number;
+};
+
+const LONG_PRESS_MS = 480;
+const DESK_TICKET_DRAFT_KEY = "de-portal-desk-ticket-draft";
+
 function viewerLabel(s: DeskSession): string {
   if (s.contactName) return s.contactName;
   if (s.email) return s.email;
@@ -64,7 +94,19 @@ function formatClock(iso: string): string {
   return new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
+function clampMenuPosition(x: number, y: number, width = 240, height = 320) {
+  const pad = 8;
+  const maxX = Math.max(pad, window.innerWidth - width - pad);
+  const maxY = Math.max(pad, window.innerHeight - height - pad);
+  return {
+    left: Math.min(Math.max(pad, x), maxX),
+    top: Math.min(Math.max(pad, y), maxY),
+  };
+}
+
 export default function PortalChat() {
+  const { toast } = useToast();
+  const [, navigate] = useLocation();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [messageText, setMessageText] = useState("");
   const [sending, setSending] = useState(false);
@@ -80,6 +122,7 @@ export default function PortalChat() {
   const [deskReply, setDeskReply] = useState("");
   const [deskSending, setDeskSending] = useState(false);
   const [channel, setChannel] = useState<OpsChannel>("website");
+  const [floatingMenu, setFloatingMenu] = useState<FloatingSessionMenu | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const deskEndRef = useRef<HTMLDivElement>(null);
   const deskComposerRef = useRef<HTMLTextAreaElement>(null);
@@ -87,6 +130,12 @@ export default function PortalChat() {
   const selectedDeskRef = useRef<string | null>(null);
   const openDeskIdsRef = useRef<string[]>([]);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const suppressNextClickRef = useRef(false);
+  const longPressRef = useRef<{
+    timer: number | null;
+    startX: number;
+    startY: number;
+  }>({ timer: null, startX: 0, startY: 0 });
 
   useEffect(() => {
     liveMessagesRef.current = messages;
@@ -213,6 +262,33 @@ export default function PortalChat() {
     deskEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [selectedDesk, deskThreads]);
 
+  const clearLongPress = useCallback(() => {
+    if (longPressRef.current.timer != null) {
+      window.clearTimeout(longPressRef.current.timer);
+      longPressRef.current.timer = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!floatingMenu) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setFloatingMenu(null);
+    };
+    const onPointer = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target?.closest?.("[data-desk-session-menu]")) return;
+      setFloatingMenu(null);
+    };
+    window.addEventListener("keydown", onKey);
+    window.addEventListener("mousedown", onPointer);
+    window.addEventListener("touchstart", onPointer);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("mousedown", onPointer);
+      window.removeEventListener("touchstart", onPointer);
+    };
+  }, [floatingMenu]);
+
   const openDeskSession = async (sessionId: string) => {
     setChannel("website");
     setSelectedDesk(sessionId);
@@ -233,6 +309,141 @@ export default function PortalChat() {
       const remaining = openDeskIds.filter((id) => id !== sessionId);
       return remaining[remaining.length - 1] || null;
     });
+  };
+
+  const mergeDeskSession = useCallback((updated: DeskSession) => {
+    setDeskSessions((prev) => {
+      const idx = prev.findIndex((s) => s.sessionId === updated.sessionId);
+      if (idx < 0) return [updated, ...prev];
+      const next = [...prev];
+      next[idx] = { ...next[idx], ...updated };
+      return next;
+    });
+  }, []);
+
+  const claimDeskSession = async (sessionId: string) => {
+    try {
+      const data = await portalPost<{ success: boolean; session: DeskSession }>(
+        `/api/portal/desk-chats/${sessionId}/claim`,
+        {},
+      );
+      if (data.session) mergeDeskSession(data.session);
+      toast({
+        title: "Claimed for live handoff",
+        description: "AI is paused on this thread while you reply.",
+      });
+      await openDeskSession(sessionId);
+    } catch (err) {
+      toast({
+        title: "Could not claim session",
+        description: err instanceof Error ? err.message : "Try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const releaseDeskSession = async (sessionId: string) => {
+    try {
+      const data = await portalPost<{ success: boolean; session: DeskSession }>(
+        `/api/portal/desk-chats/${sessionId}/release`,
+        {},
+      );
+      if (data.session) mergeDeskSession(data.session);
+      toast({
+        title: "Released to AI",
+        description: "Visitor chat returns to DE Desk AI.",
+      });
+    } catch (err) {
+      toast({
+        title: "Could not release session",
+        description: err instanceof Error ? err.message : "Try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const copyDeskText = async (label: string, value: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      toast({ title: `Copied ${label}` });
+    } catch {
+      toast({
+        title: "Copy failed",
+        description: "Clipboard permission was denied.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const createTicketFromDesk = (session: DeskSession) => {
+    const subject = `Website chat follow-up — ${viewerLabel(session)}`.slice(0, 200);
+    const description = [
+      "Source: Website DE Desk",
+      `Session: ${session.sessionId}`,
+      session.email ? `Visitor email: ${session.email}` : null,
+      session.contactName ? `Name: ${session.contactName}` : null,
+      session.companyName ? `Company: ${session.companyName}` : null,
+      session.pagePath ? `Page: ${session.pagePath}` : null,
+      session.preview ? `Last preview: ${session.preview}` : null,
+      "",
+      "Agent notes:",
+    ]
+      .filter((line): line is string => line !== null)
+      .join("\n");
+    sessionStorage.setItem(
+      DESK_TICKET_DRAFT_KEY,
+      JSON.stringify({ subject, description, priority: "medium" }),
+    );
+    navigate("/portal/tickets/create");
+  };
+
+  const runDeskSessionAction = (session: DeskSession, action: DeskSessionAction) => {
+    setFloatingMenu(null);
+    switch (action) {
+      case "open":
+        void openDeskSession(session.sessionId);
+        break;
+      case "claim":
+        void claimDeskSession(session.sessionId);
+        break;
+      case "release":
+        void releaseDeskSession(session.sessionId);
+        break;
+      case "copy-id":
+        void copyDeskText("session ID", session.sessionId);
+        break;
+      case "copy-email":
+        if (session.email) void copyDeskText("email", session.email);
+        break;
+      case "copy-path":
+        if (session.pagePath) void copyDeskText("page path", session.pagePath);
+        break;
+      case "create-ticket":
+        createTicketFromDesk(session);
+        break;
+      case "close-tab":
+        closeDeskTab(session.sessionId);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const startSessionLongPress = (session: DeskSession, clientX: number, clientY: number) => {
+    clearLongPress();
+    longPressRef.current.startX = clientX;
+    longPressRef.current.startY = clientY;
+    longPressRef.current.timer = window.setTimeout(() => {
+      suppressNextClickRef.current = true;
+      setFloatingMenu({ session, x: clientX, y: clientY });
+      if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+        try {
+          navigator.vibrate?.(12);
+        } catch {
+          /* ignore */
+        }
+      }
+    }, LONG_PRESS_MS);
   };
 
   const handleDeskReply = async (e?: React.FormEvent) => {
@@ -516,60 +727,155 @@ export default function PortalChat() {
                     </p>
                   </div>
                 ) : (
-                  <ul className="divide-y divide-white/5">
-                    {deskSessions.map((s) => {
-                      const active = selectedDesk === s.sessionId;
-                      const open = openDeskIds.includes(s.sessionId);
-                      return (
-                        <li key={s.sessionId}>
-                          <button
-                            type="button"
-                            onClick={() => void openDeskSession(s.sessionId)}
-                            className={`w-full px-4 py-3.5 text-left transition ${
-                              active
-                                ? "bg-[#7c3aed]/20"
-                                : open
-                                  ? "bg-white/[0.03]"
-                                  : "hover:bg-white/[0.04]"
-                            }`}
-                          >
-                            <div className="flex items-start justify-between gap-2">
-                              <span className="truncate text-sm font-semibold text-white">
-                                {viewerLabel(s)}
-                              </span>
-                              <span className="inline-flex shrink-0 items-center gap-1 text-[10px] text-white/45">
-                                <Clock3 className="h-3 w-3" aria-hidden />
-                                {formatClock(s.updatedAt)}
-                              </span>
-                            </div>
-                            <p className="mt-1 line-clamp-2 text-xs text-white/50">
-                              {s.preview || "DE Desk conversation"}
-                            </p>
-                            <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[10px]">
-                              <span className="rounded-full bg-white/5 px-2 py-0.5 text-white/55">
-                                {s.messageCount} msgs
-                              </span>
-                              {s.agentActive && (
-                                <span className="rounded-full bg-emerald-400/15 px-2 py-0.5 font-semibold text-emerald-300">
-                                  Live
-                                </span>
-                              )}
-                              {open && !active && (
-                                <span className="rounded-full bg-[#A78BFA]/20 px-2 py-0.5 font-semibold text-[#DDD6FE]">
-                                  Open
-                                </span>
-                              )}
-                              {s.pagePath && (
-                                <span className="truncate rounded-full bg-white/5 px-2 py-0.5 text-white/45">
-                                  {s.pagePath}
-                                </span>
-                              )}
-                            </div>
-                          </button>
-                        </li>
-                      );
-                    })}
-                  </ul>
+                  <>
+                    <p className="border-b border-white/5 px-4 py-2 text-[10px] uppercase tracking-[0.14em] text-white/40">
+                      Long-press or right-click for options
+                    </p>
+                    <ul className="divide-y divide-white/5">
+                      {deskSessions.map((s) => {
+                        const active = selectedDesk === s.sessionId;
+                        const open = openDeskIds.includes(s.sessionId);
+                        return (
+                          <li key={s.sessionId}>
+                            <ContextMenu>
+                              <ContextMenuTrigger asChild>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    if (suppressNextClickRef.current) {
+                                      suppressNextClickRef.current = false;
+                                      return;
+                                    }
+                                    void openDeskSession(s.sessionId);
+                                  }}
+                                  onContextMenu={() => setFloatingMenu(null)}
+                                  onTouchStart={(event) => {
+                                    const touch = event.touches[0];
+                                    if (!touch) return;
+                                    startSessionLongPress(s, touch.clientX, touch.clientY);
+                                  }}
+                                  onTouchMove={(event) => {
+                                    const touch = event.touches[0];
+                                    if (!touch) return;
+                                    const dx = touch.clientX - longPressRef.current.startX;
+                                    const dy = touch.clientY - longPressRef.current.startY;
+                                    if (Math.hypot(dx, dy) > 12) clearLongPress();
+                                  }}
+                                  onTouchEnd={clearLongPress}
+                                  onTouchCancel={clearLongPress}
+                                  className={`w-full px-4 py-3.5 text-left transition select-none ${
+                                    active
+                                      ? "bg-[#7c3aed]/20"
+                                      : open
+                                        ? "bg-white/[0.03]"
+                                        : "hover:bg-white/[0.04]"
+                                  }`}
+                                >
+                                  <div className="flex items-start justify-between gap-2">
+                                    <span className="truncate text-sm font-semibold text-white">
+                                      {viewerLabel(s)}
+                                    </span>
+                                    <span className="inline-flex shrink-0 items-center gap-1 text-[10px] text-white/45">
+                                      <Clock3 className="h-3 w-3" aria-hidden />
+                                      {formatClock(s.updatedAt)}
+                                    </span>
+                                  </div>
+                                  <p className="mt-1 line-clamp-2 text-xs text-white/50">
+                                    {s.preview || "DE Desk conversation"}
+                                  </p>
+                                  <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[10px]">
+                                    <span className="rounded-full bg-white/5 px-2 py-0.5 text-white/55">
+                                      {s.messageCount} msgs
+                                    </span>
+                                    {s.agentActive && (
+                                      <span className="rounded-full bg-emerald-400/15 px-2 py-0.5 font-semibold text-emerald-300">
+                                        Live
+                                      </span>
+                                    )}
+                                    {open && !active && (
+                                      <span className="rounded-full bg-[#A78BFA]/20 px-2 py-0.5 font-semibold text-[#DDD6FE]">
+                                        Open
+                                      </span>
+                                    )}
+                                    {s.pagePath && (
+                                      <span className="truncate rounded-full bg-white/5 px-2 py-0.5 text-white/45">
+                                        {s.pagePath}
+                                      </span>
+                                    )}
+                                  </div>
+                                </button>
+                              </ContextMenuTrigger>
+                              <ContextMenuContent className="w-56 border-white/10 bg-[#1a0f2e] text-white">
+                                <ContextMenuItem
+                                  className="gap-2 focus:bg-white/10 focus:text-white"
+                                  onSelect={() => runDeskSessionAction(s, "open")}
+                                >
+                                  <MessageSquare className="h-4 w-4" aria-hidden />
+                                  Open conversation
+                                </ContextMenuItem>
+                                <ContextMenuItem
+                                  className="gap-2 focus:bg-white/10 focus:text-white"
+                                  disabled={!!s.agentActive}
+                                  onSelect={() => runDeskSessionAction(s, "claim")}
+                                >
+                                  <UserCheck className="h-4 w-4" aria-hidden />
+                                  Claim for live handoff
+                                </ContextMenuItem>
+                                <ContextMenuItem
+                                  className="gap-2 focus:bg-white/10 focus:text-white"
+                                  disabled={!s.agentActive}
+                                  onSelect={() => runDeskSessionAction(s, "release")}
+                                >
+                                  <Bot className="h-4 w-4" aria-hidden />
+                                  Release to AI
+                                </ContextMenuItem>
+                                <ContextMenuSeparator className="bg-white/10" />
+                                <ContextMenuItem
+                                  className="gap-2 focus:bg-white/10 focus:text-white"
+                                  onSelect={() => runDeskSessionAction(s, "copy-id")}
+                                >
+                                  <Copy className="h-4 w-4" aria-hidden />
+                                  Copy session ID
+                                </ContextMenuItem>
+                                <ContextMenuItem
+                                  className="gap-2 focus:bg-white/10 focus:text-white"
+                                  disabled={!s.email}
+                                  onSelect={() => runDeskSessionAction(s, "copy-email")}
+                                >
+                                  <Copy className="h-4 w-4" aria-hidden />
+                                  Copy email
+                                </ContextMenuItem>
+                                <ContextMenuItem
+                                  className="gap-2 focus:bg-white/10 focus:text-white"
+                                  disabled={!s.pagePath}
+                                  onSelect={() => runDeskSessionAction(s, "copy-path")}
+                                >
+                                  <Copy className="h-4 w-4" aria-hidden />
+                                  Copy page path
+                                </ContextMenuItem>
+                                <ContextMenuSeparator className="bg-white/10" />
+                                <ContextMenuItem
+                                  className="gap-2 focus:bg-white/10 focus:text-white"
+                                  onSelect={() => runDeskSessionAction(s, "create-ticket")}
+                                >
+                                  <Ticket className="h-4 w-4" aria-hidden />
+                                  Create support ticket
+                                </ContextMenuItem>
+                                <ContextMenuItem
+                                  className="gap-2 focus:bg-white/10 focus:text-white"
+                                  disabled={!open}
+                                  onSelect={() => runDeskSessionAction(s, "close-tab")}
+                                >
+                                  <X className="h-4 w-4" aria-hidden />
+                                  Close tab
+                                </ContextMenuItem>
+                              </ContextMenuContent>
+                            </ContextMenu>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </>
                 )}
               </aside>
 
@@ -583,7 +889,8 @@ export default function PortalChat() {
                       Select a website viewer to open their DE Desk thread
                     </p>
                     <p className="max-w-sm text-xs text-white/45">
-                      Keep multiple viewers open as tabs. Enter sends · Shift+Enter for a new line.
+                      Keep multiple viewers open as tabs. Long-press or right-click a session for
+                      claim, release, copy, or ticket. Enter sends · Shift+Enter for a new line.
                     </p>
                   </div>
                 ) : (
@@ -601,16 +908,41 @@ export default function PortalChat() {
                             : " · AI until you reply"}
                         </p>
                       </div>
-                      {activeSession?.agentActive ? (
-                        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-300">
-                          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                          On desk
-                        </span>
-                      ) : (
-                        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-white/55">
-                          Standby
-                        </span>
-                      )}
+                      <div className="flex shrink-0 items-center gap-2">
+                        {activeSession?.agentActive ? (
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            className="h-8 gap-1.5 border-white/15 bg-white/5 text-white hover:bg-white/10"
+                            onClick={() => void releaseDeskSession(activeSession.sessionId)}
+                          >
+                            <Bot className="h-3.5 w-3.5" aria-hidden />
+                            Release
+                          </Button>
+                        ) : activeSession ? (
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            className="h-8 gap-1.5 border-emerald-400/30 bg-emerald-400/10 text-emerald-200 hover:bg-emerald-400/15"
+                            onClick={() => void claimDeskSession(activeSession.sessionId)}
+                          >
+                            <UserCheck className="h-3.5 w-3.5" aria-hidden />
+                            Claim
+                          </Button>
+                        ) : null}
+                        {activeSession?.agentActive ? (
+                          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-300">
+                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                            On desk
+                          </span>
+                        ) : (
+                          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-white/55">
+                            Standby
+                          </span>
+                        )}
+                      </div>
                     </div>
 
                     <div className="flex-1 space-y-3 overflow-y-auto p-4 max-h-[420px] sm:max-h-[480px]">
@@ -803,6 +1135,90 @@ export default function PortalChat() {
           </p>
         </div>
       </div>
+
+      {floatingMenu &&
+        (() => {
+          const session = floatingMenu.session;
+          const open = openDeskIds.includes(session.sessionId);
+          const pos = clampMenuPosition(floatingMenu.x, floatingMenu.y);
+          return (
+            <div
+              data-desk-session-menu
+              role="menu"
+              aria-label={`Options for ${viewerLabel(session)}`}
+              className="fixed z-[80] w-56 overflow-hidden rounded-xl border border-white/15 bg-[#1a0f2e] p-1 text-white shadow-2xl"
+              style={{ left: pos.left, top: pos.top }}
+            >
+              {(
+                [
+                  {
+                    action: "open" as const,
+                    label: "Open conversation",
+                    icon: MessageSquare,
+                    disabled: false,
+                  },
+                  {
+                    action: "claim" as const,
+                    label: "Claim for live handoff",
+                    icon: UserCheck,
+                    disabled: !!session.agentActive,
+                  },
+                  {
+                    action: "release" as const,
+                    label: "Release to AI",
+                    icon: Bot,
+                    disabled: !session.agentActive,
+                  },
+                  {
+                    action: "copy-id" as const,
+                    label: "Copy session ID",
+                    icon: Copy,
+                    disabled: false,
+                  },
+                  {
+                    action: "copy-email" as const,
+                    label: "Copy email",
+                    icon: Copy,
+                    disabled: !session.email,
+                  },
+                  {
+                    action: "copy-path" as const,
+                    label: "Copy page path",
+                    icon: Copy,
+                    disabled: !session.pagePath,
+                  },
+                  {
+                    action: "create-ticket" as const,
+                    label: "Create support ticket",
+                    icon: Ticket,
+                    disabled: false,
+                  },
+                  {
+                    action: "close-tab" as const,
+                    label: "Close tab",
+                    icon: X,
+                    disabled: !open,
+                  },
+                ] as const
+              ).map((item) => {
+                const Icon = item.icon;
+                return (
+                  <button
+                    key={item.action}
+                    type="button"
+                    role="menuitem"
+                    disabled={item.disabled}
+                    className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm text-white/90 hover:bg-white/10 disabled:pointer-events-none disabled:opacity-40"
+                    onClick={() => runDeskSessionAction(session, item.action)}
+                  >
+                    <Icon className="h-4 w-4 shrink-0" aria-hidden />
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
+          );
+        })()}
     </PortalLayout>
   );
 };
