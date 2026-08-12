@@ -6,14 +6,15 @@
 |-------|-------|-----|
 | Magenta | `#D3126A` | Primary CTA, active underline glow, user bubbles, brand mark |
 | Violet | `#5B45E0` / `#7c3aed` | Secondary accents, ticket submit gradient start |
-| Shell bg | `#0b0c10` | Modal background |
+| Shell bg | `#140a24` | Modal background (deep purple, not flat black) |
 | Nested dark | `#12141c` / `#171922` | Ticket & Resources panels / cards |
 | Nested light | `#ffffff` / `#faf8fc` | Desk chat panel |
 | Online | Emerald glow on status dot | Availability |
 | Text light-on-dark | `white` / `white/65` / `white/45` | Hierarchy on dark |
 | Text dark-on-light | `#1a1228` / `#5A3A5E` / plum secondary | Desk chat body |
 
-Shell border/glow: subtle `border-[#D3126A]/20` + soft magenta/violet outer shadow.
+Shell border/glow: cool purple frame `border-2 border-[#8B5CF6]/55` on deep purple shell
+`bg-[#140a24]` + violet outer ring/glow (not flat near-black).
 
 ## Shared chrome (top → bottom)
 

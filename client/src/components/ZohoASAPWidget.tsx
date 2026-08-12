@@ -568,7 +568,7 @@ export const ZohoASAPWidget = ({
 
         {isOpen && (
           <section
-            className="fixed inset-x-3 top-[max(0.75rem,env(safe-area-inset-top))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[100] flex max-h-[100dvh] w-auto flex-col overflow-hidden rounded-[1.5rem] border border-[#D3126A]/20 bg-[#0b0c10] shadow-[0_0_0_1px_rgba(139,44,245,0.12),0_30px_90px_rgba(0,0,0,0.7),0_0_70px_rgba(91,69,224,0.16)] sm:absolute sm:inset-auto sm:bottom-0 sm:right-0 sm:top-auto sm:h-[min(760px,calc(100dvh-5.5rem))] sm:max-h-[min(86vh,calc(100dvh-4.5rem))] sm:w-[460px] sm:max-w-[calc(100vw-2rem)]"
+            className="fixed inset-x-3 top-[max(0.75rem,env(safe-area-inset-top))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[100] flex max-h-[100dvh] w-auto flex-col overflow-hidden rounded-[1.5rem] border-2 border-[#8B5CF6]/55 bg-[#140a24] shadow-[0_0_0_1px_rgba(167,139,250,0.35),0_0_0_4px_rgba(91,69,224,0.18),0_28px_80px_rgba(40,10,70,0.75),0_0_90px_rgba(124,58,237,0.35)] sm:absolute sm:inset-auto sm:bottom-0 sm:right-0 sm:top-auto sm:h-[min(760px,calc(100dvh-5.5rem))] sm:max-h-[min(86vh,calc(100dvh-4.5rem))] sm:w-[460px] sm:max-w-[calc(100vw-2rem)]"
             role="dialog"
             aria-modal="true"
             aria-label="DE Desk help"
@@ -577,7 +577,7 @@ export const ZohoASAPWidget = ({
               className="pointer-events-none absolute inset-0"
               style={{
                 backgroundImage:
-                  "radial-gradient(ellipse 70% 45% at 0% 0%, rgba(211,18,106,0.20), transparent 55%), radial-gradient(ellipse 55% 40% at 100% 0%, rgba(91,69,224,0.18), transparent 50%)",
+                  "radial-gradient(ellipse 75% 50% at 8% 0%, rgba(167,139,250,0.28), transparent 55%), radial-gradient(ellipse 60% 45% at 100% 0%, rgba(211,18,106,0.22), transparent 52%), linear-gradient(180deg, rgba(91,69,224,0.14) 0%, transparent 42%)",
               }}
               aria-hidden="true"
             />
@@ -587,7 +587,7 @@ export const ZohoASAPWidget = ({
               <div className="flex min-w-0 items-center gap-3">
                 <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#D3126A] to-[#7c3aed] text-[12px] font-bold tracking-wide text-white shadow-[0_0_22px_rgba(211,18,106,0.4)]">
                   DE
-                  <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#0b0c10] bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.85)]" />
+                  <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#140a24] bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.85)]" />
                 </div>
                 <div className="min-w-0">
                   <h2 className="truncate text-[16px] font-semibold tracking-tight text-white" data-testid="text-widget-title">
