@@ -387,7 +387,10 @@ export default function ProActiveEcosystemPricing() {
                   ))}
                 </ul>
                 <Link href={plan.learnMoreUrl}>
-                  <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
+                  <Button
+                    variant="outline"
+                    className="w-full border-violet-400/40 bg-white/5 text-white hover:border-violet-300/70 hover:bg-violet-500/20 hover:text-white"
+                  >
                     Learn More
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
