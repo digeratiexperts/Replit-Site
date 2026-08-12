@@ -12,14 +12,24 @@ import {
   KeyRound,
   Cloud,
   AlertCircle,
+  type LucideIcon,
 } from "lucide-react";
 import { CTA } from "@/lib/ctaCopy";
+import { SectionVisualStage } from "@/components/visual/SectionVisualStage";
+import { engagePathVisualByTitle } from "@/lib/visualAssets";
 
 /**
  * Homepage engagement paths — three primary choices.
  * Capability cards also previewed here (same stack as Protect) so nothing feels deleted.
  */
-const paths = [
+const paths: {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  link: string;
+  cta: string;
+  testId: string;
+}[] = [
   {
     icon: Shield,
     title: "Fully Managed IT & Cybersecurity",
@@ -49,13 +59,48 @@ const paths = [
   },
 ];
 
-const capabilityPreview = [
-  { icon: Eye, title: "SOC / MDR Monitoring", link: "/solutions/security-operations", desc: "24/7 detection and response." },
-  { icon: ShieldCheck, title: "Endpoint Security (EDR)", link: "/solutions/threat-detection", desc: "Protect devices across the environment." },
-  { icon: UserCheck, title: "SMART Identity (MFA + SSO)", link: "/solutions/unified-security", desc: "Stronger access without user chaos." },
-  { icon: KeyRound, title: "Privileged Access Controls", link: "/solutions/unified-security", desc: "Admin controls and audit visibility." },
-  { icon: Cloud, title: "Backup & Disaster Recovery", link: "/solutions/backup-disaster-recovery", desc: "Recovery planning and restore discipline." },
-  { icon: AlertCircle, title: "Email Protection", link: "/solutions/security-operations", desc: "Anti-phishing and mailbox defenses." },
+const capabilityPreview: {
+  icon: LucideIcon;
+  title: string;
+  link: string;
+  desc: string;
+}[] = [
+  {
+    icon: Eye,
+    title: "SOC / MDR Monitoring",
+    link: "/solutions/security-operations",
+    desc: "24/7 detection and response.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Endpoint Security (EDR)",
+    link: "/solutions/threat-detection",
+    desc: "Protect devices across the environment.",
+  },
+  {
+    icon: UserCheck,
+    title: "SMART Identity (MFA + SSO)",
+    link: "/solutions/unified-security",
+    desc: "Stronger access without user chaos.",
+  },
+  {
+    icon: KeyRound,
+    title: "Privileged Access Controls",
+    link: "/solutions/unified-security",
+    desc: "Admin controls and audit visibility.",
+  },
+  {
+    icon: Cloud,
+    title: "Backup & Disaster Recovery",
+    link: "/solutions/backup-disaster-recovery",
+    desc: "Recovery planning and restore discipline.",
+  },
+  {
+    icon: AlertCircle,
+    title: "Email Protection",
+    link: "/solutions/security-operations",
+    desc: "Anti-phishing and mailbox defenses.",
+  },
 ];
 
 export const DigeratiServicesSection = (): JSX.Element => {
@@ -89,6 +134,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8">
           {paths.map((path, index) => {
             const Icon = path.icon;
+            const visual = engagePathVisualByTitle[path.title];
             return (
               <motion.div
                 key={path.title}
@@ -99,8 +145,14 @@ export const DigeratiServicesSection = (): JSX.Element => {
                 className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-8 lg:p-10"
                 data-testid={path.testId}
               >
-                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-xl bg-violet-500/20">
-                  <Icon className="h-8 w-8 text-violet-300" aria-hidden="true" />
+                <div className="mb-6">
+                  {visual ? (
+                    <SectionVisualStage still={visual} size="md" />
+                  ) : (
+                    <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-violet-500/20">
+                      <Icon className="h-8 w-8 text-violet-300" aria-hidden="true" />
+                    </div>
+                  )}
                 </div>
                 <h3 className="mb-3 text-2xl font-semibold text-white lg:text-3xl">{path.title}</h3>
                 <p className="mb-7 flex-1 text-lg leading-relaxed text-white/65 lg:text-xl">
@@ -117,7 +169,6 @@ export const DigeratiServicesSection = (): JSX.Element => {
           })}
         </div>
 
-        {/* Secondary capability stack — same six as Protect, so Engage never feels emptied */}
         <div className="mt-12 md:mt-16" data-testid="engage-capability-preview">
           <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
             <div>

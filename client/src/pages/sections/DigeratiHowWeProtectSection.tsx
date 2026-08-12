@@ -2,6 +2,9 @@ import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion
 import { Shield, Search, FileText, Settings, Activity, Eye, ShieldCheck, UserCheck, KeyRound, Cloud, AlertCircle } from "lucide-react";
 import { useRef } from "react";
 import { Link } from "wouter";
+import { MeshyStillAccent } from "@/components/visual/MeshyStillAccent";
+import { SectionVisualStage } from "@/components/visual/SectionVisualStage";
+import { homepageSectionAccents, stackVisualByTitle } from "@/lib/visualAssets";
 
 
 export const DigeratiHowWeProtectSection = (): JSX.Element => {
@@ -93,23 +96,33 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
       />
       
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
-        <motion.div 
-          className="text-center mb-8 md:mb-12 lg:mb-16"
+        <motion.div
+          className="mb-8 grid items-center gap-8 md:mb-12 lg:mb-16 lg:grid-cols-12"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.35 }}
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-violet-50 border border-violet-200 mb-4 md:mb-6">
-            <Shield className="w-3.5 h-3.5 md:w-4 md:h-4 text-violet-400" />
-            <span className="text-sm md:text-base font-medium text-violet-600">Our Process</span>
+          <div className="text-center lg:col-span-8 lg:text-left">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-3 py-1.5 md:mb-6 md:px-4 md:py-2">
+              <Shield className="h-3.5 w-3.5 text-violet-400 md:h-4 md:w-4" aria-hidden />
+              <span className="text-sm font-medium text-violet-600 md:text-base">Our Process</span>
+            </div>
+            <h2 className="mb-4 px-2 text-3xl font-bold leading-tight text-gray-900 sm:text-4xl md:mb-5 md:text-5xl lg:px-0 lg:text-6xl">
+              How We Protect Your Business
+            </h2>
+            <p className="mx-auto max-w-3xl px-4 text-lg leading-relaxed text-gray-600 md:text-xl lg:mx-0 lg:px-0 lg:text-2xl">
+              Our proven 4-step process ensures your business stays secure and compliant
+            </p>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-4 md:mb-5 px-2">
-            How We Protect Your Business
-          </h2>
-          <p className="text-lg md:text-xl lg:text-2xl text-gray-600 leading-relaxed max-w-3xl mx-auto px-4">
-            Our proven 4-step process ensures your business stays secure and compliant
-          </p>
+          <div className="hidden justify-end lg:col-span-4 lg:flex">
+            <SectionVisualStage
+              still={homepageSectionAccents.protectProcess}
+              size="lg"
+              surface="light"
+              alt="Network protection visual for the managed security process"
+            />
+          </div>
         </motion.div>
 
         <motion.div 
@@ -178,14 +191,19 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
               { icon: AlertCircle, title: "Email Protection", link: "/solutions/security-operations", desc: "Anti-phishing and mailbox defenses." },
             ].map((item) => {
               const Icon = item.icon;
+              const visual = stackVisualByTitle[item.title];
               return (
                 <Link key={item.title} href={item.link}>
-                  <div className="h-full rounded-xl border border-gray-200 bg-white p-5 md:p-6 hover:border-violet-300 hover:shadow-md transition-all cursor-pointer">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Icon className="w-4 h-4 text-violet-500" aria-hidden="true" />
-                      <p className="text-base md:text-lg font-semibold text-gray-900">{item.title}</p>
+                  <div className="h-full cursor-pointer rounded-xl border border-gray-200 bg-white p-5 transition-all hover:border-violet-300 hover:shadow-md md:p-6">
+                    <div className="mb-2 flex items-center gap-3">
+                      {visual ? (
+                        <MeshyStillAccent still={visual} size="sm" surface="light" />
+                      ) : (
+                        <Icon className="h-4 w-4 text-violet-500" aria-hidden="true" />
+                      )}
+                      <p className="text-base font-semibold text-gray-900 md:text-lg">{item.title}</p>
                     </div>
-                    <p className="text-sm md:text-base text-gray-600 leading-relaxed">{item.desc}</p>
+                    <p className="text-sm leading-relaxed text-gray-600 md:text-base">{item.desc}</p>
                   </div>
                 </Link>
               );

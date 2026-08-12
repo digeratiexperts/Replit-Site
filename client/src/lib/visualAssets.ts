@@ -110,11 +110,41 @@ export const outcomeVisualByTitle: Record<string, VisualStill | undefined> = {
  * Hero keeps Arizona dusk + DashboardMockup; no Meshy swarm there.
  */
 export const homepageSectionAccents = {
+  /** Stats / threat reality — endpoint as editorial stage */
+  statsThreats: meshyBatch01.endpoint,
   /** Engagement assessment band — copy names email explicitly */
   engagementAssessment: meshyBatch01.email,
   /** Process intro — environment / operating-model cue */
   howItWorks: meshyBatch01.network,
+  /** Protect section header */
+  protectProcess: meshyBatch01.network,
+  /** Pricing operating-model band */
+  pricingEcosystem: meshyBatch01.backup,
 } as const;
+
+/** Live "What We Tackle" cards — selective only (not every Lucide) */
+export const tackleVisualByTitle: Record<string, VisualStill | undefined> = {
+  "Ransomware & Malware": meshyBatch01.endpoint,
+  "Data Loss Prevention": meshyBatch01.backup,
+  "Phishing & Social Engineering": meshyBatch01.email,
+  "Insider Threats": meshyBatch01.identity,
+};
+
+/** Engage path cards — one still each, mapped to copy */
+export const engagePathVisualByTitle: Record<string, VisualStill | undefined> = {
+  "Fully Managed IT & Cybersecurity": meshyBatch01.endpoint,
+  "Co-Managed IT": meshyBatch01.network,
+  "Cyber Risk Assessment": meshyBatch01.email,
+};
+
+/** Security stack preview / Protect stack */
+export const stackVisualByTitle: Record<string, VisualStill | undefined> = {
+  "Endpoint Security (EDR)": meshyBatch01.endpoint,
+  "SMART Identity (MFA + SSO)": meshyBatch01.identity,
+  "Backup & Disaster Recovery": meshyBatch01.backup,
+  "Email Protection": meshyBatch01.email,
+  "SOC / MDR Monitoring": meshyBatch01.network,
+};
 
 /** Solutions index cards that map cleanly to approved Batch 01 */
 export const solutionVisualByTitle: Record<string, VisualStill | undefined> = {
