@@ -514,29 +514,29 @@ export const ZohoASAPWidget = ({
 
         {isOpen && (
           <section
-            className="fixed inset-x-3 top-[max(0.75rem,env(safe-area-inset-top))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[100] flex max-h-[100dvh] w-auto flex-col overflow-hidden rounded-[1.25rem] border border-[#2a2433]/40 shadow-[0_24px_70px_rgba(12,10,18,0.42)] sm:absolute sm:inset-auto sm:bottom-0 sm:right-0 sm:top-auto sm:h-[min(700px,calc(100dvh-6rem))] sm:max-h-[min(82vh,calc(100dvh-5rem))] sm:w-[448px] sm:max-w-[calc(100vw-2rem)]"
+            className="fixed inset-x-3 top-[max(0.75rem,env(safe-area-inset-top))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[100] flex max-h-[100dvh] w-auto flex-col overflow-hidden rounded-[1.35rem] border border-[#1a1522]/50 shadow-[0_28px_80px_rgba(8,6,14,0.55)] sm:absolute sm:inset-auto sm:bottom-0 sm:right-0 sm:top-auto sm:h-[min(700px,calc(100dvh-6rem))] sm:max-h-[min(82vh,calc(100dvh-5rem))] sm:w-[448px] sm:max-w-[calc(100vw-2rem)]"
             role="dialog"
             aria-modal="true"
             aria-label="DE Desk help"
             style={{
               background:
-                "linear-gradient(128deg, #0e0e12 0%, #14141a 34%, #2a2433 46%, #ebe6f2 54%, #f7f5fa 100%)",
+                "linear-gradient(165deg, #121018 0%, #17141f 28%, #2a2033 42%, #f4f0f7 58%, #faf8fc 100%)",
             }}
           >
             <div
               className="pointer-events-none absolute inset-0"
               style={{
                 backgroundImage:
-                  "radial-gradient(ellipse 70% 55% at 0% -10%, rgba(211,18,106,0.22), transparent 55%), radial-gradient(ellipse 50% 40% at 100% 0%, rgba(91,69,224,0.10), transparent 50%)",
+                  "radial-gradient(ellipse 65% 42% at 8% -8%, rgba(211,18,106,0.18), transparent 58%), radial-gradient(ellipse 45% 35% at 96% 8%, rgba(91,69,224,0.12), transparent 52%)",
               }}
               aria-hidden="true"
             />
 
-            <header className="relative flex flex-shrink-0 items-center justify-between gap-3 px-4 pb-3 pt-4">
+            <header className="relative flex flex-shrink-0 items-center justify-between gap-3 px-4 pb-2.5 pt-4">
               <div className="flex min-w-0 items-center gap-3">
-                <div className="relative flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[0.85rem] bg-[#D3126A] text-[11px] font-bold tracking-wide text-white">
+                <div className="relative flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-[#D3126A] text-[11px] font-bold tracking-wide text-white shadow-[0_8px_20px_rgba(211,18,106,0.35)]">
                   DE
-                  <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full border-2 border-[#0e0e12] bg-emerald-400" />
+                  <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full border-2 border-[#121018] bg-emerald-400" />
                 </div>
                 <div className="min-w-0">
                   <h2
@@ -546,7 +546,7 @@ export const ZohoASAPWidget = ({
                     DE Desk
                   </h2>
                   <p
-                    className="truncate text-[11px] text-[#F2D6E4]"
+                    className="truncate text-[11px] text-[#F3D4E4]"
                     data-testid="text-widget-status"
                   >
                     {agentLive
@@ -558,7 +558,7 @@ export const ZohoASAPWidget = ({
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="rounded-xl border border-black/5 bg-[#f7f5fa]/90 p-2 text-[#4A2F55] shadow-sm backdrop-blur-sm transition hover:bg-white hover:text-[#2A1530] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/35"
+                className="rounded-xl border border-white/15 bg-white/10 p-2 text-[#F8EAF2] backdrop-blur-sm transition hover:bg-white/18 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/45"
                 data-testid="button-close-widget"
                 aria-label="Close DE Desk"
               >
@@ -567,7 +567,7 @@ export const ZohoASAPWidget = ({
             </header>
 
             <nav
-              className="relative mx-3 mb-2 grid flex-shrink-0 grid-cols-3 gap-0.5 rounded-2xl border border-black/[0.04] bg-[#f7f5fa]/80 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] backdrop-blur-md"
+              className="relative mx-3 mb-2.5 grid flex-shrink-0 grid-cols-3 gap-1 rounded-2xl border border-white/10 bg-[#0f0d14]/55 p-1 backdrop-blur-md"
               aria-label="Support options"
             >
               {(
@@ -576,22 +576,22 @@ export const ZohoASAPWidget = ({
                     id: "chat" as const,
                     label: "Desk",
                     icon: MessageCircle,
-                    active: "bg-[#16161c] text-white shadow-sm",
+                    active: "bg-[#faf8fc] text-[#2A1530] shadow-sm",
                     accent: "bg-[#D3126A]",
                   },
                   {
                     id: "ticket" as const,
                     label: "Ticket",
                     icon: FileText,
-                    active: "bg-white text-[#5B45E0] shadow-sm",
-                    accent: "bg-[#5B45E0]",
+                    active: "bg-[#5B45E0] text-white shadow-sm",
+                    accent: "bg-white/80",
                   },
                   {
                     id: "resources" as const,
                     label: "Resources",
                     icon: BookOpen,
-                    active: "bg-[#1a1520] text-[#E8A0BC] shadow-sm",
-                    accent: "bg-[#C45B8A]",
+                    active: "bg-[#D3126A] text-white shadow-sm",
+                    accent: "bg-white/80",
                   },
                 ]
               ).map(({ id, label, icon: Icon, active, accent }) => (
@@ -602,7 +602,7 @@ export const ZohoASAPWidget = ({
                   className={`relative flex min-h-10 items-center justify-center gap-1.5 rounded-[0.85rem] px-2 text-[12.5px] font-semibold transition ${
                     activeTab === id
                       ? active
-                      : "text-[#5A3D68] hover:bg-white/80 hover:text-[#5B45E0]"
+                      : "text-[#E8C8D8] hover:bg-white/8 hover:text-white"
                   }`}
                   data-testid={`button-tab-${id}`}
                   aria-current={activeTab === id ? "page" : undefined}
@@ -610,7 +610,7 @@ export const ZohoASAPWidget = ({
                   <Icon className="h-3.5 w-3.5 opacity-90" aria-hidden="true" />
                   <span>{label}</span>
                   {activeTab === id && (
-                    <span className={`absolute inset-x-6 bottom-1 h-[2px] rounded-full ${accent}`} />
+                    <span className={`absolute inset-x-7 bottom-1 h-[2px] rounded-full ${accent}`} />
                   )}
                 </button>
               ))}
@@ -619,17 +619,17 @@ export const ZohoASAPWidget = ({
             <div className="relative min-h-0 flex-1">
               {activeTab === "chat" && (
                 <div className="flex h-full min-h-0 flex-col" data-testid="panel-support-chat">
-                  <div className="mx-3 mb-2 flex items-center justify-between gap-3 rounded-xl border border-white/[0.07] bg-[#121218]/75 px-3 py-2 backdrop-blur-sm">
-                    <div className="flex items-center gap-2 text-[11px] font-medium text-[#FFF0F7]">
+                  <div className="mx-3 mb-2 flex items-center justify-between gap-3 rounded-xl border border-[#e8e0ef] bg-[#faf8fc]/92 px-3 py-2 shadow-sm">
+                    <div className="flex items-center gap-2 text-[11px] font-medium text-[#4A2F55]">
                       <span
                         className={`h-1.5 w-1.5 rounded-full ${
                           agentLive
-                            ? "bg-sky-400"
+                            ? "bg-sky-500"
                             : assistantAvailable === true
-                              ? "bg-emerald-400"
+                              ? "bg-emerald-500"
                               : assistantAvailable === false
-                                ? "bg-amber-400"
-                                : "bg-white/25"
+                                ? "bg-amber-500"
+                                : "bg-[#c4b5c8]"
                         }`}
                       />
                       {agentLive
@@ -643,7 +643,7 @@ export const ZohoASAPWidget = ({
                     <button
                       type="button"
                       onClick={() => setActiveTab("ticket")}
-                      className="text-[11px] font-semibold text-[#F0B4CC] transition hover:text-white"
+                      className="text-[11px] font-semibold text-[#D3126A] transition hover:text-[#a00e54]"
                     >
                       Need a human?
                     </button>
@@ -653,7 +653,7 @@ export const ZohoASAPWidget = ({
                     className="min-h-0 flex-1 space-y-3 overflow-y-auto px-3 pb-3"
                     style={{
                       background:
-                        "linear-gradient(180deg, rgba(14,14,18,0.55) 0%, rgba(18,18,24,0.35) 62%, rgba(247,245,250,0.42) 100%)",
+                        "linear-gradient(180deg, rgba(250,248,252,0.96) 0%, rgba(244,240,247,0.92) 55%, rgba(236,228,242,0.88) 100%)",
                     }}
                     aria-live="polite"
                   >
@@ -668,10 +668,10 @@ export const ZohoASAPWidget = ({
                           <div
                             className={`max-w-[88%] px-3.5 py-2.5 text-[13.5px] leading-relaxed ${
                               isUser
-                                ? "rounded-2xl rounded-br-md bg-[#D3126A] text-white"
+                                ? "rounded-2xl rounded-br-md bg-[#D3126A] text-white shadow-[0_8px_22px_rgba(211,18,106,0.28)]"
                                 : isAgent
-                                  ? "rounded-2xl rounded-bl-md border border-[#cfe4f5] bg-[#f3f8fc] text-[#1a2434]"
-                                  : "rounded-2xl rounded-bl-md border border-white/80 bg-[#fffafc] text-[#2A1530] shadow-[0_8px_24px_rgba(12,10,18,0.10)]"
+                                  ? "rounded-2xl rounded-bl-md border border-[#d4e6f4] bg-[#f4f9fc] text-[#1a2434] shadow-sm"
+                                  : "rounded-2xl rounded-bl-md border border-[#ece4f2] bg-white text-[#2A1530] shadow-[0_6px_20px_rgba(42,21,48,0.08)]"
                             }`}
                           >
                             {!isUser && (
@@ -703,7 +703,7 @@ export const ZohoASAPWidget = ({
                             key={prompt}
                             type="button"
                             onClick={() => void handleSendChat(prompt)}
-                            className="rounded-xl border border-white/18 bg-white/[0.12] px-3 py-2.5 text-left text-[12px] font-medium text-[#FFF8FC] transition hover:border-[#D3126A]/35 hover:bg-[#D3126A]/15 hover:text-white"
+                            className="rounded-xl border border-[#e4daf0] bg-white/90 px-3 py-2.5 text-left text-[12px] font-medium text-[#3d2850] shadow-sm transition hover:border-[#D3126A]/35 hover:bg-[#fff5f9] hover:text-[#2A1530]"
                           >
                             {prompt}
                           </button>
@@ -713,7 +713,7 @@ export const ZohoASAPWidget = ({
 
                     {isChatSending && (
                       <div className="flex justify-start">
-                        <div className="rounded-2xl rounded-bl-md border border-white/80 bg-[#fffafc] px-3.5 py-2.5 text-xs text-[#5A3A5E]">
+                        <div className="rounded-2xl rounded-bl-md border border-[#ece4f2] bg-white px-3.5 py-2.5 text-xs text-[#5A3A5E] shadow-sm">
                           <span className="inline-flex items-center gap-2">
                             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#D3126A]" />
                             {agentLive ? "Delivering to specialist…" : "Thinking it through…"}
@@ -724,7 +724,7 @@ export const ZohoASAPWidget = ({
                     <div ref={chatEndRef} />
                   </div>
 
-                  <div className="flex-shrink-0 border-t border-[#ddd6e6]/80 bg-[#f3f0f7]/95 px-3 py-3 backdrop-blur-md">
+                  <div className="flex-shrink-0 border-t border-[#e4daf0] bg-[#17141f] px-3 py-3">
                     <div className="flex items-end gap-2">
                       <Textarea
                         value={chatInput}
@@ -742,7 +742,7 @@ export const ZohoASAPWidget = ({
                             ? `Message ${agentName || "the specialist"}…`
                             : "Ask about risk, stack, pricing, or an outage…"
                         }
-                        className="min-h-[50px] resize-none rounded-xl border-[#2a2433]/30 bg-[#16161c] text-[13.5px] text-[#FFF8FC] placeholder:text-[#E8B8D0] focus-visible:ring-[#D3126A]/70"
+                        className="min-h-[50px] resize-none rounded-xl border-white/10 bg-[#faf8fc] text-[13.5px] text-[#2A1530] placeholder:text-[#8a6f8c] focus-visible:ring-[#D3126A]/70"
                         disabled={isChatSending}
                         data-testid="input-support-chat"
                         aria-label="Chat message"
@@ -751,14 +751,14 @@ export const ZohoASAPWidget = ({
                         type="button"
                         onClick={() => void handleSendChat()}
                         disabled={!chatInput.trim() || isChatSending}
-                        className="h-[50px] w-[50px] flex-shrink-0 rounded-xl bg-[#D3126A] p-0 text-white hover:bg-[#c01060]"
+                        className="h-[50px] w-[50px] flex-shrink-0 rounded-xl bg-[#D3126A] p-0 text-white shadow-[0_8px_20px_rgba(211,18,106,0.35)] hover:bg-[#c01060]"
                         data-testid="button-send-support-chat"
                         aria-label="Send chat message"
                       >
                         <Send className="h-4 w-4" aria-hidden="true" />
                       </Button>
                     </div>
-                    <p className="mt-2 text-[11px] font-medium leading-4 text-[#6B3A62]">
+                    <p className="mt-2 text-[11px] font-medium leading-4 text-[#E8C8D8]">
                       {agentLive
                         ? "A Digerati agent is in this thread. Never share passwords or MFA codes."
                         : "Never share passwords, MFA codes, or private keys."}
@@ -773,17 +773,17 @@ export const ZohoASAPWidget = ({
                   data-testid="panel-support-ticket"
                   style={{
                     background:
-                      "linear-gradient(155deg, rgba(247,245,250,0.92) 0%, rgba(243,240,247,0.88) 46%, rgba(22,18,30,0.88) 70%, rgba(14,14,18,0.92) 100%)",
+                      "linear-gradient(180deg, rgba(250,248,252,0.97) 0%, rgba(244,240,247,0.94) 62%, rgba(236,228,242,0.9) 100%)",
                   }}
                 >
                   {ticketResult ? (
-                    <div className="mt-1 flex h-[calc(100%-0.25rem)] flex-col items-center justify-center rounded-2xl border border-[#e4deec] bg-[#fbfafd] px-4 py-8 text-center shadow-[0_12px_36px_rgba(12,10,18,0.08)]">
+                    <div className="mt-1 flex h-[calc(100%-0.25rem)] flex-col items-center justify-center rounded-2xl border border-[#e4daf0] bg-white px-4 py-8 text-center shadow-[0_12px_36px_rgba(42,21,48,0.08)]">
                       <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
                         <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
                       </div>
                       <h3 className="text-[15px] font-semibold text-[#2A1530]">Support request received</h3>
                       {ticketResult.ticketNumber && (
-                        <p className="mt-2 rounded-lg bg-[#16161c] px-3 py-1.5 font-mono text-xs font-semibold text-white">
+                        <p className="mt-2 rounded-lg bg-[#17141f] px-3 py-1.5 font-mono text-xs font-semibold text-white">
                           {ticketResult.ticketNumber}
                         </p>
                       )}
@@ -810,7 +810,7 @@ export const ZohoASAPWidget = ({
                     </div>
                   ) : (
                     <div className="mt-1 space-y-3">
-                      <div className="rounded-2xl border border-[#e4deec] bg-[#fbfafd]/95 px-4 py-3.5 shadow-[0_10px_30px_rgba(91,69,224,0.06)]">
+                      <div className="rounded-2xl border border-[#e4daf0] bg-white px-4 py-3.5 shadow-sm">
                         <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#5B45E0]">
                           Ticket
                         </p>
@@ -820,7 +820,7 @@ export const ZohoASAPWidget = ({
                         </p>
                       </div>
 
-                      <div className="space-y-3 rounded-2xl border border-[#e4deec] bg-[#fbfafd] p-4 shadow-[0_10px_30px_rgba(12,10,18,0.06)]">
+                      <div className="space-y-3 rounded-2xl border border-[#e4daf0] bg-white p-4 shadow-sm">
                         <div>
                           <label htmlFor="support-email" className="mb-1.5 block text-[11px] font-semibold text-[#4A2F55]">
                             Email
@@ -833,7 +833,7 @@ export const ZohoASAPWidget = ({
                             value={email}
                             onChange={(event) => setEmail(event.target.value)}
                             data-testid="input-support-email"
-                            className="h-10 rounded-xl border-[#2a2433]/25 bg-[#16161c] text-[13.5px] text-[#FFF8FC] placeholder:text-[#E8B8D0] focus-visible:ring-[#5B45E0]/70"
+                            className="h-10 rounded-xl border-[#d9cee4] bg-[#faf8fc] text-[13.5px] text-[#2A1530] placeholder:text-[#8a6f8c] focus-visible:ring-[#5B45E0]/70"
                           />
                         </div>
 
@@ -849,7 +849,7 @@ export const ZohoASAPWidget = ({
                               value={subject}
                               onChange={(event) => setSubject(event.target.value)}
                               data-testid="input-support-subject"
-                              className="h-10 rounded-xl border-[#2a2433]/25 bg-[#16161c] text-[13.5px] text-[#FFF8FC] placeholder:text-[#E8B8D0] focus-visible:ring-[#5B45E0]/70"
+                              className="h-10 rounded-xl border-[#d9cee4] bg-[#faf8fc] text-[13.5px] text-[#2A1530] placeholder:text-[#8a6f8c] focus-visible:ring-[#5B45E0]/70"
                             />
                           </div>
                           <div>
@@ -862,7 +862,7 @@ export const ZohoASAPWidget = ({
                               onChange={(event) =>
                                 setPriority(event.target.value as "Low" | "Medium" | "High" | "Urgent")
                               }
-                              className="h-10 w-full rounded-xl border border-[#2a2433]/25 bg-[#16161c] px-3 text-[13.5px] text-[#FFF8FC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5B45E0]/70"
+                              className="h-10 w-full rounded-xl border border-[#d9cee4] bg-[#faf8fc] px-3 text-[13.5px] text-[#2A1530] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5B45E0]/70"
                               data-testid="select-support-priority"
                             >
                               <option value="Low">Low</option>
@@ -884,7 +884,7 @@ export const ZohoASAPWidget = ({
                             value={message}
                             onChange={(event) => setMessage(event.target.value)}
                             rows={4}
-                            className="min-h-[100px] resize-none rounded-xl border-[#2a2433]/25 bg-[#16161c] text-[13.5px] text-[#FFF8FC] placeholder:text-[#E8B8D0] focus-visible:ring-[#5B45E0]/70"
+                            className="min-h-[100px] resize-none rounded-xl border-[#d9cee4] bg-[#faf8fc] text-[13.5px] text-[#2A1530] placeholder:text-[#8a6f8c] focus-visible:ring-[#5B45E0]/70"
                             data-testid="input-support-message"
                           />
                         </div>
@@ -893,7 +893,7 @@ export const ZohoASAPWidget = ({
                           type="button"
                           onClick={() => void handleSubmitTicket()}
                           disabled={isTicketSending}
-                          className="h-11 w-full rounded-xl bg-[#5B45E0] text-white hover:bg-[#4a37c7]"
+                          className="h-11 w-full rounded-xl bg-[#5B45E0] text-white shadow-[0_8px_20px_rgba(91,69,224,0.28)] hover:bg-[#4a37c7]"
                           data-testid="button-submit-support"
                         >
                           {isTicketSending ? "Creating ticket…" : "Create support ticket"}
@@ -911,19 +911,19 @@ export const ZohoASAPWidget = ({
                   data-testid="panel-support-resources"
                   style={{
                     background:
-                      "linear-gradient(118deg, rgba(18,16,24,0.94) 0%, rgba(26,21,34,0.88) 44%, rgba(243,240,247,0.9) 56%, rgba(251,250,253,0.96) 100%)",
+                      "linear-gradient(180deg, rgba(250,248,252,0.97) 0%, rgba(244,240,247,0.94) 62%, rgba(236,228,242,0.9) 100%)",
                   }}
                 >
                   <div className="mb-3 grid gap-2.5 pt-1 sm:grid-cols-[118px_1fr]">
-                    <div className="rounded-2xl border border-white/[0.08] bg-[#16161c]/80 p-3 text-white backdrop-blur-sm">
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#E8A0BC]">
+                    <div className="rounded-2xl border border-white/10 bg-[#17141f] p-3 text-white shadow-sm">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#F0B4CC]">
                         Resources
                       </p>
-                      <p className="mt-2 text-[11px] leading-4 text-[#F5E6EE]">
+                      <p className="mt-2 text-[11px] leading-4 text-[#F3D4E4]">
                         Assist, portal, and knowledge tools.
                       </p>
                     </div>
-                    <div className="rounded-2xl border border-[#e4deec] bg-[#fbfafd]/95 p-3 shadow-sm">
+                    <div className="rounded-2xl border border-[#e4daf0] bg-white p-3 shadow-sm">
                       <h3 className="text-[14px] font-semibold text-[#2A1530]">Get where you need to go</h3>
                       <p className="mt-1 text-[12px] leading-5 text-[#5A3A5E]">
                         Direct links clients use most.
@@ -943,16 +943,16 @@ export const ZohoASAPWidget = ({
                             : {})}
                           className={`group flex items-center gap-3 rounded-2xl border p-3 transition ${
                             darkRow
-                              ? "border-white/[0.08] bg-[#16161c]/92 hover:border-[#D3126A]/35 hover:bg-[#1c1520]"
-                              : "border-[#e4deec] bg-[#fbfafd] hover:border-[#5B45E0]/30 hover:bg-[#f5f2ff]"
+                              ? "border-white/10 bg-[#17141f] hover:border-[#D3126A]/40 hover:bg-[#1d1624]"
+                              : "border-[#e4daf0] bg-white hover:border-[#5B45E0]/35 hover:bg-[#f7f4ff]"
                           }`}
                           data-testid={`resource-link-${title.toLowerCase().replace(/\s+/g, "-")}`}
                         >
                           <span
                             className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl transition ${
                               darkRow
-                                ? "bg-white/[0.06] text-[#E8A0BC] group-hover:bg-[#D3126A]/20 group-hover:text-white"
-                                : "bg-[#efeaf6] text-[#3f3454] group-hover:bg-[#5B45E0]/12 group-hover:text-[#5B45E0]"
+                                ? "bg-white/8 text-[#F0B4CC] group-hover:bg-[#D3126A]/20 group-hover:text-white"
+                                : "bg-[#f0ebf7] text-[#4A2F55] group-hover:bg-[#5B45E0]/12 group-hover:text-[#5B45E0]"
                             }`}
                           >
                             <Icon className="h-4 w-4" aria-hidden="true" />
@@ -986,12 +986,12 @@ export const ZohoASAPWidget = ({
                     })}
                   </div>
 
-                  <div className="mt-3 rounded-2xl border border-[#D3126A]/20 bg-[#16161c]/90 p-3">
+                  <div className="mt-3 rounded-2xl border border-[#D3126A]/25 bg-[#17141f] p-3">
                     <div className="flex gap-2.5">
-                      <ShieldCheck className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#C45B8A]" aria-hidden="true" />
+                      <ShieldCheck className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#F0B4CC]" aria-hidden="true" />
                       <div>
                         <p className="text-[12px] font-semibold text-white">Security-sensitive issue?</p>
-                        <p className="mt-1 text-[11.5px] leading-4 text-[#F2D6E4]">
+                        <p className="mt-1 text-[11.5px] leading-4 text-[#F3D4E4]">
                           Don’t paste credentials into chat. Open a ticket with the minimum details and we’ll move to a secure channel.
                         </p>
                       </div>
@@ -1001,7 +1001,7 @@ export const ZohoASAPWidget = ({
               )}
             </div>
 
-            <footer className="relative flex flex-shrink-0 items-center justify-between gap-3 border-t border-[#e4deec]/90 bg-[#f7f5fa]/90 px-4 py-2.5 text-[11px] font-medium text-[#5A3558] backdrop-blur-md">
+            <footer className="relative flex flex-shrink-0 items-center justify-between gap-3 border-t border-[#e4daf0] bg-[#faf8fc]/95 px-4 py-2.5 text-[11px] font-medium text-[#5A3558]">
               <span className="truncate">DE Desk · Ticket · Resources · Assist</span>
               <button
                 type="button"
