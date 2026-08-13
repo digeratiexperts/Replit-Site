@@ -1,76 +1,99 @@
 import { useReducedMotion, motion } from "framer-motion";
-import { Shield, CheckCircle, Lock, FileCheck, Server, Mail, Activity } from "lucide-react";
+import {
+  Shield,
+  CheckCircle,
+  Lock,
+  FileCheck,
+  Server,
+  Mail,
+  Network,
+  Activity,
+  Database,
+} from "lucide-react";
 
 /**
  * Hero product preview for the Cyber Risk Assessment experience.
- * Decorative posture bars are unlabeled example levels — not customer metrics.
+ * Illustrative anatomy only — no client scores, fake ROI, or invented findings.
  */
 export const DashboardMockup = ({ className = "" }: { className?: string }) => {
   const prefersReducedMotion = useReducedMotion();
 
   const reviewAreas = [
-    { icon: Lock, label: "Identity & access", tone: "from-violet-500/25 to-purple-600/20" },
-    { icon: Server, label: "Endpoints & devices", tone: "from-indigo-500/25 to-violet-600/20" },
-    { icon: Mail, label: "Email security", tone: "from-fuchsia-500/20 to-violet-600/20" },
-    { icon: FileCheck, label: "Backups & recovery", tone: "from-emerald-500/20 to-teal-600/15" },
+    { icon: Lock, label: "Identity & access", tone: "from-violet-500/30 to-purple-600/15" },
+    { icon: Server, label: "Endpoints & devices", tone: "from-violet-500/25 to-indigo-600/15" },
+    { icon: Mail, label: "Email security", tone: "from-fuchsia-500/20 to-violet-600/15" },
+    { icon: FileCheck, label: "Backups & recovery", tone: "from-violet-400/20 to-fuchsia-600/10" },
   ];
 
-  const postureBars = [
-    { label: "Identity", level: 78, color: "#8b5cf6" },
-    { label: "Endpoints", level: 84, color: "#a78bfa" },
-    { label: "Email", level: 72, color: "#c084fc" },
-    { label: "Backups", level: 88, color: "#34d399" },
-    { label: "Controls", level: 70, color: "#818cf8" },
-    { label: "Overall", level: 80, color: "#8b5cf6" },
+  /** Six DE domains — presence markers only, never numeric scores. */
+  const domains = [
+    { icon: Lock, label: "Identity" },
+    { icon: Server, label: "Endpoint" },
+    { icon: Mail, label: "Email" },
+    { icon: Network, label: "Network" },
+    { icon: Database, label: "Data & Recovery" },
+    { icon: Activity, label: "Security Ops" },
+  ];
+
+  const outcomes = [
+    "Prioritized findings with clear business impact",
+    "Recommendations matched to your size and risk",
+    "No-obligation follow-up within one business day",
   ];
 
   return (
     <motion.div
       className={`relative ${className}`}
-      initial={prefersReducedMotion ? false : { opacity: 0, y: 28 }}
+      initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: prefersReducedMotion ? 0 : 0.55, ease: "easeOut" }}
-      aria-label="Preview of a Digerati Experts Cyber Risk Assessment report"
+      transition={{ duration: prefersReducedMotion ? 0 : 0.5, ease: [0.22, 1, 0.36, 1] }}
+      aria-label="Illustrative preview of a Digerati Experts Cyber Risk Assessment overview"
     >
       <div
-        className="relative rounded-2xl overflow-hidden border border-white/12"
+        className="pointer-events-none absolute -inset-5 -z-10 rounded-[2rem]"
+        aria-hidden="true"
+        style={{
+          background:
+            "radial-gradient(ellipse at 40% 30%, rgba(211, 18, 106, 0.18) 0%, transparent 55%), radial-gradient(ellipse at 80% 70%, rgba(91, 69, 224, 0.16) 0%, transparent 50%)",
+        }}
+      />
+
+      <div
+        className="relative overflow-hidden rounded-2xl border border-white/12"
         style={{
           background:
             "linear-gradient(145deg, rgba(12, 10, 22, 0.98) 0%, rgba(18, 12, 36, 0.96) 55%, rgba(10, 8, 20, 0.98) 100%)",
-          boxShadow: "0 24px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.06)",
+          boxShadow:
+            "0 28px 64px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.07), 0 0 0 1px rgba(255,255,255,0.03)",
         }}
       >
-        <div className="flex items-center gap-2 px-3.5 py-2.5 border-b border-white/8 bg-black/25">
-          <div className="flex gap-1" aria-hidden="true">
-            <div className="w-2 h-2 rounded-full bg-white/20" />
-            <div className="w-2 h-2 rounded-full bg-white/15" />
-            <div className="w-2 h-2 rounded-full bg-white/10" />
+        <div className="flex items-center justify-between gap-3 border-b border-white/8 bg-black/30 px-3.5 py-2.5">
+          <div className="flex items-center gap-1.5 text-[11px] text-white/55">
+            <Shield className="h-3 w-3 text-pink-400/85" aria-hidden="true" />
+            <span className="font-medium text-white/70">Cyber Risk Assessment</span>
           </div>
-          <div className="flex-1 flex justify-center">
-            <div className="px-2.5 py-0.5 text-[11px] text-white/50 flex items-center gap-1.5">
-              <Shield className="w-3 h-3 text-pink-400/80" aria-hidden="true" />
-              Cyber Risk Assessment
-            </div>
-          </div>
+          <span className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.12em] text-white/45">
+            Illustrative view
+          </span>
         </div>
 
-        <div className="p-4 sm:p-5 space-y-4">
+        <div className="space-y-4 p-4 sm:p-5">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-2.5">
               <div
-                className="w-9 h-9 rounded-xl bg-gradient-to-br from-fuchsia-500/90 via-pink-500/90 to-violet-600/90 flex items-center justify-center border border-pink-300/20"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-pink-300/20 bg-gradient-to-br from-fuchsia-500/90 via-pink-500/90 to-violet-600/90"
                 aria-hidden="true"
               >
-                <Shield className="w-4 h-4 text-white" />
+                <Shield className="h-4 w-4 text-white" />
               </div>
               <div>
-                <div className="text-white font-semibold text-sm">Assessment overview</div>
-                <div className="text-white/45 text-xs">Identity · endpoints · email · backups</div>
+                <div className="text-sm font-semibold text-white">Assessment overview</div>
+                <div className="text-xs text-white/45">Sample security posture structure</div>
               </div>
             </div>
           </div>
 
-          <p className="text-sm text-white/85 leading-relaxed">
+          <p className="text-sm leading-relaxed text-white/85">
             A practical review of posture across identity, endpoints, email, backups, and
             controls — sized to your Arizona business.
           </p>
@@ -79,77 +102,75 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
             {reviewAreas.map((area, index) => (
               <motion.div
                 key={area.label}
-                className="flex items-center gap-2.5 p-3 rounded-xl bg-white/[0.035] border border-white/10"
-                initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
+                className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/[0.035] p-3"
+                initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
-                  duration: prefersReducedMotion ? 0 : 0.35,
-                  delay: prefersReducedMotion ? 0 : 0.15 + index * 0.06,
+                  duration: prefersReducedMotion ? 0 : 0.3,
+                  delay: prefersReducedMotion ? 0 : 0.08 + index * 0.04,
                 }}
               >
                 <div
-                  className={`w-8 h-8 rounded-lg bg-gradient-to-br ${area.tone} border border-white/10 flex items-center justify-center shrink-0`}
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-gradient-to-br ${area.tone}`}
                 >
-                  <area.icon className="w-4 h-4 text-white" aria-hidden="true" />
+                  <area.icon className="h-4 w-4 text-white" aria-hidden="true" />
                 </div>
-                <span className="text-xs sm:text-sm text-white font-medium">{area.label}</span>
+                <span className="text-xs font-medium text-white sm:text-sm">{area.label}</span>
               </motion.div>
             ))}
           </div>
 
           <motion.div
-            className="p-4 rounded-xl bg-white/[0.03] border border-white/10"
+            className="rounded-xl border border-white/10 bg-white/[0.03] p-4"
             initial={prefersReducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: prefersReducedMotion ? 0 : 0.4, delay: prefersReducedMotion ? 0 : 0.35 }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.35, delay: prefersReducedMotion ? 0 : 0.22 }}
           >
-            <div className="flex items-center gap-2 mb-3">
-              <Activity className="w-4 h-4 text-violet-400" aria-hidden="true" />
-              <span className="text-white text-sm font-medium">Posture areas reviewed</span>
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <Activity className="h-4 w-4 text-violet-400" aria-hidden="true" />
+                <span className="text-sm font-medium text-white">Domains reviewed</span>
+              </div>
+              <span className="text-[10px] uppercase tracking-[0.14em] text-white/35">
+                Structure only
+              </span>
             </div>
-            <div className="flex items-end gap-2 h-[72px]" aria-hidden="true">
-              {postureBars.map((bar, index) => (
-                <motion.div
-                  key={bar.label}
-                  className="flex-1 rounded-t-md opacity-90"
-                  style={{ backgroundColor: bar.color }}
-                  initial={prefersReducedMotion ? false : { height: 0 }}
-                  animate={{ height: `${bar.level}%` }}
-                  transition={{
-                    duration: prefersReducedMotion ? 0 : 0.45,
-                    delay: prefersReducedMotion ? 0 : 0.45 + index * 0.05,
-                    ease: "easeOut",
-                  }}
-                  title={bar.label}
-                />
+            <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3" role="list">
+              {domains.map((domain) => (
+                <li
+                  key={domain.label}
+                  className="flex items-center gap-2 rounded-lg border border-white/[0.07] bg-black/20 px-2.5 py-2"
+                >
+                  <span
+                    className="flex h-6 w-6 items-center justify-center rounded-md border border-violet-400/20 bg-violet-500/15"
+                    aria-hidden="true"
+                  >
+                    <domain.icon className="h-3 w-3 text-violet-200" />
+                  </span>
+                  <span className="truncate text-[11px] font-medium text-white/80 sm:text-xs">
+                    {domain.label}
+                  </span>
+                </li>
               ))}
-            </div>
-            <div className="flex justify-between mt-2" aria-hidden="true">
-              {postureBars.map((bar) => (
-                <span key={bar.label} className="text-[9px] text-white/35 truncate max-w-[14%]">
-                  {bar.label}
-                </span>
-              ))}
-            </div>
+            </ul>
           </motion.div>
 
           <div className="space-y-2">
-            {[
-              "Prioritized findings with clear business impact",
-              "Recommendations matched to your size and risk",
-              "No-obligation follow-up within one business day",
-            ].map((line, index) => (
+            {outcomes.map((line, index) => (
               <motion.div
                 key={line}
                 className="flex items-start gap-2.5 text-sm text-white"
-                initial={prefersReducedMotion ? false : { opacity: 0, x: -10 }}
+                initial={prefersReducedMotion ? false : { opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{
-                  duration: prefersReducedMotion ? 0 : 0.3,
-                  delay: prefersReducedMotion ? 0 : 0.55 + index * 0.06,
+                  duration: prefersReducedMotion ? 0 : 0.28,
+                  delay: prefersReducedMotion ? 0 : 0.28 + index * 0.05,
                 }}
               >
-                <CheckCircle className="w-4 h-4 text-emerald-400/95 mt-0.5 shrink-0" aria-hidden="true" />
+                <CheckCircle
+                  className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400/95"
+                  aria-hidden="true"
+                />
                 <span>{line}</span>
               </motion.div>
             ))}

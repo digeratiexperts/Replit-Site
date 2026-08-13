@@ -31,7 +31,7 @@ import { DigeratiTrustPhotoSection } from "./sections/DigeratiTrustPhotoSection"
 // Extra working-branch sections stay on-page with showInNav:false.
 const homepageSections: { id: string; label: string; theme: 'dark' | 'light'; showInNav?: boolean }[] = [
   { id: 'hero', label: 'Home', theme: 'dark' },
-  { id: 'stats', label: 'Why DE', theme: 'dark' },
+  { id: 'stats', label: 'Threats', theme: 'dark' },
   { id: 'challenges', label: 'Problems', theme: 'dark', showInNav: false },
   { id: 'services', label: 'Engage', theme: 'dark' },
   { id: 'protection', label: 'Protect', theme: 'light', showInNav: false },

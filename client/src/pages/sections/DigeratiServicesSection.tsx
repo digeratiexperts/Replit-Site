@@ -1,4 +1,3 @@
-import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "wouter";
 import {
   Shield,
@@ -17,6 +16,7 @@ import {
 import { CTA } from "@/lib/ctaCopy";
 import { EngagePathVisual } from "@/components/visual/EngagePathVisual";
 import { IconWell } from "@/components/visual/IconWell";
+import { Section, Container } from "@/components/layout";
 import { engagePathVisualByTitle } from "@/lib/visualAssets";
 
 /**
@@ -105,45 +105,32 @@ const capabilityPreview: {
 ];
 
 export const DigeratiServicesSection = (): JSX.Element => {
-  const prefersReducedMotion = useReducedMotion();
-
   return (
-    <section
+    <Section
       id="services"
-      className="de-dark-chapter de-chapter-hairline relative overflow-hidden py-14 md:py-18 lg:py-22"
+      chapter="field"
+      seam="hairline"
+      rhythm="md"
+      className="overflow-hidden"
     >
-      <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
-        <motion.div
-          className="mb-10 max-w-2xl md:mb-14"
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.45 }}
-        >
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF477F]">
-            How to work with us
-          </p>
-          <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
-            Cybersecurity-First Managed IT
-          </h2>
-          <p className="max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">
+      <Container width="content">
+        <div className="mb-10 max-w-2xl md:mb-12">
+          <p className="de-eyebrow mb-3">How to work with us</p>
+          <h2 className="de-h2 mb-4 text-white">Cybersecurity-First Managed IT</h2>
+          <p className="de-lead text-white/65">
             Three clear paths. Capability depth stays available here and under Protect — nothing
             removed.
           </p>
-        </motion.div>
+        </div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8">
-          {paths.map((path, index) => {
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-7">
+          {paths.map((path) => {
             const Icon = path.icon;
             const visual = engagePathVisualByTitle[path.title];
             return (
-              <motion.div
+              <article
                 key={path.title}
-                initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.08 }}
-                className="flex h-full flex-col overflow-hidden rounded-2xl border border-de-hairline bg-de-raised"
+                className="de-raised-panel flex h-full flex-col overflow-hidden"
                 data-testid={path.testId}
               >
                 {visual ? (
@@ -153,19 +140,19 @@ export const DigeratiServicesSection = (): JSX.Element => {
                     <IconWell icon={Icon} size="md" surface="dark" />
                   </div>
                 )}
-                <div className="flex flex-1 flex-col px-6 pb-7 pt-1 lg:px-8 lg:pb-8">
-                  <h3 className="mb-2 text-xl font-semibold text-white lg:text-2xl">{path.title}</h3>
+                <div className="flex flex-1 flex-col px-6 pb-7 pt-2 lg:px-7 lg:pb-8">
+                  <h3 className="de-h3 mb-2 text-white">{path.title}</h3>
                   <p className="mb-5 flex-1 text-base leading-relaxed text-white/65">
                     {path.description}
                   </p>
                   <Link href={path.link} data-testid={`link-${path.testId}`}>
-                    <span className="inline-flex items-center gap-2 text-sm font-medium text-violet-300 hover:text-violet-200">
+                    <span className="inline-flex items-center gap-2 text-sm font-semibold text-[#D3126A] hover:text-pink-300">
                       {path.cta}
                       <ArrowRight className="h-4 w-4" aria-hidden="true" />
                     </span>
                   </Link>
                 </div>
-              </motion.div>
+              </article>
             );
           })}
         </div>
@@ -179,7 +166,10 @@ export const DigeratiServicesSection = (): JSX.Element => {
           </Link>
         </p>
 
-        <div className="mt-14 md:mt-16" data-testid="engage-capability-preview">
+        <div
+          className="mt-12 border-t border-white/10 pt-10 md:mt-14 md:pt-12"
+          data-testid="engage-capability-preview"
+        >
           <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
             <div>
               <h3 className="text-lg font-semibold text-white md:text-xl">Security capabilities</h3>
@@ -220,7 +210,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
             </span>
           </Link>
         </div>
-      </div>
-    </section>
+      </Container>
+    </Section>
   );
 };
