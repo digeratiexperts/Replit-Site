@@ -133,19 +133,8 @@ export default function Ecosystem() {
             {tiers.map((tier, index) => (
               <div
                 key={tier.name}
-                className={`rounded-2xl p-8 bg-white/5 backdrop-blur-xl border transition-all duration-300 flex flex-col ${
-                  index === 1 
-                    ? 'border-purple-500/50 ring-2 ring-purple-500/30 shadow-[0_30px_70px_-30px_rgba(139,92,246,0.4)]' 
-                    : 'border-white/10 hover:border-white/20'
-                }`}
+                className="rounded-2xl p-8 bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-300 flex flex-col"
               >
-                {index === 1 && (
-                  <div className="text-center mb-4">
-                    <span className="bg-gradient-to-r from-purple-600 to-cyan-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                      Most Popular
-                    </span>
-                  </div>
-                )}
                 <div className={`inline-block px-4 py-1.5 rounded-lg bg-gradient-to-r ${tier.color} text-white text-sm font-bold mb-4 w-fit`}>
                   {tier.name}
                 </div>
@@ -164,15 +153,9 @@ export default function Ecosystem() {
                 </ul>
                 <a
                   href="/book"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`block w-full mt-6 py-3 rounded-lg text-center font-semibold transition-all ${
-                    index === 1
-                      ? 'bg-gradient-to-r from-purple-600 to-cyan-500 text-white hover:from-purple-500 hover:to-cyan-400'
-                      : 'bg-white/10 text-white hover:bg-white/20 border border-white/20'
-                  }`}
+                  className="block w-full mt-6 py-3 rounded-lg text-center font-semibold transition-all bg-white/10 text-white hover:bg-white/20 border border-white/20"
                 >
-                  Book a Strategy Call
+                  Get My Cyber Risk Assessment
                 </a>
               </div>
             ))}

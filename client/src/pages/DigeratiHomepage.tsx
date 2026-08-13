@@ -49,7 +49,7 @@ const homepageSections: { id: string; label: string; theme: 'dark' | 'light'; sh
 export const DigeratiHomepage = (): JSX.Element => {
   useSEO({
     title: 'Managed Security Service Provider',
-    description: "Arizona's trusted MSP/MSSP. Get 24/7 cybersecurity monitoring, managed IT services, and compliance support for small-to-medium businesses. Free penetration test available.",
+    description: "Arizona MSP/MSSP. Cybersecurity-first managed IT, 24/7 operations, and a Cyber Risk Assessment that matches the operating model to your environment.",
     canonical: '/',
   });
 
@@ -99,31 +99,9 @@ export const DigeratiHomepage = (): JSX.Element => {
           <DigeratiServicesSection />
         </ScrollSectionAuto>
 
-        {/* Kept from working branch — not in live sticky bar */}
+        {/* What we protect + how */}
         <ScrollSectionAuto id="protection">
           <DigeratiHowWeProtectSection />
-        </ScrollSectionAuto>
-
-        {/* Packages */}
-        <ScrollSectionAuto id="pricing">
-          <DigeratiPricingSection />
-        </ScrollSectionAuto>
-
-        {/* Pricing tools relocated to /proactive-ecosystem-pricing#pricing-tools */}
-
-        {/* Industries */}
-        <ScrollSectionAuto id="industries">
-          <DigeratiIndustriesSection />
-        </ScrollSectionAuto>
-
-        {/* Trust imagery — feeds Proof story, hidden from sticky bar */}
-        <ScrollSectionAuto id="trust">
-          <DigeratiTrustPhotoSection />
-        </ScrollSectionAuto>
-
-        {/* Meet the Experts — human trust */}
-        <ScrollSectionAuto id="team">
-          <DigeratiMeetExpertsSection />
         </ScrollSectionAuto>
 
         {/* Proof — honest shells (no fabricated quotes) */}
@@ -132,7 +110,27 @@ export const DigeratiHomepage = (): JSX.Element => {
           <HomepageProofSection />
         </ScrollSectionAuto>
 
-        {/* Kept from working branch — not in live sticky bar */}
+        <ScrollSectionAuto id="trust">
+          <DigeratiTrustPhotoSection />
+        </ScrollSectionAuto>
+
+        <ScrollSectionAuto id="team">
+          <DigeratiMeetExpertsSection />
+        </ScrollSectionAuto>
+
+        {/* Industries */}
+        <ScrollSectionAuto id="industries">
+          <DigeratiIndustriesSection />
+        </ScrollSectionAuto>
+
+        {/* Packages — fit-based operating models */}
+        <ScrollSectionAuto id="pricing">
+          <DigeratiPricingSection />
+        </ScrollSectionAuto>
+
+        {/* Pricing tools relocated to /proactive-ecosystem-pricing#pricing-tools */}
+
+        {/* Insights + AI teasers — full versions live on Resources */}
         <ScrollSectionAuto id="insights">
           <DigeratiThreatsInsightsSection />
           <DigeratiAIAssistanceSection />

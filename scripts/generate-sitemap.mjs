@@ -20,7 +20,6 @@ const STATIC = [
   ["/solutions/proactive-enterprise-ecosystem", "monthly", "0.8"],
   ["/solutions/co-managed-it", "monthly", "0.8"],
   ["/solutions/standalone-services", "monthly", "0.8"],
-  ["/solutions/ProActive-Ecosystem-Packages", "monthly", "0.9"],
   ["/solutions/managed-it-support", "monthly", "0.7"],
   ["/solutions/managed-workplace", "monthly", "0.7"],
   ["/solutions/cloud-backup", "monthly", "0.7"],

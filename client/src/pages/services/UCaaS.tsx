@@ -132,7 +132,7 @@ export default function UCaaS() {
         "Meeting policy enforcement",
         "Monthly quality reports"
       ],
-      popular: true
+      popular: false
     },
     {
       name: "Managed UCaaS + Platform",
@@ -346,19 +346,10 @@ export default function UCaaS() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1, duration: 0.5 }}
-                className={`relative ${tier.popular ? 'md:-mt-4 md:mb-4' : ''}`}
+                className="relative"
               >
-                {tier.popular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-full text-sm font-medium text-white">
-                    Most Popular
-                  </div>
-                )}
                 <Card 
-                  className={`h-full ${
-                    tier.popular 
-                      ? 'bg-gradient-to-b from-violet-500/10 to-purple-500/5 border-violet-500/30' 
-                      : 'bg-white/5 border-white/10'
-                  } backdrop-blur-sm hover:border-purple-500/40 transition-all`}
+                  className="h-full bg-white/[0.03] border-white/10 backdrop-blur-sm hover:border-purple-500/40 transition-all"
                   data-testid={`card-pricing-${tier.name.toLowerCase().replace(/\s+/g, '-')}`}
                 >
                   <CardHeader>

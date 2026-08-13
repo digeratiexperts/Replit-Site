@@ -126,7 +126,13 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
             Recent Threats & <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-violet-400 to-purple-400">Insights</span>
           </h2>
           <p className="text-base md:text-lg lg:text-xl text-gray-400 max-w-3xl mx-auto px-4">
-            Stay ahead of cyber threats with real-time alerts and expert analysis from our security team.
+            A short teaser of current alerts. Full feed, dates, and sources live on{" "}
+            <Link href="/resources/blog">
+              <span className="font-semibold text-white/80 underline decoration-white/20 underline-offset-4 hover:text-white">
+                Resources
+              </span>
+            </Link>
+            .
           </p>
         </motion.div>
 

@@ -188,19 +188,19 @@ export default function EcosystemMatrixOfficial() {
         <div className="grid grid-cols-5 gap-4 mb-6 sticky top-0 z-40 bg-[#0a0a0f]/80 backdrop-blur-md py-4 border-b border-white/10">
           <div className="text-white/40 font-bold uppercase text-xs self-center">Capability</div>
           <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-center">
-            <Badge variant="secondary" className="mb-2 bg-slate-500/20 text-slate-400">Core</Badge>
-            <h3 className="font-bold text-lg">IT Essentials</h3>
-            <p className="text-xs text-white/50">Foundation only</p>
+            <Badge variant="secondary" className="mb-2 bg-slate-500/20 text-slate-400">IT</Badge>
+            <h3 className="font-bold text-lg">IT</h3>
+            <p className="text-xs text-white/50">${pricing.it.user} /user·mo</p>
           </div>
-          <div className="p-4 rounded-xl bg-violet-500/10 border border-violet-500/20 text-center">
-            <Badge variant="secondary" className="mb-2 bg-violet-500/20 text-violet-400">Popular</Badge>
+          <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-center">
+            <Badge variant="secondary" className="mb-2 bg-violet-500/20 text-violet-400">Office</Badge>
             <h3 className="font-bold text-lg text-violet-300">Office</h3>
-            <p className="text-xs text-violet-400/60">$65 /user·mo*</p>
+            <p className="text-xs text-violet-400/60">${pricing.office.user} /user·mo</p>
           </div>
-          <div className="p-4 rounded-xl bg-fuchsia-500/10 border border-fuchsia-500/20 text-center ring-1 ring-fuchsia-500/30">
-            <Badge variant="secondary" className="mb-2 bg-fuchsia-500/20 text-fuchsia-400">Best Value</Badge>
+          <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-center">
+            <Badge variant="secondary" className="mb-2 bg-fuchsia-500/20 text-fuchsia-400">Business</Badge>
             <h3 className="font-bold text-lg text-fuchsia-300">Business</h3>
-            <p className="text-xs text-fuchsia-400/60">$95 /user·mo*</p>
+            <p className="text-xs text-fuchsia-400/60">${pricing.business.user} /user·mo</p>
           </div>
           <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20 text-center">
             <Badge variant="secondary" className="mb-2 bg-purple-500/20 text-purple-400">Custom</Badge>

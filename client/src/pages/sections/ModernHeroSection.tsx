@@ -52,10 +52,17 @@ export const ModernHeroSection = (): JSX.Element => {
       </div>
 
       <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/70 to-[#050312]/95" />
+      <div
+        className="pointer-events-none absolute inset-0"
+        aria-hidden="true"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 55% at 18% 42%, rgba(91, 69, 224, 0.16) 0%, transparent 62%), radial-gradient(ellipse 50% 40% at 82% 28%, rgba(211, 18, 106, 0.10) 0%, transparent 58%)",
+        }}
+      />
 
-      {/* pb clears sticky section dock so hero features aren't clipped */}
       <motion.div
-        className="relative z-10 flex flex-1 w-full items-center px-3 sm:px-4 lg:px-6 xl:px-8 pt-[calc(var(--de-nav-offset)+0.35rem)] pb-28 sm:pt-[calc(var(--de-nav-offset)+0.75rem)] sm:pb-28 lg:pt-[calc(var(--de-nav-offset)+1rem)] lg:pb-32 xl:pt-[calc(var(--de-nav-offset)+1.25rem)]"
+        className="relative z-10 flex flex-1 w-full items-center px-3 sm:px-4 lg:px-6 xl:px-8 pt-[calc(var(--de-nav-offset)+0.35rem)] pb-16 sm:pt-[calc(var(--de-nav-offset)+0.75rem)] sm:pb-16 lg:pt-[calc(var(--de-nav-offset)+1rem)] lg:pb-20 xl:pt-[calc(var(--de-nav-offset)+1.25rem)]"
         style={{ y }}
       >
         <div className="mx-auto w-full max-w-[100rem]">
@@ -77,7 +84,9 @@ export const ModernHeroSection = (): JSX.Element => {
 
               <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-[3.25rem] font-bold leading-[1.08] tracking-[-0.02em] text-white">
                 Your Arizona business,{" "}
-                <span className="text-[#FF6B9D]">protected 24/7.</span>
+                <span className="bg-gradient-to-r from-[#FF6B9D] via-[#E879F9] to-[#A78BFA] bg-clip-text text-transparent">
+                  protected 24/7.
+                </span>
               </h1>
 
               <p className="text-base md:text-lg text-white/85 leading-relaxed max-w-xl">
@@ -163,7 +172,7 @@ export const ModernHeroSection = (): JSX.Element => {
 
             <div className="hidden lg:flex relative justify-end w-full">
               <motion.div
-                className="relative w-full max-w-[440px] xl:max-w-[480px]"
+                className="relative w-full max-w-[440px] xl:max-w-[560px] 2xl:max-w-[620px]"
                 initial={prefersReducedMotion ? false : { opacity: 0, x: 22, rotateY: -4 }}
                 animate={{ opacity: 1, x: 0, rotateY: 0 }}
                 transition={{
@@ -178,7 +187,7 @@ export const ModernHeroSection = (): JSX.Element => {
                   aria-hidden="true"
                   style={{
                     background:
-                      "radial-gradient(ellipse at center, rgba(236, 72, 153, 0.1) 0%, transparent 70%)",
+                      "radial-gradient(ellipse at center, rgba(236, 72, 153, 0.16) 0%, transparent 70%)",
                   }}
                 />
                 <div

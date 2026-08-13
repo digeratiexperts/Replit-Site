@@ -177,53 +177,59 @@ export function MegaMenu() {
   const navItems: NavItem[] = [
     {
       name: 'Solutions',
-      featuredPanel: {
-        title: 'Why Digerati Experts?',
-        stats: [
-          { value: '99.9%', label: 'Uptime SLA' },
-          { value: '<15min', label: 'Response Time' },
-          { value: '$50K+', label: 'Avg. Savings' },
-        ],
-        cta: { text: CTA.primary, url: '/book' },
-      },
       sections: [
         {
-          title: 'Most Popular',
-          featured: true,
+          title: 'Ways to Work With Us',
           viewAllUrl: '/solutions',
           items: [
-            { title: 'ProActive Ecosystem', description: 'Everything your office needs in one plan', icon: <Monitor className="h-5 w-5" />, url: '/solutions/ProActive-Ecosystem-Packages', badge: 'Best Value', price: `From $${pricing.office.user}/user` },
-            { title: 'Co-Managed IT', description: 'Extend your IT team without hiring', icon: <Users className="h-5 w-5" />, url: '/solutions/co-managed-it', badge: 'Popular', price: 'Custom' },
-            { title: 'Managed IT Support', description: 'End recurring IT headaches for good', icon: <HeadphonesIcon className="h-5 w-5" />, url: '/solutions/managed-it-support' },
+            { title: 'ProActive Ecosystem', description: 'Cybersecurity-first operating model: IT → Office → Business → Enterprise', icon: <Layers className="h-5 w-5" />, url: '/solutions/proactive-ecosystem' },
+            { title: 'Co-Managed IT', description: 'Extend your internal IT team without replacing it', icon: <Users className="h-5 w-5" />, url: '/solutions/co-managed-it' },
+            { title: 'Standalone Services', description: 'A specific gap — backup, UCaaS, awareness, or a project', icon: <Server className="h-5 w-5" />, url: '/solutions/standalone-services' },
+            { title: 'Cyber Risk Assessment', description: 'Match the operating model to your environment', icon: <ClipboardCheck className="h-5 w-5" />, url: '/book' },
           ]
         },
         {
-          title: 'Managed Services',
-          viewAllUrl: '/solutions',
+          title: 'ProActive Ecosystem',
+          viewAllUrl: '/proactive-ecosystem-pricing',
           items: [
-            { title: 'Managed Workplace', description: 'Focus on work, not technology', icon: <Building className="h-5 w-5" />, url: '/solutions/managed-workplace' },
-            { title: 'Cloud Backup', description: 'Never lose critical business data', icon: <Cloud className="h-5 w-5" />, url: '/solutions/cloud-backup' },
-            { title: 'Security Training', description: 'Turn staff into security assets', icon: <Shield className="h-5 w-5" />, url: '/solutions/security-awareness' },
-            { title: 'UCaaS: Voice & Meetings', description: 'Unified phone and meeting systems', icon: <Phone className="h-5 w-5" />, url: '/services/ucaas' },
+            { title: 'IT', description: pricing.it.idealBuyer, icon: <Monitor className="h-5 w-5" />, url: pricing.it.learnMoreUrl, price: `From $${pricing.it.user}/user` },
+            { title: 'Office', description: pricing.office.idealBuyer, icon: <Building className="h-5 w-5" />, url: pricing.office.learnMoreUrl, price: `From $${pricing.office.user}/user` },
+            { title: 'Business', description: pricing.business.idealBuyer, icon: <BarChart3 className="h-5 w-5" />, url: pricing.business.learnMoreUrl, price: `From $${pricing.business.user}/user` },
+            { title: 'Enterprise', description: pricing.enterprise.idealBuyer, icon: <Award className="h-5 w-5" />, url: pricing.enterprise.learnMoreUrl, price: `From $${pricing.enterprise.user}/user` },
+            { title: 'Compare All Packages', description: 'Capabilities and operating depth — not a ranking', icon: <LayoutGrid className="h-5 w-5" />, url: '/proactive-ecosystem-pricing' },
           ]
         },
         {
-          title: 'Security',
+          title: 'Managed IT & Workplace',
           viewAllUrl: '/solutions',
           items: [
-            { title: 'Threat Detection', description: 'Stop attacks before damage occurs', icon: <Zap className="h-5 w-5" />, url: '/solutions/threat-detection' },
-            { title: 'Security Operations', description: '24/7 expert eyes on your systems', icon: <Lock className="h-5 w-5" />, url: '/solutions/security-operations' },
-            { title: 'Data Encryption', description: 'Protect data even if endpoints are compromised', icon: <Shield className="h-5 w-5" />, url: '/solutions/data-encryption' },
-            { title: 'Backup & DR', description: 'Recover in hours, not weeks', icon: <Server className="h-5 w-5" />, url: '/solutions/backup-disaster-recovery' },
+            { title: 'Managed IT Support', description: 'Service desk and day-to-day issue ownership', icon: <HeadphonesIcon className="h-5 w-5" />, url: '/solutions/managed-it-support' },
+            { title: 'Managed Workplace', description: 'Identity, devices, apps, and employee lifecycle', icon: <Building className="h-5 w-5" />, url: '/solutions/managed-workplace' },
+            { title: 'Identity & Access', description: 'SSO, MFA, and access architecture', icon: <Lock className="h-5 w-5" />, url: '/solutions/unified-security' },
+            { title: 'Managed Network & Connectivity', description: 'Firewall, Wi-Fi, and connectivity operations', icon: <Server className="h-5 w-5" />, url: '/solutions/managed-it-support' },
+            { title: 'Cloud / SaaS Backup', description: 'Endpoint, M365, and Google backup — not BCDR', icon: <Cloud className="h-5 w-5" />, url: '/solutions/cloud-backup' },
+            { title: 'UCaaS', description: 'Unified phone and meeting systems', icon: <Phone className="h-5 w-5" />, url: '/services/ucaas' },
           ]
         },
         {
-          title: 'Compliance',
+          title: 'Cybersecurity & Resilience',
           viewAllUrl: '/solutions',
           items: [
-            { title: 'vCIO & Strategy', description: 'Executive IT guidance on demand', icon: <BarChart3 className="h-5 w-5" />, url: '/solutions/vcio-strategy', badge: 'For Compliance' },
-            { title: 'Compliance Reports', description: 'Pass audits with confidence', icon: <ClipboardCheck className="h-5 w-5" />, url: '/solutions/compliance-reports' },
-            { title: 'Unified Security', description: 'Complete security visibility', icon: <Layers className="h-5 w-5" />, url: '/solutions/unified-security' },
+            { title: 'Endpoint & Email Protection', description: 'Device and mailbox defenses', icon: <Shield className="h-5 w-5" />, url: '/solutions/threat-detection' },
+            { title: 'Threat Detection & Response', description: 'Find and contain attacks before damage spreads', icon: <Zap className="h-5 w-5" />, url: '/solutions/threat-detection' },
+            { title: 'Security Operations / SOC', description: 'Human-led monitoring and response', icon: <Lock className="h-5 w-5" />, url: '/solutions/security-operations' },
+            { title: 'Security Awareness', description: 'Training and phishing simulations for staff', icon: <Users className="h-5 w-5" />, url: '/solutions/security-awareness' },
+            { title: 'Data Encryption', description: 'Protect data even if an endpoint is lost', icon: <Shield className="h-5 w-5" />, url: '/solutions/data-encryption' },
+            { title: 'Backup & Disaster Recovery', description: 'Continuity, RPO/RTO, failover, and restore testing', icon: <Server className="h-5 w-5" />, url: '/solutions/backup-disaster-recovery' },
+          ]
+        },
+        {
+          title: 'Strategy & Compliance',
+          viewAllUrl: '/solutions',
+          items: [
+            { title: 'vCIO', description: 'Executive technology and security guidance', icon: <BarChart3 className="h-5 w-5" />, url: '/solutions/vcio-strategy' },
+            { title: 'Compliance & Risk Reporting', description: 'Evidence and reporting for audits and insurers', icon: <ClipboardCheck className="h-5 w-5" />, url: '/solutions/compliance-reports' },
+            { title: 'Cyber Insurance Readiness', description: 'Controls and documentation carriers typically ask for', icon: <FileCheck className="h-5 w-5" />, url: '/solutions/compliance-reports' },
           ]
         }
       ]

@@ -472,17 +472,17 @@ export const pageNarratives: Record<string, PageNarrative> = {
 
   "ProActive-Ecosystem-Packages": {
     whoFor:
-      "Small Arizona offices (about 5–25 users) that want one accountable partner for IT + security — not a patchwork of vendors.",
+      "Organizations that want one accountable cybersecurity-first operating model — IT, Office, Business, or Enterprise — matched to how the environment actually runs.",
     painPoints: [
       "Too many vendors, nobody owns the outcome",
       "Security was bolted on after the last scare",
-      "Costs feel unpredictable; value feels vague",
+      "A package was sold first, then modified until it no longer fit",
     ],
     process: [
-      { title: "Fit", description: "Confirm Office/Business/Enterprise package against headcount and risk." },
-      { title: "Onboard", description: "Baseline identity, endpoints, backup, and support paths." },
-      { title: "Run", description: "Predictable monthly operations with clear SLAs." },
-      { title: "Review", description: "Monthly summaries and optional QBRs so spend stays tied to outcomes." },
+      { title: "Assess", description: "Review identity, endpoints, email, backups, network, and operating reality." },
+      { title: "Match", description: "Fit IT, Office, Business, or Enterprise — not a ranking ladder." },
+      { title: "Implement", description: "Documented credentials you own; controls sized to the model." },
+      { title: "Operate", description: "Day-to-day support and reviews at the cadence of that tier." },
     ],
     arizonaNote:
       "ProActive is how we package complete ownership for East Valley offices that need enterprise habits without enterprise headcount.",

@@ -13,7 +13,7 @@ const cards = [
     icon: Layers,
     title: "ProActive Ecosystem",
     body: "One accountable managed IT + cybersecurity relationship for day-to-day operations, protection, and recovery.",
-    href: "/solutions/ProActive-Ecosystem-Packages",
+    href: "/solutions/proactive-ecosystem",
     cta: "Explore ProActive packages",
   },
   {

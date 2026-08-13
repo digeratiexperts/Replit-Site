@@ -33,7 +33,7 @@ const ProActiveEnterpriseEcosystemPage = lazy(() => import("@/pages/solutions/Pr
 const StandaloneServices = lazy(() => import("@/pages/solutions/StandaloneServices"));
 const ManagedWorkplace = lazy(() => import("@/pages/solutions/ManagedWorkplace"));
 const BackupDisasterRecovery = lazy(() => import("@/pages/solutions/BackupDisasterRecovery"));
-const OfficePage = lazy(() => import("@/pages/solutions/OfficePage"));
+const ProActiveEcosystemPage = lazy(() => import("@/pages/solutions/ProActiveEcosystemPage"));
 const CoManagedIT = lazy(() => import("@/pages/solutions/CoManagedIT"));
 const UCaaS = lazy(() => import("@/pages/services/UCaaS"));
 const Healthcare = lazy(() => import("@/pages/industries/Healthcare"));
@@ -184,14 +184,11 @@ function Router() {
           <BackupDisasterRecovery />
         </Suspense>
       )} />
-      <Route path="/solutions/ProActive-Ecosystem-Packages" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <OfficePage />
-        </Suspense>
-      )} />
+      <Route path="/solutions/ProActive-Ecosystem-Packages">{() => <Redirect to="/solutions/proactive-ecosystem" />}</Route>
+      <Route path="/solutions/proactive-ecosystem-packages">{() => <Redirect to="/solutions/proactive-ecosystem" />}</Route>
       <Route path="/solutions/proactive-ecosystem" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
-          <OfficePage />
+          <ProActiveEcosystemPage />
         </Suspense>
       )} />
       <Route path="/solutions/proactive-it-ecosystem" component={() => (
@@ -224,7 +221,7 @@ function Router() {
           <CoManagedIT />
         </Suspense>
       )} />
-      {Object.entries(servicePageData).filter(([key]) => !['managed-workplace', 'backup-disaster-recovery', 'co-managed-it', 'managed-it-support'].includes(key)).map(([key, data]) => (
+      {Object.entries(servicePageData).filter(([key]) => !['managed-workplace', 'backup-disaster-recovery', 'co-managed-it', 'managed-it-support', 'ProActive-Ecosystem-Packages'].includes(key)).map(([key, data]) => (
         <Route key={key} path={`/solutions/${key}`} component={() => (
           <Suspense fallback={<PageLoadingSkeleton />}>
             <GenericServicePage {...data} serviceKey={key} canonical={`/solutions/${key}`} />

@@ -128,7 +128,7 @@ const tiers = [
     id: "office", 
     name: "ProActive Office", 
     subtitle: `Starting at $${pricing.office.user} /user·mo*`,
-    ribbon: "Most Popular",
+    ribbon: "Foundation",
     gradient: "from-violet-500 to-purple-500",
     borderColor: "border-violet-500/30"
   },
@@ -136,10 +136,9 @@ const tiers = [
     id: "business", 
     name: "ProActive Business", 
     subtitle: `Starting at $${pricing.business.user} /user·mo*`,
-    ribbon: "Best Value",
+    ribbon: "Operations",
     gradient: "from-emerald-500 to-teal-500",
-    borderColor: "border-emerald-500/30",
-    featured: true
+    borderColor: "border-emerald-500/30"
   },
   { 
     id: "enterprise", 
@@ -307,16 +306,9 @@ const EcosystemPricing = () => {
                 {tiers.map((tier, index) => (
                   <div 
                     key={tier.id}
-                    className={`text-center p-3 rounded-xl border ${tier.borderColor} ${
-                      tier.featured ? 'bg-emerald-500/10' : 'bg-white/[0.02]'
-                    }`}
+                    className={`text-center p-3 rounded-xl border ${tier.borderColor} bg-white/[0.02]`}
                     data-testid={`tier-header-${tier.id}`}
                   >
-                    {tier.featured && (
-                      <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider mb-1">
-                        Best Value
-                      </div>
-                    )}
                     <div className={`text-xs font-semibold text-transparent bg-clip-text bg-gradient-to-r ${tier.gradient} uppercase tracking-wide mb-1`}>
                       {tier.ribbon}
                     </div>

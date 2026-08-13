@@ -8,7 +8,7 @@ import {
   BarChart3, Clock, Phone, Award
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
-import { pricing, pricingTiers, getPricingFooterText } from "@/data/pricing";
+import { pricingTiers, getPricingFooterText } from "@/data/pricing";
 import { IconWell } from "@/components/visual/IconWell";
 
 const SolutionsIndex = () => {
@@ -25,8 +25,7 @@ const SolutionsIndex = () => {
     tier: tier.label,
     price: tier.user,
     monthlyMinimum: tier.monthlyMinimum,
-    description: tier.note,
-    highlight: !!tier.recommended,
+    description: tier.idealBuyer,
     features: [...tier.inclusions],
     learnMoreUrl: tier.learnMoreUrl,
   }));
@@ -86,16 +85,16 @@ const SolutionsIndex = () => {
     {
       icon: Cloud,
       title: "Backup & Disaster Recovery",
-      description: "Comprehensive backup strategy with tested recovery procedures. Recover in hours, not weeks.",
-      tier: "All Plans"
+      description: "Continuity, restore testing, and DR planning. Operating depth increases at Business and Enterprise — Office includes endpoint backup; IT does not include backup by default.",
+      tier: "Business+"
     }
   ];
 
   const complianceServices = [
     {
       icon: FileCheck,
-      title: "HIPAA / GDPR Compliance",
-      description: "Full compliance modules with documentation, policies, and technical controls for healthcare and privacy regulations.",
+      title: "HIPAA / GDPR Support",
+      description: "Compliance and risk reporting support for regulated environments. Not a substitute for your legal or compliance program, and not a claim of full certification.",
       tier: "Enterprise"
     },
     {
@@ -112,8 +111,8 @@ const SolutionsIndex = () => {
     },
     {
       icon: Shield,
-      title: "Penetration Testing",
-      description: "Scoped security assessments to identify vulnerabilities before attackers do.",
+      title: "Scoped Security Assessments",
+      description: "Targeted assessments when the engagement requires them — not a complimentary pentest on every plan.",
       tier: "Enterprise"
     }
   ];
@@ -167,28 +166,18 @@ const SolutionsIndex = () => {
             viewport={{ once: true }}
           >
             <div className="text-center mb-10">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">Choose Your Plan</h2>
-              <p className="text-white/60">All plans include the same foundation. Higher tiers add depth.</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">Four operating models. One matched to your environment.</h2>
+              <p className="text-white/60">Baseline capabilities are shared. Network, backup, SOC, BCDR, and governance depth increase by fit — not because a higher tier is universally “better.”</p>
             </div>
             
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
               {plans.map((plan, index) => (
                 <motion.div
                   key={plan.name}
                   variants={itemVariants}
-                  className={`relative rounded-2xl p-6 border backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 ${
-                    plan.highlight 
-                      ? 'bg-violet-500/10 border-violet-500/40 shadow-[0_0_40px_rgba(139,92,246,0.2)]' 
-                      : 'bg-white/[0.03] border-white/10 hover:border-white/20'
-                  }`}
+                  className="relative rounded-2xl p-6 border backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 bg-white/[0.03] border-white/10 hover:border-white/20"
                   data-testid={`plan-${plan.name.toLowerCase()}`}
                 >
-                  {plan.highlight && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-violet-600 text-white text-xs font-bold rounded-full">
-                      Most Popular
-                    </div>
-                  )}
-                  
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-lg font-bold text-white">{plan.name}</span>
                     <span className="px-2 py-1 text-xs font-medium bg-white/10 text-white/70 rounded">
@@ -216,14 +205,10 @@ const SolutionsIndex = () => {
                   
                   <a href="/book">
                     <Button 
-                      className={`w-full ${
-                        plan.highlight 
-                          ? 'bg-violet-600 hover:bg-violet-500 text-white' 
-                          : 'bg-white/10 hover:bg-white/20 text-white border border-white/20'
-                      }`}
+                      className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
                       data-testid={`button-get-${plan.name.toLowerCase()}`}
                     >
-                      Get Started
+                      Cyber Risk Assessment
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
                   </a>
@@ -246,11 +231,14 @@ const SolutionsIndex = () => {
           >
             <div className="text-center mb-10">
               <span className="inline-flex items-center px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium mb-4">
-                Included in Every Plan
+                Baseline vs depth
               </span>
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">ProActive Ecosystem Foundation</h2>
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">What every model starts from</h2>
               <p className="text-white/60 max-w-2xl mx-auto">
-                Every plan includes these core managed services. This is your baseline—everything you need to run a secure, productive office.
+                Service desk, endpoint foundation, identity guidance, and a documented environment are the baseline.
+                Managed network and endpoint backup typically arrive at Office. Security operations, awareness training,
+                and BCDR posture typically arrive at Business. Unified posture reporting and deeper governance typically
+                arrive at Enterprise.
               </p>
             </div>
             

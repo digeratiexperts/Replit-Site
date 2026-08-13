@@ -12,59 +12,45 @@ interface PricingPlan {
   note: string;
   features: string[];
   learnMoreUrl: string;
-  isPopular?: boolean;
 }
 
 const defaultPlans: PricingPlan[] = [
+  {
+    name: pricing.it.name,
+    tier: pricing.it.tier,
+    monthlyPrice: estimateMonthly("it", 1),
+    perUserPrice: pricing.it.user,
+    note: pricing.it.idealBuyer,
+    learnMoreUrl: pricing.it.learnMoreUrl,
+    features: [...pricing.it.inclusions],
+  },
   {
     name: pricing.office.name,
     tier: pricing.office.tier,
     monthlyPrice: estimateMonthly("office", 1),
     perUserPrice: pricing.office.user,
-    note: "A clean, managed IT baseline.",
-    learnMoreUrl: "/solutions/managed-it-support",
-    features: [
-      "Email + Calendar + Team Chat",
-      "MFA + SSO + Password Manager",
-      "Endpoint Security (EDR)",
-      "Email Protection (Anti-Phishing)",
-      "Managed Network + Internet",
-      "Service Desk + Backup Strategy"
-    ]
+    note: pricing.office.idealBuyer,
+    learnMoreUrl: pricing.office.learnMoreUrl,
+    features: [...pricing.office.inclusions],
   },
   {
     name: pricing.business.name,
     tier: pricing.business.tier,
     monthlyPrice: estimateMonthly("business", 1),
     perUserPrice: pricing.business.user,
-    note: "Adds stronger protection and response.",
+    note: pricing.business.idealBuyer,
     learnMoreUrl: pricing.business.learnMoreUrl,
-    isPopular: true,
-    features: [
-      "Everything in Office",
-      "SOC / MDR Monitoring + Response",
-      "SMART HR + Onboarding Workflows",
-      "Security Awareness Training",
-      "vCIO + Technology Business Reviews",
-      "Cyber Insurance Readiness"
-    ]
+    features: [...pricing.business.inclusions],
   },
   {
     name: pricing.enterprise.name,
     tier: pricing.enterprise.tier,
     monthlyPrice: estimateMonthly("enterprise", 1),
     perUserPrice: pricing.enterprise.user,
-    note: pricing.enterprise.note,
+    note: pricing.enterprise.idealBuyer,
     learnMoreUrl: pricing.enterprise.learnMoreUrl,
-    features: [
-      "Everything in Business",
-      "HIPAA / GDPR Compliance Modules",
-      "Penetration Testing (scoped)",
-      "Disaster Recovery Runbooks",
-      "Privileged Access + Audit Logs",
-      "AI & Cloud Automation"
-    ]
-  }
+    features: [...pricing.enterprise.inclusions],
+  },
 ];
 
 interface ServiceMatrixProps {
@@ -72,7 +58,7 @@ interface ServiceMatrixProps {
   plans?: PricingPlan[];
   showCTA?: boolean;
   className?: string;
-  highlightTier?: "office" | "business" | "enterprise";
+  highlightTier?: "it" | "office" | "business" | "enterprise";
   showOnlyHighlighted?: boolean;
 }
 
@@ -122,26 +108,20 @@ export function ServiceMatrix({
           </Link>
         </div>
         
-        <div className={`grid gap-4 ${filteredPlans.length === 1 ? 'grid-cols-1 max-w-md mx-auto' : 'grid-cols-3'}`}>
+        <div className={`grid gap-4 ${filteredPlans.length === 1 ? 'grid-cols-1 max-w-md mx-auto' : 'grid-cols-2 xl:grid-cols-4'}`}>
           {filteredPlans.map((plan) => {
             const isHighlighted = highlightTier && plan.name.toLowerCase() === highlightTier;
             return (
               <div 
                 key={plan.name}
-                className={`rounded-xl p-4 text-center border transition-all ${
-                  isHighlighted 
-                    ? 'border-violet-500 bg-violet-500/20 ring-2 ring-violet-500/30 shadow-lg shadow-violet-500/10' 
-                    : plan.isPopular 
-                      ? 'border-violet-500/50 bg-violet-500/10' 
-                      : 'border-white/10 bg-white/[0.02]'
-                }`}
+                className="rounded-xl p-4 text-center border border-white/10 bg-white/[0.02]"
                 data-testid={`plan-compact-${plan.name.toLowerCase()}`}
               >
                 {isHighlighted && (
-                  <div className="text-xs text-violet-400 font-medium mb-2">Recommended for this service</div>
+                  <div className="text-xs text-white/50 font-medium mb-2">Typically included here</div>
                 )}
                 <div className="text-white font-bold text-lg">{plan.name}</div>
-                <div className="text-violet-400 text-sm">{plan.tier}</div>
+                <div className="text-white/50 text-sm">{plan.tier}</div>
                 <div className="text-white font-bold text-2xl mt-2">${plan.perUserPrice}</div>
                 <div className="text-white/50 text-xs">/user/mo</div>
               </div>
@@ -154,7 +134,7 @@ export function ServiceMatrix({
 
   return (
     <motion.div 
-      className={`grid grid-cols-1 gap-6 ${filteredPlans.length === 1 ? 'max-w-lg mx-auto' : 'md:grid-cols-3'} ${className}`}
+      className={`grid grid-cols-1 gap-6 ${filteredPlans.length === 1 ? 'max-w-lg mx-auto' : 'sm:grid-cols-2 xl:grid-cols-4'} ${className}`}
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
@@ -166,32 +146,16 @@ export function ServiceMatrix({
         return (
           <motion.div
             key={plan.name}
-            className={`relative rounded-2xl p-6 border backdrop-blur-xl overflow-hidden group hover:-translate-y-1 transition-all duration-300 ${
-              isHighlighted 
-                ? 'border-violet-500 bg-gradient-to-b from-violet-500/15 to-violet-500/5 ring-2 ring-violet-500/30 shadow-xl shadow-violet-500/10' 
-                : plan.isPopular 
-                  ? 'border-violet-500/50 bg-gradient-to-b from-violet-500/10 to-transparent' 
-                  : 'border-white/10 bg-white/[0.03]'
-            }`}
+            className="relative rounded-2xl p-6 border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden group hover:-translate-y-1 transition-all duration-300"
             variants={cardVariants}
             data-testid={`plan-${plan.name.toLowerCase()}`}
           >
-            {(isHighlighted || plan.isPopular) && (
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-500 to-fuchsia-500" />
-            )}
-            
             <div className="flex items-center justify-between mb-4">
-              <span className={`inline-flex px-3 py-1 rounded-full text-xs font-bold ${
-                isHighlighted || plan.isPopular 
-                  ? 'bg-violet-500/20 text-violet-300 border border-violet-500/30' 
-                  : 'bg-white/5 text-white border border-white/10'
-              }`}>
+              <span className="inline-flex px-3 py-1 rounded-full text-xs font-bold bg-white/5 text-white border border-white/10">
                 {plan.name}
               </span>
-              {isHighlighted ? (
-                <span className="text-xs text-violet-400 font-medium">Recommended</span>
-              ) : plan.isPopular && (
-                <span className="text-xs text-violet-400 font-medium">Most Popular</span>
+              {isHighlighted && (
+                <span className="text-xs text-white/50 font-medium">Typically here</span>
               )}
             </div>
             
@@ -221,11 +185,7 @@ export function ServiceMatrix({
             {showCTA && (
               <Link href={plan.learnMoreUrl}>
                 <Button 
-                  className={`w-full ${
-                    isHighlighted || plan.isPopular 
-                      ? 'bg-violet-600 hover:bg-violet-700 text-white' 
-                      : 'bg-white/10 hover:bg-white/20 text-white'
-                  }`}
+                  className="w-full bg-white/10 hover:bg-white/20 text-white"
                   data-testid={`button-learn-more-${plan.name.toLowerCase()}`}
                 >
                   Learn More

@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { Link } from "wouter";
 import { useBooking } from "@/contexts/BookingContext";
 
 const roles = [
@@ -41,7 +42,12 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
           </h2>
           <p className="text-white/60 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
             When something happens, you should know who owns it — not wonder which anonymous
-            queue picked up your ticket.
+            queue picked up your ticket.{" "}
+            <Link href="/about/team">
+              <span className="font-semibold text-white/80 underline decoration-white/20 underline-offset-4 hover:text-white">
+                Meet the team
+              </span>
+            </Link>
           </p>
         </motion.div>
 

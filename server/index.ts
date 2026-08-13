@@ -270,6 +270,13 @@ app.use(cookieParser());
 registerSecureZohoStoreCheckout(app, authMiddleware as any, requireRole as any);
 
 app.use((req, res, next) => {
+  if (req.path.toLowerCase() === "/solutions/proactive-ecosystem-packages") {
+    return res.redirect(301, "/solutions/proactive-ecosystem");
+  }
+  next();
+});
+
+app.use((req, res, next) => {
   if (req.path === "/internal" || req.path.startsWith("/internal/")) {
     return res.redirect(301, "/");
   }

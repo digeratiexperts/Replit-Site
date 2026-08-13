@@ -41,7 +41,7 @@ interface GenericServicePageProps {
   gradientColors?: string;
   stat?: ServiceStat;
   canonical?: string;
-  recommendedTier?: "office" | "business" | "enterprise";
+  recommendedTier?: "it" | "office" | "business" | "enterprise";
   serviceKey?: string;
   narrative?: PageNarrative;
 }
@@ -316,10 +316,10 @@ export default function GenericServicePage({
           >
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-white mb-2 text-center">
-                Recommended plan for {title}
+                Where this capability typically lives
               </h2>
               <p className="text-white/80 text-center">
-                This capability typically lives in the plan below — confirm fit in your assessment.
+                Fit language — not a ranking. Confirm the operating model in your Cyber Risk Assessment.
               </p>
             </div>
             <ServiceMatrix

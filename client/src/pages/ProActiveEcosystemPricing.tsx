@@ -173,7 +173,7 @@ const plans: PlanCard[] = [
     ],
     gradient: "from-violet-500 to-purple-500",
     borderColor: "border-violet-500/40",
-    popular: true,
+    popular: false,
     learnMoreUrl: pricing.office.learnMoreUrl,
   },
   {

@@ -31,7 +31,6 @@ export type ProActiveTier = {
   idealBuyer: string;
   note: string;
   learnMoreUrl: string;
-  recommended?: boolean;
   inclusions: readonly string[];
 };
 
@@ -46,8 +45,8 @@ const tiers = {
     monthlyMinimum: 1600,
     monthlyMin: 1600,
     siteMin: 1600,
-    idealBuyer: "Small teams needing accountable day-to-day IT and baseline security",
-    note: "Entry managed IT with baseline security.",
+    idealBuyer: "Smaller, less complex environments that need essential protection and a documented baseline",
+    note: "Essential managed IT and baseline security — a fit when the environment is smaller and less complex.",
     learnMoreUrl: "/solutions/proactive-it-ecosystem",
     inclusions: [
       "Service desk & issue ownership",
@@ -67,10 +66,9 @@ const tiers = {
     monthlyMinimum: 2400,
     monthlyMin: 2400,
     siteMin: 2400,
-    idealBuyer: "Typical Arizona SMB that wants dependable IT + stronger protection",
-    note: "Core protection + productivity tools for small teams.",
+    idealBuyer: "Broader managed workplace — more users, devices, and a professionally operated network",
+    note: "Managed workplace and stronger protection when Office is the right operating depth — not a ranking.",
     learnMoreUrl: "/solutions/proactive-office-ecosystem",
-    recommended: true,
     inclusions: [
       "Everything meaningful in IT, plus",
       "Managed network & connectivity",
@@ -90,8 +88,8 @@ const tiers = {
     monthlyMinimum: 5400,
     monthlyMin: 5400,
     siteMin: 5400,
-    idealBuyer: "Organizations where downtime or a breach would be a leadership-level event",
-    note: "Adds SOC monitoring, spend-card controls, and vCIO.",
+    idealBuyer: "Deeper infrastructure, cyber operations, recovery, governance, and strategy",
+    note: "The fit when Office would need heavy modification — deeper ops, not universally better.",
     learnMoreUrl: "/solutions/proactive-business-ecosystem",
     inclusions: [
       "Everything in Office, plus",
@@ -112,8 +110,8 @@ const tiers = {
     monthlyMinimum: 9000,
     monthlyMin: 9000,
     siteMin: 9000,
-    idealBuyer: "Regulated or complex environments needing board-ready security governance",
-    note: "Adds governance and audit readiness.",
+    idealBuyer: "Multi-site, regulated, or security-sensitive environments that need the greatest operating depth",
+    note: "Greatest operating depth for complex, regulated, or security-sensitive environments.",
     learnMoreUrl: "/solutions/proactive-enterprise-ecosystem",
     inclusions: [
       "Everything in Business, plus",

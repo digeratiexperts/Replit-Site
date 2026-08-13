@@ -3,8 +3,8 @@ import { getCyberFact, toDisplayStat } from "@/data/cyberAwarenessFacts";
 export const servicePageData = {
   'ProActive-Ecosystem-Packages': {
     title: "ProActive Ecosystem Packages",
-    subtitle: "Complete IT ownership for small offices—security built in",
-    description: "The Office Package is your complete IT solution for small offices (5-25 users) with no internal IT team. We own your day-to-day IT outcomes: helpdesk support, continuous maintenance, security baseline, backup, and vendor coordination. You get enterprise-level protection without the enterprise cost—all for one predictable monthly price.",
+    subtitle: "Four fit-based operating models — IT, Office, Business, Enterprise",
+    description: "The ProActive Ecosystem is the umbrella operating model, not a single Office package. IT, Office, Business, and Enterprise are matched to how your environment actually runs. Final scope is confirmed after a Cyber Risk Assessment.",
     features: [
       { title: "Managed Helpdesk & Support", description: "DE ticketing + remote/onsite support with response SLAs and vendor coordination" },
       { title: "Core Security Baseline", description: "Endpoint EDR, email security, MFA enforcement, and basic cloud security" },

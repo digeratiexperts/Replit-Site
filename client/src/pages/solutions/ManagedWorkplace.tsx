@@ -25,7 +25,6 @@ import {
   FileText,
   Check,
   X,
-  Star,
   Info,
   ExternalLink
 } from "lucide-react";
@@ -373,18 +372,9 @@ export default function ManagedWorkplace() {
                 key={pkg.sku}
                 {...fadeInUp}
                 transition={{ delay: index * 0.1 }}
-                className={`relative rounded-2xl overflow-hidden ${
-                  pkg.featured 
-                    ? 'border-2 border-violet-500 bg-gradient-to-b from-violet-600/20 to-transparent' 
-                    : 'border border-white/10 bg-white/[0.02]'
-                }`}
+                className="relative rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02]"
               >
-                {pkg.featured && (
-                  <div className="absolute top-0 left-0 right-0 bg-violet-600 text-white text-center text-sm py-1 font-medium">
-                    <Star className="w-4 h-4 inline mr-1" /> Most Popular
-                  </div>
-                )}
-                <div className={`p-8 ${pkg.featured ? 'pt-12' : ''}`}>
+                <div className="p-8">
                   <h3 className="text-2xl font-bold text-white mb-2">{pkg.name}</h3>
                   <p className="text-white/60 text-sm mb-6">{pkg.best_for}</p>
                   

@@ -1,7 +1,17 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { Search, FileText, Settings, Activity, Eye, ShieldCheck, UserCheck, KeyRound, Cloud, AlertCircle } from "lucide-react";
+import { Search, FileText, Settings, Activity, KeyRound, Monitor, Mail, Wifi, Database, Radio } from "lucide-react";
 import { Link } from "wouter";
 import { IconWell } from "@/components/visual/IconWell";
+import { ArrowRight } from "lucide-react";
+
+const domains = [
+  { icon: KeyRound, title: "Identity", link: "/solutions/unified-security", desc: "SSO, MFA, and access architecture." },
+  { icon: Monitor, title: "Endpoints", link: "/solutions/threat-detection", desc: "Device protection and hardening." },
+  { icon: Mail, title: "Email", link: "/solutions/security-operations", desc: "Anti-phishing and mailbox defenses." },
+  { icon: Wifi, title: "Network", link: "/solutions/managed-it-support", desc: "Firewall, Wi-Fi, and connectivity operations." },
+  { icon: Database, title: "Data & Recovery", link: "/solutions/backup-disaster-recovery", desc: "Backup, restore testing, and continuity." },
+  { icon: Radio, title: "Security Operations", link: "/solutions/security-operations", desc: "Detection, response, and human triage." },
+];
 
 export const DigeratiHowWeProtectSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -9,29 +19,29 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
   const steps = [
     {
       number: 1,
-      title: "Discovery & Assessment",
-      description: "We analyze your current security posture, identify vulnerabilities, and understand your business needs.",
+      title: "Assessment",
+      description: "Review identity, endpoints, email, backups, network, and operating reality.",
       icon: Search,
       testId: "step-discovery"
     },
     {
       number: 2,
-      title: "Strategic Planning",
-      description: "Custom security roadmap aligned with your business goals, compliance requirements, and budget.",
+      title: "Roadmap",
+      description: "Match the operating model to the environment — fit, not a ranking ladder.",
       icon: FileText,
       testId: "step-planning"
     },
     {
       number: 3,
       title: "Implementation",
-      description: "Deploy enterprise-grade security tools, configure policies, and train your team on best practices.",
+      description: "Documented credentials you own. Controls sized to the model we matched.",
       icon: Settings,
       testId: "step-implementation"
     },
     {
       number: 4,
-      title: "Continuous Protection",
-      description: "24/7 monitoring, regular updates, proactive threat hunting, and quarterly business reviews.",
+      title: "Continuous",
+      description: "Day-to-day support, security operations where included, and reviews at that tier’s cadence.",
       icon: Activity,
       testId: "step-protection"
     }
@@ -48,15 +58,50 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
           transition={{ duration: 0.35 }}
         >
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-violet-600">
-            Our Process
+            What we protect
           </p>
           <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-gray-900 md:text-4xl">
-            How We Protect Your Business
+            Six domains. One accountable operating model.
           </h2>
           <p className="text-base leading-relaxed text-gray-600 md:text-lg">
-            Our proven 4-step process ensures your business stays secure and compliant
+            Capability pages live under Solutions. The methodology — assessment through operations —
+            is documented on the ProActive Ecosystem overview.
           </p>
         </motion.div>
+
+        <div className="mx-auto mb-16 grid max-w-[92rem] grid-cols-1 gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3" id="protection-stack">
+          {domains.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link key={item.title} href={item.link}>
+                <div className="flex cursor-pointer items-start gap-3">
+                  <IconWell icon={Icon} size="sm" surface="light" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-gray-900 md:text-base">{item.title}</p>
+                    <p className="mt-0.5 text-sm leading-relaxed text-gray-600">{item.desc}</p>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-3 border-t border-gray-200 pt-12">
+          <div>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-violet-600">
+              How protection works
+            </p>
+            <h3 className="font-heading text-2xl font-semibold tracking-[-0.02em] text-gray-900">
+              Assessment → Roadmap → Implementation → Continuous
+            </h3>
+          </div>
+          <Link href="/solutions/proactive-ecosystem">
+            <span className="inline-flex items-center gap-1 text-sm font-semibold text-violet-700 hover:text-violet-900">
+              Full methodology
+              <ArrowRight className="h-3.5 w-3.5" />
+            </span>
+          </Link>
+        </div>
 
         <ol className="mx-auto grid max-w-[92rem] grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {steps.map((step) => {
@@ -79,41 +124,6 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
             );
           })}
         </ol>
-
-        <div className="mx-auto mt-16 max-w-[92rem] border-t border-gray-200 pt-12 md:mt-20" id="protection-stack">
-          <div className="mb-8 max-w-2xl">
-            <h3 className="mb-2 text-lg font-semibold text-gray-900 md:text-xl">
-              Security stack we manage
-            </h3>
-            <p className="text-sm leading-relaxed text-gray-600 md:text-base">
-              Technical depth lives here and on each solution page — so the homepage stays clear
-              without losing capability.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              { icon: Eye, title: "SOC / MDR Monitoring", link: "/solutions/security-operations", desc: "24/7 detection and response." },
-              { icon: ShieldCheck, title: "Endpoint Security (EDR)", link: "/solutions/threat-detection", desc: "Protect devices across the environment." },
-              { icon: UserCheck, title: "SMART Identity (MFA + SSO)", link: "/solutions/unified-security", desc: "Stronger access without user chaos." },
-              { icon: KeyRound, title: "Privileged Access Controls", link: "/solutions/unified-security", desc: "Admin controls and audit visibility." },
-              { icon: Cloud, title: "Backup & Disaster Recovery", link: "/solutions/backup-disaster-recovery", desc: "Recovery planning and restore discipline." },
-              { icon: AlertCircle, title: "Email Protection", link: "/solutions/security-operations", desc: "Anti-phishing and mailbox defenses." },
-            ].map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link key={item.title} href={item.link}>
-                  <div className="flex cursor-pointer items-start gap-3">
-                    <IconWell icon={Icon} size="sm" surface="light" />
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 md:text-base">{item.title}</p>
-                      <p className="mt-0.5 text-sm leading-relaxed text-gray-600">{item.desc}</p>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
       </div>
     </section>
   );

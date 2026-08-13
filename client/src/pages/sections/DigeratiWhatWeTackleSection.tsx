@@ -1,5 +1,6 @@
-import { Shield, Bug, Lock, Database, AlertTriangle, Users } from "lucide-react";
+import { Shield, Bug, Lock, Database, AlertTriangle, Users, ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { Link } from "wouter";
 import { IconWell } from "@/components/visual/IconWell";
 import type { LucideIcon } from "lucide-react";
 
@@ -69,9 +70,15 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
               What We Tackle
             </h2>
             <p className="max-w-md text-base leading-relaxed text-white/65 md:text-lg">
-              Your business faces evolving cyber threats daily. We handle these complex challenges
-              with enterprise-grade solutions, so you can focus on growth without worry.
+              Compact view of the problems we own with you. Sourced industry statistics live on
+              Cyber Facts; capability detail lives on Solutions.
             </p>
+            <Link href="/resources/cyber-facts">
+              <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[#FF477F] hover:text-pink-300">
+                Full threat context
+                <ArrowRight className="h-3.5 w-3.5" />
+              </span>
+            </Link>
           </motion.div>
 
           <div className="grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2 lg:col-span-7">

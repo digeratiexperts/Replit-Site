@@ -36,7 +36,7 @@ const paths: {
     title: "Fully Managed IT & Cybersecurity",
     description:
       "One accountable team for support, identity, endpoints, email, backup, and security operations — delivered through our ProActive Ecosystem.",
-    link: "/solutions/managed-it-support",
+    link: "/solutions/proactive-ecosystem",
     cta: "Explore managed services",
     testId: "engage-fully-managed",
   },
@@ -170,6 +170,15 @@ export const DigeratiServicesSection = (): JSX.Element => {
           })}
         </div>
 
+        <p className="mt-6 text-sm text-white/50 md:text-base">
+          Need one specific service?{" "}
+          <Link href="/solutions/standalone-services">
+            <span className="font-semibold text-white/80 underline decoration-white/20 underline-offset-4 hover:text-white hover:decoration-white/50">
+              View Standalone Services
+            </span>
+          </Link>
+        </p>
+
         <div className="mt-14 md:mt-16" data-testid="engage-capability-preview">
           <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
             <div>
@@ -204,7 +213,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
         </div>
 
         <div className="mt-10 flex flex-wrap items-center gap-4 text-sm md:mt-12 md:text-base">
-          <Link href="/solutions/proactive-office-ecosystem" data-testid="link-proactive-ecosystem">
+          <Link href="/solutions/proactive-ecosystem" data-testid="link-proactive-ecosystem">
             <span className="inline-flex items-center gap-2 text-white/75 transition-colors hover:text-white">
               How the ProActive Ecosystem works
               <ArrowRight className="h-5 w-5" aria-hidden="true" />

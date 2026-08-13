@@ -36,11 +36,10 @@ export const DigeratiCTASection = (): JSX.Element => {
         >
           <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight mb-6 relative overflow-hidden">
             <span className="relative z-10">
-              Get a{" "}
+              Start with a{" "}
               <span className="text-violet-400">
-                $20,000 Pen Test
+                Cyber Risk Assessment
               </span>
-              {" "}– Free
             </span>
             {/* Light sweep animation - hidden for reduced motion */}
             {!prefersReducedMotion && (
@@ -66,7 +65,7 @@ export const DigeratiCTASection = (): JSX.Element => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-lg md:text-xl text-gray-300 leading-relaxed mb-2"
         >
-          Discover vulnerabilities before attackers do – without paying a cent.
+          Discover identity, endpoint, email, backup, and operating gaps before you buy a package.
         </motion.p>
         <motion.p
           initial={{ opacity: 0 }}
@@ -75,7 +74,7 @@ export const DigeratiCTASection = (): JSX.Element => {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="text-sm text-gray-400 mb-6"
         >
-          *With qualifying managed services package. Limited availability.
+          Assessment-led recommendations. Final scope confirmed after we see the environment.
         </motion.p>
         
         {/* Stars */}
