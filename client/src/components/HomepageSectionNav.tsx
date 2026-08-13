@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Phone, Shield } from "lucide-react";
 import { useOptionalFullPageScroll } from "@/components/FullPageScroll";
 import { useBooking } from "@/contexts/BookingContext";
+import { CTA } from "@/lib/ctaCopy";
 
 /** Homepage chapters in the thin top table of contents. */
 const TOP_CHAPTERS = new Set([
@@ -261,7 +262,7 @@ export function HomepageSectionDock() {
               className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold rounded-full bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 text-white hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 transition-all duration-200 shadow-lg whitespace-nowrap shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-300"
               data-testid="nav-cta-assessment"
             >
-              Assessment
+              {CTA.primaryNavCompact}
               <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
             </button>
           </nav>

@@ -844,7 +844,6 @@ export function MegaMenu() {
                             </motion.div>
                           ))}
                           
-                          {/* Featured Panel for Solutions */}
                           {item.featuredPanel && (
                             <motion.div 
                               className="relative bg-white/[0.02] p-6 flex flex-col justify-between overflow-hidden min-h-[22rem]"
@@ -852,7 +851,6 @@ export function MegaMenu() {
                               animate={{ opacity: 1, scale: 1 }}
                               transition={{ delay: 0.15 }}
                             >
-                              {/* Hexagon pattern background */}
                               <HexagonPattern id={uniqueId} />
                               
                               <div className="relative z-10">
