@@ -118,6 +118,16 @@ html {
   --de-muted-soft: rgba(255, 255, 255, 0.72);
   --de-accent: #ec4899;
   --de-accent-2: #d946ef;
+  --de-magenta: #D3126A;
+  --de-violet: #5B45E0;
+  --de-brand-energy: linear-gradient(
+    90deg,
+    #5b45e0 0%,
+    #8b3ad4 16%,
+    #d3126a 48%,
+    #e11d5a 74%,
+    #fb7185 100%
+  );
 
   /*
    * Sticky MegaMenu clearance (utility bar + main nav).
@@ -156,6 +166,16 @@ html {
 /* Shared top padding so marketing/store pages clear the sticky MegaMenu */
 .de-nav-clear {
   padding-top: var(--de-nav-offset);
+}
+
+/* Homepage statement band — violet → magenta → coral. Not a page-wide wash. */
+.de-brand-energy-band {
+  background-color: #d3126a;
+  background-image:
+    radial-gradient(ellipse 36% 90% at 22% -18%, rgba(255, 255, 255, 0.42) 0%, transparent 58%),
+    radial-gradient(circle 4.5rem at 16% 10%, rgba(255, 255, 255, 0.28) 0%, transparent 68%),
+    radial-gradient(circle 2.75rem at 30% 6%, rgba(255, 255, 255, 0.2) 0%, transparent 70%),
+    var(--de-brand-energy);
 }
 
 /* Primary nav labels must never crop glyphs when type/logo scale up */

@@ -135,16 +135,14 @@ export default function Accounting() {
           </p>
           <div className="grid md:grid-cols-4 gap-6">
             {[
-              { badge: "HIPAA", label: "Aligned security and compliance support", color: "from-violet-500 to-purple-500" },
-              { badge: "SOC 2", label: "Readiness and control alignment", color: "from-violet-500 to-purple-500" },
-              { badge: "Cyber Insurance", label: "Readiness for underwriting reviews", color: "from-purple-500 to-fuchsia-500" },
-              { badge: "Reporting", label: "Security and compliance reporting", color: "from-violet-500 to-purple-500" }
-            ].map((item, idx) => (
-              <div key={idx} className="text-center p-4 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 hover:border-white/20 transition-all">
-                <div className={`inline-block bg-gradient-to-r ${item.color} text-white px-4 py-2 rounded-lg font-bold mb-2`}>
-                  {item.badge}
-                </div>
-                <p className="text-sm text-gray-300">{item.label}</p>
+              { title: "HIPAA-aligned support", label: "Security and compliance support for practices handling PHI" },
+              { title: "SOC 2 readiness", label: "Control mapping and evidence — not a Digerati certification" },
+              { title: "Cyber insurance readiness", label: "Documentation carriers typically request in underwriting" },
+              { title: "Security reporting", label: "Repeatable evidence for audits and client questionnaires" },
+            ].map((item) => (
+              <div key={item.title} className="text-left p-4 bg-white/5 rounded-lg border border-white/10">
+                <p className="text-sm font-semibold text-white mb-1">{item.title}</p>
+                <p className="text-sm text-white/60">{item.label}</p>
               </div>
             ))}
           </div>

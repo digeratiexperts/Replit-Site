@@ -24,44 +24,57 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
 
   return (
     <section
-      className="relative py-10 md:py-14 lg:py-16 bg-[#0a0a0a] overflow-hidden"
+      className="relative overflow-hidden bg-[#0a0a0a] py-10 md:py-14 lg:py-16"
       data-testid="section-meet-experts"
     >
-      <div className="max-w-[100rem] mx-auto px-3 sm:px-4 lg:px-6">
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#D3126A]/70 to-transparent"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute -right-24 top-1/2 h-[28rem] w-[28rem] -translate-y-1/2 rounded-full bg-[#D3126A]/18 blur-3xl"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute right-[8%] top-16 h-40 w-40 rounded-full bg-[#5B45E0]/20 blur-3xl"
+        aria-hidden="true"
+      />
+
+      <div className="relative z-10 mx-auto max-w-[100rem] px-3 sm:px-4 lg:px-6">
         <motion.div
-          className="text-center mb-8 md:mb-10"
+          className="mb-8 md:mb-10"
           initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <p className="text-xs md:text-sm font-medium text-[#FF477F] tracking-wide uppercase mb-3">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF477F] md:text-sm">
             Human trust
           </p>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3">
+          <h2 className="mb-3 font-heading text-3xl font-semibold tracking-[-0.02em] text-white sm:text-4xl md:text-5xl">
             The people behind your technology
           </h2>
-          <p className="text-white/60 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
+          <p className="max-w-3xl text-base leading-relaxed text-white/80 md:text-lg">
             When something happens, you should know who owns it — not wonder which anonymous
             queue picked up your ticket.{" "}
             <Link href="/about/team">
-              <span className="font-semibold text-white/80 underline decoration-white/20 underline-offset-4 hover:text-white">
+              <span className="font-semibold text-white underline decoration-[#D3126A]/70 underline-offset-4 hover:decoration-[#D3126A]">
                 Meet the team
               </span>
             </Link>
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
+        <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-12 lg:gap-10">
           <motion.div
             initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="lg:col-span-5 rounded-2xl overflow-hidden border border-white/10 bg-[#111] self-stretch"
+            viewport={{ once: true, margin: "200px" }}
+            className="self-stretch overflow-hidden rounded-2xl border border-white/10 bg-[#111] lg:col-span-5"
           >
             <img
               src="/images/founder/joe-petro-studio-blazer-white.jpg"
               alt="Joseph Petro, Founder of Digerati Experts"
-              className="w-full aspect-[3/4] lg:aspect-auto lg:h-full lg:min-h-[28rem] object-cover object-center lg:object-top"
+              className="aspect-[3/4] w-full object-cover object-center lg:aspect-auto lg:h-full lg:min-h-[28rem] lg:object-top"
               loading="lazy"
               decoding="async"
               width={768}
@@ -71,30 +84,33 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
           </motion.div>
 
           <motion.div
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.06 }}
-            className="lg:col-span-7 flex flex-col justify-center"
+            className="flex w-full min-w-0 flex-col justify-between gap-8 lg:col-span-7 lg:py-2"
           >
-            <p className="text-white text-xl md:text-2xl font-semibold">Joseph Petro</p>
-            <p className="text-violet-300 text-sm md:text-base mb-4">
-              Founder · Technology &amp; Security Strategy
-            </p>
-            <p className="text-white/65 text-sm md:text-base leading-relaxed mb-6 max-w-xl">
-              Principal-led MSP/MSSP based in Chandler, Arizona. Joe stays close to assessments,
-              architecture decisions, and client relationships — so growing businesses get
-              cybersecurity-first managed IT without becoming account number four thousand.
-            </p>
+            <div className="w-full">
+              <h3 className="font-heading text-4xl font-semibold leading-[1.05] tracking-[-0.03em] text-white sm:text-5xl lg:text-[3.5rem]">
+                Joseph Petro
+              </h3>
+              <p className="mt-3 text-xl font-medium text-white md:text-2xl">
+                Founder · Technology &amp; Security Strategy
+              </p>
+              <p className="mt-5 w-full text-lg leading-relaxed text-white md:text-xl">
+                Principal-led MSP/MSSP based in Chandler, Arizona. Joe stays close to assessments,
+                architecture decisions, and client relationships — so growing businesses get
+                cybersecurity-first managed IT without becoming account number four thousand.
+              </p>
+            </div>
 
-            <div className="grid sm:grid-cols-3 gap-3 mb-6">
-              {roles.map((r) => (
+            <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-8">
+              {roles.map((r, index) => (
                 <div
                   key={r.title}
-                  className="rounded-xl border border-white/10 bg-white/[0.03] p-4"
+                  className="w-full border-t-2 border-[#D3126A] pt-5"
                 >
-                  <p className="text-white text-sm font-medium mb-1">{r.title}</p>
-                  <p className="text-white/50 text-xs leading-relaxed">{r.detail}</p>
+                  <p className="font-mono text-xs font-semibold tracking-[0.18em] text-white/55">
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+                  <p className="mt-2 text-lg font-semibold text-white md:text-xl">{r.title}</p>
+                  <p className="mt-2 text-[15px] leading-relaxed text-white/90 md:text-base">{r.detail}</p>
                 </div>
               ))}
             </div>
@@ -102,11 +118,11 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
             <button
               type="button"
               onClick={() => openBooking("meet_experts")}
-              className="inline-flex items-center gap-2 self-start rounded-lg bg-gradient-to-r from-fuchsia-600 to-violet-600 hover:from-fuchsia-500 hover:to-violet-500 text-white text-sm font-semibold px-5 py-2.5"
+              className="inline-flex h-12 min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-pink-300/25 bg-gradient-to-r from-[#D3126A] via-pink-600 to-[#5B45E0] px-8 text-base font-semibold text-white shadow-[0_0_22px_rgba(211,18,106,0.35)] transition-all hover:from-[#e01874] hover:via-pink-500 hover:to-[#6b56f0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a] sm:w-auto sm:min-w-[16rem]"
               data-testid="button-talk-to-expert"
             >
               Talk to an expert
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="h-4 w-4" />
             </button>
           </motion.div>
         </div>
