@@ -10,7 +10,7 @@ with the locked engage-path sculpture set.
 - `VisualStage` / `EngagePathVisual` for sculptures only (path cards + Stats editorial)
 - Small cards (Tackle, capabilities, Protect stack, `/solutions`) use Lucide `IconWell`
 - Meshy Batch 01 retired from public marketing placement
-- Sticky dock publishes `--de-dock-offset`; sections use `.de-dock-clear`
+- Homepage section jumps live in MegaMenu (`Protected?` / On this page) — no floating bottom dock
 - Assessment CTA uses the same brand gradient as MegaMenu (`from-fuchsia-600 via-pink-600 to-rose-500`)
 
 ## Rules kept

@@ -541,12 +541,10 @@ export const ZohoASAPWidget = ({
 
   return (
     <>
-      {/* Above section dock; clears hero mockup / scroll-to-top track on the right */}
+      {/* Bottom-right utility — cookie banner lifts it; no second nav bar */}
       <div
-        className={`fixed z-[100] ${
-          cookieBannerClear
-            ? "bottom-5 right-3 sm:right-4 lg:bottom-[max(5.25rem,calc(var(--de-dock-offset)+0.5rem))] lg:right-[4.75rem]"
-            : "bottom-28 right-3 sm:right-4 lg:bottom-[max(5.25rem,calc(var(--de-dock-offset)+0.5rem))] lg:right-[4.75rem]"
+        className={`fixed z-[100] right-3 sm:right-4 ${
+          cookieBannerClear ? "bottom-5" : "bottom-28"
         }`}
         data-testid="widget-zoho-asap-container"
       >

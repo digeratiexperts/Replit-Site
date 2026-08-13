@@ -27,7 +27,7 @@ import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooter
 import { DigeratiStatsSection } from "./sections/DigeratiStatsSection";
 import { DigeratiTrustPhotoSection } from "./sections/DigeratiTrustPhotoSection";
 
-// Live digeratexperts.com story order for sticky-bar cleanness.
+// Live digeratexperts.com story order.
 // Extra working-branch sections stay on-page with showInNav:false.
 const homepageSections: { id: string; label: string; theme: 'dark' | 'light'; showInNav?: boolean }[] = [
   { id: 'hero', label: 'Home', theme: 'dark' },
@@ -71,8 +71,8 @@ export const DigeratiHomepage = (): JSX.Element => {
 
   return (
     <FullPageScrollProvider sections={homepageSections} enableOnMobile={false}>
-      {/* pb clears fixed bottom section dock so content isn't clipped */}
-      <div className="min-h-screen bg-[#050312] pb-28 lg:pb-32">
+      {/* Ask DE sits bottom-right; extra lift only while the cookie banner is visible */}
+      <div className="min-h-screen bg-[#050312] pb-8">
         <OrganizationJsonLd />
         <WebSiteJsonLd />
         {/* Navigation — chat lives in App MarketingChrome sitewide */}
@@ -84,56 +84,56 @@ export const DigeratiHomepage = (): JSX.Element => {
           <DigeratiAlertBanner />
         </ScrollSectionAuto>
 
-        {/* Why DE — dock clearance on each section */}
-        <ScrollSectionAuto id="stats" className="de-dock-clear">
+        {/* Why DE */}
+        <ScrollSectionAuto id="stats">
           <DigeratiStatsSection />
         </ScrollSectionAuto>
 
         {/* Problems */}
-        <ScrollSectionAuto id="challenges" className="de-dock-clear">
+        <ScrollSectionAuto id="challenges">
           <DigeratiWhatWeTackleSection />
         </ScrollSectionAuto>
 
         {/* Engage */}
-        <ScrollSectionAuto id="services" className="de-dock-clear">
+        <ScrollSectionAuto id="services">
           <DigeratiServicesSection />
         </ScrollSectionAuto>
 
         {/* Kept from working branch — not in live sticky bar */}
-        <ScrollSectionAuto id="protection" className="de-dock-clear">
+        <ScrollSectionAuto id="protection">
           <DigeratiHowWeProtectSection />
         </ScrollSectionAuto>
 
         {/* Packages */}
-        <ScrollSectionAuto id="pricing" className="de-dock-clear">
+        <ScrollSectionAuto id="pricing">
           <DigeratiPricingSection />
         </ScrollSectionAuto>
 
         {/* Pricing tools relocated to /proactive-ecosystem-pricing#pricing-tools */}
 
         {/* Industries */}
-        <ScrollSectionAuto id="industries" className="de-dock-clear">
+        <ScrollSectionAuto id="industries">
           <DigeratiIndustriesSection />
         </ScrollSectionAuto>
 
         {/* Trust imagery — feeds Proof story, hidden from sticky bar */}
-        <ScrollSectionAuto id="trust" className="de-dock-clear">
+        <ScrollSectionAuto id="trust">
           <DigeratiTrustPhotoSection />
         </ScrollSectionAuto>
 
         {/* Meet the Experts — human trust */}
-        <ScrollSectionAuto id="team" className="de-dock-clear">
+        <ScrollSectionAuto id="team">
           <DigeratiMeetExpertsSection />
         </ScrollSectionAuto>
 
         {/* Proof — honest shells (no fabricated quotes) */}
-        <ScrollSectionAuto id="testimonials" className="de-dock-clear">
+        <ScrollSectionAuto id="testimonials">
           <DigeratiTestimonialsSection />
           <HomepageProofSection />
         </ScrollSectionAuto>
 
         {/* Kept from working branch — not in live sticky bar */}
-        <ScrollSectionAuto id="insights" className="de-dock-clear">
+        <ScrollSectionAuto id="insights">
           <DigeratiThreatsInsightsSection />
           <DigeratiAIAssistanceSection />
         </ScrollSectionAuto>
@@ -142,18 +142,18 @@ export const DigeratiHomepage = (): JSX.Element => {
         <DigeratiLeadFormSection />
 
         {/* FAQ before Next step — live cleanness */}
-        <ScrollSectionAuto id="faq" className="de-dock-clear">
+        <ScrollSectionAuto id="faq">
           <DigeratiFAQSection />
           <DigeratiNewsletterSection />
         </ScrollSectionAuto>
 
         {/* Next step */}
-        <ScrollSectionAuto id="cta" className="de-dock-clear">
+        <ScrollSectionAuto id="cta">
           <DigeratiCTASection />
         </ScrollSectionAuto>
 
         {/* Contact */}
-        <ScrollSectionAuto id="contact" className="scroll-mt-20 pt-8 de-dock-clear">
+        <ScrollSectionAuto id="contact" className="scroll-mt-20 pt-8">
           <DigeratiContactSection />
           <DigeratiEnhancedFooterSection />
         </ScrollSectionAuto>

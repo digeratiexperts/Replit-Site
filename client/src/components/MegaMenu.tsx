@@ -12,6 +12,7 @@ import * as Tooltip from '@radix-ui/react-tooltip';
 import { pricing } from '@/data/pricing';
 import { useBooking } from '@/contexts/BookingContext';
 import { useOptionalFullPageScroll } from '@/components/FullPageScroll';
+import { HomepageOnPageNav } from '@/components/HomepageOnPageNav';
 import { PORTAL_LOGIN } from '@/lib/portalUrls';
 import { CTA } from '@/lib/ctaCopy';
 
@@ -999,6 +1000,7 @@ export function MegaMenu() {
 
             {/* Right Side Actions — short label on lg so Schedule isn’t truncated */}
           <div className="flex items-center space-x-2 lg:space-x-3 flex-shrink-0">
+            <HomepageOnPageNav variant="desktop" onOpen={closeMenu} />
             <button
               type="button"
               className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-3.5 xl:px-5 py-2.5 rounded-lg text-sm xl:text-base font-semibold whitespace-nowrap shadow-[0_0_18px_rgba(236,72,153,0.28)] hover:shadow-[0_0_24px_rgba(236,72,153,0.36)] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black border border-pink-300/25"
@@ -1073,6 +1075,13 @@ export function MegaMenu() {
                   <X className="w-6 h-6 text-gray-400" />
                 </button>
               </div>
+
+              {mobileMenuOpen && (
+                <HomepageOnPageNav
+                  variant="mobile"
+                  onNavigate={() => setMobileMenuOpen(false)}
+                />
+              )}
 
               {/* Navigation Items */}
               {navItems.map((item, index) => (

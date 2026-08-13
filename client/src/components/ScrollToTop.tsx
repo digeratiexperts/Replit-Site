@@ -2,8 +2,20 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 
+function hasCookieConsent(): boolean {
+  try {
+    return !!(
+      localStorage.getItem("de_cookie_consent_v2") ||
+      localStorage.getItem("de_cookie_consent")
+    );
+  } catch {
+    return false;
+  }
+}
+
 export const ScrollToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [cookieBannerClear, setCookieBannerClear] = useState(hasCookieConsent);
   const prefersReducedMotion = useReducedMotion();
 
   const toggleVisibility = useCallback(() => {
@@ -27,6 +39,21 @@ export const ScrollToTop = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [toggleVisibility]);
 
+  useEffect(() => {
+    if (cookieBannerClear) return;
+    const check = () => {
+      if (hasCookieConsent()) setCookieBannerClear(true);
+    };
+    window.addEventListener("de-cookie-consent", check);
+    window.addEventListener("storage", check);
+    const id = window.setInterval(check, 800);
+    return () => {
+      window.clearInterval(id);
+      window.removeEventListener("de-cookie-consent", check);
+      window.removeEventListener("storage", check);
+    };
+  }, [cookieBannerClear]);
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -43,7 +70,9 @@ export const ScrollToTop = () => {
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
           onClick={scrollToTop}
-        className="fixed bottom-32 right-6 z-50 p-3 bg-violet-600/90 hover:bg-violet-500 text-white rounded-full shadow-lg shadow-violet-500/25 backdrop-blur-sm border border-violet-500/30 transition-colors duration-200 group lg:bottom-[max(5.5rem,calc(var(--de-dock-offset)+0.75rem))]"
+          className={`fixed right-6 z-50 p-3 bg-violet-600/90 hover:bg-violet-500 text-white rounded-full shadow-lg shadow-violet-500/25 backdrop-blur-sm border border-violet-500/30 transition-colors duration-200 group ${
+            cookieBannerClear ? "bottom-24" : "bottom-44"
+          }`}
           aria-label="Scroll to top"
           data-testid="button-scroll-to-top"
         >

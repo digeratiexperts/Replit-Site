@@ -1,13 +1,10 @@
 import { useState, useEffect, useRef, useCallback, createContext, useContext } from 'react';
-import { ArrowRight, Shield, Phone, ChevronDown } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { CTA } from '@/lib/ctaCopy';
 
 interface ScrollSection {
   id: string;
   label: string;
   theme?: 'dark' | 'light';
-  /** When false, section is tracked for scroll/theme but hidden from the sticky bar. */
+  /** When false, section is tracked for scroll/theme but omitted from On this page jumps. */
   showInNav?: boolean;
 }
 
@@ -19,6 +16,7 @@ interface FullPageScrollContextType {
   toggleSnap: () => void;
   currentTheme: 'dark' | 'light';
   sectionProgress: number;
+  sections: ScrollSection[];
 }
 
 const FullPageScrollContext = createContext<FullPageScrollContextType | null>(null);
@@ -233,7 +231,8 @@ export function FullPageScrollProvider({
       isSnapEnabled: effectiveSnapEnabled,
       toggleSnap,
       currentTheme: headerTheme,
-      sectionProgress
+      sectionProgress,
+      sections,
     }}>
       <div 
         ref={containerRef}
@@ -242,214 +241,9 @@ export function FullPageScrollProvider({
       >
         {children}
       </div>
-      
-      {!isMobile && (
-        <SectionNavBar
-          sections={sections}
-          currentSection={currentSection}
-          onNavigate={scrollToSection}
-        />
-      )}
     </FullPageScrollContext.Provider>
   );
 }
-
-interface SectionNavBarProps {
-  sections: ScrollSection[];
-  currentSection: number;
-  onNavigate: (index: number) => void;
-}
-
-/** Primary sticky links — rest live under More so the pill does not overflow. */
-/** Slim primary row — Team/FAQ/etc. stay under More to cut dock clutter vs top nav. */
-const SECTION_NAV_PRIMARY = new Set([
-  'hero',
-  'stats',
-  'services',
-  'pricing',
-  'industries',
-  'contact',
-]);
-
-/** Desktop sticky section bar — primary row + More; roomy padding with FAB clearance on the right. */
-function SectionNavBar({ sections, currentSection, onNavigate }: SectionNavBarProps) {
-  const [moreOpen, setMoreOpen] = useState(false);
-  const moreRef = useRef<HTMLDivElement>(null);
-  const dockRef = useRef<HTMLDivElement>(null);
-
-  const navSections = sections
-    .map((section, index) => ({ section, index }))
-    .filter(({ section }) => section.showInNav !== false);
-
-  const primary = navSections.filter(({ section }) => SECTION_NAV_PRIMARY.has(section.id));
-  const moreItems = navSections.filter(({ section }) => !SECTION_NAV_PRIMARY.has(section.id));
-
-  // Highlight the nearest nav-visible section when scrolling a hidden-in-nav block.
-  const activeNavIndex = (() => {
-    if (navSections.some(({ index }) => index === currentSection)) return currentSection;
-    let best = navSections[0]?.index ?? 0;
-    let bestDist = Infinity;
-    for (const { index } of navSections) {
-      const dist = Math.abs(index - currentSection);
-      if (dist < bestDist) {
-        bestDist = dist;
-        best = index;
-      }
-    }
-    return best;
-  })();
-
-  const moreContainsActive = moreItems.some(({ index }) => index === activeNavIndex);
-
-  useEffect(() => {
-    if (!moreOpen) return;
-    const onPointer = (event: MouseEvent) => {
-      if (moreRef.current && !moreRef.current.contains(event.target as Node)) {
-        setMoreOpen(false);
-      }
-    };
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setMoreOpen(false);
-    };
-    document.addEventListener('mousedown', onPointer);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onPointer);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [moreOpen]);
-
-  useEffect(() => {
-    const el = dockRef.current;
-    if (!el) return;
-
-    const publish = () => {
-      const root = document.documentElement;
-      const rect = el.getBoundingClientRect();
-      const visible = rect.height > 0 && window.getComputedStyle(el).display !== "none";
-      const offset = visible
-        ? Math.round(window.innerHeight - rect.top + 8)
-        : 0;
-      root.style.setProperty("--de-dock-offset", `${offset}px`);
-    };
-
-    publish();
-    const ro = new ResizeObserver(publish);
-    ro.observe(el);
-    window.addEventListener("resize", publish);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", publish);
-      document.documentElement.style.setProperty("--de-dock-offset", "0px");
-    };
-  }, []);
-
-  const renderNavButton = (
-    section: ScrollSection,
-    index: number,
-    opts?: { block?: boolean }
-  ) => {
-    const isActive = activeNavIndex === index;
-    return (
-      <button
-        key={section.id}
-        type="button"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setMoreOpen(false);
-          onNavigate(index);
-        }}
-        className={`${opts?.block ? 'w-full justify-start text-left' : ''} relative inline-flex items-center px-3.5 py-1.5 text-sm font-semibold rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#FF477F] whitespace-nowrap shrink-0 ${
-          isActive
-            ? 'bg-[#D3126A] text-white shadow-lg shadow-[#D3126A]/40'
-            : 'text-white/75 hover:text-white hover:bg-white/10'
-        }`}
-        aria-label={`Go to ${section.label}`}
-        aria-current={isActive ? 'true' : undefined}
-        data-testid={`nav-dot-${section.id}`}
-      >
-        {section.label}
-      </button>
-    );
-  };
-
-  return (
-    <div
-      ref={dockRef}
-      data-de-section-dock
-      className="fixed bottom-3 left-3 right-[17rem] xl:left-4 xl:right-[17.5rem] 2xl:right-[18.5rem] z-40 hidden lg:flex justify-center pointer-events-none min-w-0"
-    >
-      <motion.nav
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="pointer-events-auto flex w-max min-w-0 max-w-full flex-row items-center gap-1 overflow-visible py-2 px-3.5 rounded-full bg-black/95 backdrop-blur-xl border-2 border-[#D3126A]/60 shadow-[0_0_24px_rgba(211,18,106,0.35),0_4px_24px_rgba(0,0,0,0.5)]"
-        aria-label="Section navigation"
-      >
-        <div className="hidden xl:flex items-center gap-2 pr-3 border-r border-white/20 mr-2 shrink-0">
-          <Shield className="w-4 h-4 text-[#FF477F]" aria-hidden="true" />
-          <span className="text-white font-semibold text-sm whitespace-nowrap">Protected?</span>
-        </div>
-
-        <div className="flex items-center gap-1 min-w-0 overflow-x-auto scrollbar-none">
-          {primary.map(({ section, index }) => renderNavButton(section, index))}
-        </div>
-
-        {moreItems.length > 0 && (
-          <div className="relative shrink-0" ref={moreRef}>
-            <button
-              type="button"
-              onClick={() => setMoreOpen((open) => !open)}
-              className={`inline-flex items-center gap-1 px-3.5 py-1.5 text-sm font-semibold rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-[#FF477F] ${
-                moreOpen || moreContainsActive
-                  ? 'bg-white/15 text-white'
-                  : 'text-white/75 hover:text-white hover:bg-white/10'
-              }`}
-              aria-expanded={moreOpen}
-              aria-haspopup="menu"
-              data-testid="nav-section-more"
-            >
-              More
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${moreOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
-            </button>
-            {moreOpen && (
-              <div
-                role="menu"
-                className="absolute bottom-[calc(100%+0.5rem)] right-0 min-w-[11rem] rounded-2xl border border-white/15 bg-black/95 backdrop-blur-xl p-2 shadow-2xl z-50"
-              >
-                {moreItems.map(({ section, index }) => renderNavButton(section, index, { block: true }))}
-              </div>
-            )}
-          </div>
-        )}
-
-        <div className="w-px h-6 bg-white/20 mx-2 shrink-0" aria-hidden="true" />
-
-        <a
-          href="tel:480-519-5892"
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-white/90 hover:text-white hover:bg-white/10 transition-colors shrink-0 text-sm font-medium"
-          data-testid="nav-phone"
-          aria-label="Call 480-519-5892"
-          title="480-519-5892"
-        >
-          <Phone className="w-4 h-4 text-[#FF477F]" aria-hidden="true" />
-          <span className="hidden xl:inline">480-519-5892</span>
-        </a>
-
-        <a
-          href="/book"
-          className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold rounded-lg bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white border border-pink-300/25 shadow-lg shadow-pink-500/30 whitespace-nowrap shrink-0"
-          data-testid="nav-cta-assessment"
-          aria-label={CTA.primary}
-        >
-          {CTA.primaryNavCompact}
-          <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-        </a>
-      </motion.nav>
-    </div>
-  );
-}
-
 
 interface ScrollSectionProps {
   id: string;
