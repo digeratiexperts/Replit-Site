@@ -9,8 +9,14 @@
 > (`colors.de.*`). Do **not** invent new brand colors — reuse the tokens below.
 > Authoritative policy: root `.cursorrules`. Brand rule: `.cursor/rules/brand.mdc`.
 
-**Status:** Phase 2 specification. Token *values* below marked ✅ already exist in code;
-those marked 🆕 are proposed additions to codify in Phase 3 (no visual change until then).
+**Status:** Phase A foundations — tokens below are **decided and live** in `client/src/index.css`
++ `tailwind.config.ts` unless marked ⏳ (deferred, not blocking Phase B).
+Primitives: `Section` / `Container` (`components/layout/`), `.de-display` / `.de-h2` / `.de-h3` /
+`.de-lead` / `.de-eyebrow`, Button `cta` + `xl`, tightened `RevealOnScroll`, Vitest exclude for
+`msp-advisor` (pre-existing CI config fix).
+
+**Hard gate:** Phase B homepage proof → before/after at 1440/768/390 → STOP for DE. No PageTemplate
+rollout until approved.
 
 ---
 
@@ -73,100 +79,98 @@ Chapters must **juxtapose** well ↔ surface ↔ paper ↔ magenta. Never flatte
 | `--de-fg` ✅ | `#ffffff` | Primary text on dark |
 | `--de-muted` ✅ | `rgba(255,255,255,0.85)` | Secondary text on dark |
 | `--de-muted-soft` ✅ | `rgba(255,255,255,0.72)` | Tertiary/supporting text on dark |
-| (paper) 🆕 `--de-ink` | `#111827` | Primary text on paper |
-| (paper) 🆕 `--de-ink-muted` | `#374151` | Secondary text on paper |
+| `--de-ink` ✅ | `#111827` | Primary text on paper |
+| `--de-ink-muted` ✅ | `#374151` | Secondary text on paper |
 
 Use `white/65` / `white/45` sparingly for the quietest tier only; verify contrast (WCAG 2.2 AA).
 
 ### 3.3 Color — accent / brand
 | Token | Value | Use |
 |-------|-------|-----|
-| `--de-magenta` ✅ | `#D3126A` | **Primary brand & CTA**; brand mark, active underline, user bubbles |
+| `--de-magenta` ✅ | `#D3126A` | **Primary brand & CTA** (solid for marketing `cta` variant) |
 | `--de-violet` ✅ | `#5B45E0` | Accent & illumination (violet as **light, not paint**) |
 | (accent) ✅ | `#7c3aed` / `#8B5CF6` / `#A78BFA` | Deep→lavender violet for gradients/glow frames |
 | `--de-brand-energy` ✅ | violet→magenta→coral gradient | The single loud statement band only |
 
-Purple is illumination/accent, not large fills. Exactly one loud band per page (the magenta
-how-it-works/statement band). No rainbow gradients.
+Purple is illumination/accent, not large fills. Exactly one loud band per page. No rainbow gradients.
+Marketing primary actions use solid magenta (`Button` `cta`). Keep `brand` gradient for portal/Desk.
 
-### 3.4 Color — semantic states 🆕 (proposed; restrained, AA-checked)
-State colors are intentionally quiet and only appear on functional UI (forms, portal, alerts),
-never as marketing decoration. Reuse the existing shadcn `--destructive` where a mapping exists.
-| Token | Value (proposed) | Use |
-|-------|------------------|-----|
-| `--de-success` | `#10b981` | Success/validation confirms |
+### 3.4 Color — semantic states ✅
+| Token | Value | Use |
+|-------|-------|-----|
+| `--de-success` | `#10b981` | Success/validation |
 | `--de-warning` | `#f59e0b` | Non-blocking warnings |
-| `--de-danger` | `#ef4444` | Errors / destructive (align with shadcn `--destructive`) |
-| `--de-info` | `#5B45E0` | Informational (reuse brand violet) |
+| `--de-danger` | `#ef4444` | Errors / destructive |
+| `--de-info` | `#5B45E0` | Informational (brand violet) |
 
 ### 3.5 Color — focus
 | Token | Value | Use |
 |-------|-------|-----|
-| focus ring ✅ | `2px solid #ec4899`, offset `2px` | All `:focus-visible` (already global in `index.css`) |
+| focus ring ✅ | `2px solid #ec4899`, offset `2px` | Global `:focus-visible` + Button |
 
-### 3.6 Spacing scale 🆕 (codify existing rhythm as tokens)
-Base unit 4px. Codify the ad-hoc utility strings into a scale:
-`0, 1(4), 2(8), 3(12), 4(16), 6(24), 8(32), 10(40), 12(48), 16(64), 20(80), 24(96)`.
-Tailwind's default scale already matches; standardize component usage rather than inventing new steps.
+### 3.6 Spacing scale
+Tailwind default 4px scale. Prefer tokens over inventing steps.
 
-### 3.7 Section spacing 🆕
+### 3.7 Section spacing ✅
 | Token | Value | Use |
 |-------|-------|-----|
-| `--de-section-y` | `clamp(2.5rem, 4vw, 4rem)` | Standard marketing section vertical padding |
-| `--de-section-y-lg` | `clamp(4rem, 6vw, 6rem)` | Hero / major chapter breaks |
-Current live pattern `py-10 md:py-14 lg:py-16` maps to `--de-section-y`; keep consistent.
+| `--de-section-y` | `clamp(3.5rem, 6vw, 5.5rem)` | Standard marketing section |
+| `--de-section-y-lg` | `clamp(5rem, 8vw, 8rem)` | Hero / major chapter |
+| `--de-section-y-sm` | `clamp(2.5rem, 4vw, 3.5rem)` | Continuation bands |
 
 ### 3.8 Radius scale
 | Token | Value | Use |
 |-------|-------|-----|
-| `--radius` ✅ | `0.5rem` | shadcn base (`rounded-lg`/`md`/`sm` derive from it) |
-| card 🆕 `--de-radius-card` | `1rem` (`rounded-2xl`) | Marketing cards |
-| panel 🆕 `--de-radius-panel` | `1.5rem` (`rounded-3xl`) | Large panels |
-Do **not** invent one-off radii (13px/17px/etc.).
+| `--radius` ✅ | `0.5rem` | shadcn base |
+| `--de-radius-card` ✅ | `1rem` | Marketing cards |
+| `--de-radius-panel` ✅ | `1.5rem` | Large panels |
 
-### 3.9 Container widths
+### 3.9 Container widths ✅
 | Token | Value | Use |
 |-------|-------|-----|
-| container ✅ | centered, padding `1rem`, `2xl` max `1680px` | Global (Tailwind container) |
-| content 🆕 `--de-content-max` | `1280px` | Standard marketing content width |
-| prose 🆕 `--de-prose-max` | `72ch` | Long-form reading measure |
+| `--de-w-content` | `1280px` | Default band (`Container width="content"`) |
+| `--de-w-wide` | `1520px` | Galleries / 4-up |
+| `--de-w-prose` | `68ch` | Long-form measure |
+| `--de-gutter` | `clamp(1rem, 4vw, 2.5rem)` | Side padding |
 
-### 3.10 Typography scale
-- **Families ✅:** headings `Space Grotesk`; body `Inter`; stats/numbers `Oxanium`/`JetBrains Mono`.
-- **Root ✅:** `14px` (→ `15px` ≥1920px, `16px` ≥2560px).
-- **Headings ✅:** weight 600–700, tracking `-0.015em`…`-0.03em`, line-height `1.15–1.25`.
-- **Body ✅:** weight 400, line-height `1.6` (prose `1.75`).
-- **Scale 🆕 (fluid, one dominant heading per section):**
-  | Role | Size |
-  |------|------|
-  | Display (hero H1) | `clamp(2.25rem, 4.5vw, 3.75rem)` |
-  | H2 (section) | `clamp(1.75rem, 3vw, 2.5rem)` |
-  | H3 | `clamp(1.25rem, 2vw, 1.75rem)` |
-  | Body-lg | `1.125rem` |
-  | Body | `1rem` |
-  | Small/caption | `0.875rem` / `0.75rem` (uppercase tracking for eyebrows) |
-  Fix the current flat-hierarchy weakness: do not push section H2 to `text-5xl/6xl` with `text-2xl` body.
+### 3.10 Typography scale ✅
+- **Families:** Space Grotesk / Inter / Oxanium·JetBrains Mono.
+- **Root:** `14px` (→15px ≥1920, →16px ≥2560).
+- **Rule:** no section H2 may exceed hero H1 — use utilities `.de-display` / `.de-h2` / `.de-h3` / `.de-lead` / `.de-eyebrow`.
+| Role | Token / class | Size |
+|------|---------------|------|
+| Display (hero H1) | `--de-fs-display` / `.de-display` | `clamp(2.5rem, 4.6vw, 4rem)` |
+| H2 | `--de-fs-h2` / `.de-h2` | `clamp(1.75rem, 2.6vw, 2.5rem)` |
+| H3 | `--de-fs-h3` / `.de-h3` | `clamp(1.25rem, 1.6vw, 1.5rem)` |
+| Lead | `--de-fs-lead` / `.de-lead` | `clamp(1.0625rem, 1.1vw, 1.25rem)` |
+| Eyebrow | `--de-fs-eyebrow` / `.de-eyebrow` | `0.75rem` / 600 / `.18em` / uppercase |
 
-### 3.11 Line heights
-Headings `1.15–1.25` · body `1.6` · prose `1.75` · UI/controls `1.35` (nav labels already `1.35`).
-
-### 3.12 Elevation / shadows 🆕
-Replace scattered glow shadows with a restrained, brand-consistent set:
+### 3.11 Elevation / shadows ✅
 | Token | Value | Use |
 |-------|-------|-----|
-| `--de-shadow-sm` | `0 1px 2px rgba(0,0,0,.4)` | Subtle lift on dark |
+| `--de-shadow-sm` | `0 1px 2px rgba(0,0,0,.4)` | Subtle lift |
 | `--de-shadow-md` | `0 8px 24px rgba(0,0,0,.35)` | Cards on dark |
-| `--de-shadow-paper` | `0 10px 28px rgba(26,18,16,.07)` | Cards on paper (matches `.de-paper-lift`) |
-| `--de-shadow-cta` | magenta-tinted, low-spread | Primary CTA only |
-Avoid neon glow shadows (`0 0 40px violet`) as ambient decoration.
+| `--de-shadow-paper` | paper lift | Cards on paper |
+| `--de-shadow-cta` | magenta-tinted | Primary CTA only |
+| `--de-rim` | inset top highlight | Raised panels (`.de-raised-panel`) |
 
-### 3.13 Transitions & motion
-- **Durations 🆕:** `--de-dur-fast 150ms`, `--de-dur 200ms`, `--de-dur-slow 300ms`.
-- **Easing:** `ease-out` for enter, `cubic-bezier(0.22,1,0.36,1)` for lifts (already used).
-- **Buttons ✅:** `transition-all 200ms ease-out`, `active:scale-[0.98]`, hover `-translate-y-0.5`.
-- **Rules:** motion communicates state/hierarchy/continuity/feedback — never decoration.
-  Respect `prefers-reduced-motion` (already global). Remove ambient floating/glow/gradient-text
-  animations from marketing per brand rules.
+**Premium depth (not glow):** chapter juxtaposition, rim light, directional scrims, layered sculpture
+stages, editorial asymmetry, hairline seams, real photography. Neon ambient glow is banned.
+
+### 3.12 Motion ✅
+`--de-dur-fast 150ms` · `--de-dur 200ms` · `--de-dur-slow 320ms`.
+Rules: (1) no `repeat: Infinity` on marketing; (2) reveals ≤12px rise, ≤400ms, total stagger ≤200ms;
+(3) prefer `RevealOnScroll` over per-element motion stacks.
+
+### 3.13 Visual treatment matrix
+| Treatment | Use for |
+|-----------|---------|
+| Bespoke / editorial / sculptural | major story concepts |
+| Lucide in `IconWell` | services, features, functional UI |
+| Real photography | people, Arizona/local, offices, field work |
+| Data / product visualization | assessments, posture, pricing, proof |
+
+Never one treatment for everything. Do not confuse cleaner with flatter.
 
 ---
 
@@ -180,8 +184,8 @@ components before creating new ones. Never create `Button2`/`CardV2`/`ImprovedHe
 | `Button` | ✅ `components/ui/button.tsx` (has `brand` variant) | Canonical; migrate inline gradient buttons to it |
 | `Badge` | ✅ `components/ui/badge.tsx` | Brandize; reuse |
 | `Card` | ✅ `components/ui/card.tsx` | Add tokenized dark/paper variants; replace glass cards |
-| `Section` | 🆕 | New: chapter (well/surface/paper/magenta) + spacing variants over `--de-*` |
-| `Container` | 🆕 | New: content/prose width wrapper |
+| `Section` | ✅ `components/layout/Section.tsx` | chapter + rhythm + seam |
+| `Container` | ✅ `components/layout/Container.tsx` | content / wide / prose |
 | `FeatureCard` / `ServiceCard` | partial (`DigeratiServicesSection`, inline) | Extract one primitive |
 | `IconWell` | ✅ `components/visual/IconWell.tsx` | Standardize as the marketing icon container |
 | `Stat` | partial (`StatCallout`/inline) | One primitive; prefer number strip |

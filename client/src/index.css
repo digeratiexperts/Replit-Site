@@ -15,6 +15,8 @@ html {
   font-size: 14px;
   /* Keep in-page anchors clear of fixed MegaMenu chrome */
   scroll-padding-top: var(--de-nav-offset);
+  /* Marketing default — prevent white FOUC / overscroll bleed (shadcn --background stays for controls) */
+  background-color: var(--de-bg);
 }
 
 /* Slightly larger on very wide screens */
@@ -125,6 +127,8 @@ html {
   --de-fg: #ffffff;
   --de-muted: rgba(255, 255, 255, 0.85);
   --de-muted-soft: rgba(255, 255, 255, 0.72);
+  --de-ink: #111827;
+  --de-ink-muted: #374151;
   --de-accent: #ec4899;
   --de-accent-2: #d946ef;
   --de-magenta: #D3126A;
@@ -137,6 +141,49 @@ html {
     #e11d5a 74%,
     #fb7185 100%
   );
+
+  /* Type scale — H1 always dominant over section H2 */
+  --de-fs-display: clamp(2.5rem, 4.6vw, 4rem);
+  --de-fs-h2: clamp(1.75rem, 2.6vw, 2.5rem);
+  --de-fs-h3: clamp(1.25rem, 1.6vw, 1.5rem);
+  --de-fs-lead: clamp(1.0625rem, 1.1vw, 1.25rem);
+  --de-fs-body: 1rem;
+  --de-fs-eyebrow: 0.75rem;
+
+  /* Content widths — three only */
+  --de-w-content: 1280px;
+  --de-w-wide: 1520px;
+  --de-w-prose: 68ch;
+  --de-gutter: clamp(1rem, 4vw, 2.5rem);
+
+  /* Section rhythm */
+  --de-section-y: clamp(3.5rem, 6vw, 5.5rem);
+  --de-section-y-lg: clamp(5rem, 8vw, 8rem);
+  --de-section-y-sm: clamp(2.5rem, 4vw, 3.5rem);
+
+  /* Radius */
+  --de-radius-card: 1rem;
+  --de-radius-panel: 1.5rem;
+
+  /* Elevation — depth without neon glow */
+  --de-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --de-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --de-shadow-paper: 0 1px 2px rgba(26, 18, 16, 0.05), 0 10px 28px rgba(26, 18, 16, 0.07);
+  --de-shadow-cta: 0 8px 24px rgba(211, 18, 106, 0.28);
+  --de-rim: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+  /* Motion */
+  --de-dur-fast: 150ms;
+  --de-dur: 200ms;
+  --de-dur-slow: 320ms;
+  --de-ease-out: ease-out;
+  --de-ease-lift: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Semantic (functional UI only) */
+  --de-success: #10b981;
+  --de-warning: #f59e0b;
+  --de-danger: #ef4444;
+  --de-info: #5b45e0;
 
   /*
    * Sticky MegaMenu clearance (utility bar + main nav).
@@ -218,6 +265,49 @@ html {
   background-color: var(--de-paper-raised);
   border: 1px solid var(--de-paper-hairline);
   box-shadow: 0 1px 2px rgba(26, 18, 16, 0.05), 0 10px 28px rgba(26, 18, 16, 0.07);
+}
+
+/* Typography utilities — adopt instead of ad-hoc text-5xl / text-6xl */
+.de-display {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: var(--de-fs-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+}
+.de-h2 {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: var(--de-fs-h2);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.de-h3 {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: var(--de-fs-h3);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+.de-lead {
+  font-size: var(--de-fs-lead);
+  line-height: 1.6;
+  color: var(--de-muted);
+}
+.de-eyebrow {
+  font-size: var(--de-fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--de-magenta) 88%, white);
+}
+
+/* Depth helpers — rim + directional scrim without neon glow */
+.de-raised-panel {
+  background-color: var(--de-raised);
+  border: 1px solid var(--de-hairline);
+  border-radius: var(--de-radius-card);
+  box-shadow: var(--de-shadow-md), var(--de-rim);
 }
 .de-paper-lift:hover {
   box-shadow: 0 2px 4px rgba(26, 18, 16, 0.06), 0 14px 36px rgba(26, 18, 16, 0.09);
@@ -951,7 +1041,9 @@ html {
   }
 
   body {
-    @apply bg-background text-foreground;
+    /* Dark marketing field by default. Paper chapters and light shells set their own surfaces. */
+    background-color: var(--de-bg);
+    color: var(--de-fg);
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-feature-settings: 'cv11', 'ss01';
     -webkit-font-smoothing: antialiased;
