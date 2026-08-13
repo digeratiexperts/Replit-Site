@@ -1,27 +1,36 @@
 import { useEffect, useRef, useState } from "react";
 import {
   AlertTriangle,
+  AppWindow,
   BookOpen,
+  Building2,
   CheckCircle2,
   ChevronRight,
+  ClipboardList,
   Clock,
   ExternalLink,
   FileText,
   Flag,
+  Headset,
+  KeyRound,
   LifeBuoy,
   Lock,
   Mail,
   Monitor,
   MessageCircle,
+  Paperclip,
   Scale,
+  Search,
   Send,
   Shield,
   ShieldCheck,
   Sparkles,
   Tag,
+  Ticket,
+  User,
   Users,
-  Zap,
   X,
+  Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -73,11 +82,63 @@ const QUICK_CHAT_PROMPTS: Array<{
   { label: "Possible security incident", icon: AlertTriangle },
 ];
 
+function BookMagnifier({ className }: { className?: string }) {
+  return (
+    <span className={`relative inline-flex items-center justify-center ${className ?? "h-5 w-5"}`} aria-hidden="true">
+      <BookOpen className="h-full w-full" />
+      <Search className="absolute -bottom-[12%] -right-[14%] h-[58%] w-[58%]" strokeWidth={2.75} />
+    </span>
+  );
+}
+
+const TICKET_CATEGORIES = [
+  "Email",
+  "Access & Security",
+  "Network & VPN",
+  "Software & Applications",
+  "Hardware & Devices",
+  "Backup & Recovery",
+  "Collaboration",
+  "Other",
+] as const;
+
+const TICKET_QUICK_CHIPS: Array<{
+  label: string;
+  icon: typeof Shield;
+  category: (typeof TICKET_CATEGORIES)[number];
+  iconClass: string;
+}> = [
+  {
+    label: "Something broke",
+    icon: AlertTriangle,
+    category: "Hardware & Devices",
+    iconClass: "text-[#fda4af] bg-[#D3126A]/20 ring-[#fb7185]/45",
+  },
+  {
+    label: "Microsoft 365 help",
+    icon: AppWindow,
+    category: "Collaboration",
+    iconClass: "text-[#7dd3fc] bg-[#0284c7]/25 ring-[#38bdf8]/45",
+  },
+  {
+    label: "Access or login issue",
+    icon: KeyRound,
+    category: "Access & Security",
+    iconClass: "text-[#c4b5fd] bg-[#7c3aed]/25 ring-[#a78bfa]/50",
+  },
+  {
+    label: "Possible security incident",
+    icon: Shield,
+    category: "Access & Security",
+    iconClass: "text-[#fca5a5] bg-[#b91c1c]/25 ring-[#f87171]/45",
+  },
+];
+
 const RESOURCE_LINKS: Array<{
   title: string;
   description: string;
   href: string;
-  icon: typeof BookOpen;
+  icon: typeof BookOpen | typeof BookMagnifier;
   external?: boolean;
   tags: [string, string];
   cta: string;
@@ -111,7 +172,7 @@ const RESOURCE_LINKS: Array<{
     title: "Knowledge base",
     description: "Setup guides, troubleshooting, and security help",
     href: "/support/knowledge-base",
-    icon: BookOpen,
+    icon: BookMagnifier,
     tags: ["Guides", "Troubleshooting"],
     cta: "Browse articles",
     accent: "text-[#bbf7d0]",
@@ -153,12 +214,17 @@ export const ZohoASAPWidget = ({
   const pollSinceRef = useRef<string | null>(null);
   const knownMsgIdsRef = useRef<Set<string>>(new Set(["welcome"]));
 
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [priority, setPriority] = useState<"Low" | "Medium" | "High" | "Urgent">("Medium");
+  const [category, setCategory] = useState("");
+  const [attachmentName, setAttachmentName] = useState<string | null>(null);
   const [isTicketSending, setIsTicketSending] = useState(false);
   const [ticketResult, setTicketResult] = useState<TicketResult | null>(null);
+  const ticketFileRef = useRef<HTMLInputElement>(null);
 
   const [cookieBannerClear, setCookieBannerClear] = useState(() => {
     try {
@@ -471,6 +537,34 @@ export const ZohoASAPWidget = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pendingSeed, isOpen, activeTab]);
 
+  const handleTicketFile = (file: File | undefined) => {
+    if (!file) {
+      setAttachmentName(null);
+      return;
+    }
+    const allowed = ["image/png", "image/jpeg", "application/pdf"];
+    const okType = allowed.includes(file.type) || /\.(png|jpe?g|pdf)$/i.test(file.name);
+    if (!okType) {
+      toast({
+        title: "File type not supported",
+        description: "Please choose a PNG, JPG, or PDF.",
+        variant: "destructive",
+      });
+      if (ticketFileRef.current) ticketFileRef.current.value = "";
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      toast({
+        title: "File is too large",
+        description: "Please keep attachments under 10MB.",
+        variant: "destructive",
+      });
+      if (ticketFileRef.current) ticketFileRef.current.value = "";
+      return;
+    }
+    setAttachmentName(file.name);
+  };
+
   const handleSubmitTicket = async () => {
     if (!email || !subject || !message) {
       toast({
@@ -494,6 +588,20 @@ export const ZohoASAPWidget = ({
     setIsTicketSending(true);
     setTicketResult(null);
 
+    const description = [
+      message.trim(),
+      "",
+      fullName.trim() ? `Name: ${fullName.trim()}` : null,
+      company.trim() ? `Company: ${company.trim()}` : null,
+      category ? `Category: ${category}` : null,
+      attachmentName
+        ? `Visitor noted a file: ${attachmentName} (not uploaded in this form — follow up to collect PNG/JPG/PDF).`
+        : null,
+    ]
+      .filter(Boolean)
+      .join("\n")
+      .slice(0, 5000);
+
     try {
       const response = await fetch("/api/portal/zoho/ticket", {
         method: "POST",
@@ -501,7 +609,7 @@ export const ZohoASAPWidget = ({
         body: JSON.stringify({
           email: email.trim(),
           subject: subject.trim(),
-          description: message.trim(),
+          description,
           priority,
           sessionId: advisorSessionId || undefined,
         }),
@@ -515,10 +623,15 @@ export const ZohoASAPWidget = ({
         ticketNumber: data.ticketNumber,
         message: data.message || "Your support request has been received.",
       });
+      setFullName("");
       setEmail("");
+      setCompany("");
       setSubject("");
       setMessage("");
       setPriority("Medium");
+      setCategory("");
+      setAttachmentName(null);
+      if (ticketFileRef.current) ticketFileRef.current.value = "";
 
       toast({
         title: "Ticket created",
@@ -691,11 +804,13 @@ export const ZohoASAPWidget = ({
               </div>
               <button
                 type="button"
-                onClick={() => setActiveTab("ticket")}
-                className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#F0B4CC] transition hover:text-white"
+                onClick={() => setActiveTab(activeTab === "ticket" ? "chat" : "ticket")}
+                className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#F0B4CC] transition hover:text-white"
               >
-                Need a human?
-                <ChevronRight className="h-3 w-3" aria-hidden="true" />
+                Need help now?
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#D3126A]/25 text-[#F0B4CC] ring-1 ring-[#F0B4CC]/35">
+                  <Headset className="h-3 w-3" aria-hidden="true" />
+                </span>
               </button>
             </div>
 
@@ -830,7 +945,7 @@ export const ZohoASAPWidget = ({
                   className="flex h-full min-h-0 flex-col overflow-hidden rounded-[1.2rem] border border-white/10 bg-[#12141c]"
                   data-testid="panel-support-ticket"
                 >
-                  <div className="min-h-0 flex-1 space-y-3 overflow-y-auto p-3">
+                  <div className="min-h-0 flex-1 space-y-3 overflow-y-auto p-3 pb-8">
                     {ticketResult ? (
                       <div className="flex min-h-[70%] flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#171922] px-4 py-10 text-center">
                         <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-400/15 text-emerald-300">
@@ -867,70 +982,61 @@ export const ZohoASAPWidget = ({
                     ) : (
                       <>
                         <div
-                          className="relative overflow-hidden rounded-2xl border border-[#c084fc]/45 p-4 shadow-[0_0_40px_rgba(168,85,247,0.22)]"
+                          className="relative overflow-hidden rounded-2xl border border-[#c084fc]/40 p-4 shadow-[0_0_36px_rgba(168,85,247,0.2)]"
                           style={{
                             background:
-                              "linear-gradient(135deg, rgba(168,85,247,0.55) 0%, rgba(91,69,224,0.42) 38%, rgba(26,11,51,0.96) 72%, rgba(211,18,106,0.28) 100%)",
+                              "linear-gradient(135deg, rgba(91,69,224,0.55) 0%, rgba(26,11,51,0.92) 48%, rgba(211,18,106,0.28) 100%)",
                           }}
                         >
                           <div
-                            className="pointer-events-none absolute -right-6 -top-8 h-28 w-28 rounded-full bg-[#F0B4CC]/20 blur-2xl"
+                            className="pointer-events-none absolute -right-8 -top-10 h-32 w-32 rounded-full bg-[#D3126A]/25 blur-2xl"
                             aria-hidden="true"
                           />
-                          <div className="relative flex items-start gap-3">
-                            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#e9d5ff] to-[#a855f7] text-[#3b0764] ring-2 ring-white/30 shadow-[0_0_28px_rgba(232,121,249,0.55)]">
-                              <Sparkles className="h-5 w-5" aria-hidden="true" />
+                          <div className="relative flex items-center gap-3">
+                            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#D3126A] to-[#7c3aed] text-white ring-2 ring-white/25 shadow-[0_0_24px_rgba(211,18,106,0.45)]">
+                              <Ticket className="h-5 w-5" aria-hidden="true" />
                             </div>
                             <div className="min-w-0 flex-1">
-                              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#F0B4CC]">
-                                Support ticket
-                              </p>
-                              <h3 className="mt-0.5 text-[16px] font-semibold text-white">How can we help?</h3>
-                              <p className="mt-1 text-[12px] leading-5 text-white/80">
-                                Tell us what broke, what you&apos;re evaluating, or what you&apos;re trying to protect — we&apos;ll guide the next step.
+                              <h3 className="text-[16px] font-semibold tracking-tight text-white">
+                                Create a support ticket
+                              </h3>
+                              <p className="mt-1 text-[12px] leading-5 text-white/75">
+                                Tell us what happened and we&apos;ll route it to the right team.
                               </p>
                             </div>
-                            <Shield className="mt-1 hidden h-10 w-10 flex-shrink-0 text-[#F0B4CC]/50 sm:block" aria-hidden="true" />
+                            <div className="hidden h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-white/15 bg-black/40 text-[#c4b5fd] sm:flex">
+                              <ClipboardList className="h-5 w-5" aria-hidden="true" />
+                            </div>
                           </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                          {QUICK_CHAT_PROMPTS.map(({ label, icon: Icon }, idx) => {
-                            const chipTone = [
-                              "from-[#f472b6]/35 to-[#D3126A]/20 text-[#fda4af] ring-[#fb7185]/45",
-                              "from-[#a78bfa]/40 to-[#7c3aed]/25 text-[#ddd6fe] ring-[#c4b5fd]/50",
-                              "from-[#38bdf8]/35 to-[#0284c7]/20 text-[#bae6fd] ring-[#7dd3fc]/45",
-                              "from-[#fbbf24]/35 to-[#f59e0b]/20 text-[#fde68a] ring-[#fcd34d]/45",
-                            ][idx]!;
-                            return (
-                              <button
-                                key={label}
-                                type="button"
-                                onClick={() => setSubject(label)}
-                                className="group rounded-xl border border-white/15 bg-[#1c1528] p-2.5 text-left transition hover:border-[#F0B4CC]/45 hover:bg-[#241833]"
-                              >
-                                <div className="mb-2 flex items-center justify-between">
-                                  <span
-                                    className={`flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br ring-1 shadow-[0_0_16px_rgba(168,85,247,0.2)] ${chipTone}`}
-                                  >
-                                    <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-                                  </span>
-                                  <ChevronRight className="h-3 w-3 text-white/30 group-hover:text-[#F0B4CC]" aria-hidden="true" />
-                                </div>
-                                <span className="block text-[10.5px] font-medium leading-3.5 text-white/90">{label}</span>
-                              </button>
-                            );
-                          })}
+                          {TICKET_QUICK_CHIPS.map(({ label, icon: Icon, category: chipCategory, iconClass }) => (
+                            <button
+                              key={label}
+                              type="button"
+                              onClick={() => {
+                                setSubject(label);
+                                setCategory(chipCategory);
+                              }}
+                              className="group rounded-xl border border-white/15 bg-black p-2.5 text-left transition hover:border-[#F0B4CC]/45"
+                            >
+                              <div className="mb-2 flex items-center justify-between">
+                                <span
+                                  className={`flex h-8 w-8 items-center justify-center rounded-lg ring-1 ${iconClass}`}
+                                >
+                                  <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+                                </span>
+                                <ChevronRight className="h-3 w-3 text-white/30 group-hover:text-[#F0B4CC]" aria-hidden="true" />
+                              </div>
+                              <span className="block text-[10.5px] font-medium leading-3.5 text-white">{label}</span>
+                            </button>
+                          ))}
                         </div>
 
-                        <div className="rounded-2xl border border-[#a78bfa]/30 bg-[#171022] p-4 shadow-[inset_0_1px_0_rgba(196,181,253,0.12)]">
+                        <div className="rounded-2xl border border-[#a78bfa]/30 bg-black p-4 shadow-[inset_0_1px_0_rgba(196,181,253,0.1)]">
                           <div className="mb-4 flex items-center justify-between gap-2">
-                            <div className="flex items-center gap-2">
-                              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#a78bfa]/50 to-[#7c3aed]/30 text-[#ede9fe] ring-1 ring-[#c4b5fd]/45">
-                                <FileText className="h-4 w-4" aria-hidden="true" />
-                              </span>
-                              <h3 className="text-[14px] font-semibold text-white">Create a support ticket</h3>
-                            </div>
+                            <h3 className="text-[14px] font-semibold text-white">Tell us the details</h3>
                             <span className="inline-flex items-center gap-1 rounded-full border border-[#c084fc]/40 bg-[#7c3aed]/25 px-2 py-0.5 text-[10px] font-semibold text-[#e9d5ff]">
                               <Lock className="h-2.5 w-2.5" aria-hidden="true" />
                               Secure & Private
@@ -938,13 +1044,30 @@ export const ZohoASAPWidget = ({
                           </div>
 
                           <div className="space-y-3">
-                            <div className="grid gap-3 sm:grid-cols-[1fr_110px]">
+                            <div className="grid gap-3 sm:grid-cols-2">
                               <div>
-                                <label htmlFor="support-email" className="mb-1.5 block text-[11px] font-semibold text-white/60">
-                                  Email
+                                <label htmlFor="support-name" className="mb-1.5 block text-[11px] font-semibold text-white">
+                                  Full name
                                 </label>
                                 <div className="relative">
-                                  <Mail className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]/70" aria-hidden="true" />
+                                  <User className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]" aria-hidden="true" />
+                                  <Input
+                                    id="support-name"
+                                    autoComplete="name"
+                                    placeholder="Jane Smith"
+                                    value={fullName}
+                                    onChange={(event) => setFullName(event.target.value)}
+                                    data-testid="input-support-name"
+                                    className="h-10 rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] pl-9 text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
+                                  />
+                                </div>
+                              </div>
+                              <div>
+                                <label htmlFor="support-email" className="mb-1.5 block text-[11px] font-semibold text-white">
+                                  Work email
+                                </label>
+                                <div className="relative">
+                                  <Mail className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]" aria-hidden="true" />
                                   <Input
                                     id="support-email"
                                     type="email"
@@ -953,23 +1076,43 @@ export const ZohoASAPWidget = ({
                                     value={email}
                                     onChange={(event) => setEmail(event.target.value)}
                                     data-testid="input-support-email"
-                                    className="h-10 rounded-xl border border-[#c4b5fd]/55 bg-[#faf7ff] pl-9 text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
+                                    className="h-10 rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] pl-9 text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="grid gap-3 sm:grid-cols-2">
+                              <div>
+                                <label htmlFor="support-company" className="mb-1.5 block text-[11px] font-semibold text-white">
+                                  Company
+                                </label>
+                                <div className="relative">
+                                  <Building2 className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]" aria-hidden="true" />
+                                  <Input
+                                    id="support-company"
+                                    autoComplete="organization"
+                                    placeholder="Company name"
+                                    value={company}
+                                    onChange={(event) => setCompany(event.target.value)}
+                                    data-testid="input-support-company"
+                                    className="h-10 rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] pl-9 text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
                                   />
                                 </div>
                               </div>
                               <div>
-                                <label htmlFor="support-priority" className="mb-1.5 block text-[11px] font-semibold text-white/60">
+                                <label htmlFor="support-priority" className="mb-1.5 block text-[11px] font-semibold text-white">
                                   Priority
                                 </label>
                                 <div className="relative">
-                                  <Flag className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]/70" aria-hidden="true" />
+                                  <Flag className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]" aria-hidden="true" />
                                   <select
                                     id="support-priority"
                                     value={priority}
                                     onChange={(event) =>
                                       setPriority(event.target.value as "Low" | "Medium" | "High" | "Urgent")
                                     }
-                                    className="h-10 w-full appearance-none rounded-xl border border-[#c4b5fd]/55 bg-[#faf7ff] pl-9 pr-2 text-[13px] text-[#1a1228] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7c3aed]/65"
+                                    className="h-10 w-full appearance-none rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] pl-9 pr-2 text-[13px] text-[#1a1228] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7c3aed]/65"
                                     data-testid="select-support-priority"
                                   >
                                     <option value="Low">Low</option>
@@ -981,39 +1124,87 @@ export const ZohoASAPWidget = ({
                               </div>
                             </div>
 
-                            <div>
-                              <label htmlFor="support-subject" className="mb-1.5 block text-[11px] font-semibold text-white/60">
-                                Subject
-                              </label>
-                              <div className="relative">
-                                <Tag className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]/70" aria-hidden="true" />
-                                <Input
-                                  id="support-subject"
-                                  maxLength={200}
-                                  placeholder="Brief description"
-                                  value={subject}
-                                  onChange={(event) => setSubject(event.target.value)}
-                                  data-testid="input-support-subject"
-                                  className="h-10 rounded-xl border border-[#c4b5fd]/55 bg-[#faf7ff] pl-9 text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
-                                />
+                            <div className="grid gap-3 sm:grid-cols-2">
+                              <div>
+                                <label htmlFor="support-category" className="mb-1.5 block text-[11px] font-semibold text-white">
+                                  Category
+                                </label>
+                                <select
+                                  id="support-category"
+                                  value={category}
+                                  onChange={(event) => setCategory(event.target.value)}
+                                  className="h-10 w-full appearance-none rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] px-3 text-[13px] text-[#1a1228] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7c3aed]/65"
+                                  data-testid="select-support-category"
+                                >
+                                  <option value="">Select a category</option>
+                                  {TICKET_CATEGORIES.map((item) => (
+                                    <option key={item} value={item}>
+                                      {item}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                              <div>
+                                <label htmlFor="support-subject" className="mb-1.5 block text-[11px] font-semibold text-white">
+                                  Subject
+                                </label>
+                                <div className="relative">
+                                  <Tag className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]" aria-hidden="true" />
+                                  <Input
+                                    id="support-subject"
+                                    maxLength={200}
+                                    placeholder="Brief description"
+                                    value={subject}
+                                    onChange={(event) => setSubject(event.target.value)}
+                                    data-testid="input-support-subject"
+                                    className="h-10 rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] pl-9 text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
+                                  />
+                                </div>
                               </div>
                             </div>
 
                             <div>
-                              <label htmlFor="support-message" className="mb-1.5 block text-[11px] font-semibold text-white/60">
+                              <label htmlFor="support-message" className="mb-1.5 block text-[11px] font-semibold text-white">
                                 What&apos;s happening?
                               </label>
                               <Textarea
                                 id="support-message"
                                 maxLength={5000}
-                                placeholder="Device, service, error, and what you already tried. No passwords or codes."
+                                placeholder="Describe the issue, affected device or service, and what you already tried. No passwords or MFA codes."
                                 value={message}
                                 onChange={(event) => setMessage(event.target.value)}
                                 rows={3}
-                                className="min-h-[88px] resize-none rounded-xl border border-[#c4b5fd]/55 bg-[#faf7ff] text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
+                                className="min-h-[88px] resize-none rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
                                 data-testid="input-support-message"
                               />
                             </div>
+
+                            <div>
+                              <input
+                                ref={ticketFileRef}
+                                type="file"
+                                accept="image/png,image/jpeg,application/pdf,.png,.jpg,.jpeg,.pdf"
+                                className="sr-only"
+                                onChange={(event) => handleTicketFile(event.target.files?.[0])}
+                                data-testid="input-support-attachment"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => ticketFileRef.current?.click()}
+                                className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-white/20 bg-black px-3 py-2 text-[12.5px] font-semibold text-white transition hover:border-[#F0B4CC]/50 hover:text-[#F0B4CC]"
+                              >
+                                <Paperclip className="h-3.5 w-3.5" aria-hidden="true" />
+                                {attachmentName || "Attach file or screenshot"}
+                              </button>
+                              <p className="mt-1.5 text-[11px] text-white/55">
+                                PNG, JPG, PDF up to 10MB. We&apos;ll collect the file after the ticket is opened.
+                              </p>
+                            </div>
+
+                            <p className="flex items-center gap-1.5 text-[11px] font-medium text-white/70">
+                              <Lock className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
+                              Never share passwords, MFA codes, or private keys.
+                            </p>
 
                             <Button
                               type="button"
@@ -1022,13 +1213,9 @@ export const ZohoASAPWidget = ({
                               className="h-11 w-full rounded-xl bg-gradient-to-r from-[#5B45E0] via-[#8b2cf5] to-[#D3126A] text-white shadow-[0_10px_28px_rgba(211,18,106,0.28)] hover:opacity-95"
                               data-testid="button-submit-support"
                             >
-                              {isTicketSending ? "Creating ticket…" : "Create support ticket"}
+                              {isTicketSending ? "Creating ticket…" : "Create ticket"}
                               {!isTicketSending && <Send size={15} className="ml-2" aria-hidden="true" />}
                             </Button>
-                            <p className="flex items-center justify-center gap-1.5 text-[11px] text-white/40">
-                              <Lock className="h-3 w-3" aria-hidden="true" />
-                              Never share passwords, MFA codes, or private keys.
-                            </p>
                           </div>
                         </div>
                       </>
@@ -1125,7 +1312,7 @@ export const ZohoASAPWidget = ({
                         {...(external || href.startsWith("http")
                           ? { target: "_blank", rel: "noopener noreferrer" }
                           : {})}
-                        className="group flex items-center gap-3 rounded-2xl border border-white/12 bg-[#1a1228] p-3 transition hover:border-[#F0B4CC]/40 hover:bg-[#231633]"
+                        className="group flex items-center gap-3 rounded-2xl border border-white/15 bg-black p-3 transition hover:border-[#F0B4CC]/40"
                         data-testid={`resource-link-${title.toLowerCase().replace(/\s+/g, "-")}`}
                       >
                         <span
@@ -1154,6 +1341,35 @@ export const ZohoASAPWidget = ({
                         <ExternalLink className="h-3.5 w-3.5 flex-shrink-0 text-white/30 sm:hidden" aria-hidden="true" />
                       </a>
                     ))}
+
+                    <a
+                      href="/book"
+                      className="group flex items-center gap-3 rounded-2xl border border-[#F0B4CC]/55 bg-white p-3 shadow-[0_8px_24px_rgba(211,18,106,0.18)] transition hover:border-[#D3126A]"
+                      data-testid="resource-link-cyber-risk-assessment"
+                    >
+                      <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#D3126A] to-[#f472b6] text-white ring-1 ring-[#D3126A]/40 shadow-[0_0_18px_rgba(211,18,106,0.35)]">
+                        <Shield className="h-5 w-5" aria-hidden="true" />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-[13.5px] font-semibold text-[#1a1228]">Cyber risk assessment</span>
+                        <span className="mt-0.5 block text-[11.5px] leading-4 text-[#5A3A5E]">
+                          Map your gaps and get a prioritized next step
+                        </span>
+                        <span className="mt-1.5 flex flex-wrap gap-1.5">
+                          <span className="rounded-md bg-[#F0B4CC]/35 px-1.5 py-0.5 text-[10px] font-medium text-[#9d174d]">
+                            Assessment
+                          </span>
+                          <span className="rounded-md bg-[#F0B4CC]/35 px-1.5 py-0.5 text-[10px] font-medium text-[#9d174d]">
+                            Book now
+                          </span>
+                        </span>
+                      </span>
+                      <span className="hidden flex-shrink-0 items-center gap-1 text-[11px] font-semibold text-[#D3126A] sm:inline-flex">
+                        Book
+                        <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+                      </span>
+                      <ExternalLink className="h-3.5 w-3.5 flex-shrink-0 text-[#D3126A]/50 sm:hidden" aria-hidden="true" />
+                    </a>
                   </div>
 
                   <div className="rounded-2xl border border-[#fb7185]/40 bg-gradient-to-r from-[#D3126A]/20 via-[#1a1228] to-[#7c3aed]/20 p-3">
@@ -1183,7 +1399,13 @@ export const ZohoASAPWidget = ({
             </div>
 
             <footer className="relative flex flex-shrink-0 items-center justify-between gap-3 border-t border-white/10 px-4 py-2.5 text-[11px] text-white/40">
-              <span className="truncate">DE Desk · Ticket · Resources · Assist</span>
+              <span className="truncate">
+                DE Desk ·{" "}
+                <span className={activeTab === "ticket" ? "font-semibold text-[#F0B4CC]" : undefined}>Ticket</span>
+                {" · "}
+                <span className={activeTab === "resources" ? "font-semibold text-[#F0B4CC]" : undefined}>Resources</span>
+                {" · Assist"}
+              </span>
               <button
                 type="button"
                 onClick={() => setActiveTab("ticket")}
