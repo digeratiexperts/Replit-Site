@@ -40,7 +40,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
           boxShadow: "0 24px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.06)",
         }}
       >
-        <div className="flex items-center gap-2 px-3.5 py-2.5 border-b border-white/8 bg-black/25">
+        <div className="flex items-center gap-2 px-3 py-2 border-b border-white/8 bg-black/25">
           <div className="flex gap-1" aria-hidden="true">
             <div className="w-2 h-2 rounded-full bg-white/20" />
             <div className="w-2 h-2 rounded-full bg-white/15" />
@@ -54,7 +54,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
           </div>
         </div>
 
-        <div className="p-4 sm:p-5 space-y-4">
+        <div className="p-3.5 sm:p-4 space-y-3">
           <div className="flex items-start gap-3">
             <div
               className="w-9 h-9 rounded-xl bg-gradient-to-br from-fuchsia-500/90 via-pink-500/90 to-violet-600/90 flex items-center justify-center border border-pink-300/20"
@@ -68,11 +68,11 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-2">
             {reviewAreas.map((area, index) => (
               <motion.div
                 key={area.label}
-                className="flex items-center gap-2.5 p-3 rounded-xl bg-white/[0.035] border border-white/10"
+                className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.035] border border-white/10"
                 initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
@@ -91,7 +91,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
           </div>
 
           <motion.div
-            className="p-4 rounded-xl bg-white/[0.03] border border-white/10"
+            className="p-3 rounded-xl bg-white/[0.03] border border-white/10"
             initial={prefersReducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: prefersReducedMotion ? 0 : 0.4, delay: prefersReducedMotion ? 0 : 0.35 }}
@@ -100,7 +100,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
               <Activity className="w-4 h-4 text-violet-400" aria-hidden="true" />
               <span className="text-white text-sm font-medium">Posture across key areas</span>
             </div>
-            <div className="flex items-end gap-2 h-[72px]" aria-hidden="true">
+            <div className="flex items-end gap-2 h-[62px]" aria-hidden="true">
               {postureBars.map((bar, index) => (
                 <motion.div
                   key={bar.label}
@@ -125,7 +125,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
             </div>
           </motion.div>
 
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {[
               "Prioritized findings",
               "Recommendations matched to your size",

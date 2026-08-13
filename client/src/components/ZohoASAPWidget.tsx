@@ -669,8 +669,10 @@ export const ZohoASAPWidget = ({
   if (!isEnabled) return null;
 
   const dockClear = cookieBannerClear
-    ? "calc(1.25rem + var(--de-section-dock-h, 0px))"
+    ? "calc(0.75rem + env(safe-area-inset-bottom, 0px) + var(--de-section-dock-h, 0px))"
     : "calc(5.75rem + var(--de-section-dock-h, 0px))";
+
+  const canvasRight = "calc(var(--de-canvas-gutter) + 0.75rem)";
 
   const deskWindowStyle = canDrag
     ? deskDrag.pos
@@ -681,7 +683,7 @@ export const ZohoASAPWidget = ({
           bottom: "auto",
         }
       : {
-          right: "calc(var(--de-canvas-gutter) + 0.75rem)",
+          right: canvasRight,
           bottom: dockClear,
           left: "auto",
           top: "auto",
@@ -695,7 +697,7 @@ export const ZohoASAPWidget = ({
         className="fixed z-[100]"
         style={{
           bottom: dockClear,
-          right: "calc(var(--de-canvas-gutter) + 0.75rem)",
+          right: canvasRight,
         }}
         data-testid="widget-zoho-asap-container"
       >

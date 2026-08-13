@@ -147,13 +147,12 @@ html {
 
   /*
    * Sticky MegaMenu clearance (utility bar + main nav).
-   * Utility must clear enlarged text-lg links (~3.25rem); never fix utility
-   * height below content or glyphs clip above the viewport.
+   * Keep these compact so the homepage hero can land in the first viewport.
    * MegaMenu publishes live --de-utility-h / --de-nav-offset from ResizeObserver.
    */
-  --de-utility-h: 3.25rem;
-  --de-nav-h: 6.5rem;
-  --de-nav-h-scrolled: 5.25rem;
+  --de-utility-h: 2.5rem;
+  --de-nav-h: 5.5rem;
+  --de-nav-h-scrolled: 4.5rem;
   --de-nav-chrome: calc(var(--de-utility-h) + var(--de-nav-h));
   --de-spy-h: 0px;
   --de-nav-offset: calc(var(--de-nav-chrome) + var(--de-spy-h) + 0.75rem);

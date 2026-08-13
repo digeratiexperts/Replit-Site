@@ -47,29 +47,28 @@ export const ModernHeroSection = (): JSX.Element => {
           alt=""
           loading="eager"
           decoding="async"
-          className="absolute inset-0 w-full h-full object-cover object-[center_78%] opacity-[0.34]"
+          className="absolute inset-0 w-full h-full object-cover object-[center_82%]"
           style={{
             y: backgroundY,
+            opacity: 0.46,
             WebkitMaskImage:
-              "linear-gradient(to bottom, transparent 0%, transparent 32%, rgba(0,0,0,0.45) 58%, black 82%)",
+              "linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.38) 16%, rgba(0,0,0,0.88) 46%, black 72%)",
             maskImage:
-              "linear-gradient(to bottom, transparent 0%, transparent 32%, rgba(0,0,0,0.45) 58%, black 82%)",
+              "linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.38) 16%, rgba(0,0,0,0.88) 46%, black 72%)",
           }}
         />
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-b from-[#050312] via-[#050312]/82 to-[#050312]/92">
-        <div
-          className="absolute top-[18%] left-0 w-[420px] h-[420px] pointer-events-none opacity-60"
-          aria-hidden="true"
-          style={{
-            background:
-              "radial-gradient(circle at 0% 40%, rgba(236, 72, 153, 0.08) 0%, transparent 62%)",
-          }}
-        />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        aria-hidden="true"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(5,3,18,0.92) 0%, rgba(5,3,18,0.70) 26%, rgba(5,3,18,0.22) 56%, rgba(5,3,18,0.06) 100%), linear-gradient(180deg, rgba(5,3,18,0.72) 0%, rgba(5,3,18,0.28) 34%, rgba(5,3,18,0.08) 62%, rgba(5,3,18,0.38) 100%)",
+        }}
+      >
         <div
           className="absolute top-[8%] right-[-4%] w-[640px] h-[640px] pointer-events-none"
-          aria-hidden="true"
           style={{
             background:
               "radial-gradient(circle at 70% 35%, rgba(236, 72, 153, 0.20) 0%, rgba(139, 92, 246, 0.14) 38%, transparent 64%)",
@@ -78,13 +77,13 @@ export const ModernHeroSection = (): JSX.Element => {
       </div>
 
       <motion.div
-        className="relative z-10 flex flex-1 w-full items-center px-5 sm:px-8 lg:px-12 xl:px-16 pt-[calc(var(--de-nav-offset)+1.25rem)] pb-16 sm:pt-[calc(var(--de-nav-offset)+1.75rem)] sm:pb-20 lg:pt-[calc(var(--de-nav-offset)+2.25rem)] lg:pb-24"
+        className="relative z-10 flex flex-1 w-full items-center px-5 sm:px-8 lg:px-10 xl:px-12 pt-[calc(var(--de-nav-offset)+0.35rem)] pb-16 sm:pb-14 lg:pt-[calc(var(--de-nav-offset)+0.5rem)] lg:pb-16"
         style={{ y }}
       >
         <div className="mx-auto w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 xl:gap-20 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.18fr)_minmax(0,0.82fr)] gap-8 lg:gap-10 xl:gap-12 items-start lg:items-center">
             <motion.div
-              className="flex flex-col gap-6 sm:gap-7 w-full"
+              className="flex flex-col gap-4 sm:gap-5 w-full min-w-0"
               initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: prefersReducedMotion ? 0 : 0.4, ease: "easeOut" }}
@@ -98,25 +97,25 @@ export const ModernHeroSection = (): JSX.Element => {
                 Arizona MSP · Cybersecurity &amp; Managed IT
               </motion.p>
 
-              <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-[4.35rem] font-bold leading-[1.05] tracking-[-0.03em] text-white">
-                Your Arizona business,
+              <h1 className="text-[clamp(2.05rem,3.2vw,3.55rem)] font-bold leading-[1.08] tracking-[-0.03em] text-white">
+                <span className="whitespace-nowrap">Your Arizona business,</span>
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-300 via-pink-400 to-violet-300">
                   protected 24/7.
                 </span>
               </h1>
 
-              <p className="text-base md:text-lg text-white/85 leading-relaxed max-w-xl">
+              <p className="text-[0.95rem] md:text-base text-white/85 leading-relaxed max-w-xl">
                 Cybersecurity and managed IT for growing businesses—reducing risk, supporting
                 compliance, and keeping your team productive without building an internal IT
                 department.
               </p>
 
-              <div className="grid grid-cols-1 xs:grid-cols-2 gap-x-5 gap-y-2 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-2.5">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-2">
                 {features.map((feature, index) => (
                   <motion.div
                     key={feature.text}
-                    className="flex items-center gap-2"
+                    className="flex items-start gap-1.5 min-w-0"
                     initial={prefersReducedMotion ? false : { opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{
@@ -124,22 +123,22 @@ export const ModernHeroSection = (): JSX.Element => {
                       delay: prefersReducedMotion ? 0 : 0.1 + index * 0.03,
                     }}
                   >
-                    <feature.icon className="h-3.5 w-3.5 text-pink-400/90 flex-shrink-0" aria-hidden="true" />
-                    <span className="text-xs sm:text-sm text-white/70">{feature.text}</span>
+                    <feature.icon className="h-3.5 w-3.5 text-pink-400/90 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    <span className="text-[11px] sm:text-xs text-white/70 leading-snug">{feature.text}</span>
                   </motion.div>
                 ))}
               </div>
 
-              <div className="mt-1 flex flex-col items-start gap-4" id="assessment-cta">
+              <div className="mt-0.5 flex flex-col items-start gap-3" id="assessment-cta">
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                   <Button
                     type="button"
                     size="lg"
                     data-testid="button-hero-schedule"
                     onClick={handleSchedule}
-                    className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-semibold bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white border border-pink-300/35 shadow-lg shadow-pink-500/40 hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300"
+                    className="h-12 px-6 sm:px-7 text-base font-semibold bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white border border-pink-300/35 shadow-lg shadow-pink-500/40 hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300"
                   >
-                    {CTA.primary}
+                    {CTA.heroPrimary}
                     <ArrowRight className="ml-2 w-5 h-5" aria-hidden="true" />
                   </Button>
                   <Button
@@ -147,7 +146,7 @@ export const ModernHeroSection = (): JSX.Element => {
                     size="lg"
                     asChild
                     data-testid="button-hero-pricing"
-                    className="h-12 sm:h-14 px-6 sm:px-7 text-base sm:text-lg font-semibold bg-transparent text-white border border-white/35 hover:bg-white/5 hover:border-white/55 shadow-none"
+                    className="h-12 px-6 sm:px-7 text-base font-semibold bg-transparent text-white border border-white/35 hover:bg-white/5 hover:border-white/55 shadow-none"
                   >
                     <Link href={CTA.secondaryHref}>{CTA.secondary}</Link>
                   </Button>
@@ -181,9 +180,9 @@ export const ModernHeroSection = (): JSX.Element => {
               </div>
             </motion.div>
 
-            <div className="hidden lg:flex relative justify-end w-full">
+            <div className="hidden lg:flex relative justify-end w-full lg:pb-8">
               <motion.div
-                className="relative w-full max-w-[520px] xl:max-w-[560px]"
+                className="relative w-full max-w-[500px] xl:max-w-[530px]"
                 initial={prefersReducedMotion ? false : { opacity: 0, x: 22 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{
@@ -219,7 +218,7 @@ export const ModernHeroSection = (): JSX.Element => {
         </div>
       </motion.div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-[#050312] via-[#050312]/80 to-transparent z-10 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#050312]/80 to-transparent z-10 pointer-events-none" />
     </section>
   );
 };

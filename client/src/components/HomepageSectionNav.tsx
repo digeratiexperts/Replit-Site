@@ -17,12 +17,13 @@ const TOP_CHAPTERS = new Set([
   "contact",
 ]);
 
-/** Concise dock chapters — same system, fewer labels. */
+/** Concise dock chapters — same system as the top TOC. */
 const DOCK_CHAPTERS = new Set([
   "hero",
   "stats",
   "services",
   "pricing",
+  "industries",
   "testimonials",
   "contact",
 ]);
@@ -149,7 +150,11 @@ export function HomepageSectionDock() {
   const items = sections
     .map((section, index) => ({ section, index }))
     .filter(({ section }) => DOCK_CHAPTERS.has(section.id));
-  const activeIndex = nearestNavIndex(items, currentSection);
+  const topItems = sections
+    .map((section, index) => ({ section, index }))
+    .filter(({ section }) => TOP_CHAPTERS.has(section.id));
+  const conceptualActiveIndex = nearestNavIndex(topItems, currentSection);
+  const conceptualActiveId = sections[conceptualActiveIndex]?.id;
 
   useEffect(() => {
     const onConsent = () => setCookieClear(true);
@@ -221,7 +226,7 @@ export function HomepageSectionDock() {
 
             <div className="flex items-center gap-1 min-w-0 overflow-x-auto scrollbar-none">
               {items.map(({ section, index }) => {
-                const isActive = activeIndex === index;
+                const isActive = section.id === conceptualActiveId;
                 return (
                   <a
                     key={section.id}
@@ -230,7 +235,7 @@ export function HomepageSectionDock() {
                       event.preventDefault();
                       scrollToSection?.(index);
                     }}
-                    className={`relative inline-flex items-center px-3.5 py-1.5 text-sm font-semibold rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF477F] whitespace-nowrap shrink-0 ${
+                    className={`relative inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF477F] whitespace-nowrap shrink-0 ${
                       isActive
                         ? "bg-[#D3126A] text-white shadow-lg shadow-[#D3126A]/40"
                         : "text-white/75 hover:text-white hover:bg-white/10"
@@ -238,6 +243,12 @@ export function HomepageSectionDock() {
                     aria-current={isActive ? "true" : undefined}
                     data-testid={`nav-dock-${section.id}`}
                   >
+                    {isActive && (
+                      <span
+                        className="h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.85)]"
+                        aria-hidden="true"
+                      />
+                    )}
                     {section.label}
                   </a>
                 );
