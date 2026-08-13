@@ -124,7 +124,6 @@ interface PlanCard {
   bullets: string[];
   gradient: string;
   borderColor: string;
-  popular?: boolean;
   learnMoreUrl: string;
 }
 
@@ -173,7 +172,6 @@ const plans: PlanCard[] = [
     ],
     gradient: "from-violet-500 to-purple-500",
     borderColor: "border-violet-500/40",
-    popular: false,
     learnMoreUrl: pricing.office.learnMoreUrl,
   },
   {
@@ -354,11 +352,6 @@ export default function ProActiveEcosystemPricing() {
                 variants={fadeIn}
                 data-testid={`plan-card-${plan.id}`}
               >
-                {plan.popular && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-gradient-to-r from-violet-500 to-purple-500 text-white text-xs font-semibold">
-                    Most Popular
-                  </span>
-                )}
                 <div className={`inline-flex self-start px-3 py-1 rounded-full bg-gradient-to-r ${plan.gradient} text-white text-xs font-semibold mb-4`}>
                   {plan.shortName}
                 </div>

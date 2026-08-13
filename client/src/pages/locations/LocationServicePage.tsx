@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { DigeratiEnhancedFooterSection } from '@/pages/sections/DigeratiEnhancedFooterSection';
 import { MegaMenu } from '@/components/MegaMenu';
-import { DashboardMockup, AnimatedShield, NetworkNodes } from "@/components/graphics";
+import { DashboardMockup, NetworkNodes } from "@/components/graphics";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -360,9 +360,6 @@ export function LocationServicePage(props: LocationPageProps) {
                   <div className="absolute inset-0 bg-gradient-to-br from-purple-600/30 via-indigo-600/15 to-cyan-600/30 blur-3xl scale-110" />
                   <motion.div className="relative" style={{ transform: "perspective(1200px) rotateY(-8deg) rotateX(3deg)", transformStyle: "preserve-3d" }} animate={{ rotateY: [-8, -5, -8], rotateX: [3, 4, 3] }} transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}>
                     <DashboardMockup className="w-full drop-shadow-2xl" />
-                  </motion.div>
-                  <motion.div className="absolute -top-8 -left-4 w-24 h-28 z-30" animate={{ y: [0, -12, 0], rotate: [0, 5, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
-                    <AnimatedShield className="w-full h-full drop-shadow-lg" />
                   </motion.div>
                   <motion.div className="absolute bottom-4 -right-6 w-32 h-40 opacity-60" animate={{ y: [0, 8, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}>
                     <NetworkNodes className="w-full h-full" />

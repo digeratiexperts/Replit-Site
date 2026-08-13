@@ -1,29 +1,67 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useId, useRef } from "react";
 import { analytics } from "@/lib/analytics";
-import { motion, AnimatePresence } from "framer-motion";
-import { X, Download, ArrowRight, Mail } from "lucide-react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { X, ArrowRight, Mail, Check, CheckCircle2, Phone, ClipboardCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { AnimatedShield } from "@/components/graphics/AnimatedShield";
 import { CTA } from "@/lib/ctaCopy";
+import { IconWell } from "@/components/visual/IconWell";
+
+const PUBLIC_EMAIL_DOMAINS = [
+  "gmail.com",
+  "yahoo.com",
+  "hotmail.com",
+  "outlook.com",
+  "aol.com",
+  "icloud.com",
+];
+
+const BENEFITS = [
+  "Independent findings",
+  "No switch required",
+  "Arizona-based experts",
+  "Practical next steps",
+] as const;
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_DISPLAY = "480-519-5892";
+const PHONE_HREF = "tel:480-519-5892";
 
 interface ExitIntentPopupProps {
   delay?: number;
+}
+
+function validateBusinessEmail(value: string): string | null {
+  const email = value.trim();
+  if (!email) return "Enter your business email.";
+  if (!EMAIL_RE.test(email)) return "Enter a valid email address.";
+  const domain = email.split("@")[1]?.toLowerCase();
+  if (domain && PUBLIC_EMAIL_DOMAINS.includes(domain)) {
+    return "Use your company email — personal inboxes aren’t accepted.";
+  }
+  return null;
 }
 
 export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [hasShown, setHasShown] = useState(false);
   const [email, setEmail] = useState("");
+  const [fieldError, setFieldError] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const { toast } = useToast();
+  const prefersReducedMotion = useReducedMotion();
+  const titleId = useId();
+  const descId = useId();
+  const errorId = useId();
+  const emailRef = useRef<HTMLInputElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   const showPopup = useCallback(() => {
     if (hasShown) return;
-    
+
     const dismissed = sessionStorage.getItem("exitPopupDismissed");
     if (dismissed) return;
 
@@ -57,64 +95,88 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
     };
   }, [delay, showPopup]);
 
-  const handleClose = () => {
+  useEffect(() => {
+    if (!isVisible) return;
+    const t = window.setTimeout(() => emailRef.current?.focus(), 50);
+    return () => window.clearTimeout(t);
+  }, [isVisible]);
+
+  const handleClose = useCallback(() => {
     setIsVisible(false);
     sessionStorage.setItem("exitPopupDismissed", "true");
-  };
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        handleClose();
+        return;
+      }
+      if (e.key !== "Tab" || !dialogRef.current) return;
+      const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), input:not([disabled]), a[href]',
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [isVisible, handleClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      toast({
-        title: "Invalid Email",
-        description: "Please enter a valid email address.",
-        variant: "destructive"
-      });
+    setSubmitError(null);
+
+    const nextError = validateBusinessEmail(email);
+    if (nextError) {
+      setFieldError(nextError);
+      emailRef.current?.focus();
       return;
     }
 
-    const publicDomains = ["gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "aol.com", "icloud.com"];
-    const emailDomain = email.split("@")[1]?.toLowerCase();
-    
-    if (publicDomains.includes(emailDomain)) {
-      toast({
-        title: "Business Email Required",
-        description: "Please use your company email address.",
-        variant: "destructive"
-      });
-      return;
-    }
-
+    setFieldError(null);
     setIsSubmitting(true);
-    
+
     try {
       await apiRequest("POST", "/api/newsletter", {
-        email,
+        email: email.trim(),
         source: "exit_intent_popup",
-        website_url: ""
+        website_url: "",
       });
-      
+
       analytics.exitIntentConverted();
       setIsSuccess(true);
-      toast({
-        title: "Success!",
-        description: "You're on the list — we'll follow up with next steps."
-      });
-      
-      setTimeout(() => {
+
+      window.setTimeout(() => {
         handleClose();
-      }, 3000);
-    } catch (error) {
-      toast({
-        title: "Something went wrong",
-        description: "Please try again or contact us directly.",
-        variant: "destructive"
-      });
+      }, 4000);
+    } catch {
+      setSubmitError("We couldn’t send that. Try again, or call us at 480-519-5892.");
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const motionProps = prefersReducedMotion
+    ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
+    : {
+        initial: { opacity: 0, scale: 0.96, y: 12 },
+        animate: { opacity: 1, scale: 1, y: 0 },
+        exit: { opacity: 0, scale: 0.96, y: 12 },
+        transition: { duration: 0.22, ease: "easeOut" as const },
+      };
 
   return (
     <AnimatePresence>
@@ -124,116 +186,167 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]"
+            className="fixed inset-0 z-[100] bg-black/70"
             onClick={handleClose}
             data-testid="overlay-exit-intent"
           />
-          
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: "spring", duration: 0.5 }}
-            className="fixed inset-0 flex items-center justify-center p-4 z-[101] pointer-events-none"
-            data-testid="popup-exit-intent"
-          >
-            <div className="max-w-lg w-full pointer-events-auto">
-            <div className="relative rounded-2xl overflow-hidden bg-slate-900 border border-violet-500/30 shadow-2xl shadow-violet-500/20">
-              <button
-                onClick={handleClose}
-                className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/10 transition-colors z-10"
-                aria-label="Close popup"
-                data-testid="button-close-exit-popup"
+
+          <div className="pointer-events-none fixed inset-0 z-[101] flex items-center justify-center p-4">
+            <motion.div
+              {...motionProps}
+              className="pointer-events-auto w-full max-w-lg"
+              data-testid="popup-exit-intent"
+            >
+              <div
+                ref={dialogRef}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby={titleId}
+                aria-describedby={descId}
+                className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a] shadow-[0_24px_80px_rgba(0,0,0,0.55)]"
               >
-                <X className="w-5 h-5 text-white/60" />
-              </button>
+                <div
+                  className="h-px bg-gradient-to-r from-transparent via-[#D3126A]/80 to-transparent"
+                  aria-hidden="true"
+                />
 
-              <div className="h-2 bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500" />
+                <button
+                  ref={closeRef}
+                  type="button"
+                  onClick={handleClose}
+                  className="absolute right-2 top-2 z-10 inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg text-white/55 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+                  aria-label="Close"
+                  data-testid="button-close-exit-popup"
+                >
+                  <X className="h-5 w-5" />
+                </button>
 
-              <div className="p-6 md:p-8">
-                {!isSuccess ? (
-                  <>
-                    <div className="flex items-center justify-center mb-6">
-                      <div className="relative" aria-hidden="true">
-                        <div className="absolute inset-0 bg-[#D3126A]/25 rounded-full blur-2xl scale-125" />
-                        <AnimatedShield className="relative w-28 h-36 drop-shadow-[0_0_24px_rgba(211,18,106,0.35)]" />
+                <div className="px-5 pb-6 pt-7 md:px-7 md:pb-7 md:pt-8">
+                  {!isSuccess ? (
+                    <>
+                      <div className="mb-5 flex justify-center">
+                        <IconWell icon={ClipboardCheck} size="md" surface="dark" />
                       </div>
-                    </div>
 
-                    <div className="text-center mb-6">
-                      <h3 className="text-2xl font-bold text-white mb-2">
-                        Wait! Don't Leave Unprotected
-                      </h3>
-                      <p className="text-white/70">
-                        Leave your business email for a{" "}
-                        <span className="text-violet-300 font-semibold">free cyber risk assessment intro</span>
-                        {" "}— an independent look at gaps, with a plan you can run with your current IT or with us.
+                      <div className="mb-5 text-center">
+                        <h2
+                          id={titleId}
+                          className="font-heading text-[1.65rem] font-semibold leading-tight tracking-[-0.02em] text-white md:text-[1.75rem]"
+                        >
+                          Wait! Don&apos;t Leave Unprotected
+                        </h2>
+                        <p id={descId} className="mt-3 text-sm leading-relaxed text-white/70">
+                          Leave your business email for a{" "}
+                          <span className="font-semibold text-[#A78BFA]">
+                            free cyber risk assessment intro
+                          </span>{" "}
+                          — an independent look at gaps, with a plan you can run with your current IT
+                          or with us.
+                        </p>
+                      </div>
+
+                      <ul className="mb-5 grid grid-cols-2 gap-x-3 gap-y-2.5">
+                        {BENEFITS.map((item) => (
+                          <li
+                            key={item}
+                            className="flex items-center gap-2.5 text-sm text-white/75"
+                          >
+                            <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-white/10 bg-violet-500/15">
+                              <Check className="h-3.5 w-3.5 text-[#A78BFA]" aria-hidden="true" />
+                            </span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      <form onSubmit={handleSubmit} className="space-y-3" noValidate>
+                        <div>
+                          <label htmlFor="exit-intent-email" className="sr-only">
+                            Business email
+                          </label>
+                          <div className="relative">
+                            <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
+                            <Input
+                              ref={emailRef}
+                              id="exit-intent-email"
+                              type="email"
+                              autoComplete="email"
+                              inputMode="email"
+                              placeholder="Enter your business email"
+                              value={email}
+                              aria-invalid={fieldError ? true : undefined}
+                              aria-describedby={fieldError ? errorId : undefined}
+                              onChange={(e) => {
+                                setEmail(e.target.value);
+                                if (fieldError) setFieldError(null);
+                                if (submitError) setSubmitError(null);
+                              }}
+                              className="h-11 border-white/15 bg-[#151217] pl-10 text-white placeholder:text-white/40 hover:border-white/25 focus-visible:border-pink-400 focus-visible:ring-pink-400/50"
+                              data-testid="input-exit-popup-email"
+                            />
+                          </div>
+                          {fieldError ? (
+                            <p id={errorId} role="alert" className="mt-2 text-sm text-rose-300">
+                              {fieldError}
+                            </p>
+                          ) : null}
+                          {submitError ? (
+                            <p role="alert" className="mt-2 text-sm text-rose-300">
+                              {submitError}
+                            </p>
+                          ) : null}
+                        </div>
+
+                        <Button
+                          type="submit"
+                          variant="brand"
+                          disabled={isSubmitting}
+                          className="h-11 w-full font-semibold"
+                          data-testid="button-get-checklist"
+                        >
+                          {isSubmitting ? (
+                            "Sending…"
+                          ) : (
+                            <>
+                              {CTA.primary}
+                              <ArrowRight className="h-4 w-4" />
+                            </>
+                          )}
+                        </Button>
+                      </form>
+
+                      <p className="mt-4 text-center text-sm text-white/50">
+                        Prefer to call?{" "}
+                        <a
+                          href={PHONE_HREF}
+                          className="inline-flex items-center gap-1 font-medium text-white/80 underline-offset-2 hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400"
+                        >
+                          <Phone className="h-3.5 w-3.5" aria-hidden="true" />
+                          {PHONE_DISPLAY}
+                        </a>
+                      </p>
+
+                      <p className="mt-3 text-center text-xs leading-relaxed text-white/40">
+                        No spam. Unsubscribe anytime. We respect your privacy.
+                      </p>
+                    </>
+                  ) : (
+                    <div className="py-6 text-center">
+                      <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-emerald-400/20 bg-emerald-500/10">
+                        <CheckCircle2 className="h-6 w-6 text-emerald-400" aria-hidden="true" />
+                      </div>
+                      <h2 className="font-heading text-xl font-semibold tracking-[-0.02em] text-white">
+                        You&apos;re on the list
+                      </h2>
+                      <p className="mt-2 text-sm leading-relaxed text-white/70">
+                        We&apos;ll follow up with assessment next steps — no spam.
                       </p>
                     </div>
-
-                    <div className="grid grid-cols-2 gap-3 mb-6">
-                      {[
-                        "Independent findings",
-                        "No switch required",
-                        "Arizona-based experts",
-                        "Practical next steps"
-                      ].map((item, i) => (
-                        <div key={i} className="flex items-center gap-2 text-sm text-white/60">
-                          <Download className="w-4 h-4 text-violet-400" />
-                          <span>{item}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
-                        <Input
-                          type="email"
-                          placeholder="Enter your business email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-violet-500"
-                          data-testid="input-exit-popup-email"
-                        />
-                      </div>
-                      
-                      <Button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="w-full bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white font-semibold"
-                        data-testid="button-get-checklist"
-                      >
-                        {isSubmitting ? (
-                          "Sending..."
-                        ) : (
-                          <>
-                            {CTA.primary}
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                          </>
-                        )}
-                      </Button>
-                    </form>
-
-                    <p className="text-center text-white/40 text-xs mt-4">
-                      No spam. Unsubscribe anytime. We respect your privacy.
-                    </p>
-                  </>
-                ) : (
-                  <div className="text-center py-8">
-                    <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
-                      <Download className="w-8 h-8 text-emerald-400" />
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-2">You're on the list</h3>
-                    <p className="text-white/70">
-                      We'll follow up with assessment next steps — no spam.
-                    </p>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>

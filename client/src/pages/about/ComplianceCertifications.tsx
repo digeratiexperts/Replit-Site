@@ -1,4 +1,4 @@
-import { Shield, CheckCircle2, FileCheck, Building2, Heart, CreditCard, Lock, Award, ArrowRight, Clock, Users, FileText, ExternalLink } from "lucide-react";
+import { Shield, CheckCircle2, FileCheck, Building2, Heart, CreditCard, Lock, Award, ArrowRight, Clock, Users, FileText, ClipboardCheck } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { MegaMenu } from "@/components/MegaMenu";
@@ -139,13 +139,13 @@ const complianceFrameworks = [
   }
 ];
 
-const certifications = [
-  { name: "Microsoft Partner", logo: "🏆" },
-  { name: "CompTIA Security+", logo: "🛡️" },
-  { name: "Certified Ethical Hacker", logo: "🔐" },
-  { name: "CISSP", logo: "📜" },
-  { name: "AWS Certified", logo: "☁️" },
-  { name: "Azure Certified", logo: "💠" }
+const teamCredentials = [
+  { name: "Microsoft Partner", icon: Award },
+  { name: "CompTIA Security+", icon: FileCheck },
+  { name: "Certified Ethical Hacker", icon: FileCheck },
+  { name: "CISSP", icon: Award },
+  { name: "AWS Certified", icon: Building2 },
+  { name: "Azure Certified", icon: Building2 }
 ];
 
 export default function ComplianceCertifications() {
@@ -168,8 +168,8 @@ export default function ComplianceCertifications() {
               data-testid="section-hero-compliance"
             >
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6" data-testid="badge-compliance-header">
-                <Shield className="w-4 h-4 text-violet-400" />
-                <span className="text-violet-300 text-sm font-medium">Compliance & Certifications</span>
+                <ClipboardCheck className="w-4 h-4 text-violet-400" />
+                <span className="text-violet-300 text-sm font-medium">Compliance & risk reporting</span>
               </div>
               
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6" data-testid="heading-compliance-hero">
@@ -180,19 +180,21 @@ export default function ComplianceCertifications() {
               </h1>
               
               <p className="text-xl text-white/70 mb-8 max-w-3xl mx-auto" data-testid="text-compliance-description">
-                From HIPAA to CMMC to PCI-DSS, we help Arizona businesses achieve, maintain, and demonstrate 
-                regulatory compliance with comprehensive security programs tailored to your industry.
+                From HIPAA to CMMC to PCI-DSS, we help Arizona businesses map controls, gather evidence,
+                and prepare for audits and cyber-insurance reviews. Framework names describe customer
+                requirements — Digerati is not SOC 2 Type II certified and does not certify your organization.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
                   asChild
                   size="lg"
-                  className="bg-white text-violet-700 hover:bg-violet-50 font-semibold px-8"
+                  variant="brand"
+                  className="px-8 font-semibold"
                   data-testid="button-compliance-assessment"
                 >
                   <a href="/book">
-                    Get Compliance Assessment
+                    {CTA.primary}
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </a>
                 </Button>
@@ -343,13 +345,13 @@ export default function ComplianceCertifications() {
         <section className="py-16 border-t border-white/10" data-testid="section-team-certifications">
           <div className="container mx-auto px-6">
             <div className="text-center mb-12">
-              <h2 className="text-2xl font-bold text-white mb-2" data-testid="heading-certifications">Our Team Certifications</h2>
-              <p className="text-white/60">Industry-recognized credentials backing our expertise</p>
+              <h2 className="text-2xl font-bold text-white mb-2" data-testid="heading-certifications">Team credentials</h2>
+              <p className="text-white/60">Industry credentials held across the practice — not a substitute for a customer’s own audit.</p>
             </div>
             <div className="flex flex-wrap justify-center gap-6" data-testid="list-certifications">
-              {certifications.map((cert, i) => (
+              {teamCredentials.map((cert, i) => (
                 <div key={i} className="flex items-center gap-3 px-6 py-3 rounded-xl bg-white/[0.04] border border-white/10" data-testid={`badge-certification-${i}`}>
-                  <span className="text-2xl">{cert.logo}</span>
+                  <cert.icon className="h-5 w-5 text-[#A78BFA]" aria-hidden="true" />
                   <span className="text-white/80 font-medium">{cert.name}</span>
                 </div>
               ))}
@@ -362,22 +364,23 @@ export default function ComplianceCertifications() {
           <div className="container mx-auto px-6">
             <div className="max-w-3xl mx-auto text-center">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                Ready to Achieve Compliance?
+                Map your compliance gaps
               </h2>
               <p className="text-white/70 mb-8">
-                Schedule a free compliance assessment to understand your current posture, identify gaps, 
-                and create a roadmap to full compliance.
+                Start with a Cyber Risk Assessment to understand current posture, identify gaps,
+                and decide what to run with your current IT or with us.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
                   asChild
                   size="lg"
-                  className="bg-white text-violet-700 hover:bg-violet-50 font-semibold px-8"
+                  variant="brand"
+                  className="px-8 font-semibold"
                   data-testid="button-schedule-assessment"
                 >
                   <a href="/book">
                     {CTA.primary}
-                    <ExternalLink className="ml-2 h-4 w-4" />
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
                 <Button

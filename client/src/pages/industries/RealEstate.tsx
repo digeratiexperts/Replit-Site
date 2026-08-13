@@ -1,8 +1,8 @@
 import { PageTemplate } from "@/components/PageTemplate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { CheckCircle, AlertCircle, DollarSign, Shield, Lock, TrendingDown, Zap } from "lucide-react";
+import { CheckCircle, AlertCircle, Shield, Lock } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
+import { CTA } from "@/lib/ctaCopy";
 
 export default function RealEstate() {
   useSEO({
@@ -11,11 +11,11 @@ export default function RealEstate() {
       "Protect Arizona brokerages from wire fraud and BEC with managed email security, MFA, and accountable IT support.",
     canonical: "/industries/real-estate",
   });
-  const wirefraudStats = [
-    { stat: "$1.9B", label: "Annual Fraud Losses", icon: DollarSign, color: "text-red-600" },
-    { stat: "45%", label: "Year-over-Year Increase", icon: TrendingDown, color: "text-orange-600" },
-    { stat: "98%", label: "Reported by Email", icon: AlertCircle, color: "text-amber-600" },
-    { stat: "3 mins", label: "Average Compromise Time", icon: Zap, color: "text-violet-400" }
+  const focusAreas = [
+    { title: "Wire instruction fraud", body: "Verify-before-send workflows and mailbox protection for closings.", icon: Shield },
+    { title: "Business email compromise", body: "MFA, email filtering, and staff awareness for brokerages.", icon: AlertCircle },
+    { title: "Transaction data", body: "Access control for contracts, IDs, and shared deal rooms.", icon: Lock },
+    { title: "Local accountability", body: "Arizona team you can call when a wire looks wrong.", icon: CheckCircle },
   ];
 
   return (
@@ -27,19 +27,16 @@ export default function RealEstate() {
       <div className="space-y-16">
         {/* Wire Fraud Statistics - Modern Dashboard */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {wirefraudStats.map((item, idx) => {
+          {focusAreas.map((item) => {
             const Icon = item.icon;
             return (
-              <div key={idx} className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-orange-400 rounded-xl blur opacity-0 group-hover:opacity-20 transition-all" />
-                <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:shadow-lg transition-all">
-                  <CardContent className="pt-6">
-                    <Icon className={`h-6 w-6 ${item.color} mb-3`} />
-                    <p className="text-3xl font-bold text-white">{item.stat}</p>
-                    <p className="text-sm text-gray-400 mt-2">{item.label}</p>
-                  </CardContent>
-                </Card>
-              </div>
+              <Card key={item.title} className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:shadow-lg transition-all">
+                <CardContent className="pt-6">
+                  <Icon className="h-6 w-6 text-[#A78BFA] mb-3" />
+                  <p className="font-semibold text-white">{item.title}</p>
+                  <p className="text-sm text-gray-400 mt-2 leading-relaxed">{item.body}</p>
+                </CardContent>
+              </Card>
             );
           })}
         </div>
@@ -146,34 +143,32 @@ export default function RealEstate() {
         </div>
 
         {/* Protection ROI */}
-        <div className="grid md:grid-cols-3 gap-6 bg-gradient-to-r from-violet-600 to-purple-600 rounded-xl p-8 text-white">
+        <div className="grid md:grid-cols-3 gap-6 rounded-xl border border-white/10 bg-[#151217] p-8 text-white">
           <div className="text-center">
-            <p className="text-4xl font-bold mb-2">$0</p>
-            <p className="text-white/70">Fraud Losses (Protected Agents)</p>
+            <p className="text-lg font-semibold mb-2">Verify before you wire</p>
+            <p className="text-white/70 text-sm">Out-of-band confirmation for instruction changes — not a claimed $0-loss guarantee.</p>
           </div>
-          <div className="text-center border-l border-r border-violet-400">
-            <p className="text-4xl font-bold mb-2">100%</p>
-            <p className="text-white/70">Closings Protected</p>
+          <div className="text-center md:border-l md:border-r border-white/10 md:px-6">
+            <p className="text-lg font-semibold mb-2">Mailbox defenses</p>
+            <p className="text-white/70 text-sm">MFA and email protection sized to how brokerages actually work.</p>
           </div>
           <div className="text-center">
-            <p className="text-4xl font-bold mb-2">1 click</p>
-            <p className="text-white/70">Verify Wire Instructions</p>
+            <p className="text-lg font-semibold mb-2">Someone to call</p>
+            <p className="text-white/70 text-sm">Arizona team when a closing looks off — 480-519-5892.</p>
           </div>
         </div>
 
         {/* CTA */}
-        <div className="bg-gradient-to-r from-violet-600 to-purple-600 rounded-xl p-8 text-center text-white">
+        <div className="rounded-xl border border-white/10 bg-[#151217] p-8 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Protect Your Transactions Today</h2>
-          <p className="text-lg mb-6 text-white/70">Free security assessment for real estate professionals.</p>
+          <p className="text-lg mb-6 text-white/70">Start with a Cyber Risk Assessment for your brokerage.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 
               href="/book" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center bg-white text-violet-700 hover:bg-violet-50 px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
+              className="inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-8 py-3 rounded-lg font-semibold transition-all border border-pink-300/25"
               data-testid="button-schedule-real-estate"
             >
-              Get Security Assessment
+              {CTA.primary}
             </a>
             <a 
               href="tel:480-519-5892"

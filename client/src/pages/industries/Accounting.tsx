@@ -1,7 +1,6 @@
 import { PageTemplate } from "@/components/PageTemplate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Shield, Lock, FileText, AlertCircle, DollarSign, TrendingUp, Activity } from "lucide-react";
+import { CheckCircle, Shield, Lock, FileText, AlertCircle, DollarSign, Activity } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { CTA } from "@/lib/ctaCopy";
 
@@ -12,11 +11,11 @@ export default function Accounting() {
       "Managed IT and security for Arizona accounting and finance firms — stop BEC, protect tax season systems, and meet cyber-insurance expectations.",
     canonical: "/industries/accounting-finance",
   });
-  const metrics = [
-    { label: "Compliance Pass Rate", value: "99.8%", icon: CheckCircle, color: "text-emerald-500" },
-    { label: "Avg. Audit Findings", value: "0.2", icon: TrendingUp, color: "text-violet-400" },
-    { label: "Data Protection", value: "256-bit", icon: Lock, color: "text-violet-400" },
-    { label: "Uptime Guarantee", value: "99.95%", icon: Activity, color: "text-violet-400" }
+  const capabilities = [
+    { label: "Tax-season systems", value: "Identity, email, and backup owned through busy season", icon: Activity },
+    { label: "Client data", value: "Access control and encryption for workpapers and portals", icon: Lock },
+    { label: "Insurance reviews", value: "Evidence and control mapping carriers typically ask for", icon: FileText },
+    { label: "BEC / wire fraud", value: "MFA, email protection, and verification workflows", icon: Shield }
   ];
 
   return (
@@ -28,19 +27,15 @@ export default function Accounting() {
       <div className="space-y-16">
         {/* Key Metrics - Modern Dashboard Style */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {metrics.map((metric, idx) => {
-            const Icon = metric.icon;
+          {capabilities.map((item, idx) => {
+            const Icon = item.icon;
             return (
               <div key={idx} className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-purple-500 rounded-xl blur opacity-0 group-hover:opacity-20 transition-all duration-300" />
                 <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:border-white/20 hover:shadow-lg transition-all">
                   <CardContent className="pt-6">
-                    <div className="flex items-start justify-between mb-3">
-                      <Icon className={`h-6 w-6 ${metric.color}`} />
-                      <Badge variant="outline" className="text-xs border-white/20 text-gray-300">Key Metric</Badge>
-                    </div>
-                    <p className="text-gray-400 text-sm">{metric.label}</p>
-                    <p className="text-3xl font-bold mt-2 text-white">{metric.value}</p>
+                    <Icon className="h-6 w-6 text-[#A78BFA] mb-3" />
+                    <p className="text-white font-semibold">{item.label}</p>
+                    <p className="text-sm text-gray-400 mt-2 leading-relaxed">{item.value}</p>
                   </CardContent>
                 </Card>
               </div>
@@ -156,31 +151,31 @@ export default function Accounting() {
         </div>
 
         {/* ROI Visualization */}
-        <div className="grid md:grid-cols-3 gap-6 bg-gradient-to-r from-violet-600 to-purple-600 rounded-xl p-8 text-white">
+        <div className="grid md:grid-cols-3 gap-6 rounded-xl border border-white/10 bg-[#151217] p-8 text-white">
           <div className="text-center">
-            <p className="text-4xl font-bold mb-2">7 → 0</p>
-            <p className="text-white/70">Audit Findings Eliminated</p>
+            <p className="text-lg font-semibold mb-2">Audit readiness</p>
+            <p className="text-white/70 text-sm">Control mapping and evidence for reviews — not a claim that findings disappear.</p>
           </div>
-          <div className="text-center border-l border-r border-violet-400">
-            <p className="text-4xl font-bold mb-2">25%</p>
-            <p className="text-white/70">Insurance Premium Reduction</p>
+          <div className="text-center md:border-l md:border-r border-white/10 md:px-6">
+            <p className="text-lg font-semibold mb-2">Insurance questions</p>
+            <p className="text-white/70 text-sm">Documentation carriers typically request. Premium outcomes vary by underwriter.</p>
           </div>
           <div className="text-center">
-            <p className="text-4xl font-bold mb-2">100%</p>
-            <p className="text-white/70">Compliance Automation</p>
+            <p className="text-lg font-semibold mb-2">Repeatable reporting</p>
+            <p className="text-white/70 text-sm">Security and compliance reporting as an operating practice, not a one-time binder.</p>
           </div>
         </div>
 
         {/* CTA */}
-        <div className="bg-gradient-to-r from-violet-600 to-purple-600 rounded-xl p-8 text-center text-white">
+        <div className="rounded-xl border border-white/10 bg-[#151217] p-8 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Ready to Protect Your Firm?</h2>
-          <p className="text-lg mb-6 text-white/70">Get a compliance assessment from MSP experts.</p>
+          <p className="text-lg mb-6 text-white/70">Start with a Cyber Risk Assessment from Arizona MSP experts.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 
               href="/book" 
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center bg-white text-violet-700 hover:bg-violet-50 px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
+              className="inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-8 py-3 rounded-lg font-semibold transition-all border border-pink-300/25"
               data-testid="button-schedule-accounting"
             >
               {CTA.primary}

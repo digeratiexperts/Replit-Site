@@ -1,12 +1,9 @@
 import { useState, useRef, useEffect, useCallback, useId } from 'react';
 import { Link } from 'wouter';
-import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink, X, ArrowRight, Monitor, Cloud, Lock, Zap, HeadphonesIcon, Building, BarChart3, ClipboardCheck, Layers, TrendingUp, Star, CheckCircle, Award, LayoutGrid, Heart } from 'lucide-react';
+import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink, X, ArrowRight, Monitor, Cloud, Lock, Zap, HeadphonesIcon, Building, BarChart3, ClipboardCheck, Layers, TrendingUp, Star, CheckCircle, Award, LayoutGrid, BookOpen, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import logoImage from '@assets/DE-Logo-new_1762461524794.webp';
-import ebookCover from '@/assets/images/ebook-defending-digital-realm-cover.png';
-import socImage from '@assets/lucid-origin_cybersecurity_operations_center_actively_stopping_1775870357913.jpg';
-import socTeamImage from '@assets/lucid-origin_modern_cybersecurity_operations_center_with_a_sma_1775870491267.jpg';
-import officeRecoveryImage from '@assets/lucid-origin_business_office_recovering_from_a_cyber_attack_IT_1775870566593.jpg';
+import { IconWell } from '@/components/visual/IconWell';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { pricing } from '@/data/pricing';
@@ -298,7 +295,7 @@ export function MegaMenu() {
           items: [
             { title: 'Mission & Values', description: 'Our commitment to partnership', icon: <Star className="h-5 w-5" />, url: '/about/mission-values' },
             { title: 'Case Studies', description: 'Arizona business success stories', icon: <TrendingUp className="h-5 w-5" />, url: '/resources/case-studies' },
-            { title: 'Meet The Experts', description: 'Our certified Chandler team', icon: <Users className="h-5 w-5" />, url: '/about/team' },
+            { title: 'Meet The Experts', description: 'Chandler, AZ team', icon: <Users className="h-5 w-5" />, url: '/about/team' },
             { title: 'Client Bill of Rights', description: 'Our 8 pledges to you', icon: <Award className="h-5 w-5" />, url: '/about/client-bill-of-rights' },
             { title: '100% Guarantee', description: '30-day money-back promise', icon: <CheckCircle className="h-5 w-5" />, url: '/about/guarantee' },
             { title: '21 Questions to Ask', description: 'Before hiring any IT company', icon: <ClipboardCheck className="h-5 w-5" />, url: '/about/21-questions' },
@@ -858,7 +855,6 @@ export function MegaMenu() {
                             >
                               {/* Hexagon pattern background */}
                               <HexagonPattern id={uniqueId} />
-                              <img src={officeRecoveryImage} alt="" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-[0.08]" />
                               
                               <div className="relative z-10">
                                 <h4 className="font-bold text-white text-base mb-4 flex items-center gap-2">
@@ -887,116 +883,81 @@ export function MegaMenu() {
                             </motion.div>
                           )}
                           
-                          {/* Featured Case Study for Industries */}
                           {item.name === 'Industries' && (
-                            <motion.div 
-                              className="bg-gradient-to-br from-purple-900/30 to-violet-900/20 border border-white/10 rounded-xl overflow-hidden flex flex-col flex-1 min-h-[240px] hover:border-violet-500/40 transition-colors group"
+                            <motion.div
+                              className="flex flex-1 flex-col rounded-xl border border-white/10 bg-[#151217] p-5"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: 0.2 }}
                               data-testid="menu-featured-industries"
                             >
-                              <div className="relative h-40 overflow-hidden">
-                                <img 
-                                  src={socImage} 
-                                  alt="Cybersecurity Operations Center" 
-                                  loading="lazy"
-                                  decoding="async"
-                                  width={320}
-                                  height={128}
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0826] via-transparent to-transparent" />
-                                <div className="absolute top-2 left-2">
-                                  <span className="bg-violet-600/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Case Study</span>
-                                </div>
-                              </div>
-                              <div className="p-3 flex flex-col flex-1">
-                                <h4 className="text-sm font-semibold text-white mb-1 leading-tight">How We Stopped a Ransomware Attack on an AZ Medical Practice</h4>
-                                <p className="text-xs text-gray-400 mb-3 flex-1">Our 24/7 SOC detected and neutralized the threat in under 4 minutes, saving $2.3M in potential damages.</p>
-                                <a 
-                                  href="/resources/case-studies" 
-                                  className="inline-flex items-center text-xs font-semibold text-violet-400 hover:text-violet-300 transition-colors"
-                                  data-testid="link-featured-case-study-industries"
-                                >
-                                  Read the Full Story
-                                  <ArrowRight className="w-3 h-3 ml-1.5" />
-                                </a>
-                              </div>
+                              <IconWell icon={Building} size="sm" surface="dark" />
+                              <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45">Arizona industries</p>
+                              <h4 className="mt-1 text-sm font-semibold leading-snug text-white">Healthcare, legal, accounting, and more</h4>
+                              <p className="mt-2 flex-1 text-xs leading-relaxed text-white/55">
+                                Industry-specific IT and security — we publish client stories with permission.
+                              </p>
+                              <a
+                                href="/resources/case-studies"
+                                className="mt-4 inline-flex items-center text-xs font-semibold text-[#A78BFA] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400"
+                                data-testid="link-featured-case-study-industries"
+                                onClick={handleLinkClick}
+                              >
+                                See case studies
+                                <ArrowRight className="ml-1.5 h-3 w-3" />
+                              </a>
                             </motion.div>
                           )}
 
-                          {/* Featured Team Spotlight for About */}
                           {item.name === 'About' && (
-                            <motion.div 
-                              className="bg-gradient-to-br from-purple-900/30 to-violet-900/20 border border-white/10 rounded-xl overflow-hidden flex flex-col flex-1 min-h-[240px] hover:border-violet-500/40 transition-colors group"
+                            <motion.div
+                              className="flex flex-1 flex-col rounded-xl border border-white/10 bg-[#151217] p-5"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: 0.2 }}
                               data-testid="menu-featured-about"
                             >
-                              <div className="relative h-40 overflow-hidden">
-                                <img 
-                                  src={socTeamImage} 
-                                  alt="Digerati Experts Security Operations Team" 
-                                  loading="lazy"
-                                  decoding="async"
-                                  width={320}
-                                  height={128}
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0826] via-transparent to-transparent" />
-                                <div className="absolute top-2 left-2">
-                                  <span className="bg-emerald-600/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Our Team</span>
-                                </div>
-                              </div>
-                              <div className="p-3 flex flex-col flex-1">
-                                <h4 className="text-sm font-semibold text-white mb-1 leading-tight">Your Dedicated Arizona Security Operations Team</h4>
-                                <p className="text-xs text-gray-400 mb-3 flex-1">Certified experts monitoring your business 24/7 from our Chandler, AZ operations center.</p>
-                                <a 
-                                  href="/about/team" 
-                                  className="inline-flex items-center text-xs font-semibold text-violet-400 hover:text-violet-300 transition-colors"
-                                  data-testid="link-featured-team-about"
-                                >
-                                  Meet the Experts
-                                  <ArrowRight className="w-3 h-3 ml-1.5" />
-                                </a>
-                              </div>
+                              <IconWell icon={MapPin} size="sm" surface="dark" />
+                              <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45">Chandler, AZ</p>
+                              <h4 className="mt-1 text-sm font-semibold leading-snug text-white">Local accountability</h4>
+                              <p className="mt-2 flex-1 text-xs leading-relaxed text-white/55">
+                                An Arizona team you can reach — not an anonymous remote NOC.
+                              </p>
+                              <a
+                                href="/about/team"
+                                className="mt-4 inline-flex items-center text-xs font-semibold text-[#A78BFA] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400"
+                                data-testid="link-featured-team-about"
+                                onClick={handleLinkClick}
+                              >
+                                Meet the experts
+                                <ArrowRight className="ml-1.5 h-3 w-3" />
+                              </a>
                             </motion.div>
                           )}
 
-                          {/* Ebook Feature for Resources */}
                           {item.name === 'Resources' && (
-                            <motion.div 
-                              className="bg-gradient-to-br from-orange-900/20 to-amber-900/10 border border-orange-500/20 rounded-xl p-5 flex flex-col flex-1 min-h-[240px] hover:border-orange-500/40 transition-colors"
+                            <motion.div
+                              className="flex flex-1 flex-col rounded-xl border border-white/10 bg-[#151217] p-5"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: 0.2 }}
                               data-testid="menu-ebook-feature"
                             >
-                              <Link 
+                              <Link
                                 href="/resources/ebook/defending-digital-realm"
                                 onClick={handleLinkClick}
-                                className="flex flex-col h-full"
+                                className="flex h-full flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400"
                               >
-                                <div className="flex-1 flex items-center justify-center mb-3">
-                                  <img 
-                                    src={ebookCover} 
-                                    alt="Defending the Digital Realm ebook" 
-                                    loading="lazy"
-                                    decoding="async"
-                                    width={120}
-                                    height={144}
-                                    className="max-h-36 w-auto rounded-lg shadow-lg shadow-orange-500/20 border border-orange-500/30"
-                                  />
-                                </div>
-                                <div className="text-center">
-                                  <span className="inline-block bg-white text-orange-600 text-xs font-bold px-2 py-1 rounded mb-2">
-                                    FREE EBOOK
-                                  </span>
-                                  <p className="text-sm font-semibold text-white mb-1">Defending the Digital Realm</p>
-                                  <p className="text-xs text-white/60">A Cyber Risk Assessment Framework for Modern Businesses</p>
-                                </div>
+                                <IconWell icon={BookOpen} size="sm" surface="dark" />
+                                <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45">Free ebook</p>
+                                <h4 className="mt-1 text-sm font-semibold leading-snug text-white">Defending the Digital Realm</h4>
+                                <p className="mt-2 flex-1 text-xs leading-relaxed text-white/55">
+                                  A cyber risk assessment framework for modern businesses.
+                                </p>
+                                <span className="mt-4 inline-flex items-center text-xs font-semibold text-[#A78BFA]">
+                                  Read the ebook
+                                  <ArrowRight className="ml-1.5 h-3 w-3" />
+                                </span>
                               </Link>
                             </motion.div>
                           )}

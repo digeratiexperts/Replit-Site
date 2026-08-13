@@ -11,6 +11,7 @@ import {
 import { useSEO } from "@/hooks/useSEO";
 import { ServiceJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
 import { pricing } from "@/data/pricing";
+import { CTA } from "@/lib/ctaCopy";
 
 type InclusionStatus = "included" | "limited" | "optional" | "not-included";
 
@@ -261,11 +262,12 @@ function StickyCTA() {
           <Button
             asChild
             size="sm"
-            className="bg-white text-violet-700 hover:bg-violet-50 font-semibold"
+            variant="brand"
+            className="font-semibold"
             data-testid="btn-sticky-consultation"
           >
             <a href="/book">
-              Schedule Consultation
+              {CTA.primary}
               <ArrowRight className="ml-2 h-4 w-4" />
             </a>
           </Button>
@@ -327,7 +329,7 @@ export default function OfficePage() {
               <div className="max-w-3xl">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/20 border border-violet-500/30 text-violet-300 text-sm font-medium mb-6">
                   <Shield className="w-4 h-4" />
-                  Popular for small offices
+                  Fit for small offices
                 </div>
                 
                 <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
@@ -409,7 +411,7 @@ export default function OfficePage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <Check className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                    <span>Security baseline that stops 95% of common threats</span>
+                    <span>Security baseline for identity, endpoints, and email</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <Check className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
@@ -448,7 +450,7 @@ export default function OfficePage() {
             <div className="max-w-lg mx-auto">
               <div className="relative bg-gradient-to-b from-violet-600/20 to-transparent rounded-2xl border-2 border-violet-500 overflow-hidden">
                 <div className="absolute top-0 left-0 right-0 bg-violet-600 text-white text-center text-sm py-1.5 font-medium">
-                  Popular for Small Offices
+                  Small-office operating model
                 </div>
                 <div className="p-8 pt-12">
                   <h3 className="text-3xl font-bold text-white mb-2">Office</h3>
@@ -474,12 +476,13 @@ export default function OfficePage() {
 
                   <Button
                     asChild
-                    className="w-full bg-white text-violet-700 hover:bg-violet-50 font-semibold"
+                    variant="brand"
+                    className="w-full font-semibold"
                     size="lg"
                     data-testid="btn-package-consultation"
                   >
                     <a href="/book">
-                      Schedule Consultation
+                      {CTA.primary}
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
