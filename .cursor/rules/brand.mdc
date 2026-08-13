@@ -36,10 +36,11 @@ SOPHISTICATED 3D / DIGITAL VISUALIZATION
 Think high-end enterprise technology product visualization rather than generic cybersecurity artwork.
 ## COLOR
 Primary environment:
-- near black `#0a0a0a`
-- charcoal `#151217`
-- graphite `--de-bg` `#050312` / `--de-surface` `#0a0714`
-- dark gray
+- near black `#0a0a0a` (`--de-surface`, marketing field)
+- charcoal `#151217` (`--de-raised`, cards)
+- graphite `--de-bg` `#050312` (deep well)
+- hairline `--de-hairline` `rgba(255,255,255,0.1)`
+- paper `--de-paper` `#f7f5f2`
 Accent:
 - deep violet `#5B45E0` / `#7c3aed`
 - restrained purple `#8B5CF6`

@@ -1,6 +1,6 @@
 # Design rationale library
 
-Use this folder with the mandatory root `.cursorrules` policy (sections 4–14, 27–28, 31, 40–42).
+Use this folder with the mandatory root `.cursorrules` policy (sections 4ï¿½14, 27ï¿½28, 31, 40ï¿½42).
 
 Design OS (tokens, brand, UX, imagery): `DESIGN_SYSTEM.md`, `BRAND.md`, `UX_PRINCIPLES.md`, `IMAGERY.md`. Cursor execution layer: `.cursor/rules/ui-ux.mdc`, `brand.mdc`, `frontend.mdc`. Audit before implementing: `.cursor/skills/visual-audit/SKILL.md`.
 
@@ -14,7 +14,7 @@ Design OS (tokens, brand, UX, imagery): `DESIGN_SYSTEM.md`, `BRAND.md`, `UX_PRIN
 | `design/IMAGERY.md` | Dark technical sculpture system; concept-not-noun |
 | `design/references/` | Inspiration and competitor/industry refs (not yet approved for DE) |
 | `design/approved/` | Ship-quality examples agents should match or elevate toward |
-| `design/rejected/` | Anti-patterns — do not recreate these looks or structures |
+| `design/rejected/` | Anti-patterns ï¿½ do not recreate these looks or structures |
 
 ## How agents should use this
 
@@ -23,6 +23,10 @@ Design OS (tokens, brand, UX, imagery): `DESIGN_SYSTEM.md`, `BRAND.md`, `UX_PRIN
 3. Prefer elevating existing DE sections in place over inventing new layouts.
 4. After browser verification, if DE accepts or rejects a direction, drop a short note + screenshot into `approved/` or `rejected/` with why.
 
+## Homepage shade system (2026-08)
+
+Steal Lucide.devâ€™s nested neutrals, not their layout. Adjacent dark homepage sections share `--de-surface` (`#0a0a0a`) with a 1px `--de-hairline` or a single lift from `--de-bg` (`#050312`). Cards sit on `--de-raised` (`#151217`). Light leftovers use one `--de-paper` (`#f7f5f2`) recipe. Magenta how-it-works stays the only loud band. Do not call Meshy for UI chrome.
+
 ## Naming
 
-Prefer descriptive filenames, e.g. `homepage-hero-fullbleed-2026-08.png` plus a sibling `.md` with 2–5 bullets on why it works or fails.
+Prefer descriptive filenames, e.g. `homepage-hero-fullbleed-2026-08.png` plus a sibling `.md` with 2ï¿½5 bullets on why it works or fails.

@@ -51,7 +51,7 @@ export const ModernHeroSection = (): JSX.Element => {
         />
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/70 to-[#050312]/95" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/70 to-de-bg/95" />
       <div
         className="pointer-events-none absolute inset-0"
         aria-hidden="true"

@@ -7,7 +7,7 @@ import { ArrowRight, ShieldCheck, FileText, Scale, Star } from "lucide-react";
  */
 export function HomepageProofSection() {
   return (
-    <section id="proof" className="py-14 lg:py-20 bg-[#0a0a0a]">
+    <section id="proof" className="de-dark-chapter py-14 lg:py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-pink-300/90 mb-3">
           Trust & transparency

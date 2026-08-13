@@ -127,10 +127,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
   return (
     <section
       id="testimonials"
-      className="relative overflow-hidden py-14 md:py-18 lg:py-20"
-      style={{
-        background: "linear-gradient(180deg, #0a0a0a 0%, #0f0f1a 50%, #0a0a0a 100%)",
-      }}
+      className="de-dark-chapter relative overflow-hidden py-14 md:py-18 lg:py-20"
       data-testid="section-client-proof"
     >
       <div className="mx-auto max-w-[100rem] px-3 sm:px-4 lg:px-6">

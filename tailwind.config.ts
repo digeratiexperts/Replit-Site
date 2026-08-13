@@ -50,6 +50,15 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        de: {
+          bg: "var(--de-bg)",
+          surface: "var(--de-surface)",
+          raised: "var(--de-raised)",
+          hairline: "var(--de-hairline)",
+          paper: "var(--de-paper)",
+          "paper-raised": "var(--de-paper-raised)",
+          "paper-hairline": "var(--de-paper-hairline)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

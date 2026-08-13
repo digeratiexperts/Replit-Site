@@ -27,7 +27,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section id="pricing" className="relative bg-[#0a0a0a] py-16 md:py-20 lg:py-24">
+    <section id="pricing" className="de-dark-chapter relative py-16 md:py-20 lg:py-24">
       <div className="relative z-10 mx-auto max-w-[100rem] px-3 sm:px-4 lg:px-6">
         <motion.div
           className="mx-auto mb-10 max-w-5xl md:mb-12 lg:text-left"
@@ -61,7 +61,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
-                className="relative flex flex-col rounded-2xl border border-white/10 bg-[#141418] p-6"
+                className="relative flex flex-col rounded-2xl border border-de-hairline bg-de-raised p-6"
                 data-testid={`pricing-summary-${key}`}
               >
                 <p className="text-sm font-semibold text-white/50">{tier.fullName}</p>
@@ -93,7 +93,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
           })}
         </div>
 
-        <div className="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-[#151217] md:mt-10">
+        <div className="mt-8 overflow-hidden rounded-2xl border border-de-hairline bg-de-raised md:mt-10">
           <div className="grid gap-0 lg:grid-cols-12 lg:items-stretch">
             <div className="relative flex min-h-[11rem] items-center justify-center px-4 py-6 sm:min-h-[13rem] lg:col-span-4 lg:px-6">
               {isApprovedStill(homepageSectionAccents.pricingEcosystem) ? (

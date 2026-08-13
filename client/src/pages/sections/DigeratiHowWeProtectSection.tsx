@@ -49,7 +49,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
 
   return (
     <>
-      <section className="relative bg-white py-16 lg:py-24">
+      <section className="de-paper-chapter relative py-16 lg:py-24">
         <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
           <motion.div
             className="mb-12 max-w-2xl md:mb-16"

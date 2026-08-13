@@ -35,7 +35,7 @@ function FactCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.45, delay: index * 0.06 }}
-      className="h-full rounded-2xl border border-white/10 bg-[#151217] p-6 md:p-7"
+      className="h-full rounded-2xl border border-de-hairline bg-de-raised p-6 md:p-7"
       data-testid={`homepage-stat-${index}`}
     >
       <IconWell icon={Icon} size="sm" surface="dark" />
@@ -64,7 +64,7 @@ export const DigeratiStatsSection = (): JSX.Element => {
   const facts = getHomepageCyberFacts();
 
   return (
-    <section className="relative bg-[#0a0a0a] py-16 lg:py-24">
+    <section className="de-dark-chapter de-chapter-hairline relative py-16 lg:py-24">
       <div className="relative mx-auto max-w-[100rem] px-3 sm:px-4 lg:px-6">
         <div className="mb-10 grid items-center gap-8 lg:mb-12 lg:grid-cols-12 lg:gap-10">
           <motion.div

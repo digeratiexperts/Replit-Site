@@ -109,10 +109,17 @@ html {
   }
 }
 
-/* Brand tokens — shared dark cyber + magenta theme */
+/* Brand tokens — shared dark cyber + magenta theme.
+ * Shade ladder (Lucide lesson, DE hex): bg → surface → raised, 1px hairline.
+ * Do not invent leftover grays (#0f0f0f, #0f0f1a, #141418, cool #F7FAFC). */
 :root {
   --de-bg: #050312;
-  --de-surface: #0a0714;
+  --de-surface: #0a0a0a;
+  --de-raised: #151217;
+  --de-hairline: rgba(255, 255, 255, 0.1);
+  --de-paper: #f7f5f2;
+  --de-paper-raised: #ffffff;
+  --de-paper-hairline: rgba(26, 18, 16, 0.1);
   --de-fg: #ffffff;
   --de-muted: rgba(255, 255, 255, 0.85);
   --de-muted-soft: rgba(255, 255, 255, 0.72);
@@ -168,9 +175,29 @@ html {
   padding-top: var(--de-nav-offset);
 }
 
-/* Paper chapter — warm, not leftover cool gray (#F7FAFC). */
+/* Dark chapters share one field. Adjacent siblings use a hairline, not a new gray. */
+.de-dark-well {
+  background-color: var(--de-bg);
+}
+.de-dark-chapter {
+  background-color: var(--de-surface);
+}
+.de-dark-raised {
+  background-color: var(--de-raised);
+}
+.de-chapter-hairline {
+  border-top: 1px solid var(--de-hairline);
+}
+
+/* Paper chapter — one warm recipe. Raised cards sit on it with paper hairlines. */
 .de-paper-chapter {
-  background-color: #f7f5f2;
+  background-color: var(--de-paper);
+}
+.de-paper-raised {
+  background-color: var(--de-paper-raised);
+}
+.de-paper-hairline {
+  border-top: 1px solid var(--de-paper-hairline);
 }
 
 /* Hairline fade between dark graphite and paper chapters. No parallax. */
@@ -183,12 +210,12 @@ html {
   position: absolute;
   inset: 0 0 auto 0;
   height: 56px;
-  background: linear-gradient(to bottom, rgba(5, 3, 18, 0.12), transparent);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--de-bg) 12%, transparent), transparent);
 }
 @media (prefers-reduced-motion: reduce) {
   .de-chapter-fade-from-dark::before {
     height: 24px;
-    background: linear-gradient(to bottom, rgba(5, 3, 18, 0.08), transparent);
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--de-bg) 8%, transparent), transparent);
   }
 }
 
@@ -201,7 +228,7 @@ html {
   position: absolute;
   inset: auto 0 0 0;
   height: 72px;
-  background: linear-gradient(to bottom, transparent, #050312);
+  background: linear-gradient(to bottom, transparent, var(--de-bg));
 }
 @media (prefers-reduced-motion: reduce) {
   .de-chapter-fade-to-dark::after {

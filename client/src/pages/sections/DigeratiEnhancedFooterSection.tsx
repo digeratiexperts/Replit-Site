@@ -135,7 +135,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
   ];
 
   return (
-    <footer className="relative bg-[#0f0f0f] border-t border-violet-500/20 overflow-hidden">
+    <footer className="de-dark-well de-chapter-hairline relative overflow-hidden">
       <CircuitOverlay />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.08),transparent_50%)] pointer-events-none" />
       
@@ -151,7 +151,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 mb-12 border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
           {/* Quick Access - Dark Style */}
-          <div className="p-8 bg-[#0a0a0a] relative group border-r border-white/10 transition-colors hover:bg-[#0d0d0d]">
+          <div className="p-8 bg-de-surface relative group border-r border-de-hairline transition-colors hover:bg-de-raised">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(139,92,246,0.08)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider relative z-10">Quick Access</h4>
             <ul className="space-y-3 relative z-10">
@@ -181,7 +181,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           </div>
 
           {/* Legal - Dark Style (same as Quick Access) */}
-          <div className="p-8 bg-[#0a0a0a] relative group border-r border-white/10 transition-colors hover:bg-[#0d0d0d]">
+          <div className="p-8 bg-de-surface relative group border-r border-de-hairline transition-colors hover:bg-de-raised">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,rgba(139,92,246,0.08)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider relative z-10">Legal</h4>
             <ul className="space-y-3 relative z-10">
@@ -324,7 +324,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
               )}
             </div>
             
-            <div className="p-8 bg-[#0a0a0a] border border-white/10 rounded-3xl h-full flex flex-col justify-center relative overflow-hidden group hover:bg-[#0d0d0d] transition-colors">
+            <div className="p-8 bg-de-surface border border-de-hairline rounded-3xl h-full flex flex-col justify-center relative overflow-hidden group hover:bg-de-raised transition-colors">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_100%_100%,rgba(139,92,246,0.05)_0%,transparent_70%)]" />
               <h4 className="text-white text-sm font-semibold mb-6 uppercase tracking-wider relative z-10 text-center">
                 Serving Greater Phoenix

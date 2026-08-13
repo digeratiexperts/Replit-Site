@@ -50,7 +50,7 @@ export const DigeratiAlertBanner = (): JSX.Element => {
   };
 
   return (
-    <section className="relative overflow-hidden border-t border-white/10 bg-[#050312] py-12 lg:py-16">
+    <section className="de-dark-well de-chapter-hairline relative overflow-hidden py-12 lg:py-16">
       <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
         <motion.div
           className="mb-12 text-center md:mb-16"
@@ -81,7 +81,7 @@ export const DigeratiAlertBanner = (): JSX.Element => {
               data-testid={feature.testId}
               className="group relative"
             >
-              <div className="relative h-full rounded-2xl border border-white/10 bg-[#151217] p-6 transition-colors duration-300 group-hover:border-white/20">
+              <div className="relative h-full rounded-2xl border border-de-hairline bg-de-raised p-6 transition-colors duration-300 group-hover:border-white/20">
                 <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl border border-white/10 bg-white/5">
                   <feature.icon className="h-7 w-7 text-[#A78BFA]" />
                 </div>
@@ -98,7 +98,7 @@ export const DigeratiAlertBanner = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: prefersReducedMotion ? 0 : 0.15 }}
         >
-          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#151217] px-8 py-10 md:px-12 md:py-12">
+          <div className="relative overflow-hidden rounded-2xl border border-de-hairline bg-de-raised px-8 py-10 md:px-12 md:py-12">
             <div className="relative z-10 text-center">
               <h3 className="mb-4 text-2xl font-bold text-white md:text-3xl">
                 Ready to Secure Your Business?

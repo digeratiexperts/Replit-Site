@@ -92,7 +92,7 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
   return (
     <section 
       ref={sectionRef}
-      className="py-10 md:py-14 lg:py-16 relative overflow-hidden bg-[#0a0a0a]"
+      className="de-dark-chapter relative overflow-hidden py-10 md:py-14 lg:py-16"
       style={{ position: 'relative' }}
     >
       {/* Parallax violet accent glow */}
@@ -186,8 +186,8 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
           </button>
 
           {/* Gradient edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+          <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-de-surface to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-de-surface to-transparent z-10 pointer-events-none" />
 
           <div 
             ref={scrollContainerRef}

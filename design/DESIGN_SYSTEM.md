@@ -17,19 +17,24 @@ Enterprise
 
 ## Color
 
-Background:
-`#0a0a0a` (marketing/page field; also MegaMenu, store, footer)
-`--de-bg` `#050312` (shared dark-cyber token)
+Shade ladder (Lucide lesson, DE hex — nested, not leftover slabs):
 
-Surface:
-`#151217` (cards, e.g. engage-path cards)
-`--de-surface` `#0a0714`
+`--de-bg` `#050312` — deepest well (hero, credibility, closing CTA/contact/footer)
+`--de-surface` `#0a0a0a` — marketing field (adjacent dark sections share this)
+`--de-raised` `#151217` — cards / lifted panels
+`--de-hairline` `rgba(255,255,255,0.1)` — 1px borders and chapter seams
+`--de-paper` `#f7f5f2` — one light chapter recipe
+`--de-paper-raised` `#ffffff` — cards on paper
+`--de-paper-hairline` `rgba(26,18,16,0.1)`
+
+Adjacent same-chapter dark sections share `--de-surface` with a hairline or a single 1-step lift from `--de-bg`. Do not paint `#0f0f0f`, `#0f0f1a`, `#141418`, or cool `#F7FAFC` as competing page fields.
+
 DE Desk shell `#1a0b33`
 Nested dark `#12141c` / `#171922`
 Nested light `#ffffff` / `#faf8fc` (Desk chat insert only)
 
 Border:
-`white/10` `rgba(255,255,255,0.1)`
+`--de-hairline` / `white/10` `rgba(255,255,255,0.1)`
 `white/15` `rgba(255,255,255,0.15)`
 `--radius` `0.5rem` (shadcn)
 
@@ -75,7 +80,7 @@ Do not introduce a new purple, magenta, or near-black. Reuse these.
 - Container: centered, padding `1rem`, `2xl` max `1680px`
 - Sticky nav clearance: `--de-nav-offset` (MegaMenu ResizeObserver)
 - Homepage section jumps live in MegaMenu (`HomepageOnPageNav`) — no floating bottom dock
-- Dark marketing cards: `rounded-2xl border border-white/10 bg-[#151217]` with Lucide in `IconWell` (muted violet well)
+- Dark marketing cards: `rounded-2xl border border-de-hairline bg-de-raised` with Lucide in `IconWell` (muted violet well)
 - Section padding pattern: `py-10 md:py-14 lg:py-16` (and nearby variants already in sections)
 - Touch targets: ~44×44px where practical (`min-h-11`)
 

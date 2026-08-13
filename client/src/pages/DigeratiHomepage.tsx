@@ -72,7 +72,7 @@ export const DigeratiHomepage = (): JSX.Element => {
   return (
     <FullPageScrollProvider sections={homepageSections} enableOnMobile={false}>
       {/* Ask DE sits bottom-right; extra lift only while the cookie banner is visible */}
-      <div className="min-h-screen bg-[#050312] pb-8">
+      <div className="de-dark-well min-h-screen pb-8">
         <OrganizationJsonLd />
         <WebSiteJsonLd />
         {/* Navigation — chat lives in App MarketingChrome sitewide */}

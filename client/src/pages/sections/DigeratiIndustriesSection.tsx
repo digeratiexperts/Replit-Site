@@ -137,7 +137,7 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
   return (
     <section 
       ref={sectionRef}
-      className="py-10 md:py-14 lg:py-16 bg-[#0a0a0a] relative overflow-hidden"
+      className="de-dark-chapter relative overflow-hidden py-10 md:py-14 lg:py-16"
       style={{ position: 'relative' }}
     >
       {/* Parallax background accents */}
@@ -213,8 +213,8 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
           </button>
 
           {/* Gradient fade edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-de-surface to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-de-surface to-transparent z-10 pointer-events-none" />
 
           {/* Scrollable container */}
           <div 

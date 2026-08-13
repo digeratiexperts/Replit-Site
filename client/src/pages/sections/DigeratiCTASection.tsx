@@ -15,15 +15,10 @@ export const DigeratiCTASection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
   
   return (
-    <section className="py-12 lg:py-16 bg-[#0a0a0a] relative overflow-hidden">
+    <section className="de-dark-well relative overflow-hidden py-12 lg:py-16">
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <img src={ctaBgImage} alt="" loading="lazy" className="absolute top-0 left-0 w-full h-auto opacity-[0.15]" />
       </div>
-      {/* Subtle purple glow */}
-      <div 
-        className="absolute inset-0 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse at 50% 50%, rgba(139, 92, 246, 0.10) 0%, transparent 60%)" }}
-      />
       
       <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-6 text-center relative z-10">
         {/* Animated headline with light sweep */}
@@ -164,9 +159,6 @@ export const DigeratiCTASection = (): JSX.Element => {
           </div>
         </motion.div>
       </div>
-      
-      {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a0118] to-transparent pointer-events-none" />
     </section>
   );
 };

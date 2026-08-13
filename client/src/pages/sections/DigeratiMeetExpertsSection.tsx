@@ -24,22 +24,9 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
 
   return (
     <section
-      className="relative overflow-hidden bg-[#0a0a0a] py-10 md:py-14 lg:py-16"
+      className="de-dark-chapter de-chapter-hairline relative overflow-hidden py-10 md:py-14 lg:py-16"
       data-testid="section-meet-experts"
     >
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#D3126A]/70 to-transparent"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute -right-24 top-1/2 h-[28rem] w-[28rem] -translate-y-1/2 rounded-full bg-[#D3126A]/18 blur-3xl"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute right-[8%] top-16 h-40 w-40 rounded-full bg-[#5B45E0]/20 blur-3xl"
-        aria-hidden="true"
-      />
-
       <div className="relative z-10 mx-auto max-w-[100rem] px-3 sm:px-4 lg:px-6">
         <motion.div
           className="mb-8 md:mb-10"
@@ -69,7 +56,7 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
             initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "200px" }}
-            className="self-stretch overflow-hidden rounded-2xl border border-white/10 bg-[#111] lg:col-span-5"
+            className="self-stretch overflow-hidden rounded-2xl border border-de-hairline bg-de-raised lg:col-span-5"
           >
             <img
               src="/images/founder/joe-petro-studio-blazer-white.jpg"

@@ -17,7 +17,7 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
   const { openBooking } = useBooking();
 
   return (
-    <section className="py-20 relative overflow-hidden bg-[#0a0a0a]">
+    <section className="de-dark-chapter relative overflow-hidden py-20">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{

@@ -53,7 +53,7 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section className="relative bg-[#0a0a0a] py-16 lg:py-24">
+    <section className="de-dark-chapter relative py-16 lg:py-24">
       <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
         <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-16">
           <motion.div

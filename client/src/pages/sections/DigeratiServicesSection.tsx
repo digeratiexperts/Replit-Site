@@ -110,7 +110,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
   return (
     <section
       id="services"
-      className="relative overflow-hidden bg-[#0a0a0a] py-14 md:py-18 lg:py-22"
+      className="de-dark-chapter relative overflow-hidden py-14 md:py-18 lg:py-22"
     >
       <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
         <motion.div
@@ -143,13 +143,13 @@ export const DigeratiServicesSection = (): JSX.Element => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.08 }}
-                className="flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#151217]"
+                className="flex h-full flex-col overflow-hidden rounded-2xl border border-de-hairline bg-de-raised"
                 data-testid={path.testId}
               >
                 {visual ? (
                   <EngagePathVisual still={visual} alt={visual.alt} />
                 ) : (
-                  <div className="flex aspect-[5/3] items-center justify-center bg-[#151217]">
+                  <div className="flex aspect-[5/3] items-center justify-center bg-de-raised">
                     <IconWell icon={Icon} size="md" surface="dark" />
                   </div>
                 )}
