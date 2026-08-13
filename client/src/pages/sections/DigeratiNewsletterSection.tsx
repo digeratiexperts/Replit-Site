@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { motion, useReducedMotion } from "framer-motion";
-import { PatternOverlay, DiagonalDivider } from "@/components/SectionPatterns";
 
 // Import avatar strip image
 import avatarsImg from "@assets/Frame-2131330726_1767027918695.png";
@@ -62,22 +61,7 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
   ];
 
   return (
-    <section 
-      className="py-14 md:py-24 pt-16 md:pt-32 pb-16 md:pb-32 relative overflow-hidden"
-      style={{ 
-        background: 'linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 50%, #E2E8F0 100%)'
-      }}
-    >
-      {/* Subtle diagonal transition with violet accent */}
-      <DiagonalDivider position="bottom" toColor="#0a0a0a" height={50} angle="right" />
-      
-      {/* Pattern overlay */}
-      <PatternOverlay variant="dots" opacity={0.025} />
-      
-      {/* Background decoration */}
-      <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-violet-200/30 rounded-full blur-[120px]" />
-      </div>
+    <section className="de-paper-chapter de-chapter-fade-to-dark relative overflow-hidden py-14 pb-24 pt-16 md:py-24 md:pb-32 md:pt-24">
 
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
         <div className="max-w-4xl mx-auto">

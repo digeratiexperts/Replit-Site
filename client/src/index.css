@@ -168,6 +168,47 @@ html {
   padding-top: var(--de-nav-offset);
 }
 
+/* Paper chapter — warm, not leftover cool gray (#F7FAFC). */
+.de-paper-chapter {
+  background-color: #f7f5f2;
+}
+
+/* Hairline fade between dark graphite and paper chapters. No parallax. */
+.de-chapter-fade-from-dark {
+  position: relative;
+}
+.de-chapter-fade-from-dark::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 56px;
+  background: linear-gradient(to bottom, rgba(5, 3, 18, 0.12), transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .de-chapter-fade-from-dark::before {
+    height: 24px;
+    background: linear-gradient(to bottom, rgba(5, 3, 18, 0.08), transparent);
+  }
+}
+
+.de-chapter-fade-to-dark {
+  position: relative;
+}
+.de-chapter-fade-to-dark::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 72px;
+  background: linear-gradient(to bottom, transparent, #050312);
+}
+@media (prefers-reduced-motion: reduce) {
+  .de-chapter-fade-to-dark::after {
+    height: 32px;
+  }
+}
+
 /* Homepage statement band — violet → magenta → coral. Not a page-wide wash. */
 .de-brand-energy-band {
   background-color: #d3126a;

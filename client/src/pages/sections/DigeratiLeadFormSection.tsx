@@ -8,7 +8,6 @@ import { ArrowRight, Loader2, Check, Shield, Clock, CheckCircle } from "lucide-r
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { PatternOverlay, DiagonalDivider } from "@/components/SectionPatterns";
 import { CTA } from "@/lib/ctaCopy";
 
 const formSchema = z.object({
@@ -84,20 +83,8 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
   return (
     <section 
       id="assessment-form"
-      className="py-[80px] pt-32 pb-32 relative overflow-hidden"
-      style={{ 
-        background: 'linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 50%, #E2E8F0 100%)'
-      }}
+      className="de-paper-chapter de-chapter-fade-from-dark relative overflow-hidden py-[80px] pt-32 pb-24"
     >
-      {/* Subtle diagonal transition with violet accent */}
-      <DiagonalDivider position="bottom" toColor="#0a0a0a" height={50} angle="right" />
-      
-      {/* Pattern overlay */}
-      <PatternOverlay variant="dots" opacity={0.025} />
-      
-      {/* Accent glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-purple-300/10 rounded-full blur-[100px] pointer-events-none z-0" />
-      
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
         <div className="max-w-4xl mx-auto">
           <motion.div 
