@@ -1,6 +1,6 @@
 import { MegaMenu } from "@/components/MegaMenu";
 import { FullPageScrollProvider, ScrollSectionAuto } from "@/components/FullPageScroll";
-import { HomepageConversionBar } from "@/components/HomepageConversionBar";
+import { HomepageSectionDock } from "@/components/HomepageSectionNav";
 import { useEffect } from "react";
 import { useSEO } from "@/hooks/useSEO";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/JsonLd";
@@ -42,7 +42,7 @@ const homepageSections: { id: string; label: string; theme: 'dark' | 'light'; sh
   { id: 'industries', label: 'Industries', theme: 'dark' },
   { id: 'pricing', label: 'Packages', theme: 'dark' },
   { id: 'insights', label: 'Insights', theme: 'dark', showInNav: false },
-  { id: 'faq', label: 'FAQ', theme: 'light', showInNav: false },
+  { id: 'faq', label: 'FAQ', theme: 'light' },
   { id: 'cta', label: 'Next step', theme: 'dark', showInNav: false },
   { id: 'contact', label: 'Contact', theme: 'dark' },
 ];
@@ -78,7 +78,7 @@ export const DigeratiHomepage = (): JSX.Element => {
         <WebSiteJsonLd />
         {/* Navigation — chat lives in App MarketingChrome sitewide */}
         <MegaMenu />
-        <HomepageConversionBar />
+        <HomepageSectionDock />
 
         {/* Home — Cybersecurity-First hero + Assessment / Talk to Expert CTAs */}
         <ScrollSectionAuto id="hero">

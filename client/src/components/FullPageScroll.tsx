@@ -11,7 +11,7 @@ interface ScrollSection {
 interface FullPageScrollContextType {
   currentSection: number;
   totalSections: number;
-  scrollToSection: (index: number) => void;
+  scrollToSection: (index: number, opts?: { hash?: boolean }) => void;
   isSnapEnabled: boolean;
   toggleSnap: () => void;
   currentTheme: 'dark' | 'light';
@@ -66,14 +66,22 @@ export function FullPageScrollProvider({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const scrollToSection = useCallback((index: number) => {
+  const scrollToSection = useCallback((index: number, opts?: { hash?: boolean }) => {
     if (index < 0 || index >= sections.length) return;
     
     const sectionElement = document.getElementById(sections[index].id);
     if (sectionElement) {
       isScrollingRef.current = true;
-      sectionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      sectionElement.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
       setCurrentSection(index);
+
+      if (opts?.hash !== false) {
+        const nextHash = `#${sections[index].id}`;
+        if (window.location.hash !== nextHash) {
+          history.pushState(null, "", nextHash);
+        }
+      }
       
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
@@ -220,6 +228,26 @@ export function FullPageScrollProvider({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isMobile, enableOnMobile, currentSection, sections.length, scrollToSection]);
+
+  useEffect(() => {
+    const onHashNav = () => {
+      const id = window.location.hash.replace("#", "");
+      if (!id) {
+        scrollToSection(0, { hash: false });
+        return;
+      }
+      const idx = sections.findIndex((section) => section.id === id);
+      if (idx >= 0) {
+        scrollToSection(idx, { hash: false });
+      }
+    };
+    window.addEventListener("popstate", onHashNav);
+    window.addEventListener("hashchange", onHashNav);
+    return () => {
+      window.removeEventListener("popstate", onHashNav);
+      window.removeEventListener("hashchange", onHashNav);
+    };
+  }, [sections, scrollToSection]);
 
   const effectiveSnapEnabled = isSnapEnabled && (!isMobile || enableOnMobile);
 

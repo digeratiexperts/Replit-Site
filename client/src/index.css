@@ -142,6 +142,8 @@ html {
   --de-canvas: 100rem;
   --de-canvas-gutter: max(0px, calc((100vw - var(--de-canvas)) / 2));
   --de-conversion-bar-h: 0px;
+  --de-section-dock-h: 0px;
+  --de-spy-h: 0px;
 
   /*
    * Sticky MegaMenu clearance (utility bar + main nav).

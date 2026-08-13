@@ -9,7 +9,7 @@ import * as Tooltip from '@radix-ui/react-tooltip';
 import { pricing } from '@/data/pricing';
 import { useBooking } from '@/contexts/BookingContext';
 import { useOptionalFullPageScroll } from '@/components/FullPageScroll';
-import { HomepageOnPageNav } from '@/components/HomepageOnPageNav';
+import { HomepageOnPageNav } from '@/components/HomepageSectionNav';
 import { PORTAL_LOGIN } from '@/lib/portalUrls';
 import { CTA } from '@/lib/ctaCopy';
 
@@ -1001,6 +1001,15 @@ export function MegaMenu() {
         </div>
 
         <div ref={spyBarRef} className="w-full">
+          <HomepageOnPageNav />
+        </div>
+
+        <div
+          ref={spyBarRef}
+          className={`w-full overflow-hidden motion-reduce:transition-none ${
+            isScrolled ? "lg:hidden" : ""
+          }`}
+        >
           <HomepageOnPageNav />
         </div>
 

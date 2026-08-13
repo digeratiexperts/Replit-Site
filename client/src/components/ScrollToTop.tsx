@@ -73,8 +73,8 @@ export const ScrollToTop = () => {
           className="fixed z-50 p-3 bg-violet-600/90 hover:bg-violet-500 text-white rounded-full shadow-lg shadow-violet-500/25 backdrop-blur-sm border border-violet-500/30 transition-colors duration-200 group"
           style={{
             bottom: cookieBannerClear
-              ? "calc(5.5rem + var(--de-conversion-bar-h, 0px))"
-              : "calc(7.5rem + var(--de-conversion-bar-h, 0px))",
+              ? "calc(5.5rem + var(--de-section-dock-h, 0px))"
+              : "calc(7.5rem + var(--de-section-dock-h, 0px))",
             right: "calc(var(--de-canvas-gutter) + 1.25rem)",
           }}
           aria-label="Scroll to top"

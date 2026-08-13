@@ -41,6 +41,7 @@ import { PORTAL_LOGIN } from "@/lib/portalUrls";
 import type { OpenMspAdvisorDetail } from "@/lib/openMspAdvisor";
 import { STORE_ADVISOR_SEED } from "@/lib/openMspAdvisor";
 import { analytics } from "@/lib/analytics";
+import { useDraggableWindow } from "@/hooks/useDraggableWindow";
 
 interface ZohoASAPWidgetProps {
   isEnabled?: boolean;
@@ -236,8 +237,23 @@ export const ZohoASAPWidget = ({
       return false;
     }
   });
+  const [canDrag, setCanDrag] = useState(false);
+
+  const deskDrag = useDraggableWindow({
+    enabled: canDrag,
+    open: isOpen,
+    storageKey: "de-desk-window-pos",
+  });
 
   const { toast } = useToast();
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 640px)");
+    const sync = () => setCanDrag(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   useEffect(() => {
     if (cookieBannerClear) return;
@@ -652,20 +668,37 @@ export const ZohoASAPWidget = ({
 
   if (!isEnabled) return null;
 
+  const dockClear = cookieBannerClear
+    ? "calc(1.25rem + var(--de-section-dock-h, 0px))"
+    : "calc(5.75rem + var(--de-section-dock-h, 0px))";
+
+  const deskWindowStyle = canDrag
+    ? deskDrag.pos
+      ? {
+          left: deskDrag.pos.x,
+          top: deskDrag.pos.y,
+          right: "auto",
+          bottom: "auto",
+        }
+      : {
+          right: "calc(var(--de-canvas-gutter) + 0.75rem)",
+          bottom: dockClear,
+          left: "auto",
+          top: "auto",
+        }
+    : undefined;
+
   return (
     <>
-      {/* Bottom-right utility — cookie banner lifts it; no second nav bar */}
+      {!isOpen && (
       <div
         className="fixed z-[100]"
         style={{
-          bottom: cookieBannerClear
-            ? "calc(1.25rem + var(--de-conversion-bar-h, 0px))"
-            : "calc(5.75rem + var(--de-conversion-bar-h, 0px))",
+          bottom: dockClear,
           right: "calc(var(--de-canvas-gutter) + 0.75rem)",
         }}
         data-testid="widget-zoho-asap-container"
       >
-        {!isOpen && (
           <button
             type="button"
             onClick={() => setIsOpen(true)}
@@ -683,11 +716,14 @@ export const ZohoASAPWidget = ({
               <span className="block text-[11px] leading-4 text-white/55">We&apos;re here to help.</span>
             </span>
           </button>
-        )}
+      </div>
+      )}
 
         {isOpen && (
           <section
-            className="fixed inset-x-3 top-[max(0.75rem,env(safe-area-inset-top))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[100] flex max-h-[100dvh] w-auto flex-col overflow-hidden rounded-[1.5rem] border-[3px] border-[#A78BFA]/75 bg-[#1a0b33] shadow-[0_0_0_1px_rgba(196,181,253,0.45),0_0_0_6px_rgba(124,58,237,0.22),0_28px_80px_rgba(50,15,90,0.7),0_0_100px_rgba(139,92,246,0.4)] sm:absolute sm:inset-auto sm:bottom-0 sm:right-0 sm:top-auto sm:h-[min(760px,calc(100dvh-5.5rem))] sm:max-h-[min(86vh,calc(100dvh-4.5rem))] sm:w-[460px] sm:max-w-[calc(100vw-2rem)]"
+            ref={deskDrag.panelRef}
+            className="fixed inset-x-3 top-[max(0.75rem,env(safe-area-inset-top))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[100] flex max-h-[100dvh] w-auto flex-col overflow-hidden rounded-[1.5rem] border-[3px] border-[#A78BFA]/75 bg-[#1a0b33] shadow-[0_0_0_1px_rgba(196,181,253,0.45),0_0_0_6px_rgba(124,58,237,0.22),0_28px_80px_rgba(50,15,90,0.7),0_0_100px_rgba(139,92,246,0.4)] sm:inset-auto sm:h-[min(760px,calc(100dvh-5.5rem))] sm:max-h-[min(86vh,calc(100dvh-4.5rem))] sm:w-[460px] sm:max-w-[calc(100vw-2rem)]"
+            style={deskWindowStyle}
             role="dialog"
             aria-modal="true"
             aria-label="DE Desk help"
@@ -703,7 +739,20 @@ export const ZohoASAPWidget = ({
 
             {/* Shared chrome — same for all three tabs */}
             <header className="relative flex flex-shrink-0 items-center justify-between gap-3 px-4 pb-1 pt-4">
-              <div className="flex min-w-0 items-center gap-3">
+              <div
+                className={`flex min-w-0 flex-1 items-center gap-3 ${
+                  canDrag
+                    ? deskDrag.dragging
+                      ? "cursor-grabbing select-none"
+                      : "cursor-grab select-none"
+                    : ""
+                }`}
+                onPointerDown={canDrag ? deskDrag.onHandlePointerDown : undefined}
+                onDoubleClick={canDrag ? deskDrag.reset : undefined}
+                style={canDrag ? { touchAction: "none" } : undefined}
+                data-testid="desk-drag-handle"
+                aria-label={canDrag ? "Move DE Desk window" : undefined}
+              >
                 <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#D3126A] to-[#7c3aed] text-[12px] font-bold tracking-wide text-white shadow-[0_0_22px_rgba(211,18,106,0.4)]">
                   DE
                   <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#1a0b33] bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.85)]" />
@@ -1421,7 +1470,6 @@ export const ZohoASAPWidget = ({
             </footer>
           </section>
         )}
-      </div>
 
       {customCSS && <style dangerouslySetInnerHTML={{ __html: customCSS }} />}
     </>
