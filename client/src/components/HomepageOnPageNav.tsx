@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Shield } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { useOptionalFullPageScroll } from "@/components/FullPageScroll";
 
 const ON_PAGE_IDS = new Set([
@@ -11,24 +10,13 @@ const ON_PAGE_IDS = new Set([
   "contact",
 ]);
 
-interface HomepageOnPageNavProps {
-  variant: "desktop" | "mobile";
-  onOpen?: () => void;
-  onNavigate?: () => void;
-}
-
 /**
- * Homepage-only section jumps, folded into MegaMenu chrome.
- * Replaces the floating bottom dock so primary nav stays a single layer.
+ * Homepage-only slim scroll spy under MegaMenu.
+ * MegaMenu remains the only full nav; this row only jumps in-page sections.
  */
-export function HomepageOnPageNav({
-  variant,
-  onOpen,
-  onNavigate,
-}: HomepageOnPageNavProps) {
+export function HomepageOnPageNav() {
   const ctx = useOptionalFullPageScroll();
-  const [open, setOpen] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLElement>(null);
   const sections = ctx?.sections ?? [];
   const currentSection = ctx?.currentSection ?? 0;
   const scrollToSection = ctx?.scrollToSection;
@@ -51,125 +39,71 @@ export function HomepageOnPageNav({
   })();
 
   useEffect(() => {
-    if (!open) return;
-    const onPointer = (event: MouseEvent) => {
-      if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
+    const root = document.documentElement;
+    const el = rootRef.current;
+    if (!el) {
+      root.style.setProperty("--de-spy-h", "0px");
+      return;
+    }
+
+    const publish = () => {
+      root.style.setProperty("--de-spy-h", `${Math.round(el.offsetHeight)}px`);
     };
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("mousedown", onPointer);
-    document.addEventListener("keydown", onKey);
+    publish();
+    const ro = new ResizeObserver(publish);
+    ro.observe(el);
     return () => {
-      document.removeEventListener("mousedown", onPointer);
-      document.removeEventListener("keydown", onKey);
+      ro.disconnect();
+      root.style.setProperty("--de-spy-h", "0px");
     };
-  }, [open]);
+  }, [ctx]);
+
+  if (!ctx || items.length === 0) return null;
 
   const goTo = (index: number) => {
-    setOpen(false);
-    onNavigate?.();
     scrollToSection?.(index);
   };
 
-  if (!ctx) return null;
-
-  if (variant === "mobile") {
-    return (
-      <nav aria-label="On this page" className="mb-4 pb-4 border-b border-white/10">
-        <p className="flex items-center gap-2 px-4 mb-2 text-xs font-semibold uppercase tracking-wider text-white/45">
-          <Shield className="w-3.5 h-3.5 text-[#FF477F]" aria-hidden="true" />
-          Protected?
-        </p>
-        <p className="px-4 mb-3 text-sm text-white/55">On this page</p>
-        <div className="flex flex-col">
-          {items.map(({ section, index }) => {
-            const isActive = activeIndex === index;
-            return (
-              <a
-                key={section.id}
-                href={`#${section.id}`}
-                onClick={(event) => {
-                  event.preventDefault();
-                  goTo(index);
-                }}
-                className={`flex min-h-11 items-center px-4 py-3 text-base font-semibold rounded-xl transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 ${
-                  isActive
-                    ? "bg-white/10 text-white"
-                    : "text-white/80 hover:text-white hover:bg-white/5"
-                }`}
-                aria-current={isActive ? "true" : undefined}
-                data-testid={`nav-dot-${section.id}`}
-              >
-                {section.label}
-              </a>
-            );
-          })}
-        </div>
-      </nav>
-    );
-  }
-
   return (
-    <div className="relative hidden lg:block" ref={rootRef}>
-      <button
-        type="button"
-        className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-white/80 hover:text-white rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-        aria-expanded={open}
-        aria-haspopup="menu"
-        aria-label="On this page"
-        data-testid="nav-on-this-page"
-        onClick={() => {
-          setOpen((prev) => {
-            const next = !prev;
-            if (next) onOpen?.();
-            return next;
-          });
-        }}
-      >
-        <Shield className="w-3.5 h-3.5 text-[#FF477F]" aria-hidden="true" />
-        <span>Protected?</span>
-        <ChevronDown
-          className={`w-3.5 h-3.5 transition-transform ${open ? "rotate-180" : ""}`}
-          aria-hidden="true"
-        />
-      </button>
-      {open && (
-        <div
-          role="menu"
-          aria-label="On this page"
-          className="absolute right-0 top-[calc(100%+0.5rem)] z-[70] min-w-[13.5rem] rounded-xl border border-white/12 bg-[#0a0a0a] p-2 shadow-[0_16px_40px_rgba(0,0,0,0.45)]"
-        >
-          <p className="px-3 pt-1.5 pb-2 text-[11px] font-semibold uppercase tracking-wider text-white/40">
-            On this page
-          </p>
+    <nav
+      ref={rootRef}
+      aria-label="On this page"
+      data-testid="homepage-section-spy"
+      className="border-t border-white/[0.08] bg-black/90"
+    >
+      <div className="mx-auto flex max-w-[100rem] items-stretch px-2 sm:px-3 xl:px-5">
+        <ul className="flex w-full min-h-9 items-stretch justify-start overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] lg:justify-center [&::-webkit-scrollbar]:hidden">
           {items.map(({ section, index }) => {
             const isActive = activeIndex === index;
             return (
-              <a
-                key={section.id}
-                href={`#${section.id}`}
-                role="menuitem"
-                onClick={(event) => {
-                  event.preventDefault();
-                  goTo(index);
-                }}
-                className={`flex min-h-11 items-center px-3 py-2 text-sm font-semibold rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 ${
-                  isActive
-                    ? "bg-[#D3126A] text-white"
-                    : "text-white/80 hover:text-white hover:bg-white/10"
-                }`}
-                aria-current={isActive ? "true" : undefined}
-                data-testid={`nav-dot-${section.id}`}
-              >
-                {section.label}
-              </a>
+              <li key={section.id} className="flex min-w-0 flex-1 justify-center lg:flex-none">
+                <a
+                  href={`#${section.id}`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    goTo(index);
+                  }}
+                  className={`relative inline-flex min-h-9 w-full items-center justify-center px-1 py-1.5 text-[10px] font-semibold tracking-wide whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-inset sm:px-2 sm:text-[11px] lg:min-h-8 lg:w-auto lg:px-3.5 lg:text-[13px] ${
+                    isActive
+                      ? "text-white"
+                      : "text-white/55 hover:text-white/90"
+                  }`}
+                  aria-current={isActive ? "location" : undefined}
+                  data-testid={`nav-dot-${section.id}`}
+                >
+                  {section.label}
+                  <span
+                    aria-hidden="true"
+                    className={`pointer-events-none absolute inset-x-1 bottom-0 h-0.5 rounded-full transition-opacity lg:inset-x-2 ${
+                      isActive ? "bg-[#D3126A] opacity-100" : "opacity-0"
+                    }`}
+                  />
+                </a>
+              </li>
             );
           })}
-        </div>
-      )}
-    </div>
+        </ul>
+      </div>
+    </nav>
   );
 }

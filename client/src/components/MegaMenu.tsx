@@ -144,6 +144,7 @@ export function MegaMenu() {
   const menuContainerRef = useRef<HTMLDivElement>(null);
   const utilityBarRef = useRef<HTMLDivElement>(null);
   const navBarRef = useRef<HTMLDivElement>(null);
+  const spyBarRef = useRef<HTMLDivElement>(null);
   const navButtonsRef = useRef<Map<string, HTMLButtonElement>>(new Map());
   const dropdownRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const columnRefs = useRef<Map<number, HTMLDivElement>>(new Map());
@@ -445,7 +446,9 @@ export function MegaMenu() {
       const utilityEl = utilityBarRef.current;
       const navEl = navBarRef.current;
       const navH = navEl?.offsetHeight ?? 0;
+      const spyH = spyBarRef.current?.offsetHeight ?? 0;
       const liveBottom = menuContainerRef.current?.getBoundingClientRect().bottom ?? 0;
+      root.style.setProperty('--de-spy-h', `${Math.round(spyH)}px`);
 
       if (utilityEl && !isScrolled && utilityEl.offsetHeight > 0) {
         utilityNaturalHRef.current = utilityEl.offsetHeight;
@@ -461,7 +464,7 @@ export function MegaMenu() {
       // not jump when the utility bar collapses on scroll.
       if (!isScrolled && navH > 0) {
         const utilityH = utilityNaturalHRef.current || utilityEl?.offsetHeight || 0;
-        const chromeH = utilityH + navH;
+        const chromeH = utilityH + navH + spyH;
         root.style.setProperty('--de-nav-chrome', `${Math.round(chromeH)}px`);
         root.style.setProperty('--de-nav-offset', `${Math.round(chromeH + BREATHING_PX)}px`);
       }
@@ -471,6 +474,7 @@ export function MegaMenu() {
     const ro = new ResizeObserver(() => publish());
     if (utilityBarRef.current) ro.observe(utilityBarRef.current);
     if (navBarRef.current) ro.observe(navBarRef.current);
+    if (spyBarRef.current) ro.observe(spyBarRef.current);
     window.addEventListener('resize', publish);
     return () => {
       ro.disconnect();
@@ -1000,7 +1004,6 @@ export function MegaMenu() {
 
             {/* Right Side Actions — short label on lg so Schedule isn’t truncated */}
           <div className="flex items-center space-x-2 lg:space-x-3 flex-shrink-0">
-            <HomepageOnPageNav variant="desktop" onOpen={closeMenu} />
             <button
               type="button"
               className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-3.5 xl:px-5 py-2.5 rounded-lg text-sm xl:text-base font-semibold whitespace-nowrap shadow-[0_0_18px_rgba(236,72,153,0.28)] hover:shadow-[0_0_24px_rgba(236,72,153,0.36)] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black border border-pink-300/25"
@@ -1028,6 +1031,11 @@ export function MegaMenu() {
               <div className="absolute inset-0 rounded-xl bg-violet-500/0 group-hover:bg-violet-500/10 transition-all duration-300" />
             </button>
           </div>
+        </div>
+        </div>
+
+        <div ref={spyBarRef} className="w-full">
+          <HomepageOnPageNav />
         </div>
 
         {/* Mobile/Tablet Menu - Premium Glassmorphism Slide-out */}
@@ -1075,13 +1083,6 @@ export function MegaMenu() {
                   <X className="w-6 h-6 text-gray-400" />
                 </button>
               </div>
-
-              {mobileMenuOpen && (
-                <HomepageOnPageNav
-                  variant="mobile"
-                  onNavigate={() => setMobileMenuOpen(false)}
-                />
-              )}
 
               {/* Navigation Items */}
               {navItems.map((item, index) => (
@@ -1248,7 +1249,6 @@ export function MegaMenu() {
             </div>
           </div>
         </div>
-      </div>
     </nav>
       </>
     </Tooltip.Provider>

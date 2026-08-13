@@ -129,8 +129,9 @@ html {
   --de-nav-h: 6.5rem;
   --de-nav-h-scrolled: 5.25rem;
   --de-nav-chrome: calc(var(--de-utility-h) + var(--de-nav-h));
-  --de-nav-offset: calc(var(--de-nav-chrome) + 0.75rem);
-  --de-nav-current-bottom: var(--de-nav-chrome);
+  --de-spy-h: 0px;
+  --de-nav-offset: calc(var(--de-nav-chrome) + var(--de-spy-h) + 0.75rem);
+  --de-nav-current-bottom: calc(var(--de-nav-chrome) + var(--de-spy-h));
 }
 
 /* Homepage section snap — proximity only (no JS scroll hijack). */
