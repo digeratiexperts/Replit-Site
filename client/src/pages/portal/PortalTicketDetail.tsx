@@ -1,15 +1,20 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useLocation, useParams } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { PortalLayout } from "./PortalLayout";
-import { ArrowLeft, Send, MessageCircle, Clock, User, AlertCircle, Loader2 } from "lucide-react";
+import { ArrowLeft, Send, MessageCircle, Clock, AlertCircle, Loader2, Upload, X } from "lucide-react";
 import { queryClient } from "@/lib/queryClient";
 import { portalGet, portalPost } from "@/lib/portalApi";
+import {
+  PORTAL_TICKET_ACCEPT,
+  PORTAL_TICKET_MAX_FILES,
+  uploadPortalTicketAttachment,
+  validatePortalTicketFile,
+} from "@/lib/portalTicketAttach";
 
 interface Comment {
   id: string;
@@ -39,6 +44,10 @@ export default function PortalTicketDetail() {
   const params = useParams<{ id: string }>();
   const ticketId = params.id;
   const [commentText, setCommentText] = useState("");
+  const [attachError, setAttachError] = useState("");
+  const [attaching, setAttaching] = useState(false);
+  const [pendingFiles, setPendingFiles] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: ticketData, isLoading, error } = useQuery<{ ticket: Ticket }>({
     queryKey: ['/api/portal/tickets', ticketId],
@@ -64,11 +73,51 @@ export default function PortalTicketDetail() {
     addCommentMutation.mutate(commentText);
   };
 
+  const queueDetailFiles = (incoming: FileList | File[]) => {
+    const next = [...pendingFiles];
+    const problems: string[] = [];
+    for (const file of Array.from(incoming)) {
+      if (next.length >= PORTAL_TICKET_MAX_FILES) {
+        problems.push(`You can attach up to ${PORTAL_TICKET_MAX_FILES} files at a time.`);
+        break;
+      }
+      const invalid = validatePortalTicketFile(file);
+      if (invalid) {
+        problems.push(invalid);
+        continue;
+      }
+      next.push(file);
+    }
+    setPendingFiles(next);
+    setAttachError(problems[0] || "");
+  };
+
+  const handleAttachFiles = async () => {
+    if (!ticketId || pendingFiles.length === 0) return;
+    setAttaching(true);
+    setAttachError("");
+    const failed: string[] = [];
+    for (const file of pendingFiles) {
+      try {
+        await uploadPortalTicketAttachment(ticketId, file);
+      } catch (err) {
+        failed.push(err instanceof Error ? err.message : `Could not attach ${file.name}.`);
+      }
+    }
+    setAttaching(false);
+    if (failed.length) {
+      setAttachError(failed[0]);
+      return;
+    }
+    setPendingFiles([]);
+    queryClient.invalidateQueries({ queryKey: ["/api/portal/tickets", ticketId] });
+  };
+
   if (isLoading) {
     return (
       <PortalLayout title="Ticket Details">
         <div className="flex items-center justify-center min-h-[400px]">
-          <Loader2 className="h-8 w-8 animate-spin text-[#5034ff]" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#7c3aed]" />
         </div>
       </PortalLayout>
     );
@@ -259,19 +308,91 @@ export default function PortalTicketDetail() {
                     data-testid="textarea-comment"
                   />
                 </div>
-                <Button
-                  type="submit"
-                  disabled={!commentText || addCommentMutation.isPending}
-                  className="bg-[#5034ff] hover:bg-[#5034ff]/90 text-white"
-                  data-testid="button-send-comment"
-                >
-                  {addCommentMutation.isPending ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <Send className="h-4 w-4 mr-2" />
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Attach files</label>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    accept={PORTAL_TICKET_ACCEPT}
+                    className="sr-only"
+                    data-testid="input-ticket-detail-files"
+                    onChange={(event) => {
+                      if (event.target.files) queueDetailFiles(event.target.files);
+                      event.target.value = "";
+                    }}
+                  />
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="gap-2 border-violet-300 bg-white text-violet-800 hover:bg-violet-50 dark:border-violet-500/40 dark:bg-transparent dark:text-violet-100"
+                      onClick={() => fileInputRef.current?.click()}
+                      data-testid="button-choose-detail-files"
+                    >
+                      <Upload className="h-4 w-4" />
+                      Choose files
+                    </Button>
+                    <span className="text-xs text-gray-500">
+                      PNG, JPG, PDF, TXT, or LOG — 10MB each
+                    </span>
+                  </div>
+                  {pendingFiles.length > 0 && (
+                    <ul className="space-y-2">
+                      {pendingFiles.map((file) => (
+                        <li
+                          key={`${file.name}-${file.size}`}
+                          className="flex items-center justify-between gap-2 rounded-md border border-violet-200 bg-white px-3 py-2 text-sm dark:border-violet-500/20 dark:bg-slate-900/60"
+                        >
+                          <span className="min-w-0 truncate">{file.name}</span>
+                          <button
+                            type="button"
+                            className="shrink-0 rounded p-1 text-gray-500 hover:bg-gray-100 dark:hover:bg-white/10"
+                            aria-label={`Remove ${file.name}`}
+                            onClick={() =>
+                              setPendingFiles((prev) => prev.filter((item) => item !== file))
+                            }
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
                   )}
-                  {addCommentMutation.isPending ? "Sending..." : "Send Comment"}
-                </Button>
+                  {attachError && (
+                    <p className="text-sm text-red-600 dark:text-red-400">{attachError}</p>
+                  )}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    type="submit"
+                    disabled={!commentText || addCommentMutation.isPending}
+                    className="bg-[#7c3aed] hover:bg-[#7c3aed]/90 text-white"
+                    data-testid="button-send-comment"
+                  >
+                    {addCommentMutation.isPending ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Send className="h-4 w-4 mr-2" />
+                    )}
+                    {addCommentMutation.isPending ? "Sending..." : "Send Comment"}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={pendingFiles.length === 0 || attaching}
+                    onClick={() => void handleAttachFiles()}
+                    data-testid="button-upload-attachments"
+                  >
+                    {attaching ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Upload className="h-4 w-4 mr-2" />
+                    )}
+                    {attaching ? "Uploading..." : "Upload attachments"}
+                  </Button>
+                </div>
               </form>
             </div>
 

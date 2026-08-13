@@ -241,6 +241,54 @@ class ZohoDeskService {
       return [];
     }
   }
+
+  /**
+   * Zoho Desk create-ticket is JSON-only. Attachments must be uploaded after
+   * the ticket exists: POST /tickets/{id}/attachments (multipart field `file`).
+   */
+  async uploadTicketAttachment(
+    ticketId: string,
+    file: { filename: string; contentType: string; buffer: Buffer },
+  ): Promise<{ id?: string }> {
+    const client = await zohoClient.getDeskUploadClient();
+    const orgId = await this.getOrgId();
+    const form = new FormData();
+    form.append(
+      "file",
+      new Blob([file.buffer], { type: file.contentType }),
+      file.filename,
+    );
+
+    try {
+      const response = await client.post(`/tickets/${ticketId}/attachments`, form, {
+        headers: { orgId },
+      });
+      return response.data || {};
+    } catch (error: any) {
+      console.error(
+        "Error uploading Zoho Desk attachment:",
+        error.response?.data || error.message,
+      );
+      throw error;
+    }
+  }
+
+  async addTicketComment(ticketId: string, content: string): Promise<void> {
+    try {
+      const client = await zohoClient.getDeskClient();
+      const orgId = await this.getOrgId();
+      await client.post(
+        `/tickets/${ticketId}/comments`,
+        { content, isPublic: true },
+        { headers: { orgId } },
+      );
+    } catch (error: any) {
+      console.warn(
+        "Could not sync comment to Zoho Desk:",
+        error.response?.data || error.message,
+      );
+    }
+  }
 }
 
 export const zohoDeskService = new ZohoDeskService();

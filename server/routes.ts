@@ -1,4 +1,4 @@
-import { type Express, type Request, type Response, NextFunction } from "express";
+import express, { type Express, type Request, type Response, NextFunction } from "express";
 import { storage } from "./storage";
 import { randomBytes, createHash } from "crypto";
 import rateLimit from "express-rate-limit";
@@ -6,6 +6,12 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { registerObjectStorageRoutes, ObjectStorageService } from "./replit_integrations/object_storage";
 import { zohoClient, zohoDeskService, zohoCRMService, zohoBillingService } from "./zoho";
+import {
+  parseZohoTicketId,
+  validatePortalTicketUpload,
+  PortalTicketUploadError,
+} from "./portalTicketUploads";
+import { PORTAL_TICKET_MAX_FILE_BYTES } from "@shared/portalTicketFileRules";
 import {
   clearZohoPkceCookie,
   createZohoStartPayload,
@@ -1835,6 +1841,75 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  // Attach a file after ticket create. Zoho Desk create-ticket is JSON-only;
+  // attachments go to POST /tickets/{id}/attachments (multipart) once the ticket exists.
+  app.post(
+    "/api/portal/tickets/:id/attachments",
+    authMiddleware,
+    express.raw({ type: "*/*", limit: PORTAL_TICKET_MAX_FILE_BYTES }),
+    async (req: AuthenticatedRequest, res: Response) => {
+      try {
+        const ticket = await storage.getPortalTicket(req.params.id);
+        if (!ticket) {
+          return res.status(404).json({ error: "Ticket not found" });
+        }
+
+        const isAdmin = req.user?.role === "admin";
+        const userClientId = req.user?.clientId;
+        if (!isAdmin && ticket.clientId !== userClientId) {
+          return res.status(403).json({ error: "Access denied" });
+        }
+
+        const rawName = req.headers["x-filename"];
+        const headerName = Array.isArray(rawName) ? rawName[0] : rawName;
+        let filename = "attachment";
+        try {
+          filename = decodeURIComponent(String(headerName || "attachment"));
+        } catch {
+          filename = String(headerName || "attachment");
+        }
+
+        const body = req.body;
+        const buffer = Buffer.isBuffer(body)
+          ? body
+          : Buffer.from(body || [], typeof body === "string" ? "binary" : undefined);
+
+        const validated = validatePortalTicketUpload({
+          filename,
+          buffer,
+          declaredMime: req.headers["content-type"],
+        });
+
+        const zohoTicketId = parseZohoTicketId(ticket.assignedTo);
+        if (!zohoTicketId || !zohoClient.isConfigured()) {
+          return res.status(503).json({
+            error:
+              "Ticket was created, but file upload needs Zoho Desk sync. Email support with your ticket ID and attach the file there.",
+          });
+        }
+
+        await zohoDeskService.uploadTicketAttachment(zohoTicketId, {
+          filename: validated.filename,
+          contentType: validated.contentType,
+          buffer,
+        });
+
+        logSecurityEvent("TICKET_ATTACHMENT_UPLOADED", req, {
+          ticketId: ticket.id,
+          filename: validated.filename,
+          bytes: buffer.length,
+        });
+        res.json({ success: true, filename: validated.filename });
+      } catch (error: any) {
+        if (error instanceof PortalTicketUploadError) {
+          return res.status(error.status).json({ error: error.message });
+        }
+        console.error("Ticket attachment error:", error?.response?.data || error?.message || error);
+        res.status(502).json({ error: "Could not attach the file to the support ticket." });
+      }
+    },
+  );
+
   // Get single ticket by ID
   app.get("/api/portal/tickets/:id", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
@@ -1904,6 +1979,15 @@ export async function registerRoutes(app: Express) {
         isInternal: false,
         createdAt: new Date(),
       });
+
+      const zohoTicketId = parseZohoTicketId(ticket.assignedTo);
+      if (zohoTicketId && zohoClient.isConfigured()) {
+        const author = req.user?.fullName || req.user?.email || "Client";
+        void zohoDeskService.addTicketComment(
+          zohoTicketId,
+          `${author}:\n${String(content).slice(0, 8000)}`,
+        );
+      }
 
       res.json({ success: true, comment });
       logSecurityEvent("TICKET_COMMENT_ADDED", req, { ticketId: id });

@@ -6,6 +6,9 @@ import {
   extractProfileFromText,
   mergeProfile,
   knownFactsList,
+  extractContactNameFromText,
+  extractCompanyNameFromText,
+  isSubstantiveAdvisorQuestion,
 } from "./profile";
 import { buildSystemPrompt, OFF_TOPIC_FALLBACK, INCIDENT_FALLBACK, AI_UNAVAILABLE_FALLBACK } from "./prompt";
 import { sanitizeActions, assertNoInternalLeak, defaultActionsForMode } from "./actions";
@@ -126,17 +129,36 @@ async function callModel(system: string, history: Array<{ role: "user" | "assist
   });
 }
 
+function identityNamePrompt(): string {
+  return "Before we continue, what's your name?";
+}
+
+function identityCompanyPrompt(contactName?: string): string {
+  const first = (contactName || "").split(" ")[0];
+  return first
+    ? `Thanks, ${first}. What company are you with?`
+    : "What company are you with?";
+}
+
 export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<AdvisorChatResponse> {
-  const message = (req.message || "").trim().slice(0, 4000);
-  if (!message) {
+  const userTurn = (req.message || "").trim().slice(0, 4000);
+  if (!userTurn) {
     throw Object.assign(new Error("Message is required"), { status: 400 });
   }
+  let message = userTurn;
 
   const session = getOrCreateSession(req.sessionId, req.pageContext);
   const page = req.pageContext || session.pageContext;
+  const priorName = session.profile.contactName;
 
   // Merge heuristic extraction before model so known facts are available
   let profile = mergeProfile(session.profile, extractProfileFromText(message));
+  if (priorName) {
+    profile = mergeProfile(profile, { contactName: priorName });
+  } else {
+    const named = extractContactNameFromText(message);
+    if (named) profile = mergeProfile(profile, { contactName: named });
+  }
   updateProfile(session, profile);
 
   // When a portal agent has joined, skip AI and hand the turn to the human.
@@ -213,6 +235,63 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
     };
   }
 
+  const skipIdentity = mode === "security_incident";
+  if (!skipIdentity && !profile.contactName) {
+    if (isSubstantiveAdvisorQuestion(message) && !session.heldUserMessage) {
+      session.heldUserMessage = message;
+    }
+    const reply = identityNamePrompt();
+    appendMessage(session, "user", message);
+    appendMessage(session, "assistant", reply);
+    session.lastMode = mode === "off_topic" ? "msp_discovery" : mode;
+    const persisted = await persistTurn(session.id, message, reply, profile, page?.pathname);
+    return {
+      sessionId: session.id,
+      reply,
+      mode: session.lastMode,
+      profile,
+      actions: [],
+      analyticsEvents: ["conversation_started"],
+      knownFacts: knownFactsList(profile),
+      ...persisted,
+    };
+  }
+
+  if (!skipIdentity && !profile.companyName) {
+    const collectedNameThisTurn = Boolean(!priorName && profile.contactName);
+    const companyGuess = extractCompanyNameFromText(message, { allowBare: !collectedNameThisTurn });
+    if (companyGuess && companyGuess.toLowerCase() !== (profile.contactName || "").toLowerCase()) {
+      profile = mergeProfile(profile, { companyName: companyGuess });
+      updateProfile(session, profile);
+    }
+  }
+
+  if (!skipIdentity && !profile.companyName) {
+    const reply = identityCompanyPrompt(profile.contactName);
+    appendMessage(session, "user", message);
+    appendMessage(session, "assistant", reply);
+    session.lastMode = mode === "off_topic" ? "msp_discovery" : mode;
+    const persisted = await persistTurn(session.id, message, reply, profile, page?.pathname);
+    return {
+      sessionId: session.id,
+      reply,
+      mode: session.lastMode,
+      profile,
+      actions: [],
+      analyticsEvents: ["conversation_started"],
+      knownFacts: knownFactsList(profile),
+      ...persisted,
+    };
+  }
+
+  if (session.heldUserMessage && session.heldUserMessage !== message) {
+    message = session.heldUserMessage;
+    session.heldUserMessage = undefined;
+    mode = classifyMode(message, page);
+  } else {
+    session.heldUserMessage = undefined;
+  }
+
   const knowledge = selectKnowledgeSlice(mode, page);
   const system = buildSystemPrompt({ mode, knowledge, profile, page });
 
@@ -221,7 +300,7 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
     content: m.content,
   }));
 
-  appendMessage(session, "user", message);
+  appendMessage(session, "user", userTurn);
 
   let modelOut: ModelAdvisorOutput | null = null;
   try {
@@ -280,7 +359,7 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
   appendMessage(session, "assistant", modelOut.reply);
   session.lastMode = mode;
 
-  const persisted = await persistTurn(session.id, message, modelOut.reply, profile, page?.pathname);
+  const persisted = await persistTurn(session.id, userTurn, modelOut.reply, profile, page?.pathname);
 
   return {
     sessionId: session.id,

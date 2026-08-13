@@ -107,7 +107,101 @@ export function extractProfileFromText(message: string): Partial<ConversationPro
     patch.companyName = company[1].trim();
   }
 
+  const nameAtCompany = extractNameAndCompany(text);
+  if (nameAtCompany.contactName) patch.contactName = nameAtCompany.contactName;
+  if (nameAtCompany.companyName) patch.companyName = nameAtCompany.companyName;
+
   return patch;
+}
+
+const NAME_STOPWORDS = new Set([
+  "hi",
+  "hello",
+  "hey",
+  "thanks",
+  "thank",
+  "yes",
+  "no",
+  "ok",
+  "okay",
+  "please",
+  "help",
+  "sure",
+  "yep",
+  "yeah",
+  "we",
+  "i",
+  "my",
+  "the",
+  "a",
+  "an",
+]);
+
+export function extractContactNameFromText(message: string): string | undefined {
+  const text = message.trim();
+  const intro = text.match(
+    /^(?:i(?:['’]?m| am)|my name is|this is|name(?:'s| is)|it['’]?s)\s+([A-Za-z][A-Za-z'.\-]+(?:\s+[A-Za-z][A-Za-z'.\-]+){0,2})\b/i,
+  );
+  if (intro?.[1] && !/[?]/.test(intro[1])) {
+    return cleanPersonName(intro[1]);
+  }
+
+  if (/[?]/.test(text) || text.length > 42) return undefined;
+  if (!/^[A-Za-z][A-Za-z'.\-]+(?:\s+[A-Za-z][A-Za-z'.\-]+){0,2}$/.test(text)) return undefined;
+  if (NAME_STOPWORDS.has(text.toLowerCase())) return undefined;
+  return cleanPersonName(text);
+}
+
+export function extractCompanyNameFromText(message: string, opts?: { allowBare?: boolean }): string | undefined {
+  const text = message.trim();
+  if (!text) return undefined;
+
+  const explicit =
+    text.match(/\b(?:(?:i(?:['’]?m| am)|we(?:'re| are))\s+(?:with|at|from)|company(?:\s+name)?(?:\s+is|:)|we work (?:at|for))\s+(.+)$/i) ||
+    text.match(/\b(?:at|from|with)\s+([A-Z][\w&.\- ]{1,60})$/);
+  if (explicit?.[1]) {
+    const company = sanitizeCompanyName(explicit[1]);
+    if (company) return company;
+  }
+
+  if (!opts?.allowBare) return undefined;
+  if (/[?]/.test(text) || text.length > 80) return undefined;
+  return sanitizeCompanyName(text);
+}
+
+function extractNameAndCompany(text: string): { contactName?: string; companyName?: string } {
+  const match = text.match(
+    /^(?:i(?:['’]?m| am)|my name is)\s+([A-Za-z][A-Za-z'.\-]+(?:\s+[A-Za-z][A-Za-z'.\-]+)?)\s+(?:at|from|with)\s+(.+)$/i,
+  );
+  if (!match) return {};
+  return {
+    contactName: cleanPersonName(match[1]),
+    companyName: sanitizeCompanyName(match[2]),
+  };
+}
+
+function cleanPersonName(raw: string): string | undefined {
+  const name = raw.replace(/\s+/g, " ").trim().replace(/[.,!]+$/, "");
+  if (!name || NAME_STOPWORDS.has(name.toLowerCase())) return undefined;
+  return name
+    .split(" ")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+function sanitizeCompanyName(raw: string): string | undefined {
+  const company = raw.replace(/\s+/g, " ").trim().replace(/[.,!]+$/, "");
+  if (!company || company.length < 2) return undefined;
+  if (NAME_STOPWORDS.has(company.toLowerCase())) return undefined;
+  if (/^(looking|interested|trying|based|located|help|hello)\b/i.test(company)) return undefined;
+  return company.slice(0, 80);
+}
+
+export function isSubstantiveAdvisorQuestion(message: string): boolean {
+  const text = message.trim();
+  if (text.length >= 40) return true;
+  if (/[?]/.test(text)) return true;
+  return /\b(how|what|why|need|help|ransomware|phishing|ticket|price|cost|hipaa|m365|microsoft)\b/i.test(text);
 }
 
 export function mergeProfile(

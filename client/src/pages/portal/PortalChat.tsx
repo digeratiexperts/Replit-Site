@@ -83,11 +83,18 @@ type FloatingSessionMenu = {
 const LONG_PRESS_MS = 480;
 const DESK_TICKET_DRAFT_KEY = "de-portal-desk-ticket-draft";
 
+function sessionNameLabel(s: DeskSession): string {
+  const name = s.contactName?.trim();
+  return name || "Name not given yet";
+}
+
+function sessionCompanyLabel(s: DeskSession): string | null {
+  const company = s.companyName?.trim();
+  return company || null;
+}
+
 function viewerLabel(s: DeskSession): string {
-  if (s.contactName) return s.contactName;
-  if (s.email) return s.email;
-  if (s.pagePath) return `Visitor · ${s.pagePath}`;
-  return `Viewer ${s.sessionId.slice(0, 6)}`;
+  return sessionNameLabel(s);
 }
 
 function formatClock(iso: string): string {
@@ -701,7 +708,7 @@ export default function PortalChat() {
                             aria-hidden="true"
                           />
                         )}
-                        {label}
+                        {s ? sessionNameLabel(s) : id.slice(0, 8)}
                       </button>
                       <button
                         type="button"
@@ -772,8 +779,15 @@ export default function PortalChat() {
                                   }`}
                                 >
                                   <div className="flex items-start justify-between gap-2">
-                                    <span className="truncate text-sm font-semibold text-white">
-                                      {viewerLabel(s)}
+                                    <span className="min-w-0">
+                                      <span className="block truncate text-sm font-semibold text-white">
+                                        {sessionNameLabel(s)}
+                                      </span>
+                                      {sessionCompanyLabel(s) ? (
+                                        <span className="mt-0.5 block truncate text-[11px] font-normal text-white/45">
+                                          {sessionCompanyLabel(s)}
+                                        </span>
+                                      ) : null}
                                     </span>
                                     <span className="inline-flex shrink-0 items-center gap-1 text-[10px] text-white/45">
                                       <Clock3 className="h-3 w-3" aria-hidden />
@@ -898,8 +912,13 @@ export default function PortalChat() {
                     <div className="flex items-center justify-between gap-3 border-b border-white/10 bg-[#1a0f2e]/70 px-4 py-3">
                       <div className="min-w-0">
                         <p className="truncate text-sm font-semibold text-white">
-                          {activeSession ? viewerLabel(activeSession) : "Viewer"}
+                          {activeSession ? sessionNameLabel(activeSession) : "Name not given yet"}
                         </p>
+                        {activeSession && sessionCompanyLabel(activeSession) ? (
+                          <p className="truncate text-[11px] text-white/45">
+                            {sessionCompanyLabel(activeSession)}
+                          </p>
+                        ) : null}
                         <p className="truncate text-xs text-white/50">
                           {activeSession?.email || "no email yet"}
                           {activeSession?.pagePath ? ` · ${activeSession.pagePath}` : ""}

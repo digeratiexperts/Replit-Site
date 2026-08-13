@@ -146,6 +146,20 @@ class ZohoClient {
     });
   }
 
+  /** Desk client without JSON Content-Type so multipart uploads can set their own boundary. */
+  async getDeskUploadClient(): Promise<AxiosInstance> {
+    const token = await this.getDeskAccessToken();
+
+    return axios.create({
+      baseURL: "https://desk.zoho.com/api/v1",
+      headers: {
+        Authorization: `Zoho-oauthtoken ${token}`,
+      },
+      maxBodyLength: 12 * 1024 * 1024,
+      maxContentLength: 12 * 1024 * 1024,
+    });
+  }
+
   isConfigured(): boolean {
     return !!(this.clientId && this.clientSecret && this.refreshToken);
   }

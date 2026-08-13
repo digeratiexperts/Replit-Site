@@ -9,7 +9,7 @@ import {
   listKnownServiceNames,
   inferPageType,
 } from "./knowledge";
-import { extractProfileFromText, mergeProfile, createEmptyProfile, knownFactsList } from "./profile";
+import { extractProfileFromText, mergeProfile, createEmptyProfile, knownFactsList, extractContactNameFromText, extractCompanyNameFromText } from "./profile";
 import { sanitizeActions, sanitizePath, assertNoInternalLeak, isAllowedActionType } from "./actions";
 import { handleAdvisorChat } from "./advisor";
 import { _resetSessionsForTests } from "./session";
@@ -69,7 +69,7 @@ describe("pricing knowledge", () => {
     assert.match(k, /\$245\/user/);
     assert.match(k, /\$345\/user/);
     assert.match(k, /\$125\/user/);
-    assert.match(k, /\$1,725/);
+    assert.match(k, /\$1,600/);
     assert.doesNotMatch(k, /\$129\/user/); // storeProducts drift
   });
 });
@@ -137,11 +137,63 @@ describe("knowledge / services", () => {
   });
 });
 
+describe("identity extraction", () => {
+  it("reads intro names and name-at-company", () => {
+    assert.equal(extractContactNameFromText("I'm Joseph Petro"), "Joseph Petro");
+    assert.equal(extractContactNameFromText("Alex"), "Alex");
+    assert.equal(extractContactNameFromText("How do I protect Microsoft 365?"), undefined);
+  });
+  it("reads a company reply without treating it as a person name overwrite", () => {
+    assert.equal(extractCompanyNameFromText("Acme Dental", { allowBare: true }), "Acme Dental");
+    assert.equal(extractCompanyNameFromText("we are at Desert Law LLP"), "Desert Law LLP");
+  });
+});
+
+async function identifiedChat(
+  message: string,
+  pageContext?: { pathname: string; pageType: "home" | "cybersecurity" | "pricing" | "industry" | "other" },
+) {
+  const named = await handleAdvisorChat({
+    message: "Alex Chen",
+    pageContext,
+  });
+  const company = await handleAdvisorChat({
+    sessionId: named.sessionId,
+    message: "Acme Dental",
+  });
+  return handleAdvisorChat({
+    sessionId: company.sessionId,
+    message,
+    pageContext,
+  });
+}
+
 describe("handleAdvisorChat acceptance (heuristic / no LLM required)", () => {
-  it("answers IT question path without crashing and returns DE actions", async () => {
-    const res = await handleAdvisorChat({
+  it("asks for name before continuing, then company", async () => {
+    const first = await handleAdvisorChat({
       message: "How do I protect Microsoft 365 from phishing?",
       pageContext: { pathname: "/solutions/cybersecurity", pageType: "cybersecurity" },
+    });
+    assert.match(first.reply, /what'?s your name/i);
+    assert.equal(first.profile.contactName, undefined);
+    const second = await handleAdvisorChat({
+      sessionId: first.sessionId,
+      message: "Jordan Hale",
+    });
+    assert.equal(second.profile.contactName, "Jordan Hale");
+    assert.match(second.reply, /company/i);
+    const third = await handleAdvisorChat({
+      sessionId: second.sessionId,
+      message: "Hale Family Dentistry",
+    });
+    assert.equal(third.profile.companyName, "Hale Family Dentistry");
+    assert.doesNotMatch(third.reply, /what'?s your name/i);
+  });
+
+  it("answers IT question path without crashing and returns DE actions", async () => {
+    const res = await identifiedChat("How do I protect Microsoft 365 from phishing?", {
+      pathname: "/solutions/cybersecurity",
+      pageType: "cybersecurity",
     });
     assert.ok(res.reply.length > 20);
     assert.equal(res.mode, "cybersecurity");
@@ -150,9 +202,9 @@ describe("handleAdvisorChat acceptance (heuristic / no LLM required)", () => {
   });
 
   it("remembers employee count across turns", async () => {
-    const a = await handleAdvisorChat({
-      message: "We have 40 employees and our IT guy left.",
-      pageContext: { pathname: "/", pageType: "home" },
+    const a = await identifiedChat("We have 40 employees and our IT guy left.", {
+      pathname: "/",
+      pageType: "home",
     });
     assert.equal(a.profile.employeeCount, 40);
     const b = await handleAdvisorChat({
@@ -164,17 +216,17 @@ describe("handleAdvisorChat acceptance (heuristic / no LLM required)", () => {
   });
 
   it("compliance influences mode", async () => {
-    const res = await handleAdvisorChat({
-      message: "We are a dental office with HIPAA concerns",
-      pageContext: { pathname: "/industries/healthcare", pageType: "industry" },
+    const res = await identifiedChat("We are a dental office with HIPAA concerns", {
+      pathname: "/industries/healthcare",
+      pageType: "industry",
     });
     assert.equal(res.mode, "compliance");
   });
 
   it("off-topic redirects", async () => {
-    const res = await handleAdvisorChat({
-      message: "Write me a funny poem about celebrities",
-      pageContext: { pathname: "/", pageType: "home" },
+    const res = await identifiedChat("Write me a funny poem about celebrities", {
+      pathname: "/",
+      pageType: "home",
     });
     assert.equal(res.mode, "off_topic");
     assert.ok(
@@ -185,9 +237,7 @@ describe("handleAdvisorChat acceptance (heuristic / no LLM required)", () => {
   });
 
   it("existing client routes toward portal", async () => {
-    const res = await handleAdvisorChat({
-      message: "I'm an existing client and need support",
-    });
+    const res = await identifiedChat("I'm an existing client and need support");
     assert.equal(res.mode, "existing_client");
     assert.ok(res.actions.some((a) => a.type === "open_portal" || a.type === "existing_client_support"));
     assert.ok(res.reply.includes("portal.digeratiexperts.com/portal/login"));
@@ -211,9 +261,9 @@ describe("handleAdvisorChat acceptance (heuristic / no LLM required)", () => {
   });
 
   it("pricing reply mentions canonical floors when AI unavailable", async () => {
-    const res = await handleAdvisorChat({
-      message: "How much does the Business package cost per user?",
-      pageContext: { pathname: "/pricing", pageType: "pricing" },
+    const res = await identifiedChat("How much does the Business package cost per user?", {
+      pathname: "/pricing",
+      pageType: "pricing",
     });
     // heuristic or model — must not invent $129 store price
     assert.doesNotMatch(res.reply, /\$129/);

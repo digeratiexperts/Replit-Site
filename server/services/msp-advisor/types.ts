@@ -86,6 +86,8 @@ export interface AdvisorSession {
   lastMode: AdvisorMode;
   analyticsFlags: Record<string, boolean>;
   pageContext?: PageContext;
+  /** Substantive first question held until name + company are collected. */
+  heldUserMessage?: string;
 }
 
 export interface AdvisorChatRequest {

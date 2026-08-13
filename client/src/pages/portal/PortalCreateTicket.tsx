@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { PortalLayout } from "./PortalLayout";
-import { ArrowLeft, Upload, AlertCircle, Info } from "lucide-react";
+import { ArrowLeft, Upload, AlertCircle, Info, X } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -14,6 +14,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { queryClient } from "@/lib/queryClient";
+import { portalFetch } from "@/lib/portalApi";
+import {
+  PORTAL_TICKET_ACCEPT,
+  PORTAL_TICKET_MAX_FILES,
+  uploadPortalTicketAttachment,
+  validatePortalTicketFile,
+} from "@/lib/portalTicketAttach";
 
 const DESK_TICKET_DRAFT_KEY = "de-portal-desk-ticket-draft";
 
@@ -28,6 +35,8 @@ export default function PortalCreateTicket() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [draftNotice, setDraftNotice] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     try {
@@ -69,6 +78,29 @@ export default function PortalCreateTicket() {
     "Other",
   ];
 
+  const addFiles = (incoming: FileList | File[]) => {
+    const next = [...files];
+    const problems: string[] = [];
+    for (const file of Array.from(incoming)) {
+      if (next.length >= PORTAL_TICKET_MAX_FILES) {
+        problems.push(`You can attach up to ${PORTAL_TICKET_MAX_FILES} files.`);
+        break;
+      }
+      const invalid = validatePortalTicketFile(file);
+      if (invalid) {
+        problems.push(invalid);
+        continue;
+      }
+      if (next.some((existing) => existing.name === file.name && existing.size === file.size)) {
+        continue;
+      }
+      next.push(file);
+    }
+    setFiles(next);
+    if (problems.length) setError(problems[0]);
+    else setError("");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
@@ -82,13 +114,9 @@ export default function PortalCreateTicket() {
         description: formData.description,
       };
 
-      const response = await fetch("/api/portal/tickets", {
+      const response = await portalFetch("/api/portal/tickets", {
         method: "POST",
         body: JSON.stringify(ticketData),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("portalToken")}`,
-        },
       });
 
       if (!response.ok) {
@@ -96,11 +124,34 @@ export default function PortalCreateTicket() {
         throw new Error(errorData.error || "Failed to create ticket");
       }
 
+      const created = (await response.json()) as { ticket?: { id?: string } };
+      const ticketId = created.ticket?.id;
+      const attachErrors: string[] = [];
+      if (ticketId && files.length) {
+        for (const file of files) {
+          try {
+            await uploadPortalTicketAttachment(ticketId, file);
+          } catch (attachErr) {
+            attachErrors.push(
+              attachErr instanceof Error ? attachErr.message : `Could not attach ${file.name}.`,
+            );
+          }
+        }
+      }
+
       queryClient.invalidateQueries({ queryKey: ["/api/portal/tickets"] });
       queryClient.invalidateQueries({ queryKey: ["/api/portal/dashboard"] });
 
       setFormData({ subject: "", category: "", priority: "medium", description: "" });
-      navigate("/portal/tickets");
+      setFiles([]);
+      if (ticketId && attachErrors.length) {
+        navigate(`/portal/tickets/${ticketId}`);
+        setError(
+          `Ticket created, but ${attachErrors.length} file${attachErrors.length === 1 ? "" : "s"} did not attach: ${attachErrors[0]}`,
+        );
+        return;
+      }
+      navigate(ticketId ? `/portal/tickets/${ticketId}` : "/portal/tickets");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create ticket. Please try again.");
     } finally {
@@ -241,30 +292,59 @@ export default function PortalCreateTicket() {
                 />
               </div>
 
-              {/* Attachments — disabled: no multipart upload API on ticket create */}
               <div className="space-y-2">
                 <label className="text-sm font-medium">Attachments</label>
-                <div className="border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg p-6 text-center bg-gray-50/50 dark:bg-slate-900/40 opacity-80">
-                  <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    File upload not available on this form
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  accept={PORTAL_TICKET_ACCEPT}
+                  className="sr-only"
+                  data-testid="input-ticket-files"
+                  onChange={(event) => {
+                    if (event.target.files) addFiles(event.target.files);
+                    event.target.value = "";
+                  }}
+                />
+                <div className="rounded-lg border-2 border-dashed border-violet-300/70 bg-violet-50/40 p-6 text-center dark:border-violet-500/30 dark:bg-violet-500/10">
+                  <Upload className="mx-auto mb-2 h-8 w-8 text-violet-600 dark:text-violet-300" />
+                  <p className="mb-1 text-sm font-medium text-gray-800 dark:text-gray-200">
+                    Screenshots, PDFs, or logs
                   </p>
-                  <div className="flex gap-2 justify-center items-start max-w-md mx-auto text-left">
-                    <Info className="h-4 w-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-                    <p className="text-xs text-gray-600 dark:text-gray-400">
-                      Create the ticket first, then add screenshots or logs by replying on the ticket detail page (or email them to support and reference your ticket ID).
-                    </p>
-                  </div>
+                  <p className="mx-auto max-w-md text-xs text-gray-600 dark:text-gray-400">
+                    PNG, JPG, PDF, TXT, or LOG — up to {PORTAL_TICKET_MAX_FILES} files, 10MB each.
+                    Files attach as soon as the ticket is created.
+                  </p>
                   <Button
                     type="button"
                     variant="outline"
                     size="sm"
-                    className="mt-4 cursor-not-allowed"
-                    disabled
+                    className="mt-4 border-violet-300 bg-white text-violet-800 hover:bg-violet-50 dark:border-violet-500/40 dark:bg-transparent dark:text-violet-100"
+                    onClick={() => fileInputRef.current?.click()}
                     data-testid="button-choose-files"
                   >
-                    Choose Files (unavailable)
+                    Choose Files
                   </Button>
+                  {files.length > 0 && (
+                    <ul className="mx-auto mt-4 max-w-md space-y-2 text-left">
+                      {files.map((file) => (
+                        <li
+                          key={`${file.name}-${file.size}`}
+                          className="flex items-center justify-between gap-2 rounded-md border border-violet-200 bg-white px-3 py-2 text-sm dark:border-violet-500/20 dark:bg-slate-900/60"
+                        >
+                          <span className="min-w-0 truncate">{file.name}</span>
+                          <button
+                            type="button"
+                            className="shrink-0 rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-white/10"
+                            aria-label={`Remove ${file.name}`}
+                            onClick={() => setFiles((prev) => prev.filter((item) => item !== file))}
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </div>
 
@@ -273,7 +353,7 @@ export default function PortalCreateTicket() {
                 <Button
                   type="submit"
                   disabled={!formData.subject || !formData.category || !formData.description || submitting}
-                  className="bg-[#5034ff] hover:bg-[#5034ff]/90 text-white"
+                  className="bg-[#7c3aed] hover:bg-[#7c3aed]/90 text-white"
                   data-testid="button-submit"
                 >
                   {submitting ? "Creating..." : "Create Ticket"}
