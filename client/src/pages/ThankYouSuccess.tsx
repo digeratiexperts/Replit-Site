@@ -183,11 +183,6 @@ export default function ThankYouSuccess() {
             <SiGoogle className="h-6 w-6 text-blue-500" />
             <div className="text-xs font-semibold text-slate-700">Google Partner</div>
           </div>
-          
-          {/* SOC 2 Badge */}
-          <div className="flex items-center gap-2 bg-white rounded-lg px-4 py-2">
-            <div className="text-xs font-semibold text-slate-700">SOC 2 Compliant</div>
-          </div>
         </div>
       </section>
       

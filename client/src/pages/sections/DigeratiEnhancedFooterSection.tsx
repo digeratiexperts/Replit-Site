@@ -1,5 +1,4 @@
-import { Shield, Phone, Mail, MapPin, Linkedin, Twitter, Facebook, Instagram, ExternalLink, Lock, FileText, ArrowRight, CheckCircle, Send } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Shield, Linkedin, Twitter, Facebook, Instagram, ArrowRight, CheckCircle, Send } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import logoImage from '@assets/DE-Logo-new_1762461524794.webp';
@@ -119,12 +118,14 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
     { name: "Scottsdale", href: "/locations/scottsdale-az", primary: false }
   ];
 
-  const complianceSeals = [
-    { name: "SOC 2 Type II", icon: Shield, verified: true },
-    { name: "HIPAA Compliant", icon: Lock, verified: true },
-    { name: "Microsoft Partner", icon: CheckCircle, verified: true },
-    { name: "Apple Consultants", icon: CheckCircle, verified: true }
+  const complianceSupport = [
+    "HIPAA-aligned security and compliance support",
+    "SOC 2 readiness and control alignment",
+    "Cyber insurance readiness",
+    "Security and compliance reporting",
   ];
+
+  const partnerMarks = ["Microsoft Partner", "Apple Consultants"];
 
   const socialLinks = [
     { name: "LinkedIn", href: "https://www.linkedin.com/company/digerati-experts", icon: Linkedin, testId: "footer-linkedin", color: "hover:bg-[#0077B5] hover:border-[#0077B5]" },
@@ -231,13 +232,13 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                 </div>
                 <div>
                   <h3 className="text-white font-semibold mb-1 flex items-center gap-2 ">
-                    COMPLIANCE READY
+                    Security & Compliance Support
                   </h3>
                   <p className="text-gray-400 text-sm font-normal">
-                    Need SOC 2 or Security Documentation?
+                    Need security questionnaires or compliance documentation?
                   </p>
                   <p className="text-gray-500 text-sm mt-1 font-normal">
-                    Request compliance documents for vendor onboarding and security reviews
+                    Request security questionnaires and framework-alignment materials for vendor onboarding
                   </p>
                 </div>
               </div>
@@ -256,22 +257,32 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
         </div>
 
         <div className="border-t border-white/10 py-8 px-4 md:px-8 lg:px-0">
-          <h4 className="text-white text-sm font-semibold mb-6 uppercase tracking-wider ">
-            Compliance Certifications
+          <h4 className="text-white text-sm font-semibold mb-2 uppercase tracking-wider ">
+            Security & Compliance Support
           </h4>
-          <div className="flex flex-wrap gap-4">
-            {complianceSeals.map((seal, index) => (
-              <div 
-                key={index}
-                className="flex items-center gap-3 px-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl hover:bg-white/10 hover:border-white/20 transition-all duration-300"
-                data-testid={`footer-seal-${index}`}
+          <p className="text-gray-500 text-sm mb-6 max-w-3xl">
+            Framework names describe customer requirements Digerati helps organizations address — not certifications Digerati holds.
+          </p>
+          <ul className="grid sm:grid-cols-2 gap-3 mb-6">
+            {complianceSupport.map((item, index) => (
+              <li
+                key={item}
+                className="flex items-start gap-3 px-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl"
+                data-testid={`footer-compliance-support-${index}`}
               >
-                <seal.icon className="h-5 w-5 text-purple-400" />
-                <span className="text-gray-400 text-sm font-medium ">{seal.name}</span>
-                {seal.verified && (
-                  <CheckCircle className="h-4 w-4 text-green-400" />
-                )}
-              </div>
+                <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-violet-400" aria-hidden />
+                <span className="text-gray-400 text-sm font-medium">{item}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="flex flex-wrap gap-3">
+            {partnerMarks.map((name) => (
+              <span
+                key={name}
+                className="px-3 py-1.5 text-xs text-gray-500 border border-white/10 rounded-lg"
+              >
+                {name}
+              </span>
             ))}
           </div>
         </div>

@@ -342,8 +342,13 @@ export function LocationServicePage(props: LocationPageProps) {
 
                 {/* Trust badges */}
                 <div className="flex flex-wrap items-center gap-3">
-                  <span className="text-sm text-gray-500">Trusted by:</span>
-                  {["SOC 2 Type II", "Microsoft Partner", "Apple Consultants"].map((badge) => (
+                  <span className="text-sm text-gray-500">Built for regulated environments</span>
+                  {["HIPAA", "SOC 2", "Cyber Insurance", "Security Framework Alignment"].map((badge) => (
+                    <div key={badge} className="px-3 py-1.5 rounded-md bg-white/5 border border-white/10 text-xs text-gray-400">{badge}</div>
+                  ))}
+                </div>
+                <div className="flex flex-wrap items-center gap-3 mt-3">
+                  {["Microsoft Partner", "Apple Consultants"].map((badge) => (
                     <div key={badge} className="px-3 py-1.5 rounded-md bg-white/5 border border-white/10 text-xs text-gray-400">{badge}</div>
                   ))}
                 </div>

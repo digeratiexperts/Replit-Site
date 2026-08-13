@@ -96,7 +96,7 @@ const LOCAL_BUSINESS = {
       { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Managed Cybersecurity (SOC/MDR)" } },
       { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Business Continuity & Disaster Recovery" } },
       { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Co-Managed IT" } },
-      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "HIPAA & PCI Compliance" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "HIPAA & PCI compliance support" } },
       { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Unified Communications (UCaaS)" } }
     ]
   },

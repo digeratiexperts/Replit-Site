@@ -5,7 +5,7 @@ import { CheckCircle, Shield, Clock, RefreshCw, Zap, Eye } from "lucide-react";
 export default function RemoteSupport() {
   const features = [
     { icon: Clock, title: "Instant Connection", color: "from-blue-500 to-cyan-500", points: ["Connect in under 2 minutes", "No software required", "Windows, Mac, Linux"] },
-    { icon: Shield, title: "Secure & Encrypted", color: "from-green-500 to-emerald-500", points: ["End-to-end encryption", "Session recording", "HIPAA & GDPR compliant"] },
+    { icon: Shield, title: "Secure & Encrypted", color: "from-green-500 to-emerald-500", points: ["End-to-end encryption", "Session recording", "HIPAA-aligned session controls"] },
     { icon: RefreshCw, title: "Screen Sharing", color: "from-purple-500 to-indigo-500", points: ["Full control capability", "Multi-monitor support", "File transfer included"] },
     { icon: Zap, title: "24/7 Availability", color: "from-amber-500 to-orange-500", points: ["Round-the-clock support", "15-min response time", "Senior engineer escalation"] }
   ];

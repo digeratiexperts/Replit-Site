@@ -12,10 +12,9 @@ const cities = [
   { name: "Scottsdale", icon: "/figmaAssets/svg-2.svg" },
 ];
 
-const certifications = [
+const partnerMarks = [
   { icon: "/figmaAssets/svg-3.svg", text: "Microsoft Partner" },
   { icon: "/figmaAssets/svg-3.svg", text: "Apple Consultants" },
-  { icon: "/figmaAssets/svg-13.svg", text: "SOC 2 Type II" },
 ];
 
 const socialLinks = [
@@ -108,7 +107,7 @@ export const BlogSection = (): JSX.Element => {
 
           <div className="flex flex-col gap-4 lg:gap-[25px]">
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 lg:gap-6">
-              {certifications.map((cert, index) => (
+              {partnerMarks.map((mark, index) => (
                 <Card
                   key={index}
                   className="bg-[#2c3045] border-0 backdrop-blur-[2px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(2px)_brightness(100%)]"
@@ -116,15 +115,18 @@ export const BlogSection = (): JSX.Element => {
                   <CardContent className="inline-flex items-center gap-3 lg:gap-5 p-4 lg:p-6">
                     <img
                       className="w-4 h-4 lg:w-[18px] lg:h-[18px]"
-                      alt="Certification"
-                      src={cert.icon}
+                      alt=""
+                      src={mark.icon}
                     />
                     <div className="font-bold text-[#e5e9f0] text-xs lg:text-sm tracking-[0] leading-[23.8px] whitespace-nowrap">
-                      {cert.text}
+                      {mark.text}
                     </div>
                   </CardContent>
                 </Card>
               ))}
+              <p className="w-full text-center lg:text-left text-slate-400 text-xs lg:text-sm leading-relaxed">
+                Built for regulated environments — HIPAA · SOC 2 · Cyber Insurance · Security Framework Alignment
+              </p>
             </div>
 
             <div className="inline-flex items-center justify-center lg:justify-start gap-2.5 flex-wrap">
@@ -167,12 +169,12 @@ export const BlogSection = (): JSX.Element => {
                     src="/figmaAssets/svg-7.svg"
                   />
                   <span className="font-bold text-white text-xs tracking-[1.00px] leading-[20.4px]">
-                    COMPLIANCE READY
+                    SECURITY & COMPLIANCE SUPPORT
                   </span>
                 </Badge>
 
                 <h3 className="font-bold text-white text-lg lg:text-xl tracking-[-0.70px] leading-[26px]">
-                  Need SOC 2 or Security Documentation?
+                  Need security questionnaires or compliance documentation?
                 </h3>
 
                 <p className="font-normal text-slate-300 text-sm lg:text-[15px] tracking-[0] leading-[25.5px]">

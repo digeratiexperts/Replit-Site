@@ -29,7 +29,7 @@ const complianceFrameworks = [
       "Employee security awareness training",
       "Incident response planning",
       "Secure email and file sharing",
-      "HIPAA-compliant cloud infrastructure"
+      "HIPAA-aligned cloud infrastructure"
     ]
   },
   {

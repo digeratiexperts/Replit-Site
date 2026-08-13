@@ -14,7 +14,7 @@ export default function PayInvoice() {
   const features = [
     { icon: Download, title: "Download Invoices", desc: "View and download all invoices and receipts in the portal" },
     { icon: Zap, title: "Auto-Pay Setup", desc: "Set up automatic monthly payments where available" },
-    { icon: Shield, title: "Secure Payments", desc: "PCI-DSS compliant encryption via the portal" },
+    { icon: Shield, title: "Secure Payments", desc: "Encrypted checkout through the Client Portal" },
     { icon: CreditCard, title: "Payment History", desc: "Complete transaction records in your account" }
   ];
 
@@ -118,14 +118,13 @@ export default function PayInvoice() {
         {/* Security Badges */}
         <div className="flex flex-wrap gap-4 justify-center">
           {[
-            { badge: "PCI-DSS", label: "Level 1 Certified" },
-            { badge: "SSL", label: "256-bit Encryption" },
-            { badge: "SOC 2", label: "Type II" },
-            { badge: "GDPR", label: "Compliant" }
+            { badge: "Encrypted checkout", label: "TLS in transit" },
+            { badge: "Security questionnaires", label: "Available on request" },
+            { badge: "Framework alignment", label: "HIPAA · SOC 2 · insurance" },
           ].map((cert, idx) => (
-            <div key={idx} className="px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-lg">
-              <p className="font-semibold text-green-400">{cert.badge}</p>
-              <p className="text-xs text-green-300/70">{cert.label}</p>
+            <div key={idx} className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg">
+              <p className="font-semibold text-white">{cert.badge}</p>
+              <p className="text-xs text-gray-400">{cert.label}</p>
             </div>
           ))}
         </div>

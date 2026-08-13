@@ -52,7 +52,7 @@ export const DigeratiFooterSection = (): JSX.Element => {
         <div className="border-t border-gray-800 mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-center md:text-left">
-              © {new Date().getFullYear()} Digerati Experts. All rights reserved. | SOC 2 Type II Documentation | Cybersecurity-First MSP
+              © {new Date().getFullYear()} Digerati Experts. All rights reserved. | Security & Compliance Support | Cybersecurity-First MSP
             </p>
             <div className="mt-4 md:mt-0 flex items-center space-x-4">
               <span className="text-gray-400">24/7 Emergency:</span>

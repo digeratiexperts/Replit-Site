@@ -443,7 +443,7 @@ export const resourcePageData = {
     features: [
       { title: "Service Datasheets", description: "Detailed specifications for all services" },
       { title: "Technical Documentation", description: "Architecture and integration guides" },
-      { title: "Compliance Docs", description: "SOC 2, HIPAA, and other compliance documentation" }
+      { title: "Compliance Docs", description: "Security questionnaires and framework-alignment documentation" }
     ],
     benefits: [
       "Vendor evaluation resources",

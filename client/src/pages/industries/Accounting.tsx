@@ -22,7 +22,7 @@ export default function Accounting() {
   return (
     <PageTemplate
       title="IT Solutions for Accounting & Finance"
-      subtitle="PCI DSS compliant, secure financial data protection for Arizona CPAs and accounting firms"
+      subtitle="PCI DSS-aligned security and financial data protection for Arizona CPAs and accounting firms"
       gradientColors="from-violet-600 via-purple-600 to-fuchsia-600"
     >
       <div className="space-y-16">
@@ -133,21 +133,23 @@ export default function Accounting() {
           })}
         </div>
 
-        {/* Certifications & Trust Badges */}
         <div className="bg-white/5 backdrop-blur-sm rounded-xl p-12 border border-white/10">
-          <h3 className="text-2xl font-bold text-center text-white mb-8">Enterprise-Grade Certifications</h3>
+          <h3 className="text-2xl font-bold text-center text-white mb-3">Security & Compliance Support</h3>
+          <p className="text-center text-gray-400 text-sm mb-8 max-w-2xl mx-auto">
+            Framework names describe customer requirements we help organizations address — not certifications Digerati holds.
+          </p>
           <div className="grid md:grid-cols-4 gap-6">
             {[
-              { badge: "SOC 2", label: "Type II Certified", color: "from-violet-500 to-purple-500" },
-              { badge: "ISO 27001", label: "Information Security", color: "from-violet-500 to-purple-500" },
-              { badge: "PCI DSS", label: "Level 1 Compliant", color: "from-purple-500 to-fuchsia-500" },
-              { badge: "NIST", label: "Framework Aligned", color: "from-violet-500 to-purple-500" }
-            ].map((cert, idx) => (
+              { badge: "HIPAA", label: "Aligned security and compliance support", color: "from-violet-500 to-purple-500" },
+              { badge: "SOC 2", label: "Readiness and control alignment", color: "from-violet-500 to-purple-500" },
+              { badge: "Cyber Insurance", label: "Readiness for underwriting reviews", color: "from-purple-500 to-fuchsia-500" },
+              { badge: "Reporting", label: "Security and compliance reporting", color: "from-violet-500 to-purple-500" }
+            ].map((item, idx) => (
               <div key={idx} className="text-center p-4 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 hover:border-white/20 transition-all">
-                <div className={`inline-block bg-gradient-to-r ${cert.color} text-white px-4 py-2 rounded-lg font-bold mb-2`}>
-                  {cert.badge}
+                <div className={`inline-block bg-gradient-to-r ${item.color} text-white px-4 py-2 rounded-lg font-bold mb-2`}>
+                  {item.badge}
                 </div>
-                <p className="text-sm text-gray-300">{cert.label}</p>
+                <p className="text-sm text-gray-300">{item.label}</p>
               </div>
             ))}
           </div>

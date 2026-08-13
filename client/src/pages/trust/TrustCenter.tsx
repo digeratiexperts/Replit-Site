@@ -1,16 +1,16 @@
 import { PageTemplate } from "@/components/PageTemplate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Shield, Lock, FileCheck, Award, Eye, Server, CheckCircle, Mail, Phone } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 
 export default function TrustCenter() {
   const prefersReducedMotion = useReducedMotion() ?? false;
   
-  const certifications = [
-    { icon: Award, title: "SOC 2 Type II", desc: "Independently audited security controls for Service Organization Control", status: "Certified", gradient: "from-violet-500 to-purple-600" },
-    { icon: FileCheck, title: "HIPAA Compliant", desc: "Business Associate Agreements available for healthcare clients", status: "Compliant", gradient: "from-purple-500 to-fuchsia-600" },
-    { icon: Lock, title: "PCI DSS", desc: "Payment Card Industry Data Security Standard compliance", status: "Compliant", gradient: "from-fuchsia-500 to-pink-600" }
+  const complianceSupport = [
+    { icon: FileCheck, title: "HIPAA-aligned security and compliance support", desc: "Business Associate Agreements available for healthcare clients. Framework alignment — not a HIPAA certification.", gradient: "from-purple-500 to-fuchsia-600" },
+    { icon: Award, title: "SOC 2 readiness and control alignment", desc: "Control mapping, evidence support, and readiness work for customer SOC 2 programs. Digerati is not SOC 2 Type II certified.", gradient: "from-violet-500 to-purple-600" },
+    { icon: Lock, title: "Cyber insurance readiness", desc: "Controls and documentation insurers commonly request during underwriting and renewals.", gradient: "from-fuchsia-500 to-pink-600" },
+    { icon: Shield, title: "Security and compliance reporting", desc: "Questionnaires, control evidence, and reporting support for vendor reviews and audits.", gradient: "from-violet-600 to-purple-600" },
   ];
 
   const technicalControls = [
@@ -48,41 +48,51 @@ export default function TrustCenter() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          Digerati Experts is committed to maintaining the highest standards of security, compliance, 
-          and privacy. Our Trust Center provides transparency into our security practices and certifications.
+          Digerati Experts is committed to maintaining high standards of security, compliance, 
+          and privacy. Our Trust Center provides transparency into our security practices and the frameworks we help customers address.
         </motion.p>
 
-        {/* Security Certifications */}
-        <div className="grid md:grid-cols-3 gap-6">
-          {certifications.map((cert, idx) => {
-            const Icon = cert.icon;
-            return (
-              <motion.div
-                key={idx}
-                initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1, duration: 0.5 }}
-              >
-                <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 hover:shadow-xl transition-all duration-300 overflow-hidden">
-                  <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl ${cert.gradient} opacity-10 rounded-bl-full`} />
-                  <CardHeader>
-                    <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${cert.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                      <Icon className="h-7 w-7 text-white" />
-                    </div>
-                    <CardTitle className="text-xl text-white">{cert.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-400 mb-4 leading-relaxed">{cert.desc}</p>
-                    <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
-                      <CheckCircle className="w-3 h-3 mr-1" />
-                      {cert.status}
-                    </Badge>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            );
-          })}
+        {/* Security & Compliance Support — capability language, not company certifications */}
+        <div>
+          <h2 className="text-2xl font-bold text-white mb-2 text-center">Security & Compliance Support</h2>
+          <p className="text-gray-400 text-center max-w-2xl mx-auto mb-8">
+            These names describe frameworks and customer requirements Digerati helps organizations address. They are not certifications Digerati holds.
+          </p>
+          <div className="grid md:grid-cols-2 gap-6">
+            {complianceSupport.map((item, idx) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  key={item.title}
+                  initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1, duration: 0.5 }}
+                >
+                  <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 hover:shadow-xl transition-all duration-300 overflow-hidden">
+                    <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl ${item.gradient} opacity-10 rounded-bl-full`} />
+                    <CardHeader>
+                      <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.gradient} flex items-center justify-center mb-4`}>
+                        <Icon className="h-7 w-7 text-white" />
+                      </div>
+                      <CardTitle className="text-xl text-white">{item.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-gray-400 leading-relaxed">{item.desc}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Honest empty hook — only populate when a current report/attestation exists */}
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8 md:p-10">
+          <h2 className="text-2xl font-bold text-white mb-3">Verified Certifications & Attestations</h2>
+          <p className="text-gray-400 leading-relaxed max-w-3xl">
+            No independent SOC 2 Type II report or HIPAA certification is published here. When a current, documented attestation is available, it will be listed in this section.
+          </p>
         </div>
 
         {/* Security Practices */}
@@ -233,7 +243,7 @@ export default function TrustCenter() {
           <div className="relative p-8 md:p-12 text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Need Security Documentation?</h2>
             <p className="text-lg md:text-xl mb-8 text-white/90 max-w-2xl mx-auto">
-              Request our SOC 2 report, security questionnaires, or compliance documentation for vendor onboarding.
+              Request security questionnaires or framework-alignment documentation for vendor onboarding.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 

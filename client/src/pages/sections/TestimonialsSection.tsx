@@ -17,7 +17,7 @@ const industries = [
   {
     title: "Medical Practices",
     description:
-      "HIPAA-compliant IT solutions with 24/7 monitoring to protect patient data and ensure uptime.",
+      "HIPAA-aligned IT solutions with 24/7 monitoring to protect patient data and ensure uptime.",
     image: "/figmaAssets/rectangle-152058-1.svg",
   },
   {

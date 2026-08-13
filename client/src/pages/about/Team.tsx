@@ -70,7 +70,6 @@ export default function Team() {
       items: [
         "Microsoft Partner Network",
         "Apple Consultants Network",
-        "SOC 2 Type II Certified",
         "Better Business Bureau A+ Rating"
       ]
     }
