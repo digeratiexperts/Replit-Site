@@ -89,7 +89,7 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2 lg:col-span-7">
+          <div className="de-raised-panel grid grid-cols-1 gap-x-8 gap-y-8 p-6 sm:grid-cols-2 sm:p-8 lg:col-span-7">
             {challenges.map((challenge, index) => {
               const Icon = challenge.icon;
               return (
