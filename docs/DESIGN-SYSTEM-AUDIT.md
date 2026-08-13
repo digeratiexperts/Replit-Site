@@ -1,14 +1,142 @@
 # Design System Audit — Digerati Experts
 
-> Phase 1 deliverable. Read-only audit of the existing production site before any broad
-> visual change. Companion to [`docs/DIGERATI-DESIGN-SYSTEM.md`](./DIGERATI-DESIGN-SYSTEM.md)
-> (canonical spec) and the existing internal system under [`design/`](../design).
-> Authoritative policy: root `.cursorrules`. Nothing here authorizes deleting content.
+> Audit of the existing production site before any broad visual change. Companion to
+> [`docs/DIGERATI-DESIGN-SYSTEM.md`](./DIGERATI-DESIGN-SYSTEM.md) (canonical spec) and the
+> existing internal system under [`design/`](../design).
+> Authoritative policy: root `.cursorrules`. **Nothing here authorizes deleting content or assets.**
 
-**Audit date:** 2026-08 · **Branch:** `cursor/design-system-audit-a75a`
+**Audit date:** 2026-08-13
 **Method:** static inspection of `client/`, `server/`, `design/`, `tailwind.config.ts`,
-`client/src/index.css`; rendered inspection of `/`, `/proactive-ecosystem-pricing`,
-`/portal/login` via the local dev server.
+`client/src/index.css`, **plus rendered inspection** of `/`, `/solutions/managed-it-support`,
+`/industries/law-firms`, `/proactive-ecosystem-pricing`, `/store` and `/portal/login` at
+**1440 / 768 / 390** using headless Chrome against the local dev server, including per-element
+captures of all 14 homepage bands and computed-style measurement of type, surfaces and layout.
+
+Evidence images: [`design/audit-2026-08/`](../design/audit-2026-08).
+
+---
+
+## 0. Rendered evidence (2026-08-13)
+
+Sections 1–9 below are the structural/static audit. This section is what the **running site**
+actually shows, and it is the part that drives the work order. Every claim here has a measured
+value or a screenshot behind it.
+
+### 0.1 Measured baselines before any change
+
+| Gate | Result |
+|---|---|
+| `npm run build` | **PASS** (5.2s). Main chunk **972.61 kB / 285.60 kB gzip** (>500 kB warning) |
+| `npm run check` (tsc) | **FAIL — 73 pre-existing errors** (54 server/shared, 19 client). CI treats as informational |
+| `npm test` | **FAIL — 1 suite**: `server/services/msp-advisor/msp-advisor.test.ts` → "No test suite found"; 39 tests pass |
+| CI on `main` | **RED**, solely because of that one suite (`gh run view 31661163851 --log-failed`) |
+| Horizontal overflow @ 1440/768/390 | **none** on the five pages audited |
+| Homepage height | **15,884px @1440** · **25,973px @390** · 18 `h2` / 35 `h3` / 22 `h4` |
+| Fixed chrome | `--de-nav-offset` = **182px** (utility 46 + nav ~103 + section-spy 33) |
+
+The 73 TypeScript errors are **pre-existing and out of scope** — they are not to be "fixed"
+opportunistically, so the baseline stays traceable. Only deltas against this table are reported.
+
+### 0.2 The ten highest-impact problems, ranked
+
+Scored 1–5 on user impact (U), conversion impact (C), visual impact (V) and implementation
+risk (R). **Priority = (U + C + V) − R.**
+
+| # | Problem | Evidence | U | C | V | R | Pri |
+|---|---|---|---|---|---|---|---|
+| **1** | **`PageTemplate` is a cliché generator across ~80 public routes.** It contains a glowing shield inside a glassmorphic circle, three `repeat: Infinity` blobs, two more `blur-3xl` glow orbs, a noise layer and a grid layer, over an off-token saturated `#2a0a32 → #1a0b3a` slab — and **no CTA** (only a "Back" link). Every service page and every industry page are visually identical. | `components/PageTemplate.tsx` L21–100; `before-pagetemplate-service-1440.png`, `before-pagetemplate-industry-1440.png` | 5 | 5 | 5 | 1 | **14** |
+| **2** | **`document.body` computes to `rgb(255,255,255)`** on a site whose every marketing page is near-black. shadcn's light `--background` is the default and `.dark` is never applied to `<html>`. White bleeds through wherever a lazy or un-triggered section has not painted, plus FOUC before the hero and white overscroll. | computed style; `index.css:877` vs inert `.dark` at `:910`; `before-white-body-bleed.png` | 4 | 2 | 5 | 1 | **10** |
+| **3** | **The heading scale is inverted.** Computed on `/`: H1 = **45.5px**; H2s = **26.25 / 31.5 / 42 / 52.5px**. Three H2s ("Frequently Asked Questions", "Start with a Cyber Risk Assessment", "Protection that fits how you actually operate") are **larger than the H1**. Nothing dominates; every band shouts equally. | computed `font-size` sweep | 4 | 4 | 5 | 2 | **11** |
+| **4** | **Five competing content widths.** `max-w-[100rem]` (×8), `max-w-7xl` (×5), `max-w-[1200px]` (×5), `max-w-[1440px]` (×2), `max-w-[92rem]` (×2), plus `container`. The hero runs edge-to-edge while the next band is inset, so the left edge visibly jumps. Section padding drifts too: `py-16`(6) `py-20`(4) `py-24`(2) **`py-22`**(1, off-scale) `py-12`(1). | `rg` over `pages/sections/*.tsx` | 3 | 2 | 5 | 2 | **8** |
+| **5** | **The closing CTA band fabricates trust.** Five glowing gold stars imply a 5.0 rating with no source or count (`.cursorrules` §3/§20). The heading "Enterprise-Grade Compliance & **Certifications**" sits over capability statements ("Audit readiness support", "HIPAA-minded controls"). Plus glassmorphic pills, an infinite light-sweep, and 11 staggered reveals delayed to **1.4s** so the band reads as empty on arrival. | `DigeratiCTASection.tsx` L80–160; `before-cta-1440.png` | 4 | 5 | 3 | 1 | **11** |
+| **6** | **`whileInView` leaves real content invisible.** 192 uses across 48 files, 120 with `initial={{ opacity: 0 }}`. Homepage `#pricing` renders **~450px of blank black** where the four un-triggered tier cards sit. Also an LCP/CLS liability. | `before-pricing-1440.png` | 5 | 4 | 4 | 2 | **11** |
+| **7** | **Imagery contradicts the locked art direction.** `#industries` uses grayscale literal-noun stock photos — scales of justice, law books, stethoscope, door handle, a hand — which `design/IMAGERY.md` and `.cursorrules` §5 explicitly ban. Cards also fade progressively darker left→right (reads as broken), and the mobile peek-carousel arrow overlaps the card. The hero photo at `opacity-.38` under a 75% black scrim reads as mud rather than depth. | `before-industries-1440.png`, `before-industries-390.png` | 3 | 3 | 5 | 3 | **8** |
+| **8** | **Token drift — hard-coded hexes outnumber tokens.** `#5034ff` appears **319 times** and is not a brand colour at all; `#FFB800` ×89; `#FF477F` ×38; `#6548ff` ×32; `#c4b5fd` ×33. **Nine competing near-blacks** are in use (`#020029` `#141414` `#0a0118` `#030228` `#252550` `#1a1228` `#0f0d2e` `#0e1524` `#1A202C`) — exactly what `design/DESIGN_SYSTEM.md` forbids. Brand tokens are the minority (`#D3126A` 94, `#0a0a0a` 68, `#151217` 22, `#050312` 13). | `rg` over `client/src/**/*.tsx` | 2 | 2 | 4 | 3 | **5** |
+| **9** | **The homepage is an encyclopedia, not a narrative.** 15,884px at 1440 (≈18 viewports), 18 H2s, four near-identical card grids in sequence (stats → tackle → trust → capabilities), and large dead zones in `#challenges` (~120px of empty left column), `#team` and `#cta` (~300px of empty background image). The `#stats` nav label says "Why DE" while the heading says "The Threats Are Real". | full-page metrics + per-band captures | 4 | 4 | 4 | 4 | **8** |
+| **10** | **182px of fixed chrome** — utility bar 46px + main nav ~103px + section-spy 33px — is ~20% of a 900px viewport before any content, and three stacked bars on mobile. | live `--de-nav-offset` | 4 | 3 | 3 | 3 | **7** |
+
+### 0.3 Tracked runners-up
+
+`/store` `<title>` duplicates its suffix ("IT Services Store | Digerati Experts | Digerati Experts") ·
+70–86 interactive elements under 32px tall on every page audited · one heading-order skip per inner
+page · `repeat: Infinity` in 8 files / 17 occurrences · `backdrop-blur` ×216 across 77 files ·
+`bg-clip-text` gradient text ×39 across 27 files (on `/`: "protected 24/7.", "how you actually
+operate.", "Serve", "Insights", plus every MegaMenu column heading) · `Button`'s `brand` variant is a
+three-stop gradient with a pink glow while the brand calls for solid `#D3126A` · two focus-ring systems
+(`ring-purple-500` in `button.tsx` vs the global magenta ring in `index.css`) · a 972 kB main chunk ·
+a framer-motion "non-static position" console warning on `/` · confirmed-dead code
+(`lib/designSystem.ts`, `Homepage.tsx` + the Figma section stack, `hero.tsx`, `navbar.tsx`,
+`Footer.tsx`, `DigeratiHeroSection.tsx`, `DigeratiFooterSection.tsx`, `AnnouncementBanner.tsx`).
+
+### 0.4 Two integrity findings (content, not styling)
+
+**Fabricated rating signal.** `DigeratiCTASection` renders five gold `Star` icons with a glow and no
+review source, above a "…& Certifications" heading. `.cursorrules` §3 forbids manufacturing ratings and
+§20 forbids certification signalling DE cannot support. Commit `e83a95a` already replaced the SOC 2 /
+HIPAA badge *text* with capability language but left the misleading heading and the stars.
+
+**Stale content presented as current.** `#insights` is titled "Recent Threats & Insights" and shows
+items dated **January 7 2026, December 5 2025 and December 16 2025** — seven to eight months stale as of
+2026-08-13, violating `.cursorrules` §34. Verified during this audit: **no live feed exists and none was
+partially implemented.** `DigeratiThreatsInsightsSection.tsx` holds a hardcoded three-item array with
+hardcoded date strings; `pages/resources/SecurityUpdates.tsx` is fully static (no `useQuery`, no
+`fetch`); and `server/routes.ts` has no CISA/KEV/threat endpoint.
+
+### 0.5 What is genuinely good and must be preserved
+
+This site is not short of content or capability — it is short of a *system*. The following already
+work and must be elevated in place, never replaced:
+
+- **The engage-path sculptures** in `#services` (`lib/visualAssets.ts`) — the strongest visual asset DE
+  owns: graphite / smoked glass / violet-as-light, consistent camera and materials. `before-services-1440.png`.
+- **The hero right-rail assessment graphic** (`graphics/DashboardMockup.tsx`) — a distinctive, premium
+  product visualization. Its *concept*, its four review-area tiles and its three outcome lines are all
+  sound. Only the invented numeric posture scores are a problem (see §0.6).
+- **The sourced statistics** in `#stats` — Verizon DBIR, IBM Cost of a Data Breach, Microsoft Digital
+  Defense Report, FBI IC3 — with visible attributions. This is exactly what `.cursorrules` §33 asks for.
+- **The honest empty states** in `#testimonials` / `#proof` — "We publish only real client reviews —
+  never placeholders." This is `.cursorrules` §36 done correctly.
+- **The `--de-*` chapter ladder** (well / surface / raised / paper / magenta) and its utility classes.
+- **The founder section's content**, the Client Bill of Rights, the Trust Center, and the ProActive
+  IT / Office / Business / Enterprise architecture.
+
+### 0.6 Correction: the hero graphic is a *honesty* fix, not a redesign
+
+`graphics/DashboardMockup.tsx` defines `postureBars` with hardcoded levels — Identity 78, Endpoints 84,
+Email 72, Backups 88, Controls 70, Overall 80 — rendered as a labelled bar chart. The component carries
+`aria-hidden` on the chart and a source comment stating the bars are "unlabeled example levels — not
+customer metrics", but neither changes what a visitor sees: a scored security-posture chart with named
+axes. That single block must lose its numbers. Secondary issues: five competing bar colours including an
+off-ladder emerald, macOS-style traffic-light window dots that push the piece toward "admin dashboard
+screenshot", no illustrative labelling, and `hidden lg:flex` so tablet and mobile visitors never see the
+hero's main visual at all. **Everything else about the graphic is kept.**
+
+### 0.7 Contrast methodology (read before quoting any contrast number)
+
+A naive contrast sweep that walks up the DOM for the first non-transparent `background-color` reports
+**false 1:1 failures** on this site, because it stops at translucent overlays such as
+`rgba(255,255,255,0.05)` and treats them as opaque white. Only **alpha-composited** results are
+trustworthy. That corrected sweep is what surfaced the white-`body` bug in §0.2 #2. No raw contrast
+counts from the naive method appear in this document, and a repeatable composited harness is added under
+`scripts/` so the figure can be re-measured rather than re-guessed.
+
+### 0.8 Corrections to the static audit below
+
+Sections 1–9 were written from source inspection alone. Rendering corrects three things:
+
+1. **§1.12 / §4.8 understate the shadcn theme problem.** The inert `.dark` block is not merely a
+   "latent visual bug" — it produces a live white `body` that users can see (§0.2 #2).
+2. **`PageTemplate` is never named** as a problem, yet it is the single largest source of design debt
+   on the site by reach (~80 routes) and the only place the forbidden glowing-shield cliché ships.
+3. **§4.1 / §4.5 are directionally right but unquantified.** The specific numbers — five content widths,
+   an inverted 45.5px-H1-vs-52.5px-H2 scale, 15,884px of homepage — are what make the case actionable.
+
+### 0.9 Reference availability
+
+**Rambox `DESIGN.md`, Evervault `DESIGN.md` and Relume exports are NOT present in this repository.**
+`design-references/` is empty intake scaffolding. Their contents must not be invented or paraphrased
+from memory. Where this audit and the canonical design system cite "Rambox-level polish" or
+"Evervault-level credibility", those are DE's stated quality targets, not quotations from files.
 
 ---
 
@@ -283,12 +411,18 @@ Restyle is fine **only if** DOM hooks, payloads, and flows are preserved:
 
 ---
 
-## 9. Recommended phase sequencing (no destructive work)
+## 9. Recommended phase sequencing (approved by DE 2026-08-13)
 
-- **Phase 2 (next):** finalize `docs/DIGERATI-DESIGN-SYSTEM.md` tokens + component contracts;
-  codify spacing/elevation/motion tokens in `tailwind.config.ts` / CSS variables.
-- **Phase 3:** build/normalize shared primitives (`Section`, `Container`, `Card`, `ServiceCard`,
-  `Stat`, `CTA`, `PricingCard`, `ComparisonTable`) on `--de-*`; migrate call sites incrementally.
-- **Phase 4:** redesign the homepage hero + the next 2–3 sections as the proving ground.
-- **Phase 5:** visual + technical review (lint/types/tests/build + 390/768/1440 + console).
-- **Phase 6:** progressive rollout across remaining public pages; dead-code cleanup PR.
+Hard gate: **Phase A (foundation) → Phase B (homepage proof) → STOP for DE before/after review.**
+No `PageTemplate` / ~80-route rollout until that checkpoint is approved.
+
+- **Phase A:** evidence audit (§0) · canonical design system · dark `body` · type/width/rhythm/motion
+  tokens · `Section`/`Container` · typography utilities · `cta` button variant · `RevealOnScroll`
+  policy · Vitest exclude for the pre-existing `node:test` advisor suite.
+- **Phase B:** hero (refine `DashboardMockup`, do not replace) · credibility/proof · engagement paths ·
+  one content section · **before/after at 1440/768/390** · validation report · **STOP**.
+- **Later (gated):** PageTemplate with pageKind variation · industry imagery · closing CTA honesty ·
+  insights gateway · homepage condensation · marketing token sweep.
+
+Preserve → elevate → consolidate → relocate. Never delete DE content or assets without approval.
+
