@@ -69,7 +69,6 @@ export const DigeratiHomepage = (): JSX.Element => {
           <DigeratiAlertBanner />
         </ScrollSectionAuto>
 
-<<<<<<< HEAD
         {/* Why DE */}
         <ScrollSectionAuto id="stats" chapter>
           <DigeratiStatsSection />
