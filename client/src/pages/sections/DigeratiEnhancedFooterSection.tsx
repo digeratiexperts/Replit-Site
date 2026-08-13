@@ -166,7 +166,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           </div>
 
           {/* Services - Glassmorphism Style */}
-          <div className="p-8 bg-white/[0.02] backdrop-blur-xl relative group border-r border-white/10 transition-colors hover:bg-white/[0.04]">
+          <div className="p-8 bg-de-surface relative group border-r border-de-hairline transition-colors hover:bg-de-raised">
             <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(139,92,246,0.04)_0%,transparent_100%)]" />
             <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider relative z-10">Services</h4>
             <ul className="space-y-3 relative z-10">
@@ -208,7 +208,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           </div>
 
           {/* Trust - Glassmorphism Style (same as Services) */}
-          <div className="p-8 bg-white/[0.02] backdrop-blur-xl relative group transition-colors hover:bg-white/[0.04]">
+          <div className="p-8 bg-de-surface relative group transition-colors hover:bg-de-raised">
             <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(139,92,246,0.04)_0%,transparent_100%)]" />
             <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider relative z-10">Trust</h4>
             <ul className="space-y-3 relative z-10">

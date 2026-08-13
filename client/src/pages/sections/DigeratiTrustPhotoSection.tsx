@@ -25,7 +25,7 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section className="de-paper-chapter overflow-hidden py-14 md:py-20 lg:py-24" data-testid="section-trust-photo">
+    <section className="de-paper-chapter de-chapter-fade-from-dark overflow-hidden py-14 md:py-20 lg:py-24" data-testid="section-trust-photo">
       <div className="max-w-[100rem] mx-auto px-3 sm:px-4 lg:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <motion.div
@@ -84,7 +84,7 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <div className="relative rounded-2xl overflow-hidden border border-gray-200 shadow-lg shadow-gray-200/60">
+            <div className="relative overflow-hidden rounded-2xl border border-de-paper-hairline shadow-lg shadow-black/10">
               <img
                 src={trustDeskImg}
                 alt="Principal-led cyber risk assessment work for an Arizona business"

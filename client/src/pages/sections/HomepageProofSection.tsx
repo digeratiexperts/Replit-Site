@@ -7,7 +7,7 @@ import { ArrowRight, ShieldCheck, FileText, Scale, Star } from "lucide-react";
  */
 export function HomepageProofSection() {
   return (
-    <section id="proof" className="de-dark-chapter py-14 lg:py-20">
+    <section id="proof" className="de-dark-well de-chapter-hairline py-14 lg:py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-pink-300/90 mb-3">
           Trust & transparency
@@ -21,7 +21,7 @@ export function HomepageProofSection() {
         </p>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+          <div className="rounded-2xl border border-de-hairline bg-de-raised p-6">
             <Star className="mb-3 h-6 w-6 text-violet-300" aria-hidden />
             <h3 className="mb-2 text-lg font-semibold text-white">Client reviews</h3>
             <p className="mb-4 text-sm text-white/65">
@@ -37,7 +37,7 @@ export function HomepageProofSection() {
               <ArrowRight className="h-4 w-4" aria-hidden />
             </a>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+          <div className="rounded-2xl border border-de-hairline bg-de-raised p-6">
             <Scale className="h-6 w-6 text-violet-300 mb-3" aria-hidden />
             <h3 className="text-lg font-semibold text-white mb-2">Client Bill of Rights</h3>
             <p className="text-sm text-white/65 mb-4">
@@ -52,7 +52,7 @@ export function HomepageProofSection() {
               <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+          <div className="rounded-2xl border border-de-hairline bg-de-raised p-6">
             <ShieldCheck className="h-6 w-6 text-violet-300 mb-3" aria-hidden />
             <h3 className="text-lg font-semibold text-white mb-2">Trust Center</h3>
             <p className="text-sm text-white/65 mb-4">
@@ -67,7 +67,7 @@ export function HomepageProofSection() {
               <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+          <div className="rounded-2xl border border-de-hairline bg-de-raised p-6">
             <FileText className="h-6 w-6 text-violet-300 mb-3" aria-hidden />
             <h3 className="text-lg font-semibold text-white mb-2">Case studies</h3>
             <p className="text-sm text-white/65 mb-4">

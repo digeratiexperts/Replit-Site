@@ -70,10 +70,10 @@ export const DigeratiFAQSection = (): JSX.Element => {
                 data-testid={`faq-${index}`}
               >
                 <div 
-                  className={`de-paper-raised rounded-xl border border-de-paper-hairline border-l-4 transition-all duration-300 ${
+                  className={`de-paper-lift rounded-xl border-l-4 transition-all duration-300 ${
                     isOpen 
-                      ? 'border-l-violet-600'
-                      : 'border-l-violet-400/50 hover:border-l-violet-500'
+                      ? 'border-l-violet-600 shadow-lg'
+                      : 'border-l-violet-400/50 hover:border-l-violet-500 hover:shadow-lg'
                   }`}
                 >
                   <button

@@ -49,7 +49,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
 
   return (
     <>
-      <section className="de-paper-chapter relative py-16 lg:py-24">
+      <section className="de-paper-chapter de-chapter-fade-from-dark relative py-16 lg:py-24">
         <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
           <motion.div
             className="mb-12 max-w-2xl md:mb-16"
@@ -70,7 +70,10 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
             </p>
           </motion.div>
 
-          <div className="mx-auto grid max-w-[92rem] grid-cols-1 gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3" id="protection-stack">
+          <div
+            id="protection-stack"
+            className="de-paper-lift mx-auto grid max-w-[92rem] grid-cols-1 gap-x-10 gap-y-6 rounded-2xl p-6 sm:grid-cols-2 md:p-8 lg:grid-cols-3 lg:p-10"
+          >
             {domains.map((item) => {
               const Icon = item.icon;
               return (

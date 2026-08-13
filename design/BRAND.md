@@ -39,7 +39,7 @@ Think high-end enterprise technology product visualization rather than generic c
 
 ## Color (live tokens)
 
-Primary environment: graphite well `--de-bg` `#050312`, marketing field `--de-surface` `#0a0a0a`, charcoal raised `--de-raised` `#151217`, hairline `rgba(255,255,255,0.1)`. Paper chapters: `--de-paper` `#f7f5f2`.
+Primary environment: graphite well `--de-bg` `#050312`, marketing field `--de-surface` `#0a0a0a`, charcoal raised `--de-raised` `#151217`, hairline `rgba(255,255,255,0.1)`. Paper chapters: `--de-paper` `#f7f5f2`. Juxtapose well / surface / paper / magenta — do not flatten every section to one `#0a0a0a` slab.
 
 Accent: brand magenta `#D3126A`; deep violet `#5B45E0` / `#7c3aed`; restrained purple `#8B5CF6`; subtle lavender `#A78BFA`.
 

@@ -127,7 +127,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
   return (
     <section
       id="testimonials"
-      className="de-dark-chapter relative overflow-hidden py-14 md:py-18 lg:py-20"
+      className="de-dark-well de-chapter-hairline relative overflow-hidden py-14 md:py-18 lg:py-20"
       data-testid="section-client-proof"
     >
       <div className="mx-auto max-w-[100rem] px-3 sm:px-4 lg:px-6">
@@ -155,7 +155,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
             initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="rounded-2xl border border-white/10 bg-white/[0.04] p-7 md:p-8 lg:col-span-1"
+            className="rounded-2xl border border-de-hairline bg-de-raised p-7 md:p-8 lg:col-span-1"
             data-testid="proof-reviews-slot"
             id="google-reviews"
           >
@@ -295,7 +295,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.05 }}
-            className="rounded-2xl border border-white/10 bg-white/[0.04] p-7 md:p-8 lg:col-span-2"
+            className="rounded-2xl border border-de-hairline bg-de-raised p-7 md:p-8 lg:col-span-2"
             data-testid="proof-outcomes"
           >
             <div className="mb-4 flex items-start gap-3">

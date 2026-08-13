@@ -92,7 +92,7 @@ export const DigeratiContactSection = (): JSX.Element => {
   return (
     <section 
       id="contact" 
-      className="de-dark-well relative overflow-hidden py-8 lg:py-10"
+      className="de-dark-well de-chapter-hairline relative overflow-hidden py-8 lg:py-10"
     >
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <img src={contactBgImage} alt="" loading="lazy" className="absolute top-0 left-0 w-full h-auto opacity-[0.15]" />

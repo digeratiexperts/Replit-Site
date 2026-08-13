@@ -103,7 +103,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
           </motion.div>
 
           <motion.div
-            className="de-paper-raised rounded-2xl border border-de-paper-hairline p-8 md:p-10"
+            className="de-paper-lift-lg rounded-2xl p-8 md:p-10"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

@@ -24,9 +24,14 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
 
   return (
     <section
-      className="de-dark-chapter de-chapter-hairline relative overflow-hidden py-10 md:py-14 lg:py-16"
+      className="de-dark-well de-chapter-hairline relative overflow-hidden py-10 md:py-14 lg:py-16"
       data-testid="section-meet-experts"
     >
+      <div
+        className="de-founder-seam pointer-events-none absolute inset-x-0 top-0"
+        aria-hidden="true"
+      />
+
       <div className="relative z-10 mx-auto max-w-[100rem] px-3 sm:px-4 lg:px-6">
         <motion.div
           className="mb-8 md:mb-10"

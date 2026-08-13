@@ -15,7 +15,7 @@ export const DigeratiCTASection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
   
   return (
-    <section className="de-dark-well relative overflow-hidden py-12 lg:py-16">
+    <section className="de-dark-well de-chapter-hairline relative overflow-hidden py-12 lg:py-16">
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <img src={ctaBgImage} alt="" loading="lazy" className="absolute top-0 left-0 w-full h-auto opacity-[0.15]" />
       </div>

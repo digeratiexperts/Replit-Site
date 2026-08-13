@@ -25,7 +25,7 @@ Design OS (tokens, brand, UX, imagery): `DESIGN_SYSTEM.md`, `BRAND.md`, `UX_PRIN
 
 ## Homepage shade system (2026-08)
 
-Steal Lucide.dev’s nested neutrals, not their layout. Adjacent dark homepage sections share `--de-surface` (`#0a0a0a`) with a 1px `--de-hairline` or a single lift from `--de-bg` (`#050312`). Cards sit on `--de-raised` (`#151217`). Light leftovers use one `--de-paper` (`#f7f5f2`) recipe. Magenta how-it-works stays the only loud band. Do not call Meshy for UI chrome.
+Steal Lucide.dev’s nested neutrals, not their layout. Homepage chapters should juxtapose: `--de-bg` well, `--de-surface` field, `--de-paper`, and the magenta how-it-works band. Adjacent dark sections in the *same* chapter share a field with a 1px hairline and raised cards (`--de-raised`). Do not flatten every section to one `#0a0a0a` slab. Light leftovers use one `--de-paper` (`#f7f5f2`) recipe with lifted white cards. Magenta how-it-works stays the only loud band. Do not call Meshy for UI chrome.
 
 ## Naming
 

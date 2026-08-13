@@ -17,7 +17,7 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
   const { openBooking } = useBooking();
 
   return (
-    <section className="de-dark-chapter relative overflow-hidden py-20">
+    <section className="de-dark-chapter de-chapter-hairline relative overflow-hidden py-20">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -85,14 +85,14 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
             </ul>
 
             <div className="grid sm:grid-cols-2 gap-4 mb-8">
-              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
+              <div className="rounded-xl border border-de-hairline bg-de-raised p-5">
                 <Shield className="h-5 w-5 text-pink-400 mb-2" aria-hidden />
                 <p className="text-white font-semibold text-sm mb-1">Coverage with context</p>
                 <p className="text-white/55 text-sm leading-relaxed">
                   Alerts are interpreted against your environment — not dumped into a generic queue.
                 </p>
               </div>
-              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
+              <div className="rounded-xl border border-de-hairline bg-de-raised p-5">
                 <Layers className="h-5 w-5 text-violet-300 mb-2" aria-hidden />
                 <p className="text-white font-semibold text-sm mb-1">Documented next steps</p>
                 <p className="text-white/55 text-sm leading-relaxed">

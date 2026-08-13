@@ -27,7 +27,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section id="pricing" className="de-dark-chapter relative py-16 md:py-20 lg:py-24">
+    <section id="pricing" className="de-dark-chapter de-chapter-hairline relative py-16 md:py-20 lg:py-24">
       <div className="relative z-10 mx-auto max-w-[100rem] px-3 sm:px-4 lg:px-6">
         <motion.div
           className="mx-auto mb-10 max-w-5xl md:mb-12 lg:text-left"

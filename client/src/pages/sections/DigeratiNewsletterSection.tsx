@@ -117,7 +117,7 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
               ) : (
                 <form 
                   onSubmit={handleSubmit} 
-                  className="flex flex-col sm:flex-row gap-3 p-2 rounded-2xl bg-white shadow-xl border border-gray-200"
+                  className="de-paper-lift-lg flex flex-col gap-3 rounded-2xl p-2 sm:flex-row"
                 >
                   <Input
                     type="email"

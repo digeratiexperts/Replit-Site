@@ -17,17 +17,17 @@ Enterprise
 
 ## Color
 
-Shade ladder (Lucide lesson, DE hex — nested, not leftover slabs):
+Shade ladder (Lucide lesson, DE hex — nested, juxtaposed, not leftover slabs):
 
-`--de-bg` `#050312` — deepest well (hero, credibility, closing CTA/contact/footer)
-`--de-surface` `#0a0a0a` — marketing field (adjacent dark sections share this)
-`--de-raised` `#151217` — cards / lifted panels
-`--de-hairline` `rgba(255,255,255,0.1)` — 1px borders and chapter seams
-`--de-paper` `#f7f5f2` — one light chapter recipe
+`--de-bg` `#050312` — deepest well (hero, credibility, proof after magenta, founder, closing CTA/contact/footer)
+`--de-surface` `#0a0a0a` — marketing field for a dark chapter (stats→engage, industries→insights)
+`--de-raised` `#151217` — cards / lifted panels inside a dark chapter
+`--de-hairline` `rgba(255,255,255,0.1)` — 1px borders and same-chapter seams
+`--de-paper` `#f7f5f2` — one light chapter recipe (protect, trust, FAQ/newsletter)
 `--de-paper-raised` `#ffffff` — cards on paper
-`--de-paper-hairline` `rgba(26,18,16,0.1)`
+`--de-paper-hairline` `rgba(26, 18, 16, 0.1)`
 
-Adjacent same-chapter dark sections share `--de-surface` with a hairline or a single 1-step lift from `--de-bg`. Do not paint `#0f0f0f`, `#0f0f1a`, `#141418`, or cool `#F7FAFC` as competing page fields.
+Adjacent same-chapter dark sections share one field with a hairline and internal lift (raised cards). Different chapters step well ↔ surface ↔ paper ↔ magenta so the page does not read as one `#0a0a0a` slab. Do not paint `#0f0f0f`, `#0f0f1a`, `#141418`, or cool `#F7FAFC` as competing page fields. Magenta how-it-works stays the only loud band.
 
 DE Desk shell `#1a0b33`
 Nested dark `#12141c` / `#171922`

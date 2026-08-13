@@ -111,7 +111,9 @@ html {
 
 /* Brand tokens — shared dark cyber + magenta theme.
  * Shade ladder (Lucide lesson, DE hex): bg → surface → raised, 1px hairline.
- * Do not invent leftover grays (#0f0f0f, #0f0f1a, #141418, cool #F7FAFC). */
+ * Use the ladder to juxtapose chapters (well / surface / paper / magenta).
+ * Do not flatten every section to one slab, and do not invent leftover
+ * grays (#0f0f0f, #0f0f1a, #141418, cool #F7FAFC). */
 :root {
   --de-bg: #050312;
   --de-surface: #0a0a0a;
@@ -175,7 +177,9 @@ html {
   padding-top: var(--de-nav-offset);
 }
 
-/* Dark chapters share one field. Adjacent siblings use a hairline, not a new gray. */
+/* Dark chapters: well (#050312) vs surface (#0a0a0a) vs raised (#151217).
+ * Adjacent siblings in the SAME chapter share a field + hairline.
+ * Different chapters step the ladder so the page does not read as one slab. */
 .de-dark-well {
   background-color: var(--de-bg);
 }
@@ -189,7 +193,18 @@ html {
   border-top: 1px solid var(--de-hairline);
 }
 
-/* Paper chapter — one warm recipe. Raised cards sit on it with paper hairlines. */
+/* Magenta seam — tasteful chapter chrome, not a blur blob. */
+.de-founder-seam {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in srgb, var(--de-magenta) 70%, transparent),
+    transparent
+  );
+}
+
+/* Paper chapter — one warm recipe. Raised cards must actually lift. */
 .de-paper-chapter {
   background-color: var(--de-paper);
 }
@@ -198,6 +213,19 @@ html {
 }
 .de-paper-hairline {
   border-top: 1px solid var(--de-paper-hairline);
+}
+.de-paper-lift {
+  background-color: var(--de-paper-raised);
+  border: 1px solid var(--de-paper-hairline);
+  box-shadow: 0 1px 2px rgba(26, 18, 16, 0.05), 0 10px 28px rgba(26, 18, 16, 0.07);
+}
+.de-paper-lift:hover {
+  box-shadow: 0 2px 4px rgba(26, 18, 16, 0.06), 0 14px 36px rgba(26, 18, 16, 0.09);
+}
+.de-paper-lift-lg {
+  background-color: var(--de-paper-raised);
+  border: 1px solid var(--de-paper-hairline);
+  box-shadow: 0 8px 32px rgba(26, 18, 16, 0.1);
 }
 
 /* Hairline fade between dark graphite and paper chapters. No parallax. */
