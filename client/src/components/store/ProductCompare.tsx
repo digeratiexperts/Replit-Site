@@ -35,7 +35,7 @@ export function ProductCompareBar({
       className="de-bottom-bar z-40 flex items-center justify-center pointer-events-none"
       style={{
         bottom:
-          "calc(var(--de-chrome-inset) + var(--de-cookie-h) + var(--de-sticky-cta-h) + 0.5rem)",
+          "calc(var(--de-chrome-inset) + var(--de-cookie-h) + var(--de-unified-bar-h) + var(--de-sticky-cta-h) + 0.5rem)",
       }}
       data-testid="compare-bar"
     >

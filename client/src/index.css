@@ -143,11 +143,12 @@ html {
   --de-canvas-gutter: max(0px, calc((100vw - var(--de-canvas)) / 2));
   --de-conversion-bar-h: 0px;
   --de-section-dock-h: 0px;
+  --de-unified-bar-h: 0px;
   --de-spy-h: 0px;
   --de-sticky-cta-h: 0px;
   --de-cookie-h: 0px;
   --de-chrome-inset: 0.75rem;
-  --de-fab-rail: 17.5rem;
+  --de-fab-rail: 0px;
   --de-fab-h: 3.5rem;
 
   /*
@@ -176,7 +177,7 @@ html.de-marketing-canvas body {
   min-height: 100%;
   background-color: var(--de-bg);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
-  padding-bottom: calc(var(--de-section-dock-h) + var(--de-sticky-cta-h) + var(--de-chrome-inset));
+  padding-bottom: calc(var(--de-unified-bar-h) + var(--de-sticky-cta-h) + var(--de-chrome-inset));
 }
 
 .de-fixed-in-canvas {
@@ -185,15 +186,25 @@ html.de-marketing-canvas body {
 }
 
 /*
- * Bottom chrome: one wide bar (dock or sticky CTA) + a right rail for Ask DE.
- * Back-to-top sits in that rail, above the launcher — never on the bar.
+ * Bottom chrome: one unified capsule (menu + scroll-top + Ask DE).
+ * Sticky CTA / compare sit above that shell so close controls stay clear.
  */
+.de-unified-bar {
+  position: fixed;
+  z-index: 55;
+  left: calc(var(--de-canvas-gutter) + var(--de-chrome-inset));
+  right: calc(var(--de-canvas-gutter) + var(--de-chrome-inset));
+  bottom: calc(var(--de-chrome-inset) + var(--de-cookie-h));
+}
+
 .de-bottom-bar {
   position: fixed;
   z-index: 50;
   left: calc(var(--de-canvas-gutter) + var(--de-chrome-inset));
-  right: calc(var(--de-canvas-gutter) + var(--de-fab-rail));
-  bottom: calc(var(--de-chrome-inset) + var(--de-cookie-h));
+  right: calc(var(--de-canvas-gutter) + var(--de-chrome-inset));
+  bottom: calc(
+    var(--de-chrome-inset) + var(--de-cookie-h) + var(--de-unified-bar-h) + 0.5rem
+  );
 }
 
 .de-fab-rail {
@@ -208,15 +219,15 @@ html.de-marketing-canvas body {
   z-index: 54;
   right: calc(var(--de-canvas-gutter) + var(--de-chrome-inset));
   bottom: calc(
-    var(--de-chrome-inset) + var(--de-cookie-h) + var(--de-fab-h) + 0.6rem
+    var(--de-chrome-inset) + var(--de-cookie-h) + var(--de-unified-bar-h) + 0.6rem
   );
 }
 
 @media (max-width: 639px) {
+  .de-unified-bar,
   .de-bottom-bar {
     left: var(--de-chrome-inset);
     right: var(--de-chrome-inset);
-    bottom: calc(var(--de-chrome-inset) + var(--de-cookie-h) + var(--de-fab-h) + 0.6rem);
   }
 }
 

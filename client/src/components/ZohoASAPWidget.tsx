@@ -343,6 +343,13 @@ export const ZohoASAPWidget = ({
   }, [isOpen]);
 
   useEffect(() => {
+    window.dispatchEvent(new CustomEvent("de-desk-open-change", { detail: { open: isOpen } }));
+    return () => {
+      window.dispatchEvent(new CustomEvent("de-desk-open-change", { detail: { open: false } }));
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
     const onOpen = (event: Event) => {
       const detail = (event as CustomEvent<OpenMspAdvisorDetail>).detail || {};
       setIsOpen(true);
@@ -669,8 +676,8 @@ export const ZohoASAPWidget = ({
   if (!isEnabled) return null;
 
   const dockClear = cookieBannerClear
-    ? "calc(var(--de-chrome-inset) + env(safe-area-inset-bottom, 0px) + var(--de-cookie-h, 0px))"
-    : "calc(5.75rem + var(--de-cookie-h, 0px))";
+    ? "calc(var(--de-chrome-inset) + env(safe-area-inset-bottom, 0px) + var(--de-cookie-h, 0px) + var(--de-unified-bar-h, 0px))"
+    : "calc(5.75rem + var(--de-cookie-h, 0px) + var(--de-unified-bar-h, 0px))";
 
   const canvasRight = "calc(var(--de-canvas-gutter) + var(--de-chrome-inset))";
 
@@ -692,31 +699,6 @@ export const ZohoASAPWidget = ({
 
   return (
     <>
-      {!isOpen && (
-      <div
-        className="de-fab-rail z-[55]"
-        data-testid="widget-zoho-asap-container"
-      >
-          <button
-            type="button"
-            onClick={() => setIsOpen(true)}
-            className="group flex h-14 items-center gap-3 rounded-full border border-white/12 bg-[#0a0a0a]/95 px-4 pr-5 text-white shadow-[0_12px_40px_rgba(0,0,0,0.45)] backdrop-blur-md transition duration-200 hover:-translate-y-0.5 hover:border-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            data-testid="button-open-asap-widget"
-            aria-label="Open DE Desk"
-            aria-expanded={isOpen}
-          >
-            <span className="relative flex h-9 w-9 items-center justify-center rounded-full bg-[#D3126A] text-sm font-bold tracking-tight">
-              DE
-              <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#0a0a0a] bg-emerald-400" />
-            </span>
-            <span className="hidden text-left sm:block">
-              <span className="block text-sm font-semibold leading-4 tracking-tight">Ask DE</span>
-              <span className="block text-[11px] leading-4 text-white/55">We&apos;re here to help.</span>
-            </span>
-          </button>
-      </div>
-      )}
-
         {isOpen && (
           <section
             ref={deskDrag.panelRef}

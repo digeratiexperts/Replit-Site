@@ -7,10 +7,10 @@ import { HelmetProvider } from "react-helmet-async";
 import NotFound from "@/pages/not-found";
 import { lazy, Suspense, useEffect } from "react";
 import { analytics } from "@/lib/analytics";
-import { ScrollToTop } from "@/components/ScrollToTop";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { ExitIntentPopup } from "@/components/ExitIntentPopup";
 import { StickyCTABar } from "@/components/StickyCTABar";
+import { SiteBottomBar } from "@/components/SiteBottomBar";
 import { MarketingChrome } from "@/components/MarketingChrome";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PageLoadingSkeleton } from "@/components/LoadingSkeleton";
@@ -869,6 +869,7 @@ function AppContent() {
   useGlobalShortcuts();
   const [location] = useLocation();
   const isPortal = location.startsWith("/portal");
+  const isHome = location === "/";
 
   useEffect(() => {
     document.documentElement.classList.toggle("de-marketing-canvas", !isPortal);
@@ -886,7 +887,7 @@ function AppContent() {
         <Router />
       </div>
       <MarketingChrome />
-      <ScrollToTop />
+      {!isHome && <SiteBottomBar />}
       <StickyCTABar />
       <ExitIntentPopup delay={10000} />
       <CookieConsentBanner />

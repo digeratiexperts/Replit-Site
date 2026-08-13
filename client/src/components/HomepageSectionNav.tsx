@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Phone, Shield } from "lucide-react";
 import { useOptionalFullPageScroll } from "@/components/FullPageScroll";
 import { useBooking } from "@/contexts/BookingContext";
@@ -126,13 +125,8 @@ export function HomepageOnPageNav() {
   );
 }
 
-/**
- * Scrolled state of the homepage section navigator — branded Protected? dock.
- */
-export function HomepageSectionDock() {
+export function useHomepageDockVisibility() {
   const ctx = useOptionalFullPageScroll();
-  const { openBooking } = useBooking();
-  const prefersReducedMotion = useReducedMotion();
   const [scrolledAway, setScrolledAway] = useState(false);
   const [nearFooter, setNearFooter] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
@@ -145,16 +139,9 @@ export function HomepageSectionDock() {
   });
 
   const sections = ctx?.sections ?? [];
-  const currentSection = ctx?.currentSection ?? 0;
-  const scrollToSection = ctx?.scrollToSection;
   const items = sections
     .map((section, index) => ({ section, index }))
     .filter(({ section }) => DOCK_CHAPTERS.has(section.id));
-  const topItems = sections
-    .map((section, index) => ({ section, index }))
-    .filter(({ section }) => TOP_CHAPTERS.has(section.id));
-  const conceptualActiveIndex = nearestNavIndex(topItems, currentSection);
-  const conceptualActiveId = sections[conceptualActiveIndex]?.id;
 
   useEffect(() => {
     const onConsent = () => setCookieClear(true);
@@ -188,93 +175,101 @@ export function HomepageSectionDock() {
     return () => observer.disconnect();
   }, []);
 
-  const show = Boolean(ctx) && isDesktop && scrolledAway && !nearFooter && cookieClear && items.length > 0;
+  const showMenu =
+    Boolean(ctx) && isDesktop && scrolledAway && !nearFooter && cookieClear && items.length > 0;
 
-  useEffect(() => {
-    document.documentElement.style.setProperty(
-      "--de-section-dock-h",
-      show ? "3.75rem" : "0px"
-    );
-    return () => {
-      document.documentElement.style.setProperty("--de-section-dock-h", "0px");
-    };
-  }, [show]);
+  return { showMenu, nearFooter, isDesktop };
+}
+
+/**
+ * Chapter + phone + Risk Assessment cluster for the unified bottom bar.
+ * Visibility is owned by SiteBottomBar so this is only the menu segment.
+ */
+export function HomepageDockMenu() {
+  const ctx = useOptionalFullPageScroll();
+  const { openBooking } = useBooking();
+  const sections = ctx?.sections ?? [];
+  const currentSection = ctx?.currentSection ?? 0;
+  const scrollToSection = ctx?.scrollToSection;
+  const items = sections
+    .map((section, index) => ({ section, index }))
+    .filter(({ section }) => DOCK_CHAPTERS.has(section.id));
+  const topItems = sections
+    .map((section, index) => ({ section, index }))
+    .filter(({ section }) => TOP_CHAPTERS.has(section.id));
+  const conceptualActiveIndex = nearestNavIndex(topItems, currentSection);
+  const conceptualActiveId = sections[conceptualActiveIndex]?.id;
+
+  if (!ctx || items.length === 0) return null;
 
   return (
-    <AnimatePresence>
-      {show && (
-        <motion.div
-          initial={prefersReducedMotion ? { opacity: 1 } : { y: 18, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={prefersReducedMotion ? { opacity: 0 } : { y: 18, opacity: 0 }}
-          transition={{ duration: prefersReducedMotion ? 0 : 0.22, ease: "easeOut" }}
-          className="de-bottom-bar hidden lg:flex items-center pointer-events-none"
-          data-testid="homepage-section-dock"
-        >
-          <nav
-            className="pointer-events-auto flex w-full min-w-0 flex-row items-center justify-between gap-2 overflow-hidden py-2 px-3.5 rounded-full bg-black/95 backdrop-blur-xl border-2 border-[#D3126A]/60 shadow-[0_0_24px_rgba(211,18,106,0.35),0_4px_24px_rgba(0,0,0,0.5)]"
-            aria-label="On this page"
-          >
-            <div className="hidden xl:flex items-center gap-2 pr-3 border-r border-white/20 mr-2 shrink-0">
-              <Shield className="w-4 h-4 text-[#FF477F]" aria-hidden="true" />
-              <span className="text-white font-semibold text-sm whitespace-nowrap">Protected?</span>
-            </div>
+    <nav
+      className="flex min-w-0 flex-1 flex-row items-center justify-between gap-2 overflow-hidden"
+      aria-label="On this page"
+      data-testid="homepage-section-dock"
+    >
+      <div className="hidden xl:flex items-center gap-2 pr-3 border-r border-white/20 mr-2 shrink-0">
+        <Shield className="w-4 h-4 text-[#FF477F]" aria-hidden="true" />
+        <span className="text-white font-semibold text-sm whitespace-nowrap">Protected?</span>
+      </div>
 
-            <div className="flex items-center gap-1 min-w-0 overflow-x-auto scrollbar-none">
-              {items.map(({ section, index }) => {
-                const isActive = section.id === conceptualActiveId;
-                return (
-                  <a
-                    key={section.id}
-                    href={`#${section.id}`}
-                    onClick={(event) => {
-                      event.preventDefault();
-                      scrollToSection?.(index);
-                    }}
-                    className={`relative inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF477F] whitespace-nowrap shrink-0 ${
-                      isActive
-                        ? "bg-[#D3126A] text-white shadow-lg shadow-[#D3126A]/40"
-                        : "text-white/75 hover:text-white hover:bg-white/10"
-                    }`}
-                    aria-current={isActive ? "true" : undefined}
-                    data-testid={`nav-dock-${section.id}`}
-                  >
-                    {isActive && (
-                      <span
-                        className="h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.85)]"
-                        aria-hidden="true"
-                      />
-                    )}
-                    {section.label}
-                  </a>
-                );
-              })}
-            </div>
-
-            <div className="w-px h-6 bg-white/20 mx-2 shrink-0" aria-hidden="true" />
-
+      <div className="flex items-center gap-1 min-w-0 overflow-x-auto scrollbar-none">
+        {items.map(({ section, index }) => {
+          const isActive = section.id === conceptualActiveId;
+          return (
             <a
-              href="tel:480-519-5892"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-white/90 hover:text-white hover:bg-white/10 transition-colors shrink-0 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF477F]"
-              data-testid="nav-phone"
-              aria-label="Call 480-519-5892"
+              key={section.id}
+              href={`#${section.id}`}
+              onClick={(event) => {
+                event.preventDefault();
+                scrollToSection?.(index);
+              }}
+              className={`relative inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF477F] whitespace-nowrap shrink-0 ${
+                isActive
+                  ? "bg-[#D3126A] text-white shadow-lg shadow-[#D3126A]/40"
+                  : "text-white/75 hover:text-white hover:bg-white/10"
+              }`}
+              aria-current={isActive ? "true" : undefined}
+              data-testid={`nav-dock-${section.id}`}
             >
-              <Phone className="w-4 h-4 text-[#FF477F]" aria-hidden="true" />
-              <span className="hidden xl:inline">480-519-5892</span>
+              {isActive && (
+                <span
+                  className="h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.85)]"
+                  aria-hidden="true"
+                />
+              )}
+              {section.label}
             </a>
+          );
+        })}
+      </div>
 
-            <button
-              type="button"
-              onClick={() => openBooking("homepage_section_dock")}
-              className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold rounded-full bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 text-white hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 transition-all duration-200 shadow-lg whitespace-nowrap shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-300"
-              data-testid="nav-cta-assessment"
-            >
-              {CTA.primaryNavCompact}
-              <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-            </button>
-          </nav>
-        </motion.div>
-      )}
-    </AnimatePresence>
+      <div className="w-px h-6 bg-white/20 mx-2 shrink-0" aria-hidden="true" />
+
+      <a
+        href="tel:480-519-5892"
+        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-white/90 hover:text-white hover:bg-white/10 transition-colors shrink-0 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF477F]"
+        data-testid="nav-phone"
+        aria-label="Call 480-519-5892"
+      >
+        <Phone className="w-4 h-4 text-[#FF477F]" aria-hidden="true" />
+        <span className="hidden xl:inline">480-519-5892</span>
+      </a>
+
+      <button
+        type="button"
+        onClick={() => openBooking("homepage_section_dock")}
+        className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold rounded-full bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 text-white hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 transition-all duration-200 shadow-lg whitespace-nowrap shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-300"
+        data-testid="nav-cta-assessment"
+      >
+        {CTA.primaryNavCompact}
+        <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+      </button>
+    </nav>
   );
+}
+
+/** @deprecated Use SiteBottomBar — kept so existing homepage imports stay safe during the swap. */
+export function HomepageSectionDock() {
+  return null;
 }

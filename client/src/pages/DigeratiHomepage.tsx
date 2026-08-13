@@ -1,6 +1,6 @@
 import { MegaMenu } from "@/components/MegaMenu";
 import { FullPageScrollProvider, ScrollSectionAuto } from "@/components/FullPageScroll";
-import { HomepageSectionDock } from "@/components/HomepageSectionNav";
+import { SiteBottomBar } from "@/components/SiteBottomBar";
 import { useSEO } from "@/hooks/useSEO";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/JsonLd";
 
@@ -61,7 +61,7 @@ export const DigeratiHomepage = (): JSX.Element => {
         <WebSiteJsonLd />
         {/* Navigation — chat lives in App MarketingChrome sitewide */}
         <MegaMenu />
-        <HomepageSectionDock />
+        <SiteBottomBar />
 
         {/* Home — Cybersecurity-First hero + Assessment / Talk to Expert CTAs */}
         <ScrollSectionAuto id="hero" chapter>
