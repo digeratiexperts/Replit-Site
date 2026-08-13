@@ -138,6 +138,11 @@ html {
     #fb7185 100%
   );
 
+  /* Contained marketing canvas — black outer gutters, framed DE site inside */
+  --de-canvas: 100rem;
+  --de-canvas-gutter: max(0px, calc((100vw - var(--de-canvas)) / 2));
+  --de-conversion-bar-h: 0px;
+
   /*
    * Sticky MegaMenu clearance (utility bar + main nav).
    * Utility must clear enlarged text-lg links (~3.25rem); never fix utility
@@ -151,6 +156,25 @@ html {
   --de-spy-h: 0px;
   --de-nav-offset: calc(var(--de-nav-chrome) + var(--de-spy-h) + 0.75rem);
   --de-nav-current-bottom: calc(var(--de-nav-chrome) + var(--de-spy-h));
+}
+
+html.de-marketing-canvas,
+html.de-marketing-canvas body {
+  background-color: #000;
+}
+
+.de-site-canvas {
+  max-width: var(--de-canvas);
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 100%;
+  background-color: var(--de-bg);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.de-fixed-in-canvas {
+  left: var(--de-canvas-gutter);
+  right: var(--de-canvas-gutter);
 }
 
 /* Homepage section snap — proximity only (no JS scroll hijack). */
@@ -483,7 +507,8 @@ textarea:focus-visible {
 .scroll-progress {
   position: fixed;
   top: 0;
-  left: 0;
+  left: var(--de-canvas-gutter, 0px);
+  width: calc(100vw - (2 * var(--de-canvas-gutter, 0px)));
   height: 3px;
   background: linear-gradient(90deg, #8b5cf6, #a855f7);
   z-index: 9999;

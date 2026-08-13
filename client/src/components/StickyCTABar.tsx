@@ -53,7 +53,7 @@ export function StickyCTABar() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="fixed bottom-0 left-0 right-0 md:right-[70px] z-50 p-3 md:p-0"
+          className="fixed bottom-0 de-fixed-in-canvas z-50 p-3 md:p-0"
           data-testid="sticky-cta-bar"
         >
           <div className="relative bg-gradient-to-r from-fuchsia-900/95 via-pink-900/95 to-violet-900/95 backdrop-blur-lg border-t border-pink-500/35 shadow-lg shadow-pink-500/15">

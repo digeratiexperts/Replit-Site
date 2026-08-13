@@ -518,7 +518,7 @@ export function MegaMenu() {
         {/* Top Utility Bar - solid dark violet with fade effect */}
       <div 
         ref={utilityBarRef}
-        className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-300 ${
+        className={`fixed top-0 de-fixed-in-canvas z-[60] transition-all duration-300 ${
           /* Never lock height to --de-utility-h: that chicken-eggs measurement and
              clips enlarged utility glyphs above the viewport (only letter bottoms show). */
           isScrolled
@@ -564,8 +564,7 @@ export function MegaMenu() {
               data-testid="utility-zoho-assist"
             >
               <Monitor className="h-4 w-4 mr-1.5 text-pink-400 shrink-0" />
-              <span className="hidden sm:inline">Zoho Assist</span>
-              <span className="sm:hidden">Assist</span>
+              <span>Support</span>
             </a>
 
             <a
@@ -582,7 +581,7 @@ export function MegaMenu() {
 
       {/* Main Navigation — live presence + solid chrome only when needed */}
       <nav 
-        className={`fixed left-0 right-0 z-[55] mega-menu-container transition-all duration-300 ${
+        className={`fixed de-fixed-in-canvas z-[55] mega-menu-container transition-all duration-300 ${
           isScrolled ? 'top-0' : 'top-[var(--de-utility-h)]'
         } ${
           useSolidChrome
@@ -1007,7 +1006,7 @@ export function MegaMenu() {
 
         {/* Mobile/Tablet Menu - Premium Glassmorphism Slide-out */}
         <div 
-          className={`lg:hidden fixed left-0 right-0 z-40 transition-all duration-500 ${
+          className={`lg:hidden fixed de-fixed-in-canvas z-40 transition-all duration-500 ${
             mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
           }`}
           style={{ 
@@ -1159,14 +1158,14 @@ export function MegaMenu() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 px-4 py-3 rounded-xl bg-violet-500/10 border border-violet-500/20 hover:border-violet-500/40 transition-all group"
                   data-testid="mobile-zoho-assist"
-                  aria-label="Open Zoho Assist remote support"
+                  aria-label="Open Support remote session"
                 >
                   <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center border border-violet-500/20">
                     <Monitor className="h-5 w-5 text-violet-400" aria-hidden="true" />
                   </div>
                   <div>
                     <div className="text-sm text-gray-400">Remote Support</div>
-                    <div className="font-semibold text-white group-hover:text-violet-400 transition-colors">Zoho Assist</div>
+                    <div className="font-semibold text-white group-hover:text-violet-400 transition-colors">Support</div>
                   </div>
                 </a>
                 

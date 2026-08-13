@@ -27,6 +27,7 @@ export default defineConfig({
     },
   },
   root: path.resolve(import.meta.dirname, "client"),
+  cacheDir: process.env.VITE_CACHE_DIR || path.resolve(import.meta.dirname, "node_modules/.vite"),
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,

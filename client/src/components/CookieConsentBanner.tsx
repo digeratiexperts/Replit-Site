@@ -70,7 +70,8 @@ export function CookieConsentBanner() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 40 }}
               transition={{ duration: 0.3 }}
-              className="fixed bottom-[88px] left-4 right-4 md:left-auto md:right-6 md:w-[420px] z-[9995] rounded-2xl border border-violet-500/30 bg-[#0d0d1a] shadow-2xl shadow-black/50 p-6"
+              className="fixed bottom-[88px] left-4 right-4 md:left-auto z-[9995] rounded-2xl border border-violet-500/30 bg-[#0d0d1a] shadow-2xl shadow-black/50 p-6 md:w-[420px]"
+              style={{ right: "calc(var(--de-canvas-gutter) + 1.5rem)" }}
               data-testid="cookie-preferences-panel"
             >
               <h3 className="text-white font-semibold text-lg mb-1 font-['Space_Grotesk']">Cookie Preferences</h3>
@@ -145,7 +146,7 @@ export function CookieConsentBanner() {
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="fixed bottom-0 left-0 right-0 z-[9991]"
+          className="fixed z-[9991] de-fixed-in-canvas bottom-0"
             data-testid="cookie-consent-banner"
           >
             <div

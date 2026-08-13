@@ -656,9 +656,13 @@ export const ZohoASAPWidget = ({
     <>
       {/* Bottom-right utility — cookie banner lifts it; no second nav bar */}
       <div
-        className={`fixed z-[100] right-3 sm:right-4 ${
-          cookieBannerClear ? "bottom-5" : "bottom-28"
-        }`}
+        className="fixed z-[100]"
+        style={{
+          bottom: cookieBannerClear
+            ? "calc(1.25rem + var(--de-conversion-bar-h, 0px))"
+            : "calc(5.75rem + var(--de-conversion-bar-h, 0px))",
+          right: "calc(var(--de-canvas-gutter) + 0.75rem)",
+        }}
         data-testid="widget-zoho-asap-container"
       >
         {!isOpen && (
@@ -676,7 +680,7 @@ export const ZohoASAPWidget = ({
             </span>
             <span className="hidden text-left sm:block">
               <span className="block text-sm font-semibold leading-4 tracking-tight">Ask DE</span>
-              <span className="block text-[11px] leading-4 text-white/55">Technology desk · live</span>
+              <span className="block text-[11px] leading-4 text-white/55">We&apos;re here to help.</span>
             </span>
           </button>
         )}

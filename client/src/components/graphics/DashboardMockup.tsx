@@ -30,7 +30,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
       initial={prefersReducedMotion ? false : { opacity: 0, y: 28 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: prefersReducedMotion ? 0 : 0.55, ease: "easeOut" }}
-      aria-label="Preview of a Digerati Experts Cyber Risk Assessment report"
+      aria-label="Illustrative preview of a Digerati Experts Cyber Risk Assessment"
     >
       <div
         className="relative rounded-2xl overflow-hidden border border-white/12"
@@ -55,25 +55,18 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
         </div>
 
         <div className="p-4 sm:p-5 space-y-4">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-2.5">
-              <div
-                className="w-9 h-9 rounded-xl bg-gradient-to-br from-fuchsia-500/90 via-pink-500/90 to-violet-600/90 flex items-center justify-center border border-pink-300/20"
-                aria-hidden="true"
-              >
-                <Shield className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <div className="text-white font-semibold text-sm">Assessment overview</div>
-                <div className="text-white/45 text-xs">Identity · endpoints · email · backups</div>
-              </div>
+          <div className="flex items-start gap-3">
+            <div
+              className="w-9 h-9 rounded-xl bg-gradient-to-br from-fuchsia-500/90 via-pink-500/90 to-violet-600/90 flex items-center justify-center border border-pink-300/20"
+              aria-hidden="true"
+            >
+              <Shield className="w-4 h-4 text-white" />
+            </div>
+            <div>
+              <div className="text-white font-semibold text-sm">Cyber Risk Assessment</div>
+              <div className="text-white/50 text-xs italic">Illustrative preview · not live customer data</div>
             </div>
           </div>
-
-          <p className="text-sm text-white/85 leading-relaxed">
-            A practical review of posture across identity, endpoints, email, backups, and
-            controls — sized to your Arizona business.
-          </p>
 
           <div className="grid grid-cols-2 gap-2.5">
             {reviewAreas.map((area, index) => (
@@ -105,7 +98,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
           >
             <div className="flex items-center gap-2 mb-3">
               <Activity className="w-4 h-4 text-violet-400" aria-hidden="true" />
-              <span className="text-white text-sm font-medium">Posture areas reviewed</span>
+              <span className="text-white text-sm font-medium">Posture across key areas</span>
             </div>
             <div className="flex items-end gap-2 h-[72px]" aria-hidden="true">
               {postureBars.map((bar, index) => (
@@ -120,7 +113,6 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
                     delay: prefersReducedMotion ? 0 : 0.45 + index * 0.05,
                     ease: "easeOut",
                   }}
-                  title={bar.label}
                 />
               ))}
             </div>
@@ -135,9 +127,9 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
 
           <div className="space-y-2">
             {[
-              "Prioritized findings with clear business impact",
-              "Recommendations matched to your size and risk",
-              "No-obligation follow-up within one business day",
+              "Prioritized findings",
+              "Recommendations matched to your size",
+              "No obligation follow-up",
             ].map((line, index) => (
               <motion.div
                 key={line}

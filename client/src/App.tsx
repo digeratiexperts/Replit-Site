@@ -867,7 +867,14 @@ function SpaPageViews() {
 
 function AppContent() {
   useGlobalShortcuts();
-  
+  const [location] = useLocation();
+  const isPortal = location.startsWith("/portal");
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("de-marketing-canvas", !isPortal);
+    return () => document.documentElement.classList.remove("de-marketing-canvas");
+  }, [isPortal]);
+
   return (
     <AnnouncerProvider>
       <a href="#main-content" className="skip-link">
@@ -875,7 +882,7 @@ function AppContent() {
       </a>
       <ScrollProgress />
       <SpaPageViews />
-      <div id="main-content">
+      <div id="main-content" className={isPortal ? undefined : "de-site-canvas"}>
         <Router />
       </div>
       <MarketingChrome />
