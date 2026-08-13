@@ -197,6 +197,33 @@ html.de-marketing-canvas body {
   bottom: calc(var(--de-chrome-inset) + var(--de-cookie-h));
 }
 
+/*
+ * Glass lives on a static inset layer. Transform (Framer layout/scale) on the
+ * same node as backdrop-filter is what made the expanded bar look blurry.
+ */
+.de-unified-bar-shell {
+  isolation: isolate;
+  /* Width is animated as a layout length, never transform/scale. */
+  transform: none;
+}
+
+.de-unified-bar-glass {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .de-unified-bar-shell {
+    transition: none;
+  }
+}
+
 .de-bottom-bar {
   position: fixed;
   z-index: 50;

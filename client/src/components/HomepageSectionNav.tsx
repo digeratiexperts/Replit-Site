@@ -204,7 +204,7 @@ export function HomepageDockMenu() {
 
   return (
     <nav
-      className="flex min-w-0 flex-1 flex-row items-center justify-between gap-2 overflow-hidden"
+      className="flex min-w-0 flex-1 flex-row items-center gap-1 overflow-hidden"
       aria-label="On this page"
       data-testid="homepage-section-dock"
     >
@@ -213,7 +213,7 @@ export function HomepageDockMenu() {
         <span className="text-white font-semibold text-sm whitespace-nowrap">Protected?</span>
       </div>
 
-      <div className="flex items-center gap-1 min-w-0 overflow-x-auto scrollbar-none">
+      <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto scrollbar-none">
         {items.map(({ section, index }) => {
           const isActive = section.id === conceptualActiveId;
           return (
@@ -244,7 +244,7 @@ export function HomepageDockMenu() {
         })}
       </div>
 
-      <div className="w-px h-6 bg-white/20 mx-2 shrink-0" aria-hidden="true" />
+      <div className="w-px h-6 bg-white/20 mx-1 shrink-0" aria-hidden="true" />
 
       <a
         href="tel:480-519-5892"

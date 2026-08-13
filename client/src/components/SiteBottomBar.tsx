@@ -1,16 +1,20 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 import { useLocation } from "wouter";
 import { HomepageDockMenu, useHomepageDockVisibility } from "@/components/HomepageSectionNav";
 import { openMspAdvisor } from "@/lib/openMspAdvisor";
 
+/** Original used 0.28s easeOut layout + 300ms grid. Keep that pacing without transform. */
+const EXPAND_S = 0.4;
+const EXPAND_EASE = "easeOut" as const;
+
 function AskDELauncherButton() {
   return (
     <button
       type="button"
       onClick={() => openMspAdvisor()}
-      className="group flex h-11 shrink-0 items-center gap-2.5 rounded-full px-1.5 pr-3.5 text-white transition duration-200 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+      className="group flex h-11 shrink-0 items-center gap-2 rounded-full px-1 pr-2 text-white transition-colors duration-200 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
       data-testid="button-open-asap-widget"
       aria-label="Open DE Desk"
       aria-expanded={false}
@@ -30,6 +34,9 @@ function AskDELauncherButton() {
 /**
  * One bottom chrome shell: homepage chapter menu (after scroll), scroll-to-top,
  * and the Ask DE launcher. Desk window stays in ZohoASAPWidget.
+ *
+ * Width is tweened as CSS width (not Framer `layout` / scale) so backdrop-filter
+ * on the static glass layer does not smear text while the capsule grows.
  */
 export function SiteBottomBar() {
   const [location] = useLocation();
@@ -38,6 +45,8 @@ export function SiteBottomBar() {
   const [farDown, setFarDown] = useState(false);
   const [deskOpen, setDeskOpen] = useState(false);
   const barRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [trackW, setTrackW] = useState(0);
   const isPortal = location.startsWith("/portal");
 
   const syncFarDown = useCallback(() => {
@@ -66,6 +75,16 @@ export function SiteBottomBar() {
     };
     window.addEventListener("de-desk-open-change", onDesk as EventListener);
     return () => window.removeEventListener("de-desk-open-change", onDesk as EventListener);
+  }, []);
+
+  useLayoutEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const publish = () => setTrackW(Math.round(track.getBoundingClientRect().width));
+    publish();
+    const ro = new ResizeObserver(publish);
+    ro.observe(track);
+    return () => ro.disconnect();
   }, []);
 
   const showScrollTop = farDown;
@@ -106,45 +125,59 @@ export function SiteBottomBar() {
 
   if (!showBar) return null;
 
-  const duration = prefersReducedMotion ? 0.18 : 0.28;
+  const duration = prefersReducedMotion ? 0 : EXPAND_S;
 
   return (
     <div
-      className={`de-unified-bar pointer-events-none flex items-end ${
-        expanded ? "justify-stretch" : "justify-end"
-      }`}
+      ref={trackRef}
+      className="de-unified-bar pointer-events-none flex items-end justify-end"
       data-testid="site-bottom-bar"
     >
       <motion.div
         ref={barRef}
-        layout={!prefersReducedMotion}
-        className={`pointer-events-auto flex min-w-0 items-center gap-1 rounded-full border-2 border-[#D3126A]/60 bg-black/95 py-1.5 shadow-[0_0_24px_rgba(211,18,106,0.35),0_4px_24px_rgba(0,0,0,0.5)] backdrop-blur-xl ${
-          expanded ? "w-full px-2.5 sm:px-3" : "w-auto px-1.5"
+        className={`de-unified-bar-shell pointer-events-auto relative flex min-w-0 items-center gap-0 rounded-full border-2 border-[#D3126A]/60 py-1.5 shadow-[0_0_24px_rgba(211,18,106,0.35),0_4px_24px_rgba(0,0,0,0.5)] ${
+          expanded ? "pl-2.5 pr-1 sm:pl-3 sm:pr-1.5" : "pl-1.5 pr-1"
         }`}
-        transition={{ duration, ease: "easeOut" }}
+        initial={false}
+        layout={false}
+        transformTemplate={() => "none"}
+        animate={{
+          width: expanded ? (trackW > 0 ? trackW : "100%") : "auto",
+        }}
+        transition={
+          prefersReducedMotion
+            ? { duration: 0 }
+            : { duration: EXPAND_S, ease: EXPAND_EASE }
+        }
       >
+        <span className="de-unified-bar-glass" aria-hidden="true" />
+
         {!expanded && location === "/" && (
           <span
-            className="ml-1 mr-0.5 hidden h-2 w-2 rounded-full bg-[#D3126A] shadow-[0_0_8px_rgba(211,18,106,0.8)] sm:block"
+            className="relative z-[1] ml-1 mr-0.5 hidden h-2 w-2 shrink-0 rounded-full bg-[#D3126A] shadow-[0_0_8px_rgba(211,18,106,0.8)] sm:block"
             aria-hidden="true"
           />
         )}
         <div
-          className={`grid min-w-0 ${prefersReducedMotion ? "" : "transition-[grid-template-columns,opacity] duration-300 ease-out"} ${
-            expanded ? "grid-cols-[minmax(0,1fr)] opacity-100" : "pointer-events-none grid-cols-[0fr] opacity-0"
+          className={`relative z-[1] grid min-w-0 ${
+            prefersReducedMotion ? "" : "transition-[grid-template-columns,opacity] duration-[400ms] ease-out"
+          } ${
+            expanded
+              ? "flex-1 grid-cols-[minmax(0,1fr)] opacity-100"
+              : "pointer-events-none w-0 flex-none grid-cols-[0fr] overflow-hidden opacity-0"
           }`}
           aria-hidden={!expanded}
         >
           <div className="min-w-0 overflow-hidden">
-            {expanded ? <HomepageDockMenu /> : null}
+            <HomepageDockMenu />
           </div>
         </div>
 
         {expanded && (showScrollTop || showAskDE) && (
-          <div className="mx-1 h-6 w-px shrink-0 bg-white/20" aria-hidden="true" />
+          <div className="relative z-[1] mx-0.5 h-6 w-px shrink-0 bg-white/20" aria-hidden="true" />
         )}
 
-        <div className="flex shrink-0 items-center gap-0.5">
+        <div className="relative z-[1] ml-auto flex shrink-0 items-center gap-0">
           <AnimatePresence initial={false}>
             {showScrollTop && (
               <motion.button
