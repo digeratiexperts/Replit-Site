@@ -197,8 +197,8 @@ function FAQItem({ question, answer, isOpen, onToggle, index }: {
 
 function StickyCTA() {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-gray-950/95 backdrop-blur-sm border-t border-white/10">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+    <div className="border-t border-white/10 bg-gray-950/80">
+      <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <Users className="w-5 h-5 text-violet-400" />
           <span className="text-white font-medium">Co-Managed IT</span>

@@ -208,15 +208,11 @@ export function HomepageSectionDock() {
           animate={{ y: 0, opacity: 1 }}
           exit={prefersReducedMotion ? { opacity: 0 } : { y: 18, opacity: 0 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.22, ease: "easeOut" }}
-          className="fixed bottom-3 z-40 hidden lg:flex justify-center pointer-events-none"
-          style={{
-            left: "calc(var(--de-canvas-gutter) + 0.75rem)",
-            right: "calc(var(--de-canvas-gutter) + 16.5rem)",
-          }}
+          className="de-bottom-bar hidden lg:flex items-center pointer-events-none"
           data-testid="homepage-section-dock"
         >
           <nav
-            className="pointer-events-auto flex w-max min-w-0 max-w-full flex-row items-center gap-1 overflow-visible py-2 px-3.5 rounded-full bg-black/95 backdrop-blur-xl border-2 border-[#D3126A]/60 shadow-[0_0_24px_rgba(211,18,106,0.35),0_4px_24px_rgba(0,0,0,0.5)]"
+            className="pointer-events-auto flex w-full min-w-0 flex-row items-center justify-between gap-2 overflow-hidden py-2 px-3.5 rounded-full bg-black/95 backdrop-blur-xl border-2 border-[#D3126A]/60 shadow-[0_0_24px_rgba(211,18,106,0.35),0_4px_24px_rgba(0,0,0,0.5)]"
             aria-label="On this page"
           >
             <div className="hidden xl:flex items-center gap-2 pr-3 border-r border-white/20 mr-2 shrink-0">

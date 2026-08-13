@@ -144,6 +144,11 @@ html {
   --de-conversion-bar-h: 0px;
   --de-section-dock-h: 0px;
   --de-spy-h: 0px;
+  --de-sticky-cta-h: 0px;
+  --de-cookie-h: 0px;
+  --de-chrome-inset: 0.75rem;
+  --de-fab-rail: 17.5rem;
+  --de-fab-h: 3.5rem;
 
   /*
    * Sticky MegaMenu clearance (utility bar + main nav).
@@ -171,11 +176,48 @@ html.de-marketing-canvas body {
   min-height: 100%;
   background-color: var(--de-bg);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
+  padding-bottom: calc(var(--de-section-dock-h) + var(--de-sticky-cta-h) + var(--de-chrome-inset));
 }
 
 .de-fixed-in-canvas {
   left: var(--de-canvas-gutter);
   right: var(--de-canvas-gutter);
+}
+
+/*
+ * Bottom chrome: one wide bar (dock or sticky CTA) + a right rail for Ask DE.
+ * Back-to-top sits in that rail, above the launcher — never on the bar.
+ */
+.de-bottom-bar {
+  position: fixed;
+  z-index: 50;
+  left: calc(var(--de-canvas-gutter) + var(--de-chrome-inset));
+  right: calc(var(--de-canvas-gutter) + var(--de-fab-rail));
+  bottom: calc(var(--de-chrome-inset) + var(--de-cookie-h));
+}
+
+.de-fab-rail {
+  position: fixed;
+  z-index: 55;
+  right: calc(var(--de-canvas-gutter) + var(--de-chrome-inset));
+  bottom: calc(var(--de-chrome-inset) + var(--de-cookie-h));
+}
+
+.de-scroll-top {
+  position: fixed;
+  z-index: 54;
+  right: calc(var(--de-canvas-gutter) + var(--de-chrome-inset));
+  bottom: calc(
+    var(--de-chrome-inset) + var(--de-cookie-h) + var(--de-fab-h) + 0.6rem
+  );
+}
+
+@media (max-width: 639px) {
+  .de-bottom-bar {
+    left: var(--de-chrome-inset);
+    right: var(--de-chrome-inset);
+    bottom: calc(var(--de-chrome-inset) + var(--de-cookie-h) + var(--de-fab-h) + 0.6rem);
+  }
 }
 
 /* Homepage section snap — proximity only (no JS scroll hijack). */

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "wouter";
 import { AnimatePresence, motion } from "framer-motion";
 import { saveConsent } from "@/lib/analytics";
@@ -19,6 +19,7 @@ export function CookieConsentBanner() {
   const [showPreferences, setShowPreferences] = useState(false);
   const [analyticsEnabled, setAnalyticsEnabled] = useState(true);
   const [marketingEnabled, setMarketingEnabled] = useState(true);
+  const bannerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!hasStoredConsent()) {
@@ -26,6 +27,25 @@ export function CookieConsentBanner() {
       return () => clearTimeout(timer);
     }
   }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const el = bannerRef.current;
+    if (!visible || !el) {
+      root.style.setProperty("--de-cookie-h", "0px");
+      return;
+    }
+    const publish = () => {
+      root.style.setProperty("--de-cookie-h", `${Math.round(el.offsetHeight)}px`);
+    };
+    publish();
+    const ro = new ResizeObserver(publish);
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      root.style.setProperty("--de-cookie-h", "0px");
+    };
+  }, [visible]);
 
   const finishConsent = () => {
     setVisible(false);
@@ -146,10 +166,11 @@ export function CookieConsentBanner() {
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-          className="fixed z-[9991] de-fixed-in-canvas bottom-0"
+            className="fixed z-[9991] de-fixed-in-canvas bottom-0"
             data-testid="cookie-consent-banner"
           >
             <div
+              ref={bannerRef}
               className="relative overflow-hidden"
               style={{
                 background: "linear-gradient(90deg, #1e0a4a 0%, #2d1060 30%, #3b1578 60%, #2a0d6b 100%)",

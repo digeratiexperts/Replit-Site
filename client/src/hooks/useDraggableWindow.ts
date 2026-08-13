@@ -24,14 +24,14 @@ function clampPos(x: number, y: number, width: number): WindowPos {
     parseCssPx(
       getComputedStyle(document.documentElement).getPropertyValue("--de-nav-current-bottom")
     ) || 72;
-  const dockH = parseCssPx(
-    getComputedStyle(document.documentElement).getPropertyValue("--de-section-dock-h")
+  const cookieH = parseCssPx(
+    getComputedStyle(document.documentElement).getPropertyValue("--de-cookie-h")
   );
   const gutter = canvasGutterPx();
   const minX = gutter + PAD;
   const maxX = Math.max(minX, window.innerWidth - gutter - width - PAD);
   const minY = navBottom + PAD;
-  const maxY = Math.max(minY, window.innerHeight - TITLE_KEEP - dockH - PAD);
+  const maxY = Math.max(minY, window.innerHeight - TITLE_KEEP - cookieH - PAD);
   return {
     x: Math.min(Math.max(x, minX), maxX),
     y: Math.min(Math.max(y, minY), maxY),
