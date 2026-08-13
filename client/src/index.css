@@ -220,16 +220,41 @@ html.de-marketing-canvas body {
   }
 }
 
+/*
+ * Homepage chapters fill one viewport under sticky chrome.
+ * Hidden (showInNav:false) blocks stay natural height and are not snap targets.
+ */
+.scroll-snap-chapter {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  scroll-margin-top: var(--de-nav-current-bottom, var(--de-nav-chrome));
+}
+
+.scroll-snap-chapter > *:last-child {
+  flex: 1 1 auto;
+}
+
 /* Homepage section snap — proximity only (no JS scroll hijack). */
 @media (min-width: 1024px) {
   html.de-section-snap {
     scroll-snap-type: y proximity;
+    /* Chapters use scroll-margin-top for live chrome; don't add html scroll-padding. */
+    scroll-padding-top: 0;
   }
 
-  html.de-section-snap .scroll-snap-section,
-  html.de-section-snap .scroll-snap-section-auto {
+  html.de-section-snap.de-snap-suppress {
+    scroll-snap-type: none;
+  }
+
+  html.de-section-snap .scroll-snap-chapter {
     scroll-snap-align: start;
     scroll-snap-stop: normal;
+  }
+
+  html.de-section-snap .scroll-snap-section:not(.scroll-snap-chapter),
+  html.de-section-snap .scroll-snap-section-auto:not(.scroll-snap-chapter) {
+    scroll-snap-align: none;
   }
 }
 

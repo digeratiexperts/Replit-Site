@@ -1,7 +1,6 @@
 import { MegaMenu } from "@/components/MegaMenu";
 import { FullPageScrollProvider, ScrollSectionAuto } from "@/components/FullPageScroll";
 import { HomepageSectionDock } from "@/components/HomepageSectionNav";
-import { useEffect } from "react";
 import { useSEO } from "@/hooks/useSEO";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/JsonLd";
 
@@ -54,22 +53,6 @@ export const DigeratiHomepage = (): JSX.Element => {
     canonical: '/',
   });
 
-  // Handle hash navigation - scroll to anchor when navigating from other pages
-  useEffect(() => {
-    const hash = window.location.hash;
-    if (hash) {
-      const targetId = hash.replace('#', '');
-      // Small delay to ensure DOM is ready
-      const timer = setTimeout(() => {
-        const element = document.getElementById(targetId);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, []);
-
   return (
     <FullPageScrollProvider sections={homepageSections} enableOnMobile={false}>
       {/* Live shade well + A+C canvas base. Ask DE sits bottom-right. */}
@@ -81,13 +64,14 @@ export const DigeratiHomepage = (): JSX.Element => {
         <HomepageSectionDock />
 
         {/* Home — Cybersecurity-First hero + Assessment / Talk to Expert CTAs */}
-        <ScrollSectionAuto id="hero">
+        <ScrollSectionAuto id="hero" chapter>
           <ModernHeroSection />
           <DigeratiAlertBanner />
         </ScrollSectionAuto>
 
+<<<<<<< HEAD
         {/* Why DE */}
-        <ScrollSectionAuto id="stats">
+        <ScrollSectionAuto id="stats" chapter>
           <DigeratiStatsSection />
         </ScrollSectionAuto>
 
@@ -97,7 +81,7 @@ export const DigeratiHomepage = (): JSX.Element => {
         </ScrollSectionAuto>
 
         {/* Engage */}
-        <ScrollSectionAuto id="services">
+        <ScrollSectionAuto id="services" chapter>
           <DigeratiServicesSection />
         </ScrollSectionAuto>
 
@@ -121,12 +105,12 @@ export const DigeratiHomepage = (): JSX.Element => {
         </ScrollSectionAuto>
 
         {/* Industries */}
-        <ScrollSectionAuto id="industries">
+        <ScrollSectionAuto id="industries" chapter>
           <DigeratiIndustriesSection />
         </ScrollSectionAuto>
 
         {/* Packages — fit-based operating models */}
-        <ScrollSectionAuto id="pricing">
+        <ScrollSectionAuto id="pricing" chapter>
           <DigeratiPricingSection />
         </ScrollSectionAuto>
 
@@ -141,7 +125,7 @@ export const DigeratiHomepage = (): JSX.Element => {
         <DigeratiLeadFormSection />
 
         {/* FAQ before Next step — live cleanness */}
-        <ScrollSectionAuto id="faq">
+        <ScrollSectionAuto id="faq" chapter>
           <DigeratiFAQSection />
           <DigeratiNewsletterSection />
         </ScrollSectionAuto>
@@ -152,7 +136,7 @@ export const DigeratiHomepage = (): JSX.Element => {
         </ScrollSectionAuto>
 
         {/* Contact */}
-        <ScrollSectionAuto id="contact" className="scroll-mt-20 pt-8">
+        <ScrollSectionAuto id="contact" chapter className="scroll-mt-20 pt-8">
           <DigeratiContactSection />
           <DigeratiEnhancedFooterSection />
         </ScrollSectionAuto>
