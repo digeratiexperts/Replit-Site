@@ -169,12 +169,12 @@ export function getCyberFact(id: string): CyberAwarenessFact {
   return fact;
 }
 
-/** Tight homepage set: AZ + national/global drivers (keep calm — not a wall of stats). */
+/** Tight homepage set: national drivers first, then Arizona — not a wall of stats. */
 export const HOMEPAGE_FACT_IDS = [
-  "az-ic3-losses-2024",
   "dbir-ransomware-2026",
   "ibm-us-breach-cost-2026",
   "microsoft-mfa-blocks-2025",
+  "az-ic3-losses-2024",
 ] as const;
 
 export function getHomepageCyberFacts(): CyberAwarenessFact[] {

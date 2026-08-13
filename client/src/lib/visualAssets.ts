@@ -22,7 +22,7 @@ export type VisualStill = {
   alt: string;
   /** Placement readiness */
   status: "approved" | "awaiting-approval" | "missing";
-  source: "meshy-batch-01" | "photography" | "envato" | "engage-sculpture-set";
+  source: "meshy-batch-01" | "photography" | "envato" | "engage-sculpture-set" | "meshy-site-accent";
 };
 
 const meshy01 = (slug: string, label: string, alt: string, status: VisualStill["status"]): VisualStill => ({
@@ -109,12 +109,13 @@ const engageSculpture = (
   slug: string,
   label: string,
   alt: string,
+  opts?: { alpha?: boolean },
 ): VisualStill => ({
   id: slug,
   label,
   src: `/images/visual-system/engage-paths/${slug}.webp`,
-  // Photographic stills compress better as JPEG than PNG.
-  srcPng: `/images/visual-system/engage-paths/${slug}.jpg`,
+  // Photographic stills compress better as JPEG; knockout stills need PNG alpha.
+  srcPng: `/images/visual-system/engage-paths/${slug}.${opts?.alpha ? "png" : "jpg"}`,
   srcThumb: `/images/visual-system/engage-paths/${slug}-640.webp`,
   alt,
   status: "approved",
@@ -141,6 +142,13 @@ export const engageSculptureSet = {
     "Cyber risk assessment",
     "Network lattice illuminated by a scanning arc highlighting selected nodes",
   ),
+  /** Homepage Threats chapter — one knockout still, not Meshy laptop/shield */
+  threatTelemetry: engageSculpture(
+    "threat-telemetry",
+    "Threat telemetry",
+    "Graphite telemetry core with smoked-glass plates and violet-lit nodes representing detected events",
+    { alpha: true },
+  ),
 } as const;
 
 /** Engage path cards — one still each, mapped to copy */
@@ -150,16 +158,27 @@ export const engagePathVisualByTitle: Record<string, VisualStill | undefined> = 
   "Cyber Risk Assessment": engageSculptureSet.cyberRisk,
 };
 
+const pricingEcosystemStill: VisualStill = {
+  id: "pricing-ecosystem",
+  label: "ProActive operating model",
+  src: "/images/visual-system/site/pricing-ecosystem.webp",
+  srcPng: "/images/visual-system/site/pricing-ecosystem.png",
+  srcThumb: "/images/visual-system/site/pricing-ecosystem.webp",
+  alt: "Isometric 3×3 service blocks around a ProActive operating-model hub",
+  status: "approved",
+  source: "meshy-site-accent",
+};
+
 /**
- * Homepage section editorials — sculptures stay on engage-path cards.
- * Stats / Protect / Pricing are Lucide + type, not repeated stills.
+ * Homepage section editorials — one still per chapter, not a gallery.
+ * Small cards stay Lucide. Protect (light) stays Lucide.
  */
 export const homepageSectionAccents = {
-  statsThreats: undefined as VisualStill | undefined,
+  statsThreats: engageSculptureSet.threatTelemetry,
   engagementAssessment: engageSculptureSet.cyberRisk,
   howItWorks: engageSculptureSet.fullyManaged,
   protectProcess: undefined as VisualStill | undefined,
-  pricingEcosystem: undefined as VisualStill | undefined,
+  pricingEcosystem: pricingEcosystemStill,
 };
 
 /** Security stack / solutions cards — Lucide wells, not Meshy */
