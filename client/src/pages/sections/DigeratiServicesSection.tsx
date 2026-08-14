@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { CTA } from "@/lib/ctaCopy";
 import { IconWell } from "@/components/visual/IconWell";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 
 /**
  * Homepage engagement paths — three primary choices.
@@ -181,36 +183,81 @@ export const DigeratiServicesSection = (): JSX.Element => {
           </Link>
         </p>
 
-        <div className="mt-14 md:mt-16" data-testid="engage-capability-preview">
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <h3 className="text-lg font-semibold text-white md:text-xl">Security capabilities</h3>
-              <p className="mt-1 text-sm text-white/50 md:text-base">
-                Preview of the stack we manage — also detailed under Protect.
-              </p>
+        <div className="mt-16 md:mt-20" data-testid="engage-capability-preview">
+          <div className="mx-auto max-w-4xl text-center">
+            <h3 className="font-heading text-3xl font-semibold tracking-[-0.03em] text-white md:text-4xl lg:text-5xl">
+              What&apos;s in ProActive
+              <span className="text-[#D3126A]" aria-hidden="true">
+                :
+              </span>
+            </h3>
+            <p className="mx-auto mt-3 max-w-2xl text-sm text-white/50 md:text-base">
+              Preview of the stack we manage — also detailed under Protect.
+            </p>
+          </div>
+
+          <Tabs defaultValue={capabilityPreview[0].title} className="mt-8 md:mt-10">
+            <div className="relative">
+              <div
+                className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-[var(--de-surface)] to-transparent md:hidden"
+                aria-hidden="true"
+              />
+              <TabsList
+                aria-label="Security capabilities"
+                className="h-auto w-full max-w-full justify-start gap-2.5 overflow-x-auto bg-transparent p-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:justify-center md:gap-3"
+              >
+                {capabilityPreview.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <TabsTrigger
+                      key={item.title}
+                      value={item.title}
+                      className={cn(
+                        "group h-auto min-h-11 shrink-0 rounded-xl border bg-transparent px-3.5 py-2.5 text-sm font-medium text-white shadow-none",
+                        "hover:bg-white/[0.03] hover:text-white",
+                        "focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]",
+                        "data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-white",
+                        "border-[var(--de-hairline)] data-[state=active]:border-[#D3126A] data-[state=active]:shadow-[inset_0_0_0_1px_#D3126A]",
+                      )}
+                    >
+                      <Icon
+                        className="mr-2 h-4 w-4 shrink-0 text-white group-data-[state=active]:text-[#D3126A]"
+                        aria-hidden="true"
+                      />
+                      {item.title}
+                    </TabsTrigger>
+                  );
+                })}
+              </TabsList>
             </div>
+
+            {capabilityPreview.map((item) => (
+              <TabsContent
+                key={item.title}
+                value={item.title}
+                className="mt-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]"
+              >
+                <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
+                  <p className="font-heading text-xl font-semibold text-white md:text-2xl">{item.title}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-white/55 md:text-base">{item.desc}</p>
+                  <Link href={item.link}>
+                    <span className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-medium text-white/80 underline decoration-white/20 underline-offset-4 hover:text-white hover:decoration-white/50">
+                      {item.title} details
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    </span>
+                  </Link>
+                </div>
+              </TabsContent>
+            ))}
+          </Tabs>
+
+          <div className="mt-8 flex justify-center md:mt-10">
             <Link href="/#protection" data-testid="link-see-security-stack">
-              <span className="inline-flex items-center gap-2 text-sm text-white/65 hover:text-white">
-                <Layers className="h-4 w-4 text-pink-400" aria-hidden="true" />
+              <span className="inline-flex min-h-11 items-center gap-2 text-sm text-white/65 hover:text-white">
+                <Layers className="h-4 w-4 text-[#D3126A]" aria-hidden="true" />
                 See full Protect process
               </span>
             </Link>
-          </div>
-          <div className="grid grid-cols-1 gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
-            {capabilityPreview.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link key={item.title} href={item.link}>
-                  <div className="flex cursor-pointer items-start gap-3">
-                    <IconWell icon={Icon} size="sm" surface="dark" />
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-white md:text-base">{item.title}</p>
-                      <p className="mt-0.5 text-sm leading-relaxed text-white/50">{item.desc}</p>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
           </div>
         </div>
 
