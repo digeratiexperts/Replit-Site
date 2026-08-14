@@ -1,27 +1,9 @@
-import { Shield, Linkedin, Twitter, Facebook, Instagram, ArrowRight, CheckCircle, Send } from "lucide-react";
-import { motion } from "framer-motion";
+import { Linkedin, Twitter, Facebook, Instagram, ArrowRight, CheckCircle, Send, Loader2, Shield } from "lucide-react";
 import { useState } from "react";
-import logoImage from '@assets/DE-Logo-new_1762461524794.webp';
-
-const CircuitOverlay = () => (
-  <svg
-    className="absolute inset-0 w-full h-full opacity-[0.03] pointer-events-none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <defs>
-      <pattern id="footer-circuit" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-        <path d="M10 10h80v80h-80z" fill="none" stroke="currentColor" strokeWidth="0.5"/>
-        <circle cx="10" cy="10" r="2" fill="currentColor"/>
-        <circle cx="90" cy="10" r="2" fill="currentColor"/>
-        <circle cx="10" cy="90" r="2" fill="currentColor"/>
-        <circle cx="90" cy="90" r="2" fill="currentColor"/>
-        <circle cx="50" cy="50" r="3" fill="currentColor"/>
-        <path d="M10 50h30M60 50h30M50 10v30M50 60v30" stroke="currentColor" strokeWidth="0.5"/>
-      </pattern>
-    </defs>
-    <rect width="100%" height="100%" fill="url(#footer-circuit)" className="text-purple-400"/>
-  </svg>
-);
+import { useToast } from "@/hooks/use-toast";
+import { IconWell } from "@/components/visual/IconWell";
+import { COMPANY_SOCIAL } from "@/data/companyContact";
+import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
 
 const FooterLink = ({ href, children, testId }: { href: string; children: React.ReactNode; testId: string }) => {
   const isExternal = /^https?:\/\//i.test(href);
@@ -29,44 +11,51 @@ const FooterLink = ({ href, children, testId }: { href: string; children: React.
     <a
       href={href}
       {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className="group relative text-gray-400 hover:text-white text-base transition-all duration-300 inline-block"
+      className="text-sm text-white/55 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
       data-testid={testId}
     >
-      <span className="relative">
-        {children}
-        <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-violet-500 transition-all duration-300 group-hover:w-full" />
-      </span>
+      {children}
     </a>
   );
 };
 
-const socialButtonVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: i * 0.1,
-      duration: 0.4,
-      ease: "easeOut"
-    }
-  }),
-  hover: {
-    scale: 1.15,
-    transition: { duration: 0.2 }
-  }
-};
-
 export const DigeratiEnhancedFooterSection = (): JSX.Element => {
   const currentYear = new Date().getFullYear();
+  const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
-      setIsSubscribed(true);
+    if (!email) return;
+
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to subscribe");
+      }
+      toast({
+        title: "Successfully Subscribed!",
+        description: "You'll receive our security updates and expert insights.",
+        variant: "default",
+      });
       setEmail("");
+      setIsSubscribed(true);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to subscribe. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -79,7 +68,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
     { name: "Remote Support", href: "/support/remote-support" },
     { name: "Pay Invoice", href: "/support/pay-invoice" },
     { name: "Knowledge Base", href: "/support/knowledge-base" },
-    { name: "System Status", href: "/portal/status" }
+    { name: "System Status", href: "/portal/status" },
   ];
 
   const services = [
@@ -88,7 +77,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
     { name: "Compliance & Risk", href: "/solutions/compliance-reports" },
     { name: "Backup & DR", href: "/solutions/backup-disaster-recovery" },
     { name: "Threat Detection", href: "/solutions/threat-detection" },
-    { name: "Security Training", href: "/solutions/security-awareness" }
+    { name: "Security Training", href: "/solutions/security-awareness" },
   ];
 
   const legal = [
@@ -98,7 +87,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
     { name: "DPA", badge: "v2025.1", href: "/legal/dpa" },
     { name: "Privacy Policy", href: "/legal/privacy-policy" },
     { name: "Terms of Use", href: "/legal/terms-of-use" },
-    { name: "Sample SOW", href: "/legal/sample-sow" }
+    { name: "Sample SOW", href: "/legal/sample-sow" },
   ];
 
   const trust = [
@@ -106,7 +95,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
     { name: "Status Page", href: "/portal/status" },
     { name: "Vulnerability Disclosure", href: "/trust/vulnerability-disclosure" },
     { name: "security.txt", href: "/.well-known/security.txt" },
-    { name: "Accessibility", href: "/trust/accessibility" }
+    { name: "Accessibility", href: "/trust/accessibility" },
   ];
 
   const locations = [
@@ -115,7 +104,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
     { name: "Gilbert", href: "/locations/gilbert-az", primary: false },
     { name: "Tempe", href: "/locations/tempe-az", primary: false },
     { name: "Mesa", href: "/locations/mesa-az", primary: false },
-    { name: "Scottsdale", href: "/locations/scottsdale-az", primary: false }
+    { name: "Scottsdale", href: "/locations/scottsdale-az", primary: false },
   ];
 
   const complianceSupport = [
@@ -128,36 +117,33 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
   const partnerMarks = ["Microsoft Partner", "Apple Consultants"];
 
   const socialLinks = [
-    { name: "LinkedIn", href: "https://www.linkedin.com/company/digerati-experts", icon: Linkedin, testId: "footer-linkedin", color: "hover:bg-[#0077B5] hover:border-[#0077B5]" },
-    { name: "Twitter", href: "https://twitter.com/digerati_experts", icon: Twitter, testId: "footer-twitter", color: "hover:bg-[#1DA1F2] hover:border-[#1DA1F2]" },
-    { name: "Facebook", href: "https://www.facebook.com/digeratiexperts", icon: Facebook, testId: "footer-facebook", color: "hover:bg-[#1877F2] hover:border-[#1877F2]" },
-    { name: "Instagram", href: "https://www.instagram.com/digerati.experts", icon: Instagram, testId: "footer-instagram", color: "hover:bg-gradient-to-br hover:from-[#833AB4] hover:via-[#FD1D1D] hover:to-[#FCAF45] hover:border-[#833AB4]" }
+    { ...COMPANY_SOCIAL.linkedin, icon: Linkedin, testId: "footer-linkedin" },
+    { ...COMPANY_SOCIAL.twitter, icon: Twitter, testId: "footer-twitter" },
+    { ...COMPANY_SOCIAL.facebook, icon: Facebook, testId: "footer-facebook" },
+    { ...COMPANY_SOCIAL.instagram, icon: Instagram, testId: "footer-instagram" },
   ];
 
   return (
-    <footer className="de-dark-well de-chapter-hairline relative overflow-hidden">
-      <CircuitOverlay />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.08),transparent_50%)] pointer-events-none" />
-      
-      <div className="container mx-auto px-3 sm:px-4 lg:px-6 pt-16 max-w-[1440px] relative z-10">
-        <div className="mb-12 pl-4 md:pl-8 lg:pl-0">
-          <img 
-            src={logoImage} 
-            alt="Digerati Experts Logo" 
+    <footer className="de-dark-well de-chapter-hairline relative">
+      <div className="container relative z-10 mx-auto max-w-[1440px] px-3 pt-16 sm:px-4 lg:px-6">
+        <div className="mb-10">
+          <img
+            src={logoImage}
+            alt="Digerati Experts Logo"
             className="h-12 w-auto"
             data-testid="logo-footer"
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 mb-12 border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
-          {/* Quick Access - Dark Style */}
-          <div className="p-8 bg-de-surface relative group border-r border-de-hairline transition-colors hover:bg-de-raised">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(139,92,246,0.08)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider relative z-10">Quick Access</h4>
-            <ul className="space-y-3 relative z-10">
-              {quickAccess.map((item, index) => (
-                <li key={index}>
-                  <FooterLink href={item.href} testId={`footer-${item.name.toLowerCase().replace(/\s+/g, '-')}`}>
+        <div className="mb-12 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+          <div>
+            <h4 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-white">
+              Quick Access
+            </h4>
+            <ul className="space-y-2.5">
+              {quickAccess.map((item) => (
+                <li key={item.name}>
+                  <FooterLink href={item.href} testId={`footer-${item.name.toLowerCase().replace(/\s+/g, "-")}`}>
                     {item.name}
                   </FooterLink>
                 </li>
@@ -165,13 +151,13 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
             </ul>
           </div>
 
-          {/* Services - Glassmorphism Style */}
-          <div className="p-8 bg-de-surface relative group border-r border-de-hairline transition-colors hover:bg-de-raised">
-            <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(139,92,246,0.04)_0%,transparent_100%)]" />
-            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider relative z-10">Services</h4>
-            <ul className="space-y-3 relative z-10">
+          <div>
+            <h4 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-white">
+              Services
+            </h4>
+            <ul className="space-y-2.5">
               {services.map((item, index) => (
-                <li key={index}>
+                <li key={item.name}>
                   <FooterLink href={item.href} testId={`footer-service-${index}`}>
                     {item.name}
                   </FooterLink>
@@ -180,24 +166,21 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
             </ul>
           </div>
 
-          {/* Legal - Dark Style (same as Quick Access) */}
-          <div className="p-8 bg-de-surface relative group border-r border-de-hairline transition-colors hover:bg-de-raised">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,rgba(139,92,246,0.08)_0%,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider relative z-10">Legal</h4>
-            <ul className="space-y-3 relative z-10">
+          <div>
+            <h4 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-white">
+              Legal
+            </h4>
+            <ul className="space-y-2.5">
               {legal.map((item, index) => (
-                <li key={index}>
-                  <a 
-                    href={item.href} 
-                    className="group/link relative text-gray-400 hover:text-white text-sm transition-all duration-300 inline-flex items-center gap-2 font-normal"
+                <li key={item.name}>
+                  <a
+                    href={item.href}
+                    className="inline-flex items-center gap-2 text-sm text-white/55 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
                     data-testid={`footer-legal-${index}`}
                   >
-                    <span className="relative">
-                      {item.name}
-                      <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-violet-500 transition-all duration-300 group-hover/link:w-full" />
-                    </span>
+                    {item.name}
                     {item.badge && (
-                      <span className="text-[10px] bg-violet-600/50 text-white/80 px-1.5 py-0.5 rounded-full border border-violet-500/30">
+                      <span className="rounded border border-de-hairline px-1.5 py-0.5 text-[10px] text-white/45">
                         {item.badge}
                       </span>
                     )}
@@ -207,13 +190,13 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
             </ul>
           </div>
 
-          {/* Trust - Glassmorphism Style (same as Services) */}
-          <div className="p-8 bg-de-surface relative group transition-colors hover:bg-de-raised">
-            <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(139,92,246,0.04)_0%,transparent_100%)]" />
-            <h4 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider relative z-10">Trust</h4>
-            <ul className="space-y-3 relative z-10">
+          <div>
+            <h4 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-white">
+              Trust
+            </h4>
+            <ul className="space-y-2.5">
               {trust.map((item, index) => (
-                <li key={index}>
+                <li key={item.name}>
                   <FooterLink href={item.href} testId={`footer-trust-${index}`}>
                     {item.name}
                   </FooterLink>
@@ -223,63 +206,55 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           </div>
         </div>
 
-        <div className="border-t border-white/10 py-8 px-4 md:px-8 lg:px-0">
-          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 mb-8 shadow-[0_0_40px_rgba(139,92,246,0.1)]">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-xl bg-violet-500/10 border border-violet-500/20">
-                  <Shield className="h-6 w-6 text-violet-400" />
-                </div>
-                <div>
-                  <h3 className="text-white font-semibold mb-1 flex items-center gap-2 ">
-                    Security & Compliance Support
-                  </h3>
-                  <p className="text-gray-400 text-sm font-normal">
-                    Need security questionnaires or compliance documentation?
-                  </p>
-                  <p className="text-gray-500 text-sm mt-1 font-normal">
-                    Request security questionnaires and framework-alignment materials for vendor onboarding
-                  </p>
-                </div>
+        <div className="border-t border-de-hairline py-8">
+          <div className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
+            <div className="flex items-start gap-4">
+              <IconWell icon={Shield} size="sm" surface="dark" />
+              <div>
+                <h3 className="font-semibold text-white">Security &amp; Compliance Support</h3>
+                <p className="mt-1 text-sm text-white/55">
+                  Need security questionnaires or compliance documentation?
+                </p>
+                <p className="mt-1 text-sm text-white/40">
+                  Request security questionnaires and framework-alignment materials for vendor onboarding
+                </p>
               </div>
-              <a
-                href="/book"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-semibold px-6 py-3 rounded-xl shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_40px_rgba(139,92,246,0.4)] whitespace-nowrap transition-all duration-300"
-                data-testid="footer-request-docs"
-              >
-                Request Docs
-                <ArrowRight className="h-4 w-4" />
-              </a>
             </div>
+            <a
+              href="/book"
+              className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-lg border border-pink-300/30 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 px-6 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
+              data-testid="footer-request-docs"
+            >
+              Request Docs
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </a>
           </div>
         </div>
 
-        <div className="border-t border-white/10 py-8 px-4 md:px-8 lg:px-0">
-          <h4 className="text-white text-sm font-semibold mb-2 uppercase tracking-wider ">
-            Security & Compliance Support
+        <div className="border-t border-de-hairline py-8">
+          <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-white">
+            Security &amp; Compliance Support
           </h4>
-          <p className="text-gray-500 text-sm mb-6 max-w-3xl">
+          <p className="mb-5 max-w-3xl text-sm text-white/45">
             Framework names describe customer requirements Digerati helps organizations address — not certifications Digerati holds.
           </p>
-          <ul className="grid sm:grid-cols-2 gap-3 mb-6">
+          <ul className="mb-6 grid gap-2 sm:grid-cols-2">
             {complianceSupport.map((item, index) => (
               <li
                 key={item}
-                className="flex items-start gap-3 px-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl"
+                className="flex items-start gap-3 text-sm text-white/60"
                 data-testid={`footer-compliance-support-${index}`}
               >
-                <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-violet-400" aria-hidden />
-                <span className="text-gray-400 text-sm font-medium">{item}</span>
+                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-violet-400" aria-hidden />
+                <span>{item}</span>
               </li>
             ))}
           </ul>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2">
             {partnerMarks.map((name) => (
               <span
                 key={name}
-                className="px-3 py-1.5 text-xs text-gray-500 border border-white/10 rounded-lg"
+                className="rounded-md border border-de-hairline px-3 py-1.5 text-xs text-white/45"
               >
                 {name}
               </span>
@@ -287,54 +262,67 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           </div>
         </div>
 
-        <div className="border-t border-white/10 py-8 px-4 md:px-8 lg:px-0">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-3xl p-8 relative overflow-hidden group hover:bg-white/[0.05] transition-colors">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(139,92,246,0.1)_0%,transparent_70%)]" />
-              <h4 className="text-white text-sm font-semibold mb-4 uppercase tracking-wider relative z-10">
+        <div className="border-t border-de-hairline py-8">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
+            <div>
+              <h4 className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-white">
                 Stay Updated
               </h4>
-              <p className="text-gray-400 text-sm mb-6 relative z-10">
+              <p className="mb-5 text-sm text-white/55">
                 Get the latest cybersecurity insights and IT tips delivered to your inbox.
               </p>
               {isSubscribed ? (
-                <div className="flex items-center gap-2 text-green-400 relative z-10">
-                  <CheckCircle className="h-5 w-5" />
-                  <span className="text-sm ">Thank you for subscribing!</span>
+                <div className="flex items-center gap-2 text-emerald-400">
+                  <CheckCircle className="h-5 w-5" aria-hidden="true" />
+                  <span className="text-sm">Thank you for subscribing!</span>
                 </div>
               ) : (
-                <form onSubmit={handleNewsletterSubmit} className="flex gap-3 relative z-10">
+                <form onSubmit={handleNewsletterSubmit} className="flex flex-col gap-3 sm:flex-row">
+                  <label htmlFor="footer-newsletter-email" className="sr-only">
+                    Email address
+                  </label>
                   <input
+                    id="footer-newsletter-email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
-                    className="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition-all duration-300 text-sm"
+                    required
+                    disabled={isSubmitting}
+                    className="h-11 min-w-0 flex-1 rounded-lg border border-de-hairline bg-de-raised px-4 text-sm text-white placeholder:text-white/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-300/60"
                     data-testid="footer-newsletter-input"
                   />
                   <button
                     type="submit"
-                    className="px-6 py-3 bg-violet-600 hover:bg-violet-500 text-white font-semibold rounded-xl shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.4)] transition-all duration-300 flex items-center gap-2"
+                    disabled={isSubmitting}
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-white px-5 text-sm font-semibold text-[#1A1228] transition-colors hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)] disabled:opacity-60"
                     data-testid="footer-newsletter-submit"
                   >
-                    <Send className="h-4 w-4" />
-                    <span className="hidden sm:inline ">Subscribe</span>
+                    {isSubmitting ? (
+                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                    ) : (
+                      <Send className="h-4 w-4" aria-hidden="true" />
+                    )}
+                    <span>Subscribe</span>
                   </button>
                 </form>
               )}
             </div>
-            
-            <div className="p-8 bg-de-surface border border-de-hairline rounded-3xl h-full flex flex-col justify-center relative overflow-hidden group hover:bg-de-raised transition-colors">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_100%_100%,rgba(139,92,246,0.05)_0%,transparent_70%)]" />
-              <h4 className="text-white text-sm font-semibold mb-6 uppercase tracking-wider relative z-10 text-center">
+
+            <div>
+              <h4 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-white">
                 Serving Greater Phoenix
               </h4>
-              <div className="honeycomb-grid relative z-10">
-                {locations.map((location, index) => (
+              <div className="flex flex-wrap gap-2">
+                {locations.map((location) => (
                   <a
-                    key={index}
+                    key={location.name}
                     href={location.href}
-                    className="city-btn"
+                    className={`inline-flex min-h-11 items-center rounded-lg border px-4 text-sm transition-colors hover:border-white/25 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)] ${
+                      location.primary
+                        ? "border-white/20 text-white"
+                        : "border-de-hairline text-white/70"
+                    }`}
                     data-city={location.name.toLowerCase()}
                     data-testid={`footer-location-${location.name.toLowerCase()}`}
                   >
@@ -346,31 +334,25 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-8 pb-8 px-4 md:px-8 lg:px-0">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex items-center gap-4">
-              {socialLinks.map((social, index) => (
-                <motion.a
+        <div className="border-t border-de-hairline py-8">
+          <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+            <div className="flex items-center gap-2">
+              {socialLinks.map((social) => (
+                <a
                   key={social.name}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`p-3 bg-white/5 border border-white/10 rounded-xl text-gray-400 hover:text-white transition-all duration-300 ${social.color}`}
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-de-hairline text-white/55 transition-colors hover:border-white/25 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
                   aria-label={social.name}
                   data-testid={social.testId}
-                  custom={index}
-                  initial="hidden"
-                  whileInView="visible"
-                  whileHover="hover"
-                  viewport={{ once: true }}
-                  variants={socialButtonVariants}
                 >
-                  <social.icon className="h-5 w-5" />
-                </motion.a>
+                  <social.icon className="h-4 w-4" aria-hidden="true" />
+                </a>
               ))}
             </div>
-            
-            <div className="text-gray-500 text-sm text-center font-normal">
+
+            <div className="text-sm text-white/40">
               © {currentYear} Digerati Experts, LLC. All rights reserved.
             </div>
           </div>

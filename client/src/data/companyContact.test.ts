@@ -18,5 +18,6 @@ describe("companyContact", () => {
     expect(COMPANY.website).toBe("https://digeratiexperts.com");
     expect(COMPANY.addressLocality).toBe("Chandler");
     expect(COMPANY.addressRegion).toBe("AZ");
+    expect(COMPANY.mapsUrl).toBe("https://maps.google.com/?cid=1710856351091471339");
   });
 });

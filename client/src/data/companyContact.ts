@@ -36,6 +36,28 @@ export const COMPANY = {
   postalCode: "85248",
   addressCountry: "US",
   areaServed: "Arizona and Greater Phoenix (Chandler, Phoenix, Scottsdale, Tempe, Mesa, Gilbert)",
+  /** Verified Google Business Profile listing (CID — not a Place ID). */
+  mapsUrl: "https://maps.google.com/?cid=1710856351091471339",
+} as const;
+
+/** Public social profiles already used on the site. Do not invent new handles. */
+export const COMPANY_SOCIAL = {
+  linkedin: {
+    name: "LinkedIn",
+    href: "https://www.linkedin.com/company/digerati-experts",
+  },
+  facebook: {
+    name: "Facebook",
+    href: "https://www.facebook.com/digeratiexperts",
+  },
+  twitter: {
+    name: "Twitter",
+    href: "https://twitter.com/digerati_experts",
+  },
+  instagram: {
+    name: "Instagram",
+    href: "https://www.instagram.com/digerati.experts",
+  },
 } as const;
 
 /** Primary public business / sales number used across marketing + schema. */
