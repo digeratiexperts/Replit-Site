@@ -245,7 +245,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                 className="flex items-start gap-3 text-base text-white/60"
                 data-testid={`footer-compliance-support-${index}`}
               >
-                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-violet-400" aria-hidden />
+                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#D3126A]" aria-hidden />
                 <span>{item}</span>
               </li>
             ))}

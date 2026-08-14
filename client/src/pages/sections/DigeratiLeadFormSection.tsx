@@ -122,7 +122,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                           <Input 
                             placeholder="John Smith" 
                             data-testid="input-lead-full-name"
-                            className="h-12 bg-white border-gray-300 text-[#1A202C] placeholder:text-gray-400 focus-visible:ring-purple-500 focus-visible:border-purple-400 text-base"
+                            className="h-12 bg-white border-gray-300 text-[#1A202C] placeholder:text-gray-400 focus-visible:ring-[#D3126A] focus-visible:border-[#D3126A] text-base"
                             disabled={isSubmitting}
                             {...field} 
                           />
@@ -143,7 +143,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                             type="email" 
                             placeholder="john@company.com" 
                             data-testid="input-lead-email"
-                            className="h-12 bg-white border-gray-300 text-[#1A202C] placeholder:text-gray-400 focus-visible:ring-purple-500 focus-visible:border-purple-400 text-base"
+                            className="h-12 bg-white border-gray-300 text-[#1A202C] placeholder:text-gray-400 focus-visible:ring-[#D3126A] focus-visible:border-[#D3126A] text-base"
                             disabled={isSubmitting}
                             {...field} 
                           />
@@ -164,7 +164,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                             type="tel" 
                             placeholder="(555) 123-4567" 
                             data-testid="input-lead-phone"
-                            className="h-12 bg-white border-gray-300 text-[#1A202C] placeholder:text-gray-400 focus-visible:ring-purple-500 focus-visible:border-purple-400 text-base"
+                            className="h-12 bg-white border-gray-300 text-[#1A202C] placeholder:text-gray-400 focus-visible:ring-[#D3126A] focus-visible:border-[#D3126A] text-base"
                             disabled={isSubmitting}
                             {...field} 
                           />
@@ -184,7 +184,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                           <Input 
                             placeholder="Acme Corp" 
                             data-testid="input-lead-company"
-                            className="h-12 bg-white border-gray-300 text-[#1A202C] placeholder:text-gray-400 focus-visible:ring-purple-500 focus-visible:border-purple-400 text-base"
+                            className="h-12 bg-white border-gray-300 text-[#1A202C] placeholder:text-gray-400 focus-visible:ring-[#D3126A] focus-visible:border-[#D3126A] text-base"
                             disabled={isSubmitting}
                             {...field} 
                           />
@@ -218,7 +218,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                 <div className="flex flex-wrap items-center justify-center gap-6 pt-4">
                   {benefits.map((benefit) => (
                     <div key={benefit.text} className="flex items-center gap-2">
-                      <benefit.icon className="w-4 h-4 text-purple-600" />
+                      <benefit.icon className="w-4 h-4 text-[#D3126A]" />
                       <span className="text-base text-[#4A5568]">{benefit.text}</span>
                     </div>
                   ))}
@@ -238,7 +238,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
             <a 
               href="tel:480-519-5892"
               data-testid="link-lead-phone"
-              className="text-purple-600 hover:text-purple-700 font-medium transition-colors"
+              className="text-[#D3126A] hover:text-[#f0187a] font-medium transition-colors"
             >
               480-519-5892
             </a>

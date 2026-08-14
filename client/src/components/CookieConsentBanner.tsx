@@ -90,7 +90,7 @@ export function CookieConsentBanner() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 40 }}
               transition={{ duration: 0.3 }}
-              className="fixed bottom-[88px] left-4 right-4 md:left-auto z-[9995] rounded-2xl border border-violet-500/30 bg-[#0d0d1a] shadow-2xl shadow-black/50 p-6 md:w-[420px]"
+              className="fixed bottom-[88px] left-4 right-4 md:left-auto z-[9995] rounded-2xl border border-de-hairline bg-de-raised shadow-2xl shadow-black/50 p-6 md:w-[420px]"
               style={{ right: "calc(var(--de-canvas-gutter) + 1.5rem)" }}
               data-testid="cookie-preferences-panel"
             >
@@ -117,7 +117,7 @@ export function CookieConsentBanner() {
                     role="switch"
                     aria-checked={analyticsEnabled}
                     onClick={() => setAnalyticsEnabled(v => !v)}
-                    className={`relative mt-1 w-10 h-5 rounded-full flex-shrink-0 cursor-pointer transition-colors ${analyticsEnabled ? "bg-violet-500" : "bg-white/20"}`}
+                    className={`relative mt-1 w-10 h-5 rounded-full flex-shrink-0 cursor-pointer transition-colors ${analyticsEnabled ? "bg-[#D3126A]" : "bg-white/20"}`}
                     data-testid="toggle-analytics"
                   >
                     <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${analyticsEnabled ? "translate-x-5" : "translate-x-0"}`} />
@@ -133,7 +133,7 @@ export function CookieConsentBanner() {
                     role="switch"
                     aria-checked={marketingEnabled}
                     onClick={() => setMarketingEnabled(v => !v)}
-                    className={`relative mt-1 w-10 h-5 rounded-full flex-shrink-0 cursor-pointer transition-colors ${marketingEnabled ? "bg-violet-500" : "bg-white/20"}`}
+                    className={`relative mt-1 w-10 h-5 rounded-full flex-shrink-0 cursor-pointer transition-colors ${marketingEnabled ? "bg-[#D3126A]" : "bg-white/20"}`}
                     data-testid="toggle-marketing"
                   >
                     <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${marketingEnabled ? "translate-x-5" : "translate-x-0"}`} />
@@ -144,7 +144,7 @@ export function CookieConsentBanner() {
               <div className="flex gap-3 mt-5">
                 <button
                   onClick={savePreferences}
-                  className="flex-1 min-h-11 bg-violet-600 hover:bg-violet-500 text-white text-base font-semibold py-2.5 rounded-xl transition-colors"
+                  className="flex-1 min-h-11 bg-[#D3126A] hover:bg-[#e01874] text-white text-base font-semibold py-2.5 rounded-xl transition-colors"
                   data-testid="button-save-preferences"
                 >
                   Save Preferences
@@ -173,8 +173,8 @@ export function CookieConsentBanner() {
               ref={bannerRef}
               className="relative overflow-hidden"
               style={{
-                background: "linear-gradient(90deg, #1e0a4a 0%, #2d1060 30%, #3b1578 60%, #2a0d6b 100%)",
-                borderTop: "1px solid rgba(139,92,246,0.3)",
+                background: "#0a0a0a",
+                borderTop: "1px solid rgba(255,255,255,0.1)",
               }}
             >
               <div
@@ -190,7 +190,7 @@ export function CookieConsentBanner() {
                   Digerati Experts uses cookies and similar tracking technologies to collect information you provide and to capture your interaction with our site. We use this information to enhance site navigation, personalize content, analyze your use of our website, and assist in our marketing efforts and customer service. To deliver the best experience, analytics and hosting service providers may have access to this information. By clicking "Accept All," you consent to our collection, use, and disclosure of such information. For more information about our data processing practices, please see our{" "}
                   <Link
                     href="/legal/privacy-policy"
-                    className="underline underline-offset-2 text-violet-300 hover:text-white transition-colors font-medium"
+                    className="underline underline-offset-2 text-[#D3126A] hover:text-white transition-colors font-medium"
                     data-testid="link-privacy-policy-cookie"
                   >
                     Privacy Policy
@@ -201,7 +201,7 @@ export function CookieConsentBanner() {
                   We use cookies to run the site, measure performance, and support marketing. Details in our{" "}
                   <Link
                     href="/legal/privacy-policy"
-                    className="underline underline-offset-2 text-violet-300 hover:text-white transition-colors font-medium"
+                    className="underline underline-offset-2 text-[#D3126A] hover:text-white transition-colors font-medium"
                     data-testid="link-privacy-policy-cookie-mobile"
                   >
                     Privacy Policy
@@ -212,7 +212,7 @@ export function CookieConsentBanner() {
                 <div className="flex items-center gap-2 flex-shrink-0 flex-wrap w-full md:w-auto justify-between md:justify-end">
                   <button
                     onClick={() => setShowPreferences(v => !v)}
-                    className="text-violet-300 hover:text-white text-base font-semibold underline underline-offset-2 transition-colors whitespace-nowrap px-1 min-h-11"
+                    className="text-[#D3126A] hover:text-white text-base font-semibold underline underline-offset-2 transition-colors whitespace-nowrap px-1 min-h-11"
                     data-testid="button-manage-cookie-preferences"
                   >
                     Manage Cookie Preferences

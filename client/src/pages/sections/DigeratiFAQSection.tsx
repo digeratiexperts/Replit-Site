@@ -80,6 +80,8 @@ export const DigeratiFAQSection = (): JSX.Element => {
                     className="w-full px-6 py-6 md:px-8 md:py-7 flex items-center justify-between text-left group"
                     onClick={() => toggleAccordion(index)}
                     aria-expanded={isOpen}
+                    aria-controls={`faq-answer-${index}`}
+                    id={`faq-question-${index}`}
                     data-testid={`faq-trigger-${index}`}
                   >
                     <span className={`text-base md:text-lg font-semibold pr-4 transition-colors duration-200 ${
@@ -111,7 +113,7 @@ export const DigeratiFAQSection = (): JSX.Element => {
                       >
                         <div className="px-5 pb-5 md:px-6 md:pb-6 pt-0">
                           <div className="border-t border-gray-100 pt-4">
-                            <p className="text-lg text-gray-600 leading-relaxed" data-testid={`faq-answer-${index}`}>
+                            <p className="text-lg text-gray-600 leading-relaxed" id={`faq-answer-${index}`} data-testid={`faq-answer-${index}`}>
                               {faq.answer}
                             </p>
                           </div>

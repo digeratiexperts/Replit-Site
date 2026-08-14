@@ -1159,16 +1159,16 @@ export function MegaMenu() {
                   href="https://assist.zoho.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl bg-violet-500/10 border border-violet-500/20 hover:border-violet-500/40 transition-all group"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl border border-de-hairline bg-de-raised hover:border-white/25 transition-all group"
                   data-testid="mobile-zoho-assist"
                   aria-label="Open Support remote session"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center border border-violet-500/20">
-                    <Monitor className="h-5 w-5 text-violet-400" aria-hidden="true" />
+                  <div className="w-10 h-10 rounded-lg border border-de-hairline bg-[#0a0a0a] flex items-center justify-center">
+                    <Monitor className="h-5 w-5 text-[#D3126A]" aria-hidden="true" />
                   </div>
                   <div>
                     <div className="text-base text-gray-400">Remote Support</div>
-                    <div className="font-semibold text-white group-hover:text-violet-400 transition-colors">Support</div>
+                    <div className="font-semibold text-white group-hover:text-[#D3126A] transition-colors">Support</div>
                   </div>
                 </a>
                 
@@ -1178,12 +1178,12 @@ export function MegaMenu() {
                   data-testid="mobile-portal"
                   aria-label="Access client portal"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/20 to-purple-500/10 flex items-center justify-center border border-purple-500/20">
-                    <ExternalLink className="h-5 w-5 text-purple-400" aria-hidden="true" />
+                  <div className="w-10 h-10 rounded-lg border border-de-hairline bg-[#0a0a0a] flex items-center justify-center">
+                    <ExternalLink className="h-5 w-5 text-[#D3126A]" aria-hidden="true" />
                   </div>
                   <div>
                     <div className="text-base text-gray-400">Existing Client?</div>
-                    <div className="font-semibold text-white group-hover:text-purple-400 transition-colors">Client Portal</div>
+                    <div className="font-semibold text-white group-hover:text-[#D3126A] transition-colors">Client Portal</div>
                   </div>
                 </a>
               </div>

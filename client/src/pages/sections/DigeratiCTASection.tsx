@@ -132,7 +132,7 @@ export const DigeratiCTASection = (): JSX.Element => {
           className="mt-16"
         >
           <p className="text-gray-400 text-base uppercase tracking-wider mb-6">
-            Enterprise-Grade Compliance & Certifications
+            How we operate
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
             {badges.map((badge, index) => {
