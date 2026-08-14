@@ -36,7 +36,7 @@ export const DigeratiFAQSection = (): JSX.Element => {
   };
 
   return (
-    <section className="de-paper-chapter py-14 md:py-18 lg:py-20">
+    <section className="de-paper-chapter py-16 md:py-20 lg:py-24">
       <FAQJsonLd faqs={faqs} />
       <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-6">
         {/* Header */}
@@ -47,10 +47,10 @@ export const DigeratiFAQSection = (): JSX.Element => {
           transition={{ duration: 0.35 }}
           className="text-center mb-8 md:mb-10"
         >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 md:mb-5 px-2">
+          <h2 className="mb-4 px-2 font-heading text-3xl font-semibold tracking-[-0.02em] text-[#1A1228] sm:text-4xl md:mb-5 md:text-5xl">
             Frequently Asked Questions
           </h2>
-          <p className="text-lg md:text-xl text-gray-500 px-4">
+          <p className="px-4 text-lg text-black/55 md:text-xl">
             Find answers to common queries about us.
           </p>
         </motion.div>
@@ -84,8 +84,8 @@ export const DigeratiFAQSection = (): JSX.Element => {
                     id={`faq-question-${index}`}
                     data-testid={`faq-trigger-${index}`}
                   >
-                    <span className={`text-base md:text-lg font-semibold pr-4 transition-colors duration-200 ${
-                      isOpen ? 'text-[#D3126A]' : 'text-gray-900 group-hover:text-[#D3126A]'
+                    <span className={`pr-4 text-base font-semibold transition-colors duration-200 md:text-lg ${
+                      isOpen ? 'text-[#D3126A]' : 'text-[#1A1228] group-hover:text-[#D3126A]'
                     }`}>
                       {faq.question}
                     </span>
@@ -112,8 +112,8 @@ export const DigeratiFAQSection = (): JSX.Element => {
                         className="overflow-hidden"
                       >
                         <div className="px-5 pb-5 md:px-6 md:pb-6 pt-0">
-                          <div className="border-t border-gray-100 pt-4">
-                            <p className="text-lg text-gray-600 leading-relaxed" id={`faq-answer-${index}`} data-testid={`faq-answer-${index}`}>
+                          <div className="border-t border-[var(--de-paper-hairline)] pt-4">
+                            <p className="text-lg leading-relaxed text-black/60" id={`faq-answer-${index}`} data-testid={`faq-answer-${index}`}>
                               {faq.answer}
                             </p>
                           </div>

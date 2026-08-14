@@ -61,12 +61,12 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
             initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "200px" }}
-            className="self-stretch overflow-hidden rounded-2xl border border-de-hairline bg-de-raised lg:col-span-5"
+            className="overflow-hidden rounded-2xl border border-de-hairline bg-de-raised lg:col-span-5 lg:self-start"
           >
             <img
               src="/images/founder/joe-petro-studio-blazer-white.jpg"
               alt="Joseph Petro, Founder of Digerati Experts"
-              className="aspect-[3/4] w-full object-cover object-center lg:aspect-auto lg:h-full lg:min-h-[28rem] lg:object-top"
+              className="block aspect-[3/4] w-full object-cover object-[center_20%]"
               loading="lazy"
               decoding="async"
               width={768}
@@ -102,7 +102,7 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
                     {String(index + 1).padStart(2, "0")}
                   </p>
                   <p className="mt-2 text-lg font-semibold text-white md:text-xl">{r.title}</p>
-                  <p className="mt-2 text-[15px] leading-relaxed text-white/90 md:text-base">{r.detail}</p>
+                  <p className="mt-2 text-base leading-relaxed text-white/90">{r.detail}</p>
                 </div>
               ))}
             </div>

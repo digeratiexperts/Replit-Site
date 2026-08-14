@@ -83,7 +83,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
   return (
     <section 
       id="assessment-form"
-      className="de-paper-chapter de-chapter-fade-from-dark relative overflow-hidden py-[80px] pt-32 pb-24"
+      className="de-paper-chapter de-chapter-fade-from-dark relative overflow-hidden py-16 md:py-20 lg:py-24"
     >
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
         <div className="max-w-4xl mx-auto">
@@ -94,10 +94,13 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1A202C] leading-tight mb-4">
+            <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#D3126A]">
+              Cyber Risk Assessment
+            </p>
+            <h2 className="mb-4 font-heading text-3xl font-semibold leading-tight tracking-[-0.02em] text-[#1A1228] md:text-4xl lg:text-5xl">
               Get Your Free Security Assessment
             </h2>
-            <p className="text-lg md:text-xl text-[#4A5568] leading-relaxed max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-lg leading-relaxed text-black/60 md:text-xl">
               Discover vulnerabilities before attackers do. Our experts will analyze your security posture and provide actionable recommendations.
             </p>
           </motion.div>
@@ -117,12 +120,12 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                     name="fullName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-base text-[#1A202C] font-medium">Full Name *</FormLabel>
+                        <FormLabel className="text-base font-medium text-[#1A1228]">Full Name *</FormLabel>
                         <FormControl>
                           <Input 
                             placeholder="John Smith" 
                             data-testid="input-lead-full-name"
-                            className="h-12 bg-white border-gray-300 text-[#1A202C] placeholder:text-gray-400 focus-visible:ring-[#D3126A] focus-visible:border-[#D3126A] text-base"
+                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/35 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
                             disabled={isSubmitting}
                             {...field} 
                           />
@@ -137,13 +140,13 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-base text-[#1A202C] font-medium">Work Email *</FormLabel>
+                        <FormLabel className="text-base font-medium text-[#1A1228]">Work Email *</FormLabel>
                         <FormControl>
                           <Input 
                             type="email" 
                             placeholder="john@company.com" 
                             data-testid="input-lead-email"
-                            className="h-12 bg-white border-gray-300 text-[#1A202C] placeholder:text-gray-400 focus-visible:ring-[#D3126A] focus-visible:border-[#D3126A] text-base"
+                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/35 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
                             disabled={isSubmitting}
                             {...field} 
                           />
@@ -158,13 +161,13 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                     name="phone"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-base text-[#1A202C] font-medium">Phone (Optional)</FormLabel>
+                        <FormLabel className="text-base font-medium text-[#1A1228]">Phone (Optional)</FormLabel>
                         <FormControl>
                           <Input 
                             type="tel" 
                             placeholder="(555) 123-4567" 
                             data-testid="input-lead-phone"
-                            className="h-12 bg-white border-gray-300 text-[#1A202C] placeholder:text-gray-400 focus-visible:ring-[#D3126A] focus-visible:border-[#D3126A] text-base"
+                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/35 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
                             disabled={isSubmitting}
                             {...field} 
                           />
@@ -179,12 +182,12 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                     name="company"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-base text-[#1A202C] font-medium">Company (Optional)</FormLabel>
+                        <FormLabel className="text-base font-medium text-[#1A1228]">Company (Optional)</FormLabel>
                         <FormControl>
                           <Input 
                             placeholder="Acme Corp" 
                             data-testid="input-lead-company"
-                            className="h-12 bg-white border-gray-300 text-[#1A202C] placeholder:text-gray-400 focus-visible:ring-[#D3126A] focus-visible:border-[#D3126A] text-base"
+                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/35 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
                             disabled={isSubmitting}
                             {...field} 
                           />
@@ -200,7 +203,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                   size="lg"
                   data-testid="button-lead-submit"
                   disabled={isSubmitting}
-                  className="w-full h-14 text-lg font-bold bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white border-0 shadow-lg shadow-pink-500/30 hover:shadow-pink-500/45 transition-all duration-300 justify-center gap-2"
+                  className="h-14 w-full justify-center gap-2 border-0 !bg-[#D3126A] text-lg font-semibold text-white shadow-none transition-colors hover:!bg-[#e01874] hover:shadow-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70"
                 >
                   {isSubmitting ? (
                     <>
@@ -219,7 +222,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                   {benefits.map((benefit) => (
                     <div key={benefit.text} className="flex items-center gap-2">
                       <benefit.icon className="w-4 h-4 text-[#D3126A]" />
-                      <span className="text-base text-[#4A5568]">{benefit.text}</span>
+                      <span className="text-base text-black/60">{benefit.text}</span>
                     </div>
                   ))}
                 </div>
@@ -228,7 +231,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
           </motion.div>
 
           <motion.p 
-            className="text-center text-base text-[#718096] mt-6"
+            className="mt-6 text-center text-base text-black/50"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}

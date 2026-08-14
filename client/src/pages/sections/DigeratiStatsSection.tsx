@@ -46,12 +46,12 @@ function FactCard({
           href={fact.sourceUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 inline-block text-base text-white/55 hover:text-white/75"
+          className="mt-4 inline-block border-t border-de-hairline pt-3 text-base font-medium text-white/70 hover:text-white"
         >
           {sourceLine}
         </a>
       ) : (
-        <p className="mt-2 text-base text-white/55">{sourceLine}</p>
+        <p className="mt-4 border-t border-de-hairline pt-3 text-base font-medium text-white/70">{sourceLine}</p>
       )}
     </motion.div>
   );

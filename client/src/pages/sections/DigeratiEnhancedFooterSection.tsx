@@ -125,7 +125,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
 
   return (
     <footer className="de-dark-well de-chapter-hairline relative">
-      <div className="container relative z-10 mx-auto max-w-[1440px] px-3 pt-16 sm:px-4 lg:px-6">
+      <div className="container relative z-10 mx-auto max-w-[1440px] px-3 pt-20 sm:px-4 lg:px-6 lg:pt-24">
         <div className="mb-10">
           <img
             src={logoImage}
@@ -135,8 +135,8 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           />
         </div>
 
-        <div className="mb-12 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
-          <div>
+        <div className="mb-12 grid grid-cols-1 items-start gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+          <div className="min-w-0">
             <h4 className="mb-4 text-base font-semibold uppercase tracking-[0.16em] text-white">
               Quick Access
             </h4>
@@ -151,7 +151,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
             </ul>
           </div>
 
-          <div>
+          <div className="min-w-0">
             <h4 className="mb-4 text-base font-semibold uppercase tracking-[0.16em] text-white">
               Services
             </h4>
@@ -166,7 +166,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
             </ul>
           </div>
 
-          <div>
+          <div className="min-w-0">
             <h4 className="mb-4 text-base font-semibold uppercase tracking-[0.16em] text-white">
               Legal
             </h4>
@@ -190,7 +190,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
             </ul>
           </div>
 
-          <div>
+          <div className="min-w-0">
             <h4 className="mb-4 text-base font-semibold uppercase tracking-[0.16em] text-white">
               Trust
             </h4>
@@ -206,7 +206,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           </div>
         </div>
 
-        <div className="border-t border-de-hairline py-8">
+        <div className="border-t border-de-hairline py-10">
           <div className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
             <div className="flex items-start gap-4">
               <IconWell icon={Shield} size="sm" surface="dark" />
@@ -231,8 +231,8 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           </div>
         </div>
 
-        <div className="border-t border-de-hairline py-8">
-          <h4 className="mb-2 text-base font-semibold uppercase tracking-[0.16em] text-white">
+        <div className="border-t border-de-hairline py-10">
+          <h4 className="mb-4 text-base font-semibold uppercase tracking-[0.16em] text-white">
             Security &amp; Compliance Support
           </h4>
           <p className="mb-5 max-w-3xl text-base text-white/55">
@@ -262,10 +262,10 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           </div>
         </div>
 
-        <div className="border-t border-de-hairline py-8">
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
-            <div>
-              <h4 className="mb-2 text-base font-semibold uppercase tracking-[0.16em] text-white">
+        <div className="border-t border-de-hairline py-10">
+          <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-2 lg:gap-16">
+            <div className="min-w-0">
+              <h4 className="mb-4 text-base font-semibold uppercase tracking-[0.16em] text-white">
                 Stay Updated
               </h4>
               <p className="mb-5 text-base text-white/55">
@@ -309,7 +309,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
               )}
             </div>
 
-            <div>
+            <div className="min-w-0">
               <h4 className="mb-4 text-base font-semibold uppercase tracking-[0.16em] text-white">
                 Serving Greater Phoenix
               </h4>
@@ -334,7 +334,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
           </div>
         </div>
 
-        <div className="border-t border-de-hairline py-8">
+        <div className="border-t border-de-hairline py-10">
           <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
             <div className="flex items-center gap-2">
               {socialLinks.map((social) => (
