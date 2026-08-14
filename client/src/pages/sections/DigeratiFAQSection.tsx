@@ -72,8 +72,8 @@ export const DigeratiFAQSection = (): JSX.Element => {
                 <div 
                   className={`de-paper-lift rounded-xl border-l-4 transition-all duration-300 ${
                     isOpen 
-                      ? 'border-l-violet-600 shadow-lg'
-                      : 'border-l-violet-400/50 hover:border-l-violet-500 hover:shadow-lg'
+                      ? 'border-l-[#D3126A] shadow-lg'
+                      : 'border-l-[#D3126A]/40 hover:border-l-[#D3126A] hover:shadow-lg'
                   }`}
                 >
                   <button
@@ -83,18 +83,18 @@ export const DigeratiFAQSection = (): JSX.Element => {
                     data-testid={`faq-trigger-${index}`}
                   >
                     <span className={`text-base md:text-lg font-semibold pr-4 transition-colors duration-200 ${
-                      isOpen ? 'text-violet-700' : 'text-gray-900 group-hover:text-violet-600'
+                      isOpen ? 'text-[#D3126A]' : 'text-gray-900 group-hover:text-[#D3126A]'
                     }`}>
                       {faq.question}
                     </span>
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
                       isOpen 
-                        ? 'bg-violet-600 rotate-180' 
-                        : 'bg-violet-100 group-hover:bg-violet-200'
+                        ? 'bg-[#D3126A] rotate-180' 
+                        : 'bg-[#D3126A]/10 group-hover:bg-[#D3126A]/15'
                     }`}>
                       <ChevronDown 
                         className={`h-5 w-5 transition-colors duration-200 flex-shrink-0 ${
-                          isOpen ? 'text-white' : 'text-violet-600'
+                          isOpen ? 'text-white' : 'text-[#D3126A]'
                         }`}
                       />
                     </div>
@@ -111,7 +111,7 @@ export const DigeratiFAQSection = (): JSX.Element => {
                       >
                         <div className="px-5 pb-5 md:px-6 md:pb-6 pt-0">
                           <div className="border-t border-gray-100 pt-4">
-                            <p className="text-base text-gray-600 leading-relaxed" data-testid={`faq-answer-${index}`}>
+                            <p className="text-lg text-gray-600 leading-relaxed" data-testid={`faq-answer-${index}`}>
                               {faq.answer}
                             </p>
                           </div>

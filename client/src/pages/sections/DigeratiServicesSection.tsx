@@ -123,13 +123,13 @@ export const DigeratiServicesSection = (): JSX.Element => {
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.45 }}
         >
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF477F]">
+          <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#D3126A]">
             How to work with us
           </p>
           <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
             Cybersecurity-First Managed IT
           </h2>
-          <p className="max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">
+          <p className="max-w-2xl text-lg leading-relaxed text-white/65">
             Three clear paths. Capability depth stays available here and under Protect — nothing
             removed.
           </p>
@@ -150,7 +150,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
               >
                 <IconWell icon={Icon} size="md" surface="dark" className="mb-5" />
                 <p
-                  className={`mb-2 min-h-4 text-xs font-semibold uppercase tracking-[0.2em] ${
+                  className={`mb-2 min-h-4 text-base font-semibold uppercase tracking-[0.2em] ${
                     path.eyebrow ? "text-white/45" : "invisible"
                   }`}
                   aria-hidden={!path.eyebrow}
@@ -164,7 +164,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
                 <Link
                   href={path.link}
                   data-testid={`link-${path.testId}`}
-                  className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-violet-300 hover:text-violet-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-de-raised"
+                  className="inline-flex min-h-11 items-center gap-2 text-base font-medium text-[#D3126A] hover:text-[#f0187a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-de-raised"
                 >
                   {path.cta}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -174,7 +174,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
           })}
         </div>
 
-        <p className="mt-6 text-sm text-white/50 md:text-base">
+        <p className="mt-6 text-base text-white/55 md:text-lg">
           Need one specific service?{" "}
           <Link href="/solutions/standalone-services">
             <span className="font-semibold text-white/80 underline decoration-white/20 underline-offset-4 hover:text-white hover:decoration-white/50">
@@ -191,7 +191,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
                 :
               </span>
             </h3>
-            <p className="mx-auto mt-3 max-w-2xl text-sm text-white/50 md:text-base">
+            <p className="mx-auto mt-3 max-w-2xl text-base text-white/55 md:text-lg">
               Preview of the stack we manage — also detailed under Protect.
             </p>
           </div>
@@ -213,7 +213,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
                       key={item.title}
                       value={item.title}
                       className={cn(
-                        "group h-auto min-h-11 shrink-0 rounded-xl border bg-transparent px-3.5 py-2.5 text-sm font-medium text-white shadow-none",
+                        "group h-auto min-h-11 shrink-0 rounded-xl border bg-transparent px-3.5 py-2.5 text-base font-medium text-white shadow-none",
                         "hover:bg-white/[0.03] hover:text-white",
                         "focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]",
                         "data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-white",
@@ -239,9 +239,9 @@ export const DigeratiServicesSection = (): JSX.Element => {
               >
                 <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
                   <p className="font-heading text-xl font-semibold text-white md:text-2xl">{item.title}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-white/55 md:text-base">{item.desc}</p>
+                  <p className="mt-2 text-base leading-relaxed text-white/55 md:text-lg">{item.desc}</p>
                   <Link href={item.link}>
-                    <span className="mt-5 inline-flex min-h-11 items-center gap-2 text-sm font-medium text-white/80 underline decoration-white/20 underline-offset-4 hover:text-white hover:decoration-white/50">
+                    <span className="mt-5 inline-flex min-h-11 items-center gap-2 text-base font-medium text-white/80 underline decoration-white/20 underline-offset-4 hover:text-white hover:decoration-white/50">
                       {item.title} details
                       <ArrowRight className="h-4 w-4" aria-hidden="true" />
                     </span>
@@ -253,7 +253,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
 
           <div className="mt-8 flex justify-center md:mt-10">
             <Link href="/#protection" data-testid="link-see-security-stack">
-              <span className="inline-flex min-h-11 items-center gap-2 text-sm text-white/65 hover:text-white">
+              <span className="inline-flex min-h-11 items-center gap-2 text-base text-white/65 hover:text-white">
                 <Layers className="h-4 w-4 text-[#D3126A]" aria-hidden="true" />
                 See full Protect process
               </span>
@@ -261,7 +261,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center gap-4 text-sm md:mt-12 md:text-base">
+        <div className="mt-10 flex flex-wrap items-center gap-4 text-base md:mt-12 md:text-lg">
           <Link href="/solutions/proactive-ecosystem" data-testid="link-proactive-ecosystem">
             <span className="inline-flex items-center gap-2 text-white/75 transition-colors hover:text-white">
               How the ProActive Ecosystem works

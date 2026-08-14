@@ -83,7 +83,7 @@ export const DigeratiAlertBanner = (): JSX.Element => {
             >
               <div className="relative h-full rounded-2xl border border-de-hairline bg-de-raised p-6 transition-colors duration-300 group-hover:border-white/20">
                 <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-                  <feature.icon className="h-7 w-7 text-[#A78BFA]" />
+                  <feature.icon className="h-7 w-7 text-[#D3126A]" />
                 </div>
                 <h3 className="mb-3 text-xl font-bold text-white">{feature.title}</h3>
                 <p className="leading-relaxed text-white/60">{feature.description}</p>
@@ -111,7 +111,7 @@ export const DigeratiAlertBanner = (): JSX.Element => {
                 <a href="/book">
                   <Button
                     size="lg"
-                    className="h-14 rounded-xl bg-white px-8 font-semibold text-[#1A202C] shadow-lg transition-all duration-300 hover:bg-white/90 hover:scale-[1.02]"
+                    className="h-14 rounded-xl bg-[#D3126A] px-8 text-base font-semibold text-white shadow-none transition-colors hover:bg-[#e01874]"
                     data-testid="button-schedule-consultation-banner"
                   >
                     <ArrowRight className="mr-2 h-5 w-5" />
@@ -122,7 +122,7 @@ export const DigeratiAlertBanner = (): JSX.Element => {
                   <Button
                     variant="outline"
                     size="lg"
-                    className="h-14 rounded-xl border-2 border-white/25 bg-transparent px-8 font-semibold text-white hover:bg-white/10"
+                    className="h-14 rounded-xl border-2 border-white/25 bg-transparent px-8 text-base font-semibold text-white hover:bg-white/10"
                     data-testid="button-call-banner"
                   >
                     <Phone className="mr-2 h-5 w-5" />

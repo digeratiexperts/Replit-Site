@@ -147,7 +147,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
         >
-          <p className="mb-3 text-sm font-medium uppercase tracking-wide text-[#FF477F] md:text-base">
+          <p className="mb-3 text-base font-medium uppercase tracking-wide text-[#D3126A]">
             Client proof
           </p>
           <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl md:text-5xl">
@@ -163,12 +163,12 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
           initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-8 rounded-2xl border border-de-hairline bg-de-raised/80 p-6 md:p-8"
+          className="mb-8 rounded-2xl border border-de-hairline bg-de-raised p-6 md:p-8"
           data-testid="proof-reviews-slot"
           id="google-reviews"
         >
           {loading ? (
-            <div className="flex items-center gap-2 text-sm text-white/60">
+            <div className="flex items-center gap-2 text-base text-white/60">
               <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
               Loading reviews…
             </div>
@@ -178,7 +178,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                 <div>
                   <p className="font-semibold text-white">Client reviews</p>
                   {showGoogleAverage && (
-                    <p className="mt-1 text-sm text-white/70">
+                    <p className="mt-1 text-base text-white/70">
                       {googleMeta!.rating!.toFixed(1)}
                       {googleMeta!.userRatingsTotal != null
                         ? ` · ${googleMeta!.userRatingsTotal} on Google`
@@ -186,7 +186,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                     </p>
                   )}
                   {sourceFilters.length === 1 && (
-                    <p className="mt-1 text-xs text-white/45">
+                    <p className="mt-1 text-base text-white/55">
                       From {REVIEW_SOURCE_LABELS[sourceFilters[0]!]}
                       {allReviews.every((r) => r.origin === "catalog")
                         ? " (published with permission)"
@@ -206,7 +206,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                 prefersReducedMotion={prefersReducedMotion}
               />
 
-              <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+              <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-base">
                 {listingLinks.map((link, i) => (
                   <span key={link.id} className="inline-flex items-center gap-4">
                     {i > 0 && (
@@ -218,7 +218,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-violet-300 hover:text-violet-200"
+                      className="inline-flex items-center gap-1 text-[#D3126A] hover:text-[#f0187a]"
                       data-testid={
                         link.id === "google" ? "link-read-us-on-google" : `link-read-us-on-${link.id}`
                       }
@@ -233,7 +233,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
           ) : (
             <>
               <p className="mb-1 font-semibold text-white">Client reviews</p>
-              <p className="mb-3 text-xs font-medium uppercase tracking-[0.16em] text-white/40">
+              <p className="mb-3 text-base font-medium uppercase tracking-[0.16em] text-white/50">
                 Google · Yelp · Thumbtack
               </p>
               <p className="mb-4 max-w-2xl text-base leading-relaxed text-white/55">
@@ -245,7 +245,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                 href={mapsHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-[#1a0a2e] transition-colors hover:bg-pink-50"
+                className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-white px-4 py-2.5 text-base font-semibold text-[#1a0a2e] transition-colors hover:bg-pink-50"
                 data-testid="link-read-us-on-google"
               >
                 Read us on Google
@@ -264,7 +264,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
           data-testid="proof-outcomes"
         >
           <div className="mb-4 flex items-start gap-3">
-            <Quote className="mt-0.5 h-5 w-5 flex-shrink-0 text-violet-400" aria-hidden="true" />
+            <Quote className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#D3126A]" aria-hidden="true" />
             <p className="font-semibold text-white">What clients hire us to improve</p>
           </div>
           <ul className="grid gap-4 md:grid-cols-3 md:gap-6">
@@ -281,8 +281,8 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
           <div className="flex items-start gap-3">
             <Building2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-pink-400" aria-hidden="true" />
             <div>
-              <p className="text-sm font-medium text-white">Case studies</p>
-              <p className="text-sm leading-relaxed text-white/50">
+              <p className="text-base font-medium text-white">Case studies</p>
+              <p className="text-base leading-relaxed text-white/55">
                 See how we approach real Arizona engagements — challenge, approach, and outcome.
               </p>
             </div>
@@ -290,7 +290,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
           <div className="flex flex-shrink-0 flex-col gap-3 sm:flex-row">
             <Link href="/resources/case-studies">
               <span
-                className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 px-5 py-3 text-base font-semibold text-white hover:border-violet-400/50"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/20 px-5 py-3 text-base font-semibold text-white hover:border-[#D3126A]/60"
                 data-testid="link-proof-case-studies"
               >
                 View case studies
@@ -300,7 +300,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
             <button
               type="button"
               onClick={() => openBooking("proof_section")}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-violet-600 px-5 py-3 text-base font-semibold text-white hover:bg-violet-500"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#D3126A] px-5 py-3 text-base font-semibold text-white hover:bg-[#e01874]"
               data-testid="button-proof-assessment"
             >
               {CTA.primary}
@@ -309,9 +309,9 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-base">
           <Link href="/about/client-bill-of-rights">
-            <span className="text-violet-300 hover:text-violet-200" data-testid="link-proof-bill-of-rights">
+            <span className="text-[#D3126A] hover:text-[#f0187a]" data-testid="link-proof-bill-of-rights">
               Client Bill of Rights
             </span>
           </Link>
@@ -319,7 +319,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
             ·
           </span>
           <Link href="/about/guarantee">
-            <span className="text-violet-300 hover:text-violet-200" data-testid="link-proof-guarantee">
+            <span className="text-[#D3126A] hover:text-[#f0187a]" data-testid="link-proof-guarantee">
               Our Guarantee
             </span>
           </Link>
@@ -327,7 +327,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
             ·
           </span>
           <Link href="/trust/trust-center">
-            <span className="text-violet-300 hover:text-violet-200" data-testid="link-proof-trust">
+            <span className="text-[#D3126A] hover:text-[#f0187a]" data-testid="link-proof-trust">
               Trust Center
             </span>
           </Link>
@@ -335,10 +335,10 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
             ·
           </span>
           <Link href="/industries/healthcare">
-            <span className="text-violet-300 hover:text-violet-200">Browse industries</span>
+            <span className="text-[#D3126A] hover:text-[#f0187a]">Browse industries</span>
           </Link>
         </div>
-        <p className="mt-4 text-center text-sm text-white/45">
+        <p className="mt-4 text-center text-base text-white/55">
           Serving professional services, healthcare, construction, nonprofit, and regulated
           organizations across Greater Phoenix · 480-519-5892
         </p>

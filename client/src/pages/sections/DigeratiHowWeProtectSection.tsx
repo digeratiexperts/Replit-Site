@@ -58,13 +58,13 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.35 }}
           >
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-violet-600">
+            <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#D3126A]">
               What we protect
             </p>
             <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-gray-900 md:text-4xl">
               Six domains. One accountable operating model.
             </h2>
-            <p className="text-base leading-relaxed text-gray-600 md:text-lg">
+            <p className="text-lg leading-relaxed text-gray-600">
               Capability pages live under Solutions. The methodology — assessment through operations —
               is documented on the ProActive Ecosystem overview.
             </p>
@@ -81,8 +81,8 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
                   <div className="flex cursor-pointer items-start gap-3">
                     <IconWell icon={Icon} size="sm" surface="light" />
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 md:text-base">{item.title}</p>
-                      <p className="mt-0.5 text-sm leading-relaxed text-gray-600">{item.desc}</p>
+                      <p className="text-base font-semibold text-gray-900 md:text-lg">{item.title}</p>
+                      <p className="mt-0.5 text-base leading-relaxed text-gray-600">{item.desc}</p>
                     </div>
                   </div>
                 </Link>
@@ -100,7 +100,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
         <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4 md:mb-12">
             <div className="max-w-3xl">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/80">
+              <p className="mb-2 text-base font-semibold uppercase tracking-[0.2em] text-white/80">
                 How protection works
               </p>
               <h3
@@ -111,7 +111,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
               </h3>
             </div>
             <Link href="/solutions/proactive-ecosystem">
-              <span className="inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-white underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#D3126A]">
+              <span className="inline-flex min-h-11 items-center gap-1.5 text-base font-semibold text-white underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#D3126A]">
                 Full methodology
                 <ArrowRight className="h-3.5 w-3.5" />
               </span>
@@ -127,7 +127,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
                   data-testid={step.testId}
                   className={`lg:px-6 ${index > 0 ? "lg:border-l lg:border-white/25" : "lg:pl-0"}`}
                 >
-                  <p className="font-mono text-xs font-semibold tracking-[0.18em] text-white/75">
+                  <p className="font-mono text-base font-semibold tracking-[0.18em] text-white/75">
                     {String(step.number).padStart(2, "0")}
                   </p>
                   <span className="mt-3 mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/25 bg-[#0a0a0a]/40 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.14)]">
@@ -136,7 +136,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
                   <h4 className="mb-2 text-lg font-semibold text-white">
                     {step.title}
                   </h4>
-                  <p className="text-sm leading-relaxed text-white/90 md:text-base">
+                  <p className="text-base leading-relaxed text-white/90 md:text-lg">
                     {step.description}
                   </p>
                 </li>

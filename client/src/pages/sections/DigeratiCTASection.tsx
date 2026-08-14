@@ -32,7 +32,7 @@ export const DigeratiCTASection = (): JSX.Element => {
           <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight mb-6 relative overflow-hidden">
             <span className="relative z-10">
               Start with a{" "}
-              <span className="text-violet-400">
+              <span className="text-[#D3126A]">
                 Cyber Risk Assessment
               </span>
             </span>
@@ -67,7 +67,7 @@ export const DigeratiCTASection = (): JSX.Element => {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-sm text-gray-400 mb-6"
+          className="text-base text-gray-300 mb-6"
         >
           Assessment-led recommendations. Final scope confirmed after we see the environment.
         </motion.p>
@@ -111,7 +111,7 @@ export const DigeratiCTASection = (): JSX.Element => {
           transition={{ duration: 0.6, delay: 0.7 }}
         >
           <motion.button
-            className="h-14 px-10 rounded-xl bg-white text-black text-lg font-semibold inline-flex items-center justify-center gap-2 whitespace-nowrap transition-all duration-300 hover:bg-white/90"
+            className="h-14 px-10 rounded-xl bg-[#D3126A] text-white text-lg font-semibold inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors hover:bg-[#e01874]"
             data-testid="button-cta-assessment"
             onClick={() => {
               document.getElementById('assessment-form')?.scrollIntoView({ behavior: 'smooth' });
@@ -131,7 +131,7 @@ export const DigeratiCTASection = (): JSX.Element => {
           transition={{ duration: 0.6, delay: 0.9 }}
           className="mt-16"
         >
-          <p className="text-gray-500 text-sm uppercase tracking-wider mb-6">
+          <p className="text-gray-400 text-base uppercase tracking-wider mb-6">
             Enterprise-Grade Compliance & Certifications
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
@@ -145,13 +145,13 @@ export const DigeratiCTASection = (): JSX.Element => {
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: 1 + index * 0.1 }}
                   whileHover={{ 
-                    scale: 1.05,
-                    borderColor: "rgba(139,92,246,0.5)"
+                    scale: 1.02,
+                    borderColor: "rgba(211,18,106,0.45)"
                   }}
-                  className="flex items-center gap-2 px-5 py-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full transition-all duration-300 hover:bg-white/10"
+                  className="flex items-center gap-2 rounded-xl border border-de-hairline bg-de-raised px-5 py-3 transition-colors hover:border-white/20"
                   data-testid={`badge-${badge.name.toLowerCase().replace(/\s+/g, '-')}`}
                 >
-                  <IconComponent className="h-4 w-4 text-violet-400" />
+                  <IconComponent className="h-4 w-4 text-[#D3126A]" />
                   <span className="text-base font-medium text-gray-300">{badge.name}</span>
                 </motion.div>
               );

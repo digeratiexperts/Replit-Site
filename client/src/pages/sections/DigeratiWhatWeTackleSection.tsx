@@ -63,18 +63,18 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
             viewport={{ once: true }}
             transition={{ duration: 0.45 }}
           >
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF477F]">
+            <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#D3126A]">
               Problems we solve
             </p>
             <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
               What We Tackle
             </h2>
-            <p className="max-w-md text-base leading-relaxed text-white/65 md:text-lg">
+            <p className="max-w-md text-lg leading-relaxed text-white/65">
               Compact view of the problems we own with you. Sourced industry statistics live on
               Cyber Facts; capability detail lives on Solutions.
             </p>
             <Link href="/resources/cyber-facts">
-              <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[#FF477F] hover:text-pink-300">
+              <span className="mt-4 inline-flex items-center gap-1 text-base font-semibold text-[#D3126A] hover:text-[#f0187a]">
                 Full threat context
                 <ArrowRight className="h-3.5 w-3.5" />
               </span>
@@ -99,7 +99,7 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
                     <h3 className="mb-1 text-base font-semibold text-white md:text-lg">
                       {challenge.title}
                     </h3>
-                    <p className="text-sm leading-relaxed text-white/55 md:text-base">
+                    <p className="text-base leading-relaxed text-white/55 md:text-lg">
                       {challenge.description}
                     </p>
                   </div>
@@ -110,14 +110,14 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
         </div>
 
         <div className="mt-12 flex flex-col items-start gap-3 lg:mt-14">
-          <p className="text-sm text-white/45">
+          <p className="text-base text-white/55">
             Don&apos;t see your specific challenge? We handle it all.
           </p>
           <a
             href="/book"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-11 items-center rounded-lg border border-pink-300/30 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-pink-500/25 transition-all duration-200 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400"
+            className="inline-flex min-h-11 items-center rounded-lg border border-pink-300/30 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 px-6 py-2.5 text-base font-semibold text-white shadow-lg shadow-pink-500/25 transition-all duration-200 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400"
             data-testid="tackle-cta"
           >
             Discuss Your Security Needs

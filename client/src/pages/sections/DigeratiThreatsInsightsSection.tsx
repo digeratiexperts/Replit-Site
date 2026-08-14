@@ -2,7 +2,7 @@ import { Calendar, User, ArrowRight, AlertCircle, Shield, Lock, Zap, ChevronLeft
 import { Link } from "wouter";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 
 export const DigeratiThreatsInsightsSection = (): JSX.Element => {
@@ -12,15 +12,6 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
-
-  // Parallax transforms - reduced for smoother scroll
-  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-3%", "3%"]);
-  const floatingY = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 15, prefersReducedMotion ? 0 : -15]);
-  
   const insights = [
     {
       category: "CISA Alert",
@@ -31,7 +22,7 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
       readTime: "3 min read",
       urgent: true,
       icon: <AlertCircle className="h-5 w-5" />,
-      gradient: "from-red-500 to-orange-500",
+      accent: "bg-[#D3126A]",
       slug: "kev-hpe-oneview-cve-2025-37164"
     },
     {
@@ -43,7 +34,7 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
       readTime: "5 min read",
       urgent: true,
       icon: <Shield className="h-5 w-5" />,
-      gradient: "from-purple-500 to-pink-500",
+      accent: "bg-[#D3126A]",
       slug: "kev-react-server-components-cve-2025-55182"
     },
     {
@@ -55,7 +46,7 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
       readTime: "4 min read",
       urgent: false,
       icon: <Lock className="h-5 w-5" />,
-      gradient: "from-violet-500 to-purple-500",
+      accent: "bg-[#D3126A]",
       slug: "hhs-ocr-right-of-access-concentra-2025-12-16"
     }
   ];
@@ -95,21 +86,6 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
       className="de-dark-chapter de-chapter-hairline relative overflow-hidden py-10 md:py-14 lg:py-16"
       style={{ position: 'relative' }}
     >
-      {/* Parallax violet accent glow */}
-      <motion.div 
-        className="absolute inset-0 pointer-events-none"
-        style={{ 
-          y: backgroundY,
-          background: "radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 60%)" 
-        }} 
-      />
-      
-      {/* Floating decorative element */}
-      <motion.div 
-        className="absolute top-20 right-16 w-4 h-4 rounded-full border border-violet-500/20 pointer-events-none hidden lg:block"
-        style={{ y: floatingY }}
-      />
-
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
         <motion.div 
           className="text-center mb-8 md:mb-12"
@@ -118,12 +94,15 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.35 }}
         >
-          <Badge className="mb-3 md:mb-4 bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 text-xs md:text-sm">
+          <Badge className="mb-3 md:mb-4 bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 text-base">
             <Zap className="w-3 h-3 mr-1" />
             24/7 Security Response Team
           </Badge>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 px-2">
-            Recent Threats & <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-violet-400 to-purple-400">Insights</span>
+          <h2 className="mb-3 px-2 text-2xl font-bold text-white sm:text-3xl md:mb-4 md:text-4xl lg:text-5xl">
+            Recent Threats & Insights
+            <span className="text-[#D3126A]" aria-hidden="true">
+              :
+            </span>
           </h2>
           <p className="text-base md:text-lg lg:text-xl text-gray-400 max-w-3xl mx-auto px-4">
             A short teaser of current alerts. Full feed, dates, and sources live on{" "}
@@ -148,10 +127,10 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
           {categories.map((category, index) => (
             <button
               key={index}
-              className={`px-3 md:px-4 py-1.5 md:py-2 rounded-full transition-all duration-300 text-xs md:text-sm font-medium whitespace-nowrap flex-shrink-0 ${
+              className={`min-h-11 shrink-0 whitespace-nowrap rounded-xl border px-3 py-1.5 text-base font-medium transition-colors md:px-4 md:py-2 ${
                 index === 0
-                  ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-500/25"
-                  : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10"
+                  ? "border-[#D3126A] bg-transparent text-white shadow-[inset_0_0_0_1px_#D3126A]"
+                  : "border-de-hairline bg-transparent text-white/55 hover:border-white/20 hover:text-white"
               }`}
               data-testid={`filter-${category.toLowerCase().replace(/\s+/g, '-')}`}
             >
@@ -200,10 +179,10 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
                 className="flex-shrink-0 w-[300px] sm:w-[340px] snap-center"
               >
                 <Card 
-                  className="h-full bg-white/5 backdrop-blur-xl border-white/10 hover:border-white/20 transition-all duration-300 hover:bg-white/[0.07] overflow-hidden"
+                  className="h-full overflow-hidden border-de-hairline bg-de-raised transition-colors hover:border-white/20"
                   data-testid={`insight-card-${index}`}
                 >
-                  <div className={`h-1 bg-gradient-to-r ${insight.gradient}`} />
+                  <div className={`h-1 ${insight.accent}`} />
                   
                   <CardHeader className="pb-3 p-4 sm:p-6">
                     <div className="flex items-center justify-between mb-3 gap-2">
@@ -211,8 +190,8 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
                         className={`${
                           insight.urgent 
                             ? 'bg-red-500/20 text-red-400 border-red-500/30' 
-                            : 'bg-violet-500/20 text-violet-400 border-violet-500/30'
-                        } border text-xs`}
+                            : 'border-de-hairline bg-transparent text-white/70'
+                        } border text-base`}
                       >
                         <span className="flex items-center gap-1">
                           {insight.icon}
@@ -220,7 +199,7 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
                           <span className="sm:hidden">{insight.category.split(' ')[0]}</span>
                         </span>
                       </Badge>
-                      <span className="text-[10px] sm:text-xs text-gray-500 flex items-center gap-1 whitespace-nowrap">
+                      <span className="text-base text-gray-400 flex items-center gap-1 whitespace-nowrap">
                         <Calendar className="h-3 w-3" />
                         <span className="hidden sm:inline">{insight.date}</span>
                         <span className="sm:hidden">{insight.date.split(',')[0]}</span>
@@ -235,7 +214,7 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
                       {insight.excerpt}
                     </CardDescription>
                     <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                      <div className="flex items-center gap-2 text-[10px] sm:text-xs text-gray-500">
+                      <div className="flex items-center gap-2 text-base text-gray-400">
                         <User className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                         <span className="hidden sm:inline">{insight.author}</span>
                         <span className="sm:hidden">{insight.author.split(' ')[0]}</span>
@@ -244,7 +223,7 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
                       </div>
                       <Link 
                         href="/resources/security-updates"
-                        className="text-purple-400 hover:text-purple-300 font-medium text-xs sm:text-sm flex items-center gap-1"
+                        className="flex items-center gap-1 text-base font-medium text-[#D3126A] hover:text-[#f0187a]"
                       >
                         <span className="hidden sm:inline">Know More</span>
                         <span className="sm:hidden">More</span>
@@ -269,10 +248,10 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
               transition={{ duration: 0.35, delay: index * 0.06 }}
             >
               <Card 
-                className="group h-full bg-white/5 backdrop-blur-xl border-white/10 hover:border-white/20 transition-all duration-300 hover:bg-white/[0.07] overflow-hidden"
+                className="group h-full overflow-hidden border-de-hairline bg-de-raised transition-colors hover:border-white/20"
                 data-testid={`insight-card-${index}`}
               >
-                <div className={`h-1 bg-gradient-to-r ${insight.gradient}`} />
+                <div className={`h-1 ${insight.accent}`} />
                 
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between mb-3">
@@ -280,29 +259,29 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
                       className={`${
                         insight.urgent 
                           ? 'bg-red-500/20 text-red-400 border-red-500/30' 
-                          : 'bg-violet-500/20 text-violet-400 border-violet-500/30'
-                      } border`}
+                          : 'border-de-hairline bg-transparent text-white/70'
+                      } border text-base`}
                     >
                       <span className="flex items-center gap-1">
                         {insight.icon}
                         {insight.category}
                       </span>
                     </Badge>
-                    <span className="text-xs text-gray-500 flex items-center gap-1">
+                    <span className="text-base text-gray-400 flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
                       {insight.date}
                     </span>
                   </div>
-                  <CardTitle className="text-lg text-white line-clamp-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-purple-300 transition-all cursor-pointer">
+                  <CardTitle className="line-clamp-2 cursor-pointer text-lg text-white">
                     {insight.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="text-gray-400 mb-4 line-clamp-3">
+                  <CardDescription className="mb-4 line-clamp-3 text-base text-gray-400">
                     {insight.excerpt}
                   </CardDescription>
                   <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <div className="flex items-center gap-2 text-base text-gray-400">
                       <User className="h-3.5 w-3.5" />
                       <span>{insight.author}</span>
                       <span>•</span>
@@ -310,7 +289,7 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
                     </div>
                     <Link 
                       href="/resources/security-updates"
-                      className="text-purple-400 hover:text-purple-300 font-medium text-sm flex items-center gap-1 group/btn"
+                      className="group/btn flex items-center gap-1 text-base font-medium text-[#D3126A] hover:text-[#f0187a]"
                     >
                       Know More
                       <ArrowRight className="h-3.5 w-3.5 group-hover/btn:translate-x-1 transition-transform" />
@@ -331,7 +310,7 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
         >
           <Link 
             href="/resources/security-updates"
-            className="px-6 md:px-8 py-2.5 md:py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-500 hover:to-indigo-500 transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 font-semibold inline-flex items-center gap-2 hover:scale-105 text-sm md:text-base"
+            className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#D3126A] px-6 py-2.5 text-base font-semibold text-white transition-colors hover:bg-[#e01874] md:px-8 md:py-3"
             data-testid="view-all-updates"
           >
             View All Security Updates
@@ -339,7 +318,7 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
           </Link>
           <Link 
             href="/resources/blog"
-            className="px-6 md:px-8 py-2.5 md:py-3 border border-fuchsia-400/40 bg-white/[0.04] text-white rounded-lg hover:bg-fuchsia-500/15 hover:border-fuchsia-300/60 transition-all duration-300 font-semibold inline-flex items-center gap-2 text-sm md:text-base"
+            className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-de-hairline bg-transparent px-6 py-2.5 text-base font-semibold text-white transition-colors hover:border-white/25 md:px-8 md:py-3"
             data-testid="view-digerati-journal"
           >
             Read the Digerati Journal

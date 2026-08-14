@@ -18,14 +18,6 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
 
   return (
     <section className="de-dark-chapter de-chapter-hairline relative overflow-hidden py-20">
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 60%)",
-        }}
-      />
-
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <motion.div
@@ -47,8 +39,8 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
                   className="w-full object-cover aspect-[4/3]"
                 />
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6">
-                  <p className="text-sm font-medium text-white">Local operations. Human judgment.</p>
-                  <p className="text-xs text-white/75 mt-1">
+                  <p className="text-base font-medium text-white">Local operations. Human judgment.</p>
+                  <p className="text-base text-white/75 mt-1">
                     Arizona-based · Principal-led · Always-on monitoring
                   </p>
                 </div>
@@ -63,7 +55,7 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <div className="inline-flex items-center gap-2 text-sm font-medium text-violet-300 mb-4">
+            <div className="inline-flex items-center gap-2 text-base font-medium text-[#D3126A] mb-4">
               <Radio className="h-4 w-4" aria-hidden />
               Detection & response
             </div>
@@ -87,15 +79,15 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
             <div className="grid sm:grid-cols-2 gap-4 mb-8">
               <div className="rounded-xl border border-de-hairline bg-de-raised p-5">
                 <Shield className="h-5 w-5 text-pink-400 mb-2" aria-hidden />
-                <p className="text-white font-semibold text-sm mb-1">Coverage with context</p>
-                <p className="text-white/55 text-sm leading-relaxed">
+                <p className="text-white font-semibold text-base mb-1">Coverage with context</p>
+                <p className="text-white/55 text-base leading-relaxed">
                   Alerts are interpreted against your environment — not dumped into a generic queue.
                 </p>
               </div>
               <div className="rounded-xl border border-de-hairline bg-de-raised p-5">
-                <Layers className="h-5 w-5 text-violet-300 mb-2" aria-hidden />
-                <p className="text-white font-semibold text-sm mb-1">Documented next steps</p>
-                <p className="text-white/55 text-sm leading-relaxed">
+                <Layers className="h-5 w-5 text-[#D3126A] mb-2" aria-hidden />
+                <p className="text-white font-semibold text-base mb-1">Documented next steps</p>
+                <p className="text-white/55 text-base leading-relaxed">
                   Findings become clear actions your team can follow without decoding jargon.
                 </p>
               </div>
@@ -104,7 +96,7 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
             <Button
               type="button"
               onClick={() => openBooking("ai_assistance_section")}
-              className="bg-violet-600 hover:bg-violet-500 text-white font-semibold"
+              className="min-h-11 bg-[#D3126A] text-base font-semibold text-white hover:bg-[#e01874]"
               data-testid="button-ai-section-assessment"
             >
               {CTA.primary}

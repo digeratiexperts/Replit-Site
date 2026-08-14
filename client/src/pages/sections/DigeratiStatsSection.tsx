@@ -37,21 +37,21 @@ function FactCard({
       data-testid={`homepage-stat-${index}`}
     >
       <IconWell icon={Icon} size="sm" surface="dark" />
-      <p className="mt-5 font-mono text-3xl font-semibold tracking-tight text-violet-300 md:text-4xl">
+      <p className="mt-5 font-mono text-3xl font-semibold tracking-tight text-white md:text-4xl">
         {fact.metric}
       </p>
-      <p className="mt-2 text-sm leading-relaxed text-white/75 md:text-base">{fact.statement}</p>
+      <p className="mt-2 text-base leading-relaxed text-white/75 md:text-lg">{fact.statement}</p>
       {fact.sourceUrl ? (
         <a
           href={fact.sourceUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 inline-block text-sm text-white/45 hover:text-white/70"
+          className="mt-2 inline-block text-base text-white/55 hover:text-white/75"
         >
           {sourceLine}
         </a>
       ) : (
-        <p className="mt-2 text-sm text-white/45">{sourceLine}</p>
+        <p className="mt-2 text-base text-white/55">{sourceLine}</p>
       )}
     </motion.div>
   );
@@ -71,13 +71,13 @@ export const DigeratiStatsSection = (): JSX.Element => {
           transition={{ duration: 0.45 }}
           className="mb-10 max-w-3xl lg:mb-12"
         >
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF477F]">
+          <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#D3126A]">
             Why Digerati Experts
           </p>
           <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
             The Threats Are Real
           </h2>
-          <p className="max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">
+          <p className="max-w-2xl text-lg leading-relaxed text-white/65">
             Don&apos;t become a statistic. These numbers show why proactive security matters —
             and why endpoint, identity, and recovery discipline have to be owned, not assumed.
           </p>
@@ -96,7 +96,7 @@ export const DigeratiStatsSection = (): JSX.Element => {
 
         <p className="mt-6">
           <Link href="/resources/cyber-facts">
-            <span className="inline-flex items-center gap-1 text-sm font-semibold text-[#FF477F] hover:text-pink-300">
+            <span className="inline-flex items-center gap-1 text-base font-semibold text-[#D3126A] hover:text-[#f0187a]">
               Full sourced facts
               <ArrowRight className="h-3.5 w-3.5" />
             </span>
