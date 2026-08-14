@@ -1,0 +1,47 @@
+---
+description: Dark wells + charcoal boxes so brand magenta pops. Apply on any marketing UI with sections, cards, chips, or CTAs.
+globs: ["**/*.tsx", "**/*.css"]
+alwaysApply: true
+---
+
+# Dark field, accent pop
+
+Vibrant color pops **because** the field is black/charcoal and quiet — not because boxes are filled with purple.
+
+## Recipe (DE tokens only)
+
+| Role | Token | Use |
+|------|--------|-----|
+| Deep well | `--de-bg` `#050312` | Chapter field |
+| Marketing field | `--de-surface` `#0a0a0a` | Adjacent dark chapter |
+| Raised box | `--de-raised` `#151217` + `--de-hairline` | Panels, cards, chips |
+| Pop | `#D3126A` | CTA fill, active border, colon, icon |
+
+Violet `#5B45E0` / `#8B5CF6` = lighting only. Never a wash fill.
+
+## Do
+
+- Black/charcoal field → charcoal raised box → white type → magenta punctuation
+- Hairline chips: transparent/`bg-de-raised`, `border-de-hairline`; active = `border-[#D3126A]`
+- Magenta colon after a statement heading (Trust / Engage pattern)
+- Paper chapters: white lift + magenta accent, not violet-100 fills
+
+## Do not
+
+- Purple/navy/indigo fills on cards, chips, buttons, or section backgrounds
+- `bg-violet-500/15`, `from-purple-600 to-indigo-600`, `#FF00FF`, rainbow
+- Glass `bg-white/5 backdrop-blur` as the card recipe
+- Giant neon blooms or cyberpunk glow
+- Copy OpenMSP/OpenFrame logos, copy, APPROVE/REJECT, or fake “Featured in”
+
+```tsx
+// ❌ muddy chrome
+<div className="rounded-2xl bg-violet-500/15 backdrop-blur-xl">
+  <span className="bg-gradient-to-r from-purple-600 to-indigo-600">CTA</span>
+</div>
+
+// ✅ quiet field, accent pops
+<div className="rounded-2xl border border-de-hairline bg-de-raised">
+  <span className="bg-[#D3126A] text-white">Get My Cyber Risk Assessment</span>
+</div>
+```

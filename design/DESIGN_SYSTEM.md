@@ -39,11 +39,13 @@ Border:
 `--radius` `0.5rem` (shadcn)
 
 Primary:
-`#D3126A` (brand magenta — CTA, brand mark, active underline, user bubbles)
+`#D3126A` (brand magenta — CTA, brand mark, active underline, colon, icon, user bubbles)
 
 Accent violet:
-`#5B45E0` / `#7c3aed` (lighting, gradients, secondary accents)
-`#8B5CF6` / `#A78BFA` (lavender frame / glow)
+`#5B45E0` / `#7c3aed` (lighting only — not box fills)
+`#8B5CF6` / `#A78BFA` (lavender frame / glow, lighting only)
+
+**Accent pop:** magenta is loud because the field is quiet. Raised boxes = `--de-raised` + `--de-hairline`. Do not paint cards/chips/sections with violet or indigo fills. See `.cursor/rules/dark-field-accent-pop.mdc`.
 
 Primary text:
 `#ffffff` / `--de-fg`
@@ -80,7 +82,7 @@ Do not introduce a new purple, magenta, or near-black. Reuse these.
 - Container: centered, padding `1rem`, `2xl` max `1680px`
 - Sticky nav clearance: `--de-nav-offset` (MegaMenu ResizeObserver)
 - Homepage section jumps live in MegaMenu (`HomepageOnPageNav`) — no floating bottom dock
-- Dark marketing cards: `rounded-2xl border border-de-hairline bg-de-raised` with Lucide in `IconWell` (muted violet well)
+- Dark marketing cards: `rounded-2xl border border-de-hairline bg-de-raised` with Lucide in `IconWell` (quiet well, magenta icon)
 - Section padding pattern: `py-10 md:py-14 lg:py-16` (and nearby variants already in sections)
 - Touch targets: ~44×44px where practical (`min-h-11`)
 
@@ -102,3 +104,4 @@ Locked engage-path system: dark technical sculpture — graphite / smoked glass 
 3. Consistency over novelty.
 4. Purpose over ornament.
 5. Real visual composition over generic AI imagery.
+6. Accents pop because fields stay black/charcoal — never purple-filled boxes.

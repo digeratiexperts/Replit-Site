@@ -119,3 +119,4 @@ Root `.cursorrules` remains authoritative (sections 1–42). This file is the UI
 Canonical portal login: `https://portal.digeratiexperts.com/portal/login` — never invent `//login`.
 Preserve existing DE content, CTAs, nav, and stats unless DE explicitly approves removal.
 Inspect rendered UI at 390 / 768 / 1440 at minimum. Never judge UI from source code alone.
+Dark fields stay black/charcoal so `#D3126A` pops — see `.cursor/rules/dark-field-accent-pop.mdc`. No purple-filled boxes.

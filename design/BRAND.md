@@ -43,7 +43,7 @@ Primary environment: graphite well `--de-bg` `#050312`, marketing field `--de-su
 
 Accent: brand magenta `#D3126A`; deep violet `#5B45E0` / `#7c3aed`; restrained purple `#8B5CF6`; subtle lavender `#A78BFA`.
 
-Purple should primarily function as an accent or source of illumination. Avoid large areas of saturated neon purple, rainbow gradients, and excessive bright white.
+Magenta pops because wells and raised boxes stay black/charcoal. Violet is lighting only — never a purple-filled panel, chip, or section wash. Avoid neon purple, rainbow, `#FF00FF`, and excessive bright white. Rule: `.cursor/rules/dark-field-accent-pop.mdc`.
 
 Full token table: `DESIGN_SYSTEM.md`. Cursor rule: `.cursor/rules/brand.mdc`.
 
