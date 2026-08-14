@@ -186,7 +186,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
         <div className="mt-16 md:mt-20" data-testid="engage-capability-preview">
           <div className="mx-auto max-w-4xl text-center">
             <h3 className="font-heading text-3xl font-semibold tracking-[-0.03em] text-white md:text-4xl lg:text-5xl">
-              What&apos;s in ProActive
+              ProActive Ecosystem
               <span className="text-[#D3126A]" aria-hidden="true">
                 :
               </span>

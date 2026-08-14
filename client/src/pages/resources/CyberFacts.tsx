@@ -391,7 +391,7 @@ const CyberFacts = () => {
 
             <div className="grid md:grid-cols-2 gap-6">
               <FactCard 
-                fact={allFacts.find(f => f.id === "mfa-gap")!}
+                fact={allFacts.find(f => f.id === "microsoft-mfa-blocks-2025")!}
                 onCopy={handleCopy}
                 copiedId={copiedId}
               />

@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect, useCallback, useId } from 'react';
 import { Link } from 'wouter';
-import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink, X, ArrowRight, Monitor, Cloud, Lock, Zap, HeadphonesIcon, Building, BarChart3, ClipboardCheck, Layers, TrendingUp, Star, CheckCircle, Award, LayoutGrid, BookOpen, MapPin } from 'lucide-react';
+import { ChevronDown, Shield, Server, Users, FileCheck, Phone, ExternalLink, X, ArrowRight, Monitor, Cloud, Lock, Zap, HeadphonesIcon, Building, BarChart3, ClipboardCheck, Layers, TrendingUp, Star, CheckCircle, Award, LayoutGrid } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import logoImage from '@assets/DE-Logo-new_1762461524794.webp';
-import { IconWell } from '@/components/visual/IconWell';
+import ebookCover from '@/assets/images/ebook-defending-digital-realm-cover.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { pricing } from '@/data/pricing';
@@ -99,6 +99,65 @@ const DiagonalLinesBadge = ({ children, variant }: { children: React.ReactNode; 
     </span>
   );
 };
+
+/** Right-rail offer — must earn a stop, not sit as a muted leftover card. */
+function MenuFeaturedRail({
+  href,
+  eyebrow,
+  title,
+  body,
+  cta,
+  testId,
+  linkTestId,
+  onNavigate,
+  image,
+  imageAlt,
+}: {
+  href: string;
+  eyebrow: string;
+  title: string;
+  body: string;
+  cta: string;
+  testId: string;
+  linkTestId: string;
+  onNavigate: () => void;
+  image?: string;
+  imageAlt?: string;
+}) {
+  return (
+    <motion.div
+      className={`flex flex-1 flex-col overflow-hidden rounded-xl border border-de-hairline bg-de-raised ${image ? "min-h-[22rem]" : ""}`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.2 }}
+      data-testid={testId}
+    >
+      {image ? (
+        <div className="flex items-center justify-center bg-de-bg px-5 pt-5">
+          <img
+            src={image}
+            alt={imageAlt || ""}
+            className="h-44 w-auto max-w-full rounded-sm object-contain shadow-[0_12px_40px_rgba(0,0,0,0.45)]"
+          />
+        </div>
+      ) : null}
+      <div className="flex flex-1 flex-col p-5">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#D3126A]">{eyebrow}</p>
+        <h4 className="mt-2 font-heading text-lg font-semibold leading-snug text-white md:text-xl">{title}</h4>
+        <p className="mt-2 flex-1 text-sm leading-relaxed text-white/70">{body}</p>
+        <Link
+          href={href}
+          onClick={onNavigate}
+          className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#D3126A] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#f0187a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-de-raised"
+          data-testid={linkTestId}
+        >
+          {cta}
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </Link>
+      </div>
+    </motion.div>
+  );
+}
 
 interface MegaMenuItem {
   title: string;
@@ -881,82 +940,44 @@ export function MegaMenu() {
                           )}
                           
                           {item.name === 'Industries' && (
-                            <motion.div
-                              className="flex flex-1 flex-col rounded-xl border border-white/10 bg-[#151217] p-5"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              transition={{ delay: 0.2 }}
-                              data-testid="menu-featured-industries"
-                            >
-                              <IconWell icon={Building} size="sm" surface="dark" />
-                              <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45">Arizona industries</p>
-                              <h4 className="mt-1 text-sm font-semibold leading-snug text-white">Healthcare, legal, accounting, and more</h4>
-                              <p className="mt-2 flex-1 text-xs leading-relaxed text-white/55">
-                                Industry-specific IT and security — we publish client stories with permission.
-                              </p>
-                              <a
-                                href="/resources/case-studies"
-                                className="mt-4 inline-flex items-center text-xs font-semibold text-[#A78BFA] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400"
-                                data-testid="link-featured-case-study-industries"
-                                onClick={handleLinkClick}
-                              >
-                                See case studies
-                                <ArrowRight className="ml-1.5 h-3 w-3" />
-                              </a>
-                            </motion.div>
+                            <MenuFeaturedRail
+                              href="/#industries"
+                              eyebrow="Arizona practices"
+                              title="HIPAA, privilege, tax data, and wire fraud"
+                              body="Healthcare, legal, accounting, and real estate each fail in a different place. Start with the industry that matches how you actually operate."
+                              cta="See industries we serve"
+                              testId="menu-featured-industries"
+                              linkTestId="link-featured-industries"
+                              onNavigate={handleLinkClick}
+                            />
                           )}
 
                           {item.name === 'About' && (
-                            <motion.div
-                              className="flex flex-1 flex-col rounded-xl border border-white/10 bg-[#151217] p-5"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              transition={{ delay: 0.2 }}
-                              data-testid="menu-featured-about"
-                            >
-                              <IconWell icon={MapPin} size="sm" surface="dark" />
-                              <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45">Chandler, AZ</p>
-                              <h4 className="mt-1 text-sm font-semibold leading-snug text-white">Local accountability</h4>
-                              <p className="mt-2 flex-1 text-xs leading-relaxed text-white/55">
-                                An Arizona team you can reach — not an anonymous remote NOC.
-                              </p>
-                              <a
-                                href="/about/team"
-                                className="mt-4 inline-flex items-center text-xs font-semibold text-[#A78BFA] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400"
-                                data-testid="link-featured-team-about"
-                                onClick={handleLinkClick}
-                              >
-                                Meet the experts
-                                <ArrowRight className="ml-1.5 h-3 w-3" />
-                              </a>
-                            </motion.div>
+                            <MenuFeaturedRail
+                              href="/about/team"
+                              eyebrow="Chandler, Arizona"
+                              title="You know who owns the ticket"
+                              body="Principal-led MSP/MSSP. An Arizona team you can reach — not an anonymous remote queue."
+                              cta="Meet the experts"
+                              testId="menu-featured-about"
+                              linkTestId="link-featured-team-about"
+                              onNavigate={handleLinkClick}
+                            />
                           )}
 
                           {item.name === 'Resources' && (
-                            <motion.div
-                              className="flex flex-1 flex-col rounded-xl border border-white/10 bg-[#151217] p-5"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              transition={{ delay: 0.2 }}
-                              data-testid="menu-ebook-feature"
-                            >
-                              <Link
-                                href="/resources/ebook/defending-digital-realm"
-                                onClick={handleLinkClick}
-                                className="flex h-full flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400"
-                              >
-                                <IconWell icon={BookOpen} size="sm" surface="dark" />
-                                <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/45">Free ebook</p>
-                                <h4 className="mt-1 text-sm font-semibold leading-snug text-white">Defending the Digital Realm</h4>
-                                <p className="mt-2 flex-1 text-xs leading-relaxed text-white/55">
-                                  A cyber risk assessment framework for modern businesses.
-                                </p>
-                                <span className="mt-4 inline-flex items-center text-xs font-semibold text-[#A78BFA]">
-                                  Read the ebook
-                                  <ArrowRight className="ml-1.5 h-3 w-3" />
-                                </span>
-                              </Link>
-                            </motion.div>
+                            <MenuFeaturedRail
+                              href="/resources/ebook/defending-digital-realm"
+                              eyebrow="Free ebook"
+                              title="Defending the Digital Realm"
+                              body="What a cyber risk assessment finds in identity, email, backups, and insurance gaps — before an incident finds it for you."
+                              cta="Read the ebook"
+                              testId="menu-ebook-feature"
+                              linkTestId="link-featured-ebook"
+                              onNavigate={handleLinkClick}
+                              image={ebookCover}
+                              imageAlt="Defending the Digital Realm ebook cover"
+                            />
                           )}
                         </div>
                       </motion.div>
