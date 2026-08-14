@@ -1,88 +1,190 @@
 import { Link } from "wouter";
-import { ArrowRight, ShieldCheck, FileText, Scale, Star } from "lucide-react";
+import { ArrowRight, ShieldCheck, FileText, Scale, Star, type LucideIcon } from "lucide-react";
+import { IconWell } from "@/components/visual/IconWell";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 
 /**
  * Trust surfaces — Bill of Rights, reviews, Trust Center, case studies.
  * Keep copy client-facing; never invent logos, ratings, or case-study results.
  */
+type ProofSurface = {
+  id: string;
+  title: string;
+  body: string;
+  cta: string;
+  href: string;
+  icon: LucideIcon;
+  testId: string;
+  hash?: boolean;
+};
+
+const surfaces: ProofSurface[] = [
+  {
+    id: "reviews",
+    title: "Client reviews",
+    body: "Real client feedback from Google and other approved sources — shown only when we have live API data or verbatim published reviews.",
+    cta: "See reviews",
+    href: "/#google-reviews",
+    icon: Star,
+    testId: "link-proof-google-reviews",
+    hash: true,
+  },
+  {
+    id: "rights",
+    title: "Client Bill of Rights",
+    body: "Your credentials, tenants, and licenses stay yours — with access transparency and a clear path if you ever need to transition.",
+    cta: "Read the Bill of Rights",
+    href: "/about/client-bill-of-rights",
+    icon: Scale,
+    testId: "link-proof-section-rights",
+  },
+  {
+    id: "trust-center",
+    title: "Trust Center",
+    body: "Security documentation and operating expectations in one place for diligence and cyber-insurance conversations.",
+    cta: "Open Trust Center",
+    href: "/trust/trust-center",
+    icon: ShieldCheck,
+    testId: "link-proof-section-trust",
+  },
+  {
+    id: "case-studies",
+    title: "Case studies",
+    body: "Real engagements with challenge, approach, and outcome — published with client permission.",
+    cta: "View case studies",
+    href: "/resources/case-studies",
+    icon: FileText,
+    testId: "link-proof-section-cases",
+  },
+];
+
+function ProofCta({
+  surface,
+  className,
+  testId,
+  quiet = false,
+}: {
+  surface: ProofSurface;
+  className?: string;
+  testId?: string;
+  quiet?: boolean;
+}) {
+  const classes = cn(
+    "inline-flex min-h-11 items-center justify-center gap-2 text-sm font-medium transition-colors",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70",
+    "focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]",
+    quiet
+      ? "text-white/50 hover:text-white"
+      : "text-[#D3126A] hover:text-[#f0187a]",
+    className,
+  );
+
+  const label = (
+    <>
+      {surface.cta}
+      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+    </>
+  );
+
+  if (surface.hash) {
+    return (
+      <a href={surface.href} className={classes} data-testid={testId}>
+        {label}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={surface.href} data-testid={testId}>
+      <span className={classes}>{label}</span>
+    </Link>
+  );
+}
+
 export function HomepageProofSection() {
   return (
     <section id="proof" className="de-dark-well de-chapter-hairline py-14 lg:py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-pink-300/90 mb-3">
-          Trust & transparency
-        </p>
-        <h2 className="text-2xl md:text-4xl font-bold text-white mb-3 max-w-3xl">
-          Built for accountability you can verify
-        </h2>
-        <p className="text-white/65 max-w-2xl mb-10">
-          Ownership clarity, documented operations, and public surfaces you can open before you
-          engage — not marketing claims you have to take on faith.
-        </p>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-          <div className="rounded-2xl border border-de-hairline bg-de-raised p-6">
-            <Star className="mb-3 h-6 w-6 text-violet-300" aria-hidden />
-            <h3 className="mb-2 text-lg font-semibold text-white">Client reviews</h3>
-            <p className="mb-4 text-sm text-white/65">
-              Real client feedback from Google and other approved sources — shown only when we have
-              live API data or verbatim published reviews.
-            </p>
-            <a
-              href="/#google-reviews"
-              className="inline-flex items-center gap-2 text-sm text-pink-300 hover:text-pink-200"
-              data-testid="link-proof-google-reviews"
-            >
-              See reviews
-              <ArrowRight className="h-4 w-4" aria-hidden />
-            </a>
-          </div>
-          <div className="rounded-2xl border border-de-hairline bg-de-raised p-6">
-            <Scale className="h-6 w-6 text-violet-300 mb-3" aria-hidden />
-            <h3 className="text-lg font-semibold text-white mb-2">Client Bill of Rights</h3>
-            <p className="text-sm text-white/65 mb-4">
-              Your credentials, tenants, and licenses stay yours — with access transparency and a
-              clear path if you ever need to transition.
-            </p>
-            <Link
-              href="/about/client-bill-of-rights"
-              className="inline-flex items-center gap-2 text-sm text-pink-300 hover:text-pink-200"
-            >
-              Read the Bill of Rights
-              <ArrowRight className="h-4 w-4" aria-hidden />
-            </Link>
-          </div>
-          <div className="rounded-2xl border border-de-hairline bg-de-raised p-6">
-            <ShieldCheck className="h-6 w-6 text-violet-300 mb-3" aria-hidden />
-            <h3 className="text-lg font-semibold text-white mb-2">Trust Center</h3>
-            <p className="text-sm text-white/65 mb-4">
-              Security documentation and operating expectations in one place for diligence and
-              cyber-insurance conversations.
-            </p>
-            <Link
-              href="/trust/trust-center"
-              className="inline-flex items-center gap-2 text-sm text-pink-300 hover:text-pink-200"
-            >
-              Open Trust Center
-              <ArrowRight className="h-4 w-4" aria-hidden />
-            </Link>
-          </div>
-          <div className="rounded-2xl border border-de-hairline bg-de-raised p-6">
-            <FileText className="h-6 w-6 text-violet-300 mb-3" aria-hidden />
-            <h3 className="text-lg font-semibold text-white mb-2">Case studies</h3>
-            <p className="text-sm text-white/65 mb-4">
-              Real engagements with challenge, approach, and outcome — published with client
-              permission.
-            </p>
-            <Link
-              href="/resources/case-studies"
-              className="inline-flex items-center gap-2 text-sm text-pink-300 hover:text-pink-200"
-            >
-              View case studies
-              <ArrowRight className="h-4 w-4" aria-hidden />
-            </Link>
-          </div>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-4xl text-center">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#D3126A]/80">
+            Trust & transparency
+          </p>
+          <h2 className="font-heading text-3xl font-semibold tracking-[-0.03em] text-white md:text-4xl lg:text-5xl">
+            Built for accountability you can verify
+            <span className="text-[#D3126A]" aria-hidden="true">
+              :
+            </span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/55 md:text-base">
+            Ownership clarity, documented operations, and public surfaces you can open before you
+            engage — not marketing claims you have to take on faith.
+          </p>
         </div>
+
+        <Tabs defaultValue={surfaces[0].id} className="mt-10 md:mt-12">
+          <TabsList
+            aria-label="Trust and transparency surfaces"
+            className="grid h-auto w-full max-w-full grid-cols-2 items-stretch gap-2.5 bg-transparent p-0 lg:flex lg:flex-wrap lg:justify-center lg:gap-3"
+          >
+            {surfaces.map((surface) => {
+              const Icon = surface.icon;
+              return (
+                <TabsTrigger
+                  key={surface.id}
+                  value={surface.id}
+                  className={cn(
+                    "group h-full min-h-11 w-full justify-start rounded-xl border bg-transparent px-3.5 py-2.5 text-left text-sm font-medium text-white shadow-none lg:w-auto",
+                    "whitespace-normal hover:bg-white/[0.03] hover:text-white",
+                    "focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]",
+                    "data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-white",
+                    "border-[var(--de-hairline)] data-[state=active]:border-[#D3126A] data-[state=active]:shadow-[inset_0_0_0_1px_#D3126A]",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "mr-2.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border",
+                      "border-white/20 bg-transparent text-white",
+                      "group-data-[state=active]:border-[#D3126A] group-data-[state=active]:bg-[#D3126A] group-data-[state=active]:text-white",
+                    )}
+                    aria-hidden="true"
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                  </span>
+                  {surface.title}
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+
+          {surfaces.map((surface) => (
+            <TabsContent
+              key={surface.id}
+              value={surface.id}
+              className="mt-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)] md:mt-10"
+            >
+              <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
+                <IconWell icon={surface.icon} size="md" surface="dark" className="mb-5" />
+                <h3 className="font-heading text-xl font-semibold text-white md:text-2xl">
+                  {surface.title}
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-white/55 md:text-base">
+                  {surface.body}
+                </p>
+                <ProofCta surface={surface} className="mt-6 self-center" />
+              </div>
+            </TabsContent>
+          ))}
+        </Tabs>
+
+        <nav
+          aria-label="Open a trust surface"
+          className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-1 border-t border-[var(--de-hairline)] pt-8 md:mt-12"
+        >
+          {surfaces.map((surface) => (
+            <ProofCta key={surface.id} surface={surface} testId={surface.testId} quiet />
+          ))}
+        </nav>
       </div>
     </section>
   );
