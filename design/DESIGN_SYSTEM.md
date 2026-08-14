@@ -19,15 +19,17 @@ Enterprise
 
 Shade ladder (Lucide lesson, DE hex — nested, juxtaposed, not leftover slabs):
 
-`--de-bg` `#050312` — deepest well (hero, credibility, proof after magenta, founder, closing CTA/contact/footer)
-`--de-surface` `#0a0a0a` — marketing field for a dark chapter (stats→engage, industries→insights)
-`--de-raised` `#151217` — cards / lifted panels inside a dark chapter
+`--de-bg` `#050312` — deepest well (page canvas, inset cards inside a style box, hero/credibility/proof/founder/closing)
+`--de-surface` `#0a0a0a` — marketing field for a full-bleed dark chapter
+`--de-raised` `#151217` — contained style box (2–4 flat chapters) and lifted panels/chips
 `--de-hairline` `rgba(255,255,255,0.1)` — 1px borders and same-chapter seams
-`--de-paper` `#f7f5f2` — one light chapter recipe (protect, trust, FAQ/newsletter)
+`--de-paper` `#f7f5f2` — one light chapter recipe (protect, trust, FAQ)
 `--de-paper-raised` `#ffffff` — cards on paper
 `--de-paper-hairline` `rgba(26, 18, 16, 0.1)`
 
-Adjacent same-chapter dark sections share one field with a hairline and internal lift (raised cards). Different chapters step well ↔ surface ↔ paper ↔ magenta so the page does not read as one `#0a0a0a` slab. Do not paint `#0f0f0f`, `#0f0f1a`, `#141418`, or cool `#F7FAFC` as competing page fields. Magenta how-it-works stays the only loud band.
+OpenMSP background mapping (do not copy their yellow): page `#161616` → `--de-bg`; box `#212121` → `--de-raised`; inset `#121212` → `--de-bg`. Utility: `.de-style-box` / `.de-style-box-inset`. Do not wrap every chapter.
+
+Adjacent same-chapter dark sections share one field with a hairline and internal lift (raised cards). Different chapters step well ↔ surface ↔ paper ↔ magenta so the page does not read as one `#0a0a0a` slab. Do not paint `#0f0f0f`, `#0f0f1a`, `#141418`, or cool `#F7FAFC` as competing page fields. Magenta how-it-works stays the only loud band. DE logo gold (`#e7b20d`) is a secondary mark color only — never a CTA fill.
 
 DE Desk shell `#1a0b33`
 Nested dark `#12141c` / `#171922`

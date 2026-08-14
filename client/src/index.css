@@ -309,7 +309,13 @@ html.de-marketing-canvas body {
 
 /* Dark chapters: well (#050312) vs surface (#0a0a0a) vs raised (#151217).
  * Adjacent siblings in the SAME chapter share a field + hairline.
- * Different chapters step the ladder so the page does not read as one slab. */
+ * Different chapters step the ladder so the page does not read as one slab.
+ *
+ * OpenMSP background ladder (values only — not their yellow or layout):
+ *   page ~#161616  →  --de-bg #050312  (canvas / well / inset cards)
+ *   box  ~#212121  →  --de-raised #151217  (contained style box)
+ *   inset ~#121212 →  --de-bg #050312  (cards sitting in the box)
+ * Use .de-style-box on 2–4 flat chapters. Do not wrap every section. */
 .de-dark-well {
   background-color: var(--de-bg);
 }
@@ -321,6 +327,18 @@ html.de-marketing-canvas body {
 }
 .de-chapter-hairline {
   border-top: 1px solid var(--de-hairline);
+}
+
+/* Contained chapter field — one step lighter than the well so page black
+ * shows in the gutters. Magenta pops on this quiet charcoal, not yellow. */
+.de-style-box {
+  background-color: var(--de-raised);
+  border: 1px solid var(--de-hairline);
+  border-radius: 1.5rem;
+}
+.de-style-box-inset {
+  background-color: var(--de-bg);
+  border: 1px solid var(--de-hairline);
 }
 
 /* Magenta seam — tasteful chapter chrome, not a blur blob. */

@@ -127,10 +127,10 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
   return (
     <section 
       ref={sectionRef}
-      className="de-dark-chapter de-chapter-hairline relative overflow-hidden py-10 md:py-14 lg:py-16"
+      className="de-dark-well relative overflow-hidden py-6 md:py-8"
       style={{ position: 'relative' }}
     >
-      <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
+      <div className="de-style-box relative z-10 mx-3 px-5 py-10 sm:mx-4 sm:px-8 md:py-14 lg:mx-6 lg:px-10 lg:py-16">
         <motion.div 
           className="text-center mb-8 md:mb-12 lg:mb-16"
           initial="hidden"
@@ -180,8 +180,8 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
           </button>
 
           {/* Gradient fade edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-de-surface to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-de-surface to-transparent z-10 pointer-events-none" />
+          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-de-raised to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-de-raised to-transparent z-10 pointer-events-none" />
 
           {/* Scrollable container */}
           <div 

@@ -8,23 +8,39 @@ alwaysApply: true
 
 Vibrant color pops **because** the field is black/charcoal and quiet — not because boxes are filled with purple.
 
+## Background ladder (2–3 steps)
+
+OpenMSP’s move is juxtaposition of a few dark values — page black, a slightly lighter rounded section box, darker inset cards. Map that recipe to DE tokens. Do **not** adopt their yellow, numerals, Slack magenta, or layout.
+
+| Step | OpenMSP (reference only) | DE token | Use |
+|------|--------------------------|----------|-----|
+| Canvas / well | `#161616` | `--de-bg` `#050312` (html gutters `#000`) | Page field; inset cards inside a style box |
+| Style box | `#212121` | `--de-raised` `#151217` + `--de-hairline` | Contained chapter box — **2–4 flat chapters max** |
+| Full-bleed chapter | — | `--de-surface` `#0a0a0a` | Adjacent dark chapter that stays a slab |
+| Pop | their yellow — do not copy | `#D3126A` | CTA fill, active border, colon, icon |
+
+Violet `#5B45E0` / `#8B5CF6` = lighting only. Never a wash fill.
+
+**Yellow verdict:** the DE wordmark is white; the 3-bar mark is gold (`#e7b20d` / `#f5e48a`). That gold is a *secondary* mark color. It does **not** replace magenta. Do not use OpenMSP yellow (`#ffbe0b`) as a brand color or CTA fill. Do not paint numerals yellow.
+
+**Midpoint:** if a chapter already reads well, leave it or make a one-step field shift (well ↔ surface). Do not wrap every homepage section in a rounded gray island. Hero stays atmospheric. Paper stays paper.
+
 ## Recipe (DE tokens only)
 
 | Role | Token | Use |
 |------|--------|-----|
-| Deep well | `--de-bg` `#050312` | Chapter field |
+| Deep well | `--de-bg` `#050312` | Page / chapter field / inset cards |
 | Marketing field | `--de-surface` `#0a0a0a` | Adjacent dark chapter |
-| Raised box | `--de-raised` `#151217` + `--de-hairline` | Panels, cards, chips |
+| Style box / raised | `--de-raised` `#151217` + `--de-hairline` | Contained chapter box, panels, chips |
 | Pop | `#D3126A` | CTA fill, active border, colon, icon |
-
-Violet `#5B45E0` / `#8B5CF6` = lighting only. Never a wash fill.
 
 ## Do
 
-- Black/charcoal field → charcoal raised box → white type → magenta punctuation
+- Black/charcoal field → charcoal style box → inset `--de-bg` cards → white type → magenta punctuation
 - Hairline chips: transparent/`bg-de-raised`, `border-de-hairline`; active = `border-[#D3126A]`
 - Magenta colon after a statement heading (Trust / Engage pattern)
 - Paper chapters: white lift + magenta accent, not violet-100 fills
+- Utility: `.de-style-box` / `.de-style-box-inset` in `index.css`
 
 ## Do not
 
@@ -32,7 +48,8 @@ Violet `#5B45E0` / `#8B5CF6` = lighting only. Never a wash fill.
 - `bg-violet-500/15`, `from-purple-600 to-indigo-600`, `#FF00FF`, rainbow
 - Glass `bg-white/5 backdrop-blur` as the card recipe
 - Giant neon blooms or cyberpunk glow
-- Copy OpenMSP/OpenFrame logos, copy, APPROVE/REJECT, or fake “Featured in”
+- Copy OpenMSP/OpenFrame logos, copy, yellow buttons, yellow numerals, APPROVE/REJECT, or fake “Featured in”
+- Turn every chapter into a big rounded gray container
 
 ```tsx
 // ❌ muddy chrome
