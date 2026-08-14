@@ -154,7 +154,7 @@ export default function RealEstate() {
           </div>
           <div className="text-center">
             <p className="text-lg font-semibold mb-2">Someone to call</p>
-            <p className="text-white/70 text-sm">Arizona team when a closing looks off — 480-519-5892.</p>
+            <p className="text-white/70 text-sm">Arizona team when a closing looks off — 325-480-9870.</p>
           </div>
         </div>
 
@@ -171,11 +171,11 @@ export default function RealEstate() {
               {CTA.primary}
             </a>
             <a 
-              href="tel:480-519-5892"
+              href="tel:+13254809870"
               className="inline-flex items-center justify-center border-2 border-white bg-transparent text-white hover:bg-white/10 px-8 py-3 rounded-lg font-semibold transition-all"
               data-testid="button-call-real-estate"
             >
-              Call 480-519-5892
+              Call 325-480-9870
             </a>
           </div>
         </div>

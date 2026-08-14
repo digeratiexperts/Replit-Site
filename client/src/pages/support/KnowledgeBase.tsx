@@ -150,7 +150,7 @@ export default function KnowledgeBase() {
               Submit Support Ticket
             </a>
             <a 
-              href="tel:480-519-5892"
+              href="tel:+13254809870"
               className="inline-flex items-center justify-center border-2 border-white bg-transparent text-white hover:bg-white/10 px-8 py-3 rounded-lg font-semibold transition-all"
               data-testid="button-call-support"
             >

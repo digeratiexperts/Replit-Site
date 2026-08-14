@@ -18,7 +18,7 @@ export function PremiumCTASection({
   primaryButtonText = "Schedule Consultation",
   primaryButtonHref = "/book",
   showPhoneButton = true,
-  phoneNumber = "480-519-5892",
+  phoneNumber = "325-480-9870",
 }: PremiumCTASectionProps) {
   const prefersReducedMotion = useReducedMotion();
   const { openBooking } = useBooking();

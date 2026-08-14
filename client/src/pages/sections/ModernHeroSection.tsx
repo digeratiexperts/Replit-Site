@@ -170,11 +170,11 @@ export const ModernHeroSection = (): JSX.Element => {
                   </span>
                   Or call{" "}
                   <a
-                    href="tel:480-519-5892"
+                    href="tel:+13254809870"
                     className="text-pink-300 hover:text-pink-200 font-medium underline underline-offset-4 decoration-pink-400/40 hover:decoration-pink-300/70 transition-colors"
                     data-testid="link-hero-phone"
                   >
-                    480-519-5892
+                    325-480-9870
                   </a>
                 </p>
               </div>

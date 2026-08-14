@@ -27,11 +27,11 @@ export default function TicketConfirmation() {
           We’ll follow up at the email you provided. For urgent production issues, call us now.
         </p>
         <a
-          href="tel:480-519-5892"
+          href="tel:+13254809870"
           className="inline-flex items-center gap-2 text-2xl font-bold text-purple-300 hover:text-purple-200"
         >
           <Phone className="h-6 w-6" />
-          480-519-5892
+          325-480-9870
         </a>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Button onClick={() => setLocation("/support/knowledge-base")} variant="outline">

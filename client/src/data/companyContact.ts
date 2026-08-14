@@ -2,22 +2,23 @@
  * Canonical public contact identity for Digerati Experts.
  * Import from here instead of hardcoding phone/email literals in UI.
  *
- * Primary public sales/business number: 480-519-5892
+ * Primary public sales/business number: 325-480-9870
  * Additional numbers must be labeled by function (Sales / Client Support / Emergency).
  * Do not invent alternate numbers; confirm with Joseph Petro before changing.
+ * Never publish a personal/cell number as the public NAP.
  */
 
 export type PhoneRole = "primary" | "sales" | "client_support" | "emergency";
 
 export interface CompanyPhone {
   role: PhoneRole;
-  /** Display form, e.g. 480-519-5892 */
+  /** Display form, e.g. 325-480-9870 */
   display: string;
-  /** tel: href without spaces, e.g. tel:480-519-5892 */
+  /** tel: href, e.g. tel:+13254809870 */
   telHref: string;
-  /** E.164, e.g. +14805195892 */
+  /** E.164, e.g. +13254809870 */
   e164: string;
-  /** Schema.org telephone, e.g. +1-480-519-5892 */
+  /** Schema.org telephone, e.g. +1-325-480-9870 */
   schemaTelephone?: string;
   /** Short label when multiple numbers appear */
   label: string;
@@ -60,36 +61,23 @@ export const COMPANY_SOCIAL = {
   },
 } as const;
 
-/** Primary public business / sales number used across marketing + schema. */
+/** Official public NAP — sales / business / click-to-call. */
 export const PRIMARY_PHONE: CompanyPhone = {
   role: "primary",
-  display: "480-519-5892",
-  telHref: "tel:480-519-5892",
-  e164: "+14805195892",
+  display: "325-480-9870",
+  telHref: "tel:+13254809870",
+  e164: "+13254809870",
   /** Schema.org / JSON-LD preferred display form */
-  schemaTelephone: "+1-480-519-5892",
+  schemaTelephone: "+1-325-480-9870",
   label: "Sales & Business",
 };
 
 /**
- * Known alternate / legacy numbers found in repo or GBP docs.
- * Do NOT render as an unlabeled primary number.
- * Status notes are for engineering — confirm before promoting to UI.
+ * Known phone identities. Only `primary` is public.
+ * Do not add a second unlabeled public number.
  */
 export const PHONE_REGISTRY = {
   primary: PRIMARY_PHONE,
-  /**
-   * Appears in older GBP / Maps feature-ID notes and MSP advisor knowledge.
-   * Treated as legacy until Joseph Petro confirms its function.
-   */
-  legacyGbp: {
-    role: "sales" as const,
-    display: "325-480-9870",
-    telHref: "tel:325-480-9870",
-    e164: "+13254809870",
-    label: "Legacy (confirm before public use)",
-    publicUse: false,
-  },
 } as const;
 
 export function formatAddressOneLine(): string {

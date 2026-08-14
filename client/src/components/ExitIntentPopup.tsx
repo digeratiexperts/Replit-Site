@@ -24,8 +24,8 @@ const BENEFITS = [
 ] as const;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_DISPLAY = "480-519-5892";
-const PHONE_HREF = "tel:480-519-5892";
+const PHONE_DISPLAY = "325-480-9870";
+const PHONE_HREF = "tel:+13254809870";
 
 interface ExitIntentPopupProps {
   delay?: number;
@@ -179,7 +179,7 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
         handleClose();
       }, 4000);
     } catch {
-      setSubmitError("We couldn’t send that. Try again, or call us at 480-519-5892.");
+      setSubmitError("We couldn’t send that. Try again, or call us at 325-480-9870.");
     } finally {
       setIsSubmitting(false);
     }

@@ -338,11 +338,11 @@ export function ShoppingCart() {
                       Estimated onboarding: typically 7–10 business days after kickoff (varies by
                       stack). Questions?{" "}
                       <a
-                        href="tel:4805195892"
+                        href="tel:+13254809870"
                         className="inline-flex items-center gap-1 text-[#a78bfa] hover:text-[#c4b5fd]"
                       >
                         <Phone className="h-3 w-3" />
-                        480-519-5892
+                        325-480-9870
                       </a>
                     </p>
                   </>

@@ -73,7 +73,7 @@ export function LocationServicePage(props: LocationPageProps) {
       "name": "Digerati Experts",
       "description": props.description,
       "url": `https://digeratiexperts.com/locations/${props.city.toLowerCase().replace(/\s+/g, '-')}-az`,
-      "telephone": "480-519-5892",
+      "telephone": "325-480-9870",
       "email": "info@digeratiexperts.com",
       "address": {
         "@type": "PostalAddress",
@@ -314,9 +314,9 @@ export function LocationServicePage(props: LocationPageProps) {
                           <Button type="submit" size="lg" data-testid={`button-${props.city.toLowerCase()}-submit`} disabled={isSubmitting} className="flex-1 h-12 text-base font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-0 shadow-lg shadow-purple-500/25">
                             {isSubmitting ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" />Submitting...</> : <>Get Free {props.city} Assessment<ArrowRight className="w-5 h-5 ml-2" /></>}
                           </Button>
-                          <a href="tel:480-519-5892" className="sm:flex-shrink-0">
+                          <a href="tel:+13254809870" className="sm:flex-shrink-0">
                             <Button type="button" variant="outline" size="lg" className="w-full sm:w-auto h-12 px-6 text-base font-semibold border-white/20 bg-white/5 hover:bg-white/10 text-white">
-                              <Phone className="w-5 h-5 mr-2" />480-519-5892
+                              <Phone className="w-5 h-5 mr-2" />325-480-9870
                             </Button>
                           </a>
                         </div>
@@ -500,9 +500,9 @@ export function LocationServicePage(props: LocationPageProps) {
                   {CTA.primary} <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </a>
-              <a href="tel:480-519-5892">
+              <a href="tel:+13254809870">
                 <Button variant="outline" size="lg" className="px-8 py-6 text-lg font-semibold border-white/20 bg-white/5 hover:bg-white/10 text-white">
-                  <Phone className="mr-2 w-5 h-5" /> Call 480-519-5892
+                  <Phone className="mr-2 w-5 h-5" /> Call 325-480-9870
                 </Button>
               </a>
             </div>

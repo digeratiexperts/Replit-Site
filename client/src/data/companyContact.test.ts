@@ -3,15 +3,15 @@ import { COMPANY, PHONE_REGISTRY, PRIMARY_PHONE } from "./companyContact";
 
 describe("companyContact", () => {
   it("exposes a single primary public phone identity", () => {
-    expect(PRIMARY_PHONE.display).toBe("480-519-5892");
-    expect(PRIMARY_PHONE.e164).toBe("+14805195892");
-    expect(PRIMARY_PHONE.telHref).toBe("tel:480-519-5892");
+    expect(PRIMARY_PHONE.display).toBe("325-480-9870");
+    expect(PRIMARY_PHONE.e164).toBe("+13254809870");
+    expect(PRIMARY_PHONE.telHref).toBe("tel:+13254809870");
+    expect(PRIMARY_PHONE.schemaTelephone).toBe("+1-325-480-9870");
     expect(PHONE_REGISTRY.primary).toEqual(PRIMARY_PHONE);
   });
 
-  it("keeps legacy alternate numbers non-public by default", () => {
-    expect(PHONE_REGISTRY.legacyGbp.publicUse).toBe(false);
-    expect(PHONE_REGISTRY.legacyGbp.display).not.toBe(PRIMARY_PHONE.display);
+  it("does not publish a second public phone identity", () => {
+    expect(Object.keys(PHONE_REGISTRY)).toEqual(["primary"]);
   });
 
   it("keeps canonical company identity on digeratexperts.com", () => {

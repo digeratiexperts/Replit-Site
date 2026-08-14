@@ -239,11 +239,11 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
           >
             Prefer to call?{" "}
             <a 
-              href="tel:480-519-5892"
+              href="tel:+13254809870"
               data-testid="link-lead-phone"
               className="text-[#D3126A] hover:text-[#f0187a] font-medium transition-colors"
             >
-              480-519-5892
+              325-480-9870
             </a>
           </motion.p>
         </div>

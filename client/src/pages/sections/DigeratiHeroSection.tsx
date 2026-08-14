@@ -133,12 +133,12 @@ export const DigeratiHeroSection = (): JSX.Element => {
                 {CTA.primary} <ArrowRight className="ml-2 h-5 w-5" />
               </a>
               <a
-                href="tel:480-519-5892"
+                href="tel:+13254809870"
                 className="h-12 px-8 rounded-md border-2 border-white bg-transparent text-white hover:bg-white hover:text-purple-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-purple-600 transition-all duration-200 inline-flex items-center justify-center gap-2 whitespace-nowrap text-base font-semibold group"
                 data-testid="button-hero-phone"
               >
                 <Phone className="h-5 w-5 group-hover:text-purple-600 transition-colors duration-200" />
-                480-519-5892
+                325-480-9870
               </a>
             </div>
           </div>

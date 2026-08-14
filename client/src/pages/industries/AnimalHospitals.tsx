@@ -207,11 +207,11 @@ export default function AnimalHospitals() {
               Schedule a Consultation
             </a>
             <a 
-              href="tel:480-519-5892"
+              href="tel:+13254809870"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-lg border border-white/20 transition-colors"
               data-testid="button-call-now"
             >
-              Call 480-519-5892
+              Call 325-480-9870
             </a>
           </div>
         </motion.div>

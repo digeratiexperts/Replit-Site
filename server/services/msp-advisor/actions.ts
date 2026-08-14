@@ -131,7 +131,7 @@ export function defaultActionsForMode(mode?: string): AdvisorAction[] {
   if (mode === "security_incident") {
     return [
       materializeAction("request_callback", "Emergency callback")!,
-      materializeAction("contact_sales", "Call 480-519-5892")!,
+      materializeAction("contact_sales", "Call 325-480-9870")!,
     ];
   }
   if (mode === "existing_client") {

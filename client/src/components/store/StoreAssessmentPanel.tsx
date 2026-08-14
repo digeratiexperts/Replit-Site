@@ -66,8 +66,8 @@ export function StoreAssessmentPanel({
         </div>
         <p className="mt-3 text-xs text-white/40">
           Or call{" "}
-          <a href="tel:480-519-5892" className="text-[#a78bfa] hover:underline">
-            480-519-5892
+          <a href="tel:+13254809870" className="text-[#a78bfa] hover:underline">
+            325-480-9870
           </a>
         </p>
       </div>

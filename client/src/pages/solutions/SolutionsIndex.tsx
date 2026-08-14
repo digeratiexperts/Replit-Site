@@ -410,14 +410,14 @@ const SolutionsIndex = () => {
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </a>
-              <a href="tel:480-519-5892">
+              <a href="tel:+13254809870">
                 <Button 
                   size="lg"
                   className="h-14 px-8 text-lg font-semibold bg-transparent border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50"
                   data-testid="button-call-us"
                 >
                   <Phone className="w-5 h-5 mr-2" />
-                  480-519-5892
+                  325-480-9870
                 </Button>
               </a>
             </div>

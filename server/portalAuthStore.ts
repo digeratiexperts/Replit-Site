@@ -268,7 +268,7 @@ function seedDemoIfNotProduction() {
     id: "msp-digerati",
     companyName: "Digerati Experts (Internal)",
     contactEmail: "admin@digeratiexperts.com",
-    contactPhone: "480-519-5892",
+    contactPhone: "325-480-9870",
     industry: "MSP/MSSP",
     primaryContact: "Digerati Admin",
     status: "active",

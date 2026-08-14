@@ -546,12 +546,12 @@ export function MegaMenu() {
         <div className="max-w-[100rem] mx-auto px-3 lg:px-5 flex flex-col md:flex-row items-center justify-end py-1.5 relative z-10 w-full">
           <div className="flex items-center flex-wrap gap-x-5 gap-y-1.5 md:gap-x-7 justify-center md:justify-end">
             <a
-              href="tel:480-519-5892"
+              href="tel:+13254809870"
               className="flex items-center text-white/95 hover:text-pink-300 text-base font-semibold leading-none tracking-wide transition-colors"
               data-testid="utility-phone"
             >
               <Phone className="h-4 w-4 mr-1.5 text-pink-400 shrink-0" />
-              <span className="hidden sm:inline">480-519-5892</span>
+              <span className="hidden sm:inline">325-480-9870</span>
               <span className="sm:hidden">Call</span>
             </a>
 
@@ -1141,17 +1141,17 @@ export function MegaMenu() {
                 }}
               >
                 <a
-                  href="tel:480-519-5892"
+                  href="tel:+13254809870"
                   className="flex items-center gap-3 px-4 py-3 rounded-xl bg-violet-500/10 border border-violet-500/20 hover:border-violet-500/40 transition-all group"
                   data-testid="mobile-call"
-                  aria-label="Call us at 480-519-5892"
+                  aria-label="Call us at 325-480-9870"
                 >
                   <div className="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center border border-violet-500/20">
                     <Phone className="h-5 w-5 text-violet-400" aria-hidden="true" />
                   </div>
                   <div>
                     <div className="text-base text-gray-400">Call Us</div>
-                    <div className="font-semibold text-white group-hover:text-violet-400 transition-colors">480-519-5892</div>
+                    <div className="font-semibold text-white group-hover:text-violet-400 transition-colors">325-480-9870</div>
                   </div>
                 </a>
 

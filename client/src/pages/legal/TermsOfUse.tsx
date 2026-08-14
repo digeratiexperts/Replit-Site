@@ -454,7 +454,7 @@ export default function TermsOfUse() {
               <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-4 rounded-lg">
                 <p className="text-white font-semibold mb-2">Digerati Experts - Legal Department</p>
                 <p className="text-gray-300"><strong className="text-white">Email:</strong> legal@digeratiexperts.com</p>
-                <p className="text-gray-300"><strong className="text-white">Phone:</strong> 480-519-5892</p>
+                <p className="text-gray-300"><strong className="text-white">Phone:</strong> 325-480-9870</p>
                 <p className="text-gray-300"><strong className="text-white">Address:</strong> 3165 S Alma School Rd Suite 29, Chandler, AZ 85248</p>
               </div>
             </div>

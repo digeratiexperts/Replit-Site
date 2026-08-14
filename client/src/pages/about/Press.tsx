@@ -10,7 +10,7 @@ const NAP = {
   city: "Chandler",
   region: "AZ",
   postal: "85248",
-  phone: "(480) 519-5892",
+  phone: "325-480-9870",
   email: "info@digeratiexperts.com",
 };
 
@@ -37,7 +37,7 @@ export default function Press() {
             name: NAP.name,
             url: "https://digeratiexperts.com",
             email: NAP.email,
-            telephone: "+1-480-519-5892",
+            telephone: "+1-325-480-9870",
             address: {
               "@type": "PostalAddress",
               streetAddress: NAP.street,
@@ -78,7 +78,7 @@ export default function Press() {
             {NAP.city}, {NAP.region} {NAP.postal}
             <br />
             Phone:{" "}
-            <a className="text-violet-300 underline-offset-2 hover:underline" href="tel:+14805195892">
+            <a className="text-violet-300 underline-offset-2 hover:underline" href="tel:+13254809870">
               {NAP.phone}
             </a>
             <br />

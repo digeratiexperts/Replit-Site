@@ -383,12 +383,12 @@ export default function PortalOrderDetail() {
                     support@digeratiexperts.com
                   </a>
                   <a
-                    href="tel:480-519-5892"
+                    href="tel:+13254809870"
                     className="flex items-center gap-2 text-[#5034ff] hover:underline"
                     data-testid="link-support-phone"
                   >
                     <Phone className="h-4 w-4" />
-                    480-519-5892
+                    325-480-9870
                   </a>
                 </div>
                 <Link href="/portal/tickets/create">
