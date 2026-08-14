@@ -3,7 +3,7 @@
  *
  * Rules:
  * - Only optimized derivatives under `/images/...` (never licensed ORIGINAL paths)
- * - Public marketing: sculpture set for path/section stages; Lucide for small cards
+ * - Public marketing: sculpture set for editorial stages; Lucide IconWell for path + small cards
  * - Meshy Batch 01 is retired from public marketing (laptop/robot/lock/envelope)
  * - Portal / mega-menu chrome stays Lucide
  */
@@ -151,12 +151,8 @@ export const engageSculptureSet = {
   ),
 } as const;
 
-/** Engage path cards — one still each, mapped to copy */
-export const engagePathVisualByTitle: Record<string, VisualStill | undefined> = {
-  "Fully Managed IT & Cybersecurity": engageSculptureSet.fullyManaged,
-  "Co-Managed IT": engageSculptureSet.coManaged,
-  "Cyber Risk Assessment": engageSculptureSet.cyberRisk,
-};
+/** Engage path cards use Lucide wells — sculptures stay on editorial stages only */
+export const engagePathVisualByTitle: Record<string, VisualStill | undefined> = {};
 
 const pricingEcosystemStill: VisualStill = {
   id: "pricing-ecosystem",

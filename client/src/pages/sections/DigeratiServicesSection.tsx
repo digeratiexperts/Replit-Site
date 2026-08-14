@@ -15,13 +15,12 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { CTA } from "@/lib/ctaCopy";
-import { EngagePathVisual } from "@/components/visual/EngagePathVisual";
 import { IconWell } from "@/components/visual/IconWell";
-import { engagePathVisualByTitle } from "@/lib/visualAssets";
 
 /**
  * Homepage engagement paths — three primary choices.
  * Capability cards also previewed here (same stack as Protect) so nothing feels deleted.
+ * Lucide IconWell (A+C), not engage-path sculptures — DE: 3D reads as tech-made, not business-first.
  */
 const paths: {
   icon: LucideIcon;
@@ -30,10 +29,12 @@ const paths: {
   link: string;
   cta: string;
   testId: string;
+  eyebrow?: string;
 }[] = [
   {
     icon: Shield,
     title: "Fully Managed IT & Cybersecurity",
+    eyebrow: "ProActive Ecosystem",
     description:
       "One accountable team for support, identity, endpoints, email, backup, and security operations — delivered through our ProActive Ecosystem.",
     link: "/solutions/proactive-ecosystem",
@@ -135,7 +136,6 @@ export const DigeratiServicesSection = (): JSX.Element => {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8">
           {paths.map((path, index) => {
             const Icon = path.icon;
-            const visual = engagePathVisualByTitle[path.title];
             return (
               <motion.div
                 key={path.title}
@@ -143,28 +143,30 @@ export const DigeratiServicesSection = (): JSX.Element => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.08 }}
-                className="flex h-full flex-col overflow-hidden rounded-2xl border border-de-hairline bg-de-raised"
+                className="flex h-full flex-col rounded-2xl border border-de-hairline bg-de-raised p-6 transition-colors hover:border-white/20 lg:p-8"
                 data-testid={path.testId}
               >
-                {visual ? (
-                  <EngagePathVisual still={visual} alt={visual.alt} />
-                ) : (
-                  <div className="flex aspect-[5/3] items-center justify-center bg-de-raised">
-                    <IconWell icon={Icon} size="md" surface="dark" />
-                  </div>
-                )}
-                <div className="flex flex-1 flex-col px-6 pb-7 pt-1 lg:px-8 lg:pb-8">
-                  <h3 className="mb-2 text-xl font-semibold text-white lg:text-2xl">{path.title}</h3>
-                  <p className="mb-5 flex-1 text-base leading-relaxed text-white/65">
-                    {path.description}
-                  </p>
-                  <Link href={path.link} data-testid={`link-${path.testId}`}>
-                    <span className="inline-flex items-center gap-2 text-sm font-medium text-violet-300 hover:text-violet-200">
-                      {path.cta}
-                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                    </span>
-                  </Link>
-                </div>
+                <IconWell icon={Icon} size="md" surface="dark" className="mb-5" />
+                <p
+                  className={`mb-2 min-h-4 text-xs font-semibold uppercase tracking-[0.2em] ${
+                    path.eyebrow ? "text-white/45" : "invisible"
+                  }`}
+                  aria-hidden={!path.eyebrow}
+                >
+                  {path.eyebrow ?? "\u00a0"}
+                </p>
+                <h3 className="mb-2 text-xl font-semibold text-white lg:text-2xl">{path.title}</h3>
+                <p className="mb-5 flex-1 text-base leading-relaxed text-white/65">
+                  {path.description}
+                </p>
+                <Link
+                  href={path.link}
+                  data-testid={`link-${path.testId}`}
+                  className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-violet-300 hover:text-violet-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-de-raised"
+                >
+                  {path.cta}
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
               </motion.div>
             );
           })}

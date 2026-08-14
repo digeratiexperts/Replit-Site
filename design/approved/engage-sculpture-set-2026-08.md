@@ -18,8 +18,12 @@ controlled highlights, no laptop / shield / padlock / robot.
 
 ## Placement
 
-Bleed the still into the upper ~55% of the card (`EngagePathVisual`). Same dark
-field as the card — no inner rounded purple square.
+Homepage engage-path cards no longer bleed these stills. DE (Aug 2026): the
+hex-hub / interlocking-cubes / lattice reads as a tech demo, not a
+principal-led firm. Those three offers use Lucide `IconWell` on raised cards.
 
-Batch 01 stills remain on Stats / Tackle / Protect / Pricing until those get
-their own set.
+Sculptures remain available for **editorial stages** (`VisualStage` on Stats /
+How it works / engagement assessment) — graphite field, no inner purple square.
+
+Batch 01 stills remain in inventory only. Do not place laptop / robot / lock
+stills on public marketing cards.
