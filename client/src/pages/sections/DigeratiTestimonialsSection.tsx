@@ -71,20 +71,25 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
 
   useEffect(() => {
     let cancelled = false;
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), 8000);
     (async () => {
       try {
-        const res = await fetch("/api/public/reviews");
+        const res = await fetch("/api/public/reviews", { signal: controller.signal });
         if (!res.ok) throw new Error("unavailable");
         const data = (await res.json()) as PublicReviewsResponse;
         if (!cancelled) setPayload(data);
       } catch {
         if (!cancelled) setPayload(catalogFallback());
       } finally {
+        window.clearTimeout(timer);
         if (!cancelled) setLoading(false);
       }
     })();
     return () => {
       cancelled = true;
+      controller.abort();
+      window.clearTimeout(timer);
     };
   }, []);
 

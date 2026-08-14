@@ -69,6 +69,7 @@ export async function getYelpReviews(): Promise<YelpReviewsPayload> {
 
     const res = await fetch(url.toString(), {
       headers: { Authorization: `Bearer ${apiKey}` },
+      signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) {
       throw new Error(`Yelp HTTP ${res.status}`);

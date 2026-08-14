@@ -133,7 +133,9 @@ async function fetchLegacyPlaceDetails(
   url.searchParams.set("reviews_sort", "newest");
   url.searchParams.set("key", apiKey);
 
-  const res = await fetch(url.toString());
+  const res = await fetch(url.toString(), {
+    signal: AbortSignal.timeout(8000),
+  });
   if (!res.ok) {
     throw new Error(`Places API HTTP ${res.status}`);
   }
