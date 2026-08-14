@@ -2,7 +2,11 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 import { useLocation } from "wouter";
-import { HomepageDockMenu, useHomepageDockVisibility } from "@/components/HomepageSectionNav";
+import {
+  HomepageDockActions,
+  HomepageDockMenu,
+  useHomepageDockVisibility,
+} from "@/components/HomepageSectionNav";
 import { openMspAdvisor } from "@/lib/openMspAdvisor";
 
 /** Original used 0.28s easeOut layout + 300ms grid. Keep that pacing without transform. */
@@ -14,7 +18,7 @@ function AskDELauncherButton() {
     <button
       type="button"
       onClick={() => openMspAdvisor()}
-      className="group flex h-11 shrink-0 items-center gap-2 rounded-full px-1 pr-2 text-white transition-colors duration-200 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+      className="group flex h-10 shrink-0 items-center gap-2 rounded-full px-1 pr-1.5 text-white transition-colors duration-200 hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
       data-testid="button-open-asap-widget"
       aria-label="Open DE Desk"
       aria-expanded={false}
@@ -46,7 +50,9 @@ export function SiteBottomBar() {
   const [deskOpen, setDeskOpen] = useState(false);
   const barRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const actionsRef = useRef<HTMLDivElement>(null);
   const [trackW, setTrackW] = useState(0);
+  const [compactW, setCompactW] = useState(0);
   const isPortal = location.startsWith("/portal");
 
   const syncFarDown = useCallback(() => {
@@ -77,20 +83,28 @@ export function SiteBottomBar() {
     return () => window.removeEventListener("de-desk-open-change", onDesk as EventListener);
   }, []);
 
-  useLayoutEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    const publish = () => setTrackW(Math.round(track.getBoundingClientRect().width));
-    publish();
-    const ro = new ResizeObserver(publish);
-    ro.observe(track);
-    return () => ro.disconnect();
-  }, []);
-
   const showScrollTop = farDown;
   const showAskDE = !deskOpen;
   const expanded = showMenu;
   const showBar = !isPortal && (showAskDE || expanded || showScrollTop);
+
+  useLayoutEffect(() => {
+    const track = trackRef.current;
+    const actions = actionsRef.current;
+    if (!track) return;
+    const publish = () => {
+      setTrackW(Math.round(track.getBoundingClientRect().width));
+      if (actions) {
+        // Compact capsule = action cluster + even 6px padding + 2px border each side.
+        setCompactW(Math.round(actions.getBoundingClientRect().width + 16));
+      }
+    };
+    publish();
+    const ro = new ResizeObserver(publish);
+    ro.observe(track);
+    if (actions) ro.observe(actions);
+    return () => ro.disconnect();
+  }, [showAskDE, showScrollTop, location]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -135,14 +149,16 @@ export function SiteBottomBar() {
     >
       <motion.div
         ref={barRef}
-        className={`de-unified-bar-shell pointer-events-auto relative flex min-w-0 items-center gap-0 rounded-full border-2 border-[#D3126A]/60 py-1.5 shadow-[0_0_24px_rgba(211,18,106,0.35),0_4px_24px_rgba(0,0,0,0.5)] ${
-          expanded ? "pl-2.5 pr-1 sm:pl-3 sm:pr-1.5" : "pl-1.5 pr-1"
+        className={`de-unified-bar-shell pointer-events-auto relative flex items-center rounded-full border-2 border-[#D3126A]/60 py-1.5 shadow-[0_0_24px_rgba(211,18,106,0.35),0_4px_24px_rgba(0,0,0,0.5)] ${
+          expanded
+            ? "w-full min-w-0 justify-between gap-6 pl-3 pr-2.5"
+            : "shrink-0 justify-end gap-0 pl-1.5 pr-1.5"
         }`}
         initial={false}
         layout={false}
         transformTemplate={() => "none"}
         animate={{
-          width: expanded ? (trackW > 0 ? trackW : "100%") : "auto",
+          width: expanded ? (trackW > 0 ? trackW : "100%") : compactW > 0 ? compactW : "auto",
         }}
         transition={
           prefersReducedMotion
@@ -152,18 +168,12 @@ export function SiteBottomBar() {
       >
         <span className="de-unified-bar-glass" aria-hidden="true" />
 
-        {!expanded && location === "/" && (
-          <span
-            className="relative z-[1] ml-1 mr-0.5 hidden h-2 w-2 shrink-0 rounded-full bg-[#D3126A] shadow-[0_0_8px_rgba(211,18,106,0.8)] sm:block"
-            aria-hidden="true"
-          />
-        )}
         <div
           className={`relative z-[1] grid min-w-0 ${
             prefersReducedMotion ? "" : "transition-[grid-template-columns,opacity] duration-[400ms] ease-out"
           } ${
             expanded
-              ? "flex-1 grid-cols-[minmax(0,1fr)] opacity-100"
+              ? "grid-cols-[minmax(0,max-content)] opacity-100"
               : "pointer-events-none w-0 flex-none grid-cols-[0fr] overflow-hidden opacity-0"
           }`}
           aria-hidden={!expanded}
@@ -173,31 +183,41 @@ export function SiteBottomBar() {
           </div>
         </div>
 
-        {expanded && (showScrollTop || showAskDE) && (
-          <div className="relative z-[1] mx-0.5 h-6 w-px shrink-0 bg-white/20" aria-hidden="true" />
-        )}
-
-        <div className="relative z-[1] ml-auto flex shrink-0 items-center gap-0">
-          <AnimatePresence initial={false}>
-            {showScrollTop && (
-              <motion.button
-                key="scroll-top"
-                type="button"
-                initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: "auto" }}
-                exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, width: 0 }}
-                transition={{ duration }}
-                onClick={scrollToTop}
-                className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full text-white/80 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF477F]"
-                aria-label="Scroll to top"
-                data-testid="button-scroll-to-top"
-              >
-                <ArrowUp className="h-4 w-4 shrink-0" aria-hidden="true" />
-              </motion.button>
+        <div className="relative z-[1] flex shrink-0 items-center gap-1.5">
+          {expanded && (
+            <>
+              <div className="h-6 w-px shrink-0 bg-white/20" aria-hidden="true" />
+              <HomepageDockActions />
+            </>
+          )}
+          <div ref={actionsRef} className="flex shrink-0 items-center gap-1.5">
+            {!expanded && location === "/" && !showScrollTop && (
+              <span
+                className="ml-0.5 hidden h-2 w-2 shrink-0 rounded-full bg-[#D3126A] shadow-[0_0_8px_rgba(211,18,106,0.8)] sm:block"
+                aria-hidden="true"
+              />
             )}
-          </AnimatePresence>
+            <AnimatePresence initial={false}>
+              {showScrollTop && (
+                <motion.button
+                  key="scroll-top"
+                  type="button"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration }}
+                  onClick={scrollToTop}
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white/[0.06] text-white/80 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF477F]"
+                  aria-label="Scroll to top"
+                  data-testid="button-scroll-to-top"
+                >
+                  <ArrowUp className="h-4 w-4 shrink-0" aria-hidden="true" />
+                </motion.button>
+              )}
+            </AnimatePresence>
 
-          {showAskDE && <AskDELauncherButton />}
+            {showAskDE && <AskDELauncherButton />}
+          </div>
         </div>
       </motion.div>
     </div>

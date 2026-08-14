@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Phone, Shield } from "lucide-react";
 import { useOptionalFullPageScroll } from "@/components/FullPageScroll";
 import { useBooking } from "@/contexts/BookingContext";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 import { CTA } from "@/lib/ctaCopy";
 
 /** Homepage chapters in the thin top table of contents. */
@@ -182,12 +183,12 @@ export function useHomepageDockVisibility() {
 }
 
 /**
- * Chapter + phone + Risk Assessment cluster for the unified bottom bar.
- * Visibility is owned by SiteBottomBar so this is only the menu segment.
+ * Left cluster for the unified bottom bar: Protected? + homepage chapters.
+ * Phone / Risk Assessment live in HomepageDockActions so leftover width
+ * becomes one middle gutter instead of a hole after Contact.
  */
 export function HomepageDockMenu() {
   const ctx = useOptionalFullPageScroll();
-  const { openBooking } = useBooking();
   const sections = ctx?.sections ?? [];
   const currentSection = ctx?.currentSection ?? 0;
   const scrollToSection = ctx?.scrollToSection;
@@ -204,16 +205,16 @@ export function HomepageDockMenu() {
 
   return (
     <nav
-      className="flex min-w-0 flex-1 flex-row items-center gap-1 overflow-hidden"
+      className="flex min-w-0 items-center gap-2 overflow-hidden"
       aria-label="On this page"
       data-testid="homepage-section-dock"
     >
-      <div className="hidden xl:flex items-center gap-2 pr-3 border-r border-white/20 mr-2 shrink-0">
-        <Shield className="w-4 h-4 text-[#FF477F]" aria-hidden="true" />
-        <span className="text-white font-semibold text-sm whitespace-nowrap">Protected?</span>
+      <div className="hidden h-10 shrink-0 items-center gap-2 border-r border-white/20 pr-3 xl:flex">
+        <Shield className="h-4 w-4 text-[#FF477F]" aria-hidden="true" />
+        <span className="whitespace-nowrap text-sm font-semibold text-white">Protected?</span>
       </div>
 
-      <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto scrollbar-none">
+      <div className="flex min-w-0 items-center gap-2 overflow-x-auto scrollbar-none">
         {items.map(({ section, index }) => {
           const isActive = section.id === conceptualActiveId;
           return (
@@ -224,10 +225,10 @@ export function HomepageDockMenu() {
                 event.preventDefault();
                 scrollToSection?.(index);
               }}
-              className={`relative inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF477F] whitespace-nowrap shrink-0 ${
+              className={`relative inline-flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 text-sm font-semibold transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF477F] ${
                 isActive
                   ? "bg-[#D3126A] text-white shadow-lg shadow-[#D3126A]/40"
-                  : "text-white/75 hover:text-white hover:bg-white/10"
+                  : "text-white/75 hover:bg-white/10 hover:text-white"
               }`}
               aria-current={isActive ? "true" : undefined}
               data-testid={`nav-dock-${section.id}`}
@@ -243,29 +244,36 @@ export function HomepageDockMenu() {
           );
         })}
       </div>
+    </nav>
+  );
+}
 
-      <div className="w-px h-6 bg-white/20 mx-1 shrink-0" aria-hidden="true" />
+/** Phone + Risk Assessment — sits in the bottom-bar action cluster. */
+export function HomepageDockActions() {
+  const { openBooking } = useBooking();
 
+  return (
+    <div className="flex items-center gap-1.5" data-testid="homepage-dock-actions">
       <a
-        href="tel:480-519-5892"
-        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-white/90 hover:text-white hover:bg-white/10 transition-colors shrink-0 text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF477F]"
+        href={PRIMARY_PHONE.telHref}
+        className="flex h-10 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-sm font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF477F]"
         data-testid="nav-phone"
-        aria-label="Call 480-519-5892"
+        aria-label={`Call ${PRIMARY_PHONE.display}`}
       >
-        <Phone className="w-4 h-4 text-[#FF477F]" aria-hidden="true" />
-        <span className="hidden xl:inline">480-519-5892</span>
+        <Phone className="h-4 w-4 text-[#FF477F]" aria-hidden="true" />
+        <span className="hidden xl:inline">{PRIMARY_PHONE.display}</span>
       </a>
 
       <button
         type="button"
         onClick={() => openBooking("homepage_section_dock")}
-        className="flex items-center gap-1.5 px-4 py-1.5 text-sm font-semibold rounded-full bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 text-white hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 transition-all duration-200 shadow-lg whitespace-nowrap shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-300"
+        className="flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 px-3.5 text-sm font-semibold text-white shadow-lg transition-all duration-200 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-300"
         data-testid="nav-cta-assessment"
       >
         {CTA.primaryNavCompact}
-        <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
       </button>
-    </nav>
+    </div>
   );
 }
 
