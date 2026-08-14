@@ -89,7 +89,7 @@ export const ModernHeroSection = (): JSX.Element => {
               transition={{ duration: prefersReducedMotion ? 0 : 0.4, ease: "easeOut" }}
             >
               <motion.p
-                className="text-sm sm:text-base font-semibold uppercase tracking-[0.18em] text-pink-300/95"
+                className="text-base font-semibold uppercase tracking-[0.18em] text-pink-300/95"
                 initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: prefersReducedMotion ? 0 : 0.3, delay: prefersReducedMotion ? 0 : 0.05 }}
@@ -105,7 +105,7 @@ export const ModernHeroSection = (): JSX.Element => {
                 </span>
               </h1>
 
-              <p className="text-base md:text-lg text-white/85 leading-relaxed max-w-xl">
+              <p className="text-lg text-white/85 leading-relaxed max-w-xl">
                 Cybersecurity and managed IT for growing businesses—reducing risk, supporting
                 compliance, and keeping your team productive without building an internal IT
                 department.
@@ -124,7 +124,7 @@ export const ModernHeroSection = (): JSX.Element => {
                     }}
                   >
                     <feature.icon className="h-4 w-4 text-pink-400/90 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                    <span className="text-sm text-white/70 leading-snug">{feature.text}</span>
+                    <span className="text-base text-white/80 leading-snug">{feature.text}</span>
                   </motion.div>
                 ))}
               </div>

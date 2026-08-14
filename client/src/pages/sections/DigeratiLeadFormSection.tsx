@@ -117,7 +117,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                     name="fullName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-sm text-[#1A202C] font-medium">Full Name *</FormLabel>
+                        <FormLabel className="text-base text-[#1A202C] font-medium">Full Name *</FormLabel>
                         <FormControl>
                           <Input 
                             placeholder="John Smith" 
@@ -137,7 +137,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-sm text-[#1A202C] font-medium">Work Email *</FormLabel>
+                        <FormLabel className="text-base text-[#1A202C] font-medium">Work Email *</FormLabel>
                         <FormControl>
                           <Input 
                             type="email" 
@@ -158,7 +158,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                     name="phone"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-sm text-[#1A202C] font-medium">Phone (Optional)</FormLabel>
+                        <FormLabel className="text-base text-[#1A202C] font-medium">Phone (Optional)</FormLabel>
                         <FormControl>
                           <Input 
                             type="tel" 
@@ -179,7 +179,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                     name="company"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-sm text-[#1A202C] font-medium">Company (Optional)</FormLabel>
+                        <FormLabel className="text-base text-[#1A202C] font-medium">Company (Optional)</FormLabel>
                         <FormControl>
                           <Input 
                             placeholder="Acme Corp" 

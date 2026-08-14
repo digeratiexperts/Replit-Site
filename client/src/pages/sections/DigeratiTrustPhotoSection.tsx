@@ -36,7 +36,7 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
           >
             <div className="flex items-center gap-2 mb-5">
               <Shield className="w-4 h-4 text-pink-600" aria-hidden="true" />
-              <span className="text-sm font-semibold text-pink-600 uppercase tracking-wider">
+              <span className="text-base font-semibold text-pink-600 uppercase tracking-wider">
                 Why Arizona businesses work with us
               </span>
             </div>
@@ -61,7 +61,7 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
                   </div>
                   <div>
                     <p className="font-semibold text-gray-900">{pillar.title}</p>
-                    <p className="text-sm text-gray-600 leading-relaxed">{pillar.detail}</p>
+                    <p className="text-base text-gray-600 leading-relaxed">{pillar.detail}</p>
                   </div>
                 </div>
               ))}
@@ -96,10 +96,10 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
                 data-testid="img-trust-assessment-desk"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/75 via-black/35 to-transparent p-5">
-                <p className="text-white text-sm font-medium">
+                <p className="text-white text-base font-medium">
                   Principal-led assessments sized to how your business runs
                 </p>
-                <p className="text-white/75 text-xs mt-1">
+                <p className="text-white/80 text-base mt-1">
                   Arizona MSP · Cybersecurity & Managed IT
                 </p>
               </div>

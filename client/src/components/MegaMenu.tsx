@@ -547,7 +547,7 @@ export function MegaMenu() {
           <div className="flex items-center flex-wrap gap-x-5 gap-y-1.5 md:gap-x-7 justify-center md:justify-end">
             <a
               href="tel:480-519-5892"
-              className="flex items-center text-white/95 hover:text-pink-300 text-sm md:text-base font-semibold leading-none tracking-wide transition-colors"
+              className="flex items-center text-white/95 hover:text-pink-300 text-base font-semibold leading-none tracking-wide transition-colors"
               data-testid="utility-phone"
             >
               <Phone className="h-4 w-4 mr-1.5 text-pink-400 shrink-0" />
@@ -560,7 +560,7 @@ export function MegaMenu() {
               href="https://assist.zoho.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center text-white/90 hover:text-pink-300 text-sm md:text-base font-medium leading-none transition-colors"
+              className="flex items-center text-white/90 hover:text-pink-300 text-base font-medium leading-none transition-colors"
               data-testid="utility-zoho-assist"
             >
               <Monitor className="h-4 w-4 mr-1.5 text-pink-400 shrink-0" />
@@ -569,7 +569,7 @@ export function MegaMenu() {
 
             <a
               href={PORTAL_LOGIN}
-              className="flex items-center text-white/90 hover:text-pink-300 text-sm md:text-base font-medium leading-none transition-colors"
+              className="flex items-center text-white/90 hover:text-pink-300 text-base font-medium leading-none transition-colors"
               data-testid="utility-portal"
             >
               <span className="hidden sm:inline">Client Portal</span>
@@ -970,7 +970,7 @@ export function MegaMenu() {
           <div className="flex items-center space-x-2 lg:space-x-3 flex-shrink-0">
             <button
               type="button"
-              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-3 xl:px-4 py-2 rounded-lg text-sm xl:text-base font-semibold whitespace-nowrap shadow-[0_0_22px_rgba(236,72,153,0.35)] hover:shadow-[0_0_30px_rgba(236,72,153,0.45)] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black border border-pink-300/25"
+              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-3 xl:px-4 py-2 rounded-lg text-base font-semibold whitespace-nowrap shadow-[0_0_22px_rgba(236,72,153,0.35)] hover:shadow-[0_0_30px_rgba(236,72,153,0.45)] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black border border-pink-300/25"
               data-testid="nav-cta"
               onClick={() => { handleLinkClick(); openBooking("megamenu"); }}
               aria-label={CTA.primary}
@@ -1150,7 +1150,7 @@ export function MegaMenu() {
                     <Phone className="h-5 w-5 text-violet-400" aria-hidden="true" />
                   </div>
                   <div>
-                    <div className="text-sm text-gray-400">Call Us</div>
+                    <div className="text-base text-gray-400">Call Us</div>
                     <div className="font-semibold text-white group-hover:text-violet-400 transition-colors">480-519-5892</div>
                   </div>
                 </a>
@@ -1167,7 +1167,7 @@ export function MegaMenu() {
                     <Monitor className="h-5 w-5 text-violet-400" aria-hidden="true" />
                   </div>
                   <div>
-                    <div className="text-sm text-gray-400">Remote Support</div>
+                    <div className="text-base text-gray-400">Remote Support</div>
                     <div className="font-semibold text-white group-hover:text-violet-400 transition-colors">Support</div>
                   </div>
                 </a>
@@ -1182,7 +1182,7 @@ export function MegaMenu() {
                     <ExternalLink className="h-5 w-5 text-purple-400" aria-hidden="true" />
                   </div>
                   <div>
-                    <div className="text-sm text-gray-400">Existing Client?</div>
+                    <div className="text-base text-gray-400">Existing Client?</div>
                     <div className="font-semibold text-white group-hover:text-purple-400 transition-colors">Client Portal</div>
                   </div>
                 </a>
@@ -1211,7 +1211,7 @@ export function MegaMenu() {
               
               {/* Bottom Branding */}
               <div className="pt-8 pb-4 text-center">
-                <p className="text-xs text-gray-600">
+                <p className="text-base text-gray-400">
                   Digerati Experts • Arizona's MSP Leader
                 </p>
               </div>

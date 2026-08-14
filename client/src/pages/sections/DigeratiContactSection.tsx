@@ -150,7 +150,7 @@ export const DigeratiContactSection = (): JSX.Element => {
             viewport={{ once: true }}
             transition={{ duration: 0.45 }}
           >
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF477F]">
+            <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#FF477F]">
               Contact
             </p>
             <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
@@ -164,7 +164,7 @@ export const DigeratiContactSection = (): JSX.Element => {
             <div className="mb-10 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
               <a
                 href="/book"
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-pink-300/30 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-pink-500/25 transition-all duration-200 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-pink-300/30 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 px-6 py-2.5 text-base font-semibold text-white shadow-lg shadow-pink-500/25 transition-all duration-200 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
                 data-testid="contact-cta-assessment"
               >
                 {CTA.primary}
@@ -172,7 +172,7 @@ export const DigeratiContactSection = (): JSX.Element => {
               </a>
               <a
                 href={PRIMARY_PHONE.telHref}
-                className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:border-white/40 hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
+                className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-6 py-2.5 text-base font-semibold text-white transition-colors hover:border-white/40 hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
                 data-testid="contact-cta-call"
               >
                 Call {PRIMARY_PHONE.display}
@@ -192,10 +192,10 @@ export const DigeratiContactSection = (): JSX.Element => {
                 >
                   <IconWell icon={item.icon} size="sm" surface="dark" />
                   <span className="min-w-0 pt-1">
-                    <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-white/40">
+                    <span className="block text-base font-semibold uppercase tracking-[0.16em] text-white/50">
                       {item.label}
                     </span>
-                    <span className="mt-1 block break-words text-sm text-white/80 transition-colors group-hover:text-white md:text-base">
+                    <span className="mt-1 block break-words text-base text-white/80 transition-colors group-hover:text-white md:text-lg">
                       {item.value}
                     </span>
                   </span>
@@ -208,20 +208,20 @@ export const DigeratiContactSection = (): JSX.Element => {
                 <IconWell icon={Clock} size="sm" surface="dark" />
                 <h3 className="text-base font-semibold text-white">Office Hours</h3>
               </div>
-              <dl className="grid grid-cols-1 gap-2 text-sm text-white/60 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-x-6 md:text-base">
+              <dl className="grid grid-cols-1 gap-2 text-base text-white/60 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-x-6 md:text-lg">
                 <dt>Monday - Friday</dt>
                 <dd className="text-white/80">7:00 AM - 6:00 PM MST</dd>
                 <dt>Saturday &amp; Sunday</dt>
                 <dd className="text-white/80">Emergency Support Only</dd>
               </dl>
-              <p className="mt-4 flex items-start gap-2 text-sm font-medium text-emerald-400">
+              <p className="mt-4 flex items-start gap-2 text-base font-medium text-emerald-400">
                 <Shield className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
                 <span>24/7 Security Operations Center Always Active</span>
               </p>
             </div>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <span className="text-sm text-white/45">Follow us:</span>
+              <span className="text-base text-white/55">Follow us:</span>
               {contactSocials.map((social) => (
                 <a
                   key={social.testId}
@@ -249,7 +249,7 @@ export const DigeratiContactSection = (): JSX.Element => {
               <h3 className="font-heading text-xl font-semibold tracking-[-0.02em] text-[#1A1228]">
                 Get in Touch
               </h3>
-              <p className="mb-6 mt-1 text-sm text-black/50">
+              <p className="mb-6 mt-1 text-base text-black/55">
                 Fill out the form for a free consultation
               </p>
 
@@ -260,7 +260,7 @@ export const DigeratiContactSection = (): JSX.Element => {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-sm font-medium text-[#1A1228]">Your Name *</FormLabel>
+                        <FormLabel className="text-base font-medium text-[#1A1228]">Your Name *</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="John Smith"
@@ -281,7 +281,7 @@ export const DigeratiContactSection = (): JSX.Element => {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-sm font-medium text-[#1A1228]">Business Email *</FormLabel>
+                          <FormLabel className="text-base font-medium text-[#1A1228]">Business Email *</FormLabel>
                           <FormControl>
                             <Input
                               type="email"
@@ -302,7 +302,7 @@ export const DigeratiContactSection = (): JSX.Element => {
                       name="phone"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-sm font-medium text-[#1A1228]">Phone Number *</FormLabel>
+                          <FormLabel className="text-base font-medium text-[#1A1228]">Phone Number *</FormLabel>
                           <FormControl>
                             <Input
                               type="tel"
@@ -324,7 +324,7 @@ export const DigeratiContactSection = (): JSX.Element => {
                     name="company"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-sm font-medium text-[#1A1228]">Company Name</FormLabel>
+                        <FormLabel className="text-base font-medium text-[#1A1228]">Company Name</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="Your Company Inc."
@@ -344,7 +344,7 @@ export const DigeratiContactSection = (): JSX.Element => {
                     name="service"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-sm font-medium text-[#1A1228]">Service Interested In</FormLabel>
+                        <FormLabel className="text-base font-medium text-[#1A1228]">Service Interested In</FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
@@ -352,18 +352,18 @@ export const DigeratiContactSection = (): JSX.Element => {
                         >
                           <FormControl>
                             <SelectTrigger
-                              className="h-11 border-[var(--de-paper-hairline)] bg-white text-[#1A1228] focus:ring-2 focus:ring-[#D3126A]/40 [&>span]:text-black/35"
+                              className="h-11 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] focus:ring-2 focus:ring-[#D3126A]/40 [&>span]:text-black/35"
                               data-testid="select-contact-service"
                             >
                               <SelectValue placeholder="Select a service" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="border-[var(--de-paper-hairline)] bg-white">
-                            <SelectItem value="managed-security" className="text-[#1A1228] focus:bg-black/5 focus:text-[#1A1228]">Managed Security Services</SelectItem>
-                            <SelectItem value="managed-it" className="text-[#1A1228] focus:bg-black/5 focus:text-[#1A1228]">Managed IT Services</SelectItem>
-                            <SelectItem value="compliance" className="text-[#1A1228] focus:bg-black/5 focus:text-[#1A1228]">Compliance & Governance</SelectItem>
-                            <SelectItem value="incident-response" className="text-[#1A1228] focus:bg-black/5 focus:text-[#1A1228]">Incident Response</SelectItem>
-                            <SelectItem value="assessment" className="text-[#1A1228] focus:bg-black/5 focus:text-[#1A1228]">Security Assessment</SelectItem>
+                            <SelectItem value="managed-security" className="text-base text-[#1A1228] focus:bg-black/5 focus:text-[#1A1228]">Managed Security Services</SelectItem>
+                            <SelectItem value="managed-it" className="text-base text-[#1A1228] focus:bg-black/5 focus:text-[#1A1228]">Managed IT Services</SelectItem>
+                            <SelectItem value="compliance" className="text-base text-[#1A1228] focus:bg-black/5 focus:text-[#1A1228]">Compliance & Governance</SelectItem>
+                            <SelectItem value="incident-response" className="text-base text-[#1A1228] focus:bg-black/5 focus:text-[#1A1228]">Incident Response</SelectItem>
+                            <SelectItem value="assessment" className="text-base text-[#1A1228] focus:bg-black/5 focus:text-[#1A1228]">Security Assessment</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -376,7 +376,7 @@ export const DigeratiContactSection = (): JSX.Element => {
                     name="message"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-sm font-medium text-[#1A1228]">Message</FormLabel>
+                        <FormLabel className="text-base font-medium text-[#1A1228]">Message</FormLabel>
                         <FormControl>
                           <Textarea
                             placeholder="Tell us about your security needs..."
@@ -393,7 +393,7 @@ export const DigeratiContactSection = (): JSX.Element => {
                   />
 
                   <Button
-                    className="h-11 w-full text-sm font-semibold bg-[#1A1228] text-white hover:bg-[#2a1a3a] focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2"
+                    className="h-11 w-full text-base font-semibold bg-[#1A1228] text-white hover:bg-[#2a1a3a] focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2"
                     data-testid="button-send-message"
                     type="submit"
                     disabled={isSubmitting}

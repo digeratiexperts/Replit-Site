@@ -27,13 +27,13 @@ export const DigeratiPricingSection = (): JSX.Element => {
               <h3 className="font-heading text-xl font-semibold text-white md:text-2xl">
                 Not just IT support — one operating model
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-white/55 md:text-base">
+              <p className="mt-2 text-base leading-relaxed text-white/55 md:text-lg">
                 ProActive Business consolidates capabilities organizations often buy separately:
                 managed IT, workplace, identity, endpoint security, email security, network
                 security, backup & recovery, security operations, and technology + cyber strategy
                 — one accountable partner.
               </p>
-              <p className="mt-3 text-xs leading-relaxed text-white/40 md:text-sm">
+              <p className="mt-3 text-base leading-relaxed text-white/50">
                 {PRICING_SCOPE_NOTE}
               </p>
             </div>

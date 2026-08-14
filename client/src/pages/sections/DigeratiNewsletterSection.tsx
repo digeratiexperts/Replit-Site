@@ -8,7 +8,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import avatarsImg from "@assets/Frame-2131330726_1767027918695.png";
 
 const chipClass =
-  "inline-flex min-h-11 items-center rounded-lg border border-[var(--de-hairline)] bg-transparent px-3.5 text-sm text-white/80 transition-colors hover:border-[#D3126A] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]";
+  "inline-flex min-h-11 items-center rounded-lg border border-[var(--de-hairline)] bg-transparent px-3.5 text-base text-white/80 transition-colors hover:border-[#D3126A] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]";
 
 const complianceItems = [
   "HIPAA-aligned security and compliance support",
@@ -99,7 +99,7 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
                 :
               </span>
             </h2>
-            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-white/45">
+            <p className="mt-2 max-w-3xl text-base leading-relaxed text-white/55">
               Framework names describe customer requirements Digerati helps organizations address —
               not certifications Digerati holds.
             </p>
@@ -114,7 +114,7 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
               {partnerMarks.map((name) => (
                 <span
                   key={name}
-                  className="inline-flex min-h-9 items-center rounded-lg border border-[var(--de-hairline)] px-3 text-xs text-white/55"
+                  className="inline-flex min-h-11 items-center rounded-lg border border-[var(--de-hairline)] px-3 text-base text-white/65"
                 >
                   {name}
                 </span>
@@ -141,7 +141,7 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
                   :
                 </span>
               </h2>
-              <p className="mt-2 text-sm leading-relaxed text-white/55">
+              <p className="mt-2 text-base leading-relaxed text-white/55 md:text-lg">
                 Get the latest cybersecurity insights and IT tips delivered to your inbox.
               </p>
 
@@ -157,7 +157,7 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
                       <Shield className="h-5 w-5 text-[#D3126A]" aria-hidden="true" />
                     </div>
                     <h3 className="text-lg font-semibold text-white">You&apos;re Subscribed!</h3>
-                    <p className="text-sm text-white/55">
+                    <p className="text-base text-white/55">
                       Check your inbox for a confirmation email. Welcome to our security community!
                     </p>
                     <Button
@@ -188,7 +188,7 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
                       type="submit"
                       size="lg"
                       data-testid="button-newsletter-submit"
-                      className="h-12 px-6 bg-[#D3126A] font-semibold text-white shadow-none hover:bg-[#e01874] hover:shadow-none hover:translate-y-0 focus-visible:ring-[#D3126A]/70"
+                      className="h-12 px-6 bg-[#D3126A] text-base font-semibold text-white shadow-none hover:bg-[#e01874] hover:shadow-none hover:translate-y-0 focus-visible:ring-[#D3126A]/70"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? (
@@ -216,10 +216,10 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
                 ))}
               </div>
 
-              <p className="mt-5 text-sm text-white/40">
+              <p className="mt-5 text-base text-white/50">
                 Monthly security notes for Arizona operators.
                 <br />
-                <span className="text-xs text-white/30">Unsubscribe anytime. We respect your privacy.</span>
+                <span className="text-base text-white/45">Unsubscribe anytime. We respect your privacy.</span>
               </p>
             </div>
 

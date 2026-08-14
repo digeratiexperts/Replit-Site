@@ -28,8 +28,8 @@ function AskDELauncherButton() {
         <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full border-2 border-[#0a0a0a] bg-emerald-400" />
       </span>
       <span className="hidden text-left sm:block">
-        <span className="block text-sm font-semibold leading-4 tracking-tight">Ask DE</span>
-        <span className="block text-[11px] leading-4 text-white/55">We&apos;re here to help.</span>
+        <span className="block text-base font-semibold leading-4 tracking-tight">Ask DE</span>
+        <span className="block text-base leading-4 text-white/70">We&apos;re here to help.</span>
       </span>
     </button>
   );

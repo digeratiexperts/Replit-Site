@@ -101,14 +101,14 @@ export function ReviewsCarousel({
               <article className="flex h-full min-h-[14rem] flex-col rounded-2xl border border-de-hairline bg-de-raised p-6 md:p-7">
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
                   <Stars rating={review.rating} />
-                  <span className="rounded-md border border-de-hairline bg-white/5 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-white/60">
+                  <span className="rounded-md border border-de-hairline bg-white/5 px-2 py-0.5 text-base font-semibold uppercase tracking-wide text-white/70">
                     {review.sourceLabel}
                   </span>
                 </div>
                 <p className="flex-1 text-base leading-relaxed text-white/80">
                   “{review.text}”
                 </p>
-                <p className="mt-4 text-sm text-white/45">
+                <p className="mt-4 text-base text-white/55">
                   {review.authorName}
                   {review.relativeTime ? ` · ${review.relativeTime}` : ""}
                 </p>
@@ -186,7 +186,7 @@ export function ReviewSourceChips({
 
   const chipClass = (selected: boolean) =>
     cn(
-      "rounded-full px-3 py-1.5 text-[11px] font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--de-magenta)]",
+      "min-h-11 rounded-full px-3 py-1.5 text-base font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--de-magenta)]",
       selected
         ? "bg-[var(--de-magenta)] text-white"
         : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white",

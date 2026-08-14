@@ -71,7 +71,7 @@ function ProofCta({
   quiet?: boolean;
 }) {
   const classes = cn(
-    "inline-flex min-h-11 items-center justify-center gap-2 text-sm font-medium transition-colors",
+    "inline-flex min-h-11 items-center justify-center gap-2 text-base font-medium transition-colors",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70",
     "focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]",
     quiet
@@ -107,7 +107,7 @@ export function HomepageProofSection() {
     <section id="proof" className="de-dark-well de-chapter-hairline py-14 lg:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#D3126A]/80">
+          <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#D3126A]/80">
             Trust & transparency
           </p>
           <h2 className="font-heading text-3xl font-semibold tracking-[-0.03em] text-white md:text-4xl lg:text-5xl">
@@ -116,7 +116,7 @@ export function HomepageProofSection() {
               :
             </span>
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/55 md:text-base">
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-white/55 md:text-lg">
             Ownership clarity, documented operations, and public surfaces you can open before you
             engage — not marketing claims you have to take on faith.
           </p>
@@ -134,7 +134,7 @@ export function HomepageProofSection() {
                   key={surface.id}
                   value={surface.id}
                   className={cn(
-                    "group h-full min-h-11 w-full justify-start rounded-xl border bg-transparent px-3.5 py-2.5 text-left text-sm font-medium text-white shadow-none lg:w-auto",
+                    "group h-full min-h-11 w-full justify-start rounded-xl border bg-transparent px-3.5 py-2.5 text-left text-base font-medium text-white shadow-none lg:w-auto",
                     "whitespace-normal hover:bg-white/[0.03] hover:text-white",
                     "focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]",
                     "data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-white",
@@ -168,7 +168,7 @@ export function HomepageProofSection() {
                 <h3 className="font-heading text-xl font-semibold text-white md:text-2xl">
                   {surface.title}
                 </h3>
-                <p className="mt-3 text-sm leading-relaxed text-white/55 md:text-base">
+                <p className="mt-3 text-base leading-relaxed text-white/55 md:text-lg">
                   {surface.body}
                 </p>
                 <ProofCta surface={surface} className="mt-6 self-center" />
