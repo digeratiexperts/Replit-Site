@@ -47,8 +47,8 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
             <div className="w-2 h-2 rounded-full bg-white/10" />
           </div>
           <div className="flex-1 flex justify-center">
-            <div className="px-2.5 py-0.5 text-[11px] text-white/50 flex items-center gap-1.5">
-              <Shield className="w-3 h-3 text-pink-400/80" aria-hidden="true" />
+            <div className="px-2.5 py-0.5 text-xs text-white/50 flex items-center gap-1.5">
+              <Shield className="w-3.5 h-3.5 text-pink-400/80" aria-hidden="true" />
               Cyber Risk Assessment
             </div>
           </div>
@@ -64,7 +64,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
             </div>
             <div>
               <div className="text-white font-semibold text-sm">Cyber Risk Assessment</div>
-              <div className="text-white/50 text-xs italic">Illustrative preview · not live customer data</div>
+              <div className="text-white/50 text-sm italic">Illustrative preview · not live customer data</div>
             </div>
           </div>
 
@@ -85,7 +85,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
                 >
                   <area.icon className="w-4 h-4 text-white" aria-hidden="true" />
                 </div>
-                <span className="text-xs sm:text-sm text-white font-medium">{area.label}</span>
+                <span className="text-sm text-white font-medium">{area.label}</span>
               </motion.div>
             ))}
           </div>
@@ -118,7 +118,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
             </div>
             <div className="flex justify-between mt-2" aria-hidden="true">
               {postureBars.map((bar) => (
-                <span key={bar.label} className="text-[9px] text-white/35 truncate max-w-[14%]">
+                <span key={bar.label} className="text-[11px] text-white/40 truncate max-w-[14%]">
                   {bar.label}
                 </span>
               ))}

@@ -89,7 +89,7 @@ export const ModernHeroSection = (): JSX.Element => {
               transition={{ duration: prefersReducedMotion ? 0 : 0.4, ease: "easeOut" }}
             >
               <motion.p
-                className="text-xs sm:text-sm font-semibold uppercase tracking-[0.22em] text-pink-300/95"
+                className="text-sm sm:text-base font-semibold uppercase tracking-[0.18em] text-pink-300/95"
                 initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: prefersReducedMotion ? 0 : 0.3, delay: prefersReducedMotion ? 0 : 0.05 }}
@@ -105,7 +105,7 @@ export const ModernHeroSection = (): JSX.Element => {
                 </span>
               </h1>
 
-              <p className="text-[0.95rem] md:text-base text-white/85 leading-relaxed max-w-xl">
+              <p className="text-base md:text-lg text-white/85 leading-relaxed max-w-xl">
                 Cybersecurity and managed IT for growing businesses—reducing risk, supporting
                 compliance, and keeping your team productive without building an internal IT
                 department.
@@ -123,8 +123,8 @@ export const ModernHeroSection = (): JSX.Element => {
                       delay: prefersReducedMotion ? 0 : 0.1 + index * 0.03,
                     }}
                   >
-                    <feature.icon className="h-3.5 w-3.5 text-pink-400/90 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                    <span className="text-[11px] sm:text-xs text-white/70 leading-snug">{feature.text}</span>
+                    <feature.icon className="h-4 w-4 text-pink-400/90 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    <span className="text-sm text-white/70 leading-snug">{feature.text}</span>
                   </motion.div>
                 ))}
               </div>
@@ -152,18 +152,18 @@ export const ModernHeroSection = (): JSX.Element => {
                   </Button>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm text-white/75">
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-base text-white/75">
                   <span className="inline-flex items-center gap-1.5">
-                    <Check className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
+                    <Check className="w-4 h-4 text-emerald-400" aria-hidden="true" />
                     No obligation
                   </span>
                   <span className="inline-flex items-center gap-1.5">
-                    <Check className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
+                    <Check className="w-4 h-4 text-emerald-400" aria-hidden="true" />
                     Response within one business day
                   </span>
                 </div>
 
-                <p className="text-sm text-white/55 max-w-xl leading-relaxed">
+                <p className="text-base text-white/55 max-w-xl leading-relaxed">
                   Arizona-based · Principal-led · Recommendations sized to your business
                   <span className="mx-2 text-white/25" aria-hidden="true">
                     ·
