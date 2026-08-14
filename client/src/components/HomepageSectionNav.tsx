@@ -92,18 +92,18 @@ export function HomepageOnPageNav() {
       className="border-t border-white/[0.08] bg-black/90"
     >
       <div className="mx-auto flex max-w-[100rem] items-stretch px-2 sm:px-3 xl:px-5">
-        <ul className="flex w-full min-h-9 items-stretch justify-start overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] lg:justify-center [&::-webkit-scrollbar]:hidden">
+        <ul className="flex w-full min-h-9 items-stretch justify-start overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] md:justify-between [&::-webkit-scrollbar]:hidden">
           {items.map(({ section, index }) => {
             const isActive = activeIndex === index;
             return (
-              <li key={section.id} className="flex min-w-0 flex-1 justify-center lg:flex-none">
+              <li key={section.id} className="flex shrink-0 justify-center md:min-w-0 md:flex-1">
                 <a
                   href={`#${section.id}`}
                   onClick={(event) => {
                     event.preventDefault();
                     scrollToSection?.(index);
                   }}
-                  className={`relative inline-flex min-h-9 w-full items-center justify-center px-1 py-1.5 text-[10px] font-semibold tracking-wide whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-inset sm:px-2 sm:text-[11px] lg:min-h-8 lg:w-auto lg:px-3.5 lg:text-[13px] ${
+                  className={`relative inline-flex min-h-9 items-center justify-center px-2.5 py-1.5 text-[10px] font-semibold tracking-wide whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-inset sm:px-3 sm:text-[11px] md:px-1.5 lg:min-h-8 lg:w-auto lg:px-2 lg:text-[13px] ${
                     isActive ? "text-white" : "text-white/55 hover:text-white/90"
                   }`}
                   aria-current={isActive ? "true" : undefined}
@@ -183,9 +183,9 @@ export function useHomepageDockVisibility() {
 }
 
 /**
- * Left cluster for the unified bottom bar: Protected? + homepage chapters.
- * Phone / Risk Assessment live in HomepageDockActions so leftover width
- * becomes one middle gutter instead of a hole after Contact.
+ * Homepage chapters for the unified bottom bar.
+ * Protected? stays a fixed lead-in; chapter links flex across leftover
+ * width so the row fills instead of clustering left of the actions.
  */
 export function HomepageDockMenu() {
   const ctx = useOptionalFullPageScroll();
@@ -205,7 +205,7 @@ export function HomepageDockMenu() {
 
   return (
     <nav
-      className="flex min-w-0 items-center gap-2 overflow-hidden"
+      className="flex w-full min-w-0 items-center gap-2 overflow-hidden"
       aria-label="On this page"
       data-testid="homepage-section-dock"
     >
@@ -214,33 +214,34 @@ export function HomepageDockMenu() {
         <span className="whitespace-nowrap text-sm font-semibold text-white">Protected?</span>
       </div>
 
-      <div className="flex min-w-0 items-center gap-2 overflow-x-auto scrollbar-none">
+      <div className="flex min-w-0 flex-1 items-center overflow-x-auto scrollbar-none">
         {items.map(({ section, index }) => {
           const isActive = section.id === conceptualActiveId;
           return (
-            <a
-              key={section.id}
-              href={`#${section.id}`}
-              onClick={(event) => {
-                event.preventDefault();
-                scrollToSection?.(index);
-              }}
-              className={`relative inline-flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 text-sm font-semibold transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF477F] ${
-                isActive
-                  ? "bg-[#D3126A] text-white shadow-lg shadow-[#D3126A]/40"
-                  : "text-white/75 hover:bg-white/10 hover:text-white"
-              }`}
-              aria-current={isActive ? "true" : undefined}
-              data-testid={`nav-dock-${section.id}`}
-            >
-              {isActive && (
-                <span
-                  className="h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.85)]"
-                  aria-hidden="true"
-                />
-              )}
-              {section.label}
-            </a>
+            <div key={section.id} className="flex min-w-0 flex-1 justify-center">
+              <a
+                href={`#${section.id}`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  scrollToSection?.(index);
+                }}
+                className={`relative inline-flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 text-sm font-semibold transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF477F] ${
+                  isActive
+                    ? "bg-[#D3126A] text-white shadow-lg shadow-[#D3126A]/40"
+                    : "text-white/75 hover:bg-white/10 hover:text-white"
+                }`}
+                aria-current={isActive ? "true" : undefined}
+                data-testid={`nav-dock-${section.id}`}
+              >
+                {isActive && (
+                  <span
+                    className="h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.85)]"
+                    aria-hidden="true"
+                  />
+                )}
+                {section.label}
+              </a>
+            </div>
           );
         })}
       </div>

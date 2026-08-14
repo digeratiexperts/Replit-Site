@@ -173,12 +173,12 @@ export function SiteBottomBar() {
             prefersReducedMotion ? "" : "transition-[grid-template-columns,opacity] duration-[400ms] ease-out"
           } ${
             expanded
-              ? "grid-cols-[minmax(0,max-content)] opacity-100"
+              ? "w-full min-w-0 flex-1 grid-cols-[minmax(0,1fr)] opacity-100"
               : "pointer-events-none w-0 flex-none grid-cols-[0fr] overflow-hidden opacity-0"
           }`}
           aria-hidden={!expanded}
         >
-          <div className="min-w-0 overflow-hidden">
+          <div className="w-full min-w-0 overflow-hidden">
             <HomepageDockMenu />
           </div>
         </div>
