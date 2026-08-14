@@ -816,6 +816,16 @@ input:-webkit-autofill:active {
   transition: background-color 5000s ease-in-out 0s;
 }
 
+/* Paper fields on dark cards keep warm fill + dark type when the browser autofills */
+input.de-paper-field:-webkit-autofill,
+input.de-paper-field:-webkit-autofill:hover,
+input.de-paper-field:-webkit-autofill:focus,
+input.de-paper-field:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--de-paper) inset !important;
+  -webkit-text-fill-color: #1a1228 !important;
+  caret-color: #1a1228;
+}
+
 /* Touch action for better mobile performance */
 .touch-pan {
   -ms-touch-action: pan-y;

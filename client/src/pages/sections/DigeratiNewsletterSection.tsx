@@ -10,6 +10,9 @@ import avatarsImg from "@assets/Frame-2131330726_1767027918695.png";
 const chipClass =
   "inline-flex min-h-11 items-center rounded-lg border border-[var(--de-hairline)] bg-transparent px-3.5 text-base text-white/80 transition-colors hover:border-[#D3126A] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]";
 
+const cityChipClass =
+  "inline-flex h-full min-h-12 w-full items-center justify-center rounded-lg border bg-transparent px-4 py-5 text-lg font-medium text-white/80 transition-colors hover:border-[#D3126A] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)] sm:min-h-16 md:min-h-20 md:text-xl";
+
 const complianceItems = [
   "HIPAA-aligned security and compliance support",
   "SOC 2 readiness and control alignment",
@@ -180,7 +183,7 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       data-testid="input-newsletter-email"
-                      className="h-12 flex-1 border-[var(--de-hairline)] bg-[var(--de-bg)] text-white shadow-none placeholder:text-white/35 hover:border-white/25 focus-visible:border-[#D3126A] focus-visible:ring-[#D3126A]/60"
+                      className="de-paper-field h-12 min-h-11 flex-1 border-[var(--de-paper-hairline)] bg-[var(--de-paper)] text-base text-[#1A1228] shadow-none caret-[#1A1228] placeholder:text-black/50 hover:border-black/25 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/60 md:text-base"
                       disabled={isSubmitting}
                       required
                     />
@@ -223,22 +226,22 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-[var(--de-hairline)] bg-[var(--de-surface)] p-6 md:p-8">
+            <div className="flex h-full flex-col rounded-2xl border border-[var(--de-hairline)] bg-[var(--de-surface)] p-6 md:p-8">
               <h2 className="font-heading text-xl font-semibold tracking-[-0.02em] text-white md:text-2xl">
                 Serving Greater Phoenix
                 <span className="text-[#D3126A]" aria-hidden="true">
                   :
                 </span>
               </h2>
-              <div className="mt-6 flex flex-wrap gap-2.5">
+              <div className="mt-6 grid flex-1 grid-cols-2 content-stretch gap-3 sm:grid-cols-3">
                 {locations.map((location) => (
                   <a
                     key={location.name}
                     href={location.href}
-                    className={`${chipClass} ${
+                    className={`${cityChipClass} ${
                       location.primary
                         ? "border-[#D3126A] text-white shadow-[inset_0_0_0_1px_#D3126A]"
-                        : ""
+                        : "border-[var(--de-hairline)]"
                     }`}
                     data-city={location.name.toLowerCase()}
                     data-testid={`newsletter-location-${location.name.toLowerCase()}`}
