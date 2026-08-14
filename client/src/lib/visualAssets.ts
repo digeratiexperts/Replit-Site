@@ -3,8 +3,9 @@
  *
  * Rules:
  * - Only optimized derivatives under `/images/...` (never licensed ORIGINAL paths)
- * - Public marketing: sculpture set for editorial stages; Lucide IconWell for path + small cards
- * - Meshy Batch 01 is retired from public marketing (laptop/robot/lock/envelope)
+ * - Public marketing: Lucide IconWell + type. No Meshy / sculpture / sci-fi hardware.
+ * - Meshy Batch 01 and engage-path sculptures are retired from public marketing
+ *   (DE: high quality or not at all — current stills read as cheap cyber toys)
  * - Portal / mega-menu chrome stays Lucide
  */
 
@@ -36,38 +37,38 @@ const meshy01 = (slug: string, label: string, alt: string, status: VisualStill["
   source: "meshy-batch-01",
 });
 
-/** Approved + refined Batch 01 shapes (dark charcoal + violet/fuchsia) */
+/** Retired Batch 01 shapes — inventory only. Do not mount on public marketing. */
 export const meshyBatch01 = {
   endpoint: meshy01(
     "endpoint",
     "Endpoint security",
     "3D icon of a laptop with a shield emblem representing endpoint protection",
-    "approved",
+    "awaiting-approval",
   ),
   email: meshy01(
     "email",
     "Email security",
     "3D icon of a locked envelope representing email security",
-    "approved",
+    "awaiting-approval",
   ),
   network: meshy01(
     "network",
     "Network security",
     "3D icon of connected network nodes representing network protection",
-    "approved",
+    "awaiting-approval",
   ),
   backup: meshy01(
     "backup",
     "Backup and recovery",
     "3D icon of a cloud over storage drives representing backup and recovery",
-    "approved",
+    "awaiting-approval",
   ),
-  /** v4 ID badge — approved after refine (dark + violet accents) */
+  /** v4 ID badge — retired with the rest of Batch 01 */
   identity: meshy01(
     "identity",
     "Identity and access",
     "3D icon of an ID badge with shield and keyhole representing identity and access",
-    "approved",
+    "awaiting-approval",
   ),
 } as const;
 
@@ -118,13 +119,13 @@ const engageSculpture = (
   srcPng: `/images/visual-system/engage-paths/${slug}.${opts?.alpha ? "png" : "jpg"}`,
   srcThumb: `/images/visual-system/engage-paths/${slug}-640.webp`,
   alt,
-  status: "approved",
+  status: "awaiting-approval",
   source: "engage-sculpture-set",
 });
 
 /**
- * Homepage engage-path sculptures — one locked visual system.
- * Graphite / smoked glass / violet-as-light. Not Meshy Batch 01 icons.
+ * Retired engage-path sculptures — kept for inventory only.
+ * Do not mount on public marketing. Status is not approved.
  */
 export const engageSculptureSet = {
   fullyManaged: engageSculpture(
@@ -151,30 +152,19 @@ export const engageSculptureSet = {
   ),
 } as const;
 
-/** Engage path cards use Lucide wells — sculptures stay on editorial stages only */
+/** Engage path cards use Lucide wells — sculptures are not public marketing */
 export const engagePathVisualByTitle: Record<string, VisualStill | undefined> = {};
 
-const pricingEcosystemStill: VisualStill = {
-  id: "pricing-ecosystem",
-  label: "ProActive operating model",
-  src: "/images/visual-system/site/pricing-ecosystem.webp",
-  srcPng: "/images/visual-system/site/pricing-ecosystem.png",
-  srcThumb: "/images/visual-system/site/pricing-ecosystem.webp",
-  alt: "Isometric 3×3 service blocks around a ProActive operating-model hub",
-  status: "approved",
-  source: "meshy-site-accent",
-};
-
 /**
- * Homepage section editorials — one still per chapter, not a gallery.
- * Small cards stay Lucide. Protect (light) stays Lucide.
+ * Homepage section editorials — sculptures retired (high quality or not at all).
+ * Chapters stand on type + IconWell. Do not re-wire cheap 3D here.
  */
 export const homepageSectionAccents = {
-  statsThreats: engageSculptureSet.threatTelemetry,
-  engagementAssessment: engageSculptureSet.cyberRisk,
-  howItWorks: engageSculptureSet.fullyManaged,
+  statsThreats: undefined as VisualStill | undefined,
+  engagementAssessment: undefined as VisualStill | undefined,
+  howItWorks: undefined as VisualStill | undefined,
   protectProcess: undefined as VisualStill | undefined,
-  pricingEcosystem: pricingEcosystemStill,
+  pricingEcosystem: undefined as VisualStill | undefined,
 };
 
 /** Security stack / solutions cards — Lucide wells, not Meshy */

@@ -7,7 +7,7 @@ with the locked engage-path sculpture set.
 
 ## P0 (Phase A)
 
-- `VisualStage` for editorial sculptures only (Stats / How it works / engagement assessment)
+- Editorial sculptures retired from public marketing (DE: high quality or not at all). Stats, How it works, engagement assessment, and pricing stand on type + `IconWell` — do not remount `VisualStage`
 - Engage path cards and small cards (Tackle, capabilities, Protect stack, `/solutions`) use Lucide `IconWell`
 - Homepage engage-path cards no longer bleed 3D sculptures — DE: IconWell reads as a principal-led firm, not a tech demo
 - Meshy Batch 01 retired from public marketing placement
@@ -21,7 +21,7 @@ with the locked engage-path sculpture set.
 - Protect (light section) stays Lucide — no dark sculptures on white
 - Engage path cards use Lucide `IconWell` on raised `#151217` panels (same A+C
   language as Tackle / outcomes). Sculpture files remain in
-  `client/public/images/visual-system/engage-paths/` for editorial stages only.
+  `client/public/images/visual-system/engage-paths/` as inventory only — not mounted.
 - Stats / Tackle / Protect stack / capabilities are composed lists and number strips — not identical card grids
 - Decorative radial blobs and floating dots removed from hero / stats / pricing
 - Industries: descriptions always visible (not hover-only)

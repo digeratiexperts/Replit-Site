@@ -2,9 +2,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "wouter";
 import { AlertTriangle, ArrowRight, DollarSign, MapPin, Shield } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { VisualStage } from "@/components/visual/VisualStage";
 import { IconWell } from "@/components/visual/IconWell";
-import { homepageSectionAccents } from "@/lib/visualAssets";
 import {
   getHomepageCyberFacts,
   type CyberAwarenessFact,
@@ -66,39 +64,24 @@ export const DigeratiStatsSection = (): JSX.Element => {
   return (
     <section className="de-dark-chapter de-chapter-hairline relative py-16 lg:py-24">
       <div className="relative mx-auto max-w-[100rem] px-3 sm:px-4 lg:px-6">
-        <div className="mb-10 grid items-center gap-8 lg:mb-12 lg:grid-cols-12 lg:gap-10">
-          <motion.div
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.45 }}
-            className="lg:col-span-7"
-          >
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF477F]">
-              Why Digerati Experts
-            </p>
-            <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
-              The Threats Are Real
-            </h2>
-            <p className="max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">
-              Don&apos;t become a statistic. These numbers show why proactive security matters —
-              and why endpoint, identity, and recovery discipline have to be owned, not assumed.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex justify-center lg:col-span-5 lg:justify-end"
-          >
-            <VisualStage
-              still={homepageSectionAccents.statsThreats}
-              layout="spot"
-              alt="Graphite telemetry sculpture with smoked-glass plates and violet-lit nodes"
-            />
-          </motion.div>
-        </div>
+        <motion.div
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.45 }}
+          className="mb-10 max-w-3xl lg:mb-12"
+        >
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF477F]">
+            Why Digerati Experts
+          </p>
+          <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
+            The Threats Are Real
+          </h2>
+          <p className="max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">
+            Don&apos;t become a statistic. These numbers show why proactive security matters —
+            and why endpoint, identity, and recovery discipline have to be owned, not assumed.
+          </p>
+        </motion.div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
           {facts.map((fact, index) => (

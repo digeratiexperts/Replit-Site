@@ -55,7 +55,7 @@ Portal / mega-menu chrome stays Lucide.
 
 Public marketing placement:
 
-- **Sculptures** — at most one editorial stage per section (`VisualStage`). Field `#151217`. No inner purple square. Do not put sculptures on the three homepage engage-path offer cards.
+- **Sculptures / Meshy / sci-fi hardware** — retired from public marketing (DE: high quality or not at all). Do not remount `VisualStage` stills. Chapters stand on type + `IconWell`.
 - **Offer + small cards** — Lucide in a muted violet `IconWell`. Not 40px 3D toys.
 
 ## Consistency (locked camera / materials)

@@ -8,7 +8,6 @@ import {
   type PricingTierKey,
 } from "@/data/pricing";
 import { EcosystemProgression } from "@/components/EcosystemProgression";
-import { homepageSectionAccents, isApprovedStill } from "@/lib/visualAssets";
 
 const tierKeys: PricingTierKey[] = ["it", "office", "business", "enterprise"];
 
@@ -93,61 +92,40 @@ export const DigeratiPricingSection = (): JSX.Element => {
           })}
         </div>
 
-        <div className="mt-8 overflow-hidden rounded-2xl border border-de-hairline bg-de-raised md:mt-10">
-          <div className="grid gap-0 lg:grid-cols-12 lg:items-stretch">
-            <div className="relative flex min-h-[11rem] items-center justify-center px-4 py-6 sm:min-h-[13rem] lg:col-span-4 lg:px-6">
-              {isApprovedStill(homepageSectionAccents.pricingEcosystem) ? (
-                <picture>
-                  <source
-                    srcSet={homepageSectionAccents.pricingEcosystem.src}
-                    type="image/webp"
-                  />
-                  <img
-                    src={homepageSectionAccents.pricingEcosystem.srcPng}
-                    alt={homepageSectionAccents.pricingEcosystem.alt}
-                    width={804}
-                    height={523}
-                    loading="lazy"
-                    decoding="async"
-                    className="mx-auto h-auto w-full max-w-[22rem] object-contain lg:max-w-none"
-                  />
-                </picture>
-              ) : null}
+        <div className="mt-8 rounded-2xl border border-de-hairline bg-de-raised p-6 md:mt-10 md:p-8">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-2xl">
+              <h3 className="text-xl font-semibold text-white md:text-2xl">
+                Not just IT support — one operating model
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-white/60 md:text-base">
+                ProActive Business consolidates capabilities organizations often buy separately:
+                managed IT, workplace, identity, endpoint security, email security, network
+                security, backup & recovery, security operations, and technology + cyber strategy
+                — one accountable partner.
+              </p>
+              <p className="mt-3 text-xs leading-relaxed text-white/45 md:text-sm">
+                {PRICING_SCOPE_NOTE}
+              </p>
             </div>
-            <div className="flex flex-col justify-center gap-6 p-6 md:p-8 lg:col-span-8 lg:flex-row lg:items-center lg:justify-between">
-              <div className="max-w-xl">
-                <h3 className="text-xl font-semibold text-white md:text-2xl">
-                  Not just IT support — one operating model
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/60 md:text-base">
-                  ProActive Business consolidates capabilities organizations often buy separately:
-                  managed IT, workplace, identity, endpoint security, email security, network
-                  security, backup & recovery, security operations, and technology + cyber strategy
-                  — one accountable partner.
-                </p>
-                <p className="mt-3 text-xs leading-relaxed text-white/45 md:text-sm">
-                  {PRICING_SCOPE_NOTE}
-                </p>
-              </div>
-              <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
-                <Link href="/proactive-ecosystem-pricing">
-                  <span
-                    className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-[#D3126A] px-6 text-base font-semibold text-white hover:bg-[#e01874]"
-                    data-testid="button-compare-everything"
-                  >
-                    Compare Everything
-                    <ArrowRight className="h-4 w-4" />
-                  </span>
-                </Link>
-                <Link href="/proactive-ecosystem-pricing#pricing-tools">
-                  <span
-                    className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-white/20 px-6 text-base font-semibold text-white hover:bg-white/5"
-                    data-testid="button-pricing-tools"
-                  >
-                    Pricing tools
-                  </span>
-                </Link>
-              </div>
+            <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
+              <Link href="/proactive-ecosystem-pricing">
+                <span
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-[#D3126A] px-6 text-base font-semibold text-white hover:bg-[#e01874]"
+                  data-testid="button-compare-everything"
+                >
+                  Compare Everything
+                  <ArrowRight className="h-4 w-4" />
+                </span>
+              </Link>
+              <Link href="/proactive-ecosystem-pricing#pricing-tools">
+                <span
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-white/20 px-6 text-base font-semibold text-white hover:bg-white/5"
+                  data-testid="button-pricing-tools"
+                >
+                  Pricing tools
+                </span>
+              </Link>
             </div>
           </div>
         </div>
