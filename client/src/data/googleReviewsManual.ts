@@ -1,6 +1,6 @@
 /**
  * @deprecated Prefer `reviewsCatalog` from `@/data/reviewsCatalog`.
- * Thin re-export so older imports keep working.
+ * Thin re-export of the merged catalog so older imports keep working.
  */
 
 export {

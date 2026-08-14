@@ -510,6 +510,10 @@ export async function registerRoutes(app: Express) {
         sources: [],
         reviews: [],
         mapsUri: "https://maps.google.com/?cid=1710856351091471339",
+        listingUrls: {
+          google: "https://maps.google.com/?cid=1710856351091471339",
+        },
+        yelp: { status: "error" },
         google: {
           status: "error",
           configured: false,
