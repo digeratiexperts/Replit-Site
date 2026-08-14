@@ -5,8 +5,35 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { motion, useReducedMotion } from "framer-motion";
 
-// Import avatar strip image
 import avatarsImg from "@assets/Frame-2131330726_1767027918695.png";
+
+const chipClass =
+  "inline-flex min-h-11 items-center rounded-lg border border-[var(--de-hairline)] bg-transparent px-3.5 text-sm text-white/80 transition-colors hover:border-[#D3126A] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]";
+
+const complianceItems = [
+  "HIPAA-aligned security and compliance support",
+  "SOC 2 readiness and control alignment",
+  "Cyber insurance readiness",
+  "Security and compliance reporting",
+];
+
+const partnerMarks = ["Microsoft Partner", "Apple Consultants"];
+
+const locations = [
+  { name: "Chandler", href: "/locations/chandler-az", primary: true },
+  { name: "Phoenix", href: "/locations/phoenix-az", primary: false },
+  { name: "Gilbert", href: "/locations/gilbert-az", primary: false },
+  { name: "Tempe", href: "/locations/tempe-az", primary: false },
+  { name: "Mesa", href: "/locations/mesa-az", primary: false },
+  { name: "Scottsdale", href: "/locations/scottsdale-az", primary: false },
+];
+
+const benefits = [
+  { icon: Shield, label: "Security Alerts" },
+  { icon: Lock, label: "Best Practices" },
+  { icon: TrendingUp, label: "Industry Trends" },
+  { icon: Users, label: "Expert Insights" },
+];
 
 export const DigeratiNewsletterSection = (): JSX.Element => {
   const [email, setEmail] = useState("");
@@ -18,28 +45,28 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    
+
     setIsSubmitting(true);
-    
+
     try {
-      const response = await fetch('/api/newsletter', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-      
+
       const result = await response.json();
-      
+
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to subscribe');
+        throw new Error(result.error || "Failed to subscribe");
       }
-      
+
       toast({
         title: "Successfully Subscribed!",
         description: "You'll receive our security updates and expert insights.",
         variant: "default",
       });
-      
+
       setEmail("");
       setIsSubscribed(true);
     } catch (error: any) {
@@ -53,123 +80,176 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
     }
   };
 
-  const benefits = [
-    { icon: Shield, label: "Security Alerts", color: "text-violet-600" },
-    { icon: Lock, label: "Best Practices", color: "text-violet-600" },
-    { icon: TrendingUp, label: "Industry Trends", color: "text-violet-600" },
-    { icon: Users, label: "Expert Insights", color: "text-violet-600" },
-  ];
-
   return (
-    <section className="de-paper-chapter de-chapter-fade-to-dark relative overflow-hidden py-14 pb-24 pt-16 md:py-24 md:pb-32 md:pt-24">
-
-      <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
-        <div className="max-w-4xl mx-auto">
-          <motion.div 
-            className="text-center"
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            {/* Avatar strip */}
-            <div className="flex justify-center mb-8">
-              <img 
-                src={avatarsImg} 
-                alt="Our community members" 
-                loading="lazy"
-                decoding="async"
-                width={168}
-                height={56}
-                className="h-12 md:h-14"
-              />
-            </div>
-
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-gray-900">
-              Subscribe to Our Newsletter & <span className="text-violet-600">Stay Secure</span>
+    <section
+      id="newsletter"
+      className="de-dark-chapter de-chapter-hairline relative overflow-hidden py-14 md:py-20 lg:py-24"
+    >
+      <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
+        <motion.div
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.45 }}
+        >
+          <div className="mb-10 md:mb-12">
+            <h2 className="font-heading text-xl font-semibold tracking-[-0.02em] text-white md:text-2xl">
+              Security &amp; Compliance Support
+              <span className="text-[#D3126A]" aria-hidden="true">
+                :
+              </span>
             </h2>
-            <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              Enter your email to receive expert updates and personalized security advice.
+            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-white/45">
+              Framework names describe customer requirements Digerati helps organizations address —
+              not certifications Digerati holds.
             </p>
-
-            {/* Email form - Clean card style */}
-            <div className="max-w-xl mx-auto mb-10">
-              {isSubscribed ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-white shadow-xl border border-emerald-200"
-                  data-testid="newsletter-success"
+            <ul className="mt-5 flex flex-wrap gap-2.5">
+              {complianceItems.map((item) => (
+                <li key={item}>
+                  <span className={chipClass}>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {partnerMarks.map((name) => (
+                <span
+                  key={name}
+                  className="inline-flex min-h-9 items-center rounded-lg border border-[var(--de-hairline)] px-3 text-xs text-white/55"
                 >
-                  <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center">
-                    <Shield className="h-6 w-6 text-emerald-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900">You're Subscribed!</h3>
-                  <p className="text-gray-600 text-center">Check your inbox for a confirmation email. Welcome to our security community!</p>
-                  <Button
-                    variant="ghost"
-                    onClick={() => setIsSubscribed(false)}
-                    className="text-violet-600 hover:text-violet-700"
-                  >
-                    Subscribe another email
-                  </Button>
-                </motion.div>
-              ) : (
-                <form 
-                  onSubmit={handleSubmit} 
-                  className="de-paper-lift-lg flex flex-col gap-3 rounded-2xl p-2 sm:flex-row"
-                >
-                  <Input
-                    type="email"
-                    placeholder="Enter your work email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    data-testid="input-newsletter-email"
-                    className="flex-1 h-12 border-0 shadow-none focus-visible:ring-0 text-gray-900 placeholder:text-gray-400"
-                    disabled={isSubmitting}
-                    required
-                  />
-                  <Button
-                    type="submit"
-                    size="lg"
-                    data-testid="button-newsletter-submit"
-                    className="h-12 px-8 bg-violet-600 hover:bg-violet-700 text-white font-semibold shadow-lg"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        Subscribing...
-                      </>
-                    ) : (
-                      <>
-                        Subscribe
-                        <Mail className="ml-2 h-5 w-5" />
-                      </>
-                    )}
-                  </Button>
-                </form>
-              )}
-            </div>
-
-            {/* Benefits */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto mb-8">
-              {benefits.map((benefit) => (
-                <div key={benefit.label} className="flex items-center justify-center gap-2 text-gray-700">
-                  <benefit.icon className={`h-5 w-5 ${benefit.color}`} />
-                  <span className="text-base">{benefit.label}</span>
-                </div>
+                  {name}
+                </span>
               ))}
             </div>
+          </div>
 
-            {/* Trust indicator */}
-            <p className="text-base text-gray-500">
-              Monthly security notes for Arizona operators.
-              <br />
-              <span className="text-sm text-gray-400">Unsubscribe anytime. We respect your privacy.</span>
-            </p>
-          </motion.div>
-        </div>
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+            <div className="rounded-2xl border border-[var(--de-hairline)] bg-[var(--de-surface)] p-6 md:p-8">
+              <div className="mb-5 flex items-center gap-3">
+                <img
+                  src={avatarsImg}
+                  alt="Our community members"
+                  loading="lazy"
+                  decoding="async"
+                  width={168}
+                  height={56}
+                  className="h-8 w-auto opacity-80"
+                />
+              </div>
+              <h2 className="font-heading text-xl font-semibold tracking-[-0.02em] text-white md:text-2xl">
+                Stay Updated
+                <span className="text-[#D3126A]" aria-hidden="true">
+                  :
+                </span>
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-white/55">
+                Get the latest cybersecurity insights and IT tips delivered to your inbox.
+              </p>
+
+              <div className="mt-6">
+                {isSubscribed ? (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="flex flex-col items-start gap-3 rounded-xl border border-[var(--de-hairline)] p-5"
+                    data-testid="newsletter-success"
+                  >
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[#D3126A]/40">
+                      <Shield className="h-5 w-5 text-[#D3126A]" aria-hidden="true" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-white">You&apos;re Subscribed!</h3>
+                    <p className="text-sm text-white/55">
+                      Check your inbox for a confirmation email. Welcome to our security community!
+                    </p>
+                    <Button
+                      variant="ghost"
+                      onClick={() => setIsSubscribed(false)}
+                      className="h-11 px-0 text-[#D3126A] hover:bg-transparent hover:text-[#f0187a]"
+                    >
+                      Subscribe another email
+                    </Button>
+                  </motion.div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row">
+                    <label htmlFor="homepage-newsletter-email" className="sr-only">
+                      Email address
+                    </label>
+                    <Input
+                      id="homepage-newsletter-email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      data-testid="input-newsletter-email"
+                      className="h-12 flex-1 border-[var(--de-hairline)] bg-[var(--de-bg)] text-white shadow-none placeholder:text-white/35 hover:border-white/25 focus-visible:border-[#D3126A] focus-visible:ring-[#D3126A]/60"
+                      disabled={isSubmitting}
+                      required
+                    />
+                    <Button
+                      type="submit"
+                      size="lg"
+                      data-testid="button-newsletter-submit"
+                      className="h-12 px-6 bg-[#D3126A] font-semibold text-white shadow-none hover:bg-[#e01874] hover:shadow-none hover:translate-y-0 focus-visible:ring-[#D3126A]/70"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" aria-hidden="true" />
+                          Subscribing...
+                        </>
+                      ) : (
+                        <>
+                          Subscribe
+                          <Mail className="ml-2 h-5 w-5" aria-hidden="true" />
+                        </>
+                      )}
+                    </Button>
+                  </form>
+                )}
+              </div>
+
+              <div className="mt-6 flex flex-wrap gap-2">
+                {benefits.map((benefit) => (
+                  <span key={benefit.label} className={chipClass}>
+                    <benefit.icon className="mr-2 h-4 w-4 text-[#D3126A]" aria-hidden="true" />
+                    {benefit.label}
+                  </span>
+                ))}
+              </div>
+
+              <p className="mt-5 text-sm text-white/40">
+                Monthly security notes for Arizona operators.
+                <br />
+                <span className="text-xs text-white/30">Unsubscribe anytime. We respect your privacy.</span>
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-[var(--de-hairline)] bg-[var(--de-surface)] p-6 md:p-8">
+              <h2 className="font-heading text-xl font-semibold tracking-[-0.02em] text-white md:text-2xl">
+                Serving Greater Phoenix
+                <span className="text-[#D3126A]" aria-hidden="true">
+                  :
+                </span>
+              </h2>
+              <div className="mt-6 flex flex-wrap gap-2.5">
+                {locations.map((location) => (
+                  <a
+                    key={location.name}
+                    href={location.href}
+                    className={`${chipClass} ${
+                      location.primary
+                        ? "border-[#D3126A] text-white shadow-[inset_0_0_0_1px_#D3126A]"
+                        : ""
+                    }`}
+                    data-city={location.name.toLowerCase()}
+                    data-testid={`newsletter-location-${location.name.toLowerCase()}`}
+                  >
+                    {location.name}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
