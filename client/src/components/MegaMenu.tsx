@@ -998,10 +998,6 @@ export function MegaMenu() {
         </div>
         </div>
 
-        <div ref={spyBarRef} className="w-full">
-          <HomepageOnPageNav />
-        </div>
-
         <div
           ref={spyBarRef}
           className={`w-full overflow-hidden motion-reduce:transition-none ${
