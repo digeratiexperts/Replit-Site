@@ -266,16 +266,19 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                       >
                         Leave with a clear picture of your cyber risk.
                       </h2>
-                      <p id={descId} className="mt-3 text-sm leading-relaxed text-black/60">
+                      <p
+                        id={descId}
+                        className="mt-3 text-[16px] font-medium leading-relaxed text-[#2A2438]"
+                      >
                         Drop your work email. We’ll send a short intro — independent findings you can
                         use with your current IT or with us.
                       </p>
 
-                      <ul className="mt-5 grid grid-cols-1 gap-y-2 sm:grid-cols-2 sm:gap-x-6 text-[13px] leading-snug text-black/70">
+                      <ul className="mt-5 grid grid-cols-1 gap-y-2.5 sm:grid-cols-2 sm:gap-x-6 text-[16px] font-semibold leading-snug text-[#1A1228]">
                         {BENEFITS.map((item) => (
                           <li key={item} className="flex items-baseline gap-2.5">
                             <span className="mt-[0.55em] h-px w-2.5 shrink-0 bg-[#D3126A]" aria-hidden="true" />
-                            <span>{item}</span>
+                            <span className="font-semibold">{item}</span>
                           </li>
                         ))}
                       </ul>
@@ -335,18 +338,18 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                         </button>
                       </form>
 
-                      <p className="mt-4 text-sm text-black/50">
+                      <p className="mt-4 text-[16px] font-medium text-[#2A2438]">
                         Prefer to call?{" "}
                         <a
                           href={PHONE_HREF}
-                          className="font-medium text-[#1A1228] underline-offset-2 hover:text-[#D3126A] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]"
+                          className="font-semibold text-[#1A1228] underline-offset-2 hover:text-[#D3126A] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]"
                         >
                           <Phone className="mr-1 inline h-3.5 w-3.5 align-[-2px]" aria-hidden="true" />
                           {PHONE_DISPLAY}
                         </a>
                       </p>
 
-                      <p className="mt-2 text-xs leading-relaxed text-black/40">
+                      <p className="mt-2 text-[14px] font-medium leading-relaxed text-[#3D3550]">
                         No spam. We only use this to follow up on the assessment.
                       </p>
                     </>
@@ -358,7 +361,7 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                           <h2 className="font-heading text-xl font-semibold tracking-[-0.02em] text-[#1A1228]">
                             You’re on the list
                           </h2>
-                          <p className="mt-2 text-sm leading-relaxed text-black/60">
+                          <p className="mt-2 text-[16px] font-medium leading-relaxed text-[#2A2438]">
                             We’ll follow up with assessment next steps — no spam.
                           </p>
                         </div>
