@@ -57,7 +57,7 @@ const paths: {
     title: "Cyber Risk Assessment",
     description:
       "Start with a practical review of identity, endpoints, email, backups, and security posture — then choose what to own together.",
-    link: "/#assessment-cta",
+    link: "/book",
     cta: CTA.primary,
     testId: "engage-assessment",
   },

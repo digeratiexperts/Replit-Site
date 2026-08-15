@@ -43,7 +43,7 @@ const resourceLinks = [
 
 const trustLegalLinks = [
   { name: "Trust Center", href: "/trust/trust-center" },
-  { name: "Status", href: "/portal/status" },
+  { name: "Status", href: "/trust/trust-center" },
   { name: "Vulnerability Disclosure", href: "/trust/vulnerability-disclosure" },
   { name: "Privacy", href: "/legal/privacy-policy" },
   { name: "Terms", href: "/legal/terms-of-use" },

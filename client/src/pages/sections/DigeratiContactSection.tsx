@@ -75,7 +75,11 @@ const contactSocials = [
 const fieldClass =
   "h-11 bg-white border-[var(--de-paper-hairline)] text-[#1A1228] placeholder:text-black/35 focus-visible:ring-2 focus-visible:ring-[#D3126A]/40 focus-visible:border-[#D3126A]";
 
-export const DigeratiContactSection = (): JSX.Element => {
+export const DigeratiContactSection = ({
+  headingAs = "h2",
+}: {
+  headingAs?: "h1" | "h2";
+} = {}): JSX.Element => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const prefersReducedMotion = useReducedMotion();
@@ -153,9 +157,15 @@ export const DigeratiContactSection = (): JSX.Element => {
             <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#FF477F]">
               Contact
             </p>
-            <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
-              Ready to Secure Your Business?
-            </h2>
+            {headingAs === "h1" ? (
+              <h1 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
+                Ready to Secure Your Business?
+              </h1>
+            ) : (
+              <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
+                Ready to Secure Your Business?
+              </h2>
+            )}
             <p className="mb-8 max-w-xl text-base leading-relaxed text-white/65 md:text-lg">
               Located in the heart of Chandler, we&apos;re your local cybersecurity experts.
               Whether you need immediate help or want to explore our services, we&apos;re here for you.

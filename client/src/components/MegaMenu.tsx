@@ -344,7 +344,7 @@ export function MegaMenu() {
         {
           title: 'Is This You?',
           items: [
-            { title: 'Frustrated with IT?', description: 'Slow response and recurring issues', icon: <Zap className="h-5 w-5" />, url: '/#contact' },
+            { title: 'Frustrated with IT?', description: 'Slow response and recurring issues', icon: <Zap className="h-5 w-5" />, url: '/contact' },
             { title: 'Worried about Security?', description: 'Concerned about ransomware', icon: <Shield className="h-5 w-5" />, url: '/solutions/threat-detection' },
             { title: 'Need Compliance?', description: 'HIPAA, SOC 2, or FTC needs', icon: <ClipboardCheck className="h-5 w-5" />, url: '/solutions/compliance-reports' },
           ]
@@ -369,7 +369,7 @@ export function MegaMenu() {
     },
     {
       name: 'Contact',
-      href: '/#contact',
+      href: '/contact',
       isSimple: true
     }
   ];

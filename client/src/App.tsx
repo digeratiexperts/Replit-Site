@@ -141,6 +141,7 @@ const EcosystemMatrixOfficial = lazy(() => import("@/pages/EcosystemMatrixOffici
 const NetworkPlannerOfficial = lazy(() => import("@/pages/NetworkPlannerOfficial"));
 const Ebook = lazy(() => import("@/pages/resources/Ebook"));
 const BookingPage = lazy(() => import("@/pages/BookingPage"));
+const ContactPage = lazy(() => import("@/pages/Contact"));
 
 // Store pages
 const StoreLanding = lazy(() => import("@/pages/store/StoreLanding"));
@@ -845,7 +846,11 @@ function Router() {
 
       {/* Legacy / shorthand URLs → canonical routes */}
       <Route path="/assessment">{() => <Redirect to="/book" />}</Route>
-      <Route path="/contact">{() => <Redirect to="/#contact" />}</Route>
+      <Route path="/contact" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ContactPage />
+        </Suspense>
+      )} />
       <Route path="/case-studies">{() => <Redirect to="/resources/case-studies" />}</Route>
       <Route path="/solutions/endpoint-management">{() => <Redirect to="/solutions/threat-detection" />}</Route>
       <Route path="/solutions/identity-management">{() => <Redirect to="/solutions/unified-security" />}</Route>

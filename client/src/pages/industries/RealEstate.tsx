@@ -1,6 +1,6 @@
 import { PageTemplate } from "@/components/PageTemplate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, AlertCircle, Shield, Lock } from "lucide-react";
+import { CheckCircle, AlertCircle, Shield, Lock, DollarSign, TrendingDown } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { CTA } from "@/lib/ctaCopy";
 
