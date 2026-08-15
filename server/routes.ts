@@ -462,6 +462,50 @@ export async function registerRoutes(app: Express) {
   // Register object storage routes for file uploads
   registerObjectStorageRoutes(app);
 
+  // Live MSP threat feed (CISA / FIRST / NVD / MSRC). Never invents CVEs.
+  app.get("/api/public/threats", async (req: Request, res: Response) => {
+    try {
+      const { getThreatFeed } = await import("./services/threat-intel/ingest");
+      const scope = req.query.scope === "all" ? "all" : "homepage";
+      const payload = await getThreatFeed(scope);
+      const cacheControl =
+        payload.status === "ok"
+          ? "public, max-age=300, stale-while-revalidate=3600"
+          : "public, max-age=60";
+      res.setHeader("Cache-Control", cacheControl);
+      res.json(payload);
+    } catch (error: any) {
+      console.error("public-threats error:", error);
+      res.status(500).json({
+        status: "empty",
+        generatedAt: null,
+        items: [],
+        sources: {},
+        attribution:
+          "Sources: CISA, NIST NVD, FIRST, and Microsoft MSRC. Digerati prioritizes items based on active exploitation, exploit probability, and relevance to SMB environments.",
+        message: "Unable to load the threat feed",
+      });
+    }
+  });
+
+  app.post("/api/internal/threats/refresh", async (req: Request, res: Response) => {
+    const { isLocalRequest, refreshThreatFeed } = await import("./services/threat-intel/ingest");
+    if (!isLocalRequest(req)) {
+      return res.status(403).json({ error: "Refresh is limited to localhost" });
+    }
+    try {
+      const feed = await refreshThreatFeed();
+      res.json({
+        ok: true,
+        generatedAt: feed.generatedAt,
+        count: feed.items.length,
+        sources: feed.sources,
+      });
+    } catch (error: any) {
+      res.status(502).json({ ok: false, error: error?.message || "Refresh failed" });
+    }
+  });
+
   // Public Google Business reviews (soft trust — never invents quotes)
   app.get("/api/google-reviews", async (_req: Request, res: Response) => {
     try {

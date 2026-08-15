@@ -1,23 +1,34 @@
-import { Calendar, ArrowRight, AlertCircle, Shield, Lock, Zap, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar, ArrowRight, AlertCircle, Shield, Bug, Lock, Zap, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion, useReducedMotion } from "framer-motion";
 import { useRef, useState, useEffect, useMemo } from "react";
+import { useThreatFeed } from "@/hooks/useThreatFeed";
 import {
-  formatUpdateDisplayDate,
-  getHomepageRecentThreats,
-  type SecurityUpdate,
-  type SecurityUpdateCategory,
-} from "@/data/securityUpdates";
+  formatThreatDate,
+  THREAT_ATTRIBUTION,
+  type ThreatCategory,
+  type ThreatItem,
+} from "@shared/threatFeed";
 
-const categoryIcon: Record<SecurityUpdateCategory, JSX.Element> = {
-  "CISA Alert": <AlertCircle className="h-5 w-5" />,
-  "Threat Analysis": <Shield className="h-5 w-5" />,
-  "Compliance Update": <Lock className="h-5 w-5" />,
+const categoryIcon: Record<ThreatCategory, JSX.Element> = {
+  "Active Exploitation": <AlertCircle className="h-5 w-5" />,
+  "Threat Advisory": <Shield className="h-5 w-5" />,
+  "Critical Vulnerability": <Bug className="h-5 w-5" />,
+  "Malware Activity": <Bug className="h-5 w-5" />,
+  Ransomware: <AlertCircle className="h-5 w-5" />,
+  "Microsoft Security": <Lock className="h-5 w-5" />,
+  "Digerati Advisory": <Shield className="h-5 w-5" />,
 };
 
-function InsightCard({ insight, index }: { insight: SecurityUpdate; index: number }) {
+function categoryBadgeClass(item: ThreatItem): string {
+  if (item.severity === "critical") return "bg-red-500/20 text-red-400 border-red-500/30";
+  if (item.severity === "high") return "border-[#D3126A] bg-transparent text-white";
+  return "border-de-hairline bg-transparent text-white/70";
+}
+
+function InsightCard({ insight, index }: { insight: ThreatItem; index: number }) {
   return (
     <Card
       className="h-full overflow-hidden border-de-hairline bg-de-raised transition-colors hover:border-white/20"
@@ -26,13 +37,7 @@ function InsightCard({ insight, index }: { insight: SecurityUpdate; index: numbe
       <div className="h-1 bg-[#D3126A]" />
       <CardHeader className="pb-3 p-4 sm:p-6">
         <div className="flex items-center justify-between mb-3 gap-2">
-          <Badge
-            className={`${
-              insight.urgent
-                ? "bg-red-500/20 text-red-400 border-red-500/30"
-                : "border-de-hairline bg-transparent text-white/70"
-            } border text-base`}
-          >
+          <Badge className={`${categoryBadgeClass(insight)} border text-base`}>
             <span className="flex items-center gap-1">
               {categoryIcon[insight.category]}
               <span className="hidden sm:inline">{insight.category}</span>
@@ -41,10 +46,13 @@ function InsightCard({ insight, index }: { insight: SecurityUpdate; index: numbe
           </Badge>
           <span className="text-base text-gray-400 flex items-center gap-1 whitespace-nowrap">
             <Calendar className="h-3 w-3" />
-            <span className="hidden sm:inline">{formatUpdateDisplayDate(insight.date)}</span>
-            <span className="sm:hidden">{formatUpdateDisplayDate(insight.date).split(",")[0]}</span>
+            <span className="hidden sm:inline">{formatThreatDate(insight.publishedAt)}</span>
+            <span className="sm:hidden">{formatThreatDate(insight.publishedAt, "short")}</span>
           </span>
         </div>
+        <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#D3126A]">
+          {insight.kicker}
+        </p>
         <CardTitle className="text-base sm:text-lg text-white line-clamp-2">
           {insight.title}
         </CardTitle>
@@ -53,15 +61,21 @@ function InsightCard({ insight, index }: { insight: SecurityUpdate; index: numbe
         <CardDescription className="text-gray-400 mb-4 line-clamp-3 text-base">
           {insight.excerpt}
         </CardDescription>
-        <div className="flex items-center justify-between pt-4 border-t border-white/10">
-          <span className="text-base text-gray-400">{insight.sourceName}</span>
-          <Link
-            href="/resources/security-updates"
-            className="flex items-center gap-1 text-base font-medium text-[#D3126A] hover:text-[#f0187a]"
+        <div className="flex items-center justify-between pt-4 border-t border-white/10 gap-3">
+          <span className="text-base text-gray-400 truncate">
+            {insight.sourceName}
+            {insight.vendor ? ` · ${insight.vendor}` : ""}
+            {insight.cve ? ` · ${insight.cve}` : ""}
+          </span>
+          <a
+            href={insight.sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-base font-medium text-[#D3126A] hover:text-[#f0187a] shrink-0"
           >
-            Read this update
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+            Read source
+            <ExternalLink className="h-3.5 w-3.5" />
+          </a>
         </div>
       </CardContent>
     </Card>
@@ -74,12 +88,13 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
-  const [activeCategory, setActiveCategory] = useState<"All" | SecurityUpdateCategory>("All");
+  const [activeCategory, setActiveCategory] = useState<"All" | ThreatCategory>("All");
+  const { payload, loading } = useThreatFeed("homepage");
+  const insights = payload.items;
 
-  const insights = useMemo(() => getHomepageRecentThreats(), []);
   const categories = useMemo(() => {
     const present = Array.from(new Set(insights.map((item) => item.category)));
-    return present.length ? (["All", ...present] as Array<"All" | SecurityUpdateCategory>) : [];
+    return present.length ? (["All", ...present] as Array<"All" | ThreatCategory>) : [];
   }, [insights]);
   const displayed = useMemo(
     () => (activeCategory === "All" ? insights : insights.filter((item) => item.category === activeCategory)),
@@ -112,6 +127,11 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
     }
   };
 
+  const gridClass =
+    displayed.length >= 4
+      ? "hidden lg:grid grid-cols-2 xl:grid-cols-4 gap-6 mb-12"
+      : "hidden lg:grid grid-cols-3 gap-6 mb-12";
+
   return (
     <section
       ref={sectionRef}
@@ -137,17 +157,18 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
             </span>
           </h2>
           <p className="text-base md:text-lg lg:text-xl text-gray-400 max-w-3xl mx-auto px-4">
-            A short teaser of current alerts. Full feed, dates, and sources live on{" "}
-            <Link href="/resources/blog">
+            Current items prioritized by active exploitation, exploit probability, and SMB relevance.
+            Full stream, dates, and sources live on{" "}
+            <Link href="/resources/security-updates">
               <span className="font-semibold text-white/80 underline decoration-white/20 underline-offset-4 hover:text-white">
-                Resources
+                Security Updates
               </span>
             </Link>
             .
           </p>
         </motion.div>
 
-        {insights.length > 0 && (
+        {categories.length > 2 && (
           <motion.div
             className="flex overflow-x-auto scrollbar-hide gap-2 mb-8 md:mb-10 pb-2 md:justify-center"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
@@ -174,15 +195,26 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
           </motion.div>
         )}
 
-        {displayed.length === 0 ? (
+        {loading ? (
+          <div
+            className="mx-auto mb-12 max-w-2xl rounded-2xl border border-de-hairline bg-de-raised p-6 text-center md:p-8"
+            data-testid="insights-loading"
+          >
+            <p className="text-lg font-semibold text-white">Loading current threats…</p>
+            <p className="mt-2 text-base leading-relaxed text-white/55">
+              Checking CISA, FIRST, NVD, and Microsoft MSRC. Nothing is invented while this loads.
+            </p>
+          </div>
+        ) : displayed.length === 0 ? (
           <div
             className="mx-auto mb-12 max-w-2xl rounded-2xl border border-de-hairline bg-de-raised p-6 text-center md:p-8"
             data-testid="insights-empty"
           >
-            <p className="text-lg font-semibold text-white">No current alerts available.</p>
+            <p className="text-lg font-semibold text-white">No current items meet the homepage threshold.</p>
             <p className="mt-2 text-base leading-relaxed text-white/55">
-              We only surface homepage items within the last 45 days. The archive stays on Security
-              Updates with dates and sources — nothing is backfilled to look recent.
+              We only promote threats with confirmed exploitation, high exploit probability, or clear
+              SMB relevance — and only within the last 45 days. The full stream stays on Security
+              Updates with dates and sources.
             </p>
           </div>
         ) : (
@@ -216,17 +248,17 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
                 style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
               >
                 {displayed.map((insight, index) => (
-                  <div key={insight.slug} className="flex-shrink-0 w-[300px] sm:w-[340px] snap-center">
+                  <div key={insight.id} className="flex-shrink-0 w-[300px] sm:w-[340px] snap-center">
                     <InsightCard insight={insight} index={index} />
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="hidden lg:grid grid-cols-3 gap-6 mb-12">
+            <div className={gridClass}>
               {displayed.map((insight, index) => (
                 <motion.div
-                  key={insight.slug}
+                  key={insight.id}
                   initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-30px" }}
@@ -238,6 +270,10 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
             </div>
           </>
         )}
+
+        <p className="mx-auto mb-10 max-w-3xl text-center text-sm leading-relaxed text-white/45">
+          {payload.attribution || THREAT_ATTRIBUTION}
+        </p>
 
         <motion.div
           className="text-center flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4"

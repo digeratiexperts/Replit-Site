@@ -486,6 +486,11 @@ function listEndpoints(): Array<{ method: string; path: string }> {
 
   server.listen(port, host, () => {
     log(`🚀 Running on http://${host}:${port}`);
+    void import("./services/threat-intel/ingest")
+      .then(({ startThreatIntelScheduler }) => startThreatIntelScheduler())
+      .catch((error) => {
+        log(`⚠️ Threat-intel scheduler not started: ${error?.message || error}`);
+      });
     const slug = process.env.REPL_SLUG;
     const owner = process.env.REPL_OWNER;
     if (slug && owner) {

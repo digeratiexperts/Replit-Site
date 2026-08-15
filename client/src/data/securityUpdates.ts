@@ -1,8 +1,10 @@
 /**
- * Canonical security updates / threat insights feed for public pages.
+ * Historical / compliance archive for /resources/security-updates.
  *
- * Homepage "Recent Threats" must only show items within HOMEPAGE_MAX_AGE_DAYS.
- * Older items remain available on /resources/security-updates.
+ * The homepage "Recent Threats & Insights" section now reads the live scored
+ * feed from GET /api/public/threats (CISA KEV, CISA advisories, FIRST EPSS,
+ * NIST NVD, Microsoft MSRC). Keep these dated source records — do not invent
+ * replacements, and do not backfill them onto the homepage.
  */
 
 export type SecurityUpdateCategory = "CISA Alert" | "Threat Analysis" | "Compliance Update";
