@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Loader2, Calendar, ExternalLink } from "lucide-react";
+import { Loader2, Calendar, ExternalLink, Phone } from "lucide-react";
 
 declare global {
   interface Window {
@@ -12,6 +12,8 @@ declare global {
 const EMBED_SCRIPT = "https://bookings.nimbuspop.com/assets/embed.js";
 const BOOKING_URL = "https://meet.digerati-experts.com/portal-embed#/digeratexperts";
 const FALLBACK_URL = "https://meet.digerati-experts.com/";
+const PHONE_DISPLAY = "325-480-9870";
+const PHONE_HREF = "tel:+13254809870";
 
 let scriptLoaded = false;
 let scriptLoading = false;
@@ -91,9 +93,9 @@ export function ZohoBookingWidget({ instanceId = "default", className = "", heig
   return (
     <div className={`relative ${className}`}>
       {status === "loading" && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#0d0d1a] z-10">
-          <Loader2 className="w-8 h-8 text-violet-400 animate-spin" />
-          <p className="text-gray-400 text-sm">Loading scheduler…</p>
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-[#050312]">
+          <Loader2 className="h-7 w-7 animate-spin text-[#D3126A]" />
+          <p className="text-sm font-medium text-white/70">Loading the calendar…</p>
         </div>
       )}
       <div
@@ -110,31 +112,36 @@ export function ZohoBookingWidget({ instanceId = "default", className = "", heig
 function BookingFallback({ className = "" }: { className?: string }) {
   return (
     <div
-      className={`flex flex-col items-center justify-center gap-6 bg-[#0d0d1a] rounded-2xl p-10 border border-violet-500/20 min-h-[400px] ${className}`}
+      className={`flex h-full min-h-[22rem] flex-col justify-center rounded-xl border border-de-hairline bg-de-raised p-6 md:p-8 ${className}`}
       data-testid="booking-fallback"
     >
-      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
-        <Calendar className="w-8 h-8 text-white" />
-      </div>
-      <div className="text-center max-w-sm">
-        <h3 className="text-white font-semibold text-xl mb-2 font-['Space_Grotesk']">
-          Ready to Schedule?
-        </h3>
-        <p className="text-gray-400 text-sm leading-relaxed">
-          Click below to open our scheduling tool and pick a time that works for you.
-          The call is free with no obligation.
-        </p>
-      </div>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#D3126A]">
+        Next step
+      </p>
+      <h3 className="mt-2 font-heading text-xl font-semibold tracking-[-0.02em] text-white md:text-2xl">
+        Open the calendar
+      </h3>
+      <p className="mt-3 text-base font-medium leading-relaxed text-white/80">
+        Pick a time on our scheduling page. Thirty minutes, no obligation — we look at the
+        environment before recommending a package.
+      </p>
       <a
         href={FALLBACK_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white font-semibold transition-all shadow-lg shadow-violet-500/20"
+        className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#D3126A] px-5 text-base font-semibold text-white transition-colors hover:bg-[#f0187a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#151217]"
         data-testid="link-open-booking"
       >
-        <Calendar className="w-4 h-4" />
-        Open Scheduling Calendar
-        <ExternalLink className="w-4 h-4 opacity-70" />
+        <Calendar className="h-4 w-4" aria-hidden="true" />
+        Open scheduling calendar
+        <ExternalLink className="h-4 w-4 opacity-80" aria-hidden="true" />
+      </a>
+      <a
+        href={PHONE_HREF}
+        className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 text-base font-semibold text-white hover:text-[#D3126A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]"
+      >
+        <Phone className="h-4 w-4 text-[#D3126A]" aria-hidden="true" />
+        {PHONE_DISPLAY}
       </a>
     </div>
   );

@@ -221,7 +221,7 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
           <div className="pointer-events-none fixed inset-0 z-[10051] flex items-center justify-center p-4">
             <motion.div
               {...motionProps}
-              className="pointer-events-auto w-full max-w-[28rem]"
+              className="pointer-events-auto w-full max-w-[32rem]"
               data-testid="popup-exit-intent"
             >
               <div
@@ -254,7 +254,7 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                   </button>
                 </div>
 
-                <div className="px-5 pb-6 pt-5 md:px-7 md:pb-7 md:pt-6">
+                <div className="bg-[var(--de-paper)] px-5 pb-6 pt-5 md:px-8 md:pb-8 md:pt-6">
                   {!isSuccess ? (
                     <>
                       <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#D3126A]">
@@ -262,7 +262,7 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                       </p>
                       <h2
                         id={titleId}
-                        className="mt-2 font-heading text-[1.5rem] font-semibold leading-[1.2] tracking-[-0.02em] text-[#1A1228] md:text-[1.65rem]"
+                        className="mt-2 font-heading text-[1.55rem] font-semibold leading-[1.18] tracking-[-0.02em] text-[#1A1228] md:text-[1.75rem]"
                       >
                         Leave with a clear picture of your cyber risk.
                       </h2>
@@ -274,29 +274,32 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                         use with your current IT or with us.
                       </p>
 
-                      <ul className="mt-5 grid grid-cols-1 gap-y-2.5 sm:grid-cols-2 sm:gap-x-6 text-[16px] font-semibold leading-snug text-[#1A1228]">
+                      <ul className="mt-5 grid grid-cols-1 gap-x-6 gap-y-2.5 rounded-xl border border-[var(--de-paper-hairline)] bg-white px-4 py-3.5 sm:grid-cols-2">
                         {BENEFITS.map((item) => (
-                          <li key={item} className="flex items-baseline gap-2.5">
+                          <li key={item} className="flex items-baseline gap-2.5 text-[15px] font-semibold leading-snug text-[#1A1228]">
                             <span className="mt-[0.55em] h-px w-2.5 shrink-0 bg-[#D3126A]" aria-hidden="true" />
-                            <span className="font-semibold">{item}</span>
+                            <span>{item}</span>
                           </li>
                         ))}
                       </ul>
 
-                      <form onSubmit={handleSubmit} className="mt-5 space-y-3" noValidate>
+                      <form onSubmit={handleSubmit} className="mt-6 space-y-3" noValidate>
                         <div>
-                          <label htmlFor="exit-intent-email" className="sr-only">
-                            Business email
+                          <label
+                            htmlFor="exit-intent-email"
+                            className="mb-1.5 block text-sm font-semibold text-[#1A1228]"
+                          >
+                            Work email
                           </label>
                           <div className="relative">
-                            <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-black/40" />
+                            <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#5A5368]" />
                             <Input
                               ref={emailRef}
                               id="exit-intent-email"
                               type="email"
                               autoComplete="email"
                               inputMode="email"
-                              placeholder="Work email"
+                              placeholder="name@company.com"
                               value={email}
                               aria-invalid={fieldError ? true : undefined}
                               aria-describedby={fieldError ? errorId : undefined}
@@ -305,17 +308,17 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                                 if (fieldError) setFieldError(null);
                                 if (submitError) setSubmitError(null);
                               }}
-                              className="h-12 border-[var(--de-paper-hairline)] bg-[var(--de-paper)] pl-11 text-[15px] text-[#1A1228] placeholder:text-black/40 hover:border-black/25 focus-visible:border-[#D3126A] focus-visible:ring-[#D3126A]/40"
+                              className="h-12 border-[var(--de-paper-hairline)] bg-white pl-11 text-[16px] text-[#1A1228] placeholder:text-[#8A8496] hover:border-black/25 focus-visible:border-[#D3126A] focus-visible:ring-[#D3126A]/40"
                               data-testid="input-exit-popup-email"
                             />
                           </div>
                           {fieldError ? (
-                            <p id={errorId} role="alert" className="mt-2 text-sm text-rose-700">
+                            <p id={errorId} role="alert" className="mt-2 text-sm font-medium text-rose-700">
                               {fieldError}
                             </p>
                           ) : null}
                           {submitError ? (
-                            <p role="alert" className="mt-2 text-sm text-rose-700">
+                            <p role="alert" className="mt-2 text-sm font-medium text-rose-700">
                               {submitError}
                             </p>
                           ) : null}
@@ -324,7 +327,7 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#D3126A] text-[15px] font-semibold text-white transition-colors hover:bg-[#f0187a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-60"
+                          className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#D3126A] text-[16px] font-semibold text-white transition-colors hover:bg-[#f0187a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-paper)] disabled:opacity-60"
                           data-testid="button-get-checklist"
                         >
                           {isSubmitting ? (
@@ -338,25 +341,26 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                         </button>
                       </form>
 
-                      <p className="mt-4 text-[16px] font-medium text-[#2A2438]">
-                        Prefer to call?{" "}
-                        <a
-                          href={PHONE_HREF}
-                          className="font-semibold text-[#1A1228] underline-offset-2 hover:text-[#D3126A] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]"
-                        >
-                          <Phone className="mr-1 inline h-3.5 w-3.5 align-[-2px]" aria-hidden="true" />
-                          {PHONE_DISPLAY}
-                        </a>
-                      </p>
-
-                      <p className="mt-2 text-[14px] font-medium leading-relaxed text-[#3D3550]">
-                        No spam. We only use this to follow up on the assessment.
-                      </p>
+                      <div className="mt-5 flex flex-col gap-2 border-t border-[var(--de-paper-hairline)] pt-4 sm:flex-row sm:items-center sm:justify-between">
+                        <p className="text-[15px] font-medium text-[#2A2438]">
+                          Prefer to call?{" "}
+                          <a
+                            href={PHONE_HREF}
+                            className="font-semibold text-[#1A1228] underline-offset-2 hover:text-[#D3126A] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]"
+                          >
+                            <Phone className="mr-1 inline h-3.5 w-3.5 align-[-2px]" aria-hidden="true" />
+                            {PHONE_DISPLAY}
+                          </a>
+                        </p>
+                        <p className="text-[13px] font-medium leading-relaxed text-[#5A5368]">
+                          No spam. Follow-up on the assessment only.
+                        </p>
+                      </div>
                     </>
                   ) : (
-                    <div className="py-2">
+                    <div className="py-6">
                       <div className="flex items-start gap-3">
-                        <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" aria-hidden="true" />
+                        <CheckCircle2 className="mt-0.5 h-6 w-6 shrink-0 text-emerald-600" aria-hidden="true" />
                         <div>
                           <h2 className="font-heading text-xl font-semibold tracking-[-0.02em] text-[#1A1228]">
                             You’re on the list
