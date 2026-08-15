@@ -42,7 +42,7 @@ export default function ProActiveEcosystemPage() {
       />
 
       <main className="de-nav-clear pb-20">
-        <div className="mx-auto max-w-[100rem] px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[var(--de-canvas)] px-4 sm:px-6 lg:px-8">
           <header className="mb-14 max-w-3xl">
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF477F]">
               Operating model

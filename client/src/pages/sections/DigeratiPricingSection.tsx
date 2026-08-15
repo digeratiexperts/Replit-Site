@@ -12,7 +12,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
       data-testid="homepage-pricing"
       className="de-dark-chapter de-chapter-hairline relative py-10 md:py-20 lg:py-24"
     >
-      <div className="relative z-10 mx-auto max-w-[100rem] px-3 sm:px-4 lg:px-6">
+      <div className="relative z-10 mx-auto max-w-[var(--de-canvas)] px-3 sm:px-4 lg:px-6">
         <motion.div
           initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}

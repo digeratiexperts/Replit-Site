@@ -17,17 +17,26 @@ html {
   scroll-padding-top: var(--de-nav-offset);
 }
 
-/* Slightly larger on very wide screens */
+/*
+ * Large-display type scale.
+ * 14px stays the laptop/monitor default. TVs and 4K walls need a real step
+ * up so the first viewport reads from the couch — not a 1px bump.
+ */
 @media (min-width: 1920px) {
   html {
-    font-size: 15px;
+    font-size: 16px;
   }
 }
 
-/* Larger on 4K displays */
 @media (min-width: 2560px) {
   html {
-    font-size: 16px;
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 3840px) {
+  html {
+    font-size: 20px;
   }
 }
 
@@ -138,7 +147,12 @@ html {
     #fb7185 100%
   );
 
-  /* Contained marketing canvas — black outer gutters, framed DE site inside */
+  /*
+   * Contained marketing canvas — black outer gutters on ultrawide only.
+   * 100rem ≈ 1400px at the 14px root: fills a laptop / 1440 window.
+   * 16:9 TVs (1920 / 4K) must use the screen, not sit as a postage stamp.
+   * Modest side inset keeps TV overscan from clipping chrome.
+   */
   --de-canvas: 100rem;
   --de-canvas-gutter: max(0px, calc((100vw - var(--de-canvas)) / 2));
   --de-conversion-bar-h: 0px;
@@ -163,6 +177,27 @@ html {
   --de-spy-h: 0px;
   --de-nav-offset: calc(var(--de-nav-chrome) + var(--de-spy-h) + 0.75rem);
   --de-nav-current-bottom: calc(var(--de-nav-chrome) + var(--de-spy-h));
+}
+
+/* 1080p TV / maximized 16:9 — fill the wall, keep a slim overscan gutter */
+@media (min-width: 1800px) {
+  :root {
+    --de-canvas: min(96vw, 1920px);
+  }
+}
+
+/* 1440p / small 4K CSS pixels — wider stage, still a readable measure */
+@media (min-width: 2560px) {
+  :root {
+    --de-canvas: min(92vw, 2400px);
+  }
+}
+
+/* True 4K CSS pixels (some TV browsers) — fill the wall, slim overscan inset */
+@media (min-width: 3200px) {
+  :root {
+    --de-canvas: min(94vw, 3600px);
+  }
 }
 
 /* Phones: one logo bar. Utility + chapter spy stay on lg+ (and in the menu). */

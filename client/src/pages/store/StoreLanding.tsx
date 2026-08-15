@@ -140,7 +140,7 @@ const StoreLanding = () => {
       <MegaMenu />
 
       <main className="pb-20 de-nav-clear">
-        <div className="mx-auto max-w-[100rem] px-3 sm:px-4 lg:px-6">
+        <div className="mx-auto max-w-[var(--de-canvas)] px-3 sm:px-4 lg:px-6">
           <div className="mb-4 flex items-center justify-between">
             {isLoggedIn && user ? (
               <div className="flex items-center gap-3">

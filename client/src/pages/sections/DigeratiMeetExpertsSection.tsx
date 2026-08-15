@@ -32,7 +32,7 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
         aria-hidden="true"
       />
 
-      <div className="relative z-10 mx-auto max-w-[100rem] px-3 sm:px-4 lg:px-6">
+      <div className="relative z-10 mx-auto max-w-[var(--de-canvas)] px-3 sm:px-4 lg:px-6">
         <motion.div
           className="mb-8 md:mb-10"
           initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}

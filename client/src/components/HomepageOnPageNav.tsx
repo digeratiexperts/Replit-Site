@@ -71,7 +71,7 @@ export function HomepageOnPageNav() {
       data-testid="homepage-section-spy"
       className="border-t border-white/[0.08] bg-black/90"
     >
-      <div className="mx-auto flex max-w-[100rem] items-stretch px-2 sm:px-3 xl:px-5">
+      <div className="mx-auto flex max-w-[var(--de-canvas)] items-stretch px-2 sm:px-3 xl:px-5">
         <ul className="flex w-full min-h-9 items-stretch justify-start overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] lg:justify-center [&::-webkit-scrollbar]:hidden">
           {items.map(({ section, index }) => {
             const isActive = activeIndex === index;

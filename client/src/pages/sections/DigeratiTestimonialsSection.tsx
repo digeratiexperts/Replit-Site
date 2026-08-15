@@ -139,7 +139,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
       className="de-dark-well de-chapter-hairline relative overflow-hidden py-14 md:py-18 lg:py-20"
       data-testid="section-client-proof"
     >
-      <div className="mx-auto max-w-[100rem] px-3 sm:px-4 lg:px-6">
+      <div className="mx-auto max-w-[var(--de-canvas)] px-3 sm:px-4 lg:px-6">
         <motion.div
           className="mb-10 text-center md:mb-14"
           initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}

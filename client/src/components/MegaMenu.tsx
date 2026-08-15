@@ -615,7 +615,7 @@ export function MegaMenu() {
             background: 'linear-gradient(90deg, transparent 0%, transparent 50%, rgba(139, 92, 246, 0.3) 80%, rgba(139, 92, 246, 0.2) 100%)',
           }}
         />
-        <div className="max-w-[100rem] mx-auto px-3 lg:px-5 flex flex-col md:flex-row items-center justify-end py-1.5 relative z-10 w-full">
+        <div className="max-w-[var(--de-canvas)] mx-auto px-3 lg:px-5 flex flex-col md:flex-row items-center justify-end py-1.5 relative z-10 w-full">
           <div className="flex items-center flex-wrap gap-x-5 gap-y-1.5 md:gap-x-7 justify-center md:justify-end">
             <a
               href="tel:+13254809870"
@@ -667,7 +667,7 @@ export function MegaMenu() {
         aria-label="Main navigation"
         data-nav-theme={isOverLight ? 'over-light' : 'over-dark'}
       >
-        <div className="max-w-[100rem] mx-auto w-full">
+        <div className="max-w-[var(--de-canvas)] mx-auto w-full">
           <div
             ref={navBarRef}
             className={`flex items-center justify-between gap-3 px-3 xl:px-5 overflow-visible transition-all duration-300 ${

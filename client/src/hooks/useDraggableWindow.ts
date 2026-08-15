@@ -11,6 +11,10 @@ function parseCssPx(value: string): number {
 }
 
 function canvasGutterPx(): number {
+  const gutter = parseCssPx(
+    getComputedStyle(document.documentElement).getPropertyValue("--de-canvas-gutter")
+  );
+  if (gutter > 0) return gutter;
   const raw = getComputedStyle(document.documentElement).getPropertyValue("--de-canvas").trim();
   const rootFont = parseCssPx(getComputedStyle(document.documentElement).fontSize) || 14;
   let canvasPx = window.innerWidth;
