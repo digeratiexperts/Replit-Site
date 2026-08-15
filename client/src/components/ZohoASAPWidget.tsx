@@ -1245,7 +1245,9 @@ export const ZohoASAPWidget = ({
                           <Shield aria-hidden="true" />
                         </span>
                         <span className="de-desk-row-body">
-                          <span className="de-desk-row-t">Cyber Risk Assessment</span>
+                          <span className="de-desk-row-t">
+                            Cyber Risk Assessment <span className="de-desk-badge-rec">Recommended</span>
+                          </span>
                           <span className="de-desk-row-d">Map your gaps and get a prioritized next step.</span>
                         </span>
                         <span className="de-desk-row-actions">
@@ -1256,7 +1258,7 @@ export const ZohoASAPWidget = ({
                         </span>
                       </a>
 
-                      <div className="de-desk-row is-alert" data-tone="red">
+                      <div className="de-desk-row is-lg is-alert" data-tone="red">
                         <span className="de-desk-row-ic">
                           <AlertTriangle aria-hidden="true" />
                         </span>
@@ -1404,6 +1406,22 @@ export const ZohoASAPWidget = ({
               width: 9px; height: 9px; border-radius: 50%;
               background: var(--desk-green);
               border: 2px solid var(--desk-shell);
+            }
+            .de-desk-avatar-dot::after,
+            .de-desk-status-dot.is-on::after {
+              content: "";
+              position: absolute; inset: -3px; border-radius: 50%;
+              background: var(--desk-green);
+              opacity: 0.4;
+              animation: de-desk-pulse 2s ease-out infinite;
+            }
+            @keyframes de-desk-pulse {
+              0% { transform: scale(0.6); opacity: 0.5; }
+              100% { transform: scale(2.2); opacity: 0; }
+            }
+            @media (prefers-reduced-motion: reduce) {
+              .de-desk-avatar-dot::after,
+              .de-desk-status-dot.is-on::after { animation: none; }
             }
             .de-desk-id h2 {
               font-family: "Space Grotesk", sans-serif;
@@ -1560,7 +1578,17 @@ export const ZohoASAPWidget = ({
             .de-desk-row-body { flex: 1; min-width: 0; }
             .de-desk-row-t { font-size: 13px; font-weight: 600; color: #fff; }
             .de-desk-row.is-lg .de-desk-row-t { font-size: 13.5px; }
-            .de-desk-row-d { display: block; font-size: 11.5px; color: #6b6678; margin-top: 2px; line-height: 1.4; }
+            .de-desk-row-d { display: block; font-size: 11.5px; color: #9c97a8; margin-top: 2px; line-height: 1.4; }
+            .de-desk-badge-rec {
+              display: inline-block;
+              font-size: 9.5px; font-weight: 700; letter-spacing: 0.03em;
+              color: var(--desk-pink);
+              background: rgba(211,18,106,0.16);
+              border: 1px solid rgba(211,18,106,0.4);
+              border-radius: 5px; padding: 2px 6px;
+              vertical-align: middle; margin-left: 6px;
+              text-transform: uppercase;
+            }
             .de-desk-row-chev { width: 14px; height: 14px; color: #6b6678; flex: none; }
             .de-desk-row-actions { display: flex; align-items: center; gap: 6px; flex: none; }
             .de-desk-row-ext {
@@ -1571,12 +1599,18 @@ export const ZohoASAPWidget = ({
             }
             .de-desk-row-ext svg { width: 12px; height: 12px; }
             .de-desk-row:hover .de-desk-row-ext { border-color: var(--c, var(--desk-pink)); color: var(--c, var(--desk-pink)); }
-            .de-desk-row.is-highlight { background: #2e1b28; border-color: rgba(211,18,106,0.35); }
-            .de-desk-row.is-alert { background: #2e1b22; border-color: rgba(240,69,91,0.35); }
+            .de-desk-row.is-highlight { background: #33202e; border-color: rgba(211,18,106,0.4); }
+            .de-desk-row.is-alert {
+              background: #331c22;
+              border-color: rgba(240,69,91,0.4);
+              align-items: flex-start;
+            }
+            .de-desk-row.is-alert .de-desk-row-body { padding-top: 2px; }
             .de-desk-btn-mini {
               background: var(--desk-grad); color: #fff; border: none;
               font-weight: 600; font-size: 12px; padding: 9px 14px;
               border-radius: 9px; flex: none; white-space: nowrap;
+              align-self: center;
             }
             .de-desk-section-head {
               display: flex; align-items: center; justify-content: space-between;
