@@ -96,51 +96,24 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
   useEffect(() => {
     if (window.location.pathname.startsWith("/portal")) return;
 
-    // Leave-intent can fire after a short settle. The delay is a guaranteed show
-    // so phones and visitors who never graze the tab bar still see the offer.
+    // Desktop leave toward the tab/address chrome only. No timer, no scroll bait.
     let armed = false;
-    const armAfter = Math.min(2500, delay);
     const arm = window.setTimeout(() => {
       armed = true;
-    }, armAfter);
-    const fallback = window.setTimeout(() => {
-      showPopup();
     }, delay);
 
-    const pointerLeftDocument = (e: MouseEvent) => {
+    const leavingTowardChrome = (e: MouseEvent) => {
       if (!armed) return;
-      const related = e.relatedTarget as Node | null;
-      if (related && document.documentElement.contains(related)) return;
-      const x = e.clientX;
-      const y = e.clientY;
-      const leftEdge = x <= 12;
-      const rightEdge = x >= window.innerWidth - 12;
-      const topEdge = y <= 24;
-      const bottomEdge = y >= window.innerHeight - 12;
-      if (topEdge || bottomEdge || leftEdge || rightEdge || y < 0) {
-        showPopup();
-      }
+      if (e.clientY > 8) return;
+      showPopup();
     };
 
     const html = document.documentElement;
-    html.addEventListener("mouseleave", pointerLeftDocument);
-    document.addEventListener("mouseout", pointerLeftDocument);
-
-    let lastY = window.scrollY;
-    const onScroll = () => {
-      if (!armed) return;
-      const y = window.scrollY;
-      if (lastY > 240 && y < 80) showPopup();
-      lastY = y;
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
+    html.addEventListener("mouseleave", leavingTowardChrome);
 
     return () => {
       window.clearTimeout(arm);
-      window.clearTimeout(fallback);
-      html.removeEventListener("mouseleave", pointerLeftDocument);
-      document.removeEventListener("mouseout", pointerLeftDocument);
-      window.removeEventListener("scroll", onScroll);
+      html.removeEventListener("mouseleave", leavingTowardChrome);
     };
   }, [delay, showPopup]);
 

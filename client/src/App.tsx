@@ -894,7 +894,7 @@ function AppContent() {
       <MarketingChrome />
       {!isHome && <SiteBottomBar />}
       <StickyCTABar />
-      <ExitIntentPopup delay={10000} />
+      <ExitIntentPopup delay={5000} />
       <CookieConsentBanner />
     </AnnouncerProvider>
   );
