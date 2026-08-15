@@ -221,34 +221,32 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                 aria-describedby={descId}
                 className="relative overflow-hidden rounded-2xl border border-[var(--de-paper-hairline)] bg-[var(--de-paper-raised)] shadow-[0_28px_80px_rgba(0,0,0,0.55)]"
               >
-                <div
-                  className="h-1 bg-[#D3126A]"
-                  aria-hidden="true"
-                />
+                <div className="h-1 bg-[#D3126A]" aria-hidden="true" />
 
-                <button
-                  ref={closeRef}
-                  type="button"
-                  onClick={handleClose}
-                  className="absolute right-2 top-3 z-10 inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg text-black/45 transition-colors hover:bg-black/[0.06] hover:text-[#1A1228] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-                  aria-label="Close"
-                  data-testid="button-close-exit-popup"
-                >
-                  <X className="h-5 w-5" />
-                </button>
+                <div className="flex items-center justify-between gap-3 bg-[#0a0a0a] px-4 py-3 md:px-5">
+                  <img
+                    src={logoImage}
+                    alt="Digerati Experts"
+                    className="h-8 w-auto md:h-9"
+                    width={160}
+                    height={36}
+                  />
+                  <button
+                    ref={closeRef}
+                    type="button"
+                    onClick={handleClose}
+                    className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg text-white/55 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+                    aria-label="Close"
+                    data-testid="button-close-exit-popup"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
 
-                <div className="px-5 pb-6 pt-6 md:px-7 md:pb-7 md:pt-7">
+                <div className="px-5 pb-6 pt-5 md:px-7 md:pb-7 md:pt-6">
                   {!isSuccess ? (
                     <>
-                      <img
-                        src={logoImage}
-                        alt="Digerati Experts"
-                        className="h-8 w-auto rounded-sm md:h-9"
-                        width={160}
-                        height={36}
-                      />
-
-                      <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#D3126A]">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#D3126A]">
                         Cyber Risk Assessment
                       </p>
                       <h2
@@ -342,15 +340,8 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                       </p>
                     </>
                   ) : (
-                    <div className="py-4">
-                      <img
-                        src={logoImage}
-                        alt="Digerati Experts"
-                        className="h-8 w-auto rounded-sm"
-                        width={160}
-                        height={36}
-                      />
-                      <div className="mt-6 flex items-start gap-3">
+                    <div className="py-2">
+                      <div className="flex items-start gap-3">
                         <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" aria-hidden="true" />
                         <div>
                           <h2 className="font-heading text-xl font-semibold tracking-[-0.02em] text-[#1A1228]">
