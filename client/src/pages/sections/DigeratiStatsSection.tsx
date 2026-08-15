@@ -63,7 +63,7 @@ export const DigeratiStatsSection = (): JSX.Element => {
 
   return (
     <section className="de-dark-well relative py-6 lg:py-8">
-      <div className="de-style-box relative mx-3 px-5 py-12 sm:mx-4 sm:px-8 md:py-16 lg:mx-6 lg:px-10 lg:py-20">
+      <div className="de-style-box relative mx-3 px-4 py-8 sm:mx-4 sm:px-8 md:py-16 lg:mx-6 lg:px-10 lg:py-20">
         <motion.div
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -77,7 +77,7 @@ export const DigeratiStatsSection = (): JSX.Element => {
           <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
             The Threats Are Real
           </h2>
-          <p className="max-w-2xl text-lg leading-relaxed text-white/65">
+          <p className="max-w-2xl text-base font-medium leading-relaxed text-white/80 md:text-lg md:font-normal md:text-white/65">
             Don&apos;t become a statistic. These numbers show why proactive security matters —
             and why endpoint, identity, and recovery discipline have to be owned, not assumed.
           </p>

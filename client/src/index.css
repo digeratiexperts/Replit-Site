@@ -165,6 +165,16 @@ html {
   --de-nav-current-bottom: calc(var(--de-nav-chrome) + var(--de-spy-h));
 }
 
+/* Phones: one logo bar. Utility + chapter spy stay on lg+ (and in the menu). */
+@media (max-width: 1023px) {
+  :root {
+    --de-utility-h: 0px;
+    --de-nav-h: 4rem;
+    --de-nav-h-scrolled: 3.75rem;
+    --de-spy-h: 0px;
+  }
+}
+
 html.de-marketing-canvas,
 html.de-marketing-canvas body {
   background-color: #000;

@@ -113,7 +113,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
   return (
     <section
       id="services"
-      className="de-dark-chapter de-chapter-hairline relative overflow-hidden py-14 md:py-18 lg:py-22"
+      className="de-dark-chapter de-chapter-hairline relative overflow-hidden py-10 md:py-18 lg:py-22"
     >
       <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
         <motion.div
@@ -129,7 +129,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
           <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
             Cybersecurity-First Managed IT
           </h2>
-          <p className="max-w-2xl text-lg leading-relaxed text-white/65">
+          <p className="max-w-2xl text-base font-medium leading-relaxed text-white/80 md:text-lg md:font-normal md:text-white/65">
             Three clear paths. Capability depth stays available here and under Protect — nothing
             removed.
           </p>
@@ -158,7 +158,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
                   {path.eyebrow ?? "\u00a0"}
                 </p>
                 <h3 className="mb-2 text-xl font-semibold text-white lg:text-2xl">{path.title}</h3>
-                <p className="mb-5 flex-1 text-base leading-relaxed text-white/65">
+                <p className="mb-5 flex-1 text-base font-medium leading-relaxed text-white/80 md:font-normal md:text-white/65">
                   {path.description}
                 </p>
                 <Link
@@ -174,10 +174,10 @@ export const DigeratiServicesSection = (): JSX.Element => {
           })}
         </div>
 
-        <p className="mt-6 text-base text-white/55 md:text-lg">
+        <p className="mt-6 text-base font-medium leading-relaxed text-white/80 md:text-lg md:font-normal md:text-white/55">
           Need one specific service?{" "}
           <Link href="/solutions/standalone-services">
-            <span className="font-semibold text-white/80 underline decoration-white/20 underline-offset-4 hover:text-white hover:decoration-white/50">
+            <span className="font-semibold text-white underline decoration-white/25 underline-offset-4 hover:text-white hover:decoration-white/50">
               View Standalone Services
             </span>
           </Link>

@@ -185,7 +185,7 @@ export function CookieConsentBanner() {
                 }}
               />
 
-              <div className="relative z-10 max-w-screen-2xl mx-auto px-4 md:px-8 py-3 md:py-4 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-8">
+              <div className="relative z-10 max-w-screen-2xl mx-auto px-4 md:px-8 py-2.5 md:py-4 flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-8">
                 <p className="hidden md:block text-gray-200 text-base leading-relaxed flex-1 min-w-0">
                   Digerati Experts uses cookies and similar tracking technologies to collect information you provide and to capture your interaction with our site. We use this information to enhance site navigation, personalize content, analyze your use of our website, and assist in our marketing efforts and customer service. To deliver the best experience, analytics and hosting service providers may have access to this information. By clicking "Accept All," you consent to our collection, use, and disclosure of such information. For more information about our data processing practices, please see our{" "}
                   <Link
@@ -197,22 +197,30 @@ export function CookieConsentBanner() {
                   </Link>
                   .
                 </p>
-                <p className="md:hidden text-gray-200 text-base leading-snug flex-1 min-w-0">
-                  We use cookies to run the site, measure performance, and support marketing. Details in our{" "}
+                <p className="md:hidden text-[13px] font-medium leading-snug text-gray-200 flex-1 min-w-0">
+                  We use cookies.{" "}
                   <Link
                     href="/legal/privacy-policy"
-                    className="underline underline-offset-2 text-[#D3126A] hover:text-white transition-colors font-medium"
+                    className="underline underline-offset-2 text-[#D3126A] hover:text-white transition-colors font-semibold"
                     data-testid="link-privacy-policy-cookie-mobile"
                   >
-                    Privacy Policy
+                    Privacy
                   </Link>
-                  .
+                  {" · "}
+                  <button
+                    type="button"
+                    onClick={() => setShowPreferences(v => !v)}
+                    className="underline underline-offset-2 text-[#D3126A] hover:text-white font-semibold"
+                    data-testid="button-manage-cookie-preferences-mobile"
+                  >
+                    Preferences
+                  </button>
                 </p>
 
                 <div className="flex items-center gap-2 flex-shrink-0 flex-wrap w-full md:w-auto justify-between md:justify-end">
                   <button
                     onClick={() => setShowPreferences(v => !v)}
-                    className="text-[#D3126A] hover:text-white text-base font-semibold underline underline-offset-2 transition-colors whitespace-nowrap px-1 min-h-11"
+                    className="hidden md:inline-flex text-[#D3126A] hover:text-white text-base font-semibold underline underline-offset-2 transition-colors whitespace-nowrap px-1 min-h-11"
                     data-testid="button-manage-cookie-preferences"
                   >
                     Manage Cookie Preferences

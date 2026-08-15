@@ -38,7 +38,7 @@ export const ModernHeroSection = (): JSX.Element => {
     <section
       ref={containerRef}
       id="home"
-      className="relative flex min-h-[100svh] lg:min-h-screen flex-col overflow-hidden"
+      className="relative flex min-h-0 lg:min-h-screen flex-col overflow-hidden"
       style={{ position: "relative" }}
     >
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -77,19 +77,19 @@ export const ModernHeroSection = (): JSX.Element => {
       </div>
 
       <motion.div
-        className="relative z-10 flex flex-1 w-full items-center px-5 sm:px-8 lg:px-10 xl:px-12 pt-[calc(var(--de-nav-offset)+0.35rem)] pb-16 sm:pb-14 lg:pt-[calc(var(--de-nav-offset)+0.5rem)] lg:pb-16"
+        className="relative z-10 flex flex-1 w-full items-center px-5 sm:px-8 lg:px-10 xl:px-12 pt-[calc(var(--de-nav-offset)+0.5rem)] pb-10 sm:pb-14 lg:pt-[calc(var(--de-nav-offset)+0.5rem)] lg:pb-16"
         style={{ y }}
       >
         <div className="mx-auto w-full">
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.18fr)_minmax(0,0.82fr)] gap-8 lg:gap-10 xl:gap-12 items-start lg:items-center">
             <motion.div
-              className="flex flex-col gap-4 sm:gap-5 w-full min-w-0"
+              className="flex flex-col gap-3.5 sm:gap-5 w-full min-w-0"
               initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: prefersReducedMotion ? 0 : 0.4, ease: "easeOut" }}
             >
               <motion.p
-                className="text-base font-semibold uppercase tracking-[0.18em] text-pink-300/95"
+                className="text-sm font-semibold uppercase tracking-[0.16em] text-pink-300/95 sm:text-base sm:tracking-[0.18em]"
                 initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: prefersReducedMotion ? 0 : 0.3, delay: prefersReducedMotion ? 0 : 0.05 }}
@@ -97,21 +97,21 @@ export const ModernHeroSection = (): JSX.Element => {
                 Arizona MSP · Cybersecurity &amp; Managed IT
               </motion.p>
 
-              <h1 className="text-[clamp(2.05rem,3.2vw,3.55rem)] font-bold leading-[1.08] tracking-[-0.03em] text-white">
-                <span className="whitespace-nowrap">Your Arizona business,</span>
+              <h1 className="text-[clamp(1.85rem,7.4vw,3.55rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white">
+                <span>Your Arizona business,</span>
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-300 via-pink-400 to-violet-300">
                   protected 24/7.
                 </span>
               </h1>
 
-              <p className="text-lg text-white/85 leading-relaxed max-w-xl">
+              <p className="text-base text-white/90 leading-relaxed max-w-xl sm:text-lg sm:text-white/85">
                 Cybersecurity and managed IT for growing businesses—reducing risk, supporting
                 compliance, and keeping your team productive without building an internal IT
                 department.
               </p>
 
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-2">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-2.5">
                 {features.map((feature, index) => (
                   <motion.div
                     key={feature.text}
@@ -124,19 +124,19 @@ export const ModernHeroSection = (): JSX.Element => {
                     }}
                   >
                     <feature.icon className="h-4 w-4 text-pink-400/90 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                    <span className="text-base text-white/80 leading-snug">{feature.text}</span>
+                    <span className="text-[15px] font-medium text-white/90 leading-snug sm:text-base sm:font-normal sm:text-white/80">{feature.text}</span>
                   </motion.div>
                 ))}
               </div>
 
               <div className="mt-0.5 flex flex-col items-start gap-3" id="assessment-cta">
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <div className="flex w-full flex-col sm:flex-row items-stretch sm:items-center gap-3">
                   <Button
                     type="button"
                     size="lg"
                     data-testid="button-hero-schedule"
                     onClick={handleSchedule}
-                    className="h-12 px-6 sm:px-7 text-base font-semibold bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white border border-pink-300/35 shadow-lg shadow-pink-500/40 hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300"
+                    className="h-12 w-full sm:w-auto px-6 sm:px-7 text-base font-semibold bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white border border-pink-300/35 shadow-lg shadow-pink-500/40 hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300"
                   >
                     {CTA.heroPrimary}
                     <ArrowRight className="ml-2 w-5 h-5" aria-hidden="true" />
@@ -146,7 +146,7 @@ export const ModernHeroSection = (): JSX.Element => {
                     size="lg"
                     asChild
                     data-testid="button-hero-pricing"
-                    className="h-12 px-6 sm:px-7 text-base font-semibold bg-transparent text-white border border-white/35 hover:bg-white/5 hover:border-white/55 shadow-none"
+                    className="h-12 w-full sm:w-auto px-6 sm:px-7 text-base font-semibold bg-transparent text-white border border-white/35 hover:bg-white/5 hover:border-white/55 shadow-none"
                   >
                     <Link href={CTA.secondaryHref}>{CTA.secondary}</Link>
                   </Button>

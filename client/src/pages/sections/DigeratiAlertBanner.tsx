@@ -50,25 +50,25 @@ export const DigeratiAlertBanner = (): JSX.Element => {
   };
 
   return (
-    <section className="de-dark-well de-chapter-hairline relative overflow-hidden py-12 lg:py-16">
+    <section className="de-dark-well de-chapter-hairline relative overflow-hidden py-8 lg:py-16">
       <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
         <motion.div
-          className="mb-12 text-center md:mb-16"
+          className="mb-8 text-center md:mb-16"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="mb-4 text-3xl font-bold leading-tight text-white md:text-4xl lg:text-5xl">
+          <h2 className="mb-3 text-2xl font-bold leading-tight text-white md:mb-4 md:text-4xl lg:text-5xl">
             We Exist to Protect and Enable Your Business
           </h2>
-          <p className="mx-auto max-w-3xl text-lg leading-relaxed text-white/65 md:text-xl">
+          <p className="mx-auto max-w-3xl text-base font-medium leading-relaxed text-white/80 md:text-xl md:font-normal md:text-white/65">
             If you're like most business leaders, you don't want another vendor — you want a security-first partner who proactively reduces risk, improves uptime, and keeps your team moving.
           </p>
         </motion.div>
 
         <motion.div
-          className="mb-12 grid gap-6 md:grid-cols-3 md:gap-8"
+          className="mb-8 grid gap-4 md:mb-12 md:grid-cols-3 md:gap-8"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -98,7 +98,7 @@ export const DigeratiAlertBanner = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: prefersReducedMotion ? 0 : 0.15 }}
         >
-          <div className="relative overflow-hidden rounded-2xl border border-de-hairline bg-de-raised px-8 py-10 md:px-12 md:py-12">
+          <div className="relative overflow-hidden rounded-2xl border border-de-hairline bg-de-raised px-5 py-7 md:px-12 md:py-12">
             <div className="relative z-10 text-center">
               <h3 className="mb-4 text-2xl font-bold text-white md:text-3xl">
                 Ready to Secure Your Business?

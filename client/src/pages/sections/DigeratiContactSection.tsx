@@ -218,7 +218,7 @@ export const DigeratiContactSection = ({
                 <IconWell icon={Clock} size="sm" surface="dark" />
                 <h3 className="text-base font-semibold text-white">Office Hours</h3>
               </div>
-              <dl className="grid grid-cols-1 gap-2 text-base text-white/60 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-x-6 md:text-lg">
+              <dl className="grid grid-cols-1 gap-2 text-base font-medium text-white/80 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-x-6 md:text-lg md:font-normal md:text-white/60">
                 <dt>Monday - Friday</dt>
                 <dd className="text-white/80">7:00 AM - 6:00 PM MST</dd>
                 <dt>Saturday &amp; Sunday</dt>
