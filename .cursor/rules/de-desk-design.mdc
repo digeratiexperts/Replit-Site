@@ -35,4 +35,6 @@ Do not invent a third unrelated theme per tab. Elevate in place; ask DE before r
 
 ## Logic
 
-Preserve chat send/poll, agent live, ticket submit, resources links, analytics, ASAP bootstrap, cookie offset, `de-open-msp-advisor`. Visual restyle only unless DE asks for behavior change.
+Preserve chat send/poll, agent live, ticket submit, resources links, analytics, ASAP bootstrap, cookie offset, `de-open-msp-advisor`.
+
+The composer stays on **all three tabs** and is the same Desk thread. Sending from Ticket or Resources must **not** force a tab switch. Incoming replies while on another tab show an Android-style heads-up over the panel plus a Desk tab badge; the visitor can reply in the shared composer or tap the toast to open Desk.

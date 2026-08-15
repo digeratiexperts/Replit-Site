@@ -28,6 +28,7 @@ description: >-
 - Do **not** remove tabs, CTAs, disclaimers, or resource rows without asking DE.
 - Do **not** invent `//login`; use `PORTAL_LOGIN`.
 - Preserve advisor chat, poll, agent live, ticket API, analytics, ASAP bootstrap.
+- Composer is one shared Desk thread on all three tabs. Do not force a tab switch on send. Incoming replies on Ticket/Resources use the heads-up toast + Desk badge.
 
 ## Workflow
 

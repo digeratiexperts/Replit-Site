@@ -62,6 +62,19 @@ type TicketResult = {
   message: string;
 };
 
+type ChatHeadsUp = {
+  id: string;
+  from: string;
+  preview: string;
+  kind: "in" | "out";
+  live?: boolean;
+};
+
+function previewChatLine(content: string, max = 108) {
+  const text = content.replace(/\s+/g, " ").trim();
+  return text.length > max ? `${text.slice(0, max - 1)}…` : text;
+}
+
 const CHAT_WELCOME: ChatMessage = {
   id: "welcome",
   role: "assistant",
@@ -272,6 +285,11 @@ export const ZohoASAPWidget = ({
   const chatEndRef = useRef<HTMLDivElement>(null);
   const pollSinceRef = useRef<string | null>(null);
   const knownMsgIdsRef = useRef<Set<string>>(new Set(["welcome"]));
+  const activeTabRef = useRef<ActiveTab>(activeTab);
+  const agentNameRef = useRef<string | null>(null);
+  const headsUpTimerRef = useRef<number | null>(null);
+  const [unreadChatCount, setUnreadChatCount] = useState(0);
+  const [headsUp, setHeadsUp] = useState<ChatHeadsUp | null>(null);
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -304,6 +322,35 @@ export const ZohoASAPWidget = ({
   });
 
   const { toast } = useToast();
+  activeTabRef.current = activeTab;
+  agentNameRef.current = agentName;
+
+  useEffect(() => () => {
+    if (headsUpTimerRef.current) window.clearTimeout(headsUpTimerRef.current);
+  }, []);
+
+  const clearHeadsUpTimer = () => {
+    if (headsUpTimerRef.current) {
+      window.clearTimeout(headsUpTimerRef.current);
+      headsUpTimerRef.current = null;
+    }
+  };
+
+  const showHeadsUp = (next: ChatHeadsUp, holdMs = next.kind === "in" && next.live ? 12000 : 7000) => {
+    if (activeTabRef.current === "chat") return;
+    setHeadsUp(next);
+    clearHeadsUpTimer();
+    headsUpTimerRef.current = window.setTimeout(() => setHeadsUp(null), holdMs);
+  };
+
+  const selectTab = (id: ActiveTab) => {
+    setActiveTab(id);
+    if (id === "chat") {
+      setUnreadChatCount(0);
+      setHeadsUp(null);
+      clearHeadsUpTimer();
+    }
+  };
 
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 640px)");
@@ -429,6 +476,20 @@ export const ZohoASAPWidget = ({
     chatEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [activeTab, chatMessages]);
 
+  useEffect(() => {
+    if (activeTab === "chat" || !isChatSending) return;
+    showHeadsUp(
+      {
+        id: "pending-reply",
+        from: "DE Desk",
+        preview: agentLive ? "Delivering to the specialist…" : "Working on your message…",
+        kind: "in",
+        live: agentLive,
+      },
+      20000,
+    );
+  }, [activeTab, isChatSending, agentLive]);
+
   // Pull portal agent (and any missed) messages into the website desk
   useEffect(() => {
     if (!advisorSessionId || !isOpen) return;
@@ -438,6 +499,7 @@ export const ZohoASAPWidget = ({
       if (typeof live === "boolean") setAgentLive(live);
       if (name) setAgentName(name);
       if (!incoming.length) return;
+      const added: ChatMessage[] = [];
       setChatMessages((current) => {
         const next = [...current];
         const recentAssistantContent = new Set(
@@ -464,16 +526,32 @@ export const ZohoASAPWidget = ({
           knownMsgIdsRef.current.add(msg.id);
           if (msg.createdAt) pollSinceRef.current = msg.createdAt;
           if (msg.role === "assistant") recentAssistantContent.add(msg.content.trim());
-          next.push({
+          const incomingMsg = {
             id: msg.id,
             role: msg.role,
             content: msg.content,
             senderName: msg.senderName,
             createdAt: msg.createdAt,
-          });
+          };
+          next.push(incomingMsg);
+          added.push(incomingMsg);
         }
         return next;
       });
+      if (added.length && activeTabRef.current !== "chat") {
+        setUnreadChatCount((count) => count + added.length);
+        const last = added[added.length - 1];
+        showHeadsUp({
+          id: last.id,
+          from:
+            last.role === "agent"
+              ? last.senderName || name || agentNameRef.current || "Specialist"
+              : "DE Desk",
+          preview: previewChatLine(last.content),
+          kind: "in",
+          live: last.role === "agent" || !!live,
+        });
+      }
     };
 
     const poll = async () => {
@@ -496,12 +574,12 @@ export const ZohoASAPWidget = ({
     };
 
     void poll();
-    const id = window.setInterval(poll, 2500);
+    const id = window.setInterval(poll, agentLive ? 1600 : 2400);
     return () => {
       cancelled = true;
       window.clearInterval(id);
     };
-  }, [advisorSessionId, isOpen]);
+  }, [advisorSessionId, isOpen, agentLive]);
 
   const handleSendChat = async (prompt?: string) => {
     const content = (prompt ?? chatInput).trim();
@@ -527,6 +605,14 @@ export const ZohoASAPWidget = ({
     setChatMessages((current) => [...current, userMessage]);
     setChatInput("");
     setIsChatSending(true);
+    if (activeTabRef.current !== "chat") {
+      showHeadsUp({
+        id: userMessage.id,
+        from: "You",
+        preview: previewChatLine(content, 90),
+        kind: "out",
+      }, 4000);
+    }
 
     try {
       const response = await fetch("/api/public/advisor/chat", {
@@ -589,6 +675,16 @@ export const ZohoASAPWidget = ({
           senderName: data.agentLive ? data.agentName || "DE Desk" : null,
         },
       ]);
+      if (activeTabRef.current !== "chat") {
+        setUnreadChatCount((count) => count + 1);
+        showHeadsUp({
+          id: assistantId,
+          from: data.agentLive ? String(data.agentName || "Specialist") : "DE Desk",
+          preview: previewChatLine(replyContent),
+          kind: "in",
+          live: !!data.agentLive,
+        });
+      }
     } catch (error) {
       const description = error instanceof Error ? error.message : "Chat is temporarily unavailable.";
       setChatMessages((current) => [
@@ -599,6 +695,14 @@ export const ZohoASAPWidget = ({
           content: `${description} You can create a support ticket here and the team will follow up.`,
         },
       ]);
+      if (activeTabRef.current !== "chat") {
+        showHeadsUp({
+          id: `assistant-error-${Date.now()}`,
+          from: "DE Desk",
+          preview: previewChatLine(description),
+          kind: "in",
+        });
+      }
       toast({
         title: "Chat unavailable",
         description: "Your message was not submitted as a ticket. Use the Ticket tab if you need team follow-up.",
@@ -818,13 +922,25 @@ export const ZohoASAPWidget = ({
                   <button
                     key={id}
                     type="button"
-                    onClick={() => setActiveTab(id)}
-                    className={`de-desk-tab${isActive ? " is-active" : ""}`}
+                    onClick={() => selectTab(id)}
+                    className={`de-desk-tab${isActive ? " is-active" : ""}${
+                      id === "chat" && unreadChatCount > 0 ? " has-unread" : ""
+                    }`}
                     data-testid={`button-tab-${id}`}
                     aria-current={isActive ? "page" : undefined}
+                    aria-label={
+                      id === "chat" && unreadChatCount > 0
+                        ? `Desk, ${unreadChatCount} new ${unreadChatCount === 1 ? "message" : "messages"}`
+                        : undefined
+                    }
                   >
                     <Icon aria-hidden="true" />
                     {label}
+                    {id === "chat" && unreadChatCount > 0 ? (
+                      <span className="de-desk-tab-badge" aria-hidden="true">
+                        {unreadChatCount > 9 ? "9+" : unreadChatCount}
+                      </span>
+                    ) : null}
                   </button>
                 );
               })}
@@ -853,7 +969,7 @@ export const ZohoASAPWidget = ({
               </div>
               <button
                 type="button"
-                onClick={() => setActiveTab(activeTab === "ticket" ? "chat" : "ticket")}
+                onClick={() => selectTab(activeTab === "ticket" ? "chat" : "ticket")}
                 className="de-desk-status-r"
               >
                 Need help now?
@@ -864,6 +980,47 @@ export const ZohoASAPWidget = ({
             </div>
 
             <div className="de-desk-body">
+              {headsUp && activeTab !== "chat" ? (
+                <div
+                  className={`de-desk-heads-up${headsUp.kind === "out" ? " is-out" : ""}${
+                    headsUp.live ? " is-live" : ""
+                  }`}
+                  role="status"
+                  aria-live="polite"
+                  data-testid="desk-chat-heads-up"
+                >
+                  <button
+                    type="button"
+                    className="de-desk-heads-up-main"
+                    onClick={() => selectTab("chat")}
+                  >
+                    <span className="de-desk-heads-up-mark" aria-hidden="true">
+                      {headsUp.kind === "out" ? "You" : headsUp.live ? "AG" : "DE"}
+                    </span>
+                    <span className="de-desk-heads-up-copy">
+                      <span className="de-desk-heads-up-top">
+                        <strong>{headsUp.from}</strong>
+                        <em>{headsUp.kind === "out" ? "sent" : "now"}</em>
+                      </span>
+                      <span className="de-desk-heads-up-preview">{headsUp.preview}</span>
+                      <span className="de-desk-heads-up-hint">
+                        Reply below — or open Desk
+                      </span>
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    className="de-desk-heads-up-x"
+                    onClick={() => {
+                      setHeadsUp(null);
+                      clearHeadsUpTimer();
+                    }}
+                    aria-label="Dismiss chat notification"
+                  >
+                    <X size={12} aria-hidden="true" />
+                  </button>
+                </div>
+              ) : null}
               {activeTab === "chat" && (
                 <div className="de-desk-panel" data-testid="panel-support-chat">
                   <div className="de-desk-scroll" aria-live="polite">
@@ -961,7 +1118,7 @@ export const ZohoASAPWidget = ({
                             type="button"
                             onClick={() => {
                               setTicketResult(null);
-                              setActiveTab("chat");
+                              selectTab("chat");
                             }}
                             className="de-desk-row"
                           >
@@ -1269,7 +1426,7 @@ export const ZohoASAPWidget = ({
                             channel.
                           </span>
                         </span>
-                        <button type="button" onClick={() => setActiveTab("ticket")} className="de-desk-btn-mini">
+                        <button type="button" onClick={() => selectTab("ticket")} className="de-desk-btn-mini">
                           Create ticket
                         </button>
                       </div>
@@ -1279,7 +1436,7 @@ export const ZohoASAPWidget = ({
               )}
             </div>
 
-            <div className="de-desk-composer">
+            <div className={`de-desk-composer${headsUp || unreadChatCount ? " is-live" : ""}`}>
               <input
                 type="text"
                 value={chatInput}
@@ -1287,26 +1444,30 @@ export const ZohoASAPWidget = ({
                 onKeyDown={(event) => {
                   if (event.key === "Enter" && !event.shiftKey) {
                     event.preventDefault();
-                    if (activeTab !== "chat") setActiveTab("chat");
                     void handleSendChat();
                   }
                 }}
                 maxLength={2000}
                 placeholder={
-                  agentLive
-                    ? `Message ${agentName || "the specialist"}…`
-                    : "Ask about risk, stack, pricing, or an outage..."
+                  activeTab === "ticket"
+                    ? "Reply to Desk without leaving this ticket…"
+                    : activeTab === "resources"
+                      ? "Reply to Desk while you browse…"
+                      : agentLive
+                        ? `Message ${agentName || "the specialist"}…`
+                        : "Ask about risk, stack, pricing, or an outage..."
                 }
                 disabled={isChatSending}
                 data-testid="input-support-chat"
-                aria-label="Chat message"
+                aria-label={
+                  activeTab === "chat"
+                    ? "Chat message"
+                    : "Reply to Desk from this tab"
+                }
               />
               <button
                 type="button"
-                onClick={() => {
-                  if (activeTab !== "chat") setActiveTab("chat");
-                  void handleSendChat();
-                }}
+                onClick={() => void handleSendChat()}
                 disabled={!chatInput.trim() || isChatSending}
                 className="de-desk-send"
                 data-testid="button-send-support-chat"
@@ -1317,9 +1478,11 @@ export const ZohoASAPWidget = ({
             </div>
             <p className="de-desk-composer-caption">
               <Lock aria-hidden="true" />
-              {agentLive
-                ? "A Digerati agent is in this thread. Never share passwords or MFA codes."
-                : "Never share passwords, MFA codes, or private keys."}
+              {activeTab !== "chat"
+                ? "Same Desk thread on every tab — reply here without switching."
+                : agentLive
+                  ? "A Digerati agent is in this thread. Never share passwords or MFA codes."
+                  : "Never share passwords, MFA codes, or private keys."}
             </p>
 
             <footer className="de-desk-foot">
@@ -1332,7 +1495,7 @@ export const ZohoASAPWidget = ({
                 <span aria-hidden="true">·</span>
                 Assist
               </p>
-              <button type="button" onClick={() => setActiveTab("ticket")} className="de-desk-foot-cta">
+              <button type="button" onClick={() => selectTab("ticket")} className="de-desk-foot-cta">
                 Create ticket
                 <ExternalLink aria-hidden="true" />
               </button>
@@ -1464,6 +1627,14 @@ export const ZohoASAPWidget = ({
               background: var(--desk-pink);
               box-shadow: 0 0 8px rgba(211,18,106,0.5);
             }
+            .de-desk-tab-badge {
+              min-width: 16px; height: 16px; padding: 0 4px;
+              border-radius: 999px;
+              background: var(--desk-pink); color: #fff;
+              font-size: 9px; font-weight: 700; line-height: 16px;
+              letter-spacing: 0; text-align: center;
+            }
+            .de-desk-tab.has-unread { color: var(--desk-shell-text); }
             .de-desk-status {
               display: flex; align-items: center; justify-content: space-between;
               padding: 9px 17px;
@@ -1497,6 +1668,7 @@ export const ZohoASAPWidget = ({
             .de-desk-body {
               min-height: 0; flex: 1;
               background: var(--desk-shell);
+              position: relative;
               padding: 17px;
               display: flex; flex-direction: column;
             }
@@ -1739,12 +1911,74 @@ export const ZohoASAPWidget = ({
               margin-top: 8px;
             }
             .de-desk-success-actions { display: flex; flex-direction: column; gap: 8px; width: 100%; margin-top: 14px; }
+            .de-desk-heads-up {
+              position: absolute;
+              left: 10px; right: 10px; bottom: 10px;
+              z-index: 6;
+              display: flex; align-items: stretch; gap: 4px;
+              padding: 8px 8px 8px 8px;
+              border-radius: 16px;
+              background: #1A1820;
+              border: 1px solid rgba(211,18,106,0.42);
+              box-shadow: 0 16px 36px rgba(0,0,0,0.38), 0 0 0 1px rgba(211,18,106,0.12);
+              animation: de-desk-heads-in 0.28s ease-out;
+            }
+            .de-desk-heads-up.is-out { border-color: rgba(255,255,255,0.16); }
+            .de-desk-heads-up.is-live { border-color: #3b9eff; }
+            .de-desk-heads-up-main {
+              flex: 1; min-width: 0;
+              display: flex; align-items: flex-start; gap: 10px;
+              text-align: left; background: none; border: none; color: inherit;
+              padding: 2px 4px;
+            }
+            .de-desk-heads-up-mark {
+              width: 28px; height: 28px; border-radius: 9px; flex: none;
+              display: inline-flex; align-items: center; justify-content: center;
+              background: var(--desk-pink); color: #fff;
+              font-size: 9px; font-weight: 700; letter-spacing: 0.04em;
+            }
+            .de-desk-heads-up.is-out .de-desk-heads-up-mark { background: #3a3644; }
+            .de-desk-heads-up.is-live .de-desk-heads-up-mark { background: #3b9eff; }
+            .de-desk-heads-up-copy { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+            .de-desk-heads-up-top {
+              display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+            }
+            .de-desk-heads-up-top strong {
+              font-size: 12.5px; font-weight: 700; color: #fff;
+            }
+            .de-desk-heads-up-top em {
+              font-style: normal; font-size: 10px; color: #9C97A8; flex: none;
+            }
+            .de-desk-heads-up-preview {
+              font-size: 12.5px; line-height: 1.35; color: #E8E4F0;
+              display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+            }
+            .de-desk-heads-up-hint {
+              font-size: 10.5px; font-weight: 600; color: var(--desk-pink); margin-top: 2px;
+            }
+            .de-desk-heads-up-x {
+              width: 28px; height: 28px; border-radius: 8px; flex: none; align-self: flex-start;
+              border: none; background: transparent; color: #9C97A8;
+              display: flex; align-items: center; justify-content: center;
+            }
+            .de-desk-heads-up-x:hover { color: #fff; background: rgba(255,255,255,0.06); }
+            @keyframes de-desk-heads-in {
+              from { opacity: 0; transform: translateY(10px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+            @media (prefers-reduced-motion: reduce) {
+              .de-desk-heads-up { animation: none; }
+            }
             .de-desk-composer {
               display: flex; gap: 8px;
               padding: 13px 17px;
               border-top: 1px solid var(--desk-border);
               background: #131218;
               flex-shrink: 0;
+            }
+            .de-desk-composer.is-live input {
+              border-color: rgba(211,18,106,0.55);
+              box-shadow: 0 0 0 3px rgba(211,18,106,0.14);
             }
             .de-desk-composer input {
               flex: 1;
