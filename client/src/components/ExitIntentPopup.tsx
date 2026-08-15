@@ -44,7 +44,6 @@ function validateBusinessEmail(value: string): string | null {
 
 export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
   const [isVisible, setIsVisible] = useState(false);
-  const [hasShown, setHasShown] = useState(false);
   const [email, setEmail] = useState("");
   const [fieldError, setFieldError] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -57,65 +56,90 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
   const emailRef = useRef<HTMLInputElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const shownRef = useRef(false);
 
-  const showPopup = useCallback(() => {
-    if (hasShown) return;
+  const showPopup = useCallback((force = false) => {
+    if (shownRef.current) return;
+    if (window.location.pathname.startsWith("/portal")) return;
+    if (!force) {
+      try {
+        if (sessionStorage.getItem("exitPopupDismissed")) return;
+      } catch {
+        /* private mode / blocked storage */
+      }
+    }
 
-    const dismissed = sessionStorage.getItem("exitPopupDismissed");
-    if (dismissed) return;
-
-    const isPortalPage = window.location.pathname.startsWith("/portal");
-    if (isPortalPage) return;
-
-    analytics.exitIntentShown();
+    shownRef.current = true;
+    try {
+      analytics.exitIntentShown();
+    } catch {
+      /* tracking must never block the offer */
+    }
     setIsVisible(true);
-    setHasShown(true);
-  }, [hasShown]);
+  }, []);
 
   useEffect(() => {
     try {
       if (new URLSearchParams(window.location.search).get("exit_intent") === "1") {
-        analytics.exitIntentShown();
-        setIsVisible(true);
-        setHasShown(true);
+        try {
+          sessionStorage.removeItem("exitPopupDismissed");
+        } catch {
+          /* ignore */
+        }
+        showPopup(true);
       }
     } catch {
       /* ignore malformed URLs */
     }
-  }, []);
+  }, [showPopup]);
 
   useEffect(() => {
-    let ready = false;
+    if (window.location.pathname.startsWith("/portal")) return;
+
+    // Leave-intent can fire after a short settle. The delay is a guaranteed show
+    // so phones and visitors who never graze the tab bar still see the offer.
+    let armed = false;
+    const armAfter = Math.min(2500, delay);
     const arm = window.setTimeout(() => {
-      ready = true;
+      armed = true;
+    }, armAfter);
+    const fallback = window.setTimeout(() => {
+      showPopup();
     }, delay);
 
-    const leavingViewport = (e: MouseEvent) => {
-      if (!ready) return;
+    const pointerLeftDocument = (e: MouseEvent) => {
+      if (!armed) return;
       const related = e.relatedTarget as Node | null;
-      if (related) return;
-      if (e.clientY <= 8) showPopup();
+      if (related && document.documentElement.contains(related)) return;
+      const x = e.clientX;
+      const y = e.clientY;
+      const leftEdge = x <= 12;
+      const rightEdge = x >= window.innerWidth - 12;
+      const topEdge = y <= 24;
+      const bottomEdge = y >= window.innerHeight - 12;
+      if (topEdge || bottomEdge || leftEdge || rightEdge || y < 0) {
+        showPopup();
+      }
     };
 
-    // document.mouseleave is unreliable; html + mouseout catch the tab-bar exit.
     const html = document.documentElement;
-    html.addEventListener("mouseleave", leavingViewport);
-    document.addEventListener("mouseout", leavingViewport);
+    html.addEventListener("mouseleave", pointerLeftDocument);
+    document.addEventListener("mouseout", pointerLeftDocument);
 
-    // Phones have no cursor. Treat scroll-back-to-top after reading as leaving.
     let lastY = window.scrollY;
     const onScroll = () => {
-      if (!ready) return;
+      if (!armed) return;
       const y = window.scrollY;
-      if (lastY > 320 && y < 64) showPopup();
+      if (lastY > 240 && y < 80) showPopup();
       lastY = y;
     };
     window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
       window.clearTimeout(arm);
-      html.removeEventListener("mouseleave", leavingViewport);
-      document.removeEventListener("mouseout", leavingViewport);
+      window.clearTimeout(fallback);
+      html.removeEventListener("mouseleave", pointerLeftDocument);
+      document.removeEventListener("mouseout", pointerLeftDocument);
       window.removeEventListener("scroll", onScroll);
     };
   }, [delay, showPopup]);
@@ -216,12 +240,12 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/80"
+            className="fixed inset-0 z-[10050] bg-black/80"
             onClick={handleClose}
             data-testid="overlay-exit-intent"
           />
 
-          <div className="pointer-events-none fixed inset-0 z-[101] flex items-center justify-center p-4">
+          <div className="pointer-events-none fixed inset-0 z-[10051] flex items-center justify-center p-4">
             <motion.div
               {...motionProps}
               className="pointer-events-auto w-full max-w-[28rem]"
