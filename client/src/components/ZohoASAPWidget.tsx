@@ -2006,10 +2006,10 @@ export const ZohoASAPWidget = ({
               display: flex; align-items: center; gap: 6px;
               padding: 0 17px 12px;
               background: #131218;
-              font-size: 11px; color: #6b6678;
+              font-size: 11px; color: #fff;
               flex-shrink: 0;
             }
-            .de-desk-composer-caption svg { width: 11px; height: 11px; }
+            .de-desk-composer-caption svg { width: 11px; height: 11px; color: #fff; }
             .de-desk-foot {
               display: flex; align-items: center; justify-content: space-between;
               padding: 11px 17px;
