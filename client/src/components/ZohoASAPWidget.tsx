@@ -8,7 +8,6 @@ import {
   ChevronDown,
   ChevronRight,
   ClipboardList,
-  Clock,
   ExternalLink,
   FileText,
   Flag,
@@ -25,15 +24,11 @@ import {
   Send,
   Shield,
   ShieldCheck,
-  Sparkles,
   Tag,
   Ticket,
   User,
-  Users,
   X,
-  Zap,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
@@ -77,12 +72,94 @@ const CHAT_WELCOME: ChatMessage = {
 const QUICK_CHAT_PROMPTS: Array<{
   label: string;
   icon: typeof Shield;
+  tone: "violet" | "blue" | "teal" | "red";
 }> = [
-  { label: "We need stronger cybersecurity", icon: Shield },
-  { label: "Compare managed IT options", icon: Scale },
-  { label: "Microsoft 365 feels messy", icon: Monitor },
-  { label: "Possible security incident", icon: AlertTriangle },
+  { label: "We need stronger cybersecurity", icon: Shield, tone: "violet" },
+  { label: "Compare managed IT options", icon: Scale, tone: "blue" },
+  { label: "Microsoft 365 feels messy", icon: Monitor, tone: "teal" },
+  { label: "Possible security incident", icon: AlertTriangle, tone: "red" },
 ];
+
+function DeskHeroArt({ variant }: { variant: "desk" | "ticket" | "resources" }) {
+  if (variant === "ticket") {
+    return (
+      <svg className="de-desk-hero-art" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="deDeskTicketCard" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#2B2735" />
+            <stop offset="1" stopColor="#18151F" />
+          </linearGradient>
+          <linearGradient id="deDeskTicketShield" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#3A2E44" />
+            <stop offset="1" stopColor="#1C1722" />
+          </linearGradient>
+        </defs>
+        <g transform="rotate(-7 45 55)">
+          <rect x="14" y="18" width="66" height="80" rx="12" fill="url(#deDeskTicketCard)" stroke="rgba(255,255,255,0.08)" />
+          <rect x="34" y="10" width="26" height="12" rx="5" fill="#332C3D" stroke="rgba(255,255,255,0.1)" />
+          <rect x="26" y="40" width="40" height="5" rx="2.5" fill="#D3126A" />
+          <rect x="26" y="52" width="34" height="5" rx="2.5" fill="#8B5CF6" />
+          <rect x="26" y="64" width="24" height="5" rx="2.5" fill="#413B4C" />
+          <circle cx="40" cy="84" r="11" fill="rgba(211,18,106,0.14)" stroke="#D3126A" strokeWidth="1.5" />
+          <path d="M35 84l3.5 3.5L46 80" stroke="#D3126A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </g>
+        <g transform="rotate(10 90 90)">
+          <path d="M90 62c12 0 20 6 20 6v18c0 14-9 22-20 26-11-4-20-12-20-26V68s8-6 20-6z" fill="url(#deDeskTicketShield)" stroke="#D3126A" strokeWidth="1.5" />
+          <rect x="82" y="88" width="16" height="12" rx="3" fill="none" stroke="#8B5CF6" strokeWidth="1.6" />
+          <path d="M85 88v-5a5 5 0 0 1 10 0v5" fill="none" stroke="#8B5CF6" strokeWidth="1.6" />
+        </g>
+      </svg>
+    );
+  }
+  if (variant === "resources") {
+    return (
+      <svg className="de-desk-hero-art" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="deDeskResBook" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#2B2735" />
+            <stop offset="1" stopColor="#18151F" />
+          </linearGradient>
+        </defs>
+        <g transform="rotate(-6 50 55)">
+          <rect x="18" y="22" width="60" height="70" rx="8" fill="#100E16" />
+          <rect x="22" y="18" width="60" height="70" rx="8" fill="url(#deDeskResBook)" stroke="rgba(255,255,255,0.08)" />
+          <rect x="30" y="30" width="30" height="4" rx="2" fill="#8B5CF6" />
+          <rect x="30" y="40" width="24" height="4" rx="2" fill="#3A3444" />
+          <rect x="30" y="50" width="26" height="4" rx="2" fill="#3A3444" />
+          <path d="M64 14v14l-6-4-6 4V14z" fill="#D3126A" />
+        </g>
+        <g transform="rotate(8 92 92)">
+          <circle cx="88" cy="82" r="16" fill="rgba(139,92,246,0.10)" stroke="#8B5CF6" strokeWidth="2.5" />
+          <line x1="99" y1="93" x2="112" y2="106" stroke="#8B5CF6" strokeWidth="4" strokeLinecap="round" />
+        </g>
+      </svg>
+    );
+  }
+  return (
+    <svg className="de-desk-hero-art" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="deDeskChatBubble" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#2B2735" />
+          <stop offset="1" stopColor="#18151F" />
+        </linearGradient>
+        <linearGradient id="deDeskChatShield" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#3A2E44" />
+          <stop offset="1" stopColor="#1C1722" />
+        </linearGradient>
+      </defs>
+      <g transform="rotate(-6 42 50)">
+        <path d="M16 24h56a8 8 0 0 1 8 8v34a8 8 0 0 1-8 8H44l-14 12v-12h-14a8 8 0 0 1-8-8V32a8 8 0 0 1 8-8z" fill="url(#deDeskChatBubble)" stroke="rgba(255,255,255,0.08)" />
+        <circle cx="34" cy="50" r="3.4" fill="#D3126A" />
+        <circle cx="46" cy="50" r="3.4" fill="#8B5CF6" />
+        <circle cx="58" cy="50" r="3.4" fill="#413B4C" />
+      </g>
+      <g transform="rotate(10 90 90)">
+        <path d="M90 62c12 0 20 6 20 6v18c0 14-9 22-20 26-11-4-20-12-20-26V68s8-6 20-6z" fill="url(#deDeskChatShield)" stroke="#D3126A" strokeWidth="1.5" />
+        <path d="M82 90l5 5 11-11" stroke="#8B5CF6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+      </g>
+    </svg>
+  );
+}
 
 function BookMagnifier({ className }: { className?: string }) {
   return (
@@ -108,32 +185,12 @@ const TICKET_QUICK_CHIPS: Array<{
   label: string;
   icon: typeof Shield;
   category: (typeof TICKET_CATEGORIES)[number];
-  iconClass: string;
+  tone: "red" | "blue" | "violet";
 }> = [
-  {
-    label: "Something broke",
-    icon: AlertTriangle,
-    category: "Hardware & Devices",
-    iconClass: "text-[#fda4af] bg-[#D3126A]/20 ring-[#fb7185]/45",
-  },
-  {
-    label: "Microsoft 365 help",
-    icon: AppWindow,
-    category: "Collaboration",
-    iconClass: "text-[#7dd3fc] bg-[#0284c7]/25 ring-[#38bdf8]/45",
-  },
-  {
-    label: "Access or login issue",
-    icon: KeyRound,
-    category: "Access & Security",
-    iconClass: "text-[#c4b5fd] bg-[#7c3aed]/25 ring-[#a78bfa]/50",
-  },
-  {
-    label: "Possible security incident",
-    icon: Shield,
-    category: "Access & Security",
-    iconClass: "text-[#fca5a5] bg-[#b91c1c]/25 ring-[#f87171]/45",
-  },
+  { label: "Something broke", icon: AlertTriangle, category: "Hardware & Devices", tone: "red" },
+  { label: "Microsoft 365 help", icon: AppWindow, category: "Collaboration", tone: "blue" },
+  { label: "Access or login issue", icon: KeyRound, category: "Access & Security", tone: "violet" },
+  { label: "Possible security incident", icon: Shield, category: "Access & Security", tone: "red" },
 ];
 
 const RESOURCE_LINKS: Array<{
@@ -703,26 +760,15 @@ export const ZohoASAPWidget = ({
         {isOpen && (
           <section
             ref={deskDrag.panelRef}
-            className="de-desk-shell fixed inset-x-3 top-[max(0.75rem,env(safe-area-inset-top))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[100] flex max-h-[100dvh] w-auto flex-col overflow-hidden rounded-[1.5rem] border-[3px] border-[#A78BFA]/75 bg-[var(--de-surface)] shadow-[0_0_0_1px_rgba(196,181,253,0.45),0_0_0_6px_rgba(124,58,237,0.22),0_28px_80px_rgba(50,15,90,0.7),0_0_100px_rgba(139,92,246,0.4)] sm:inset-auto sm:h-[min(760px,calc(100dvh-5.5rem))] sm:max-h-[min(86vh,calc(100dvh-4.5rem))] sm:w-[460px] sm:max-w-[calc(100vw-2rem)]"
+            className="de-desk-shell fixed inset-x-3 top-[max(0.75rem,env(safe-area-inset-top))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[100] flex max-h-[100dvh] w-auto flex-col overflow-hidden sm:inset-auto sm:h-[min(760px,calc(100dvh-5.5rem))] sm:max-h-[min(86vh,calc(100dvh-4.5rem))] sm:w-[410px] sm:max-w-[calc(100vw-2rem)]"
             style={deskWindowStyle}
             role="dialog"
             aria-modal="true"
             aria-label="DE Desk help"
           >
-            {/* Chrome fill stays near-black; purple lives on the outer glow border, not as a wash. */}
-            <div
-              className="pointer-events-none absolute inset-0"
-              style={{
-                backgroundImage:
-                  "radial-gradient(ellipse 70% 40% at 8% 0%, rgba(167,139,250,0.10), transparent 55%), radial-gradient(ellipse 55% 36% at 100% 0%, rgba(211,18,106,0.07), transparent 50%), linear-gradient(180deg, color-mix(in srgb, var(--de-raised) 88%, transparent) 0%, transparent 42%)",
-              }}
-              aria-hidden="true"
-            />
-
-            {/* Shared chrome — same for all three tabs */}
-            <header className="relative flex flex-shrink-0 items-center justify-between gap-3 px-4 pb-1 pt-4">
+            <header className="de-desk-head">
               <div
-                className={`flex min-w-0 flex-1 items-center gap-3 ${
+                className={`de-desk-id ${
                   canDrag
                     ? deskDrag.dragging
                       ? "cursor-grabbing select-none"
@@ -735,55 +781,31 @@ export const ZohoASAPWidget = ({
                 data-testid="desk-drag-handle"
                 aria-label={canDrag ? "Move DE Desk window" : undefined}
               >
-                <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#D3126A] to-[#7c3aed] text-[12px] font-bold tracking-wide text-white shadow-[0_0_22px_rgba(211,18,106,0.4)]">
+                <div className="de-desk-avatar">
                   DE
-                  <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[var(--de-surface)] bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.85)]" />
+                  <span className="de-desk-avatar-dot" />
                 </div>
                 <div className="min-w-0">
-                  <h2 className="truncate text-[16px] font-semibold tracking-tight text-white" data-testid="text-widget-title">
-                    DE Desk
-                  </h2>
-                  <p className="truncate text-[11px] text-white/50" data-testid="text-widget-status">
+                  <h2 data-testid="text-widget-title">DE Desk</h2>
+                  <p data-testid="text-widget-status">
                     {agentLive
                       ? `${agentName || "Specialist"} joined · live handoff`
                       : "Answers · Tickets · Assist"}
                   </p>
                 </div>
               </div>
-              <div className="flex flex-shrink-0 items-center gap-2">
-                <div className="hidden items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 sm:flex">
-                  <span
-                    className={`h-1.5 w-1.5 rounded-full ${
-                      agentLive
-                        ? "bg-sky-400"
-                        : assistantAvailable === true
-                          ? "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.85)]"
-                          : assistantAvailable === false
-                            ? "bg-amber-400"
-                            : "bg-white/30"
-                    }`}
-                  />
-                  <span className="text-[10px] font-medium text-white/65">
-                    {agentLive
-                      ? `${agentName || "Specialist"} live`
-                      : assistantAvailable === false
-                        ? "Ticket desk ready"
-                        : "DE Desk is online"}
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setIsOpen(false)}
-                  className="rounded-xl border border-white/10 bg-white/[0.04] p-2 text-white/60 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/45"
-                  data-testid="button-close-widget"
-                  aria-label="Close DE Desk"
-                >
-                  <X size={16} aria-hidden="true" />
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="de-desk-close"
+                data-testid="button-close-widget"
+                aria-label="Close DE Desk"
+              >
+                <X size={13} aria-hidden="true" />
+              </button>
             </header>
 
-            <nav className="relative mx-3 mb-2 grid flex-shrink-0 select-none grid-cols-3 border-b border-white/10" aria-label="Support options">
+            <nav className="de-desk-tabs" aria-label="Support options">
               {(
                 [
                   { id: "chat" as const, label: "Desk", icon: MessageCircle },
@@ -797,33 +819,28 @@ export const ZohoASAPWidget = ({
                     key={id}
                     type="button"
                     onClick={() => setActiveTab(id)}
-                    className={`relative flex min-h-11 items-center justify-center gap-1.5 rounded-md px-2 text-[12.5px] font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)] ${
-                      isActive ? "text-[#F0B4CC]" : "text-white/45 hover:text-white/80"
-                    }`}
+                    className={`de-desk-tab${isActive ? " is-active" : ""}`}
                     data-testid={`button-tab-${id}`}
                     aria-current={isActive ? "page" : undefined}
                   >
-                    <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+                    <Icon aria-hidden="true" />
                     {label}
-                    {isActive && (
-                      <span className="pointer-events-none absolute inset-x-4 bottom-0 h-[2px] rounded-full bg-[#D3126A] shadow-[0_0_12px_rgba(211,18,106,0.95)]" />
-                    )}
                   </button>
                 );
               })}
             </nav>
 
-            <div className="relative mx-3 mb-2 flex flex-shrink-0 items-center justify-between gap-3 px-0.5">
-              <div className="flex items-center gap-2 text-[11px] font-medium text-white/65">
+            <div className="de-desk-status">
+              <div className="de-desk-status-l">
                 <span
-                  className={`h-1.5 w-1.5 rounded-full ${
+                  className={`de-desk-status-dot${
                     agentLive
-                      ? "bg-sky-400"
-                      : assistantAvailable === true
-                        ? "bg-emerald-400"
-                        : assistantAvailable === false
-                          ? "bg-amber-400"
-                          : "bg-white/30"
+                      ? " is-live"
+                      : assistantAvailable === false
+                        ? " is-wait"
+                        : assistantAvailable === true
+                          ? " is-on"
+                          : ""
                   }`}
                 />
                 {agentLive
@@ -837,86 +854,83 @@ export const ZohoASAPWidget = ({
               <button
                 type="button"
                 onClick={() => setActiveTab(activeTab === "ticket" ? "chat" : "ticket")}
-                className="inline-flex items-center gap-1.5 rounded-md text-[11px] font-semibold text-[#F0B4CC] transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]"
+                className="de-desk-status-r"
               >
                 Need help now?
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#D3126A]/25 text-[#F0B4CC] ring-1 ring-[#F0B4CC]/35">
-                  <Headset className="h-3 w-3" aria-hidden="true" />
+                <span className="de-desk-status-ic">
+                  <Headset aria-hidden="true" />
                 </span>
               </button>
             </div>
 
-            <div className="relative min-h-0 flex-1 px-3 pb-2">
-              {/* DESK — light nested panel inside dark shell */}
+            <div className="de-desk-body">
               {activeTab === "chat" && (
-                <div
-                  className="flex h-full min-h-0 flex-col overflow-hidden rounded-[1.2rem] border border-white/10 bg-white shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
-                  data-testid="panel-support-chat"
-                >
-                  <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-3.5 py-3.5" aria-live="polite">
-                    {chatMessages.map((chatMessage) => {
-                      const isUser = chatMessage.role === "user";
-                      const isAgent = chatMessage.role === "agent";
-                      return (
-                        <div
-                          key={chatMessage.id}
-                          className={`flex ${isUser ? "justify-end" : "justify-start"}`}
-                        >
-                          <div
-                            className={`max-w-[90%] px-3.5 py-2.5 text-[13.5px] leading-relaxed ${
-                              isUser
-                                ? "rounded-2xl rounded-br-md bg-[#D3126A] text-white shadow-[0_8px_22px_rgba(211,18,106,0.28)]"
-                                : isAgent
-                                  ? "rounded-2xl rounded-bl-md border border-[#d4e6f4] bg-[#f4f9fc] text-[#1a2434]"
-                                  : "rounded-2xl rounded-bl-md border border-[#ece6f2] bg-[#faf8fc] text-[#1a1228]"
-                            }`}
-                          >
-                            {!isUser && (
-                              <div
-                                className={`mb-1.5 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] ${
-                                  isAgent ? "text-[#3d6f94]" : "text-[#D3126A]"
-                                }`}
-                              >
-                                <span
-                                  className={`flex h-4 w-4 items-center justify-center rounded text-[8px] font-bold tracking-normal text-white ${
-                                    isAgent ? "bg-[#4a7fa8]" : "bg-[#D3126A]"
-                                  }`}
-                                >
-                                  {isAgent ? "AG" : "DE"}
-                                </span>
-                                {isAgent ? chatMessage.senderName || agentName || "Agent" : "Desk"}
-                              </div>
-                            )}
-                            <p className="whitespace-pre-wrap">{chatMessage.content}</p>
+                <div className="de-desk-panel" data-testid="panel-support-chat">
+                  <div className="de-desk-scroll" aria-live="polite">
+                    {chatMessages.length === 1 ? (
+                      <>
+                        <div className="de-desk-hero">
+                          <div className="de-desk-hero-dots" aria-hidden="true" />
+                          <div className="de-desk-hero-txt">
+                            <div className="de-desk-hero-ring">
+                              <MessageCircle aria-hidden="true" />
+                            </div>
+                            <h3>Talk to DE Desk</h3>
+                            <p>
+                              Tell me what broke, what you&apos;re evaluating, or what you&apos;re trying to
+                              protect — I&apos;ll give you a clear read and the sensible next step.
+                            </p>
                           </div>
+                          <DeskHeroArt variant="desk" />
                         </div>
-                      );
-                    })}
-
-                    {chatMessages.length === 1 && (
-                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                        {QUICK_CHAT_PROMPTS.map(({ label, icon: Icon }) => (
-                          <button
-                            key={label}
-                            type="button"
-                            onClick={() => void handleSendChat(label)}
-                            className="group flex items-center gap-2.5 rounded-xl border border-[#e8e0f0] bg-white px-3 py-2.5 text-left transition hover:border-[#D3126A]/40 hover:bg-[#fff7fb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
+                        <div className="de-desk-rows">
+                          {QUICK_CHAT_PROMPTS.map(({ label, icon: Icon, tone }) => (
+                            <button
+                              key={label}
+                              type="button"
+                              data-tone={tone}
+                              onClick={() => void handleSendChat(label)}
+                              className="de-desk-row"
+                            >
+                              <span className="de-desk-row-ic">
+                                <Icon aria-hidden="true" />
+                              </span>
+                              <span className="de-desk-row-t">{label}</span>
+                              <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      chatMessages.map((chatMessage) => {
+                        const isUser = chatMessage.role === "user";
+                        const isAgent = chatMessage.role === "agent";
+                        return (
+                          <div
+                            key={chatMessage.id}
+                            className={`flex ${isUser ? "justify-end" : "justify-start"}`}
                           >
-                            <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[#f3eef9] text-[#6d4aff]">
-                              <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-                            </span>
-                            <span className="min-w-0 flex-1 text-[12px] font-medium leading-4 text-[#1a1228]">
-                              {label}
-                            </span>
-                            <ChevronRight className="h-3.5 w-3.5 flex-shrink-0 text-[#b0a4c4] group-hover:text-[#D3126A]" aria-hidden="true" />
-                          </button>
-                        ))}
-                      </div>
+                            <div
+                              className={`de-desk-bubble ${
+                                isUser ? "is-user" : isAgent ? "is-agent" : "is-bot"
+                              }`}
+                            >
+                              {!isUser && (
+                                <div className="de-desk-bubble-meta">
+                                  <span>{isAgent ? "AG" : "DE"}</span>
+                                  {isAgent ? chatMessage.senderName || agentName || "Agent" : "Desk"}
+                                </div>
+                              )}
+                              <p className="whitespace-pre-wrap">{chatMessage.content}</p>
+                            </div>
+                          </div>
+                        );
+                      })
                     )}
 
                     {isChatSending && (
                       <div className="flex justify-start">
-                        <div className="rounded-2xl rounded-bl-md border border-[#ece6f2] bg-[#faf8fc] px-3.5 py-2.5 text-xs text-[#5A3A5E]">
+                        <div className="de-desk-bubble is-bot">
                           <span className="inline-flex items-center gap-2">
                             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#D3126A]" />
                             {agentLive ? "Delivering to specialist…" : "Thinking it through…"}
@@ -926,163 +940,87 @@ export const ZohoASAPWidget = ({
                     )}
                     <div ref={chatEndRef} />
                   </div>
-
-                  <div className="border-t border-[#ece6f2] bg-[#faf8fc] px-3 py-3">
-                    <div className="flex items-end gap-2">
-                      <Textarea
-                        value={chatInput}
-                        onChange={(event) => setChatInput(event.target.value)}
-                        onKeyDown={(event) => {
-                          if (event.key === "Enter" && !event.shiftKey) {
-                            event.preventDefault();
-                            void handleSendChat();
-                          }
-                        }}
-                        maxLength={2000}
-                        rows={2}
-                        placeholder={
-                          agentLive
-                            ? `Message ${agentName || "the specialist"}…`
-                            : "Ask about risk, stack, pricing, or an outage…"
-                        }
-                        className="min-h-[48px] resize-none rounded-xl border-[#ddd3e8] bg-white text-[13.5px] text-[#1a1228] placeholder:text-[#8a6f8c] focus-visible:ring-[#D3126A]/70"
-                        disabled={isChatSending}
-                        data-testid="input-support-chat"
-                        aria-label="Chat message"
-                      />
-                      <Button
-                        type="button"
-                        onClick={() => void handleSendChat()}
-                        disabled={!chatInput.trim() || isChatSending}
-                        className="h-[48px] w-[48px] flex-shrink-0 rounded-xl bg-[#D3126A] p-0 text-white shadow-[0_8px_22px_rgba(211,18,106,0.35)] hover:bg-[#c01060] focus-visible:ring-[#D3126A]"
-                        data-testid="button-send-support-chat"
-                        aria-label="Send chat message"
-                      >
-                        <Send className="h-4 w-4" aria-hidden="true" />
-                      </Button>
-                    </div>
-                    <p className="mt-2 flex items-center gap-1.5 text-[11px] font-medium text-[#6B3A62]">
-                      <Lock className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
-                      {agentLive
-                        ? "A Digerati agent is in this thread. Never share passwords or MFA codes."
-                        : "Never share passwords, MFA codes, or private keys."}
-                    </p>
-                  </div>
                 </div>
               )}
 
-              {/* TICKET — dark nested panel, same language as Resources */}
               {activeTab === "ticket" && (
-                <div
-                  className="flex h-full min-h-0 flex-col overflow-hidden rounded-[1.2rem] border border-white/10 bg-[#12141c]"
-                  data-testid="panel-support-ticket"
-                >
-                  <div className="min-h-0 flex-1 space-y-3 overflow-y-auto p-3 pb-8">
+                <div className="de-desk-panel" data-testid="panel-support-ticket">
+                  <div className="de-desk-scroll">
                     {ticketResult ? (
-                      <div className="flex min-h-[70%] flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#171922] px-4 py-10 text-center">
-                        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-400/15 text-emerald-300">
-                          <CheckCircle2 className="h-6 w-6" aria-hidden="true" />
+                      <div className="de-desk-hero de-desk-success">
+                        <div className="de-desk-hero-ring">
+                          <CheckCircle2 aria-hidden="true" />
                         </div>
-                        <h3 className="text-[15px] font-semibold text-white">Support request received</h3>
+                        <h3>Support request received</h3>
                         {ticketResult.ticketNumber && (
-                          <p className="mt-2 rounded-lg border border-white/10 bg-[#0b0c10] px-3 py-1.5 font-mono text-xs font-semibold text-[#F0B4CC]">
-                            {ticketResult.ticketNumber}
-                          </p>
+                          <p className="de-desk-ticket-ref">{ticketResult.ticketNumber}</p>
                         )}
-                        <p className="mt-3 max-w-sm text-sm leading-5 text-white/65">{ticketResult.message}</p>
-                        <div className="mt-5 flex flex-wrap justify-center gap-2">
-                          <Button
+                        <p>{ticketResult.message}</p>
+                        <div className="de-desk-success-actions">
+                          <button
                             type="button"
-                            variant="outline"
                             onClick={() => {
                               setTicketResult(null);
                               setActiveTab("chat");
                             }}
-                            className="border-white/15 bg-transparent text-white hover:bg-white/10"
+                            className="de-desk-row"
                           >
-                            Back to desk
-                          </Button>
-                          <Button
-                            type="button"
-                            onClick={() => setTicketResult(null)}
-                            className="bg-gradient-to-r from-[#5B45E0] to-[#D3126A] text-white hover:opacity-95"
-                          >
+                            <span className="de-desk-row-t">Back to desk</span>
+                          </button>
+                          <button type="button" onClick={() => setTicketResult(null)} className="de-desk-btn-grad">
                             Create another ticket
-                          </Button>
+                          </button>
                         </div>
                       </div>
                     ) : (
                       <>
-                        <div
-                          className="relative overflow-hidden rounded-2xl border border-[#c084fc]/40 p-4 shadow-[0_0_36px_rgba(168,85,247,0.2)]"
-                          style={{
-                            background:
-                              "linear-gradient(135deg, rgba(91,69,224,0.55) 0%, rgba(26,11,51,0.92) 48%, rgba(211,18,106,0.28) 100%)",
-                          }}
-                        >
-                          <div
-                            className="pointer-events-none absolute -right-8 -top-10 h-32 w-32 rounded-full bg-[#D3126A]/25 blur-2xl"
-                            aria-hidden="true"
-                          />
-                          <div className="relative flex items-center gap-3">
-                            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#D3126A] to-[#7c3aed] text-white ring-2 ring-white/25 shadow-[0_0_24px_rgba(211,18,106,0.45)]">
-                              <Ticket className="h-5 w-5" aria-hidden="true" />
+                        <div className="de-desk-hero">
+                          <div className="de-desk-hero-dots" aria-hidden="true" />
+                          <div className="de-desk-hero-txt">
+                            <div className="de-desk-hero-ring">
+                              <FileText aria-hidden="true" />
                             </div>
-                            <div className="min-w-0 flex-1">
-                              <h3 className="text-[16px] font-semibold tracking-tight text-white">
-                                Create a support ticket
-                              </h3>
-                              <p className="mt-1 text-[12px] leading-5 text-white/75">
-                                Tell us what happened and we&apos;ll route it to the right team.
-                              </p>
-                            </div>
-                            <div className="hidden h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-white/15 bg-black/40 text-[#c4b5fd] sm:flex">
-                              <ClipboardList className="h-5 w-5" aria-hidden="true" />
-                            </div>
+                            <h3>Create a support ticket</h3>
+                            <p>Tell us what happened and we&apos;ll route it to the right team.</p>
                           </div>
+                          <DeskHeroArt variant="ticket" />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                          {TICKET_QUICK_CHIPS.map(({ label, icon: Icon, category: chipCategory, iconClass }) => (
+                        <div className="de-desk-rows">
+                          {TICKET_QUICK_CHIPS.map(({ label, icon: Icon, category: chipCategory, tone }) => (
                             <button
                               key={label}
                               type="button"
+                              data-tone={tone}
                               onClick={() => {
                                 setSubject(label);
                                 setCategory(chipCategory);
                               }}
-                              className="group rounded-xl border border-white/15 bg-black p-2.5 text-left transition hover:border-[#F0B4CC]/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/45"
+                              className="de-desk-row"
                             >
-                              <div className="mb-2 flex items-center justify-between">
-                                <span
-                                  className={`flex h-8 w-8 items-center justify-center rounded-lg ring-1 ${iconClass}`}
-                                >
-                                  <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-                                </span>
-                                <ChevronRight className="h-3 w-3 text-white/30 group-hover:text-[#F0B4CC]" aria-hidden="true" />
-                              </div>
-                              <span className="block text-[11px] font-medium leading-4 text-white">{label}</span>
+                              <span className="de-desk-row-ic">
+                                <Icon aria-hidden="true" />
+                              </span>
+                              <span className="de-desk-row-t">{label}</span>
+                              <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
                             </button>
                           ))}
                         </div>
 
-                        <div className="rounded-2xl border border-[#a78bfa]/30 bg-black p-4 shadow-[inset_0_1px_0_rgba(196,181,253,0.1)]">
-                          <div className="mb-4 flex items-center justify-between gap-2">
-                            <h3 className="text-[14px] font-semibold text-white">Tell us the details</h3>
-                            <span className="inline-flex items-center gap-1 rounded-full border border-[#c084fc]/40 bg-[#7c3aed]/25 px-2 py-0.5 text-[10px] font-semibold text-[#e9d5ff]">
-                              <Lock className="h-2.5 w-2.5" aria-hidden="true" />
-                              Secure & Private
-                            </span>
-                          </div>
+                        <div className="de-desk-details-head">
+                          <h4>Tell us the details</h4>
+                          <span className="de-desk-secure">
+                            <Lock aria-hidden="true" />
+                            Secure &amp; private
+                          </span>
+                        </div>
 
-                          <div className="space-y-3">
-                            <div className="grid gap-3 sm:grid-cols-2">
-                              <div>
-                                <label htmlFor="support-name" className="mb-1.5 block text-[11px] font-semibold text-white">
-                                  Full name
-                                </label>
-                                <div className="relative">
-                                  <User className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]" aria-hidden="true" />
+                          <div className="de-desk-form">
+                            <div className="de-desk-grid2">
+                              <div className="de-desk-field">
+                                <label htmlFor="support-name">Full name</label>
+                                <div className="de-desk-input-wrap">
+                                  <User aria-hidden="true" />
                                   <Input
                                     id="support-name"
                                     autoComplete="name"
@@ -1090,16 +1028,14 @@ export const ZohoASAPWidget = ({
                                     value={fullName}
                                     onChange={(event) => setFullName(event.target.value)}
                                     data-testid="input-support-name"
-                                    className="h-10 rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] pl-9 text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
+                                    className="de-desk-input"
                                   />
                                 </div>
                               </div>
-                              <div>
-                                <label htmlFor="support-email" className="mb-1.5 block text-[11px] font-semibold text-white">
-                                  Work email
-                                </label>
-                                <div className="relative">
-                                  <Mail className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]" aria-hidden="true" />
+                              <div className="de-desk-field">
+                                <label htmlFor="support-email">Work email</label>
+                                <div className="de-desk-input-wrap">
+                                  <Mail aria-hidden="true" />
                                   <Input
                                     id="support-email"
                                     type="email"
@@ -1108,19 +1044,17 @@ export const ZohoASAPWidget = ({
                                     value={email}
                                     onChange={(event) => setEmail(event.target.value)}
                                     data-testid="input-support-email"
-                                    className="h-10 rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] pl-9 text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
+                                    className="de-desk-input"
                                   />
                                 </div>
                               </div>
                             </div>
 
-                            <div className="grid gap-3 sm:grid-cols-2">
-                              <div>
-                                <label htmlFor="support-company" className="mb-1.5 block text-[11px] font-semibold text-white">
-                                  Company
-                                </label>
-                                <div className="relative">
-                                  <Building2 className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]" aria-hidden="true" />
+                            <div className="de-desk-grid2">
+                              <div className="de-desk-field">
+                                <label htmlFor="support-company">Company</label>
+                                <div className="de-desk-input-wrap">
+                                  <Building2 aria-hidden="true" />
                                   <Input
                                     id="support-company"
                                     autoComplete="organization"
@@ -1128,23 +1062,21 @@ export const ZohoASAPWidget = ({
                                     value={company}
                                     onChange={(event) => setCompany(event.target.value)}
                                     data-testid="input-support-company"
-                                    className="h-10 rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] pl-9 text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
+                                    className="de-desk-input"
                                   />
                                 </div>
                               </div>
-                              <div>
-                                <label htmlFor="support-priority" className="mb-1.5 block text-[11px] font-semibold text-white">
-                                  Priority
-                                </label>
-                                <div className="relative">
-                                  <Flag className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]" aria-hidden="true" />
+                              <div className="de-desk-field">
+                                <label htmlFor="support-priority">Priority</label>
+                                <div className="de-desk-input-wrap">
+                                  <Flag aria-hidden="true" />
                                   <select
                                     id="support-priority"
                                     value={priority}
                                     onChange={(event) =>
                                       setPriority(event.target.value as "Low" | "Medium" | "High" | "Urgent")
                                     }
-                                    className="h-10 w-full appearance-none rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] pl-9 pr-8 text-[13px] text-[#1a1228] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7c3aed]/65"
+                                    className="de-desk-input de-desk-select"
                                     data-testid="select-support-priority"
                                   >
                                     <option value="Low">Low</option>
@@ -1152,23 +1084,21 @@ export const ZohoASAPWidget = ({
                                     <option value="High">High</option>
                                     <option value="Urgent">Urgent</option>
                                   </select>
-                                  <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]" aria-hidden="true" />
+                                  <ChevronDown className="de-desk-select-chev" aria-hidden="true" />
                                 </div>
                               </div>
                             </div>
 
-                            <div className="grid gap-3 sm:grid-cols-2">
-                              <div>
-                                <label htmlFor="support-category" className="mb-1.5 block text-[11px] font-semibold text-white">
-                                  Category
-                                </label>
-                                <div className="relative">
-                                  <ClipboardList className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]" aria-hidden="true" />
+                            <div className="de-desk-grid2">
+                              <div className="de-desk-field">
+                                <label htmlFor="support-category">Category</label>
+                                <div className="de-desk-input-wrap">
+                                  <ClipboardList aria-hidden="true" />
                                   <select
                                     id="support-category"
                                     value={category}
                                     onChange={(event) => setCategory(event.target.value)}
-                                    className="h-10 w-full appearance-none rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] pl-9 pr-8 text-[13px] text-[#1a1228] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7c3aed]/65"
+                                    className="de-desk-input de-desk-select"
                                     data-testid="select-support-category"
                                   >
                                     <option value="">Select a category</option>
@@ -1178,15 +1108,13 @@ export const ZohoASAPWidget = ({
                                       </option>
                                     ))}
                                   </select>
-                                  <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]" aria-hidden="true" />
+                                  <ChevronDown className="de-desk-select-chev" aria-hidden="true" />
                                 </div>
                               </div>
-                              <div>
-                                <label htmlFor="support-subject" className="mb-1.5 block text-[11px] font-semibold text-white">
-                                  Subject
-                                </label>
-                                <div className="relative">
-                                  <Tag className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]" aria-hidden="true" />
+                              <div className="de-desk-field">
+                                <label htmlFor="support-subject">Subject</label>
+                                <div className="de-desk-input-wrap">
+                                  <Tag aria-hidden="true" />
                                   <Input
                                     id="support-subject"
                                     maxLength={200}
@@ -1194,26 +1122,27 @@ export const ZohoASAPWidget = ({
                                     value={subject}
                                     onChange={(event) => setSubject(event.target.value)}
                                     data-testid="input-support-subject"
-                                    className="h-10 rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] pl-9 text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
+                                    className="de-desk-input"
                                   />
                                 </div>
                               </div>
                             </div>
 
-                            <div>
-                              <label htmlFor="support-message" className="mb-1.5 block text-[11px] font-semibold text-white">
-                                What&apos;s happening?
-                              </label>
-                              <Textarea
-                                id="support-message"
-                                maxLength={5000}
-                                placeholder="Describe the issue, affected device or service, and what you already tried. No passwords or MFA codes."
-                                value={message}
-                                onChange={(event) => setMessage(event.target.value)}
-                                rows={3}
-                                className="min-h-[88px] resize-none rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
-                                data-testid="input-support-message"
-                              />
+                            <div className="de-desk-field">
+                              <label htmlFor="support-message">What&apos;s happening?</label>
+                              <div className="de-desk-ta-wrap">
+                                <Textarea
+                                  id="support-message"
+                                  maxLength={2000}
+                                  placeholder="Describe the issue, affected device or service, and what you already tried. No passwords or MFA codes."
+                                  value={message}
+                                  onChange={(event) => setMessage(event.target.value)}
+                                  rows={3}
+                                  className="de-desk-input de-desk-ta"
+                                  data-testid="input-support-message"
+                                />
+                                <span className="de-desk-counter">{message.length} / 2000</span>
+                              </div>
                             </div>
 
                             <div>
@@ -1225,239 +1154,185 @@ export const ZohoASAPWidget = ({
                                 onChange={(event) => handleTicketFile(event.target.files?.[0])}
                                 data-testid="input-support-attachment"
                               />
-                              <button
-                                type="button"
-                                onClick={() => ticketFileRef.current?.click()}
-                                className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-white/20 bg-black px-3 py-2 text-[12.5px] font-semibold text-white transition hover:border-[#F0B4CC]/50 hover:text-[#F0B4CC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/45"
-                              >
-                                <Paperclip className="h-3.5 w-3.5" aria-hidden="true" />
-                                {attachmentName || "Attach file or screenshot"}
+                              <button type="button" onClick={() => ticketFileRef.current?.click()} className="de-desk-attach">
+                                <Paperclip aria-hidden="true" />
+                                <span>
+                                  <span className="de-desk-attach-t">{attachmentName || "Attach file or screenshot"}</span>
+                                  <span className="de-desk-attach-h">
+                                    PNG, JPG, PDF up to 10MB. We&apos;ll collect the file after the ticket is opened.
+                                  </span>
+                                </span>
                               </button>
-                              <p className="mt-1.5 text-[11px] text-white/55">
-                                PNG, JPG, PDF up to 10MB. We&apos;ll collect the file after the ticket is opened.
-                              </p>
                             </div>
 
-                            <p className="flex items-center gap-1.5 text-[11px] font-medium text-white/70">
-                              <Lock className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
+                            <p className="de-desk-caption">
+                              <Lock aria-hidden="true" />
                               Never share passwords, MFA codes, or private keys.
                             </p>
 
-                            <Button
+                            <button
                               type="button"
                               onClick={() => void handleSubmitTicket()}
                               disabled={isTicketSending}
-                              className="h-11 w-full rounded-xl bg-gradient-to-r from-[#5B45E0] via-[#8b2cf5] to-[#D3126A] text-white shadow-[0_10px_28px_rgba(211,18,106,0.28)] hover:opacity-95 focus-visible:ring-[#D3126A]"
+                              className="de-desk-btn-grad"
                               data-testid="button-submit-support"
                             >
                               {isTicketSending ? "Creating ticket…" : "Create ticket"}
-                              {!isTicketSending && <Send size={15} className="ml-2" aria-hidden="true" />}
-                            </Button>
+                              {!isTicketSending && <Ticket aria-hidden="true" />}
+                            </button>
                           </div>
-                        </div>
                       </>
                     )}
-                  </div>
-
-                  {/* Persistent ask bar — same family as Resources composer cue */}
-                  <div className="flex-shrink-0 border-t border-white/10 bg-[#0f1118] px-3 py-2.5">
-                    <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-[#171922] px-3 py-2">
-                      <Sparkles className="h-3.5 w-3.5 flex-shrink-0 text-[#c4b5fd]" aria-hidden="true" />
-                      <button
-                        type="button"
-                        onClick={() => setActiveTab("chat")}
-                        className="min-w-0 flex-1 truncate rounded-md text-left text-[12.5px] text-white/50 hover:text-white/75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/45"
-                      >
-                        Ask about risk, stack, pricing, or an outage…
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setActiveTab("chat")}
-                        className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[#D3126A] text-white hover:bg-[#c01060] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F0B4CC]/70"
-                        aria-label="Open desk chat"
-                      >
-                        <Send className="h-3.5 w-3.5" aria-hidden="true" />
-                      </button>
-                    </div>
                   </div>
                 </div>
               )}
 
-              {/* RESOURCES — keep the dark card language that already works */}
               {activeTab === "resources" && (
-                <div
-                  className="h-full space-y-3 overflow-y-auto rounded-[1.2rem] border border-white/10 bg-[#12141c] p-3 pb-4"
-                  data-testid="panel-support-resources"
-                >
-                  <div
-                    className="relative overflow-hidden rounded-2xl border border-[#c084fc]/45 p-4 shadow-[0_0_40px_rgba(168,85,247,0.22)]"
-                    style={{
-                      background:
-                        "linear-gradient(145deg, rgba(96,165,250,0.42) 0%, rgba(124,58,237,0.48) 36%, rgba(26,11,51,0.95) 68%, rgba(211,18,106,0.32) 100%)",
-                    }}
-                  >
-                    <div
-                      className="pointer-events-none absolute -left-4 top-0 h-24 w-24 rounded-full bg-[#38bdf8]/25 blur-2xl"
-                      aria-hidden="true"
-                    />
-                    <div
-                      className="pointer-events-none absolute -right-6 bottom-0 h-28 w-28 rounded-full bg-[#D3126A]/25 blur-2xl"
-                      aria-hidden="true"
-                    />
-                    <p className="relative text-[10px] font-semibold uppercase tracking-[0.18em] text-[#F0B4CC]">
-                      Your AI help desk
-                    </p>
-                    <h3 className="relative mt-1.5 text-[18px] font-semibold tracking-tight text-white">
-                      Get clear answers, fast.
-                    </h3>
-                    <p className="relative mt-1.5 max-w-[90%] text-[12px] leading-5 text-white/80">
-                      Find tools, client info, and step-by-step help — all in one place.
-                    </p>
-                    <p className="relative mt-2 text-[12px] italic text-[#e9d5ff]">Same team. Faster support.</p>
-                    <div className="relative mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-                      {[
-                        { icon: Zap, label: "Faster answers", tone: "text-[#fde68a] bg-[#fbbf24]/20 ring-[#fcd34d]/40" },
-                        { icon: Shield, label: "Trusted info", tone: "text-[#e9d5ff] bg-[#a855f7]/25 ring-[#c084fc]/45" },
-                        { icon: Users, label: "Built for DE", tone: "text-[#bae6fd] bg-[#38bdf8]/20 ring-[#7dd3fc]/40" },
-                        { icon: Clock, label: "24/7 available", tone: "text-[#bbf7d0] bg-[#4ade80]/20 ring-[#86efac]/40" },
-                      ].map(({ icon: Icon, label, tone }) => (
-                        <div key={label} className="flex items-center gap-1.5 text-[10px] font-medium text-white/85">
-                          <span className={`flex h-6 w-6 items-center justify-center rounded-md ring-1 ${tone}`}>
-                            <Icon className="h-3 w-3" aria-hidden="true" />
-                          </span>
-                          {label}
+                <div className="de-desk-panel" data-testid="panel-support-resources">
+                  <div className="de-desk-scroll">
+                    <div className="de-desk-hero">
+                      <div className="de-desk-hero-dots" aria-hidden="true" />
+                      <div className="de-desk-hero-txt">
+                        <div className="de-desk-hero-ring">
+                          <BookOpen aria-hidden="true" />
                         </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between px-0.5">
-                    <h3 className="text-[13px] font-semibold text-white">Resources</h3>
-                    <a
-                      href="/support/knowledge-base"
-                      className="rounded-md text-[11px] font-semibold text-[#F0B4CC] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/45"
-                    >
-                      Browse all resources →
-                    </a>
-                  </div>
-
-                  <div className="space-y-2">
-                    {RESOURCE_LINKS.map(({ title, description, href, icon: Icon, external, tags, cta, accent, iconBg }) => (
-                      <a
-                        key={title}
-                        href={href}
-                        {...(external || href.startsWith("http")
-                          ? { target: "_blank", rel: "noopener noreferrer" }
-                          : {})}
-                        className="group flex items-center gap-3 rounded-2xl border border-white/15 bg-black p-3 transition hover:border-[#F0B4CC]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/45"
-                        data-testid={`resource-link-${title.toLowerCase().replace(/\s+/g, "-")}`}
-                      >
-                        <span
-                          className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl ring-1 ${iconBg} ${accent}`}
-                        >
-                          <Icon className="h-5 w-5" aria-hidden="true" />
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          <span className="block text-[13.5px] font-semibold text-white">{title}</span>
-                          <span className="mt-0.5 block text-[11.5px] leading-4 text-white/60">{description}</span>
-                          <span className="mt-1.5 flex flex-wrap gap-1.5">
-                            {tags.map((tag) => (
-                              <span
-                                key={tag}
-                                className="rounded-md bg-white/[0.08] px-1.5 py-0.5 text-[10px] font-medium text-white/70"
-                              >
-                                {tag}
-                              </span>
-                            ))}
-                          </span>
-                        </span>
-                        <span className="hidden flex-shrink-0 items-center gap-1 text-[11px] font-semibold text-[#F0B4CC] sm:inline-flex">
-                          {cta}
-                          <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-                        </span>
-                        <ExternalLink className="h-3.5 w-3.5 flex-shrink-0 text-white/30 sm:hidden" aria-hidden="true" />
-                      </a>
-                    ))}
-
-                    <a
-                      href="/book"
-                      className="group flex items-center gap-3 rounded-2xl border border-[#F0B4CC]/55 bg-white p-3 shadow-[0_8px_24px_rgba(211,18,106,0.18)] transition hover:border-[#D3126A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/45"
-                      data-testid="resource-link-cyber-risk-assessment"
-                    >
-                      <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#D3126A] to-[#f472b6] text-white ring-1 ring-[#D3126A]/40 shadow-[0_0_18px_rgba(211,18,106,0.35)]">
-                        <Shield className="h-5 w-5" aria-hidden="true" />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block text-[13.5px] font-semibold text-[#1a1228]">Cyber risk assessment</span>
-                        <span className="mt-0.5 block text-[11.5px] leading-4 text-[#5A3A5E]">
-                          Map your gaps and get a prioritized next step
-                        </span>
-                        <span className="mt-1.5 flex flex-wrap gap-1.5">
-                          <span className="rounded-md bg-[#F0B4CC]/35 px-1.5 py-0.5 text-[10px] font-medium text-[#9d174d]">
-                            Assessment
-                          </span>
-                          <span className="rounded-md bg-[#F0B4CC]/35 px-1.5 py-0.5 text-[10px] font-medium text-[#9d174d]">
-                            Book now
-                          </span>
-                        </span>
-                      </span>
-                      <span className="hidden flex-shrink-0 items-center gap-1 text-[11px] font-semibold text-[#D3126A] sm:inline-flex">
-                        Book
-                        <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-                      </span>
-                      <ExternalLink className="h-3.5 w-3.5 flex-shrink-0 text-[#D3126A]/50 sm:hidden" aria-hidden="true" />
-                    </a>
-                  </div>
-
-                  <div className="rounded-2xl border border-[#fb7185]/40 bg-gradient-to-r from-[#D3126A]/20 via-[#1a1228] to-[#7c3aed]/20 p-3">
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                      <div className="flex min-w-0 flex-1 gap-2.5">
-                        <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#fb7185]/50 to-[#D3126A]/35 text-[#fecdd3] ring-1 ring-[#fda4af]/50 shadow-[0_0_18px_rgba(211,18,106,0.35)]">
-                          <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-                        </span>
-                        <div>
-                          <p className="text-[12px] font-semibold text-white">Security-sensitive issue?</p>
-                          <p className="mt-0.5 text-[11.5px] leading-4 text-white/60">
-                            Don&apos;t paste credentials into chat. Open a ticket and we&apos;ll move to a secure channel.
-                          </p>
-                        </div>
+                        <h3>Get where you need to go</h3>
+                        <p>Quick access to the most used support tools and resources.</p>
                       </div>
-                      <Button
-                        type="button"
-                        onClick={() => setActiveTab("ticket")}
-                        className="h-9 flex-shrink-0 rounded-xl bg-[#D3126A] px-3 text-white shadow-[0_0_18px_rgba(211,18,106,0.35)] hover:bg-[#c01060]"
+                      <DeskHeroArt variant="resources" />
+                    </div>
+
+                    <div className="de-desk-section-head">
+                      <h4>Resources</h4>
+                      <a href="/support/knowledge-base">Browse all →</a>
+                    </div>
+
+                    <div className="de-desk-rows">
+                      {RESOURCE_LINKS.map(({ title, description, href, icon: Icon, external }, index) => (
+                        <a
+                          key={title}
+                          href={href}
+                          data-tone={index === 0 ? "pink" : "violet"}
+                          {...(external || href.startsWith("http")
+                            ? { target: "_blank", rel: "noopener noreferrer" }
+                            : {})}
+                          className="de-desk-row is-lg"
+                          data-testid={`resource-link-${title.toLowerCase().replace(/\s+/g, "-")}`}
+                        >
+                          <span className="de-desk-row-ic">
+                            <Icon aria-hidden="true" />
+                          </span>
+                          <span className="de-desk-row-body">
+                            <span className="de-desk-row-t">{title}</span>
+                            <span className="de-desk-row-d">{description}</span>
+                          </span>
+                          <span className="de-desk-row-actions">
+                            <span className="de-desk-row-ext">
+                              <ExternalLink aria-hidden="true" />
+                            </span>
+                            <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
+                          </span>
+                        </a>
+                      ))}
+
+                      <a
+                        href="/book"
+                        data-tone="pink"
+                        className="de-desk-row is-lg is-highlight"
+                        data-testid="resource-link-cyber-risk-assessment"
                       >
-                        Create ticket
-                      </Button>
+                        <span className="de-desk-row-ic">
+                          <Shield aria-hidden="true" />
+                        </span>
+                        <span className="de-desk-row-body">
+                          <span className="de-desk-row-t">Cyber Risk Assessment</span>
+                          <span className="de-desk-row-d">Map your gaps and get a prioritized next step.</span>
+                        </span>
+                        <span className="de-desk-row-actions">
+                          <span className="de-desk-row-ext">
+                            <ExternalLink aria-hidden="true" />
+                          </span>
+                          <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
+                        </span>
+                      </a>
+
+                      <div className="de-desk-row is-alert" data-tone="red">
+                        <span className="de-desk-row-ic">
+                          <AlertTriangle aria-hidden="true" />
+                        </span>
+                        <span className="de-desk-row-body">
+                          <span className="de-desk-row-t">Security-sensitive issue?</span>
+                          <span className="de-desk-row-d">
+                            Don&apos;t paste credentials into chat. Open a ticket and we&apos;ll move to a secure
+                            channel.
+                          </span>
+                        </span>
+                        <button type="button" onClick={() => setActiveTab("ticket")} className="de-desk-btn-mini">
+                          Create ticket
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
               )}
             </div>
 
-            <footer className="relative flex flex-shrink-0 select-none items-center justify-between gap-4 border-t border-white/10 px-4 py-3 text-white/50">
-              <p className="min-w-0 truncate text-[11px] font-medium tracking-[0.14em] text-white/50">
-                <span className={activeTab === "chat" ? "text-white/70" : undefined}>DE Desk</span>
-                <span className="mx-1.5 tracking-normal text-white/25" aria-hidden="true">
-                  ·
-                </span>
-                <span className={activeTab === "ticket" ? "text-white/70" : undefined}>Ticket</span>
-                <span className="mx-1.5 tracking-normal text-white/25" aria-hidden="true">
-                  ·
-                </span>
-                <span className={activeTab === "resources" ? "text-white/70" : undefined}>Resources</span>
-                <span className="mx-1.5 tracking-normal text-white/25" aria-hidden="true">
-                  ·
-                </span>
-                Assist
-              </p>
+            <div className="de-desk-composer">
+              <input
+                type="text"
+                value={chatInput}
+                onChange={(event) => setChatInput(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    if (activeTab !== "chat") setActiveTab("chat");
+                    void handleSendChat();
+                  }
+                }}
+                maxLength={2000}
+                placeholder={
+                  agentLive
+                    ? `Message ${agentName || "the specialist"}…`
+                    : "Ask about risk, stack, pricing, or an outage..."
+                }
+                disabled={isChatSending}
+                data-testid="input-support-chat"
+                aria-label="Chat message"
+              />
               <button
                 type="button"
-                onClick={() => setActiveTab("ticket")}
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-md text-[11px] font-semibold tracking-[0.04em] text-[#F0B4CC] transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]"
+                onClick={() => {
+                  if (activeTab !== "chat") setActiveTab("chat");
+                  void handleSendChat();
+                }}
+                disabled={!chatInput.trim() || isChatSending}
+                className="de-desk-send"
+                data-testid="button-send-support-chat"
+                aria-label="Send chat message"
               >
+                <Send aria-hidden="true" />
+              </button>
+            </div>
+            <p className="de-desk-composer-caption">
+              <Lock aria-hidden="true" />
+              {agentLive
+                ? "A Digerati agent is in this thread. Never share passwords or MFA codes."
+                : "Never share passwords, MFA codes, or private keys."}
+            </p>
+
+            <footer className="de-desk-foot">
+              <p className="de-desk-foot-nav">
+                <span className={activeTab === "chat" ? "is-active" : undefined}>DE Desk</span>
+                <span aria-hidden="true">·</span>
+                <span className={activeTab === "ticket" ? "is-active" : undefined}>Ticket</span>
+                <span aria-hidden="true">·</span>
+                <span className={activeTab === "resources" ? "is-active" : undefined}>Resources</span>
+                <span aria-hidden="true">·</span>
+                Assist
+              </p>
+              <button type="button" onClick={() => setActiveTab("ticket")} className="de-desk-foot-cta">
                 Create ticket
-                <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                <ExternalLink aria-hidden="true" />
               </button>
             </footer>
           </section>
@@ -1466,6 +1341,31 @@ export const ZohoASAPWidget = ({
       <style
         dangerouslySetInnerHTML={{
           __html: `
+            .de-desk-shell {
+              --desk-shell: #ffffff;
+              --desk-shell-soft: #f6f5fa;
+              --desk-shell-border: rgba(20,16,30,0.08);
+              --desk-shell-border-strong: rgba(20,16,30,0.14);
+              --desk-shell-text: #17141f;
+              --desk-shell-muted: #68637a;
+              --desk-shell-dim: #726c82;
+              --desk-box: #1a1820;
+              --desk-inset: #0f0e14;
+              --desk-border: rgba(255,255,255,0.07);
+              --desk-border-strong: rgba(255,255,255,0.14);
+              --desk-pink: #d3126a;
+              --desk-violet: #8b5cf6;
+              --desk-blue: #3b9eff;
+              --desk-teal: #22d3ee;
+              --desk-red: #f0455b;
+              --desk-green: #22c55e;
+              --desk-grad: linear-gradient(135deg, #d3126a, #8b5cf6);
+              background: var(--desk-shell);
+              border: 1px solid var(--desk-shell-border-strong);
+              border-radius: 20px;
+              box-shadow: 0 34px 90px -22px rgba(0,0,0,0.65), 0 0 0 1px rgba(20,16,30,0.04), 0 0 70px -16px rgba(211,18,106,0.20);
+              color: var(--desk-shell-text);
+            }
             .de-desk-shell ::selection {
               background: color-mix(in srgb, #D3126A 38%, transparent);
               color: #fff;
@@ -1476,6 +1376,394 @@ export const ZohoASAPWidget = ({
               background: transparent;
               color: inherit;
               -webkit-text-fill-color: inherit;
+            }
+            .de-desk-head {
+              display: flex;
+              align-items: center;
+              gap: 11px;
+              padding: 17px 17px 15px;
+              border-bottom: 1px solid var(--desk-shell-border);
+              flex-shrink: 0;
+            }
+            .de-desk-id { display: flex; align-items: center; gap: 11px; min-width: 0; flex: 1; }
+            .de-desk-avatar {
+              position: relative;
+              width: 37px; height: 37px;
+              border-radius: 11px;
+              background: var(--desk-pink);
+              color: #fff;
+              display: flex; align-items: center; justify-content: center;
+              flex: none;
+              font-family: "Space Grotesk", sans-serif;
+              font-weight: 700;
+              font-size: 13px;
+              box-shadow: 0 4px 14px -2px rgba(211,18,106,0.5);
+            }
+            .de-desk-avatar-dot {
+              position: absolute; right: -2px; bottom: -2px;
+              width: 9px; height: 9px; border-radius: 50%;
+              background: var(--desk-green);
+              border: 2px solid var(--desk-shell);
+            }
+            .de-desk-id h2 {
+              font-family: "Space Grotesk", sans-serif;
+              font-weight: 600;
+              font-size: 14.5px;
+              color: var(--desk-shell-text);
+              line-height: 1.2;
+            }
+            .de-desk-id p { font-size: 11.5px; color: var(--desk-shell-muted); margin-top: 1px; }
+            .de-desk-close {
+              width: 30px; height: 30px; border-radius: 9px;
+              border: 1px solid var(--desk-shell-border-strong);
+              background: var(--desk-shell-soft);
+              color: var(--desk-shell-muted);
+              display: flex; align-items: center; justify-content: center;
+              flex: none;
+            }
+            .de-desk-close:hover { color: var(--desk-pink); border-color: var(--desk-pink); }
+            .de-desk-tabs {
+              display: flex; justify-content: space-between; gap: 12px;
+              padding: 0 17px;
+              border-bottom: 1px solid var(--desk-shell-border);
+              flex-shrink: 0;
+            }
+            .de-desk-tab {
+              background: none; border: none;
+              padding: 12px 0;
+              font-family: "Space Grotesk", sans-serif;
+              font-weight: 600; font-size: 13.5px;
+              color: var(--desk-shell-dim);
+              display: flex; align-items: center; gap: 6px;
+              position: relative;
+            }
+            .de-desk-tab svg { width: 14px; height: 14px; }
+            .de-desk-tab.is-active { color: var(--desk-shell-text); }
+            .de-desk-tab.is-active::after {
+              content: "";
+              position: absolute; left: 0; right: 0; bottom: -1px;
+              height: 2px; border-radius: 2px;
+              background: var(--desk-pink);
+              box-shadow: 0 0 8px rgba(211,18,106,0.5);
+            }
+            .de-desk-status {
+              display: flex; align-items: center; justify-content: space-between;
+              padding: 9px 17px;
+              background: var(--desk-shell-soft);
+              border-bottom: 1px solid var(--desk-shell-border);
+              font-size: 11.5px;
+              flex-shrink: 0;
+            }
+            .de-desk-status-l {
+              display: flex; align-items: center; gap: 6px;
+              color: var(--desk-shell-muted); font-weight: 500;
+            }
+            .de-desk-status-dot {
+              width: 6px; height: 6px; border-radius: 50%;
+              background: #c4c0cc; position: relative;
+            }
+            .de-desk-status-dot.is-on { background: var(--desk-green); }
+            .de-desk-status-dot.is-live { background: #3b9eff; }
+            .de-desk-status-dot.is-wait { background: #e8a23d; }
+            .de-desk-status-r {
+              display: flex; align-items: center; gap: 7px;
+              color: var(--desk-pink); font-weight: 600;
+            }
+            .de-desk-status-ic {
+              width: 22px; height: 22px; border-radius: 7px;
+              border: 1.5px solid var(--desk-pink);
+              display: flex; align-items: center; justify-content: center;
+              background: rgba(211,18,106,0.10);
+            }
+            .de-desk-status-ic svg { width: 11px; height: 11px; }
+            .de-desk-body {
+              min-height: 0; flex: 1;
+              background: var(--desk-shell);
+              padding: 17px;
+              display: flex; flex-direction: column;
+            }
+            .de-desk-panel, .de-desk-scroll {
+              min-height: 0; flex: 1;
+              display: flex; flex-direction: column;
+            }
+            .de-desk-scroll { overflow-y: auto; gap: 0; }
+            .de-desk-hero {
+              position: relative; overflow: hidden;
+              border-radius: 13px;
+              border: 1px solid rgba(211,18,106,0.20);
+              background: linear-gradient(155deg, #2e1d2a 0%, #221c2d 55%, #1a1820 100%);
+              padding: 20px 18px;
+              display: flex; align-items: center; gap: 14px;
+              box-shadow: 0 16px 34px -18px rgba(211,18,106,0.30), inset 0 1px 0 rgba(255,255,255,0.04);
+              flex-shrink: 0;
+            }
+            .de-desk-hero-dots {
+              position: absolute; top: 14px; right: 14px;
+              width: 56px; height: 34px;
+              background-image: radial-gradient(rgba(255,255,255,0.20) 1px, transparent 1.4px);
+              background-size: 9px 9px; opacity: 0.5;
+            }
+            .de-desk-hero-txt { flex: 1; min-width: 0; }
+            .de-desk-hero-ring {
+              width: 38px; height: 38px; border-radius: 50%;
+              border: 1.5px solid var(--desk-pink);
+              display: flex; align-items: center; justify-content: center;
+              color: var(--desk-pink);
+              margin-bottom: 10px;
+              background: rgba(211,18,106,0.10);
+            }
+            .de-desk-hero-ring svg { width: 17px; height: 17px; }
+            .de-desk-hero h3 {
+              font-family: "Space Grotesk", sans-serif;
+              font-size: 18.5px; font-weight: 700; color: #fff;
+              letter-spacing: -0.01em;
+            }
+            .de-desk-hero p {
+              font-size: 12px; color: #9c97a8; margin-top: 5px;
+              line-height: 1.5; max-width: 210px;
+            }
+            .de-desk-hero-art { width: 92px; height: 92px; flex: none; }
+            .de-desk-rows { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+            .de-desk-row {
+              display: flex; align-items: center; gap: 12px;
+              padding: 11px 12px; border-radius: 12px;
+              background: var(--desk-box);
+              border: 1px solid var(--desk-border);
+              color: #fff; text-align: left; width: 100%;
+              transition: background 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
+            }
+            .de-desk-row:hover {
+              background: #201d28;
+              border-color: var(--desk-border-strong);
+              transform: translateY(-1px);
+            }
+            .de-desk-row[data-tone="violet"] { --c: var(--desk-violet); }
+            .de-desk-row[data-tone="blue"] { --c: var(--desk-blue); }
+            .de-desk-row[data-tone="teal"] { --c: var(--desk-teal); }
+            .de-desk-row[data-tone="red"] { --c: var(--desk-red); }
+            .de-desk-row[data-tone="pink"] { --c: var(--desk-pink); }
+            .de-desk-row-ic {
+              width: 32px; height: 32px; border-radius: 10px;
+              background: var(--desk-inset);
+              border: 1.5px solid var(--c, var(--desk-violet));
+              color: var(--c, var(--desk-violet));
+              display: flex; align-items: center; justify-content: center;
+              flex: none; position: relative; overflow: hidden;
+            }
+            .de-desk-row-ic::after {
+              content: ""; position: absolute; inset: 0;
+              background: linear-gradient(180deg, rgba(255,255,255,0.10), transparent 55%);
+            }
+            .de-desk-row-ic svg { width: 15px; height: 15px; position: relative; z-index: 1; }
+            .de-desk-row.is-lg .de-desk-row-ic { width: 46px; height: 46px; border-radius: 13px; }
+            .de-desk-row.is-lg .de-desk-row-ic svg { width: 20px; height: 20px; }
+            .de-desk-row-body { flex: 1; min-width: 0; }
+            .de-desk-row-t { font-size: 13px; font-weight: 600; color: #fff; }
+            .de-desk-row.is-lg .de-desk-row-t { font-size: 13.5px; }
+            .de-desk-row-d { display: block; font-size: 11.5px; color: #6b6678; margin-top: 2px; line-height: 1.4; }
+            .de-desk-row-chev { width: 14px; height: 14px; color: #6b6678; flex: none; }
+            .de-desk-row-actions { display: flex; align-items: center; gap: 6px; flex: none; }
+            .de-desk-row-ext {
+              width: 27px; height: 27px; border-radius: 8px;
+              border: 1px solid var(--desk-border-strong);
+              display: flex; align-items: center; justify-content: center;
+              color: #9c97a8;
+            }
+            .de-desk-row-ext svg { width: 12px; height: 12px; }
+            .de-desk-row:hover .de-desk-row-ext { border-color: var(--c, var(--desk-pink)); color: var(--c, var(--desk-pink)); }
+            .de-desk-row.is-highlight { background: #2e1b28; border-color: rgba(211,18,106,0.35); }
+            .de-desk-row.is-alert { background: #2e1b22; border-color: rgba(240,69,91,0.35); }
+            .de-desk-btn-mini {
+              background: var(--desk-grad); color: #fff; border: none;
+              font-weight: 600; font-size: 12px; padding: 9px 14px;
+              border-radius: 9px; flex: none; white-space: nowrap;
+            }
+            .de-desk-section-head {
+              display: flex; align-items: center; justify-content: space-between;
+              margin: 20px 0 2px;
+            }
+            .de-desk-section-head h4 {
+              font-family: "Space Grotesk", sans-serif;
+              font-size: 13px; font-weight: 600; color: var(--desk-shell-text);
+            }
+            .de-desk-section-head a { font-size: 12px; color: var(--desk-pink); font-weight: 600; }
+            .de-desk-details-head {
+              display: flex; align-items: center; justify-content: space-between;
+              margin: 18px 0 12px;
+            }
+            .de-desk-details-head h4 {
+              font-family: "Space Grotesk", sans-serif;
+              font-size: 11.5px; font-weight: 700;
+              letter-spacing: 0.06em; text-transform: uppercase;
+              color: var(--desk-shell-muted);
+            }
+            .de-desk-secure {
+              display: flex; align-items: center; gap: 5px;
+              border: 1px solid var(--desk-green); color: #178a4c;
+              border-radius: 999px; padding: 3px 9px;
+              font-size: 10.5px; font-weight: 600;
+              background: rgba(34,197,94,0.08);
+            }
+            .de-desk-secure svg { width: 10px; height: 10px; }
+            .de-desk-form { display: flex; flex-direction: column; gap: 10px; }
+            .de-desk-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+            .de-desk-field label {
+              display: block; font-size: 11px; font-weight: 600;
+              color: var(--desk-shell-muted); margin-bottom: 6px;
+            }
+            .de-desk-input-wrap { position: relative; }
+            .de-desk-input-wrap > svg {
+              position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+              width: 13px; height: 13px; color: #6b6678; pointer-events: none;
+            }
+            .de-desk-shell .de-desk-input {
+              width: 100%;
+              height: 40px;
+              background: var(--desk-inset) !important;
+              border: 1px solid var(--desk-border) !important;
+              color: #fff !important;
+              border-radius: 10px;
+              padding: 10px 11px 10px 32px;
+              font-size: 13px;
+              box-shadow: none !important;
+            }
+            .de-desk-shell .de-desk-input::placeholder { color: #6b6678; }
+            .de-desk-shell .de-desk-select { appearance: none; padding-right: 28px; }
+            .de-desk-select-chev {
+              position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+              width: 12px; height: 12px; color: #6b6678; pointer-events: none;
+            }
+            .de-desk-ta-wrap { position: relative; }
+            .de-desk-shell .de-desk-ta {
+              min-height: 80px; height: auto; padding-left: 11px; resize: vertical;
+              line-height: 1.5;
+            }
+            .de-desk-counter {
+              position: absolute; right: 10px; bottom: 8px;
+              font-size: 10px; color: #6b6678; pointer-events: none;
+            }
+            .de-desk-attach {
+              display: flex; align-items: flex-start; gap: 9px;
+              width: 100%; text-align: left;
+              margin-top: 2px; padding: 12px;
+              border: 1px dashed var(--desk-border-strong);
+              border-radius: 11px; background: var(--desk-inset);
+            }
+            .de-desk-attach:hover { border-color: var(--desk-pink); }
+            .de-desk-attach svg { width: 14px; height: 14px; color: #6b6678; flex: none; margin-top: 2px; }
+            .de-desk-attach-t { display: block; font-size: 12.5px; font-weight: 600; color: #fff; }
+            .de-desk-attach-h { display: block; font-size: 10.5px; color: #6b6678; margin-top: 1px; }
+            .de-desk-caption {
+              display: flex; align-items: center; gap: 6px;
+              font-size: 11px; color: var(--desk-shell-muted);
+            }
+            .de-desk-caption svg { width: 11px; height: 11px; }
+            .de-desk-btn-grad {
+              width: 100%; margin-top: 4px;
+              background: var(--desk-grad); border: none; color: #fff;
+              font-weight: 600; font-size: 13.5px; padding: 13px;
+              border-radius: 11px;
+              display: flex; align-items: center; justify-content: center; gap: 8px;
+              box-shadow: 0 14px 30px -10px rgba(211,18,106,0.45);
+            }
+            .de-desk-btn-grad:hover { filter: brightness(1.08); }
+            .de-desk-btn-grad:disabled { opacity: 0.6; }
+            .de-desk-btn-grad svg { width: 14px; height: 14px; }
+            .de-desk-bubble {
+              max-width: 90%;
+              padding: 11px 14px;
+              font-size: 13.5px; line-height: 1.5;
+              border-radius: 14px;
+            }
+            .de-desk-bubble.is-user {
+              background: var(--desk-pink); color: #fff;
+              border-bottom-right-radius: 6px;
+            }
+            .de-desk-bubble.is-bot, .de-desk-bubble.is-agent {
+              background: var(--desk-box); color: #fff;
+              border: 1px solid var(--desk-border);
+              border-bottom-left-radius: 6px;
+            }
+            .de-desk-bubble-meta {
+              display: flex; align-items: center; gap: 8px;
+              margin-bottom: 6px;
+              font-size: 10px; font-weight: 600;
+              letter-spacing: 0.14em; text-transform: uppercase;
+              color: var(--desk-pink);
+            }
+            .de-desk-bubble-meta span {
+              width: 16px; height: 16px; border-radius: 4px;
+              background: var(--desk-pink); color: #fff;
+              display: inline-flex; align-items: center; justify-content: center;
+              font-size: 8px; letter-spacing: 0;
+            }
+            .de-desk-success { flex-direction: column; align-items: flex-start; }
+            .de-desk-success p { max-width: none; }
+            .de-desk-ticket-ref {
+              font-family: ui-monospace, monospace;
+              font-size: 12px; font-weight: 600; color: #f0b4cc;
+              margin-top: 8px;
+            }
+            .de-desk-success-actions { display: flex; flex-direction: column; gap: 8px; width: 100%; margin-top: 14px; }
+            .de-desk-composer {
+              display: flex; gap: 8px;
+              padding: 13px 17px;
+              border-top: 1px solid var(--desk-border);
+              background: #131218;
+              flex-shrink: 0;
+            }
+            .de-desk-composer input {
+              flex: 1;
+              background: var(--desk-inset);
+              border: 1px solid var(--desk-border);
+              border-radius: 11px;
+              padding: 11px 13px;
+              color: #fff; font-size: 13px;
+            }
+            .de-desk-composer input:focus {
+              outline: none;
+              border-color: var(--desk-pink);
+              box-shadow: 0 0 0 3px rgba(211,18,106,0.12);
+            }
+            .de-desk-send {
+              width: 41px; height: 41px; border-radius: 11px;
+              background: var(--desk-grad); border: none;
+              display: flex; align-items: center; justify-content: center;
+              flex: none;
+              box-shadow: 0 12px 26px -8px rgba(211,18,106,0.45);
+            }
+            .de-desk-send:disabled { opacity: 0.5; }
+            .de-desk-send svg { width: 16px; height: 16px; color: #fff; }
+            .de-desk-composer-caption {
+              display: flex; align-items: center; gap: 6px;
+              padding: 0 17px 12px;
+              background: #131218;
+              font-size: 11px; color: #6b6678;
+              flex-shrink: 0;
+            }
+            .de-desk-composer-caption svg { width: 11px; height: 11px; }
+            .de-desk-foot {
+              display: flex; align-items: center; justify-content: space-between;
+              padding: 11px 17px;
+              border-top: 1px solid var(--desk-border);
+              background: var(--desk-inset);
+              flex-shrink: 0;
+            }
+            .de-desk-foot-nav {
+              font-size: 11px; color: #6b6678;
+              display: flex; gap: 5px; min-width: 0;
+            }
+            .de-desk-foot-nav .is-active { color: var(--desk-pink); font-weight: 600; }
+            .de-desk-foot-cta {
+              font-size: 11.5px; color: var(--desk-pink); font-weight: 600;
+              display: flex; align-items: center; gap: 4px; flex: none;
+            }
+            .de-desk-foot-cta svg { width: 11px; height: 11px; }
+            @media (max-width: 420px) {
+              .de-desk-grid2 { grid-template-columns: 1fr; }
+              .de-desk-hero-art { display: none; }
+              .de-desk-tab { font-size: 12.5px; }
+              .de-desk-hero h3 { font-size: 16.5px; }
             }
           `,
         }}

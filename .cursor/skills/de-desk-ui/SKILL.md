@@ -21,10 +21,9 @@ description: >-
 
 ## Non-negotiables
 
-- **One shell** for all three tabs: dark glass chrome (header, underline tabs, status, footer).
-- **Resources** dark card UI is the quality reference — match its depth, borders, glow, spacing.
-- **Desk** = light nested panel inside that shell (high-contrast chat).
-- **Ticket** = dark nested panel in the same language as Resources (not a random light form).
+- **One shell** for all three tabs: light chrome (header, underline tabs, status) + dark composer/footer.
+- **Content boxes** are dark (hero, rows, inputs) on the light body — that contrast is the quality reference.
+- **Desk / Ticket / Resources** share that language. Do not put a second nested theme per tab.
 - **Function labels**, not vendor names (`Remote session` not `Zoho Assist`). Keep hrefs.
 - Do **not** remove tabs, CTAs, disclaimers, or resource rows without asking DE.
 - Do **not** invent `//login`; use `PORTAL_LOGIN`.
@@ -34,10 +33,9 @@ description: >-
 
 ```
 DE Desk UI checklist:
-- [ ] Shell chrome shared (no per-tab conflicting tab styles)
-- [ ] Resources still feels like references/resources-*.png
-- [ ] Desk is light nested readable chat
-- [ ] Ticket is dark nested (hero + chips + form)
+- [ ] Light shell chrome shared (no per-tab conflicting tab styles)
+- [ ] Dark boxes on the light body (hero, rows, inputs)
+- [ ] Dark composer + footer on all tabs
 - [ ] Copy is function-based
 - [ ] Contrast checked (no white-on-white buttons)
 - [ ] Browser screenshot vs mockup

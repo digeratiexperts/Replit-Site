@@ -4,48 +4,41 @@
 
 | Token | Value | Use |
 |-------|-------|-----|
-| Magenta | `#D3126A` | Primary CTA, active underline glow, user bubbles, brand mark |
-| Violet | `#5B45E0` / `#7c3aed` | Secondary accents, ticket submit gradient start |
-| Shell bg | `#1a0b33` | Modal background (deep violet, not flat black) |
-| Nested dark | `#12141c` / `#171922` | Ticket & Resources panels / cards |
-| Nested light | `#ffffff` / `#faf8fc` | Desk chat panel |
-| Online | Emerald glow on status dot | Availability |
-| Text light-on-dark | `white` / `white/65` / `white/45` | Hierarchy on dark |
-| Text dark-on-light | `#1a1228` / `#5A3A5E` / plum secondary | Desk chat body |
-
-Shell border/glow: cool purple frame `border-[3px] border-[#A78BFA]/75` on deep violet shell
-`bg-[#1a0b33]` + lavender outer ring/glow (not flat near-black).
+| Magenta | `#D3126A` | Avatar, active underline, send, CTAs, user bubbles |
+| Violet | `#8B5CF6` | Icon-well accent only — never a wash fill |
+| Shell | `#FFFFFF` / `#F6F5FA` | Header, tabs, status, body |
+| Shell text | `#17141F` / `#68637A` | Titles and labels on light chrome |
+| Dark box | `#1A1820` / `#0F0E14` | Hero, rows, inputs, footer |
+| Composer | `#131218` | Shared ask bar above the footer |
+| Online | Emerald pip | Availability |
 
 ## Shared chrome (top → bottom)
 
-1. **Header** — gradient DE mark + green online pip; title “DE Desk”; subtitle “Answers · Tickets · Assist”; status pill + close
-2. **Tabs** — Desk | Ticket | Resources; active = `#F0B4CC` + magenta underline glow
-3. **Status row** — green/sky/amber dot + “DE Desk is online” | “Need a human? →”
-4. **Content** — nested rounded panel (`rounded-[1.2rem]`, `border-white/10`)
-5. **Footer** — “DE Desk · Ticket · Resources · Assist” | Create ticket
+1. **Header** — magenta DE mark + green pip; title “DE Desk”; subtitle “Answers · Tickets · Assist”; close
+2. **Tabs** — Desk | Ticket | Resources; active = dark label + magenta underline
+3. **Status row** — green/sky/amber dot + “DE Desk is online” | “Need help now?”
+4. **Content** — light body; dark hero + dark rows / dark inputs
+5. **Composer** — dark ask bar + send
+6. **Footer** — “DE Desk · Ticket · Resources · Assist” | Create ticket
 
-## Resources (approved)
+## Resources
 
-- Hero: “Your AI help desk” / “Get clear answers, fast.” + benefit row
-- Rows: colored icon well + title + description + capability tags + CTA arrow
-- Security CTA card with Create ticket
+- Hero: “Get where you need to go”
+- Rows: colored icon well + title + description + external + chevron
+- Assessment highlight + security alert with Create ticket
 - Labels are **functions** (Remote session, Remote support guide, Knowledge base, Client portal)
 
 ## Desk
 
-- Light nested card fills content area
-- Assistant bubble: light surface, DE badge magenta
-- User bubble: magenta
-- Quick chips: icon well + label + chevron (2×2)
-- Composer: light field + magenta send; lock disclaimer under input
+- Dark hero “Talk to DE Desk” + dark prompt rows
+- After send: magenta user bubbles, dark assistant bubbles
+- Shared dark composer under all tabs
 
 ## Ticket
 
-- Dark nested panel matching Resources card language
-- Hero “How can we help?”
-- Quick subject chips (4)
-- Form card: Secure & Private badge; icon-prefixed fields; violet→magenta submit
-- Optional bottom ask bar that routes to Desk chat
+- Dark hero “Create a support ticket”
+- Dark subject rows (4)
+- Form on the light body: Secure & private pill; dark icon-prefixed fields; magenta→violet submit
 
 ## Primary file
 

@@ -1,5 +1,5 @@
 ---
-description: DE Desk widget visual + copy playbook (dark glass shell, dual-tone Desk, function labels)
+description: DE Desk widget visual + copy playbook (light shell, dark boxes, function labels)
 globs: client/src/components/ZohoASAPWidget.tsx,client/src/pages/portal/PortalChat.tsx
 alwaysApply: false
 ---
@@ -10,18 +10,20 @@ Primary file: `client/src/components/ZohoASAPWidget.tsx`. Full playbook: `.curso
 
 ## Shell (all tabs)
 
-- One **dark glass** frame for Desk / Ticket / Resources — shared header, underline tabs, status row, footer.
-- Brand magenta `#D3126A`; violet `#5B45E0` / `#7c3aed` accents; soft magenta/violet radial glow — no generic purple-on-white SaaS look.
-- Active tab: pink/magenta label + glowing underline. Inactive: muted white/45.
-- High contrast text always. Never white-on-white (`outline` Button needs explicit `bg-*` on dark pages).
+- One **light chrome** frame for Desk / Ticket / Resources — white header, underline tabs, status row, light body.
+- **Dark boxes** sit on that light field (hero, prompt rows, form inputs).
+- **Dark composer + footer** stay graphite (`#131218` / `#0F0E14`).
+- Brand magenta `#D3126A` for avatar, active underline, send, CTAs. Violet `#8B5CF6` is icon-well accent only — no purple wash fills.
+- Active tab: dark label + magenta underline. Inactive: muted shell dim.
+- High contrast text always. Dark boxes use white type; labels on the light body use `#68637A`.
 
 ## Tab content
 
-| Tab | Panel inside shell |
-|-----|--------------------|
-| **Resources** | Dark nested cards — **approved reference**. Hero + tagged resource rows + security CTA. |
-| **Desk** | **Light nested chat card** (readable bubbles/chips/composer) inside the dark shell. |
-| **Ticket** | **Dark nested panel** matching Resources language (hero, quick chips, form card, optional ask bar). |
+| Tab | Panel inside light shell |
+|-----|--------------------------|
+| **Desk** | Dark hero + dark prompt rows; conversation uses magenta user / dark assistant bubbles. |
+| **Ticket** | Same hero language + dark chip rows + dark inputs on the light body. |
+| **Resources** | Same hero language + dark resource rows + assessment highlight + security alert. |
 
 Do not invent a third unrelated theme per tab. Elevate in place; ask DE before removing CTAs, tabs, disclaimers, or resource links.
 
