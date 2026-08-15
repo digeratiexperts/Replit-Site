@@ -85,24 +85,38 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
   }, []);
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    let isReady = false;
-
-    const handleMouseLeave = (e: MouseEvent) => {
-      if (e.clientY <= 0 && isReady) {
-        showPopup();
-      }
-    };
-
-    timeoutId = setTimeout(() => {
-      isReady = true;
+    let ready = false;
+    const arm = window.setTimeout(() => {
+      ready = true;
     }, delay);
 
-    document.addEventListener("mouseleave", handleMouseLeave);
+    const leavingViewport = (e: MouseEvent) => {
+      if (!ready) return;
+      const related = e.relatedTarget as Node | null;
+      if (related) return;
+      if (e.clientY <= 8) showPopup();
+    };
+
+    // document.mouseleave is unreliable; html + mouseout catch the tab-bar exit.
+    const html = document.documentElement;
+    html.addEventListener("mouseleave", leavingViewport);
+    document.addEventListener("mouseout", leavingViewport);
+
+    // Phones have no cursor. Treat scroll-back-to-top after reading as leaving.
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      if (!ready) return;
+      const y = window.scrollY;
+      if (lastY > 320 && y < 64) showPopup();
+      lastY = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
-      clearTimeout(timeoutId);
-      document.removeEventListener("mouseleave", handleMouseLeave);
+      window.clearTimeout(arm);
+      html.removeEventListener("mouseleave", leavingViewport);
+      document.removeEventListener("mouseout", leavingViewport);
+      window.removeEventListener("scroll", onScroll);
     };
   }, [delay, showPopup]);
 
