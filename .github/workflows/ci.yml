@@ -42,5 +42,10 @@ jobs:
       - name: Unit tests
         run: npm test
 
+      # msp-advisor uses the node:test runner, so it is excluded from Vitest
+      # collection and needs its own step to stay covered.
+      - name: MSP advisor tests
+        run: npm run test:advisor
+
       - name: Production build
         run: npm run build
