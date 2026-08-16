@@ -168,7 +168,7 @@ export default function Blog() {
               </button>
               <Link href="/#contact">
                 <button
-                  className="group relative inline-flex items-center gap-2 h-12 px-6 rounded-full font-semibold text-white border border-de-hairline backdrop-blur-md transition-all duration-200 bg-de-raised hover: hover:via-fuchsia-400/40 hover: shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(0,0,0,0.2),0_10px_28px_-8px_rgba(179,0,255,0.65)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),inset_0_-1px_0_rgba(0,0,0,0.2),0_14px_36px_-8px_rgba(217,70,239,0.7)] active:translate-y-px"
+                  className="group relative inline-flex items-center gap-2 h-12 px-6 rounded-full font-semibold text-white border border-de-hairline backdrop-blur-md transition-all duration-200 bg-de-raised hover:bg-de-raised shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(0,0,0,0.2),0_10px_28px_-8px_rgb(var(--de-accent-rgb) / 0.35)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),inset_0_-1px_0_rgba(0,0,0,0.2),0_14px_36px_-8px_rgb(var(--de-accent-rgb) / 0.4)] active:translate-y-px"
                   data-testid="button-subscribe"
                 >
                   <span className="pointer-events-none absolute inset-x-3 top-1 h-1/2 rounded-full bg-gradient-to-b from-white/35 to-transparent opacity-70" aria-hidden />
@@ -216,7 +216,7 @@ export default function Blog() {
                     {isActive && (
                       <span
                         aria-hidden
-                        className="absolute left-3 right-3 -bottom-px h-0.5 bg-gradient-to-r from-fuchsia-300 to-pink-300 rounded-full"
+                        className="absolute left-3 right-3 -bottom-px h-0.5 bg-gradient-to-r from-de-accent-ink to-de-accent-ink rounded-full"
                       />
                     )}
                   </button>
@@ -237,7 +237,7 @@ export default function Blog() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search articles, topics, frameworks…"
-                  className="pl-11 pr-11 h-12 bg-white/[0.06] border-white/15 text-white placeholder:text-white/55 focus-visible:ring-fuchsia-500/40 focus-visible:border-fuchsia-500/40 rounded-full"
+                  className="pl-11 pr-11 h-12 bg-white/[0.06] border-white/15 text-white placeholder:text-white/55 focus-visible:ring-de-accent/40 focus-visible:border-de-accent/40 rounded-full"
                   data-testid="input-blog-search"
                 />
                 {query && (
@@ -325,7 +325,7 @@ export default function Blog() {
               {filtered.map((post) => (
                 <Link href={post.href} key={post.slug}>
                   <Card
-                    className="group h-full overflow-hidden border-white/10 bg-white/[0.02] hover:border-fuchsia-500/40 transition-all cursor-pointer flex flex-col"
+                    className="group h-full overflow-hidden border-white/10 bg-white/[0.02] hover:border-de-accent/40 transition-all cursor-pointer flex flex-col"
                     data-testid={`card-post-${post.slug}`}
                   >
                     <div className="relative aspect-[16/9] overflow-hidden">
@@ -346,7 +346,7 @@ export default function Blog() {
                       </div>
                     </div>
                     <CardContent className="p-6 flex flex-col flex-1">
-                      <h3 className="text-lg md:text-xl font-bold text-white mb-3 leading-snug group-hover:text-fuchsia-300 transition-colors line-clamp-3">
+                      <h3 className="text-lg md:text-xl font-bold text-white mb-3 leading-snug group-hover:text-de-accent-ink transition-colors line-clamp-3">
                         {post.title}
                       </h3>
                       <p className="text-white/55 text-sm mb-5 line-clamp-3 flex-1 leading-relaxed">
@@ -376,7 +376,7 @@ export default function Blog() {
 
           {/* Ebook spotlight — editorial bottom feature */}
           <section className="mt-20" aria-label="Featured ebook">
-            <div className="rounded-3xl border border-white/10 bg-de-raised via-[#0a0a0a] to-fuchsia-950/40 overflow-hidden">
+            <div className="rounded-3xl border border-white/10 bg-de-raised overflow-hidden">
               <Link href={ebookFeature.href}>
                 <div
                   className="grid md:grid-cols-2 gap-0 group cursor-pointer"
@@ -393,11 +393,11 @@ export default function Blog() {
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0a0a0a]/40 md:to-[#0a0a0a]/0" />
                   </div>
                   <div className="p-8 md:p-10 flex flex-col justify-center">
-                    <Badge className="self-start mb-4 bg-fuchsia-500/15 text-fuchsia-300 border-fuchsia-500/30">
+                    <Badge className="self-start mb-4 bg-de-raised text-de-accent-ink border-de-hairline">
                       <BookOpen className="h-3 w-3 mr-1.5" />
                       Free Ebook
                     </Badge>
-                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 group-hover:text-fuchsia-200 transition-colors">
+                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 group-hover:text-de-accent-ink transition-colors">
                       {ebookFeature.title}
                     </h3>
                     <p className="text-white/65 text-base mb-6 leading-relaxed">
@@ -411,7 +411,7 @@ export default function Blog() {
                       <span>•</span>
                       <span>{ebookFeature.author}</span>
                     </div>
-                    <span className="inline-flex items-center text-fuchsia-300 group-hover:text-fuchsia-200 font-medium">
+                    <span className="inline-flex items-center text-de-accent-ink font-medium">
                       Read the ebook
                       <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </span>
@@ -423,7 +423,7 @@ export default function Blog() {
 
           {/* Bottom CTA */}
           <section className="mt-16">
-            <Card className="overflow-hidden border-de-hairline bg-de-raised via-[#0a0a0a] to-fuchsia-600/15">
+            <Card className="overflow-hidden border-de-hairline bg-de-raised ">
               <CardContent className="p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6">
                 <div className="text-center md:text-left">
                   <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
@@ -436,7 +436,7 @@ export default function Blog() {
                 </div>
                 <Link href="/book">
                   <button
-                    className="group relative inline-flex items-center gap-3 h-14 px-8 rounded-2xl font-semibold text-white whitespace-nowrap border border-de-hairline backdrop-blur-md transition-all duration-200 bg-de-raised hover: hover:via-fuchsia-400/45 hover: shadow-[inset_0_1px_0_rgba(255,255,255,0.45),inset_0_-1px_0_rgba(0,0,0,0.25),0_14px_36px_-10px_rgba(179,0,255,0.7)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.55),inset_0_-1px_0_rgba(0,0,0,0.25),0_18px_44px_-10px_rgba(217,70,239,0.75)] active:translate-y-px"
+                    className="group relative inline-flex items-center gap-3 h-14 px-8 rounded-2xl font-semibold text-white whitespace-nowrap border border-de-hairline backdrop-blur-md transition-all duration-200 bg-de-raised hover:bg-de-raised shadow-[inset_0_1px_0_rgba(255,255,255,0.45),inset_0_-1px_0_rgba(0,0,0,0.25),0_14px_36px_-10px_rgb(var(--de-accent-rgb) / 0.4)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.55),inset_0_-1px_0_rgba(0,0,0,0.25),0_18px_44px_-10px_rgb(var(--de-accent-rgb) / 0.45)] active:translate-y-px"
                     data-testid="button-blog-assessment"
                   >
                     <span className="pointer-events-none absolute inset-x-4 top-1 h-1/2 rounded-2xl bg-gradient-to-b from-white/35 to-transparent opacity-70" aria-hidden />

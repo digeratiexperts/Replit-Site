@@ -593,7 +593,7 @@ export default function BlogPost() {
                                     aria-hidden
                                     className={`absolute left-[3px] top-[11px] w-3.5 h-3.5 rounded-full border-2 transition-all duration-300 flex items-center justify-center text-[8px] font-bold ${
                                       isActive
-                                        ? "bg-gradient-to-br  to-fuchsia-400 border-white/80 shadow-[0_0_12px_rgba(217,70,239,0.7)] scale-110"
+                                        ? "bg-de-accent border-white/80 scale-110"
                                         : isPast
                                           ? "bg-de-raised border-de-hairline"
                                           : "bg-[#0a0a0a] border-white/25"
@@ -900,7 +900,7 @@ export default function BlogPost() {
                       key={idx}
                       className={`text-white/85 text-[18px] leading-[1.85] mb-7 ${
                         isFirst
-                          ? "first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:text-7xl first-letter:font-bold first-letter:leading-[0.85] first-letter:bg-gradient-to-br first-letter: first-letter:to-fuchsia-400 first-letter:bg-clip-text first-letter:text-transparent"
+                          ? "first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:text-7xl first-letter:font-bold first-letter:leading-[0.85] first-letter:text-de-accent-ink"
                           : ""
                       }`}
                     >

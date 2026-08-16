@@ -144,7 +144,7 @@ export default function KnowledgeBase() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 
               href="/support/submit-ticket" 
-              className="inline-flex items-center justify-center bg-white text-de-accent hover:bg-de-paper-raised px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
+              className="inline-flex items-center justify-center bg-white text-[#0e7490] hover:bg-de-paper-raised px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
               data-testid="button-submit-ticket"
             >
               Submit Support Ticket

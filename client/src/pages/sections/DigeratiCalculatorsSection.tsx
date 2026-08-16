@@ -63,7 +63,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
             <span className="text-sm md:text-base font-medium text-[#FF477F]">Assessment</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-bold text-white mb-3 md:mb-4 px-2">
-            Calculate Your <span className="bg-gradient-to-r from-[#FF477F] via-[#D3126A] to-fuchsia-400 bg-clip-text text-transparent">Investment</span>
+            Calculate Your <span className="text-de-magenta-ink">Investment</span>
           </h2>
           <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto px-4">
             Start with the numbers — downtime risk and monthly protection — then schedule a full cyber risk assessment.

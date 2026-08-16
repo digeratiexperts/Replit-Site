@@ -31,8 +31,8 @@ const FloatingOrbs = ({ prefersReducedMotion }: { prefersReducedMotion: boolean 
       transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
     />
     <motion.div
-      className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full"
-      style={{ background: "radial-gradient(circle, rgba(217, 70, 239, 0.16) 0%, transparent 65%)" }}
+      className="de-hero-glow absolute -bottom-32 -left-32 w-80 h-80 rounded-full"
+      style={{ background: "radial-gradient(circle, rgba(211, 18, 106, 0.14) 0%, transparent 65%)" }}
       animate={prefersReducedMotion ? {} : {
         x: [0, -15, 0],
         y: [0, 20, 0],
