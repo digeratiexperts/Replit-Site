@@ -36,7 +36,7 @@ export function EcosystemProgression({ compact = false, detailed = false }: Ecos
           : "rounded-2xl border border-[var(--de-hairline)] bg-[var(--de-surface)] p-6 md:p-8 lg:p-10"
       }
     >
-      <p className="text-base font-semibold uppercase tracking-[0.2em] text-[#D3126A]">
+      <p className="text-base font-semibold uppercase tracking-[0.2em] text-de-magenta-ink">
         ProActive Ecosystem
       </p>
       <h2 className="mt-2 font-heading text-2xl font-semibold tracking-[-0.03em] text-white md:text-3xl lg:text-4xl">
@@ -79,7 +79,7 @@ export function EcosystemProgression({ compact = false, detailed = false }: Ecos
               </ul>
             )}
             <Link href={tier.learnMoreUrl}>
-              <span className="mt-5 inline-flex min-h-11 items-center gap-1 text-base font-semibold text-[#D3126A] transition-colors hover:text-[#f0187a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]">
+              <span className="mt-5 inline-flex min-h-11 items-center gap-1 text-base font-semibold text-de-magenta-ink transition-colors hover:text-[#f0187a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]">
                 {tier.label}
                 <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
               </span>

@@ -76,7 +76,7 @@ function ProofCta({
     "focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]",
     quiet
       ? "text-white/50 hover:text-white"
-      : "text-[#D3126A] hover:text-[#f0187a]",
+      : "text-de-magenta-ink hover:text-[#f0187a]",
     className,
   );
 
@@ -107,7 +107,7 @@ export function HomepageProofSection() {
     <section id="proof" className="de-dark-well de-chapter-hairline py-14 lg:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#D3126A]/80">
+          <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-de-magenta-ink">
             Trust & transparency
           </p>
           <h2 className="font-heading text-3xl font-semibold tracking-[-0.03em] text-white md:text-4xl lg:text-5xl">

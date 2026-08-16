@@ -137,6 +137,14 @@ html {
   --de-accent: #ec4899;
   --de-accent-2: #d946ef;
   --de-magenta: #D3126A;
+  /*
+   * Brand magenta only reaches ~3.6:1 on the dark ladder, which clears WCAG's
+   * 3:1 bar for icons and large headings but fails the 4.5:1 bar for body-size
+   * text and inline links. This lighter tint holds the same hue and clears
+   * 4.5:1 on --de-bg, --de-surface, and --de-raised. Fills stay --de-magenta;
+   * this is for small text on dark only.
+   */
+  --de-magenta-ink: #F04C97;
   --de-violet: #5B45E0;
 
   /*
@@ -548,7 +556,7 @@ textarea:focus-visible {
   left: 50%;
   transform: translateX(-50%);
   padding: 0.75rem 1.5rem;
-  background: rgb(139, 92, 246);
+  background: var(--de-magenta);
   color: white;
   font-weight: 600;
   border-radius: 0 0 8px 8px;

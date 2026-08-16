@@ -50,7 +50,7 @@ function InsightCard({ insight, index }: { insight: ThreatItem; index: number })
             <span className="sm:hidden">{formatThreatDate(insight.publishedAt, "short")}</span>
           </span>
         </div>
-        <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#D3126A]">
+        <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-de-magenta-ink">
           {insight.kicker}
         </p>
         <CardTitle className="text-base sm:text-lg text-white line-clamp-2">
@@ -71,7 +71,7 @@ function InsightCard({ insight, index }: { insight: ThreatItem; index: number })
             href={insight.sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 text-base font-medium text-[#D3126A] hover:text-[#f0187a] shrink-0"
+            className="flex items-center gap-1 text-base font-medium text-de-magenta-ink hover:text-[#f0187a] shrink-0"
           >
             Read source
             <ExternalLink className="h-3.5 w-3.5" />

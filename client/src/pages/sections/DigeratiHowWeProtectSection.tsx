@@ -58,7 +58,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.35 }}
           >
-            <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#D3126A]">
+            <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-de-magenta">
               What we protect
             </p>
             <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-gray-900 md:text-4xl">
@@ -100,7 +100,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
         <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4 md:mb-12">
             <div className="max-w-3xl">
-              <p className="mb-2 text-base font-semibold uppercase tracking-[0.2em] text-[#D3126A]">
+              <p className="mb-2 text-base font-semibold uppercase tracking-[0.2em] text-de-magenta-ink">
                 How protection works
               </p>
               <h3
@@ -127,7 +127,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
                   data-testid={step.testId}
                   className={`lg:px-6 ${index > 0 ? "lg:border-l lg:border-[var(--de-hairline)]" : "lg:pl-0"}`}
                 >
-                  <p className="font-mono text-base font-semibold tracking-[0.18em] text-[#D3126A]">
+                  <p className="font-mono text-base font-semibold tracking-[0.18em] text-de-magenta-ink">
                     {String(step.number).padStart(2, "0")}
                   </p>
                   <span className="mt-3 mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-[var(--de-hairline)] bg-[var(--de-bg)] text-[#D3126A]">

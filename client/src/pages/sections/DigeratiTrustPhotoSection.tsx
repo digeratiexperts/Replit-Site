@@ -36,7 +36,7 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
           >
             <div className="flex items-center gap-2 mb-5">
               <Shield className="w-4 h-4 text-pink-600" aria-hidden="true" />
-              <span className="text-base font-semibold text-pink-600 uppercase tracking-wider">
+              <span className="text-base font-semibold text-de-magenta uppercase tracking-wider">
                 Why Arizona businesses work with us
               </span>
             </div>

@@ -39,7 +39,7 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#D3126A]">
+          <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-de-magenta-ink">
             Human trust
           </p>
           <h2 className="mb-3 font-heading text-3xl font-semibold tracking-[-0.02em] text-white sm:text-4xl md:text-5xl">

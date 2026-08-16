@@ -147,7 +147,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
         >
-          <p className="mb-3 text-base font-medium uppercase tracking-wide text-[#D3126A]">
+          <p className="mb-3 text-base font-medium uppercase tracking-wide text-de-magenta-ink">
             Client proof
           </p>
           <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl md:text-5xl">
@@ -218,7 +218,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-[#D3126A] hover:text-[#f0187a]"
+                      className="inline-flex items-center gap-1 text-de-magenta-ink hover:text-[#f0187a]"
                       data-testid={
                         link.id === "google" ? "link-read-us-on-google" : `link-read-us-on-${link.id}`
                       }
@@ -311,7 +311,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-base">
           <Link href="/about/client-bill-of-rights">
-            <span className="text-[#D3126A] hover:text-[#f0187a]" data-testid="link-proof-bill-of-rights">
+            <span className="text-de-magenta-ink hover:text-[#f0187a]" data-testid="link-proof-bill-of-rights">
               Client Bill of Rights
             </span>
           </Link>
@@ -319,7 +319,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
             ·
           </span>
           <Link href="/about/guarantee">
-            <span className="text-[#D3126A] hover:text-[#f0187a]" data-testid="link-proof-guarantee">
+            <span className="text-de-magenta-ink hover:text-[#f0187a]" data-testid="link-proof-guarantee">
               Our Guarantee
             </span>
           </Link>
@@ -327,7 +327,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
             ·
           </span>
           <Link href="/trust/trust-center">
-            <span className="text-[#D3126A] hover:text-[#f0187a]" data-testid="link-proof-trust">
+            <span className="text-de-magenta-ink hover:text-[#f0187a]" data-testid="link-proof-trust">
               Trust Center
             </span>
           </Link>
@@ -335,7 +335,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
             ·
           </span>
           <Link href="/industries/healthcare">
-            <span className="text-[#D3126A] hover:text-[#f0187a]">Browse industries</span>
+            <span className="text-de-magenta-ink hover:text-[#f0187a]">Browse industries</span>
           </Link>
         </div>
         <p className="mt-4 text-center text-base text-white/55">

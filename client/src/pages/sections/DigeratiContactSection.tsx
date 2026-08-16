@@ -73,7 +73,7 @@ const contactSocials = [
 ] as const;
 
 const fieldClass =
-  "h-11 bg-white border-[var(--de-paper-hairline)] text-[#1A1228] placeholder:text-black/35 focus-visible:ring-2 focus-visible:ring-[#D3126A]/40 focus-visible:border-[#D3126A]";
+  "h-11 bg-white border-[var(--de-paper-hairline)] text-[#1A1228] placeholder:text-black/55 focus-visible:ring-2 focus-visible:ring-[#D3126A]/40 focus-visible:border-[#D3126A]";
 
 export const DigeratiContactSection = ({
   headingAs = "h2",
@@ -362,7 +362,7 @@ export const DigeratiContactSection = ({
                         >
                           <FormControl>
                             <SelectTrigger
-                              className="h-11 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] focus:ring-2 focus:ring-[#D3126A]/40 [&>span]:text-black/35"
+                              className="h-11 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] focus:ring-2 focus:ring-[#D3126A]/40 data-[placeholder]:text-black/55"
                               data-testid="select-contact-service"
                             >
                               <SelectValue placeholder="Select a service" />
@@ -392,7 +392,7 @@ export const DigeratiContactSection = ({
                             placeholder="Tell us about your security needs..."
                             rows={4}
                             data-testid="textarea-contact-message"
-                            className="resize-none border-[var(--de-paper-hairline)] bg-white text-[#1A1228] placeholder:text-black/35 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
+                            className="resize-none border-[var(--de-paper-hairline)] bg-white text-[#1A1228] placeholder:text-black/55 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
                             disabled={isSubmitting}
                             {...field}
                           />

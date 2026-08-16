@@ -55,7 +55,7 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <div className="inline-flex items-center gap-2 text-base font-medium text-[#D3126A] mb-4">
+            <div className="inline-flex items-center gap-2 text-base font-medium text-de-magenta-ink mb-4">
               <Radio className="h-4 w-4" aria-hidden />
               Detection & response
             </div>

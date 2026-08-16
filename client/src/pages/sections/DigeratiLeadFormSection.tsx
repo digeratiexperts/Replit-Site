@@ -126,7 +126,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                           <Input 
                             placeholder="John Smith" 
                             data-testid="input-lead-full-name"
-                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/35 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
+                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/55 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
                             disabled={isSubmitting}
                             {...field} 
                           />
@@ -147,7 +147,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                             type="email" 
                             placeholder="john@company.com" 
                             data-testid="input-lead-email"
-                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/35 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
+                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/55 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
                             disabled={isSubmitting}
                             {...field} 
                           />
@@ -168,7 +168,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                             type="tel" 
                             placeholder="(555) 123-4567" 
                             data-testid="input-lead-phone"
-                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/35 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
+                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/55 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
                             disabled={isSubmitting}
                             {...field} 
                           />
@@ -188,7 +188,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                           <Input 
                             placeholder="Acme Corp" 
                             data-testid="input-lead-company"
-                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/35 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
+                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/55 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
                             disabled={isSubmitting}
                             {...field} 
                           />
@@ -232,7 +232,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
           </motion.div>
 
           <motion.p 
-            className="mt-6 text-center text-base text-black/50"
+            className="mt-6 text-center text-base text-black/70"
             initial={prefersReducedMotion ? {} : { opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}

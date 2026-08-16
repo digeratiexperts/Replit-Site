@@ -71,7 +71,7 @@ export const DigeratiStatsSection = (): JSX.Element => {
           transition={{ duration: 0.45 }}
           className="mb-10 max-w-3xl lg:mb-12"
         >
-          <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#D3126A]">
+          <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-de-magenta-ink">
             Why Digerati Experts
           </p>
           <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
@@ -96,7 +96,7 @@ export const DigeratiStatsSection = (): JSX.Element => {
 
         <p className="mt-6">
           <Link href="/resources/cyber-facts">
-            <span className="inline-flex items-center gap-1 text-base font-semibold text-[#D3126A] hover:text-[#f0187a]">
+            <span className="inline-flex items-center gap-1 text-base font-semibold text-de-magenta-ink hover:text-[#f0187a]">
               Full sourced facts
               <ArrowRight className="h-3.5 w-3.5" />
             </span>
