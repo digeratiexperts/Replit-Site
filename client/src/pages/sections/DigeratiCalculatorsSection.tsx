@@ -87,7 +87,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                 data-testid="calculator-downtime-trigger"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center">
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl border border-de-hairline bg-de-bg flex items-center justify-center">
                     <TrendingDown className="w-5 h-5 md:w-6 md:h-6 text-violet-400" />
                   </div>
                   <div className="text-left">
@@ -218,7 +218,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                         <div className="grid sm:grid-cols-2 gap-6">
                           <div className="text-center sm:text-left">
                             <p className="text-xs font-bold text-white/50 uppercase tracking-widest mb-2">Per-Incident Cost</p>
-                            <p className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
+                            <p className="text-3xl md:text-4xl font-bold text-de-magenta-ink">
                               ${downtimeCost.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                             </p>
                           </div>
@@ -265,7 +265,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                 data-testid="calculator-pricing-trigger"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center">
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl border border-de-hairline bg-de-bg flex items-center justify-center">
                     <DollarSign className="w-5 h-5 md:w-6 md:h-6 text-violet-400" />
                   </div>
                   <div className="text-left">
@@ -354,7 +354,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                       >
                         <div className="text-center">
                           <p className="text-xs font-bold text-white/50 uppercase tracking-widest mb-2">Estimated Monthly Cost</p>
-                          <p className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
+                          <p className="text-4xl md:text-5xl font-bold text-de-magenta-ink">
                             ${serviceCost.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                           </p>
                           <p className="text-base text-white/50 mt-2">
@@ -371,7 +371,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                           <a href="/book">
                             <Button 
                               size="lg"
-                              className="h-12 px-6 bg-gradient-to-r from-violet-500 to-purple-500 text-white hover:from-violet-400 hover:to-purple-400 font-semibold rounded-xl shadow-lg shadow-violet-500/25 transition-all duration-300 hover:scale-[1.02] hover:shadow-violet-500/40" 
+                              className="h-12 px-6 bg-de-magenta text-white hover:bg-[#e01874] font-semibold rounded-xl transition-colors" 
                               data-testid="button-schedule-consultation"
                             >
                               Schedule Consultation

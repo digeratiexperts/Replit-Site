@@ -155,9 +155,9 @@ export default function ComplianceCertifications() {
 
         {/* Hero Section */}
         <section className="relative de-nav-clear pb-20 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-violet-900/20 via-slate-950 to-purple-900/20" />
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl" />
+          <div className="absolute inset-0 bg-de-raised" />
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-de-magenta/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-de-magenta/10 rounded-full blur-3xl" />
           
           <div className="relative container mx-auto px-6">
             <motion.div
@@ -167,14 +167,14 @@ export default function ComplianceCertifications() {
               className="max-w-4xl mx-auto text-center"
               data-testid="section-hero-compliance"
             >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6" data-testid="badge-compliance-header">
-                <ClipboardCheck className="w-4 h-4 text-violet-400" />
-                <span className="text-violet-300 text-sm font-medium">Compliance & risk reporting</span>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-de-raised border border-de-hairline mb-6" data-testid="badge-compliance-header">
+                <ClipboardCheck className="w-4 h-4 text-de-magenta-ink" />
+                <span className="text-de-magenta-ink text-sm font-medium">Compliance & risk reporting</span>
               </div>
               
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6" data-testid="heading-compliance-hero">
                 Navigate Compliance with{" "}
-                <span className="bg-gradient-to-r from-violet-300 via-purple-300 to-fuchsia-300 bg-clip-text text-transparent">
+                <span className="text-de-magenta-ink">
                   Confidence
                 </span>
               </h1>
@@ -202,7 +202,7 @@ export default function ComplianceCertifications() {
                   asChild
                   size="lg"
                   variant="outline"
-                  className="border-violet-500/30 text-violet-300 hover:bg-violet-500/10"
+                  className="border-de-hairline text-de-magenta hover:bg-de-paper-raised"
                   data-testid="button-download-guide"
                 >
                   <Link href="/resources/security-checklist">
@@ -233,8 +233,8 @@ export default function ComplianceCertifications() {
                   className="p-6 rounded-xl bg-white/[0.02] border border-white/10 text-center"
                   data-testid={`card-why-compliance-${item.id}`}
                 >
-                  <div className="w-12 h-12 rounded-lg bg-violet-500/10 flex items-center justify-center mx-auto mb-4">
-                    <item.icon className="w-6 h-6 text-violet-400" />
+                  <div className="w-12 h-12 rounded-lg bg-de-raised flex items-center justify-center mx-auto mb-4">
+                    <item.icon className="w-6 h-6 text-de-magenta-ink" />
                   </div>
                   <h3 className="text-white font-semibold mb-2" data-testid={`heading-${item.id}`}>{item.title}</h3>
                   <p className="text-white/60 text-sm">{item.desc}</p>
@@ -269,10 +269,10 @@ export default function ComplianceCertifications() {
                   data-testid={`section-compliance-${framework.id}`}
                 >
                   {/* Header */}
-                  <div className={`p-6 bg-gradient-to-r ${framework.color} bg-opacity-10`} data-testid={`header-${framework.id}`}>
+                  <div className={`p-6 bg-de-raised`} data-testid={`header-${framework.id}`}>
                     <div className="flex items-start gap-4">
-                      <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${framework.color} flex items-center justify-center flex-shrink-0`}>
-                        <framework.icon className="w-7 h-7 text-white" />
+                      <div className={`w-14 h-14 rounded-xl border border-de-hairline bg-de-bg flex items-center justify-center flex-shrink-0`}>
+                        <framework.icon className="w-7 h-7 text-de-magenta" />
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-1">
@@ -292,7 +292,7 @@ export default function ComplianceCertifications() {
                     {/* Key Requirements */}
                     <div data-testid={`list-requirements-${framework.id}`}>
                       <h4 className="text-white font-semibold mb-4 flex items-center gap-2">
-                        <FileText className="w-5 h-5 text-violet-400" />
+                        <FileText className="w-5 h-5 text-de-magenta-ink" />
                         Key Requirements
                       </h4>
                       <ul className="space-y-3">
@@ -308,13 +308,13 @@ export default function ComplianceCertifications() {
                     {/* Our Capabilities */}
                     <div data-testid={`list-capabilities-${framework.id}`}>
                       <h4 className="text-white font-semibold mb-4 flex items-center gap-2">
-                        <Shield className="w-5 h-5 text-violet-400" />
+                        <Shield className="w-5 h-5 text-de-magenta-ink" />
                         Our Capabilities
                       </h4>
                       <ul className="space-y-2">
                         {framework.ourCapabilities.map((cap, i) => (
                           <li key={i} className="flex items-center gap-2" data-testid={`item-capability-${framework.id}-${i}`}>
-                            <div className="w-1.5 h-1.5 rounded-full bg-violet-400" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-de-magenta" />
                             <span className="text-white/70 text-sm">{cap}</span>
                           </li>
                         ))}
@@ -328,7 +328,7 @@ export default function ComplianceCertifications() {
                       <span className="text-white/50 text-xs uppercase tracking-wider">Industries We Serve:</span>
                       <div className="flex flex-wrap gap-2 mt-2">
                         {framework.industries.map((industry, i) => (
-                          <span key={i} className="px-3 py-1 rounded-full bg-violet-500/10 text-violet-300 text-xs" data-testid={`badge-industry-${framework.id}-${i}`}>
+                          <span key={i} className="px-3 py-1 rounded-full bg-de-raised text-de-magenta-ink text-xs" data-testid={`badge-industry-${framework.id}-${i}`}>
                             {industry}
                           </span>
                         ))}
@@ -360,7 +360,7 @@ export default function ComplianceCertifications() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-br from-violet-900/30 via-slate-950 to-purple-900/30">
+        <section className="py-20 bg-de-raised">
           <div className="container mx-auto px-6">
             <div className="max-w-3xl mx-auto text-center">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
@@ -387,7 +387,7 @@ export default function ComplianceCertifications() {
                   asChild
                   size="lg"
                   variant="outline"
-                  className="border-violet-500/30 text-violet-300 hover:bg-violet-500/10"
+                  className="border-de-hairline text-de-magenta hover:bg-de-paper-raised"
                   data-testid="button-contact-us"
                 >
                   <Link href="/#contact">

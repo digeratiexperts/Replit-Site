@@ -63,7 +63,7 @@ export default function MissionValues() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-600 mb-6">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-de-raised border border-de-hairline mb-6">
             <Zap className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-3xl font-bold mb-6 text-white">Our Mission</h2>
@@ -95,10 +95,10 @@ export default function MissionValues() {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1, duration: 0.5 }}
                 >
-                  <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 hover:bg-white/10 transition-all duration-300 overflow-hidden">
-                    <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${value.gradient} opacity-10 rounded-bl-full`} />
+                  <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-hairline hover:bg-white/10 transition-all duration-300 overflow-hidden">
+                    <div className={`absolute top-0 right-0 w-32 h-32 bg-de-magenta opacity-[0.06] rounded-bl-full`} />
                     <CardHeader>
-                      <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${value.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                      <div className={`w-14 h-14 rounded-xl border border-de-hairline bg-de-bg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                         <Icon className="h-7 w-7 text-white" />
                       </div>
                       <CardTitle className="text-2xl text-white">{value.title}</CardTitle>
@@ -121,8 +121,8 @@ export default function MissionValues() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-500/20 to-transparent rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-indigo-500/20 to-transparent rounded-full blur-3xl" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-de-raised to-transparent rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-de-raised to-transparent rounded-full blur-3xl" />
           
           <div className="relative">
             <h2 className="text-3xl font-bold mb-8 text-white">What Sets Us Apart</h2>
@@ -132,13 +132,13 @@ export default function MissionValues() {
                 return (
                   <motion.div 
                     key={index}
-                    className="flex gap-4 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:border-purple-500/50 hover:bg-white/10 transition-all duration-300"
+                    className="flex gap-4 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:border-de-hairline hover:bg-white/10 transition-all duration-300"
                     initial={prefersReducedMotion ? {} : { opacity: 0, x: -10 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1, duration: 0.3 }}
                   >
-                    <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-de-raised border border-de-hairline flex items-center justify-center">
                       <Icon className="w-6 h-6 text-white" />
                     </div>
                     <div>
@@ -154,7 +154,7 @@ export default function MissionValues() {
 
         {/* Stats Section */}
         <motion.div 
-          className="grid md:grid-cols-4 gap-6 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 rounded-2xl p-8 text-white"
+          className="grid md:grid-cols-4 gap-6 bg-de-surface rounded-2xl p-8 text-white"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -168,7 +168,7 @@ export default function MissionValues() {
           ].map((stat, idx) => (
             <div key={idx} className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
               <p className="text-3xl font-bold mb-1">{stat.value}</p>
-              <p className="text-purple-100 text-sm">{stat.label}</p>
+              <p className="text-white/80 text-sm">{stat.label}</p>
             </div>
           ))}
         </motion.div>
@@ -181,7 +181,7 @@ export default function MissionValues() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-indigo-600" />
+          <div className="absolute inset-0 bg-de-surface" />
           <div className="absolute inset-0 opacity-20">
             <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
               <defs>
@@ -202,7 +202,7 @@ export default function MissionValues() {
               href="/book"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center bg-white text-purple-700 hover:bg-purple-50 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
+              className="inline-flex items-center justify-center bg-white text-de-magenta hover:bg-de-paper-raised px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
               data-testid="button-schedule"
             >
               Schedule Free Consultation

@@ -130,7 +130,7 @@ const tiers = [
     subtitle: `Starting at $${pricing.office.user} /user·mo*`,
     ribbon: "Foundation",
     gradient: "from-violet-500 to-purple-500",
-    borderColor: "border-violet-500/30"
+    borderColor: "border-de-hairline"
   },
   { 
     id: "business", 
@@ -193,7 +193,7 @@ const EcosystemPricing = () => {
     }
     if (value === "Optional") {
       return (
-        <span className="px-2 py-1 rounded-full text-xs font-medium bg-violet-500/20 text-violet-300 border border-violet-500/30">
+        <span className="px-2 py-1 rounded-full text-xs font-medium bg-de-raised text-de-magenta-ink border border-de-hairline">
           Optional
         </span>
       );
@@ -204,7 +204,7 @@ const EcosystemPricing = () => {
       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
         isPro 
           ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' 
-          : 'bg-violet-500/20 text-violet-300 border border-violet-500/30'
+          : 'bg-de-raised text-de-magenta-ink border border-de-hairline'
       }`}>
         {value}
       </span>
@@ -237,7 +237,7 @@ const EcosystemPricing = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-300 text-sm font-medium mb-4">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-de-raised border border-de-hairline text-de-magenta-ink text-sm font-medium mb-4">
               <Shield className="w-4 h-4" />
               <span>Security-First IT Bundles</span>
             </div>
@@ -255,7 +255,7 @@ const EcosystemPricing = () => {
                 <span className="text-white/60">Included / ✓</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-violet-400"></span>
+                <span className="w-3 h-3 rounded-full bg-de-magenta"></span>
                 <span className="text-white/60">Premium / Pro</span>
               </div>
               <div className="flex items-center gap-2">
@@ -271,7 +271,7 @@ const EcosystemPricing = () => {
               size="sm"
               onClick={() => setHighlightUpgrades(!highlightUpgrades)}
               className={highlightUpgrades 
-                ? "bg-violet-600 hover:bg-violet-700 text-white" 
+                ? "bg-de-magenta hover:bg-de-magenta text-white" 
                 : "bg-white/10 border border-white/20 text-white hover:bg-white/20"}
               data-testid="btn-highlight-upgrades"
             >
@@ -300,7 +300,7 @@ const EcosystemPricing = () => {
           <div className="sticky top-16 z-20 bg-[#0a0a0f]/95 backdrop-blur-xl border-b border-white/10 mb-6 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
             <div className="max-w-[1600px] mx-auto">
               <div className="grid grid-cols-5 gap-2 py-4">
-                <div className="text-white/40 text-sm font-medium flex items-center">
+                <div className="text-white/55 text-sm font-medium flex items-center">
                   Capability
                 </div>
                 {tiers.map((tier, index) => (
@@ -309,7 +309,7 @@ const EcosystemPricing = () => {
                     className={`text-center p-3 rounded-xl border ${tier.borderColor} bg-white/[0.02]`}
                     data-testid={`tier-header-${tier.id}`}
                   >
-                    <div className={`text-xs font-semibold text-transparent bg-clip-text bg-gradient-to-r ${tier.gradient} uppercase tracking-wide mb-1`}>
+                    <div className={`text-xs font-semibold text-de-magenta-ink uppercase tracking-wide mb-1`}>
                       {tier.ribbon}
                     </div>
                     <h3 className="text-white font-bold text-sm md:text-base">{tier.name}</h3>
@@ -347,17 +347,17 @@ const EcosystemPricing = () => {
                     data-testid={`btn-toggle-${category.id}`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-violet-500/20 flex items-center justify-center text-violet-400">
+                      <div className="w-10 h-10 rounded-xl bg-de-raised flex items-center justify-center text-de-magenta-ink">
                         {category.icon}
                       </div>
                       <span className="text-white font-bold text-lg">{category.title}</span>
-                      <span className="text-white/40 text-sm">({category.rows.length})</span>
+                      <span className="text-white/55 text-sm">({category.rows.length})</span>
                     </div>
                     <div className="flex items-center gap-2">
                       {isExpanded ? (
-                        <ChevronUp className="w-5 h-5 text-white/40" />
+                        <ChevronUp className="w-5 h-5 text-white/55" />
                       ) : (
-                        <ChevronDown className="w-5 h-5 text-white/40" />
+                        <ChevronDown className="w-5 h-5 text-white/55" />
                       )}
                     </div>
                   </button>
@@ -415,7 +415,7 @@ const EcosystemPricing = () => {
             <div className="flex flex-wrap justify-center gap-4">
               <a href="/book">
                 <Button 
-                  className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white"
+                  className="bg-de-raised hover:from-violet-700 hover:to-purple-700 text-white"
                   data-testid="btn-book-call"
                 >
                   <Phone className="w-4 h-4 mr-2" />
