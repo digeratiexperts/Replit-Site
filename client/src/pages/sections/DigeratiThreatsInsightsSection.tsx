@@ -37,8 +37,8 @@ function InsightCard({ insight, index }: { insight: ThreatItem; index: number })
       <div className="h-1 bg-[#D3126A]" />
       <CardHeader className="pb-3 p-4 sm:p-6">
         <div className="flex items-center justify-between mb-3 gap-2">
-          <Badge className={`${categoryBadgeClass(insight)} border text-base`}>
-            <span className="flex items-center gap-1">
+          <Badge className={`${categoryBadgeClass(insight)} shrink-0 border text-base`}>
+            <span className="flex items-center gap-1 whitespace-nowrap">
               {categoryIcon[insight.category]}
               <span className="hidden sm:inline">{insight.category}</span>
               <span className="sm:hidden">{insight.category.split(" ")[0]}</span>
