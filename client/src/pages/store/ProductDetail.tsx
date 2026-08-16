@@ -93,7 +93,7 @@ const ProductDetail = () => {
             <h1 className="mb-4 text-3xl font-bold text-white">Product Not Found</h1>
             <p className="mb-8 text-white/60">The product you're looking for doesn't exist.</p>
             <Link href="/store">
-              <Button className="bg-[#5034ff] text-white hover:bg-[#6548ff]">
+              <Button className="bg-de-accent text-white hover:bg-[#6548ff]">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to Store
               </Button>
@@ -179,11 +179,11 @@ const ProductDetail = () => {
           <div className="mb-4 flex items-center justify-between">
             {isLoggedIn && user ? (
               <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 rounded-lg border border-[#5034ff]/20 bg-[#5034ff]/10 px-3 py-2">
-                  <User className="h-4 w-4 text-[#a78bfa]" />
+                <div className="flex items-center gap-2 rounded-lg border border-de-accent/20 bg-de-accent/10 px-3 py-2">
+                  <User className="h-4 w-4 text-de-accent-ink" />
                   <span className="text-sm text-white" data-testid="text-user-greeting">
                     Welcome,{" "}
-                    <span className="font-semibold text-[#c4b5fd]">
+                    <span className="font-semibold text-de-accent-ink">
                       {user.fullName || user.username}
                     </span>
                   </span>
@@ -197,7 +197,7 @@ const ProductDetail = () => {
                   variant="ghost"
                   size="sm"
                   onClick={logout}
-                  className="text-white/60 hover:bg-[#5034ff]/10 hover:text-white"
+                  className="text-white/60 hover:bg-de-accent/10 hover:text-white"
                   data-testid="button-store-logout"
                 >
                   <LogOut className="mr-1 h-4 w-4" />
@@ -209,7 +209,7 @@ const ProductDetail = () => {
                 variant="outline"
                 size="sm"
                 onClick={loginRedirect}
-                className="border-none bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                className="border-none bg-de-accent text-white hover:bg-[#6548ff]"
                 data-testid="button-store-login"
               >
                 <User className="mr-2 h-4 w-4" />
@@ -259,7 +259,7 @@ const ProductDetail = () => {
                 categoryBadge={categoryLabels[product.category]}
               />
               {visual.vendor && (
-                <p className="mt-3 text-sm text-white/45">
+                <p className="mt-3 text-sm text-white/55">
                   Powered with <span className="text-white/70">{visual.vendor.name}</span> in the DE
                   stack
                 </p>
@@ -272,7 +272,7 @@ const ProductDetail = () => {
               transition={{ duration: 0.5, delay: 0.1 }}
             >
               <span
-                className="mb-2 block font-mono text-sm text-white/40"
+                className="mb-2 block font-mono text-sm text-white/55"
                 data-testid="product-sku"
               >
                 SKU: {product.sku}
@@ -308,10 +308,10 @@ const ProductDetail = () => {
 
               {(includedHint || relationships?.includedIn) && (
                 <div
-                  className="mb-6 flex items-start gap-3 rounded-xl border border-[#5034ff]/25 bg-[#5034ff]/10 px-4 py-3"
+                  className="mb-6 flex items-start gap-3 rounded-xl border border-de-accent/25 bg-de-accent/10 px-4 py-3"
                   data-testid="product-included-in"
                 >
-                  <Layers className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#a78bfa]" />
+                  <Layers className="mt-0.5 h-5 w-5 flex-shrink-0 text-de-accent-ink" />
                   <div>
                     <p className="text-sm font-medium text-white">How it fits</p>
                     <p className="mt-0.5 text-sm text-white/65">
@@ -329,19 +329,19 @@ const ProductDetail = () => {
                   <div className="space-y-2">
                     <div className="flex flex-wrap items-center gap-3">
                       <span
-                        className="text-3xl font-bold text-[#a78bfa]"
+                        className="text-3xl font-bold text-de-accent-ink"
                         data-testid="product-price"
                       >
                         ${productPricing.price.toFixed(2)}
                       </span>
-                      <span className="text-xl text-white/40 line-through">
+                      <span className="text-xl text-white/55 line-through">
                         ${product.basePrice.toFixed(2)}
                       </span>
                       {product.pricingUnit && (
                         <span className="text-sm text-white/50">per {product.pricingUnit}</span>
                       )}
                     </div>
-                    <div className="flex items-center gap-2 text-[#a78bfa]">
+                    <div className="flex items-center gap-2 text-de-accent-ink">
                       <Tag className="h-4 w-4" />
                       <span className="text-sm font-medium" data-testid="discount-badge">
                         {productPricing.discountPercent}% client discount applied
@@ -351,7 +351,7 @@ const ProductDetail = () => {
                 ) : (
                   <div>
                     <span
-                      className="text-3xl font-bold text-[#a78bfa]"
+                      className="text-3xl font-bold text-de-accent-ink"
                       data-testid="product-price"
                     >
                       {formatPrice(product)}
@@ -365,7 +365,7 @@ const ProductDetail = () => {
                           variant="link"
                           size="sm"
                           onClick={loginRedirect}
-                          className="h-auto p-0 text-[#a78bfa] hover:text-[#c4b5fd]"
+                          className="h-auto p-0 text-de-accent-ink hover:text-de-accent-ink"
                           data-testid="button-login-for-pricing"
                         >
                           <User className="mr-1 h-3 w-3" />
@@ -382,7 +382,7 @@ const ProductDetail = () => {
                 <ul className="space-y-3">
                   {product.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-3" data-testid={`feature-${idx}`}>
-                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#a78bfa]" />
+                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-de-accent-ink" />
                       <span className="text-white/70">{feature}</span>
                     </li>
                   ))}
@@ -397,7 +397,7 @@ const ProductDetail = () => {
                   </p>
                   <a href="/book" target="_blank" rel="noopener noreferrer">
                     <Button
-                      className="w-full bg-[#5034ff] py-6 text-lg text-white hover:bg-[#6548ff]"
+                      className="w-full bg-de-accent py-6 text-lg text-white hover:bg-[#6548ff]"
                       data-testid="button-schedule-consultant"
                     >
                       <Calendar className="mr-2 h-5 w-5" />
@@ -425,7 +425,7 @@ const ProductDetail = () => {
                           size="icon"
                           onClick={() => handleQuantityChange(-1)}
                           disabled={quantity <= minQty}
-                          className="border-[#5034ff]/30 bg-[#5034ff]/10 text-white hover:bg-[#5034ff]/20"
+                          className="border-de-accent/30 bg-de-accent/10 text-white hover:bg-de-accent/20"
                           data-testid="button-decrease-qty"
                         >
                           <Minus className="h-4 w-4" />
@@ -440,14 +440,14 @@ const ProductDetail = () => {
                           variant="outline"
                           size="icon"
                           onClick={() => handleQuantityChange(1)}
-                          className="border-[#5034ff]/30 bg-[#5034ff]/10 text-white hover:bg-[#5034ff]/20"
+                          className="border-de-accent/30 bg-de-accent/10 text-white hover:bg-de-accent/20"
                           data-testid="button-increase-qty"
                         >
                           <Plus className="h-4 w-4" />
                         </Button>
                       </div>
                       {minQty > 1 && (
-                        <span className="text-xs text-white/40">Min: {minQty}</span>
+                        <span className="text-xs text-white/55">Min: {minQty}</span>
                       )}
                     </div>
                   )}
@@ -455,7 +455,7 @@ const ProductDetail = () => {
                   {product.isClientOnly && !isLoggedIn ? (
                     <div className="space-y-3">
                       <Button
-                        className="w-full bg-[#5034ff] py-6 text-lg text-white hover:bg-[#6548ff]"
+                        className="w-full bg-de-accent py-6 text-lg text-white hover:bg-[#6548ff]"
                         onClick={loginRedirect}
                         data-testid="button-login-to-purchase"
                       >
@@ -470,7 +470,7 @@ const ProductDetail = () => {
                   ) : configurable ? (
                     <div className="space-y-3">
                       <Button
-                        className="w-full bg-[#5034ff] py-6 text-lg text-white hover:bg-[#6548ff]"
+                        className="w-full bg-de-accent py-6 text-lg text-white hover:bg-[#6548ff]"
                         onClick={() => setConfigureOpen(true)}
                         data-testid="button-configure"
                       >
@@ -490,14 +490,14 @@ const ProductDetail = () => {
                   ) : (
                     <>
                       <Button
-                        className="w-full bg-[#5034ff] py-6 text-lg text-white hover:bg-[#6548ff]"
+                        className="w-full bg-de-accent py-6 text-lg text-white hover:bg-[#6548ff]"
                         onClick={handleAddToCart}
                         data-testid="button-add-to-cart"
                       >
                         <ShoppingCart className="mr-2 h-5 w-5" />
                         Add to Cart - ${(productPricing.price * quantity).toFixed(2)}
                         {productPricing.hasDiscount && (
-                          <span className="ml-2 text-sm text-[#c4b5fd]">
+                          <span className="ml-2 text-sm text-de-accent-ink">
                             (You save $
                             {(
                               (product.basePrice - productPricing.price) *
@@ -508,7 +508,7 @@ const ProductDetail = () => {
                         )}
                       </Button>
                       {product.isClientOnly && (
-                        <p className="flex items-center justify-center gap-1 text-center text-sm text-[#a78bfa]/80">
+                        <p className="flex items-center justify-center gap-1 text-center text-sm text-de-accent-ink/80">
                           <Check className="h-4 w-4" />
                           Client-only product - You have access
                         </p>
@@ -553,7 +553,7 @@ const ProductDetail = () => {
               data-testid="product-relationships"
             >
               <div className="mb-6 flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-[#a78bfa]" />
+                <Sparkles className="h-5 w-5 text-de-accent-ink" />
                 <h2 className="text-2xl font-bold text-white">Solution relationships</h2>
               </div>
               <div className="grid gap-6 lg:grid-cols-2">
@@ -568,14 +568,14 @@ const ProductDetail = () => {
                           <Link href={`/store/product/${related.sku}`}>
                             <span className="group flex items-center justify-between gap-3 rounded-lg border border-transparent px-2 py-2 transition-colors hover:border-white/10 hover:bg-white/[0.03]">
                               <span>
-                                <span className="block font-medium text-white group-hover:text-[#c4b5fd]">
+                                <span className="block font-medium text-white group-hover:text-de-accent-ink">
                                   {related.name}
                                 </span>
-                                <span className="block text-sm text-white/45 line-clamp-1">
+                                <span className="block text-sm text-white/55 line-clamp-1">
                                   {getOutcomeLead(related)}
                                 </span>
                               </span>
-                              <ArrowRight className="h-4 w-4 flex-shrink-0 text-white/30 group-hover:text-[#a78bfa]" />
+                              <ArrowRight className="h-4 w-4 flex-shrink-0 text-white/55 group-hover:text-de-accent-ink" />
                             </span>
                           </Link>
                         </li>
@@ -594,14 +594,14 @@ const ProductDetail = () => {
                           <Link href={`/store/product/${related.sku}`}>
                             <span className="group flex items-center justify-between gap-3 rounded-lg border border-transparent px-2 py-2 transition-colors hover:border-white/10 hover:bg-white/[0.03]">
                               <span>
-                                <span className="block font-medium text-white group-hover:text-[#c4b5fd]">
+                                <span className="block font-medium text-white group-hover:text-de-accent-ink">
                                   {related.name}
                                 </span>
-                                <span className="block text-sm text-white/45">
+                                <span className="block text-sm text-white/55">
                                   {formatPrice(related)}
                                 </span>
                               </span>
-                              <ArrowRight className="h-4 w-4 flex-shrink-0 text-white/30 group-hover:text-[#a78bfa]" />
+                              <ArrowRight className="h-4 w-4 flex-shrink-0 text-white/55 group-hover:text-de-accent-ink" />
                             </span>
                           </Link>
                         </li>
@@ -625,7 +625,7 @@ const ProductDetail = () => {
                 {relatedProducts.map((related) => (
                   <Link key={related.id} href={`/store/product/${related.sku}`}>
                     <div
-                      className="group h-full cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] transition-all duration-300 hover:border-[#5034ff]/30"
+                      className="group h-full cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] transition-all duration-300 hover:border-de-accent/30"
                       data-testid={`related-${related.id}`}
                     >
                       <ProductMedia
@@ -635,7 +635,7 @@ const ProductDetail = () => {
                       />
                       <div className="p-5">
                         <h3
-                          className="mb-2 line-clamp-1 font-semibold text-white transition-colors group-hover:text-[#c4b5fd]"
+                          className="mb-2 line-clamp-1 font-semibold text-white transition-colors group-hover:text-de-accent-ink"
                           title={related.name}
                         >
                           {related.name}
@@ -644,10 +644,10 @@ const ProductDetail = () => {
                           {getOutcomeLead(related)}
                         </p>
                         <div className="flex items-center justify-between">
-                          <span className="font-semibold text-[#a78bfa]">
+                          <span className="font-semibold text-de-accent-ink">
                             {formatPrice(related)}
                           </span>
-                          <ArrowRight className="h-4 w-4 text-white/30 transition-colors group-hover:text-[#a78bfa]" />
+                          <ArrowRight className="h-4 w-4 text-white/55 transition-colors group-hover:text-de-accent-ink" />
                         </div>
                       </div>
                     </div>
@@ -667,18 +667,18 @@ const ProductDetail = () => {
           <div className="mx-auto flex max-w-7xl items-center gap-3">
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-white">{product.name}</p>
-              <p className="text-sm text-[#a78bfa]">{formatPrice(product)}</p>
+              <p className="text-sm text-de-accent-ink">{formatPrice(product)}</p>
             </div>
             {configurable ? (
               <Button
-                className="bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                className="bg-de-accent text-white hover:bg-[#6548ff]"
                 onClick={() => setConfigureOpen(true)}
               >
                 Configure
               </Button>
             ) : (
               <Button
-                className="bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                className="bg-de-accent text-white hover:bg-[#6548ff]"
                 onClick={handleAddToCart}
               >
                 Add

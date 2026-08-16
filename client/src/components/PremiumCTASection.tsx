@@ -37,7 +37,7 @@ export function PremiumCTASection({
           <div 
             className="absolute inset-0"
             style={{
-              background: "linear-gradient(135deg, #7c3aed 0%, #a855f7 35%, #c026d3 70%, #a855f7 100%)",
+              background: "var(--de-magenta)",
             }}
           />
           
@@ -88,7 +88,7 @@ export function PremiumCTASection({
             >
               <Button 
                 size="lg"
-                className="h-14 px-8 bg-white text-violet-700 hover:bg-white/90 font-semibold text-base rounded-full shadow-lg shadow-black/20"
+                className="h-14 px-8 bg-white text-de-accent hover:bg-white/90 font-semibold text-base rounded-full shadow-lg shadow-black/20"
                 data-testid="button-premium-cta-primary"
                 onClick={(e) => { e.preventDefault(); openBooking("cta_section"); }}
               >

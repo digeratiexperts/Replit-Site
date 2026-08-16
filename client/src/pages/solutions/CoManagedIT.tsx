@@ -124,7 +124,7 @@ const outcomes = [
 
 function OwnershipBadge({ owner }: { owner: Ownership }) {
   const config = {
-    de: { bg: "bg-violet-500/20", text: "text-violet-300", border: "border-violet-500/30", label: "DE-owned" },
+    de: { bg: "bg-de-raised", text: "text-de-accent-ink", border: "border-de-hairline", label: "DE-owned" },
     client: { bg: "bg-amber-500/20", text: "text-amber-300", border: "border-amber-500/30", label: "Client-owned" },
     shared: { bg: "bg-emerald-500/20", text: "text-emerald-300", border: "border-emerald-500/30", label: "Shared" }
   };
@@ -181,9 +181,9 @@ function FAQItem({ question, answer, isOpen, onToggle, index }: {
       >
         <span className="font-semibold text-white pr-4">{question}</span>
         {isOpen ? (
-          <ChevronUp className="w-5 h-5 text-violet-400 flex-shrink-0" />
+          <ChevronUp className="w-5 h-5 text-de-accent-ink flex-shrink-0" />
         ) : (
-          <ChevronDown className="w-5 h-5 text-violet-400 flex-shrink-0" />
+          <ChevronDown className="w-5 h-5 text-de-accent-ink flex-shrink-0" />
         )}
       </button>
       {isOpen && (
@@ -200,7 +200,7 @@ function StickyCTA() {
     <div className="border-t border-white/10 bg-gray-950/80">
       <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <Users className="w-5 h-5 text-violet-400" />
+          <Users className="w-5 h-5 text-de-accent-ink" />
           <span className="text-white font-medium">Co-Managed IT</span>
           <span className="text-white/60 text-sm hidden sm:inline">Augment your team or manage a single kit</span>
         </div>
@@ -216,7 +216,7 @@ function StickyCTA() {
           <Button
             asChild
             size="sm"
-            className="bg-white text-violet-700 hover:bg-violet-50 font-semibold"
+            className="bg-white text-de-accent hover:bg-de-paper-raised font-semibold"
             data-testid="btn-sticky-consultation"
           >
             <a href="/book">
@@ -267,10 +267,10 @@ export default function CoManagedIT() {
           
           {/* Hero Section */}
           <motion.section {...fadeInUp} className="relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-violet-600/10 to-transparent rounded-3xl pointer-events-none" />
+            <div className="absolute inset-0 bg-de-raised to-transparent rounded-3xl pointer-events-none" />
             <div className="relative bg-white/[0.02] border border-white/10 rounded-3xl p-8 md:p-12">
               <div className="max-w-3xl">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/20 border border-purple-500/30 text-purple-300 text-sm font-medium mb-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-de-raised border border-de-hairline text-de-accent-ink text-sm font-medium mb-6">
                   <Users className="w-4 h-4" />
                   Flexible engagement models
                 </div>
@@ -291,7 +291,7 @@ export default function CoManagedIT() {
                   <Button
                     asChild
                     size="lg"
-                    className="bg-white text-violet-700 hover:bg-violet-50 font-semibold shadow-lg"
+                    className="bg-white text-de-accent hover:bg-de-paper-raised font-semibold shadow-lg"
                     data-testid="btn-hero-consultation"
                   >
                     <a href="/book">
@@ -334,12 +334,12 @@ export default function CoManagedIT() {
               {/* Card A: Collaboration */}
               <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-8 hover:bg-white/[0.05] transition-colors">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-600 to-violet-600 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-xl bg-de-raised flex items-center justify-center">
                     <Users className="w-6 h-6 text-white" />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-white">Co-Managed Collaboration</h3>
-                    <p className="text-violet-300 text-sm">Joint effort with internal IT</p>
+                    <p className="text-de-accent-ink text-sm">Joint effort with internal IT</p>
                   </div>
                 </div>
                 <p className="text-white/70 mb-6">
@@ -365,7 +365,7 @@ export default function CoManagedIT() {
                 </ul>
                 <Button
                   asChild
-                  className="w-full bg-violet-600 text-white hover:bg-violet-500"
+                  className="w-full bg-de-accent text-white hover:bg-de-accent"
                   data-testid="btn-card-collaboration"
                 >
                   <a href="/book">
@@ -471,7 +471,7 @@ export default function CoManagedIT() {
                   onClick={() => setEngagementMode("collaboration")}
                   className={`px-6 py-2 rounded-lg text-sm font-medium transition-colors ${
                     engagementMode === "collaboration" 
-                      ? "bg-violet-600 text-white" 
+                      ? "bg-de-accent text-white" 
                       : "text-white/60 hover:text-white"
                   }`}
                   data-testid="btn-mode-collaboration"
@@ -494,7 +494,7 @@ export default function CoManagedIT() {
 
             {engagementMode === "collaboration" ? (
               <div className="bg-white/[0.02] border border-white/10 rounded-xl overflow-hidden">
-                <div className="bg-violet-600/20 border-b border-white/10 px-6 py-4">
+                <div className="bg-de-raised border-b border-white/10 px-6 py-4">
                   <h3 className="font-semibold text-white">Collaboration Co-Managed</h3>
                   <p className="text-white/60 text-sm">Joint effort with internal IT — clear ownership per domain</p>
                 </div>
@@ -546,7 +546,7 @@ export default function CoManagedIT() {
                 <thead>
                   <tr className="bg-white/5 border-b border-white/10">
                     <th className="text-left px-6 py-4 text-white font-semibold">Responsibility</th>
-                    <th className="text-center px-4 py-4 text-violet-300 font-semibold">DE</th>
+                    <th className="text-center px-4 py-4 text-de-accent-ink font-semibold">DE</th>
                     <th className="text-center px-4 py-4 text-amber-300 font-semibold">Client</th>
                   </tr>
                 </thead>
@@ -554,7 +554,7 @@ export default function CoManagedIT() {
                   {raciPreview.map((row, index) => (
                     <tr key={index} className="hover:bg-white/[0.02]">
                       <td className="px-6 py-3 text-white/80">{row.responsibility}</td>
-                      <td className="px-4 py-3 text-center text-violet-300 text-sm">{row.de}</td>
+                      <td className="px-4 py-3 text-center text-de-accent-ink text-sm">{row.de}</td>
                       <td className="px-4 py-3 text-center text-amber-300 text-sm">{row.client}</td>
                     </tr>
                   ))}
@@ -580,7 +580,7 @@ export default function CoManagedIT() {
             </div>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="bg-white/[0.03] border border-white/10 rounded-xl p-6">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-xl bg-de-raised flex items-center justify-center mb-4">
                   <Laptop className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-2">Secure Laptops</h3>
@@ -588,7 +588,7 @@ export default function CoManagedIT() {
                 <p className="text-amber-400 font-semibold">Starting at $495</p>
               </div>
               <div className="bg-white/[0.03] border border-white/10 rounded-xl p-6">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-xl bg-de-raised flex items-center justify-center mb-4">
                   <Monitor className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-2">Workstations</h3>
@@ -596,7 +596,7 @@ export default function CoManagedIT() {
                 <p className="text-amber-400 font-semibold">Starting at $650</p>
               </div>
               <div className="bg-white/[0.03] border border-white/10 rounded-xl p-6">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-xl bg-de-raised flex items-center justify-center mb-4">
                   <Network className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-2">Network Kits</h3>
@@ -629,7 +629,7 @@ export default function CoManagedIT() {
           {/* Final CTA */}
           <motion.section {...fadeInUp}>
             <div className="relative rounded-2xl overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-violet-600 to-fuchsia-600 opacity-90" />
+              <div className="absolute inset-0 bg-de-raised opacity-90" />
               <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] pointer-events-none" />
               <div className="relative py-16 px-8 text-center">
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -642,7 +642,7 @@ export default function CoManagedIT() {
                   <Button
                     asChild
                     size="lg"
-                    className="bg-white text-violet-700 hover:bg-violet-50 font-semibold shadow-lg"
+                    className="bg-white text-de-accent hover:bg-de-paper-raised font-semibold shadow-lg"
                     data-testid="btn-final-consultation"
                   >
                     <a href="/book">

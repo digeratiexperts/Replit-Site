@@ -74,7 +74,7 @@ export class ErrorBoundary extends Component<Props, State> {
               </Button>
               <Button
                 onClick={this.handleGoHome}
-                className="gap-2 bg-violet-600 hover:bg-violet-500"
+                className="gap-2 bg-de-accent hover:bg-de-accent"
                 data-testid="button-error-home"
               >
                 <Home className="w-4 h-4" aria-hidden="true" />

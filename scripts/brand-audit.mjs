@@ -34,11 +34,59 @@ const routes = argOf("--routes", "")
   : routesFromApp();
 
 /**
+ * Intentional exceptions.
+ *
+ * This script is a regression detector, not the design authority. Plenty of
+ * colour on this site is doing a job — status, taxonomy, vendor identity — and
+ * forcing every route to zero flags would destroy it. Anything listed here is
+ * a deliberate decision; everything else that trips is a regression.
+ *
+ * Each entry needs a reason. If you cannot write one, it is not an exception.
+ */
+const EXCEPTIONS = [
+  {
+    match: (hit) => /\bde-store-category\b/.test(hit.cls),
+    why: "Store category pills colour-code 14 product categories for wayfinding. Hue is reinforcement only — the pill also prints its label. See categoryAccent in StoreProductCard.tsx.",
+  },
+  {
+    match: (hit) => /\bde-vendor-mark\b/.test(hit.cls),
+    why: "Vendor branding has to render in the vendor's own colours.",
+  },
+  {
+    match: (hit) => hit.kind === "gradient" && /\bde-process-band\b/.test(hit.cls),
+    why: "Homepage process band uses violet as lighting over a charcoal slab, which the accent-pop rule permits. It is not a fill.",
+  },
+  {
+    match: (hit) => hit.kind === "gradient" && /\bde-hero-glow\b/.test(hit.cls),
+    why: "Hero atmosphere. Violet as lighting, explicitly allowed; the field underneath stays black.",
+  },
+  {
+    match: (hit) => /\bde-status\b/.test(hit.cls) || /\bde-chart\b/.test(hit.cls),
+    why: "Semantic status and chart series colours encode meaning. Flattening them to magenta would hide the signal.",
+  },
+  {
+    match: (hit) => /\bcity-btn\b/.test(hit.cls),
+    why: "Arizona city chips use each city's official colour, not the brand palette.",
+  },
+];
+
+/** Routes the sweep deliberately does not own. */
+const OUT_OF_SCOPE = [/^\/portal(\/|$)/, /^\/login$/, /^\/signup$/];
+
+/**
  * Runs in the page. Violet is legal as *lighting* (low-alpha glows) but not as
  * a fill, so the fill check ignores anything below the alpha floor.
  */
 function collect(alphaFloor) {
-  const isPurple = (r, g, b) => b > 90 && b > r + 40 && b > g + 40;
+  /**
+   * Violet and indigo specifically, not "anything blue-ish".
+   *
+   * Purple sits where blue leads, red trails it, and green is pushed well
+   * below both. Requiring `r > g` is what separates violet from a true blue
+   * such as the Store's electric accent (low red, mid green), and requiring
+   * `b > r` is what keeps brand magenta out of the net.
+   */
+  const isPurple = (r, g, b) => b > 90 && b > r && r - g >= 10 && b - g >= 60;
   const rgb = (s) => {
     const m = s.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?/);
     return m ? { r: +m[1], g: +m[2], b: +m[3], a: m[4] === undefined ? 1 : +m[4] } : null;
@@ -180,8 +228,7 @@ function collect(alphaFloor) {
   const doc = document.documentElement;
   return {
     checked,
-    purple: purple.length,
-    purpleSample: [...new Set(purple.map((p) => `${p.kind}:${p.cls}`))].slice(0, 3),
+    purpleHits: purple,
     contrast: uniqueContrast.length,
     contrastSample: uniqueContrast.sort((a, b) => a.ratio - b.ratio).slice(0, 3),
     overflow: doc.scrollWidth > doc.clientWidth,
@@ -215,14 +262,33 @@ for (const route of routes) {
     });
     await page.waitForTimeout(500);
     const data = await page.evaluate(collect, 0.12);
-    results.push({ route, ...data, errors: errors.length, errorSample: errors.slice(0, 2) });
+
+    const excused = [];
+    const flagged = [];
+    for (const hit of data.purpleHits) {
+      const exception = EXCEPTIONS.find((e) => e.match(hit));
+      (exception ? excused : flagged).push(exception ? { ...hit, why: exception.why } : hit);
+    }
+    data.purple = flagged.length;
+    data.purpleSample = [...new Set(flagged.map((p) => `${p.kind}:${p.cls}`))].slice(0, 3);
+    data.excused = excused.length;
+    delete data.purpleHits;
+
+    results.push({
+      route,
+      outOfScope: OUT_OF_SCOPE.some((re) => re.test(route)),
+      ...data,
+      errors: errors.length,
+      errorSample: errors.slice(0, 2),
+    });
   } catch (err) {
     results.push({ route, failed: String(err).slice(0, 90), errors: errors.length });
   }
 }
 await browser.close();
 
-const bad = results.filter(
+const inScope = results.filter((r) => !r.outOfScope);
+const bad = inScope.filter(
   (r) => r.failed || r.errors > 0 || r.purple > 0 || r.contrast > 0 || r.overflow,
 );
 
@@ -245,5 +311,11 @@ for (const r of bad) {
   for (const p of r.purpleSample || []) console.log(`      ${p}`);
   for (const e of r.errorSample || []) console.log(`      ${e}`);
 }
-console.log(`\n${results.length - bad.length}/${results.length} clean\n`);
+const excused = inScope.reduce((total, r) => total + (r.excused || 0), 0);
+const skipped = results.length - inScope.length;
+
+console.log(`\n${inScope.length - bad.length}/${inScope.length} in-scope routes clean`);
+if (excused) console.log(`${excused} intentional exception(s) allowed — see EXCEPTIONS in this file`);
+if (skipped) console.log(`${skipped} route(s) out of scope (portal / auth)`);
+console.log();
 process.exit(bad.length ? 1 : 0);

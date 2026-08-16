@@ -200,7 +200,7 @@ export default function DowntimeCalculator() {
                         type="number"
                         value={employees}
                         onChange={(e) => setEmployees(e.target.value)}
-                        className="h-14 bg-[#252550] border-2 border-[#FFB800]/15 text-white placeholder:text-gray-500 hover:border-[#FFB800] focus:border-[#FFB800] focus:ring-2 focus:ring-[#FFB800]/30 transition-all"
+                        className="h-14 bg-[#252550] border-2 border-[#FFB800]/15 text-white placeholder:text-white/70 hover:border-[#FFB800] focus:border-[#FFB800] focus:ring-2 focus:ring-[#FFB800]/30 transition-all"
                         placeholder="25"
                         data-testid="input-employees"
                       />
@@ -211,7 +211,7 @@ export default function DowntimeCalculator() {
                         type="number"
                         value={hourlyWage}
                         onChange={(e) => setHourlyWage(e.target.value)}
-                        className="h-14 bg-[#252550] border-2 border-[#FFB800]/15 text-white placeholder:text-gray-500 hover:border-[#FFB800] focus:border-[#FFB800] focus:ring-2 focus:ring-[#FFB800]/30 transition-all"
+                        className="h-14 bg-[#252550] border-2 border-[#FFB800]/15 text-white placeholder:text-white/70 hover:border-[#FFB800] focus:border-[#FFB800] focus:ring-2 focus:ring-[#FFB800]/30 transition-all"
                         placeholder="35"
                         data-testid="input-hourly-wage"
                       />
@@ -225,7 +225,7 @@ export default function DowntimeCalculator() {
                       type="number"
                       value={downtimeHours}
                       onChange={(e) => setDowntimeHours(e.target.value)}
-                      className="h-14 bg-[#252550] border-2 border-[#FFB800]/15 text-white placeholder:text-gray-500 hover:border-[#FFB800] focus:border-[#FFB800] focus:ring-2 focus:ring-[#FFB800]/30 transition-all"
+                      className="h-14 bg-[#252550] border-2 border-[#FFB800]/15 text-white placeholder:text-white/70 hover:border-[#FFB800] focus:border-[#FFB800] focus:ring-2 focus:ring-[#FFB800]/30 transition-all"
                       placeholder="4"
                       data-testid="input-downtime-hours"
                     />
@@ -246,7 +246,7 @@ export default function DowntimeCalculator() {
                               type="number"
                               value={rtoHours}
                               onChange={(e) => setRtoHours(e.target.value)}
-                              className="h-12 bg-[#1a1a3e] border-2 border-[#FFB800]/15 text-white placeholder:text-gray-500 hover:border-[#FFB800] focus:border-[#FFB800] transition-all"
+                              className="h-12 bg-[#1a1a3e] border-2 border-[#FFB800]/15 text-white placeholder:text-white/70 hover:border-[#FFB800] focus:border-[#FFB800] transition-all"
                               placeholder="4"
                               data-testid="input-rto"
                             />
@@ -257,7 +257,7 @@ export default function DowntimeCalculator() {
                               type="number"
                               value={rpoHours}
                               onChange={(e) => setRpoHours(e.target.value)}
-                              className="h-12 bg-[#1a1a3e] border-2 border-[#FFB800]/15 text-white placeholder:text-gray-500 hover:border-[#FFB800] focus:border-[#FFB800] transition-all"
+                              className="h-12 bg-[#1a1a3e] border-2 border-[#FFB800]/15 text-white placeholder:text-white/70 hover:border-[#FFB800] focus:border-[#FFB800] transition-all"
                               placeholder="1"
                               data-testid="input-rpo"
                             />
@@ -269,7 +269,7 @@ export default function DowntimeCalculator() {
                             type="number"
                             value={incidentsPerYear}
                             onChange={(e) => setIncidentsPerYear(e.target.value)}
-                            className="h-12 bg-[#1a1a3e] border-2 border-[#FFB800]/15 text-white placeholder:text-gray-500 hover:border-[#FFB800] focus:border-[#FFB800] transition-all"
+                            className="h-12 bg-[#1a1a3e] border-2 border-[#FFB800]/15 text-white placeholder:text-white/70 hover:border-[#FFB800] focus:border-[#FFB800] transition-all"
                             placeholder="4"
                             data-testid="input-incidents"
                           />
@@ -358,7 +358,7 @@ export default function DowntimeCalculator() {
                       type="number"
                       value={serviceEmployees}
                       onChange={(e) => setServiceEmployees(e.target.value)}
-                      className="h-14 bg-[#252550] border-2 border-[#FFB800]/15 text-white placeholder:text-gray-500 hover:border-[#FFB800] focus:border-[#FFB800] focus:ring-2 focus:ring-[#FFB800]/30 transition-all"
+                      className="h-14 bg-[#252550] border-2 border-[#FFB800]/15 text-white placeholder:text-white/70 hover:border-[#FFB800] focus:border-[#FFB800] focus:ring-2 focus:ring-[#FFB800]/30 transition-all"
                       placeholder="10"
                       data-testid="input-service-employees"
                     />

@@ -83,7 +83,7 @@ export default function GenericServicePage({
   description,
   features,
   benefits,
-  gradientColors = "from-[#D3126A] via-fuchsia-700 to-violet-800",
+  gradientColors = "from-[#050312] via-[#0a0a0a] to-[#050312]",
   stat,
   canonical,
   recommendedTier,
@@ -200,7 +200,7 @@ export default function GenericServicePage({
         {narrative?.process && narrative.process.length > 0 && (
           <section data-testid="section-process">
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-lg bg-violet-600 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-de-accent flex items-center justify-center">
                 <ArrowRight className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -295,7 +295,7 @@ export default function GenericServicePage({
             transition={{ duration: 0.5 }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-600 to-purple-500 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-de-raised flex items-center justify-center">
                 <Grid3X3 className="w-5 h-5 text-white" />
               </div>
               <div>

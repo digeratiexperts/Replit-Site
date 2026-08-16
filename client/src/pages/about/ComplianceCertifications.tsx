@@ -12,7 +12,7 @@ const complianceFrameworks = [
     name: "HIPAA",
     fullName: "Health Insurance Portability and Accountability Act",
     icon: Heart,
-    color: "from-violet-500 to-purple-600",
+    color: " ",
     description: "Comprehensive protection for healthcare organizations handling Protected Health Information (PHI).",
     industries: ["Healthcare Providers", "Medical Practices", "Dental Offices", "Mental Health", "Home Health", "Pharmacies"],
     keyRequirements: [
@@ -37,7 +37,7 @@ const complianceFrameworks = [
     name: "CMMC",
     fullName: "Cybersecurity Maturity Model Certification",
     icon: Shield,
-    color: "from-purple-500 to-violet-600",
+    color: " ",
     description: "Required certification for Department of Defense contractors handling Controlled Unclassified Information (CUI).",
     industries: ["Defense Contractors", "DoD Suppliers", "Aerospace", "Manufacturing", "Engineering Firms", "Research Institutions"],
     keyRequirements: [
@@ -62,7 +62,7 @@ const complianceFrameworks = [
     name: "PCI DSS",
     fullName: "Payment Card Industry Data Security Standard",
     icon: CreditCard,
-    color: "from-fuchsia-500 to-purple-600",
+    color: "from-fuchsia-500 ",
     description: "Security standards for organizations that handle credit card transactions and cardholder data.",
     industries: ["Retail", "E-commerce", "Restaurants", "Hotels", "Financial Services", "Healthcare with Payment Processing"],
     keyRequirements: [
@@ -89,7 +89,7 @@ const complianceFrameworks = [
     name: "SOC 2",
     fullName: "Service Organization Control 2",
     icon: FileCheck,
-    color: "from-purple-500 to-violet-600",
+    color: " ",
     description: "Trust Services Criteria for service organizations demonstrating security, availability, and confidentiality controls.",
     industries: ["SaaS Companies", "Cloud Providers", "Data Centers", "Managed Service Providers", "Financial Tech", "Healthcare Tech"],
     keyRequirements: [
@@ -115,7 +115,7 @@ const complianceFrameworks = [
     name: "FTC Safeguards",
     fullName: "FTC Safeguards Rule (GLBA)",
     icon: Building2,
-    color: "from-violet-400 to-fuchsia-500",
+    color: " to-fuchsia-500",
     description: "Required security program for non-banking financial institutions under Gramm-Leach-Bliley Act.",
     industries: ["Tax Preparers", "Accountants", "Financial Advisors", "Mortgage Brokers", "Auto Dealers", "Collection Agencies"],
     keyRequirements: [
@@ -351,7 +351,7 @@ export default function ComplianceCertifications() {
             <div className="flex flex-wrap justify-center gap-6" data-testid="list-certifications">
               {teamCredentials.map((cert, i) => (
                 <div key={i} className="flex items-center gap-3 px-6 py-3 rounded-xl bg-white/[0.04] border border-white/10" data-testid={`badge-certification-${i}`}>
-                  <cert.icon className="h-5 w-5 text-[#A78BFA]" aria-hidden="true" />
+                  <cert.icon className="h-5 w-5 text-de-accent-ink" aria-hidden="true" />
                   <span className="text-white/80 font-medium">{cert.name}</span>
                 </div>
               ))}

@@ -85,7 +85,7 @@ export default function Videos() {
         <div className="container mx-auto px-4 max-w-7xl">
           {/* Header */}
           <div className="text-center mb-12">
-            <Badge className="mb-4 bg-violet-500/20 text-violet-400 border-violet-500/30">
+            <Badge className="mb-4 bg-de-raised text-de-accent-ink border-de-hairline">
               Learning Topics
             </Badge>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
@@ -97,10 +97,10 @@ export default function Videos() {
           </div>
 
           {/* Book a session */}
-          <Card className="mb-12 bg-gradient-to-r from-violet-600/20 to-purple-600/20 border-violet-500/30">
+          <Card className="mb-12 bg-de-raised border-de-hairline">
             <CardHeader>
               <CardTitle className="text-2xl text-white flex items-center gap-2">
-                <Calendar className="h-6 w-6 text-violet-400" />
+                <Calendar className="h-6 w-6 text-de-accent-ink" />
                 Request a Live Session
               </CardTitle>
               <CardDescription className="text-white/60">
@@ -115,7 +115,7 @@ export default function Videos() {
                       <h4 className="font-semibold text-white mb-2">{topic.title}</h4>
                       <p className="text-sm text-white/50 mb-4">{topic.summary}</p>
                       <Link href="/book">
-                        <Button className="w-full bg-violet-600 hover:bg-violet-500 text-white" data-testid={`button-register-${topic.id}`}>
+                        <Button className="w-full bg-de-accent hover:bg-de-accent text-white" data-testid={`button-register-${topic.id}`}>
                           Book a Session
                         </Button>
                       </Link>
@@ -134,7 +134,7 @@ export default function Videos() {
             </p>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {topics.map((topic) => (
-                <Card key={topic.id} className="bg-white/[0.02] border-white/10 overflow-hidden hover:border-violet-500/50 transition-colors group" data-testid={`card-video-${topic.id}`}>
+                <Card key={topic.id} className="bg-white/[0.02] border-white/10 overflow-hidden hover:border-de-hairline transition-colors group" data-testid={`card-video-${topic.id}`}>
                   <div className="aspect-video relative overflow-hidden">
                     <img 
                       src={topic.thumbnail} 
@@ -146,18 +146,18 @@ export default function Videos() {
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center pointer-events-none">
-                      <div className="w-16 h-16 bg-violet-600/90 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <div className="w-16 h-16 bg-de-raised rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                         <BookOpen className="h-8 w-8 text-white" />
                       </div>
                     </div>
                   </div>
                   <CardHeader>
                     <div className="flex items-center gap-2 mb-2">
-                      <Badge variant="secondary" className="bg-violet-500/20 text-violet-400">
+                      <Badge variant="secondary" className="bg-de-raised text-de-accent-ink">
                         {topic.type}
                       </Badge>
                     </div>
-                    <CardTitle className="text-lg text-white group-hover:text-violet-400 transition-colors">
+                    <CardTitle className="text-lg text-white group-hover:text-de-accent-ink transition-colors">
                       {topic.title}
                     </CardTitle>
                     <CardDescription className="text-white/60">
@@ -168,7 +168,7 @@ export default function Videos() {
                     <Link href="/resources/blog">
                       <Button
                         variant="outline"
-                        className="w-full border-violet-500/40 text-violet-300 hover:bg-violet-500/10 hover:text-violet-200"
+                        className="w-full border-de-hairline text-de-accent-ink hover:bg-de-raised hover:text-de-accent-ink"
                         data-testid={`button-related-reading-${topic.id}`}
                       >
                         <BookOpen className="mr-2 h-4 w-4" />
@@ -187,7 +187,7 @@ export default function Videos() {
               <h3 className="text-2xl font-bold text-white mb-2">Want a Custom Training Session?</h3>
               <p className="text-white/70 mb-6">We offer personalized security training for your team. Contact us to schedule.</p>
               <Button 
-                className="bg-violet-600 hover:bg-violet-500 text-white"
+                className="bg-de-accent hover:bg-de-accent text-white"
                 onClick={() => window.location.href = "/book"}
                 data-testid="button-schedule-training"
               >

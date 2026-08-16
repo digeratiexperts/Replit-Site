@@ -80,7 +80,7 @@ export const BlogSection = (): JSX.Element => {
 
         <div className="flex flex-col gap-8 lg:gap-14 mb-10 lg:mb-[72px]">
           <section className="flex flex-col gap-4 lg:gap-[23px]">
-            <h2 className="font-bold text-violet-400 text-xs sm:text-[15px] tracking-[1.50px] leading-[25.5px] text-center lg:text-left">
+            <h2 className="font-bold text-de-accent-ink text-xs sm:text-[15px] tracking-[1.50px] leading-[25.5px] text-center lg:text-left">
               SERVING GREATER PHOENIX
             </h2>
 

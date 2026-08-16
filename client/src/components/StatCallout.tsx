@@ -58,17 +58,17 @@ export const StatCallout = ({ stat, variant = "dark", size = "md" }: StatCallout
       data-testid="stat-callout"
     >
       <div className="flex items-start gap-4">
-        <div className={`p-3 rounded-xl ${variant === "light" ? "bg-violet-100" : "bg-violet-500/20"}`}>
-          <Icon className={`h-6 w-6 ${variant === "light" ? "text-violet-600" : "text-violet-400"}`} />
+        <div className={`p-3 rounded-xl ${variant === "light" ? "bg-de-paper-raised" : "bg-de-raised"}`}>
+          <Icon className={`h-6 w-6 ${variant === "light" ? "text-de-accent" : "text-de-accent-ink"}`} />
         </div>
         <div className="flex-1">
-          <div className={`${valueSizes[size]} font-bold bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent`}>
+          <div className={`${valueSizes[size]} font-bold text-de-accent-ink`}>
             {stat.value}
           </div>
           <p className={`mt-2 ${variant === "light" ? "text-gray-700" : "text-white/80"} leading-relaxed`}>
             {stat.label}
           </p>
-          <p className={`mt-2 text-sm ${variant === "light" ? "text-gray-500" : "text-white/50"}`}>
+          <p className={`mt-2 text-sm ${variant === "light" ? "text-white/70" : "text-white/50"}`}>
             — {stat.source}
           </p>
         </div>
@@ -93,15 +93,15 @@ export const StatBanner = ({ stat, variant = "dark" }: StatBannerProps) => {
       transition={{ duration: 0.5 }}
       className={`py-4 px-6 rounded-xl text-center ${
         variant === "dark" 
-          ? "bg-violet-500/10 border border-violet-500/20" 
-          : "bg-violet-50 border border-violet-200"
+          ? "bg-de-raised border border-de-hairline" 
+          : "bg-de-paper-raised border border-de-hairline"
       }`}
       data-testid="stat-banner"
     >
       <p className={variant === "dark" ? "text-white/90" : "text-gray-800"}>
-        <span className="font-bold text-violet-400">{stat.value}</span>{" "}
-        <span className={variant === "dark" ? "text-white/70" : "text-gray-600"}>{stat.label}</span>
-        <span className={`ml-2 text-sm ${variant === "dark" ? "text-white/50" : "text-gray-500"}`}>
+        <span className="font-bold text-de-accent-ink">{stat.value}</span>{" "}
+        <span className={variant === "dark" ? "text-white/70" : "text-white/70"}>{stat.label}</span>
+        <span className={`ml-2 text-sm ${variant === "dark" ? "text-white/50" : "text-white/70"}`}>
           — {stat.source}
         </span>
       </p>
@@ -140,13 +140,13 @@ export const StatGrid = ({ stats, variant = "dark", columns = 3 }: StatGridProps
           }`}
           data-testid={`stat-item-${index}`}
         >
-          <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">
+          <div className="text-3xl md:text-4xl font-bold text-de-accent-ink">
             {stat.value}
           </div>
-          <p className={`mt-2 ${variant === "dark" ? "text-white/70" : "text-gray-600"}`}>
+          <p className={`mt-2 ${variant === "dark" ? "text-white/70" : "text-white/70"}`}>
             {stat.label}
           </p>
-          <p className={`mt-1 text-xs ${variant === "dark" ? "text-white/40" : "text-gray-400"}`}>
+          <p className={`mt-1 text-xs ${variant === "dark" ? "text-white/55" : "text-gray-400"}`}>
             {stat.source}
           </p>
         </motion.div>

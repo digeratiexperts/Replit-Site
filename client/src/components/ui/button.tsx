@@ -14,8 +14,12 @@ const buttonVariants = cva(
           "bg-[#D3126A] text-white border-0 shadow-none hover:bg-[#e01874] hover:shadow-none focus-visible:ring-[#D3126A]",
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 hover:shadow-md",
+        // Transparent rather than bg-background: the filled variant is white,
+        // so every outline button a dark page styled with text-white rendered
+        // white-on-white and disappeared. Transparent works on both fields
+        // because the label keeps the surrounding text colour.
         outline:
-          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground hover:border-pink-400/50",
+          "border border-input bg-transparent hover:border-[#D3126A] hover:bg-[#D3126A]/10",
         secondary:
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 hover:shadow-md",
         ghost: "hover:bg-accent hover:text-accent-foreground",

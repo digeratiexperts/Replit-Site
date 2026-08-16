@@ -134,8 +134,6 @@ html {
   --de-fg: #ffffff;
   --de-muted: rgba(255, 255, 255, 0.85);
   --de-muted-soft: rgba(255, 255, 255, 0.72);
-  --de-accent: #ec4899;
-  --de-accent-2: #d946ef;
   --de-magenta: #D3126A;
   /*
    * Brand magenta only reaches ~3.6:1 on the dark ladder, which clears WCAG's
@@ -146,6 +144,22 @@ html {
    */
   --de-magenta-ink: #F04C97;
   --de-violet: #5B45E0;
+
+  /*
+   * Per-page accent. The field, type, spacing and primary CTA stay identical
+   * sitewide; this is the one hue a page family is allowed to own, and it is
+   * only ever used for topical signals — eyebrows, glyphs, step numerals,
+   * category chips, inline links. Pages opt in with data-accent on their root.
+   *
+   * Every `-ink` value clears 4.5:1 on --de-bg / --de-surface / --de-raised.
+   * Violet and indigo are deliberately absent: they read as the old generic
+   * chrome and the accent-pop rule bars them as fills.
+   *
+   * Held as raw channels so Tailwind's alpha modifiers work: the catalog leans
+   * on bg-de-accent/10 and border-de-accent/30, which a hex var cannot express.
+   */
+  --de-accent-rgb: 211 18 106;
+  --de-accent-ink-rgb: 240 76 151;
 
   /*
    * Contained marketing canvas — black outer gutters on ultrawide only.
@@ -462,6 +476,42 @@ html.de-marketing-canvas body {
  * protect" chapter from the proof well below. Violet and magenta appear only as
  * lighting so the magenta step numerals stay the brightest thing in the band.
  */
+/*
+ * Approved page accents. Only these five; violet and indigo are deliberately
+ * absent because they read as the old generic chrome and the accent-pop rule
+ * bars them as fills.
+ */
+[data-accent="magenta"] {
+  --de-accent-rgb: 211 18 106;
+  --de-accent-ink-rgb: 240 76 151;
+}
+[data-accent="cyan"] {
+  --de-accent-rgb: 8 145 178;
+  --de-accent-ink-rgb: 34 211 238;
+}
+[data-accent="amber"] {
+  --de-accent-rgb: 180 83 9;
+  --de-accent-ink-rgb: 251 191 36;
+}
+[data-accent="emerald"] {
+  --de-accent-rgb: 4 120 87;
+  --de-accent-ink-rgb: 52 211 153;
+}
+[data-accent="rose"] {
+  --de-accent-rgb: 190 18 60;
+  --de-accent-ink-rgb: 251 113 133;
+}
+/*
+ * Electric blue is the Store. It is close to the legacy #5034ff the catalog was
+ * already built in, so the store keeps the identity it had instead of being
+ * repainted — but as a token, and pulled off the indigo edge that reads as the
+ * retired chrome.
+ */
+[data-accent="electric"] {
+  --de-accent-rgb: 29 111 242;
+  --de-accent-ink-rgb: 111 179 255;
+}
+
 .de-process-band {
   background-color: var(--de-surface);
   background-image:
@@ -632,7 +682,7 @@ textarea:focus-visible {
 
 .hover-lift:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 40px -12px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 12px 40px -12px rgb(var(--de-accent-rgb) / 0.3);
 }
 
 .hover-glow {
@@ -640,17 +690,15 @@ textarea:focus-visible {
 }
 
 .hover-glow:hover {
-  box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 0 30px rgb(var(--de-accent-rgb) / 0.3);
 }
 
 /* Text gradient animation */
 .text-gradient-animate {
-  background: linear-gradient(90deg, #a78bfa, #c084fc, #e879f9, #c084fc, #a78bfa);
-  background-size: 300% 100%;
+  background: var(--de-magenta);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradient-shift 4s ease infinite;
 }
 
 /* Glassmorphism utilities */
@@ -683,7 +731,7 @@ textarea:focus-visible {
   left: var(--de-canvas-gutter, 0px);
   width: calc(100vw - (2 * var(--de-canvas-gutter, 0px)));
   height: 3px;
-  background: linear-gradient(90deg, #8b5cf6, #a855f7);
+  background: var(--de-magenta);
   z-index: 9999;
   transform-origin: left;
   transition: transform 0.1s ease-out;
@@ -716,8 +764,8 @@ textarea:focus-visible {
 
 .card-interactive:hover {
   transform: translateY(-2px);
-  border-color: rgba(139, 92, 246, 0.3);
-  box-shadow: 0 8px 30px -12px rgba(139, 92, 246, 0.25);
+  border-color: rgb(var(--de-accent-rgb) / 0.3);
+  box-shadow: 0 8px 30px -12px rgb(var(--de-accent-rgb) / 0.25);
 }
 
 .card-interactive:active {
@@ -730,7 +778,7 @@ textarea:focus-visible {
 }
 
 .focus-ring:focus-visible {
-  outline: 2px solid rgb(139, 92, 246);
+  outline: 2px solid rgb(var(--de-accent-rgb) / 1);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -747,7 +795,7 @@ textarea:focus-visible {
   left: 0;
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, #8b5cf6, #a855f7);
+  background: var(--de-magenta);
   transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -1404,8 +1452,8 @@ button, [role="button"], a {
   @apply scale-105 z-10;
   color: #ffffff;
   background: transparent;
-  border-color: var(--c1, rgba(139, 92, 246, 1));
-  box-shadow: 0 0 16px color-mix(in srgb, var(--c1, #8b5cf6) 25%, transparent 75%);
+  border-color: var(--c1, var(--de-magenta));
+  box-shadow: 0 0 16px color-mix(in srgb, var(--c1, var(--de-magenta)) 25%, transparent 75%);
 }
 
 .honeycomb-grid {

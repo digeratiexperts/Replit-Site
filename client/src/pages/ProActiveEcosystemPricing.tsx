@@ -147,7 +147,7 @@ const plans: PlanCard[] = [
       "Managed Workplace: limited / add-on",
       "No backup included by default",
     ],
-    gradient: "from-slate-500 to-violet-500",
+    gradient: "from-slate-500 ",
     borderColor: "border-slate-500/30",
     learnMoreUrl: pricing.it.learnMoreUrl,
   },
@@ -170,7 +170,7 @@ const plans: PlanCard[] = [
       "Threat Detection / SOC (add-on)",
       "BCDR, cloud backup, compliance reports (add-ons)",
     ],
-    gradient: "from-violet-500 to-purple-500",
+    gradient: " ",
     borderColor: "border-de-hairline",
     learnMoreUrl: pricing.office.learnMoreUrl,
   },
@@ -193,7 +193,7 @@ const plans: PlanCard[] = [
       "Budgeting / planning + 2× tech & security business reviews per year",
       "Spend-card controls included or available",
     ],
-    gradient: "from-purple-500 to-fuchsia-500",
+    gradient: " to-fuchsia-500",
     borderColor: "border-de-hairline",
     learnMoreUrl: pricing.business.learnMoreUrl,
   },
@@ -440,7 +440,7 @@ export default function ProActiveEcosystemPricing() {
                                 {service.name}
                                 {service.tooltip && (
                                   <span title={service.tooltip}>
-                                    <Info className="w-3.5 h-3.5 text-white/30" aria-label={service.tooltip} />
+                                    <Info className="w-3.5 h-3.5 text-white/55" aria-label={service.tooltip} />
                                   </span>
                                 )}
                               </span>

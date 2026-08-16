@@ -229,7 +229,7 @@ export default function EcosystemMatrixOfficial() {
                   {section.features.map((feature, idx) => (
                     <div 
                       key={idx} 
-                      className={`grid grid-cols-5 gap-4 items-center transition-all ${density === "compact" ? "py-2 px-4" : "py-4 px-4"} ${showUpgrades && feature.isUpgrade ? "bg-de-raised ring-1 ring-inset ring-violet-500/20" : "hover:bg-white/[0.01]"}`}
+                      className={`grid grid-cols-5 gap-4 items-center transition-all ${density === "compact" ? "py-2 px-4" : "py-4 px-4"} ${showUpgrades && feature.isUpgrade ? "bg-de-raised ring-1 ring-inset ring-de-accent" : "hover:bg-white/[0.01]"}`}
                     >
                       <div className="flex items-center gap-2 group">
                         <span className="text-sm font-medium text-white/80 group-hover:text-white transition-colors">{feature.name}</span>

@@ -28,7 +28,7 @@ export default function TicketConfirmation() {
         </p>
         <a
           href="tel:+13254809870"
-          className="inline-flex items-center gap-2 text-2xl font-bold text-purple-300 hover:text-purple-200"
+          className="inline-flex items-center gap-2 text-2xl font-bold text-de-accent-ink hover:text-de-accent-ink"
         >
           <Phone className="h-6 w-6" />
           325-480-9870
@@ -37,7 +37,7 @@ export default function TicketConfirmation() {
           <Button onClick={() => setLocation("/support/knowledge-base")} variant="outline">
             Browse Knowledge Base
           </Button>
-          <Button onClick={() => setLocation("/")} className="bg-violet-600 hover:bg-violet-500">
+          <Button onClick={() => setLocation("/")} className="bg-de-accent hover:bg-de-accent">
             Back to Home
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>

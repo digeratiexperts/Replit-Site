@@ -21,7 +21,7 @@ export default function TermsOfUse() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
             <div className="flex items-center gap-3 mb-6">
-              <FileText className="h-12 w-12 text-purple-400" />
+              <FileText className="h-12 w-12 text-de-accent-ink" />
               <h1 className="text-4xl md:text-5xl font-bold">Terms of Service</h1>
             </div>
             <p className="text-xl text-gray-300">
@@ -79,7 +79,7 @@ export default function TermsOfUse() {
             {/* Services Description */}
             <div className="mb-12">
               <h2 className="text-3xl font-bold text-white mb-4 flex items-center gap-3">
-                <Shield className="h-8 w-8 text-purple-400" />
+                <Shield className="h-8 w-8 text-de-accent-ink" />
                 3. Service Description
               </h2>
               
@@ -119,7 +119,7 @@ export default function TermsOfUse() {
             {/* Service Levels */}
             <div className="mb-12">
               <h2 className="text-3xl font-bold text-white mb-4 flex items-center gap-3">
-                <Clock className="h-8 w-8 text-purple-400" />
+                <Clock className="h-8 w-8 text-de-accent-ink" />
                 4. Service Level Commitments
               </h2>
               
@@ -237,7 +237,7 @@ export default function TermsOfUse() {
             {/* Payment Terms */}
             <div className="mb-12">
               <h2 className="text-3xl font-bold text-white mb-4 flex items-center gap-3">
-                <DollarSign className="h-8 w-8 text-purple-400" />
+                <DollarSign className="h-8 w-8 text-de-accent-ink" />
                 7. Payment Terms
               </h2>
               
@@ -330,7 +330,7 @@ export default function TermsOfUse() {
             {/* Limitation of Liability */}
             <div className="mb-12">
               <h2 className="text-3xl font-bold text-white mb-4 flex items-center gap-3">
-                <Scale className="h-8 w-8 text-purple-400" />
+                <Scale className="h-8 w-8 text-de-accent-ink" />
                 10. Limitation of Liability
               </h2>
               
@@ -445,7 +445,7 @@ export default function TermsOfUse() {
             </div>
 
             {/* Contact Information */}
-            <div className="mb-12 bg-purple-500/10 backdrop-blur-sm border border-purple-500/30 border-l-4 border-l-purple-500 p-6 rounded">
+            <div className="mb-12 bg-de-raised backdrop-blur-sm border border-de-hairline border-l-4 border-l-de-accent p-6 rounded">
               <h2 className="text-3xl font-bold text-white mb-4">15. Contact Information</h2>
               <p className="text-gray-300 mb-4">
                 For questions about these Terms of Service, please contact:

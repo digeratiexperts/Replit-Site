@@ -6,7 +6,7 @@ export default function Ecosystem() {
   const servicePillars = [
     { 
       name: "DE WORKPLACE", 
-      color: "from-purple-600 to-indigo-600", 
+      color: " ", 
       icon: Users,
       desc: "SMART HR · SMART Identity · SMART Communications · Team Collaboration",
       details: ["Email + Calendar + Chat", "MFA + SSO + Password Manager", "UCaaS + Video Conferencing", "File Storage + Wiki + Projects"]
@@ -41,7 +41,7 @@ export default function Ecosystem() {
     },
     { 
       name: "DE COMPLIANCE", 
-      color: "from-violet-600 to-purple-600", 
+      color: " ", 
       icon: FileCheck,
       desc: "HIPAA · GDPR · FTC Safeguards · Cyber Insurance · Policy Enforcement",
       details: ["Compliance Modules", "Evidence Support", "Audit-Ready Documentation", "Framework Mapping"]
@@ -58,7 +58,7 @@ export default function Ecosystem() {
     },
     { 
       name: pricing.business.name, 
-      color: "from-purple-600 to-violet-600", 
+      color: " ", 
       price: `$${pricing.business.user}`,
       desc: "SOC/MDR + SMART HR + vCIO advisory",
       highlights: ["Everything in Office", "SOC / MDR Monitoring", "SMART HR Workflows", "Security Awareness + vCIO"]
@@ -111,7 +111,7 @@ export default function Ecosystem() {
                   <p className="text-sm text-gray-400 mb-4">{pillar.desc}</p>
                   <ul className="space-y-1">
                     {pillar.details.map((detail, idx) => (
-                      <li key={idx} className="text-xs text-gray-500 flex items-center gap-2">
+                      <li key={idx} className="text-xs text-white/70 flex items-center gap-2">
                         <span className="w-1 h-1 rounded-full bg-cyan-400" />
                         {detail}
                       </li>
@@ -163,7 +163,7 @@ export default function Ecosystem() {
         </motion.div>
 
         <motion.p 
-          className="text-center text-sm text-gray-500 mt-12"
+          className="text-center text-sm text-white/70 mt-12"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}

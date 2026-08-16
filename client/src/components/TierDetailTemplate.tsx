@@ -117,7 +117,7 @@ export function TierDetailTemplate({ config }: { config: TierPageConfig }) {
             <ul className="space-y-3">
               {config.notIncluded.map((item) => (
                 <li key={item} className="flex items-start gap-3 text-white/70 leading-relaxed">
-                  <XCircle className="w-5 h-5 text-white/40 mt-0.5 flex-shrink-0" />
+                  <XCircle className="w-5 h-5 text-white/55 mt-0.5 flex-shrink-0" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -145,7 +145,7 @@ export function TierDetailTemplate({ config }: { config: TierPageConfig }) {
           <p className="text-white/85 leading-relaxed">{config.reviewCadence}</p>
         </section>
 
-        <section className="rounded-xl border border-pink-400/25 bg-gradient-to-br from-fuchsia-950/40 via-pink-950/30 to-violet-950/40 p-6">
+        <section className="rounded-xl border border-pink-400/25 bg-de-raised p-6">
           <SectionHeading icon={BadgeDollarSign}>Pricing</SectionHeading>
           <p className="text-white/85 leading-relaxed mb-6">{config.pricingNote}</p>
           <div className="flex flex-col sm:flex-row gap-4">

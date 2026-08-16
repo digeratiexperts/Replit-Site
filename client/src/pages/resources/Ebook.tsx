@@ -516,7 +516,7 @@ export default function Ebook() {
 
       <main className="de-nav-clear pb-20">
         <div className="container mx-auto px-4 max-w-7xl">
-          <Link href="/resources/blog" className="inline-flex items-center text-violet-400 hover:text-violet-300 mb-6 transition-colors" data-testid="link-back-blog">
+          <Link href="/resources/blog" className="inline-flex items-center text-de-accent-ink hover:text-de-accent-ink mb-6 transition-colors" data-testid="link-back-blog">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Resources
           </Link>
@@ -579,7 +579,7 @@ export default function Ebook() {
               </div>
               <div className="flex justify-center mb-10">
                 <div className="flex flex-col items-center gap-2">
-                  <p className="text-xs uppercase tracking-wider text-white/45">
+                  <p className="text-xs uppercase tracking-wider text-white/55">
                     Read Chapter 1 to you
                   </p>
                   <BlogAudioPlayer

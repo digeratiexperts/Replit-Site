@@ -23,7 +23,7 @@ export default function LawFirms() {
     <PageTemplate
       title="IT Solutions for Law Firms"
       subtitle="Protect client privilege, prevent data breaches, stay compliant—secure IT for Arizona attorneys"
-      gradientColors="from-violet-600 via-purple-600 to-fuchsia-600"
+      gradientColors="from-[#050312] via-[#0a0a0a] to-[#050312]"
     >
       <div className="space-y-16">
         {/* Risk Assessment Cards */}
@@ -36,7 +36,7 @@ export default function LawFirms() {
               return (
                 <Card key={idx} className="bg-white/5 backdrop-blur-sm border-white/10 hover:shadow-lg transition-all">
                   <CardContent className="pt-6">
-                    <Icon className="h-8 w-8 text-violet-400 mb-3" />
+                    <Icon className="h-8 w-8 text-de-accent-ink mb-3" />
                     <h3 className="font-semibold text-white mb-2">{item.factor}</h3>
                     <Badge className={`${severity} border`}>{item.severity}</Badge>
                   </CardContent>
@@ -102,10 +102,10 @@ export default function LawFirms() {
               const Icon = service.icon;
               return (
                 <div key={idx} className="group relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-purple-500 rounded-xl blur opacity-0 group-hover:opacity-15 transition-all" />
-                  <Card className="relative bg-white/5 backdrop-blur-sm hover:shadow-lg transition-all border border-white/10 group-hover:border-violet-500/30">
+                  <div className="absolute inset-0 bg-de-raised rounded-xl blur opacity-0 group-hover:opacity-15 transition-all" />
+                  <Card className="relative bg-white/5 backdrop-blur-sm hover:shadow-lg transition-all border border-white/10 group-hover:border-de-hairline">
                     <CardHeader>
-                      <Icon className="h-10 w-10 text-violet-400 mb-2 group-hover:scale-110 transition-transform" />
+                      <Icon className="h-10 w-10 text-de-accent-ink mb-2 group-hover:scale-110 transition-transform" />
                       <CardTitle className="text-white">{service.title}</CardTitle>
                       <p className="text-sm text-gray-400 mt-1">{service.desc}</p>
                     </CardHeader>
@@ -127,7 +127,7 @@ export default function LawFirms() {
         </div>
 
         {/* Compliance Dashboard */}
-        <div className="bg-violet-500/10 border border-violet-500/30 rounded-xl p-8">
+        <div className="bg-de-raised border border-de-hairline rounded-xl p-8">
           <h3 className="text-2xl font-bold mb-8 text-center text-white">ABA Compliance Checklist</h3>
           <div className="grid md:grid-cols-2 gap-6">
             {[

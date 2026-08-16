@@ -183,10 +183,10 @@ export function LocationServicePage(props: LocationPageProps) {
   ];
 
   const features = [
-    { icon: FileCheck, text: "Insurance & Compliance-Ready", color: "text-violet-400" },
-    { icon: Shield, text: "24/7 Human-Led Monitoring", color: "text-violet-400" },
-    { icon: Building, text: `Built for ${props.city} Businesses`, color: "text-violet-400" },
-    { icon: CheckCircle, text: "Easy-to-Read Risk Reports", color: "text-violet-400" },
+    { icon: FileCheck, text: "Insurance & Compliance-Ready", color: "text-de-accent-ink" },
+    { icon: Shield, text: "24/7 Human-Led Monitoring", color: "text-de-accent-ink" },
+    { icon: Building, text: `Built for ${props.city} Businesses`, color: "text-de-accent-ink" },
+    { icon: CheckCircle, text: "Easy-to-Read Risk Reports", color: "text-de-accent-ink" },
   ];
 
   return (
@@ -233,20 +233,20 @@ export function LocationServicePage(props: LocationPageProps) {
                 transition={{ duration: 0.6 }}
               >
                 {/* Location Badge */}
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-purple-500/30 bg-purple-500/10 backdrop-blur-sm w-fit">
-                  <MapPin className="w-4 h-4 text-purple-400" />
-                  <span className="text-sm text-purple-300">{props.localArea}</span>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-de-hairline bg-de-raised backdrop-blur-sm w-fit">
+                  <MapPin className="w-4 h-4 text-de-accent-ink" />
+                  <span className="text-sm text-de-accent-ink">{props.localArea}</span>
                 </div>
 
                 {/* Headline */}
                 <h1 className="text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-bold leading-[1.1] tracking-tight">
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400">
+                  <span className="text-de-accent-ink">
                     {props.city} Businesses
                   </span>
                   <br />
                   <span className="text-white">
                     Deserve{" "}
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-fuchsia-400">Better IT.</span>
+                    <span className="text-de-accent-ink">Better IT.</span>
                   </span>
                 </h1>
 
@@ -266,7 +266,7 @@ export function LocationServicePage(props: LocationPageProps) {
 
                 {/* Form Card */}
                 <motion.div className="relative" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
-                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 via-transparent to-fuchsia-600/20 blur-2xl" />
+                  <div className="absolute -inset-1 bg-de-raised via-transparent to-fuchsia-600/20 blur-2xl" />
                   
                   <div className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6">
                     <Form {...form}>
@@ -276,7 +276,7 @@ export function LocationServicePage(props: LocationPageProps) {
                             <FormItem>
                               <FormLabel className="text-sm text-gray-300">Full Name</FormLabel>
                               <FormControl>
-                                <Input placeholder="John Smith" data-testid={`input-${props.city.toLowerCase()}-name`} className="h-11 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500" disabled={isSubmitting} {...field} />
+                                <Input placeholder="John Smith" data-testid={`input-${props.city.toLowerCase()}-name`} className="h-11 bg-white/10 border-white/20 text-white placeholder:text-white/70 focus-visible:ring-de-accent" disabled={isSubmitting} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -285,7 +285,7 @@ export function LocationServicePage(props: LocationPageProps) {
                             <FormItem>
                               <FormLabel className="text-sm text-gray-300">Email Address</FormLabel>
                               <FormControl>
-                                <Input type="email" placeholder="john@company.com" data-testid={`input-${props.city.toLowerCase()}-email`} className="h-11 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500" disabled={isSubmitting} {...field} />
+                                <Input type="email" placeholder="john@company.com" data-testid={`input-${props.city.toLowerCase()}-email`} className="h-11 bg-white/10 border-white/20 text-white placeholder:text-white/70 focus-visible:ring-de-accent" disabled={isSubmitting} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -294,7 +294,7 @@ export function LocationServicePage(props: LocationPageProps) {
                             <FormItem>
                               <FormLabel className="text-sm text-gray-300">Phone Number</FormLabel>
                               <FormControl>
-                                <Input type="tel" placeholder="(480) 000-0000" data-testid={`input-${props.city.toLowerCase()}-phone`} className="h-11 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500" disabled={isSubmitting} {...field} />
+                                <Input type="tel" placeholder="(480) 000-0000" data-testid={`input-${props.city.toLowerCase()}-phone`} className="h-11 bg-white/10 border-white/20 text-white placeholder:text-white/70 focus-visible:ring-de-accent" disabled={isSubmitting} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -303,7 +303,7 @@ export function LocationServicePage(props: LocationPageProps) {
                             <FormItem>
                               <FormLabel className="text-sm text-gray-300">Company Name</FormLabel>
                               <FormControl>
-                                <Input placeholder="Your Company Inc." data-testid={`input-${props.city.toLowerCase()}-company`} className="h-11 bg-white/10 border-white/20 text-white placeholder:text-gray-500 focus-visible:ring-purple-500" disabled={isSubmitting} {...field} />
+                                <Input placeholder="Your Company Inc." data-testid={`input-${props.city.toLowerCase()}-company`} className="h-11 bg-white/10 border-white/20 text-white placeholder:text-white/70 focus-visible:ring-de-accent" disabled={isSubmitting} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -311,7 +311,7 @@ export function LocationServicePage(props: LocationPageProps) {
                         </div>
 
                         <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                          <Button type="submit" size="lg" data-testid={`button-${props.city.toLowerCase()}-submit`} disabled={isSubmitting} className="flex-1 h-12 text-base font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 border-0 shadow-lg shadow-purple-500/25">
+                          <Button type="submit" size="lg" data-testid={`button-${props.city.toLowerCase()}-submit`} disabled={isSubmitting} className="flex-1 h-12 text-base font-semibold bg-de-raised hover: hover: border-0 shadow-lg shadow-none">
                             {isSubmitting ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" />Submitting...</> : <>Get Free {props.city} Assessment<ArrowRight className="w-5 h-5 ml-2" /></>}
                           </Button>
                           <a href="tel:+13254809870" className="sm:flex-shrink-0">
@@ -329,8 +329,8 @@ export function LocationServicePage(props: LocationPageProps) {
                 <div className="flex flex-wrap gap-3">
                   {stats.map((stat, index) => (
                     <motion.div key={stat.label} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.4 + index * 0.1 }}>
-                      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/20 to-indigo-500/20 flex items-center justify-center">
-                        <stat.icon className="w-5 h-5 text-purple-400" />
+                      <div className="w-10 h-10 rounded-lg bg-de-raised flex items-center justify-center">
+                        <stat.icon className="w-5 h-5 text-de-accent-ink" />
                       </div>
                       <div>
                         <div className="text-xl font-bold text-white">{stat.value}</div>
@@ -342,7 +342,7 @@ export function LocationServicePage(props: LocationPageProps) {
 
                 {/* Trust badges */}
                 <div className="flex flex-wrap items-center gap-3">
-                  <span className="text-sm text-gray-500">Built for regulated environments</span>
+                  <span className="text-sm text-white/70">Built for regulated environments</span>
                   {["HIPAA-aligned support", "SOC 2 readiness", "Cyber insurance readiness", "Framework mapping"].map((badge) => (
                     <div key={badge} className="px-3 py-1.5 rounded-md bg-white/5 border border-white/10 text-xs text-gray-400">{badge}</div>
                   ))}
@@ -357,7 +357,7 @@ export function LocationServicePage(props: LocationPageProps) {
               {/* Right column - Dashboard Visual */}
               <div className="relative flex justify-center lg:justify-end w-full mt-8 lg:mt-0">
                 <motion.div className="relative w-full max-w-[500px] lg:max-w-[550px] xl:max-w-[600px]" initial={{ opacity: 0, x: 60, scale: 0.95 }} animate={{ opacity: 1, x: 0, scale: 1 }} transition={{ duration: 0.9, delay: 0.5 }}>
-                  <div className="absolute inset-0 bg-gradient-to-br from-purple-600/30 via-indigo-600/15 to-cyan-600/30 blur-3xl scale-110" />
+                  <div className="absolute inset-0 bg-de-raised blur-3xl scale-110" />
                   <motion.div className="relative" style={{ transform: "perspective(1200px) rotateY(-8deg) rotateX(3deg)", transformStyle: "preserve-3d" }} animate={{ rotateY: [-8, -5, -8], rotateX: [3, 4, 3] }} transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}>
                     <DashboardMockup className="w-full drop-shadow-2xl" />
                   </motion.div>
@@ -381,14 +381,14 @@ export function LocationServicePage(props: LocationPageProps) {
             const azFact = getCyberFact("az-ic3-losses-2024");
             return (
               <motion.div
-                className="rounded-2xl border border-violet-500/20 bg-violet-500/5 px-6 py-5 text-center"
+                className="rounded-2xl border border-de-hairline bg-de-raised px-6 py-5 text-center"
                 initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
               >
-                <p className="text-xs uppercase tracking-wider text-violet-300/80 mb-2">Arizona context</p>
+                <p className="text-xs uppercase tracking-wider text-de-accent-ink/80 mb-2">Arizona context</p>
                 <p className="text-white/90 text-sm md:text-base leading-relaxed">
-                  <span className="font-bold text-violet-300">{azFact.metric}</span>{" "}
+                  <span className="font-bold text-de-accent-ink">{azFact.metric}</span>{" "}
                   {azFact.statement} — relevant for {props.city} and Greater Phoenix SMBs planning
                   insurance-ready IT and breach readiness.
                 </p>
@@ -397,12 +397,12 @@ export function LocationServicePage(props: LocationPageProps) {
                     href={azFact.sourceUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block mt-2 text-xs text-white/40 hover:text-violet-300 underline-offset-2 hover:underline"
+                    className="inline-block mt-2 text-xs text-white/55 hover:text-de-accent-ink underline-offset-2 hover:underline"
                   >
                     — {formatFactSource(azFact)}
                   </a>
                 ) : (
-                  <p className="mt-2 text-xs text-white/40">— {formatFactSource(azFact)}</p>
+                  <p className="mt-2 text-xs text-white/55">— {formatFactSource(azFact)}</p>
                 )}
               </motion.div>
             );
@@ -415,7 +415,7 @@ export function LocationServicePage(props: LocationPageProps) {
         <div className="mx-auto w-[min(94vw,1400px)] px-4">
           <motion.div className="text-center mb-16" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              IT Services for <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-fuchsia-400">{props.city}</span> Businesses
+              IT Services for <span className="text-de-accent-ink">{props.city}</span> Businesses
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">{props.serviceRadius}</p>
           </motion.div>
@@ -424,9 +424,9 @@ export function LocationServicePage(props: LocationPageProps) {
             {props.serviceFocus.map((service, index) => {
               const IconComponent = serviceIcons[index % serviceIcons.length];
               return (
-                <motion.div key={service} className="group p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 transition-all duration-300" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-indigo-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <IconComponent className="w-6 h-6 text-purple-400" />
+                <motion.div key={service} className="group p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-hairline transition-all duration-300" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
+                  <div className="w-12 h-12 rounded-xl bg-de-raised flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <IconComponent className="w-6 h-6 text-de-accent-ink" />
                   </div>
                   <h3 className="text-xl font-semibold text-white">{service}</h3>
                 </motion.div>
@@ -441,7 +441,7 @@ export function LocationServicePage(props: LocationPageProps) {
         <div className="mx-auto w-[min(94vw,1400px)] px-4">
           <motion.div className="text-center mb-16" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Why {props.city} Chooses <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-fuchsia-400">Digerati Experts</span>
+              Why {props.city} Chooses <span className="text-de-accent-ink">Digerati Experts</span>
             </h2>
           </motion.div>
 
@@ -465,7 +465,7 @@ export function LocationServicePage(props: LocationPageProps) {
 
           <div className="flex flex-wrap justify-center gap-4">
             {props.localProof.industries.map((industry, index) => (
-              <motion.div key={industry} className="px-6 py-3 rounded-full bg-gradient-to-r from-purple-500/10 to-fuchsia-500/10 border border-purple-500/30 text-gray-300" initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
+              <motion.div key={industry} className="px-6 py-3 rounded-full bg-de-raised border border-de-hairline text-gray-300" initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
                 {industry}
               </motion.div>
             ))}
@@ -489,14 +489,14 @@ export function LocationServicePage(props: LocationPageProps) {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-purple-900/50 via-[#0a0118] to-indigo-900/50">
+      <section className="py-20 bg-de-raised via-[#0a0118]">
         <div className="mx-auto w-[min(94vw,1200px)] px-4 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">{props.cta}</h2>
             <p className="text-xl text-gray-300 mb-8">Contact our {props.city} team today for your free consultation</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="/book">
-                <Button size="lg" className="px-8 py-6 text-lg font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 shadow-lg shadow-purple-500/25">
+                <Button size="lg" className="px-8 py-6 text-lg font-semibold bg-de-raised hover: hover: shadow-lg shadow-none">
                   {CTA.primary} <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </a>

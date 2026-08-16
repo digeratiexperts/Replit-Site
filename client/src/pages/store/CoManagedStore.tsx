@@ -526,11 +526,11 @@ const CoManagedStore = () => {
           <div className="mb-4 flex items-center justify-between">
             {isLoggedIn && user ? (
               <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 rounded-lg border border-[#5034ff]/20 bg-[#5034ff]/10 px-3 py-2">
-                  <User className="h-4 w-4 text-[#a78bfa]" />
+                <div className="flex items-center gap-2 rounded-lg border border-de-accent/20 bg-de-accent/10 px-3 py-2">
+                  <User className="h-4 w-4 text-de-accent-ink" />
                   <span className="text-sm text-white" data-testid="text-user-greeting">
                     Welcome,{" "}
-                    <span className="font-semibold text-[#c4b5fd]">
+                    <span className="font-semibold text-de-accent-ink">
                       {user.fullName || user.username}
                     </span>
                   </span>
@@ -544,7 +544,7 @@ const CoManagedStore = () => {
                   variant="ghost"
                   size="sm"
                   onClick={logout}
-                  className="text-white/60 hover:bg-[#5034ff]/10 hover:text-white"
+                  className="text-white/60 hover:bg-de-accent/10 hover:text-white"
                   data-testid="button-store-logout"
                 >
                   <LogOut className="mr-1 h-4 w-4" />
@@ -556,7 +556,7 @@ const CoManagedStore = () => {
                 variant="outline"
                 size="sm"
                 onClick={loginRedirect}
-                className="h-11 border-none bg-[#5034ff] px-5 text-base text-white hover:bg-[#6548ff]"
+                className="h-11 border-none bg-de-accent px-5 text-base text-white hover:bg-[#6548ff]"
                 data-testid="button-store-login"
               >
                 <User className="mr-2 h-4 w-4" />
@@ -581,13 +581,13 @@ const CoManagedStore = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
           >
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#5034ff]/25 bg-[#5034ff]/10 px-4 py-2">
-              <Users className="h-4 w-4 text-[#a78bfa]" />
-              <span className="text-sm text-[#c4b5fd]">Guided IT Storefront</span>
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-de-accent/25 bg-de-accent/10 px-4 py-2">
+              <Users className="h-4 w-4 text-de-accent-ink" />
+              <span className="text-sm text-de-accent-ink">Guided IT Storefront</span>
             </div>
             <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl lg:text-6xl">
               Tell us what you&apos;re trying to{" "}
-              <span className="text-[#a78bfa]">accomplish.</span>
+              <span className="text-de-accent-ink">accomplish.</span>
             </h1>
             <p className="text-lg leading-relaxed text-white/70 md:text-xl">
               Shop by outcome, build a recommended stack with Ask Digerati, then buy from the live
@@ -595,7 +595,7 @@ const CoManagedStore = () => {
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Button
-                className="h-12 bg-[#5034ff] px-6 text-base text-white hover:bg-[#6548ff]"
+                className="h-12 bg-de-accent px-6 text-base text-white hover:bg-[#6548ff]"
                 onClick={() => setGuidedOpen(true)}
                 data-testid="button-build-solution"
               >
@@ -714,7 +714,7 @@ const CoManagedStore = () => {
                     variant={selectedCategory === "all" ? "default" : "outline"}
                     className={
                       selectedCategory === "all"
-                        ? "bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                        ? "bg-de-accent text-white hover:bg-[#6548ff]"
                         : "border-white/15 bg-transparent text-white/80 hover:bg-white/5"
                     }
                     onClick={() => setSelectedCategory("all")}
@@ -732,7 +732,7 @@ const CoManagedStore = () => {
                         variant={selectedCategory === category ? "default" : "outline"}
                         className={
                           selectedCategory === category
-                            ? "bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                            ? "bg-de-accent text-white hover:bg-[#6548ff]"
                             : "border-white/15 bg-transparent text-white/80 hover:bg-white/5"
                         }
                         onClick={() => setSelectedCategory(category)}
@@ -745,7 +745,7 @@ const CoManagedStore = () => {
                 </div>
 
                 {selectedCategory !== "all" && (
-                  <div className="mb-6 rounded-xl border border-[#5034ff]/20 bg-[#5034ff]/10 p-4">
+                  <div className="mb-6 rounded-xl border border-de-accent/20 bg-de-accent/10 p-4">
                     <h3 className="mb-1 font-semibold text-white">
                       {categoryLabels[selectedCategory]}
                     </h3>
@@ -793,11 +793,11 @@ const CoManagedStore = () => {
                     data-testid="catalog-empty-state"
                   >
                     <p className="text-lg text-white/50">No products match these filters.</p>
-                    <p className="mt-2 text-sm text-white/40">
+                    <p className="mt-2 text-sm text-white/55">
                       Showing 0 of {visibleBase.length} products
                     </p>
                     <Button
-                      className="mt-4 bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                      className="mt-4 bg-de-accent text-white hover:bg-[#6548ff]"
                       onClick={clearAllFilters}
                       data-testid="button-empty-clear-filters"
                     >
@@ -831,8 +831,8 @@ const CoManagedStore = () => {
             <div className="grid gap-6 md:grid-cols-2">
               <div className="rounded-xl border border-white/10 bg-[#141414] p-6">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-[#5034ff]/25 bg-[#5034ff]/15">
-                    <ShoppingCart className="h-5 w-5 text-[#a78bfa]" />
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-de-accent/25 bg-de-accent/15">
+                    <ShoppingCart className="h-5 w-5 text-de-accent-ink" />
                   </div>
                   <div>
                     <h3 className="mb-2 font-semibold text-white">Checkout enabled</h3>
@@ -846,14 +846,14 @@ const CoManagedStore = () => {
 
               <div className="rounded-xl border border-white/10 bg-[#141414] p-6">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-[#5034ff]/25 bg-[#5034ff]/15">
-                    <Lock className="h-5 w-5 text-[#a78bfa]" />
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-de-accent/25 bg-de-accent/15">
+                    <Lock className="h-5 w-5 text-de-accent-ink" />
                   </div>
                   <div>
                     <h3 className="mb-2 font-semibold text-white">Client-only products</h3>
                     <p className="text-sm text-white/60">
                       Some products require an existing client relationship.{" "}
-                      <Link href={PORTAL_LOGIN} className="text-[#a78bfa] hover:text-[#c4b5fd]">
+                      <Link href={PORTAL_LOGIN} className="text-de-accent-ink hover:text-de-accent-ink">
                         Log in to your portal
                       </Link>{" "}
                       for exclusive pricing.
@@ -894,7 +894,7 @@ const CoManagedStore = () => {
               <Link href="/store/managed">
                 <Button
                   size="lg"
-                  className="h-12 bg-[#5034ff] px-6 text-white hover:bg-[#6548ff]"
+                  className="h-12 bg-de-accent px-6 text-white hover:bg-[#6548ff]"
                   data-testid="button-view-managed"
                 >
                   View Managed IT Packages

@@ -35,22 +35,22 @@ export default function UCaaS() {
 
   const brokenItems = [
     {
-      icon: <GitBranch className="h-6 w-6 text-violet-400" />,
+      icon: <GitBranch className="h-6 w-6 text-de-accent-ink" />,
       title: "Routing",
       description: "Calls go to the wrong person or get dropped. Ring groups and auto-attendants aren't set up correctly, frustrating customers."
     },
     {
-      icon: <MapPin className="h-6 w-6 text-violet-400" />,
+      icon: <MapPin className="h-6 w-6 text-de-accent-ink" />,
       title: "E911",
       description: "Your address records are outdated or wrong. In an emergency, first responders could be sent to the wrong location."
     },
     {
-      icon: <Building2 className="h-6 w-6 text-violet-400" />,
+      icon: <Building2 className="h-6 w-6 text-de-accent-ink" />,
       title: "Too many vendors",
       description: "Phone from one vendor, meetings from another, fax from a third. Nobody owns the stack, so problems fall through the cracks."
     },
     {
-      icon: <Archive className="h-6 w-6 text-violet-400" />,
+      icon: <Archive className="h-6 w-6 text-de-accent-ink" />,
       title: "No retention",
       description: "Call recordings and voicemails vanish after 30 days. When you need them for compliance or disputes, they're gone."
     }
@@ -164,9 +164,9 @@ export default function UCaaS() {
     <PageTemplate
       title="UCaaS: Voice & Meetings"
       subtitle="We design, secure, and run your phone system and meeting stack so it actually supports the business"
-      gradientColors="from-violet-600 via-purple-600 to-fuchsia-600"
+      gradientColors="from-[#050312] via-[#0a0a0a] to-[#050312]"
       variant="dark"
-      icon={<Phone className="h-10 w-10 text-violet-300" />}
+      icon={<Phone className="h-10 w-10 text-de-accent-ink" />}
       breadcrumbs={[
         { label: "Solutions", href: "/solutions" },
         { label: "UCaaS" }
@@ -286,7 +286,7 @@ export default function UCaaS() {
           transition={{ duration: 0.5 }}
         >
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-600 to-fuchsia-500 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-de-raised flex items-center justify-center">
               <Headphones className="w-5 h-5 text-white" />
             </div>
             <h2 className="text-3xl font-bold text-white">What we actually do</h2>
@@ -302,15 +302,15 @@ export default function UCaaS() {
                 transition={{ delay: index * 0.1, duration: 0.5 }}
               >
                 <Card 
-                  className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/30 hover:bg-white/[0.08] transition-all duration-300"
+                  className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-hairline hover:bg-white/[0.08] transition-all duration-300"
                   data-testid={`card-service-${card.title.toLowerCase().replace(/\s+/g, '-')}`}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
+                  <div className="absolute inset-0 bg-de-raised to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
                   <CardHeader className="relative">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <div className="w-12 h-12 rounded-xl bg-de-raised flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                       {card.icon}
                     </div>
-                    <CardTitle className="text-xl font-semibold text-white group-hover:text-purple-300 transition-colors">
+                    <CardTitle className="text-xl font-semibold text-white group-hover:text-de-accent-ink transition-colors">
                       {card.title}
                     </CardTitle>
                   </CardHeader>
@@ -349,11 +349,11 @@ export default function UCaaS() {
                 className="relative"
               >
                 <Card 
-                  className="h-full bg-white/[0.03] border-white/10 backdrop-blur-sm hover:border-purple-500/40 transition-all"
+                  className="h-full bg-white/[0.03] border-white/10 backdrop-blur-sm hover:border-de-hairline transition-all"
                   data-testid={`card-pricing-${tier.name.toLowerCase().replace(/\s+/g, '-')}`}
                 >
                   <CardHeader>
-                    <div className="text-sm text-violet-400 uppercase tracking-wider mb-1">
+                    <div className="text-sm text-de-accent-ink uppercase tracking-wider mb-1">
                       {tier.type === 'one-time' ? 'One-Time' : 'Monthly'}
                     </div>
                     <CardTitle className="text-2xl text-white">{tier.name}</CardTitle>
@@ -394,7 +394,7 @@ export default function UCaaS() {
             <div className="grid grid-cols-3 bg-white/5">
               <div className="p-4 font-semibold text-gray-400">Feature</div>
               <div className="p-4 font-semibold text-gray-400 text-center border-l border-white/10">DIY</div>
-              <div className="p-4 font-semibold text-violet-400 text-center border-l border-white/10 bg-violet-500/5">
+              <div className="p-4 font-semibold text-de-accent-ink text-center border-l border-white/10 bg-de-raised">
                 Digerati Experts UCaaS
               </div>
             </div>
@@ -406,7 +406,7 @@ export default function UCaaS() {
               >
                 <div className="p-4 text-white font-medium">{item.feature}</div>
                 <div className="p-4 text-gray-400 text-center border-l border-white/10">{item.diy}</div>
-                <div className="p-4 text-emerald-400 text-center border-l border-white/10 bg-violet-500/5 font-medium">
+                <div className="p-4 text-emerald-400 text-center border-l border-white/10 bg-de-raised font-medium">
                   {item.digerati}
                 </div>
               </div>
@@ -422,7 +422,7 @@ export default function UCaaS() {
           transition={{ duration: 0.5 }}
           className="relative rounded-2xl overflow-hidden"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600" />
+          <div className="absolute inset-0 bg-de-raised" />
           
           <div className="absolute inset-0 opacity-30">
             <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
@@ -436,7 +436,7 @@ export default function UCaaS() {
           </div>
           
           <div className="absolute -top-20 -right-20 w-64 h-64 bg-fuchsia-400/20 rounded-full blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-purple-400/20 rounded-full blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-de-raised rounded-full blur-3xl" />
           
           <div className="relative p-8 md:p-12 text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
@@ -450,7 +450,7 @@ export default function UCaaS() {
                 href="/book" 
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center justify-center bg-white text-purple-700 hover:bg-gray-100 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
+                className="group inline-flex items-center justify-center bg-white text-de-accent hover:bg-gray-100 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
                 data-testid="button-schedule-call"
               >
                 <ArrowRight className="mr-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -458,7 +458,7 @@ export default function UCaaS() {
               </a>
               <a 
                 href="tel:+13254809870"
-                className="group inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-purple-700 px-8 py-4 rounded-xl font-semibold transition-all"
+                className="group inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-de-accent px-8 py-4 rounded-xl font-semibold transition-all"
                 data-testid="button-call-now"
               >
                 <Phone className="mr-2 h-5 w-5" />

@@ -19,7 +19,7 @@ export function CartButton() {
       <Layers className="h-5 w-5" />
       {itemCount > 0 && (
         <span
-          className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#5034ff] text-xs font-medium text-white"
+          className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-de-accent text-xs font-medium text-white"
           data-testid="cart-item-count"
         >
           {itemCount > 99 ? "99+" : itemCount}

@@ -25,10 +25,10 @@ export default function Accessibility() {
   ];
 
   const supportedUsers = [
-    { icon: Eye, text: "Blind or have low vision", color: "from-violet-500 to-purple-600" },
-    { icon: Ear, text: "Deaf or have hearing loss", color: "from-purple-500 to-fuchsia-600" },
+    { icon: Eye, text: "Blind or have low vision", color: " " },
+    { icon: Ear, text: "Deaf or have hearing loss", color: " to-fuchsia-600" },
     { icon: Hand, text: "Living with mobility impairments", color: "from-fuchsia-500 to-pink-600" },
-    { icon: Brain, text: "Living with cognitive disabilities", color: "from-purple-600 to-violet-600" }
+    { icon: Brain, text: "Living with cognitive disabilities", color: " " }
   ];
 
   return (

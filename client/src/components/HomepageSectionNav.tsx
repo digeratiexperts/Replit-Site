@@ -103,7 +103,7 @@ export function HomepageOnPageNav() {
                     event.preventDefault();
                     scrollToSection?.(index);
                   }}
-                  className={`relative inline-flex min-h-9 items-center justify-center px-2.5 py-1.5 text-base font-semibold tracking-wide whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-inset sm:px-3 md:px-1.5 lg:min-h-9 lg:w-auto lg:px-2 ${
+                  className={`relative inline-flex min-h-9 items-center justify-center px-2.5 py-1.5 text-base font-semibold tracking-wide whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-de-accent focus-visible:ring-inset sm:px-3 md:px-1.5 lg:min-h-9 lg:w-auto lg:px-2 ${
                     isActive ? "text-white" : "text-white/55 hover:text-white/90"
                   }`}
                   aria-current={isActive ? "true" : undefined}

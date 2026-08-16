@@ -182,7 +182,7 @@ export const DigeratiContactSection = ({
               </a>
               <a
                 href={PRIMARY_PHONE.telHref}
-                className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-6 py-2.5 text-base font-semibold text-white transition-colors hover:border-white/40 hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
+                className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-6 py-2.5 text-base font-semibold text-white transition-colors hover:border-white/40 hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-de-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
                 data-testid="contact-cta-call"
               >
                 Call {PRIMARY_PHONE.display}
@@ -196,7 +196,7 @@ export const DigeratiContactSection = ({
                   href={item.href}
                   {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                   data-testid={item.testId}
-                  className={`group flex items-start gap-4 border-b border-de-hairline py-4 transition-colors hover:bg-white/[0.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)] ${
+                  className={`group flex items-start gap-4 border-b border-de-hairline py-4 transition-colors hover:bg-white/[0.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-de-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)] ${
                     item.testId === "contact-address" ? "md:col-span-2" : ""
                   } ${item.testId === "contact-phone" ? "md:border-l md:pl-4" : ""}`}
                 >
@@ -240,7 +240,7 @@ export const DigeratiContactSection = ({
                   rel="noopener noreferrer"
                   data-testid={social.testId}
                   aria-label={social.name}
-                  className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-de-hairline bg-de-raised text-white/60 transition-colors hover:border-white/25 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-de-hairline bg-de-raised text-white/60 transition-colors hover:border-white/25 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-de-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
                 >
                   <social.icon className="h-4 w-4" aria-hidden="true" />
                 </a>

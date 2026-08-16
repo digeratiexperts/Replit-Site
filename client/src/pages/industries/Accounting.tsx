@@ -22,7 +22,7 @@ export default function Accounting() {
     <PageTemplate
       title="IT Solutions for Accounting & Finance"
       subtitle="PCI DSS-aligned security and financial data protection for Arizona CPAs and accounting firms"
-      gradientColors="from-violet-600 via-purple-600 to-fuchsia-600"
+      gradientColors="from-[#050312] via-[#0a0a0a] to-[#050312]"
     >
       <div className="space-y-16">
         {/* Key Metrics - Modern Dashboard Style */}
@@ -33,7 +33,7 @@ export default function Accounting() {
               <div key={idx} className="relative group">
                 <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:border-white/20 hover:shadow-lg transition-all">
                   <CardContent className="pt-6">
-                    <Icon className="h-6 w-6 text-[#A78BFA] mb-3" />
+                    <Icon className="h-6 w-6 text-de-accent-ink mb-3" />
                     <p className="text-white font-semibold">{item.label}</p>
                     <p className="text-sm text-gray-400 mt-2 leading-relaxed">{item.value}</p>
                   </CardContent>
@@ -105,10 +105,10 @@ export default function Accounting() {
             const Icon = service.icon;
             return (
               <div key={idx} className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400 rounded-xl blur opacity-0 group-hover:opacity-10 transition-all duration-300" />
+                <div className="absolute inset-0 bg-de-raised rounded-xl blur opacity-0 group-hover:opacity-10 transition-all duration-300" />
                 <Card className="relative h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-white/20 hover:shadow-xl transition-all duration-300">
                   <CardHeader>
-                    <Icon className="h-10 w-10 text-violet-400 mb-2 group-hover:scale-110 transition-transform" />
+                    <Icon className="h-10 w-10 text-de-accent-ink mb-2 group-hover:scale-110 transition-transform" />
                     <CardTitle className="text-xl text-white">{service.title}</CardTitle>
                     <p className="text-sm text-gray-400 mt-2">{service.desc}</p>
                   </CardHeader>

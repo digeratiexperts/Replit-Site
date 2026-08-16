@@ -82,7 +82,7 @@ function InternalToolGate({ children }: { children: React.ReactNode }) {
           </p>
           <a
             href={loginUrl}
-            className="inline-flex items-center justify-center rounded-lg bg-violet-600 hover:bg-violet-500 px-5 py-2.5 font-semibold"
+            className="inline-flex items-center justify-center rounded-lg bg-de-accent hover:bg-de-accent px-5 py-2.5 font-semibold"
             data-testid="network-planner-login"
           >
             Sign in to continue
@@ -228,11 +228,11 @@ function NetworkPlannerOfficialApp() {
         {/* Header */}
         <header className="flex flex-col md:flex-row items-start justify-between gap-4 mb-6">
           <div className="flex items-start gap-4">
-            <div className="px-3 py-2 rounded-xl bg-gradient-to-br from-violet-500/25 to-cyan-500/18 border border-white/15 text-violet-200 font-bold text-sm">
+            <div className="px-3 py-2 rounded-xl bg-de-raised border border-white/15 text-de-accent-ink font-bold text-sm">
               Networking
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-indigo-50 mb-1">Plan Your Networking Package</h1>
+              <h1 className="text-2xl font-bold text-white/80 mb-1">Plan Your Networking Package</h1>
               <p className="text-slate-400 text-sm">
                 Choose needs first. Pricing shows at the end. Compare <strong className="text-white">CloudShield</strong>, <strong className="text-white">CoreStack</strong>, or a <strong className="text-white">Merged</strong> package.
               </p>
@@ -250,15 +250,15 @@ function NetworkPlannerOfficialApp() {
 
         {/* Solutions */}
         <section className="bg-gradient-to-b from-[#141b2b] to-[#0f1525] border border-white/10 rounded-2xl p-5 mb-4 shadow-xl">
-          <h2 className="text-xl font-extrabold text-indigo-50 mb-4">Solutions</h2>
+          <h2 className="text-xl font-extrabold text-white/80 mb-4">Solutions</h2>
           <div className="grid md:grid-cols-2 gap-4">
             <label className="cursor-pointer group">
               <div className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${cloudShield ? 'bg-[#182346] border-amber-500 shadow-[0_0_0_2px_rgba(255,155,22,0.18)]' : 'bg-gradient-to-b from-[#10182a] to-[#0b1220] border-white/10 hover:border-white/20'}`} onClick={() => setCloudShield(!cloudShield)} data-testid="toggle-cloudshield">
-                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-violet-500/25 to-cyan-500/18 border border-white/15 flex items-center justify-center">
-                  <Shield className="w-5 h-5 text-violet-300" />
+                <div className="w-9 h-9 rounded-lg bg-de-raised border border-white/15 flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-de-accent-ink" />
                 </div>
                 <div className="flex-1">
-                  <div className="font-extrabold text-indigo-50">CloudShield</div>
+                  <div className="font-extrabold text-white/80">CloudShield</div>
                   <div className="text-xs text-slate-400">(SASE)</div>
                 </div>
                 <div className={`w-6 h-6 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 border border-orange-400 flex items-center justify-center shadow-lg shadow-orange-500/25 transition-all ${cloudShield ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
@@ -269,11 +269,11 @@ function NetworkPlannerOfficialApp() {
 
             <label className="cursor-pointer group">
               <div className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${coreStack ? 'bg-[#182346] border-amber-500 shadow-[0_0_0_2px_rgba(255,155,22,0.18)]' : 'bg-gradient-to-b from-[#10182a] to-[#0b1220] border-white/10 hover:border-white/20'}`} onClick={() => setCoreStack(!coreStack)} data-testid="toggle-corestack">
-                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-violet-500/25 to-cyan-500/18 border border-white/15 flex items-center justify-center">
+                <div className="w-9 h-9 rounded-lg bg-de-raised border border-white/15 flex items-center justify-center">
                   <Server className="w-5 h-5 text-cyan-300" />
                 </div>
                 <div className="flex-1">
-                  <div className="font-extrabold text-indigo-50">CoreStack</div>
+                  <div className="font-extrabold text-white/80">CoreStack</div>
                   <div className="text-xs text-slate-400">(Network)</div>
                 </div>
                 <div className={`w-6 h-6 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 border border-orange-400 flex items-center justify-center shadow-lg shadow-orange-500/25 transition-all ${coreStack ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
@@ -287,7 +287,7 @@ function NetworkPlannerOfficialApp() {
 
         {/* Environment */}
         <section className="bg-gradient-to-b from-[#141b2b] to-[#0f1525] border border-white/10 rounded-2xl p-5 mb-4 shadow-xl">
-          <h2 className="text-xl font-extrabold text-indigo-50 mb-4">Your Environment</h2>
+          <h2 className="text-xl font-extrabold text-white/80 mb-4">Your Environment</h2>
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label className="text-slate-400">Number of sites</Label>
@@ -296,7 +296,7 @@ function NetworkPlannerOfficialApp() {
                 min={1} 
                 value={sites} 
                 onChange={(e) => setSites(Math.max(1, parseInt(e.target.value) || 1))}
-                className="bg-[#0e1524] border-white/15 focus:border-violet-500"
+                className="bg-[#0e1524] border-white/15 focus:border-de-hairline"
                 data-testid="input-sites"
               />
             </div>
@@ -307,7 +307,7 @@ function NetworkPlannerOfficialApp() {
                 min={0} 
                 value={users} 
                 onChange={(e) => setUsers(Math.max(0, parseInt(e.target.value) || 0))}
-                className="bg-[#0e1524] border-white/15 focus:border-violet-500"
+                className="bg-[#0e1524] border-white/15 focus:border-de-hairline"
                 data-testid="input-users"
               />
             </div>
@@ -317,7 +317,7 @@ function NetworkPlannerOfficialApp() {
         {/* CloudShield Needs */}
         {cloudShield && (
           <section className="bg-gradient-to-b from-[#141b2b] to-[#0f1525] border border-white/10 rounded-2xl p-5 mb-4 shadow-xl">
-            <h2 className="text-xl font-extrabold text-indigo-50 mb-4">CloudShield (SASE) — Networking Needs</h2>
+            <h2 className="text-xl font-extrabold text-white/80 mb-4">CloudShield (SASE) — Networking Needs</h2>
             <div className="grid md:grid-cols-4 gap-4">
               <TooltipProvider>
                 <div className="space-y-2">
@@ -375,7 +375,7 @@ function NetworkPlannerOfficialApp() {
         {/* CoreStack Needs */}
         {coreStack && (
           <section className="bg-gradient-to-b from-[#141b2b] to-[#0f1525] border border-white/10 rounded-2xl p-5 mb-4 shadow-xl">
-            <h2 className="text-xl font-extrabold text-indigo-50 mb-4">CoreStack (Network) — Needs</h2>
+            <h2 className="text-xl font-extrabold text-white/80 mb-4">CoreStack (Network) — Needs</h2>
             <div className="grid md:grid-cols-3 gap-4 mb-4">
               <div className="space-y-2">
                 <Label className="text-slate-400">Gateway model (per site)</Label>
@@ -417,7 +417,7 @@ function NetworkPlannerOfficialApp() {
             </div>
 
             <fieldset className="border border-dashed border-white/10 rounded-xl p-4">
-              <legend className="px-2 text-indigo-100 font-semibold">Network hardware subscriptions (per site)</legend>
+              <legend className="px-2 text-white/80 font-semibold">Network hardware subscriptions (per site)</legend>
               <div className="grid md:grid-cols-4 gap-4">
                 <div className="space-y-2">
                   <Label className="text-slate-400">8-port PoE switches</Label>
@@ -442,14 +442,14 @@ function NetworkPlannerOfficialApp() {
 
         {/* Summary */}
         <section className="bg-gradient-to-b from-[#141b2b] to-[#0f1525] border border-white/10 rounded-2xl p-5 shadow-xl">
-          <h2 className="text-xl font-extrabold text-indigo-50 mb-4">Summary</h2>
+          <h2 className="text-xl font-extrabold text-white/80 mb-4">Summary</h2>
           <div className="grid md:grid-cols-4 gap-3 mb-6">
             <div className="bg-gradient-to-b from-[#10182a] to-[#0b1220] border border-white/10 rounded-xl p-4 shadow-inner">
-              <div className="text-xs text-violet-300 mb-1">Monthly Recurring</div>
+              <div className="text-xs text-de-accent-ink mb-1">Monthly Recurring</div>
               <div className="text-2xl font-black text-white" data-testid="text-total-mrc">${pricing.totalMRC.toLocaleString()}</div>
             </div>
             <div className="bg-gradient-to-b from-[#10182a] to-[#0b1220] border border-white/10 rounded-xl p-4 shadow-inner">
-              <div className="text-xs text-violet-300 mb-1">One-Time Setup</div>
+              <div className="text-xs text-de-accent-ink mb-1">One-Time Setup</div>
               <div className="text-2xl font-black text-white" data-testid="text-total-nrc">${pricing.totalNRC.toLocaleString()}</div>
             </div>
             <div className="bg-gradient-to-b from-[#182346] to-[#101a39] border border-white/15 rounded-xl p-4 shadow-inner">
@@ -468,7 +468,7 @@ function NetworkPlannerOfficialApp() {
           <div className="grid md:grid-cols-2 gap-4">
             {cloudShield && (
               <div className="bg-white/[0.02] border border-white/10 rounded-xl p-4">
-                <h3 className="font-bold text-violet-300 mb-3">CloudShield (SASE)</h3>
+                <h3 className="font-bold text-de-accent-ink mb-3">CloudShield (SASE)</h3>
                 <table className="w-full text-sm">
                   <tbody className="divide-y divide-white/5">
                     <tr><td className="py-2 text-slate-400">Base SASE ({users} users × $29)</td><td className="py-2 text-right font-semibold">${(users * 29).toLocaleString()}</td></tr>
@@ -520,7 +520,7 @@ function NetworkPlannerOfficialApp() {
           .bg-gradient-to-b { background: white !important; }
           .border-white\\/10 { border-color: #ddd !important; }
           .text-slate-400 { color: #666 !important; }
-          .text-white, .text-indigo-50 { color: black !important; }
+          .text-white, .text-white/80 { color: black !important; }
         }
       `}</style>
     </div>

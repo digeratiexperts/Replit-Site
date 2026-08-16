@@ -129,7 +129,7 @@ const tiers = [
     name: "ProActive Office", 
     subtitle: `Starting at $${pricing.office.user} /user·mo*`,
     ribbon: "Foundation",
-    gradient: "from-violet-500 to-purple-500",
+    gradient: " ",
     borderColor: "border-de-hairline"
   },
   { 
@@ -181,7 +181,7 @@ const EcosystemPricing = () => {
     }
     if (value === false) {
       return (
-        <span className="text-white/30">—</span>
+        <span className="text-white/55">—</span>
       );
     }
     if (value === "Add-on") {
@@ -415,7 +415,7 @@ const EcosystemPricing = () => {
             <div className="flex flex-wrap justify-center gap-4">
               <a href="/book">
                 <Button 
-                  className="bg-de-raised hover:from-violet-700 hover:to-purple-700 text-white"
+                  className="bg-de-raised hover: hover: text-white"
                   data-testid="btn-book-call"
                 >
                   <Phone className="w-4 h-4 mr-2" />

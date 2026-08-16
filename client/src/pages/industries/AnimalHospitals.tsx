@@ -15,10 +15,10 @@ export default function AnimalHospitals() {
   const prefersReducedMotion = useReducedMotion() ?? false;
   
   const metrics = [
-    { label: "Data Protection", value: "100%", icon: Shield, color: "from-violet-500 to-purple-500" },
-    { label: "System Uptime", value: "99.95%", icon: Activity, color: "from-purple-500 to-fuchsia-500" },
-    { label: "Response Time", value: "<15min", icon: Clock, color: "from-violet-500 to-purple-500" },
-    { label: "Veterinary Clients", value: "20+", icon: Heart, color: "from-purple-500 to-fuchsia-500" }
+    { label: "Data Protection", value: "100%", icon: Shield, color: " " },
+    { label: "System Uptime", value: "99.95%", icon: Activity, color: " to-fuchsia-500" },
+    { label: "Response Time", value: "<15min", icon: Clock, color: " " },
+    { label: "Veterinary Clients", value: "20+", icon: Heart, color: " to-fuchsia-500" }
   ];
 
   const challenges = [
@@ -26,19 +26,19 @@ export default function AnimalHospitals() {
       icon: Database, 
       title: "Patient Records Security", 
       description: "Protect sensitive pet medical records and client payment information with enterprise-grade encryption.",
-      color: "text-violet-400"
+      color: "text-de-accent-ink"
     },
     { 
       icon: Lock, 
       title: "Payment Card Compliance", 
       description: "Maintain PCI DSS compliance for credit card transactions and client billing systems.",
-      color: "text-violet-400"
+      color: "text-de-accent-ink"
     },
     { 
       icon: Users, 
       title: "Multi-Location Management", 
       description: "Seamlessly manage IT across multiple clinic locations with centralized security and monitoring.",
-      color: "text-violet-400"
+      color: "text-de-accent-ink"
     }
   ];
 
@@ -59,7 +59,7 @@ export default function AnimalHospitals() {
     <PageTemplate
       title="IT Solutions for Veterinary Practices"
       subtitle="Secure, reliable IT solutions designed specifically for animal hospitals and veterinary clinics across Arizona."
-      gradientColors="from-violet-600 via-purple-600 to-fuchsia-600"
+      gradientColors="from-[#050312] via-[#0a0a0a] to-[#050312]"
       icon={<PawPrint className="w-10 h-10 text-white" />}
       breadcrumbs={[{ label: "Industries", href: "/" }, { label: "Animal Hospitals" }]}
     >
@@ -78,7 +78,7 @@ export default function AnimalHospitals() {
                 className="group relative"
               >
                 <div className={`absolute inset-0 bg-gradient-to-r ${metric.color} rounded-xl blur opacity-0 group-hover:opacity-30 transition-all duration-300`} />
-                <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:border-violet-500/30 hover:shadow-lg transition-all">
+                <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-hairline hover:shadow-lg transition-all">
                   <CardContent className="pt-6">
                     <div className="flex items-start justify-between mb-3">
                       <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${metric.color} flex items-center justify-center`}>
@@ -138,7 +138,7 @@ export default function AnimalHospitals() {
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.1, duration: 0.5 }}
                 >
-                  <Card className="bg-white/5 backdrop-blur-sm border border-white/10 hover:border-violet-500/30 transition-all h-full">
+                  <Card className="bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-hairline transition-all h-full">
                     <CardHeader>
                       <div className={`w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center mb-4`}>
                         <Icon className={`h-6 w-6 ${challenge.color}`} />
@@ -162,10 +162,10 @@ export default function AnimalHospitals() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <Card className="bg-gradient-to-br from-violet-600/20 to-purple-600/20 border border-violet-500/30">
+          <Card className="bg-de-raised border border-de-hairline">
             <CardHeader>
               <CardTitle className="text-2xl text-white flex items-center gap-3">
-                <Shield className="h-7 w-7 text-violet-400" />
+                <Shield className="h-7 w-7 text-de-accent-ink" />
                 Complete Security for Your Practice
               </CardTitle>
             </CardHeader>
@@ -200,7 +200,7 @@ export default function AnimalHospitals() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 
               href="/book"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-violet-600 hover:bg-violet-700 text-white font-semibold rounded-lg transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-de-accent hover:bg-de-accent text-white font-semibold rounded-lg transition-colors"
               data-testid="button-schedule-call"
             >
               <Phone className="h-5 w-5" />

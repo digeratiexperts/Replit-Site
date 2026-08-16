@@ -207,7 +207,7 @@ export function StoreCatalogToolbar({
         </Select>
 
         <div className="flex items-center gap-1.5">
-          <ArrowUpDown className="h-4 w-4 text-white/45" aria-hidden />
+          <ArrowUpDown className="h-4 w-4 text-white/55" aria-hidden />
           <Select value={sort} onValueChange={(v) => onSortChange(v as StoreSortOption)}>
             <SelectTrigger className={`${selectClass()} w-[180px]`} data-testid="select-sort">
               <SelectValue placeholder="Sort" />
@@ -223,7 +223,7 @@ export function StoreCatalogToolbar({
       </div>
 
       <div className="flex flex-wrap items-center gap-2.5 border-t border-white/10 pt-4">
-        <span className="text-sm text-white/45">Refine</span>
+        <span className="text-sm text-white/55">Refine</span>
         {onVendorChange && (
           <Select
             value={vendorValue}
@@ -353,12 +353,12 @@ export function StoreCatalogToolbar({
     >
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
         <div className="relative flex-1">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" />
+          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-white/55" />
           <Input
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search within results (products, vendors, problems)"
-            className="h-12 border-white/15 bg-[#0a0a0a] pl-11 text-base text-white placeholder:text-white/35"
+            className="h-12 border-white/15 bg-[#0a0a0a] pl-11 text-base text-white placeholder:text-white/55"
             data-testid="input-store-search"
             aria-label="Search within catalog results"
           />
@@ -396,7 +396,7 @@ export function StoreCatalogToolbar({
               key={chip.key}
               type="button"
               onClick={chip.onClear}
-              className="inline-flex items-center gap-1.5 rounded-md border border-[#5034ff]/35 bg-[#5034ff]/15 px-2.5 py-1.5 text-sm text-[#c4b5fd] transition-colors hover:bg-[#5034ff]/25 hover:text-white"
+              className="inline-flex items-center gap-1.5 rounded-md border border-de-accent/35 bg-de-accent/15 px-2.5 py-1.5 text-sm text-de-accent-ink transition-colors hover:bg-de-accent/25 hover:text-white"
               data-testid={`chip-clear-${chip.key}`}
             >
               {chip.label}

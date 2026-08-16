@@ -18,19 +18,19 @@ export default function MissionValues() {
       icon: Shield,
       title: "Security First",
       description: "We believe every business deserves enterprise-level security, regardless of size. We stay ahead of threats so you don't have to.",
-      gradient: "from-purple-500 to-indigo-600"
+      gradient: " "
     },
     {
       icon: Users,
       title: "Partnership",
       description: "We're not just your IT provider – we're your technology partner. Your success is our success, and we're invested in your long-term growth.",
-      gradient: "from-purple-500 to-violet-600"
+      gradient: " "
     },
     {
       icon: Target,
       title: "Proactive Approach",
       description: "We prevent problems before they happen. Our proactive monitoring and maintenance keep your systems running smoothly 24/7.",
-      gradient: "from-violet-500 to-fuchsia-600"
+      gradient: " to-fuchsia-600"
     },
     {
       icon: Heart,

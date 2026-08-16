@@ -68,7 +68,7 @@ export const ModernHeroSection = (): JSX.Element => {
         }}
       >
         <div
-          className="absolute top-[8%] right-[-4%] w-[640px] h-[640px] pointer-events-none"
+          className="de-hero-glow absolute top-[8%] right-[-4%] w-[640px] h-[640px] pointer-events-none"
           style={{
             background:
               "radial-gradient(circle at 70% 35%, rgba(236, 72, 153, 0.20) 0%, rgba(139, 92, 246, 0.14) 38%, transparent 64%)",
@@ -193,7 +193,7 @@ export const ModernHeroSection = (): JSX.Element => {
                 }}
               >
                 <motion.div
-                  className="absolute -inset-8 -z-10 rounded-[2.5rem] pointer-events-none"
+                  className="de-hero-glow absolute -inset-8 -z-10 rounded-[2.5rem] pointer-events-none"
                   aria-hidden="true"
                   style={{
                     background:
@@ -210,7 +210,7 @@ export const ModernHeroSection = (): JSX.Element => {
                       : { duration: 4.5, repeat: Infinity, ease: "easeInOut" }
                   }
                 />
-                <div className="relative rounded-2xl overflow-hidden border border-white/12 shadow-2xl shadow-violet-950/50">
+                <div className="relative rounded-2xl overflow-hidden border border-white/12 shadow-2xl shadow-black/50">
                   <DashboardMockup className="w-full" />
                 </div>
               </motion.div>

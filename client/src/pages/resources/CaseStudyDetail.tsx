@@ -30,7 +30,7 @@ export default function CaseStudyDetail() {
       >
         <Link
           href="/resources/case-studies"
-          className="inline-flex items-center gap-2 text-violet-300 hover:text-violet-200"
+          className="inline-flex items-center gap-2 text-de-accent-ink hover:text-de-accent-ink"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to case studies
@@ -78,7 +78,7 @@ export default function CaseStudyDetail() {
             </Badge>
           )}
           {study.clientLabel && (
-            <Badge className="bg-violet-500/20 text-violet-200 border border-violet-500/30">
+            <Badge className="bg-de-raised text-de-accent-ink border border-de-hairline">
               {study.clientLabel}
             </Badge>
           )}
@@ -112,8 +112,8 @@ export default function CaseStudyDetail() {
 
           <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-lg bg-violet-500/20 flex items-center justify-center">
-                <Layers className="w-4 h-4 text-violet-300" />
+              <div className="w-9 h-9 rounded-lg bg-de-raised flex items-center justify-center">
+                <Layers className="w-4 h-4 text-de-accent-ink" />
               </div>
               <h2 className="text-xl font-semibold text-white">Stack</h2>
             </div>
@@ -132,7 +132,7 @@ export default function CaseStudyDetail() {
 
         <Link
           href="/resources/case-studies"
-          className="inline-flex items-center gap-2 text-violet-300 hover:text-violet-200"
+          className="inline-flex items-center gap-2 text-de-accent-ink hover:text-de-accent-ink"
           data-testid="link-back-case-studies"
         >
           <ArrowLeft className="h-4 w-4" />

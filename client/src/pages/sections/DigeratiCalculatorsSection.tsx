@@ -88,7 +88,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
               >
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl border border-de-hairline bg-de-bg flex items-center justify-center">
-                    <TrendingDown className="w-5 h-5 md:w-6 md:h-6 text-violet-400" />
+                    <TrendingDown className="w-5 h-5 md:w-6 md:h-6 text-de-accent-ink" />
                   </div>
                   <div className="text-left">
                     <h3 className="text-lg md:text-xl font-bold text-white">Downtime Cost Calculator</h3>
@@ -97,7 +97,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                 </div>
                 <div className="flex items-center gap-3">
                   {!downtimeExpanded && (
-                    <span className="hidden sm:block text-sm text-violet-400 font-medium">
+                    <span className="hidden sm:block text-sm text-de-accent-ink font-medium">
                       Current estimate: ${downtimeCost.toLocaleString()}/incident
                     </span>
                   )}
@@ -124,7 +124,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                           {/* Industry Select */}
                           <div className="space-y-3">
                             <Label htmlFor="industry" className="text-sm font-semibold text-white/70 uppercase tracking-wider flex items-center gap-2">
-                              <Building2 className="w-4 h-4 text-violet-400" />
+                              <Building2 className="w-4 h-4 text-de-accent-ink" />
                               Industry
                             </Label>
                             <Select value={industry} onValueChange={setIndustry}>
@@ -153,7 +153,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                           <div className="space-y-3">
                             <Label htmlFor="employees-affected" className="text-sm font-semibold text-white/70 uppercase tracking-wider flex items-center justify-between">
                               <span>Employees Affected</span>
-                              <span className="text-lg font-bold text-violet-400">{employees}</span>
+                              <span className="text-lg font-bold text-de-accent-ink">{employees}</span>
                             </Label>
                             <div className="pt-2">
                               <PremiumSlider 
@@ -172,7 +172,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                           <div className="space-y-3">
                             <Label htmlFor="hourly-wage" className="text-sm font-semibold text-white/70 uppercase tracking-wider flex items-center justify-between">
                               <span>Avg Hourly Wage</span>
-                              <span className="text-lg font-bold text-violet-400">${hourlyWage}</span>
+                              <span className="text-lg font-bold text-de-accent-ink">${hourlyWage}</span>
                             </Label>
                             <div className="pt-2">
                               <PremiumSlider 
@@ -191,7 +191,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                           <div className="space-y-3">
                             <Label htmlFor="downtime-hours" className="text-sm font-semibold text-white/70 uppercase tracking-wider flex items-center justify-between">
                               <span>Expected Downtime</span>
-                              <span className="text-lg font-bold text-violet-400">{downtime}h</span>
+                              <span className="text-lg font-bold text-de-accent-ink">{downtime}h</span>
                             </Label>
                             <div className="pt-2">
                               <PremiumSlider 
@@ -266,7 +266,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
               >
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl border border-de-hairline bg-de-bg flex items-center justify-center">
-                    <DollarSign className="w-5 h-5 md:w-6 md:h-6 text-violet-400" />
+                    <DollarSign className="w-5 h-5 md:w-6 md:h-6 text-de-accent-ink" />
                   </div>
                   <div className="text-left">
                     <h3 className="text-lg md:text-xl font-bold text-white">Monthly Investment Estimator</h3>
@@ -278,7 +278,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                     <motion.span 
                       initial={{ opacity: 0, x: 10 }}
                       animate={{ opacity: 1, x: 0 }}
-                      className="hidden sm:block text-sm text-violet-400 font-medium"
+                      className="hidden sm:block text-sm text-de-accent-ink font-medium"
                     >
                       Current estimate: ${serviceCost.toLocaleString()}/mo
                     </motion.span>
@@ -306,7 +306,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                           <div className="space-y-3">
                             <Label htmlFor="service-employees" className="text-sm font-semibold text-white/70 uppercase tracking-wider flex items-center justify-between">
                               <span>Number of Employees</span>
-                              <span className="text-lg font-bold text-violet-400">{serviceEmployees}</span>
+                              <span className="text-lg font-bold text-de-accent-ink">{serviceEmployees}</span>
                             </Label>
                             <div className="pt-2">
                               <PremiumSlider 

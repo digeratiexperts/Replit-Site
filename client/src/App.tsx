@@ -870,11 +870,30 @@ function SpaPageViews() {
   return null;
 }
 
+/*
+ * Page families keep one hue of their own. It only ever colours topical
+ * signals — eyebrows, glyphs, chips, inline links — while the field, type,
+ * spacing and primary CTA stay identical sitewide. Anything unlisted inherits
+ * the brand magenta default.
+ */
+const ACCENT_BY_PREFIX: ReadonlyArray<readonly [string, string]> = [
+  ["/store", "electric"],
+  ["/support", "cyan"],
+  ["/resources", "amber"],
+  ["/case-studies", "amber"],
+];
+
+function accentFor(location: string): string | undefined {
+  const match = ACCENT_BY_PREFIX.find(([prefix]) => location.startsWith(prefix));
+  return match?.[1];
+}
+
 function AppContent() {
   useGlobalShortcuts();
   const [location] = useLocation();
   const isPortal = location.startsWith("/portal");
   const isHome = location === "/";
+  const accent = isPortal ? undefined : accentFor(location);
 
   useEffect(() => {
     document.documentElement.classList.toggle("de-marketing-canvas", !isPortal);
@@ -888,7 +907,11 @@ function AppContent() {
       </a>
       <ScrollProgress />
       <SpaPageViews />
-      <div id="main-content" className={isPortal ? undefined : "de-site-canvas"}>
+      <div
+        id="main-content"
+        data-accent={accent}
+        className={isPortal ? undefined : "de-site-canvas"}
+      >
         <Router />
       </div>
       <MarketingChrome />

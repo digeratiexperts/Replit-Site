@@ -79,7 +79,7 @@ export function StickyCTABar() {
           className="de-bottom-bar"
           data-testid="sticky-cta-bar"
         >
-          <div className="relative overflow-hidden rounded-2xl border border-pink-400/35 bg-gradient-to-r from-fuchsia-900/95 via-pink-900/95 to-violet-900/95 backdrop-blur-lg shadow-lg shadow-pink-500/20">
+          <div className="relative overflow-hidden rounded-2xl border border-pink-400/35 bg-de-raised backdrop-blur-lg shadow-lg shadow-pink-500/20">
             <button
               onClick={handleDismiss}
               className="absolute top-2 right-2 z-10 p-1.5 rounded-full hover:bg-white/10 transition-colors"
@@ -93,7 +93,7 @@ export function StickyCTABar() {
               <div className="flex flex-col lg:flex-row items-center justify-between gap-3 lg:gap-5">
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="hidden sm:flex w-10 h-10 rounded-full bg-white/10 items-center justify-center shrink-0">
-                    <Shield className="w-5 h-5 text-violet-300" />
+                    <Shield className="w-5 h-5 text-de-accent-ink" />
                   </div>
                   <div className="text-center lg:text-left min-w-0">
                     <p className="text-white font-semibold text-base md:text-lg">

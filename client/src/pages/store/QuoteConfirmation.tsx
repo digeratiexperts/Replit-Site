@@ -58,7 +58,7 @@ const QuoteConfirmation = () => {
         <MegaMenu />
         <main className="de-nav-clear pb-20">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <Loader2 className="w-12 h-12 text-violet-400 animate-spin mx-auto" />
+            <Loader2 className="w-12 h-12 text-de-accent-ink animate-spin mx-auto" />
             <p className="text-white/60 mt-4">Loading quote details...</p>
           </div>
         </main>
@@ -78,7 +78,7 @@ const QuoteConfirmation = () => {
               animate={{ opacity: 1, y: 0 }}
               className="bg-white/5 border border-white/10 rounded-xl p-12"
             >
-              <FileText className="w-16 h-16 text-white/40 mx-auto mb-6" />
+              <FileText className="w-16 h-16 text-white/55 mx-auto mb-6" />
               <h1 className="text-2xl font-bold text-white mb-4" data-testid="text-error-title">
                 Quote Not Found
               </h1>
@@ -86,7 +86,7 @@ const QuoteConfirmation = () => {
                 We couldn't find the quote request you're looking for.
               </p>
               <Link href="/store">
-                <Button className="bg-violet-600 hover:bg-violet-500 text-white" data-testid="button-back-to-store">
+                <Button className="bg-de-accent hover:bg-de-accent text-white" data-testid="button-back-to-store">
                   Back to Store
                 </Button>
               </Link>
@@ -130,7 +130,7 @@ const QuoteConfirmation = () => {
             <div className="bg-white/5 border border-white/10 rounded-xl p-8 mb-8" data-testid="section-quote-details">
               <div className="text-center mb-8">
                 <p className="text-white/60 text-sm uppercase tracking-wide mb-2">Quote Request Number</p>
-                <p className="text-3xl font-mono font-bold text-violet-400" data-testid="text-quote-number">
+                <p className="text-3xl font-mono font-bold text-de-accent-ink" data-testid="text-quote-number">
                   {quoteRequest.quoteNumber}
                 </p>
               </div>
@@ -138,7 +138,7 @@ const QuoteConfirmation = () => {
               <div className="grid md:grid-cols-2 gap-6 mb-8">
                 <div className="bg-white/5 rounded-lg p-4">
                   <div className="flex items-center gap-3 mb-2">
-                    <Mail className="w-5 h-5 text-violet-400" />
+                    <Mail className="w-5 h-5 text-de-accent-ink" />
                     <span className="text-white font-medium">Email</span>
                   </div>
                   <p className="text-white/70 ml-8" data-testid="text-contact-email">
@@ -148,7 +148,7 @@ const QuoteConfirmation = () => {
 
                 <div className="bg-white/5 rounded-lg p-4">
                   <div className="flex items-center gap-3 mb-2">
-                    <Calendar className="w-5 h-5 text-violet-400" />
+                    <Calendar className="w-5 h-5 text-de-accent-ink" />
                     <span className="text-white font-medium">Submitted</span>
                   </div>
                   <p className="text-white/70 ml-8" data-testid="text-submitted-date">
@@ -172,16 +172,16 @@ const QuoteConfirmation = () => {
               )}
             </div>
 
-            <div className="bg-gradient-to-r from-violet-500/10 to-purple-500/10 border border-violet-500/30 rounded-xl p-8 mb-8" data-testid="section-next-steps">
+            <div className="bg-de-raised border border-de-hairline rounded-xl p-8 mb-8" data-testid="section-next-steps">
               <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                <Clock className="w-5 h-5 text-violet-400" />
+                <Clock className="w-5 h-5 text-de-accent-ink" />
                 What Happens Next
               </h2>
 
               <div className="space-y-6">
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center">
-                    <span className="text-violet-400 font-bold text-sm">1</span>
+                  <div className="flex-shrink-0 w-8 h-8 bg-de-raised rounded-full flex items-center justify-center">
+                    <span className="text-de-accent-ink font-bold text-sm">1</span>
                   </div>
                   <div>
                     <h3 className="text-white font-medium mb-1">Review</h3>
@@ -192,8 +192,8 @@ const QuoteConfirmation = () => {
                 </div>
 
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center">
-                    <span className="text-violet-400 font-bold text-sm">2</span>
+                  <div className="flex-shrink-0 w-8 h-8 bg-de-raised rounded-full flex items-center justify-center">
+                    <span className="text-de-accent-ink font-bold text-sm">2</span>
                   </div>
                   <div>
                     <h3 className="text-white font-medium mb-1">Consultation</h3>
@@ -204,8 +204,8 @@ const QuoteConfirmation = () => {
                 </div>
 
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center">
-                    <span className="text-violet-400 font-bold text-sm">3</span>
+                  <div className="flex-shrink-0 w-8 h-8 bg-de-raised rounded-full flex items-center justify-center">
+                    <span className="text-de-accent-ink font-bold text-sm">3</span>
                   </div>
                   <div>
                     <h3 className="text-white font-medium mb-1">Custom Quote</h3>
@@ -222,7 +222,7 @@ const QuoteConfirmation = () => {
               <div className="flex flex-col md:flex-row gap-4">
                 <a
                   href="tel:+13254809870"
-                  className="flex items-center gap-3 text-white/70 hover:text-violet-400 transition-colors"
+                  className="flex items-center gap-3 text-white/70 hover:text-de-accent-ink transition-colors"
                   data-testid="link-phone"
                 >
                   <Phone className="w-5 h-5" />
@@ -230,7 +230,7 @@ const QuoteConfirmation = () => {
                 </a>
                 <a
                   href="mailto:sales@digerati-experts.com"
-                  className="flex items-center gap-3 text-white/70 hover:text-violet-400 transition-colors"
+                  className="flex items-center gap-3 text-white/70 hover:text-de-accent-ink transition-colors"
                   data-testid="link-email"
                 >
                   <Mail className="w-5 h-5" />
@@ -252,7 +252,7 @@ const QuoteConfirmation = () => {
               </Link>
               <Link href="/store">
                 <Button
-                  className="bg-violet-600 hover:bg-violet-500 text-white"
+                  className="bg-de-accent hover:bg-de-accent text-white"
                   data-testid="button-continue-browsing"
                 >
                   Continue Browsing

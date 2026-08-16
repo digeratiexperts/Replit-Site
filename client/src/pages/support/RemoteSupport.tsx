@@ -6,7 +6,7 @@ export default function RemoteSupport() {
   const features = [
     { icon: Clock, title: "Instant Connection", color: "from-blue-500 to-cyan-500", points: ["Connect in under 2 minutes", "No software required", "Windows, Mac, Linux"] },
     { icon: Shield, title: "Secure & Encrypted", color: "from-green-500 to-emerald-500", points: ["End-to-end encryption", "Session recording", "HIPAA-aligned session controls"] },
-    { icon: RefreshCw, title: "Screen Sharing", color: "from-purple-500 to-indigo-500", points: ["Full control capability", "Multi-monitor support", "File transfer included"] },
+    { icon: RefreshCw, title: "Screen Sharing", color: " ", points: ["Full control capability", "Multi-monitor support", "File transfer included"] },
     { icon: Zap, title: "24/7 Availability", color: "from-amber-500 to-orange-500", points: ["Round-the-clock support", "15-min response time", "Senior engineer escalation"] }
   ];
 
@@ -14,7 +14,7 @@ export default function RemoteSupport() {
     <PageTemplate
       title="Remote Support"
       subtitle="Instant, secure remote assistance from our expert MSP technicians"
-      gradientColors="from-blue-600 via-indigo-600 to-violet-600"
+      gradientColors="from-blue-600  "
     >
       <div className="space-y-16">
         {/* How It Works */}
@@ -70,7 +70,7 @@ export default function RemoteSupport() {
                 )}
                 <Card className="text-center bg-white/5 backdrop-blur-sm border border-white/10">
                   <CardContent className="pt-6">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white flex items-center justify-center font-bold mx-auto mb-4">
+                    <div className="w-12 h-12 rounded-full bg-de-raised text-white flex items-center justify-center font-bold mx-auto mb-4">
                       {process.step}
                     </div>
                     <h4 className="font-semibold text-lg mb-2 text-white">{process.title}</h4>
@@ -84,7 +84,7 @@ export default function RemoteSupport() {
         </div>
 
         {/* MSP Statistics */}
-        <div className="grid md:grid-cols-4 gap-6 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-8 text-white">
+        <div className="grid md:grid-cols-4 gap-6 bg-de-raised rounded-xl p-8 text-white">
           <div className="text-center">
             <p className="text-4xl font-bold mb-2">2 mins</p>
             <p className="text-blue-100">Avg Connection Time</p>
@@ -104,7 +104,7 @@ export default function RemoteSupport() {
         </div>
 
         {/* Zoho Assist CTA — restored from 61f25fc */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-8 text-center text-white">
+        <div className="bg-de-raised rounded-xl p-8 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Need Immediate Help?</h2>
           <p className="text-lg mb-6 text-blue-100">
             Join a secure Zoho Assist session with our MSP technicians, or open a ticket if you need us to reach out.

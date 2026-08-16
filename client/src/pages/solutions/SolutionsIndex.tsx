@@ -403,7 +403,7 @@ const SolutionsIndex = () => {
               <a href="/book">
                 <Button 
                   size="lg"
-                  className="h-14 px-8 text-lg font-semibold bg-de-magenta hover:bg-de-magenta text-white shadow-lg shadow-violet-500/25"
+                  className="h-14 px-8 text-lg font-semibold bg-de-magenta hover:bg-de-magenta text-white shadow-lg shadow-none"
                   data-testid="button-final-cta"
                 >
                   Schedule Free Consultation

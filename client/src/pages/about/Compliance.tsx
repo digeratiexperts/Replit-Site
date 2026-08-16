@@ -23,7 +23,7 @@ export default function Compliance() {
         "Proactive compliance posture, not reactive scrambling",
         "Clear roadmap to compliance certifications"
       ]}
-      gradientColors="from-purple-600 via-indigo-600 to-blue-600"
+      gradientColors="  to-blue-600"
     />
   );
 }

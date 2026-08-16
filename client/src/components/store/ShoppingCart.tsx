@@ -143,7 +143,7 @@ export function ShoppingCart() {
           >
             <div className="flex items-center justify-between border-b border-white/10 p-6">
               <div className="flex items-center gap-3">
-                <Layers className="h-5 w-5 text-[#a78bfa]" />
+                <Layers className="h-5 w-5 text-de-accent-ink" />
                 <div>
                   <h2 className="text-xl font-semibold text-white">Your Solution</h2>
                   <span className="text-sm text-white/50">
@@ -156,7 +156,7 @@ export function ShoppingCart() {
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsMinimized(!isMinimized)}
-                  className="text-white/60 hover:bg-[#5034ff]/10 hover:text-white"
+                  className="text-white/60 hover:bg-de-accent/10 hover:text-white"
                   data-testid="button-minimize-cart"
                   title={isMinimized ? "Expand solution" : "Minimize"}
                 >
@@ -168,7 +168,7 @@ export function ShoppingCart() {
                   variant="ghost"
                   size="icon"
                   onClick={closeCart}
-                  className="text-white/60 hover:bg-[#5034ff]/10 hover:text-white"
+                  className="text-white/60 hover:bg-de-accent/10 hover:text-white"
                   data-testid="button-close-cart"
                 >
                   <X className="h-5 w-5" />
@@ -181,7 +181,7 @@ export function ShoppingCart() {
                 {items.length === 0 ? (
                   <div className="flex h-full flex-col items-center justify-center text-center">
                     <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-white/5">
-                      <Layers className="h-10 w-10 text-white/30" />
+                      <Layers className="h-10 w-10 text-white/55" />
                     </div>
                     <h3 className="mb-2 text-lg font-medium text-white">No services yet</h3>
                     <p className="mb-6 text-white/50">
@@ -189,7 +189,7 @@ export function ShoppingCart() {
                     </p>
                     <Link href="/store/co-managed">
                       <Button
-                        className="bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                        className="bg-de-accent text-white hover:bg-[#6548ff]"
                         onClick={closeCart}
                         data-testid="button-browse-products"
                       >
@@ -213,7 +213,7 @@ export function ShoppingCart() {
 
                     {grouped.map(([group, groupItems]) => (
                       <div key={group}>
-                        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-white/45">
+                        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-white/55">
                           {group}
                         </h3>
                         <div className="space-y-3">
@@ -228,7 +228,7 @@ export function ShoppingCart() {
                                   <h4 className="line-clamp-1 font-medium text-white">
                                     {item.product.name}
                                   </h4>
-                                  <p className="truncate text-[11px] text-white/35">
+                                  <p className="truncate text-[11px] text-white/55">
                                     {item.product.sku}
                                   </p>
                                   <p className="text-sm text-white/50">
@@ -255,7 +255,7 @@ export function ShoppingCart() {
                                       updateQuantity(item.product.id, item.quantity - 1)
                                     }
                                     disabled={item.quantity <= item.product.minimumQuantity}
-                                    className="h-8 w-8 border-[#5034ff]/30 bg-[#5034ff]/10 text-white hover:bg-[#5034ff]/20"
+                                    className="h-8 w-8 border-de-accent/30 bg-de-accent/10 text-white hover:bg-de-accent/20"
                                     data-testid={`button-decrease-${item.product.id}`}
                                   >
                                     <Minus className="h-3 w-3" />
@@ -272,13 +272,13 @@ export function ShoppingCart() {
                                     onClick={() =>
                                       updateQuantity(item.product.id, item.quantity + 1)
                                     }
-                                    className="h-8 w-8 border-[#5034ff]/30 bg-[#5034ff]/10 text-white hover:bg-[#5034ff]/20"
+                                    className="h-8 w-8 border-de-accent/30 bg-de-accent/10 text-white hover:bg-de-accent/20"
                                     data-testid={`button-increase-${item.product.id}`}
                                   >
                                     <Plus className="h-3 w-3" />
                                   </Button>
                                 </div>
-                                <span className="font-semibold text-[#a78bfa]">
+                                <span className="font-semibold text-de-accent-ink">
                                   $
                                   {(
                                     (item.clientPrice ?? item.product.basePrice) * item.quantity
@@ -296,7 +296,7 @@ export function ShoppingCart() {
                         className="rounded-xl border border-white/10 bg-white/[0.02] p-4"
                         data-testid="cart-complements"
                       >
-                        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-white/45">
+                        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-white/55">
                           Works with your stack
                         </p>
                         <div className="space-y-2">
@@ -307,7 +307,7 @@ export function ShoppingCart() {
                             >
                               <div className="min-w-0">
                                 <p className="truncate text-sm text-white">{product.name}</p>
-                                <p className="text-xs text-white/40">{formatPrice(product)}</p>
+                                <p className="text-xs text-white/55">{formatPrice(product)}</p>
                               </div>
                               <Button
                                 size="sm"
@@ -334,12 +334,12 @@ export function ShoppingCart() {
                       </div>
                     )}
 
-                    <p className="text-xs text-white/40">
+                    <p className="text-xs text-white/55">
                       Estimated onboarding: typically 7–10 business days after kickoff (varies by
                       stack). Questions?{" "}
                       <a
                         href="tel:+13254809870"
-                        className="inline-flex items-center gap-1 text-[#a78bfa] hover:text-[#c4b5fd]"
+                        className="inline-flex items-center gap-1 text-de-accent-ink hover:text-de-accent-ink"
                       >
                         <Phone className="h-3 w-3" />
                         325-480-9870
@@ -373,13 +373,13 @@ export function ShoppingCart() {
                   )}
                   <div className="flex items-center justify-between border-t border-white/10 pt-2">
                     <span className="font-medium text-white">Solution total</span>
-                    <span className="text-lg font-bold text-[#a78bfa]">${total.toFixed(2)}</span>
+                    <span className="text-lg font-bold text-de-accent-ink">${total.toFixed(2)}</span>
                   </div>
                 </div>
 
                 <div className="space-y-2.5">
                   <Button
-                    className="w-full bg-[#5034ff] text-white hover:bg-[#6548ff] disabled:opacity-50"
+                    className="w-full bg-de-accent text-white hover:bg-[#6548ff] disabled:opacity-50"
                     onClick={handleCheckout}
                     disabled={isCheckingOut}
                     data-testid="button-checkout"
@@ -409,7 +409,7 @@ export function ShoppingCart() {
                   <a href="/book" className="block" onClick={closeCart}>
                     <Button
                       variant="ghost"
-                      className="w-full text-white/70 hover:bg-[#5034ff]/10 hover:text-white"
+                      className="w-full text-white/70 hover:bg-de-accent/10 hover:text-white"
                       data-testid="button-schedule-from-cart"
                     >
                       <Calendar className="mr-2 h-4 w-4" />

@@ -7,10 +7,10 @@ export default function TrustCenter() {
   const prefersReducedMotion = useReducedMotion() ?? false;
   
   const complianceSupport = [
-    { icon: FileCheck, title: "HIPAA-aligned security and compliance support", desc: "Business Associate Agreements available for healthcare clients. Framework alignment — not a HIPAA certification.", gradient: "from-purple-500 to-fuchsia-600" },
-    { icon: Award, title: "SOC 2 readiness and control alignment", desc: "Control mapping, evidence support, and readiness work for customer SOC 2 programs. Digerati is not SOC 2 Type II certified.", gradient: "from-violet-500 to-purple-600" },
+    { icon: FileCheck, title: "HIPAA-aligned security and compliance support", desc: "Business Associate Agreements available for healthcare clients. Framework alignment — not a HIPAA certification.", gradient: " to-fuchsia-600" },
+    { icon: Award, title: "SOC 2 readiness and control alignment", desc: "Control mapping, evidence support, and readiness work for customer SOC 2 programs. Digerati is not SOC 2 Type II certified.", gradient: " " },
     { icon: Lock, title: "Cyber insurance readiness", desc: "Controls and documentation insurers commonly request during underwriting and renewals.", gradient: "from-fuchsia-500 to-pink-600" },
-    { icon: Shield, title: "Security and compliance reporting", desc: "Questionnaires, control evidence, and reporting support for vendor reviews and audits.", gradient: "from-violet-600 to-purple-600" },
+    { icon: Shield, title: "Security and compliance reporting", desc: "Questionnaires, control evidence, and reporting support for vendor reviews and audits.", gradient: " " },
   ];
 
   const technicalControls = [

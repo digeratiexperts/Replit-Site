@@ -21,21 +21,21 @@ export default function Team() {
       description: "Industry veterans with decades of combined experience in IT and cybersecurity",
       certifications: ["CISSP", "CISM", "Microsoft Certified", "CompTIA Security+"],
       icon: Trophy,
-      gradient: "from-purple-500 to-indigo-600"
+      gradient: " "
     },
     {
       name: "Security Engineers",
       description: "Specialized cybersecurity experts protecting your business 24/7",
       certifications: ["CEH", "GIAC", "OSCP", "Security+"],
       icon: Shield,
-      gradient: "from-purple-500 to-violet-600"
+      gradient: " "
     },
     {
       name: "System Engineers",
       description: "Infrastructure experts ensuring your systems run smoothly",
       certifications: ["MCSE", "VMware VCP", "AWS Certified", "Azure Administrator"],
       icon: Briefcase,
-      gradient: "from-violet-500 to-fuchsia-600"
+      gradient: " to-fuchsia-600"
     },
     {
       name: "Support Team",
@@ -117,7 +117,7 @@ export default function Team() {
                   height={160}
                   loading="lazy"
                   decoding="async"
-                  className="h-36 w-36 sm:h-40 sm:w-40 rounded-2xl object-cover border border-de-hairline shadow-lg shadow-violet-500/20"
+                  className="h-36 w-36 sm:h-40 sm:w-40 rounded-2xl object-cover border border-de-hairline shadow-lg shadow-none"
                 />
               </picture>
               <div className="text-center sm:text-left">
