@@ -159,7 +159,7 @@ export default function StandaloneServices() {
             </p>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 mt-10">
               <a href={MEET_URL} target="_blank" rel="noopener noreferrer" data-testid="cta-hero-assessment">
-                <Button size="lg" className="w-full bg-de-raised hover: hover:to-fuchsia-500 text-white">
+                <Button size="lg" className="w-full bg-de-raised  text-white">
                   Start Cyber Risk Assessment
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
@@ -337,7 +337,7 @@ export default function StandaloneServices() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <a href={MEET_URL} target="_blank" rel="noopener noreferrer">
-                <Button size="lg" className="bg-de-raised hover: hover:to-fuchsia-500 text-white">
+                <Button size="lg" className="bg-de-raised  text-white">
                   Start Cyber Risk Assessment
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>

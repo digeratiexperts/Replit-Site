@@ -133,23 +133,23 @@ const featuredFacts = allFacts.filter((f) =>
 
 const accentStyles: Record<AccentColor, { bg: string; border: string; glow: string; stat: string }> = {
   violet: {
-    bg: " ",
+    bg: "bg-de-raised",
     border: "border-de-hairline hover:border-de-hairline",
     glow: "hover:shadow-none",
-    stat: " "
+    stat: "text-de-accent-ink",
   },
   purple: {
-    bg: " to-fuchsia-500/5",
+    bg: "bg-de-raised",
     border: "border-de-hairline hover:border-de-hairline",
     glow: "hover:shadow-none",
-    stat: " to-fuchsia-400"
+    stat: "text-de-accent-ink",
   },
   fuchsia: {
-    bg: "from-fuchsia-500/10 to-pink-500/5",
-    border: "border-fuchsia-500/30 hover:border-fuchsia-400/50",
-    glow: "hover:shadow-fuchsia-500/20",
-    stat: "from-fuchsia-400 to-pink-400"
-  }
+    bg: "bg-de-raised",
+    border: "border-de-hairline hover:border-de-accent/40",
+    glow: "hover:shadow-none",
+    stat: "text-de-accent-ink",
+  },
 };
 
 interface FactCardProps {
@@ -186,7 +186,7 @@ const FactCard = ({ fact, featured = false, onCopy, copiedId }: FactCardProps) =
 
       {/* Stat & Label */}
       <div className={`flex items-baseline gap-4 flex-wrap ${featured ? 'mb-6 pb-6 border-b border-white/10' : 'mb-4'}`}>
-        <span className={`font-black tracking-tight bg-gradient-to-r ${styles.stat} bg-clip-text text-transparent
+        <span className={`font-black tracking-tight ${styles.stat}
           ${featured ? 'text-5xl md:text-7xl' : 'text-3xl md:text-4xl'}`}>
           {fact.stat}
         </span>
@@ -404,7 +404,7 @@ const CyberFacts = () => {
           </section>
 
           {/* Divider */}
-          <div className="h-px bg-gradient-to-r from-transparent via-fuchsia-500/30 to-transparent mb-16" />
+          <div className="h-px bg-gradient-to-r from-transparent via-de-accent/30 to-transparent mb-16" />
 
           {/* Section 3: Full Fact Library */}
           <section>

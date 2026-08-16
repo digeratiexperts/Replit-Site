@@ -170,7 +170,7 @@ const getTypeColor = (type: string) => {
     case "datasheet": return "bg-de-raised text-de-accent-ink border-de-hairline";
     case "whitepaper": return "bg-de-raised text-de-accent-ink border-de-hairline";
     case "guide": return "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
-    case "infographic": return "bg-fuchsia-500/20 text-fuchsia-400 border-fuchsia-500/30";
+    case "infographic": return "bg-de-raised text-de-accent-ink border-de-hairline";
     default: return "bg-white/10 text-white/70 border-white/20";
   }
 };

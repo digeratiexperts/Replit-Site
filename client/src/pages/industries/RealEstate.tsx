@@ -165,7 +165,7 @@ export default function RealEstate() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 
               href="/book" 
-              className="inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-8 py-3 rounded-lg font-semibold transition-all border border-pink-300/25"
+              className="inline-flex items-center justify-center bg-[#D3126A] hover:bg-[#B80E5C] text-white px-8 py-3 rounded-lg font-semibold transition-all border border-pink-300/25"
               data-testid="button-schedule-real-estate"
             >
               {CTA.primary}

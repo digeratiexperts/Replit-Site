@@ -67,7 +67,7 @@ export default function CaseStudies() {
         )}
 
         <motion.div
-          className="grid md:grid-cols-4 gap-6 bg-gradient-to-r from-[#1a0a2e] via-[#2d1060] to-[#1a0a2e] rounded-2xl p-8 text-white border border-white/10"
+          className="grid md:grid-cols-4 gap-6 bg-gradient-to-r from-[#050312] via-[#0a0a0a] to-[#050312] rounded-2xl p-8 text-white border border-white/10"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

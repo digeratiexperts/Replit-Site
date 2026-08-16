@@ -185,7 +185,7 @@ export default function LawFirms() {
         </div>
 
         {/* CTA */}
-        <div className="bg-gradient-to-r from-[#D3126A] via-fuchsia-600 to-rose-500 rounded-xl p-8 text-center text-white">
+        <div className="bg-[#D3126A] rounded-xl p-8 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Protect privilege with a clear security plan</h2>
           <p className="text-lg mb-6 text-white/90">Schedule a cyber risk assessment focused on law-firm email, access, and client data.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

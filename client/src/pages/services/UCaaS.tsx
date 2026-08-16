@@ -435,7 +435,7 @@ export default function UCaaS() {
             </svg>
           </div>
           
-          <div className="absolute -top-20 -right-20 w-64 h-64 bg-fuchsia-400/20 rounded-full blur-3xl" />
+          <div className="absolute -top-20 -right-20 w-64 h-64 bg-de-accent/20 rounded-full blur-3xl" />
           <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-de-raised rounded-full blur-3xl" />
           
           <div className="relative p-8 md:p-12 text-center">

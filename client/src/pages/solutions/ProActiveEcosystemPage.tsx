@@ -57,7 +57,7 @@ export default function ProActiveEcosystemPage() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/book">
-                <Button className="h-12 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 px-6 font-semibold text-white">
+                <Button className="h-12 bg-[#D3126A] px-6 font-semibold text-white">
                   {CTA.primary}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>

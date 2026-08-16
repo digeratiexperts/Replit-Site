@@ -179,7 +179,7 @@ export default function GenericServicePage({
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#D3126A] to-fuchsia-500 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-[#D3126A] flex items-center justify-center">
                 <Zap className="w-5 h-5 text-white" />
               </div>
               <h2 className="text-3xl font-bold text-white">What you get</h2>
@@ -359,7 +359,7 @@ export default function GenericServicePage({
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-[#D3126A] via-fuchsia-600 to-rose-500" />
+          <div className="absolute inset-0 bg-[#D3126A]" />
           <div className="absolute inset-0 opacity-30">
             <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
               <defs>

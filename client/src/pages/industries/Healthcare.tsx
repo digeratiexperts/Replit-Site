@@ -174,7 +174,7 @@ export default function Healthcare() {
                 transition={{ delay: idx * 0.06, duration: 0.4 }}
                 className="flex items-center gap-3 p-4 rounded-xl bg-white/[0.04] border border-white/10"
               >
-                <div className="w-9 h-9 rounded-lg bg-gradient-to-r from-[#D3126A] to-fuchsia-600 flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 rounded-lg bg-[#D3126A] flex items-center justify-center shrink-0">
                   <Icon className="h-4 w-4 text-white" />
                 </div>
                 <p className="text-sm font-medium text-white/90 leading-snug">{item.label}</p>
@@ -186,7 +186,7 @@ export default function Healthcare() {
         {/* Supporting focus labels (elevated from prior metrics — not fake KPIs) */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: "Focus", value: "HIPAA", icon: Shield, color: "from-[#D3126A] to-fuchsia-600" },
+            { label: "Focus", value: "HIPAA", icon: Shield, color: "from-[#D3126A] to-[#D3126A]" },
             { label: "Encryption", value: "AES-256", icon: Lock, color: "from-fuchsia-600 " },
             { label: "Priority", value: "PHI", icon: Activity, color: " to-[#D3126A]" },
             { label: "Outcome", value: "Audit-ready evidence", icon: Heart, color: "from-[#D3126A] to-rose-500" },
@@ -584,7 +584,7 @@ export default function Healthcare() {
           transition={{ duration: 0.5 }}
           data-testid="section-final-cta"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-[#D3126A] via-fuchsia-600 to-rose-500" />
+          <div className="absolute inset-0 bg-[#D3126A]" />
           <div className="relative p-8 md:p-12 text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
               {narrative?.ctaHeadline ?? "Protect patient data with a clear plan"}

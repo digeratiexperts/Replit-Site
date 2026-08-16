@@ -197,23 +197,23 @@ export function LocationServicePage(props: LocationPageProps) {
       <section className="relative min-h-screen overflow-hidden">
         {/* Animated gradient mesh background */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#0a0118] via-[#1a0a2e] to-[#0f0720]" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#050312] via-[#0a0a0a] to-[#151217]" />
           
           <motion.div
-            className="absolute top-[-20%] right-[-10%] w-[1000px] h-[1000px] rounded-full"
-            style={{ background: "radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 60%)" }}
+            className="de-hero-glow absolute top-[-20%] right-[-10%] w-[1000px] h-[1000px] rounded-full"
+            style={{ background: "radial-gradient(circle, rgba(211, 18, 106, 0.22) 0%, transparent 60%)" }}
             animate={{ scale: [1, 1.15, 1], x: [0, 60, 0], y: [0, 30, 0] }}
             transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div
-            className="absolute bottom-[-20%] left-[-15%] w-[900px] h-[900px] rounded-full"
-            style={{ background: "radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, transparent 60%)" }}
+            className="de-hero-glow absolute bottom-[-20%] left-[-15%] w-[900px] h-[900px] rounded-full"
+            style={{ background: "radial-gradient(circle, rgba(91, 69, 224, 0.12) 0%, transparent 60%)" }}
             animate={{ scale: [1.1, 1, 1.1], x: [0, -40, 0], y: [0, -60, 0] }}
             transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
           />
           
           <div className="absolute inset-0 opacity-10" style={{
-            backgroundImage: "linear-gradient(rgba(139, 92, 246, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(139, 92, 246, 0.15) 1px, transparent 1px)",
+            backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px)",
             backgroundSize: "80px 80px"
           }} />
           
@@ -386,7 +386,7 @@ export function LocationServicePage(props: LocationPageProps) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
               >
-                <p className="text-xs uppercase tracking-wider text-de-accent-ink/80 mb-2">Arizona context</p>
+                <p className="text-xs uppercase tracking-wider text-de-accent-ink mb-2">Arizona context</p>
                 <p className="text-white/90 text-sm md:text-base leading-relaxed">
                   <span className="font-bold text-de-accent-ink">{azFact.metric}</span>{" "}
                   {azFact.statement} — relevant for {props.city} and Greater Phoenix SMBs planning
