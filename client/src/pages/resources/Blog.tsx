@@ -107,7 +107,7 @@ export default function Blog() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(135deg, #1a0030 0%, #2d0052 35%, #4a0072 65%, #b300ff 100%)",
+              "linear-gradient(135deg, #050312 0%, #0a0a0a 55%, #151217 100%)",
           }}
         />
         <div
@@ -141,7 +141,7 @@ export default function Blog() {
                 </span>
                 <span className="block text-5xl md:text-7xl lg:text-8xl">
                   Digerati{" "}
-                  <span className="bg-gradient-to-r from-fuchsia-300 via-pink-300 to-violet-200 bg-clip-text text-transparent">
+                  <span className="text-de-accent-ink">
                     Journal
                   </span>
                 </span>
@@ -155,7 +155,7 @@ export default function Blog() {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setSearchOpen((o) => !o)}
-                className="group relative w-12 h-12 rounded-full text-white border border-violet-300/30 backdrop-blur-md transition-all duration-200 flex items-center justify-center bg-gradient-to-b from-white/15 to-white/5 hover:from-white/25 hover:to-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.35),inset_0_-1px_0_rgba(0,0,0,0.2),0_8px_24px_-8px_rgba(139,92,246,0.55)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.45),inset_0_-1px_0_rgba(0,0,0,0.2),0_10px_28px_-6px_rgba(217,70,239,0.6)] active:translate-y-px"
+                className="group relative w-12 h-12 rounded-full text-white border border-de-hairline backdrop-blur-md transition-all duration-200 flex items-center justify-center bg-gradient-to-b from-white/15 to-white/5 hover:from-white/25 hover:to-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.35),inset_0_-1px_0_rgba(0,0,0,0.2),0_8px_24px_-8px_rgba(139,92,246,0.55)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.45),inset_0_-1px_0_rgba(0,0,0,0.2),0_10px_28px_-6px_rgba(217,70,239,0.6)] active:translate-y-px"
                 aria-label={searchOpen ? "Close search" : "Open search"}
                 data-testid="button-search-toggle"
               >
@@ -168,7 +168,7 @@ export default function Blog() {
               </button>
               <Link href="/#contact">
                 <button
-                  className="group relative inline-flex items-center gap-2 h-12 px-6 rounded-full font-semibold text-white border border-violet-200/40 backdrop-blur-md transition-all duration-200 bg-gradient-to-b from-violet-400/40 via-violet-500/35 to-violet-700/45 hover:from-violet-300/50 hover:via-fuchsia-400/40 hover:to-violet-700/55 shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(0,0,0,0.2),0_10px_28px_-8px_rgba(179,0,255,0.65)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),inset_0_-1px_0_rgba(0,0,0,0.2),0_14px_36px_-8px_rgba(217,70,239,0.7)] active:translate-y-px"
+                  className="group relative inline-flex items-center gap-2 h-12 px-6 rounded-full font-semibold text-white border border-de-hairline backdrop-blur-md transition-all duration-200 bg-de-raised hover:bg-de-raised shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(0,0,0,0.2),0_10px_28px_-8px_rgb(var(--de-accent-rgb) / 0.35)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),inset_0_-1px_0_rgba(0,0,0,0.2),0_14px_36px_-8px_rgb(var(--de-accent-rgb) / 0.4)] active:translate-y-px"
                   data-testid="button-subscribe"
                 >
                   <span className="pointer-events-none absolute inset-x-3 top-1 h-1/2 rounded-full bg-gradient-to-b from-white/35 to-transparent opacity-70" aria-hidden />
@@ -207,7 +207,7 @@ export default function Blog() {
                     <span
                       className={`ml-2 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-[10px] font-semibold ${
                         isActive
-                          ? "bg-white text-violet-800"
+                          ? "bg-white text-de-accent"
                           : "bg-white/10 text-white/60"
                       }`}
                     >
@@ -216,7 +216,7 @@ export default function Blog() {
                     {isActive && (
                       <span
                         aria-hidden
-                        className="absolute left-3 right-3 -bottom-px h-0.5 bg-gradient-to-r from-fuchsia-300 to-pink-300 rounded-full"
+                        className="absolute left-3 right-3 -bottom-px h-0.5 bg-gradient-to-r from-de-accent-ink to-de-accent-ink rounded-full"
                       />
                     )}
                   </button>
@@ -237,7 +237,7 @@ export default function Blog() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search articles, topics, frameworks…"
-                  className="pl-11 pr-11 h-12 bg-white/[0.06] border-white/15 text-white placeholder:text-white/40 focus-visible:ring-fuchsia-500/40 focus-visible:border-fuchsia-500/40 rounded-full"
+                  className="pl-11 pr-11 h-12 bg-white/[0.06] border-white/15 text-white placeholder:text-white/55 focus-visible:ring-de-accent/40 focus-visible:border-de-accent/40 rounded-full"
                   data-testid="input-blog-search"
                 />
                 {query && (
@@ -258,14 +258,14 @@ export default function Blog() {
       <main className="py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-7xl">
           {/* Breadcrumb + page title */}
-          <div className="flex items-center gap-2 text-sm text-white/40 mb-3">
-            <Link href="/" className="hover:text-violet-300 transition-colors">
+          <div className="flex items-center gap-2 text-sm text-white/55 mb-3">
+            <Link href="/" className="hover:text-de-accent-ink transition-colors">
               Home
             </Link>
             <ChevronRight className="h-3.5 w-3.5" />
             <Link
               href="/resources/blog"
-              className="hover:text-violet-300 transition-colors"
+              className="hover:text-de-accent-ink transition-colors"
             >
               Journal
             </Link>
@@ -280,7 +280,7 @@ export default function Blog() {
             <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
               {pageTitle}
             </h2>
-            <span className="text-sm text-white/40">
+            <span className="text-sm text-white/55">
               {filtered.length} {filtered.length === 1 ? "article" : "articles"}
               {query && (
                 <>
@@ -297,16 +297,16 @@ export default function Blog() {
               className="text-center py-20 rounded-3xl border border-white/10 bg-white/[0.02]"
               data-testid="text-no-posts"
             >
-              <Search className="h-10 w-10 mx-auto text-white/30 mb-4" />
+              <Search className="h-10 w-10 mx-auto text-white/55 mb-4" />
               <p className="text-white/70 text-lg mb-2">No matches found</p>
-              <p className="text-white/40 text-sm">
+              <p className="text-white/55 text-sm">
                 Try a different search or category.
               </p>
               {(query || activeCategory !== "All") && (
                 <Button
                   variant="outline"
                   size="sm"
-                  className="mt-4 border-white/15 text-white/70 hover:text-white hover:border-violet-500/50"
+                  className="mt-4 border-white/15 text-white/70 hover:text-white hover:border-de-hairline"
                   onClick={() => {
                     setQuery("");
                     setActiveCategory("All");
@@ -325,7 +325,7 @@ export default function Blog() {
               {filtered.map((post) => (
                 <Link href={post.href} key={post.slug}>
                   <Card
-                    className="group h-full overflow-hidden border-white/10 bg-white/[0.02] hover:border-fuchsia-500/40 transition-all cursor-pointer flex flex-col"
+                    className="group h-full overflow-hidden border-white/10 bg-white/[0.02] hover:border-de-accent/40 transition-all cursor-pointer flex flex-col"
                     data-testid={`card-post-${post.slug}`}
                   >
                     <div className="relative aspect-[16/9] overflow-hidden">
@@ -346,13 +346,13 @@ export default function Blog() {
                       </div>
                     </div>
                     <CardContent className="p-6 flex flex-col flex-1">
-                      <h3 className="text-lg md:text-xl font-bold text-white mb-3 leading-snug group-hover:text-fuchsia-300 transition-colors line-clamp-3">
+                      <h3 className="text-lg md:text-xl font-bold text-white mb-3 leading-snug group-hover:text-de-accent-ink transition-colors line-clamp-3">
                         {post.title}
                       </h3>
                       <p className="text-white/55 text-sm mb-5 line-clamp-3 flex-1 leading-relaxed">
                         {post.excerpt}
                       </p>
-                      <div className="flex items-center gap-3 text-xs text-white/45 pt-4 border-t border-white/5">
+                      <div className="flex items-center gap-3 text-xs text-white/55 pt-4 border-t border-white/5">
                         <span className="inline-flex items-center gap-1">
                           <Calendar className="h-3 w-3" />
                           {new Date(post.date).toLocaleDateString("en-US", {
@@ -376,7 +376,7 @@ export default function Blog() {
 
           {/* Ebook spotlight — editorial bottom feature */}
           <section className="mt-20" aria-label="Featured ebook">
-            <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-violet-950/40 via-[#0a0a0a] to-fuchsia-950/40 overflow-hidden">
+            <div className="rounded-3xl border border-white/10 bg-de-raised overflow-hidden">
               <Link href={ebookFeature.href}>
                 <div
                   className="grid md:grid-cols-2 gap-0 group cursor-pointer"
@@ -393,11 +393,11 @@ export default function Blog() {
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0a0a0a]/40 md:to-[#0a0a0a]/0" />
                   </div>
                   <div className="p-8 md:p-10 flex flex-col justify-center">
-                    <Badge className="self-start mb-4 bg-fuchsia-500/15 text-fuchsia-300 border-fuchsia-500/30">
+                    <Badge className="self-start mb-4 bg-de-raised text-de-accent-ink border-de-hairline">
                       <BookOpen className="h-3 w-3 mr-1.5" />
                       Free Ebook
                     </Badge>
-                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 group-hover:text-fuchsia-200 transition-colors">
+                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 group-hover:text-de-accent-ink transition-colors">
                       {ebookFeature.title}
                     </h3>
                     <p className="text-white/65 text-base mb-6 leading-relaxed">
@@ -411,7 +411,7 @@ export default function Blog() {
                       <span>•</span>
                       <span>{ebookFeature.author}</span>
                     </div>
-                    <span className="inline-flex items-center text-fuchsia-300 group-hover:text-fuchsia-200 font-medium">
+                    <span className="inline-flex items-center text-de-accent-ink font-medium">
                       Read the ebook
                       <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </span>
@@ -423,7 +423,7 @@ export default function Blog() {
 
           {/* Bottom CTA */}
           <section className="mt-16">
-            <Card className="overflow-hidden border-violet-500/30 bg-gradient-to-br from-violet-600/15 via-[#0a0a0a] to-fuchsia-600/15">
+            <Card className="overflow-hidden border-de-hairline bg-de-raised ">
               <CardContent className="p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6">
                 <div className="text-center md:text-left">
                   <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
@@ -436,7 +436,7 @@ export default function Blog() {
                 </div>
                 <Link href="/book">
                   <button
-                    className="group relative inline-flex items-center gap-3 h-14 px-8 rounded-2xl font-semibold text-white whitespace-nowrap border border-violet-200/40 backdrop-blur-md transition-all duration-200 bg-gradient-to-b from-violet-400/45 via-violet-500/40 to-violet-800/55 hover:from-violet-300/55 hover:via-fuchsia-400/45 hover:to-violet-800/60 shadow-[inset_0_1px_0_rgba(255,255,255,0.45),inset_0_-1px_0_rgba(0,0,0,0.25),0_14px_36px_-10px_rgba(179,0,255,0.7)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.55),inset_0_-1px_0_rgba(0,0,0,0.25),0_18px_44px_-10px_rgba(217,70,239,0.75)] active:translate-y-px"
+                    className="group relative inline-flex items-center gap-3 h-14 px-8 rounded-2xl font-semibold text-white whitespace-nowrap border border-de-hairline backdrop-blur-md transition-all duration-200 bg-de-raised hover:bg-de-raised shadow-[inset_0_1px_0_rgba(255,255,255,0.45),inset_0_-1px_0_rgba(0,0,0,0.25),0_14px_36px_-10px_rgb(var(--de-accent-rgb) / 0.4)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.55),inset_0_-1px_0_rgba(0,0,0,0.25),0_18px_44px_-10px_rgb(var(--de-accent-rgb) / 0.45)] active:translate-y-px"
                     data-testid="button-blog-assessment"
                   >
                     <span className="pointer-events-none absolute inset-x-4 top-1 h-1/2 rounded-2xl bg-gradient-to-b from-white/35 to-transparent opacity-70" aria-hidden />

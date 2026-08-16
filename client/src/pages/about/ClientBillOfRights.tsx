@@ -114,7 +114,7 @@ export default function ClientBillOfRights() {
                   </div>
                 </div>
                 <div className="ml-0 md:ml-17 pl-0 md:pl-[68px]">
-                  <div className="pl-4 border-l-2 border-violet-500/50 bg-violet-500/5 py-3 pr-4 rounded-r-lg">
+                  <div className="pl-4 border-l-2 border-de-hairline bg-de-raised py-3 pr-4 rounded-r-lg">
                     <p className="text-white/80 text-sm leading-relaxed">
                       <span className="text-pink-300 font-semibold">We Pledge</span> {right.pledgeText.replace(/^We Pledge /i, '')}
                     </p>
@@ -146,7 +146,7 @@ export default function ClientBillOfRights() {
           <p className="text-white/50 mb-4">See also our money-back guarantee</p>
           <Link 
             href="/about/guarantee"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-medium transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-de-magenta hover:bg-de-magenta text-white font-medium transition-colors"
             data-testid="link-guarantee"
           >
             100% Money-Back Guarantee

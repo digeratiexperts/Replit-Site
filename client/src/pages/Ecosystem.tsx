@@ -6,7 +6,7 @@ export default function Ecosystem() {
   const servicePillars = [
     { 
       name: "DE WORKPLACE", 
-      color: "from-purple-600 to-indigo-600", 
+      color: " ", 
       icon: Users,
       desc: "SMART HR · SMART Identity · SMART Communications · Team Collaboration",
       details: ["Email + Calendar + Chat", "MFA + SSO + Password Manager", "UCaaS + Video Conferencing", "File Storage + Wiki + Projects"]
@@ -41,7 +41,7 @@ export default function Ecosystem() {
     },
     { 
       name: "DE COMPLIANCE", 
-      color: "from-violet-600 to-purple-600", 
+      color: " ", 
       icon: FileCheck,
       desc: "HIPAA · GDPR · FTC Safeguards · Cyber Insurance · Policy Enforcement",
       details: ["Compliance Modules", "Evidence Support", "Audit-Ready Documentation", "Framework Mapping"]
@@ -58,7 +58,7 @@ export default function Ecosystem() {
     },
     { 
       name: pricing.business.name, 
-      color: "from-purple-600 to-violet-600", 
+      color: " ", 
       price: `$${pricing.business.user}`,
       desc: "SOC/MDR + SMART HR + vCIO advisory",
       highlights: ["Everything in Office", "SOC / MDR Monitoring", "SMART HR Workflows", "Security Awareness + vCIO"]
@@ -81,7 +81,7 @@ export default function Ecosystem() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
             ProActive Ecosystem
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -104,14 +104,14 @@ export default function Ecosystem() {
                   key={pillar.name}
                   className="rounded-2xl p-6 bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 hover:bg-white/[0.08] transition-all duration-300"
                 >
-                  <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${pillar.color} mb-4`}>
-                    <Icon className="w-6 h-6 text-white" />
+                  <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl border border-de-hairline bg-de-bg mb-4`}>
+                    <Icon className="w-6 h-6 text-de-magenta" />
                   </div>
                   <h3 className="text-lg font-bold text-white mb-2">{pillar.name}</h3>
                   <p className="text-sm text-gray-400 mb-4">{pillar.desc}</p>
                   <ul className="space-y-1">
                     {pillar.details.map((detail, idx) => (
-                      <li key={idx} className="text-xs text-gray-500 flex items-center gap-2">
+                      <li key={idx} className="text-xs text-white/70 flex items-center gap-2">
                         <span className="w-1 h-1 rounded-full bg-cyan-400" />
                         {detail}
                       </li>
@@ -135,7 +135,7 @@ export default function Ecosystem() {
                 key={tier.name}
                 className="rounded-2xl p-8 bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-300 flex flex-col"
               >
-                <div className={`inline-block px-4 py-1.5 rounded-lg bg-gradient-to-r ${tier.color} text-white text-sm font-bold mb-4 w-fit`}>
+                <div className={`inline-block px-4 py-1.5 rounded-lg bg-de-magenta text-white text-sm font-bold mb-4 w-fit`}>
                   {tier.name}
                 </div>
                 <div className="mb-4">
@@ -163,7 +163,7 @@ export default function Ecosystem() {
         </motion.div>
 
         <motion.p 
-          className="text-center text-sm text-gray-500 mt-12"
+          className="text-center text-sm text-white/70 mt-12"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}

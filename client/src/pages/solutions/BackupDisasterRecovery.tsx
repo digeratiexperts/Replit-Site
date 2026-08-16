@@ -203,9 +203,9 @@ function FAQItem({ question, answer, isOpen, onToggle, index }: {
       >
         <span className="font-semibold text-white pr-4">{question}</span>
         {isOpen ? (
-          <ChevronUp className="w-5 h-5 text-violet-400 flex-shrink-0" />
+          <ChevronUp className="w-5 h-5 text-de-accent-ink flex-shrink-0" />
         ) : (
-          <ChevronDown className="w-5 h-5 text-violet-400 flex-shrink-0" />
+          <ChevronDown className="w-5 h-5 text-de-accent-ink flex-shrink-0" />
         )}
       </button>
       {isOpen && (
@@ -243,7 +243,7 @@ function RPOPickerComponent() {
           <select
             value={criticalSystems}
             onChange={(e) => setCriticalSystems(e.target.value)}
-            className="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white focus:border-violet-500 focus:outline-none"
+            className="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white focus:border-de-hairline focus:outline-none"
             data-testid="picker-systems"
           >
             <option value="1-5">1–5 systems</option>
@@ -257,7 +257,7 @@ function RPOPickerComponent() {
           <select
             value={targetRTO}
             onChange={(e) => setTargetRTO(e.target.value)}
-            className="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white focus:border-violet-500 focus:outline-none"
+            className="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white focus:border-de-hairline focus:outline-none"
             data-testid="picker-rto"
           >
             <option value="72h">72 hours</option>
@@ -272,7 +272,7 @@ function RPOPickerComponent() {
           <select
             value={targetRPO}
             onChange={(e) => setTargetRPO(e.target.value)}
-            className="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white focus:border-violet-500 focus:outline-none"
+            className="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white focus:border-de-hairline focus:outline-none"
             data-testid="picker-rpo"
           >
             <option value="24h">24 hours</option>
@@ -288,7 +288,7 @@ function RPOPickerComponent() {
             onClick={() => setWarmStandby(!warmStandby)}
             className={`w-full px-4 py-3 rounded-lg border transition-colors ${
               warmStandby 
-                ? 'bg-violet-600 border-violet-500 text-white' 
+                ? 'bg-de-accent border-de-hairline text-white' 
                 : 'bg-white/5 border-white/20 text-white/60'
             }`}
             data-testid="picker-standby"
@@ -298,7 +298,7 @@ function RPOPickerComponent() {
         </div>
       </div>
 
-      <div className="bg-gradient-to-r from-violet-600/20 to-purple-600/20 border border-violet-500/30 rounded-xl p-6">
+      <div className="bg-de-raised border border-de-hairline rounded-xl p-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <p className="text-white/60 text-sm mb-1">Recommended tier based on your selections:</p>
@@ -307,7 +307,7 @@ function RPOPickerComponent() {
           </div>
           <Button
             asChild
-            className="bg-white text-violet-700 hover:bg-violet-50 font-semibold"
+            className="bg-white text-de-accent hover:bg-de-paper-raised font-semibold"
             data-testid="btn-picker-quote"
           >
             <a href="/book">
@@ -357,7 +357,7 @@ export default function BackupDisasterRecovery() {
       <div className="space-y-24">
         {/* Hero Section */}
         <motion.section {...fadeInUp} className="relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 via-purple-600/10 to-transparent rounded-3xl pointer-events-none" />
+          <div className="absolute inset-0 bg-de-raised to-transparent rounded-3xl pointer-events-none" />
           <div className="relative bg-white/[0.02] border border-white/10 rounded-3xl p-8 md:p-12">
             <div className="max-w-4xl">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-300 text-sm font-medium mb-6">
@@ -367,7 +367,7 @@ export default function BackupDisasterRecovery() {
               
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
                 Recover in hours—
-                <span className="bg-gradient-to-r from-violet-300 via-purple-300 to-violet-300 bg-clip-text text-transparent">
+                <span className="text-de-accent-ink">
                   not days
                 </span>
               </h1>
@@ -379,7 +379,7 @@ export default function BackupDisasterRecovery() {
                 <Button
                   asChild
                   size="lg"
-                  className="bg-white text-violet-700 hover:bg-violet-50 font-semibold shadow-lg"
+                  className="bg-white text-de-accent hover:bg-de-paper-raised font-semibold shadow-lg"
                   data-testid="btn-hero-assessment"
                 >
                   <a href="/book">
@@ -402,15 +402,15 @@ export default function BackupDisasterRecovery() {
 
               <div className="flex flex-wrap gap-4">
                 <div className="flex items-center gap-2 text-sm text-white/60">
-                  <Target className="w-4 h-4 text-violet-400" />
+                  <Target className="w-4 h-4 text-de-accent-ink" />
                   <span>RPO/RTO in writing</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-white/60">
-                  <RefreshCw className="w-4 h-4 text-violet-400" />
+                  <RefreshCw className="w-4 h-4 text-de-accent-ink" />
                   <span>Scheduled restore testing</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-white/60">
-                  <ClipboardCheck className="w-4 h-4 text-violet-400" />
+                  <ClipboardCheck className="w-4 h-4 text-de-accent-ink" />
                   <span>DR runbooks + tabletop exercises</span>
                 </div>
               </div>
@@ -424,7 +424,7 @@ export default function BackupDisasterRecovery() {
             {bcdrData.protectedSystems.map((system, index) => (
               <div key={index} className="flex items-center gap-3 text-white/70">
                 <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
-                  <system.icon className="w-6 h-6 text-violet-400" />
+                  <system.icon className="w-6 h-6 text-de-accent-ink" />
                 </div>
                 <span className="font-medium">{system.name}</span>
               </div>
@@ -438,21 +438,21 @@ export default function BackupDisasterRecovery() {
             <h2 className="text-3xl font-bold text-white mb-6 text-center">BCDR in 30 Seconds</h2>
             <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
               <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 rounded-full bg-de-raised flex items-center justify-center mx-auto mb-4">
                   <HardDrive className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="font-semibold text-white mb-2">Backup</h3>
                 <p className="text-white/60 text-sm">Copies of your data, stored securely, with immutable protection against ransomware</p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-600 to-violet-600 flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 rounded-full bg-de-raised flex items-center justify-center mx-auto mb-4">
                   <Timer className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="font-semibold text-white mb-2">Recovery Targets</h3>
                 <p className="text-white/60 text-sm">Agreed RPO (data loss limit) and RTO (downtime limit) documented in your agreement</p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 rounded-full bg-de-raised flex items-center justify-center mx-auto mb-4">
                   <ClipboardCheck className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="font-semibold text-white mb-2">Tested Recovery</h3>
@@ -488,7 +488,7 @@ export default function BackupDisasterRecovery() {
                 className="bg-white/[0.03] border border-white/10 rounded-xl p-6 hover:bg-white/[0.05] transition-colors"
               >
                 <div className="flex items-start gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-de-raised flex items-center justify-center flex-shrink-0">
                     <feature.icon className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -506,9 +506,9 @@ export default function BackupDisasterRecovery() {
                       <span 
                         key={tier} 
                         className={`text-xs px-2 py-0.5 rounded ${
-                          tier === 'enterprise' ? 'bg-violet-600/30 text-violet-300' :
-                          tier === 'business' ? 'bg-purple-600/30 text-purple-300' :
-                          'bg-violet-600/30 text-violet-300'
+                          tier === 'enterprise' ? 'bg-de-raised text-de-accent-ink' :
+                          tier === 'business' ? 'bg-de-raised text-de-accent-ink' :
+                          'bg-de-raised text-de-accent-ink'
                         }`}
                       >
                         {tier.charAt(0).toUpperCase()}
@@ -562,7 +562,7 @@ export default function BackupDisasterRecovery() {
               >
                 <div className="p-8">
                   <h3 className="text-2xl font-bold text-white">{pkg.name}</h3>
-                  <p className="text-violet-300 text-sm mb-2">{pkg.subtitle}</p>
+                  <p className="text-de-accent-ink text-sm mb-2">{pkg.subtitle}</p>
                   <p className="text-white/60 text-sm mb-6">{pkg.best_for}</p>
                   
                   <div className="flex gap-4 mb-6">
@@ -587,7 +587,7 @@ export default function BackupDisasterRecovery() {
 
                   <div className="bg-white/5 rounded-lg p-3 mb-6 text-center">
                     <p className="text-xs text-white/50">Test Cadence</p>
-                    <p className="text-sm font-semibold text-violet-300">{pkg.test_cadence}</p>
+                    <p className="text-sm font-semibold text-de-accent-ink">{pkg.test_cadence}</p>
                   </div>
 
                   <div className="mb-6 text-center">
@@ -599,8 +599,8 @@ export default function BackupDisasterRecovery() {
                     asChild
                     className={`w-full ${
                       pkg.featured 
-                        ? 'bg-white text-violet-700 hover:bg-violet-50' 
-                        : 'bg-violet-600 text-white hover:bg-violet-500'
+                        ? 'bg-white text-de-accent hover:bg-de-paper-raised' 
+                        : 'bg-de-accent text-white hover:bg-de-accent'
                     }`}
                     data-testid={`btn-package-${pkg.sku}`}
                   >
@@ -634,10 +634,10 @@ export default function BackupDisasterRecovery() {
                 className="relative"
               >
                 <div className="bg-white/[0.03] border border-white/10 rounded-xl p-8 text-center h-full">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center mx-auto mb-6">
+                  <div className="w-16 h-16 rounded-full bg-de-raised flex items-center justify-center mx-auto mb-6">
                     <span className="text-2xl font-bold text-white">{step.step}</span>
                   </div>
-                  <step.icon className="w-8 h-8 text-violet-400 mx-auto mb-4" />
+                  <step.icon className="w-8 h-8 text-de-accent-ink mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-white mb-3">{step.title}</h3>
                   <p className="text-white/60">{step.description}</p>
                 </div>
@@ -674,26 +674,26 @@ export default function BackupDisasterRecovery() {
 
         {/* What Happens Next */}
         <motion.section {...fadeInUp}>
-          <div className="bg-gradient-to-br from-violet-600/20 via-purple-600/10 to-transparent rounded-2xl border border-white/10 p-8 md:p-12">
+          <div className="bg-de-raised to-transparent rounded-2xl border border-white/10 p-8 md:p-12">
             <h2 className="text-2xl font-bold text-white mb-6 text-center">What Happens After You Book?</h2>
             <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
               <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-violet-600/20 border border-violet-500/30 flex items-center justify-center mx-auto mb-4">
-                  <Users className="w-6 h-6 text-violet-400" />
+                <div className="w-12 h-12 rounded-full bg-de-raised border border-de-hairline flex items-center justify-center mx-auto mb-4">
+                  <Users className="w-6 h-6 text-de-accent-ink" />
                 </div>
                 <h3 className="font-semibold text-white mb-2">BCDR Assessment</h3>
                 <p className="text-white/60 text-sm">We inventory your systems, current backup state, and recovery requirements</p>
               </div>
               <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-violet-600/20 border border-violet-500/30 flex items-center justify-center mx-auto mb-4">
-                  <Target className="w-6 h-6 text-violet-400" />
+                <div className="w-12 h-12 rounded-full bg-de-raised border border-de-hairline flex items-center justify-center mx-auto mb-4">
+                  <Target className="w-6 h-6 text-de-accent-ink" />
                 </div>
                 <h3 className="font-semibold text-white mb-2">RPO/RTO Agreement</h3>
                 <p className="text-white/60 text-sm">We define realistic recovery targets and document them in your agreement</p>
               </div>
               <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-violet-600/20 border border-violet-500/30 flex items-center justify-center mx-auto mb-4">
-                  <Settings className="w-6 h-6 text-violet-400" />
+                <div className="w-12 h-12 rounded-full bg-de-raised border border-de-hairline flex items-center justify-center mx-auto mb-4">
+                  <Settings className="w-6 h-6 text-de-accent-ink" />
                 </div>
                 <h3 className="font-semibold text-white mb-2">Implementation</h3>
                 <p className="text-white/60 text-sm">We deploy backup agents, configure policies, and schedule your first restore test</p>
@@ -705,7 +705,7 @@ export default function BackupDisasterRecovery() {
         {/* Final CTA */}
         <motion.section {...fadeInUp}>
           <div className="relative rounded-2xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-violet-600 opacity-90" />
+            <div className="absolute inset-0 bg-de-raised opacity-90" />
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] pointer-events-none" />
             <div className="relative py-16 px-8 text-center">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -718,7 +718,7 @@ export default function BackupDisasterRecovery() {
                 <Button
                   asChild
                   size="lg"
-                  className="bg-white text-violet-700 hover:bg-violet-50 font-semibold shadow-lg"
+                  className="bg-white text-de-accent hover:bg-de-paper-raised font-semibold shadow-lg"
                   data-testid="btn-final-assessment"
                 >
                   <a href="/book">

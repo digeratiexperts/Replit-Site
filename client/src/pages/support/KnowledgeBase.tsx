@@ -54,15 +54,15 @@ export default function KnowledgeBase() {
         {/* Enhanced Search Bar */}
         <div className="max-w-2xl mx-auto w-full">
           <div className="relative group">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-blue-400 rounded-xl blur opacity-0 group-hover:opacity-20 transition-all" />
-            <div className="relative flex items-center bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 group-hover:border-purple-400/50 transition-all">
+            <div className="absolute inset-0 bg-de-raised rounded-xl blur opacity-0 group-hover:opacity-20 transition-all" />
+            <div className="relative flex items-center bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 group-hover:border-de-hairline transition-all">
               <Search className="absolute left-4 h-5 w-5 text-gray-400" />
               <Input
                 type="text"
                 placeholder="Search knowledge base..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12 pr-4 py-3 text-lg border-0 bg-transparent text-white placeholder:text-gray-500"
+                className="pl-12 pr-4 py-3 text-lg border-0 bg-transparent text-white placeholder:text-white/70"
                 data-testid="input-search-kb"
               />
             </div>
@@ -85,11 +85,11 @@ export default function KnowledgeBase() {
                 <div className="grid md:grid-cols-2 gap-4">
                   {cat.articles.map((article, i) => (
                     <div key={i} className="group cursor-pointer">
-                      <Card className="h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-400/50 transition-all">
+                      <Card className="h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-hairline transition-all">
                         <CardHeader>
                           <div className="flex items-start justify-between mb-2">
-                            <CardTitle className="text-lg text-white group-hover:text-purple-400 transition-colors">{article.title}</CardTitle>
-                            <Eye className="h-4 w-4 text-gray-400 group-hover:text-purple-400" />
+                            <CardTitle className="text-lg text-white group-hover:text-de-accent-ink transition-colors">{article.title}</CardTitle>
+                            <Eye className="h-4 w-4 text-gray-400 group-hover:text-de-accent-ink" />
                           </div>
                         </CardHeader>
                         <CardContent>
@@ -113,13 +113,13 @@ export default function KnowledgeBase() {
           <div className="grid md:grid-cols-3 gap-6">
             {[
               { icon: Video, title: "Video Tutorials", desc: "Step-by-step guides", color: "from-red-500 to-pink-500", cta: "Watch Videos" },
-              { icon: FileText, title: "Documentation", desc: "Technical references", color: "from-blue-500 to-indigo-500", cta: "View Docs" },
+              { icon: FileText, title: "Documentation", desc: "Technical references", color: "from-blue-500 ", cta: "View Docs" },
               { icon: Zap, title: "Quick Tips", desc: "Best practices", color: "from-amber-500 to-orange-500", cta: "Read Tips" }
             ].map((resource, idx) => {
               const Icon = resource.icon;
               return (
                 <div key={idx} className="group">
-                  <Card className="h-full bg-white/5 backdrop-blur-sm border border-white/10 group-hover:border-purple-400/50 transition-all">
+                  <Card className="h-full bg-white/5 backdrop-blur-sm border border-white/10 group-hover:border-de-hairline transition-all">
                     <CardContent className="pt-6">
                       <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${resource.color} text-white flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                         <Icon className="h-6 w-6" />
@@ -138,13 +138,13 @@ export default function KnowledgeBase() {
         </div>
 
         {/* CTA */}
-        <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl p-8 text-center text-white">
+        <div className="bg-de-raised rounded-xl p-8 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Still Need Help?</h2>
-          <p className="text-lg mb-6 text-purple-100">Our MSP support team is ready to assist 24/7.</p>
+          <p className="text-lg mb-6 text-white/80">Our MSP support team is ready to assist 24/7.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 
               href="/support/submit-ticket" 
-              className="inline-flex items-center justify-center bg-white text-purple-700 hover:bg-purple-50 px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
+              className="inline-flex items-center justify-center bg-white text-[#0e7490] hover:bg-de-paper-raised px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
               data-testid="button-submit-ticket"
             >
               Submit Support Ticket

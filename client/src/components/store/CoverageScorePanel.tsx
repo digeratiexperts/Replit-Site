@@ -28,20 +28,20 @@ export function CoverageScorePanel({
     >
       <div className="mb-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <Shield className="h-4 w-4 text-[#a78bfa]" />
+          <Shield className="h-4 w-4 text-de-accent-ink" />
           <h3 className="text-sm font-semibold text-white">Solution coverage</h3>
         </div>
         <div className="text-right">
           <span className="text-lg font-bold text-white" data-testid="text-coverage-score">
             {score.total}
-            <span className="text-sm font-medium text-white/45"> / 100</span>
+            <span className="text-sm font-medium text-white/55"> / 100</span>
           </span>
-          <p className="text-[11px] text-white/45" data-testid="text-coverage-areas">
+          <p className="text-[11px] text-white/55" data-testid="text-coverage-areas">
             {score.coveredCount} of {score.dimensionCount} areas
           </p>
         </div>
       </div>
-      <p className="mb-4 text-xs leading-relaxed text-white/45">
+      <p className="mb-4 text-xs leading-relaxed text-white/55">
         Heuristic stack coverage (endpoint, identity, email, backup, network, compliance) —
         not a security audit or certification claim.
       </p>
@@ -56,13 +56,13 @@ export function CoverageScorePanel({
             <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/10">
               <div
                 className={`h-full rounded-full transition-all ${
-                  bar.covered ? "bg-[#5034ff]" : "bg-white/15"
+                  bar.covered ? "bg-de-accent" : "bg-white/15"
                 }`}
                 style={{ width: bar.covered ? "100%" : "18%" }}
               />
             </div>
             {bar.coveredBy && (
-              <span className="hidden w-28 truncate text-[10px] text-white/35 sm:inline">
+              <span className="hidden w-28 truncate text-[10px] text-white/55 sm:inline">
                 {bar.coveredBy}
               </span>
             )}
@@ -80,16 +80,16 @@ export function CoverageScorePanel({
                 className="flex items-start justify-between gap-2 rounded-lg border border-white/10 bg-white/[0.03] p-3"
               >
                 <div className="min-w-0">
-                  <p className="text-[10px] uppercase tracking-wide text-white/40">{s.label}</p>
+                  <p className="text-[10px] uppercase tracking-wide text-white/55">{s.label}</p>
                   <p className="truncate text-sm text-white">{s.product.name}</p>
-                  <p className="text-xs text-white/45">
+                  <p className="text-xs text-white/55">
                     Coverage {s.from} → {s.to}
                   </p>
                 </div>
                 {onAddSuggestion ? (
                   <Button
                     size="sm"
-                    className="h-8 shrink-0 bg-[#5034ff] text-xs text-white hover:bg-[#6548ff]"
+                    className="h-8 shrink-0 bg-de-accent text-xs text-white hover:bg-[#6548ff]"
                     onClick={() => onAddSuggestion(s.product!)}
                     data-testid={`button-improve-${s.product.id}`}
                   >
@@ -97,7 +97,7 @@ export function CoverageScorePanel({
                   </Button>
                 ) : (
                   <Link href={`/store/product/${s.product.sku}`}>
-                    <span className="text-xs text-[#a78bfa] hover:text-[#c4b5fd]">View</span>
+                    <span className="text-xs text-de-accent-ink hover:text-de-accent-ink">View</span>
                   </Link>
                 )}
               </div>

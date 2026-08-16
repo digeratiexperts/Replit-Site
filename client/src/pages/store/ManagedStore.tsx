@@ -56,13 +56,13 @@ const ManagedStore = () => {
         variants={itemVariants}
         className={`relative overflow-hidden rounded-2xl border transition-all duration-300 hover:-translate-y-1 cursor-pointer ${
           featured 
-            ? 'bg-violet-500/10 border-violet-500/40 shadow-[0_0_40px_rgba(139,92,246,0.2)]' 
-            : 'bg-white/[0.03] border-white/10 hover:border-violet-500/30'
+            ? 'bg-de-raised border-de-hairline shadow-[0_0_40px_rgba(139,92,246,0.2)]' 
+            : 'bg-white/[0.03] border-white/10 hover:border-de-hairline'
         }`}
         data-testid={`product-${product.id}`}
       >
       {featured && (
-        <div className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 px-3 py-1 bg-violet-600 text-white text-xs font-bold rounded-full flex items-center gap-1">
+        <div className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 px-3 py-1 bg-de-accent text-white text-xs font-bold rounded-full flex items-center gap-1">
           <Star className="w-3 h-3" />
           Most Popular
         </div>
@@ -77,7 +77,7 @@ const ManagedStore = () => {
 
       <div className="p-6">
       <div className="mb-4">
-        <span className="text-xs text-white/40 uppercase tracking-wider">{categoryLabels[product.category]}</span>
+        <span className="text-xs text-white/55 uppercase tracking-wider">{categoryLabels[product.category]}</span>
         {visual.vendor && (
           <span className="ml-2 text-xs text-white/50">{visual.vendor.name}</span>
         )}
@@ -86,7 +86,7 @@ const ManagedStore = () => {
 
       <div className="mb-4">
         {product.basePrice === 0 ? (
-          <span className="text-2xl font-bold text-violet-400">Custom Quote</span>
+          <span className="text-2xl font-bold text-de-accent-ink">Custom Quote</span>
         ) : (
           <>
             <span className="text-3xl font-black text-white">${product.basePrice}</span>
@@ -111,7 +111,7 @@ const ManagedStore = () => {
       <Button 
         className={`w-full ${
           featured 
-            ? 'bg-violet-600 hover:bg-violet-500 text-white' 
+            ? 'bg-de-accent hover:bg-de-accent text-white' 
             : 'bg-white/10 hover:bg-white/20 text-white border border-white/20'
         }`}
         onClick={(e) => {
@@ -154,13 +154,13 @@ const ManagedStore = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6">
-              <Building className="w-4 h-4 text-violet-400" />
-              <span className="text-sm text-violet-300">Managed IT Services</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-de-raised border border-de-hairline mb-6">
+              <Building className="w-4 h-4 text-de-accent-ink" />
+              <span className="text-sm text-de-accent-ink">Managed IT Services</span>
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
               Full-Service{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-purple-300 to-fuchsia-300">
+              <span className="text-de-accent-ink">
                 Managed IT
               </span>
             </h1>
@@ -172,12 +172,12 @@ const ManagedStore = () => {
 
           {/* Contract Notice */}
           <motion.div 
-            className="mb-12 p-4 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-start gap-4"
+            className="mb-12 p-4 rounded-xl bg-de-raised border border-de-hairline flex items-start gap-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <Lock className="w-5 h-5 text-violet-400 mt-0.5 flex-shrink-0" />
+            <Lock className="w-5 h-5 text-de-accent-ink mt-0.5 flex-shrink-0" />
             <div>
               <h3 className="text-white font-semibold mb-1">Contract-Based Services</h3>
               <p className="text-white/60 text-sm">
@@ -210,7 +210,7 @@ const ManagedStore = () => {
               ))}
             </div>
             
-            <p className="text-center text-white/40 text-sm mt-6">
+            <p className="text-center text-white/55 text-sm mt-6">
               {getPricingFooterText()}. Final pricing tailored to your users, sites, and compliance needs.
             </p>
           </motion.section>
@@ -239,7 +239,7 @@ const ManagedStore = () => {
 
           {/* Why Choose Managed */}
           <motion.section 
-            className="mb-20 rounded-2xl p-8 bg-gradient-to-br from-violet-900/20 to-purple-900/20 border border-violet-500/20"
+            className="mb-20 rounded-2xl p-8 bg-de-raised border border-de-hairline"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -257,8 +257,8 @@ const ManagedStore = () => {
                 { icon: Award, value: "$50K+", label: "Avg. Savings", description: "Per client annually" }
               ].map((stat, index) => (
                 <div key={index} className="text-center p-4">
-                  <div className="w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center mx-auto mb-3">
-                    <stat.icon className="w-6 h-6 text-violet-400" />
+                  <div className="w-12 h-12 rounded-full bg-de-raised flex items-center justify-center mx-auto mb-3">
+                    <stat.icon className="w-6 h-6 text-de-accent-ink" />
                   </div>
                   <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
                   <div className="text-white/80 font-medium text-sm">{stat.label}</div>
@@ -287,7 +287,7 @@ const ManagedStore = () => {
               <a href="/book">
                 <Button 
                   size="lg"
-                  className="h-14 px-8 text-lg font-semibold bg-violet-600 hover:bg-violet-500 text-white shadow-lg shadow-violet-500/25"
+                  className="h-14 px-8 text-lg font-semibold bg-de-accent hover:bg-de-accent text-white shadow-lg shadow-none"
                   data-testid="button-final-cta"
                 >
                   <Calendar className="w-5 h-5 mr-2" />
@@ -310,7 +310,7 @@ const ManagedStore = () => {
               <Link href="/store/co-managed">
                 <Button 
                   variant="link" 
-                  className="text-violet-400 hover:text-violet-300"
+                  className="text-de-accent-ink hover:text-de-accent-ink"
                   data-testid="button-browse-comanaged"
                 >
                   Looking for individual products? Browse Co-Managed Store

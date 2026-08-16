@@ -38,7 +38,7 @@ export function ReadingProgressBar({ targetRef }: ReadingProgressBarProps) {
     >
       <div className="h-1 bg-white/10 w-full">
         <div 
-          className="h-full bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 transition-transform duration-150 ease-out origin-left"
+          className="h-full bg-de-raised transition-transform duration-150 ease-out origin-left"
           style={{ transform: `scaleX(${progress / 100})` }}
           role="progressbar"
           aria-valuenow={Math.round(progress)}

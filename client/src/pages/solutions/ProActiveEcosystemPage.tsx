@@ -57,7 +57,7 @@ export default function ProActiveEcosystemPage() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/book">
-                <Button className="h-12 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 px-6 font-semibold text-white">
+                <Button className="h-12 bg-[#D3126A] px-6 font-semibold text-white">
                   {CTA.primary}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -105,7 +105,7 @@ export default function ProActiveEcosystemPage() {
                   <span className="font-semibold text-white">Enterprise</span> — adds unified posture reporting, deeper compliance reporting, custom BCDR architecture support, privileged access program elements, quarterly executive reviews. Starts at {formatUserPrice("enterprise")} ({formatPrice(pricing.enterprise.monthlyMin)}/mo minimum).
                 </li>
               </ul>
-              <p className="mt-4 text-xs text-white/40">{PRICING_SCOPE_NOTE}</p>
+              <p className="mt-4 text-xs text-white/55">{PRICING_SCOPE_NOTE}</p>
             </div>
             <div>
               <h2 className="font-heading text-2xl font-semibold text-white">How engagement works</h2>

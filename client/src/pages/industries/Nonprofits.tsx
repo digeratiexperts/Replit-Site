@@ -12,9 +12,9 @@ export default function Nonprofits() {
     canonical: "/industries/nonprofits",
   });
   const savings = [
-    { metric: "IT Cost Savings", value: "40%", icon: DollarSign, color: "text-violet-400" },
-    { metric: "Staff Time Saved", value: "6 hrs/wk", icon: Zap, color: "text-violet-400" },
-    { metric: "Donor Confidence", value: "+85%", icon: Heart, color: "text-violet-400" },
+    { metric: "IT Cost Savings", value: "40%", icon: DollarSign, color: "text-de-accent-ink" },
+    { metric: "Staff Time Saved", value: "6 hrs/wk", icon: Zap, color: "text-de-accent-ink" },
+    { metric: "Donor Confidence", value: "+85%", icon: Heart, color: "text-de-accent-ink" },
     { metric: "Audit Pass Rate", value: "100%", icon: CheckCircle, color: "text-emerald-500" }
   ];
 
@@ -22,7 +22,7 @@ export default function Nonprofits() {
     <PageTemplate
       title="IT Solutions for Nonprofits"
       subtitle="Cost-effective, compliant IT for mission-driven organizations in Arizona"
-      gradientColors="from-violet-600 via-purple-600 to-fuchsia-600"
+      gradientColors="from-[#050312] via-[#0a0a0a] to-[#050312]"
     >
       <div className="space-y-16">
         {/* Impact Metrics */}
@@ -31,7 +31,7 @@ export default function Nonprofits() {
             const Icon = item.icon;
             return (
               <div key={idx} className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-purple-500 rounded-xl blur opacity-0 group-hover:opacity-20 transition-all" />
+                <div className="absolute inset-0 bg-de-raised rounded-xl blur opacity-0 group-hover:opacity-20 transition-all" />
                 <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:shadow-lg transition-all">
                   <CardContent className="pt-6">
                     <Icon className={`h-6 w-6 ${item.color} mb-3`} />
@@ -45,9 +45,9 @@ export default function Nonprofits() {
         </div>
 
         {/* Why Nonprofits Struggle */}
-        <div className="bg-violet-500/10 backdrop-blur-sm border border-violet-500/30 rounded-xl p-8">
+        <div className="bg-de-raised backdrop-blur-sm border border-de-hairline rounded-xl p-8">
           <div className="flex gap-4">
-            <Target className="h-8 w-8 text-violet-400 flex-shrink-0 mt-1" />
+            <Target className="h-8 w-8 text-de-accent-ink flex-shrink-0 mt-1" />
             <div>
               <h3 className="text-2xl font-bold text-white mb-3">Nonprofit IT Challenges</h3>
               <div className="space-y-2 text-white/50">
@@ -59,7 +59,7 @@ export default function Nonprofits() {
                   "Rapid growth strains IT infrastructure"
                 ].map((item, idx) => (
                   <div key={idx} className="flex gap-2">
-                    <span className="text-violet-400 font-bold">•</span>
+                    <span className="text-de-accent-ink font-bold">•</span>
                     <span>{item}</span>
                   </div>
                 ))}
@@ -101,10 +101,10 @@ export default function Nonprofits() {
               const Icon = service.icon;
               return (
                 <div key={idx} className="group relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-purple-500 rounded-xl blur opacity-0 group-hover:opacity-15 transition-all" />
-                  <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:shadow-lg transition-all group-hover:border-violet-500/30">
+                  <div className="absolute inset-0 bg-de-raised rounded-xl blur opacity-0 group-hover:opacity-15 transition-all" />
+                  <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:shadow-lg transition-all group-hover:border-de-hairline">
                     <CardHeader>
-                      <Icon className="h-10 w-10 text-violet-400 mb-2 group-hover:scale-110 transition-transform" />
+                      <Icon className="h-10 w-10 text-de-accent-ink mb-2 group-hover:scale-110 transition-transform" />
                       <CardTitle className="text-white">{service.title}</CardTitle>
                       <p className="text-sm text-gray-400 mt-1">{service.desc}</p>
                     </CardHeader>
@@ -126,7 +126,7 @@ export default function Nonprofits() {
         </div>
 
         {/* Supported Programs */}
-        <div className="bg-violet-500/10 backdrop-blur-sm rounded-xl p-8 border border-violet-500/20">
+        <div className="bg-de-raised backdrop-blur-sm rounded-xl p-8 border border-de-hairline">
           <h3 className="text-2xl font-bold mb-8 text-center text-white">Nonprofit Programs We Support</h3>
           <div className="grid md:grid-cols-3 gap-4">
             {[
@@ -146,13 +146,13 @@ export default function Nonprofits() {
         </div>
 
         {/* Success Story */}
-        <div className="grid md:grid-cols-3 gap-6 bg-gradient-to-r from-violet-600 to-purple-600 rounded-xl p-8 text-white">
+        <div className="grid md:grid-cols-3 gap-6 bg-de-raised rounded-xl p-8 text-white">
           <div className="text-center p-4 bg-white/10 rounded-lg backdrop-blur-sm">
             <p className="text-3xl font-bold mb-1">40%</p>
             <p className="text-white/70">IT Cost Reduction</p>
             <p className="text-xs text-white/50 mt-2">20% nonprofit discount + efficient management</p>
           </div>
-          <div className="text-center p-4 bg-white/10 rounded-lg backdrop-blur-sm border-l border-r border-violet-400">
+          <div className="text-center p-4 bg-white/10 rounded-lg backdrop-blur-sm border-l border-r border-de-hairline">
             <p className="text-3xl font-bold mb-1">100%</p>
             <p className="text-white/70">Audit Pass Rate</p>
             <p className="text-xs text-white/50 mt-2">Grant compliance documentation</p>
@@ -165,7 +165,7 @@ export default function Nonprofits() {
         </div>
 
         {/* CTA */}
-        <div className="bg-gradient-to-r from-violet-600 to-purple-600 rounded-xl p-8 text-center text-white">
+        <div className="bg-de-raised rounded-xl p-8 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Focus on Your Mission</h2>
           <p className="text-lg mb-6 text-white/70">Let us handle technology. Get nonprofit pricing + free consultation.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -173,7 +173,7 @@ export default function Nonprofits() {
               href="/book" 
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center bg-white text-violet-700 hover:bg-violet-50 px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
+              className="inline-flex items-center justify-center bg-white text-de-accent hover:bg-de-paper-raised px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
               data-testid="button-schedule-nonprofit"
             >
               Schedule Free Consultation

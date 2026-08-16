@@ -40,13 +40,13 @@ export function ProductCompareBar({
       data-testid="compare-bar"
     >
       <div className="pointer-events-auto flex items-center gap-3 rounded-full border border-white/15 bg-[#121212]/95 px-5 py-3 shadow-xl backdrop-blur">
-      <GitCompare className="h-5 w-5 text-[#a78bfa]" />
+      <GitCompare className="h-5 w-5 text-de-accent-ink" />
       <span className="text-sm font-medium text-white">
         {selected.length} selected for compare
       </span>
       <Button
         size="sm"
-        className="h-9 bg-[#5034ff] text-white hover:bg-[#6548ff]"
+        className="h-9 bg-de-accent text-white hover:bg-[#6548ff]"
         onClick={onOpen}
         data-testid="button-open-compare"
       >
@@ -123,7 +123,7 @@ export function ProductCompareDrawer({
                     {selected.map((p) => (
                       <th key={p.id} className="p-3 align-top">
                         <p className="text-base font-semibold text-white">{p.name}</p>
-                        <p className="mt-1 text-sm text-[#a78bfa]">{formatPrice(p)}</p>
+                        <p className="mt-1 text-sm text-de-accent-ink">{formatPrice(p)}</p>
                         <div className="mt-2 flex flex-wrap gap-1">
                           {getProductTags(p).map((t) => (
                             <span

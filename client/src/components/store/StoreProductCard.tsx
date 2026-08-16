@@ -19,11 +19,20 @@ import {
 import { getProductVisual } from "@/data/productImages";
 import { ProductMedia } from "@/components/store/ProductMedia";
 
-/** Soft accent colors — pills only, not whole-card rainbow. */
-const categoryAccent: Record<ProductCategory, string> = {
+/**
+ * Soft accent colors — pills only, not whole-card rainbow.
+ *
+ * This is wayfinding, not decoration: every category has to stay tellable from
+ * every other one, so no two entries may share a hue. The pill also prints its
+ * category label, which keeps colour as reinforcement rather than the only
+ * channel. Violet, purple and indigo are deliberately absent — they read as the
+ * retired generic chrome. Colours here are exempt from the site accent sweep;
+ * see the store entry in scripts/brand-audit.mjs.
+ */
+export const categoryAccent: Record<ProductCategory, string> = {
   contract_services: "text-amber-300",
-  comanaged_subscriptions: "text-violet-300",
-  comanaged_onboarding: "text-purple-300",
+  comanaged_subscriptions: "text-teal-300",
+  comanaged_onboarding: "text-lime-300",
   networking_managed: "text-cyan-300",
   networking_projects: "text-sky-300",
   ucaas_subscriptions: "text-green-300",
@@ -32,9 +41,9 @@ const categoryAccent: Record<ProductCategory, string> = {
   hardware_physical: "text-rose-300",
   hardware_handling: "text-red-300",
   digital_assessments: "text-blue-300",
-  digital_templates: "text-indigo-300",
+  digital_templates: "text-yellow-300",
   digital_training: "text-fuchsia-300",
-  professional_services: "text-teal-300",
+  professional_services: "text-pink-300",
 };
 
 export interface StoreProductCardProps {
@@ -81,7 +90,7 @@ export function StoreProductCard({
 
   return (
     <article
-      className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#141414] transition-all duration-200 hover:border-[#5034ff]/35 hover:bg-[#171717]"
+      className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#141414] transition-all duration-200 hover:border-de-accent/35 hover:bg-[#171717]"
       data-testid={`product-${product.id}`}
     >
       {onCompareToggle && !isContract && (
@@ -91,7 +100,7 @@ export function StoreProductCard({
             checked={compareSelected}
             disabled={!compareSelected && compareDisabled}
             onChange={() => onCompareToggle(product)}
-            className="h-4 w-4 rounded border-white/30 bg-transparent accent-[#5034ff]"
+            className="h-4 w-4 rounded border-white/30 bg-transparent accent-de-accent"
             data-testid={`compare-check-${product.id}`}
           />
           Compare
@@ -116,12 +125,12 @@ export function StoreProductCard({
               </span>
             )}
             <span
-              className={`rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-wide ${accent}`}
+              className={`de-store-category rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-wide ${accent}`}
             >
               {categoryLabels[product.category]}
             </span>
             {product.isClientOnly && (
-              <span className="rounded-full border border-[#5034ff]/30 bg-[#5034ff]/15 px-2.5 py-0.5 text-[11px] font-medium text-[#c4b5fd]">
+              <span className="rounded-full border border-de-accent/30 bg-de-accent/15 px-2.5 py-0.5 text-[11px] font-medium text-de-accent-ink">
                 Client pricing
               </span>
             )}
@@ -135,7 +144,7 @@ export function StoreProductCard({
             className={`font-semibold leading-snug text-white ${compact ? "text-lg" : "text-xl md:text-2xl"}`}
           >
             <Link href={`/store/product/${product.sku}`}>
-              <span className="transition-colors hover:text-[#c4b5fd]" title={product.name}>
+              <span className="transition-colors hover:text-de-accent-ink" title={product.name}>
                 {product.name}
               </span>
             </Link>
@@ -152,12 +161,12 @@ export function StoreProductCard({
           <ul className="mb-4 space-y-2">
             {product.features.slice(0, 3).map((feature) => (
               <li key={feature} className="flex items-start gap-2 text-sm text-white/50">
-                <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#5034ff]/80" />
+                <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-de-accent/80" />
                 <span className="line-clamp-1">{feature}</span>
               </li>
             ))}
             {product.features.length > 3 && (
-              <li className="pl-3.5 text-sm text-white/40">+{product.features.length - 3} more</li>
+              <li className="pl-3.5 text-sm text-white/55">+{product.features.length - 3} more</li>
             )}
           </ul>
         )}
@@ -174,15 +183,15 @@ export function StoreProductCard({
         </div>
 
         {(includedHint || worksWithNames.length > 0 || relationships?.upgradeTo?.length) && (
-          <div className="mb-4 space-y-1 text-sm text-[#a78bfa]/90">
+          <div className="mb-4 space-y-1 text-sm text-de-accent-ink/90">
             {includedHint && (
               <p data-testid={`included-hint-${product.id}`}>{includedHint}</p>
             )}
             {worksWithNames.length > 0 && (
-              <p className="text-white/45">Works with: {worksWithNames.join(", ")}</p>
+              <p className="text-white/55">Works with: {worksWithNames.join(", ")}</p>
             )}
             {relationships?.upgradeTo?.[0] && (
-              <p className="text-white/45">
+              <p className="text-white/55">
                 Upgrade:{" "}
                 {getProductBySku(relationships.upgradeTo[0])?.name || relationships.upgradeTo[0]}
               </p>
@@ -198,11 +207,11 @@ export function StoreProductCard({
                   <span className="text-2xl font-bold text-white" data-testid={`price-${product.id}`}>
                     ${price.toFixed(2)}
                   </span>
-                  <span className="text-sm text-white/40 line-through">
+                  <span className="text-sm text-white/55 line-through">
                     ${product.basePrice.toFixed(2)}
                   </span>
                 </div>
-                <span className="mt-0.5 inline-flex items-center gap-1 text-sm text-[#a78bfa]">
+                <span className="mt-0.5 inline-flex items-center gap-1 text-sm text-de-accent-ink">
                   <Tag className="h-3.5 w-3.5" />
                   {discountPercent}% off
                 </span>
@@ -231,7 +240,7 @@ export function StoreProductCard({
               <a href="/book" className="flex-1">
                 <Button
                   size="sm"
-                  className="h-12 w-full bg-[#5034ff] text-base text-white hover:bg-[#6548ff]"
+                  className="h-12 w-full bg-de-accent text-base text-white hover:bg-[#6548ff]"
                   data-testid={`button-consult-${product.id}`}
                 >
                   Schedule
@@ -240,7 +249,7 @@ export function StoreProductCard({
             ) : product.isClientOnly && !isLoggedIn ? (
               <Button
                 size="sm"
-                className="h-12 flex-1 bg-[#5034ff] text-base text-white hover:bg-[#6548ff]"
+                className="h-12 flex-1 bg-de-accent text-base text-white hover:bg-[#6548ff]"
                 onClick={(e) => {
                   e.preventDefault();
                   onLoginRequired?.();
@@ -253,7 +262,7 @@ export function StoreProductCard({
             ) : configurable ? (
               <Button
                 size="sm"
-                className="h-12 flex-1 bg-[#5034ff] text-base text-white hover:bg-[#6548ff]"
+                className="h-12 flex-1 bg-de-accent text-base text-white hover:bg-[#6548ff]"
                 onClick={(e) => {
                   e.preventDefault();
                   onConfigure?.(product);
@@ -266,7 +275,7 @@ export function StoreProductCard({
             ) : (
               <Button
                 size="sm"
-                className="h-12 flex-1 bg-[#5034ff] text-base text-white hover:bg-[#6548ff]"
+                className="h-12 flex-1 bg-de-accent text-base text-white hover:bg-[#6548ff]"
                 onClick={(e) => onAddToCart(product, e)}
                 data-testid={`button-add-${product.id}`}
               >

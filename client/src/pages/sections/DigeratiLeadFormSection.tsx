@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +25,7 @@ type FormData = z.infer<typeof formSchema>;
 export const DigeratiLeadFormSection = (): JSX.Element => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const prefersReducedMotion = useReducedMotion();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -89,10 +90,10 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
         <div className="max-w-4xl mx-auto">
           <motion.div 
             className="text-center mb-10"
-            initial={{ opacity: 0, y: 20 }}
+            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
           >
             <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#D3126A]">
               Cyber Risk Assessment
@@ -107,10 +108,10 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
 
           <motion.div
             className="de-paper-lift-lg rounded-2xl p-8 md:p-10"
-            initial={{ opacity: 0, y: 20 }}
+            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.6, delay: prefersReducedMotion ? 0 : 0.2 }}
           >
             <Form {...form}>
               <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
@@ -125,7 +126,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                           <Input 
                             placeholder="John Smith" 
                             data-testid="input-lead-full-name"
-                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/35 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
+                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/55 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
                             disabled={isSubmitting}
                             {...field} 
                           />
@@ -146,7 +147,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                             type="email" 
                             placeholder="john@company.com" 
                             data-testid="input-lead-email"
-                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/35 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
+                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/55 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
                             disabled={isSubmitting}
                             {...field} 
                           />
@@ -167,7 +168,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                             type="tel" 
                             placeholder="(555) 123-4567" 
                             data-testid="input-lead-phone"
-                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/35 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
+                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/55 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
                             disabled={isSubmitting}
                             {...field} 
                           />
@@ -187,7 +188,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                           <Input 
                             placeholder="Acme Corp" 
                             data-testid="input-lead-company"
-                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/35 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
+                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/55 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
                             disabled={isSubmitting}
                             {...field} 
                           />
@@ -231,11 +232,11 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
           </motion.div>
 
           <motion.p 
-            className="mt-6 text-center text-base text-black/50"
-            initial={{ opacity: 0 }}
+            className="mt-6 text-center text-base text-black/70"
+            initial={prefersReducedMotion ? {} : { opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.4, duration: 0.5 }}
+            transition={{ delay: prefersReducedMotion ? 0 : 0.4, duration: prefersReducedMotion ? 0 : 0.5 }}
           >
             Prefer to call?{" "}
             <a 

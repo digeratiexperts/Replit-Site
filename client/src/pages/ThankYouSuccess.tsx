@@ -68,7 +68,7 @@ export default function ThankYouSuccess() {
                 Identify how you can better protect your business from cyber threats.
               </p>
               <p className="text-slate-600 text-center mb-8">
-                If you qualify, you will receive a <strong className="text-purple-600">free security assessment</strong>.
+                If you qualify, you will receive a <strong className="text-de-accent">free security assessment</strong>.
               </p>
               
               {/* Divider */}
@@ -76,8 +76,8 @@ export default function ThankYouSuccess() {
               
               {/* Meeting Scheduled Card */}
               <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
-                  <Calendar className="h-8 w-8 text-purple-600" />
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-de-paper-raised rounded-full mb-4">
+                  <Calendar className="h-8 w-8 text-de-accent" />
                 </div>
                 
                 <h3 className="text-xl font-bold text-slate-900 mb-2">
@@ -85,7 +85,7 @@ export default function ThankYouSuccess() {
                 </h3>
                 <p className="text-slate-600 text-sm mb-6">
                   Thank you for your interest. Click below to book a time that works for you.<br />
-                  Call our office at <a href="tel:+13254809870" className="text-purple-600 hover:underline">325-480-9870</a> if you have any questions.
+                  Call our office at <a href="tel:+13254809870" className="text-de-accent hover:underline">325-480-9870</a> if you have any questions.
                 </p>
                 
                 {/* Meeting Details */}
@@ -110,7 +110,7 @@ export default function ThankYouSuccess() {
                 <Button 
                   asChild 
                   size="lg"
-                  className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-6 text-lg rounded-xl shadow-lg"
+                  className="bg-de-raised hover: hover:to-blue-700 text-white px-8 py-6 text-lg rounded-xl shadow-lg"
                   data-testid="button-book-consultation"
                 >
                   <a href="/book">

@@ -109,7 +109,7 @@ export default function SubmitTicket() {
                       placeholder="John Smith"
                       required
                       data-testid="input-name"
-                      className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                      className="bg-white/10 border-white/20 text-white placeholder:text-white/70"
                     />
                   </div>
                   <div>
@@ -122,7 +122,7 @@ export default function SubmitTicket() {
                       placeholder="john@company.com"
                       required
                       data-testid="input-email"
-                      className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                      className="bg-white/10 border-white/20 text-white placeholder:text-white/70"
                     />
                   </div>
                 </div>
@@ -138,7 +138,7 @@ export default function SubmitTicket() {
                       placeholder="(480) 000-0000"
                       required
                       data-testid="input-phone"
-                      className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                      className="bg-white/10 border-white/20 text-white placeholder:text-white/70"
                     />
                   </div>
                   <div>
@@ -166,7 +166,7 @@ export default function SubmitTicket() {
                     placeholder="Brief description of your issue"
                     required
                     data-testid="input-subject"
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/70"
                   />
                 </div>
 
@@ -180,7 +180,7 @@ export default function SubmitTicket() {
                     rows={8}
                     required
                     data-testid="textarea-description"
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/70"
                   />
                 </div>
 
@@ -188,7 +188,7 @@ export default function SubmitTicket() {
                   type="submit"
                   size="lg"
                   disabled={isSubmitting}
-                  className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white"
+                  className="w-full bg-de-raised text-white"
                   data-testid="button-submit-ticket"
                 >
                   {isSubmitting ? (
@@ -208,12 +208,12 @@ export default function SubmitTicket() {
         <div className="space-y-6">
           <Card className="bg-white/5 backdrop-blur-sm border border-white/10">
             <CardHeader>
-              <Clock className="h-10 w-10 text-purple-400 mb-2" />
+              <Clock className="h-10 w-10 text-de-accent-ink mb-2" />
               <CardTitle className="text-white">Response Times</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div>
-                <p className="font-semibold text-purple-400">Critical Issues</p>
+                <p className="font-semibold text-de-accent-ink">Critical Issues</p>
                 <p className="text-sm text-gray-400">Immediate response</p>
               </div>
               <div>
@@ -229,7 +229,7 @@ export default function SubmitTicket() {
 
           <Card className="bg-white/5 backdrop-blur-sm border border-white/10">
             <CardHeader>
-              <Phone className="h-10 w-10 text-purple-400 mb-2" />
+              <Phone className="h-10 w-10 text-de-accent-ink mb-2" />
               <CardTitle className="text-white">Need Immediate Help?</CardTitle>
             </CardHeader>
             <CardContent>
@@ -238,7 +238,7 @@ export default function SubmitTicket() {
               </p>
               <a
                 href="tel:+13254809870"
-                className="text-2xl font-bold text-purple-400 hover:text-purple-300"
+                className="text-2xl font-bold text-de-accent-ink hover:text-de-accent-ink"
               >
                 325-480-9870
               </a>

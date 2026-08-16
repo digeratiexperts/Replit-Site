@@ -91,8 +91,8 @@ export function FormSubmitting({ message = "Submitting..." }: { message?: string
       aria-busy="true"
     >
       <div className="relative mb-4">
-        <div className="w-12 h-12 rounded-full border-2 border-violet-500/30 border-t-violet-500 animate-spin" />
-        <div className="absolute inset-0 w-12 h-12 rounded-full bg-violet-500/20 blur-xl animate-pulse" />
+        <div className="w-12 h-12 rounded-full border-2 border-de-hairline border-t-de-accent animate-spin" />
+        <div className="absolute inset-0 w-12 h-12 rounded-full bg-de-raised blur-xl animate-pulse" />
       </div>
       <p className="text-white/60 text-base animate-pulse">{message}</p>
       <span className="sr-only">Form is being submitted, please wait</span>

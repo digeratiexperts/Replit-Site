@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { motion, useReducedMotion } from "framer-motion";
-
-import avatarsImg from "@assets/Frame-2131330726_1767027918695.png";
+import { IconWell } from "@/components/visual/IconWell";
 
 const chipClass =
   "inline-flex min-h-11 items-center rounded-lg border border-[var(--de-hairline)] bg-transparent px-3.5 text-base text-white/80 transition-colors hover:border-[#D3126A] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]";
@@ -128,15 +127,10 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
             <div className="rounded-2xl border border-[var(--de-hairline)] bg-[var(--de-surface)] p-6 md:p-8">
               <div className="mb-5 flex items-center gap-3">
-                <img
-                  src={avatarsImg}
-                  alt="Our community members"
-                  loading="lazy"
-                  decoding="async"
-                  width={168}
-                  height={56}
-                  className="h-8 w-auto opacity-80"
-                />
+                <IconWell icon={Mail} size="sm" surface="dark" />
+                <span className="text-base font-medium uppercase tracking-[0.16em] text-white/60">
+                  Monthly · Arizona operators
+                </span>
               </div>
               <h2 className="font-heading text-xl font-semibold tracking-[-0.02em] text-white md:text-2xl">
                 Stay Updated

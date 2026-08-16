@@ -167,10 +167,10 @@ const categories = ["All", "Services", "Security", "Backup", "Compliance", "Trai
 
 const getTypeColor = (type: string) => {
   switch (type) {
-    case "datasheet": return "bg-violet-500/20 text-violet-400 border-violet-500/30";
-    case "whitepaper": return "bg-purple-500/20 text-purple-400 border-purple-500/30";
+    case "datasheet": return "bg-de-raised text-de-accent-ink border-de-hairline";
+    case "whitepaper": return "bg-de-raised text-de-accent-ink border-de-hairline";
     case "guide": return "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
-    case "infographic": return "bg-fuchsia-500/20 text-fuchsia-400 border-fuchsia-500/30";
+    case "infographic": return "bg-de-raised text-de-accent-ink border-de-hairline";
     default: return "bg-white/10 text-white/70 border-white/20";
   }
 };
@@ -186,7 +186,7 @@ export default function Datasheets() {
         <div className="container mx-auto px-4 max-w-7xl">
           {/* Header */}
           <div className="text-center mb-12">
-            <Badge className="mb-4 bg-violet-500/20 text-violet-400 border-violet-500/30">
+            <Badge className="mb-4 bg-de-raised text-de-accent-ink border-de-hairline">
               Resource Library
             </Badge>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
@@ -205,7 +205,7 @@ export default function Datasheets() {
                 key={category}
                 variant="outline"
                 size="sm"
-                className="border-violet-500/30 bg-transparent text-white/70 hover:bg-violet-500/10 hover:text-violet-400 hover:border-violet-400"
+                className="border-de-hairline bg-transparent text-white/70 hover:bg-de-raised hover:text-de-accent-ink hover:border-de-hairline"
                 data-testid={`button-filter-${category.toLowerCase()}`}
               >
                 {category}
@@ -216,11 +216,11 @@ export default function Datasheets() {
           {/* Document Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {documents.map((doc) => (
-              <Card key={doc.id} className="bg-white/[0.02] border-white/10 hover:border-violet-500/50 transition-colors" data-testid={`card-document-${doc.id}`}>
+              <Card key={doc.id} className="bg-white/[0.02] border-white/10 hover:border-de-hairline transition-colors" data-testid={`card-document-${doc.id}`}>
                 <CardHeader>
                   <div className="flex items-start justify-between mb-2">
-                    <div className="w-12 h-12 rounded-lg bg-violet-500/20 flex items-center justify-center">
-                      <doc.icon className="h-6 w-6 text-violet-400" />
+                    <div className="w-12 h-12 rounded-lg bg-de-raised flex items-center justify-center">
+                      <doc.icon className="h-6 w-6 text-de-accent-ink" />
                     </div>
                     <Badge className={getTypeColor(doc.type)}>
                       {doc.type}
@@ -239,7 +239,7 @@ export default function Datasheets() {
                   {doc.downloadUrl ? (
                     <Button
                       asChild
-                      className="w-full bg-violet-600 hover:bg-violet-500 text-white"
+                      className="w-full bg-de-accent hover:bg-de-accent text-white"
                       data-testid={`button-download-${doc.id}`}
                     >
                       <a href={doc.downloadUrl} download target="_blank" rel="noopener noreferrer">
@@ -251,7 +251,7 @@ export default function Datasheets() {
                     <Button
                       asChild
                       variant="outline"
-                      className="w-full border-violet-500/40 text-violet-300 hover:bg-violet-500/10 hover:text-violet-200"
+                      className="w-full border-de-hairline text-de-accent-ink hover:bg-de-raised hover:text-de-accent-ink"
                       data-testid={`button-request-${doc.id}`}
                     >
                       <Link href="/book">
@@ -266,7 +266,7 @@ export default function Datasheets() {
           </div>
 
           {/* Request Custom Content */}
-          <Card className="mt-12 bg-gradient-to-r from-violet-600/20 to-purple-600/20 border-violet-500/30">
+          <Card className="mt-12 bg-de-raised border-de-hairline">
             <CardContent className="p-8">
               <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                 <div>
@@ -274,7 +274,7 @@ export default function Datasheets() {
                   <p className="text-white/70">We can provide tailored proposals, assessments, and documentation for your specific needs.</p>
                 </div>
                 <Button 
-                  className="bg-white text-violet-700 hover:bg-white/90 whitespace-nowrap"
+                  className="bg-white text-de-accent hover:bg-white/90 whitespace-nowrap"
                   onClick={() => window.location.href = "/book"}
                   data-testid="button-request-docs"
                 >
@@ -286,7 +286,7 @@ export default function Datasheets() {
           </Card>
 
           {/* Legal Notice */}
-          <div className="mt-8 text-center text-sm text-gray-500">
+          <div className="mt-8 text-center text-sm text-white/70">
             <p>All documents are for informational purposes. Contact us for specific pricing and service details.</p>
             <p className="mt-1">© {new Date().getFullYear()} Digerati Experts. All rights reserved.</p>
           </div>

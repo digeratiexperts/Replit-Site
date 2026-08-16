@@ -7,10 +7,10 @@ export default function TrustCenter() {
   const prefersReducedMotion = useReducedMotion() ?? false;
   
   const complianceSupport = [
-    { icon: FileCheck, title: "HIPAA-aligned security and compliance support", desc: "Business Associate Agreements available for healthcare clients. Framework alignment — not a HIPAA certification.", gradient: "from-purple-500 to-fuchsia-600" },
-    { icon: Award, title: "SOC 2 readiness and control alignment", desc: "Control mapping, evidence support, and readiness work for customer SOC 2 programs. Digerati is not SOC 2 Type II certified.", gradient: "from-violet-500 to-purple-600" },
+    { icon: FileCheck, title: "HIPAA-aligned security and compliance support", desc: "Business Associate Agreements available for healthcare clients. Framework alignment — not a HIPAA certification.", gradient: " to-fuchsia-600" },
+    { icon: Award, title: "SOC 2 readiness and control alignment", desc: "Control mapping, evidence support, and readiness work for customer SOC 2 programs. Digerati is not SOC 2 Type II certified.", gradient: " " },
     { icon: Lock, title: "Cyber insurance readiness", desc: "Controls and documentation insurers commonly request during underwriting and renewals.", gradient: "from-fuchsia-500 to-pink-600" },
-    { icon: Shield, title: "Security and compliance reporting", desc: "Questionnaires, control evidence, and reporting support for vendor reviews and audits.", gradient: "from-violet-600 to-purple-600" },
+    { icon: Shield, title: "Security and compliance reporting", desc: "Questionnaires, control evidence, and reporting support for vendor reviews and audits.", gradient: " " },
   ];
 
   const technicalControls = [
@@ -69,11 +69,11 @@ export default function TrustCenter() {
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.1, duration: 0.5 }}
                 >
-                  <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 hover:shadow-xl transition-all duration-300 overflow-hidden">
-                    <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl ${item.gradient} opacity-10 rounded-bl-full`} />
+                  <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-hairline hover:shadow-xl transition-all duration-300 overflow-hidden">
+                    <div className={`absolute top-0 right-0 w-24 h-24 bg-de-magenta opacity-[0.06] rounded-bl-full`} />
                     <CardHeader>
-                      <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.gradient} flex items-center justify-center mb-4`}>
-                        <Icon className="h-7 w-7 text-white" />
+                      <div className={`w-14 h-14 rounded-xl border border-de-hairline bg-de-bg flex items-center justify-center mb-4`}>
+                        <Icon className="h-7 w-7 text-de-magenta" />
                       </div>
                       <CardTitle className="text-xl text-white">{item.title}</CardTitle>
                     </CardHeader>
@@ -103,11 +103,11 @@ export default function TrustCenter() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-500/20 to-transparent rounded-full blur-3xl" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-de-raised to-transparent rounded-full blur-3xl" />
           
           <div className="relative">
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-lg bg-de-raised border border-de-hairline flex items-center justify-center">
                 <Lock className="w-6 h-6 text-white" />
               </div>
               <h2 className="text-3xl font-bold text-white">Our Security Practices</h2>
@@ -116,7 +116,7 @@ export default function TrustCenter() {
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-violet-400" />
+                  <Shield className="w-5 h-5 text-de-magenta-ink" />
                   Technical Controls
                 </h3>
                 <div className="space-y-3">
@@ -137,7 +137,7 @@ export default function TrustCenter() {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                  <FileCheck className="w-5 h-5 text-violet-400" />
+                  <FileCheck className="w-5 h-5 text-de-magenta-ink" />
                   Administrative Controls
                 </h3>
                 <div className="space-y-3">
@@ -162,14 +162,14 @@ export default function TrustCenter() {
 
         {/* Infrastructure Security */}
         <motion.div 
-          className="bg-white/5 backdrop-blur-sm border-l-4 border-violet-500 border border-white/10 rounded-xl p-8"
+          className="bg-white/5 backdrop-blur-sm border-l-4 border-de-hairline border border-white/10 rounded-xl p-8"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-de-raised border border-de-hairline flex items-center justify-center">
               <Server className="w-5 h-5 text-white" />
             </div>
             <h2 className="text-2xl font-bold text-white">Infrastructure Security</h2>
@@ -192,14 +192,14 @@ export default function TrustCenter() {
 
         {/* Privacy & Data Protection */}
         <motion.div 
-          className="bg-white/5 backdrop-blur-sm border-l-4 border-purple-500 border border-white/10 rounded-xl p-8"
+          className="bg-white/5 backdrop-blur-sm border-l-4 border-de-hairline border border-white/10 rounded-xl p-8"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-de-raised border border-de-hairline flex items-center justify-center">
               <Eye className="w-5 h-5 text-white" />
             </div>
             <h2 className="text-2xl font-bold text-white">Privacy & Data Protection</h2>
@@ -228,7 +228,7 @@ export default function TrustCenter() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600" />
+          <div className="absolute inset-0 bg-de-surface" />
           <div className="absolute inset-0 opacity-20">
             <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
               <defs>
@@ -248,7 +248,7 @@ export default function TrustCenter() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
                 href="mailto:security@digeratiexperts.com?subject=Security Documentation Request"
-                className="group inline-flex items-center justify-center bg-white text-purple-700 hover:bg-purple-50 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
+                className="group inline-flex items-center justify-center bg-white text-de-magenta hover:bg-de-paper-raised px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
                 data-testid="button-request-docs"
               >
                 <Mail className="mr-2 h-5 w-5" />
@@ -256,7 +256,7 @@ export default function TrustCenter() {
               </a>
               <a 
                 href="tel:+13254809870"
-                className="inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-purple-700 px-8 py-4 rounded-xl font-semibold transition-all"
+                className="inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-de-magenta px-8 py-4 rounded-xl font-semibold transition-all"
                 data-testid="button-call-trust"
               >
                 <Phone className="mr-2 h-5 w-5" />

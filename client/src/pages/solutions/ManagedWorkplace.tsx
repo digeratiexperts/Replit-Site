@@ -161,7 +161,7 @@ function CompareCell({ value }: { value: boolean | string }) {
     return <Check className="w-5 h-5 text-emerald-400 mx-auto" />;
   }
   if (value === false) {
-    return <X className="w-5 h-5 text-white/30 mx-auto" />;
+    return <X className="w-5 h-5 text-white/55 mx-auto" />;
   }
   return <span className="text-sm text-white/80">{value}</span>;
 }
@@ -177,9 +177,9 @@ function FAQItem({ question, answer, isOpen, onToggle, index }: { question: stri
       >
         <span className="font-semibold text-white pr-4">{question}</span>
         {isOpen ? (
-          <ChevronUp className="w-5 h-5 text-violet-400 flex-shrink-0" />
+          <ChevronUp className="w-5 h-5 text-de-accent-ink flex-shrink-0" />
         ) : (
-          <ChevronDown className="w-5 h-5 text-violet-400 flex-shrink-0" />
+          <ChevronDown className="w-5 h-5 text-de-accent-ink flex-shrink-0" />
         )}
       </button>
       {isOpen && (
@@ -227,12 +227,12 @@ export default function ManagedWorkplace() {
       <div className="space-y-24">
         {/* Hero Section */}
         <motion.section {...fadeInUp} className="relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 via-purple-600/10 to-transparent rounded-3xl pointer-events-none" />
+          <div className="absolute inset-0 bg-de-raised to-transparent rounded-3xl pointer-events-none" />
           <div className="relative bg-white/[0.02] border border-white/10 rounded-3xl p-8 md:p-12">
             <div className="max-w-4xl">
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
                 Managed Workplace for{" "}
-                <span className="bg-gradient-to-r from-violet-300 via-purple-300 to-fuchsia-300 bg-clip-text text-transparent">
+                <span className="text-de-accent-ink">
                   security-first teams
                 </span>
               </h1>
@@ -244,7 +244,7 @@ export default function ManagedWorkplace() {
                 <Button
                   asChild
                   size="lg"
-                  className="bg-white text-violet-700 hover:bg-violet-50 font-semibold shadow-lg"
+                  className="bg-white text-de-accent hover:bg-de-paper-raised font-semibold shadow-lg"
                   data-testid="btn-hero-consultation"
                 >
                   <a href="/book">
@@ -256,15 +256,15 @@ export default function ManagedWorkplace() {
 
               <div className="flex flex-wrap gap-4">
                 <div className="flex items-center gap-2 text-sm text-white/60">
-                  <Shield className="w-4 h-4 text-violet-400" />
+                  <Shield className="w-4 h-4 text-de-accent-ink" />
                   <span>Zero-trust access policies</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-white/60">
-                  <UserPlus className="w-4 h-4 text-violet-400" />
+                  <UserPlus className="w-4 h-4 text-de-accent-ink" />
                   <span>Onboarding automation</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-white/60">
-                  <Laptop className="w-4 h-4 text-violet-400" />
+                  <Laptop className="w-4 h-4 text-de-accent-ink" />
                   <span>Standardized device baseline</span>
                 </div>
               </div>
@@ -289,7 +289,7 @@ export default function ManagedWorkplace() {
                 className="bg-white/[0.03] border border-white/10 rounded-xl p-6 hover:bg-white/[0.05] transition-colors"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-de-raised flex items-center justify-center flex-shrink-0">
                     <outcome.icon className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -317,10 +317,10 @@ export default function ManagedWorkplace() {
                 className="relative"
               >
                 <div className="bg-white/[0.03] border border-white/10 rounded-xl p-8 text-center h-full">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center mx-auto mb-6">
+                  <div className="w-16 h-16 rounded-full bg-de-raised flex items-center justify-center mx-auto mb-6">
                     <span className="text-2xl font-bold text-white">{step.step}</span>
                   </div>
-                  <step.icon className="w-8 h-8 text-violet-400 mx-auto mb-4" />
+                  <step.icon className="w-8 h-8 text-de-accent-ink mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-white mb-3">{step.title}</h3>
                   <p className="text-white/60">{step.description}</p>
                 </div>
@@ -345,7 +345,7 @@ export default function ManagedWorkplace() {
                 onClick={() => setPricingMode('per_user')}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   pricingMode === 'per_user' 
-                    ? 'bg-violet-600 text-white' 
+                    ? 'bg-de-accent text-white' 
                     : 'text-white/60 hover:text-white'
                 }`}
                 data-testid="btn-pricing-per-user"
@@ -356,7 +356,7 @@ export default function ManagedWorkplace() {
                 onClick={() => setPricingMode('monthly')}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   pricingMode === 'monthly' 
-                    ? 'bg-violet-600 text-white' 
+                    ? 'bg-de-accent text-white' 
                     : 'text-white/60 hover:text-white'
                 }`}
                 data-testid="btn-pricing-monthly"
@@ -414,7 +414,7 @@ export default function ManagedWorkplace() {
                   <div className="bg-white/5 rounded-lg p-4 mb-6">
                     <p className="text-sm text-white/60 mb-2">Key Outcomes:</p>
                     {pkg.outcomes.map((outcome, i) => (
-                      <div key={i} className="flex items-center gap-2 text-sm text-violet-300">
+                      <div key={i} className="flex items-center gap-2 text-sm text-de-accent-ink">
                         <Sparkles className="w-4 h-4" />
                         {outcome}
                       </div>
@@ -425,8 +425,8 @@ export default function ManagedWorkplace() {
                     asChild
                     className={`w-full ${
                       pkg.featured 
-                        ? 'bg-white text-violet-700 hover:bg-violet-50' 
-                        : 'bg-violet-600 text-white hover:bg-violet-500'
+                        ? 'bg-white text-de-accent hover:bg-de-paper-raised' 
+                        : 'bg-de-accent text-white hover:bg-de-accent'
                     }`}
                     data-testid={`btn-package-${pkg.sku}`}
                   >
@@ -437,7 +437,7 @@ export default function ManagedWorkplace() {
                   </Button>
 
                   {pkg.not_included && pkg.not_included.length > 0 && (
-                    <p className="text-xs text-white/40 mt-4 text-center">
+                    <p className="text-xs text-white/55 mt-4 text-center">
                       <Info className="w-3 h-3 inline mr-1" />
                       Not included: {pkg.not_included.slice(0, 2).join(', ')}
                       {pkg.not_included.length > 2 && ` +${pkg.not_included.length - 2} more`}
@@ -462,7 +462,7 @@ export default function ManagedWorkplace() {
                 <tr className="border-b border-white/10">
                   <th className="text-left py-4 px-4 text-white/60 font-medium">Feature</th>
                   <th className="text-center py-4 px-4 text-white font-semibold">Essentials</th>
-                  <th className="text-center py-4 px-4 text-white font-semibold bg-violet-600/20">Business</th>
+                  <th className="text-center py-4 px-4 text-white font-semibold bg-de-raised">Business</th>
                   <th className="text-center py-4 px-4 text-white font-semibold">Enterprise</th>
                 </tr>
               </thead>
@@ -471,7 +471,7 @@ export default function ManagedWorkplace() {
                   <tr key={index} className="border-b border-white/5 hover:bg-white/[0.02]">
                     <td className="py-4 px-4 text-white/80 text-sm">{row.feature}</td>
                     <td className="py-4 px-4 text-center"><CompareCell value={row.essentials} /></td>
-                    <td className="py-4 px-4 text-center bg-violet-600/10"><CompareCell value={row.business} /></td>
+                    <td className="py-4 px-4 text-center bg-de-raised"><CompareCell value={row.business} /></td>
                     <td className="py-4 px-4 text-center"><CompareCell value={row.enterprise} /></td>
                   </tr>
                 ))}
@@ -482,7 +482,7 @@ export default function ManagedWorkplace() {
           <div className="text-center mt-6">
             <a 
               href="/ecosystem-pricing" 
-              className="text-violet-400 hover:text-violet-300 text-sm inline-flex items-center gap-1"
+              className="text-de-accent-ink hover:text-de-accent-ink text-sm inline-flex items-center gap-1"
               data-testid="link-full-matrix"
             >
               View full service matrix
@@ -504,7 +504,7 @@ export default function ManagedWorkplace() {
                 key={index}
                 {...fadeInUp}
                 transition={{ delay: index * 0.05 }}
-                className="bg-white/[0.03] border border-white/10 rounded-xl p-5 hover:border-violet-500/50 transition-colors"
+                className="bg-white/[0.03] border border-white/10 rounded-xl p-5 hover:border-de-hairline transition-colors"
               >
                 <h3 className="text-white font-semibold mb-2">{addon.name}</h3>
                 <p className="text-white/60 text-sm">{addon.description}</p>
@@ -536,26 +536,26 @@ export default function ManagedWorkplace() {
 
         {/* What Happens After You Book */}
         <motion.section {...fadeInUp}>
-          <div className="bg-gradient-to-br from-violet-600/20 via-purple-600/10 to-transparent rounded-2xl border border-white/10 p-8 md:p-12">
+          <div className="bg-de-raised to-transparent rounded-2xl border border-white/10 p-8 md:p-12">
             <h2 className="text-2xl font-bold text-white mb-6 text-center">What Happens After You Book?</h2>
             <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
               <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-violet-600/20 border border-violet-500/30 flex items-center justify-center mx-auto mb-4">
-                  <Phone className="w-6 h-6 text-violet-400" />
+                <div className="w-12 h-12 rounded-full bg-de-raised border border-de-hairline flex items-center justify-center mx-auto mb-4">
+                  <Phone className="w-6 h-6 text-de-accent-ink" />
                 </div>
                 <h3 className="font-semibold text-white mb-2">Discovery Call</h3>
                 <p className="text-white/60 text-sm">15–25 min call to understand your tools, team, and goals</p>
               </div>
               <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-violet-600/20 border border-violet-500/30 flex items-center justify-center mx-auto mb-4">
-                  <FileText className="w-6 h-6 text-violet-400" />
+                <div className="w-12 h-12 rounded-full bg-de-raised border border-de-hairline flex items-center justify-center mx-auto mb-4">
+                  <FileText className="w-6 h-6 text-de-accent-ink" />
                 </div>
                 <h3 className="font-semibold text-white mb-2">Access & Inventory</h3>
                 <p className="text-white/60 text-sm">We document your current state and create an action plan</p>
               </div>
               <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-violet-600/20 border border-violet-500/30 flex items-center justify-center mx-auto mb-4">
-                  <Building2 className="w-6 h-6 text-violet-400" />
+                <div className="w-12 h-12 rounded-full bg-de-raised border border-de-hairline flex items-center justify-center mx-auto mb-4">
+                  <Building2 className="w-6 h-6 text-de-accent-ink" />
                 </div>
                 <h3 className="font-semibold text-white mb-2">Onboarding Timeline</h3>
                 <p className="text-white/60 text-sm">Clear responsibilities and milestones for go-live</p>
@@ -567,7 +567,7 @@ export default function ManagedWorkplace() {
         {/* Final CTA */}
         <motion.section {...fadeInUp}>
           <div className="relative rounded-2xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 opacity-90" />
+            <div className="absolute inset-0 bg-de-raised opacity-90" />
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] pointer-events-none" />
             <div className="relative py-16 px-8 text-center">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -580,7 +580,7 @@ export default function ManagedWorkplace() {
                 <Button
                   asChild
                   size="lg"
-                  className="bg-white text-violet-700 hover:bg-violet-50 font-semibold shadow-lg"
+                  className="bg-white text-de-accent hover:bg-de-paper-raised font-semibold shadow-lg"
                   data-testid="btn-final-consultation"
                 >
                   <a href="/book">

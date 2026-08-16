@@ -12,7 +12,7 @@ export default function MSA() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
             <div className="flex items-center gap-3 mb-6">
-              <FileText className="h-12 w-12 text-purple-400" />
+              <FileText className="h-12 w-12 text-de-accent-ink" />
               <h1 className="text-4xl md:text-5xl font-bold">Master Service Agreement</h1>
             </div>
             <p className="text-xl text-gray-300">
@@ -30,7 +30,7 @@ export default function MSA() {
               the provision of managed IT and security services by Digerati Experts to our clients.
             </p>
 
-            <div className="bg-purple-500/10 backdrop-blur-sm border border-purple-500/30 border-l-4 border-l-purple-500 p-6 rounded mb-8">
+            <div className="bg-de-raised backdrop-blur-sm border border-de-hairline border-l-4 border-l-de-accent p-6 rounded mb-8">
               <h3 className="text-xl font-semibold text-white mb-3">What's Included in Our MSA:</h3>
               <ul className="list-disc pl-6 text-gray-300 space-y-2">
                 <li>Scope of managed IT and security services</li>
@@ -55,7 +55,7 @@ export default function MSA() {
 
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
               <Button 
-                className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
+                className="bg-de-raised text-white hover: hover:to-blue-700"
                 onClick={() => window.location.href = 'mailto:legal@digeratiexperts.com?subject=MSA Request'}
                 data-testid="button-request-msa"
               >

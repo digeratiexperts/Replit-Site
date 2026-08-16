@@ -192,7 +192,7 @@ export const storeOutcomes: StoreOutcome[] = [
       "DE-SVC-COMANAGED-CUSTOM-MO",
     ],
     keywords: ["managed", "outsource", "msp", "proactive", "full service", "ecosystem"],
-    accent: "text-violet-300",
+    accent: "text-lime-300",
   },
   {
     id: "secure_remote",

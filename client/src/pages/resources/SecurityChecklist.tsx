@@ -113,7 +113,7 @@ export default function SecurityChecklist() {
         <div className="container mx-auto px-4 max-w-5xl">
           {/* Header */}
           <div className="text-center mb-12">
-            <Badge className="mb-4 bg-violet-500/20 text-violet-400 border-violet-500/30">
+            <Badge className="mb-4 bg-de-raised text-de-accent-ink border-de-hairline">
               Security Checklist
             </Badge>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
@@ -125,28 +125,28 @@ export default function SecurityChecklist() {
           </div>
 
           {/* Progress Card */}
-          <Card className="mb-8 bg-gradient-to-r from-violet-600/20 to-purple-600/20 border-violet-500/30">
+          <Card className="mb-8 bg-de-raised border-de-hairline">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <h3 className="text-xl font-bold text-white">Your Progress</h3>
                   <p className="text-white/70">{completedItems} of {totalItems} items completed</p>
                 </div>
-                <div className="text-4xl font-bold text-violet-400">{percentComplete}%</div>
+                <div className="text-4xl font-bold text-de-accent-ink">{percentComplete}%</div>
               </div>
               <div className="w-full bg-white/10 rounded-full h-4">
                 <div 
-                  className="bg-gradient-to-r from-violet-600 to-purple-500 h-4 rounded-full transition-all duration-500"
+                  className="bg-de-raised h-4 rounded-full transition-all duration-500"
                   style={{ width: `${percentComplete}%` }}
                 />
               </div>
               <div className="mt-4 flex gap-4">
-                <Button variant="outline" className="border-violet-500/30 bg-transparent text-white/70 hover:bg-violet-500/10 hover:text-violet-400 hover:border-violet-400" data-testid="button-download-pdf">
+                <Button variant="outline" className="border-de-hairline bg-transparent text-white/70 hover:bg-de-raised hover:text-de-accent-ink hover:border-de-hairline" data-testid="button-download-pdf">
                   <Download className="mr-2 h-4 w-4" />
                   Download PDF
                 </Button>
                 <Button 
-                  className="bg-white text-violet-700 hover:bg-white/90"
+                  className="bg-white text-de-accent hover:bg-white/90"
                   onClick={() => window.location.href = "/book"}
                   data-testid="button-get-assessment"
                 >
@@ -163,7 +163,7 @@ export default function SecurityChecklist() {
               <Card key={category.name} className="bg-white/[0.02] border-white/10" data-testid={`card-category-${category.name.toLowerCase().replace(/\s+/g, '-')}`}>
                 <CardHeader>
                   <CardTitle className="text-xl text-white flex items-center gap-3">
-                    <category.icon className="h-6 w-6 text-violet-400" />
+                    <category.icon className="h-6 w-6 text-de-accent-ink" />
                     {category.name}
                   </CardTitle>
                 </CardHeader>
@@ -216,7 +216,7 @@ export default function SecurityChecklist() {
               <h3 className="text-2xl font-bold text-white mb-2">Need Help Completing Your Checklist?</h3>
               <p className="text-white/70 mb-6">Our security experts can help you implement these controls and more. Schedule a free consultation.</p>
               <Button 
-                className="bg-violet-600 hover:bg-violet-500 text-white"
+                className="bg-de-accent hover:bg-de-accent text-white"
                 onClick={() => window.location.href = "/book"}
                 data-testid="button-schedule-consultation"
               >

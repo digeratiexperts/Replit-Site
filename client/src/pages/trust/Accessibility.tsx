@@ -25,10 +25,10 @@ export default function Accessibility() {
   ];
 
   const supportedUsers = [
-    { icon: Eye, text: "Blind or have low vision", color: "from-violet-500 to-purple-600" },
-    { icon: Ear, text: "Deaf or have hearing loss", color: "from-purple-500 to-fuchsia-600" },
+    { icon: Eye, text: "Blind or have low vision", color: " " },
+    { icon: Ear, text: "Deaf or have hearing loss", color: " to-fuchsia-600" },
     { icon: Hand, text: "Living with mobility impairments", color: "from-fuchsia-500 to-pink-600" },
-    { icon: Brain, text: "Living with cognitive disabilities", color: "from-purple-600 to-violet-600" }
+    { icon: Brain, text: "Living with cognitive disabilities", color: " " }
   ];
 
   return (
@@ -58,14 +58,14 @@ export default function Accessibility() {
 
         {/* Conformance Status */}
         <motion.div 
-          className="bg-white/5 backdrop-blur-sm border-l-4 border-violet-500 border border-white/10 rounded-xl p-8"
+          className="bg-white/5 backdrop-blur-sm border-l-4 border-de-hairline border border-white/10 rounded-xl p-8"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-de-raised border border-de-hairline flex items-center justify-center">
               <CheckCircle className="w-5 h-5 text-white" />
             </div>
             <h2 className="text-2xl font-bold text-white">Conformance Status</h2>
@@ -89,7 +89,7 @@ export default function Accessibility() {
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.1, duration: 0.3 }}
                 >
-                  <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${user.color} flex items-center justify-center mb-2`}>
+                  <div className={`w-10 h-10 rounded-lg border border-de-hairline bg-de-bg flex items-center justify-center mb-2`}>
                     <Icon className="w-5 h-5 text-white" />
                   </div>
                   <span className="text-sm text-gray-300">{user.text}</span>
@@ -107,11 +107,11 @@ export default function Accessibility() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-500/20 to-transparent rounded-full blur-3xl" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-de-raised to-transparent rounded-full blur-3xl" />
           
           <div className="relative">
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-lg bg-de-raised border border-de-hairline flex items-center justify-center">
                 <Eye className="w-6 h-6 text-white" />
               </div>
               <h2 className="text-3xl font-bold text-white">Accessibility Features</h2>
@@ -148,9 +148,9 @@ export default function Accessibility() {
             {assistiveTech.map((tech, idx) => {
               const Icon = tech.icon;
               return (
-                <Card key={idx} className="group bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 hover:shadow-xl transition-all duration-300 text-center">
+                <Card key={idx} className="group bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-hairline hover:shadow-xl transition-all duration-300 text-center">
                   <CardContent className="pt-6">
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <div className="w-14 h-14 rounded-xl bg-de-raised border border-de-hairline flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                       <Icon className="h-7 w-7 text-white" />
                     </div>
                     <p className="text-gray-300 text-sm">{tech.name}</p>
@@ -203,15 +203,15 @@ export default function Accessibility() {
           </p>
           <div className="grid md:grid-cols-3 gap-4">
             <div className="flex items-center gap-3 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
-              <Mail className="w-5 h-5 text-purple-400" />
+              <Mail className="w-5 h-5 text-de-magenta-ink" />
               <span className="text-gray-300">accessibility@digeratiexperts.com</span>
             </div>
             <div className="flex items-center gap-3 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
-              <Phone className="w-5 h-5 text-purple-400" />
+              <Phone className="w-5 h-5 text-de-magenta-ink" />
               <span className="text-gray-300">325-480-9870</span>
             </div>
             <div className="flex items-center gap-3 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
-              <MapPin className="w-5 h-5 text-purple-400" />
+              <MapPin className="w-5 h-5 text-de-magenta-ink" />
               <span className="text-gray-300 text-sm">3165 S Alma School Rd Suite 29, Chandler, AZ 85248</span>
             </div>
           </div>
@@ -228,7 +228,7 @@ export default function Accessibility() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600" />
+          <div className="absolute inset-0 bg-de-surface" />
           <div className="absolute inset-0 opacity-20">
             <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
               <defs>
@@ -247,7 +247,7 @@ export default function Accessibility() {
             </p>
             <a 
               href="mailto:accessibility@digeratiexperts.com?subject=Accessibility Feedback"
-              className="group inline-flex items-center justify-center bg-white text-purple-700 hover:bg-purple-50 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
+              className="group inline-flex items-center justify-center bg-white text-de-magenta hover:bg-de-paper-raised px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
               data-testid="button-report-accessibility"
             >
               <Mail className="mr-2 h-5 w-5" />

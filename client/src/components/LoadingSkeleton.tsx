@@ -70,8 +70,8 @@ export function PageLoadingSkeleton() {
       aria-label="Loading page"
     >
       <div className="relative">
-        <div className="w-12 h-12 rounded-full border-2 border-violet-500/30 border-t-violet-500 animate-spin" />
-        <div className="absolute inset-0 w-12 h-12 rounded-full bg-violet-500/20 blur-xl animate-pulse" />
+        <div className="w-12 h-12 rounded-full border-2 border-de-hairline border-t-de-accent animate-spin" />
+        <div className="absolute inset-0 w-12 h-12 rounded-full bg-de-raised blur-xl animate-pulse" />
       </div>
       <p className="mt-4 text-white/50 text-base animate-pulse">Loading...</p>
       <span className="sr-only">Page is loading, please wait</span>

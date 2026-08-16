@@ -15,8 +15,8 @@ export function StoreTrustStrip() {
           const Icon = icons[i] ?? Shield;
           return (
             <li key={claim.label} className="flex items-start gap-3.5">
-              <div className="mt-0.5 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-[#5034ff]/15 border border-[#5034ff]/25">
-                <Icon className="h-5 w-5 text-[#a78bfa]" />
+              <div className="mt-0.5 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-de-accent/15 border border-de-accent/25">
+                <Icon className="h-5 w-5 text-de-accent-ink" />
               </div>
               <div>
                 <p className="text-base font-medium text-white">{claim.label}</p>

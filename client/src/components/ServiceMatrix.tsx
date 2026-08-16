@@ -99,7 +99,7 @@ export function ServiceMatrix({
           </div>
           <Link href="/pricing">
             <Button 
-              className="bg-violet-600 hover:bg-violet-700 text-white"
+              className="bg-de-accent hover:bg-de-accent text-white"
               data-testid="button-view-pricing"
             >
               View Full Pricing

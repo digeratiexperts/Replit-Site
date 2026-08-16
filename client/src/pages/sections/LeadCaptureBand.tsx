@@ -27,7 +27,7 @@ const assessmentFormSchema = z.object({
 type AssessmentFormData = z.infer<typeof assessmentFormSchema>;
 
 const benefits = [
-  { icon: Shield, text: "Full vulnerability assessment included", color: "text-violet-400" },
+  { icon: Shield, text: "Full vulnerability assessment included", color: "text-de-accent-ink" },
   { icon: CheckCircle, text: "Results delivered within 48 hours", color: "text-green-400" },
   { icon: Clock, text: "No commitment required", color: "text-purple-400" },
   { icon: Award, text: "Expert recommendations included", color: "text-yellow-400" },
@@ -112,7 +112,7 @@ export const LeadCaptureBand = (): JSX.Element => {
             className="space-y-6"
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-600/20 border border-violet-500/30">
-              <span className="text-violet-400 text-base font-medium">Limited Time Offer</span>
+              <span className="text-de-accent-ink text-base font-medium">Limited Time Offer</span>
             </div>
             
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">

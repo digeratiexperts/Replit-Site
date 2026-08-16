@@ -146,7 +146,7 @@ export default function SecurityUpdates() {
                           {update.category}
                         </span>
                       </Badge>
-                      <span className="text-xs text-gray-500 flex items-center gap-1 whitespace-nowrap">
+                      <span className="text-xs text-white/70 flex items-center gap-1 whitespace-nowrap">
                         <Calendar className="h-3 w-3" />
                         {formatThreatDate(update.publishedAt, "short")}
                       </span>
@@ -161,7 +161,7 @@ export default function SecurityUpdates() {
                       {update.excerpt}
                     </CardDescription>
                     <div className="flex items-center justify-between pt-4 border-t border-white/10 gap-3">
-                      <span className="text-xs text-gray-500 truncate">
+                      <span className="text-xs text-white/70 truncate">
                         {update.sourceName}
                         {update.cve ? ` · ${update.cve}` : ""}
                       </span>
@@ -210,7 +210,7 @@ export default function SecurityUpdates() {
                             Compliance Update
                           </span>
                         </Badge>
-                        <span className="text-xs text-gray-500 flex items-center gap-1">
+                        <span className="text-xs text-white/70 flex items-center gap-1">
                           <Calendar className="h-3 w-3" />
                           {formatUpdateDisplayDate(update.date)}
                         </span>

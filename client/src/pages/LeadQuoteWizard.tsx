@@ -221,12 +221,12 @@ export default function LeadQuoteWizard() {
             <div
               key={step}
               className={`h-2 flex-1 rounded-full transition-colors ${
-                step <= currentStep ? 'bg-purple-600' : 'bg-gray-200'
+                step <= currentStep ? 'bg-de-accent' : 'bg-gray-200'
               }`}
             />
           ))}
         </div>
-        <span className="text-sm text-gray-600 ml-4">Step {currentStep} of 3</span>
+        <span className="text-sm text-white/70 ml-4">Step {currentStep} of 3</span>
       </div>
 
       <Form {...form}>
@@ -236,7 +236,7 @@ export default function LeadQuoteWizard() {
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">How many users?</h2>
-                <p className="text-gray-600">Includes employees and shared devices.</p>
+                <p className="text-white/70">Includes employees and shared devices.</p>
               </div>
 
               <FormField
@@ -253,7 +253,7 @@ export default function LeadQuoteWizard() {
                         {...field}
                         onChange={(e) => field.onChange(parseInt(e.target.value))}
                         disabled={form.watch('enterpriseToggle')}
-                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#D3126A]"
                       />
                     </FormControl>
                     <FormMessage />
@@ -295,7 +295,7 @@ export default function LeadQuoteWizard() {
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">What do you need?</h2>
-                <p className="text-gray-600">Help us understand your infrastructure needs.</p>
+                <p className="text-white/70">Help us understand your infrastructure needs.</p>
               </div>
 
               <FormField
@@ -360,7 +360,7 @@ export default function LeadQuoteWizard() {
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Show Me The Best Plan!</h2>
-                <p className="text-gray-600">We'll need a few details to confirm your perfect fit.</p>
+                <p className="text-white/70">We'll need a few details to confirm your perfect fit.</p>
               </div>
 
               <FormField

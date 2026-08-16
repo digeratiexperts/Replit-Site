@@ -144,16 +144,16 @@ const StoreLanding = () => {
           <div className="mb-4 flex items-center justify-between">
             {isLoggedIn && user ? (
               <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 rounded-lg border border-[#5034ff]/20 bg-[#5034ff]/10 px-3 py-2">
-                  <User className="h-4 w-4 text-[#a78bfa]" />
+                <div className="flex items-center gap-2 rounded-lg border border-de-accent/20 bg-de-accent/10 px-3 py-2">
+                  <User className="h-4 w-4 text-de-accent-ink" />
                   <span className="text-sm text-white" data-testid="text-user-greeting">
                     Welcome,{" "}
-                    <span className="font-semibold text-[#c4b5fd]">
+                    <span className="font-semibold text-de-accent-ink">
                       {user.fullName || user.username}
                     </span>
                   </span>
                   {clientType !== "public" && (
-                    <span className="ml-2 rounded-full bg-[#5034ff]/20 px-2 py-0.5 text-xs font-medium text-[#c4b5fd]">
+                    <span className="ml-2 rounded-full bg-de-accent/20 px-2 py-0.5 text-xs font-medium text-de-accent-ink">
                       {clientType === "managed" ? "Managed Client" : "Co-Managed Client"}
                     </span>
                   )}
@@ -162,7 +162,7 @@ const StoreLanding = () => {
                   variant="ghost"
                   size="sm"
                   onClick={logout}
-                  className="text-white/60 hover:bg-[#5034ff]/10 hover:text-white"
+                  className="text-white/60 hover:bg-de-accent/10 hover:text-white"
                   data-testid="button-store-logout"
                 >
                   <LogOut className="mr-1 h-4 w-4" />
@@ -174,7 +174,7 @@ const StoreLanding = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-11 border-none bg-[#5034ff] px-5 text-base text-white hover:bg-[#6548ff]"
+                  className="h-11 border-none bg-de-accent px-5 text-base text-white hover:bg-[#6548ff]"
                   data-testid="button-store-login"
                 >
                   <User className="mr-2 h-4 w-4" />
@@ -193,13 +193,13 @@ const StoreLanding = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#5034ff]/25 bg-[#5034ff]/10 px-4 py-2">
-                  <Package className="h-4 w-4 text-[#a78bfa]" />
-                  <span className="text-sm text-[#c4b5fd]">IT Services & Solutions</span>
+                <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-de-accent/25 bg-de-accent/10 px-4 py-2">
+                  <Package className="h-4 w-4 text-de-accent-ink" />
+                  <span className="text-sm text-de-accent-ink">IT Services & Solutions</span>
                 </div>
                 <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl lg:text-6xl xl:text-7xl">
                   Tell us what you&apos;re trying to{" "}
-                  <span className="text-[#a78bfa]">accomplish</span>
+                  <span className="text-de-accent-ink">accomplish</span>
                 </h1>
                 <p className="max-w-3xl text-xl leading-relaxed text-white/70 md:text-2xl">
                   Guided storefront for managed packages and à la carte services — shop by outcome,
@@ -207,7 +207,7 @@ const StoreLanding = () => {
                 </p>
                 <div className="mt-7 flex flex-wrap gap-3">
                   <Button
-                    className="h-12 bg-[#5034ff] px-6 text-base text-white hover:bg-[#6548ff]"
+                    className="h-12 bg-de-accent px-6 text-base text-white hover:bg-[#6548ff]"
                     onClick={() => setGuidedOpen(true)}
                     data-testid="button-build-solution"
                   >
@@ -266,12 +266,12 @@ const StoreLanding = () => {
             <div className="grid gap-8 md:grid-cols-2">
               <motion.div
                 variants={itemVariants}
-                className="group relative overflow-hidden rounded-2xl border border-[#5034ff]/30 bg-[#141414] p-9 transition-all duration-300 hover:-translate-y-1"
+                className="group relative overflow-hidden rounded-2xl border border-de-accent/30 bg-[#141414] p-9 transition-all duration-300 hover:-translate-y-1"
                 data-testid="card-managed-clients"
               >
                 <div className="relative z-10">
-                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-xl border border-[#5034ff]/30 bg-[#5034ff]/15">
-                    <Building className="h-8 w-8 text-[#a78bfa]" />
+                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-xl border border-de-accent/30 bg-de-accent/15">
+                    <Building className="h-8 w-8 text-de-accent-ink" />
                   </div>
                   <h2 className="mb-3 text-2xl font-bold text-white md:text-3xl">Managed Clients</h2>
                   <p className="mb-4 text-base leading-relaxed text-white/65 md:text-lg">
@@ -279,7 +279,7 @@ const StoreLanding = () => {
                     ProActive Ecosystem plans include everything you need in one predictable monthly
                     subscription.
                   </p>
-                  <div className="mb-6 flex items-center gap-2 text-base text-[#c4b5fd]">
+                  <div className="mb-6 flex items-center gap-2 text-base text-de-accent-ink">
                     <Lock className="h-4 w-4" />
                     <span>Contract-based services · Schedule a consultation</span>
                   </div>
@@ -289,7 +289,7 @@ const StoreLanding = () => {
                     </span>
                     <Link href="/store/managed">
                       <Button
-                        className="h-11 bg-[#5034ff] px-5 text-base text-white hover:bg-[#6548ff]"
+                        className="h-11 bg-de-accent px-5 text-base text-white hover:bg-[#6548ff]"
                         data-testid="button-view-managed"
                       >
                         View Packages
@@ -302,12 +302,12 @@ const StoreLanding = () => {
 
               <motion.div
                 variants={itemVariants}
-                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#141414] p-9 transition-all duration-300 hover:-translate-y-1 hover:border-[#5034ff]/30"
+                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#141414] p-9 transition-all duration-300 hover:-translate-y-1 hover:border-de-accent/30"
                 data-testid="card-comanaged-clients"
               >
                 <div className="relative z-10">
-                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-xl border border-[#5034ff]/30 bg-[#5034ff]/15">
-                    <Users className="h-8 w-8 text-[#a78bfa]" />
+                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-xl border border-de-accent/30 bg-de-accent/15">
+                    <Users className="h-8 w-8 text-de-accent-ink" />
                   </div>
                   <h2 className="mb-3 text-2xl font-bold text-white md:text-3xl">Co-Managed Clients</h2>
                   <p className="mb-4 text-base leading-relaxed text-white/65 md:text-lg">
@@ -324,7 +324,7 @@ const StoreLanding = () => {
                     </span>
                     <Link href="/store/co-managed">
                       <Button
-                        className="h-11 border-none bg-[#5034ff] px-5 text-base text-white hover:bg-[#6548ff]"
+                        className="h-11 border-none bg-de-accent px-5 text-base text-white hover:bg-[#6548ff]"
                         data-testid="button-view-comanaged"
                       >
                         Browse Products
@@ -388,16 +388,16 @@ const StoreLanding = () => {
                   <motion.div key={category} variants={itemVariants}>
                     <Link href={`/store/co-managed?category=${category}`}>
                       <div
-                        className="group h-full cursor-pointer rounded-xl border border-white/10 bg-[#141414] p-4 text-center transition-all duration-300 hover:border-[#5034ff]/30 hover:bg-[#171717]"
+                        className="group h-full cursor-pointer rounded-xl border border-white/10 bg-[#141414] p-4 text-center transition-all duration-300 hover:border-de-accent/30 hover:bg-[#171717]"
                         data-testid={`category-${category}`}
                       >
-                        <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04] transition-colors group-hover:border-[#5034ff]/30 group-hover:bg-[#5034ff]/15">
-                          <Icon className="h-5 w-5 text-[#a78bfa]" />
+                        <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04] transition-colors group-hover:border-de-accent/30 group-hover:bg-de-accent/15">
+                          <Icon className="h-5 w-5 text-de-accent-ink" />
                         </div>
                         <h3 className="mb-1 text-sm font-medium text-white">
                           {categoryLabels[category]}
                         </h3>
-                        <p className="text-xs text-white/40">{productCount} items</p>
+                        <p className="text-xs text-white/55">{productCount} items</p>
                       </div>
                     </Link>
                   </motion.div>
@@ -474,7 +474,7 @@ const StoreLanding = () => {
               <a href="/book">
                 <Button
                   size="lg"
-                  className="h-12 bg-[#5034ff] px-6 text-white hover:bg-[#6548ff]"
+                  className="h-12 bg-de-accent px-6 text-white hover:bg-[#6548ff]"
                   data-testid="button-schedule-consult"
                 >
                   Schedule Free Consultation

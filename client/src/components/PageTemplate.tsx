@@ -21,8 +21,8 @@ interface PageTemplateProps {
 const FloatingOrbs = ({ prefersReducedMotion }: { prefersReducedMotion: boolean }) => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
     <motion.div
-      className="absolute -top-20 -right-20 w-96 h-96 rounded-full"
-      style={{ background: "radial-gradient(circle, rgba(236, 72, 153, 0.2) 0%, rgba(139, 92, 246, 0.12) 45%, transparent 68%)" }}
+      className="de-hero-glow absolute -top-20 -right-20 w-96 h-96 rounded-full"
+      style={{ background: "radial-gradient(circle, rgba(211, 18, 106, 0.2) 0%, rgba(91, 69, 224, 0.1) 45%, transparent 68%)" }}
       animate={prefersReducedMotion ? {} : {
         x: [0, 20, 0],
         y: [0, -15, 0],
@@ -31,8 +31,8 @@ const FloatingOrbs = ({ prefersReducedMotion }: { prefersReducedMotion: boolean 
       transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
     />
     <motion.div
-      className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full"
-      style={{ background: "radial-gradient(circle, rgba(217, 70, 239, 0.16) 0%, transparent 65%)" }}
+      className="de-hero-glow absolute -bottom-32 -left-32 w-80 h-80 rounded-full"
+      style={{ background: "radial-gradient(circle, rgba(211, 18, 106, 0.14) 0%, transparent 65%)" }}
       animate={prefersReducedMotion ? {} : {
         x: [0, -15, 0],
         y: [0, 20, 0],
@@ -57,7 +57,7 @@ const GridPattern = () => (
     <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <pattern id="grid-pattern" width="48" height="48" patternUnits="userSpaceOnUse">
-          <path d="M 48 0 L 0 0 0 48" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-white/30" />
+          <path d="M 48 0 L 0 0 0 48" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-white/55" />
         </pattern>
       </defs>
       <rect width="100%" height="100%" fill="url(#grid-pattern)" />
@@ -91,9 +91,11 @@ const ShieldBadge = () => (
     transition={{ delay: 0.5, duration: 0.6 }}
   >
     <div className="relative">
-      <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-400/40 to-pink-600/40 rounded-full blur-xl" />
+      {/* Glow follows the page accent, so a support page reads cyan and the
+          store reads electric without either leaving the shared system. */}
+      <div className="absolute inset-0 bg-de-accent/35 rounded-full blur-xl" />
       <div className="relative w-28 h-28 bg-white/[0.07] backdrop-blur-sm rounded-full border border-white/15 flex items-center justify-center">
-        <Shield className="w-14 h-14 text-pink-300/85" />
+        <Shield className="w-14 h-14 text-de-accent-ink" />
       </div>
     </div>
   </motion.div>
@@ -104,7 +106,7 @@ export const PageTemplate = ({
   subtitle, 
   children, 
   showBackButton = true,
-  gradientColors = "from-[#2a0a32] via-[#1a0b3a] to-[#050312]",
+  gradientColors = "from-[#050312] via-[#0a0a0a] to-[#050312]",
   icon,
   breadcrumbs,
   variant = "dark",
@@ -119,10 +121,10 @@ export const PageTemplate = ({
       : "bg-[#050312]";
   
   const contentBgClass = variant === "dark"
-    ? "bg-[#0a0714]"
+    ? "bg-de-surface"
     : variant === "light"
       ? "bg-white"
-      : "bg-[#0a0714]";
+      : "bg-de-surface";
   
   const textClass = variant === "dark" ? "text-white" : "text-gray-900";
   const proseClass = variant === "dark" ? "de-prose-dark" : "de-prose-light";

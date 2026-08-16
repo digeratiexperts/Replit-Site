@@ -68,7 +68,7 @@ export const ModernHeroSection = (): JSX.Element => {
         }}
       >
         <div
-          className="absolute top-[8%] right-[-4%] w-[640px] h-[640px] pointer-events-none"
+          className="de-hero-glow absolute top-[8%] right-[-4%] w-[640px] h-[640px] pointer-events-none"
           style={{
             background:
               "radial-gradient(circle at 70% 35%, rgba(236, 72, 153, 0.20) 0%, rgba(139, 92, 246, 0.14) 38%, transparent 64%)",
@@ -100,7 +100,7 @@ export const ModernHeroSection = (): JSX.Element => {
               <h1 className="text-[clamp(1.85rem,7.4vw,3.55rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white">
                 <span>Your Arizona business,</span>
                 <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-300 via-pink-400 to-violet-300">
+                <span className="text-[#D3126A]">
                   protected 24/7.
                 </span>
               </h1>
@@ -136,7 +136,8 @@ export const ModernHeroSection = (): JSX.Element => {
                     size="lg"
                     data-testid="button-hero-schedule"
                     onClick={handleSchedule}
-                    className="h-12 w-full sm:w-auto px-6 sm:px-7 text-base font-semibold bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white border border-pink-300/35 shadow-lg shadow-pink-500/40 hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300"
+                    variant="brand"
+                    className="h-12 w-full sm:w-auto px-6 sm:px-7 text-base font-semibold"
                   >
                     {CTA.heroPrimary}
                     <ArrowRight className="ml-2 w-5 h-5" aria-hidden="true" />
@@ -192,7 +193,7 @@ export const ModernHeroSection = (): JSX.Element => {
                 }}
               >
                 <motion.div
-                  className="absolute -inset-8 -z-10 rounded-[2.5rem] pointer-events-none"
+                  className="de-hero-glow absolute -inset-8 -z-10 rounded-[2.5rem] pointer-events-none"
                   aria-hidden="true"
                   style={{
                     background:
@@ -209,7 +210,7 @@ export const ModernHeroSection = (): JSX.Element => {
                       : { duration: 4.5, repeat: Infinity, ease: "easeInOut" }
                   }
                 />
-                <div className="relative rounded-2xl overflow-hidden border border-white/12 shadow-2xl shadow-violet-950/50">
+                <div className="relative rounded-2xl overflow-hidden border border-white/12 shadow-2xl shadow-black/50">
                   <DashboardMockup className="w-full" />
                 </div>
               </motion.div>

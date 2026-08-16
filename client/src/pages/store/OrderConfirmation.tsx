@@ -98,7 +98,7 @@ const OrderConfirmation = () => {
     pending: { label: "Pending", color: "text-amber-400", bg: "bg-amber-400/10" },
     quote_requested: { label: "Quote Requested", color: "text-blue-400", bg: "bg-blue-400/10" },
     paid: { label: "Paid", color: "text-emerald-400", bg: "bg-emerald-400/10" },
-    processing: { label: "Processing", color: "text-violet-400", bg: "bg-violet-400/10" },
+    processing: { label: "Processing", color: "text-de-accent-ink", bg: "bg-de-raised" },
     completed: { label: "Completed", color: "text-emerald-400", bg: "bg-emerald-400/10" },
   };
 
@@ -110,7 +110,7 @@ const OrderConfirmation = () => {
         <MegaMenu />
         <main className="de-nav-clear pb-20">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center min-h-[50vh]">
-            <Loader2 className="w-12 h-12 text-violet-400 animate-spin mb-4" />
+            <Loader2 className="w-12 h-12 text-de-accent-ink animate-spin mb-4" />
             <p className="text-white/60">Loading order details...</p>
           </div>
         </main>
@@ -131,7 +131,7 @@ const OrderConfirmation = () => {
               We couldn't find your order. Please check your email for confirmation or contact support.
             </p>
             <Link href="/store">
-              <Button className="bg-violet-600 hover:bg-violet-500 text-white" data-testid="button-back-to-store">
+              <Button className="bg-de-accent hover:bg-de-accent text-white" data-testid="button-back-to-store">
                 <ShoppingBag className="w-4 h-4 mr-2" />
                 Continue Shopping
               </Button>
@@ -159,8 +159,8 @@ const OrderConfirmation = () => {
             transition={{ duration: 0.5 }}
             className="text-center mb-12"
           >
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-violet-500/20 mb-6">
-              <CheckCircle className="w-10 h-10 text-violet-400" />
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-de-raised mb-6">
+              <CheckCircle className="w-10 h-10 text-de-accent-ink" />
             </div>
 
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-4" data-testid="text-confirmation-title">
@@ -257,7 +257,7 @@ const OrderConfirmation = () => {
               </div>
               <div className="flex justify-between text-lg font-semibold pt-2 border-t border-white/10">
                 <span className="text-white">Total</span>
-                <span className="text-violet-400" data-testid="text-order-total">
+                <span className="text-de-accent-ink" data-testid="text-order-total">
                   {formatCurrency(parseFloat(order?.total || "0"))}
                 </span>
               </div>
@@ -268,18 +268,18 @@ const OrderConfirmation = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-gradient-to-r from-violet-500/10 to-purple-500/10 border border-violet-500/20 rounded-xl p-6 md:p-8 mb-8"
+            className="bg-de-raised border border-de-hairline rounded-xl p-6 md:p-8 mb-8"
             data-testid="section-next-steps"
           >
             <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-              <FileText className="w-5 h-5 text-violet-400" />
+              <FileText className="w-5 h-5 text-de-accent-ink" />
               What's Next?
             </h2>
 
             <div className="grid md:grid-cols-3 gap-6">
               <div className="flex gap-4">
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-violet-500/20 flex items-center justify-center">
-                  <Mail className="w-5 h-5 text-violet-400" />
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-de-raised flex items-center justify-center">
+                  <Mail className="w-5 h-5 text-de-accent-ink" />
                 </div>
                 <div>
                   <p className="text-white font-medium mb-1">Confirmation Email</p>
@@ -292,8 +292,8 @@ const OrderConfirmation = () => {
               </div>
 
               <div className="flex gap-4">
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-violet-500/20 flex items-center justify-center">
-                  <Clock className="w-5 h-5 text-violet-400" />
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-de-raised flex items-center justify-center">
+                  <Clock className="w-5 h-5 text-de-accent-ink" />
                 </div>
                 <div>
                   <p className="text-white font-medium mb-1">
@@ -308,8 +308,8 @@ const OrderConfirmation = () => {
               </div>
 
               <div className="flex gap-4">
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-violet-500/20 flex items-center justify-center">
-                  <Package className="w-5 h-5 text-violet-400" />
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-de-raised flex items-center justify-center">
+                  <Package className="w-5 h-5 text-de-accent-ink" />
                 </div>
                 <div>
                   <p className="text-white font-medium mb-1">Get Started</p>
@@ -342,7 +342,7 @@ const OrderConfirmation = () => {
 
             <Link href="/portal/dashboard">
               <Button
-                className="bg-violet-600 hover:bg-violet-500 text-white"
+                className="bg-de-accent hover:bg-de-accent text-white"
                 data-testid="button-go-to-portal"
               >
                 Go to Client Portal
@@ -361,14 +361,14 @@ const OrderConfirmation = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="tel:+13254809870"
-                className="inline-flex items-center gap-2 text-violet-400 hover:text-violet-300 transition-colors"
+                className="inline-flex items-center gap-2 text-de-accent-ink hover:text-de-accent-ink transition-colors"
                 data-testid="link-phone-support"
               >
                 <Phone className="w-4 h-4" />
                 325-480-9870
               </a>
               <Link href="/support/submit-ticket">
-                <span className="inline-flex items-center gap-2 text-violet-400 hover:text-violet-300 transition-colors cursor-pointer" data-testid="link-submit-ticket">
+                <span className="inline-flex items-center gap-2 text-de-accent-ink hover:text-de-accent-ink transition-colors cursor-pointer" data-testid="link-submit-ticket">
                   <MessageSquare className="w-4 h-4" />
                   Submit a Ticket
                 </span>

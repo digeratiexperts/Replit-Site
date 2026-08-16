@@ -21,21 +21,21 @@ export default function Team() {
       description: "Industry veterans with decades of combined experience in IT and cybersecurity",
       certifications: ["CISSP", "CISM", "Microsoft Certified", "CompTIA Security+"],
       icon: Trophy,
-      gradient: "from-purple-500 to-indigo-600"
+      gradient: " "
     },
     {
       name: "Security Engineers",
       description: "Specialized cybersecurity experts protecting your business 24/7",
       certifications: ["CEH", "GIAC", "OSCP", "Security+"],
       icon: Shield,
-      gradient: "from-purple-500 to-violet-600"
+      gradient: " "
     },
     {
       name: "System Engineers",
       description: "Infrastructure experts ensuring your systems run smoothly",
       certifications: ["MCSE", "VMware VCP", "AWS Certified", "Azure Administrator"],
       icon: Briefcase,
-      gradient: "from-violet-500 to-fuchsia-600"
+      gradient: " to-fuchsia-600"
     },
     {
       name: "Support Team",
@@ -117,7 +117,7 @@ export default function Team() {
                   height={160}
                   loading="lazy"
                   decoding="async"
-                  className="h-36 w-36 sm:h-40 sm:w-40 rounded-2xl object-cover border border-violet-500/30 shadow-lg shadow-violet-500/20"
+                  className="h-36 w-36 sm:h-40 sm:w-40 rounded-2xl object-cover border border-de-hairline shadow-lg shadow-none"
                 />
               </picture>
               <div className="text-center sm:text-left">
@@ -146,11 +146,11 @@ export default function Team() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1, duration: 0.5 }}
               >
-                <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-purple-500/50 hover:bg-white/10 transition-all duration-300 overflow-hidden">
-                  <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${group.gradient} opacity-10 rounded-bl-full`} />
+                <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-hairline hover:bg-white/10 transition-all duration-300 overflow-hidden">
+                  <div className={`absolute top-0 right-0 w-32 h-32 bg-de-magenta opacity-[0.06] rounded-bl-full`} />
                   <CardHeader>
-                    <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${group.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                      <Icon className="h-7 w-7 text-white" />
+                    <div className={`w-14 h-14 rounded-xl border border-de-hairline bg-de-bg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                      <Icon className="h-7 w-7 text-de-magenta" />
                     </div>
                     <CardTitle className="text-2xl flex items-center gap-2 text-white">
                       {group.name}
@@ -162,7 +162,7 @@ export default function Team() {
                       {group.certifications.map((cert, idx) => (
                         <Badge 
                           key={idx} 
-                          className={`bg-gradient-to-r ${group.gradient} text-white border-0`}
+                          className={`bg-de-magenta text-white border-0`}
                         >
                           {cert}
                         </Badge>
@@ -177,7 +177,7 @@ export default function Team() {
 
         {/* Team Stats */}
         <motion.div 
-          className="grid md:grid-cols-4 gap-6 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 rounded-2xl p-8 text-white"
+          className="grid md:grid-cols-4 gap-6 bg-de-surface rounded-2xl p-8 text-white"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -191,7 +191,7 @@ export default function Team() {
           ].map((stat, idx) => (
             <div key={idx} className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
               <p className="text-3xl font-bold mb-1">{stat.value}</p>
-              <p className="text-purple-100 text-sm">{stat.label}</p>
+              <p className="text-white/80 text-sm">{stat.label}</p>
             </div>
           ))}
         </motion.div>
@@ -204,11 +204,11 @@ export default function Team() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-500/20 to-transparent rounded-full blur-3xl" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-de-raised to-transparent rounded-full blur-3xl" />
           
           <div className="relative">
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-lg bg-de-raised border border-de-hairline flex items-center justify-center">
                 <Award className="w-6 h-6 text-white" />
               </div>
               <h2 className="text-3xl font-bold text-white">Our Certifications & Partnerships</h2>
@@ -218,14 +218,14 @@ export default function Team() {
               {certCategories.map((category, catIdx) => (
                 <motion.div 
                   key={catIdx}
-                  className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-purple-500/50 hover:bg-white/10 transition-all duration-300"
+                  className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-de-hairline hover:bg-white/10 transition-all duration-300"
                   initial={prefersReducedMotion ? {} : { opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: catIdx * 0.1, duration: 0.3 }}
                 >
                   <h3 className="font-bold text-lg mb-4 text-white flex items-center gap-2">
-                    <Star className="w-5 h-5 text-purple-400" />
+                    <Star className="w-5 h-5 text-de-magenta-ink" />
                     {category.title}
                   </h3>
                   <ul className="space-y-3">
@@ -250,7 +250,7 @@ export default function Team() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-indigo-600" />
+          <div className="absolute inset-0 bg-de-surface" />
           <div className="absolute inset-0 opacity-20">
             <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
               <defs>
@@ -271,7 +271,7 @@ export default function Team() {
               href="/book" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="inline-flex items-center justify-center bg-white text-purple-700 hover:bg-purple-50 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105" 
+              className="inline-flex items-center justify-center bg-white text-de-magenta hover:bg-de-paper-raised px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105" 
               data-testid="button-schedule"
             >
               Schedule Consultation

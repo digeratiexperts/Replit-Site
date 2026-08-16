@@ -73,7 +73,7 @@ const contactSocials = [
 ] as const;
 
 const fieldClass =
-  "h-11 bg-white border-[var(--de-paper-hairline)] text-[#1A1228] placeholder:text-black/35 focus-visible:ring-2 focus-visible:ring-[#D3126A]/40 focus-visible:border-[#D3126A]";
+  "h-11 bg-white border-[var(--de-paper-hairline)] text-[#1A1228] placeholder:text-black/55 focus-visible:ring-2 focus-visible:ring-[#D3126A]/40 focus-visible:border-[#D3126A]";
 
 export const DigeratiContactSection = ({
   headingAs = "h2",
@@ -174,7 +174,7 @@ export const DigeratiContactSection = ({
             <div className="mb-10 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
               <a
                 href="/book"
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-pink-300/30 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 px-6 py-2.5 text-base font-semibold text-white shadow-lg shadow-pink-500/25 transition-all duration-200 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#D3126A] px-6 py-2.5 text-base font-semibold text-white transition-colors duration-200 hover:bg-[#e01874] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
                 data-testid="contact-cta-assessment"
               >
                 {CTA.primary}
@@ -182,7 +182,7 @@ export const DigeratiContactSection = ({
               </a>
               <a
                 href={PRIMARY_PHONE.telHref}
-                className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-6 py-2.5 text-base font-semibold text-white transition-colors hover:border-white/40 hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
+                className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-6 py-2.5 text-base font-semibold text-white transition-colors hover:border-white/40 hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-de-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
                 data-testid="contact-cta-call"
               >
                 Call {PRIMARY_PHONE.display}
@@ -196,7 +196,7 @@ export const DigeratiContactSection = ({
                   href={item.href}
                   {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                   data-testid={item.testId}
-                  className={`group flex items-start gap-4 border-b border-de-hairline py-4 transition-colors hover:bg-white/[0.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)] ${
+                  className={`group flex items-start gap-4 border-b border-de-hairline py-4 transition-colors hover:bg-white/[0.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-de-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)] ${
                     item.testId === "contact-address" ? "md:col-span-2" : ""
                   } ${item.testId === "contact-phone" ? "md:border-l md:pl-4" : ""}`}
                 >
@@ -240,7 +240,7 @@ export const DigeratiContactSection = ({
                   rel="noopener noreferrer"
                   data-testid={social.testId}
                   aria-label={social.name}
-                  className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-de-hairline bg-de-raised text-white/60 transition-colors hover:border-white/25 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-de-hairline bg-de-raised text-white/60 transition-colors hover:border-white/25 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-de-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
                 >
                   <social.icon className="h-4 w-4" aria-hidden="true" />
                 </a>
@@ -362,7 +362,7 @@ export const DigeratiContactSection = ({
                         >
                           <FormControl>
                             <SelectTrigger
-                              className="h-11 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] focus:ring-2 focus:ring-[#D3126A]/40 [&>span]:text-black/35"
+                              className="h-11 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] focus:ring-2 focus:ring-[#D3126A]/40 data-[placeholder]:text-black/55"
                               data-testid="select-contact-service"
                             >
                               <SelectValue placeholder="Select a service" />
@@ -392,7 +392,7 @@ export const DigeratiContactSection = ({
                             placeholder="Tell us about your security needs..."
                             rows={4}
                             data-testid="textarea-contact-message"
-                            className="resize-none border-[var(--de-paper-hairline)] bg-white text-[#1A1228] placeholder:text-black/35 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
+                            className="resize-none border-[var(--de-paper-hairline)] bg-white text-[#1A1228] placeholder:text-black/55 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
                             disabled={isSubmitting}
                             {...field}
                           />
@@ -403,7 +403,7 @@ export const DigeratiContactSection = ({
                   />
 
                   <Button
-                    className="h-11 w-full text-base font-semibold bg-[#1A1228] text-white hover:bg-[#2a1a3a] focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2"
+                    className="h-11 w-full text-base font-semibold bg-[#1A1228] text-white transition-colors hover:bg-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2"
                     data-testid="button-send-message"
                     type="submit"
                     disabled={isSubmitting}

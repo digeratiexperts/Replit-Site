@@ -5,6 +5,10 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["client/src/**/*.test.ts", "server/**/*.test.ts", "shared/**/*.test.ts", "scripts/**/*.test.ts"],
+    // msp-advisor is written against the node:test runner and is executed by
+    // `npm run test:advisor`. Collecting it here makes Vitest fail the suite
+    // with "No test suite found".
+    exclude: ["**/node_modules/**", "**/dist/**", "server/services/msp-advisor/**"],
   },
   resolve: {
     alias: {

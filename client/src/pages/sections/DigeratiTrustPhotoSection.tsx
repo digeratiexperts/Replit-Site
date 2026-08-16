@@ -36,14 +36,14 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
           >
             <div className="flex items-center gap-2 mb-5">
               <Shield className="w-4 h-4 text-pink-600" aria-hidden="true" />
-              <span className="text-base font-semibold text-pink-600 uppercase tracking-wider">
+              <span className="text-base font-semibold text-de-magenta uppercase tracking-wider">
                 Why Arizona businesses work with us
               </span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight mb-6 tracking-tight">
               Protection that fits{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-600 via-pink-600 to-violet-600">
+              <span className="text-[#D3126A]">
                 how you actually operate.
               </span>
             </h2>
@@ -69,7 +69,7 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
 
             <a
               href="/book"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white font-semibold px-7 py-3.5 text-base rounded-lg shadow-md shadow-pink-500/25 transition-all duration-200"
+              className="inline-flex items-center gap-2 rounded-lg bg-[#D3126A] px-7 py-3.5 text-base font-semibold text-white transition-colors duration-200 hover:bg-[#e01874] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-paper)]"
               data-testid="link-trust-cta"
             >
               {CTA.primary}

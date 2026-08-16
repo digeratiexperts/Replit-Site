@@ -81,10 +81,10 @@ const CircuitLines = ({ id }: { id: string }) => (
 
 const DiagonalLinesBadge = ({ children, variant }: { children: React.ReactNode; variant: 'popular' | 'bestValue' | 'compliance' }) => {
   const baseClasses = variant === 'popular' 
-    ? 'bg-violet-500/20 text-violet-300 border border-violet-500/30'
+    ? 'bg-de-raised text-de-accent-ink border border-de-hairline'
     : variant === 'bestValue'
     ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-    : 'bg-purple-500/20 text-purple-300 border border-purple-500/30';
+    : 'bg-de-raised text-de-accent-ink border border-de-hairline';
     
   return (
     <span className={`relative text-[10px] px-1.5 py-0.5 rounded font-medium overflow-hidden ${baseClasses}`}>
@@ -676,7 +676,7 @@ export function MegaMenu() {
             {/* Logo */}
             <a
               href="/"
-              className="flex items-center flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded"
+              className="flex items-center flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-de-accent focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded"
               aria-label="Digerati Experts home"
             >
               <img 
@@ -702,20 +702,20 @@ export function MegaMenu() {
                   {item.isSimple ? (
                     <a
                       href={item.href}
-                      className="group relative inline-flex items-center px-3 xl:px-4 py-2 text-lg xl:text-xl leading-normal text-white/85 hover:text-white font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded whitespace-nowrap overflow-visible"
+                      className="group relative inline-flex items-center px-3 xl:px-4 py-2 text-lg xl:text-xl leading-normal text-white/85 hover:text-white font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-de-accent focus:ring-offset-2 focus:ring-offset-black rounded whitespace-nowrap overflow-visible"
                       data-testid={`nav-${item.name.toLowerCase()}`}
                       onClick={handleLinkClick}
                       aria-label={`Go to ${item.name}`}
                     >
                       {item.name}
-                      <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-violet-400 group-hover:w-full transition-all duration-300" />
+                      <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-de-accent group-hover:w-full transition-all duration-300" />
                     </a>
                   ) : (
                     <button
                       ref={(el) => {
                         if (el) navButtonsRef.current.set(item.name, el);
                       }}
-                      className={`group relative inline-flex items-center px-3 xl:px-4 py-2 text-lg xl:text-xl leading-normal text-white/85 hover:text-white font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-black rounded whitespace-nowrap overflow-visible ${
+                      className={`group relative inline-flex items-center px-3 xl:px-4 py-2 text-lg xl:text-xl leading-normal text-white/85 hover:text-white font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-de-accent focus:ring-offset-2 focus:ring-offset-black rounded whitespace-nowrap overflow-visible ${
                         activeMenu === item.name ? 'text-white' : ''
                       }`}
                       data-testid={`nav-${item.name.toLowerCase()}`}
@@ -732,7 +732,7 @@ export function MegaMenu() {
                         }`} 
                         aria-hidden="true"
                       />
-                      <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-violet-400 transition-all duration-300 ${
+                      <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-de-accent transition-all duration-300 ${
                         activeMenu === item.name ? 'w-full' : 'w-0 group-hover:w-full'
                       }`} />
                     </button>
@@ -808,7 +808,7 @@ export function MegaMenu() {
                               <div className="mb-4">
                                 <h3 
                                   className={`font-bold text-xs uppercase tracking-[0.18em] flex items-center gap-2 ${
-                                    section.featured ? 'text-violet-400' : 'text-gray-400'
+                                    section.featured ? 'text-de-accent-ink' : 'text-gray-400'
                                   }`}
                                   id={`menu-section-${section.title.replace(/\s+/g, '-')}`}
                                 >
@@ -816,7 +816,7 @@ export function MegaMenu() {
                                 </h3>
                                 <div className={`h-px mt-2 ${
                                   section.featured 
-                                    ? 'bg-violet-500/30' 
+                                    ? 'bg-de-raised' 
                                     : 'bg-white/5'
                                 }`} />
                               </div>
@@ -843,9 +843,9 @@ export function MegaMenu() {
                                       <Tooltip.Trigger asChild>
                                         <a
                                           href={subItem.url || '#'}
-                                          className={`group/item flex items-start gap-3.5 px-3 py-3 rounded-xl transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-violet-500/50 border ${
+                                          className={`group/item flex items-start gap-3.5 px-3 py-3 rounded-xl transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-de-accent border ${
                                             isHovered 
-                                              ? 'bg-violet-600/10 border-violet-500/20' 
+                                              ? 'bg-de-raised border-de-hairline' 
                                               : 'border-transparent hover:bg-white/[0.03]'
                                           }`}
                                           onClick={handleLinkClick}
@@ -854,7 +854,7 @@ export function MegaMenu() {
                                         >
                                           {subItem.icon && (
                                             <span className={`mt-0.5 transition-colors flex-shrink-0 ${
-                                              isHovered ? 'text-violet-400' : 'text-violet-400/60 group-hover/item:text-violet-400'
+                                              isHovered ? 'text-de-accent-ink' : 'text-de-accent-ink/60 group-hover/item:text-de-accent-ink'
                                             }`} aria-hidden="true">
                                               <div className="scale-100">{subItem.icon}</div>
                                             </span>
@@ -877,7 +877,7 @@ export function MegaMenu() {
                                               )}
                                             </div>
                                             {subItem.description && (
-                                              <p className="text-[13px] text-gray-500 group-hover/item:text-gray-400 mt-1 transition-colors leading-snug line-clamp-2">
+                                              <p className="text-[13px] text-white/70 group-hover/item:text-gray-400 mt-1 transition-colors leading-snug line-clamp-2">
                                                 {subItem.description}
                                               </p>
                                             )}
@@ -906,7 +906,7 @@ export function MegaMenu() {
                               {section.viewAllUrl && (
                                 <a
                                   href={section.viewAllUrl}
-                                  className="inline-flex items-center gap-1.5 mt-3 px-3 text-xs font-bold text-gray-500 hover:text-violet-400 transition-colors group/view uppercase tracking-wider"
+                                  className="inline-flex items-center gap-1.5 mt-3 px-3 text-xs font-bold text-white/70 hover:text-de-accent-ink transition-colors group/view uppercase tracking-wider"
                                   onClick={handleLinkClick}
                                 >
                                   Explore
@@ -934,7 +934,7 @@ export function MegaMenu() {
                                   {item.featuredPanel.stats.map((stat, idx) => (
                                     <div key={idx} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
                                       <span className="text-gray-400 text-xs uppercase tracking-wider font-semibold">{stat.label}</span>
-                                      <span className="text-violet-300 font-bold text-base">{stat.value}</span>
+                                      <span className="text-de-accent-ink font-bold text-base">{stat.value}</span>
                                     </div>
                                   ))}
                                 </div>
@@ -943,7 +943,7 @@ export function MegaMenu() {
                                 href={item.featuredPanel.cta.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="relative z-10 mt-6 w-full inline-flex items-center justify-center px-4 py-3 bg-violet-600 hover:bg-violet-500 text-white text-sm font-bold rounded-lg transition-all shadow-lg shadow-violet-500/20"
+                                className="relative z-10 mt-6 w-full inline-flex items-center justify-center px-4 py-3 bg-de-accent hover:bg-de-accent text-white text-sm font-bold rounded-lg transition-all shadow-lg shadow-none"
                                 onClick={handleLinkClick}
                               >
                                 {item.featuredPanel.cta.text}
@@ -1004,7 +1004,7 @@ export function MegaMenu() {
           <div className="flex items-center space-x-2 lg:space-x-3 flex-shrink-0">
             <button
               type="button"
-              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-3 xl:px-4 py-2 rounded-lg text-base font-semibold whitespace-nowrap shadow-[0_0_22px_rgba(236,72,153,0.35)] hover:shadow-[0_0_30px_rgba(236,72,153,0.45)] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black border border-pink-300/25"
+              className="hidden lg:inline-flex items-center justify-center bg-[#D3126A] hover:bg-[#e01874] text-white px-3 xl:px-4 py-2 rounded-lg text-base font-semibold whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               data-testid="nav-cta"
               onClick={() => { handleLinkClick(); openBooking("megamenu"); }}
               aria-label={CTA.primary}
@@ -1126,7 +1126,7 @@ export function MegaMenu() {
                       aria-label={`Go to ${item.name}`}
                     >
                       {item.name}
-                      <ArrowRight className="w-5 h-5 text-white/35 group-hover:text-[#D3126A] transform group-hover:translate-x-1 transition-all" />
+                      <ArrowRight className="w-5 h-5 text-white/55 group-hover:text-[#D3126A] transform group-hover:translate-x-1 transition-all" />
                     </a>
                   ) : (
                     <details className="group">
@@ -1137,7 +1137,7 @@ export function MegaMenu() {
                         <span className="flex items-center gap-3">
                           {item.name}
                         </span>
-                        <ChevronDown className="h-5 w-5 text-white/40 transition-transform duration-300 group-open:rotate-180 group-open:text-[#D3126A]" aria-hidden="true" />
+                        <ChevronDown className="h-5 w-5 text-white/55 transition-transform duration-300 group-open:rotate-180 group-open:text-[#D3126A]" aria-hidden="true" />
                       </summary>
                       {item.sections && (
                         <div className="mt-2 ml-1 space-y-1 rounded-xl border border-de-hairline bg-de-raised p-3">

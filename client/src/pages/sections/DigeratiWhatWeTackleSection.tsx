@@ -63,7 +63,7 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
             viewport={{ once: true }}
             transition={{ duration: 0.45 }}
           >
-            <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#D3126A]">
+            <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-de-magenta-ink">
               Problems we solve
             </p>
             <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
@@ -74,7 +74,7 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
               Cyber Facts; capability detail lives on Solutions.
             </p>
             <Link href="/resources/cyber-facts">
-              <span className="mt-4 inline-flex items-center gap-1 text-base font-semibold text-[#D3126A] hover:text-[#f0187a]">
+              <span className="mt-4 inline-flex items-center gap-1 text-base font-semibold text-de-magenta-ink hover:text-[#f0187a]">
                 Full threat context
                 <ArrowRight className="h-3.5 w-3.5" />
               </span>
@@ -117,7 +117,7 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
             href="/book"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-11 items-center rounded-lg border border-pink-300/30 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 px-6 py-2.5 text-base font-semibold text-white shadow-lg shadow-pink-500/25 transition-all duration-200 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400"
+            className="inline-flex min-h-11 items-center rounded-lg bg-[#D3126A] px-6 py-2.5 text-base font-semibold text-white transition-colors duration-200 hover:bg-[#e01874] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
             data-testid="tackle-cta"
           >
             Discuss Your Security Needs

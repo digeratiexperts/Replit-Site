@@ -51,6 +51,10 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
         de: {
+          magenta: "var(--de-magenta)",
+          "magenta-ink": "var(--de-magenta-ink)",
+          accent: "rgb(var(--de-accent-rgb) / <alpha-value>)",
+          "accent-ink": "rgb(var(--de-accent-ink-rgb) / <alpha-value>)",
           bg: "var(--de-bg)",
           surface: "var(--de-surface)",
           raised: "var(--de-raised)",

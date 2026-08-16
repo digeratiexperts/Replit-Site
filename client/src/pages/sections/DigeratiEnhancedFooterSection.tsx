@@ -120,7 +120,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
             <p className="mt-1 text-base text-white/55">
               Arizona MSP · Cybersecurity &amp; Managed IT
             </p>
-            <p className="mt-1 text-base text-white/45">
+            <p className="mt-1 text-base text-white/55">
               <a
                 href="/locations/chandler-az"
                 className="transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"

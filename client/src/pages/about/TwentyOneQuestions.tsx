@@ -56,15 +56,15 @@ export default function TwentyOneQuestions() {
                     Critical Question
                   </th>
                   <th className="bg-[#1a1a2e] text-white text-center p-4 font-bold text-sm border border-white/10 w-[13.75%]">
-                    Company A<br /><span className="text-white/40">_______</span>
+                    Company A<br /><span className="text-white/55">_______</span>
                   </th>
                   <th className="bg-[#1a1a2e] text-white text-center p-4 font-bold text-sm border border-white/10 w-[13.75%]">
-                    Company B<br /><span className="text-white/40">_______</span>
+                    Company B<br /><span className="text-white/55">_______</span>
                   </th>
                   <th className="bg-[#1a1a2e] text-white text-center p-4 font-bold text-sm border border-white/10 w-[13.75%]">
-                    Company C<br /><span className="text-white/40">_______</span>
+                    Company C<br /><span className="text-white/55">_______</span>
                   </th>
-                  <th className="bg-gradient-to-br from-violet-500/30 to-violet-600/20 text-white text-center p-4 font-bold text-sm border border-violet-400/30 w-[13.75%]">
+                  <th className="bg-de-raised text-white text-center p-4 font-bold text-sm border border-de-hairline w-[13.75%]">
                     DIGERATI<br />EXPERTS
                   </th>
                 </tr>
@@ -78,13 +78,13 @@ export default function TwentyOneQuestions() {
                     <td className="bg-[#2a2a3e] text-center p-4 border border-white/10"></td>
                     <td className="bg-[#2a2a3e] text-center p-4 border border-white/10"></td>
                     <td className="bg-[#2a2a3e] text-center p-4 border border-white/10"></td>
-                    <td className="bg-gradient-to-br from-violet-500/25 to-violet-600/15 text-center p-4 border border-violet-400/20">
+                    <td className="bg-de-raised text-center p-4 border border-de-hairline">
                       {index === 17 ? (
-                        <span className="text-violet-300 font-bold text-xs leading-tight block" data-testid="special-note">
+                        <span className="text-de-magenta-ink font-bold text-xs leading-tight block" data-testid="special-note">
                           Phoenix-based<br />& US Only!
                         </span>
                       ) : (
-                        <Check className="w-7 h-7 text-violet-400 mx-auto" strokeWidth={3} data-testid={`check-${index}`} />
+                        <Check className="w-7 h-7 text-de-magenta-ink mx-auto" strokeWidth={3} data-testid={`check-${index}`} />
                       )}
                     </td>
                   </tr>
@@ -93,13 +93,13 @@ export default function TwentyOneQuestions() {
             </table>
           </div>
 
-          <div className="bg-gradient-to-br from-[#1a1a2e] to-[#2a2a3e] border-4 border-violet-400 rounded-xl p-8 md:p-12 text-center mb-12">
+          <div className="bg-gradient-to-br from-[#1a1a2e] to-[#2a2a3e] border-4 border-de-hairline rounded-xl p-8 md:p-12 text-center mb-12">
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-6" data-testid="heading-cta">
               Ready to experience the Digerati Experts difference?
             </h2>
             <a 
               href="tel:+13254809870" 
-              className="text-3xl md:text-4xl font-bold text-violet-400 hover:text-violet-300 transition-colors block mb-6"
+              className="text-3xl md:text-4xl font-bold text-de-magenta-ink hover:text-de-magenta-ink transition-colors block mb-6"
               data-testid="link-phone"
             >
               <Phone className="w-8 h-8 inline-block mr-3 -mt-1" />
@@ -114,7 +114,7 @@ export default function TwentyOneQuestions() {
                 href="/book"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-violet-500 hover:bg-violet-400 text-white font-semibold px-8 py-4 rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 bg-de-magenta hover:bg-de-magenta text-white font-semibold px-8 py-4 rounded-lg transition-colors"
                 data-testid="button-schedule"
               >
                 {CTA.primary}

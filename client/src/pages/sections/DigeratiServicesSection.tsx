@@ -123,7 +123,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.45 }}
         >
-          <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#D3126A]">
+          <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-de-magenta-ink">
             How to work with us
           </p>
           <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
@@ -164,7 +164,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
                 <Link
                   href={path.link}
                   data-testid={`link-${path.testId}`}
-                  className="inline-flex min-h-11 items-center gap-2 text-base font-medium text-[#D3126A] hover:text-[#f0187a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-de-raised"
+                  className="inline-flex min-h-11 items-center gap-2 text-base font-medium text-de-magenta-ink hover:text-[#f0187a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-de-raised"
                 >
                   {path.cta}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />

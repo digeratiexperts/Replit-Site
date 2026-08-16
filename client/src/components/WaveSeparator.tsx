@@ -134,7 +134,7 @@ export const WaveSeparator = ({ variant = 'default', className = '' }: WaveSepar
     return (
       <div className={`wave-separator relative h-20 md:h-24 ${className}`}>
         {/* Gradient background layer */}
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-blue-600 to-purple-600 opacity-10"></div>
+        <div className="absolute inset-0 bg-de-raised opacity-10"></div>
         
         {/* Main wave */}
         <svg
