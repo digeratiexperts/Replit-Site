@@ -117,7 +117,7 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
             href="/book"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-11 items-center rounded-lg border border-pink-300/30 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 px-6 py-2.5 text-base font-semibold text-white shadow-lg shadow-pink-500/25 transition-all duration-200 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400"
+            className="inline-flex min-h-11 items-center rounded-lg bg-[#D3126A] px-6 py-2.5 text-base font-semibold text-white transition-colors duration-200 hover:bg-[#e01874] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
             data-testid="tackle-cta"
           >
             Discuss Your Security Needs

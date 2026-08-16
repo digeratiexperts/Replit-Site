@@ -4,14 +4,14 @@ import * as React from "react";
 import { cn } from "../../lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-[0.98]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-[0.98]",
   {
     variants: {
       variant: {
         default:
           "bg-primary text-primary-foreground shadow-md hover:bg-primary/90 hover:shadow-lg hover:-translate-y-0.5",
         brand:
-          "bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 text-white border border-pink-300/30 shadow-lg shadow-pink-500/30 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 hover:shadow-xl hover:shadow-pink-500/40 hover:-translate-y-0.5 focus-visible:ring-pink-400",
+          "bg-[#D3126A] text-white border-0 shadow-none hover:bg-[#e01874] hover:shadow-none focus-visible:ring-[#D3126A]",
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 hover:shadow-md",
         outline:

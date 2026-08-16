@@ -174,7 +174,7 @@ export const DigeratiContactSection = ({
             <div className="mb-10 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
               <a
                 href="/book"
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-pink-300/30 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 px-6 py-2.5 text-base font-semibold text-white shadow-lg shadow-pink-500/25 transition-all duration-200 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#D3126A] px-6 py-2.5 text-base font-semibold text-white transition-colors duration-200 hover:bg-[#e01874] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
                 data-testid="contact-cta-assessment"
               >
                 {CTA.primary}
@@ -403,7 +403,7 @@ export const DigeratiContactSection = ({
                   />
 
                   <Button
-                    className="h-11 w-full text-base font-semibold bg-[#1A1228] text-white hover:bg-[#2a1a3a] focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2"
+                    className="h-11 w-full text-base font-semibold bg-[#1A1228] text-white transition-colors hover:bg-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2"
                     data-testid="button-send-message"
                     type="submit"
                     disabled={isSubmitting}

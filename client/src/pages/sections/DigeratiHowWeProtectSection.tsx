@@ -94,13 +94,13 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
 
       <section
         id="how-protection-works"
-        className="de-brand-energy-band relative overflow-hidden py-14 md:py-16 lg:py-20"
+        className="de-process-band relative overflow-hidden py-14 md:py-16 lg:py-20"
         aria-labelledby="how-protection-works-heading"
       >
         <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4 md:mb-12">
             <div className="max-w-3xl">
-              <p className="mb-2 text-base font-semibold uppercase tracking-[0.2em] text-white/80">
+              <p className="mb-2 text-base font-semibold uppercase tracking-[0.2em] text-[#D3126A]">
                 How protection works
               </p>
               <h3
@@ -111,7 +111,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
               </h3>
             </div>
             <Link href="/solutions/proactive-ecosystem">
-              <span className="inline-flex min-h-11 items-center gap-1.5 text-base font-semibold text-white underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#D3126A]">
+              <span className="inline-flex min-h-11 items-center gap-1.5 text-base font-semibold text-white underline-offset-4 hover:text-[#D3126A] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]">
                 Full methodology
                 <ArrowRight className="h-3.5 w-3.5" />
               </span>
@@ -125,18 +125,18 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
                 <li
                   key={step.number}
                   data-testid={step.testId}
-                  className={`lg:px-6 ${index > 0 ? "lg:border-l lg:border-white/25" : "lg:pl-0"}`}
+                  className={`lg:px-6 ${index > 0 ? "lg:border-l lg:border-[var(--de-hairline)]" : "lg:pl-0"}`}
                 >
-                  <p className="font-mono text-base font-semibold tracking-[0.18em] text-white/75">
+                  <p className="font-mono text-base font-semibold tracking-[0.18em] text-[#D3126A]">
                     {String(step.number).padStart(2, "0")}
                   </p>
-                  <span className="mt-3 mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/25 bg-[#0a0a0a]/40 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.14)]">
+                  <span className="mt-3 mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-[var(--de-hairline)] bg-[var(--de-bg)] text-[#D3126A]">
                     <IconComponent className="h-5 w-5" aria-hidden="true" />
                   </span>
                   <h4 className="mb-2 text-lg font-semibold text-white">
                     {step.title}
                   </h4>
-                  <p className="text-base leading-relaxed text-white/90 md:text-lg">
+                  <p className="text-base leading-relaxed text-white/75 md:text-lg">
                     {step.description}
                   </p>
                 </li>
