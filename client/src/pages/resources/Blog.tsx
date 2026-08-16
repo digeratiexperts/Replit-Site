@@ -107,7 +107,7 @@ export default function Blog() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(135deg, #1a0030 0%, #2d0052 35%, #4a0072 65%, #b300ff 100%)",
+              "linear-gradient(135deg, #050312 0%, #0a0a0a 55%, #151217 100%)",
           }}
         />
         <div
