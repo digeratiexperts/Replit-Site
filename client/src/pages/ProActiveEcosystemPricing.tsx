@@ -484,7 +484,7 @@ export default function ProActiveEcosystemPricing() {
               then confirm your exact ProActive Ecosystem investment.
             </p>
             <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
-              <Button size="lg" className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white">
+              <Button size="lg" variant="brand">
                 {CTA.primary}
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>

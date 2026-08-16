@@ -1004,7 +1004,7 @@ export function MegaMenu() {
           <div className="flex items-center space-x-2 lg:space-x-3 flex-shrink-0">
             <button
               type="button"
-              className="hidden lg:inline-flex items-center justify-center bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white px-3 xl:px-4 py-2 rounded-lg text-base font-semibold whitespace-nowrap shadow-[0_0_22px_rgba(236,72,153,0.35)] hover:shadow-[0_0_30px_rgba(236,72,153,0.45)] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black border border-pink-300/25"
+              className="hidden lg:inline-flex items-center justify-center bg-[#D3126A] hover:bg-[#e01874] text-white px-3 xl:px-4 py-2 rounded-lg text-base font-semibold whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               data-testid="nav-cta"
               onClick={() => { handleLinkClick(); openBooking("megamenu"); }}
               aria-label={CTA.primary}
