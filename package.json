@@ -13,7 +13,7 @@
     "test:watch": "vitest",
     "smoke:public": "node scripts/public-route-smoke.mjs",
     "db:push": "drizzle-kit push",
-    "test:advisor": "tsx --test server/services/msp-advisor/**/*.test.ts",
+    "test:advisor": "tsx --test server/services/msp-advisor/*.test.ts",
     "eval:advisor": "tsx server/services/msp-advisor/eval/score.ts"
   },
   "dependencies": {
