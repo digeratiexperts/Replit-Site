@@ -186,10 +186,10 @@ export default function Healthcare() {
         {/* Supporting focus labels (elevated from prior metrics — not fake KPIs) */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: "Focus", value: "HIPAA", icon: Shield, color: "from-[#D3126A] to-[#D3126A]" },
-            { label: "Encryption", value: "AES-256", icon: Lock, color: "from-fuchsia-600 " },
-            { label: "Priority", value: "PHI", icon: Activity, color: " to-[#D3126A]" },
-            { label: "Outcome", value: "Audit-ready evidence", icon: Heart, color: "from-[#D3126A] to-rose-500" },
+            { label: "Focus", value: "HIPAA", icon: Shield },
+            { label: "Encryption", value: "AES-256", icon: Lock },
+            { label: "Priority", value: "PHI", icon: Activity },
+            { label: "Outcome", value: "Audit-ready evidence", icon: Heart },
           ].map((metric, idx) => {
             const Icon = metric.icon;
             return (
@@ -202,13 +202,13 @@ export default function Healthcare() {
                 className="group relative"
               >
                 <div
-                  className={`absolute inset-0 bg-gradient-to-r ${metric.color} rounded-xl blur opacity-0 group-hover:opacity-30 transition-all duration-300`}
+                  className="absolute inset-0 bg-[#D3126A] rounded-xl blur opacity-0 group-hover:opacity-30 transition-all duration-300"
                 />
                 <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-hairline transition-all">
                   <CardContent className="pt-6">
                     <div className="flex items-start justify-between mb-3">
                       <div
-                        className={`w-10 h-10 rounded-lg bg-gradient-to-r ${metric.color} flex items-center justify-center`}
+                        className="w-10 h-10 rounded-lg bg-[#D3126A] flex items-center justify-center"
                       >
                         <Icon className="h-5 w-5 text-white" />
                       </div>
