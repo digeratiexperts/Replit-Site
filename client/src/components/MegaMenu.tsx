@@ -203,6 +203,9 @@ export function MegaMenu() {
   const spyBarRef = useRef<HTMLDivElement>(null);
   const navButtonsRef = useRef<Map<string, HTMLAnchorElement>>(new Map());
   const dropdownRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  const dropdownScrollRef = useRef<HTMLDivElement | null>(null);
+  const [dropdownCanScroll, setDropdownCanScroll] = useState(false);
+  const [dropdownAtEnd, setDropdownAtEnd] = useState(true);
   const columnRefs = useRef<Map<number, HTMLDivElement>>(new Map());
   const rafRef = useRef<number | null>(null);
   /** Unscrolled utility height — kept so page offset does not shrink when the bar collapses. */
@@ -508,6 +511,33 @@ export function MegaMenu() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Safety-net fade: only when a short viewport still overflows after density.
+  useEffect(() => {
+    const el = dropdownScrollRef.current;
+    if (!activeMenu || !el) {
+      setDropdownCanScroll(false);
+      setDropdownAtEnd(true);
+      return;
+    }
+
+    const update = () => {
+      const overflow = el.scrollHeight > el.clientHeight + 2;
+      setDropdownCanScroll(overflow);
+      setDropdownAtEnd(!overflow || el.scrollTop + el.clientHeight >= el.scrollHeight - 4);
+    };
+
+    update();
+    const frame = window.requestAnimationFrame(update);
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    el.addEventListener("scroll", update, { passive: true });
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+      el.removeEventListener("scroll", update);
+    };
+  }, [activeMenu]);
+
   // Publish sticky chrome height so pages can clear the fixed MegaMenu centrally.
   useEffect(() => {
     const root = document.documentElement;
@@ -760,21 +790,27 @@ export function MegaMenu() {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.15 }}
-                        className={`fixed inset-x-0 top-[var(--de-nav-current-bottom)] mx-auto ${
+                        className={`mega-menu-dropdown fixed inset-x-0 top-[var(--de-nav-current-bottom)] mx-auto flex flex-col overflow-hidden ${
                           item.name === 'Solutions' || item.name === 'About'
                             ? 'w-[min(98vw,92rem)]'
                             : 'w-[min(96vw,72rem)]'
-                        } bg-[#0a0118] backdrop-blur-xl border border-white/15 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.6),0_0_40px_rgba(139,92,246,0.2)] mega-menu-dropdown overflow-hidden`}
+                        } ${item.name === 'Solutions' ? 'mega-menu-dropdown--dense' : ''} bg-[#0a0118] backdrop-blur-xl border border-white/15 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.6),0_0_40px_rgba(139,92,246,0.2)]`}
                         onMouseEnter={handleDropdownMouseEnter}
                         onMouseLeave={handleMouseLeave}
                         role="menu"
                         aria-label={`${item.name} submenu`}
+                        data-testid={item.name === 'Solutions' ? 'mega-menu-solutions' : `mega-menu-${item.name.toLowerCase()}`}
+                        data-can-scroll={dropdownCanScroll ? 'true' : 'false'}
                       >
                         {/* Texture Overlays */}
                         <NoiseTexture id={uniqueId} />
                         <DotMatrixTexture />
                         {item.name === 'Solutions' && <CircuitLines id={uniqueId} />}
-                        
+
+                        <div
+                          ref={dropdownScrollRef}
+                          className="mega-menu-dropdown-scroll relative min-h-0 flex-1"
+                        >
                         <div className={`relative ${
                           item.name === 'Solutions' 
                             ? 'grid grid-cols-5 divide-x divide-white/5' 
@@ -797,7 +833,7 @@ export function MegaMenu() {
                               transition={{ delay: sectionIdx * 0.05 }}
                               className={`relative overflow-hidden ${
                                 item.name === 'Solutions' 
-                                  ? 'min-w-0 p-6' 
+                                  ? 'mega-menu-col min-w-0 px-4 py-4' 
                                   : 'flex-1 min-w-0'
                               }`}
                               onMouseMove={(e) => item.name === 'Solutions' && handleColumnMouseMove(e, sectionIdx)}
@@ -815,7 +851,7 @@ export function MegaMenu() {
                                 />
                               )}
                               {/* Section Header */}
-                              <div className="mb-4">
+                              <div className={item.name === 'Solutions' ? 'mb-2' : 'mb-4'}>
                                 <h3 
                                   className={`font-bold text-xs uppercase tracking-[0.18em] flex items-center gap-2 ${
                                     section.featured ? 'text-de-accent-ink' : 'text-gray-400'
@@ -853,7 +889,11 @@ export function MegaMenu() {
                                       <Tooltip.Trigger asChild>
                                         <a
                                           href={subItem.url || '#'}
-                                          className={`group/item flex items-start gap-3.5 px-3 py-3 rounded-xl transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-de-accent border ${
+                                          className={`group/item flex items-start rounded-xl transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-de-accent border ${
+                                            item.name === 'Solutions'
+                                              ? 'gap-2.5 px-2.5 py-1.5'
+                                              : 'gap-3.5 px-3 py-3'
+                                          } ${
                                             isHovered 
                                               ? 'bg-de-raised border-de-hairline' 
                                               : 'border-transparent hover:bg-white/[0.03]'
@@ -871,7 +911,9 @@ export function MegaMenu() {
                                           )}
                                           <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 flex-wrap">
-                                              <span className={`font-semibold transition-colors text-[15px] leading-snug ${
+                                              <span className={`font-semibold transition-colors leading-snug ${
+                                                item.name === 'Solutions' ? 'text-sm' : 'text-[15px]'
+                                              } ${
                                                 isHovered ? 'text-white' : 'text-gray-200 group-hover/item:text-white'
                                               }`}>
                                                 {subItem.title}
@@ -887,7 +929,11 @@ export function MegaMenu() {
                                               )}
                                             </div>
                                             {subItem.description && (
-                                              <p className="text-sm text-white/70 group-hover/item:text-gray-400 mt-1 transition-colors leading-snug line-clamp-2">
+                                              <p className={`text-white/70 group-hover/item:text-gray-400 transition-colors leading-snug ${
+                                                item.name === 'Solutions'
+                                                  ? 'mt-0.5 text-[13px] line-clamp-1'
+                                                  : 'mt-1 text-sm line-clamp-2'
+                                              }`}>
                                                 {subItem.description}
                                               </p>
                                             )}
@@ -916,7 +962,9 @@ export function MegaMenu() {
                               {section.viewAllUrl && (
                                 <a
                                   href={section.viewAllUrl}
-                                  className="inline-flex items-center gap-1.5 mt-3 px-3 text-xs font-bold text-white/70 hover:text-de-accent-ink transition-colors group/view uppercase tracking-wider"
+                                  className={`inline-flex items-center gap-1.5 px-3 text-xs font-bold text-white/70 hover:text-de-accent-ink transition-colors group/view uppercase tracking-wider ${
+                                    item.name === 'Solutions' ? 'mt-2' : 'mt-3'
+                                  }`}
                                   onClick={handleLinkClick}
                                 >
                                   Explore
@@ -1003,6 +1051,10 @@ export function MegaMenu() {
                             />
                           )}
                         </div>
+                        </div>
+                        {dropdownCanScroll && !dropdownAtEnd ? (
+                          <div className="mega-menu-dropdown-fade" aria-hidden="true" />
+                        ) : null}
                       </motion.div>
                     )}
                   </AnimatePresence>
