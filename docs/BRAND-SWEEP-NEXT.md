@@ -11,7 +11,7 @@ The audit (`scripts/brand-audit.mjs`) is a regression detector, not a requiremen
 - Marketing field stays the charcoal ladder. Primary CTA fill is solid `#D3126A`.
 - Page families keep one topical hue: store → electric, support → cyan, resources → amber, everything else inherits magenta.
 - **Locked (DE):** Blog/Journal and Store keep the colors they have now. Do not restyle those palettes. Rule: `.cursor/rules/blog-store-color-lock.mdc`.
-- Store category pills stay pill-only and use 14 distinct hues. Teal / lime / yellow replaced the three that had collapsed onto violet; `professional_services` moved to pink so teal could stay. Guard: `client/src/components/store/categoryAccent.test.ts`.
+- Store category pills stay pill-only and use 14 distinct hues. `comanaged_subscriptions`, `comanaged_onboarding`, and `digital_templates` keep their pre-sweep taxonomy colours (violet / purple / indigo). Do not apply the marketing-page “remove purple” rule to those pills. Everything else in the store palette stays as it currently looks. Guard: `client/src/components/store/categoryAccent.test.ts`.
 - Portal, login, and signup are out of scope unless DE asks for a separate portal UI pass.
 - Dead `client/src/pages/Homepage.tsx` and the legacy sections it imports are not routed (`/` uses `DigeratiHomepage`). Sweeping them is diff noise.
 - Intentional exceptions live in `EXCEPTIONS` inside `scripts/brand-audit.mjs`: store category pills, vendor marks, hero lighting, semantic status/charts, official city chips.

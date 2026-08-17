@@ -27,8 +27,9 @@ Ask DE before changing any value below.
 - Page accent: `data-accent="electric"`.
 - Tokens: `--de-accent-rgb: 29 111 242`; `--de-accent-ink-rgb: 111 179 255`.
 - Category pills stay **pill-only** with the 14 distinct hues in `categoryAccent` (`StoreProductCard.tsx`). Guard: `categoryAccent.test.ts`.
-  - `comanaged_subscriptions` teal-300, `comanaged_onboarding` lime-300, `digital_templates` yellow-300, `professional_services` pink-300.
-- Do not paint cards, rails, or the catalog field with those pill hues. Do not collapse pills onto violet/purple/indigo or onto one store-wide color.
+  - `comanaged_subscriptions` violet-300, `comanaged_onboarding` purple-300, `digital_templates` indigo-300. Those three are intentional taxonomy colours from before the sweep — do not collapse them, and do not restyle them under the marketing-page “remove purple” rule.
+  - `professional_services` pink-300. Blues, cyan, green, orange, and the other current pill hues stay as they are.
+- Do not paint cards, rails, or the catalog field with those pill hues. Do not collapse any two categories onto one store-wide color.
 - Vendor marks stay vendor colors. Do not recolor logos.
 
 ## Shared
