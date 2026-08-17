@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
   AlertTriangle,
-  AppWindow,
   BookOpen,
   Building2,
   CheckCircle2,
@@ -38,6 +37,12 @@ import type { OpenMspAdvisorDetail } from "@/lib/openMspAdvisor";
 import { STORE_ADVISOR_SEED } from "@/lib/openMspAdvisor";
 import { analytics } from "@/lib/analytics";
 import { useDraggableWindow } from "@/hooks/useDraggableWindow";
+import {
+  DESK_TICKET_CATEGORIES,
+  DESK_TICKET_CHIPS,
+  applyDeskTicketChip,
+  type DeskTicketChipId,
+} from "@/lib/deskTicketChips";
 
 interface ZohoASAPWidgetProps {
   isEnabled?: boolean;
@@ -183,28 +188,12 @@ function BookMagnifier({ className }: { className?: string }) {
   );
 }
 
-const TICKET_CATEGORIES = [
-  "Email",
-  "Access & Security",
-  "Network & VPN",
-  "Software & Applications",
-  "Hardware & Devices",
-  "Backup & Recovery",
-  "Collaboration",
-  "Other",
-] as const;
-
-const TICKET_QUICK_CHIPS: Array<{
-  label: string;
-  icon: typeof Shield;
-  category: (typeof TICKET_CATEGORIES)[number];
-  tone: "red" | "blue" | "violet";
-}> = [
-  { label: "Something broke", icon: AlertTriangle, category: "Hardware & Devices", tone: "red" },
-  { label: "Microsoft 365 help", icon: AppWindow, category: "Collaboration", tone: "blue" },
-  { label: "Access or login issue", icon: KeyRound, category: "Access & Security", tone: "violet" },
-  { label: "Possible security incident", icon: Shield, category: "Access & Security", tone: "red" },
-];
+const TICKET_CHIP_ICONS: Record<DeskTicketChipId, typeof Shield> = {
+  "email-m365": Mail,
+  "sign-in": KeyRound,
+  device: Monitor,
+  "security-incident": Shield,
+};
 
 const RESOURCE_LINKS: Array<{
   title: string;
@@ -298,6 +287,8 @@ export const ZohoASAPWidget = ({
   const [message, setMessage] = useState("");
   const [priority, setPriority] = useState<"Low" | "Medium" | "High" | "Urgent">("Medium");
   const [category, setCategory] = useState("");
+  const [selectedTicketChip, setSelectedTicketChip] = useState<DeskTicketChipId | null>(null);
+  const ticketDetailsRef = useRef<HTMLDivElement>(null);
   const [attachmentName, setAttachmentName] = useState<string | null>(null);
   const [isTicketSending, setIsTicketSending] = useState(false);
   const [ticketResult, setTicketResult] = useState<TicketResult | null>(null);
@@ -750,6 +741,26 @@ export const ZohoASAPWidget = ({
     setAttachmentName(file.name);
   };
 
+  const applyTicketChip = (chipId: DeskTicketChipId) => {
+    const chip = DESK_TICKET_CHIPS.find((item) => item.id === chipId);
+    if (!chip) return;
+    const next = applyDeskTicketChip(chip, { message });
+    setSelectedTicketChip(next.chipId);
+    setSubject(next.subject);
+    setCategory(next.category);
+    setPriority(next.priority);
+    setMessage(next.message);
+    window.requestAnimationFrame(() => {
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      ticketDetailsRef.current?.scrollIntoView({
+        behavior: reduceMotion ? "auto" : "smooth",
+        block: "start",
+      });
+      const focusId = fullName.trim() && email.trim() ? "support-message" : "support-name";
+      document.getElementById(focusId)?.focus();
+    });
+  };
+
   const handleSubmitTicket = async () => {
     if (!email || !subject || !message) {
       toast({
@@ -815,6 +826,7 @@ export const ZohoASAPWidget = ({
       setMessage("");
       setPriority("Medium");
       setCategory("");
+      setSelectedTicketChip(null);
       setAttachmentName(null);
       if (ticketFileRef.current) ticketFileRef.current.value = "";
 
@@ -1143,28 +1155,31 @@ export const ZohoASAPWidget = ({
                           <DeskHeroArt variant="ticket" />
                         </div>
 
-                        <div className="de-desk-rows is-grid">
-                          {TICKET_QUICK_CHIPS.map(({ label, icon: Icon, category: chipCategory, tone }) => (
-                            <button
-                              key={label}
-                              type="button"
-                              data-tone={tone}
-                              onClick={() => {
-                                setSubject(label);
-                                setCategory(chipCategory);
-                              }}
-                              className="de-desk-row"
-                            >
-                              <span className="de-desk-row-ic">
-                                <Icon aria-hidden="true" />
-                              </span>
-                              <span className="de-desk-row-t">{label}</span>
-                              <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
-                            </button>
-                          ))}
+                        <div className="de-desk-rows is-grid" role="group" aria-label="Common support issues">
+                          {DESK_TICKET_CHIPS.map((chip) => {
+                            const Icon = TICKET_CHIP_ICONS[chip.id];
+                            const selected = selectedTicketChip === chip.id;
+                            return (
+                              <button
+                                key={chip.id}
+                                type="button"
+                                data-tone={chip.tone}
+                                data-testid={`ticket-chip-${chip.id}`}
+                                aria-pressed={selected}
+                                onClick={() => applyTicketChip(chip.id)}
+                                className={`de-desk-row${selected ? " is-selected" : ""}`}
+                              >
+                                <span className="de-desk-row-ic">
+                                  <Icon aria-hidden="true" />
+                                </span>
+                                <span className="de-desk-row-t">{chip.label}</span>
+                                <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
+                              </button>
+                            );
+                          })}
                         </div>
 
-                        <div className="de-desk-details-head">
+                        <div className="de-desk-details-head" ref={ticketDetailsRef}>
                           <h4>Tell us the details</h4>
                           <span className="de-desk-secure">
                             <Lock aria-hidden="true" />
@@ -1259,7 +1274,7 @@ export const ZohoASAPWidget = ({
                                     data-testid="select-support-category"
                                   >
                                     <option value="">Select a category</option>
-                                    {TICKET_CATEGORIES.map((item) => (
+                                    {DESK_TICKET_CATEGORIES.map((item) => (
                                       <option key={item} value={item}>
                                         {item}
                                       </option>
@@ -1768,6 +1783,12 @@ export const ZohoASAPWidget = ({
               border-color: var(--desk-border-strong);
               transform: translateY(-1px);
             }
+            .de-desk-row.is-selected {
+              border-color: #D3126A;
+              background: #fff;
+              box-shadow: inset 0 0 0 1px rgba(211,18,106,0.16);
+            }
+            .de-desk-row.is-selected .de-desk-row-chev { color: #D3126A; }
             .de-desk-rows.is-grid .de-desk-row { padding: 9px 10px; }
             .de-desk-rows.is-grid .de-desk-row-t { font-size: 13.5px; line-height: 1.3; }
             .de-desk-row[data-tone="violet"] { --c: var(--desk-violet); }

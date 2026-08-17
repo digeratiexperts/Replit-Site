@@ -41,7 +41,7 @@ Do **not** use charcoal hero/rows, black footer, plum washes, or magenta→viole
 ## Ticket
 
 - Paper hero “Create a support ticket”
-- Subject chips in a 2×2 grid so the form starts in view
+- Subject chips in a 2×2 grid (Email or Microsoft 365, Can't sign in, Computer or printer, Possible security incident). Clicking one selects it, fills subject/category/priority, seeds a prompt, and moves focus into the form.
 - Form on paper: Secure & private pill; light fields; solid magenta submit
 
 ## Primary file
