@@ -97,7 +97,7 @@ export const ModernHeroSection = (): JSX.Element => {
                 Arizona MSP · Cybersecurity &amp; Managed IT
               </motion.p>
 
-              <h1 className="text-[clamp(1.85rem,7.4vw,3.55rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white">
+              <h1 className="text-[clamp(2.25rem,8vw,3.75rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white">
                 <span>Your Arizona business,</span>
                 <br />
                 <span className="text-[#D3126A]">
@@ -164,7 +164,7 @@ export const ModernHeroSection = (): JSX.Element => {
                   </span>
                 </div>
 
-                <p className="text-base text-white/55 max-w-xl leading-relaxed">
+                <p className="text-base text-white/75 max-w-xl leading-relaxed">
                   Arizona-based · Principal-led · Recommendations sized to your business
                   <span className="mx-2 text-white/25" aria-hidden="true">
                     ·

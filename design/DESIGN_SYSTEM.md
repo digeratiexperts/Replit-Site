@@ -71,6 +71,7 @@ Do not introduce a new purple, magenta, or near-black. Reuse these.
 - Body: Inter, weight 400, line-height `1.6` (prose `1.75`)
 - Stats/numbers: Oxanium, fallback JetBrains Mono
 - Root font-size: `16px` (`18px` at 1920px, `20px` at 2560px, `22px` at 3840px)
+- Small type: `text-xs` = `0.875rem` (14px), `text-sm` = `1rem` (16px) — lifted so chips and captions stay readable
 - Tailwind: `font-heading`, `font-sans` / `font-body`, `font-mono`
 
 ## Radius

@@ -69,6 +69,12 @@ module.exports = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      // Lift the small end of the scale so chips, spy nav, and captions
+      // stay readable after the 16px rem restore. text-base stays 1rem.
+      fontSize: {
+        xs: ["0.875rem", { lineHeight: "1.35" }],
+        sm: ["1rem", { lineHeight: "1.5" }],
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
       },

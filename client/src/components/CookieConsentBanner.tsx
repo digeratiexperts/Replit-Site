@@ -197,7 +197,7 @@ export function CookieConsentBanner() {
                   </Link>
                   .
                 </p>
-                <p className="md:hidden text-[13px] font-medium leading-snug text-gray-200 flex-1 min-w-0">
+                <p className="md:hidden text-sm font-medium leading-snug text-gray-200 flex-1 min-w-0">
                   We use cookies.{" "}
                   <Link
                     href="/legal/privacy-policy"

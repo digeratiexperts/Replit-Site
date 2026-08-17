@@ -877,7 +877,7 @@ export function MegaMenu() {
                                               )}
                                             </div>
                                             {subItem.description && (
-                                              <p className="text-[13px] text-white/70 group-hover/item:text-gray-400 mt-1 transition-colors leading-snug line-clamp-2">
+                                              <p className="text-sm text-white/70 group-hover/item:text-gray-400 mt-1 transition-colors leading-snug line-clamp-2">
                                                 {subItem.description}
                                               </p>
                                             )}
