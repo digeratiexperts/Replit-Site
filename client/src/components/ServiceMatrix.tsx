@@ -97,15 +97,16 @@ export function ServiceMatrix({
             <h3 className="text-xl font-bold text-white mb-1">Protection Plans</h3>
             <p className="text-white/60 text-sm">Starting at ${pricing.office.user}/user/month</p>
           </div>
-          <Link href="/pricing">
-            <Button 
-              className="bg-de-accent hover:bg-de-accent text-white"
-              data-testid="button-view-pricing"
-            >
+          <Button
+            asChild
+            className="bg-de-accent hover:bg-de-accent text-white"
+            data-testid="button-view-pricing"
+          >
+            <Link href="/pricing">
               View Full Pricing
               <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
         
         <div className={`grid gap-4 ${filteredPlans.length === 1 ? 'grid-cols-1 max-w-md mx-auto' : 'grid-cols-2 xl:grid-cols-4'}`}>
@@ -183,15 +184,16 @@ export function ServiceMatrix({
             </ul>
             
             {showCTA && (
-              <Link href={plan.learnMoreUrl}>
-                <Button 
-                  className="w-full bg-white/10 hover:bg-white/20 text-white"
-                  data-testid={`button-learn-more-${plan.name.toLowerCase()}`}
-                >
+              <Button
+                asChild
+                className="w-full bg-white/10 hover:bg-white/20 text-white"
+                data-testid={`button-learn-more-${plan.name.toLowerCase()}`}
+              >
+                <Link href={plan.learnMoreUrl}>
                   Learn More
                   <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             )}
           </motion.div>
         );

@@ -43,7 +43,7 @@ const SectionHeading = ({
 }) => (
   <h2 className="flex items-center gap-3 text-2xl font-bold text-white mb-5 tracking-tight">
     <span className="w-10 h-10 rounded-lg bg-pink-500/15 border border-pink-400/25 flex items-center justify-center">
-      <Icon className="w-5 h-5 text-pink-300" />
+      <Icon className="w-5 h-5 text-de-magenta-ink" />
     </span>
     {children}
   </h2>
@@ -80,7 +80,7 @@ export function TierDetailTemplate({ config }: { config: TierPageConfig }) {
           <ul className="space-y-3">
             {config.whoFor.map((item) => (
               <li key={item} className="flex items-start gap-3 text-white/85 leading-relaxed">
-                <CheckCircle className="w-5 h-5 text-pink-400 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="w-5 h-5 text-de-magenta-ink mt-0.5 flex-shrink-0" />
                 <span>{item}</span>
               </li>
             ))}
@@ -150,29 +150,30 @@ export function TierDetailTemplate({ config }: { config: TierPageConfig }) {
           <p className="text-white/85 leading-relaxed mb-6">{config.pricingNote}</p>
           <div className="flex flex-col sm:flex-row gap-4">
             {isExternalCta ? (
-              <a href={config.ctaPrimary.href} target="_blank" rel="noopener noreferrer">
-                <Button size="lg" variant="brand" className="w-full sm:w-auto">
+              <Button asChild size="lg" variant="brand" className="w-full sm:w-auto">
+                <a href={config.ctaPrimary.href} target="_blank" rel="noopener noreferrer">
                   {config.ctaPrimary.label}
                   <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </a>
-            ) : (
-              <Link href={config.ctaPrimary.href}>
-                <Button size="lg" variant="brand" className="w-full sm:w-auto">
-                  {config.ctaPrimary.label}
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </Link>
-            )}
-            <Link href="/proactive-ecosystem-pricing">
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-full sm:w-auto border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
-              >
-                Compare All Packages
+                </a>
               </Button>
-            </Link>
+            ) : (
+              <Button asChild size="lg" variant="brand" className="w-full sm:w-auto">
+                <Link href={config.ctaPrimary.href}>
+                  {config.ctaPrimary.label}
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Link>
+              </Button>
+            )}
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="w-full sm:w-auto border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+            >
+              <Link href="/proactive-ecosystem-pricing">
+                Compare All Packages
+              </Link>
+            </Button>
           </div>
         </section>
       </div>

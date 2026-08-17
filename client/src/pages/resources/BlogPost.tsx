@@ -306,12 +306,12 @@ export default function BlogPost() {
             <p className="text-white/70 mb-8">
               The article you’re looking for doesn’t exist.
             </p>
-            <Link href="/resources/blog">
-              <Button className="bg-white text-de-accent hover:bg-white/90">
+            <Button asChild className="bg-white text-de-accent hover:bg-white/90">
+              <Link href="/resources/blog">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to Blog
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </main>
         <DigeratiEnhancedFooterSection />
@@ -927,24 +927,25 @@ export default function BlogPost() {
                         "A short Cyber Risk Assessment shows where your environment actually stands and what to do first."}
                     </p>
                     <div className="flex flex-wrap gap-3">
-                      <Link href={body.bottomCta?.primaryHref ?? "/book"}>
-                        <Button data-testid="button-blog-assessment">
+                      <Button asChild data-testid="button-blog-assessment">
+                        <Link href={body.bottomCta?.primaryHref ?? "/book"}>
                           {body.bottomCta?.primaryLabel ??
                             "Schedule a Cyber Risk Assessment"}
                           <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      </Link>
+                        </Link>
+                      </Button>
                       {body.bottomCta?.secondaryLabel &&
                         body.bottomCta?.secondaryHref && (
-                          <Link href={body.bottomCta.secondaryHref}>
-                            <Button
-                              variant="outline"
-                              className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white hover:border-white/50"
-                              data-testid="button-blog-secondary"
-                            >
+                          <Button
+                            asChild
+                            variant="outline"
+                            className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white hover:border-white/50"
+                            data-testid="button-blog-secondary"
+                          >
+                            <Link href={body.bottomCta.secondaryHref}>
                               {body.bottomCta.secondaryLabel}
-                            </Button>
-                          </Link>
+                            </Link>
+                          </Button>
                         )}
                     </div>
                   </div>
