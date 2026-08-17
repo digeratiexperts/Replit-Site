@@ -116,6 +116,23 @@ function parseCatalogSearch(searchString: string) {
   };
 }
 
+/** True when the catalog URL already names a filter — used to scroll past the hero. */
+export function catalogSearchHasDeepLink(searchString: string): boolean {
+  const parsed = parseCatalogSearch(searchString);
+  return (
+    parsed.outcome !== null ||
+    parsed.category !== "all" ||
+    parsed.vendor !== "all" ||
+    parsed.compliance !== "all" ||
+    parsed.size !== "all" ||
+    parsed.q.trim().length > 0 ||
+    parsed.billing !== "all" ||
+    parsed.priceBand !== "all" ||
+    parsed.purchasePath !== "all" ||
+    parsed.coverage !== "all"
+  );
+}
+
 const CoManagedStore = () => {
   const prefersReducedMotion = useReducedMotion();
   const searchString = useSearch();
@@ -491,8 +508,29 @@ const CoManagedStore = () => {
   };
 
   const scrollToCatalog = () => {
-    catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "auto"
+      : "smooth";
+    catalogRef.current?.scrollIntoView({ behavior, block: "start" });
   };
+
+  // Deep links like /store/co-managed?outcome=protect used to land on the hero
+  // (~6k px above the filtered grid). Scroll once after mount so clicking an
+  // outcome actually shows the matching products.
+  useEffect(() => {
+    if (!catalogSearchHasDeepLink(searchString)) return;
+
+    let timeout = 0;
+    const frame = window.requestAnimationFrame(() => {
+      timeout = window.setTimeout(scrollToCatalog, 80);
+    });
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(timeout);
+    };
+    // Intentionally mount-only: later filter changes already call scrollToCatalog.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleOutcomeSelect = (id: StoreOutcomeId | null) => {
     setSelectedOutcome(id);
@@ -651,7 +689,7 @@ const CoManagedStore = () => {
           <StoreBundlesSection isLoggedIn={isLoggedIn} onAddBundle={handleAddBundle} />
 
           {/* Catalog + sticky assessment */}
-          <div ref={catalogRef} className="scroll-mt-28">
+          <div ref={catalogRef} id="store-catalog" className="scroll-mt-28">
             <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <h2 className="text-3xl font-bold text-white md:text-4xl">Full catalog</h2>

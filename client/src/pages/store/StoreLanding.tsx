@@ -131,7 +131,7 @@ const StoreLanding = () => {
   const handleOutcomeSelect = (id: StoreOutcomeId | null) => {
     setOutcomeHighlight(id);
     if (id) {
-      setLocation(`/store/co-managed?outcome=${id}`);
+      setLocation(`/store/co-managed?outcome=${id}#store-catalog`);
     }
   };
 
