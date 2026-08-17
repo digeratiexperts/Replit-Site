@@ -49,6 +49,7 @@ Accent:
 Homepage chapters must juxtapose this ladder (well / surface / paper / magenta) — do not flatten every section to one `#0a0a0a` slab.
 The DE mark is white type + gold 3-bar icon (`#e7b20d`). Gold is secondary only. Do not adopt reference-site yellow as a brand or CTA color.
 Executable rule: `.cursor/rules/dark-field-accent-pop.mdc`.
+Blog/Journal and Store palettes are locked — `.cursor/rules/blog-store-color-lock.mdc`.
 ## MATERIALS
 Preferred:
 - graphite wells and charcoal raised boxes (hairline, not color-filled)
