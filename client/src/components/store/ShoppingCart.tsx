@@ -228,7 +228,7 @@ export function ShoppingCart() {
                                   <h4 className="line-clamp-1 font-medium text-white">
                                     {item.product.name}
                                   </h4>
-                                  <p className="truncate text-[11px] text-white/55">
+                                  <p className="truncate text-sm text-white/55">
                                     {item.product.sku}
                                   </p>
                                   <p className="text-sm text-white/50">

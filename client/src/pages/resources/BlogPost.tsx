@@ -505,7 +505,7 @@ export default function BlogPost() {
                   data-testid="tab-overview"
                 >
                   Overview
-                  <span className="ml-2 text-[11px] opacity-70">
+                  <span className="ml-2 text-sm opacity-70">
                     {body.overviewReadTime}
                   </span>
                 </button>
@@ -522,7 +522,7 @@ export default function BlogPost() {
                   data-testid="tab-extended"
                 >
                   Extended Deep Dive
-                  <span className="ml-2 text-[11px] opacity-70">
+                  <span className="ml-2 text-sm opacity-70">
                     {body.extendedReadTime}
                   </span>
                 </button>
@@ -554,7 +554,7 @@ export default function BlogPost() {
               <aside className="hidden lg:block lg:col-span-3" aria-label="Table of contents">
                 <div className="sticky top-28">
                   <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-white/[0.01] p-5 backdrop-blur-sm shadow-[0_10px_40px_-20px_rgba(179,0,255,0.4)]">
-                    <div className="flex items-center gap-2 text-[11px] font-bold text-white/80 mb-5 uppercase tracking-[0.18em]">
+                    <div className="flex items-center gap-2 text-sm font-bold text-white/80 mb-5 uppercase tracking-[0.18em]">
                       <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-de-raised border border-de-hairline">
                         <List className="h-3.5 w-3.5 text-de-accent-ink" />
                       </span>
@@ -591,7 +591,7 @@ export default function BlogPost() {
                                   {/* Step dot */}
                                   <span
                                     aria-hidden
-                                    className={`absolute left-[3px] top-[11px] w-3.5 h-3.5 rounded-full border-2 transition-all duration-300 flex items-center justify-center text-[8px] font-bold ${
+                                    className={`absolute left-[3px] top-[11px] w-3.5 h-3.5 rounded-full border-2 transition-all duration-300 flex items-center justify-center text-[0.625rem] font-bold ${
                                       isActive
                                         ? "bg-de-accent border-white/80 scale-110"
                                         : isPast
@@ -621,7 +621,7 @@ export default function BlogPost() {
                                     }`}
                                     data-testid={`toc-${h.id}`}
                                   >
-                                    <span className="text-[10px] font-bold opacity-50 mr-2 tabular-nums">
+                                    <span className="text-xs font-bold opacity-50 mr-2 tabular-nums">
                                       {String(i + 1).padStart(2, "0")}
                                     </span>
                                     {h.text}
@@ -632,7 +632,7 @@ export default function BlogPost() {
                           </ul>
                           {/* Progress meter */}
                           <div className="mt-5 pt-4 border-t border-white/10">
-                            <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-wider text-white/50 mb-2">
+                            <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-white/50 mb-2">
                               <span>Progress</span>
                               <span className="text-de-accent-ink tabular-nums">
                                 {activeIdx < 0 ? 0 : activeIdx + 1}/{headings.length}
@@ -758,7 +758,7 @@ export default function BlogPost() {
                             <Icon className="h-5 w-5" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <span className={`inline-block text-[10px] font-bold uppercase tracking-[0.14em] mb-2 px-2 py-0.5 rounded-full border ${toneCfg.chip}`}>
+                            <span className={`inline-block text-xs font-bold uppercase tracking-[0.14em] mb-2 px-2 py-0.5 rounded-full border ${toneCfg.chip}`}>
                               {renderTokens(block.title ?? toneCfg.defaultTitle, wordCounter)}
                             </span>
                             <p className="text-white/90 text-[16px] leading-[1.7]">
@@ -881,7 +881,7 @@ export default function BlogPost() {
                             <Icon className="h-5 w-5" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <span className={`inline-block text-[10px] font-bold uppercase tracking-[0.14em] mb-2 px-2 py-0.5 rounded-full border ${toneCfg.chip}`}>
+                            <span className={`inline-block text-xs font-bold uppercase tracking-[0.14em] mb-2 px-2 py-0.5 rounded-full border ${toneCfg.chip}`}>
                               {renderTokens(toneCfg.title, wordCounter)}
                             </span>
                             <p className="text-white/90 text-[16px] leading-[1.7]">

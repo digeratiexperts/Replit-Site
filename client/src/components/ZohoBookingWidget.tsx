@@ -115,7 +115,7 @@ function BookingFallback({ className = "" }: { className?: string }) {
       className={`flex h-full min-h-[22rem] flex-col justify-center rounded-xl border border-de-hairline bg-de-raised p-6 md:p-8 ${className}`}
       data-testid="booking-fallback"
     >
-      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#D3126A]">
+      <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#D3126A]">
         Next step
       </p>
       <h3 className="mt-2 font-heading text-xl font-semibold tracking-[-0.02em] text-white md:text-2xl">

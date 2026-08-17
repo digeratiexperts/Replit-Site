@@ -182,7 +182,7 @@ export function ServiceCapabilityMatrix({
     }
     if (value === "Add-on" || value === "Optional") {
       return (
-        <span className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${
+        <span className={`px-2 py-0.5 rounded-full text-sm font-medium ${
           isHighlighted 
             ? 'bg-de-raised text-de-accent-ink border border-de-hairline' 
             : 'bg-amber-500/15 text-amber-400 border border-amber-500/20'
@@ -192,7 +192,7 @@ export function ServiceCapabilityMatrix({
       );
     }
     return (
-      <span className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${
+      <span className={`px-2 py-0.5 rounded-full text-sm font-medium ${
         isHighlighted 
           ? 'bg-de-raised text-de-accent-ink border border-de-hairline' 
           : 'bg-white/5 text-white/70 border border-white/10'
@@ -232,9 +232,9 @@ export function ServiceCapabilityMatrix({
             }`}>
               {tier.name}
             </div>
-            <div className="text-[10px] text-white/50">{tier.price}</div>
+            <div className="text-xs text-white/50">{tier.price}</div>
             {highlightTier === tier.id && (
-              <div className="text-[9px] text-de-accent-ink mt-0.5">Recommended</div>
+              <div className="text-xs text-de-accent-ink mt-0.5">Recommended</div>
             )}
           </div>
         ))}

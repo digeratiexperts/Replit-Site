@@ -438,7 +438,7 @@ export function BlogAudioPlayer({
             style={{ width: `${progress}%` }}
           />
         </div>
-        <span className="text-[10px] text-white/55 tabular-nums w-8 text-right">
+        <span className="text-xs text-white/55 tabular-nums w-8 text-right">
           {progress}%
         </span>
       </div>
@@ -454,7 +454,7 @@ export function BlogAudioPlayer({
             stop();
           }
         }}
-        className="hidden sm:block bg-transparent text-[11px] text-white/50 border-none outline-none cursor-pointer hover:text-white/70"
+        className="hidden sm:block bg-transparent text-sm text-white/50 border-none outline-none cursor-pointer hover:text-white/70"
         data-testid="select-audio-rate"
         title="Playback speed"
         aria-label="Playback speed"
@@ -486,7 +486,7 @@ export function BlogAudioPlayer({
             setMode("openai");
           }
         }}
-        className="hidden md:block bg-transparent text-[11px] text-white/50 border-none outline-none cursor-pointer hover:text-white/70 max-w-[120px]"
+        className="hidden md:block bg-transparent text-sm text-white/50 border-none outline-none cursor-pointer hover:text-white/70 max-w-[120px]"
         data-testid="select-audio-voice"
         title={
           mode === "browser"
@@ -506,7 +506,7 @@ export function BlogAudioPlayer({
       </select>
 
       {error && !isPlaying && !isPaused && (
-        <span className="text-[10px] text-amber-300/90 hidden sm:inline">
+        <span className="text-xs text-amber-300/90 hidden sm:inline">
           {error}
         </span>
       )}

@@ -23,7 +23,7 @@ function AskDELauncherButton() {
       aria-label="Open DE Desk"
       aria-expanded={false}
     >
-      <span className="relative flex h-8 w-8 items-center justify-center rounded-full bg-[#D3126A] text-[11px] font-bold tracking-tight">
+      <span className="relative flex h-8 w-8 items-center justify-center rounded-full bg-[#D3126A] text-sm font-bold tracking-tight">
         DE
         <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full border-2 border-[#0a0a0a] bg-emerald-400" />
       </span>

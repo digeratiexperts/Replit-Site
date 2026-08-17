@@ -128,7 +128,7 @@ export function ProductCompareDrawer({
                           {getProductTags(p).map((t) => (
                             <span
                               key={t}
-                              className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[11px] text-white/60"
+                              className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-sm text-white/60"
                             >
                               {t}
                             </span>

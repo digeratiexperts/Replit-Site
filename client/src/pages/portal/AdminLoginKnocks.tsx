@@ -185,7 +185,7 @@ export function AdminLoginKnocks() {
                         </p>
                       )}
                       {k.userAgent && (
-                        <p className="text-[11px] text-muted-foreground truncate" title={k.userAgent}>
+                        <p className="text-sm text-muted-foreground truncate" title={k.userAgent}>
                           {k.userAgent}
                         </p>
                       )}

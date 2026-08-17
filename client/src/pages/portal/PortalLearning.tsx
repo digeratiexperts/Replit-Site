@@ -252,17 +252,17 @@ export default function PortalLearning() {
                         </div>
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="text-[11px] font-mono text-muted-foreground">
+                            <span className="text-sm font-mono text-muted-foreground">
                               {String(idx + 1).padStart(2, "0")}
                             </span>
                             {lesson.badge && (
-                              <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                              <Badge variant="secondary" className="text-xs px-1.5 py-0">
                                 {lesson.badge}
                               </Badge>
                             )}
                           </div>
                           <p className="text-sm font-medium leading-snug mt-0.5">{lesson.title}</p>
-                          <p className="text-[11px] text-muted-foreground mt-0.5">{lesson.minutes} min</p>
+                          <p className="text-sm text-muted-foreground mt-0.5">{lesson.minutes} min</p>
                         </div>
                       </div>
                     </button>
@@ -404,7 +404,7 @@ export default function PortalLearning() {
                   <div key={doc.slug} className="border-b border-border/50 pb-2 last:border-0 last:pb-0">
                     <p className="text-sm font-medium leading-snug">{doc.title}</p>
                     {doc.category && (
-                      <p className="text-[11px] text-muted-foreground mt-0.5 capitalize">
+                      <p className="text-sm text-muted-foreground mt-0.5 capitalize">
                         {String(doc.category).replace(/_/g, " ")}
                       </p>
                     )}

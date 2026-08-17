@@ -87,7 +87,7 @@ const DiagonalLinesBadge = ({ children, variant }: { children: React.ReactNode; 
     : 'bg-de-raised text-de-accent-ink border border-de-hairline';
     
   return (
-    <span className={`relative text-[10px] px-1.5 py-0.5 rounded font-medium overflow-hidden ${baseClasses}`}>
+    <span className={`relative text-xs px-1.5 py-0.5 rounded font-medium overflow-hidden ${baseClasses}`}>
       <span 
         className="absolute inset-0 pointer-events-none opacity-[0.05]"
         style={{
@@ -142,7 +142,7 @@ function MenuFeaturedRail({
         </div>
       ) : null}
       <div className="flex flex-1 flex-col p-5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#D3126A]">{eyebrow}</p>
+        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#D3126A]">{eyebrow}</p>
         <h4 className="mt-2 font-heading text-lg font-semibold leading-snug text-white md:text-xl">{title}</h4>
         <p className="mt-2 flex-1 text-sm leading-relaxed text-white/70">{body}</p>
         <Link
@@ -877,7 +877,7 @@ export function MegaMenu() {
                                               )}
                                             </div>
                                             {subItem.description && (
-                                              <p className="text-[13px] text-white/70 group-hover/item:text-gray-400 mt-1 transition-colors leading-snug line-clamp-2">
+                                              <p className="text-sm text-white/70 group-hover/item:text-gray-400 mt-1 transition-colors leading-snug line-clamp-2">
                                                 {subItem.description}
                                               </p>
                                             )}
@@ -1081,7 +1081,7 @@ export function MegaMenu() {
 
               {scrollContext && (
                 <div className="mb-5">
-                  <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#D3126A]">
+                  <p className="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-[#D3126A]">
                     On this page
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -1143,7 +1143,7 @@ export function MegaMenu() {
                         <div className="mt-2 ml-1 space-y-1 rounded-xl border border-de-hairline bg-de-raised p-3">
                           {item.sections.map((section) => (
                             <div key={section.title} className="mb-4 last:mb-0">
-                              <h4 className="mb-3 px-2 pt-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#D3126A]">
+                              <h4 className="mb-3 px-2 pt-1 text-sm font-semibold uppercase tracking-[0.16em] text-[#D3126A]">
                                 {section.title}
                               </h4>
                               <div className="space-y-1">
