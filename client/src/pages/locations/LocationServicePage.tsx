@@ -1,27 +1,46 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  Shield, MapPin, Phone, ArrowRight, Sparkles, Zap, Clock, CheckCircle, 
-  Building, FileCheck, Loader2, Monitor, Lock, Cloud, Users, HeadphonesIcon
-} from 'lucide-react';
-import { DigeratiEnhancedFooterSection } from '@/pages/sections/DigeratiEnhancedFooterSection';
-import { MegaMenu } from '@/components/MegaMenu';
-import { DashboardMockup, NetworkNodes } from "@/components/graphics";
+import {
+  Shield,
+  MapPin,
+  Phone,
+  ArrowRight,
+  Zap,
+  Clock,
+  CheckCircle,
+  Building,
+  FileCheck,
+  Loader2,
+  Monitor,
+  Lock,
+  Cloud,
+  Users,
+  HeadphonesIcon,
+} from "lucide-react";
+import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
+import { MegaMenu } from "@/components/MegaMenu";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useSEO } from "@/hooks/useSEO";
 import { getCyberFact, formatFactSource } from "@/data/cyberAwarenessFacts";
 import { CTA } from "@/lib/ctaCopy";
+import { COMPANY, COMPANY_SOCIAL, PRIMARY_PHONE } from "@/data/companyContact";
+import { GREATER_PHOENIX_CITIES, cityPageSlug } from "@/data/greaterPhoenixCities";
+import { IconWell } from "@/components/visual/IconWell";
+import heroBgImage from "@assets/de-hero-arizona-dusk.png";
 
 const assessmentFormSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters").max(50),
   email: z.string().email("Please enter a valid email address"),
-  phone: z.string().regex(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/, "Please enter a valid phone number"),
+  phone: z
+    .string()
+    .regex(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/, "Please enter a valid phone number"),
   company: z.string().min(2, "Company name must be at least 2 characters").max(100),
 });
 
@@ -51,90 +70,92 @@ interface LocationPageProps {
 
 const serviceIcons = [Monitor, Shield, Lock, Cloud, Users, HeadphonesIcon];
 
+const paperFieldClass =
+  "h-11 bg-white border-[var(--de-paper-hairline)] text-[#1A1228] placeholder:text-black/55 focus-visible:ring-2 focus-visible:ring-[#D3126A]/40 focus-visible:border-[#D3126A]";
+
+const cityChipClass =
+  "inline-flex h-full min-h-12 w-full items-center justify-center rounded-lg border bg-transparent px-4 py-4 text-base font-medium text-white/80 transition-colors hover:border-[#D3126A] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)] sm:min-h-14 md:text-lg";
+
 export function LocationServicePage(props: LocationPageProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const prefersReducedMotion = useReducedMotion();
+  const currentSlug = cityPageSlug(props.city);
 
   useSEO({
     title: props.title,
     description: props.description,
-    canonical: `/locations/${props.city.toLowerCase().replace(/\s+/g, '-')}-az`,
+    canonical: `/locations/${currentSlug}`,
   });
 
   useEffect(() => {
-    
-    // Add local business JSON-LD schema
     const existingSchema = document.querySelector('script[data-schema="local-business"]');
     if (existingSchema) existingSchema.remove();
-    
+
     const schema = {
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
-      "name": "Digerati Experts",
-      "description": props.description,
-      "url": `https://digeratiexperts.com/locations/${props.city.toLowerCase().replace(/\s+/g, '-')}-az`,
-      "telephone": "325-480-9870",
-      "email": "info@digeratiexperts.com",
-      "address": {
+      name: COMPANY.legalName,
+      description: props.description,
+      url: `${COMPANY.website}/locations/${currentSlug}`,
+      telephone: PRIMARY_PHONE.schemaTelephone ?? PRIMARY_PHONE.display,
+      email: COMPANY.email,
+      address: {
         "@type": "PostalAddress",
-        "streetAddress": "3165 S Alma School Rd Suite 29",
-        "addressLocality": "Chandler",
-        "addressRegion": "AZ",
-        "postalCode": "85248",
-        "addressCountry": "US"
+        streetAddress: COMPANY.streetAddress,
+        addressLocality: COMPANY.addressLocality,
+        addressRegion: COMPANY.addressRegion,
+        postalCode: COMPANY.postalCode,
+        addressCountry: COMPANY.addressCountry,
       },
-      "geo": {
+      geo: {
         "@type": "GeoCoordinates",
-        "latitude": 33.2826,
-        "longitude": -111.8407
+        latitude: 33.2826,
+        longitude: -111.8407,
       },
-      "areaServed": {
+      areaServed: {
         "@type": "City",
-        "name": props.city,
-        "containedInPlace": {
+        name: props.city,
+        containedInPlace: {
           "@type": "State",
-          "name": "Arizona"
-        }
+          name: "Arizona",
+        },
       },
-      "openingHoursSpecification": [
+      openingHoursSpecification: [
         {
           "@type": "OpeningHoursSpecification",
-          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-          "opens": "07:00",
-          "closes": "18:00"
-        }
+          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          opens: "07:00",
+          closes: "18:00",
+        },
       ],
-      "priceRange": "$$",
-      "image": "https://digeratiexperts.com/logo.png",
-      "sameAs": [
-        "https://www.linkedin.com/company/digerati-experts",
-        "https://www.facebook.com/digeratiexperts",
-        "https://twitter.com/digerati_experts"
-      ],
-      "hasOfferCatalog": {
+      priceRange: "$$",
+      image: "https://digeratiexperts.com/logo.png",
+      sameAs: [COMPANY_SOCIAL.linkedin.href, COMPANY_SOCIAL.facebook.href, COMPANY_SOCIAL.twitter.href],
+      hasOfferCatalog: {
         "@type": "OfferCatalog",
-        "name": "IT Services",
-        "itemListElement": props.serviceFocus.map(service => ({
+        name: "IT Services",
+        itemListElement: props.serviceFocus.map((service) => ({
           "@type": "Offer",
-          "itemOffered": {
+          itemOffered: {
             "@type": "Service",
-            "name": service
-          }
-        }))
-      }
+            name: service,
+          },
+        })),
+      },
     };
-    
-    const scriptTag = document.createElement('script');
-    scriptTag.type = 'application/ld+json';
-    scriptTag.setAttribute('data-schema', 'local-business');
+
+    const scriptTag = document.createElement("script");
+    scriptTag.type = "application/ld+json";
+    scriptTag.setAttribute("data-schema", "local-business");
     scriptTag.textContent = JSON.stringify(schema);
     document.head.appendChild(scriptTag);
-    
+
     return () => {
       const schemaToRemove = document.querySelector('script[data-schema="local-business"]');
       if (schemaToRemove) schemaToRemove.remove();
     };
-  }, [props.title, props.description, props.city, props.serviceFocus]);
+  }, [props.description, props.city, props.serviceFocus, currentSlug]);
 
   const form = useForm<AssessmentFormData>({
     resolver: zodResolver(assessmentFormSchema),
@@ -165,10 +186,11 @@ export function LocationServicePage(props: LocationPageProps) {
         description: `We'll contact you within 24 hours to schedule your free ${props.city} assessment.`,
       });
       form.reset();
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Something went wrong.";
       toast({
         title: "Error",
-        description: error?.message || "Something went wrong.",
+        description: message,
         variant: "destructive",
       });
     } finally {
@@ -183,221 +205,337 @@ export function LocationServicePage(props: LocationPageProps) {
   ];
 
   const features = [
-    { icon: FileCheck, text: "Insurance & Compliance-Ready", color: "text-de-accent-ink" },
-    { icon: Shield, text: "24/7 Human-Led Monitoring", color: "text-de-accent-ink" },
-    { icon: Building, text: `Built for ${props.city} Businesses`, color: "text-de-accent-ink" },
-    { icon: CheckCircle, text: "Easy-to-Read Risk Reports", color: "text-de-accent-ink" },
+    { icon: FileCheck, text: "Insurance & Compliance-Ready" },
+    { icon: Shield, text: "24/7 Human-Led Monitoring" },
+    { icon: Building, text: `Built for ${props.city} Businesses` },
+    { icon: CheckCircle, text: "Easy-to-Read Risk Reports" },
   ];
+
+  const fadeUp = prefersReducedMotion ? {} : { opacity: 0, y: 16 };
 
   return (
     <>
       <MegaMenu />
-      
-      {/* Hero Section - Matches homepage dark theme */}
-      <section className="relative min-h-screen overflow-hidden">
-        {/* Animated gradient mesh background */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#050312] via-[#0a0a0a] to-[#151217]" />
-          
-          <motion.div
-            className="de-hero-glow absolute top-[-20%] right-[-10%] w-[1000px] h-[1000px] rounded-full"
-            style={{ background: "radial-gradient(circle, rgba(211, 18, 106, 0.22) 0%, transparent 60%)" }}
-            animate={{ scale: [1, 1.15, 1], x: [0, 60, 0], y: [0, 30, 0] }}
-            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+
+      <section className="relative overflow-hidden bg-[var(--de-bg)]">
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <img
+            src={heroBgImage}
+            alt=""
+            loading="eager"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover object-[center_82%] opacity-45"
+            style={{
+              WebkitMaskImage:
+                "linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.38) 16%, rgba(0,0,0,0.88) 46%, black 72%)",
+              maskImage:
+                "linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.38) 16%, rgba(0,0,0,0.88) 46%, black 72%)",
+            }}
           />
-          <motion.div
-            className="de-hero-glow absolute bottom-[-20%] left-[-15%] w-[900px] h-[900px] rounded-full"
-            style={{ background: "radial-gradient(circle, rgba(91, 69, 224, 0.12) 0%, transparent 60%)" }}
-            animate={{ scale: [1.1, 1, 1.1], x: [0, -40, 0], y: [0, -60, 0] }}
-            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+        </div>
+        <div
+          className="absolute inset-0 pointer-events-none"
+          aria-hidden="true"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(5,3,18,0.92) 0%, rgba(5,3,18,0.70) 26%, rgba(5,3,18,0.22) 56%, rgba(5,3,18,0.06) 100%), linear-gradient(180deg, rgba(5,3,18,0.72) 0%, rgba(5,3,18,0.28) 34%, rgba(5,3,18,0.08) 62%, rgba(5,3,18,0.38) 100%)",
+          }}
+        >
+          <div
+            className="de-hero-glow absolute top-[8%] right-[-4%] h-[640px] w-[640px] pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(circle at 70% 35%, rgba(211, 18, 106, 0.20) 0%, rgba(139, 92, 246, 0.10) 38%, transparent 64%)",
+            }}
           />
-          
-          <div className="absolute inset-0 opacity-10" style={{
-            backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px)",
-            backgroundSize: "80px 80px"
-          }} />
-          
-          
         </div>
 
-        {/* Main content */}
-        <div className="relative z-10 w-full px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 2xl:px-24 pt-[calc(var(--de-nav-offset)+0.5rem)] pb-12 sm:pt-[calc(var(--de-nav-offset)+1.25rem)] lg:pt-[calc(var(--de-nav-offset)+2rem)] xl:pt-[calc(var(--de-nav-offset)+2.75rem)] lg:pb-16 xl:pb-20">
+        <div className="relative z-10 w-full px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 2xl:px-24 pt-[calc(var(--de-nav-offset)+0.5rem)] pb-12 sm:pt-[calc(var(--de-nav-offset)+1.25rem)] lg:pb-16">
           <div className="mx-auto w-[min(94vw,1680px)]">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
-              
-              {/* Left column - Form with integrated info */}
-              <motion.div 
-                className="flex flex-col gap-6 w-full"
-                initial={{ opacity: 0, y: 30 }}
+            <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-12 xl:gap-16">
+              <motion.div
+                className="flex w-full flex-col gap-6"
+                initial={fadeUp}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: prefersReducedMotion ? 0 : 0.4, ease: "easeOut" }}
               >
-                {/* Location Badge */}
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-de-hairline bg-de-raised backdrop-blur-sm w-fit">
-                  <MapPin className="w-4 h-4 text-de-accent-ink" />
-                  <span className="text-sm text-de-accent-ink">{props.localArea}</span>
+                <div className="inline-flex w-fit items-center gap-2 rounded-lg border border-de-hairline bg-de-raised px-3.5 py-2">
+                  <MapPin className="h-4 w-4 text-[#D3126A]" aria-hidden="true" />
+                  <span className="text-sm font-medium text-white/85">{props.localArea}</span>
                 </div>
 
-                {/* Headline */}
-                <h1 className="text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-bold leading-[1.1] tracking-tight">
-                  <span className="text-de-accent-ink">
-                    {props.city} Businesses
-                  </span>
+                <h1 className="text-[clamp(2.25rem,7vw,3.75rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white">
+                  {props.city} Businesses
                   <br />
-                  <span className="text-white">
-                    Deserve{" "}
-                    <span className="text-de-accent-ink">Better IT.</span>
-                  </span>
+                  Deserve <span className="text-[#D3126A]">Better IT.</span>
                 </h1>
 
-                <p className="text-lg text-gray-300 leading-relaxed max-w-xl">
-                  {props.description}
-                </p>
+                <p className="max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">{props.description}</p>
 
-                {/* Feature pills */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-x-3 gap-y-2.5 lg:grid-cols-2">
                   {features.map((feature) => (
-                    <div key={feature.text} className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
-                      <feature.icon className={`h-4 w-4 ${feature.color} flex-shrink-0`} />
-                      <span className="text-xs text-gray-300 leading-tight">{feature.text}</span>
+                    <div key={feature.text} className="flex min-w-0 items-start gap-1.5">
+                      <feature.icon className="mt-0.5 h-4 w-4 shrink-0 text-pink-400/90" aria-hidden="true" />
+                      <span className="text-[15px] font-medium leading-snug text-white/90 sm:text-base sm:font-normal sm:text-white/80">
+                        {feature.text}
+                      </span>
                     </div>
                   ))}
                 </div>
 
-                {/* Form Card */}
-                <motion.div className="relative" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
-                  <div className="absolute -inset-1 bg-de-raised via-transparent to-fuchsia-600/20 blur-2xl" />
-                  
-                  <div className="relative backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6">
-                    <Form {...form}>
-                      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <FormField control={form.control} name="fullName" render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-sm text-gray-300">Full Name</FormLabel>
-                              <FormControl>
-                                <Input placeholder="John Smith" data-testid={`input-${props.city.toLowerCase()}-name`} className="h-11 bg-white/10 border-white/20 text-white placeholder:text-white/70 focus-visible:ring-de-accent" disabled={isSubmitting} {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )} />
-                          <FormField control={form.control} name="email" render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-sm text-gray-300">Email Address</FormLabel>
-                              <FormControl>
-                                <Input type="email" placeholder="john@company.com" data-testid={`input-${props.city.toLowerCase()}-email`} className="h-11 bg-white/10 border-white/20 text-white placeholder:text-white/70 focus-visible:ring-de-accent" disabled={isSubmitting} {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )} />
-                          <FormField control={form.control} name="phone" render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-sm text-gray-300">Phone Number</FormLabel>
-                              <FormControl>
-                                <Input type="tel" placeholder="(480) 000-0000" data-testid={`input-${props.city.toLowerCase()}-phone`} className="h-11 bg-white/10 border-white/20 text-white placeholder:text-white/70 focus-visible:ring-de-accent" disabled={isSubmitting} {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )} />
-                          <FormField control={form.control} name="company" render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-sm text-gray-300">Company Name</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Your Company Inc." data-testid={`input-${props.city.toLowerCase()}-company`} className="h-11 bg-white/10 border-white/20 text-white placeholder:text-white/70 focus-visible:ring-de-accent" disabled={isSubmitting} {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )} />
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                          <Button type="submit" size="lg" data-testid={`button-${props.city.toLowerCase()}-submit`} disabled={isSubmitting} className="flex-1 h-12 text-base font-semibold bg-de-raised hover: hover: border-0 shadow-lg shadow-none">
-                            {isSubmitting ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" />Submitting...</> : <>Get Free {props.city} Assessment<ArrowRight className="w-5 h-5 ml-2" /></>}
-                          </Button>
-                          <Button asChild type="button" variant="outline" size="lg" className="w-full sm:w-auto h-12 px-6 text-base font-semibold border-white/20 bg-white/5 hover:bg-white/10 text-white">
-                  <a href="tel:+13254809870" className="sm:flex-shrink-0">
-                    <Phone className="w-5 h-5 mr-2" />325-480-9870
-                  </a>
-                </Button>
-                        </div>
-                      </form>
-                    </Form>
-                  </div>
-                </motion.div>
-
-                {/* Stats row */}
                 <div className="flex flex-wrap gap-3">
-                  {stats.map((stat, index) => (
-                    <motion.div key={stat.label} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.4 + index * 0.1 }}>
-                      <div className="w-10 h-10 rounded-lg bg-de-raised flex items-center justify-center">
-                        <stat.icon className="w-5 h-5 text-de-accent-ink" />
-                      </div>
+                  {stats.map((stat) => (
+                    <div
+                      key={stat.label}
+                      className="flex items-center gap-3 rounded-xl border border-de-hairline bg-de-raised px-4 py-3"
+                    >
+                      <IconWell icon={stat.icon} size="sm" />
                       <div>
-                        <div className="text-xl font-bold text-white">{stat.value}</div>
-                        <div className="text-xs text-gray-400">{stat.label}</div>
+                        <div className="font-mono text-lg font-semibold text-white">{stat.value}</div>
+                        <div className="text-xs text-white/55">{stat.label}</div>
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
 
-                {/* Trust badges */}
-                <div className="flex flex-wrap items-center gap-3">
-                  <span className="text-sm text-white/70">Built for regulated environments</span>
-                  {["HIPAA-aligned support", "SOC 2 readiness", "Cyber insurance readiness", "Framework mapping"].map((badge) => (
-                    <div key={badge} className="px-3 py-1.5 rounded-md bg-white/5 border border-white/10 text-xs text-gray-400">{badge}</div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-sm text-white/60">Built for regulated environments</span>
+                  {["HIPAA-aligned support", "SOC 2 readiness", "Cyber insurance readiness", "Framework mapping"].map(
+                    (badge) => (
+                      <span
+                        key={badge}
+                        className="rounded-md border border-de-hairline bg-transparent px-3 py-1.5 text-xs text-white/70"
+                      >
+                        {badge}
+                      </span>
+                    ),
+                  )}
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  {["Microsoft Partner", "Apple Consultants"].map((badge) => (
+                    <span
+                      key={badge}
+                      className="rounded-md border border-de-hairline bg-transparent px-3 py-1.5 text-xs text-white/70"
+                    >
+                      {badge}
+                    </span>
                   ))}
                 </div>
-                <div className="flex flex-wrap items-center gap-3 mt-3">
-                  {["Microsoft Partner", "Apple Consultants"].map((badge) => (
-                    <div key={badge} className="px-3 py-1.5 rounded-md bg-white/5 border border-white/10 text-xs text-gray-400">{badge}</div>
-                  ))}
+
+                <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+                  <Button
+                    asChild
+                    size="lg"
+                    variant="outline"
+                    className="h-12 w-full border-white/35 bg-transparent px-6 text-base font-semibold text-white shadow-none hover:border-white/55 hover:bg-white/5 sm:w-auto"
+                  >
+                    <Link href={CTA.secondaryHref}>{CTA.secondary}</Link>
+                  </Button>
+                  <a
+                    href={PRIMARY_PHONE.telHref}
+                    className="text-base font-medium text-pink-300 underline decoration-pink-400/40 underline-offset-4 transition-colors hover:text-pink-200 hover:decoration-pink-300/70"
+                  >
+                    Or call {PRIMARY_PHONE.display}
+                  </a>
                 </div>
               </motion.div>
 
-              {/* Right column - Dashboard Visual */}
-              <div className="relative flex justify-center lg:justify-end w-full mt-8 lg:mt-0">
-                <motion.div className="relative w-full max-w-[500px] lg:max-w-[550px] xl:max-w-[600px]" initial={{ opacity: 0, x: 60, scale: 0.95 }} animate={{ opacity: 1, x: 0, scale: 1 }} transition={{ duration: 0.9, delay: 0.5 }}>
-                  <div className="absolute inset-0 bg-de-raised blur-3xl scale-110" />
-                  <motion.div className="relative" style={{ transform: "perspective(1200px) rotateY(-8deg) rotateX(3deg)", transformStyle: "preserve-3d" }} animate={{ rotateY: [-8, -5, -8], rotateX: [3, 4, 3] }} transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}>
-                    <DashboardMockup className="w-full drop-shadow-2xl" />
-                  </motion.div>
-                  <motion.div className="absolute bottom-4 -right-6 w-32 h-40 opacity-60" animate={{ y: [0, 8, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}>
-                    <NetworkNodes className="w-full h-full" />
-                  </motion.div>
-                </motion.div>
-              </div>
+              <motion.div
+                id="city-assessment"
+                className="w-full"
+                initial={prefersReducedMotion ? {} : { opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: prefersReducedMotion ? 0 : 0.45, delay: prefersReducedMotion ? 0 : 0.08 }}
+              >
+                <div className="de-paper-lift-lg rounded-2xl p-6 md:p-8">
+                  <h2 className="font-heading text-xl font-semibold tracking-[-0.02em] text-[#1A1228]">
+                    Get Your Free {props.city} Assessment
+                  </h2>
+                  <p className="mb-6 mt-1 text-base text-black/55">
+                    Tell us about your environment. We will follow up within one business day.
+                  </p>
+
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <FormField
+                          control={form.control}
+                          name="fullName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm font-medium text-[#1A1228]">Full Name</FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="John Smith"
+                                  data-testid={`input-${props.city.toLowerCase()}-name`}
+                                  className={paperFieldClass}
+                                  disabled={isSubmitting}
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="email"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm font-medium text-[#1A1228]">Email Address</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="email"
+                                  placeholder="john@company.com"
+                                  data-testid={`input-${props.city.toLowerCase()}-email`}
+                                  className={paperFieldClass}
+                                  disabled={isSubmitting}
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="phone"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm font-medium text-[#1A1228]">Phone Number</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="tel"
+                                  placeholder="(480) 000-0000"
+                                  data-testid={`input-${props.city.toLowerCase()}-phone`}
+                                  className={paperFieldClass}
+                                  disabled={isSubmitting}
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="company"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm font-medium text-[#1A1228]">Company Name</FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="Your Company Inc."
+                                  data-testid={`input-${props.city.toLowerCase()}-company`}
+                                  className={paperFieldClass}
+                                  disabled={isSubmitting}
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-3 pt-1 sm:flex-row">
+                        <Button
+                          type="submit"
+                          size="lg"
+                          variant="brand"
+                          data-testid={`button-${props.city.toLowerCase()}-submit`}
+                          disabled={isSubmitting}
+                          className="h-12 flex-1 text-base font-semibold"
+                        >
+                          {isSubmitting ? (
+                            <>
+                              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                              Submitting...
+                            </>
+                          ) : (
+                            <>
+                              {CTA.primary}
+                              <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
+                            </>
+                          )}
+                        </Button>
+                        <Button
+                          asChild
+                          type="button"
+                          variant="outline"
+                          size="lg"
+                          className="h-12 w-full border-[var(--de-paper-hairline)] bg-white px-6 text-base font-semibold text-[#1A1228] hover:border-[#D3126A] hover:bg-[#D3126A]/5 sm:w-auto"
+                        >
+                          <a href={PRIMARY_PHONE.telHref} className="sm:flex-shrink-0">
+                            <Phone className="mr-2 h-5 w-5" aria-hidden="true" />
+                            {PRIMARY_PHONE.display}
+                          </a>
+                        </Button>
+                      </div>
+                    </form>
+                  </Form>
+                </div>
+              </motion.div>
             </div>
           </div>
         </div>
-
-        {/* Bottom gradient fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a0118] to-transparent z-10" />
       </section>
 
-      {/* Arizona industry context — sourced awareness, not DE proof */}
-      <section className="py-10 bg-[#0a0118] border-y border-white/5" aria-label="Arizona cybersecurity context">
+      <section className="bg-[var(--de-surface)] py-12 md:py-16" aria-label="Greater Phoenix cities">
+        <div className="mx-auto w-[min(94vw,1100px)] px-4">
+          <h2 className="font-heading text-xl font-semibold tracking-[-0.02em] text-white md:text-2xl">
+            Serving Greater Phoenix
+            <span className="text-[#D3126A]" aria-hidden="true">
+              :
+            </span>
+          </h2>
+          <div className="mt-6 grid grid-cols-2 content-stretch gap-3 sm:grid-cols-3">
+            {GREATER_PHOENIX_CITIES.map((location) => {
+              const isCurrent = location.slug === currentSlug;
+              return (
+                <Link
+                  key={location.slug}
+                  href={location.href}
+                  aria-current={isCurrent ? "page" : undefined}
+                  className={`${cityChipClass} ${
+                    isCurrent
+                      ? "border-[#D3126A] text-white shadow-[inset_0_0_0_1px_#D3126A]"
+                      : "border-[var(--de-hairline)]"
+                  }`}
+                  data-city={location.name.toLowerCase()}
+                  data-testid={`location-switcher-${location.name.toLowerCase()}`}
+                >
+                  {location.name}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-de-hairline bg-[var(--de-bg)] py-10" aria-label="Arizona cybersecurity context">
         <div className="mx-auto w-[min(94vw,900px)] px-4">
           {(() => {
             const azFact = getCyberFact("az-ic3-losses-2024");
             return (
               <motion.div
                 className="rounded-2xl border border-de-hairline bg-de-raised px-6 py-5 text-center"
-                initial={{ opacity: 0, y: 12 }}
+                initial={fadeUp}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
+                transition={{ duration: prefersReducedMotion ? 0 : 0.35 }}
               >
-                <p className="text-xs uppercase tracking-wider text-de-accent-ink mb-2">Arizona context</p>
-                <p className="text-white/90 text-sm md:text-base leading-relaxed">
-                  <span className="font-bold text-de-accent-ink">{azFact.metric}</span>{" "}
-                  {azFact.statement} — relevant for {props.city} and Greater Phoenix SMBs planning
-                  insurance-ready IT and breach readiness.
+                <p className="mb-2 text-xs uppercase tracking-wider text-[#D3126A]">Arizona context</p>
+                <p className="text-sm leading-relaxed text-white/90 md:text-base">
+                  <span className="font-bold text-white">{azFact.metric}</span> {azFact.statement} — relevant for{" "}
+                  {props.city} and Greater Phoenix SMBs planning insurance-ready IT and breach readiness.
                 </p>
                 {azFact.sourceUrl ? (
                   <a
                     href={azFact.sourceUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block mt-2 text-xs text-white/55 hover:text-de-accent-ink underline-offset-2 hover:underline"
+                    className="mt-2 inline-block text-xs text-white/55 underline-offset-2 hover:text-[#D3126A] hover:underline"
                   >
                     — {formatFactSource(azFact)}
                   </a>
@@ -410,24 +548,34 @@ export function LocationServicePage(props: LocationPageProps) {
         </div>
       </section>
 
-      {/* Services Section - Dark themed */}
-      <section className="py-20 bg-gradient-to-b from-[#0a0118] via-[#0d0720] to-[#0a0118]">
+      <section className="bg-[var(--de-surface)] py-20">
         <div className="mx-auto w-[min(94vw,1400px)] px-4">
-          <motion.div className="text-center mb-16" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              IT Services for <span className="text-de-accent-ink">{props.city}</span> Businesses
+          <motion.div
+            className="mb-12 text-center"
+            initial={fadeUp}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.35 }}
+          >
+            <h2 className="mb-4 text-3xl font-bold text-white md:text-4xl">
+              IT Services for <span className="text-[#D3126A]">{props.city}</span> Businesses
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">{props.serviceRadius}</p>
+            <p className="mx-auto max-w-2xl text-lg text-white/65">{props.serviceRadius}</p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {props.serviceFocus.map((service, index) => {
               const IconComponent = serviceIcons[index % serviceIcons.length];
               return (
-                <motion.div key={service} className="group p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-hairline transition-all duration-300" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
-                  <div className="w-12 h-12 rounded-xl bg-de-raised flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <IconComponent className="w-6 h-6 text-de-accent-ink" />
-                  </div>
+                <motion.div
+                  key={service}
+                  className="rounded-2xl border border-de-hairline bg-de-raised p-6"
+                  initial={fadeUp}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: prefersReducedMotion ? 0 : 0.3, delay: prefersReducedMotion ? 0 : index * 0.04 }}
+                >
+                  <IconWell icon={IconComponent} className="mb-4" />
                   <h3 className="text-xl font-semibold text-white">{service}</h3>
                 </motion.div>
               );
@@ -436,75 +584,113 @@ export function LocationServicePage(props: LocationPageProps) {
         </div>
       </section>
 
-      {/* Why Choose Us Section */}
-      <section className="py-20 bg-gradient-to-b from-[#0a0118] to-[#0d0720]">
+      <section className="bg-[var(--de-paper)] py-20">
         <div className="mx-auto w-[min(94vw,1400px)] px-4">
-          <motion.div className="text-center mb-16" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Why {props.city} Chooses <span className="text-de-accent-ink">Digerati Experts</span>
+          <motion.div
+            className="mb-12 text-center"
+            initial={fadeUp}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.35 }}
+          >
+            <h2 className="text-3xl font-bold text-[#1A1228] md:text-4xl">
+              Why {props.city} Chooses <span className="text-[#A30E52]">Digerati Experts</span>
             </h2>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div className="mx-auto grid max-w-4xl gap-4 md:grid-cols-2">
             {props.whyChooseUs.map((reason, index) => (
-              <motion.div key={index} className="flex gap-4 p-5 rounded-xl bg-white/5 border border-white/10" initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
-                <CheckCircle className="w-6 h-6 text-emerald-400 flex-shrink-0 mt-0.5" />
-                <p className="text-gray-300">{reason}</p>
+              <motion.div
+                key={reason}
+                className="de-paper-lift flex gap-4 rounded-xl p-5"
+                initial={fadeUp}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: prefersReducedMotion ? 0 : 0.3, delay: prefersReducedMotion ? 0 : index * 0.04 }}
+              >
+                <CheckCircle className="mt-0.5 h-6 w-6 shrink-0 text-[#A30E52]" aria-hidden="true" />
+                <p className="text-[#1A1228]/80">{reason}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Industries Section */}
-      <section className="py-20 bg-[#0d0720]">
+      <section className="bg-[var(--de-surface)] py-20">
         <div className="mx-auto w-[min(94vw,1400px)] px-4">
-          <motion.div className="text-center mb-12" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Industries We Serve in {props.city}</h2>
+          <motion.div
+            className="mb-10 text-center"
+            initial={fadeUp}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.35 }}
+          >
+            <h2 className="text-3xl font-bold text-white md:text-4xl">Industries We Serve in {props.city}</h2>
           </motion.div>
 
-          <div className="flex flex-wrap justify-center gap-4">
-            {props.localProof.industries.map((industry, index) => (
-              <motion.div key={industry} className="px-6 py-3 rounded-full bg-de-raised border border-de-hairline text-gray-300" initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: index * 0.1 }}>
+          <div className="flex flex-wrap justify-center gap-3">
+            {props.localProof.industries.map((industry) => (
+              <span
+                key={industry}
+                className="rounded-lg border border-de-hairline bg-de-raised px-5 py-2.5 text-white/80"
+              >
                 {industry}
-              </motion.div>
+              </span>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Service Areas */}
-      <section className="py-20 bg-gradient-to-b from-[#0d0720] to-[#0a0118]">
+      <section className="bg-[var(--de-bg)] py-20">
         <div className="mx-auto w-[min(94vw,1400px)] px-4 text-center">
-          <motion.h2 className="text-3xl md:text-4xl font-bold text-white mb-4" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <motion.h2
+            className="mb-4 text-3xl font-bold text-white md:text-4xl"
+            initial={fadeUp}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.35 }}
+          >
             Neighborhoods We Serve
           </motion.h2>
-          <p className="text-gray-400 mb-8">{props.serviceRadius}</p>
+          <p className="mb-8 text-white/65">{props.serviceRadius}</p>
           <div className="flex flex-wrap justify-center gap-3">
             {props.neighborhoods.map((area) => (
-              <span key={area} className="px-5 py-2.5 rounded-lg bg-white/5 border border-white/10 text-gray-300">{area}</span>
+              <span key={area} className="rounded-lg border border-de-hairline bg-de-raised px-5 py-2.5 text-white/80">
+                {area}
+              </span>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-de-raised via-[#0a0118]">
+      <section className="bg-[var(--de-surface)] py-20">
         <div className="mx-auto w-[min(94vw,1200px)] px-4 text-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">{props.cta}</h2>
-            <p className="text-xl text-gray-300 mb-8">Contact our {props.city} team today for your free consultation</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="px-8 py-6 text-lg font-semibold bg-de-raised hover: hover: shadow-lg shadow-none">
-                  <a href="/book">
-                    {CTA.primary} <ArrowRight className="ml-2 w-5 h-5" />
-                  </a>
-                </Button>
-              <Button asChild variant="outline" size="lg" className="px-8 py-6 text-lg font-semibold border-white/20 bg-white/5 hover:bg-white/10 text-white">
-                  <a href="tel:+13254809870">
-                    <Phone className="mr-2 w-5 h-5" /> Call 325-480-9870
-                  </a>
-                </Button>
+          <motion.div
+            initial={fadeUp}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.35 }}
+          >
+            <h2 className="mb-6 text-3xl font-bold text-white md:text-4xl">{props.cta}</h2>
+            <p className="mb-8 text-xl text-white/75">
+              Contact our {props.city} team today for your free consultation
+            </p>
+            <div className="flex flex-col justify-center gap-4 sm:flex-row">
+              <Button asChild size="lg" variant="brand" className="px-8 py-6 text-lg font-semibold">
+                <a href="#city-assessment">
+                  {CTA.primary} <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
+                </a>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="border-white/35 bg-transparent px-8 py-6 text-lg font-semibold text-white hover:border-white/55 hover:bg-white/5"
+              >
+                <a href={PRIMARY_PHONE.telHref}>
+                  <Phone className="mr-2 h-5 w-5" aria-hidden="true" /> Call {PRIMARY_PHONE.display}
+                </a>
+              </Button>
             </div>
           </motion.div>
         </div>

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { motion, useReducedMotion } from "framer-motion";
 import { IconWell } from "@/components/visual/IconWell";
+import { GREATER_PHOENIX_CITIES } from "@/data/greaterPhoenixCities";
 
 const chipClass =
   "inline-flex min-h-11 items-center rounded-lg border border-[var(--de-hairline)] bg-transparent px-3.5 text-base text-white/80 transition-colors hover:border-[#D3126A] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]";
@@ -21,14 +22,7 @@ const complianceItems = [
 
 const partnerMarks = ["Microsoft Partner", "Apple Consultants"];
 
-const locations = [
-  { name: "Chandler", href: "/locations/chandler-az", primary: true },
-  { name: "Phoenix", href: "/locations/phoenix-az", primary: false },
-  { name: "Gilbert", href: "/locations/gilbert-az", primary: false },
-  { name: "Tempe", href: "/locations/tempe-az", primary: false },
-  { name: "Mesa", href: "/locations/mesa-az", primary: false },
-  { name: "Scottsdale", href: "/locations/scottsdale-az", primary: false },
-];
+const locations = GREATER_PHOENIX_CITIES;
 
 const benefits = [
   { icon: Shield, label: "Security Alerts" },
@@ -233,7 +227,7 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
                     key={location.name}
                     href={location.href}
                     className={`${cityChipClass} ${
-                      location.primary
+                      location.slug === "chandler-az"
                         ? "border-[#D3126A] text-white shadow-[inset_0_0_0_1px_#D3126A]"
                         : "border-[var(--de-hairline)]"
                     }`}
