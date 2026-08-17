@@ -547,6 +547,45 @@ html.de-marketing-canvas body {
   line-height: 1.35;
 }
 
+/* Fit mega-menus to the viewport. Density lives on Solutions; scroll is a last resort. */
+.mega-menu-dropdown {
+  max-height: calc(100dvh - var(--de-nav-current-bottom) - var(--de-cookie-h, 0px) - 4.5rem);
+}
+
+.mega-menu-dropdown-scroll {
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+
+.mega-menu-dropdown-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mega-menu-dropdown-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mega-menu-dropdown-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.mega-menu-dropdown-fade {
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2.75rem;
+  background: linear-gradient(to bottom, transparent, #0a0118 88%);
+  z-index: 2;
+}
+
 /* Readable long-form marketing copy on dark pages */
 .de-prose-dark {
   color: var(--de-muted);
