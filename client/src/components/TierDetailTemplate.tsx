@@ -69,7 +69,7 @@ export function TierDetailTemplate({ config }: { config: TierPageConfig }) {
     >
       <div className="max-w-5xl mx-auto space-y-14">
         <section>
-          <span className="inline-block px-3 py-1 rounded-full bg-pink-500/15 border border-pink-400/30 text-pink-200 text-sm font-semibold mb-4">
+          <span className="inline-block px-3 py-1 rounded-full bg-de-magenta/15 border border-de-magenta/30 text-de-magenta-ink text-sm font-semibold mb-4">
             {config.heroBadge}
           </span>
           <p className="text-lg text-white/85 leading-relaxed">{config.positioning}</p>
