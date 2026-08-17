@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  Activity,
   AlertTriangle,
   BookOpen,
   Building2,
@@ -93,11 +94,12 @@ const QUICK_CHAT_PROMPTS: Array<{
   label: string;
   icon: typeof Shield;
   tone: "violet" | "blue" | "teal" | "red";
+  ticketChip?: DeskTicketChipId;
 }> = [
-  { label: "We need stronger cybersecurity", icon: Shield, tone: "violet" },
-  { label: "Compare managed IT options", icon: Scale, tone: "blue" },
-  { label: "Microsoft 365 feels messy", icon: Monitor, tone: "teal" },
-  { label: "Possible security incident", icon: AlertTriangle, tone: "red" },
+  { label: "Something isn't working", icon: Monitor, tone: "blue" },
+  { label: "Possible security incident", icon: AlertTriangle, tone: "red", ticketChip: "security-incident" },
+  { label: "Help me choose IT/security services", icon: Scale, tone: "violet" },
+  { label: "I have an IT or security question", icon: MessageCircle, tone: "teal" },
 ];
 
 function DeskHeroArt({ variant }: { variant: "desk" | "ticket" | "resources" }) {
@@ -191,10 +193,11 @@ function BookMagnifier({ className }: { className?: string }) {
 }
 
 const TICKET_CHIP_ICONS: Record<DeskTicketChipId, typeof Shield> = {
+  "security-incident": AlertTriangle,
   "email-m365": Mail,
   "sign-in": KeyRound,
   device: Monitor,
-  "security-incident": Shield,
+  "something-else": ClipboardList,
 };
 
 const RESOURCE_LINKS: Array<{
@@ -203,17 +206,30 @@ const RESOURCE_LINKS: Array<{
   href: string;
   icon: typeof BookOpen | typeof BookMagnifier;
   external?: boolean;
+  guide?: { title: string; href: string };
   tags: [string, string];
   cta: string;
   accent: string;
   iconBg: string;
 }> = [
   {
-    title: "Remote session",
-    description: "Join a secure live session so a technician can help on your screen",
+    title: "Client portal",
+    description: "Tickets, services, approvals, and account management.",
+    href: PORTAL_LOGIN,
+    icon: ShieldCheck,
+    tags: ["Account access", "Self-service"],
+    cta: "Open portal",
+    accent: "text-[#fed7aa]",
+    iconBg:
+      "bg-gradient-to-br from-[#fb923c]/45 to-[#ea580c]/25 ring-[#fdba74]/55 shadow-[0_0_20px_rgba(251,146,60,0.3)]",
+  },
+  {
+    title: "Start remote support",
+    description: "Connect securely with a technician.",
     href: "https://assist.zoho.com/",
     icon: Monitor,
     external: true,
+    guide: { title: "Remote support guide", href: "/support/remote-support" },
     tags: ["Live help", "Screen share"],
     cta: "Start session",
     accent: "text-[#e9d5ff]",
@@ -221,19 +237,8 @@ const RESOURCE_LINKS: Array<{
       "bg-gradient-to-br from-[#a855f7]/45 to-[#7c3aed]/30 ring-[#c084fc]/55 shadow-[0_0_20px_rgba(168,85,247,0.35)]",
   },
   {
-    title: "Remote support guide",
-    description: "How remote sessions work and what to expect",
-    href: "/support/remote-support",
-    icon: LifeBuoy,
-    tags: ["Support process", "Quick guide"],
-    cta: "View guide",
-    accent: "text-[#bae6fd]",
-    iconBg:
-      "bg-gradient-to-br from-[#38bdf8]/40 to-[#0284c7]/25 ring-[#7dd3fc]/50 shadow-[0_0_20px_rgba(56,189,248,0.3)]",
-  },
-  {
     title: "Knowledge base",
-    description: "Setup guides, troubleshooting, and security help",
+    description: "Guides and troubleshooting.",
     href: "/support/knowledge-base",
     icon: BookMagnifier,
     tags: ["Guides", "Troubleshooting"],
@@ -243,15 +248,15 @@ const RESOURCE_LINKS: Array<{
       "bg-gradient-to-br from-[#4ade80]/40 to-[#16a34a]/25 ring-[#86efac]/50 shadow-[0_0_20px_rgba(74,222,128,0.28)]",
   },
   {
-    title: "Client portal",
-    description: "Tickets, services, billing, approvals, and account tools",
-    href: PORTAL_LOGIN,
-    icon: ShieldCheck,
-    tags: ["Account access", "Self-service"],
-    cta: "Open portal",
-    accent: "text-[#fed7aa]",
+    title: "System status",
+    description: "Service advisories and known issues.",
+    href: "/portal/status",
+    icon: Activity,
+    tags: ["Advisories", "Known issues"],
+    cta: "View status",
+    accent: "text-[#bae6fd]",
     iconBg:
-      "bg-gradient-to-br from-[#fb923c]/45 to-[#ea580c]/25 ring-[#fdba74]/55 shadow-[0_0_20px_rgba(251,146,60,0.3)]",
+      "bg-gradient-to-br from-[#38bdf8]/40 to-[#0284c7]/25 ring-[#7dd3fc]/50 shadow-[0_0_20px_rgba(56,189,248,0.3)]",
   },
 ];
 
@@ -918,7 +923,7 @@ export const ZohoASAPWidget = ({
                   <p data-testid="text-widget-status">
                     {agentLive
                       ? `${agentName || "Specialist"} joined · live handoff`
-                      : "Answers · Tickets · Assist"}
+                      : "Ask · Support · Tools"}
                   </p>
                 </div>
               </div>
@@ -953,9 +958,9 @@ export const ZohoASAPWidget = ({
             <nav className="de-desk-tabs" aria-label="Support options">
               {(
                 [
-                  { id: "chat" as const, label: "Desk", icon: MessageCircle },
-                  { id: "ticket" as const, label: "Ticket", icon: FileText },
-                  { id: "resources" as const, label: "Resources", icon: BookOpen },
+                  { id: "chat" as const, label: "Ask DE", icon: MessageCircle },
+                  { id: "ticket" as const, label: "Get Support", icon: FileText },
+                  { id: "resources" as const, label: "Client Tools", icon: BookOpen },
                 ]
               ).map(({ id, label, icon: Icon }) => {
                 const isActive = activeTab === id;
@@ -971,7 +976,7 @@ export const ZohoASAPWidget = ({
                     aria-current={isActive ? "page" : undefined}
                     aria-label={
                       id === "chat" && unreadChatCount > 0
-                        ? `Desk, ${unreadChatCount} new ${unreadChatCount === 1 ? "message" : "messages"}`
+                        ? `Ask DE, ${unreadChatCount} new ${unreadChatCount === 1 ? "message" : "messages"}`
                         : undefined
                     }
                   >
@@ -1001,11 +1006,11 @@ export const ZohoASAPWidget = ({
                   }`}
                 />
                 {agentLive
-                  ? `${agentName || "Specialist"} on desk`
+                  ? `${agentName || "Support specialist"} joined the conversation`
                   : assistantAvailable === true
-                    ? "DE Desk is online"
+                    ? "DE Desk available"
                     : assistantAvailable === false
-                      ? "Ticket desk available"
+                      ? "Get Support available"
                       : "Connecting…"}
               </div>
               <button
@@ -1013,7 +1018,7 @@ export const ZohoASAPWidget = ({
                 onClick={() => selectTab(activeTab === "ticket" ? "chat" : "ticket")}
                 className="de-desk-status-r"
               >
-                Need help now?
+                {activeTab === "ticket" ? "Ask DE instead" : "Open a support ticket"}
                 <span className="de-desk-status-ic">
                   <Headset aria-hidden="true" />
                 </span>
@@ -1045,7 +1050,7 @@ export const ZohoASAPWidget = ({
                       </span>
                       <span className="de-desk-heads-up-preview">{headsUp.preview}</span>
                       <span className="de-desk-heads-up-hint">
-                        Reply below — or open Desk
+                        Reply below — or open Ask DE
                       </span>
                     </span>
                   </button>
@@ -1073,7 +1078,7 @@ export const ZohoASAPWidget = ({
                             <div className="de-desk-hero-ring">
                               <MessageCircle aria-hidden="true" />
                             </div>
-                            <h3>Talk to DE Desk</h3>
+                            <h3>How can we help?</h3>
                             <p>
                               Tell me what broke, what you&apos;re evaluating, or what you&apos;re trying to
                               protect — I&apos;ll give you a clear read and the sensible next step.
@@ -1082,13 +1087,21 @@ export const ZohoASAPWidget = ({
                           <DeskHeroArt variant="desk" />
                         </div>
                         <div className="de-desk-rows">
-                          {QUICK_CHAT_PROMPTS.map(({ label, icon: Icon, tone }) => (
+                          {QUICK_CHAT_PROMPTS.map(({ label, icon: Icon, tone, ticketChip }) => (
                             <button
                               key={label}
                               type="button"
                               data-tone={tone}
-                              onClick={() => void handleSendChat(label)}
-                              className="de-desk-row"
+                              data-testid={`ask-prompt-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                              onClick={() => {
+                                if (ticketChip) {
+                                  selectTab("ticket");
+                                  applyTicketChip(ticketChip);
+                                  return;
+                                }
+                                void handleSendChat(label);
+                              }}
+                              className={`de-desk-row${ticketChip ? " is-incident" : ""}`}
                             >
                               <span className="de-desk-row-ic">
                                 <Icon aria-hidden="true" />
@@ -1116,7 +1129,7 @@ export const ZohoASAPWidget = ({
                               {!isUser && (
                                 <div className="de-desk-bubble-meta">
                                   <span>{isAgent ? "AG" : "DE"}</span>
-                                  {isAgent ? chatMessage.senderName || agentName || "Agent" : "Desk"}
+                                  {isAgent ? chatMessage.senderName || agentName || "Agent" : "Ask DE"}
                                 </div>
                               )}
                               <p className="whitespace-pre-wrap">{chatMessage.content}</p>
@@ -1163,7 +1176,7 @@ export const ZohoASAPWidget = ({
                             }}
                             className="de-desk-row"
                           >
-                            <span className="de-desk-row-t">Back to desk</span>
+                            <span className="de-desk-row-t">Back to Ask DE</span>
                           </button>
                           <button type="button" onClick={() => setTicketResult(null)} className="de-desk-btn-grad">
                             Create another ticket
@@ -1178,14 +1191,14 @@ export const ZohoASAPWidget = ({
                             <div className="de-desk-hero-ring">
                               <FileText aria-hidden="true" />
                             </div>
-                            <h3>Create a support ticket</h3>
-                            <p>Tell us what happened and we&apos;ll route it to the right team.</p>
+                            <h3>Get technical support</h3>
+                            <p>Tell us what&apos;s happening and we&apos;ll route it to the right place.</p>
                           </div>
                           <DeskHeroArt variant="ticket" />
                         </div>
 
-                        <div className="de-desk-rows is-grid" role="group" aria-label="Common support issues">
-                          {DESK_TICKET_CHIPS.map((chip) => {
+                        <div className="de-desk-rows" role="group" aria-label="Common support issues">
+                          {DESK_TICKET_CHIPS.filter((chip) => chip.featured).map((chip) => {
                             const Icon = TICKET_CHIP_ICONS[chip.id];
                             const selected = selectedTicketChip === chip.id;
                             return (
@@ -1196,16 +1209,45 @@ export const ZohoASAPWidget = ({
                                 data-testid={`ticket-chip-${chip.id}`}
                                 aria-pressed={selected}
                                 onClick={() => applyTicketChip(chip.id)}
-                                className={`de-desk-row${selected ? " is-selected" : ""}`}
+                                className={`de-desk-row is-lg is-incident${selected ? " is-selected" : ""}`}
                               >
                                 <span className="de-desk-row-ic">
                                   <Icon aria-hidden="true" />
                                 </span>
-                                <span className="de-desk-row-t">{chip.label}</span>
+                                <span className="de-desk-row-body">
+                                  <span className="de-desk-row-t">
+                                    {chip.label}
+                                    <span className="de-desk-badge-urgent">Urgent</span>
+                                  </span>
+                                  {chip.blurb ? <span className="de-desk-row-d">{chip.blurb}</span> : null}
+                                </span>
                                 <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
                               </button>
                             );
                           })}
+                          <div className="de-desk-rows is-grid">
+                            {DESK_TICKET_CHIPS.filter((chip) => !chip.featured).map((chip) => {
+                              const Icon = TICKET_CHIP_ICONS[chip.id];
+                              const selected = selectedTicketChip === chip.id;
+                              return (
+                                <button
+                                  key={chip.id}
+                                  type="button"
+                                  data-tone={chip.tone}
+                                  data-testid={`ticket-chip-${chip.id}`}
+                                  aria-pressed={selected}
+                                  onClick={() => applyTicketChip(chip.id)}
+                                  className={`de-desk-row${selected ? " is-selected" : ""}`}
+                                >
+                                  <span className="de-desk-row-ic">
+                                    <Icon aria-hidden="true" />
+                                  </span>
+                                  <span className="de-desk-row-t">{chip.label}</span>
+                                  <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
+                                </button>
+                              );
+                            })}
+                          </div>
                         </div>
 
                         <div className="de-desk-details-head" ref={ticketDetailsRef}>
@@ -1397,43 +1439,49 @@ export const ZohoASAPWidget = ({
                         <div className="de-desk-hero-ring">
                           <BookOpen aria-hidden="true" />
                         </div>
-                        <h3>Get where you need to go</h3>
-                        <p>Quick access to the most used support tools and resources.</p>
+                        <h3>Client tools</h3>
+                        <p>Portal, remote support, knowledge base, and system status — not a generic resource library.</p>
                       </div>
                       <DeskHeroArt variant="resources" />
                     </div>
 
                     <div className="de-desk-section-head">
-                      <h4>Resources</h4>
-                      <a href="/support/knowledge-base">Browse all →</a>
+                      <h4>Client tools</h4>
+                      <a href="/support/knowledge-base">Browse knowledge base →</a>
                     </div>
 
                     <div className="de-desk-rows">
-                      {RESOURCE_LINKS.map(({ title, description, href, icon: Icon, external }, index) => (
-                        <a
-                          key={title}
-                          href={href}
-                          data-tone={index === 0 ? "pink" : "violet"}
-                          {...(external || href.startsWith("http")
-                            ? { target: "_blank", rel: "noopener noreferrer" }
-                            : {})}
-                          className="de-desk-row is-lg"
-                          data-testid={`resource-link-${title.toLowerCase().replace(/\s+/g, "-")}`}
-                        >
-                          <span className="de-desk-row-ic">
-                            <Icon aria-hidden="true" />
-                          </span>
-                          <span className="de-desk-row-body">
-                            <span className="de-desk-row-t">{title}</span>
-                            <span className="de-desk-row-d">{description}</span>
-                          </span>
-                          <span className="de-desk-row-actions">
-                            <span className="de-desk-row-ext">
-                              <ExternalLink aria-hidden="true" />
+                      {RESOURCE_LINKS.map(({ title, description, href, icon: Icon, external, guide }, index) => (
+                        <div key={title} className="de-desk-tool-block">
+                          <a
+                            href={href}
+                            data-tone={index === 0 ? "pink" : "violet"}
+                            {...(external || href.startsWith("http")
+                              ? { target: "_blank", rel: "noopener noreferrer" }
+                              : {})}
+                            className="de-desk-row is-lg"
+                            data-testid={`resource-link-${title.toLowerCase().replace(/\s+/g, "-")}`}
+                          >
+                            <span className="de-desk-row-ic">
+                              <Icon aria-hidden="true" />
                             </span>
-                            <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
-                          </span>
-                        </a>
+                            <span className="de-desk-row-body">
+                              <span className="de-desk-row-t">{title}</span>
+                              <span className="de-desk-row-d">{description}</span>
+                            </span>
+                            <span className="de-desk-row-actions">
+                              <span className="de-desk-row-ext">
+                                <ExternalLink aria-hidden="true" />
+                              </span>
+                              <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
+                            </span>
+                          </a>
+                          {guide ? (
+                            <a href={guide.href} className="de-desk-sublink" data-testid="resource-link-remote-support-guide">
+                              {guide.title}
+                            </a>
+                          ) : null}
+                        </div>
                       ))}
 
                       <a
@@ -1494,9 +1542,9 @@ export const ZohoASAPWidget = ({
                 maxLength={2000}
                 placeholder={
                   activeTab === "ticket"
-                    ? "Reply to Desk without leaving this ticket…"
+                    ? "Reply to Ask DE without leaving this ticket…"
                     : activeTab === "resources"
-                      ? "Reply to Desk while you browse…"
+                      ? "Reply to Ask DE while you browse tools…"
                       : agentLive
                         ? `Message ${agentName || "the specialist"}…`
                         : "Ask about risk, stack, pricing, or an outage..."
@@ -1505,8 +1553,8 @@ export const ZohoASAPWidget = ({
                 data-testid="input-support-chat"
                 aria-label={
                   activeTab === "chat"
-                    ? "Chat message"
-                    : "Reply to Desk from this tab"
+                    ? "Ask DE message"
+                    : "Reply to Ask DE from this tab"
                 }
               />
               <button
@@ -1523,7 +1571,7 @@ export const ZohoASAPWidget = ({
             <p className="de-desk-composer-caption">
               <Lock aria-hidden="true" />
               {activeTab !== "chat"
-                ? "Same Desk thread on every tab — reply here without switching."
+                ? "Same Ask DE thread on every tab — reply here without switching."
                 : agentLive
                   ? "A Digerati agent is in this thread. Never share passwords or MFA codes."
                   : "Never share passwords, MFA codes, or private keys."}
@@ -1536,7 +1584,7 @@ export const ZohoASAPWidget = ({
                   className={activeTab === "chat" ? "is-active" : undefined}
                   onClick={() => selectTab("chat")}
                 >
-                  DE Desk
+                  Ask DE
                 </button>
                 <span aria-hidden="true">·</span>
                 <button
@@ -1544,7 +1592,7 @@ export const ZohoASAPWidget = ({
                   className={activeTab === "ticket" ? "is-active" : undefined}
                   onClick={() => selectTab("ticket")}
                 >
-                  Ticket
+                  Get Support
                 </button>
                 <span aria-hidden="true">·</span>
                 <button
@@ -1552,7 +1600,7 @@ export const ZohoASAPWidget = ({
                   className={activeTab === "resources" ? "is-active" : undefined}
                   onClick={() => selectTab("resources")}
                 >
-                  Resources
+                  Client Tools
                 </button>
                 <span aria-hidden="true">·</span>
                 <a
@@ -1565,7 +1613,7 @@ export const ZohoASAPWidget = ({
                 </a>
               </p>
               <button type="button" onClick={() => selectTab("ticket")} className="de-desk-foot-cta">
-                Create ticket
+                Open a support ticket
                 <ExternalLink aria-hidden="true" />
               </button>
             </footer>
@@ -1821,6 +1869,7 @@ export const ZohoASAPWidget = ({
             .de-desk-rows.is-grid {
               display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
             }
+            .de-desk-rows > .de-desk-rows.is-grid { margin-top: 0; }
             .de-desk-row {
               display: flex; align-items: center; gap: 10px;
               padding: 9px 11px; border-radius: 12px;
@@ -1841,6 +1890,45 @@ export const ZohoASAPWidget = ({
               box-shadow: inset 0 0 0 1px rgba(211,18,106,0.16);
             }
             .de-desk-row.is-selected .de-desk-row-chev { color: #D3126A; }
+            .de-desk-row.is-incident {
+              background: #fff;
+              border-color: rgba(211,18,106,0.42);
+              box-shadow: inset 3px 0 0 #D3126A;
+              align-items: flex-start;
+            }
+            .de-desk-row.is-incident .de-desk-row-ic {
+              border-color: #D3126A;
+              color: #D3126A;
+              background: rgba(211,18,106,0.06);
+            }
+            .de-desk-row.is-incident .de-desk-row-t {
+              display: flex;
+              flex-wrap: wrap;
+              align-items: center;
+              gap: 6px 0;
+            }
+            .de-desk-row.is-incident:hover {
+              background: #fff;
+              border-color: #D3126A;
+            }
+            .de-desk-badge-urgent {
+              display: inline-block;
+              font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em;
+              text-transform: uppercase;
+              color: #fff; background: #D3126A;
+              border-radius: 5px; padding: 2px 6px;
+              vertical-align: middle; margin-left: 8px;
+            }
+            .de-desk-tool-block { display: flex; flex-direction: column; gap: 2px; }
+            .de-desk-sublink {
+              align-self: flex-start;
+              margin: 0 0 4px 46px;
+              padding: 4px 0;
+              font-size: 12.5px; font-weight: 600;
+              color: #D3126A; text-decoration: none;
+            }
+            .de-desk-sublink:hover,
+            .de-desk-sublink:focus-visible { text-decoration: underline; }
             .de-desk-rows.is-grid .de-desk-row { padding: 9px 10px; }
             .de-desk-rows.is-grid .de-desk-row-t { font-size: 13.5px; line-height: 1.3; }
             .de-desk-row[data-tone="violet"] { --c: var(--desk-violet); }
