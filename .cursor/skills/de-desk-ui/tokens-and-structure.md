@@ -18,7 +18,7 @@ Do **not** use charcoal hero/rows, black footer, plum washes, or magenta→viole
 
 ## Shared chrome (top → bottom)
 
-1. **Header** — magenta DE mark + green pip; title “DE Desk”; subtitle “Answers · Tickets · Assist”; close. On `sm+` the header moves the window; double-click resets size and position. A south-east grip resizes the window (grows up/left when docked).
+1. **Header** — magenta DE mark + green pip; title “DE Desk”; subtitle “Answers · Tickets · Assist”; Expand (desktop) + close. On `sm+` the header moves the window; double-click resets size and position. Drag any edge or the south-east grip to resize. Expand grows toward the page from a bottom-right dock.
 2. **Tabs** — Desk | Ticket | Resources; active = dark label + magenta underline
 3. **Status row** — paper field; green/sky/amber dot + “DE Desk is online” | “Need help now?”
 4. **Content** — paper body; white raised hero + white raised rows / light inputs

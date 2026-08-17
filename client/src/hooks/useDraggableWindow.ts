@@ -2,7 +2,10 @@ import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPoi
 import {
   clampDeskPos,
   clampDeskSize,
-  resizeDeskFromSouthEast,
+  expandDeskWindow,
+  isDeskExpanded,
+  resizeDeskFromEdge,
+  type DeskResizeEdge,
   type DeskViewport,
   type DeskWindowPos,
   type DeskWindowSize,
@@ -61,6 +64,7 @@ export function useDraggableWindow(options: {
   const [size, setSize] = useState<DeskWindowSize | null>(null);
   const [dragging, setDragging] = useState(false);
   const [resizing, setResizing] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const sizeRef = useRef<DeskWindowSize | null>(null);
   const dragRef = useRef({
     active: false,
@@ -71,6 +75,7 @@ export function useDraggableWindow(options: {
   });
   const resizeRef = useRef({
     active: false,
+    edge: "se" as DeskResizeEdge,
     startX: 0,
     startY: 0,
     origX: 0,
@@ -127,6 +132,14 @@ export function useDraggableWindow(options: {
       /* ignore */
     }
   }, [open, enabled, storageKey, measureAndClamp]);
+
+  useEffect(() => {
+    if (!size) {
+      setExpanded(false);
+      return;
+    }
+    setExpanded(isDeskExpanded(size, readViewport()));
+  }, [size]);
 
   useEffect(() => {
     if (!open || (!pos && !size)) return;
@@ -225,7 +238,18 @@ export function useDraggableWindow(options: {
     window.addEventListener("pointercancel", onUp);
   };
 
-  const onResizePointerDown = (event: ReactPointerEvent<HTMLElement>) => {
+  const applyRect = (next: DeskWindowPos & DeskWindowSize) => {
+    const el = panelRef.current;
+    if (!el) return;
+    el.style.left = `${next.x}px`;
+    el.style.top = `${next.y}px`;
+    el.style.right = "auto";
+    el.style.bottom = "auto";
+    el.style.width = `${next.w}px`;
+    el.style.height = `${next.h}px`;
+  };
+
+  const onResizePointerDown = (edge: DeskResizeEdge) => (event: ReactPointerEvent<HTMLElement>) => {
     if (!enabled) return;
     if (event.pointerType === "mouse" && event.button !== 0) return;
     const el = panelRef.current;
@@ -238,6 +262,7 @@ export function useDraggableWindow(options: {
 
     resizeRef.current = {
       active: true,
+      edge,
       startX: event.clientX,
       startY: event.clientY,
       origX: pinned.x,
@@ -247,20 +272,17 @@ export function useDraggableWindow(options: {
     };
     setResizing(true);
     document.body.style.userSelect = "none";
-    document.body.style.cursor = "nwse-resize";
 
     const onMove = (moveEvent: PointerEvent) => {
       if (!resizeRef.current.active) return;
-      const { startX, startY, origX, origY, origW, origH } = resizeRef.current;
-      const next = resizeDeskFromSouthEast(
+      const { startX, startY, origX, origY, origW, origH, edge: liveEdge } = resizeRef.current;
+      const next = resizeDeskFromEdge(
         { x: origX, y: origY, w: origW, h: origH },
         { dx: moveEvent.clientX - startX, dy: moveEvent.clientY - startY },
+        liveEdge,
         readViewport(),
       );
-      el.style.left = `${next.x}px`;
-      el.style.top = `${next.y}px`;
-      el.style.width = `${next.w}px`;
-      el.style.height = `${next.h}px`;
+      applyRect(next);
     };
 
     const onUp = () => {
@@ -270,7 +292,6 @@ export function useDraggableWindow(options: {
       if (!resizeRef.current.active) return;
       resizeRef.current.active = false;
       document.body.style.userSelect = "";
-      document.body.style.cursor = "";
       setResizing(false);
       const box = el.getBoundingClientRect();
       const view = readViewport();
@@ -285,13 +306,31 @@ export function useDraggableWindow(options: {
     window.addEventListener("pointercancel", onUp);
   };
 
+  const toggleExpanded = () => {
+    if (!enabled) return;
+    const el = panelRef.current;
+    if (!el) return;
+    const pinned = pinCurrentRect();
+    if (!pinned) return;
+    const view = readViewport();
+    if (isDeskExpanded(pinned, view)) {
+      reset();
+      return;
+    }
+    const next = expandDeskWindow(pinned, view);
+    applyRect(next);
+    persist(next, next);
+  };
+
   return {
     panelRef,
     pos,
     size,
     dragging,
     resizing,
+    expanded,
     reset,
+    toggleExpanded,
     onHandlePointerDown,
     onResizePointerDown,
   };

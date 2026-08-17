@@ -16,6 +16,7 @@ export type DeskViewport = {
 
 export type DeskWindowSize = { w: number; h: number };
 export type DeskWindowPos = { x: number; y: number };
+export type DeskResizeEdge = "n" | "s" | "e" | "w" | "ne" | "nw" | "se" | "sw";
 
 export function deskSizeBounds(view: DeskViewport): {
   minW: number;
@@ -58,6 +59,46 @@ export function clampDeskPos(x: number, y: number, width: number, view: DeskView
   };
 }
 
+function deskMaxRight(view: DeskViewport): number {
+  return view.width - view.gutter - DESK_WINDOW_PAD;
+}
+
+function deskMaxBottom(view: DeskViewport): number {
+  return view.height - view.cookieH - DESK_WINDOW_PAD;
+}
+
+/**
+ * Grow/shrink from a window edge or corner. West/north pulls keep the opposite
+ * edge planted so a bottom-right docked Desk can expand toward the page.
+ * East/south growth that would overflow shifts the window up/left.
+ */
+export function resizeDeskFromEdge(
+  start: DeskWindowPos & DeskWindowSize,
+  delta: { dx: number; dy: number },
+  edge: DeskResizeEdge,
+  view: DeskViewport,
+): DeskWindowPos & DeskWindowSize {
+  const fromW = edge.includes("w");
+  const fromE = edge.includes("e");
+  const fromN = edge.includes("n");
+  const fromS = edge.includes("s");
+
+  let nextW = start.w;
+  let nextH = start.h;
+  if (fromE) nextW = start.w + delta.dx;
+  if (fromW) nextW = start.w - delta.dx;
+  if (fromS) nextH = start.h + delta.dy;
+  if (fromN) nextH = start.h - delta.dy;
+
+  const size = clampDeskSize(nextW, nextH, view);
+  let x = fromW ? start.x + start.w - size.w : start.x;
+  let y = fromN ? start.y + start.h - size.h : start.y;
+  if (x + size.w > deskMaxRight(view)) x = deskMaxRight(view) - size.w;
+  if (y + size.h > deskMaxBottom(view)) y = deskMaxBottom(view) - size.h;
+  const pos = clampDeskPos(x, y, size.w, view);
+  return { ...pos, ...size };
+}
+
 /**
  * Grow/shrink from the south-east corner. If the new size would overflow the
  * right or bottom edge, shift the window up/left so a docked Desk can still
@@ -68,13 +109,19 @@ export function resizeDeskFromSouthEast(
   delta: { dx: number; dy: number },
   view: DeskViewport,
 ): DeskWindowPos & DeskWindowSize {
-  const size = clampDeskSize(start.w + delta.dx, start.h + delta.dy, view);
-  const maxRight = view.width - view.gutter - DESK_WINDOW_PAD;
-  const maxBottom = view.height - view.cookieH - DESK_WINDOW_PAD;
-  let x = start.x;
-  let y = start.y;
-  if (x + size.w > maxRight) x = maxRight - size.w;
-  if (y + size.h > maxBottom) y = maxBottom - size.h;
-  const pos = clampDeskPos(x, y, size.w, view);
-  return { ...pos, ...size };
+  return resizeDeskFromEdge(start, delta, "se", view);
+}
+
+/** Grow to the largest on-screen size while keeping the bottom-right planted. */
+export function expandDeskWindow(
+  start: DeskWindowPos & DeskWindowSize,
+  view: DeskViewport,
+): DeskWindowPos & DeskWindowSize {
+  const b = deskSizeBounds(view);
+  return resizeDeskFromEdge(start, { dx: b.maxW - start.w, dy: b.maxH - start.h }, "se", view);
+}
+
+export function isDeskExpanded(size: DeskWindowSize, view: DeskViewport): boolean {
+  const b = deskSizeBounds(view);
+  return size.w >= b.maxW - 16 && size.h >= b.maxH - 16;
 }
