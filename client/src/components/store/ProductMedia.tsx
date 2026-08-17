@@ -10,7 +10,7 @@ interface ProductMediaProps {
 }
 
 /**
- * Dominant product visual: branded category hero + vendor mark overlay.
+ * Vendor plate is the subject. Category/Meshy art is atmosphere only.
  * Used by listing cards and product detail so imagery stays consistent.
  */
 export function ProductMedia({
@@ -32,10 +32,10 @@ export function ProductMedia({
 
   const logoBox =
     variant === "detail"
-      ? "h-36 w-36 sm:h-44 sm:w-44 md:h-52 md:w-52 p-6 sm:p-8"
+      ? "h-[46%] w-[46%] max-h-56 max-w-56 min-h-36 min-w-36 p-6 sm:p-8"
       : variant === "card"
-        ? "h-20 w-20 p-3"
-        : "h-12 w-12 p-2";
+        ? "h-[46%] w-[46%] max-h-44 max-w-44 min-h-28 min-w-28 p-4"
+        : "h-[42%] w-[42%] max-h-16 max-w-16 min-h-12 min-w-12 p-2";
 
   return (
     <div
@@ -46,11 +46,11 @@ export function ProductMedia({
       <img
         src={mediaSrc}
         alt=""
-        className="absolute inset-0 h-full w-full object-cover"
+        className="absolute inset-0 h-full w-full scale-110 object-cover opacity-50"
         loading={variant === "detail" ? "eager" : "lazy"}
         decoding="async"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/20" />
 
       <div className="absolute inset-0 flex items-center justify-center p-4">
         {visual.logoUrl ? (

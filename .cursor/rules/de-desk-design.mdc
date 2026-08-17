@@ -1,5 +1,5 @@
 ---
-description: DE Desk widget visual + copy playbook (light shell, dark boxes, function labels)
+description: DE Desk widget visual + copy playbook (one paper theme, function labels)
 globs: client/src/components/ZohoASAPWidget.tsx,client/src/pages/portal/PortalChat.tsx
 alwaysApply: false
 ---
@@ -10,20 +10,19 @@ Primary file: `client/src/components/ZohoASAPWidget.tsx`. Full playbook: `.curso
 
 ## Shell (all tabs)
 
-- One **light chrome** frame for Desk / Ticket / Resources — white header, underline tabs, status row, light body.
-- **Dark boxes** sit on that light field (hero, prompt rows, form inputs).
-- **Dark composer + footer** stay graphite (`#131218` / `#0F0E14`).
+- **One paper theme** for Desk / Ticket / Resources — header, tabs, status, body, composer, and footer all sit on `#F7F5F2`.
+- **White raised cards** for hero, prompt rows, resource rows, and form fields.
 - Brand magenta `#D3126A` for avatar, active underline, send, CTAs. Violet `#8B5CF6` is icon-well accent only — no purple wash fills.
 - Active tab: dark label + magenta underline. Inactive: muted shell dim.
-- High contrast text always. Dark boxes use white type; labels on the light body use `#68637A`.
+- High contrast: dark ink on paper. Do not restore charcoal boxes or a black footer.
 
 ## Tab content
 
-| Tab | Panel inside light shell |
+| Tab | Panel inside paper shell |
 |-----|--------------------------|
-| **Desk** | Dark hero + dark prompt rows; conversation uses magenta user / dark assistant bubbles. |
-| **Ticket** | Same hero language + dark chip rows + dark inputs on the light body. |
-| **Resources** | Same hero language + dark resource rows + assessment highlight + security alert. |
+| **Desk** | Paper hero + paper prompt rows; conversation uses magenta user / paper assistant bubbles. |
+| **Ticket** | Same hero language + paper chip rows + light inputs. |
+| **Resources** | Same hero language + paper resource rows + assessment highlight + security alert. |
 
 Do not invent a third unrelated theme per tab. Elevate in place; ask DE before removing CTAs, tabs, disclaimers, or resource links.
 
