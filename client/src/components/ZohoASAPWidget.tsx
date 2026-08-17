@@ -98,8 +98,8 @@ const QUICK_CHAT_PROMPTS: Array<{
 }> = [
   { label: "Something isn't working", icon: Monitor, tone: "blue" },
   { label: "Possible security incident", icon: AlertTriangle, tone: "red", ticketChip: "security-incident" },
-  { label: "Help me choose IT/security services", icon: Scale, tone: "violet" },
-  { label: "I have an IT or security question", icon: MessageCircle, tone: "teal" },
+  { label: "Help me choose services", icon: Scale, tone: "violet" },
+  { label: "Ask an IT/security question", icon: MessageCircle, tone: "teal" },
 ];
 
 function DeskHeroArt({ variant }: { variant: "desk" | "ticket" | "resources" }) {
@@ -1086,7 +1086,7 @@ export const ZohoASAPWidget = ({
                           </div>
                           <DeskHeroArt variant="desk" />
                         </div>
-                        <div className="de-desk-rows">
+                        <div className="de-desk-rows is-grid">
                           {QUICK_CHAT_PROMPTS.map(({ label, icon: Icon, tone, ticketChip }) => (
                             <button
                               key={label}
@@ -1440,17 +1440,12 @@ export const ZohoASAPWidget = ({
                           <BookOpen aria-hidden="true" />
                         </div>
                         <h3>Client tools</h3>
-                        <p>Portal, remote support, knowledge base, and system status — not a generic resource library.</p>
+                        <p>Open the portal, start remote support, check status, or browse the knowledge base.</p>
                       </div>
                       <DeskHeroArt variant="resources" />
                     </div>
 
-                    <div className="de-desk-section-head">
-                      <h4>Client tools</h4>
-                      <a href="/support/knowledge-base">Browse knowledge base →</a>
-                    </div>
-
-                    <div className="de-desk-rows">
+                    <div className="de-desk-rows is-grid">
                       {RESOURCE_LINKS.map(({ title, description, href, icon: Icon, external, guide }, index) => (
                         <div key={title} className="de-desk-tool-block">
                           <a
@@ -1459,7 +1454,7 @@ export const ZohoASAPWidget = ({
                             {...(external || href.startsWith("http")
                               ? { target: "_blank", rel: "noopener noreferrer" }
                               : {})}
-                            className="de-desk-row is-lg"
+                            className="de-desk-row"
                             data-testid={`resource-link-${title.toLowerCase().replace(/\s+/g, "-")}`}
                           >
                             <span className="de-desk-row-ic">
@@ -1483,7 +1478,9 @@ export const ZohoASAPWidget = ({
                           ) : null}
                         </div>
                       ))}
+                    </div>
 
+                    <div className="de-desk-rows">
                       <a
                         href="/book"
                         data-tone="pink"
@@ -1919,18 +1916,19 @@ export const ZohoASAPWidget = ({
               border-radius: 5px; padding: 2px 6px;
               vertical-align: middle; margin-left: 8px;
             }
-            .de-desk-tool-block { display: flex; flex-direction: column; gap: 2px; }
+            .de-desk-tool-block { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
             .de-desk-sublink {
               align-self: flex-start;
-              margin: 0 0 4px 46px;
-              padding: 4px 0;
+              margin: 0 0 2px 42px;
+              padding: 2px 0 4px;
               font-size: 12.5px; font-weight: 600;
               color: #D3126A; text-decoration: none;
             }
             .de-desk-sublink:hover,
             .de-desk-sublink:focus-visible { text-decoration: underline; }
-            .de-desk-rows.is-grid .de-desk-row { padding: 9px 10px; }
+            .de-desk-rows.is-grid .de-desk-row { padding: 9px 10px; align-items: flex-start; }
             .de-desk-rows.is-grid .de-desk-row-t { font-size: 13.5px; line-height: 1.3; }
+            .de-desk-rows.is-grid .de-desk-tool-block .de-desk-row-actions { display: none; }
             .de-desk-row[data-tone="violet"] { --c: var(--desk-violet); }
             .de-desk-row[data-tone="blue"] { --c: var(--desk-blue); }
             .de-desk-row[data-tone="teal"] { --c: var(--desk-teal); }
@@ -2299,6 +2297,9 @@ export const ZohoASAPWidget = ({
             }
             @media (min-width: 640px) {
               .de-desk-foot { padding-right: 36px; }
+            }
+            @media (max-width: 480px) {
+              .de-desk-foot-cta { display: none; }
             }
             @media (max-width: 420px) {
               .de-desk-grid2 { grid-template-columns: 1fr; }

@@ -28,7 +28,7 @@ Do **not** use charcoal hero/rows, black footer, plum washes, or magenta→viole
 ## Ask DE
 
 - Paper hero “How can we help?”
-- Intent prompts (all four visible): Something isn't working · Possible security incident · Help me choose IT/security services · I have an IT or security question
+- Intent prompts in a 2×2 (all four visible): Something isn't working · Possible security incident · Help me choose services · Ask an IT/security question
 - Security prompt switches to Get Support and applies the incident chip
 - After send: magenta user bubbles, paper assistant bubbles labeled “Ask DE”
 - Shared paper composer under all tabs
