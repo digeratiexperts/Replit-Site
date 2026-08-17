@@ -110,7 +110,7 @@ export function StoreProductCard({
       <Link href={`/store/product/${product.sku}`}>
         <ProductMedia
           product={product}
-          variant={compact ? "thumb" : "card"}
+          variant="card"
           className="rounded-none border-0 border-b border-white/10"
           categoryBadge={categoryLabels[product.category]}
         />

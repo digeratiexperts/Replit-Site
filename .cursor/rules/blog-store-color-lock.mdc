@@ -1,0 +1,40 @@
+---
+description: Freeze current Blog (Journal) and Store color systems — do not restyle
+globs:
+  - client/src/pages/resources/**
+  - client/src/pages/store/**
+  - client/src/components/store/**
+  - client/src/App.tsx
+  - client/src/index.css
+alwaysApply: true
+---
+
+# Blog and Store color lock
+
+DE settled these palettes. Do **not** restyle them to magenta, paper, cyan, or another family’s hue. Size, layout, and type may change. **Colors stay.**
+
+Ask DE before changing any value below.
+
+## Blog / Journal (`/resources/blog`, `/resources/blog/*`)
+
+- Page accent: `data-accent="amber"` via `ACCENT_BY_PREFIX` in `client/src/App.tsx` (`/resources` and `/case-studies`).
+- Tokens in `client/src/index.css`: `--de-accent-rgb: 180 83 9`; `--de-accent-ink-rgb: 251 191 36`.
+- Masthead stays the charcoal ladder (`#050312` → `#0a0a0a` → `#151217`). “Journal” uses `text-de-accent-ink` (amber), not magenta.
+- Do not flatten the Journal to a paper chapter or repaint it electric/magenta/cyan.
+
+## Store (`/store`, `/store/*`)
+
+- Page accent: `data-accent="electric"`.
+- Tokens: `--de-accent-rgb: 29 111 242`; `--de-accent-ink-rgb: 111 179 255`.
+- Category pills stay **pill-only** with the 14 distinct hues in `categoryAccent` (`StoreProductCard.tsx`). Guard: `categoryAccent.test.ts`.
+  - `comanaged_subscriptions` teal-300, `comanaged_onboarding` lime-300, `digital_templates` yellow-300, `professional_services` pink-300.
+- Do not paint cards, rails, or the catalog field with those pill hues. Do not collapse pills onto violet/purple/indigo or onto one store-wide color.
+- Vendor marks stay vendor colors. Do not recolor logos.
+
+## Shared
+
+- Primary marketing CTA fill stays `#D3126A` sitewide, including on blog and store chrome that is not the page accent.
+- Gold (`#e7b20d`) is the wordmark bars only — not a blog or store fill.
+- Portal `/portal/*` is out of scope.
+
+If a sweep, audit, or “one theme” pass wants to unify accents: **skip blog and store.**

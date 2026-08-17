@@ -120,3 +120,4 @@ Canonical portal login: `https://portal.digeratiexperts.com/portal/login` — ne
 Preserve existing DE content, CTAs, nav, and stats unless DE explicitly approves removal.
 Inspect rendered UI at 390 / 768 / 1440 at minimum. Never judge UI from source code alone.
 Dark fields stay black/charcoal so `#D3126A` pops — see `.cursor/rules/dark-field-accent-pop.mdc`. No purple-filled boxes.
+Blog/Journal stays amber; Store stays electric + the 14 category-pill hues — `.cursor/rules/blog-store-color-lock.mdc`. Do not restyle those colors.
