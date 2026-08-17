@@ -110,7 +110,7 @@ export default function ThankYouSuccess() {
                 <Button 
                   asChild 
                   size="lg"
-                  className="bg-de-raised hover: hover:to-blue-700 text-white px-8 py-6 text-lg rounded-xl shadow-lg"
+                  className="bg-[#D3126A] px-8 py-6 text-lg text-white shadow-lg hover:bg-[#e01874] rounded-xl"
                   data-testid="button-book-consultation"
                 >
                   <a href="/book">
@@ -169,14 +169,18 @@ export default function ThankYouSuccess() {
       {/* Trust Badges Section */}
       <section className="bg-slate-800 py-8 px-4">
         <div className="max-w-4xl mx-auto flex flex-wrap justify-center items-center gap-6">
-          {/* Google Reviews Badge */}
-          <div className="flex items-center gap-2 bg-white rounded-lg px-4 py-2">
-            <SiGoogle className="h-6 w-6 text-blue-500" />
+          {/* Google Reviews — no fabricated star rating */}
+          <a
+            href="/#google-reviews"
+            className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-[#1A1228] transition-colors hover:bg-de-paper"
+            data-testid="link-thank-you-reviews"
+          >
+            <SiGoogle className="h-6 w-6 text-blue-500" aria-hidden="true" />
             <div>
               <div className="text-xs font-semibold text-slate-700">Google Reviews</div>
-              <div className="flex text-yellow-400 text-sm">★★★★★</div>
+              <div className="text-xs text-black/55 underline">See client reviews</div>
             </div>
-          </div>
+          </a>
           
           {/* Google Partner Badge */}
           <div className="flex items-center gap-2 bg-white rounded-lg px-4 py-2">
