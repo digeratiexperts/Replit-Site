@@ -856,19 +856,29 @@ export const ZohoASAPWidget = ({
   const canvasRight = "calc(var(--de-canvas-gutter) + var(--de-chrome-inset))";
 
   const deskWindowStyle = canDrag
-    ? deskDrag.pos
-      ? {
-          left: deskDrag.pos.x,
-          top: deskDrag.pos.y,
-          right: "auto",
-          bottom: "auto",
-        }
-      : {
-          right: canvasRight,
-          bottom: dockClear,
-          left: "auto",
-          top: "auto",
-        }
+    ? {
+        ...(deskDrag.pos
+          ? {
+              left: deskDrag.pos.x,
+              top: deskDrag.pos.y,
+              right: "auto",
+              bottom: "auto",
+            }
+          : {
+              right: canvasRight,
+              bottom: dockClear,
+              left: "auto",
+              top: "auto",
+            }),
+        ...(deskDrag.size
+          ? {
+              width: deskDrag.size.w,
+              height: deskDrag.size.h,
+              maxWidth: "none",
+              maxHeight: "none",
+            }
+          : {}),
+      }
     : undefined;
 
   return (
@@ -895,7 +905,7 @@ export const ZohoASAPWidget = ({
                 onDoubleClick={canDrag ? deskDrag.reset : undefined}
                 style={canDrag ? { touchAction: "none" } : undefined}
                 data-testid="desk-drag-handle"
-                aria-label={canDrag ? "Move DE Desk window" : undefined}
+                aria-label={canDrag ? "Move DE Desk window. Double-click to reset size and position." : undefined}
               >
                 <div className="de-desk-avatar">
                   DE
@@ -1540,6 +1550,17 @@ export const ZohoASAPWidget = ({
                 <ExternalLink aria-hidden="true" />
               </button>
             </footer>
+            {canDrag ? (
+              <button
+                type="button"
+                className={`de-desk-resize${deskDrag.resizing ? " is-active" : ""}`}
+                data-testid="desk-resize-handle"
+                aria-label="Resize DE Desk. Drag to make the window larger or smaller."
+                onPointerDown={deskDrag.onResizePointerDown}
+              >
+                <span aria-hidden="true" />
+              </button>
+            ) : null}
           </section>
         )}
 
@@ -2106,6 +2127,45 @@ export const ZohoASAPWidget = ({
               display: flex; align-items: center; gap: 4px; flex: none;
             }
             .de-desk-foot-cta svg { width: 11px; height: 11px; }
+            .de-desk-resize {
+              position: absolute;
+              right: 0;
+              bottom: 0;
+              width: 44px;
+              height: 44px;
+              border: 0;
+              background: transparent;
+              cursor: nwse-resize;
+              touch-action: none;
+              z-index: 3;
+            }
+            .de-desk-resize span {
+              position: absolute;
+              right: 8px;
+              bottom: 8px;
+              width: 14px;
+              height: 14px;
+              background:
+                linear-gradient(135deg, transparent 46%, #726c82 46%, #726c82 54%, transparent 54%),
+                linear-gradient(135deg, transparent 66%, #726c82 66%, #726c82 74%, transparent 74%),
+                linear-gradient(135deg, transparent 86%, #726c82 86%, #726c82 94%, transparent 94%);
+            }
+            .de-desk-resize:hover span,
+            .de-desk-resize.is-active span,
+            .de-desk-resize:focus-visible span {
+              background:
+                linear-gradient(135deg, transparent 46%, #d3126a 46%, #d3126a 54%, transparent 54%),
+                linear-gradient(135deg, transparent 66%, #d3126a 66%, #d3126a 74%, transparent 74%),
+                linear-gradient(135deg, transparent 86%, #d3126a 86%, #d3126a 94%, transparent 94%);
+            }
+            .de-desk-resize:focus-visible {
+              outline: 2px solid #d3126a;
+              outline-offset: -4px;
+              border-radius: 10px;
+            }
+            @media (min-width: 640px) {
+              .de-desk-foot { padding-right: 36px; }
+            }
             @media (max-width: 420px) {
               .de-desk-grid2 { grid-template-columns: 1fr; }
               .de-desk-hero-art { display: none; }
