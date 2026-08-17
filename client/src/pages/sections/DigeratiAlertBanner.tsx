@@ -108,27 +108,27 @@ export const DigeratiAlertBanner = (): JSX.Element => {
               </p>
 
               <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-                <a href="/book">
-                  <Button
+                <Button asChild
                     size="lg"
                     className="h-14 rounded-xl bg-[#D3126A] px-8 text-base font-semibold text-white shadow-none transition-colors hover:bg-[#e01874]"
                     data-testid="button-schedule-consultation-banner"
                   >
+                  <a href="/book">
                     <ArrowRight className="mr-2 h-5 w-5" />
                     Schedule Consultation
-                  </Button>
-                </a>
-                <a href="tel:+13254809870">
-                  <Button
+                  </a>
+                </Button>
+                <Button asChild
                     variant="outline"
                     size="lg"
                     className="h-14 rounded-xl border-2 border-white/25 bg-transparent px-8 text-base font-semibold text-white hover:bg-white/10"
                     data-testid="button-call-banner"
                   >
+                  <a href="tel:+13254809870">
                     <Phone className="mr-2 h-5 w-5" />
                     Call 325-480-9870
-                  </Button>
-                </a>
+                  </a>
+                </Button>
               </div>
             </div>
           </div>

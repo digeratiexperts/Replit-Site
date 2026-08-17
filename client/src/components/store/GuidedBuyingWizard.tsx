@@ -297,16 +297,16 @@ export function GuidedBuyingWizard({ open, onClose, onAddStack }: GuidedBuyingWi
                       <MessageCircle className="mr-2 h-4 w-4" />
                       Talk to advisor
                     </Button>
-                    <a href="/book" className="flex-1">
-                      <Button
+                    <Button asChild
                         variant="outline"
                         className="h-11 w-full border-white/15 bg-transparent text-white hover:bg-white/5"
                         data-testid="button-guided-book"
                       >
-                        <Calendar className="mr-2 h-4 w-4" />
+                  <a href="/book" className="flex-1">
+                    <Calendar className="mr-2 h-4 w-4" />
                         Book architect
-                      </Button>
-                    </a>
+                  </a>
+                </Button>
                   </div>
                   <Button
                     variant="ghost"

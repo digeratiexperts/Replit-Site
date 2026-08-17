@@ -97,17 +97,17 @@ export function PremiumCTASection({
               </Button>
               
               {showPhoneButton && (
-                <a href={`tel:${phoneNumber}`}>
-                  <Button 
+                <Button asChild 
                     variant="outline"
                     size="lg"
                     className="h-14 px-8 bg-transparent border-2 border-white/40 text-white hover:bg-white/10 hover:border-white/60 font-semibold text-base rounded-full"
                     data-testid="button-premium-cta-phone"
                   >
+                  <a href={`tel:${phoneNumber}`}>
                     <Phone className="mr-2 h-5 w-5" />
                     Call {phoneNumber}
-                  </Button>
-                </a>
+                  </a>
+                </Button>
               )}
             </motion.div>
           </div>

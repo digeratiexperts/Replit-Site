@@ -158,12 +158,12 @@ export default function StandaloneServices() {
               technology or security role — after we assess the environment, document the scope, and confirm ownership.
             </p>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 mt-10">
-              <a href={MEET_URL} target="_blank" rel="noopener noreferrer" data-testid="cta-hero-assessment">
-                <Button size="lg" className="w-full bg-de-raised  text-white">
-                  Start Cyber Risk Assessment
+              <Button asChild size="lg" className="w-full bg-de-raised  text-white">
+                  <a href={MEET_URL} target="_blank" rel="noopener noreferrer" data-testid="cta-hero-assessment">
+                    Start Cyber Risk Assessment
                   <ArrowRight className="w-4 h-4 ml-2" />
+                  </a>
                 </Button>
-              </a>
               <Link href="/proactive-ecosystem-pricing">
                 <Button size="lg" variant="outline" className="w-full border-white/20 text-white hover:bg-white/10" data-testid="cta-hero-compare">
                   Compare ProActive Ecosystem
@@ -189,11 +189,11 @@ export default function StandaloneServices() {
                   </li>
                 ))}
               </ul>
-              <a href={MEET_URL} target="_blank" rel="noopener noreferrer" data-testid="cta-standalone-scope">
-                <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                  Request Standalone Scope
+              <Button asChild variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                  <a href={MEET_URL} target="_blank" rel="noopener noreferrer" data-testid="cta-standalone-scope">
+                    Request Standalone Scope
+                  </a>
                 </Button>
-              </a>
             </div>
             <div className="rounded-2xl border border-de-hairline bg-white/[0.03] p-7" data-testid="compare-ecosystem">
               <h2 className="text-xl font-bold text-white mb-4">ProActive Ecosystem</h2>
@@ -336,12 +336,12 @@ export default function StandaloneServices() {
               standalone service or ProActive Ecosystem package is the safer path forward.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <a href={MEET_URL} target="_blank" rel="noopener noreferrer">
-                <Button size="lg" className="bg-de-raised  text-white">
-                  Start Cyber Risk Assessment
+              <Button asChild size="lg" className="bg-de-raised  text-white">
+                  <a href={MEET_URL} target="_blank" rel="noopener noreferrer">
+                    Start Cyber Risk Assessment
                   <ArrowRight className="w-4 h-4 ml-2" />
+                  </a>
                 </Button>
-              </a>
               <Link href="/proactive-ecosystem-pricing">
                 <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10">
                   Compare ProActive Ecosystem

@@ -395,16 +395,16 @@ const ProductDetail = () => {
                     This is a contract-based service. Schedule a consultation to discuss your needs
                     and receive a custom quote.
                   </p>
-                  <a href="/book" target="_blank" rel="noopener noreferrer">
-                    <Button
+                  <Button asChild
                       className="w-full bg-de-accent py-6 text-lg text-white hover:bg-[#6548ff]"
                       data-testid="button-schedule-consultant"
                     >
-                      <Calendar className="mr-2 h-5 w-5" />
+                  <a href="/book" target="_blank" rel="noopener noreferrer">
+                    <Calendar className="mr-2 h-5 w-5" />
                       Schedule Consultant
                       <ExternalLink className="ml-2 h-4 w-4" />
-                    </Button>
                   </a>
+                </Button>
                   <a
                     href="tel:+13254809870"
                     className="flex h-12 w-full items-center justify-center gap-2 rounded-md border border-white/15 text-white/80 transition-colors hover:bg-white/5 hover:text-white"

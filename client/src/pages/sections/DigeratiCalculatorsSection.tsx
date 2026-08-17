@@ -231,16 +231,16 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                         </div>
 
                         <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
-                          <a href="/book">
-                            <Button 
+                          <Button asChild 
                               size="lg"
                               className="h-12 px-6 bg-white text-black hover:bg-white/90 font-semibold rounded-xl shadow-lg transition-all duration-300 hover:scale-[1.02]" 
                               data-testid="button-get-protected"
                             >
-                              Get Protected Now
+                  <a href="/book">
+                    Get Protected Now
                               <ChevronRight className="ml-2 h-4 w-4" />
-                            </Button>
-                          </a>
+                  </a>
+                </Button>
                         </div>
                       </div>
                     </CardContent>
@@ -368,16 +368,16 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                         </div>
 
                         <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
-                          <a href="/book">
-                            <Button 
+                          <Button asChild 
                               size="lg"
                               className="h-12 px-6 bg-de-magenta text-white hover:bg-[#e01874] font-semibold rounded-xl transition-colors" 
                               data-testid="button-schedule-consultation"
                             >
-                              Schedule Consultation
+                  <a href="/book">
+                    Schedule Consultation
                               <ChevronRight className="ml-2 h-4 w-4" />
-                            </Button>
-                          </a>
+                  </a>
+                </Button>
                         </div>
                       </div>
                     </CardContent>

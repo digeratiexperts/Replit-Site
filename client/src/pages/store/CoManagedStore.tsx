@@ -910,16 +910,16 @@ const CoManagedStore = () => {
                 <MessageCircle className="mr-2 h-4 w-4" />
                 Ask Digerati
               </Button>
-              <a href="/book">
-                <Button
+              <Button asChild
                   size="lg"
                   className="h-12 border-2 border-white/25 bg-transparent px-6 text-white hover:bg-white/10"
                   data-testid="button-schedule-consult"
                 >
-                  <Phone className="mr-2 h-4 w-4" />
+                  <a href="/book">
+                    <Phone className="mr-2 h-4 w-4" />
                   Schedule Consultation
+                  </a>
                 </Button>
-              </a>
             </div>
           </motion.section>
         </div>

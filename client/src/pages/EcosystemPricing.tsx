@@ -413,23 +413,23 @@ const EcosystemPricing = () => {
               Contact us for a custom quote based on your specific requirements.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <a href="/book">
-                <Button 
+              <Button asChild 
                   className="bg-de-raised hover: hover: text-white"
                   data-testid="btn-book-call"
                 >
-                  <Phone className="w-4 h-4 mr-2" />
+                  <a href="/book">
+                    <Phone className="w-4 h-4 mr-2" />
                   Book a Call
+                  </a>
                 </Button>
-              </a>
-              <a href="/proactive-ecosystem-pricing">
-                <Button 
+              <Button asChild 
                   className="bg-white/10 border border-white/20 text-white hover:bg-white/20"
                   data-testid="btn-compare-packages"
                 >
-                  Compare Packages
+                  <a href="/proactive-ecosystem-pricing">
+                    Compare Packages
+                  </a>
                 </Button>
-              </a>
             </div>
           </motion.div>
         </div>

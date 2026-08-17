@@ -31,15 +31,15 @@ export function StoreAssessmentPanel({
           to catalog items — no obligation.
         </p>
         <div className="mt-4 flex flex-col gap-2">
-          <a href="/book">
-            <Button
+          <Button asChild
               className="h-10 w-full bg-de-accent text-white hover:bg-[#6548ff]"
               data-testid="button-assessment-book"
             >
-              <Calendar className="mr-2 h-4 w-4" />
+                  <a href="/book">
+                    <Calendar className="mr-2 h-4 w-4" />
               Book assessment
-            </Button>
-          </a>
+                  </a>
+                </Button>
           {onFilterAssessments && (
             <Button
               variant="outline"

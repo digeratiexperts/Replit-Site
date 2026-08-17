@@ -471,26 +471,26 @@ const StoreLanding = () => {
               to discuss your IT needs and find the right solution.
             </p>
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
-              <a href="/book">
-                <Button
+              <Button asChild
                   size="lg"
                   className="h-12 bg-de-accent px-6 text-white hover:bg-[#6548ff]"
                   data-testid="button-schedule-consult"
                 >
-                  Schedule Free Consultation
+                  <a href="/book">
+                    Schedule Free Consultation
                   <ArrowRight className="ml-2 h-4 w-4" />
+                  </a>
                 </Button>
-              </a>
-              <a href="tel:+13254809870">
-                <Button
+              <Button asChild
                   size="lg"
                   className="h-12 border-2 border-white/30 bg-transparent px-6 text-white hover:bg-white/10"
                   data-testid="button-call-us"
                 >
-                  <Phone className="mr-2 h-4 w-4" />
+                  <a href="tel:+13254809870">
+                    <Phone className="mr-2 h-4 w-4" />
                   325-480-9870
+                  </a>
                 </Button>
-              </a>
             </div>
           </motion.section>
         </div>

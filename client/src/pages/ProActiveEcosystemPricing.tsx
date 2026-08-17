@@ -483,12 +483,12 @@ export default function ProActiveEcosystemPricing() {
               Schedule a brief assessment so we can scope users, devices, sites, backup, network, and compliance needs —
               then confirm your exact ProActive Ecosystem investment.
             </p>
-            <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
-              <Button size="lg" variant="brand">
-                {CTA.primary}
+            <Button asChild size="lg" variant="brand">
+                  <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                    {CTA.primary}
                 <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </a>
+                  </a>
+                </Button>
           </section>
         </main>
 

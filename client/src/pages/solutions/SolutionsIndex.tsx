@@ -203,15 +203,15 @@ const SolutionsIndex = () => {
                     ))}
                   </ul>
                   
-                  <a href="/book">
-                    <Button 
+                  <Button asChild 
                       className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
                       data-testid={`button-get-${plan.name.toLowerCase()}`}
                     >
-                      Cyber Risk Assessment
+                  <a href="/book">
+                    Cyber Risk Assessment
                       <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
                   </a>
+                </Button>
                 </motion.div>
               ))}
             </div>
@@ -400,26 +400,26 @@ const SolutionsIndex = () => {
               Schedule a free 15-minute call to discuss your needs. No pressure, no obligation—just honest advice about what your business actually needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/book">
-                <Button 
+              <Button asChild 
                   size="lg"
                   className="h-14 px-8 text-lg font-semibold bg-de-magenta hover:bg-de-magenta text-white shadow-lg shadow-none"
                   data-testid="button-final-cta"
                 >
-                  Schedule Free Consultation
+                  <a href="/book">
+                    Schedule Free Consultation
                   <ArrowRight className="w-5 h-5 ml-2" />
+                  </a>
                 </Button>
-              </a>
-              <a href="tel:+13254809870">
-                <Button 
+              <Button asChild 
                   size="lg"
                   className="h-14 px-8 text-lg font-semibold bg-transparent border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50"
                   data-testid="button-call-us"
                 >
-                  <Phone className="w-5 h-5 mr-2" />
+                  <a href="tel:+13254809870">
+                    <Phone className="w-5 h-5 mr-2" />
                   325-480-9870
+                  </a>
                 </Button>
-              </a>
             </div>
           </motion.section>
 

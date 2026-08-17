@@ -284,26 +284,26 @@ const ManagedStore = () => {
               and provide a customized quote for your organization.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/book">
-                <Button 
+              <Button asChild 
                   size="lg"
                   className="h-14 px-8 text-lg font-semibold bg-de-accent hover:bg-de-accent text-white shadow-lg shadow-none"
                   data-testid="button-final-cta"
                 >
-                  <Calendar className="w-5 h-5 mr-2" />
+                  <a href="/book">
+                    <Calendar className="w-5 h-5 mr-2" />
                   Schedule Consultation
+                  </a>
                 </Button>
-              </a>
-              <a href="tel:+13254809870">
-                <Button 
+              <Button asChild 
                   size="lg"
                   className="h-14 px-8 text-lg font-semibold bg-transparent border-2 border-white/30 text-white hover:bg-white/10"
                   data-testid="button-call-us"
                 >
-                  <Phone className="w-5 h-5 mr-2" />
+                  <a href="tel:+13254809870">
+                    <Phone className="w-5 h-5 mr-2" />
                   325-480-9870
+                  </a>
                 </Button>
-              </a>
             </div>
             
             <div className="mt-8">

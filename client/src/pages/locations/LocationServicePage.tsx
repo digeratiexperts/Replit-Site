@@ -314,11 +314,11 @@ export function LocationServicePage(props: LocationPageProps) {
                           <Button type="submit" size="lg" data-testid={`button-${props.city.toLowerCase()}-submit`} disabled={isSubmitting} className="flex-1 h-12 text-base font-semibold bg-de-raised hover: hover: border-0 shadow-lg shadow-none">
                             {isSubmitting ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" />Submitting...</> : <>Get Free {props.city} Assessment<ArrowRight className="w-5 h-5 ml-2" /></>}
                           </Button>
-                          <a href="tel:+13254809870" className="sm:flex-shrink-0">
-                            <Button type="button" variant="outline" size="lg" className="w-full sm:w-auto h-12 px-6 text-base font-semibold border-white/20 bg-white/5 hover:bg-white/10 text-white">
-                              <Phone className="w-5 h-5 mr-2" />325-480-9870
-                            </Button>
-                          </a>
+                          <Button asChild type="button" variant="outline" size="lg" className="w-full sm:w-auto h-12 px-6 text-base font-semibold border-white/20 bg-white/5 hover:bg-white/10 text-white">
+                  <a href="tel:+13254809870" className="sm:flex-shrink-0">
+                    <Phone className="w-5 h-5 mr-2" />325-480-9870
+                  </a>
+                </Button>
                         </div>
                       </form>
                     </Form>
@@ -495,16 +495,16 @@ export function LocationServicePage(props: LocationPageProps) {
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">{props.cta}</h2>
             <p className="text-xl text-gray-300 mb-8">Contact our {props.city} team today for your free consultation</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/book">
-                <Button size="lg" className="px-8 py-6 text-lg font-semibold bg-de-raised hover: hover: shadow-lg shadow-none">
-                  {CTA.primary} <ArrowRight className="ml-2 w-5 h-5" />
+              <Button asChild size="lg" className="px-8 py-6 text-lg font-semibold bg-de-raised hover: hover: shadow-lg shadow-none">
+                  <a href="/book">
+                    {CTA.primary} <ArrowRight className="ml-2 w-5 h-5" />
+                  </a>
                 </Button>
-              </a>
-              <a href="tel:+13254809870">
-                <Button variant="outline" size="lg" className="px-8 py-6 text-lg font-semibold border-white/20 bg-white/5 hover:bg-white/10 text-white">
-                  <Phone className="mr-2 w-5 h-5" /> Call 325-480-9870
+              <Button asChild variant="outline" size="lg" className="px-8 py-6 text-lg font-semibold border-white/20 bg-white/5 hover:bg-white/10 text-white">
+                  <a href="tel:+13254809870">
+                    <Phone className="mr-2 w-5 h-5" /> Call 325-480-9870
+                  </a>
                 </Button>
-              </a>
             </div>
           </motion.div>
         </div>

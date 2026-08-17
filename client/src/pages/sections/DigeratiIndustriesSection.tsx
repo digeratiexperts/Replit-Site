@@ -286,16 +286,16 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <a href="/book">
-            <Button 
+          <Button asChild 
               size="lg"
               className="h-12 border-0 bg-[#D3126A] px-6 text-base font-bold text-white shadow-none transition-colors hover:bg-[#e01874] md:h-14 md:px-8 md:text-lg"
               data-testid="button-industries-cta"
             >
-              Get Industry-Specific Protection
+                  <a href="/book">
+                    Get Industry-Specific Protection
               <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5" />
-            </Button>
-          </a>
+                  </a>
+                </Button>
         </motion.div>
       </div>
     </section>
