@@ -298,7 +298,7 @@ const ProductDetail = () => {
                   {tags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-[11px] text-white/55"
+                      className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-sm text-white/55"
                     >
                       {tag}
                     </span>

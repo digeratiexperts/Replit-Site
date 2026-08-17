@@ -144,7 +144,7 @@ export function BookingModal() {
 
               <div className="grid min-h-0 flex-1 overflow-y-auto lg:grid-cols-[minmax(17rem,0.9fr)_minmax(0,1.15fr)]">
                 <aside className="border-b border-de-hairline bg-de-raised px-5 py-6 md:px-7 md:py-8 lg:border-b-0 lg:border-r">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#D3126A]">
+                  <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#D3126A]">
                     Cyber Risk Assessment
                   </p>
                   <h2

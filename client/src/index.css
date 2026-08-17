@@ -10,33 +10,37 @@
 /* Performance & Accessibility Optimizations */
 html {
   scroll-behavior: smooth;
-  /* Scale down overall sizing - 14px base instead of 16px default */
-  /* This makes 100% zoom look similar to previous 87.5% zoom */
-  font-size: 14px;
+  /*
+   * Browser-default rem. The previous 14px root made every rem-based
+   * size (type, padding, gaps) read as ~87.5% zoom. Marketing pages
+   * need the full 16px scale so body copy and nav labels stay readable
+   * at 100% without asking visitors to pinch-zoom.
+   */
+  font-size: 16px;
   /* Keep in-page anchors clear of fixed MegaMenu chrome */
   scroll-padding-top: var(--de-nav-offset);
 }
 
 /*
  * Large-display type scale.
- * 14px stays the laptop/monitor default. TVs and 4K walls need a real step
+ * 16px is the laptop/monitor default. TVs and 4K walls need a real step
  * up so the first viewport reads from the couch — not a 1px bump.
  */
 @media (min-width: 1920px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-@media (min-width: 2560px) {
   html {
     font-size: 18px;
   }
 }
 
-@media (min-width: 3840px) {
+@media (min-width: 2560px) {
   html {
     font-size: 20px;
+  }
+}
+
+@media (min-width: 3840px) {
+  html {
+    font-size: 22px;
   }
 }
 
@@ -1010,7 +1014,7 @@ html {
 
 :root {
   --paragraph-2-font-family: "Inter", Helvetica;
-  --paragraph-2-font-size: 14px;
+  --paragraph-2-font-size: 1rem;
   --paragraph-2-font-style: normal;
   --paragraph-2-font-weight: 400;
   --paragraph-2-letter-spacing: 0px;

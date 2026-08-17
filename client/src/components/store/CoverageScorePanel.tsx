@@ -36,7 +36,7 @@ export function CoverageScorePanel({
             {score.total}
             <span className="text-sm font-medium text-white/55"> / 100</span>
           </span>
-          <p className="text-[11px] text-white/55" data-testid="text-coverage-areas">
+          <p className="text-sm text-white/55" data-testid="text-coverage-areas">
             {score.coveredCount} of {score.dimensionCount} areas
           </p>
         </div>
@@ -62,7 +62,7 @@ export function CoverageScorePanel({
               />
             </div>
             {bar.coveredBy && (
-              <span className="hidden w-28 truncate text-[10px] text-white/55 sm:inline">
+              <span className="hidden w-28 truncate text-xs text-white/55 sm:inline">
                 {bar.coveredBy}
               </span>
             )}
@@ -80,7 +80,7 @@ export function CoverageScorePanel({
                 className="flex items-start justify-between gap-2 rounded-lg border border-white/10 bg-white/[0.03] p-3"
               >
                 <div className="min-w-0">
-                  <p className="text-[10px] uppercase tracking-wide text-white/55">{s.label}</p>
+                  <p className="text-xs uppercase tracking-wide text-white/55">{s.label}</p>
                   <p className="truncate text-sm text-white">{s.product.name}</p>
                   <p className="text-xs text-white/55">
                     Coverage {s.from} → {s.to}

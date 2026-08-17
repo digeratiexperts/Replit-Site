@@ -120,22 +120,22 @@ export function StoreProductCard({
         <div className="mb-4">
           <div className="mb-2 flex flex-wrap items-center gap-1.5">
             {vendor && (
-              <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-[11px] font-medium text-white/70">
+              <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-sm font-medium text-white/70">
                 {vendor.name}
               </span>
             )}
             <span
-              className={`de-store-category rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-wide ${accent}`}
+              className={`de-store-category rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-sm font-medium uppercase tracking-wide ${accent}`}
             >
               {categoryLabels[product.category]}
             </span>
             {product.isClientOnly && (
-              <span className="rounded-full border border-de-accent/30 bg-de-accent/15 px-2.5 py-0.5 text-[11px] font-medium text-de-accent-ink">
+              <span className="rounded-full border border-de-accent/30 bg-de-accent/15 px-2.5 py-0.5 text-sm font-medium text-de-accent-ink">
                 Client pricing
               </span>
             )}
             {isContract && (
-              <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[11px] font-medium text-amber-200">
+              <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-sm font-medium text-amber-200">
                 Consult
               </span>
             )}
@@ -175,7 +175,7 @@ export function StoreProductCard({
           {tags.map((tag) => (
             <span
               key={tag}
-              className="rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-0.5 text-[11px] text-white/55"
+              className="rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-0.5 text-sm text-white/55"
             >
               {tag}
             </span>

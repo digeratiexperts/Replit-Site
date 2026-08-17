@@ -466,7 +466,7 @@ export function OrderForm() {
                                 data-testid={`service-card-${service.id}`}
                               >
                                 {service.isPopular && (
-                                  <Badge className="absolute -top-2 right-3 bg-[#5034ff] text-white text-[10px] px-1.5 py-0">
+                                  <Badge className="absolute -top-2 right-3 bg-[#5034ff] text-white text-xs px-1.5 py-0">
                                     <Star className="w-2.5 h-2.5 mr-0.5" />
                                     Popular
                                   </Badge>
@@ -481,7 +481,7 @@ export function OrderForm() {
                                       {service.tier && (
                                         <Badge
                                           variant="outline"
-                                          className={`text-[10px] h-5 ${
+                                          className={`text-xs h-5 ${
                                             service.tier === "enterprise"
                                               ? "border-violet-300 text-violet-700 bg-violet-50"
                                               : service.tier === "business"
@@ -501,13 +501,13 @@ export function OrderForm() {
                                       {service.features.slice(0, 3).map((feature, i) => (
                                         <span
                                           key={i}
-                                          className="text-[11px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded"
+                                          className="text-sm bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded"
                                         >
                                           {feature}
                                         </span>
                                       ))}
                                       {service.features.length > 3 && (
-                                        <span className="text-[11px] text-[#5034ff]">
+                                        <span className="text-sm text-[#5034ff]">
                                           +{service.features.length - 3} more
                                         </span>
                                       )}
@@ -525,10 +525,10 @@ export function OrderForm() {
                                       {price.primary}
                                     </div>
                                     {price.secondary && (
-                                      <div className="text-[11px] text-slate-400">{price.secondary}</div>
+                                      <div className="text-sm text-slate-400">{price.secondary}</div>
                                     )}
                                     {service.minQuantity > 1 && (
-                                      <div className="text-[11px] text-slate-400">
+                                      <div className="text-sm text-slate-400">
                                         Min: {service.minQuantity}
                                       </div>
                                     )}

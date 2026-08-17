@@ -151,7 +151,7 @@ export default function SecurityUpdates() {
                         {formatThreatDate(update.publishedAt, "short")}
                       </span>
                     </div>
-                    <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#D3126A]">
+                    <p className="mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-[#D3126A]">
                       {update.kicker}
                     </p>
                     <CardTitle className="text-lg text-white line-clamp-2">{update.title}</CardTitle>

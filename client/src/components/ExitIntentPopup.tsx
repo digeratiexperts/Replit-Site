@@ -257,7 +257,7 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                 <div className="bg-[var(--de-paper)] px-5 pb-6 pt-5 md:px-8 md:pb-8 md:pt-6">
                   {!isSuccess ? (
                     <>
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#D3126A]">
+                      <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#D3126A]">
                         Cyber Risk Assessment
                       </p>
                       <h2

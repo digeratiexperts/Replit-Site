@@ -298,7 +298,7 @@ export default function PortalOrders() {
                           <td className="py-4 px-3 max-w-[220px]">
                             <p className="truncate font-medium">{order.title || order.billingName || "—"}</p>
                             {order.hubStatus && (
-                              <p className="text-[11px] text-muted-foreground truncate">
+                              <p className="text-sm text-muted-foreground truncate">
                                 Hub: {order.hubStatus}
                               </p>
                             )}

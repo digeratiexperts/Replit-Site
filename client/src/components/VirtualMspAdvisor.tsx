@@ -501,7 +501,7 @@ export function VirtualMspAdvisor() {
               <Send size={16} />
             </Button>
           </form>
-          <div className="px-3 pb-2 bg-white text-[10px] text-slate-400 text-center">
+          <div className="px-3 pb-2 bg-white text-xs text-slate-400 text-center">
             Not a general chatbot · Digerati Experts · 325-480-9870
           </div>
         </div>

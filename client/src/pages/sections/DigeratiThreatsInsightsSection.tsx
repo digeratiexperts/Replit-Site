@@ -50,7 +50,7 @@ function InsightCard({ insight, index }: { insight: ThreatItem; index: number })
             <span className="sm:hidden">{formatThreatDate(insight.publishedAt, "short")}</span>
           </span>
         </div>
-        <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-de-magenta-ink">
+        <p className="mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-de-magenta-ink">
           {insight.kicker}
         </p>
         <CardTitle className="text-base sm:text-lg text-white line-clamp-2">

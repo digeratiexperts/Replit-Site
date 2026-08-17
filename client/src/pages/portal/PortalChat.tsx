@@ -581,7 +581,7 @@ export default function PortalChat() {
         <div className="overflow-hidden rounded-2xl border border-[#8B5CF6]/35 bg-gradient-to-br from-[#1a0f2e] via-[#140a24] to-[#0f0818] p-4 text-white shadow-[0_0_0_1px_rgba(167,139,250,0.2),0_20px_50px_rgba(40,10,70,0.35)] sm:p-5">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="min-w-0">
-              <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-[#A78BFA]/35 bg-[#8B5CF6]/15 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#E9D5FF]">
+              <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-[#A78BFA]/35 bg-[#8B5CF6]/15 px-2.5 py-1 text-sm font-semibold uppercase tracking-[0.14em] text-[#E9D5FF]">
                 <Headphones className="h-3.5 w-3.5" aria-hidden />
                 Operations desk
               </div>
@@ -735,7 +735,7 @@ export default function PortalChat() {
                   </div>
                 ) : (
                   <>
-                    <p className="border-b border-white/5 px-4 py-2 text-[10px] uppercase tracking-[0.14em] text-white/40">
+                    <p className="border-b border-white/5 px-4 py-2 text-xs uppercase tracking-[0.14em] text-white/40">
                       Long-press or right-click for options
                     </p>
                     <ul className="divide-y divide-white/5">
@@ -784,12 +784,12 @@ export default function PortalChat() {
                                         {sessionNameLabel(s)}
                                       </span>
                                       {sessionCompanyLabel(s) ? (
-                                        <span className="mt-0.5 block truncate text-[11px] font-normal text-white/45">
+                                        <span className="mt-0.5 block truncate text-sm font-normal text-white/45">
                                           {sessionCompanyLabel(s)}
                                         </span>
                                       ) : null}
                                     </span>
-                                    <span className="inline-flex shrink-0 items-center gap-1 text-[10px] text-white/45">
+                                    <span className="inline-flex shrink-0 items-center gap-1 text-xs text-white/45">
                                       <Clock3 className="h-3 w-3" aria-hidden />
                                       {formatClock(s.updatedAt)}
                                     </span>
@@ -797,7 +797,7 @@ export default function PortalChat() {
                                   <p className="mt-1 line-clamp-2 text-xs text-white/50">
                                     {s.preview || "DE Desk conversation"}
                                   </p>
-                                  <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[10px]">
+                                  <div className="mt-2 flex flex-wrap items-center gap-1.5 text-xs">
                                     <span className="rounded-full bg-white/5 px-2 py-0.5 text-white/55">
                                       {s.messageCount} msgs
                                     </span>
@@ -915,7 +915,7 @@ export default function PortalChat() {
                           {activeSession ? sessionNameLabel(activeSession) : "Name not given yet"}
                         </p>
                         {activeSession && sessionCompanyLabel(activeSession) ? (
-                          <p className="truncate text-[11px] text-white/45">
+                          <p className="truncate text-sm text-white/45">
                             {sessionCompanyLabel(activeSession)}
                           </p>
                         ) : null}
@@ -952,12 +952,12 @@ export default function PortalChat() {
                           </Button>
                         ) : null}
                         {activeSession?.agentActive ? (
-                          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-300">
+                          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-1 text-sm font-semibold text-emerald-300">
                             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                             On desk
                           </span>
                         ) : (
-                          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-white/55">
+                          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-sm font-medium text-white/55">
                             Standby
                           </span>
                         )}
@@ -987,7 +987,7 @@ export default function PortalChat() {
                                       : "rounded-bl-md border border-white/10 bg-white/[0.06] text-white/90"
                                 }`}
                               >
-                                <div className="mb-1 flex items-center justify-between gap-3 text-[10px] uppercase tracking-[0.12em] opacity-70">
+                                <div className="mb-1 flex items-center justify-between gap-3 text-xs uppercase tracking-[0.12em] opacity-70">
                                   <span>
                                     {isUser
                                       ? "Visitor"
@@ -1037,7 +1037,7 @@ export default function PortalChat() {
                           <Send className="h-4 w-4" />
                         </Button>
                       </div>
-                      <p className="mt-2 text-[11px] text-white/40">
+                      <p className="mt-2 text-sm text-white/40">
                         Enter to send · Shift+Enter for newline · This channel is website DE Desk
                         only
                       </p>
@@ -1096,7 +1096,7 @@ export default function PortalChat() {
                         >
                           <p className="mb-1 text-xs font-medium opacity-70">{message.senderName}</p>
                           <p className="whitespace-pre-wrap text-sm">{message.content}</p>
-                          <p className="mt-1 text-[10px] opacity-60">
+                          <p className="mt-1 text-xs opacity-60">
                             {formatClock(message.timestamp)}
                           </p>
                         </div>

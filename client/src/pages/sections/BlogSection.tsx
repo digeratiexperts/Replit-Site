@@ -255,7 +255,7 @@ export const BlogSection = (): JSX.Element => {
                   </a>
                   {link.version && (
                     <Badge className="h-auto bg-[#5034ff26] rounded-lg border border-solid border-[#5034ff4c] px-2 lg:px-[11px] py-1 lg:py-1.5 hover:bg-[#5034ff26]">
-                      <span className="font-bold text-[#5034ff] text-[10px] lg:text-[11px] tracking-[0] leading-[18.7px]">
+                      <span className="font-bold text-[#5034ff] text-xs lg:text-sm tracking-[0] leading-[18.7px]">
                         {link.version}
                       </span>
                     </Badge>

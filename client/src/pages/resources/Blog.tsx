@@ -131,7 +131,7 @@ export default function Blog() {
         <div className="container relative mx-auto px-4 max-w-7xl py-10 md:py-14">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <div>
-              <div className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.2em] text-white/70 uppercase mb-3">
+              <div className="inline-flex items-center gap-2 text-sm font-semibold tracking-[0.2em] text-white/70 uppercase mb-3">
                 <Sparkles className="h-3.5 w-3.5" />
                 A Digerati Experts Publication
               </div>
@@ -205,7 +205,7 @@ export default function Blog() {
                   >
                     {cat === "All" ? "All Posts" : cat}
                     <span
-                      className={`ml-2 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-[10px] font-semibold ${
+                      className={`ml-2 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-semibold ${
                         isActive
                           ? "bg-white text-de-accent"
                           : "bg-white/10 text-white/60"
@@ -340,7 +340,7 @@ export default function Blog() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/70 via-transparent to-transparent" />
                       <div className="absolute top-3 left-3">
-                        <Badge className="bg-black/60 text-white border-white/15 backdrop-blur uppercase text-[10px] tracking-wider font-semibold">
+                        <Badge className="bg-black/60 text-white border-white/15 backdrop-blur uppercase text-xs tracking-wider font-semibold">
                           {post.category}
                         </Badge>
                       </div>

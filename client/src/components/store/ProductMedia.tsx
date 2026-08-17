@@ -84,12 +84,12 @@ export function ProductMedia({
       {(categoryBadge || visual.vendor) && variant !== "thumb" && (
         <div className="absolute left-3 top-3 z-10 flex max-w-[85%] flex-wrap gap-2 sm:left-4 sm:top-4">
           {categoryBadge && (
-            <span className="rounded-full border border-white/20 bg-black/50 px-2.5 py-1 text-[11px] font-medium text-white/90 backdrop-blur-sm sm:text-xs">
+            <span className="rounded-full border border-white/20 bg-black/50 px-2.5 py-1 text-sm font-medium text-white/90 backdrop-blur-sm sm:text-xs">
               {categoryBadge}
             </span>
           )}
           {visual.vendor && (
-            <span className="rounded-full border border-white/20 bg-black/50 px-2.5 py-1 text-[11px] font-medium text-white/90 backdrop-blur-sm sm:text-xs">
+            <span className="rounded-full border border-white/20 bg-black/50 px-2.5 py-1 text-sm font-medium text-white/90 backdrop-blur-sm sm:text-xs">
               {visual.vendor.name}
             </span>
           )}
