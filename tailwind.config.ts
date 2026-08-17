@@ -53,6 +53,7 @@ module.exports = {
         de: {
           magenta: "var(--de-magenta)",
           "magenta-ink": "var(--de-magenta-ink)",
+          "magenta-paper-ink": "var(--de-magenta-paper-ink)",
           "magenta-hover": "var(--de-magenta-hover)",
           accent: "rgb(var(--de-accent-rgb) / <alpha-value>)",
           "accent-ink": "rgb(var(--de-accent-ink-rgb) / <alpha-value>)",

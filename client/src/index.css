@@ -144,17 +144,19 @@ html {
   /*
    * Brand magenta only reaches ~3.6:1 on the dark ladder, which clears WCAG's
    * 3:1 bar for icons and large headings but fails the 4.5:1 bar for body-size
-   * text and inline links. This lighter tint holds the same hue and clears
+   * text and inline links. The lighter tint holds the same hue and clears
    * 4.5:1 on --de-bg, --de-surface, and --de-raised. Fills stay --de-magenta;
-   * this is for small text / links / icons on dark only.
+   * that lighter tint is for small text / links / icons on dark only.
    *
-   * Accent pink budget (Talos): only two magenta variants —
-   *   fill / CTA  → --de-magenta (+ --de-magenta-hover)
-   *   ink on dark → --de-magenta-ink
+   * Accent pink budget:
+   *   fill / CTA        → --de-magenta (+ --de-magenta-hover)  Do not darken.
+   *   ink on dark       → --de-magenta-ink
+   *   ink on paper      → --de-magenta-paper-ink
    * Do not invent #FF477F, #F9A8D4, pink-300, or fuchsia→rose CTA gradients
    * for marketing chrome. Store category pills keep their locked hues.
    */
   --de-magenta-ink: #F04C97;
+  --de-magenta-paper-ink: #A30E52;
   --de-magenta-hover: #e01874;
   --de-violet: #5B45E0;
 
