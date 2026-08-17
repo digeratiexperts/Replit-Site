@@ -32,10 +32,10 @@ export function ProductMedia({
 
   const logoBox =
     variant === "detail"
-      ? "h-[46%] w-[46%] max-h-56 max-w-56 min-h-36 min-w-36 p-6 sm:p-8"
+      ? "aspect-square w-[48%] max-w-[14rem] p-6 sm:p-8"
       : variant === "card"
-        ? "h-[46%] w-[46%] max-h-44 max-w-44 min-h-28 min-w-28 p-4"
-        : "h-[42%] w-[42%] max-h-16 max-w-16 min-h-12 min-w-12 p-2";
+        ? "aspect-square w-[46%] max-w-[11rem] p-4"
+        : "aspect-square w-[46%] max-w-[7rem] p-3";
 
   return (
     <div
