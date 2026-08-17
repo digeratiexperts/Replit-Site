@@ -121,7 +121,7 @@ export default function Team() {
                 />
               </picture>
               <div className="text-center sm:text-left">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-pink-300/90 mb-2">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-de-magenta-ink mb-2">
                   Founder
                 </p>
                 <h2 className="text-2xl font-bold text-white mb-2">Joseph Petro</h2>

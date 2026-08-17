@@ -103,6 +103,8 @@ export const ServicesSection = (): JSX.Element => {
                     <Input
                       id={field.name}
                       name={field.name}
+                      required={field.label.includes("*")}
+                      aria-required={field.label.includes("*")}
                       className="h-[50px] border-[#0000001f] rounded-[25px] border border-solid shadow-[inset_0px_1px_1px_#00000013] backdrop-blur-[15px] backdrop-brightness-[100%] [-webkit-backdrop-filter:blur(15px)_brightness(100%)] bg-transparent"
                     />
                   </div>

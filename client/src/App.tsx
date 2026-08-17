@@ -42,6 +42,7 @@ const LawFirms = lazy(() => import("@/pages/industries/LawFirms"));
 const RealEstate = lazy(() => import("@/pages/industries/RealEstate"));
 const Nonprofits = lazy(() => import("@/pages/industries/Nonprofits"));
 const AnimalHospitals = lazy(() => import("@/pages/industries/AnimalHospitals"));
+const IndustriesIndex = lazy(() => import("@/pages/industries/IndustriesIndex"));
 const CaseStudies = lazy(() => import("@/pages/resources/CaseStudies"));
 const CaseStudyDetail = lazy(() => import("@/pages/resources/CaseStudyDetail"));
 const Blog = lazy(() => import("@/pages/resources/Blog"));
@@ -52,6 +53,7 @@ const Videos = lazy(() => import("@/pages/resources/Videos"));
 const SecurityChecklist = lazy(() => import("@/pages/resources/SecurityChecklist"));
 const Datasheets = lazy(() => import("@/pages/resources/Datasheets"));
 const DowntimeCalculator = lazy(() => import("@/pages/resources/DowntimeCalculator"));
+const ResourcesIndex = lazy(() => import("@/pages/resources/ResourcesIndex"));
 const KnowledgeBase = lazy(() => import("@/pages/support/KnowledgeBase"));
 const RemoteSupport = lazy(() => import("@/pages/support/RemoteSupport"));
 const PayInvoice = lazy(() => import("@/pages/support/PayInvoice"));
@@ -281,6 +283,11 @@ function Router() {
       )} />
       
       {/* Industries Pages */}
+      <Route path="/industries" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <IndustriesIndex />
+        </Suspense>
+      )} />
       <Route path="/industries/healthcare" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <Healthcare />
@@ -320,6 +327,11 @@ function Router() {
       ))}
       
       {/* Resources Pages */}
+      <Route path="/resources" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ResourcesIndex />
+        </Suspense>
+      )} />
       <Route path="/resources/case-studies/:slug" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <CaseStudyDetail />

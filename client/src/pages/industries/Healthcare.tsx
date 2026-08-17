@@ -352,7 +352,7 @@ export default function Healthcare() {
                 transition={{ delay: idx * 0.08, duration: 0.4 }}
                 className="p-6 rounded-2xl bg-white/[0.04] border border-white/10"
               >
-                <p className="text-xs font-semibold tracking-wide uppercase text-[#FF477F] mb-2">
+                <p className="text-xs font-semibold tracking-wide uppercase text-[#F04C97] mb-2">
                   Pillar {idx + 1}
                 </p>
                 <h3 className="text-xl font-semibold text-white mb-2">{item.title}</h3>
@@ -436,7 +436,7 @@ export default function Healthcare() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <p className="text-xs font-semibold tracking-wide uppercase text-[#FF477F] mb-3">
+            <p className="text-xs font-semibold tracking-wide uppercase text-[#F04C97] mb-3">
               Arizona practices
             </p>
             <p className="text-white/85 leading-relaxed">
@@ -450,7 +450,7 @@ export default function Healthcare() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <p className="text-xs font-semibold tracking-wide uppercase text-[#FF477F] mb-3">
+            <p className="text-xs font-semibold tracking-wide uppercase text-[#F04C97] mb-3">
               What proof looks like today
             </p>
             <p className="text-white/85 leading-relaxed mb-3">
@@ -461,7 +461,7 @@ export default function Healthcare() {
             </p>
             <a
               href="#assessment"
-              className="inline-flex items-center text-[#FF477F] hover:text-pink-300 font-medium"
+              className="inline-flex items-center text-[#F04C97] hover:text-de-magenta-ink font-medium"
             >
               Jump to what we check
               <ArrowRight className="ml-1.5 h-4 w-4" />
@@ -536,7 +536,7 @@ export default function Healthcare() {
                 transition={{ delay: index * 0.08, duration: 0.4 }}
                 className="relative p-5 rounded-xl bg-white/[0.04] border border-white/10"
               >
-                <div className="text-xs font-semibold tracking-wide text-[#FF477F] mb-2">
+                <div className="text-xs font-semibold tracking-wide text-[#F04C97] mb-2">
                   Step {index + 1}
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-2">{step.title}</h3>

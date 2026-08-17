@@ -120,7 +120,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                     control={form.control}
                     name="fullName"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem required>
                         <FormLabel className="text-base font-medium text-[#1A1228]">Full Name *</FormLabel>
                         <FormControl>
                           <Input 
@@ -140,7 +140,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
                     control={form.control}
                     name="email"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem required>
                         <FormLabel className="text-base font-medium text-[#1A1228]">Work Email *</FormLabel>
                         <FormControl>
                           <Input 

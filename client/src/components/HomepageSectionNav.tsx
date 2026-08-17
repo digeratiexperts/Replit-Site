@@ -104,7 +104,7 @@ export function HomepageOnPageNav() {
                     scrollToSection?.(index);
                   }}
                   className={`relative inline-flex min-h-9 items-center justify-center px-2.5 py-1.5 text-base font-semibold tracking-wide whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-de-accent focus-visible:ring-inset sm:px-3 md:px-1.5 lg:min-h-9 lg:w-auto lg:px-2 ${
-                    isActive ? "text-white" : "text-white/55 hover:text-white/90"
+                    isActive ? "text-white" : "text-de-muted-soft hover:text-white"
                   }`}
                   aria-current={isActive ? "true" : undefined}
                   data-testid={`nav-dot-${section.id}`}
@@ -210,7 +210,7 @@ export function HomepageDockMenu() {
       data-testid="homepage-section-dock"
     >
       <div className="hidden h-10 shrink-0 items-center gap-2 border-r border-white/20 pr-3 xl:flex">
-        <Shield className="h-4 w-4 text-[#FF477F]" aria-hidden="true" />
+        <Shield className="h-4 w-4 text-de-magenta-ink" aria-hidden="true" />
         <span className="whitespace-nowrap text-base font-semibold text-white">Protected?</span>
       </div>
 
@@ -225,10 +225,10 @@ export function HomepageDockMenu() {
                   event.preventDefault();
                   scrollToSection?.(index);
                 }}
-                className={`relative inline-flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 text-base font-semibold transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF477F] ${
+                className={`relative inline-flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 text-base font-semibold transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-de-magenta-ink ${
                   isActive
-                    ? "bg-[#D3126A] text-white shadow-lg shadow-[#D3126A]/40"
-                    : "text-white/75 hover:bg-white/10 hover:text-white"
+                    ? "bg-de-magenta text-white shadow-lg shadow-[#D3126A]/40"
+                    : "text-de-muted-soft hover:bg-white/10 hover:text-white"
                 }`}
                 aria-current={isActive ? "true" : undefined}
                 data-testid={`nav-dock-${section.id}`}
@@ -257,18 +257,18 @@ export function HomepageDockActions() {
     <div className="flex items-center gap-1.5" data-testid="homepage-dock-actions">
       <a
         href={PRIMARY_PHONE.telHref}
-        className="flex h-10 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-base font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF477F]"
+        className="flex h-10 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-base font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-de-magenta-ink"
         data-testid="nav-phone"
         aria-label={`Call ${PRIMARY_PHONE.display}`}
       >
-        <Phone className="h-4 w-4 text-[#FF477F]" aria-hidden="true" />
+        <Phone className="h-4 w-4 text-de-magenta-ink" aria-hidden="true" />
         <span className="hidden xl:inline">{PRIMARY_PHONE.display}</span>
       </a>
 
       <button
         type="button"
         onClick={() => openBooking("homepage_section_dock")}
-        className="flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 px-3.5 text-base font-semibold text-white shadow-lg transition-all duration-200 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-300"
+        className="flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-de-magenta px-3.5 text-base font-semibold text-white shadow-lg shadow-[#D3126A]/35 transition-colors duration-200 hover:bg-de-magenta-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-de-magenta-ink"
         data-testid="nav-cta-assessment"
       >
         {CTA.primaryNavCompact}

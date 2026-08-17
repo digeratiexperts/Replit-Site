@@ -60,12 +60,15 @@ const useFormField = () => {
     formItemId: `${id}-form-item`,
     formDescriptionId: `${id}-form-item-description`,
     formMessageId: `${id}-form-item-message`,
+    required: itemContext.required,
     ...fieldState,
   }
 }
 
 type FormItemContextValue = {
   id: string
+  /** When true, FormControl exposes native required + aria-required. */
+  required?: boolean
 }
 
 const FormItemContext = React.createContext<FormItemContextValue>(
@@ -74,12 +77,12 @@ const FormItemContext = React.createContext<FormItemContextValue>(
 
 const FormItem = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement> & { required?: boolean }
+>(({ className, required, ...props }, ref) => {
   const id = React.useId()
 
   return (
-    <FormItemContext.Provider value={{ id }}>
+    <FormItemContext.Provider value={{ id, required }}>
       <div ref={ref} className={cn("space-y-2", className)} {...props} />
     </FormItemContext.Provider>
   )
@@ -107,7 +110,16 @@ const FormControl = React.forwardRef<
   React.ElementRef<typeof Slot>,
   React.ComponentPropsWithoutRef<typeof Slot>
 >(({ ...props }, ref) => {
-  const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
+  const { error, formItemId, formDescriptionId, formMessageId, required } =
+    useFormField()
+
+  // Visible "*" in labels is not enough — AT needs programmatic required.
+  // Prefer FormItem required; allow callers to override via props.
+  const isRequired =
+    props["aria-required"] === true ||
+    props["aria-required"] === "true" ||
+    props.required === true ||
+    !!required
 
   return (
     <Slot
@@ -120,6 +132,8 @@ const FormControl = React.forwardRef<
       }
       aria-invalid={!!error}
       {...props}
+      aria-required={isRequired || undefined}
+      required={isRequired || undefined}
     />
   )
 })

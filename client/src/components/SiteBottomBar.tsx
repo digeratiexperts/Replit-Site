@@ -207,7 +207,7 @@ export function SiteBottomBar() {
                   exit={{ opacity: 0 }}
                   transition={{ duration }}
                   onClick={scrollToTop}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white/[0.06] text-white/80 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF477F]"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white/[0.06] text-white/85 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-de-magenta-ink"
                   aria-label="Scroll to top"
                   data-testid="button-scroll-to-top"
                 >

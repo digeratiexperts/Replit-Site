@@ -367,7 +367,7 @@ export default function LeadQuoteWizard() {
                 control={form.control}
                 name="email"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem required>
                     <FormLabel>Company Email *</FormLabel>
                     <FormControl>
                       <Input
@@ -386,7 +386,7 @@ export default function LeadQuoteWizard() {
                   control={form.control}
                   name="firstName"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem required>
                       <FormLabel>First Name *</FormLabel>
                       <FormControl>
                         <Input placeholder="First name" {...field} />
@@ -400,7 +400,7 @@ export default function LeadQuoteWizard() {
                   control={form.control}
                   name="lastName"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem required>
                       <FormLabel>Last Name *</FormLabel>
                       <FormControl>
                         <Input placeholder="Last name" {...field} />
@@ -415,7 +415,7 @@ export default function LeadQuoteWizard() {
                 control={form.control}
                 name="company"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem required>
                     <FormLabel>Company Name *</FormLabel>
                     <FormControl>
                       <Input placeholder="Your company" {...field} />

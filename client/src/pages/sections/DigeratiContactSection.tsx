@@ -154,7 +154,7 @@ export const DigeratiContactSection = ({
             viewport={{ once: true }}
             transition={{ duration: 0.45 }}
           >
-            <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#FF477F]">
+            <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#F04C97]">
               Contact
             </p>
             {headingAs === "h1" ? (
@@ -269,7 +269,7 @@ export const DigeratiContactSection = ({
                     control={form.control}
                     name="name"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem required>
                         <FormLabel className="text-base font-medium text-[#1A1228]">Your Name *</FormLabel>
                         <FormControl>
                           <Input
@@ -290,7 +290,7 @@ export const DigeratiContactSection = ({
                       control={form.control}
                       name="email"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem required>
                           <FormLabel className="text-base font-medium text-[#1A1228]">Business Email *</FormLabel>
                           <FormControl>
                             <Input
@@ -311,7 +311,7 @@ export const DigeratiContactSection = ({
                       control={form.control}
                       name="phone"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem required>
                           <FormLabel className="text-base font-medium text-[#1A1228]">Phone Number *</FormLabel>
                           <FormControl>
                             <Input

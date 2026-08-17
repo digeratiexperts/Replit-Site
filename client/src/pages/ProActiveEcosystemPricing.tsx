@@ -467,7 +467,7 @@ export default function ProActiveEcosystemPricing() {
           {/* Relocated from homepage — keep tools, deepen pricing page */}
           <section className="mb-16" aria-label="Pricing calculators">
             <div className="mb-6 text-center">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#FF477F]">Pricing tools</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#F04C97]">Pricing tools</p>
               <h2 className="mt-2 text-3xl font-bold text-white">Calculate investment &amp; downtime risk</h2>
               <p className="mx-auto mt-2 max-w-2xl text-sm text-white/55">{PRICING_SCOPE_NOTE}</p>
               <p className="mx-auto mt-2 max-w-2xl text-sm text-white/55">{NO_BLACK_BOX_TAGLINE}</p>

@@ -136,17 +136,26 @@ html {
   --de-paper-raised: #ffffff;
   --de-paper-hairline: rgba(26, 18, 16, 0.1);
   --de-fg: #ffffff;
-  --de-muted: rgba(255, 255, 255, 0.85);
-  --de-muted-soft: rgba(255, 255, 255, 0.72);
+  /* Floor ≥ ~4.5:1 body text on --de-bg / --de-surface / --de-raised.
+   * Prefer these over ad-hoc text-white/50–/60 and pink-300 on dark fields. */
+  --de-muted: rgba(255, 255, 255, 0.88);
+  --de-muted-soft: rgba(255, 255, 255, 0.78);
   --de-magenta: #D3126A;
   /*
    * Brand magenta only reaches ~3.6:1 on the dark ladder, which clears WCAG's
    * 3:1 bar for icons and large headings but fails the 4.5:1 bar for body-size
    * text and inline links. This lighter tint holds the same hue and clears
    * 4.5:1 on --de-bg, --de-surface, and --de-raised. Fills stay --de-magenta;
-   * this is for small text on dark only.
+   * this is for small text / links / icons on dark only.
+   *
+   * Accent pink budget (Talos): only two magenta variants —
+   *   fill / CTA  → --de-magenta (+ --de-magenta-hover)
+   *   ink on dark → --de-magenta-ink
+   * Do not invent #FF477F, #F9A8D4, pink-300, or fuchsia→rose CTA gradients
+   * for marketing chrome. Store category pills keep their locked hues.
    */
   --de-magenta-ink: #F04C97;
+  --de-magenta-hover: #e01874;
   --de-violet: #5B45E0;
 
   /*
@@ -1220,7 +1229,9 @@ html {
     line-height: 1.6;
   }
 
-  /* Typography system - Space Grotesk for headings */
+  /* Typography system — intentional three-role stack (Talos “one display font”
+   * guidance does not override DE brand): Space Grotesk headings, Inter body,
+   * Oxanium/JetBrains Mono for stats/telemetry only. */
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', system-ui, sans-serif;
     font-weight: 700;

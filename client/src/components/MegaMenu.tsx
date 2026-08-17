@@ -201,7 +201,7 @@ export function MegaMenu() {
   const utilityBarRef = useRef<HTMLDivElement>(null);
   const navBarRef = useRef<HTMLDivElement>(null);
   const spyBarRef = useRef<HTMLDivElement>(null);
-  const navButtonsRef = useRef<Map<string, HTMLButtonElement>>(new Map());
+  const navButtonsRef = useRef<Map<string, HTMLAnchorElement>>(new Map());
   const dropdownRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const columnRefs = useRef<Map<number, HTMLDivElement>>(new Map());
   const rafRef = useRef<number | null>(null);
@@ -233,6 +233,7 @@ export function MegaMenu() {
   const navItems: NavItem[] = [
     {
       name: 'Solutions',
+      href: '/solutions',
       sections: [
         {
           title: 'Ways to Work With Us',
@@ -292,6 +293,7 @@ export function MegaMenu() {
     },
     {
       name: 'Industries',
+      href: '/industries',
       sections: [
         {
           title: 'Industries We Serve',
@@ -313,6 +315,7 @@ export function MegaMenu() {
     },
     {
       name: 'Resources',
+      href: '/resources',
       sections: [
         {
           title: 'Learn',
@@ -340,6 +343,7 @@ export function MegaMenu() {
     },
     {
       name: 'About',
+      href: '/about/mission-values',
       sections: [
         {
           title: 'Is This You?',
@@ -432,6 +436,11 @@ export function MegaMenu() {
   }, []);
 
   const handleNavButtonClick = useCallback((name: string, event: React.MouseEvent) => {
+    // Allow modified clicks (new tab / middle-click) to follow the hub href.
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
+      closeMenu();
+      return;
+    }
     event.preventDefault();
     if (activeMenu === name) {
       closeMenu();
@@ -619,10 +628,10 @@ export function MegaMenu() {
           <div className="flex items-center flex-wrap gap-x-5 gap-y-1.5 md:gap-x-7 justify-center md:justify-end">
             <a
               href="tel:+13254809870"
-              className="flex items-center text-white/95 hover:text-pink-300 text-base font-semibold leading-none tracking-wide transition-colors"
+              className="flex items-center text-white/95 hover:text-de-magenta-ink text-base font-semibold leading-none tracking-wide transition-colors"
               data-testid="utility-phone"
             >
-              <Phone className="h-4 w-4 mr-1.5 text-pink-400 shrink-0" />
+              <Phone className="h-4 w-4 mr-1.5 text-de-magenta-ink shrink-0" />
               <span className="hidden sm:inline">325-480-9870</span>
               <span className="sm:hidden">Call</span>
             </a>
@@ -632,16 +641,16 @@ export function MegaMenu() {
               href="https://assist.zoho.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center text-white/90 hover:text-pink-300 text-base font-medium leading-none transition-colors"
+              className="flex items-center text-white/90 hover:text-de-magenta-ink text-base font-medium leading-none transition-colors"
               data-testid="utility-zoho-assist"
             >
-              <Monitor className="h-4 w-4 mr-1.5 text-pink-400 shrink-0" />
+              <Monitor className="h-4 w-4 mr-1.5 text-de-magenta-ink shrink-0" />
               <span>Support</span>
             </a>
 
             <a
               href={PORTAL_LOGIN}
-              className="flex items-center text-white/90 hover:text-pink-300 text-base font-medium leading-none transition-colors"
+              className="flex items-center text-white/90 hover:text-de-magenta-ink text-base font-medium leading-none transition-colors"
               data-testid="utility-portal"
             >
               <span className="hidden sm:inline">Client Portal</span>
@@ -702,7 +711,7 @@ export function MegaMenu() {
                   {item.isSimple ? (
                     <a
                       href={item.href}
-                      className="group relative inline-flex items-center px-3 xl:px-4 py-2 text-lg xl:text-xl leading-normal text-white/85 hover:text-white font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-de-accent focus:ring-offset-2 focus:ring-offset-black rounded whitespace-nowrap overflow-visible"
+                      className="group relative inline-flex items-center px-3 xl:px-4 py-2 text-lg xl:text-xl leading-normal text-white/90 hover:text-white font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-de-accent focus:ring-offset-2 focus:ring-offset-black rounded whitespace-nowrap overflow-visible"
                       data-testid={`nav-${item.name.toLowerCase()}`}
                       onClick={handleLinkClick}
                       aria-label={`Go to ${item.name}`}
@@ -711,11 +720,12 @@ export function MegaMenu() {
                       <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-de-accent group-hover:w-full transition-all duration-300" />
                     </a>
                   ) : (
-                    <button
+                    <a
+                      href={item.href || '#'}
                       ref={(el) => {
                         if (el) navButtonsRef.current.set(item.name, el);
                       }}
-                      className={`group relative inline-flex items-center px-3 xl:px-4 py-2 text-lg xl:text-xl leading-normal text-white/85 hover:text-white font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-de-accent focus:ring-offset-2 focus:ring-offset-black rounded whitespace-nowrap overflow-visible ${
+                      className={`group relative inline-flex items-center px-3 xl:px-4 py-2 text-lg xl:text-xl leading-normal text-white/90 hover:text-white font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-de-accent focus:ring-offset-2 focus:ring-offset-black rounded whitespace-nowrap overflow-visible ${
                         activeMenu === item.name ? 'text-white' : ''
                       }`}
                       data-testid={`nav-${item.name.toLowerCase()}`}
@@ -735,7 +745,7 @@ export function MegaMenu() {
                       <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-de-accent transition-all duration-300 ${
                         activeMenu === item.name ? 'w-full' : 'w-0 group-hover:w-full'
                       }`} />
-                    </button>
+                    </a>
                   )}
 
                   {/* Mega Menu Dropdown — opacity-only motion (no transform) so
@@ -1089,18 +1099,19 @@ export function MegaMenu() {
                       .map((section, index) => ({ section, index }))
                       .filter(({ section }) => section.showInNav !== false)
                       .map(({ section, index }) => (
-                        <button
+                        <a
                           key={section.id}
-                          type="button"
-                          onClick={() => {
+                          href={`#${section.id}`}
+                          onClick={(event) => {
+                            event.preventDefault();
                             scrollContext.scrollToSection(index);
                             setMobileMenuOpen(false);
                           }}
-                          className="min-h-11 rounded-lg border border-de-hairline bg-de-raised px-3 text-sm font-semibold text-white/85 hover:border-[#D3126A] hover:text-white"
+                          className="inline-flex min-h-11 items-center rounded-lg border border-de-hairline bg-de-raised px-3 text-sm font-semibold text-white/90 hover:border-[#D3126A] hover:text-white"
                           data-testid={`mobile-page-${section.id}`}
                         >
                           {section.label}
-                        </button>
+                        </a>
                       ))}
                   </div>
                 </div>

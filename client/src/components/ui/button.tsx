@@ -11,7 +11,7 @@ const buttonVariants = cva(
         default:
           "bg-primary text-primary-foreground shadow-md hover:bg-primary/90 hover:shadow-lg hover:-translate-y-0.5",
         brand:
-          "bg-[#D3126A] text-white border-0 shadow-none hover:bg-[#e01874] hover:shadow-none focus-visible:ring-[#D3126A]",
+          "bg-de-magenta text-white border-0 shadow-none hover:bg-de-magenta-hover hover:shadow-none focus-visible:ring-de-magenta",
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 hover:shadow-md",
         // Transparent rather than bg-background: the filled variant is white,
@@ -23,7 +23,7 @@ const buttonVariants = cva(
         secondary:
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 hover:shadow-md",
         ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline hover:text-pink-500",
+        link: "text-de-magenta-ink underline-offset-4 hover:underline hover:text-de-magenta-ink/90",
       },
       size: {
         default: "h-9 px-4 py-2",

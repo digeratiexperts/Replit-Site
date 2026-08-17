@@ -23,8 +23,8 @@ export default function Guarantee() {
             <div className="flex-1 order-2 lg:order-1">
               <div className="mb-8">
                 <p className="text-white/85 text-lg leading-relaxed mb-6">
-                  Because we are ardently committed to deliver <span className="text-pink-300 font-semibold">excellence</span> in 
-                  IT services and cybersecurity, keeping our commitments and <span className="text-pink-300 font-semibold">exceeding</span> our 
+                  Because we are ardently committed to deliver <span className="text-de-magenta-ink font-semibold">excellence</span> in 
+                  IT services and cybersecurity, keeping our commitments and <span className="text-de-magenta-ink font-semibold">exceeding</span> our 
                   clients' expectations, we stand behind our work with a 100%, no-small-print, no weasel clause guarantee:
                 </p>
               </div>
@@ -49,19 +49,19 @@ export default function Guarantee() {
 
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-pink-400 mt-0.5 flex-shrink-0" />
+                  <CheckCircle2 className="w-5 h-5 text-de-magenta-ink mt-0.5 flex-shrink-0" />
                   <span className="text-white/85">30-day risk-free trial period</span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-pink-400 mt-0.5 flex-shrink-0" />
+                  <CheckCircle2 className="w-5 h-5 text-de-magenta-ink mt-0.5 flex-shrink-0" />
                   <span className="text-white/85">100% refund of service fees if not satisfied</span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-pink-400 mt-0.5 flex-shrink-0" />
+                  <CheckCircle2 className="w-5 h-5 text-de-magenta-ink mt-0.5 flex-shrink-0" />
                   <span className="text-white/85">Release from contracts without penalties</span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-pink-400 mt-0.5 flex-shrink-0" />
+                  <CheckCircle2 className="w-5 h-5 text-de-magenta-ink mt-0.5 flex-shrink-0" />
                   <span className="text-white/85">No questions asked, no fine print</span>
                 </div>
               </div>

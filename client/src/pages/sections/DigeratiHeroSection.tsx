@@ -157,7 +157,7 @@ export const DigeratiHeroSection = (): JSX.Element => {
                         control={form.control}
                         name="fullName"
                         render={({ field }) => (
-                          <FormItem>
+                          <FormItem required>
                             <FormLabel>Full Name *</FormLabel>
                             <FormControl>
                               <Input 
@@ -177,7 +177,7 @@ export const DigeratiHeroSection = (): JSX.Element => {
                         control={form.control}
                         name="email"
                         render={({ field }) => (
-                          <FormItem>
+                          <FormItem required>
                             <FormLabel>Email Address *</FormLabel>
                             <FormControl>
                               <Input 
@@ -198,7 +198,7 @@ export const DigeratiHeroSection = (): JSX.Element => {
                         control={form.control}
                         name="phone"
                         render={({ field }) => (
-                          <FormItem>
+                          <FormItem required>
                             <FormLabel>Phone Number *</FormLabel>
                             <FormControl>
                               <Input 
@@ -219,7 +219,7 @@ export const DigeratiHeroSection = (): JSX.Element => {
                         control={form.control}
                         name="company"
                         render={({ field }) => (
-                          <FormItem>
+                          <FormItem required>
                             <FormLabel>Company Name *</FormLabel>
                             <FormControl>
                               <Input 

@@ -35,7 +35,7 @@ export default function TwentyOneQuestions() {
       <section className="de-nav-clear pb-16 px-6 de-prose-dark">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 pb-8 border-b-4 border-pink-400">
-            <p className="text-pink-300 font-semibold text-sm uppercase tracking-wider mb-4">
+            <p className="text-de-magenta-ink font-semibold text-sm uppercase tracking-wider mb-4">
               Elite IT & Cybersecurity for Phoenix Businesses
             </p>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 tracking-tight" data-testid="heading-21-questions">

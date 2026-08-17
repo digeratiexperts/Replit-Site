@@ -148,14 +148,14 @@ export default function LawFirms() {
 
         <div className="grid md:grid-cols-2 gap-6">
           <div className="p-6 rounded-2xl bg-white/[0.04] border border-white/10">
-            <p className="text-xs font-semibold tracking-wide uppercase text-[#FF477F] mb-3">Arizona law firms</p>
+            <p className="text-xs font-semibold tracking-wide uppercase text-[#F04C97] mb-3">Arizona law firms</p>
             <p className="text-white/85 leading-relaxed">
               Privilege, client files, and wire instructions are the attack surface. We work with East Valley and Greater Phoenix firms that need security
               without slowing partners who live in email and document review.
             </p>
           </div>
           <div className="p-6 rounded-2xl bg-[#D3126A]/10 border border-[#D3126A]/25">
-            <p className="text-xs font-semibold tracking-wide uppercase text-[#FF477F] mb-3">How engagement works</p>
+            <p className="text-xs font-semibold tracking-wide uppercase text-[#F04C97] mb-3">How engagement works</p>
             <ol className="space-y-2 text-white/85 list-decimal list-inside">
               <li>Map identity, email, DMS/cloud file exposure, and remote access</li>
               <li>Harden MFA, phishing controls, and privilege-aware access</li>

@@ -242,8 +242,10 @@ const Checkout = () => {
                         <Input
                           id="name"
                           {...register("name")}
+                          required
+                          aria-required={true}
                           placeholder="John Smith"
-                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-white/55 focus:border-de-hairline"
+                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-de-muted-soft focus:border-de-hairline"
                           data-testid="input-name"
                         />
                         {errors.name && (
@@ -260,8 +262,10 @@ const Checkout = () => {
                           id="email"
                           type="email"
                           {...register("email")}
+                          required
+                          aria-required={true}
                           placeholder="john@company.com"
-                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-white/55 focus:border-de-hairline"
+                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-de-muted-soft focus:border-de-hairline"
                           data-testid="input-email"
                         />
                         {errors.email && (
