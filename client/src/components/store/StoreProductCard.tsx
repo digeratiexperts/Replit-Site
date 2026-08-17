@@ -25,14 +25,17 @@ import { ProductMedia } from "@/components/store/ProductMedia";
  * This is wayfinding, not decoration: every category has to stay tellable from
  * every other one, so no two entries may share a hue. The pill also prints its
  * category label, which keeps colour as reinforcement rather than the only
- * channel. Violet, purple and indigo are deliberately absent — they read as the
- * retired generic chrome. Colours here are exempt from the site accent sweep;
- * see the store entry in scripts/brand-audit.mjs.
+ * channel.
+ *
+ * Store taxonomy colours are exceptions to the marketing-page accent cleanup.
+ * Do not collapse them onto one hue, and do not strip violet / purple / indigo
+ * from these pills just because those tokens are retired on marketing chrome.
+ * See the store entry in scripts/brand-audit.mjs and blog-store-color-lock.mdc.
  */
 export const categoryAccent: Record<ProductCategory, string> = {
   contract_services: "text-amber-300",
-  comanaged_subscriptions: "text-teal-300",
-  comanaged_onboarding: "text-lime-300",
+  comanaged_subscriptions: "text-violet-300",
+  comanaged_onboarding: "text-purple-300",
   networking_managed: "text-cyan-300",
   networking_projects: "text-sky-300",
   ucaas_subscriptions: "text-green-300",
@@ -41,7 +44,7 @@ export const categoryAccent: Record<ProductCategory, string> = {
   hardware_physical: "text-rose-300",
   hardware_handling: "text-red-300",
   digital_assessments: "text-blue-300",
-  digital_templates: "text-yellow-300",
+  digital_templates: "text-indigo-300",
   digital_training: "text-fuchsia-300",
   professional_services: "text-pink-300",
 };

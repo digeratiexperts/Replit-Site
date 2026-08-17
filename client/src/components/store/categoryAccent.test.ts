@@ -4,8 +4,8 @@ import { categoryAccent } from "./StoreProductCard";
 /**
  * Store category pills are wayfinding, so two categories sharing a hue is a
  * real defect rather than a cosmetic one. A site-wide colour sweep already
- * collapsed three of these into a single accent once; these assertions make
- * that fail loudly instead of shipping.
+ * collapsed three of these into a single accent once; these assertions lock
+ * the pre-sweep distinct tokens and fail if they collapse again.
  */
 describe("store category accents", () => {
   const entries = Object.entries(categoryAccent);
@@ -23,9 +23,10 @@ describe("store category accents", () => {
     expect(shared).toEqual([]);
   });
 
-  it("never reaches for the retired violet chrome", () => {
-    const retired = entries.filter(([, token]) => /-(violet|purple|indigo)-/.test(token));
-    expect(retired).toEqual([]);
+  it("keeps the three pre-sweep taxonomy pills on their distinct hues", () => {
+    expect(categoryAccent.comanaged_subscriptions).toBe("text-violet-300");
+    expect(categoryAccent.comanaged_onboarding).toBe("text-purple-300");
+    expect(categoryAccent.digital_templates).toBe("text-indigo-300");
   });
 
   it("keeps the accents to text tokens so pills stay pills", () => {
