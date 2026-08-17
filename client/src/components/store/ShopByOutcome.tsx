@@ -18,7 +18,7 @@ export function ShopByOutcome({ selected, onSelect }: ShopByOutcomeProps) {
           Start with the result you need — we map it to real catalog categories.
         </p>
       </div>
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-7">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {storeOutcomes.map((outcome) => {
           const isActive = selected === outcome.id;
           return (
@@ -48,7 +48,7 @@ export function ShopByOutcome({ selected, onSelect }: ShopByOutcomeProps) {
                 />
               </div>
               <p className="text-base font-semibold text-white">{outcome.label}</p>
-              <p className="mt-1.5 line-clamp-2 text-sm text-white/50">{outcome.blurb}</p>
+              <p className="mt-1.5 text-sm leading-snug text-white/50">{outcome.blurb}</p>
             </button>
           );
         })}

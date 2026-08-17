@@ -149,7 +149,7 @@ export function ConfigureProductDrawer({
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
-            className="fixed right-0 top-0 z-[61] flex h-full w-full max-w-md flex-col border-l border-white/10 bg-[#0a0a0a]"
+            className="fixed right-0 top-0 z-[61] flex h-full min-h-0 w-full max-w-md flex-col overflow-hidden border-l border-white/10 bg-[#0a0a0a]"
             data-testid="configure-product-drawer"
             role="dialog"
             aria-modal="true"
@@ -180,7 +180,7 @@ export function ConfigureProductDrawer({
               </Button>
             </div>
 
-            <div className="flex-1 space-y-6 overflow-y-auto p-6">
+            <div className="min-h-0 flex-1 space-y-6 overflow-y-auto p-6 pb-8">
               <div className="flex gap-4">
                 <ProductMedia
                   product={product}
@@ -195,31 +195,6 @@ export function ConfigureProductDrawer({
                   <p className="mt-2 text-sm text-white/55">{formatPrice(product)}</p>
                 </div>
               </div>
-
-              {product.features.length > 0 && (
-                <div className="rounded-xl border border-white/10 bg-[#141414] p-4">
-                  <p className="mb-3 text-sm font-medium text-white/70">What you get</p>
-                  <ul className="space-y-2">
-                    {product.features.slice(0, 4).map((feature) => (
-                      <li key={feature} className="flex items-start gap-2 text-sm text-white/60">
-                        <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-de-accent-ink" />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {(includedHint || upgradeName) && (
-                <div className="space-y-1.5 text-sm text-white/50">
-                  {includedHint && (
-                    <p className="text-de-accent-ink/90" data-testid="configure-included-hint">
-                      {includedHint}
-                    </p>
-                  )}
-                  {upgradeName && <p>Upgrade path: {upgradeName}</p>}
-                </div>
-              )}
 
               <div className="rounded-xl border border-white/10 bg-[#141414] p-5">
                 <label
@@ -268,6 +243,31 @@ export function ConfigureProductDrawer({
                   Minimum {product.minimumQuantity || 1} {unit}
                 </p>
               </div>
+
+              {product.features.length > 0 && (
+                <div className="rounded-xl border border-white/10 bg-[#141414] p-4">
+                  <p className="mb-3 text-sm font-medium text-white/70">What you get</p>
+                  <ul className="space-y-2">
+                    {product.features.slice(0, 4).map((feature) => (
+                      <li key={feature} className="flex items-start gap-2 text-sm text-white/60">
+                        <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-de-accent-ink" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {(includedHint || upgradeName) && (
+                <div className="space-y-1.5 text-sm text-white/50">
+                  {includedHint && (
+                    <p className="text-de-accent-ink/90" data-testid="configure-included-hint">
+                      {includedHint}
+                    </p>
+                  )}
+                  {upgradeName && <p>Upgrade path: {upgradeName}</p>}
+                </div>
+              )}
 
               {recurring && product.pricingType !== "yearly" && (
                 <div className="rounded-xl border border-white/10 bg-[#141414] p-5">
