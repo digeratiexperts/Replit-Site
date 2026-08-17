@@ -221,7 +221,7 @@ export default function PortalLearning() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center gap-2">
-                  <Compass className="h-4 w-4 text-[#5034ff]" />
+                  <Compass className="h-4 w-4 text-[#D3126A]" />
                   Your mission path
                 </CardTitle>
                 <CardDescription>Tap a stop to study it. Progress saves on this device.</CardDescription>
@@ -238,7 +238,7 @@ export default function PortalLearning() {
                       onClick={() => setActiveId(lesson.id)}
                       className={`w-full text-left rounded-lg px-3 py-2.5 transition border ${
                         selected
-                          ? "border-[#5034ff]/50 bg-[#5034ff]/5"
+                          ? "border-[#D3126A]/50 bg-[#D3126A]/5"
                           : "border-transparent hover:bg-muted/60"
                       }`}
                     >
@@ -298,7 +298,7 @@ export default function PortalLearning() {
           <div className="lg:col-span-5 space-y-4">
             {active ? (
               <Card className="overflow-hidden">
-                <div className="h-1.5 bg-gradient-to-r from-[#5034ff] via-sky-500 to-emerald-400" />
+                <div className="h-1.5 bg-gradient-to-r from-[#D3126A] via-sky-500 to-emerald-400" />
                 <CardHeader>
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <div className="space-y-1">
@@ -321,7 +321,7 @@ export default function PortalLearning() {
 
                   <div>
                     <p className="text-sm font-semibold mb-2 flex items-center gap-1.5">
-                      <Sparkles className="h-4 w-4 text-[#5034ff]" />
+                      <Sparkles className="h-4 w-4 text-[#D3126A]" />
                       Walkthrough
                     </p>
                     <ol className="space-y-2.5">

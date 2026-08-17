@@ -25,7 +25,7 @@ The audit (`scripts/brand-audit.mjs`) is a regression detector, not a requiremen
 | `#5034ff` “Sign Up” | Official tools + portal login | DE asked these tools to join the accent system. The `#5034ff` “Sign Up” string is the portal login link; official-tool pages no longer use that fill. | Official-tool violet glow retired. Portal Sign Up / fills move to magenta in the portal commit. |
 | Yellow star glyphs | `/thank-you-success-page` | Unsourced ★★★★★ is a fabricated rating. | Removed. Badge now links to `/#google-reviews` with no star count. |
 | Legacy unused purple | `Homepage.tsx` + unused Figma sections | DE approved deletion. | Deleted. Live homepage is still `DigeratiHomepage`. |
-| Portal palette | `/portal/*` | DE asked for the pass. | `#5034ff` / violet fills → magenta tokens. Paths stay `/portal/login`. |
+| Portal palette | `/portal/*` | DE asked for the pass. | `#5034ff` / violet fills → magenta. Login stays `/portal/login`. Semantic status purples (order state, file type) left alone. |
 
 ## Optional later
 

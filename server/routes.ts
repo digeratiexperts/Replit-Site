@@ -727,7 +727,7 @@ export async function registerRoutes(app: Express) {
         description: description || "",
         ownerId: req.userId || "",
         icon: "📦",
-        color: "#5034ff",
+        color: "#D3126A",
       });
 
       res.json({ workspace });
@@ -775,7 +775,7 @@ export async function registerRoutes(app: Express) {
         name,
         createdBy: req.userId || "",
         description: description || "",
-        color: "#5034ff",
+        color: "#D3126A",
         isFavorite: false,
       });
 
@@ -919,7 +919,7 @@ export async function registerRoutes(app: Express) {
       const label = await storage.createLabel({
         workspaceId,
         name,
-        color: color || "#5034ff",
+        color: color || "#D3126A",
       });
 
       res.json({ label });
@@ -4037,7 +4037,7 @@ export async function registerRoutes(app: Express) {
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #333; }
     .header { text-align: center; margin-bottom: 40px; }
-    .logo { font-size: 24px; font-weight: bold; color: #5034ff; margin-bottom: 8px; }
+    .logo { font-size: 24px; font-weight: bold; color: #D3126A; margin-bottom: 8px; }
     .receipt-title { font-size: 18px; color: #666; }
     .order-info { display: flex; justify-content: space-between; margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px; }
     .order-info div { }

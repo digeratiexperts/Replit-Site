@@ -376,7 +376,7 @@ export default function PortalOrderDetail() {
                 <div className="space-y-2">
                   <a
                     href="mailto:support@digeratiexperts.com"
-                    className="flex items-center gap-2 text-[#5034ff] hover:underline"
+                    className="flex items-center gap-2 text-[#D3126A] hover:underline"
                     data-testid="link-support-email"
                   >
                     <Mail className="h-4 w-4" />
@@ -384,7 +384,7 @@ export default function PortalOrderDetail() {
                   </a>
                   <a
                     href="tel:+13254809870"
-                    className="flex items-center gap-2 text-[#5034ff] hover:underline"
+                    className="flex items-center gap-2 text-[#D3126A] hover:underline"
                     data-testid="link-support-phone"
                   >
                     <Phone className="h-4 w-4" />

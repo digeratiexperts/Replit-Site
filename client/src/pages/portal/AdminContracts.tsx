@@ -220,7 +220,7 @@ export function AdminContracts() {
         <div className="flex gap-2">
           <Button 
             variant="outline" 
-            className="border-violet-500/50 text-violet-400 hover:bg-violet-500/10"
+            className="border-[#D3126A]/50 text-de-magenta-ink hover:bg-[#D3126A]/10"
             onClick={() => setShowTemplateDialog(true)}
             data-testid="button-create-template"
           >
@@ -228,7 +228,7 @@ export function AdminContracts() {
             New Template
           </Button>
           <Button 
-            className="bg-violet-600 hover:bg-violet-700"
+            className="bg-[#D3126A] hover:bg-[#e01874]"
             onClick={() => setShowCreateDialog(true)}
             data-testid="button-create-contract"
           >
@@ -240,11 +240,11 @@ export function AdminContracts() {
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="bg-slate-800">
-          <TabsTrigger value="contracts" className="data-[state=active]:bg-violet-600">
+          <TabsTrigger value="contracts" className="data-[state=active]:bg-[#D3126A]">
             <FileSignature className="w-4 h-4 mr-2" />
             Contracts
           </TabsTrigger>
-          <TabsTrigger value="templates" className="data-[state=active]:bg-violet-600">
+          <TabsTrigger value="templates" className="data-[state=active]:bg-[#D3126A]">
             <FileText className="w-4 h-4 mr-2" />
             Templates
           </TabsTrigger>
@@ -281,7 +281,7 @@ export function AdminContracts() {
 
           {contractsLoading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader className="w-8 h-8 animate-spin text-violet-500" />
+              <Loader className="w-8 h-8 animate-spin text-[#D3126A]" />
             </div>
           ) : filteredContracts.length === 0 ? (
             <Card className="bg-slate-900/50 border-slate-700">
@@ -289,7 +289,7 @@ export function AdminContracts() {
                 <FileText className="w-12 h-12 text-slate-600 mb-4" />
                 <p className="text-slate-400">No contracts found</p>
                 <Button 
-                  className="mt-4 bg-violet-600 hover:bg-violet-700"
+                  className="mt-4 bg-[#D3126A] hover:bg-[#e01874]"
                   onClick={() => setShowCreateDialog(true)}
                 >
                   Create your first contract
@@ -302,7 +302,7 @@ export function AdminContracts() {
                 const status = statusConfig[contract.status];
                 const StatusIcon = status.icon;
                 return (
-                  <Card key={contract.id} className="bg-slate-900/50 border-slate-700 hover:border-violet-500/50 transition-colors">
+                  <Card key={contract.id} className="bg-slate-900/50 border-slate-700 hover:border-[#D3126A]/50 transition-colors">
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -344,7 +344,7 @@ export function AdminContracts() {
                               <Button 
                                 variant="ghost" 
                                 size="sm"
-                                className="text-violet-400 hover:text-violet-300"
+                                className="text-de-magenta-ink hover:text-de-magenta-ink"
                                 onClick={() => sendContractMutation.mutate(contract.id)}
                                 disabled={sendContractMutation.isPending}
                                 data-testid={`button-send-contract-${contract.id}`}
@@ -392,7 +392,7 @@ export function AdminContracts() {
         <TabsContent value="templates" className="mt-6 space-y-4">
           {templatesLoading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader className="w-8 h-8 animate-spin text-violet-500" />
+              <Loader className="w-8 h-8 animate-spin text-[#D3126A]" />
             </div>
           ) : templates.length === 0 ? (
             <Card className="bg-slate-900/50 border-slate-700">
@@ -400,7 +400,7 @@ export function AdminContracts() {
                 <FileText className="w-12 h-12 text-slate-600 mb-4" />
                 <p className="text-slate-400">No templates found</p>
                 <Button 
-                  className="mt-4 bg-violet-600 hover:bg-violet-700"
+                  className="mt-4 bg-[#D3126A] hover:bg-[#e01874]"
                   onClick={() => setShowTemplateDialog(true)}
                 >
                   Create your first template
@@ -417,7 +417,7 @@ export function AdminContracts() {
                         <CardTitle className="text-lg text-white">{template.name}</CardTitle>
                         <CardDescription className="mt-1">{template.description}</CardDescription>
                       </div>
-                      <Badge variant="outline" className="border-violet-500/50 text-violet-400">
+                      <Badge variant="outline" className="border-[#D3126A]/50 text-de-magenta-ink">
                         v{template.version}
                       </Badge>
                     </div>
@@ -505,7 +505,7 @@ export function AdminContracts() {
               Cancel
             </Button>
             <Button 
-              className="bg-violet-600 hover:bg-violet-700"
+              className="bg-[#D3126A] hover:bg-[#e01874]"
               onClick={() => createContractMutation.mutate(newContract)}
               disabled={!newContract.clientId || !newContract.title || createContractMutation.isPending}
               data-testid="button-submit-contract"
@@ -587,7 +587,7 @@ export function AdminContracts() {
               Cancel
             </Button>
             <Button 
-              className="bg-violet-600 hover:bg-violet-700"
+              className="bg-[#D3126A] hover:bg-[#e01874]"
               onClick={() => createTemplateMutation.mutate(newTemplate)}
               disabled={!newTemplate.name || createTemplateMutation.isPending}
               data-testid="button-submit-template"

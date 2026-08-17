@@ -59,7 +59,7 @@ export default function PortalServices() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <CardTitle className="flex items-center gap-2">
-                        <Package className="h-5 w-5 text-[#5034ff]" />
+                        <Package className="h-5 w-5 text-[#D3126A]" />
                         {service.serviceName}
                       </CardTitle>
                       <CardDescription>{service.description}</CardDescription>

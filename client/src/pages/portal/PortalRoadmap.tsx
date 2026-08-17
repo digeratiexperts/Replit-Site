@@ -331,7 +331,7 @@ export default function PortalRoadmap() {
                 role="button"
                 tabIndex={0}
                 aria-expanded={isExpanded}
-                className="cursor-pointer hover:border-[#5034ff]/50 transition-colors"
+                className="cursor-pointer hover:border-[#D3126A]/50 transition-colors"
                 onClick={() => setExpandedItem(isExpanded ? null : item.id)}
                 onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setExpandedItem(isExpanded ? null : item.id); } }}
                 data-testid={`roadmap-item-${item.id}`}
@@ -385,11 +385,11 @@ export default function PortalRoadmap() {
           })}
         </div>
 
-        <Card className="bg-gradient-to-r from-[#5034ff]/10 to-purple-500/10 border-[#5034ff]/30">
+        <Card className="bg-gradient-to-r from-[#D3126A]/10 to-transparent border-[#D3126A]/30">
           <CardContent className="pt-6">
             <div className="flex flex-col md:flex-row items-center gap-6">
-              <div className="w-16 h-16 rounded-2xl bg-[#5034ff]/20 flex items-center justify-center flex-shrink-0">
-                <Map className="h-8 w-8 text-[#5034ff]" />
+              <div className="w-16 h-16 rounded-2xl bg-[#D3126A]/20 flex items-center justify-center flex-shrink-0">
+                <Map className="h-8 w-8 text-[#D3126A]" />
               </div>
               <div className="flex-1 text-center md:text-left">
                 <h3 className="text-xl font-bold mb-1">Need to adjust your roadmap?</h3>
@@ -398,7 +398,7 @@ export default function PortalRoadmap() {
                 </p>
               </div>
               <Button
-                className="bg-[#5034ff] hover:bg-[#5034ff]/90"
+                className="bg-[#D3126A] hover:bg-[#D3126A]/90"
                 onClick={() => window.location.href = "/book"}
                 data-testid="button-schedule-strategy"
               >

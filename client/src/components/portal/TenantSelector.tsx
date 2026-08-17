@@ -137,9 +137,9 @@ export function TenantSelector({ currentTenant, onTenantChange }: TenantSelector
         >
           <div className="flex items-center gap-2">
             {currentTenant ? (
-              <Users className="h-4 w-4 text-violet-400" />
+              <Users className="h-4 w-4 text-de-magenta-ink" />
             ) : (
-              <Shield className="h-4 w-4 text-violet-400" />
+              <Shield className="h-4 w-4 text-de-magenta-ink" />
             )}
             <span className="truncate max-w-[150px]">
               {isPending ? "Switching..." : displayName}
@@ -152,7 +152,7 @@ export function TenantSelector({ currentTenant, onTenantChange }: TenantSelector
         align="end" 
         className="w-[280px] max-h-[400px] overflow-y-auto"
       >
-        <DropdownMenuLabel className="flex items-center gap-2 text-violet-600">
+        <DropdownMenuLabel className="flex items-center gap-2 text-[#D3126A]">
           <Shield className="h-4 w-4" />
           Internal
         </DropdownMenuLabel>
@@ -160,13 +160,13 @@ export function TenantSelector({ currentTenant, onTenantChange }: TenantSelector
           <DropdownMenuItem
             key={tenant.id}
             onClick={() => handleSelectTenant(tenant)}
-            className={`cursor-pointer ${!currentTenant ? "bg-violet-50 dark:bg-violet-900/20" : ""}`}
+            className={`cursor-pointer ${!currentTenant ? "bg-de-paper dark:bg-[#D3126A]/10" : ""}`}
             data-testid={`tenant-${tenant.id}`}
           >
-            <Shield className="h-4 w-4 mr-2 text-violet-500" />
+            <Shield className="h-4 w-4 mr-2 text-[#D3126A]" />
             <span className="truncate">{tenant.companyName}</span>
             {!currentTenant && (
-              <span className="ml-auto text-xs text-violet-600">(Current)</span>
+              <span className="ml-auto text-xs text-[#D3126A]">(Current)</span>
             )}
           </DropdownMenuItem>
         ))}
@@ -181,13 +181,13 @@ export function TenantSelector({ currentTenant, onTenantChange }: TenantSelector
           <DropdownMenuItem
             key={tenant.id}
             onClick={() => handleSelectTenant(tenant)}
-            className={`cursor-pointer ${currentTenant?.id === tenant.id ? "bg-violet-50 dark:bg-violet-900/20" : ""}`}
+            className={`cursor-pointer ${currentTenant?.id === tenant.id ? "bg-de-paper dark:bg-[#D3126A]/10" : ""}`}
             data-testid={`tenant-${tenant.id}`}
           >
             <Building2 className="h-4 w-4 mr-2 text-slate-500" />
             <span className="truncate">{tenant.companyName}</span>
             {currentTenant?.id === tenant.id && (
-              <span className="ml-auto text-xs text-violet-600">(Current)</span>
+              <span className="ml-auto text-xs text-[#D3126A]">(Current)</span>
             )}
           </DropdownMenuItem>
         ))}

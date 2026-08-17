@@ -101,7 +101,7 @@ export default function PortalForgotPassword() {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-violet-600 hover:bg-violet-700"
+                  className="w-full bg-[#D3126A] hover:bg-[#e01874]"
                   data-testid="button-send-reset"
                 >
                   {loading ? "Sending..." : "Send Reset Link"}
@@ -109,7 +109,7 @@ export default function PortalForgotPassword() {
 
                 <p className="text-center text-sm text-gray-400">
                   Remember your password?{" "}
-                  <Link href="/portal/login" className="text-violet-400 hover:underline" data-testid="link-back-login">
+                  <Link href="/portal/login" className="text-de-magenta-ink hover:underline" data-testid="link-back-login">
                     Sign in
                   </Link>
                 </p>

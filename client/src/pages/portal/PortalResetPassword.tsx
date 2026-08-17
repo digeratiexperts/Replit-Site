@@ -63,7 +63,7 @@ export default function PortalResetPassword() {
                 Invalid or missing reset token. Please request a new password reset link.
               </div>
               <Link href="/portal/forgot-password">
-                <Button className="w-full bg-violet-600 hover:bg-violet-700" data-testid="button-request-new-link">
+                <Button className="w-full bg-[#D3126A] hover:bg-[#e01874]" data-testid="button-request-new-link">
                   Request New Link
                 </Button>
               </Link>
@@ -97,7 +97,7 @@ export default function PortalResetPassword() {
                   <p className="text-sm">Password updated successfully. You can now sign in with your new password.</p>
                 </div>
                 <Link href="/portal/login">
-                  <Button className="w-full bg-violet-600 hover:bg-violet-700" data-testid="button-go-login">
+                  <Button className="w-full bg-[#D3126A] hover:bg-[#e01874]" data-testid="button-go-login">
                     Go to Login
                   </Button>
                 </Link>
@@ -154,7 +154,7 @@ export default function PortalResetPassword() {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-violet-600 hover:bg-violet-700"
+                  className="w-full bg-[#D3126A] hover:bg-[#e01874]"
                   data-testid="button-reset-password"
                 >
                   {loading ? "Resetting..." : "Reset Password"}
@@ -162,7 +162,7 @@ export default function PortalResetPassword() {
 
                 <p className="text-center text-sm text-gray-400">
                   Remembered it?{" "}
-                  <Link href="/portal/login" className="text-violet-400 hover:underline" data-testid="link-login">
+                  <Link href="/portal/login" className="text-de-magenta-ink hover:underline" data-testid="link-login">
                     Sign in
                   </Link>
                 </p>
