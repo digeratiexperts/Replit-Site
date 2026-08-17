@@ -166,16 +166,17 @@ export default function Blog() {
                   <Search className="h-[18px] w-[18px] relative" />
                 )}
               </button>
-              <Link href="/#contact">
-                <button
-                  className="group relative inline-flex items-center gap-2 h-12 px-6 rounded-full font-semibold text-white border border-de-hairline backdrop-blur-md transition-all duration-200 bg-de-raised hover:bg-de-raised shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(0,0,0,0.2),0_10px_28px_-8px_rgb(var(--de-accent-rgb) / 0.35)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),inset_0_-1px_0_rgba(0,0,0,0.2),0_14px_36px_-8px_rgb(var(--de-accent-rgb) / 0.4)] active:translate-y-px"
-                  data-testid="button-subscribe"
-                >
+              <Button
+                asChild
+                className="group relative inline-flex items-center gap-2 h-12 px-6 rounded-full font-semibold text-white border border-de-hairline backdrop-blur-md transition-all duration-200 bg-de-raised hover:bg-de-raised shadow-[inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(0,0,0,0.2),0_10px_28px_-8px_rgb(var(--de-accent-rgb) / 0.35)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),inset_0_-1px_0_rgba(0,0,0,0.2),0_14px_36px_-8px_rgb(var(--de-accent-rgb) / 0.4)] active:translate-y-px"
+                data-testid="button-subscribe"
+              >
+                <Link href="/#contact">
                   <span className="pointer-events-none absolute inset-x-3 top-1 h-1/2 rounded-full bg-gradient-to-b from-white/35 to-transparent opacity-70" aria-hidden />
                   <Mail className="h-4 w-4 relative" />
                   <span className="relative">Subscribe</span>
-                </button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -434,16 +435,17 @@ export default function Blog() {
                     actually stands and what to do first.
                   </p>
                 </div>
-                <Link href="/book">
-                  <button
-                    className="group relative inline-flex items-center gap-3 h-14 px-8 rounded-2xl font-semibold text-white whitespace-nowrap border border-de-hairline backdrop-blur-md transition-all duration-200 bg-de-raised hover:bg-de-raised shadow-[inset_0_1px_0_rgba(255,255,255,0.45),inset_0_-1px_0_rgba(0,0,0,0.25),0_14px_36px_-10px_rgb(var(--de-accent-rgb) / 0.4)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.55),inset_0_-1px_0_rgba(0,0,0,0.25),0_18px_44px_-10px_rgb(var(--de-accent-rgb) / 0.45)] active:translate-y-px"
-                    data-testid="button-blog-assessment"
-                  >
+                <Button
+                  asChild
+                  className="group relative inline-flex items-center gap-3 h-14 px-8 rounded-2xl font-semibold text-white whitespace-nowrap border border-de-hairline backdrop-blur-md transition-all duration-200 bg-de-raised hover:bg-de-raised shadow-[inset_0_1px_0_rgba(255,255,255,0.45),inset_0_-1px_0_rgba(0,0,0,0.25),0_14px_36px_-10px_rgb(var(--de-accent-rgb) / 0.4)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.55),inset_0_-1px_0_rgba(0,0,0,0.25),0_18px_44px_-10px_rgb(var(--de-accent-rgb) / 0.45)] active:translate-y-px"
+                  data-testid="button-blog-assessment"
+                >
+                  <Link href="/book">
                     <span className="pointer-events-none absolute inset-x-4 top-1 h-1/2 rounded-2xl bg-gradient-to-b from-white/35 to-transparent opacity-70" aria-hidden />
                     <span className="relative">Schedule a Cyber Risk Assessment</span>
                     <ArrowRight className="relative h-5 w-5 transition-transform group-hover:translate-x-1" />
-                  </button>
-                </Link>
+                  </Link>
+                </Button>
               </CardContent>
             </Card>
           </section>

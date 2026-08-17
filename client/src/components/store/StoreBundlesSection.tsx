@@ -60,16 +60,17 @@ export function StoreBundlesSection({ isLoggedIn, onAddBundle }: StoreBundlesSec
                     Add all to cart
                   </Button>
                 )}
-                <Link href="/store/co-managed">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-white/15 bg-transparent text-white hover:bg-white/5"
-                  >
+                <Button
+                  asChild
+                  size="sm"
+                  variant="outline"
+                  className="border-white/15 bg-transparent text-white hover:bg-white/5"
+                >
+                  <Link href="/store/co-managed">
                     Browse related
                     <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             </div>
           );

@@ -187,16 +187,17 @@ export function ShoppingCart() {
                     <p className="mb-6 text-white/50">
                       Build a solution from outcomes, rails, or the catalog.
                     </p>
-                    <Link href="/store/co-managed">
-                      <Button
-                        className="bg-de-accent text-white hover:bg-[#6548ff]"
-                        onClick={closeCart}
-                        data-testid="button-browse-products"
-                      >
+                    <Button
+                      asChild
+                      className="bg-de-accent text-white hover:bg-[#6548ff]"
+                      onClick={closeCart}
+                      data-testid="button-browse-products"
+                    >
+                      <Link href="/store/co-managed">
                         Browse Products
                         <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </Link>
+                      </Link>
+                    </Button>
                   </div>
                 ) : (
                   <>
@@ -406,16 +407,18 @@ export function ShoppingCart() {
                     <FileText className="mr-2 h-4 w-4" />
                     Save / email quote
                   </Button>
-                  <a href="/book" className="block" onClick={closeCart}>
-                    <Button
-                      variant="ghost"
-                      className="w-full text-white/70 hover:bg-de-accent/10 hover:text-white"
-                      data-testid="button-schedule-from-cart"
-                    >
+                  <Button
+                    asChild
+                    variant="ghost"
+                    className="w-full text-white/70 hover:bg-de-accent/10 hover:text-white"
+                    onClick={closeCart}
+                    data-testid="button-schedule-from-cart"
+                  >
+                    <a href="/book" className="block">
                       <Calendar className="mr-2 h-4 w-4" />
                       Schedule consultation
-                    </Button>
-                  </a>
+                    </a>
+                  </Button>
                   <Button
                     variant="ghost"
                     onClick={clearCart}

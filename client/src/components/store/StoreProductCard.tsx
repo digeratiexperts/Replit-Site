@@ -224,28 +224,30 @@ export function StoreProductCard({
           </div>
 
           <div className="flex gap-2.5">
-            <Link href={`/store/product/${product.sku}`} className="flex-1">
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-12 w-full border-white/15 bg-transparent text-base text-white hover:bg-white/5"
-                data-testid={`button-details-${product.id}`}
-              >
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="h-12 w-full flex-1 border-white/15 bg-transparent text-base text-white hover:bg-white/5"
+              data-testid={`button-details-${product.id}`}
+            >
+              <Link href={`/store/product/${product.sku}`}>
                 <Eye className="mr-1.5 h-4 w-4" />
                 View details
-              </Button>
-            </Link>
+              </Link>
+            </Button>
 
             {isContract ? (
-              <a href="/book" className="flex-1">
-                <Button
-                  size="sm"
-                  className="h-12 w-full bg-de-accent text-base text-white hover:bg-[#6548ff]"
-                  data-testid={`button-consult-${product.id}`}
-                >
+              <Button
+                asChild
+                size="sm"
+                className="h-12 w-full flex-1 bg-de-accent text-base text-white hover:bg-[#6548ff]"
+                data-testid={`button-consult-${product.id}`}
+              >
+                <a href="/book">
                   Schedule
-                </Button>
-              </a>
+                </a>
+              </Button>
             ) : product.isClientOnly && !isLoggedIn ? (
               <Button
                 size="sm"
