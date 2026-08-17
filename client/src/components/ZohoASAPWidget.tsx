@@ -15,6 +15,8 @@ import {
   LifeBuoy,
   Lock,
   Mail,
+  Maximize2,
+  Minimize2,
   Monitor,
   MessageCircle,
   Paperclip,
@@ -920,6 +922,23 @@ export const ZohoASAPWidget = ({
                   </p>
                 </div>
               </div>
+              {canDrag ? (
+                <button
+                  type="button"
+                  className="de-desk-close"
+                  data-testid="button-expand-desk"
+                  aria-label={deskDrag.expanded ? "Reset DE Desk size" : "Expand DE Desk"}
+                  title={deskDrag.expanded ? "Reset size" : "Expand"}
+                  onPointerDown={(event) => event.stopPropagation()}
+                  onClick={deskDrag.toggleExpanded}
+                >
+                  {deskDrag.expanded ? (
+                    <Minimize2 size={13} aria-hidden="true" />
+                  ) : (
+                    <Maximize2 size={13} aria-hidden="true" />
+                  )}
+                </button>
+              ) : null}
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
@@ -1551,15 +1570,27 @@ export const ZohoASAPWidget = ({
               </button>
             </footer>
             {canDrag ? (
-              <button
-                type="button"
-                className={`de-desk-resize${deskDrag.resizing ? " is-active" : ""}`}
-                data-testid="desk-resize-handle"
-                aria-label="Resize DE Desk. Drag to make the window larger or smaller."
-                onPointerDown={deskDrag.onResizePointerDown}
-              >
-                <span aria-hidden="true" />
-              </button>
+              <>
+                {(["n", "s", "e", "w", "ne", "nw", "sw"] as const).map((edge) => (
+                  <button
+                    key={edge}
+                    type="button"
+                    className={`de-desk-resize-edge de-desk-resize-${edge}`}
+                    data-testid={`desk-resize-${edge}`}
+                    aria-label={`Resize DE Desk from the ${edge} edge`}
+                    onPointerDown={deskDrag.onResizePointerDown(edge)}
+                  />
+                ))}
+                <button
+                  type="button"
+                  className={`de-desk-resize de-desk-resize-se${deskDrag.resizing ? " is-active" : ""}`}
+                  data-testid="desk-resize-handle"
+                  aria-label="Resize DE Desk. Drag any edge or this corner, or use Expand in the header."
+                  onPointerDown={deskDrag.onResizePointerDown("se")}
+                >
+                  <span aria-hidden="true" />
+                </button>
+              </>
             ) : null}
           </section>
         )}
@@ -2127,6 +2158,21 @@ export const ZohoASAPWidget = ({
               display: flex; align-items: center; gap: 4px; flex: none;
             }
             .de-desk-foot-cta svg { width: 11px; height: 11px; }
+            .de-desk-resize-edge {
+              position: absolute;
+              border: 0;
+              padding: 0;
+              background: transparent;
+              touch-action: none;
+              z-index: 4;
+            }
+            .de-desk-resize-n { top: 0; left: 14px; right: 14px; height: 10px; cursor: ns-resize; }
+            .de-desk-resize-s { bottom: 0; left: 14px; right: 14px; height: 10px; cursor: ns-resize; }
+            .de-desk-resize-e { right: 0; top: 14px; bottom: 14px; width: 10px; cursor: ew-resize; }
+            .de-desk-resize-w { left: 0; top: 14px; bottom: 14px; width: 10px; cursor: ew-resize; }
+            .de-desk-resize-nw { top: 0; left: 0; width: 16px; height: 16px; cursor: nwse-resize; }
+            .de-desk-resize-ne { top: 0; right: 0; width: 16px; height: 16px; cursor: nesw-resize; }
+            .de-desk-resize-sw { bottom: 0; left: 0; width: 16px; height: 16px; cursor: nesw-resize; }
             .de-desk-resize {
               position: absolute;
               right: 0;
@@ -2137,7 +2183,7 @@ export const ZohoASAPWidget = ({
               background: transparent;
               cursor: nwse-resize;
               touch-action: none;
-              z-index: 3;
+              z-index: 5;
             }
             .de-desk-resize span {
               position: absolute;
@@ -2146,9 +2192,9 @@ export const ZohoASAPWidget = ({
               width: 14px;
               height: 14px;
               background:
-                linear-gradient(135deg, transparent 46%, #726c82 46%, #726c82 54%, transparent 54%),
-                linear-gradient(135deg, transparent 66%, #726c82 66%, #726c82 74%, transparent 74%),
-                linear-gradient(135deg, transparent 86%, #726c82 86%, #726c82 94%, transparent 94%);
+                linear-gradient(135deg, transparent 46%, #5c5668 46%, #5c5668 54%, transparent 54%),
+                linear-gradient(135deg, transparent 66%, #5c5668 66%, #5c5668 74%, transparent 74%),
+                linear-gradient(135deg, transparent 86%, #5c5668 86%, #5c5668 94%, transparent 94%);
             }
             .de-desk-resize:hover span,
             .de-desk-resize.is-active span,
