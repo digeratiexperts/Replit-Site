@@ -2,7 +2,7 @@
 
 Authoritative policy: **`.cursorrules`** (sections 1?42). Always-applied pointer: `.cursor/rules/00-follow-cursorrules.mdc`.
 
-Design OS (execution layer, does not replace `.cursorrules`): `.cursor/rules/ui-ux.mdc`, `brand.mdc`, `frontend.mdc` + `design/DESIGN_SYSTEM.md`. Never judge UI from source code alone.
+Design OS (execution layer, does not replace `.cursorrules`): `.cursor/rules/ui-ux.mdc`, `brand.mdc`, `frontend.mdc` + `design/DESIGN_SYSTEM.md`. Never judge UI from source code alone. Blog/Journal and Store colors are locked: `.cursor/rules/blog-store-color-lock.mdc`.
 
 ## Closed loop (UI work)
 
