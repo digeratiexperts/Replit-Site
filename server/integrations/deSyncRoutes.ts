@@ -1,0 +1,136 @@
+import type { Express, NextFunction, Request, Response } from "express";
+import { requireDeSyncAuth } from "./deSyncAuth";
+import { handleHubEvents } from "./hubEvents";
+import {
+  enqueueOutbox,
+  getCatalogSnapshot,
+  getOldestPendingAgeMs,
+  listConflicts,
+  listFailures,
+  listOutbox,
+  retryFailed,
+  saveCatalogSnapshot,
+} from "./deSyncStore";
+import { fetchPublicCatalog, pingHub } from "./techSalesClient";
+import { addPortalSseClient } from "./portalSse";
+import type { DeSyncEventType } from "./deSyncContract";
+import { getClient } from "../portalAuthStore";
+
+type AuthedRequest = Request & {
+  user?: { role?: string; clientId?: string | null };
+  userId?: string;
+};
+
+type AuthMiddleware = (req: AuthedRequest, res: Response, next: NextFunction) => void;
+
+const PORTAL_COMMANDS: DeSyncEventType[] = [
+  "account.profile_update_requested",
+  "quote.requested",
+  "quote.response_submitted",
+  "approval.submitted",
+  "assessment.response_submitted",
+  "onboarding.response_submitted",
+  "document.acknowledged",
+  "service.change_requested",
+];
+
+function healthStatus(opts: { configured: boolean; reachable: boolean; oldestPendingMs: number | null }): "healthy" | "degraded" | "failed" | "not_configured" {
+  if (!opts.configured) return "not_configured";
+  if (!opts.reachable) return "failed";
+  if (opts.oldestPendingMs !== null && opts.oldestPendingMs > 15 * 60 * 1000) return "degraded";
+  return "healthy";
+}
+
+export function registerDeSyncRoutes(app: Express, authMiddleware: AuthMiddleware): void {
+  app.post("/api/integrations/v1/hub/events", requireDeSyncAuth("hub_to_website"), handleHubEvents);
+
+  app.get("/api/integrations/health", async (_req: Request, res: Response) => {
+    const hubUrl = (process.env.TECHSALES_HUB_URL || process.env.TECHSALES_SYNC_URL || "").trim();
+    const ping = hubUrl ? await pingHub() : { ok: false, latencyMs: 0 };
+    const oldestPendingMs = await getOldestPendingAgeMs();
+    const pending = (await listOutbox("pending")).length;
+    const failed = (await listOutbox("failed")).length;
+    const status = healthStatus({
+      configured: Boolean(hubUrl),
+      reachable: ping.ok,
+      oldestPendingMs,
+    });
+    res.status(status === "failed" ? 503 : 200).json({
+      status,
+      hub: {
+        configured: Boolean(hubUrl),
+        reachable: ping.ok,
+        latencyMs: ping.latencyMs,
+        httpStatus: ping.status,
+      },
+      outbox: { pending, failed, oldestPendingMs },
+    });
+  });
+
+  app.get("/api/integrations/v1/public-catalog", async (_req: Request, res: Response) => {
+    const cached = await getCatalogSnapshot();
+    if (cached) {
+      return res.json({ source: "last_known_good", publishedAt: cached.publishedAt, ...cached.snapshot });
+    }
+    const live = await fetchPublicCatalog();
+    if (live) {
+      await saveCatalogSnapshot(live);
+      return res.json({ source: "hub", ...live });
+    }
+    return res.json({
+      source: "none",
+      message: "Hub catalog snapshot is not available. Storefront continues to use the local published catalog.",
+      tiers: [],
+    });
+  });
+
+  app.post("/api/integrations/v1/reconcile/account/:accountId", requireDeSyncAuth("hub_to_website"), async (req: Request, res: Response) => {
+    const accountId = String(req.params.accountId || "").trim();
+    if (!accountId) return res.status(400).json({ error: "accountId required" });
+    res.json({ ok: true, accountId, projectionsRefreshed: false, message: "Site stores Hub projections only; no command echo." });
+  });
+
+  app.get("/api/integrations/conflicts", [authMiddleware], async (req: AuthedRequest, res: Response) => {
+    if (req.user?.role !== "admin") return res.status(403).json({ error: "Admin only" });
+    res.json({ conflicts: await listConflicts(), failures: await listFailures() });
+  });
+
+  app.post("/api/integrations/retry", [authMiddleware], async (req: AuthedRequest, res: Response) => {
+    if (req.user?.role !== "admin") return res.status(403).json({ error: "Admin only" });
+    const eventId = typeof req.body?.eventId === "string" ? req.body.eventId : undefined;
+    const count = await retryFailed(eventId);
+    res.json({ ok: true, retried: count });
+  });
+
+  app.get("/api/portal/events/stream", [authMiddleware], (req: AuthedRequest, res: Response) => {
+    req.headers["x-no-compression"] = "1";
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache, no-transform");
+    res.setHeader("Connection", "keep-alive");
+    res.flushHeaders?.();
+    res.write(`data: ${JSON.stringify({ eventType: "stream.ready", entityId: req.userId || "anon" })}\n\n`);
+    addPortalSseClient(res);
+  });
+
+  app.post("/api/portal/integrations/commands", [authMiddleware], async (req: AuthedRequest, res: Response) => {
+    const eventType = req.body?.eventType as DeSyncEventType;
+    if (!PORTAL_COMMANDS.includes(eventType)) {
+      return res.status(400).json({ error: "Unsupported portal command" });
+    }
+    const client = req.user?.clientId ? getClient(req.user.clientId) : undefined;
+    const envelope = await enqueueOutbox({
+      eventType,
+      source: "portal",
+      destination: "hub",
+      entityType: typeof req.body?.entityType === "string" ? req.body.entityType : "command",
+      entityId: typeof req.body?.entityId === "string" ? req.body.entityId : undefined,
+      canonicalAccountId: client?.hubAccountId || null,
+      payload: {
+        ...(req.body?.payload && typeof req.body.payload === "object" ? req.body.payload : {}),
+        portalClientId: req.user?.clientId || null,
+        actorUserId: req.userId || null,
+      },
+    });
+    res.status(202).json({ ok: true, eventId: envelope.eventId });
+  });
+}

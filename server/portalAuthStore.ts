@@ -45,6 +45,7 @@ export type PortalAuthClient = {
   status?: string | null;
   type?: string;
   serviceType?: string | null;
+  hubAccountId?: string | null;
   createdAt?: Date;
 };
 
@@ -96,6 +97,7 @@ function rowToClient(row: typeof portalClientsTable.$inferSelect): PortalAuthCli
     primaryContact: row.primaryContact,
     status: row.status,
     serviceType: row.serviceType,
+    hubAccountId: (row as { hubAccountId?: string | null }).hubAccountId || null,
     createdAt: row.createdAt,
   };
 }
@@ -105,6 +107,9 @@ async function ensureSchema() {
   try {
     await db.execute(sql`
       ALTER TABLE portal_clients ADD COLUMN IF NOT EXISTS service_type text DEFAULT 'prospect'
+    `);
+    await db.execute(sql`
+      ALTER TABLE portal_clients ADD COLUMN IF NOT EXISTS hub_account_id varchar
     `);
     await db.execute(sql`ALTER TABLE portal_users ALTER COLUMN client_id DROP NOT NULL`);
     await db.execute(sql`ALTER TABLE portal_users ADD COLUMN IF NOT EXISTS username text`);
@@ -205,6 +210,7 @@ async function upsertClientDb(client: PortalAuthClient) {
         primaryContact: client.primaryContact || null,
         status: client.status || "active",
         serviceType: client.serviceType || "prospect",
+        hubAccountId: client.hubAccountId || null,
       })
       .onConflictDoUpdate({
         target: portalClientsTable.id,
@@ -216,6 +222,7 @@ async function upsertClientDb(client: PortalAuthClient) {
           primaryContact: client.primaryContact || null,
           status: client.status || "active",
           serviceType: client.serviceType || "prospect",
+          hubAccountId: client.hubAccountId || null,
           updatedAt: new Date(),
         },
       });

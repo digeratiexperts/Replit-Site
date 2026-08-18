@@ -488,6 +488,11 @@ function listEndpoints(): Array<{ method: string; path: string }> {
 
   server.listen(port, host, () => {
     log(`🚀 Running on http://${host}:${port}`);
+    void import("./integrations/deSyncWorker")
+      .then(({ startDeSyncWorker }) => startDeSyncWorker())
+      .catch((error) => {
+        log(`⚠️ de-sync worker not started: ${error?.message || error}`);
+      });
     void import("./services/threat-intel/ingest")
       .then(({ startThreatIntelScheduler }) => startThreatIntelScheduler())
       .catch((error) => {

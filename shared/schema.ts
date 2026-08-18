@@ -211,8 +211,76 @@ export const portalClients = pgTable("portal_clients", {
   status: text("status").default("active"),
   /** managed | comanaged | prospect — drives storeRole for linked users */
   serviceType: text("service_type").default("prospect"),
+  /** Hub accounts.id — canonical commercial identity once mapped */
+  hubAccountId: varchar("hub_account_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const syncOutbox = pgTable("sync_outbox", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  eventId: varchar("event_id").notNull().unique(),
+  eventType: text("event_type").notNull(),
+  version: integer("version").notNull().default(1),
+  source: text("source").notNull(),
+  destination: text("destination").notNull(),
+  occurredAt: timestamp("occurred_at").notNull(),
+  correlationId: varchar("correlation_id"),
+  entityType: text("entity_type").notNull(),
+  entityId: text("entity_id").notNull(),
+  canonicalAccountId: varchar("canonical_account_id"),
+  payload: jsonb("payload").notNull(),
+  status: text("status").notNull().default("pending"),
+  attemptCount: integer("attempt_count").notNull().default(0),
+  nextAttemptAt: timestamp("next_attempt_at").notNull(),
+  lastError: text("last_error"),
+  lockedAt: timestamp("locked_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  deliveredAt: timestamp("delivered_at"),
+});
+
+export const syncInbox = pgTable("sync_inbox", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  eventId: varchar("event_id").notNull().unique(),
+  eventType: text("event_type").notNull(),
+  source: text("source").notNull(),
+  canonicalAccountId: varchar("canonical_account_id"),
+  entityType: text("entity_type").notNull(),
+  entityId: text("entity_id").notNull(),
+  payload: jsonb("payload").notNull(),
+  receivedAt: timestamp("received_at").defaultNow().notNull(),
+  appliedAt: timestamp("applied_at"),
+});
+
+export const syncFailures = pgTable("sync_failures", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  eventId: varchar("event_id").notNull(),
+  direction: text("direction").notNull(),
+  eventType: text("event_type").notNull(),
+  lastError: text("last_error").notNull(),
+  attemptCount: integer("attempt_count").notNull().default(0),
+  payload: jsonb("payload"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const syncConflicts = pgTable("sync_conflicts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  canonicalAccountId: varchar("canonical_account_id"),
+  entityType: text("entity_type").notNull(),
+  entityId: text("entity_id").notNull(),
+  field: text("field").notNull(),
+  hubValue: jsonb("hub_value"),
+  peerValue: jsonb("peer_value"),
+  resolution: text("resolution").notNull().default("hub_wins"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const publicCatalogSnapshots = pgTable("public_catalog_snapshots", {
+  id: varchar("id").primaryKey(),
+  snapshot: jsonb("snapshot").notNull(),
+  sourceVersion: text("source_version"),
+  publishedAt: timestamp("published_at").defaultNow().notNull(),
 });
 
 /** Client departments — optional Dept IT Contact per department */
