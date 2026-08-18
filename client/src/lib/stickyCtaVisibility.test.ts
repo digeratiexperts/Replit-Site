@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  isNearDocumentEnd,
   isPastStickyCtaThreshold,
   isStickyCtaRouteAllowed,
   rectOverlapsPageContent,
@@ -35,7 +36,7 @@ describe("sticky CTA visibility", () => {
     expect(shouldShowStickyCta({ ...base, dismissed: true })).toBe(false);
   });
 
-  it("treats page content under the bar as overlap", () => {
+  it("does not treat ordinary page copy as overlap", () => {
     const article = {
       closest: () => null,
     } as unknown as Element;
@@ -43,7 +44,24 @@ describe("sticky CTA visibility", () => {
       { top: 700, left: 40, width: 1200, height: 100, right: 1240 },
       () => [article],
     );
-    expect(overlaps).toBe(true);
+    expect(overlaps).toBe(false);
+  });
+
+  it("parks when a dialog or cookie banner sits in the same slot", () => {
+    const dialog = {
+      closest: (selector: string) => (selector === "[role='dialog']" ? dialog : null),
+    } as unknown as Element;
+    expect(
+      rectOverlapsPageContent(
+        { top: 700, left: 40, width: 1200, height: 100, right: 1240 },
+        () => [dialog],
+      ),
+    ).toBe(true);
+  });
+
+  it("parks near the document footer", () => {
+    expect(isNearDocumentEnd(2200, 800, 2400)).toBe(true);
+    expect(isNearDocumentEnd(400, 800, 2400)).toBe(false);
   });
 
   it("ignores the dock and the bar itself", () => {

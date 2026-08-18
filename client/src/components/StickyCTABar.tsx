@@ -10,6 +10,7 @@ import {
   STICKY_CTA_FALLBACK_HEIGHT,
   STICKY_CTA_RESHOW_DELTA_PX,
   STICKY_CTA_SCROLL_IDLE_MS,
+  isNearDocumentEnd,
   isPastStickyCtaThreshold,
   isStickyCtaRouteAllowed,
   rectOverlapsPageContent,
@@ -80,10 +81,15 @@ export function StickyCTABar() {
         height,
         right: left + width,
       };
-      const hits = rectOverlapsPageContent(rect, (x) =>
+      const overlayHits = rectOverlapsPageContent(rect, (x) =>
         document.elementsFromPoint(x, top + Math.min(20, height / 2)),
       );
-      setOverlapping(hits);
+      const footerHits = isNearDocumentEnd(
+        window.scrollY,
+        window.innerHeight,
+        document.documentElement.scrollHeight,
+      );
+      setOverlapping(overlayHits || footerHits);
     };
 
     const onScroll = () => {
@@ -112,16 +118,23 @@ export function StickyCTABar() {
     onScroll();
     window.addEventListener("scroll", onScrollRaf, { passive: true });
     window.addEventListener("resize", measureOverlap);
+    const overlapPoll = window.setInterval(measureOverlap, 500);
     return () => {
       window.clearTimeout(idleTimer);
+      window.clearInterval(overlapPoll);
       window.removeEventListener("scroll", onScrollRaf);
       window.removeEventListener("resize", measureOverlap);
     };
   }, [dismissed, routeAllowed]);
 
   useEffect(() => {
-    if (!visible) {
+    if (dismissed || !routeAllowed) {
       publishStickyCtaHeight(0);
+      return;
+    }
+    if (!visible) {
+      // Keep the reserved slot while the bar is only parked so the page does not jump.
+      publishStickyCtaHeight(lastHeight.current);
       return;
     }
     lastShowScroll.current = window.scrollY;
@@ -138,9 +151,8 @@ export function StickyCTABar() {
     return () => {
       ro.disconnect();
       window.clearTimeout(hideTimer);
-      publishStickyCtaHeight(0);
     };
-  }, [visible]);
+  }, [visible, dismissed, routeAllowed]);
 
   const handleDismiss = () => {
     setDismissed(true);

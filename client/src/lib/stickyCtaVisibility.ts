@@ -2,6 +2,24 @@ export const STICKY_CTA_SCROLL_IDLE_MS = 900;
 export const STICKY_CTA_AUTO_HIDE_MS = 12_000;
 export const STICKY_CTA_RESHOW_DELTA_PX = 160;
 export const STICKY_CTA_FALLBACK_HEIGHT = 112;
+export const STICKY_CTA_END_RESERVE_PX = 160;
+
+const COMPETING_CHROME_SELECTORS = [
+  "[data-testid='sticky-cta-bar']",
+  ".de-bottom-bar",
+  ".de-unified-bar",
+  ".de-fab-rail",
+  "[data-sticky-cta-chrome]",
+];
+
+const BLOCKING_OVERLAY_SELECTORS = [
+  "[role='dialog']",
+  "[aria-modal='true']",
+  "[data-radix-dialog-content]",
+  "[data-radix-dialog-overlay]",
+  "[data-testid='cookie-consent-banner']",
+  ".de-desk-shell",
+];
 
 export function isStickyCtaRouteAllowed(path: string): boolean {
   return path !== "/" && !path.startsWith("/portal");
@@ -9,6 +27,16 @@ export function isStickyCtaRouteAllowed(path: string): boolean {
 
 export function isPastStickyCtaThreshold(scrollY: number, viewportH: number): boolean {
   return scrollY > viewportH * 0.5;
+}
+
+/** Park the bar when the visitor is on the page footer so links stay clickable. */
+export function isNearDocumentEnd(
+  scrollY: number,
+  viewportH: number,
+  scrollHeight: number,
+  reservePx = STICKY_CTA_END_RESERVE_PX,
+): boolean {
+  return scrollY + viewportH >= scrollHeight - reservePx;
 }
 
 export function shouldShowStickyCta(input: {
@@ -31,23 +59,17 @@ export function shouldShowStickyCta(input: {
 
 export function isStickyCtaChrome(el: Element | null): boolean {
   if (!el) return true;
-  return Boolean(
-    el.closest("[data-testid='sticky-cta-bar']") ||
-      el.closest(".de-bottom-bar") ||
-      el.closest(".de-unified-bar") ||
-      el.closest(".de-fab-rail") ||
-      el.closest("[data-sticky-cta-chrome]"),
-  );
+  return COMPETING_CHROME_SELECTORS.some((selector) => el.closest(selector));
 }
 
-/** Page content or a modal under the bar should park it. */
+/** Dialogs, drawers, cookie, and Desk occupy the same dock — page copy does not. */
 export function isBlockingStickyCtaTarget(el: Element | null): boolean {
   if (!el) return false;
   if (typeof document !== "undefined" && (el === document.documentElement || el === document.body)) {
     return false;
   }
   if (isStickyCtaChrome(el)) return false;
-  return true;
+  return BLOCKING_OVERLAY_SELECTORS.some((selector) => el.closest(selector));
 }
 
 export function samplePointsInRect(rect: DOMRect): Array<{ x: number; y: number }> {
@@ -70,7 +92,9 @@ export function rectOverlapsPageContent(
   const body = typeof document === "undefined" ? null : document.body;
   return points.some(({ x }) => {
     const stack = elementsFromPoint(x);
-    const top = stack.find((el) => el !== root && el !== body);
-    return isBlockingStickyCtaTarget(top ?? null);
+    return stack.some((el) => {
+      if (el === root || el === body) return false;
+      return isBlockingStickyCtaTarget(el);
+    });
   });
 }
