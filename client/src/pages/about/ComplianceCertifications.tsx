@@ -202,7 +202,7 @@ export default function ComplianceCertifications() {
                   asChild
                   size="lg"
                   variant="outline"
-                  className="border-de-hairline text-de-magenta hover:bg-de-paper-raised"
+                  className="border-de-hairline text-de-magenta-ink hover:bg-de-paper-raised hover:text-de-magenta-paper-ink"
                   data-testid="button-download-guide"
                 >
                   <Link href="/resources/security-checklist">
@@ -387,7 +387,7 @@ export default function ComplianceCertifications() {
                   asChild
                   size="lg"
                   variant="outline"
-                  className="border-de-hairline text-de-magenta hover:bg-de-paper-raised"
+                  className="border-de-hairline text-de-magenta-ink hover:bg-de-paper-raised hover:text-de-magenta-paper-ink"
                   data-testid="button-contact-us"
                 >
                   <Link href="/#contact">
