@@ -17,6 +17,14 @@ export function requestPath(req: Request): string {
   return raw || req.path;
 }
 
+function legacySecret(): string {
+  return (
+    process.env.TECHSALES_SYNC_TOKEN ||
+    process.env.WEBSITE_LEAD_WEBHOOK_SECRET ||
+    ""
+  ).trim();
+}
+
 export function resolveScopedSecret(direction: SyncDirection): { secret: string; legacy: boolean } {
   const scoped: Record<SyncDirection, string | undefined> = {
     website_to_hub: process.env.WEBSITE_TO_HUB_SECRET,
@@ -27,12 +35,31 @@ export function resolveScopedSecret(direction: SyncDirection): { secret: string;
   const next = (scoped[direction] || "").trim();
   if (next) return { secret: next, legacy: false };
 
-  const legacy = (
-    process.env.TECHSALES_SYNC_TOKEN ||
-    process.env.WEBSITE_LEAD_WEBHOOK_SECRET ||
-    ""
-  ).trim();
+  const legacy = legacySecret();
   return { secret: legacy, legacy: !!legacy };
+}
+
+function acceptedSecrets(direction: SyncDirection): Array<{ secret: string; legacy: boolean }> {
+  const primary = resolveScopedSecret(direction);
+  const legacy = legacySecret();
+  const candidates: Array<{ secret: string; legacy: boolean }> = [];
+
+  if (primary.secret) candidates.push(primary);
+  if (legacy && legacy !== primary.secret) candidates.push({ secret: legacy, legacy: true });
+
+  return candidates;
+}
+
+function expectedSource(direction: SyncDirection): DeSyncSource {
+  switch (direction) {
+    case "website_to_hub":
+      return "website";
+    case "portal_to_hub":
+      return "portal";
+    case "hub_to_website":
+    case "hub_to_portal":
+      return "techsales";
+  }
 }
 
 export function hashBody(body: string): string {
@@ -87,6 +114,8 @@ export function buildSignedHeaders(input: {
     "X-DE-Timestamp": timestamp,
     "X-DE-Source": input.source,
     "X-DE-Signature": signature,
+    // Keep compatibility headers during the migration window. Receivers prefer
+    // HMAC when present; these can be removed after legacy auth is retired.
     Authorization: `Bearer ${input.secret}`,
     "x-de-sync-token": input.secret,
   };
@@ -96,50 +125,70 @@ export function verifySignedRequest(
   req: Request,
   direction: SyncDirection,
 ): { ok: true; eventId: string; source: string; legacy: boolean } | { ok: false; status: number; error: string } {
-  const resolved = resolveScopedSecret(direction);
-  if (!resolved.secret) {
+  const candidates = acceptedSecrets(direction);
+  if (candidates.length === 0) {
     return { ok: false, status: 503, error: "Integration not configured" };
   }
 
-  const eventId = String(req.get("x-de-event-id") || "").trim() || randomUUID();
+  const rawEventId = String(req.get("x-de-event-id") || "").trim();
   const timestamp = String(req.get("x-de-timestamp") || "").trim();
   const source = String(req.get("x-de-source") || "").trim();
   const signature = String(req.get("x-de-signature") || "").trim();
 
-  if (signature && timestamp) {
+  if (signature || timestamp) {
+    if (!signature || !timestamp || !rawEventId) {
+      return { ok: false, status: 401, error: "Incomplete integration signature headers" };
+    }
+    if (source !== expectedSource(direction)) {
+      return { ok: false, status: 401, error: "Invalid integration source" };
+    }
+
     const ts = Date.parse(timestamp);
     if (!Number.isFinite(ts) || Math.abs(Date.now() - ts) > TIMESTAMP_SKEW_MS) {
       return { ok: false, status: 401, error: "Stale integration timestamp" };
     }
+
     const body = typeof req.body === "string" ? req.body : JSON.stringify(req.body ?? {});
     const path = requestPath(req);
-    const expected = signDeSyncRequest({
-      method: req.method,
-      path,
-      timestamp,
-      eventId,
-      body,
-      secret: resolved.secret,
-    });
-    if (!timingSafeStringEqual(expected, signature)) {
-      return { ok: false, status: 401, error: "Invalid integration signature" };
+
+    for (const candidate of candidates) {
+      const expected = signDeSyncRequest({
+        method: req.method,
+        path,
+        timestamp,
+        eventId: rawEventId,
+        body,
+        secret: candidate.secret,
+      });
+      if (!timingSafeStringEqual(expected, signature)) continue;
+
+      if (candidate.legacy) {
+        console.warn("[de-sync] legacy integration credential used");
+      }
+      return { ok: true, eventId: rawEventId, source, legacy: candidate.legacy };
     }
-    if (resolved.legacy) {
-      console.warn("[de-sync] legacy integration credential used");
-    }
-    return { ok: true, eventId, source, legacy: resolved.legacy };
+
+    return { ok: false, status: 401, error: "Invalid integration signature" };
   }
 
+  const eventId = rawEventId || randomUUID();
   const provided =
     String(req.get("x-de-sync-token") || "").trim() ||
     (String(req.get("authorization") || "").match(/^Bearer\s+(.+)$/i)?.[1] || "").trim();
-  if (!provided || !timingSafeStringEqual(provided, resolved.secret)) {
+
+  if (!provided) {
     return { ok: false, status: 401, error: "Unauthorized" };
   }
-  if (resolved.legacy) {
-    console.warn("[de-sync] legacy integration credential used");
+
+  for (const candidate of candidates) {
+    if (!timingSafeStringEqual(provided, candidate.secret)) continue;
+    if (candidate.legacy) {
+      console.warn("[de-sync] legacy integration credential used");
+    }
+    return { ok: true, eventId, source, legacy: candidate.legacy };
   }
-  return { ok: true, eventId, source, legacy: true };
+
+  return { ok: false, status: 401, error: "Unauthorized" };
 }
 
 export function requireDeSyncAuth(direction: SyncDirection) {
