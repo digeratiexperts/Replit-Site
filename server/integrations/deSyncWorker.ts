@@ -3,6 +3,7 @@ import { claimPendingOutbox, markOutboxDelivered, markOutboxRetry } from "./deSy
 import { recoverStaleOutboxLocks } from "./deSyncOutboxRecovery";
 import { deliverEnvelopeToHub } from "./techSalesClient";
 import type { DeSyncEnvelope } from "./deSyncContract";
+import { ensureDeSyncSchema } from "./ensureDeSyncSchema";
 
 const TICK_MS = 15_000;
 let timer: ReturnType<typeof setInterval> | null = null;
@@ -37,6 +38,8 @@ function recordToEnvelope(record: {
 export async function processDeSyncOutbox(
   limit = 10,
 ): Promise<{ delivered: number; retried: number; dlq: number }> {
+  await ensureDeSyncSchema();
+
   const recovered = await recoverStaleOutboxLocks();
   if (recovered > 0) {
     logger.warn("recovered stale de-sync delivery leases", { recovered });
@@ -66,7 +69,8 @@ export async function processDeSyncOutbox(
 
 export function startDeSyncWorker(): void {
   if (timer) return;
-  timer = setInterval(() => {
+
+  const tick = () => {
     if (running) return;
     running = true;
     void processDeSyncOutbox()
@@ -74,7 +78,12 @@ export function startDeSyncWorker(): void {
       .finally(() => {
         running = false;
       });
-  }, TICK_MS);
+  };
+
+  // Start immediately so schema bootstrap and any queued delivery happen as
+  // soon as the process is live; subsequent retries use the normal interval.
+  tick();
+  timer = setInterval(tick, TICK_MS);
   logger.info("de-sync worker started");
 }
 
