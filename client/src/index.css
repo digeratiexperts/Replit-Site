@@ -22,6 +22,28 @@ html {
 }
 
 /*
+ * Store owns horizontal trackpad / swipe so Chrome and Safari do not
+ * treat it as Back / Forward. Scoped to /store* via .de-store-gesture-lock.
+ */
+html.de-store-gesture-lock,
+html.de-store-gesture-lock body {
+  overscroll-behavior-x: none;
+  overflow-x: clip;
+  touch-action: pan-y pinch-zoom;
+}
+
+.de-store-h-rail {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
+  touch-action: pan-x pan-y;
+  -webkit-overflow-scrolling: touch;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: scroll-position;
+}
+
+/*
  * Large-display type scale.
  * 16px is the laptop/monitor default. TVs and 4K walls need a real step
  * up so the first viewport reads from the couch — not a 1px bump.

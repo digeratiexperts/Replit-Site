@@ -16,6 +16,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PageLoadingSkeleton } from "@/components/LoadingSkeleton";
 import { AnnouncerProvider } from "@/components/AccessibleAnnouncer";
 import { useGlobalShortcuts } from "@/hooks/useKeyboardShortcuts";
+import { useStoreChromeGestures } from "@/hooks/useStoreChromeGestures";
 import { CartProvider } from "@/contexts/CartContext";
 import { BookingProvider } from "@/contexts/BookingContext";
 import { BookingModal } from "@/components/BookingModal";
@@ -903,6 +904,7 @@ function accentFor(location: string): string | undefined {
 function AppContent() {
   useGlobalShortcuts();
   const [location] = useLocation();
+  useStoreChromeGestures(location);
   const isPortal = location.startsWith("/portal");
   const isHome = location === "/";
   const accent = isPortal ? undefined : accentFor(location);

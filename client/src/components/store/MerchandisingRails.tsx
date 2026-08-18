@@ -85,7 +85,7 @@ function RailScroller({
       </div>
       <div
         ref={scrollerRef}
-        className="flex gap-5 overflow-x-auto pb-2 scrollbar-thin"
+        className="de-store-h-rail flex gap-5 pb-2 scrollbar-thin"
         style={{ scrollSnapType: "x mandatory" }}
       >
         {products.map((product) => {
