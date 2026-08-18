@@ -6,13 +6,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Users, Building2, Shield, Server, Layers, Bookmark, Briefcase,
-  FileCheck, ArrowRight, Check, Calculator, Database, Info,
+  FileCheck, ArrowRight, Check, Calculator, Database, Info, ChevronDown,
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { Link } from "wouter";
 import { pricing, estimateMonthly, PRICING_SCOPE_NOTE, NO_BLACK_BOX_TAGLINE, type PricingTierKey } from "@/data/pricing";
 import { PricingToolsSection } from "./sections/PricingToolsSection";
 import { CTA } from "@/lib/ctaCopy";
+import { ProActiveCoverageMap } from "@/components/pricing/ProActiveCoverageMap";
+import {
+  categoryLayer,
+  coverageRowIsUniform,
+  isTierLit,
+  type CoverageTier,
+} from "@/lib/proactiveCoverage";
+import { cn } from "@/lib/utils";
 
 type CellValue = boolean | string;
 
@@ -122,8 +130,6 @@ interface PlanCard {
   minUsers?: number;
   siteMin?: number;
   bullets: string[];
-  gradient: string;
-  borderColor: string;
   learnMoreUrl: string;
 }
 
@@ -147,8 +153,6 @@ const plans: PlanCard[] = [
       "Managed Workplace: limited / add-on",
       "No backup included by default",
     ],
-    gradient: "from-slate-500 ",
-    borderColor: "border-slate-500/30",
     learnMoreUrl: pricing.it.learnMoreUrl,
   },
   {
@@ -170,8 +174,6 @@ const plans: PlanCard[] = [
       "Threat Detection / SOC (add-on)",
       "BCDR, cloud backup, compliance reports (add-ons)",
     ],
-    gradient: " ",
-    borderColor: "border-de-hairline",
     learnMoreUrl: pricing.office.learnMoreUrl,
   },
   {
@@ -193,8 +195,6 @@ const plans: PlanCard[] = [
       "Budgeting / planning + 2× tech & security business reviews per year",
       "Spend-card controls included or available",
     ],
-    gradient: " to-fuchsia-500",
-    borderColor: "border-de-hairline",
     learnMoreUrl: pricing.business.learnMoreUrl,
   },
   {
@@ -216,11 +216,11 @@ const plans: PlanCard[] = [
       "Advanced / custom backup, BCDR, data protection strategy",
       "Multi-site / complex network support, executive reporting",
     ],
-    gradient: "from-fuchsia-500 to-pink-500",
-    borderColor: "border-fuchsia-500/40",
     learnMoreUrl: pricing.enterprise.learnMoreUrl,
   },
 ];
+
+const PREVIEW_BULLETS = 5;
 
 const MatrixCell = ({ value }: { value: CellValue }) => {
   if (value === true) {
@@ -243,6 +243,9 @@ export default function ProActiveEcosystemPricing() {
   const prefersReducedMotion = useReducedMotion();
   const [userCount, setUserCount] = useState<number | "">(10);
   const [siteCount, setSiteCount] = useState<number | "">(1);
+  const [selectedTier, setSelectedTier] = useState<CoverageTier>("business");
+  const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({});
+  const [showDifferencesOnly, setShowDifferencesOnly] = useState(false);
 
   useSEO({
     title: "ProActive Ecosystem Pricing — Managed IT & Cybersecurity Packages",
@@ -275,8 +278,8 @@ export default function ProActiveEcosystemPricing() {
     : { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      <div className="fixed inset-0 bg-gradient-to-b from-[#0a0118] via-[#0d0720] to-[#050312]" aria-hidden="true" />
+    <div className="relative min-h-screen overflow-hidden bg-de-bg">
+      <div className="fixed inset-0 bg-de-surface" aria-hidden="true" />
       <div className="relative z-10">
         <MegaMenu />
 
@@ -301,9 +304,13 @@ export default function ProActiveEcosystemPricing() {
             </p>
           </motion.header>
 
+          <section className="mb-14">
+            <ProActiveCoverageMap selected={selectedTier} onSelect={setSelectedTier} />
+          </section>
+
           {/* Estimator */}
           <section className="mb-14" aria-labelledby="estimator-heading">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
+            <div className="de-style-box p-6 md:p-8">
               <h2 id="estimator-heading" className="flex items-center gap-3 text-xl font-semibold text-white mb-2">
                 <Calculator className="w-5 h-5 text-de-magenta-ink" />
                 Estimate Your Starting Point
@@ -341,56 +348,81 @@ export default function ProActiveEcosystemPricing() {
           </section>
 
           {/* Plan cards */}
-          <section className="grid md:grid-cols-2 xl:grid-cols-4 gap-6 mb-6" aria-label="ProActive Ecosystem packages">
-            {estimates.map((plan) => (
+          <section className="mb-6 grid gap-6 md:grid-cols-2 xl:grid-cols-4" aria-label="ProActive Ecosystem packages">
+            {estimates.map((plan) => {
+              const expanded = !!expandedCards[plan.id];
+              const visibleBullets = expanded ? plan.bullets : plan.bullets.slice(0, PREVIEW_BULLETS);
+              const selected = selectedTier === plan.id;
+              return (
               <motion.article
                 key={plan.id}
-                className={`relative rounded-2xl border ${plan.borderColor} bg-white/[0.03] p-6 flex flex-col`}
+                className={cn(
+                  "relative flex flex-col rounded-2xl border bg-de-raised p-6",
+                  selected ? "border-[#D3126A]" : "border-de-hairline",
+                )}
                 initial={prefersReducedMotion ? undefined : "hidden"}
                 whileInView={prefersReducedMotion ? undefined : "visible"}
                 viewport={{ once: true }}
                 variants={fadeIn}
                 data-testid={`plan-card-${plan.id}`}
               >
-                <div className={`inline-flex self-start px-3 py-1 rounded-full bg-de-magenta text-white text-xs font-semibold mb-4`}>
+                <button
+                  type="button"
+                  className="mb-4 inline-flex self-start rounded-full border border-de-hairline bg-de-bg px-3 py-1 text-xs font-semibold text-white"
+                  onClick={() => setSelectedTier(plan.id as CoverageTier)}
+                >
                   {plan.shortName}
-                </div>
-                <h3 className="text-lg font-bold text-white mb-1">{plan.name}</h3>
-                <p className="text-sm text-white/50 mb-4">{plan.tagline}</p>
+                </button>
+                <h3 className="mb-1 text-lg font-bold text-white">{plan.name}</h3>
+                <p className="mb-4 text-sm text-white/50">{plan.tagline}</p>
                 <div className="mb-4">
-                  <p className="text-de-magenta-ink font-semibold">{plan.priceLabel}</p>
+                  <p className="font-semibold text-de-magenta-ink">{plan.priceLabel}</p>
                   {plan.siteMin ? (
-                    <p className="text-xs text-white/50 mt-1">${plan.siteMin.toLocaleString()}/site/mo minimum</p>
+                    <p className="mt-1 text-xs text-white/50">${plan.siteMin.toLocaleString()}/site/mo minimum</p>
                   ) : null}
                   {plan.minUsers ? (
-                    <p className="text-xs text-white/50 mt-1">Minimum {plan.minUsers} users</p>
+                    <p className="mt-1 text-xs text-white/50">Minimum {plan.minUsers} users</p>
                   ) : null}
                   {plan.monthlyEstimate != null && (
-                    <p className="text-2xl font-bold text-white mt-2" data-testid={`estimate-${plan.id}`}>
+                    <p className="mt-2 text-2xl font-bold text-white" data-testid={`estimate-${plan.id}`}>
                       ~${plan.monthlyEstimate.toLocaleString()}<span className="text-sm font-normal text-white/50">/mo</span>
                     </p>
                   )}
-                  {plan.priceNote && <p className="text-xs text-white/50 mt-2">{plan.priceNote}</p>}
+                  {plan.priceNote && <p className="mt-2 text-xs text-white/50">{plan.priceNote}</p>}
                 </div>
-                <ul className="space-y-2 mb-6 flex-1">
-                  {plan.bullets.map((bullet) => (
+                <ul className="mb-4 flex-1 space-y-2">
+                  {visibleBullets.map((bullet) => (
                     <li key={bullet} className="flex items-start gap-2 text-sm text-white/70">
-                      <Check className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
+                      <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-400" />
                       <span>{bullet}</span>
                     </li>
                   ))}
                 </ul>
+                {plan.bullets.length > PREVIEW_BULLETS && (
+                  <button
+                    type="button"
+                    className="mb-4 inline-flex items-center gap-1 text-sm text-[#F04C97] hover:text-white"
+                    onClick={() =>
+                      setExpandedCards((current) => ({ ...current, [plan.id]: !current[plan.id] }))
+                    }
+                    data-testid={`plan-expand-${plan.id}`}
+                  >
+                    {expanded ? "Show less" : `Show all ${plan.bullets.length} outcomes`}
+                    <ChevronDown className={cn("h-4 w-4", expanded && "rotate-180")} />
+                  </button>
+                )}
                 <Link href={plan.learnMoreUrl}>
                   <Button
                     variant="outline"
-                    className="w-full border-de-hairline bg-white/5 text-white hover:border-de-hairline hover:bg-de-raised hover:text-white"
+                    className="w-full border-de-hairline bg-de-bg text-white hover:border-[#D3126A] hover:bg-de-raised hover:text-white"
                   >
-                    Learn More
-                    <ArrowRight className="w-4 h-4 ml-2" />
+                    Explore {plan.shortName}
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
               </motion.article>
-            ))}
+              );
+            })}
           </section>
 
           <p className="text-center text-sm text-white/55 mb-16 max-w-2xl mx-auto">
@@ -398,64 +430,112 @@ export default function ProActiveEcosystemPricing() {
             assessment of your environment, security needs, and selected add-ons.
           </p>
 
-          {/* Comparison matrix */}
+          {/* Coverage Explorer — same matrix facts, progressive reveal */}
           <section className="mb-16" aria-labelledby="matrix-heading">
-            <div className="text-center mb-8">
-              <h2 id="matrix-heading" className="text-3xl font-bold text-white mb-2">
-                Service Comparison Matrix
-              </h2>
-              <p className="text-white/60">
-                What's included, enhanced, or available as an add-on across each ProActive Ecosystem package.
-              </p>
+            <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div>
+                <h2 id="matrix-heading" className="mb-2 text-3xl font-bold text-white">
+                  Coverage Explorer
+                </h2>
+                <p className="text-white/60">
+                  What's included, enhanced, or available as an add-on across each ProActive Ecosystem package.
+                </p>
+              </div>
+              <label className="inline-flex h-11 items-center gap-2 text-sm text-white/70">
+                <input
+                  type="checkbox"
+                  checked={showDifferencesOnly}
+                  onChange={(event) => setShowDifferencesOnly(event.target.checked)}
+                  className="h-4 w-4 accent-[#D3126A]"
+                  data-testid="coverage-show-differences"
+                />
+                Show differences only
+              </label>
             </div>
 
             <div className="space-y-8">
-              {matrixCategories.map((category) => (
-                <div key={category.id} className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-                  <div className="flex items-center gap-3 px-5 py-4 border-b border-white/10">
+              {matrixCategories.map((category) => {
+                const layer = categoryLayer(category.id);
+                const dimmed = layer !== "always" && !isTierLit(selectedTier, layer);
+                const services = showDifferencesOnly
+                  ? category.services.filter(
+                      (service) =>
+                        !coverageRowIsUniform([
+                          service.it,
+                          service.office,
+                          service.business,
+                          service.enterprise,
+                        ]),
+                    )
+                  : category.services;
+                if (services.length === 0) return null;
+                return (
+                <div
+                  key={category.id}
+                  className={cn(
+                    "overflow-hidden rounded-2xl border border-de-hairline bg-de-raised",
+                    dimmed && "opacity-55",
+                  )}
+                >
+                  <div className="flex items-center gap-3 border-b border-white/10 px-5 py-4">
                     <span className="text-de-magenta-ink">{category.icon}</span>
                     <h3 className="font-semibold text-white">{category.title}</h3>
                     {category.ribbon && (
-                      <span className="ml-auto text-xs text-amber-400/90 border border-amber-400/30 rounded-full px-3 py-1">
+                      <span className="ml-auto rounded-full border border-amber-400/30 px-3 py-1 text-xs text-amber-400/90">
                         {category.ribbon}
                       </span>
                     )}
                   </div>
-                  <div className="overflow-x-auto">
+                  <div className="max-h-[70vh] overflow-auto">
                     <table className="w-full text-left">
-                      <thead>
+                      <thead className="sticky top-0 z-10 bg-de-raised">
                         <tr className="text-xs uppercase tracking-wide text-white/55">
-                          <th className="px-5 py-3 font-medium min-w-[220px]">Service</th>
-                          <th className="px-3 py-3 font-medium text-center">IT</th>
-                          <th className="px-3 py-3 font-medium text-center">Office</th>
-                          <th className="px-3 py-3 font-medium text-center">Business</th>
-                          <th className="px-3 py-3 font-medium text-center">Enterprise</th>
+                          <th className="min-w-[220px] px-5 py-3 font-medium">Service</th>
+                          {(["it", "office", "business", "enterprise"] as CoverageTier[]).map((tier) => (
+                            <th
+                              key={tier}
+                              className={cn(
+                                "px-3 py-3 text-center font-medium capitalize",
+                                selectedTier === tier && "text-[#F04C97]",
+                              )}
+                            >
+                              {tier}
+                            </th>
+                          ))}
                         </tr>
                       </thead>
                       <tbody>
-                        {category.services.map((service) => (
+                        {services.map((service) => (
                           <tr key={service.name} className="border-t border-white/5">
                             <td className="px-5 py-3 text-sm text-white/80">
                               <span className="inline-flex items-center gap-1.5">
                                 {service.name}
                                 {service.tooltip && (
                                   <span title={service.tooltip}>
-                                    <Info className="w-3.5 h-3.5 text-white/55" aria-label={service.tooltip} />
+                                    <Info className="h-3.5 w-3.5 text-white/55" aria-label={service.tooltip} />
                                   </span>
                                 )}
                               </span>
                             </td>
-                            <td className="px-3 py-3 text-center"><MatrixCell value={service.it} /></td>
-                            <td className="px-3 py-3 text-center"><MatrixCell value={service.office} /></td>
-                            <td className="px-3 py-3 text-center"><MatrixCell value={service.business} /></td>
-                            <td className="px-3 py-3 text-center"><MatrixCell value={service.enterprise} /></td>
+                            {(["it", "office", "business", "enterprise"] as CoverageTier[]).map((tier) => (
+                              <td
+                                key={tier}
+                                className={cn(
+                                  "px-3 py-3 text-center",
+                                  selectedTier === tier && "bg-[#D3126A]/10",
+                                )}
+                              >
+                                <MatrixCell value={service[tier]} />
+                              </td>
+                            ))}
                           </tr>
                         ))}
                       </tbody>
                     </table>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
 
             <p className="text-center text-xs text-white/55 mt-6 max-w-3xl mx-auto">
