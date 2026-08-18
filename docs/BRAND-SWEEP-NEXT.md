@@ -20,14 +20,13 @@ The audit (`scripts/brand-audit.mjs`) is a regression detector, not a requiremen
 
 | Item | Where | Why it is parked | Next move |
 |------|--------|------------------|-----------|
-| Magenta as text on paper (~3.6:1) | `ComplianceCertifications.tsx` outline buttons; `SecurityUpdates.tsx` source / severity labels | `#D3126A` as a **fill** on dark is fine. As **text on paper** it fails AA. | Add a darker paper-ink token. Do not darken the CTA fill. |
-| Quote wizard 1.14:1 on slate-900 | `/quote-wizard` | Almost certainly a backdrop-measurement miss in the audit, not a purple regression. | Confirm in the browser, then fix `behind()` in `brand-audit.mjs` if the form is actually readable. |
-| `#5034ff` “Sign Up” | Official tools + portal login | DE asked these tools to join the accent system. The `#5034ff` “Sign Up” string is the portal login link; official-tool pages no longer use that fill. | Official-tool violet glow retired. Portal Sign Up / fills move to magenta in the portal commit. |
+| Magenta as text on paper (~3.6:1) | `ComplianceCertifications.tsx` outline buttons; `SecurityUpdates.tsx` source / severity labels | Settled: `--de-magenta-paper-ink` `#A30E52` for magenta text on paper. Dark-field labels use `--de-magenta-ink`. CTA fill stays `#D3126A`. | Done on `cursor/paper-magenta-ink-3080`. |
+| Quote wizard 1.14:1 on slate-900 | `/quote-wizard` | Not an audit miss. Labels were `slate-900` on `--de-bg`. | Settled on `cursor/quote-wizard-contrast-3080`: form sits on `de-paper-lift-lg`. |
+| `#5034ff` “Sign Up” | Official tools + portal login | DE asked these tools to join the accent system. | Official-tool violet glow retired. Portal Sign Up / fills move to magenta. Login stays `/portal/login`. |
 | Yellow star glyphs | `/thank-you-success-page` | Unsourced ★★★★★ is a fabricated rating. | Removed. Badge now links to `/#google-reviews` with no star count. |
 | Legacy unused purple | `Homepage.tsx` + unused Figma sections | DE approved deletion. | Deleted. Live homepage is still `DigeratiHomepage`. |
-| Portal palette | `/portal/*` | DE asked for the pass. | `#5034ff` / violet fills → magenta. Login stays `/portal/login`. Semantic status purples (order state, file type) left alone. |
+| Portal palette | `/portal/*` | DE asked for the pass. | `#5034ff` / violet fills → magenta. Semantic status purples left alone. |
 
 ## Optional later
 
-1. Paper-ink token for magenta-on-white text (separate PR).
-2. Quote-wizard contrast (separate PR).
+1. Official-tool hue decision remainder (`#5034ff` vs electric vs magenta) if any glow remains.
