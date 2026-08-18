@@ -16,6 +16,7 @@ import { addPortalSseClient } from "./portalSse";
 import type { DeSyncEventType } from "./deSyncContract";
 import { getClient } from "../portalAuthStore";
 import { ensureDeSyncSchema } from "./ensureDeSyncSchema";
+import { logger } from "../logger";
 
 type AuthedRequest = Request & {
   user?: { role?: string; clientId?: string | null };
@@ -47,16 +48,16 @@ async function requireDeSyncSchema(_req: Request, res: Response, next: NextFunct
     await ensureDeSyncSchema();
     next();
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    res.status(503).json({ error: "DE integration storage unavailable", detail: message });
+    logger.error("DE integration schema bootstrap unavailable", error);
+    res.status(503).json({ error: "DE integration storage unavailable" });
   }
 }
 
 export function registerDeSyncRoutes(app: Express, authMiddleware: AuthMiddleware): void {
   app.post(
     "/api/integrations/v1/hub/events",
-    requireDeSyncSchema,
     requireDeSyncAuth("hub_to_website"),
+    requireDeSyncSchema,
     handleHubEvents,
   );
 
@@ -102,8 +103,8 @@ export function registerDeSyncRoutes(app: Express, authMiddleware: AuthMiddlewar
 
   app.post(
     "/api/integrations/v1/reconcile/account/:accountId",
-    requireDeSyncSchema,
     requireDeSyncAuth("hub_to_website"),
+    requireDeSyncSchema,
     async (req: Request, res: Response) => {
       const accountId = String(req.params.accountId || "").trim();
       if (!accountId) return res.status(400).json({ error: "accountId required" });
