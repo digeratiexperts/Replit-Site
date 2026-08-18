@@ -1,11 +1,11 @@
 import type { Express, NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import {
-  claimSolution,
+  claimSolutionDurable,
   createSolution,
-  findSolution,
+  findSolutionDurable,
   publicSolution,
-  upsertSolution,
+  upsertSolutionDurable,
 } from "./storeSolutionStore";
 import type { SolutionLineInput } from "@shared/storeCommerce";
 
@@ -53,25 +53,25 @@ export function registerStoreSolutionRoutes(
   app: Express,
   authMiddleware: (req: SolutionRequest, res: Response, next: NextFunction) => unknown,
 ) {
-  app.get("/api/store/solutions/current", (req: SolutionRequest, res: Response) => {
+  app.get("/api/store/solutions/current", async (req: SolutionRequest, res: Response) => {
     const sessionId = readSessionId(req);
     if (!sessionId) return res.status(400).json({ error: "sessionId is required" });
     const userId = optionalUserId(req);
-    const existing = findSolution({ sessionId, userId });
+    const existing = await findSolutionDurable({ sessionId, userId });
     if (!existing) {
       return res.json({ solution: publicSolution(createSolution(sessionId, userId)) });
     }
     return res.json({ solution: publicSolution(existing) });
   });
 
-  app.put("/api/store/solutions/current", (req: SolutionRequest, res: Response) => {
+  app.put("/api/store/solutions/current", async (req: SolutionRequest, res: Response) => {
     const sessionId = readSessionId(req);
     if (!sessionId) return res.status(400).json({ error: "sessionId is required" });
     const userId = optionalUserId(req);
     const items = parseLines(req.body?.items);
     const savedForLater = parseLines(req.body?.savedForLater);
     const name = typeof req.body?.name === "string" ? req.body.name.slice(0, 80) : undefined;
-    const solution = upsertSolution({
+    const solution = await upsertSolutionDurable({
       id: typeof req.body?.id === "string" ? req.body.id : undefined,
       sessionId,
       userId,
@@ -82,13 +82,13 @@ export function registerStoreSolutionRoutes(
     return res.json({ solution: publicSolution(solution) });
   });
 
-  app.post("/api/store/solutions/claim", authMiddleware, (req: SolutionRequest, res: Response) => {
+  app.post("/api/store/solutions/claim", authMiddleware, async (req: SolutionRequest, res: Response) => {
     const sessionId = readSessionId(req);
     const userId = req.userId || req.user?.id;
     if (!sessionId || !userId) {
       return res.status(400).json({ error: "sessionId and authenticated user are required" });
     }
-    const solution = claimSolution(sessionId, userId);
+    const solution = await claimSolutionDurable(sessionId, userId);
     return res.json({ solution: publicSolution(solution) });
   });
 }

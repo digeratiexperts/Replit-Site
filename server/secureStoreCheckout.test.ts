@@ -51,6 +51,39 @@ describe("secure store checkout canonicalization", () => {
     ], "comanaged")).toThrow(/unknown or mismatched store product/i);
   });
 
+  it("honors a server-side client list price below catalog", () => {
+    const items = canonicalizeCheckoutLineItems(
+      [
+        {
+          productId: "prod-010",
+          sku: "DE-SVC-CM-ENDPOINT-CORE-MO",
+          quantity: 2,
+          unitPrice: 0.01,
+        },
+      ],
+      "comanaged",
+      { "prod-010": 30 },
+    );
+
+    expect(items[0].unitPrice).toBe(30);
+    expect(items[0].total).toBe(60);
+    expect(canonicalCheckoutTotal(items)).toBe(60);
+  });
+
+  it("keeps catalog price when no client override is present", () => {
+    const items = canonicalizeCheckoutLineItems(
+      [
+        {
+          productId: "prod-010",
+          sku: "DE-SVC-CM-ENDPOINT-CORE-MO",
+          quantity: 1,
+        },
+      ],
+      "comanaged",
+    );
+    expect(items[0].unitPrice).toBe(39);
+  });
+
   it("rejects invalid quantities", () => {
     expect(() => canonicalizeCheckoutLineItems([
       {

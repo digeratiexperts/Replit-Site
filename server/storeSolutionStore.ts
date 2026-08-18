@@ -1,6 +1,9 @@
 import { randomUUID } from "crypto";
-import { computeSolutionSnapshot, type SolutionLineInput, type SolutionSnapshot } from "@shared/storeCommerce";
+import { eq } from "drizzle-orm";
+import { computeSolutionSnapshot, money, type SolutionLineInput, type SolutionSnapshot } from "@shared/storeCommerce";
+import { storeCarts } from "@shared/schema";
 import { storeProducts } from "../client/src/data/storeProducts";
+import { db, dbReady, initPromise } from "./db";
 
 export type StoredSolution = {
   id: string;
@@ -159,4 +162,220 @@ export function publicSolution(record: StoredSolution) {
     updatedAt: record.updatedAt,
     createdAt: record.createdAt,
   };
+}
+
+export type CartPayloadV1 = {
+  version: 1;
+  items: SolutionLineInput[];
+  savedForLater: SolutionLineInput[];
+  name: string;
+  status: StoredSolution["status"];
+};
+
+function asLine(raw: unknown): SolutionLineInput | null {
+  if (!raw || typeof raw !== "object") return null;
+  const item = raw as Record<string, unknown>;
+  const productId = typeof item.productId === "string" ? item.productId.trim() : "";
+  const sku = typeof item.sku === "string" ? item.sku.trim() : undefined;
+  const quantity = Number(item.quantity);
+  if (!productId || !Number.isFinite(quantity)) return null;
+  return { productId, sku, quantity };
+}
+
+export function serializeCartPayload(record: StoredSolution): CartPayloadV1 {
+  return {
+    version: 1,
+    items: record.items,
+    savedForLater: record.savedForLater,
+    name: record.name,
+    status: record.status,
+  };
+}
+
+export function parseCartPayload(raw: unknown): Pick<StoredSolution, "items" | "savedForLater" | "name" | "status"> {
+  if (Array.isArray(raw)) {
+    return {
+      items: raw.map(asLine).filter((line): line is SolutionLineInput => !!line),
+      savedForLater: [],
+      name: "Your Solution",
+      status: "draft",
+    };
+  }
+  if (raw && typeof raw === "object") {
+    const payload = raw as Record<string, unknown>;
+    const status = payload.status === "saved" || payload.status === "archived" ? payload.status : "draft";
+    return {
+      items: Array.isArray(payload.items)
+        ? payload.items.map(asLine).filter((line): line is SolutionLineInput => !!line)
+        : [],
+      savedForLater: Array.isArray(payload.savedForLater)
+        ? payload.savedForLater.map(asLine).filter((line): line is SolutionLineInput => !!line)
+        : [],
+      name: typeof payload.name === "string" && payload.name.trim() ? payload.name.trim().slice(0, 80) : "Your Solution",
+      status,
+    };
+  }
+  return { items: [], savedForLater: [], name: "Your Solution", status: "draft" };
+}
+
+function rowToSolution(row: {
+  id: string;
+  sessionId: string | null;
+  userId: string | null;
+  items: unknown;
+  createdAt?: Date | string | null;
+  updatedAt?: Date | string | null;
+}): StoredSolution {
+  const payload = parseCartPayload(row.items);
+  const createdAt =
+    row.createdAt instanceof Date ? row.createdAt.toISOString() : String(row.createdAt || new Date().toISOString());
+  const updatedAt =
+    row.updatedAt instanceof Date ? row.updatedAt.toISOString() : String(row.updatedAt || new Date().toISOString());
+  return hydrate({
+    id: row.id,
+    sessionId: row.sessionId || "",
+    userId: row.userId,
+    name: payload.name,
+    status: payload.status,
+    items: payload.items,
+    savedForLater: payload.savedForLater,
+    snapshot: computeSolutionSnapshot([], catalog()),
+    createdAt,
+    updatedAt,
+  });
+}
+
+async function loadFromDb(opts: { id?: string; sessionId?: string; userId?: string | null }): Promise<StoredSolution | undefined> {
+  await initPromise;
+  if (!dbReady || !db) return undefined;
+  try {
+    let rows: any[] = [];
+    if (opts.id) {
+      rows = await db.select().from(storeCarts).where(eq(storeCarts.id, opts.id)).limit(1);
+    } else if (opts.userId) {
+      rows = await db.select().from(storeCarts).where(eq(storeCarts.userId, opts.userId)).limit(8);
+    } else if (opts.sessionId) {
+      rows = await db.select().from(storeCarts).where(eq(storeCarts.sessionId, opts.sessionId)).limit(8);
+    }
+    const now = Date.now();
+    const fresh = rows
+      .filter((row) => !row.expiresAt || new Date(row.expiresAt).getTime() > now)
+      .sort(
+        (left, right) =>
+          new Date(right.updatedAt || 0).getTime() - new Date(left.updatedAt || 0).getTime(),
+      );
+    const row = fresh[0];
+    if (!row) return undefined;
+    const record = rowToSolution(row);
+    solutions.set(record.id, record);
+    return record;
+  } catch (error: any) {
+    console.warn("[store-solution] database load skipped:", error?.message || error);
+    return undefined;
+  }
+}
+
+async function deleteCartRow(id: string): Promise<void> {
+  await initPromise;
+  if (!dbReady || !db) return;
+  try {
+    await db.delete(storeCarts).where(eq(storeCarts.id, id));
+  } catch (error: any) {
+    console.warn("[store-solution] database delete skipped:", error?.message || error);
+  }
+}
+
+export async function persistSolutionRecord(record: StoredSolution): Promise<void> {
+  solutions.set(record.id, record);
+  await initPromise;
+  if (!dbReady || !db) return;
+
+  const expiresAt = new Date(Date.now() + (record.userId ? 90 : 30) * 24 * 60 * 60 * 1000);
+  const values = {
+    sessionId: record.sessionId || null,
+    userId: record.userId,
+    items: serializeCartPayload(record),
+    subtotal: money(record.snapshot.totals.monthly + record.snapshot.totals.dueToday).toFixed(2),
+    expiresAt,
+    updatedAt: new Date(),
+  };
+
+  try {
+    const existing = await db.select({ id: storeCarts.id }).from(storeCarts).where(eq(storeCarts.id, record.id)).limit(1);
+    if (existing[0]) {
+      await db.update(storeCarts).set(values).where(eq(storeCarts.id, record.id));
+      return;
+    }
+    await db.insert(storeCarts).values({ id: record.id, ...values });
+  } catch (error: any) {
+    const message = String(error?.message || error);
+    if (record.userId && /foreign key|violates/i.test(message)) {
+      try {
+        await db
+          .insert(storeCarts)
+          .values({ id: record.id, ...values, userId: null })
+          .onConflictDoUpdate({
+            target: storeCarts.id,
+            set: { ...values, userId: null },
+          });
+        return;
+      } catch (retryError: any) {
+        console.warn("[store-solution] database persist skipped:", retryError?.message || retryError);
+        return;
+      }
+    }
+    console.warn("[store-solution] database persist skipped:", message);
+  }
+}
+
+export async function findSolutionDurable(opts: {
+  id?: string;
+  sessionId?: string;
+  userId?: string | null;
+}): Promise<StoredSolution | undefined> {
+  const memory = findSolution(opts);
+  if (memory) return memory;
+  if (opts.id) {
+    const byId = await loadFromDb({ id: opts.id });
+    if (byId) return byId;
+  }
+  if (opts.userId) {
+    const byUser = await loadFromDb({ userId: opts.userId });
+    if (byUser) return byUser;
+  }
+  if (opts.sessionId) {
+    const bySession = await loadFromDb({ sessionId: opts.sessionId });
+    if (bySession) return bySession;
+  }
+  return undefined;
+}
+
+export async function upsertSolutionDurable(input: {
+  id?: string;
+  sessionId: string;
+  userId?: string | null;
+  name?: string;
+  items: SolutionLineInput[];
+  savedForLater?: SolutionLineInput[];
+}): Promise<StoredSolution> {
+  await findSolutionDurable({ id: input.id, sessionId: input.sessionId, userId: input.userId });
+  const record = upsertSolution(input);
+  await persistSolutionRecord(record);
+  return record;
+}
+
+export async function claimSolutionDurable(sessionId: string, userId: string): Promise<StoredSolution> {
+  const guest = (await findSolutionDurable({ sessionId })) ?? findSolution({ sessionId });
+  const owned = (await findSolutionDurable({ userId })) ?? findSolution({ userId });
+  const result = claimSolution(sessionId, userId);
+  await persistSolutionRecord(result);
+  if (guest && owned && guest.id !== owned.id) {
+    await deleteCartRow(guest.id);
+  }
+  return result;
+}
+
+export async function createSolutionDurable(sessionId: string, userId: string | null = null): Promise<StoredSolution> {
+  const record = createSolution(sessionId, userId);
+  return record;
 }

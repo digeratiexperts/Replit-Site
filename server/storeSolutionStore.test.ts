@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { claimSolution, createSolution, upsertSolution } from "./storeSolutionStore";
+import {
+  claimSolution,
+  createSolution,
+  parseCartPayload,
+  serializeCartPayload,
+  upsertSolution,
+} from "./storeSolutionStore";
 
 describe("store solution store", () => {
   it("persists a guest solution and recalculates catalog totals", () => {
@@ -29,4 +35,26 @@ describe("store solution store", () => {
     expect(ids).toEqual(["prod-010", "prod-011"]);
     expect(claimed.items.find((item) => item.productId === "prod-010")?.quantity).toBe(4);
   });
+
+  it("round-trips solution payload inside store_carts items jsonb", () => {
+    const saved = upsertSolution({
+      sessionId: "payload-session",
+      items: [{ productId: "prod-010", quantity: 3 }],
+      savedForLater: [{ productId: "prod-080", quantity: 1 }],
+      name: "Office stack",
+    });
+    const encoded = serializeCartPayload(saved);
+    expect(encoded.version).toBe(1);
+    const decoded = parseCartPayload(encoded);
+    expect(decoded.items).toEqual(saved.items);
+    expect(decoded.savedForLater).toEqual(saved.savedForLater);
+    expect(decoded.name).toBe("Office stack");
+  });
+
+  it("reads legacy cart arrays that only stored product lines", () => {
+    const decoded = parseCartPayload([{ productId: "prod-010", quantity: 2 }]);
+    expect(decoded.items).toEqual([{ productId: "prod-010", quantity: 2 }]);
+    expect(decoded.savedForLater).toEqual([]);
+  });
 });
+

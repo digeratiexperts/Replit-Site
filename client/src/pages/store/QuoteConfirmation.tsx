@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRoute, Link } from "wouter";
 import { motion } from "framer-motion";
 import { MegaMenu } from "@/components/MegaMenu";
@@ -16,11 +16,14 @@ import {
   ArrowRight,
   Home,
   Loader2,
+  Download,
 } from "lucide-react";
 
 const QuoteConfirmation = () => {
   const [, params] = useRoute("/store/quote-confirmation/:id");
   const quoteId = params?.id;
+  const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
+  const [pdfError, setPdfError] = useState<string | null>(null);
 
   useSEO({
     title: "Quote Request Submitted | Digerati Experts Store",
@@ -133,6 +136,55 @@ const QuoteConfirmation = () => {
                 <p className="text-3xl font-mono font-bold text-de-accent-ink" data-testid="text-quote-number">
                   {quoteRequest.quoteNumber}
                 </p>
+                <Button
+                  type="button"
+                  className="mt-6 bg-[#D3126A] hover:bg-[#D3126A] text-white"
+                  data-testid="button-download-quote-pdf"
+                  disabled={isDownloadingPdf}
+                  onClick={async () => {
+                    setPdfError(null);
+                    setIsDownloadingPdf(true);
+                    try {
+                      const token = localStorage.getItem("portalToken");
+                      const response = await fetch(quoteRequest.pdfUrl || `/api/store/quote-requests/${quoteId}/pdf`, {
+                        headers: token ? { Authorization: `Bearer ${token}` } : {},
+                        credentials: "include",
+                      });
+                      if (!response.ok) {
+                        throw new Error("Unable to download the preliminary quote PDF.");
+                      }
+                      const blob = await response.blob();
+                      const url = URL.createObjectURL(blob);
+                      const link = document.createElement("a");
+                      link.href = url;
+                      link.download = `${quoteRequest.quoteNumber}.pdf`;
+                      document.body.appendChild(link);
+                      link.click();
+                      link.remove();
+                      URL.revokeObjectURL(url);
+                    } catch (error: any) {
+                      setPdfError(error?.message || "Unable to download the preliminary quote PDF.");
+                    } finally {
+                      setIsDownloadingPdf(false);
+                    }
+                  }}
+                >
+                  {isDownloadingPdf ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Download className="w-4 h-4 mr-2" />
+                  )}
+                  Download preliminary quote PDF
+                </Button>
+                {pdfError ? (
+                  <p className="text-sm text-red-300 mt-3" data-testid="text-pdf-error">
+                    {pdfError}
+                  </p>
+                ) : (
+                  <p className="text-sm text-white/50 mt-3">
+                    Catalog pricing for your requested solution. A consultant will confirm commercial terms.
+                  </p>
+                )}
               </div>
 
               <div className="grid md:grid-cols-2 gap-6 mb-8">
