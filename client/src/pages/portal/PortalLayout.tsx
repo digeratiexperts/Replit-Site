@@ -39,6 +39,7 @@ import { TenantSelector } from "@/components/portal/TenantSelector";
 import { useSEO } from "@/hooks/useSEO";
 import { navAllowed, readPortalUser, type NavKey } from "@/lib/portalRoles";
 import { portalGet, redirectToPortalLogin } from "@/lib/portalApi";
+import { usePortalHubEvents } from "@/hooks/usePortalHubEvents";
 
 interface PortalLayoutProps {
   children: React.ReactNode;
@@ -107,6 +108,7 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
   const [location] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sessionReady, setSessionReady] = useState(false);
+  usePortalHubEvents();
   useSEO({
     title: `${title} | Client Portal`,
     description: "Digerati Experts Client Portal — secure access for existing clients.",

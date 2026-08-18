@@ -106,8 +106,12 @@ import {
   fetchHubCompanyDocuments,
   fetchHubCompanyOrders,
   fetchHubContractDownload,
+  persistHubAccountId,
   resolvePortalCompanyName,
-} from "./techSalesDocuments";
+  resolvePortalHubAccountId,
+} from "./integrations/techSalesClient";
+import { registerDeSyncRoutes } from "./integrations/deSyncRoutes";
+import { enqueueOutbox } from "./integrations/deSyncStore";
 
 const JWT_SECRET = process.env.JWT_SECRET || randomBytes(32).toString('hex');
 const SALT_ROUNDS = 12;
@@ -461,6 +465,7 @@ const logSecurityEvent = (event: string, req: AuthenticatedRequest, data: any) =
 export async function registerRoutes(app: Express) {
   // Register object storage routes for file uploads
   registerObjectStorageRoutes(app);
+  registerDeSyncRoutes(app, authMiddleware as any);
 
   // Live MSP threat feed (CISA / FIRST / NVD / MSRC). Never invents CVEs.
   app.get("/api/public/threats", async (req: Request, res: Response) => {
@@ -1576,6 +1581,16 @@ export async function registerRoutes(app: Express) {
       if (result.finalized && !result.rejected) {
         fulfillmentTicketId = await fulfillApprovedRequest(req.params.id, req);
       }
+      const client = req.user?.clientId ? portalClients.get(req.user.clientId) : undefined;
+      void enqueueOutbox({
+        eventType: "approval.submitted",
+        source: "portal",
+        destination: "hub",
+        entityType: "approval",
+        entityId: req.params.id,
+        canonicalAccountId: client?.hubAccountId || null,
+        payload: { action: "approve", note: req.body?.note || null, finalized: !!result.finalized },
+      });
       res.json({ success: true, ...result, fulfillmentTicketId });
     } catch (error: any) {
       const status = /Forbidden|not the current/i.test(error.message) ? 403 : 400;
@@ -1590,6 +1605,16 @@ export async function registerRoutes(app: Express) {
         actor: asOrgUser(req),
         action: "reject",
         note: req.body?.note,
+      });
+      const client = req.user?.clientId ? portalClients.get(req.user.clientId) : undefined;
+      void enqueueOutbox({
+        eventType: "approval.submitted",
+        source: "portal",
+        destination: "hub",
+        entityType: "approval",
+        entityId: req.params.id,
+        canonicalAccountId: client?.hubAccountId || null,
+        payload: { action: "reject", note: req.body?.note || null },
       });
       res.json({ success: true, ...result });
     } catch (error: any) {
@@ -3885,8 +3910,12 @@ export async function registerRoutes(app: Express) {
       try {
         const ctx = portalCompanyContext(req);
         companyName = ctx.companyName;
-        if (companyName) {
-          const hub = await fetchHubCompanyOrders(companyName);
+        if (companyName || ctx.hubAccountId) {
+          const hub = await fetchHubCompanyOrders(companyName || "", ctx.hubAccountId);
+          const mappedAccountId = hub?.accountId || hub?.matchedDeals?.find((d) => d.accountId)?.accountId;
+          if (ctx.companyId && mappedAccountId) {
+            await persistHubAccountId(ctx.companyId, mappedAccountId);
+          }
           if (hub?.orders) {
             hubSource = "ok";
             matchedDeals = hub.matchedDeals || [];
@@ -4185,13 +4214,18 @@ export async function registerRoutes(app: Express) {
       impersonatingCompanyId: jwtImpersonation || impersonatingCompanyId,
       getClient: (id) => portalClients.get(id),
     });
-    return { companyId, companyName };
+    const hubAccountId = resolvePortalHubAccountId({
+      clientId: companyId,
+      impersonatingCompanyId: jwtImpersonation || impersonatingCompanyId,
+      getClient: (id) => portalClients.get(id),
+    });
+    return { companyId, companyName, hubAccountId };
   }
 
   app.get("/api/portal/contracts", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { companyId, companyName } = portalCompanyContext(req);
-      if (!companyName) {
+      const { companyId, companyName, hubAccountId } = portalCompanyContext(req);
+      if (!companyName && !hubAccountId) {
         return res.json({
           contracts: [],
           library: [],
@@ -4202,7 +4236,11 @@ export async function registerRoutes(app: Express) {
         });
       }
 
-      const hub = await fetchHubCompanyDocuments(companyName);
+      const hub = await fetchHubCompanyDocuments(companyName || "", hubAccountId);
+      const mappedAccountId = hub?.accountId || hub?.matchedDeals?.find((d) => d.accountId)?.accountId;
+      if (companyId && mappedAccountId) {
+        await persistHubAccountId(companyId, mappedAccountId);
+      }
       if (!hub) {
         return res.json({
           contracts: [],
@@ -4244,12 +4282,12 @@ export async function registerRoutes(app: Express) {
       if (Number.isNaN(signatureId)) {
         return res.status(400).json({ message: "Invalid contract id" });
       }
-      const { companyName } = portalCompanyContext(req);
-      if (!companyName) {
+      const { companyName, hubAccountId } = portalCompanyContext(req);
+      if (!companyName && !hubAccountId) {
         return res.status(400).json({ message: "No company profile loaded" });
       }
       const kind = typeof req.query.kind === "string" ? req.query.kind : "signed_pdf";
-      const file = await fetchHubContractDownload(signatureId, companyName, kind);
+      const file = await fetchHubContractDownload(signatureId, companyName || "", kind, hubAccountId);
       if (!file) {
         return res.status(404).json({ message: "Document not available" });
       }
@@ -4259,6 +4297,29 @@ export async function registerRoutes(app: Express) {
     } catch (error: any) {
       logger.error("Failed to download contract", error);
       return res.status(500).json({ message: "Failed to download contract" });
+    }
+  });
+
+  app.post("/api/portal/contracts/:id/acknowledge", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { companyId, hubAccountId } = portalCompanyContext(req);
+      const envelope = await enqueueOutbox({
+        eventType: "document.acknowledged",
+        source: "portal",
+        destination: "hub",
+        entityType: "document",
+        entityId: String(req.params.id),
+        canonicalAccountId: hubAccountId,
+        payload: { portalClientId: companyId, kind: "acknowledge" },
+      });
+      return res.status(202).json({
+        ok: true,
+        eventId: envelope.eventId,
+        message: "Acknowledgement queued for TechSales. This is not an e-signature.",
+      });
+    } catch (error: any) {
+      logger.error("Failed to acknowledge contract", error);
+      return res.status(500).json({ message: "Failed to acknowledge document" });
     }
   });
 
@@ -5591,6 +5652,19 @@ export async function registerRoutes(app: Express) {
       });
 
       console.log(`[QUOTE REQUEST] Created: ${quoteRequest.quoteNumber} for ${contactEmail}`);
+
+      void eventBus.emit(EventTypes.QUOTE_REQUESTED, {
+        id: quoteRequest.id,
+        quoteId: quoteRequest.id,
+        quoteNumber: quoteRequest.quoteNumber,
+        contactName,
+        contactEmail,
+        contactPhone,
+        companyName,
+        message,
+        source: "store_quote",
+        canonicalAccountId: req.user?.clientId ? portalClients.get(req.user.clientId)?.hubAccountId : null,
+      });
 
       void import("./storeQuoteCrm")
         .then(({ syncStoreQuoteToCrm }) => syncStoreQuoteToCrm(quoteRequest))
