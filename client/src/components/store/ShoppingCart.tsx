@@ -459,7 +459,7 @@ export function ShoppingCart() {
                   {totals.monthly > 0 && (
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-white/60">Monthly</span>
-                      <span className="text-white">${totals.monthly.toFixed(2)}/mo</span>
+                      <span className="text-white">${totals.monthly.toFixed(2)} / month</span>
                     </div>
                   )}
                   {totals.annual > 0 && (

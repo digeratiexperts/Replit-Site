@@ -9,7 +9,7 @@ import {
 } from "react";
 import type { StoreProduct, PricingType } from "@/data/storeProducts";
 import { storeProducts } from "@/data/storeProducts";
-import { computeSolutionSnapshot, type SolutionTotals } from "@shared/storeCommerce";
+import { computeSolutionSnapshot, type SolutionSnapshot, type SolutionTotals } from "@shared/storeCommerce";
 import { analytics } from "@/lib/analytics";
 
 export interface CartItem {
@@ -41,6 +41,7 @@ interface CartContextType {
   getOriginalTotal: () => number;
   getSavings: () => number;
   getItemCount: () => number;
+  snapshot: SolutionSnapshot;
   totals: SolutionTotals;
   lastUpdated: string | null;
   solutionId: string | null;
@@ -92,11 +93,11 @@ function migrateItems(parsed: unknown): CartItem[] {
     .filter((item): item is CartItem => !!item);
 }
 
-function snapshotFromItems(items: CartItem[]): SolutionTotals {
+function snapshotFromItems(items: CartItem[]): SolutionSnapshot {
   return computeSolutionSnapshot(
     items.map((item) => ({ productId: item.product.id, sku: item.product.sku, quantity: item.quantity })),
     storeProducts,
-  ).totals;
+  );
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
@@ -379,7 +380,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     [items],
   );
 
-  const totals = snapshotFromItems(items);
+  const snapshot = snapshotFromItems(items);
+  const totals = snapshot.totals;
 
   const openCart = useCallback(() => {
     setIsOpen(true);
@@ -410,6 +412,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         getOriginalTotal,
         getSavings,
         getItemCount,
+        snapshot,
         totals,
         lastUpdated,
         solutionId,

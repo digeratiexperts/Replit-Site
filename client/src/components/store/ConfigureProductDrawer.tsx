@@ -405,7 +405,7 @@ export function ConfigureProductDrawer({
                 onClick={() => onConfirm(buildPayload())}
                 data-testid="button-add-configured"
               >
-                Add to Solution Cart
+                Add to Solution
               </Button>
               {onRequestQuote && (
                 <Button

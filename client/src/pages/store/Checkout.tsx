@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, Link } from "wouter";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
@@ -11,13 +11,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useSEO } from "@/hooks/useSEO";
-import { useCart, isRecurringPricing } from "@/contexts/CartContext";
+import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
-import { type PricingType } from "@/data/storeProducts";
-
-const formatCurrency = (amount: number): string => {
-  return `$${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-};
+import { SolutionOrderSummary } from "@/components/store/SolutionOrderSummary";
+import { snapshotSubmitLines } from "@/lib/solutionSnapshotView";
 
 import {
   ArrowLeft,
@@ -27,8 +24,6 @@ import {
   MessageSquare,
   Loader2,
   Check,
-  RefreshCw,
-  Package,
 } from "lucide-react";
 
 const billingSchema = z.object({
@@ -42,21 +37,9 @@ type BillingFormData = z.infer<typeof billingSchema>;
 
 type PaymentMethod = "zoho" | "quote_request";
 
-const pricingUnitLabels: Record<string, string> = {
-  monthly: " / month",
-  yearly: " / year",
-  per_user: " / user / month",
-  per_endpoint: " / endpoint / month",
-  per_device: " / device / month",
-  per_location: " / location / month",
-  per_seat: " / user / month",
-  one_time: "",
-  per_hour: " / hour",
-};
-
 const Checkout = () => {
   const [, navigate] = useLocation();
-  const { items, getCartTotal, clearCart } = useCart();
+  const { items, snapshot, clearCart } = useCart();
   const { toast } = useToast();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("zoho");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -88,45 +71,10 @@ const Checkout = () => {
     }
   }, [items.length, navigate]);
 
-  const { recurringItems, oneTimeItems, recurringTotal, oneTimeTotal } = useMemo(() => {
-    const recurring = items.filter((item) =>
-      isRecurringPricing(item.product.pricingType)
-    );
-    const oneTime = items.filter(
-      (item) => !isRecurringPricing(item.product.pricingType)
-    );
-    const recTotal = recurring.reduce(
-      (sum, item) => sum + item.product.basePrice * item.quantity,
-      0
-    );
-    const otTotal = oneTime.reduce(
-      (sum, item) => sum + item.product.basePrice * item.quantity,
-      0
-    );
-    return {
-      recurringItems: recurring,
-      oneTimeItems: oneTime,
-      recurringTotal: recTotal,
-      oneTimeTotal: otTotal,
-    };
-  }, [items]);
-
-  const getPricingLabel = (pricingType: PricingType) => {
-    return pricingUnitLabels[pricingType] || "";
-  };
-
   const onSubmit = async (data: BillingFormData) => {
     setIsSubmitting(true);
     try {
-      const lineItems = items.map((item) => ({
-        productId: item.product.id,
-        sku: item.product.sku,
-        name: item.product.name,
-        quantity: item.quantity,
-        unitPrice: item.product.basePrice,
-        pricingType: item.product.pricingType,
-        total: item.product.basePrice * item.quantity,
-      }));
+      const lineItems = snapshotSubmitLines(snapshot);
 
       if (paymentMethod === "zoho") {
         const portalToken = localStorage.getItem("portalToken");
@@ -149,8 +97,6 @@ const Checkout = () => {
           body: JSON.stringify({
             lineItems,
             billing: data,
-            subtotal: getCartTotal(),
-            total: getCartTotal(),
           }),
         });
 
@@ -367,133 +313,49 @@ const Checkout = () => {
               </div>
 
               <div className="lg:col-span-2">
-                <div className="bg-white/5 border border-white/10 rounded-xl p-6 sticky top-28" data-testid="section-order-summary">
-                  <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                    <ShoppingCart className="w-5 h-5 text-de-accent-ink" />
-                    Order Summary
-                  </h2>
-
-                  <div className="space-y-4 mb-6">
-                    {recurringItems.length > 0 && (
-                      <div>
-                        <div className="flex items-center gap-2 text-sm text-white/60 mb-3">
-                          <RefreshCw className="w-4 h-4" />
-                          Recurring Services
-                        </div>
-                        {recurringItems.map((item) => (
-                          <div
-                            key={item.product.id}
-                            className="flex justify-between items-start py-3 border-b border-white/10"
-                            data-testid={`order-item-${item.product.id}`}
-                          >
-                            <div className="flex-1">
-                              <p className="text-white font-medium text-sm">{item.product.name}</p>
-                              <p className="text-white/50 text-xs">
-                                {item.quantity}x {formatCurrency(item.product.basePrice)}
-                                {getPricingLabel(item.product.pricingType)}
-                              </p>
-                            </div>
-                            <p className="text-white font-medium text-sm">
-                              {formatCurrency(item.product.basePrice * item.quantity)}
-                              {getPricingLabel(item.product.pricingType)}
-                            </p>
-                          </div>
-                        ))}
-                        <div className="flex justify-between py-2 text-sm">
-                          <span className="text-white/60">Recurring Subtotal</span>
-                          <span className="text-white font-medium">{formatCurrency(recurringTotal)}/mo</span>
-                        </div>
-                      </div>
-                    )}
-
-                    {oneTimeItems.length > 0 && (
-                      <div>
-                        <div className="flex items-center gap-2 text-sm text-white/60 mb-3">
-                          <Package className="w-4 h-4" />
-                          One-Time Purchases
-                        </div>
-                        {oneTimeItems.map((item) => (
-                          <div
-                            key={item.product.id}
-                            className="flex justify-between items-start py-3 border-b border-white/10"
-                            data-testid={`order-item-${item.product.id}`}
-                          >
-                            <div className="flex-1">
-                              <p className="text-white font-medium text-sm">{item.product.name}</p>
-                              <p className="text-white/50 text-xs">
-                                {item.quantity}x {formatCurrency(item.product.basePrice)}
-                              </p>
-                            </div>
-                            <p className="text-white font-medium text-sm">
-                              {formatCurrency(item.product.basePrice * item.quantity)}
-                            </p>
-                          </div>
-                        ))}
-                        <div className="flex justify-between py-2 text-sm">
-                          <span className="text-white/60">One-Time Subtotal</span>
-                          <span className="text-white font-medium">{formatCurrency(oneTimeTotal)}</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="border-t border-white/20 pt-4 space-y-2">
-                    {recurringTotal > 0 && (
-                      <div className="flex justify-between text-sm">
-                        <span className="text-white/60">Monthly Recurring</span>
-                        <span className="text-white">{formatCurrency(recurringTotal)}/mo</span>
-                      </div>
-                    )}
-                    {oneTimeTotal > 0 && (
-                      <div className="flex justify-between text-sm">
-                        <span className="text-white/60">One-Time Total</span>
-                        <span className="text-white">{formatCurrency(oneTimeTotal)}</span>
-                      </div>
-                    )}
-                    <div className="flex justify-between text-lg font-semibold pt-2 border-t border-white/10">
-                      <span className="text-white">Due Today</span>
-                      <span className="text-de-accent-ink" data-testid="text-total-due">
-                        {formatCurrency(getCartTotal())}
-                      </span>
-                    </div>
-                  </div>
-
-                  <Button
-                    type="submit"
-                    form="checkout-form"
-                    disabled={isSubmitting}
-                    className="w-full mt-6 bg-de-accent hover:bg-de-accent text-white py-6 text-lg font-semibold"
-                    data-testid="button-submit-order"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                        Processing...
-                      </>
-                    ) : paymentMethod === "quote_request" ? (
-                      <>
-                        <MessageSquare className="w-5 h-5 mr-2" />
-                        Request Quote
-                      </>
-                    ) : (
-                      <>
-                        <CreditCard className="w-5 h-5 mr-2" />
-                        Pay Now
-                      </>
-                    )}
-                  </Button>
-
-                  <p className="text-center text-white/55 text-xs mt-4">
-                    By completing this order, you agree to our{" "}
-                    <Link href="/legal/terms-of-use" className="text-de-accent-ink hover:underline">
-                      Terms of Service
-                    </Link>{" "}
-                    and{" "}
-                    <Link href="/legal/privacy-policy" className="text-de-accent-ink hover:underline">
-                      Privacy Policy
-                    </Link>
-                  </p>
-                </div>
+                <SolutionOrderSummary
+                  snapshot={snapshot}
+                  title="Order Summary"
+                  titleIcon={<ShoppingCart className="h-5 w-5 text-de-accent-ink" />}
+                  footer={
+                    <>
+                      <Button
+                        type="submit"
+                        form="checkout-form"
+                        disabled={isSubmitting}
+                        className="mt-6 w-full bg-de-accent py-6 text-lg font-semibold text-white hover:bg-de-accent"
+                        data-testid="button-submit-order"
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                            Processing...
+                          </>
+                        ) : paymentMethod === "quote_request" ? (
+                          <>
+                            <MessageSquare className="mr-2 h-5 w-5" />
+                            Request Quote
+                          </>
+                        ) : (
+                          <>
+                            <CreditCard className="mr-2 h-5 w-5" />
+                            Pay Now
+                          </>
+                        )}
+                      </Button>
+                      <p className="mt-4 text-center text-xs text-white/55">
+                        By completing this order, you agree to our{" "}
+                        <Link href="/legal/terms-of-use" className="text-de-accent-ink hover:underline">
+                          Terms of Service
+                        </Link>{" "}
+                        and{" "}
+                        <Link href="/legal/privacy-policy" className="text-de-accent-ink hover:underline">
+                          Privacy Policy
+                        </Link>
+                      </p>
+                    </>
+                  }
+                />
               </div>
             </div>
           </motion.div>

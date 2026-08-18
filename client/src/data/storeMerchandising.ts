@@ -77,7 +77,7 @@ export const storePurchasePathFilters: {
   label: string;
   blurb: string;
 }[] = [
-  { id: "checkout", label: "Can checkout", blurb: "Add to cart and purchase online" },
+  { id: "checkout", label: "Can checkout", blurb: "Add to Solution and purchase online" },
   { id: "quote", label: "Quote first", blurb: "Custom, zero-list, or high-touch SKUs" },
 ];
 
@@ -634,6 +634,12 @@ export const outcomeLeads: Record<string, string> = {
 
 export function getOutcomeLead(product: StoreProduct): string {
   return outcomeLeads[product.sku] || product.shortDescription || product.description;
+}
+
+/** Outcome label only when the SKU is explicitly hinted — never invented. */
+export function getBestForLabel(product: StoreProduct): string | null {
+  const hinted = storeOutcomes.find((outcome) => outcome.skuHints.includes(product.sku));
+  return hinted?.label ?? null;
 }
 
 /** Soft discovery tags for cards (not rainbow category paint). */

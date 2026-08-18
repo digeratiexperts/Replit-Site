@@ -29,7 +29,39 @@ export function getMissingRequirements(products: StoreProduct[]): SolutionWarnin
   return warnings;
 }
 
-export function recommendationWhy(candidate: StoreProduct, cart: StoreProduct[]): string {
+export type SolutionChip = {
+  kind: "in_solution" | "required_by" | "works_with" | "upgrade";
+  label: string;
+};
+
+/** Status chips only when merchandising data exists — never “already owned”. */
+export function getSolutionChips(product: StoreProduct, solution: StoreProduct[]): SolutionChip[] {
+  const chips: SolutionChip[] = [];
+  if (solution.some((item) => item.sku === product.sku)) {
+    chips.push({ kind: "in_solution", label: "Already in your solution" });
+  }
+  for (const item of solution) {
+    if (item.sku === product.sku) continue;
+    const rel = getProductRelationships(item.sku);
+    if (rel?.required?.includes(product.sku)) {
+      chips.push({ kind: "required_by", label: `Required by ${item.name}` });
+    }
+    if (rel?.worksWith?.includes(product.sku)) {
+      chips.push({ kind: "works_with", label: `Works with ${item.name}` });
+    }
+    if (rel?.upgradeTo?.includes(product.sku)) {
+      chips.push({ kind: "upgrade", label: `Upgrade from ${item.name}` });
+    }
+  }
+  const seen = new Set<string>();
+  return chips.filter((chip) => {
+    if (seen.has(chip.label)) return false;
+    seen.add(chip.label);
+    return true;
+  }).slice(0, 2);
+}
+
+export function recommendationWhy(candidate: StoreProduct, cart: StoreProduct[]): string | null {
   for (const item of cart) {
     const rel = getProductRelationships(item.sku);
     if (rel?.required?.includes(candidate.sku)) {
@@ -42,5 +74,5 @@ export function recommendationWhy(candidate: StoreProduct, cart: StoreProduct[])
       return `Commonly paired with ${item.name}.`;
     }
   }
-  return "Closes a detected coverage gap in this solution.";
+  return null;
 }

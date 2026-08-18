@@ -649,7 +649,7 @@ const CoManagedStore = () => {
               <div>
                 <h2 className="text-3xl font-bold text-white md:text-4xl">Full catalog</h2>
                 <p className="mt-2 text-base text-white/60">
-                  Larger cards · outcome-first blurbs · technical bullets · Add to cart
+                  Larger cards · outcome-first blurbs · technical bullets · Add to Solution
                 </p>
               </div>
               {selectedOutcome && (
