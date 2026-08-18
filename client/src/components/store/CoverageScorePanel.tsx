@@ -3,6 +3,7 @@ import { Check, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { StoreProduct } from "@/data/storeProducts";
 import { computeCoverageScore } from "@/data/storeMerchandising";
+import { analytics } from "@/lib/analytics";
 
 interface CoverageScorePanelProps {
   products: StoreProduct[];
@@ -72,7 +73,7 @@ export function CoverageScorePanel({
 
       {score.suggestions.length > 0 ? (
         <div className="mt-4 space-y-2 border-t border-white/10 pt-4">
-          <p className="text-xs font-medium text-white/70">Close coverage gaps</p>
+          <p className="text-xs font-medium text-white/70">Recommended because this layer is missing</p>
           {score.suggestions.map((s) =>
             s.product ? (
               <div
@@ -90,7 +91,11 @@ export function CoverageScorePanel({
                   <Button
                     size="sm"
                     className="h-8 shrink-0 bg-de-accent text-xs text-white hover:bg-[#6548ff]"
-                    onClick={() => onAddSuggestion(s.product!)}
+                    onClick={() => {
+                      analytics.storeCoverageGapViewed(s.label);
+                      analytics.storeAcceptRecommendation(s.product!.name, `Closes ${s.label} coverage gap`);
+                      onAddSuggestion(s.product!);
+                    }}
                     data-testid={`button-improve-${s.product.id}`}
                   >
                     Add

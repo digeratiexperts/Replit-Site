@@ -258,6 +258,35 @@ class ZohoCRMService {
     const leads = await this.searchLeads(`(Email:equals:${email})`);
     return leads[0] || null;
   }
+
+  async searchAccounts(criteria: string): Promise<ZohoCRMAccount[]> {
+    try {
+      const client = await zohoClient.getClient();
+      const response = await client.get("/crm/v6/Accounts/search", {
+        params: { criteria },
+      });
+      return response.data?.data || [];
+    } catch (error: any) {
+      console.error("Error searching accounts:", error.response?.data || error.message);
+      return [];
+    }
+  }
+
+  async createDeal(data: Partial<ZohoCRMDeal> & { Description?: string }): Promise<any> {
+    const client = await zohoClient.getClient();
+    const response = await client.post("/crm/v6/Deals", {
+      data: [data],
+    });
+    return response.data?.data?.[0];
+  }
+
+  async createQuote(data: Record<string, unknown>): Promise<any> {
+    const client = await zohoClient.getClient();
+    const response = await client.post("/crm/v6/Quotes", {
+      data: [data],
+    });
+    return response.data?.data?.[0];
+  }
 }
 
 export const zohoCRMService = new ZohoCRMService();

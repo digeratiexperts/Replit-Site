@@ -1,5 +1,6 @@
 import type { Express, NextFunction, Request, Response } from "express";
 import { storeProducts, type StoreProduct } from "../client/src/data/storeProducts";
+import { resolveClientPricingRows, resolveUnitPrice, toPriceOverrides } from "./storeClientPricing";
 
 type StoreRole = "public" | "prospect" | "managed" | "comanaged" | "admin";
 
@@ -46,6 +47,7 @@ function isPurchasableForRole(product: StoreProduct, role: StoreRole): boolean {
 export function canonicalizeCheckoutLineItems(
   suppliedItems: unknown,
   role: StoreRole,
+  priceOverrides: Record<string, number> = {},
 ): CanonicalCheckoutLineItem[] {
   if (!Array.isArray(suppliedItems) || suppliedItems.length === 0) {
     throw new Error("Line items are required");
@@ -80,7 +82,7 @@ export function canonicalizeCheckoutLineItems(
       throw new Error(`Invalid quantity for ${product.sku}`);
     }
 
-    const unitPrice = money(Number(product.basePrice));
+    const unitPrice = resolveUnitPrice(Number(product.basePrice), priceOverrides[product.id]);
     if (!Number.isFinite(unitPrice) || unitPrice <= 0) {
       throw new Error(`Product does not have a valid checkout price: ${product.sku}`);
     }
@@ -122,9 +124,11 @@ export function registerSecureZohoStoreCheckout(
         }
 
         const role = (req.user?.storeRole || "public") as StoreRole;
+        const pricingRows = await resolveClientPricingRows(req.user?.clientId);
+        const priceOverrides = toPriceOverrides(pricingRows);
         let lineItems: CanonicalCheckoutLineItem[];
         try {
-          lineItems = canonicalizeCheckoutLineItems(req.body?.lineItems, role);
+          lineItems = canonicalizeCheckoutLineItems(req.body?.lineItems, role, priceOverrides);
         } catch (error: any) {
           console.warn("[SECURITY] CHECKOUT_CART_REJECTED", {
             userId: req.userId,

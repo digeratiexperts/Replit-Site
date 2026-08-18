@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { ArrowRight, Calendar, ClipboardList, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { openMspAdvisor } from "@/lib/openMspAdvisor";
+import { CTA } from "@/lib/ctaCopy";
 
 interface StoreAssessmentPanelProps {
   variant?: "sticky" | "inline";
@@ -32,12 +33,13 @@ export function StoreAssessmentPanel({
         </p>
         <div className="mt-4 flex flex-col gap-2">
           <Button asChild
-              className="h-10 w-full bg-de-accent text-white hover:bg-[#6548ff]"
+              variant="brand"
+              className="h-10 w-full"
               data-testid="button-assessment-book"
             >
                   <a href="/book">
                     <Calendar className="mr-2 h-4 w-4" />
-              Book assessment
+              {CTA.primaryShort}
                   </a>
                 </Button>
           {onFilterAssessments && (

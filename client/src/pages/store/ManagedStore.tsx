@@ -14,7 +14,9 @@ import {
   formatPrice,
   type StoreProduct
 } from "@/data/storeProducts";
-import { CartButton } from "@/components/store/CartButton";
+import { StoreClientBar } from "@/components/store/StoreClientBar";
+import { StorePageAtmosphere } from "@/components/store/StorePageAtmosphere";
+import { CTA } from "@/lib/ctaCopy";
 import { pricing, getPricingFooterText } from "@/data/pricing";
 import { ProductMedia } from "@/components/store/ProductMedia";
 import { getProductVisual } from "@/data/productImages";
@@ -55,9 +57,9 @@ const ManagedStore = () => {
       <motion.div
         variants={itemVariants}
         className={`relative overflow-hidden rounded-2xl border transition-all duration-300 hover:-translate-y-1 cursor-pointer ${
-          featured 
-            ? 'bg-de-raised border-de-hairline shadow-[0_0_40px_rgba(139,92,246,0.2)]' 
-            : 'bg-white/[0.03] border-white/10 hover:border-de-hairline'
+          featured
+            ? "bg-de-raised border-de-accent/35"
+            : "border-white/10 bg-white/[0.03] hover:border-de-hairline"
         }`}
         data-testid={`product-${product.id}`}
       >
@@ -131,20 +133,18 @@ const ManagedStore = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="relative min-h-screen bg-[#0a0a0a]">
+      <StorePageAtmosphere />
       <MegaMenu />
       
-      <main className="de-nav-clear pb-20">
+      <main className="relative z-10 de-nav-clear pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          {/* Breadcrumb with Cart Button */}
-          <div className="mb-8 flex items-center justify-between">
-            <div className="flex items-center gap-2 text-sm text-white/50">
-              <Link href="/store" className="hover:text-white transition-colors">Store</Link>
-              <span>/</span>
-              <span className="text-white">Managed Clients</span>
-            </div>
-            <CartButton />
+          <StoreClientBar />
+          <div className="mb-8 flex items-center gap-2 text-sm text-white/50">
+            <Link href="/store" className="transition-colors hover:text-white">Store</Link>
+            <span>/</span>
+            <span className="text-white">Managed Clients</span>
           </div>
 
           {/* Hero Section */}
@@ -158,7 +158,7 @@ const ManagedStore = () => {
               <Building className="w-4 h-4 text-de-accent-ink" />
               <span className="text-sm text-de-accent-ink">Managed IT Services</span>
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+            <h1 className="mb-6 text-[clamp(2rem,6vw,3.25rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white">
               Full-Service{" "}
               <span className="text-de-accent-ink">
                 Managed IT
@@ -276,34 +276,37 @@ const ManagedStore = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-              Ready to Get Started?
+            <h2 className="mb-4 text-2xl font-bold text-white md:text-3xl">
+              Need a package recommendation?
             </h2>
-            <p className="text-white/60 mb-8 max-w-xl mx-auto">
-              Schedule a free 15-minute call to discuss your needs. We'll help you choose the right plan 
-              and provide a customized quote for your organization.
+            <p className="mx-auto mb-8 max-w-xl text-white/60">
+              Start with a cyber risk assessment. We map the right ProActive tier to your users,
+              sites, and compliance needs — then quote the contract.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild 
-                  size="lg"
-                  className="h-14 px-8 text-lg font-semibold bg-de-accent hover:bg-de-accent text-white shadow-lg shadow-none"
-                  data-testid="button-final-cta"
-                >
-                  <a href="/book">
-                    <Calendar className="w-5 h-5 mr-2" />
-                  Schedule Consultation
-                  </a>
-                </Button>
-              <Button asChild 
-                  size="lg"
-                  className="h-14 px-8 text-lg font-semibold bg-transparent border-2 border-white/30 text-white hover:bg-white/10"
-                  data-testid="button-call-us"
-                >
-                  <a href="tel:+13254809870">
-                    <Phone className="w-5 h-5 mr-2" />
+            <div className="flex flex-col justify-center gap-4 sm:flex-row">
+              <Button
+                asChild
+                size="lg"
+                variant="brand"
+                className="h-14 px-8 text-lg font-semibold"
+                data-testid="button-final-cta"
+              >
+                <a href="/book">
+                  <Calendar className="mr-2 h-5 w-5" />
+                  {CTA.primary}
+                </a>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                className="h-14 border-2 border-white/30 bg-transparent px-8 text-lg font-semibold text-white hover:bg-white/10"
+                data-testid="button-call-us"
+              >
+                <a href="tel:+13254809870">
+                  <Phone className="mr-2 h-5 w-5" />
                   325-480-9870
-                  </a>
-                </Button>
+                </a>
+              </Button>
             </div>
             
             <div className="mt-8">

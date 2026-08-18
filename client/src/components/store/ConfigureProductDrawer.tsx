@@ -388,6 +388,13 @@ export function ConfigureProductDrawer({
                     <span className="text-lg font-medium text-white/50">{periodSuffix}</span>
                   ) : null}
                 </p>
+                <p className="mt-2 text-xs text-white/55">
+                  {recurring
+                    ? billingPeriod === "yearly"
+                      ? "Adds to Annual in Your Solution."
+                      : "Adds to Monthly in Your Solution."
+                    : "Adds to Due Today in Your Solution."}
+                </p>
               </div>
             </div>
 

@@ -5,6 +5,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { createServer } from "http";
 import { registerRoutes, authMiddleware, requireRole } from "./routes";
 import { registerSecureZohoStoreCheckout } from "./secureStoreCheckout";
+import { registerStoreSolutionRoutes } from "./storeSolutionRoutes";
 import { registerPublicSupportChat } from "./publicSupportChat";
 import { createServer as createViteServer } from "vite";
 import path from "path";
@@ -269,6 +270,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 registerSecureZohoStoreCheckout(app, authMiddleware as any, requireRole as any);
+registerStoreSolutionRoutes(app, authMiddleware as any);
 
 app.use((req, res, next) => {
   if (req.path.toLowerCase() === "/solutions/proactive-ecosystem-packages") {

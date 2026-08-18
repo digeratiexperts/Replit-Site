@@ -320,6 +320,34 @@ export const analytics = {
     });
   },
 
+  storeRemoveFromCart(productName: string, productId: string) {
+    track("remove_from_cart", {
+      item_id: productId,
+      item_name: productName,
+      event_category: "ecommerce",
+    });
+  },
+
+  storeViewCart(value: number, itemCount: number) {
+    track("view_cart", { currency: "USD", value, item_count: itemCount, event_category: "ecommerce" });
+  },
+
+  storeRequestQuote(value: number) {
+    track("request_quote", { currency: "USD", value, event_category: "ecommerce" });
+  },
+
+  storeAcceptRecommendation(productName: string, reason: string) {
+    track("accept_recommendation", {
+      item_name: productName,
+      reason,
+      event_category: "ecommerce",
+    });
+  },
+
+  storeCoverageGapViewed(label: string) {
+    track("coverage_gap_viewed", { coverage_label: label, event_category: "ecommerce" });
+  },
+
   storeCheckoutStarted(value: number) {
     trackMarketing("begin_checkout", "InitiateCheckout", {
       currency: "USD",

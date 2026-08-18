@@ -5567,22 +5567,19 @@ export async function registerRoutes(app: Express) {
       if (!contactName || !contactEmail) {
         return res.status(400).json({ error: "Contact name and email are required" });
       }
-      
-      if (!requestedItems || !Array.isArray(requestedItems) || requestedItems.length === 0) {
-        return res.status(400).json({ error: "Requested items are required" });
+
+      const { canonicalizeQuoteItems } = await import("./storeQuoteCommerce");
+      const { insertQuoteRequest } = await import("./storeQuoteStore");
+      const { resolveClientPricingRows: resolveQuotePricing, toPriceOverrides: toQuoteOverrides } = await import("./storeClientPricing");
+      const pricingRows = await resolveQuotePricing(req.user?.clientId);
+      let canonicalItems;
+      try {
+        canonicalItems = canonicalizeQuoteItems(requestedItems, toQuoteOverrides(pricingRows));
+      } catch (error: any) {
+        return res.status(400).json({ error: error?.message || "Invalid quote items" });
       }
 
-      const { db } = await import("./db");
-      const { storeQuoteRequests } = await import("@shared/schema");
-      
-      // Generate quote number in QR-YYYYMMDD-XXXX format
-      const now = new Date();
-      const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
-      const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase();
-      const quoteNumber = `QR-${dateStr}-${randomSuffix}`;
-
-      const [quoteRequest] = await db.insert(storeQuoteRequests).values({
-        quoteNumber,
+      const quoteRequest = await insertQuoteRequest({
         userId: req.userId || null,
         clientId: req.user?.clientId || null,
         contactName,
@@ -5590,26 +5587,32 @@ export async function registerRoutes(app: Express) {
         contactPhone: contactPhone || null,
         companyName: companyName || null,
         message: message || null,
-        requestedItems,
-        status: "pending",
-      }).returning();
+        requestedItems: canonicalItems,
+      });
 
-      console.log(`[QUOTE REQUEST] Created: ${quoteNumber} for ${contactEmail}`);
+      console.log(`[QUOTE REQUEST] Created: ${quoteRequest.quoteNumber} for ${contactEmail}`);
+
+      void import("./storeQuoteCrm")
+        .then(({ syncStoreQuoteToCrm }) => syncStoreQuoteToCrm(quoteRequest))
+        .catch((error: any) => {
+          console.warn("[store-quote] CRM sync skipped:", error?.message || error);
+        });
       
       logSecurityEvent("QUOTE_REQUESTED", req, { 
         quoteId: quoteRequest.id, 
-        quoteNumber,
+        quoteNumber: quoteRequest.quoteNumber,
         clientId: req.user?.clientId,
         userId: req.userId,
         contactEmail,
         companyName,
-        itemCount: requestedItems.length,
-        items: requestedItems.map((item: any) => ({ id: item.id, name: item.name, quantity: item.quantity }))
+        itemCount: canonicalItems.length,
+        items: canonicalItems.map((item) => ({ id: item.productId, name: item.name, quantity: item.quantity })),
       });
 
       res.json({
         id: quoteRequest.id,
         quoteNumber: quoteRequest.quoteNumber,
+        pdfUrl: `/api/store/quote-requests/${quoteRequest.id}/pdf`,
         message: "Quote request submitted successfully",
       });
     } catch (error: any) {
@@ -5618,42 +5621,66 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  const canAccessQuote = (req: AuthenticatedRequest, quoteRequest: { userId: string | null; clientId: string | null; contactEmail: string | null }) => {
+    const isAdmin = req.user?.role === "admin";
+    const ownsQuote =
+      (req.userId && quoteRequest.userId === req.userId) ||
+      (req.user?.clientId && quoteRequest.clientId === req.user.clientId) ||
+      (req.user?.email &&
+        quoteRequest.contactEmail?.toLowerCase() === req.user.email.toLowerCase());
+    return { isAdmin, ownsQuote: !!(isAdmin || ownsQuote) };
+  };
+
+  app.get("/api/store/quote-requests/:id/pdf", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { getQuoteRequest } = await import("./storeQuoteStore");
+      const { buildQuotePdf } = await import("./storeQuotePdf");
+      const quoteRequest = await getQuoteRequest(req.params.id);
+      if (!quoteRequest) {
+        return res.status(404).json({ error: "Quote request not found" });
+      }
+      const { ownsQuote } = canAccessQuote(req, quoteRequest);
+      if (!ownsQuote) {
+        return res.status(403).json({ error: "Access denied" });
+      }
+
+      const pdf = buildQuotePdf(quoteRequest);
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", `attachment; filename="${quoteRequest.quoteNumber}.pdf"`);
+      return res.send(pdf);
+    } catch (error: any) {
+      console.error("[GET QUOTE PDF ERROR]", error);
+      return res.status(500).json({ error: "Failed to generate quote PDF" });
+    }
+  });
+
   // Get quote request by ID — authenticated owner or admin only
   app.get("/api/store/quote-requests/:id", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { id } = req.params;
-      const { db } = await import("./db");
-      const { storeQuoteRequests } = await import("@shared/schema");
-      const { eq, or } = await import("drizzle-orm");
-      
-      const [quoteRequest] = await db.select().from(storeQuoteRequests).where(
-        or(
-          eq(storeQuoteRequests.id, id),
-          eq(storeQuoteRequests.quoteNumber, id)
-        )
-      ).limit(1);
+      const { getQuoteRequest } = await import("./storeQuoteStore");
+      const quoteRequest = await getQuoteRequest(req.params.id);
       
       if (!quoteRequest) {
         return res.status(404).json({ error: "Quote request not found" });
       }
 
-      const isAdmin = req.user?.role === "admin";
-      const ownsQuote =
-        (req.userId && quoteRequest.userId === req.userId) ||
-        (req.user?.clientId && quoteRequest.clientId === req.user.clientId) ||
-        (req.user?.email &&
-          quoteRequest.contactEmail?.toLowerCase() === req.user.email.toLowerCase());
-      if (!isAdmin && !ownsQuote) {
+      const { isAdmin, ownsQuote } = canAccessQuote(req, quoteRequest);
+      if (!ownsQuote) {
         return res.status(403).json({ error: "Access denied" });
       }
 
+      const payload = {
+        ...quoteRequest,
+        pdfUrl: `/api/store/quote-requests/${quoteRequest.id}/pdf`,
+      };
+
       // Never return internal assignment fields to non-admins
       if (!isAdmin) {
-        const { assignedTo, ...clientSafe } = quoteRequest as typeof quoteRequest & { assignedTo?: string | null };
+        const { assignedTo, ...clientSafe } = payload;
         return res.json(clientSafe);
       }
 
-      res.json(quoteRequest);
+      res.json(payload);
     } catch (error: any) {
       console.error("[GET QUOTE REQUEST ERROR]", error);
       res.status(500).json({ error: error.message || "Failed to get quote request" });
@@ -6017,33 +6044,13 @@ export async function registerRoutes(app: Express) {
 
   // ========== STORE CLIENT AUTH ROUTES ==========
 
-  // Demo client pricing - in production this would come from a database
-  const clientPricingData: Map<string, { productId: string; customPrice: number; discountPercent: number }[]> = new Map([
-    ["client-1", [
-      { productId: "prod-010", customPrice: 35, discountPercent: 10 },
-      { productId: "prod-011", customPrice: 22, discountPercent: 12 },
-      { productId: "prod-040", customPrice: 22.50, discountPercent: 10 },
-    ]],
-    ["client-2", [
-      { productId: "prod-010", customPrice: 32, discountPercent: 18 },
-      { productId: "prod-012", customPrice: 5, discountPercent: 17 },
-    ]],
-    ["client-3", [
-      { productId: "prod-010", customPrice: 37, discountPercent: 5 },
-      { productId: "prod-035", customPrice: 160, discountPercent: 9 },
-      { productId: "prod-036", customPrice: 200, discountPercent: 11 },
-    ]],
-    ["client-4", [
-      { productId: "prod-010", customPrice: 36, discountPercent: 8 },
-      { productId: "prod-030", customPrice: 179, discountPercent: 10 },
-    ]],
-    ["client-5", [
-      { productId: "prod-010", customPrice: 34, discountPercent: 13 },
-      { productId: "prod-011", customPrice: 20, discountPercent: 20 },
-      { productId: "prod-030", customPrice: 169, discountPercent: 15 },
-      { productId: "prod-040", customPrice: 20, discountPercent: 20 },
-    ]],
-  ]);
+  const {
+    listDemoClientPricing,
+    removeDemoClientPricing,
+    resolveClientPricingRows,
+    toPriceOverrides,
+    upsertDemoClientPricing,
+  } = await import("./storeClientPricing");
 
   // Get client info for store (returns client type)
   app.get("/api/store/client-info", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
@@ -6091,7 +6098,7 @@ export async function registerRoutes(app: Express) {
         return res.json({ pricing: [] });
       }
 
-      const pricing = clientPricingData.get(user.clientId) || [];
+      const pricing = await resolveClientPricingRows(user.clientId);
       res.json({ pricing });
     } catch (error: any) {
       console.error("[ERROR] Failed to get client pricing:", error);
@@ -6144,26 +6151,13 @@ export async function registerRoutes(app: Express) {
         return res.status(400).json({ error: "Either custom price or discount percent is required" });
       }
       
-      // Get or create client pricing array
-      let clientPricing = clientPricingData.get(clientId) || [];
-      
-      // Check if pricing already exists for this product
-      const existingIndex = clientPricing.findIndex(p => p.productId === productId);
-      const oldPricing = existingIndex >= 0 ? clientPricing[existingIndex] : null;
-      
-      const newPricingEntry = {
+      const existingPricing = listDemoClientPricing(clientId);
+      const oldPricing = existingPricing.find((row) => row.productId === productId) || null;
+      const newPricingEntry = upsertDemoClientPricing(clientId, {
         productId,
         customPrice: customPrice || oldPricing?.customPrice || 0,
-        discountPercent: discountPercent !== undefined ? discountPercent : (oldPricing?.discountPercent || 0)
-      };
-      
-      if (existingIndex >= 0) {
-        clientPricing[existingIndex] = newPricingEntry;
-      } else {
-        clientPricing.push(newPricingEntry);
-      }
-      
-      clientPricingData.set(clientId, clientPricing);
+        discountPercent: discountPercent !== undefined ? discountPercent : (oldPricing?.discountPercent || 0),
+      });
       
       logSecurityEvent("CLIENT_PRICING_SET", req, { 
         clientId, 
@@ -6187,7 +6181,7 @@ export async function registerRoutes(app: Express) {
   app.get("/api/admin/client-pricing/:clientId", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { clientId } = req.params;
-      const pricing = clientPricingData.get(clientId) || [];
+      const pricing = await resolveClientPricingRows(clientId);
       
       res.json({ clientId, pricing });
     } catch (error: any) {
@@ -6201,11 +6195,7 @@ export async function registerRoutes(app: Express) {
     try {
       const { clientId, productId } = req.params;
       
-      let clientPricing = clientPricingData.get(clientId) || [];
-      const oldPricing = clientPricing.find(p => p.productId === productId);
-      
-      clientPricing = clientPricing.filter(p => p.productId !== productId);
-      clientPricingData.set(clientId, clientPricing);
+      const oldPricing = removeDemoClientPricing(clientId, productId);
       
       logSecurityEvent("CLIENT_PRICING_REMOVED", req, { 
         clientId, 

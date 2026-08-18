@@ -1,5 +1,16 @@
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  type ReactNode,
+} from "react";
 import type { StoreProduct, PricingType } from "@/data/storeProducts";
+import { storeProducts } from "@/data/storeProducts";
+import { computeSolutionSnapshot, type SolutionTotals } from "@shared/storeCommerce";
+import { analytics } from "@/lib/analytics";
 
 export interface CartItem {
   product: StoreProduct;
@@ -17,14 +28,23 @@ interface ClientPricing {
 
 interface CartContextType {
   items: CartItem[];
+  savedForLater: CartItem[];
   addToCart: (product: StoreProduct, quantity?: number, clientPrice?: number) => void;
   removeFromCart: (productId: string) => void;
+  undoRemove: () => void;
+  canUndoRemove: boolean;
   updateQuantity: (productId: string, quantity: number) => void;
+  saveForLater: (productId: string) => void;
+  moveToSolution: (productId: string) => void;
   clearCart: () => void;
   getCartTotal: () => number;
   getOriginalTotal: () => number;
   getSavings: () => number;
   getItemCount: () => number;
+  totals: SolutionTotals;
+  lastUpdated: string | null;
+  solutionId: string | null;
+  announcement: string;
   isOpen: boolean;
   openCart: () => void;
   closeCart: () => void;
@@ -36,65 +56,212 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const CART_STORAGE_KEY = "digerati-store-cart";
+const SESSION_KEY = "digerati-store-session";
+const SAVED_KEY = "digerati-store-saved";
 
 const isRecurringPricing = (pricingType: PricingType): boolean => {
   return ["monthly", "yearly", "per_user", "per_endpoint", "per_device", "per_location", "per_seat"].includes(pricingType);
 };
 
+function readOrCreateSessionId(): string {
+  try {
+    const existing = localStorage.getItem(SESSION_KEY);
+    if (existing) return existing;
+    const created = crypto.randomUUID();
+    localStorage.setItem(SESSION_KEY, created);
+    return created;
+  } catch {
+    return `anon-${Date.now()}`;
+  }
+}
+
+function migrateItems(parsed: unknown): CartItem[] {
+  if (!Array.isArray(parsed)) return [];
+  return parsed
+    .map((item: any) => {
+      const product = storeProducts.find((candidate) => candidate.id === item?.product?.id);
+      if (!product) return null;
+      return {
+        product,
+        quantity: Math.max(product.minimumQuantity, Number(item.quantity) || product.minimumQuantity),
+        originalPrice: item.originalPrice ?? product.basePrice,
+        hasClientDiscount: item.hasClientDiscount ?? false,
+        clientPrice: item.clientPrice,
+      } satisfies CartItem;
+    })
+    .filter((item): item is CartItem => !!item);
+}
+
+function snapshotFromItems(items: CartItem[]): SolutionTotals {
+  return computeSolutionSnapshot(
+    items.map((item) => ({ productId: item.product.id, sku: item.product.sku, quantity: item.quantity })),
+    storeProducts,
+  ).totals;
+}
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [savedForLater, setSavedForLater] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [clientPricingMap, setClientPricingMap] = useState<Map<string, ClientPricing>>(new Map());
+  const [lastRemoved, setLastRemoved] = useState<CartItem | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
+  const [solutionId, setSolutionId] = useState<string | null>(null);
+  const [announcement, setAnnouncement] = useState("");
+  const [syncReady, setSyncReady] = useState(false);
+  const sessionIdRef = useRef("");
+  const solutionIdRef = useRef<string | null>(null);
+  const hydratedRef = useRef(false);
+  const persistTimer = useRef<number | null>(null);
+  const lastTokenRef = useRef<string | null>(null);
 
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(CART_STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) {
-          const migratedItems = parsed.map((item: any) => ({
-            ...item,
-            originalPrice: item.originalPrice ?? item.product.basePrice,
-            hasClientDiscount: item.hasClientDiscount ?? false,
-          }));
-          setItems(migratedItems);
-        }
-      }
-    } catch (e) {
-      console.error("Failed to load cart from localStorage:", e);
-    }
+  const announce = useCallback((message: string) => {
+    setAnnouncement(message);
   }, []);
 
   useEffect(() => {
+    sessionIdRef.current = readOrCreateSessionId();
+    try {
+      setItems(migrateItems(JSON.parse(localStorage.getItem(CART_STORAGE_KEY) || "[]")));
+      setSavedForLater(migrateItems(JSON.parse(localStorage.getItem(SAVED_KEY) || "[]")));
+    } catch (error) {
+      console.error("Failed to load solution from localStorage:", error);
+    }
+
+    const sessionId = sessionIdRef.current;
+    void fetch(`/api/store/solutions/current?sessionId=${encodeURIComponent(sessionId)}`, {
+      credentials: "include",
+      headers: (() => {
+        const headers: Record<string, string> = {};
+        const token = localStorage.getItem("portalToken");
+        if (token) headers.Authorization = `Bearer ${token}`;
+        return headers;
+      })(),
+    })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload) => {
+        const remote = payload?.solution;
+        if (!remote?.items) return;
+        setSolutionId(remote.id);
+        solutionIdRef.current = remote.id;
+        setLastUpdated(remote.updatedAt || new Date().toISOString());
+        setItems((local) => {
+          if (local.length === 0 && Array.isArray(remote.items) && remote.items.length > 0) {
+            return migrateItems(
+              remote.items.map((line: { productId: string; quantity: number }) => ({
+                product: storeProducts.find((product) => product.id === line.productId),
+                quantity: line.quantity,
+              })),
+            );
+          }
+          return local;
+        });
+      })
+      .catch(() => {
+        /* localStorage remains the offline cache */
+      })
+      .finally(() => {
+        hydratedRef.current = true;
+        setSyncReady(true);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!hydratedRef.current && items.length === 0) return;
     try {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
-    } catch (e) {
-      console.error("Failed to save cart to localStorage:", e);
+      localStorage.setItem(SAVED_KEY, JSON.stringify(savedForLater));
+    } catch (error) {
+      console.error("Failed to save solution locally:", error);
     }
-  }, [items]);
+  }, [items, savedForLater]);
+
+  const persistRemote = useCallback((nextItems: CartItem[], nextSaved: CartItem[]) => {
+    if (!hydratedRef.current || !sessionIdRef.current) return;
+    if (persistTimer.current) window.clearTimeout(persistTimer.current);
+    persistTimer.current = window.setTimeout(() => {
+      const token = localStorage.getItem("portalToken");
+      void fetch("/api/store/solutions/current", {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          id: solutionIdRef.current,
+          sessionId: sessionIdRef.current,
+          items: nextItems.map((item) => ({
+            productId: item.product.id,
+            sku: item.product.sku,
+            quantity: item.quantity,
+          })),
+          savedForLater: nextSaved.map((item) => ({
+            productId: item.product.id,
+            sku: item.product.sku,
+            quantity: item.quantity,
+          })),
+        }),
+      })
+        .then((response) => (response.ok ? response.json() : null))
+        .then((payload) => {
+          if (payload?.solution?.id) {
+            setSolutionId(payload.solution.id);
+            solutionIdRef.current = payload.solution.id;
+          }
+          setLastUpdated(payload?.solution?.updatedAt || new Date().toISOString());
+        })
+        .catch(() => {
+          setLastUpdated(new Date().toISOString());
+        });
+    }, 400);
+  }, []);
+
+  useEffect(() => {
+    if (!syncReady) return;
+    persistRemote(items, savedForLater);
+  }, [items, savedForLater, persistRemote, syncReady]);
+
+  useEffect(() => {
+    const claimIfLoggedIn = () => {
+      const token = localStorage.getItem("portalToken");
+      if (!token || token === lastTokenRef.current || !sessionIdRef.current) return;
+      lastTokenRef.current = token;
+      void fetch("/api/store/solutions/claim", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ sessionId: sessionIdRef.current }),
+      }).catch(() => {
+        /* guest solution stays local until auth is valid */
+      });
+    };
+    claimIfLoggedIn();
+    window.addEventListener("storage", claimIfLoggedIn);
+    return () => window.removeEventListener("storage", claimIfLoggedIn);
+  }, []);
 
   const setClientPricing = useCallback((pricing: ClientPricing[]) => {
     const map = new Map<string, ClientPricing>();
-    pricing.forEach((p) => map.set(p.productId, p));
+    pricing.forEach((entry) => map.set(entry.productId, entry));
     setClientPricingMap(map);
   }, []);
 
   const getItemPrice = useCallback(
     (productId: string): { price: number; hasDiscount: boolean } => {
       const pricing = clientPricingMap.get(productId);
-      if (pricing) {
-        return { price: pricing.customPrice, hasDiscount: true };
-      }
-      const item = items.find((i) => i.product.id === productId);
+      if (pricing) return { price: pricing.customPrice, hasDiscount: true };
+      const item = items.find((entry) => entry.product.id === productId);
       return { price: item?.product.basePrice || 0, hasDiscount: false };
     },
-    [clientPricingMap, items]
+    [clientPricingMap, items],
   );
 
   const addToCart = useCallback((product: StoreProduct, quantity: number = 1, clientPrice?: number) => {
-    if (product.isContractOnly || !product.isCheckoutEnabled) {
-      return;
-    }
+    if (product.isContractOnly || !product.isCheckoutEnabled) return;
 
     const pricing = clientPricingMap.get(product.id);
     const effectiveClientPrice = clientPrice ?? pricing?.customPrice;
@@ -105,44 +272,94 @@ export function CartProvider({ children }: { children: ReactNode }) {
       if (existing) {
         return prev.map((item) =>
           item.product.id === product.id
-            ? { 
-                ...item, 
+            ? {
+                ...item,
                 quantity: item.quantity + quantity,
                 clientPrice: effectiveClientPrice,
                 hasClientDiscount: hasDiscount,
               }
-            : item
+            : item,
         );
       }
-      return [...prev, { 
-        product, 
-        quantity: Math.max(quantity, product.minimumQuantity),
-        clientPrice: effectiveClientPrice,
-        originalPrice: product.basePrice,
-        hasClientDiscount: hasDiscount,
-      }];
+      return [
+        ...prev,
+        {
+          product,
+          quantity: Math.max(quantity, product.minimumQuantity),
+          clientPrice: effectiveClientPrice,
+          originalPrice: product.basePrice,
+          hasClientDiscount: hasDiscount,
+        },
+      ];
     });
-  }, [clientPricingMap]);
+    setSavedForLater((prev) => prev.filter((item) => item.product.id !== product.id));
+    announce(`${product.name} added to your solution`);
+    analytics.storeAddToCart(product.name, product.basePrice, product.id);
+  }, [announce, clientPricingMap]);
 
   const removeFromCart = useCallback((productId: string) => {
-    setItems((prev) => prev.filter((item) => item.product.id !== productId));
-  }, []);
+    setItems((prev) => {
+      const removed = prev.find((item) => item.product.id === productId) || null;
+      setLastRemoved(removed);
+      if (removed) {
+        announce(`${removed.product.name} removed. Undo available.`);
+        analytics.storeRemoveFromCart(removed.product.name, removed.product.id);
+      }
+      return prev.filter((item) => item.product.id !== productId);
+    });
+  }, [announce]);
+
+  const undoRemove = useCallback(() => {
+    if (!lastRemoved) return;
+    setItems((prev) => {
+      if (prev.some((item) => item.product.id === lastRemoved.product.id)) return prev;
+      return [...prev, lastRemoved];
+    });
+    announce(`${lastRemoved.product.name} restored`);
+    setLastRemoved(null);
+  }, [announce, lastRemoved]);
 
   const updateQuantity = useCallback((productId: string, quantity: number) => {
     setItems((prev) =>
       prev.map((item) => {
-        if (item.product.id === productId) {
-          const newQty = Math.max(quantity, item.product.minimumQuantity);
-          return { ...item, quantity: newQty };
-        }
-        return item;
-      })
+        if (item.product.id !== productId) return item;
+        const next = Number.isFinite(quantity) ? quantity : item.quantity;
+        return { ...item, quantity: Math.max(next, item.product.minimumQuantity) };
+      }),
     );
   }, []);
 
+  const saveForLater = useCallback((productId: string) => {
+    setItems((prev) => {
+      const item = prev.find((entry) => entry.product.id === productId);
+      if (item) {
+        setSavedForLater((saved) =>
+          saved.some((entry) => entry.product.id === productId) ? saved : [...saved, item],
+        );
+        announce(`${item.product.name} saved for later`);
+      }
+      return prev.filter((entry) => entry.product.id !== productId);
+    });
+  }, [announce]);
+
+  const moveToSolution = useCallback((productId: string) => {
+    setSavedForLater((prev) => {
+      const item = prev.find((entry) => entry.product.id === productId);
+      if (item) {
+        setItems((current) =>
+          current.some((entry) => entry.product.id === productId) ? current : [...current, item],
+        );
+        announce(`${item.product.name} moved back to your solution`);
+      }
+      return prev.filter((entry) => entry.product.id !== productId);
+    });
+  }, [announce]);
+
   const clearCart = useCallback(() => {
     setItems([]);
-  }, []);
+    setLastRemoved(null);
+    announce("Solution cleared");
+  }, [announce]);
 
   const getCartTotal = useCallback(() => {
     return items.reduce((total, item) => {
@@ -152,35 +369,51 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [items]);
 
   const getOriginalTotal = useCallback(() => {
-    return items.reduce((total, item) => {
-      return total + item.originalPrice * item.quantity;
-    }, 0);
+    return items.reduce((total, item) => total + item.originalPrice * item.quantity, 0);
   }, [items]);
 
-  const getSavings = useCallback(() => {
-    return getOriginalTotal() - getCartTotal();
-  }, [getOriginalTotal, getCartTotal]);
+  const getSavings = useCallback(() => getOriginalTotal() - getCartTotal(), [getOriginalTotal, getCartTotal]);
 
-  const getItemCount = useCallback(() => {
-    return items.reduce((count, item) => count + item.quantity, 0);
-  }, [items]);
+  const getItemCount = useCallback(
+    () => items.reduce((count, item) => count + item.quantity, 0),
+    [items],
+  );
 
-  const openCart = useCallback(() => setIsOpen(true), []);
+  const totals = snapshotFromItems(items);
+
+  const openCart = useCallback(() => {
+    setIsOpen(true);
+    analytics.storeViewCart(getCartTotal(), getItemCount());
+  }, [getCartTotal, getItemCount]);
   const closeCart = useCallback(() => setIsOpen(false), []);
-  const toggleCart = useCallback(() => setIsOpen((prev) => !prev), []);
+  const toggleCart = useCallback(() => {
+    setIsOpen((prev) => {
+      if (!prev) analytics.storeViewCart(getCartTotal(), getItemCount());
+      return !prev;
+    });
+  }, [getCartTotal, getItemCount]);
 
   return (
     <CartContext.Provider
       value={{
         items,
+        savedForLater,
         addToCart,
         removeFromCart,
+        undoRemove,
+        canUndoRemove: !!lastRemoved,
         updateQuantity,
+        saveForLater,
+        moveToSolution,
         clearCart,
         getCartTotal,
         getOriginalTotal,
         getSavings,
         getItemCount,
+        totals,
+        lastUpdated,
+        solutionId,
+        announcement,
         isOpen,
         openCart,
         closeCart,
