@@ -15,6 +15,7 @@ import { fetchPublicCatalog, pingHub } from "./techSalesClient";
 import { addPortalSseClient } from "./portalSse";
 import type { DeSyncEventType } from "./deSyncContract";
 import { getClient } from "../portalAuthStore";
+import { ensureDeSyncSchema } from "./ensureDeSyncSchema";
 
 type AuthedRequest = Request & {
   user?: { role?: string; clientId?: string | null };
@@ -41,10 +42,25 @@ function healthStatus(opts: { configured: boolean; reachable: boolean; oldestPen
   return "healthy";
 }
 
-export function registerDeSyncRoutes(app: Express, authMiddleware: AuthMiddleware): void {
-  app.post("/api/integrations/v1/hub/events", requireDeSyncAuth("hub_to_website"), handleHubEvents);
+async function requireDeSyncSchema(_req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    await ensureDeSyncSchema();
+    next();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    res.status(503).json({ error: "DE integration storage unavailable", detail: message });
+  }
+}
 
-  app.get("/api/integrations/health", async (_req: Request, res: Response) => {
+export function registerDeSyncRoutes(app: Express, authMiddleware: AuthMiddleware): void {
+  app.post(
+    "/api/integrations/v1/hub/events",
+    requireDeSyncSchema,
+    requireDeSyncAuth("hub_to_website"),
+    handleHubEvents,
+  );
+
+  app.get("/api/integrations/health", requireDeSyncSchema, async (_req: Request, res: Response) => {
     const hubUrl = (process.env.TECHSALES_HUB_URL || process.env.TECHSALES_SYNC_URL || "").trim();
     const ping = hubUrl ? await pingHub() : { ok: false, latencyMs: 0 };
     const oldestPendingMs = await getOldestPendingAgeMs();
@@ -67,7 +83,7 @@ export function registerDeSyncRoutes(app: Express, authMiddleware: AuthMiddlewar
     });
   });
 
-  app.get("/api/integrations/v1/public-catalog", async (_req: Request, res: Response) => {
+  app.get("/api/integrations/v1/public-catalog", requireDeSyncSchema, async (_req: Request, res: Response) => {
     const cached = await getCatalogSnapshot();
     if (cached) {
       return res.json({ source: "last_known_good", publishedAt: cached.publishedAt, ...cached.snapshot });
@@ -84,18 +100,23 @@ export function registerDeSyncRoutes(app: Express, authMiddleware: AuthMiddlewar
     });
   });
 
-  app.post("/api/integrations/v1/reconcile/account/:accountId", requireDeSyncAuth("hub_to_website"), async (req: Request, res: Response) => {
-    const accountId = String(req.params.accountId || "").trim();
-    if (!accountId) return res.status(400).json({ error: "accountId required" });
-    res.json({ ok: true, accountId, projectionsRefreshed: false, message: "Site stores Hub projections only; no command echo." });
-  });
+  app.post(
+    "/api/integrations/v1/reconcile/account/:accountId",
+    requireDeSyncSchema,
+    requireDeSyncAuth("hub_to_website"),
+    async (req: Request, res: Response) => {
+      const accountId = String(req.params.accountId || "").trim();
+      if (!accountId) return res.status(400).json({ error: "accountId required" });
+      res.json({ ok: true, accountId, projectionsRefreshed: false, message: "Site stores Hub projections only; no command echo." });
+    },
+  );
 
-  app.get("/api/integrations/conflicts", [authMiddleware], async (req: AuthedRequest, res: Response) => {
+  app.get("/api/integrations/conflicts", [authMiddleware, requireDeSyncSchema], async (req: AuthedRequest, res: Response) => {
     if (req.user?.role !== "admin") return res.status(403).json({ error: "Admin only" });
     res.json({ conflicts: await listConflicts(), failures: await listFailures() });
   });
 
-  app.post("/api/integrations/retry", [authMiddleware], async (req: AuthedRequest, res: Response) => {
+  app.post("/api/integrations/retry", [authMiddleware, requireDeSyncSchema], async (req: AuthedRequest, res: Response) => {
     if (req.user?.role !== "admin") return res.status(403).json({ error: "Admin only" });
     const eventId = typeof req.body?.eventId === "string" ? req.body.eventId : undefined;
     const count = await retryFailed(eventId);
@@ -112,25 +133,29 @@ export function registerDeSyncRoutes(app: Express, authMiddleware: AuthMiddlewar
     addPortalSseClient(res);
   });
 
-  app.post("/api/portal/integrations/commands", [authMiddleware], async (req: AuthedRequest, res: Response) => {
-    const eventType = req.body?.eventType as DeSyncEventType;
-    if (!PORTAL_COMMANDS.includes(eventType)) {
-      return res.status(400).json({ error: "Unsupported portal command" });
-    }
-    const client = req.user?.clientId ? getClient(req.user.clientId) : undefined;
-    const envelope = await enqueueOutbox({
-      eventType,
-      source: "portal",
-      destination: "hub",
-      entityType: typeof req.body?.entityType === "string" ? req.body.entityType : "command",
-      entityId: typeof req.body?.entityId === "string" ? req.body.entityId : undefined,
-      canonicalAccountId: client?.hubAccountId || null,
-      payload: {
-        ...(req.body?.payload && typeof req.body.payload === "object" ? req.body.payload : {}),
-        portalClientId: req.user?.clientId || null,
-        actorUserId: req.userId || null,
-      },
-    });
-    res.status(202).json({ ok: true, eventId: envelope.eventId });
-  });
+  app.post(
+    "/api/portal/integrations/commands",
+    [authMiddleware, requireDeSyncSchema],
+    async (req: AuthedRequest, res: Response) => {
+      const eventType = req.body?.eventType as DeSyncEventType;
+      if (!PORTAL_COMMANDS.includes(eventType)) {
+        return res.status(400).json({ error: "Unsupported portal command" });
+      }
+      const client = req.user?.clientId ? getClient(req.user.clientId) : undefined;
+      const envelope = await enqueueOutbox({
+        eventType,
+        source: "portal",
+        destination: "hub",
+        entityType: typeof req.body?.entityType === "string" ? req.body.entityType : "command",
+        entityId: typeof req.body?.entityId === "string" ? req.body.entityId : undefined,
+        canonicalAccountId: client?.hubAccountId || null,
+        payload: {
+          ...(req.body?.payload && typeof req.body.payload === "object" ? req.body.payload : {}),
+          portalClientId: req.user?.clientId || null,
+          actorUserId: req.userId || null,
+        },
+      });
+      res.status(202).json({ ok: true, eventId: envelope.eventId });
+    },
+  );
 }
