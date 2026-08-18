@@ -18,7 +18,7 @@ export function ShopByOutcome({ selected, onSelect }: ShopByOutcomeProps) {
           Start with the result you need — we map it to real catalog categories.
         </p>
       </div>
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         {storeOutcomes.map((outcome) => {
           const isActive = selected === outcome.id;
           return (

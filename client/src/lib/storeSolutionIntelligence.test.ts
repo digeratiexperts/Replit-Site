@@ -46,6 +46,7 @@ describe("recommendationWhy", () => {
 describe("getBestForLabel", () => {
   it("uses an explicit outcome hint only", () => {
     expect(getBestForLabel(sku("DE-SVC-CM-ENDPOINT-EDR-MO"))).toBe("Protect");
+    expect(getBestForLabel(sku("DE-SVC-UC-SEAT-STD-MO"))).toBe("Communicate");
     expect(getBestForLabel(sku("DE-HW-INFRA-UPS-1500-OT"))).toBeNull();
   });
 });

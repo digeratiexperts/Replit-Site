@@ -71,11 +71,10 @@ const STEPS = [
     title: "Main objective",
     options: [
       { value: "protect", label: "Protect the business" },
-      { value: "modernize", label: "Modernize IT / comms" },
-      { value: "compliance", label: "Meet compliance" },
       { value: "recover", label: "Backup & recover" },
-      { value: "support_it", label: "Support our IT team" },
-      { value: "outsource", label: "Outsource IT" },
+      { value: "communicate", label: "Calling & meetings" },
+      { value: "operate", label: "Operate IT day to day" },
+      { value: "compliance", label: "Compliance readiness" },
     ],
   },
 ];

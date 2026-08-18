@@ -36,6 +36,7 @@ import {
   sortProducts,
   isConfigurableProduct,
   storeOutcomes,
+  resolveStoreOutcomeId,
   storeComplianceFilters,
   storeSizeFilters,
   storePriceBandFilters,
@@ -83,12 +84,10 @@ const PURCHASE_PATH_IDS = new Set(storePurchasePathFilters.map((p) => p.id));
 const COVERAGE_IDS = new Set(coverageDimensions.map((d) => d.id));
 const COMPLIANCE_IDS = new Set(storeComplianceFilters.map((c) => c.id));
 const SIZE_IDS = new Set(storeSizeFilters.map((s) => s.id));
-const OUTCOME_IDS = new Set(storeOutcomes.map((o) => o.id));
-
 function parseCatalogSearch(searchString: string) {
   const urlParams = new URLSearchParams(searchString);
   const category = urlParams.get("category") as ProductCategory | null;
-  const outcome = urlParams.get("outcome") as StoreOutcomeId | null;
+  const outcome = resolveStoreOutcomeId(urlParams.get("outcome"));
   const vendor = urlParams.get("vendor") || "";
   const compliance = urlParams.get("compliance") as StoreComplianceId | null;
   const size = urlParams.get("size") as StoreSizeId | null;
@@ -101,7 +100,7 @@ function parseCatalogSearch(searchString: string) {
 
   return {
     category: category && categoryLabels[category] ? category : ("all" as const),
-    outcome: outcome && OUTCOME_IDS.has(outcome) ? outcome : null,
+    outcome,
     vendor: vendor || "all",
     compliance: compliance && COMPLIANCE_IDS.has(compliance) ? compliance : ("all" as const),
     size: size && SIZE_IDS.has(size) ? size : ("all" as const),

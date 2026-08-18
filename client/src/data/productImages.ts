@@ -59,7 +59,7 @@ const MESHY_CATEGORY_IDS = new Set<ProductCategory>([
   "professional_services",
 ]);
 
-const MESHY_OUTCOME_IDS = new Set<StoreOutcomeId>([
+const MESHY_OUTCOME_IDS = new Set<string>([
   "protect",
   "modernize",
   "compliance",
@@ -68,6 +68,16 @@ const MESHY_OUTCOME_IDS = new Set<StoreOutcomeId>([
   "outsource",
   "secure_remote",
 ]);
+
+/** New taxonomy ids reuse existing Meshy art until dedicated assets exist. */
+const OUTCOME_IMAGE_ALIAS: Partial<Record<StoreOutcomeId, string>> = {
+  communicate: "modernize",
+  operate: "support_it",
+};
+
+function outcomeImageId(outcomeId: StoreOutcomeId): string {
+  return OUTCOME_IMAGE_ALIAS[outcomeId] ?? outcomeId;
+}
 
 const MESHY_SITE_IDS = new Set<string>([
   "trust-security",
@@ -99,17 +109,19 @@ export function categoryCardUrl(category: ProductCategory): string {
 }
 
 export function outcomeIconUrl(outcomeId: StoreOutcomeId): string {
-  if (MESHY_OUTCOME_IDS.has(outcomeId)) {
-    return meshyHero("outcomes", outcomeId);
+  const imageId = outcomeImageId(outcomeId);
+  if (MESHY_OUTCOME_IDS.has(imageId)) {
+    return meshyHero("outcomes", imageId);
   }
-  return `${STORE_IMAGE_BASE}/outcomes/${outcomeId}.png`;
+  return `${STORE_IMAGE_BASE}/outcomes/${imageId}.png`;
 }
 
 export function outcomeCardUrl(outcomeId: StoreOutcomeId): string {
-  if (MESHY_OUTCOME_IDS.has(outcomeId)) {
-    return meshyCard("outcomes", outcomeId);
+  const imageId = outcomeImageId(outcomeId);
+  if (MESHY_OUTCOME_IDS.has(imageId)) {
+    return meshyCard("outcomes", imageId);
   }
-  return `${STORE_IMAGE_BASE}/outcomes/${outcomeId}-card.png`;
+  return `${STORE_IMAGE_BASE}/outcomes/${imageId}-card.png`;
 }
 
 function siteAccentUrl(id: string): string {
