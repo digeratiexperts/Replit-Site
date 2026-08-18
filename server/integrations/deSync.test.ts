@@ -1,12 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { eventBus } from "../eventBus";
 import { createDeSyncEnvelope, parseDeSyncEnvelope, shouldEchoToHub } from "./deSyncContract";
 import { signDeSyncRequest, timingSafeStringEqual, verifySignedRequest } from "./deSyncAuth";
 import {
   enqueueOutbox,
   listOutbox,
-  recordInbox,
   resetDeSyncMemory,
 } from "./deSyncStore";
+import { resetInboxLifecycleMemory } from "./deSyncInboxLifecycle";
 import { enqueueWebsiteCommand } from "./enqueueWebsiteCommand";
 import { handleHubEvents, resetHubProjections } from "./hubEvents";
 import type { Request, Response } from "express";
@@ -108,6 +109,7 @@ describe("de-sync auth", () => {
 describe("lifecycle A–H", () => {
   beforeEach(() => {
     resetDeSyncMemory();
+    resetInboxLifecycleMemory();
     resetHubProjections();
     delete process.env.DATABASE_URL;
     process.env.TECHSALES_HUB_URL = "https://techsales.example.test";
@@ -194,13 +196,41 @@ describe("lifecycle A–H", () => {
       entityId: "ord-1",
       payload: { orderNumber: "SO-1" },
     });
+
     for (let i = 0; i < 5; i += 1) {
       const res = mockRes();
       await handleHubEvents(mockReq({ body: envelope }), res);
       expect(res.statusCode).toBe(200);
+      expect((res.body as { duplicate?: boolean }).duplicate).toBe(i > 0);
     }
-    const first = await recordInbox(envelope);
-    expect(first.duplicate).toBe(true);
+  });
+
+  it("E2: failed application is retried with the same event id before duplicate acknowledgement", async () => {
+    const envelope = createDeSyncEnvelope({
+      eventType: "order.updated",
+      source: "techsales",
+      entityType: "order",
+      entityId: "ord-retry",
+      payload: { status: "processing" },
+    });
+
+    const emitSpy = vi.spyOn(eventBus, "emit").mockRejectedValueOnce(new Error("projection failure"));
+
+    const failed = mockRes();
+    await handleHubEvents(mockReq({ body: envelope }), failed);
+    expect(failed.statusCode).toBe(500);
+
+    emitSpy.mockRestore();
+
+    const retried = mockRes();
+    await handleHubEvents(mockReq({ body: envelope }), retried);
+    expect(retried.statusCode).toBe(200);
+    expect((retried.body as { duplicate?: boolean }).duplicate).toBe(false);
+
+    const duplicate = mockRes();
+    await handleHubEvents(mockReq({ body: envelope }), duplicate);
+    expect(duplicate.statusCode).toBe(200);
+    expect((duplicate.body as { duplicate?: boolean }).duplicate).toBe(true);
   });
 
   it("F: website still 202/queued when Hub is down", async () => {
