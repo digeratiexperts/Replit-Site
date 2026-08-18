@@ -351,7 +351,6 @@ export default function ProActiveEcosystemPricing() {
           <section className="mb-6 grid gap-6 md:grid-cols-2 xl:grid-cols-4" aria-label="ProActive Ecosystem packages">
             {estimates.map((plan) => {
               const expanded = !!expandedCards[plan.id];
-              const visibleBullets = expanded ? plan.bullets : plan.bullets.slice(0, PREVIEW_BULLETS);
               const selected = selectedTier === plan.id;
               return (
               <motion.article
@@ -391,8 +390,14 @@ export default function ProActiveEcosystemPricing() {
                   {plan.priceNote && <p className="mt-2 text-xs text-white/50">{plan.priceNote}</p>}
                 </div>
                 <ul className="mb-4 flex-1 space-y-2">
-                  {visibleBullets.map((bullet) => (
-                    <li key={bullet} className="flex items-start gap-2 text-sm text-white/70">
+                  {plan.bullets.map((bullet, index) => (
+                    <li
+                      key={bullet}
+                      className={cn(
+                        "flex items-start gap-2 text-sm text-white/70",
+                        !expanded && index >= PREVIEW_BULLETS && "hidden",
+                      )}
+                    >
                       <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-400" />
                       <span>{bullet}</span>
                     </li>
