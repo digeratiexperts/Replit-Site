@@ -71,14 +71,9 @@ const statements = [
   )`,
 ];
 
-/**
- * Narrow, additive bootstrap for the Site side of the DE integration bus.
- *
- * This deliberately does NOT run drizzle-kit push. It creates only the tables
- * and column owned by the integration bus, before the new server starts
- * accepting traffic. Existing releases safely ignore these additive objects.
- */
-export async function ensureDeSyncSchema(): Promise<void> {
+let schemaPromise: Promise<void> | null = null;
+
+async function runBootstrap(): Promise<void> {
   if (!process.env.DATABASE_URL) return;
 
   const ready = await initPromise;
@@ -99,4 +94,22 @@ export async function ensureDeSyncSchema(): Promise<void> {
   } finally {
     client.release();
   }
+}
+
+/**
+ * Narrow, additive bootstrap for the Site side of the DE integration bus.
+ *
+ * This deliberately does NOT run drizzle-kit push. It creates only the tables
+ * and column owned by the integration bus. The promise is shared by all inbound
+ * routes and the outbound worker so no request can race table creation.
+ */
+export function ensureDeSyncSchema(): Promise<void> {
+  if (!schemaPromise) {
+    schemaPromise = runBootstrap().catch((error) => {
+      // Allow a later request/worker tick to retry after a transient DB outage.
+      schemaPromise = null;
+      throw error;
+    });
+  }
+  return schemaPromise;
 }
