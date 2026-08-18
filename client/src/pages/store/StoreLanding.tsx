@@ -163,9 +163,9 @@ const StoreLanding = () => {
                   Guided storefront for managed packages and à la carte services — shop by outcome,
                   ask Digerati to build a stack, then buy from the live catalog.
                 </p>
-                <div className="mt-7 flex flex-wrap gap-3">
+                <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                   <Button
-                    className="h-12 bg-de-accent px-6 text-base text-white hover:bg-[#6548ff]"
+                    className="h-12 w-full bg-de-accent px-6 text-base text-white hover:bg-[#6548ff] sm:w-auto"
                     onClick={() => setGuidedOpen(true)}
                     data-testid="button-build-solution"
                   >
@@ -174,7 +174,7 @@ const StoreLanding = () => {
                   </Button>
                   <Button
                     variant="outline"
-                    className="h-12 border-white/20 bg-transparent px-6 text-base text-white hover:bg-white/5"
+                    className="h-12 w-full border-white/20 bg-transparent px-6 text-base text-white hover:bg-white/5 sm:w-auto"
                     onClick={() => openMspAdvisor({ context: "store" })}
                     data-testid="button-ask-digerati"
                   >
@@ -184,7 +184,7 @@ const StoreLanding = () => {
                   <Link href="/store/co-managed">
                     <Button
                       variant="ghost"
-                      className="h-12 px-6 text-base text-white/70 hover:bg-white/5 hover:text-white"
+                      className="h-12 w-full px-6 text-base text-white/70 hover:bg-white/5 hover:text-white sm:w-auto"
                       data-testid="button-browse-catalog"
                     >
                       Browse full catalog
@@ -241,13 +241,13 @@ const StoreLanding = () => {
                     <Lock className="h-4 w-4" />
                     <span>Contract-based services · Schedule a consultation</span>
                   </div>
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <span className="text-base text-white/50">
                       {contractOnlyProducts.length} packages available
                     </span>
                     <Link href="/store/managed">
                       <Button
-                        className="h-11 bg-de-accent px-5 text-base text-white hover:bg-[#6548ff]"
+                        className="h-11 w-full bg-de-accent px-5 text-base text-white hover:bg-[#6548ff] sm:w-auto"
                         data-testid="button-view-managed"
                       >
                         View Packages
@@ -276,13 +276,13 @@ const StoreLanding = () => {
                     <Shield className="h-4 w-4" />
                     <span>Checkout enabled · Purchase directly</span>
                   </div>
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <span className="text-base text-white/50">
                       {checkoutProducts.length} products available
                     </span>
                     <Link href="/store/co-managed">
                       <Button
-                        className="h-11 border-none bg-de-accent px-5 text-base text-white hover:bg-[#6548ff]"
+                        className="h-11 w-full border-none bg-de-accent px-5 text-base text-white hover:bg-[#6548ff] sm:w-auto"
                         data-testid="button-view-comanaged"
                       >
                         Browse Products
@@ -375,15 +375,15 @@ const StoreLanding = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="mb-8 flex items-center justify-between">
+            <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="mb-2 text-2xl font-bold text-white md:text-3xl">Available for checkout</h2>
-                <p className="text-white/60">Catalog items you can configure or add now — not a second popularity rail.</p>
+                <p className="text-white/60">Configure or add these catalog items now.</p>
               </div>
               <Link href="/store/co-managed">
                 <Button
                   variant="outline"
-                  className="border-white/20 text-white hover:bg-white/10"
+                  className="w-full border-white/20 text-white hover:bg-white/10 sm:w-auto"
                   data-testid="button-view-all-products"
                 >
                   View All
@@ -426,43 +426,44 @@ const StoreLanding = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="mb-4 text-2xl font-bold text-white md:text-3xl">Need Help Choosing?</h2>
+            <h2 className="mb-4 text-2xl font-bold text-white md:text-3xl">Need a recommendation, not a catalog?</h2>
             <p className="mx-auto mb-8 max-w-xl text-white/60">
-              Not sure which services fit your business? Schedule a free consultation with our team
-              to discuss your IT needs and find the right solution.
+              Start with a cyber risk assessment or compare ProActive plans. We map gaps to real
+              SKUs — no obligation to buy from the storefront.
             </p>
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
-              <Button asChild
-                  size="lg"
-                  variant="brand"
-                  className="h-12 px-6"
-                  data-testid="button-schedule-consult"
-                >
-                  <a href="/book">
-                    {CTA.primary}
+              <Button
+                asChild
+                size="lg"
+                variant="brand"
+                className="h-12 px-6"
+                data-testid="button-schedule-consult"
+              >
+                <a href="/book">
+                  {CTA.primary}
                   <ArrowRight className="ml-2 h-4 w-4" />
-                  </a>
-                </Button>
-              <Button asChild
-                  size="lg"
-                  variant="outline"
-                  className="h-12 border-white/30 bg-transparent px-6 text-white hover:bg-white/10"
-                  data-testid="button-see-plans"
-                >
-                  <Link href={CTA.secondaryHref}>
-                    {CTA.secondary}
-                  </Link>
-                </Button>
-              <Button asChild
-                  size="lg"
-                  className="h-12 border-2 border-white/30 bg-transparent px-6 text-white hover:bg-white/10"
-                  data-testid="button-call-us"
-                >
-                  <a href="tel:+13254809870">
-                    <Phone className="mr-2 h-4 w-4" />
+                </a>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="h-12 border-white/30 bg-transparent px-6 text-white hover:bg-white/10"
+                data-testid="button-see-plans"
+              >
+                <Link href={CTA.secondaryHref}>{CTA.secondary}</Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                className="h-12 border-2 border-white/30 bg-transparent px-6 text-white hover:bg-white/10"
+                data-testid="button-call-us"
+              >
+                <a href="tel:+13254809870">
+                  <Phone className="mr-2 h-4 w-4" />
                   325-480-9870
-                  </a>
-                </Button>
+                </a>
+              </Button>
             </div>
           </motion.section>
         </div>

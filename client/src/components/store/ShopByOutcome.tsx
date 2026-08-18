@@ -26,7 +26,7 @@ export function ShopByOutcome({ selected, onSelect }: ShopByOutcomeProps) {
               key={outcome.id}
               type="button"
               onClick={() => onSelect(isActive ? null : outcome.id)}
-              className={`group rounded-xl border p-5 md:p-6 text-left transition-all duration-200 ${
+              className={`group rounded-xl border p-3.5 text-left transition-all duration-200 sm:p-5 md:p-6 ${
                 isActive
                   ? "border-[#D3126A]/55 bg-[#D3126A]/10 shadow-[0_0_24px_rgba(211,18,106,0.12)]"
                   : "border-white/10 bg-[#121212] hover:border-white/20 hover:bg-[#161616]"

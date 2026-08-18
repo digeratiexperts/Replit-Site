@@ -34,7 +34,6 @@ import {
   Check,
   ExternalLink,
   User,
-  LogOut,
   Tag,
   Lock,
   Settings2,
@@ -43,7 +42,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useStoreAuth } from "@/hooks/useStoreAuth";
-import { CartButton } from "@/components/store/CartButton";
+import { StoreClientBar } from "@/components/store/StoreClientBar";
+import { StorePageAtmosphere } from "@/components/store/StorePageAtmosphere";
 import { ProductMedia } from "@/components/store/ProductMedia";
 import {
   ConfigureProductDrawer,
@@ -57,8 +57,7 @@ const ProductDetail = () => {
   const { toast } = useToast();
   const [quantity, setQuantity] = useState(1);
   const [configureOpen, setConfigureOpen] = useState(false);
-  const { isLoggedIn, user, clientType, clientPricing, getProductPrice, loginRedirect, logout } =
-    useStoreAuth();
+  const { isLoggedIn, clientPricing, getProductPrice, loginRedirect } = useStoreAuth();
 
   useEffect(() => {
     if (clientPricing.length > 0) {
@@ -154,7 +153,8 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="relative min-h-screen bg-[#0a0a0a]">
+      <StorePageAtmosphere />
       <ProductJsonLd
         name={product.name}
         description={product.description}
@@ -174,50 +174,9 @@ const ProductDetail = () => {
       />
       <MegaMenu />
 
-      <main className="de-nav-clear pb-28 lg:pb-20">
+      <main className="relative z-10 de-nav-clear pb-28 lg:pb-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-4 flex items-center justify-between">
-            {isLoggedIn && user ? (
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 rounded-lg border border-de-accent/20 bg-de-accent/10 px-3 py-2">
-                  <User className="h-4 w-4 text-de-accent-ink" />
-                  <span className="text-sm text-white" data-testid="text-user-greeting">
-                    Welcome,{" "}
-                    <span className="font-semibold text-de-accent-ink">
-                      {user.fullName || user.username}
-                    </span>
-                  </span>
-                  {clientType !== "public" && (
-                    <span className="ml-2 rounded-full bg-emerald-500/20 px-2 py-0.5 text-xs font-medium text-emerald-300">
-                      {clientType === "managed" ? "Managed Client" : "Co-Managed Client"}
-                    </span>
-                  )}
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={logout}
-                  className="text-white/60 hover:bg-de-accent/10 hover:text-white"
-                  data-testid="button-store-logout"
-                >
-                  <LogOut className="mr-1 h-4 w-4" />
-                  Logout
-                </Button>
-              </div>
-            ) : (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={loginRedirect}
-                className="border-none bg-de-accent text-white hover:bg-[#6548ff]"
-                data-testid="button-store-login"
-              >
-                <User className="mr-2 h-4 w-4" />
-                Login for Client Pricing
-              </Button>
-            )}
-            <CartButton />
-          </div>
+          <StoreClientBar />
 
           <nav className="mb-8" aria-label="Breadcrumb">
             <ol className="flex items-center gap-2 text-sm text-white/50">

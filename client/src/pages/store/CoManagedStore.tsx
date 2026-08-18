@@ -586,9 +586,9 @@ const CoManagedStore = () => {
               Shop by outcome, build a recommended stack with Ask Digerati, then buy from the live
               catalog when you know what you need.
             </p>
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Button
-                className="h-12 bg-de-accent px-6 text-base text-white hover:bg-[#6548ff]"
+                className="h-12 w-full bg-de-accent px-6 text-base text-white hover:bg-[#6548ff] sm:w-auto"
                 onClick={() => setGuidedOpen(true)}
                 data-testid="button-build-solution"
               >
@@ -597,7 +597,7 @@ const CoManagedStore = () => {
               </Button>
               <Button
                 variant="outline"
-                className="h-12 border-white/20 bg-transparent px-6 text-base text-white hover:bg-white/5"
+                className="h-12 w-full border-white/20 bg-transparent px-6 text-base text-white hover:bg-white/5 sm:w-auto"
                 onClick={() => openMspAdvisor({ context: "store" })}
                 data-testid="button-ask-digerati"
               >
@@ -606,7 +606,7 @@ const CoManagedStore = () => {
               </Button>
               <Button
                 variant="ghost"
-                className="h-12 text-base text-white/70 hover:bg-white/5 hover:text-white"
+                className="h-12 w-full text-base text-white/70 hover:bg-white/5 hover:text-white sm:w-auto"
                 onClick={scrollToCatalog}
                 data-testid="button-browse-everything"
               >

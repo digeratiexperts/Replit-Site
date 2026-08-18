@@ -13,7 +13,16 @@ export function StorePageAtmosphere() {
     target: ref,
     offset: ["start start", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["0%", "9%"]);
+  const y = useTransform(
+    scrollYProgress,
+    [0, 1],
+    prefersReducedMotion ? ["0%", "0%"] : ["0%", "8%"],
+  );
+  const bloomY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    prefersReducedMotion ? ["0%", "0%"] : ["0%", "14%"],
+  );
 
   return (
     <div
@@ -24,21 +33,22 @@ export function StorePageAtmosphere() {
       <motion.img
         src={atmosphere}
         alt=""
-        className="absolute inset-x-0 top-0 h-[70vh] min-h-[28rem] w-full object-cover object-center"
-        style={{ y, opacity: 0.32 }}
+        className="absolute inset-x-0 top-0 h-[78vh] min-h-[32rem] w-full object-cover object-center"
+        style={{ y, opacity: 0.44 }}
       />
       <div
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(10,10,10,0.35) 0%, rgba(10,10,10,0.72) 42%, #0a0a0a 78%), linear-gradient(90deg, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.12) 48%, rgba(10,10,10,0.45) 100%)",
+            "linear-gradient(180deg, rgba(10,10,10,0.18) 0%, rgba(10,10,10,0.52) 46%, #0a0a0a 84%), linear-gradient(90deg, rgba(10,10,10,0.38) 0%, rgba(10,10,10,0.08) 50%, rgba(10,10,10,0.34) 100%)",
         }}
       />
-      <div
-        className="absolute -right-[12%] top-[8%] h-[28rem] w-[28rem]"
+      <motion.div
+        className="absolute -right-[12%] top-[6%] h-[30rem] w-[30rem]"
         style={{
+          y: bloomY,
           background:
-            "radial-gradient(circle at 60% 40%, rgba(29, 111, 242, 0.16) 0%, rgba(29, 111, 242, 0.04) 42%, transparent 68%)",
+            "radial-gradient(circle at 60% 40%, rgba(29, 111, 242, 0.2) 0%, rgba(29, 111, 242, 0.05) 42%, transparent 68%)",
         }}
       />
     </div>
