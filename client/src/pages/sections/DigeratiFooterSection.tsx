@@ -1,3 +1,4 @@
+import { PRIMARY_PHONE } from "@/data/companyContact";
 export const DigeratiFooterSection = (): JSX.Element => {
   return (
     <footer className="bg-gray-900 text-white py-12">
@@ -56,8 +57,8 @@ export const DigeratiFooterSection = (): JSX.Element => {
             </p>
             <div className="mt-4 md:mt-0 flex items-center space-x-4">
               <span className="text-gray-400">24/7 Emergency:</span>
-              <a href="tel:+13254809870" className="text-de-accent-ink font-semibold hover:text-violet-300">
-                325-480-9870
+              <a href={PRIMARY_PHONE.telHref} className="text-de-accent-ink font-semibold hover:text-violet-300">
+                {PRIMARY_PHONE.display}
               </a>
             </div>
           </div>

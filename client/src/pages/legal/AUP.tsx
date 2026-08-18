@@ -2,6 +2,7 @@ import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
 import { ShieldAlert, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function AUP() {
   return (
@@ -75,9 +76,9 @@ export default function AUP() {
               <Button 
                 variant="outline"
                 className="border-white/20 text-white hover:bg-white/10"
-                onClick={() => window.location.href = 'tel:+13254809870'}
+                onClick={() => window.location.href = PRIMARY_PHONE.telHref}
               >
-                Call 325-480-9870
+                Call {PRIMARY_PHONE.display}
               </Button>
             </div>
           </div>

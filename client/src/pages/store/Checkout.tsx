@@ -43,15 +43,15 @@ type BillingFormData = z.infer<typeof billingSchema>;
 type PaymentMethod = "zoho" | "quote_request";
 
 const pricingUnitLabels: Record<string, string> = {
-  monthly: "/mo",
-  yearly: "/yr",
-  per_user: "/user/mo",
-  per_endpoint: "/endpoint/mo",
-  per_device: "/device/mo",
-  per_location: "/location/mo",
-  per_seat: "/seat/mo",
+  monthly: " / month",
+  yearly: " / year",
+  per_user: " / user / month",
+  per_endpoint: " / endpoint / month",
+  per_device: " / device / month",
+  per_location: " / location / month",
+  per_seat: " / user / month",
   one_time: "",
-  per_hour: "/hr",
+  per_hour: " / hour",
 };
 
 const Checkout = () => {

@@ -14,6 +14,7 @@ import { sanitizeActions, sanitizePath, assertNoInternalLeak, isAllowedActionTyp
 import { handleAdvisorChat } from "./advisor";
 import { _resetSessionsForTests } from "./session";
 import { OFF_TOPIC_FALLBACK } from "./prompt";
+import { PRIMARY_PHONE } from "@shared/companyContact";
 
 beforeEach(() => {
   _resetSessionsForTests();

@@ -32,6 +32,7 @@ import {
   Settings,
   BarChart3
 } from "lucide-react";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 const bcdrData = {
   packages: [
@@ -732,9 +733,9 @@ export default function BackupDisasterRecovery() {
                   className="bg-transparent border border-white/30 text-white hover:bg-white/10"
                   data-testid="btn-final-call"
                 >
-                  <a href="tel:+13254809870">
+                  <a href={PRIMARY_PHONE.telHref}>
                     <Phone className="mr-2 h-5 w-5" />
-                    Call 325-480-9870
+                    Call {PRIMARY_PHONE.display}
                   </a>
                 </Button>
               </div>

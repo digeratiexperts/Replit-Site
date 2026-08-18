@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useBooking } from "@/contexts/BookingContext";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 interface PremiumCTASectionProps {
   headline?: string;
@@ -18,7 +19,7 @@ export function PremiumCTASection({
   primaryButtonText = "Schedule Consultation",
   primaryButtonHref = "/book",
   showPhoneButton = true,
-  phoneNumber = "325-480-9870",
+  phoneNumber = PRIMARY_PHONE.display,
 }: PremiumCTASectionProps) {
   const prefersReducedMotion = useReducedMotion();
   const { openBooking } = useBooking();

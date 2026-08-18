@@ -1253,32 +1253,28 @@ export const getPublicProducts = (): StoreProduct[] => {
   return storeProducts.filter(p => p.requiredClientType === "public" && !p.isClientOnly);
 };
 
-export const formatPrice = (product: StoreProduct): string => {
+const PRICE_UNIT_BY_TYPE: Record<PricingType, string | null> = {
+  monthly: "month",
+  yearly: "year",
+  per_hour: "hour",
+  per_user: "user / month",
+  per_seat: "user / month",
+  per_endpoint: "endpoint / month",
+  per_device: "device",
+  per_location: "location / month",
+  one_time: null,
+};
+
+/** Owns the entire public price string. Do not append `per {unit}` beside this. */
+export const formatPrice = (product: StoreProduct, unitPrice = product.basePrice): string => {
   if (product.basePrice === 0 && product.isContractOnly) {
     return "Contact for Quote";
   }
-  
-  const priceStr = `$${product.basePrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  
-  switch (product.pricingType) {
-    case "monthly":
-      return `${priceStr}/mo`;
-    case "yearly":
-      return `${priceStr}/yr`;
-    case "per_hour":
-      return `${priceStr}/hr`;
-    case "per_user":
-      return `${priceStr}/user/mo`;
-    case "per_endpoint":
-      return `${priceStr}/endpoint/mo`;
-    case "per_device":
-      return `${priceStr}/device`;
-    case "per_location":
-      return `${priceStr}/location/mo`;
-    case "per_seat":
-      return `${priceStr}/seat/mo`;
-    case "one_time":
-    default:
-      return priceStr;
+
+  const money = `$${unitPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  if (product.pricingType === "per_device" && product.pricingUnit && product.pricingUnit !== "device") {
+    return `${money} / ${product.pricingUnit}`;
   }
+  const unit = PRICE_UNIT_BY_TYPE[product.pricingType];
+  return unit ? `${money} / ${unit}` : money;
 };

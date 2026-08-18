@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { AlertCircle, Clock, Phone, Loader2 } from "lucide-react";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function SubmitTicket() {
   const { toast } = useToast();
@@ -237,10 +238,10 @@ export default function SubmitTicket() {
                 For urgent issues, call us directly:
               </p>
               <a
-                href="tel:+13254809870"
+                href={PRIMARY_PHONE.telHref}
                 className="text-2xl font-bold text-de-accent-ink hover:text-de-accent-ink"
               >
-                325-480-9870
+                {PRIMARY_PHONE.display}
               </a>
             </CardContent>
           </Card>

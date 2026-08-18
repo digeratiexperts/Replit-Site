@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Lock, Eye, Briefcase, AlertCircle, Scale, Shield, Clock } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { CTA } from "@/lib/ctaCopy";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function LawFirms() {
   useSEO({
@@ -197,11 +198,11 @@ export default function LawFirms() {
               {CTA.primary}
             </a>
             <a 
-              href="tel:+13254809870"
+              href={PRIMARY_PHONE.telHref}
               className="inline-flex items-center justify-center border-2 border-white bg-transparent text-white hover:bg-white/10 px-8 py-3 rounded-lg font-semibold transition-all"
               data-testid="button-call-law"
             >
-              Call 325-480-9870
+              Call {PRIMARY_PHONE.display}
             </a>
           </div>
         </div>

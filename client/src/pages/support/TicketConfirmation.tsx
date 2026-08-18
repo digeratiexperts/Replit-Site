@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { CheckCircle, Phone, ArrowRight } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { PageTemplate } from "@/components/PageTemplate";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function TicketConfirmation() {
   useSEO({
@@ -27,11 +28,11 @@ export default function TicketConfirmation() {
           We’ll follow up at the email you provided. For urgent production issues, call us now.
         </p>
         <a
-          href="tel:+13254809870"
+          href={PRIMARY_PHONE.telHref}
           className="inline-flex items-center gap-2 text-2xl font-bold text-de-accent-ink hover:text-de-accent-ink"
         >
           <Phone className="h-6 w-6" />
-          325-480-9870
+          {PRIMARY_PHONE.display}
         </a>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Button onClick={() => setLocation("/support/knowledge-base")} variant="outline">

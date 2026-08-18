@@ -2,6 +2,7 @@ import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
 import { FileText, Download, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function MSA() {
   return (
@@ -65,17 +66,17 @@ export default function MSA() {
               <Button 
                 variant="outline"
                 className="border-white/20 text-white hover:bg-white/10"
-                onClick={() => window.location.href = 'tel:+13254809870'}
+                onClick={() => window.location.href = PRIMARY_PHONE.telHref}
                 data-testid="button-call-legal"
               >
-                Call 325-480-9870
+                Call {PRIMARY_PHONE.display}
               </Button>
             </div>
 
             <div className="mt-12 bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-lg">
               <h3 className="text-xl font-semibold text-white mb-3">Contact Legal Department</h3>
               <p className="text-gray-300 mb-2"><strong className="text-white">Email:</strong> legal@digeratiexperts.com</p>
-              <p className="text-gray-300 mb-2"><strong className="text-white">Phone:</strong> 325-480-9870</p>
+              <p className="text-gray-300 mb-2"><strong className="text-white">Phone:</strong> {PRIMARY_PHONE.display}</p>
               <p className="text-gray-300"><strong className="text-white">Address:</strong> 3165 S Alma School Rd Suite 29, Chandler, AZ 85248</p>
             </div>
           </div>

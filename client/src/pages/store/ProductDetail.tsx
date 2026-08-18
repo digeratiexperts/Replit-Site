@@ -50,6 +50,7 @@ import {
   type ConfigureConfirmPayload,
 } from "@/components/store/ConfigureProductDrawer";
 import { StoreTrustStrip } from "@/components/store/StoreTrustStrip";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 const ProductDetail = () => {
   const { sku } = useParams<{ sku: string }>();
@@ -291,14 +292,11 @@ const ProductDetail = () => {
                         className="text-3xl font-bold text-de-accent-ink"
                         data-testid="product-price"
                       >
-                        ${productPricing.price.toFixed(2)}
+                        {formatPrice(product, productPricing.price)}
                       </span>
                       <span className="text-xl text-white/55 line-through">
-                        ${product.basePrice.toFixed(2)}
+                        {formatPrice(product)}
                       </span>
-                      {product.pricingUnit && (
-                        <span className="text-sm text-white/50">per {product.pricingUnit}</span>
-                      )}
                     </div>
                     <div className="flex items-center gap-2 text-de-accent-ink">
                       <Tag className="h-4 w-4" />
@@ -315,9 +313,6 @@ const ProductDetail = () => {
                     >
                       {formatPrice(product)}
                     </span>
-                    {product.pricingUnit && (
-                      <span className="ml-2 text-sm text-white/50">per {product.pricingUnit}</span>
-                    )}
                     {!isLoggedIn && (
                       <div className="mt-2">
                         <Button
@@ -328,7 +323,7 @@ const ProductDetail = () => {
                           data-testid="button-login-for-pricing"
                         >
                           <User className="mr-1 h-3 w-3" />
-                          Log in for potential client pricing
+                          Sign in to view your client pricing
                         </Button>
                       </div>
                     )}
@@ -365,12 +360,12 @@ const ProductDetail = () => {
                   </a>
                 </Button>
                   <a
-                    href="tel:+13254809870"
+                    href={PRIMARY_PHONE.telHref}
                     className="flex h-12 w-full items-center justify-center gap-2 rounded-md border border-white/15 text-white/80 transition-colors hover:bg-white/5 hover:text-white"
                     data-testid="button-call-product"
                   >
                     <Phone className="h-5 w-5" />
-                    Call 325-480-9870
+                    Call {PRIMARY_PHONE.display}
                   </a>
                 </div>
               ) : (
@@ -477,12 +472,12 @@ const ProductDetail = () => {
 
                   <div className="grid gap-2 sm:grid-cols-2">
                     <a
-                      href="tel:+13254809870"
+                      href={PRIMARY_PHONE.telHref}
                       className="flex h-11 items-center justify-center gap-2 rounded-md border border-white/15 text-sm text-white/75 transition-colors hover:bg-white/5 hover:text-white"
                       data-testid="button-call-product"
                     >
                       <Phone className="h-4 w-4" />
-                      325-480-9870
+                      {PRIMARY_PHONE.display}
                     </a>
                     <a
                       href="/book"

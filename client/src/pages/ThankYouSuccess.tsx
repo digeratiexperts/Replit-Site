@@ -7,6 +7,7 @@ import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhanced
 import { SiGoogle } from "react-icons/si";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
 import { useSEO } from "@/hooks/useSEO";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function ThankYouSuccess() {
   useSEO({
@@ -85,7 +86,7 @@ export default function ThankYouSuccess() {
                 </h3>
                 <p className="text-slate-600 text-sm mb-6">
                   Thank you for your interest. Click below to book a time that works for you.<br />
-                  Call our office at <a href="tel:+13254809870" className="text-de-accent hover:underline">325-480-9870</a> if you have any questions.
+                  Call our office at <a href={PRIMARY_PHONE.telHref} className="text-de-accent hover:underline">{PRIMARY_PHONE.display}</a> if you have any questions.
                 </p>
                 
                 {/* Meeting Details */}

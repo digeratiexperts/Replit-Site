@@ -25,6 +25,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
 import { pageNarratives } from "@/pages/routes/pageNarratives";
 import { CTA } from "@/lib/ctaCopy";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 const narrative = pageNarratives.healthcare;
 
@@ -603,12 +604,12 @@ export default function Healthcare() {
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </a>
               <a
-                href="tel:+13254809870"
+                href={PRIMARY_PHONE.telHref}
                 className="inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-[#D3126A] px-8 py-4 rounded-xl font-semibold transition-all"
                 data-testid="button-call-now"
               >
                 <Phone className="mr-2 h-5 w-5" />
-                Call 325-480-9870
+                Call {PRIMARY_PHONE.display}
               </a>
             </div>
           </div>

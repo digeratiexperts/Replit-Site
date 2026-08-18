@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PortalLayout } from "./PortalLayout";
 import { Phone, Download, CheckCircle, Settings, Headphones, Volume2, Mic, PhoneCall, PhoneOff, Users, Clock } from "lucide-react";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 interface CallHistory {
   id: string;
@@ -251,7 +252,7 @@ export default function PortalCytracom() {
                 <p className="font-medium text-blue-900 dark:text-blue-100">Cytracom ControlOne Support</p>
                 <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
                   For phone system issues, check our <a href="/portal/kb" className="underline">Knowledge Base</a> or 
-                  contact support at <strong>support@digeratiexperts.com</strong>. For urgent issues, call <strong>325-480-9870</strong>.
+                  contact support at <strong>support@digeratiexperts.com</strong>. For urgent issues, call <strong>{PRIMARY_PHONE.display}</strong>.
                 </p>
               </div>
             </div>

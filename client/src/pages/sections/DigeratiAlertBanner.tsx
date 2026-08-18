@@ -1,6 +1,7 @@
 import { Shield, Users, Activity, ArrowRight, Phone } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export const DigeratiAlertBanner = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -124,9 +125,9 @@ export const DigeratiAlertBanner = (): JSX.Element => {
                     className="h-14 rounded-xl border-2 border-white/25 bg-transparent px-8 text-base font-semibold text-white hover:bg-white/10"
                     data-testid="button-call-banner"
                   >
-                  <a href="tel:+13254809870">
+                  <a href={PRIMARY_PHONE.telHref}>
                     <Phone className="mr-2 h-5 w-5" />
-                    Call 325-480-9870
+                    Call {PRIMARY_PHONE.display}
                   </a>
                 </Button>
               </div>

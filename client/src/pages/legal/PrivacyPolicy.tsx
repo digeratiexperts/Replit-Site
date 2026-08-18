@@ -2,6 +2,7 @@ import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
 import { Shield, Lock, Database, FileText, AlertTriangle } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function PrivacyPolicy() {
   const lastUpdated = "November 6, 2025";
@@ -296,7 +297,7 @@ export default function PrivacyPolicy() {
               </ul>
 
               <p className="text-gray-300 mb-4">
-                To exercise these rights, contact us at <strong className="text-white">privacy@digeratiexperts.com</strong> or call <strong className="text-white">325-480-9870</strong>.
+                To exercise these rights, contact us at <strong className="text-white">privacy@digeratiexperts.com</strong> or call <strong className="text-white">{PRIMARY_PHONE.display}</strong>.
               </p>
 
               <p className="text-gray-300">
@@ -376,7 +377,7 @@ export default function PrivacyPolicy() {
               <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-4 rounded-lg">
                 <p className="text-white font-semibold mb-2">Digerati Experts - Privacy Team</p>
                 <p className="text-gray-300"><strong className="text-white">Email:</strong> privacy@digeratiexperts.com</p>
-                <p className="text-gray-300"><strong className="text-white">Phone:</strong> 325-480-9870</p>
+                <p className="text-gray-300"><strong className="text-white">Phone:</strong> {PRIMARY_PHONE.display}</p>
                 <p className="text-gray-300"><strong className="text-white">Address:</strong> 3165 S Alma School Rd Suite 29, Chandler, AZ 85248</p>
                 <p className="text-gray-300 mt-3"><strong className="text-white">Office Hours:</strong> Monday-Friday 7:00 AM - 6:00 PM MST</p>
                 <p className="text-gray-300"><strong className="text-white">Emergency Contact:</strong> Available 24/7 for active clients</p>

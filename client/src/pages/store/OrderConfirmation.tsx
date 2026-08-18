@@ -23,6 +23,7 @@ import {
   Loader2,
   AlertCircle,
 } from "lucide-react";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 interface OrderLineItem {
   productId: string;
@@ -360,12 +361,12 @@ const OrderConfirmation = () => {
             <p className="text-white/60 mb-4">Need help with your order?</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="tel:+13254809870"
+                href={PRIMARY_PHONE.telHref}
                 className="inline-flex items-center gap-2 text-de-accent-ink hover:text-de-accent-ink transition-colors"
                 data-testid="link-phone-support"
               >
                 <Phone className="w-4 h-4" />
-                325-480-9870
+                {PRIMARY_PHONE.display}
               </a>
               <Link href="/support/submit-ticket">
                 <span className="inline-flex items-center gap-2 text-de-accent-ink hover:text-de-accent-ink transition-colors cursor-pointer" data-testid="link-submit-ticket">

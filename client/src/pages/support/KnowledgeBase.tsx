@@ -5,6 +5,7 @@ import { Search, Book, FileText, Video, Zap, TrendingUp, Eye } from "lucide-reac
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function KnowledgeBase() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -150,7 +151,7 @@ export default function KnowledgeBase() {
               Submit Support Ticket
             </a>
             <a 
-              href="tel:+13254809870"
+              href={PRIMARY_PHONE.telHref}
               className="inline-flex items-center justify-center border-2 border-white bg-transparent text-white hover:bg-white/10 px-8 py-3 rounded-lg font-semibold transition-all"
               data-testid="button-call-support"
             >

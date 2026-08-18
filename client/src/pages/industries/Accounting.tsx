@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, Shield, Lock, FileText, AlertCircle, DollarSign, Activity } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { CTA } from "@/lib/ctaCopy";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function Accounting() {
   useSEO({
@@ -179,11 +180,11 @@ export default function Accounting() {
               {CTA.primary}
             </a>
             <a 
-              href="tel:+13254809870"
+              href={PRIMARY_PHONE.telHref}
               className="inline-flex items-center justify-center border-2 border-white bg-transparent text-white hover:bg-white/10 px-8 py-3 rounded-lg font-semibold transition-all"
               data-testid="button-call-accounting"
             >
-              Call 325-480-9870
+              Call {PRIMARY_PHONE.display}
             </a>
           </div>
         </div>

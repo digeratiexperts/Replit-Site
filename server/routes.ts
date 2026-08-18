@@ -112,6 +112,7 @@ import {
 } from "./integrations/techSalesClient";
 import { registerDeSyncRoutes } from "./integrations/deSyncRoutes";
 import { enqueueOutbox } from "./integrations/deSyncStore";
+import { PRIMARY_PHONE } from "@shared/companyContact";
 
 const JWT_SECRET = process.env.JWT_SECRET || randomBytes(32).toString('hex');
 const SALT_ROUNDS = 12;
@@ -4161,7 +4162,7 @@ export async function registerRoutes(app: Express) {
 
   <div class="footer">
     <p>Thank you for your business!</p>
-    <p>Digerati Experts | support@digeratiexperts.com | 325-480-9870</p>
+    <p>Digerati Experts | support@digeratiexperts.com | ${PRIMARY_PHONE.display}</p>
   </div>
 </body>
 </html>

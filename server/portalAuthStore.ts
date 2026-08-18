@@ -9,6 +9,7 @@ import {
   portalClients as portalClientsTable,
   portalOrderForms,
 } from "@shared/schema";
+import { PRIMARY_PHONE } from "@shared/companyContact";
 
 type StoreRole = "public" | "prospect" | "managed" | "comanaged" | "admin";
 
@@ -275,7 +276,7 @@ function seedDemoIfNotProduction() {
     id: "msp-digerati",
     companyName: "Digerati Experts (Internal)",
     contactEmail: "admin@digeratiexperts.com",
-    contactPhone: "325-480-9870",
+    contactPhone: PRIMARY_PHONE.display,
     industry: "MSP/MSSP",
     primaryContact: "Digerati Admin",
     status: "active",

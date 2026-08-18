@@ -52,6 +52,7 @@ import { GuidedBuyingWizard } from "@/components/store/GuidedBuyingWizard";
 import { StorePageAtmosphere } from "@/components/store/StorePageAtmosphere";
 import { StoreClientBar } from "@/components/store/StoreClientBar";
 import { CTA } from "@/lib/ctaCopy";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 const categoryIcons: Record<ProductCategory, typeof Shield> = {
   contract_services: Building,
@@ -459,9 +460,9 @@ const StoreLanding = () => {
                 className="h-12 border-2 border-white/30 bg-transparent px-6 text-white hover:bg-white/10"
                 data-testid="button-call-us"
               >
-                <a href="tel:+13254809870">
+                <a href={PRIMARY_PHONE.telHref}>
                   <Phone className="mr-2 h-4 w-4" />
-                  325-480-9870
+                  {PRIMARY_PHONE.display}
                 </a>
               </Button>
             </div>

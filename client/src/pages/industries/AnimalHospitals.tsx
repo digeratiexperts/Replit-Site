@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Shield, Lock, FileCheck, CheckCircle, Phone, Heart, Activity, PawPrint, AlertTriangle, Database, Clock, Users } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function AnimalHospitals() {
   useSEO({
@@ -207,11 +208,11 @@ export default function AnimalHospitals() {
               Schedule a Consultation
             </a>
             <a 
-              href="tel:+13254809870"
+              href={PRIMARY_PHONE.telHref}
               className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-lg border border-white/20 transition-colors"
               data-testid="button-call-now"
             >
-              Call 325-480-9870
+              Call {PRIMARY_PHONE.display}
             </a>
           </div>
         </motion.div>

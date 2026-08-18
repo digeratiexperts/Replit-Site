@@ -2,6 +2,7 @@ import { Phone, Mail, MapPin, Check } from "lucide-react";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "../sections/DigeratiEnhancedFooterSection";
 import { CTA } from "@/lib/ctaCopy";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 const questions = [
   "Do they answer calls live and provide multiple ways to reach support with clear escalation?",
@@ -98,12 +99,12 @@ export default function TwentyOneQuestions() {
               Ready to experience the Digerati Experts difference?
             </h2>
             <a 
-              href="tel:+13254809870" 
+              href={PRIMARY_PHONE.telHref} 
               className="text-3xl md:text-4xl font-bold text-de-magenta-ink hover:text-de-magenta-ink transition-colors block mb-6"
               data-testid="link-phone"
             >
               <Phone className="w-8 h-8 inline-block mr-3 -mt-1" />
-              325-480-9870
+              {PRIMARY_PHONE.display}
             </a>
             <p className="text-white/80 text-lg font-medium leading-relaxed">
               Call now for your FREE 30-Day Risk-Free Pilot<br />
@@ -124,7 +125,7 @@ export default function TwentyOneQuestions() {
 
           <div className="text-center py-8 border-t border-white/10">
             <p className="text-white font-semibold mb-2">
-              DIGERATI EXPERTS | 325-480-9870 | info@digeratiexperts.com
+              DIGERATI EXPERTS | {PRIMARY_PHONE.display} | info@digeratiexperts.com
             </p>
             <p className="text-white/50 text-sm flex items-center justify-center gap-2">
               <MapPin className="w-4 h-4" />

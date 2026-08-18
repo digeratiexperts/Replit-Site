@@ -1,5 +1,6 @@
 import type { AdvisorMode, ConversationProfile, PageContext } from "./types";
 import { knownFactsList } from "./profile";
+import { PRIMARY_PHONE } from "@shared/companyContact";
 
 export function buildSystemPrompt(params: {
   mode: AdvisorMode;
@@ -69,7 +70,7 @@ export const OFF_TOPIC_FALLBACK =
   "I stay on business IT, cybersecurity, compliance, and Digerati Experts services. If this affects your company's technology or risk, tell me what's going on — I'll work it with you.";
 
 export const INCIDENT_FALLBACK =
-  "If you suspect an active compromise (ransomware, account takeover, or data theft), treat it as urgent: isolate affected systems if safe, don't pay ransom or wipe evidence, reset critical passwords from a clean device, and call Digerati Experts at 325-480-9870 for containment help. Want an emergency callback?";
+  `If you suspect an active compromise (ransomware, account takeover, or data theft), treat it as urgent: isolate affected systems if safe, don't pay ransom or wipe evidence, reset critical passwords from a clean device, and call Digerati Experts at ${PRIMARY_PHONE.display} for containment help. Want an emergency callback?`;
 
 export const AI_UNAVAILABLE_FALLBACK =
-  "I can still point you. For a Cyber Risk Assessment or a human on the DE team: 325-480-9870 · https://meet.digerati-experts.com/ — or ask about managed IT and cybersecurity for your business.";
+  `I can still point you. For a Cyber Risk Assessment or a human on the DE team: ${PRIMARY_PHONE.display} · https://meet.digerati-experts.com/ — or ask about managed IT and cybersecurity for your business.`;

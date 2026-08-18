@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { Phone, CheckCircle2 } from "lucide-react";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "../sections/DigeratiEnhancedFooterSection";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function Guarantee() {
   return (
@@ -93,12 +94,12 @@ export default function Guarantee() {
             Call us today to see what Elite IT & Cybersecurity is all about
           </p>
           <a 
-            href="tel:+13254809870" 
+            href={PRIMARY_PHONE.telHref} 
             className="inline-flex items-center gap-3 text-2xl md:text-3xl font-bold text-de-magenta-ink hover:text-de-magenta-ink transition-colors"
             data-testid="link-phone"
           >
             <Phone className="w-6 h-6" />
-            325-480-9870
+            {PRIMARY_PHONE.display}
           </a>
         </div>
       </section>

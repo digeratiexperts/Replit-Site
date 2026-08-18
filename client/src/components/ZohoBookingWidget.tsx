@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Loader2, Calendar, ExternalLink, Phone } from "lucide-react";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 declare global {
   interface Window {
@@ -12,8 +13,6 @@ declare global {
 const EMBED_SCRIPT = "https://bookings.nimbuspop.com/assets/embed.js";
 const BOOKING_URL = "https://meet.digerati-experts.com/portal-embed#/digeratexperts";
 const FALLBACK_URL = "https://meet.digerati-experts.com/";
-const PHONE_DISPLAY = "325-480-9870";
-const PHONE_HREF = "tel:+13254809870";
 
 let scriptLoaded = false;
 let scriptLoading = false;
@@ -137,11 +136,11 @@ function BookingFallback({ className = "" }: { className?: string }) {
         <ExternalLink className="h-4 w-4 opacity-80" aria-hidden="true" />
       </a>
       <a
-        href={PHONE_HREF}
+        href={PRIMARY_PHONE.telHref}
         className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 text-base font-semibold text-white hover:text-[#D3126A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]"
       >
         <Phone className="h-4 w-4 text-[#D3126A]" aria-hidden="true" />
-        {PHONE_DISPLAY}
+        {PRIMARY_PHONE.display}
       </a>
     </div>
   );
