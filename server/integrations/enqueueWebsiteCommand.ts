@@ -1,5 +1,6 @@
 import type { DeSyncEventType } from "./deSyncContract";
 import { enqueueOutbox } from "./deSyncStore";
+import { ensureDeSyncSchema } from "./ensureDeSyncSchema";
 
 export type WebsiteLeadLike = {
   id?: string;
@@ -23,6 +24,11 @@ function eventTypeForSource(source?: string): DeSyncEventType {
 }
 
 export async function enqueueWebsiteCommand(payload: WebsiteLeadLike, eventType?: DeSyncEventType) {
+  // Website forms can be the first integration activity after a fresh deploy,
+  // before any health route or worker tick. Guarantee the durable outbox exists
+  // before accepting the customer event into it.
+  await ensureDeSyncSchema();
+
   const type = eventType || eventTypeForSource(payload.source);
   return enqueueOutbox({
     eventType: type,
@@ -32,6 +38,7 @@ export async function enqueueWebsiteCommand(payload: WebsiteLeadLike, eventType?
     entityId: payload.id,
     canonicalAccountId: payload.canonicalAccountId ?? null,
     payload: {
+      id: payload.id || "",
       name: payload.name || "",
       email: payload.email || "",
       company: payload.company || "",
