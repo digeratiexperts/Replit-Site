@@ -42,7 +42,7 @@ export function ShopByOutcome({ selected, onSelect }: ShopByOutcomeProps) {
                 <img
                   src={outcomeCardUrl(outcome.id)}
                   alt=""
-                  className="h-14 w-full object-cover"
+                  className="h-24 w-full object-cover object-center sm:h-28"
                   loading="lazy"
                   decoding="async"
                 />

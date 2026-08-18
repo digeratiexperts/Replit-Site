@@ -15,6 +15,7 @@ import {
   type StoreProduct
 } from "@/data/storeProducts";
 import { CartButton } from "@/components/store/CartButton";
+import { StorePageAtmosphere } from "@/components/store/StorePageAtmosphere";
 import { pricing, getPricingFooterText } from "@/data/pricing";
 import { ProductMedia } from "@/components/store/ProductMedia";
 import { getProductVisual } from "@/data/productImages";
@@ -131,10 +132,11 @@ const ManagedStore = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="relative min-h-screen bg-[#0a0a0a]">
+      <StorePageAtmosphere />
       <MegaMenu />
       
-      <main className="de-nav-clear pb-20">
+      <main className="relative z-10 de-nav-clear pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Breadcrumb with Cart Button */}
@@ -158,7 +160,7 @@ const ManagedStore = () => {
               <Building className="w-4 h-4 text-de-accent-ink" />
               <span className="text-sm text-de-accent-ink">Managed IT Services</span>
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+            <h1 className="mb-6 text-[clamp(2rem,6vw,3.25rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white">
               Full-Service{" "}
               <span className="text-de-accent-ink">
                 Managed IT
