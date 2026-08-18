@@ -1,5 +1,6 @@
 import { logger } from "../logger";
 import { claimPendingOutbox, markOutboxDelivered, markOutboxRetry } from "./deSyncStore";
+import { recoverStaleOutboxLocks } from "./deSyncOutboxRecovery";
 import { deliverEnvelopeToHub } from "./techSalesClient";
 import type { DeSyncEnvelope } from "./deSyncContract";
 
@@ -33,7 +34,14 @@ function recordToEnvelope(record: {
   };
 }
 
-export async function processDeSyncOutbox(limit = 10): Promise<{ delivered: number; retried: number; dlq: number }> {
+export async function processDeSyncOutbox(
+  limit = 10,
+): Promise<{ delivered: number; retried: number; dlq: number }> {
+  const recovered = await recoverStaleOutboxLocks();
+  if (recovered > 0) {
+    logger.warn("recovered stale de-sync delivery leases", { recovered });
+  }
+
   const claimed = await claimPendingOutbox(limit);
   let delivered = 0;
   let retried = 0;
