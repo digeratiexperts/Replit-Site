@@ -1,8 +1,9 @@
 /**
- * Ticket issue chips for DE Desk.
- * Four paths that match the most common MSP/MSSP work DE actually handles:
- * email/M365, identity/sign-in, endpoint/printer, and security incidents.
+ * Ticket issue chips for DE Desk Get Support.
+ * Paths that match the most common MSP/MSSP work DE actually handles:
+ * security incidents first, then email/M365, identity/sign-in, devices, and other.
  */
+
 export const DESK_TICKET_PRIORITIES = ["Low", "Medium", "High", "Urgent"] as const;
 export type DeskTicketPriority = (typeof DESK_TICKET_PRIORITIES)[number];
 
@@ -18,11 +19,18 @@ export const DESK_TICKET_CATEGORIES = [
 ] as const;
 export type DeskTicketCategory = (typeof DESK_TICKET_CATEGORIES)[number];
 
-export type DeskTicketChipId = "email-m365" | "sign-in" | "device" | "security-incident";
+export type DeskTicketChipId =
+  | "security-incident"
+  | "email-m365"
+  | "sign-in"
+  | "device"
+  | "something-else";
 
 export type DeskTicketChip = {
   id: DeskTicketChipId;
   label: string;
+  blurb?: string;
+  featured?: boolean;
   tone: "red" | "blue" | "violet";
   category: DeskTicketCategory;
   priority: DeskTicketPriority;
@@ -31,6 +39,18 @@ export type DeskTicketChip = {
 };
 
 export const DESK_TICKET_CHIPS: DeskTicketChip[] = [
+  {
+    id: "security-incident",
+    label: "Possible security incident",
+    blurb: "Phishing, suspicious login, compromised account, malware or ransomware.",
+    featured: true,
+    tone: "red",
+    category: "Access & Security",
+    priority: "Urgent",
+    subject: "Possible security incident",
+    prompt:
+      "What did you notice (phishing email, unusual login, ransomware warning, or something else):\nWho is affected:\nWhen you first saw it:\nDo not include passwords or MFA codes.\n",
+  },
   {
     id: "email-m365",
     label: "Email or Microsoft 365",
@@ -43,7 +63,7 @@ export const DESK_TICKET_CHIPS: DeskTicketChip[] = [
   },
   {
     id: "sign-in",
-    label: "Can't sign in",
+    label: "Can't sign in / MFA",
     tone: "violet",
     category: "Access & Security",
     priority: "High",
@@ -53,23 +73,23 @@ export const DESK_TICKET_CHIPS: DeskTicketChip[] = [
   },
   {
     id: "device",
-    label: "Computer or printer",
+    label: "Computer or device",
     tone: "blue",
     category: "Hardware & Devices",
     priority: "Medium",
-    subject: "Computer or printer issue",
+    subject: "Computer or device issue",
     prompt:
-      "Which device (computer, laptop, or printer):\nWhat's happening:\nWhen it started:\nWhat you already tried:\n",
+      "Which device (computer, laptop, phone, or other):\nWhat's happening:\nWhen it started:\nWhat you already tried:\n",
   },
   {
-    id: "security-incident",
-    label: "Possible security incident",
-    tone: "red",
-    category: "Access & Security",
-    priority: "Urgent",
-    subject: "Possible security incident",
+    id: "something-else",
+    label: "Something else",
+    tone: "blue",
+    category: "Other",
+    priority: "Medium",
+    subject: "Support request",
     prompt:
-      "What did you notice (phishing email, unusual login, ransomware warning, or something else):\nWho is affected:\nWhen you first saw it:\nDo not include passwords or MFA codes.\n",
+      "What's happening:\nWho is affected:\nWhen it started:\nWhat you already tried:\n",
   },
 ];
 
