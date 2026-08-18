@@ -51,6 +51,7 @@ export function StickyCTABar() {
 
   useEffect(() => {
     if (dismissed || !routeAllowed) {
+      document.documentElement.dataset.stickyCtaScrolling = "false";
       setPastThreshold(false);
       setScrolling(false);
       setOverlapping(false);
@@ -92,16 +93,21 @@ export function StickyCTABar() {
       setOverlapping(overlayHits || footerHits);
     };
 
+    const markScrolling = (on: boolean) => {
+      document.documentElement.dataset.stickyCtaScrolling = on ? "true" : "false";
+      setScrolling(on);
+    };
+
     const onScroll = () => {
       const scrollY = window.scrollY;
       setPastThreshold(isPastStickyCtaThreshold(scrollY, window.innerHeight));
-      setScrolling(true);
+      markScrolling(true);
       if (Math.abs(scrollY - lastShowScroll.current) >= STICKY_CTA_RESHOW_DELTA_PX) {
         setAutoHidden(false);
       }
       window.clearTimeout(idleTimer);
       idleTimer = window.setTimeout(() => {
-        setScrolling(false);
+        markScrolling(false);
         measureOverlap();
       }, STICKY_CTA_SCROLL_IDLE_MS);
     };
@@ -124,6 +130,7 @@ export function StickyCTABar() {
       window.clearInterval(overlapPoll);
       window.removeEventListener("scroll", onScrollRaf);
       window.removeEventListener("resize", measureOverlap);
+      document.documentElement.dataset.stickyCtaScrolling = "false";
     };
   }, [dismissed, routeAllowed]);
 
@@ -167,10 +174,10 @@ export function StickyCTABar() {
       {visible && (
         <motion.div
           ref={barRef}
-          initial={{ y: 100, opacity: 0 }}
+          initial={{ y: 24, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 100, opacity: 0 }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          exit={{ y: 16, opacity: 0 }}
+          transition={{ duration: 0.16, ease: "easeOut" }}
           className="de-bottom-bar"
           data-testid="sticky-cta-bar"
           data-sticky-cta-chrome="true"

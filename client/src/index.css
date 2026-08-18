@@ -330,6 +330,13 @@ html.de-marketing-canvas body {
   );
 }
 
+/* Instantly clear the dock while the visitor is moving so the bar never sits on copy. */
+html[data-sticky-cta-scrolling="true"] .de-bottom-bar {
+  opacity: 0 !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .de-fab-rail {
   position: fixed;
   z-index: 55;
