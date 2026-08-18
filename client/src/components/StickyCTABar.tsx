@@ -1,75 +1,158 @@
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Shield, ArrowRight, X, Phone } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowRight, Phone, Shield, X } from "lucide-react";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useBooking } from "@/contexts/BookingContext";
 import { CTA } from "@/lib/ctaCopy";
+import {
+  STICKY_CTA_AUTO_HIDE_MS,
+  STICKY_CTA_FALLBACK_HEIGHT,
+  STICKY_CTA_RESHOW_DELTA_PX,
+  STICKY_CTA_SCROLL_IDLE_MS,
+  isPastStickyCtaThreshold,
+  isStickyCtaRouteAllowed,
+  rectOverlapsPageContent,
+  shouldShowStickyCta,
+} from "@/lib/stickyCtaVisibility";
+
+function publishStickyCtaHeight(px: number) {
+  document.documentElement.style.setProperty("--de-sticky-cta-h", `${Math.round(px)}px`);
+}
 
 export function StickyCTABar() {
-  const [isVisible, setIsVisible] = useState(false);
-  const [isDismissed, setIsDismissed] = useState(false);
+  const [location] = useLocation();
+  const [dismissed, setDismissed] = useState(false);
+  const [pastThreshold, setPastThreshold] = useState(false);
+  const [scrolling, setScrolling] = useState(false);
+  const [overlapping, setOverlapping] = useState(false);
+  const [autoHidden, setAutoHidden] = useState(false);
   const { openBooking } = useBooking();
   const barRef = useRef<HTMLDivElement>(null);
+  const lastShowScroll = useRef(0);
+  const lastHeight = useRef(STICKY_CTA_FALLBACK_HEIGHT);
+
+  const routeAllowed = isStickyCtaRouteAllowed(location);
+  const visible = shouldShowStickyCta({
+    dismissed,
+    routeAllowed,
+    pastThreshold,
+    scrolling,
+    overlapping,
+    autoHidden,
+  });
 
   useEffect(() => {
-    const dismissed = sessionStorage.getItem("stickyCtaDismissed");
-    if (dismissed) {
-      setIsDismissed(true);
-      return;
+    if (sessionStorage.getItem("stickyCtaDismissed")) {
+      setDismissed(true);
     }
-
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const threshold = window.innerHeight * 0.5;
-      const path = window.location.pathname;
-      const isPortalPage = path.startsWith("/portal");
-      const isHomePage = path === "/";
-
-      if (isPortalPage || isHomePage) {
-        setIsVisible(false);
-        return;
-      }
-
-      setIsVisible(scrollY > threshold);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
-    const root = document.documentElement;
-    const el = barRef.current;
-    if (!isVisible || isDismissed || !el) {
-      root.style.setProperty("--de-sticky-cta-h", "0px");
+    if (dismissed || !routeAllowed) {
+      setPastThreshold(false);
+      setScrolling(false);
+      setOverlapping(false);
+      setAutoHidden(false);
       return;
     }
 
+    let idleTimer: number | undefined;
+    let ticking = false;
+
+    const measureOverlap = () => {
+      const bar = barRef.current;
+      const height = bar?.offsetHeight || lastHeight.current;
+      const width = bar?.offsetWidth || window.innerWidth - 32;
+      const bottomGap = 16;
+      const unified = Number.parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue("--de-unified-bar-h"),
+      ) || 0;
+      const cookie = Number.parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue("--de-cookie-h"),
+      ) || 0;
+      const top = window.innerHeight - bottomGap - cookie - unified - height;
+      const left = bar?.getBoundingClientRect().left ?? 16;
+      const rect = {
+        top,
+        left,
+        width,
+        height,
+        right: left + width,
+      };
+      const hits = rectOverlapsPageContent(rect, (x) =>
+        document.elementsFromPoint(x, top + Math.min(20, height / 2)),
+      );
+      setOverlapping(hits);
+    };
+
+    const onScroll = () => {
+      const scrollY = window.scrollY;
+      setPastThreshold(isPastStickyCtaThreshold(scrollY, window.innerHeight));
+      setScrolling(true);
+      if (Math.abs(scrollY - lastShowScroll.current) >= STICKY_CTA_RESHOW_DELTA_PX) {
+        setAutoHidden(false);
+      }
+      window.clearTimeout(idleTimer);
+      idleTimer = window.setTimeout(() => {
+        setScrolling(false);
+        measureOverlap();
+      }, STICKY_CTA_SCROLL_IDLE_MS);
+    };
+
+    const onScrollRaf = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        onScroll();
+        ticking = false;
+      });
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScrollRaf, { passive: true });
+    window.addEventListener("resize", measureOverlap);
+    return () => {
+      window.clearTimeout(idleTimer);
+      window.removeEventListener("scroll", onScrollRaf);
+      window.removeEventListener("resize", measureOverlap);
+    };
+  }, [dismissed, routeAllowed]);
+
+  useEffect(() => {
+    if (!visible) {
+      publishStickyCtaHeight(0);
+      return;
+    }
+    lastShowScroll.current = window.scrollY;
+    const el = barRef.current;
+    if (!el) return;
     const publish = () => {
-      root.style.setProperty("--de-sticky-cta-h", `${Math.round(el.offsetHeight)}px`);
+      lastHeight.current = el.offsetHeight;
+      publishStickyCtaHeight(el.offsetHeight);
     };
     publish();
     const ro = new ResizeObserver(publish);
     ro.observe(el);
+    const hideTimer = window.setTimeout(() => setAutoHidden(true), STICKY_CTA_AUTO_HIDE_MS);
     return () => {
       ro.disconnect();
-      root.style.setProperty("--de-sticky-cta-h", "0px");
+      window.clearTimeout(hideTimer);
+      publishStickyCtaHeight(0);
     };
-  }, [isVisible, isDismissed]);
+  }, [visible]);
 
   const handleDismiss = () => {
-    setIsDismissed(true);
+    setDismissed(true);
     sessionStorage.setItem("stickyCtaDismissed", "true");
-    document.documentElement.style.setProperty("--de-sticky-cta-h", "0px");
+    publishStickyCtaHeight(0);
   };
 
-  if (isDismissed) return null;
+  if (dismissed) return null;
 
   return (
     <AnimatePresence>
-      {isVisible && (
+      {visible && (
         <motion.div
           ref={barRef}
           initial={{ y: 100, opacity: 0 }}
@@ -78,6 +161,7 @@ export function StickyCTABar() {
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
           className="de-bottom-bar"
           data-testid="sticky-cta-bar"
+          data-sticky-cta-chrome="true"
         >
           <div className="relative overflow-hidden rounded-2xl border border-pink-400/35 bg-de-raised backdrop-blur-lg shadow-lg shadow-pink-500/20">
             <button

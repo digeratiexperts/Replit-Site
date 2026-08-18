@@ -1,0 +1,59 @@
+import { describe, expect, it } from "vitest";
+import {
+  isPastStickyCtaThreshold,
+  isStickyCtaRouteAllowed,
+  rectOverlapsPageContent,
+  shouldShowStickyCta,
+} from "./stickyCtaVisibility";
+
+describe("sticky CTA visibility", () => {
+  it("stays off the homepage and portal", () => {
+    expect(isStickyCtaRouteAllowed("/")).toBe(false);
+    expect(isStickyCtaRouteAllowed("/portal/dashboard")).toBe(false);
+    expect(isStickyCtaRouteAllowed("/solutions")).toBe(true);
+    expect(isStickyCtaRouteAllowed("/store")).toBe(true);
+  });
+
+  it("waits until the visitor is halfway down the first screen", () => {
+    expect(isPastStickyCtaThreshold(100, 800)).toBe(false);
+    expect(isPastStickyCtaThreshold(401, 800)).toBe(true);
+  });
+
+  it("hides while scrolling, overlapping, timed out, or dismissed", () => {
+    const base = {
+      dismissed: false,
+      routeAllowed: true,
+      pastThreshold: true,
+      scrolling: false,
+      overlapping: false,
+      autoHidden: false,
+    };
+    expect(shouldShowStickyCta(base)).toBe(true);
+    expect(shouldShowStickyCta({ ...base, scrolling: true })).toBe(false);
+    expect(shouldShowStickyCta({ ...base, overlapping: true })).toBe(false);
+    expect(shouldShowStickyCta({ ...base, autoHidden: true })).toBe(false);
+    expect(shouldShowStickyCta({ ...base, dismissed: true })).toBe(false);
+  });
+
+  it("treats page content under the bar as overlap", () => {
+    const article = {
+      closest: () => null,
+    } as unknown as Element;
+    const overlaps = rectOverlapsPageContent(
+      { top: 700, left: 40, width: 1200, height: 100, right: 1240 },
+      () => [article],
+    );
+    expect(overlaps).toBe(true);
+  });
+
+  it("ignores the dock and the bar itself", () => {
+    const dock = {
+      closest: (selector: string) => (selector === ".de-unified-bar" ? dock : null),
+    } as unknown as Element;
+    const overlaps = rectOverlapsPageContent(
+      { top: 700, left: 40, width: 1200, height: 100, right: 1240 },
+      () => [dock],
+    );
+    expect(overlaps).toBe(false);
+  });
+});
