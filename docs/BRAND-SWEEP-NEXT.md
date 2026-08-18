@@ -20,7 +20,7 @@ The audit (`scripts/brand-audit.mjs`) is a regression detector, not a requiremen
 
 | Item | Where | Why it is parked | Next move |
 |------|--------|------------------|-----------|
-| Magenta as text on paper (~3.6:1) | `ComplianceCertifications.tsx` outline buttons; `SecurityUpdates.tsx` source / severity labels | `#D3126A` as a **fill** on dark is fine. As **text on paper** it fails AA. | Add a darker paper-ink token. Do not darken the CTA fill. |
+| Magenta as text on paper (~3.6:1) | `ComplianceCertifications.tsx` outline buttons; `SecurityUpdates.tsx` source / severity labels | Settled: `--de-magenta-paper-ink` `#A30E52` for magenta text on paper. Dark-field labels use `--de-magenta-ink`. CTA fill stays `#D3126A`. | Done on `cursor/paper-magenta-ink-3080`. |
 | Quote wizard 1.14:1 on slate-900 | `/quote-wizard` | Almost certainly a backdrop-measurement miss in the audit, not a purple regression. | Confirm in the browser, then fix `behind()` in `brand-audit.mjs` if the form is actually readable. |
 | `#5034ff` “Sign Up” | `/de-ecosystem-matrix-offical`, `/official-network-planner` | Official-tool pages, not the marketing/store system. | DE decides whether those tools join the accent system. |
 | Yellow star glyphs | `/thank-you-success-page` | Rating affordance, not brand chrome. | Leave unless DE wants a different rating treatment. |

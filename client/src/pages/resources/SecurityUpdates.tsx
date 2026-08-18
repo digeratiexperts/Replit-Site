@@ -118,7 +118,7 @@ export default function SecurityUpdates() {
           <div className="rounded-2xl border border-de-hairline bg-de-raised p-6 mb-12">
             <div className="flex items-start gap-4">
               <div className="p-3 rounded-lg border border-de-hairline bg-[var(--de-bg)]">
-                <AlertCircle className="h-6 w-6 text-[#D3126A]" />
+                <AlertCircle className="h-6 w-6 text-de-magenta-ink" />
               </div>
               <div>
                 <h2 className="text-lg font-semibold text-white mb-2">Authoritative sources, scored for SMBs</h2>
@@ -151,7 +151,7 @@ export default function SecurityUpdates() {
                         {formatThreatDate(update.publishedAt, "short")}
                       </span>
                     </div>
-                    <p className="mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-[#D3126A]">
+                    <p className="mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-de-magenta-ink">
                       {update.kicker}
                     </p>
                     <CardTitle className="text-lg text-white line-clamp-2">{update.title}</CardTitle>
@@ -169,7 +169,7 @@ export default function SecurityUpdates() {
                         href={update.sourceUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[#D3126A] hover:text-[#f0187a] font-medium text-sm flex items-center gap-1 shrink-0"
+                        className="text-de-magenta-ink hover:text-de-magenta-ink/90 font-medium text-sm flex items-center gap-1 shrink-0"
                       >
                         Source
                         <ExternalLink className="h-3 w-3" />
@@ -225,7 +225,7 @@ export default function SecurityUpdates() {
                         href={update.sourceUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[#D3126A] hover:text-[#f0187a] font-medium text-sm inline-flex items-center gap-1"
+                        className="text-de-magenta-ink hover:text-de-magenta-ink/90 font-medium text-sm inline-flex items-center gap-1"
                       >
                         {update.sourceName}
                         <ExternalLink className="h-3 w-3" />
