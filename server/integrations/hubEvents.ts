@@ -3,7 +3,8 @@ import { eventBus } from "../eventBus";
 import { logger } from "../logger";
 import { parseDeSyncEnvelope, shouldEchoToHub, type DeSyncEnvelope } from "./deSyncContract";
 import { requireDeSyncAuth } from "./deSyncAuth";
-import { recordInbox, recordConflict, saveCatalogSnapshot } from "./deSyncStore";
+import { recordConflict, saveCatalogSnapshot } from "./deSyncStore";
+import { beginInbox, markInboxApplied } from "./deSyncInboxLifecycle";
 import { persistHubAccountId } from "./techSalesClient";
 import { publishPortalProjection } from "./portalSse";
 
@@ -23,7 +24,14 @@ async function applyHubEvent(envelope: DeSyncEnvelope): Promise<void> {
   const key = `${envelope.entityType}:${envelope.entityId}`;
   const existing = projections.get(key);
 
-  if (existing && envelope.eventType.startsWith("account.") && envelope.payload && existing.name && envelope.payload.name && existing.name !== envelope.payload.name) {
+  if (
+    existing &&
+    envelope.eventType.startsWith("account.") &&
+    envelope.payload &&
+    existing.name &&
+    envelope.payload.name &&
+    existing.name !== envelope.payload.name
+  ) {
     await recordConflict({
       canonicalAccountId: envelope.canonicalAccountId,
       entityType: envelope.entityType,
@@ -41,7 +49,8 @@ async function applyHubEvent(envelope: DeSyncEnvelope): Promise<void> {
     updatedAt: envelope.occurredAt,
   });
 
-  const portalClientId = typeof envelope.payload.portalClientId === "string" ? envelope.payload.portalClientId : null;
+  const portalClientId =
+    typeof envelope.payload.portalClientId === "string" ? envelope.payload.portalClientId : null;
   if (envelope.canonicalAccountId && portalClientId) {
     await persistHubAccountId(portalClientId, envelope.canonicalAccountId);
   }
@@ -58,12 +67,16 @@ async function applyHubEvent(envelope: DeSyncEnvelope): Promise<void> {
     await saveCatalogSnapshot(snapshot, envelope.eventId);
   }
 
-  await eventBus.emit(`hub:${envelope.eventType}`, {
-    eventId: envelope.eventId,
-    entityType: envelope.entityType,
-    entityId: envelope.entityId,
-    canonicalAccountId: envelope.canonicalAccountId,
-  }, "techsales");
+  await eventBus.emit(
+    `hub:${envelope.eventType}`,
+    {
+      eventId: envelope.eventId,
+      entityType: envelope.entityType,
+      entityId: envelope.entityId,
+      canonicalAccountId: envelope.canonicalAccountId,
+    },
+    "techsales",
+  );
 
   publishPortalProjection({ eventType: envelope.eventType, entityId: envelope.entityId });
 }
@@ -82,16 +95,19 @@ export async function handleHubEvents(req: Request, res: Response): Promise<void
     return;
   }
 
-  const inbox = await recordInbox(envelope);
-  if (inbox.duplicate) {
-    res.status(200).json({ ok: true, duplicate: true });
-    return;
-  }
-
   try {
+    const inbox = await beginInbox(envelope);
+    if (inbox.alreadyApplied) {
+      res.status(200).json({ ok: true, duplicate: true });
+      return;
+    }
+
     await applyHubEvent(envelope);
+    await markInboxApplied(envelope.eventId);
     res.status(200).json({ ok: true, duplicate: false });
   } catch (error) {
+    // The inbox row intentionally remains with appliedAt = null. A Hub retry
+    // with the same eventId will re-run application instead of being discarded.
     logger.error("Failed to apply Hub event", error);
     res.status(500).json({ error: "Failed to apply event" });
   }
