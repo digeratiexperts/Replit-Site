@@ -126,7 +126,7 @@ export default function PortalSettings() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <User className="h-5 w-5 text-[#5034ff]" />
+              <User className="h-5 w-5 text-[#D3126A]" />
               <div>
                 <CardTitle>Profile Information</CardTitle>
                 <CardDescription>Update your personal details</CardDescription>
@@ -160,7 +160,7 @@ export default function PortalSettings() {
               </div>
               <Button
                 type="submit"
-                className="bg-[#5034ff] hover:bg-[#5034ff]/90"
+                className="bg-[#D3126A] hover:bg-[#D3126A]/90"
                 data-testid="button-save-profile"
                 disabled={savingProfile}
               >
@@ -173,7 +173,7 @@ export default function PortalSettings() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-[#5034ff]" />
+              <Users className="h-5 w-5 text-[#D3126A]" />
               <div>
                 <CardTitle>Your manager (profile)</CardTitle>
                 <CardDescription>
@@ -196,7 +196,7 @@ export default function PortalSettings() {
                 & Org.
               </p>
             )}
-            <Link href="/portal/people" className="text-[#5034ff] text-sm font-medium hover:underline inline-block mt-1">
+            <Link href="/portal/people" className="text-[#D3126A] text-sm font-medium hover:underline inline-block mt-1">
               Open People & Org
             </Link>
           </CardContent>
@@ -206,7 +206,7 @@ export default function PortalSettings() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Lock className="h-5 w-5 text-[#5034ff]" />
+              <Lock className="h-5 w-5 text-[#D3126A]" />
               <div>
                 <CardTitle>Change Password</CardTitle>
                 <CardDescription>
@@ -263,7 +263,7 @@ export default function PortalSettings() {
               </div>
               <Button
                 type="submit"
-                className="bg-[#5034ff] hover:bg-[#5034ff]/90"
+                className="bg-[#D3126A] hover:bg-[#D3126A]/90"
                 data-testid="button-change-password"
                 disabled={savingPassword}
               >
@@ -277,7 +277,7 @@ export default function PortalSettings() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Bell className="h-5 w-5 text-[#5034ff]" />
+              <Bell className="h-5 w-5 text-[#D3126A]" />
               <div>
                 <CardTitle>Notifications</CardTitle>
                 <CardDescription>Manage your notification preferences</CardDescription>

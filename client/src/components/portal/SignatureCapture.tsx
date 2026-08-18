@@ -139,7 +139,7 @@ export function SignatureCapture({ onSignatureChange, signerName = '', disabled 
         <TabsList className="grid w-full grid-cols-2 bg-slate-800">
           <TabsTrigger 
             value="draw" 
-            className="data-[state=active]:bg-violet-600 data-[state=active]:text-white"
+            className="data-[state=active]:bg-[#D3126A] data-[state=active]:text-white"
             data-testid="tab-draw-signature"
           >
             <Pen className="w-4 h-4 mr-2" />
@@ -147,7 +147,7 @@ export function SignatureCapture({ onSignatureChange, signerName = '', disabled 
           </TabsTrigger>
           <TabsTrigger 
             value="type"
-            className="data-[state=active]:bg-violet-600 data-[state=active]:text-white"
+            className="data-[state=active]:bg-[#D3126A] data-[state=active]:text-white"
             data-testid="tab-type-signature"
           >
             <Type className="w-4 h-4 mr-2" />
@@ -162,7 +162,7 @@ export function SignatureCapture({ onSignatureChange, signerName = '', disabled 
               width={600}
               height={200}
               className={`w-full border-2 border-dashed rounded-lg cursor-crosshair touch-none
-                ${disabled ? 'opacity-50 cursor-not-allowed border-slate-600' : 'border-violet-500/50 hover:border-violet-400'}
+                ${disabled ? 'opacity-50 cursor-not-allowed border-slate-600' : 'border-[#D3126A]/50 hover:border-[#D3126A]'}
                 bg-white`}
               onMouseDown={startDrawing}
               onMouseMove={draw}
@@ -219,7 +219,7 @@ export function SignatureCapture({ onSignatureChange, signerName = '', disabled 
           />
           
           {typedSignature && (
-            <div className="p-6 bg-white rounded-lg border-2 border-dashed border-violet-500/50">
+            <div className="p-6 bg-white rounded-lg border-2 border-dashed border-[#D3126A]/50">
               <p 
                 className="text-4xl text-center text-slate-800"
                 style={{ fontFamily: '"Brush Script MT", cursive, serif', fontStyle: 'italic' }}

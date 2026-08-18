@@ -428,7 +428,7 @@ export function PortalQuestionnaireCalendar() {
               </div>
 
               {selectedEvent.type === "questionnaire" && (
-                <Button className="w-full bg-purple-600 hover:bg-purple-700" data-testid="button-fill-questionnaire">
+                <Button className="w-full bg-[#D3126A] hover:bg-[#e01874]" data-testid="button-fill-questionnaire">
                   <FileText className="w-4 h-4 mr-2" />
                   Fill Out Questionnaire
                 </Button>

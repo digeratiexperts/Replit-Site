@@ -113,9 +113,9 @@ export default function PortalAgent() {
     <PortalLayout title="Desktop Agent">
       <div className="space-y-6">
         {/* Hero Section */}
-        <div className="bg-gradient-to-r from-[#5034ff]/10 to-blue-500/10 border border-[#5034ff]/20 rounded-lg p-8">
+        <div className="bg-gradient-to-r from-[#D3126A]/10 to-blue-500/10 border border-[#D3126A]/20 rounded-lg p-8">
           <div className="flex items-center gap-4">
-            <Monitor className="h-12 w-12 text-[#5034ff]" />
+            <Monitor className="h-12 w-12 text-[#D3126A]" />
             <div>
               <h2 className="text-2xl font-bold mb-1">Digerati Experts Desktop Agent</h2>
               <p className="text-gray-600 dark:text-gray-400">
@@ -126,10 +126,10 @@ export default function PortalAgent() {
         </div>
 
         {/* Download Section */}
-        <Card className="border-2 border-[#5034ff]/30">
+        <Card className="border-2 border-[#D3126A]/30">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Download className="h-5 w-5 text-[#5034ff]" />
+              <Download className="h-5 w-5 text-[#D3126A]" />
               Download Desktop Agent
             </CardTitle>
             <CardDescription>Windows 10/11 Compatible</CardDescription>
@@ -138,7 +138,7 @@ export default function PortalAgent() {
             <div className="space-y-3">
               <Button
                 onClick={handleDownload}
-                className="w-full bg-[#5034ff] hover:bg-[#5034ff]/90 text-white h-12 text-base"
+                className="w-full bg-[#D3126A] hover:bg-[#D3126A]/90 text-white h-12 text-base"
                 data-testid="button-download-agent"
               >
                 <Download className="h-5 w-5 mr-2" />
@@ -154,23 +154,23 @@ export default function PortalAgent() {
               <h4 className="font-semibold text-sm">Installation Instructions:</h4>
               <ol className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
                 <li className="flex gap-2">
-                  <span className="font-bold text-[#5034ff]">1.</span>
+                  <span className="font-bold text-[#D3126A]">1.</span>
                   <span>Click the download button above - a secure token will be generated</span>
                 </li>
                 <li className="flex gap-2">
-                  <span className="font-bold text-[#5034ff]">2.</span>
+                  <span className="font-bold text-[#D3126A]">2.</span>
                   <span>Run "DigeratiExpertsAgent-Setup.exe" with admin privileges</span>
                 </li>
                 <li className="flex gap-2">
-                  <span className="font-bold text-[#5034ff]">3.</span>
+                  <span className="font-bold text-[#D3126A]">3.</span>
                   <span>The installer will automatically use your secure authentication token</span>
                 </li>
                 <li className="flex gap-2">
-                  <span className="font-bold text-[#5034ff]">4.</span>
+                  <span className="font-bold text-[#D3126A]">4.</span>
                   <span>Complete the installation wizard (typical duration: 2-3 minutes)</span>
                 </li>
                 <li className="flex gap-2">
-                  <span className="font-bold text-[#5034ff]">5.</span>
+                  <span className="font-bold text-[#D3126A]">5.</span>
                   <span>Look for the purple Digerati Experts icon in your notification area (system tray)</span>
                 </li>
               </ol>
@@ -188,7 +188,7 @@ export default function PortalAgent() {
                 <Card key={feature.title}>
                   <CardContent className="pt-6">
                     <div className="flex gap-3">
-                      <Icon className="h-6 w-6 text-[#5034ff] flex-shrink-0 mt-1" />
+                      <Icon className="h-6 w-6 text-[#D3126A] flex-shrink-0 mt-1" />
                       <div>
                         <h4 className="font-semibold mb-1">{feature.title}</h4>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -370,7 +370,7 @@ export default function PortalAgent() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-[#5034ff]/30 hover:bg-[#5034ff]/10"
+                  className="border-[#D3126A]/30 hover:bg-[#D3126A]/10"
                   data-testid="button-view-guide"
                 >
                   View Installation Guide
@@ -378,7 +378,7 @@ export default function PortalAgent() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-[#5034ff]/30 hover:bg-[#5034ff]/10"
+                  className="border-[#D3126A]/30 hover:bg-[#D3126A]/10"
                   data-testid="button-contact-support"
                 >
                   Contact Support

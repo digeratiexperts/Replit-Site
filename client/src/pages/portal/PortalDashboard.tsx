@@ -144,7 +144,7 @@ export default function PortalDashboard() {
                   <CardDescription>Your latest ticket activity</CardDescription>
                 </div>
                 <Link href="/portal/tickets">
-                  <a className="text-[#5034ff] hover:underline text-sm font-medium">
+                  <a className="text-[#D3126A] hover:underline text-sm font-medium">
                     View All
                   </a>
                 </Link>
@@ -202,7 +202,7 @@ export default function PortalDashboard() {
                   <CardDescription>Currently active services</CardDescription>
                 </div>
                 <Link href="/portal/services">
-                  <a className="text-[#5034ff] hover:underline text-sm font-medium">
+                  <a className="text-[#D3126A] hover:underline text-sm font-medium">
                     View All
                   </a>
                 </Link>
@@ -242,7 +242,7 @@ export default function PortalDashboard() {
                             href={service.zohoLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-violet-500 hover:text-violet-700 p-1"
+                            className="text-[#D3126A] hover:text-[#1A1228] p-1"
                             title="View in Zoho"
                             data-testid={`link-zoho-${service.id}`}
                           >
@@ -263,7 +263,7 @@ export default function PortalDashboard() {
         </div>
 
         {/* Quick Actions */}
-        <Card className="bg-gradient-to-r from-[#5034ff]/10 to-blue-500/10 border-[#5034ff]/20">
+        <Card className="bg-gradient-to-r from-[#D3126A]/10 to-blue-500/10 border-[#D3126A]/20">
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
           </CardHeader>
@@ -273,7 +273,7 @@ export default function PortalDashboard() {
                 <a>
                   <Button
                     variant="outline"
-                    className="w-full border-[#5034ff]/30 hover:bg-[#5034ff]/10 text-gray-900 dark:text-white hover:text-gray-900 dark:hover:text-white"
+                    className="w-full border-[#D3126A]/30 hover:bg-[#D3126A]/10 text-gray-900 dark:text-white hover:text-gray-900 dark:hover:text-white"
                     data-testid="button-new-ticket"
                   >
                     <Ticket className="h-4 w-4 mr-2" />
@@ -285,7 +285,7 @@ export default function PortalDashboard() {
                 <a>
                   <Button
                     variant="outline"
-                    className="w-full border-[#5034ff]/30 hover:bg-[#5034ff]/10 text-gray-900 dark:text-white hover:text-gray-900 dark:hover:text-white"
+                    className="w-full border-[#D3126A]/30 hover:bg-[#D3126A]/10 text-gray-900 dark:text-white hover:text-gray-900 dark:hover:text-white"
                     data-testid="button-view-kb"
                   >
                     <FileText className="h-4 w-4 mr-2" />
@@ -297,7 +297,7 @@ export default function PortalDashboard() {
                 <a>
                   <Button
                     variant="outline"
-                    className="w-full border-[#5034ff]/30 hover:bg-[#5034ff]/10 text-gray-900 dark:text-white hover:text-gray-900 dark:hover:text-white"
+                    className="w-full border-[#D3126A]/30 hover:bg-[#D3126A]/10 text-gray-900 dark:text-white hover:text-gray-900 dark:hover:text-white"
                     data-testid="button-view-invoices"
                   >
                     <FileText className="h-4 w-4 mr-2" />

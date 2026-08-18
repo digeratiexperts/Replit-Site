@@ -189,7 +189,7 @@ export default function PortalInvoices() {
                                 <Button
                                   variant="ghost"
                                   size="sm"
-                                  className="h-8 w-8 p-0 text-[#5034ff] hover:bg-[#5034ff]/10"
+                                  className="h-8 w-8 p-0 text-[#D3126A] hover:bg-[#D3126A]/10"
                                   data-testid={`button-pay-${invoice.id}`}
                                 >
                                   <CreditCard className="h-4 w-4" />

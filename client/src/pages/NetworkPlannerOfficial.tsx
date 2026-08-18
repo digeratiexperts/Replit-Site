@@ -223,7 +223,7 @@ function NetworkPlannerOfficialApp() {
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
-      <div className="max-w-[1120px] mx-auto p-7 bg-[radial-gradient(900px_500px_at_8%_-10%,rgba(95,60,200,0.22)_0%,rgba(95,60,200,0)_60%),radial-gradient(900px_520px_at_100%_110%,rgba(11,163,255,0.18)_0%,rgba(11,163,255,0)_60%),#0a1020] rounded-[18px]">
+      <div className="mx-auto max-w-[1120px] rounded-[18px] bg-[radial-gradient(900px_500px_at_8%_-10%,rgba(211,18,106,0.14)_0%,transparent_60%),radial-gradient(900px_520px_at_100%_110%,rgba(11,163,255,0.12)_0%,transparent_60%),#0a1020] p-7">
         
         {/* Header */}
         <header className="flex flex-col md:flex-row items-start justify-between gap-4 mb-6">

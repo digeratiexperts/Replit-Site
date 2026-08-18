@@ -85,7 +85,7 @@ export default function PortalProcurementStore() {
             {internalProducts.map((product) => (
               <Card
                 key={product.id}
-                className="hover:border-[#5034ff]/50 transition-colors cursor-pointer"
+                className="hover:border-[#D3126A]/50 transition-colors cursor-pointer"
                 data-testid={`card-product-${product.id}`}
               >
                 <CardHeader>
@@ -101,8 +101,8 @@ export default function PortalProcurementStore() {
                 <CardContent>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{product.description}</p>
                   <div className="flex items-center justify-between">
-                    <p className="text-lg font-bold text-[#5034ff]">{product.price}</p>
-                    <Button size="sm" className="bg-[#5034ff] hover:bg-[#5034ff]/90" data-testid={`button-add-${product.id}`}>
+                    <p className="text-lg font-bold text-[#D3126A]">{product.price}</p>
+                    <Button size="sm" className="bg-[#D3126A] hover:bg-[#D3126A]/90" data-testid={`button-add-${product.id}`}>
                       <ShoppingCart className="h-4 w-4 mr-1" />
                       Add
                     </Button>
@@ -124,7 +124,7 @@ export default function PortalProcurementStore() {
             {distributors.map((distributor) => (
               <Card
                 key={distributor.name}
-                className="hover:border-[#5034ff]/50 transition-colors"
+                className="hover:border-[#D3126A]/50 transition-colors"
                 data-testid={`card-distributor-${distributor.name.toLowerCase()}`}
               >
                 <CardHeader>
@@ -150,7 +150,7 @@ export default function PortalProcurementStore() {
                       </div>
                     </div>
                     <Button
-                      className="w-full bg-[#5034ff] hover:bg-[#5034ff]/90 text-white"
+                      className="w-full bg-[#D3126A] hover:bg-[#D3126A]/90 text-white"
                       onClick={() => window.open(distributor.url, "_blank")}
                       data-testid={`button-visit-${distributor.name.toLowerCase().replace(/\s+/g, '-')}`}
                     >

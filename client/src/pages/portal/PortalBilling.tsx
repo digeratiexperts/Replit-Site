@@ -114,7 +114,7 @@ export default function PortalBilling() {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="flex items-center gap-2">
-                  <CreditCard className="h-5 w-5 text-violet-500" />
+                  <CreditCard className="h-5 w-5 text-[#D3126A]" />
                   Current Subscription
                 </CardTitle>
                 <CardDescription>Your active service plan</CardDescription>
@@ -178,7 +178,7 @@ export default function PortalBilling() {
                 <div className="flex gap-3">
                   {data.subscription.zohoLink && (
                     <a href={data.subscription.zohoLink} target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" className="border-violet-500/30 text-violet-700 dark:text-violet-300 hover:bg-violet-50 dark:hover:bg-violet-900/20" data-testid="button-manage-subscription">
+                      <Button variant="outline" className="border-[#D3126A]/30 text-[#1A1228] dark:text-de-magenta-ink hover:bg-de-paper dark:hover:bg-[#D3126A]/10" data-testid="button-manage-subscription">
                         <ExternalLink className="h-4 w-4 mr-2" />
                         Manage in Zoho
                       </Button>
@@ -193,7 +193,7 @@ export default function PortalBilling() {
               <div className="text-center py-8">
                 <CreditCard className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-500 dark:text-gray-400">No active subscription found</p>
-                <Button className="mt-4 bg-violet-600 hover:bg-violet-700" data-testid="button-view-plans">
+                <Button className="mt-4 bg-[#D3126A] hover:bg-[#e01874]" data-testid="button-view-plans">
                   View Plans
                 </Button>
               </div>
@@ -207,7 +207,7 @@ export default function PortalBilling() {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="flex items-center gap-2">
-                  <FileText className="h-5 w-5 text-violet-500" />
+                  <FileText className="h-5 w-5 text-[#D3126A]" />
                   Recent Invoices
                 </CardTitle>
                 <CardDescription>Your billing history</CardDescription>
@@ -294,7 +294,7 @@ export default function PortalBilling() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <CreditCard className="h-5 w-5 text-violet-500" />
+              <CreditCard className="h-5 w-5 text-[#D3126A]" />
               Payment Methods
             </CardTitle>
             <CardDescription>Manage your payment options</CardDescription>

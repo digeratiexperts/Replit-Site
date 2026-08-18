@@ -81,7 +81,7 @@ export default function PortalKB() {
                     variant={selectedCategory === null ? "default" : "ghost"}
                     className={`w-full justify-start ${
                       selectedCategory === null
-                        ? "bg-[#5034ff] hover:bg-[#5034ff]/90"
+                        ? "bg-[#D3126A] hover:bg-[#D3126A]/90"
                         : ""
                     }`}
                     onClick={() => setSelectedCategory(null)}
@@ -97,7 +97,7 @@ export default function PortalKB() {
                       }
                       className={`w-full justify-start ${
                         selectedCategory === category
-                          ? "bg-[#5034ff] hover:bg-[#5034ff]/90"
+                          ? "bg-[#D3126A] hover:bg-[#D3126A]/90"
                           : ""
                       }`}
                       onClick={() => setSelectedCategory(category)}
@@ -127,14 +127,14 @@ export default function PortalKB() {
                 {filteredArticles.map((article) => (
                   <Card
                     key={article.id}
-                    className="hover:border-[#5034ff]/50 transition-colors cursor-pointer"
+                    className="hover:border-[#D3126A]/50 transition-colors cursor-pointer"
                     data-testid={`article-${article.id}`}
                   >
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-2">
-                            <BookOpen className="h-4 w-4 text-[#5034ff] flex-shrink-0" />
+                            <BookOpen className="h-4 w-4 text-[#D3126A] flex-shrink-0" />
                             <span className="text-xs text-gray-500 dark:text-gray-400">
                               {article.category}
                             </span>

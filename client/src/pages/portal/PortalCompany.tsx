@@ -95,14 +95,14 @@ export default function PortalCompany() {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="flex items-center gap-2">
-                  <Building2 className="h-5 w-5 text-violet-500" />
+                  <Building2 className="h-5 w-5 text-[#D3126A]" />
                   Company Information
                 </CardTitle>
                 <CardDescription>Your organization details from our CRM</CardDescription>
               </div>
               {data?.account?.zohoLink && (
                 <a href={data.account.zohoLink} target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" size="sm" className="border-violet-500/30 text-violet-700 dark:text-violet-300" data-testid="button-edit-in-zoho">
+                  <Button variant="outline" size="sm" className="border-[#D3126A]/30 text-[#1A1228] dark:text-de-magenta-ink" data-testid="button-edit-in-zoho">
                     <ExternalLink className="h-4 w-4 mr-2" />
                     Edit in Zoho
                   </Button>
@@ -124,7 +124,7 @@ export default function PortalCompany() {
                     {data.account.Account_Name}
                   </h3>
                   {data.account.Industry && (
-                    <Badge className="mt-2 bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-300">
+                    <Badge className="mt-2 bg-de-paper text-[#1A1228] dark:bg-[#D3126A]/10 dark:text-de-magenta-ink">
                       {data.account.Industry}
                     </Badge>
                   )}
@@ -150,7 +150,7 @@ export default function PortalCompany() {
                           href={data.account.Website.startsWith("http") ? data.account.Website : `https://${data.account.Website}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="font-medium text-violet-600 dark:text-violet-400 hover:underline flex items-center gap-1"
+                          className="font-medium text-[#D3126A] dark:text-de-magenta-ink hover:underline flex items-center gap-1"
                           data-testid="link-company-website"
                         >
                           {data.account.Website}
@@ -202,7 +202,7 @@ export default function PortalCompany() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-violet-500" />
+              <Users className="h-5 w-5 text-[#D3126A]" />
               Team Members
             </CardTitle>
             <CardDescription>People at your organization with portal access</CardDescription>
@@ -223,8 +223,8 @@ export default function PortalCompany() {
                     data-testid={`contact-row-${contact.id}`}
                   >
                     <div className="flex items-center gap-4">
-                      <div className="h-10 w-10 rounded-full bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center">
-                        <span className="text-sm font-semibold text-violet-700 dark:text-violet-300">
+                      <div className="h-10 w-10 rounded-full bg-de-paper dark:bg-[#D3126A]/10 flex items-center justify-center">
+                        <span className="text-sm font-semibold text-[#1A1228] dark:text-de-magenta-ink">
                           {contact.First_Name?.[0]}{contact.Last_Name?.[0]}
                         </span>
                       </div>
@@ -242,7 +242,7 @@ export default function PortalCompany() {
                       {contact.Email && (
                         <a
                           href={`mailto:${contact.Email}`}
-                          className="flex items-center gap-1 hover:text-violet-600 dark:hover:text-violet-400"
+                          className="flex items-center gap-1 hover:text-[#D3126A] dark:hover:text-de-magenta-ink"
                           data-testid={`link-email-${contact.id}`}
                         >
                           <Mail className="h-4 w-4" />
@@ -252,7 +252,7 @@ export default function PortalCompany() {
                       {(contact.Phone || contact.Mobile) && (
                         <a
                           href={`tel:${contact.Phone || contact.Mobile}`}
-                          className="flex items-center gap-1 hover:text-violet-600 dark:hover:text-violet-400"
+                          className="flex items-center gap-1 hover:text-[#D3126A] dark:hover:text-de-magenta-ink"
                           data-testid={`link-phone-${contact.id}`}
                         >
                           <Phone className="h-4 w-4" />
@@ -264,7 +264,7 @@ export default function PortalCompany() {
                           href={contact.zohoLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1 hover:text-violet-600 dark:hover:text-violet-400"
+                          className="flex items-center gap-1 hover:text-[#D3126A] dark:hover:text-de-magenta-ink"
                           title="View in Zoho"
                           data-testid={`link-zoho-${contact.id}`}
                         >

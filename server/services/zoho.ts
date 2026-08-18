@@ -251,7 +251,7 @@ export class ZohoService {
           width: 60px;
           height: 60px;
           border-radius: 50%;
-          background: linear-gradient(135deg, #5034ff 0%, #030228 100%);
+          background: linear-gradient(135deg, #D3126A 0%, #050312 100%);
           display: flex;
           align-items: center;
           justify-content: center;

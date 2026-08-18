@@ -198,7 +198,7 @@ export default function PortalSignup() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#5034ff] hover:bg-[#5034ff]/90 text-white font-semibold"
+                className="w-full bg-[#D3126A] hover:bg-[#D3126A]/90 text-white font-semibold"
                 data-testid="button-signup"
               >
                 {loading ? "Creating Account..." : "Sign Up"}
@@ -209,7 +209,7 @@ export default function PortalSignup() {
             <div className="mt-6 pt-6 border-t border-white/10">
               <p className="text-xs text-gray-400 text-center">
                 Already have an account?{" "}
-                <a href="/portal/login" className="text-[#5034ff] hover:underline">
+                <a href="/portal/login" className="text-de-magenta-ink hover:underline">
                   Sign In
                 </a>
               </p>

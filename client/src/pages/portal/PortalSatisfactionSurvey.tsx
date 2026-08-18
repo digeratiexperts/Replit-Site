@@ -316,7 +316,7 @@ export function PortalSatisfactionSurvey() {
               >
                 <CardContent className="pt-4 flex justify-between items-center gap-4">
                   <div className="flex items-start gap-3 min-w-0">
-                    <ClipboardList className="h-5 w-5 text-[#5034ff] mt-0.5 shrink-0" />
+                    <ClipboardList className="h-5 w-5 text-[#D3126A] mt-0.5 shrink-0" />
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <p className="font-medium">{item.title}</p>
@@ -471,7 +471,7 @@ export function PortalSatisfactionSurvey() {
                   key={option}
                   className={`flex items-center gap-3 rounded-lg border px-3 py-2 cursor-pointer ${
                     selected
-                      ? "border-[#5034ff] bg-[#5034ff]/5"
+                      ? "border-[#D3126A] bg-[#D3126A]/5"
                       : "border-gray-200 dark:border-gray-700"
                   } ${readOnly ? "opacity-80 cursor-default" : ""}`}
                 >
@@ -482,7 +482,7 @@ export function PortalSatisfactionSurvey() {
                     checked={selected}
                     disabled={readOnly}
                     onChange={() => setAnswer(q.id, option)}
-                    className="accent-[#5034ff]"
+                    className="accent-[#D3126A]"
                     data-testid={`radio-${q.id}-${option.slice(0, 24)}`}
                   />
                   <span className="text-sm">{option}</span>
@@ -510,7 +510,7 @@ export function PortalSatisfactionSurvey() {
                 key={option}
                 className={`flex items-center gap-3 rounded-lg border px-3 py-2 cursor-pointer ${
                   checked
-                    ? "border-[#5034ff] bg-[#5034ff]/5"
+                    ? "border-[#D3126A] bg-[#D3126A]/5"
                     : "border-gray-200 dark:border-gray-700"
                 } ${readOnly ? "opacity-80 cursor-default" : ""}`}
               >
@@ -519,7 +519,7 @@ export function PortalSatisfactionSurvey() {
                   checked={checked}
                   disabled={readOnly}
                   onChange={() => toggleMulti(q.id, option)}
-                  className="accent-[#5034ff]"
+                  className="accent-[#D3126A]"
                   data-testid={`check-${q.id}-${option.slice(0, 24)}`}
                 />
                 <span className="text-sm">{option}</span>
@@ -619,7 +619,7 @@ export function PortalSatisfactionSurvey() {
                 <Button
                   onClick={handleSubmit}
                   disabled={!canSubmit || submitMutation.isPending}
-                  className="flex-1 bg-[#5034ff] hover:bg-[#3f28d4]"
+                  className="flex-1 bg-[#D3126A] hover:bg-[#e01874]"
                   data-testid="button-submit-survey"
                 >
                   {submitMutation.isPending ? (

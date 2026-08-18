@@ -165,7 +165,7 @@ export default function PortalCytracom() {
                   <span className="text-sm">Speaker: Default</span>
                 </div>
               </div>
-              <Button onClick={handleSaveSettings} className="w-full bg-[#5034ff] hover:bg-[#4028e0]" data-testid="button-save-settings">
+              <Button onClick={handleSaveSettings} className="w-full bg-[#D3126A] hover:bg-[#e01874]" data-testid="button-save-settings">
                 Save Settings
               </Button>
             </CardContent>
@@ -220,21 +220,21 @@ export default function PortalCytracom() {
         </div>
 
         {/* Quick Actions */}
-        <Card className="bg-gradient-to-r from-[#5034ff]/10 to-blue-500/10 border-[#5034ff]/20">
+        <Card className="bg-gradient-to-r from-[#D3126A]/10 to-blue-500/10 border-[#D3126A]/20">
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button variant="outline" className="border-[#5034ff]/30 hover:bg-[#5034ff]/10" data-testid="button-check-voicemail">
+              <Button variant="outline" className="border-[#D3126A]/30 hover:bg-[#D3126A]/10" data-testid="button-check-voicemail">
                 <Volume2 className="h-4 w-4 mr-2" />
                 Check Voicemail
               </Button>
-              <Button variant="outline" className="border-[#5034ff]/30 hover:bg-[#5034ff]/10" data-testid="button-update-greeting">
+              <Button variant="outline" className="border-[#D3126A]/30 hover:bg-[#D3126A]/10" data-testid="button-update-greeting">
                 <Mic className="h-4 w-4 mr-2" />
                 Update Greeting
               </Button>
-              <Button variant="outline" className="border-[#5034ff]/30 hover:bg-[#5034ff]/10" data-testid="button-call-forwarding">
+              <Button variant="outline" className="border-[#D3126A]/30 hover:bg-[#D3126A]/10" data-testid="button-call-forwarding">
                 <Phone className="h-4 w-4 mr-2" />
                 Call Forwarding
               </Button>

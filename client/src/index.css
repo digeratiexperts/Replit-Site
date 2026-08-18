@@ -674,7 +674,7 @@ textarea:focus-visible {
 
 /* Optimized image loading placeholder */
 .img-loading {
-  background: linear-gradient(90deg, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.2) 50%, rgba(139, 92, 246, 0.1) 100%);
+  background: linear-gradient(90deg, rgba(211, 18, 106, 0.08) 0%, rgba(211, 18, 106, 0.16) 50%, rgba(211, 18, 106, 0.08) 100%);
   background-size: 200% 100%;
   animation: img-shimmer 1.5s ease-in-out infinite;
 }

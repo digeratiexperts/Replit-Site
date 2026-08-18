@@ -86,7 +86,7 @@ export function AdminImport() {
 
               <Button
                 disabled
-                className="bg-[#5034ff]/40 cursor-not-allowed"
+                className="bg-[#D3126A]/40 cursor-not-allowed"
                 data-testid={`button-import-${job.id}`}
               >
                 Run Import (unavailable)
@@ -96,7 +96,7 @@ export function AdminImport() {
         ))}
       </div>
 
-      <Card className="border-[#5034ff]/50">
+      <Card className="border-[#D3126A]/50">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Mail className="h-5 w-5" />
@@ -111,7 +111,7 @@ export function AdminImport() {
           <div className="flex flex-wrap gap-2">
             <Button
               asChild
-              className="bg-[#5034ff] hover:bg-[#5034ff]/90"
+              className="bg-[#D3126A] hover:bg-[#D3126A]/90"
               data-testid="button-contact-ops"
             >
               <a href="mailto:admin@digeratiexperts.com?subject=Admin%20data%20import%20request">
