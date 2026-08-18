@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   isNearDocumentEnd,
+  isPageFooterOnScreen,
   isPastStickyCtaThreshold,
   isStickyCtaRouteAllowed,
   rectOverlapsPageContent,
@@ -62,6 +63,11 @@ describe("sticky CTA visibility", () => {
   it("parks near the document footer", () => {
     expect(isNearDocumentEnd(2200, 800, 2400)).toBe(true);
     expect(isNearDocumentEnd(400, 800, 2400)).toBe(false);
+  });
+
+  it("parks as soon as the marketing footer enters the viewport", () => {
+    expect(isPageFooterOnScreen(880, 900)).toBe(true);
+    expect(isPageFooterOnScreen(1200, 900)).toBe(false);
   });
 
   it("ignores the dock and the bar itself", () => {

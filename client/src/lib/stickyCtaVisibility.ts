@@ -39,6 +39,11 @@ export function isNearDocumentEnd(
   return scrollY + viewportH >= scrollHeight - reservePx;
 }
 
+/** True once a marketing footer has entered the viewport — not only at the last 160px. */
+export function isPageFooterOnScreen(footerTop: number, viewportH: number): boolean {
+  return Number.isFinite(footerTop) && footerTop < viewportH;
+}
+
 export function shouldShowStickyCta(input: {
   dismissed: boolean;
   routeAllowed: boolean;

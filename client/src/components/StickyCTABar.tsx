@@ -11,6 +11,7 @@ import {
   STICKY_CTA_RESHOW_DELTA_PX,
   STICKY_CTA_SCROLL_IDLE_MS,
   isNearDocumentEnd,
+  isPageFooterOnScreen,
   isPastStickyCtaThreshold,
   isStickyCtaRouteAllowed,
   rectOverlapsPageContent,
@@ -85,12 +86,16 @@ export function StickyCTABar() {
       const overlayHits = rectOverlapsPageContent(rect, (x) =>
         document.elementsFromPoint(x, top + Math.min(20, height / 2)),
       );
-      const footerHits = isNearDocumentEnd(
+      const footerHits = Array.from(document.querySelectorAll("footer")).some((el) => {
+        if (el.closest("[role='dialog']") || el.closest(".de-desk-shell")) return false;
+        return isPageFooterOnScreen(el.getBoundingClientRect().top, window.innerHeight);
+      });
+      const endHits = isNearDocumentEnd(
         window.scrollY,
         window.innerHeight,
         document.documentElement.scrollHeight,
       );
-      setOverlapping(overlayHits || footerHits);
+      setOverlapping(overlayHits || footerHits || endHits);
     };
 
     const markScrolling = (on: boolean) => {
