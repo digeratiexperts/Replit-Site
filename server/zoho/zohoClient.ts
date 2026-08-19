@@ -165,7 +165,7 @@ class ZohoClient {
   }
 
   isDeskConfigured(): boolean {
-    return !!(this.clientId && this.clientSecret && (this.deskRefreshToken || this.refreshToken));
+    return !!(this.clientId && this.clientSecret && this.getDeskRefreshToken());
   }
 }
 

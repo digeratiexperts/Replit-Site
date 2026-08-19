@@ -1,37 +1,23 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
-  AlertTriangle,
-  AppWindow,
-  BookOpen,
+  Activity,
+  BookOpenText,
   Building2,
   CheckCircle2,
   ChevronRight,
-  ClipboardList,
-  Clock,
-  ExternalLink,
   FileText,
-  Flag,
-  Headset,
-  KeyRound,
-  LifeBuoy,
+  LayoutDashboard,
+  LayoutGrid,
   Lock,
   Mail,
-  Monitor,
   MessageCircle,
+  MonitorPlay,
   Paperclip,
-  Scale,
-  Search,
   Send,
-  Shield,
-  ShieldCheck,
-  Sparkles,
-  Tag,
-  Ticket,
   User,
-  Users,
   X,
-  Zap,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -69,27 +55,16 @@ const CHAT_WELCOME: ChatMessage = {
   id: "welcome",
   role: "assistant",
   content:
-    "DE Desk here. Tell me what broke, what you're evaluating, or what you're trying to protect — I'll give you a clear read and the sensible next step.",
+    "DE Desk is here. Describe the outage, the risk, or the question — we'll take it and give you a clear next step.",
 };
 
-const QUICK_CHAT_PROMPTS: Array<{
-  label: string;
-  icon: typeof Shield;
-}> = [
-  { label: "We need stronger cybersecurity", icon: Shield },
-  { label: "Compare managed IT options", icon: Scale },
-  { label: "Microsoft 365 feels messy", icon: Monitor },
-  { label: "Possible security incident", icon: AlertTriangle },
-];
+/** Optional starters — chips that seed the composer, not a competing card grid. */
+const CHAT_STARTERS = [
+  { label: "Something isn't working", seed: "Something isn't working: " },
+  { label: "Possible security incident", seed: "Possible security incident: " },
+] as const;
 
-function BookMagnifier({ className }: { className?: string }) {
-  return (
-    <span className={`relative inline-flex items-center justify-center ${className ?? "h-5 w-5"}`} aria-hidden="true">
-      <BookOpen className="h-full w-full" />
-      <Search className="absolute -bottom-[12%] -right-[14%] h-[58%] w-[58%]" strokeWidth={2.75} />
-    </span>
-  );
-}
+const TICKET_PRIORITIES = ["Low", "Medium", "High", "Urgent"] as const;
 
 const TICKET_CATEGORIES = [
   "Email",
@@ -102,93 +77,51 @@ const TICKET_CATEGORIES = [
   "Other",
 ] as const;
 
-const TICKET_QUICK_CHIPS: Array<{
-  label: string;
-  icon: typeof Shield;
-  category: (typeof TICKET_CATEGORIES)[number];
-  iconClass: string;
-}> = [
-  {
-    label: "Something broke",
-    icon: AlertTriangle,
-    category: "Hardware & Devices",
-    iconClass: "text-[#fda4af] bg-[#D3126A]/20 ring-[#fb7185]/45",
-  },
-  {
-    label: "Microsoft 365 help",
-    icon: AppWindow,
-    category: "Collaboration",
-    iconClass: "text-[#7dd3fc] bg-[#0284c7]/25 ring-[#38bdf8]/45",
-  },
-  {
-    label: "Access or login issue",
-    icon: KeyRound,
-    category: "Access & Security",
-    iconClass: "text-[#c4b5fd] bg-[#7c3aed]/25 ring-[#a78bfa]/50",
-  },
-  {
-    label: "Possible security incident",
-    icon: Shield,
-    category: "Access & Security",
-    iconClass: "text-[#fca5a5] bg-[#b91c1c]/25 ring-[#f87171]/45",
-  },
-];
-
-const RESOURCE_LINKS: Array<{
+type ClientTool = {
+  id: string;
   title: string;
   description: string;
   href: string;
-  icon: typeof BookOpen | typeof BookMagnifier;
+  icon: LucideIcon;
+  featured?: boolean;
+  badge?: string;
+  guide?: { label: string; href: string };
   external?: boolean;
-  tags: [string, string];
-  cta: string;
-  accent: string;
-  iconBg: string;
-}> = [
+};
+
+const CLIENT_TOOLS: ClientTool[] = [
   {
-    title: "Remote session",
-    description: "Join a secure live session so a technician can help on your screen",
-    href: "https://assist.zoho.com/",
-    icon: Monitor,
-    external: true,
-    tags: ["Live help", "Screen share"],
-    cta: "Start session",
-    accent: "text-[#e9d5ff]",
-    iconBg:
-      "bg-gradient-to-br from-[#a855f7]/45 to-[#7c3aed]/30 ring-[#c084fc]/55 shadow-[0_0_20px_rgba(168,85,247,0.35)]",
-  },
-  {
-    title: "Remote support guide",
-    description: "How remote sessions work and what to expect",
-    href: "/support/remote-support",
-    icon: LifeBuoy,
-    tags: ["Support process", "Quick guide"],
-    cta: "View guide",
-    accent: "text-[#bae6fd]",
-    iconBg:
-      "bg-gradient-to-br from-[#38bdf8]/40 to-[#0284c7]/25 ring-[#7dd3fc]/50 shadow-[0_0_20px_rgba(56,189,248,0.3)]",
-  },
-  {
-    title: "Knowledge base",
-    description: "Setup guides, troubleshooting, and security help",
-    href: "/support/knowledge-base",
-    icon: BookMagnifier,
-    tags: ["Guides", "Troubleshooting"],
-    cta: "Browse articles",
-    accent: "text-[#bbf7d0]",
-    iconBg:
-      "bg-gradient-to-br from-[#4ade80]/40 to-[#16a34a]/25 ring-[#86efac]/50 shadow-[0_0_20px_rgba(74,222,128,0.28)]",
-  },
-  {
-    title: "Client portal",
-    description: "Tickets, services, billing, approvals, and account tools",
+    id: "portal",
+    title: "Client Portal",
+    description: "Account, tickets, services and client resources.",
     href: PORTAL_LOGIN,
-    icon: ShieldCheck,
-    tags: ["Account access", "Self-service"],
-    cta: "Open portal",
-    accent: "text-[#fed7aa]",
-    iconBg:
-      "bg-gradient-to-br from-[#fb923c]/45 to-[#ea580c]/25 ring-[#fdba74]/55 shadow-[0_0_20px_rgba(251,146,60,0.3)]",
+    icon: LayoutDashboard,
+    featured: true,
+    external: true,
+  },
+  {
+    id: "remote",
+    title: "Start Remote Support",
+    description: "Launch a secure technician support session.",
+    href: "https://assist.zoho.com/",
+    icon: MonitorPlay,
+    badge: "Fastest",
+    guide: { label: "Remote support guide", href: "/support/remote-support" },
+    external: true,
+  },
+  {
+    id: "help",
+    title: "Help Center",
+    description: "Guides, common fixes and client documentation.",
+    href: "/support/knowledge-base",
+    icon: BookOpenText,
+  },
+  {
+    id: "status",
+    title: "Service Status",
+    description: "Check availability of DE-managed services.",
+    href: "/portal/status",
+    icon: Activity,
   },
 ];
 
@@ -224,7 +157,14 @@ export const ZohoASAPWidget = ({
   const [attachmentName, setAttachmentName] = useState<string | null>(null);
   const [isTicketSending, setIsTicketSending] = useState(false);
   const [ticketResult, setTicketResult] = useState<TicketResult | null>(null);
+  const [showTicketExtras, setShowTicketExtras] = useState(false);
+  const [dialogHeight, setDialogHeight] = useState<number | undefined>(undefined);
+  const [reduceMotion, setReduceMotion] = useState(false);
   const ticketFileRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLElement>(null);
+  const chromeRef = useRef<HTMLDivElement>(null);
+  const panelMeasureRef = useRef<HTMLDivElement>(null);
+  const chatInputRef = useRef<HTMLTextAreaElement>(null);
 
   const [cookieBannerClear, setCookieBannerClear] = useState(() => {
     try {
@@ -238,6 +178,51 @@ export const ZohoASAPWidget = ({
   });
 
   const { toast } = useToast();
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setReduceMotion(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!isOpen) {
+      setDialogHeight(undefined);
+      return;
+    }
+
+    const measure = () => {
+      const dialog = dialogRef.current;
+      const chrome = chromeRef.current;
+      const panel = panelMeasureRef.current;
+      if (!dialog || !chrome || !panel) return;
+      const vh = window.innerHeight;
+      const maxH = Math.min(Math.round(vh * 0.86), vh - 72);
+      const prevHeight = dialog.style.height;
+      const prevMax = dialog.style.maxHeight;
+      dialog.style.height = "auto";
+      dialog.style.maxHeight = "none";
+      const next = Math.min(maxH, chrome.offsetHeight + panel.scrollHeight + 16);
+      dialog.style.height = prevHeight;
+      dialog.style.maxHeight = prevMax;
+      setDialogHeight(next);
+    };
+
+    measure();
+    const panel = panelMeasureRef.current;
+    const chrome = chromeRef.current;
+    if (!panel) return;
+    const observer = new ResizeObserver(measure);
+    observer.observe(panel);
+    if (chrome) observer.observe(chrome);
+    window.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [isOpen, activeTab, ticketResult, showTicketExtras, chatMessages, isChatSending]);
 
   useEffect(() => {
     if (cookieBannerClear) return;
@@ -520,7 +505,7 @@ export const ZohoASAPWidget = ({
       ]);
       toast({
         title: "Chat unavailable",
-        description: "Your message was not submitted as a ticket. Use the Ticket tab if you need team follow-up.",
+        description: "Your message was not submitted as a ticket. Use Get Support if you need team follow-up.",
         variant: "destructive",
       });
     } finally {
@@ -611,12 +596,13 @@ export const ZohoASAPWidget = ({
           subject: subject.trim(),
           description,
           priority,
+          name: fullName.trim() || undefined,
           sessionId: advisorSessionId || undefined,
         }),
       });
       const data = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to create ticket");
+      if (!response.ok || !data.zohoTicketId) {
+        throw new Error(data.error || "We couldn't open the ticket right now. Please try again.");
       }
 
       setTicketResult({
@@ -631,6 +617,7 @@ export const ZohoASAPWidget = ({
       setPriority("Medium");
       setCategory("");
       setAttachmentName(null);
+      setShowTicketExtras(false);
       if (ticketFileRef.current) ticketFileRef.current.value = "";
 
       toast({
@@ -683,7 +670,13 @@ export const ZohoASAPWidget = ({
 
         {isOpen && (
           <section
-            className="fixed inset-x-3 top-[max(0.75rem,env(safe-area-inset-top))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[100] flex max-h-[100dvh] w-auto flex-col overflow-hidden rounded-[1.5rem] border-[3px] border-[#A78BFA]/75 bg-[#1a0b33] shadow-[0_0_0_1px_rgba(196,181,253,0.45),0_0_0_6px_rgba(124,58,237,0.22),0_28px_80px_rgba(50,15,90,0.7),0_0_100px_rgba(139,92,246,0.4)] sm:absolute sm:inset-auto sm:bottom-0 sm:right-0 sm:top-auto sm:h-[min(760px,calc(100dvh-5.5rem))] sm:max-h-[min(86vh,calc(100dvh-4.5rem))] sm:w-[460px] sm:max-w-[calc(100vw-2rem)]"
+            ref={dialogRef}
+            className="absolute bottom-0 right-0 z-[100] flex w-[min(460px,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-[1.5rem] border-[3px] border-[#A78BFA]/75 bg-[#1a0b33] shadow-[0_0_0_1px_rgba(196,181,253,0.45),0_0_0_6px_rgba(124,58,237,0.22),0_28px_80px_rgba(50,15,90,0.7),0_0_100px_rgba(139,92,246,0.4)]"
+            style={{
+              height: dialogHeight,
+              maxHeight: "min(86vh, calc(100dvh - 4.5rem))",
+              transition: reduceMotion ? undefined : "height 220ms ease",
+            }}
             role="dialog"
             aria-modal="true"
             aria-label="DE Desk help"
@@ -697,44 +690,23 @@ export const ZohoASAPWidget = ({
               aria-hidden="true"
             />
 
-            {/* Shared chrome — same for all three tabs */}
-            <header className="relative flex flex-shrink-0 items-center justify-between gap-3 px-4 pb-1 pt-4">
-              <div className="flex min-w-0 items-center gap-3">
-                <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#D3126A] to-[#7c3aed] text-[12px] font-bold tracking-wide text-white shadow-[0_0_22px_rgba(211,18,106,0.4)]">
-                  DE
-                  <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#1a0b33] bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.85)]" />
-                </div>
-                <div className="min-w-0">
-                  <h2 className="truncate text-[16px] font-semibold tracking-tight text-white" data-testid="text-widget-title">
-                    DE Desk
-                  </h2>
-                  <p className="truncate text-[11px] text-white/50" data-testid="text-widget-status">
-                    {agentLive
-                      ? `${agentName || "Specialist"} joined · live handoff`
-                      : "Answers · Tickets · Assist"}
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-shrink-0 items-center gap-2">
-                <div className="hidden items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 sm:flex">
-                  <span
-                    className={`h-1.5 w-1.5 rounded-full ${
-                      agentLive
-                        ? "bg-sky-400"
-                        : assistantAvailable === true
-                          ? "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.85)]"
-                          : assistantAvailable === false
-                            ? "bg-amber-400"
-                            : "bg-white/30"
-                    }`}
-                  />
-                  <span className="text-[10px] font-medium text-white/65">
-                    {agentLive
-                      ? `${agentName || "Specialist"} live`
-                      : assistantAvailable === false
-                        ? "Ticket desk ready"
-                        : "DE Desk is online"}
-                  </span>
+            <div ref={chromeRef} className="relative flex-shrink-0">
+              <header className="flex items-center justify-between gap-3 px-4 pb-1 pt-4">
+                <div className="flex min-w-0 items-center gap-3">
+                  <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#D3126A] to-[#7c3aed] text-[12px] font-bold tracking-wide text-white shadow-[0_0_22px_rgba(211,18,106,0.4)]">
+                    DE
+                    <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#1a0b33] bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.85)]" />
+                  </div>
+                  <div className="min-w-0">
+                    <h2 className="truncate text-[16px] font-semibold tracking-tight text-white" data-testid="text-widget-title">
+                      DE Desk
+                    </h2>
+                    <p className="truncate text-[11px] text-white/55" data-testid="text-widget-status">
+                      {agentLive
+                        ? `${agentName || "Specialist"} joined · live handoff`
+                        : "DE Desk is available"}
+                    </p>
+                  </div>
                 </div>
                 <button
                   type="button"
@@ -745,149 +717,127 @@ export const ZohoASAPWidget = ({
                 >
                   <X size={16} aria-hidden="true" />
                 </button>
-              </div>
-            </header>
+              </header>
 
-            <nav className="relative mx-3 mb-2 grid flex-shrink-0 grid-cols-3 border-b border-white/10" aria-label="Support options">
-              {(
-                [
-                  { id: "chat" as const, label: "Desk", icon: MessageCircle },
-                  { id: "ticket" as const, label: "Ticket", icon: FileText },
-                  { id: "resources" as const, label: "Resources", icon: BookOpen },
-                ]
-              ).map(({ id, label, icon: Icon }) => {
-                const isActive = activeTab === id;
-                return (
-                  <button
-                    key={id}
-                    type="button"
-                    onClick={() => setActiveTab(id)}
-                    className={`relative flex min-h-11 items-center justify-center gap-1.5 px-2 text-[12.5px] font-semibold transition ${
-                      isActive ? "text-white" : "text-white/45 hover:text-white/80"
-                    }`}
-                    data-testid={`button-tab-${id}`}
-                    aria-current={isActive ? "page" : undefined}
-                  >
-                    <Icon
-                      className={`h-3.5 w-3.5 ${isActive ? "text-[#F0B4CC]" : ""}`}
-                      aria-hidden="true"
-                    />
-                    <span className={isActive ? "text-[#F0B4CC]" : undefined}>{label}</span>
-                    {isActive && (
-                      <span className="absolute inset-x-4 bottom-0 h-[2px] rounded-full bg-[#D3126A] shadow-[0_0_12px_rgba(211,18,106,0.95)]" />
-                    )}
-                  </button>
-                );
-              })}
-            </nav>
-
-            <div className="relative mx-3 mb-2 flex flex-shrink-0 items-center justify-between gap-3 px-0.5">
-              <div className="flex items-center gap-2 text-[11px] font-medium text-white/65">
-                <span
-                  className={`h-1.5 w-1.5 rounded-full ${
-                    agentLive
-                      ? "bg-sky-400"
-                      : assistantAvailable === true
-                        ? "bg-emerald-400"
-                        : assistantAvailable === false
-                          ? "bg-amber-400"
-                          : "bg-white/30"
-                  }`}
-                />
-                {agentLive
-                  ? `${agentName || "Specialist"} on desk`
-                  : assistantAvailable === true
-                    ? "DE Desk is online"
-                    : assistantAvailable === false
-                      ? "Ticket desk available"
-                      : "Connecting…"}
-              </div>
-              <button
-                type="button"
-                onClick={() => setActiveTab(activeTab === "ticket" ? "chat" : "ticket")}
-                className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#F0B4CC] transition hover:text-white"
-              >
-                Need help now?
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#D3126A]/25 text-[#F0B4CC] ring-1 ring-[#F0B4CC]/35">
-                  <Headset className="h-3 w-3" aria-hidden="true" />
-                </span>
-              </button>
+              <nav className="mx-3 mb-2 grid grid-cols-3 border-b border-white/10" aria-label="Support options">
+                {(
+                  [
+                    { id: "chat" as const, label: "Ask DE", icon: MessageCircle },
+                    { id: "ticket" as const, label: "Get Support", icon: FileText },
+                    { id: "resources" as const, label: "Client Tools", icon: LayoutGrid },
+                  ]
+                ).map(({ id, label, icon: Icon }) => {
+                  const isActive = activeTab === id;
+                  return (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => setActiveTab(id)}
+                      className={`relative flex min-h-11 items-center justify-center gap-1.5 px-1 text-[12px] font-semibold transition sm:text-[12.5px] ${
+                        isActive ? "text-white" : "text-white/45 hover:text-white/80"
+                      }`}
+                      data-testid={`button-tab-${id}`}
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      <Icon
+                        className={`h-3.5 w-3.5 ${isActive ? "text-[#F0B4CC]" : ""}`}
+                        aria-hidden="true"
+                      />
+                      <span className={isActive ? "text-[#F0B4CC]" : undefined}>{label}</span>
+                      {isActive && (
+                        <span className="absolute inset-x-3 bottom-0 h-[2px] rounded-full bg-[#D3126A] shadow-[0_0_12px_rgba(211,18,106,0.95)]" />
+                      )}
+                    </button>
+                  );
+                })}
+              </nav>
             </div>
 
-            <div className="relative min-h-0 flex-1 px-3 pb-2">
-              {/* DESK — light nested panel inside dark shell */}
+            <div className="relative min-h-0 flex-1 overflow-y-auto px-3 pb-3">
+              <div ref={panelMeasureRef}>
               {activeTab === "chat" && (
                 <div
-                  className="flex h-full min-h-0 flex-col overflow-hidden rounded-[1.2rem] border border-white/10 bg-white shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
+                  className="flex min-h-[320px] flex-col overflow-hidden rounded-[1.2rem] border border-white/10 bg-[#f7f5f2] shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
                   data-testid="panel-support-chat"
                 >
-                  <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-3.5 py-3.5" aria-live="polite">
-                    {chatMessages.map((chatMessage) => {
+                  <div className="min-h-[200px] flex-1 space-y-3.5 overflow-y-auto px-3.5 py-4" aria-live="polite">
+                    {chatMessages.map((chatMessage, index) => {
                       const isUser = chatMessage.role === "user";
                       const isAgent = chatMessage.role === "agent";
+                      const isOpening = !isUser && index === 0;
                       return (
                         <div
                           key={chatMessage.id}
                           className={`flex ${isUser ? "justify-end" : "justify-start"}`}
                         >
-                          <div
-                            className={`max-w-[90%] px-3.5 py-2.5 text-[13.5px] leading-relaxed ${
-                              isUser
-                                ? "rounded-2xl rounded-br-md bg-[#D3126A] text-white shadow-[0_8px_22px_rgba(211,18,106,0.28)]"
-                                : isAgent
-                                  ? "rounded-2xl rounded-bl-md border border-[#d4e6f4] bg-[#f4f9fc] text-[#1a2434]"
-                                  : "rounded-2xl rounded-bl-md border border-[#ece6f2] bg-[#faf8fc] text-[#1a1228]"
-                            }`}
-                          >
+                          <div className={`max-w-[92%] ${isUser ? "" : "flex gap-2.5"}`}>
                             {!isUser && (
-                              <div
-                                className={`mb-1.5 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] ${
-                                  isAgent ? "text-[#3d6f94]" : "text-[#D3126A]"
-                                }`}
-                              >
+                              <div className="relative mt-0.5 h-8 w-8 flex-shrink-0">
                                 <span
-                                  className={`flex h-4 w-4 items-center justify-center rounded text-[8px] font-bold tracking-normal text-white ${
-                                    isAgent ? "bg-[#4a7fa8]" : "bg-[#D3126A]"
+                                  className={`flex h-8 w-8 items-center justify-center rounded-full text-[10px] font-bold text-white ${
+                                    isAgent ? "bg-[#3d5a73]" : "bg-[#151217]"
                                   }`}
                                 >
                                   {isAgent ? "AG" : "DE"}
                                 </span>
-                                {isAgent ? chatMessage.senderName || agentName || "Agent" : "Desk"}
+                                {isOpening && (
+                                  <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#f7f5f2] bg-emerald-400" />
+                                )}
                               </div>
                             )}
-                            <p className="whitespace-pre-wrap">{chatMessage.content}</p>
+                            <div>
+                              {!isUser && (
+                                <div className="mb-1.5 flex items-center gap-2">
+                                  <span className="text-[12px] font-semibold text-[#151217]">
+                                    {isAgent ? chatMessage.senderName || agentName || "Specialist" : "DE Desk"}
+                                  </span>
+                                  {isOpening && (
+                                    <span className="text-[11px] font-medium text-emerald-700">
+                                      Available
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                              <div
+                                className={`px-3.5 py-2.5 text-[13.5px] leading-relaxed ${
+                                  isUser
+                                    ? "rounded-2xl rounded-br-md bg-[#D3126A] text-white shadow-[0_8px_22px_rgba(211,18,106,0.28)]"
+                                    : isAgent
+                                      ? "rounded-2xl rounded-bl-md border border-[#d4e6f4] bg-[#eef5f9] text-[#1a2434]"
+                                      : "rounded-2xl rounded-bl-md bg-[#151217] text-[#f7f5f2]"
+                                }`}
+                              >
+                                <p className="whitespace-pre-wrap">{chatMessage.content}</p>
+                              </div>
+                              {isOpening && chatMessages.length === 1 && (
+                                <div className="mt-2.5 flex flex-wrap gap-1.5">
+                                  {CHAT_STARTERS.map(({ label, seed }) => (
+                                    <button
+                                      key={label}
+                                      type="button"
+                                      onClick={() => {
+                                        setChatInput(seed);
+                                        requestAnimationFrame(() => chatInputRef.current?.focus());
+                                      }}
+                                      className="rounded-full border border-[#d8d2cc] bg-white px-2.5 py-1 text-[11px] font-medium text-[#3d342f] transition hover:border-[#151217] hover:text-[#151217] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/45"
+                                    >
+                                      {label}
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
                       );
                     })}
 
-                    {chatMessages.length === 1 && (
-                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                        {QUICK_CHAT_PROMPTS.map(({ label, icon: Icon }) => (
-                          <button
-                            key={label}
-                            type="button"
-                            onClick={() => void handleSendChat(label)}
-                            className="group flex items-center gap-2.5 rounded-xl border border-[#e8e0f0] bg-white px-3 py-2.5 text-left transition hover:border-[#D3126A]/40 hover:bg-[#fff7fb]"
-                          >
-                            <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[#f3eef9] text-[#6d4aff]">
-                              <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-                            </span>
-                            <span className="min-w-0 flex-1 text-[12px] font-medium leading-4 text-[#1a1228]">
-                              {label}
-                            </span>
-                            <ChevronRight className="h-3.5 w-3.5 flex-shrink-0 text-[#b0a4c4] group-hover:text-[#D3126A]" aria-hidden="true" />
-                          </button>
-                        ))}
-                      </div>
-                    )}
-
                     {isChatSending && (
                       <div className="flex justify-start">
-                        <div className="rounded-2xl rounded-bl-md border border-[#ece6f2] bg-[#faf8fc] px-3.5 py-2.5 text-xs text-[#5A3A5E]">
+                        <div className="rounded-2xl rounded-bl-md bg-[#151217] px-3.5 py-2.5 text-xs text-[#f7f5f2]/70">
                           <span className="inline-flex items-center gap-2">
                             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#D3126A]" />
-                            {agentLive ? "Delivering to specialist…" : "Thinking it through…"}
+                            {agentLive ? "Delivering to specialist…" : "Reading your note…"}
                           </span>
                         </div>
                       </div>
@@ -895,9 +845,10 @@ export const ZohoASAPWidget = ({
                     <div ref={chatEndRef} />
                   </div>
 
-                  <div className="border-t border-[#ece6f2] bg-[#faf8fc] px-3 py-3">
+                  <div className="border-t border-[#e4dfd8] bg-white px-3 py-3">
                     <div className="flex items-end gap-2">
                       <Textarea
+                        ref={chatInputRef}
                         value={chatInput}
                         onChange={(event) => setChatInput(event.target.value)}
                         onKeyDown={(event) => {
@@ -911,9 +862,9 @@ export const ZohoASAPWidget = ({
                         placeholder={
                           agentLive
                             ? `Message ${agentName || "the specialist"}…`
-                            : "Ask about risk, stack, pricing, or an outage…"
+                            : "Type the issue — we're ready now"
                         }
-                        className="min-h-[48px] resize-none rounded-xl border-[#ddd3e8] bg-white text-[13.5px] text-[#1a1228] placeholder:text-[#8a6f8c] focus-visible:ring-[#D3126A]/70"
+                        className="min-h-[48px] resize-none rounded-xl border-[#d8d2cc] bg-[#f7f5f2] text-[13.5px] text-[#151217] placeholder:text-[#7a7168] focus-visible:ring-[#D3126A]/70"
                         disabled={isChatSending}
                         data-testid="input-support-chat"
                         aria-label="Chat message"
@@ -922,15 +873,15 @@ export const ZohoASAPWidget = ({
                         type="button"
                         onClick={() => void handleSendChat()}
                         disabled={!chatInput.trim() || isChatSending}
-                        className="h-[48px] w-[48px] flex-shrink-0 rounded-xl bg-[#D3126A] p-0 text-white shadow-[0_8px_22px_rgba(211,18,106,0.35)] hover:bg-[#c01060]"
+                        className="h-12 w-12 flex-shrink-0 rounded-xl bg-[#D3126A] p-0 text-white shadow-[0_8px_22px_rgba(211,18,106,0.35)] hover:bg-[#c01060]"
                         data-testid="button-send-support-chat"
                         aria-label="Send chat message"
                       >
                         <Send className="h-4 w-4" aria-hidden="true" />
                       </Button>
                     </div>
-                    <p className="mt-2 flex items-center gap-1.5 text-[11px] font-medium text-[#6B3A62]">
-                      <Lock className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
+                    <p className="mt-2 text-[10.5px] leading-4 text-[#7a7168]">
+                      <Lock className="mr-1 inline h-3 w-3 align-[-2px]" aria-hidden="true" />
                       {agentLive
                         ? "A Digerati agent is in this thread. Never share passwords or MFA codes."
                         : "Never share passwords, MFA codes, or private keys."}
@@ -939,21 +890,19 @@ export const ZohoASAPWidget = ({
                 </div>
               )}
 
-              {/* TICKET — dark nested panel, same language as Resources */}
               {activeTab === "ticket" && (
                 <div
-                  className="flex h-full min-h-0 flex-col overflow-hidden rounded-[1.2rem] border border-white/10 bg-[#12141c]"
+                  className="overflow-hidden rounded-[1.2rem] border border-white/10 bg-[#12141c] p-3.5"
                   data-testid="panel-support-ticket"
                 >
-                  <div className="min-h-0 flex-1 space-y-3 overflow-y-auto p-3 pb-8">
                     {ticketResult ? (
-                      <div className="flex min-h-[70%] flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#171922] px-4 py-10 text-center">
-                        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-400/15 text-emerald-300">
-                          <CheckCircle2 className="h-6 w-6" aria-hidden="true" />
+                      <div className="flex flex-col items-center px-2 py-6 text-center">
+                        <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-emerald-400/15 text-emerald-300">
+                          <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
                         </div>
                         <h3 className="text-[15px] font-semibold text-white">Support request received</h3>
                         {ticketResult.ticketNumber && (
-                          <p className="mt-2 rounded-lg border border-white/10 bg-[#0b0c10] px-3 py-1.5 font-mono text-xs font-semibold text-[#F0B4CC]">
+                          <p className="mt-2 rounded-lg border border-white/10 bg-[#0b0c10] px-3 py-1.5 font-mono text-xs font-semibold text-white/80">
                             {ticketResult.ticketNumber}
                           </p>
                         )}
@@ -973,210 +922,120 @@ export const ZohoASAPWidget = ({
                           <Button
                             type="button"
                             onClick={() => setTicketResult(null)}
-                            className="bg-gradient-to-r from-[#5B45E0] to-[#D3126A] text-white hover:opacity-95"
+                            className="bg-[#D3126A] text-white hover:bg-[#c01060]"
                           >
-                            Create another ticket
+                            Open another ticket
                           </Button>
                         </div>
                       </div>
                     ) : (
-                      <>
-                        <div
-                          className="relative overflow-hidden rounded-2xl border border-[#c084fc]/40 p-4 shadow-[0_0_36px_rgba(168,85,247,0.2)]"
-                          style={{
-                            background:
-                              "linear-gradient(135deg, rgba(91,69,224,0.55) 0%, rgba(26,11,51,0.92) 48%, rgba(211,18,106,0.28) 100%)",
-                          }}
-                        >
-                          <div
-                            className="pointer-events-none absolute -right-8 -top-10 h-32 w-32 rounded-full bg-[#D3126A]/25 blur-2xl"
-                            aria-hidden="true"
-                          />
-                          <div className="relative flex items-center gap-3">
-                            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#D3126A] to-[#7c3aed] text-white ring-2 ring-white/25 shadow-[0_0_24px_rgba(211,18,106,0.45)]">
-                              <Ticket className="h-5 w-5" aria-hidden="true" />
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <h3 className="text-[16px] font-semibold tracking-tight text-white">
-                                Create a support ticket
-                              </h3>
-                              <p className="mt-1 text-[12px] leading-5 text-white/75">
-                                Tell us what happened and we&apos;ll route it to the right team.
-                              </p>
-                            </div>
-                            <div className="hidden h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-white/15 bg-black/40 text-[#c4b5fd] sm:flex">
-                              <ClipboardList className="h-5 w-5" aria-hidden="true" />
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                          {TICKET_QUICK_CHIPS.map(({ label, icon: Icon, category: chipCategory, iconClass }) => (
-                            <button
-                              key={label}
-                              type="button"
-                              onClick={() => {
-                                setSubject(label);
-                                setCategory(chipCategory);
-                              }}
-                              className="group rounded-xl border border-white/15 bg-black p-2.5 text-left transition hover:border-[#F0B4CC]/45"
-                            >
-                              <div className="mb-2 flex items-center justify-between">
-                                <span
-                                  className={`flex h-8 w-8 items-center justify-center rounded-lg ring-1 ${iconClass}`}
-                                >
-                                  <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-                                </span>
-                                <ChevronRight className="h-3 w-3 text-white/30 group-hover:text-[#F0B4CC]" aria-hidden="true" />
-                              </div>
-                              <span className="block text-[10.5px] font-medium leading-3.5 text-white">{label}</span>
-                            </button>
-                          ))}
-                        </div>
-
-                        <div className="rounded-2xl border border-[#a78bfa]/30 bg-black p-4 shadow-[inset_0_1px_0_rgba(196,181,253,0.1)]">
-                          <div className="mb-4 flex items-center justify-between gap-2">
-                            <h3 className="text-[14px] font-semibold text-white">Tell us the details</h3>
-                            <span className="inline-flex items-center gap-1 rounded-full border border-[#c084fc]/40 bg-[#7c3aed]/25 px-2 py-0.5 text-[10px] font-semibold text-[#e9d5ff]">
-                              <Lock className="h-2.5 w-2.5" aria-hidden="true" />
-                              Secure & Private
-                            </span>
+                      <form
+                        className="space-y-2.5"
+                        onSubmit={(event) => {
+                          event.preventDefault();
+                          void handleSubmitTicket();
+                        }}
+                      >
+                          <div>
+                            <h3 className="text-[15px] font-semibold tracking-tight text-white">
+                              Open a support ticket
+                            </h3>
+                            <p className="mt-1 text-[12px] leading-5 text-white/55">
+                              Tell us what happened. We&apos;ll route it to the desk.
+                            </p>
                           </div>
 
-                          <div className="space-y-3">
-                            <div className="grid gap-3 sm:grid-cols-2">
-                              <div>
-                                <label htmlFor="support-name" className="mb-1.5 block text-[11px] font-semibold text-white">
-                                  Full name
-                                </label>
-                                <div className="relative">
-                                  <User className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]" aria-hidden="true" />
-                                  <Input
-                                    id="support-name"
-                                    autoComplete="name"
-                                    placeholder="Jane Smith"
-                                    value={fullName}
-                                    onChange={(event) => setFullName(event.target.value)}
-                                    data-testid="input-support-name"
-                                    className="h-10 rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] pl-9 text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
-                                  />
-                                </div>
-                              </div>
-                              <div>
-                                <label htmlFor="support-email" className="mb-1.5 block text-[11px] font-semibold text-white">
-                                  Work email
-                                </label>
-                                <div className="relative">
-                                  <Mail className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]" aria-hidden="true" />
-                                  <Input
-                                    id="support-email"
-                                    type="email"
-                                    autoComplete="email"
-                                    placeholder="you@company.com"
-                                    value={email}
-                                    onChange={(event) => setEmail(event.target.value)}
-                                    data-testid="input-support-email"
-                                    className="h-10 rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] pl-9 text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
-                                  />
-                                </div>
+                          <div className="space-y-2.5">
+                            <div>
+                              <label htmlFor="support-name" className="mb-1.5 block text-[11px] font-semibold text-white">
+                                Name
+                              </label>
+                              <div className="relative">
+                                <User className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#6b5a78]" aria-hidden="true" />
+                                <Input
+                                  id="support-name"
+                                  autoComplete="name"
+                                  placeholder="Your name"
+                                  value={fullName}
+                                  onChange={(event) => setFullName(event.target.value)}
+                                  data-testid="input-support-name"
+                                  className="h-10 rounded-xl border border-white/15 bg-[#f7f5f2] pl-9 text-[13.5px] text-[#151217] placeholder:text-[#7a7168] focus-visible:ring-[#D3126A]/50"
+                                />
                               </div>
                             </div>
-
-                            <div className="grid gap-3 sm:grid-cols-2">
-                              <div>
-                                <label htmlFor="support-company" className="mb-1.5 block text-[11px] font-semibold text-white">
-                                  Company
-                                </label>
-                                <div className="relative">
-                                  <Building2 className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]" aria-hidden="true" />
-                                  <Input
-                                    id="support-company"
-                                    autoComplete="organization"
-                                    placeholder="Company name"
-                                    value={company}
-                                    onChange={(event) => setCompany(event.target.value)}
-                                    data-testid="input-support-company"
-                                    className="h-10 rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] pl-9 text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
-                                  />
-                                </div>
-                              </div>
-                              <div>
-                                <label htmlFor="support-priority" className="mb-1.5 block text-[11px] font-semibold text-white">
-                                  Priority
-                                </label>
-                                <div className="relative">
-                                  <Flag className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]" aria-hidden="true" />
-                                  <select
-                                    id="support-priority"
-                                    value={priority}
-                                    onChange={(event) =>
-                                      setPriority(event.target.value as "Low" | "Medium" | "High" | "Urgent")
-                                    }
-                                    className="h-10 w-full appearance-none rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] pl-9 pr-2 text-[13px] text-[#1a1228] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7c3aed]/65"
-                                    data-testid="select-support-priority"
-                                  >
-                                    <option value="Low">Low</option>
-                                    <option value="Medium">Medium</option>
-                                    <option value="High">High</option>
-                                    <option value="Urgent">Urgent</option>
-                                  </select>
-                                </div>
+                            <div>
+                              <label htmlFor="support-email" className="mb-1.5 block text-[11px] font-semibold text-white">
+                                Work email
+                              </label>
+                              <div className="relative">
+                                <Mail className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#6b5a78]" aria-hidden="true" />
+                                <Input
+                                  id="support-email"
+                                  type="email"
+                                  autoComplete="email"
+                                  placeholder="you@company.com"
+                                  value={email}
+                                  onChange={(event) => setEmail(event.target.value)}
+                                  required
+                                  data-testid="input-support-email"
+                                  className="h-10 rounded-xl border border-white/15 bg-[#f7f5f2] pl-9 text-[13.5px] text-[#151217] placeholder:text-[#7a7168] focus-visible:ring-[#D3126A]/50"
+                                />
                               </div>
                             </div>
-
-                            <div className="grid gap-3 sm:grid-cols-2">
-                              <div>
-                                <label htmlFor="support-category" className="mb-1.5 block text-[11px] font-semibold text-white">
-                                  Category
-                                </label>
-                                <select
-                                  id="support-category"
-                                  value={category}
-                                  onChange={(event) => setCategory(event.target.value)}
-                                  className="h-10 w-full appearance-none rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] px-3 text-[13px] text-[#1a1228] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7c3aed]/65"
-                                  data-testid="select-support-category"
-                                >
-                                  <option value="">Select a category</option>
-                                  {TICKET_CATEGORIES.map((item) => (
-                                    <option key={item} value={item}>
-                                      {item}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-                              <div>
-                                <label htmlFor="support-subject" className="mb-1.5 block text-[11px] font-semibold text-white">
-                                  Subject
-                                </label>
-                                <div className="relative">
-                                  <Tag className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#7c3aed]" aria-hidden="true" />
-                                  <Input
-                                    id="support-subject"
-                                    maxLength={200}
-                                    placeholder="Brief description"
-                                    value={subject}
-                                    onChange={(event) => setSubject(event.target.value)}
-                                    data-testid="input-support-subject"
-                                    className="h-10 rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] pl-9 text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
-                                  />
-                                </div>
-                              </div>
+                            <div>
+                              <label htmlFor="support-subject" className="mb-1.5 block text-[11px] font-semibold text-white">
+                                What&apos;s happening?
+                              </label>
+                              <Input
+                                id="support-subject"
+                                maxLength={200}
+                                placeholder="Short summary"
+                                value={subject}
+                                onChange={(event) => setSubject(event.target.value)}
+                                required
+                                data-testid="input-support-subject"
+                                className="h-10 rounded-xl border border-white/15 bg-[#f7f5f2] text-[13.5px] text-[#151217] placeholder:text-[#7a7168] focus-visible:ring-[#D3126A]/50"
+                              />
                             </div>
-
                             <div>
                               <label htmlFor="support-message" className="mb-1.5 block text-[11px] font-semibold text-white">
-                                What&apos;s happening?
+                                Details
                               </label>
                               <Textarea
                                 id="support-message"
                                 maxLength={5000}
-                                placeholder="Describe the issue, affected device or service, and what you already tried. No passwords or MFA codes."
+                                placeholder="What broke, who is affected, and what you already tried."
                                 value={message}
                                 onChange={(event) => setMessage(event.target.value)}
-                                rows={3}
-                                className="min-h-[88px] resize-none rounded-xl border border-[#c4b5fd]/70 bg-[#f4edff] text-[13.5px] text-[#1a1228] placeholder:text-[#6b5a78] focus-visible:ring-[#7c3aed]/65"
+                                rows={2}
+                                required
+                                className="min-h-[72px] resize-none rounded-xl border border-white/15 bg-[#f7f5f2] text-[13.5px] text-[#151217] placeholder:text-[#7a7168] focus-visible:ring-[#D3126A]/50"
                                 data-testid="input-support-message"
                               />
+                            </div>
+
+                            <div>
+                              <p className="mb-1.5 text-[11px] font-semibold text-white">Urgency</p>
+                              <div className="grid grid-cols-4 gap-1.5" role="group" aria-label="Ticket urgency">
+                                {TICKET_PRIORITIES.map((level) => {
+                                  const selected = priority === level;
+                                  return (
+                                    <button
+                                      key={level}
+                                      type="button"
+                                      onClick={() => setPriority(level)}
+                                      className={`min-h-9 rounded-lg px-1 text-[11px] font-semibold transition ${
+                                        selected
+                                          ? "bg-white text-[#151217]"
+                                          : "border border-white/15 bg-transparent text-white/60 hover:text-white"
+                                      }`}
+                                      aria-pressed={selected}
+                                    >
+                                      {level}
+                                    </button>
+                                  );
+                                })}
+                              </div>
                             </div>
 
                             <div>
@@ -1191,230 +1050,172 @@ export const ZohoASAPWidget = ({
                               <button
                                 type="button"
                                 onClick={() => ticketFileRef.current?.click()}
-                                className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-white/20 bg-black px-3 py-2 text-[12.5px] font-semibold text-white transition hover:border-[#F0B4CC]/50 hover:text-[#F0B4CC]"
+                                className="inline-flex min-h-10 items-center gap-2 text-[12px] font-medium text-white/65 transition hover:text-white"
                               >
                                 <Paperclip className="h-3.5 w-3.5" aria-hidden="true" />
-                                {attachmentName || "Attach file or screenshot"}
+                                {attachmentName || "Attach a screenshot (optional)"}
                               </button>
-                              <p className="mt-1.5 text-[11px] text-white/55">
-                                PNG, JPG, PDF up to 10MB. We&apos;ll collect the file after the ticket is opened.
-                              </p>
                             </div>
 
-                            <p className="flex items-center gap-1.5 text-[11px] font-medium text-white/70">
-                              <Lock className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
+                            <button
+                              type="button"
+                              onClick={() => setShowTicketExtras((open) => !open)}
+                              className="text-[12px] font-medium text-white/55 underline-offset-2 hover:text-white hover:underline"
+                              aria-expanded={showTicketExtras}
+                            >
+                              {showTicketExtras ? "Hide extra details" : "Add company or category"}
+                            </button>
+
+                            {showTicketExtras && (
+                              <div className="space-y-3">
+                                <div>
+                                  <label htmlFor="support-company" className="mb-1.5 block text-[11px] font-semibold text-white">
+                                    Company
+                                  </label>
+                                  <div className="relative">
+                                    <Building2 className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#6b5a78]" aria-hidden="true" />
+                                    <Input
+                                      id="support-company"
+                                      autoComplete="organization"
+                                      placeholder="Company name"
+                                      value={company}
+                                      onChange={(event) => setCompany(event.target.value)}
+                                      data-testid="input-support-company"
+                                      className="h-10 rounded-xl border border-white/15 bg-[#f7f5f2] pl-9 text-[13.5px] text-[#151217] placeholder:text-[#7a7168] focus-visible:ring-[#D3126A]/50"
+                                    />
+                                  </div>
+                                </div>
+                                <div>
+                                  <label htmlFor="support-category" className="mb-1.5 block text-[11px] font-semibold text-white">
+                                    Category
+                                  </label>
+                                  <select
+                                    id="support-category"
+                                    value={category}
+                                    onChange={(event) => setCategory(event.target.value)}
+                                    className="h-10 w-full appearance-none rounded-xl border border-white/15 bg-[#f7f5f2] px-3 text-[13px] text-[#151217] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/50"
+                                    data-testid="select-support-category"
+                                  >
+                                    <option value="">Select a category</option>
+                                    {TICKET_CATEGORIES.map((item) => (
+                                      <option key={item} value={item}>
+                                        {item}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </div>
+                              </div>
+                            )}
+
+                            <p className="text-[10.5px] leading-4 text-white/45">
+                              <Lock className="mr-1 inline h-3 w-3 align-[-2px]" aria-hidden="true" />
                               Never share passwords, MFA codes, or private keys.
                             </p>
 
                             <Button
-                              type="button"
-                              onClick={() => void handleSubmitTicket()}
+                              type="submit"
                               disabled={isTicketSending}
-                              className="h-11 w-full rounded-xl bg-gradient-to-r from-[#5B45E0] via-[#8b2cf5] to-[#D3126A] text-white shadow-[0_10px_28px_rgba(211,18,106,0.28)] hover:opacity-95"
+                              className="h-11 w-full rounded-xl bg-[#D3126A] text-white shadow-[0_10px_28px_rgba(211,18,106,0.28)] hover:bg-[#c01060]"
                               data-testid="button-submit-support"
                             >
-                              {isTicketSending ? "Creating ticket…" : "Create ticket"}
+                              {isTicketSending ? "Opening ticket…" : "Submit ticket"}
                               {!isTicketSending && <Send size={15} className="ml-2" aria-hidden="true" />}
                             </Button>
                           </div>
-                        </div>
-                      </>
+                      </form>
                     )}
-                  </div>
-
-                  {/* Persistent ask bar — same family as Resources composer cue */}
-                  <div className="flex-shrink-0 border-t border-white/10 bg-[#0f1118] px-3 py-2.5">
-                    <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-[#171922] px-3 py-2">
-                      <Sparkles className="h-3.5 w-3.5 flex-shrink-0 text-[#c4b5fd]" aria-hidden="true" />
-                      <button
-                        type="button"
-                        onClick={() => setActiveTab("chat")}
-                        className="min-w-0 flex-1 truncate text-left text-[12.5px] text-white/40 hover:text-white/70"
-                      >
-                        Ask about risk, stack, pricing, or an outage…
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setActiveTab("chat")}
-                        className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[#D3126A] text-white hover:bg-[#c01060]"
-                        aria-label="Open desk chat"
-                      >
-                        <Send className="h-3.5 w-3.5" aria-hidden="true" />
-                      </button>
-                    </div>
-                  </div>
                 </div>
               )}
 
-              {/* RESOURCES — keep the dark card language that already works */}
               {activeTab === "resources" && (
                 <div
-                  className="h-full space-y-3 overflow-y-auto rounded-[1.2rem] border border-white/10 bg-[#12141c] p-3"
+                  className="rounded-[1.2rem] border border-white/10 bg-[#12141c] p-3.5"
                   data-testid="panel-support-resources"
                 >
-                  <div
-                    className="relative overflow-hidden rounded-2xl border border-[#c084fc]/45 p-4 shadow-[0_0_40px_rgba(168,85,247,0.22)]"
-                    style={{
-                      background:
-                        "linear-gradient(145deg, rgba(96,165,250,0.42) 0%, rgba(124,58,237,0.48) 36%, rgba(26,11,51,0.95) 68%, rgba(211,18,106,0.32) 100%)",
-                    }}
-                  >
-                    <div
-                      className="pointer-events-none absolute -left-4 top-0 h-24 w-24 rounded-full bg-[#38bdf8]/25 blur-2xl"
-                      aria-hidden="true"
-                    />
-                    <div
-                      className="pointer-events-none absolute -right-6 bottom-0 h-28 w-28 rounded-full bg-[#D3126A]/25 blur-2xl"
-                      aria-hidden="true"
-                    />
-                    <p className="relative text-[10px] font-semibold uppercase tracking-[0.18em] text-[#F0B4CC]">
-                      Your AI help desk
-                    </p>
-                    <h3 className="relative mt-1.5 text-[18px] font-semibold tracking-tight text-white">
-                      Get clear answers, fast.
-                    </h3>
-                    <p className="relative mt-1.5 max-w-[90%] text-[12px] leading-5 text-white/80">
-                      Find tools, client info, and step-by-step help — all in one place.
-                    </p>
-                    <p className="relative mt-2 text-[12px] italic text-[#e9d5ff]">Same team. Faster support.</p>
-                    <div className="relative mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-                      {[
-                        { icon: Zap, label: "Faster answers", tone: "text-[#fde68a] bg-[#fbbf24]/20 ring-[#fcd34d]/40" },
-                        { icon: Shield, label: "Trusted info", tone: "text-[#e9d5ff] bg-[#a855f7]/25 ring-[#c084fc]/45" },
-                        { icon: Users, label: "Built for DE", tone: "text-[#bae6fd] bg-[#38bdf8]/20 ring-[#7dd3fc]/40" },
-                        { icon: Clock, label: "24/7 available", tone: "text-[#bbf7d0] bg-[#4ade80]/20 ring-[#86efac]/40" },
-                      ].map(({ icon: Icon, label, tone }) => (
-                        <div key={label} className="flex items-center gap-1.5 text-[10px] font-medium text-white/85">
-                          <span className={`flex h-6 w-6 items-center justify-center rounded-md ring-1 ${tone}`}>
-                            <Icon className="h-3 w-3" aria-hidden="true" />
-                          </span>
-                          {label}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between px-0.5">
-                    <h3 className="text-[13px] font-semibold text-white">Resources</h3>
-                    <a
-                      href="/support/knowledge-base"
-                      className="text-[11px] font-semibold text-[#F0B4CC] hover:text-white"
-                    >
-                      Browse all resources →
-                    </a>
+                  <div className="px-0.5 pb-3">
+                    <h3 className="text-[15px] font-semibold tracking-tight text-white">Your client shortcuts</h3>
+                    <p className="mt-1 text-[12px] leading-5 text-white/55">Go directly to the tool you need.</p>
                   </div>
 
                   <div className="space-y-2">
-                    {RESOURCE_LINKS.map(({ title, description, href, icon: Icon, external, tags, cta, accent, iconBg }) => (
-                      <a
-                        key={title}
-                        href={href}
-                        {...(external || href.startsWith("http")
-                          ? { target: "_blank", rel: "noopener noreferrer" }
-                          : {})}
-                        className="group flex items-center gap-3 rounded-2xl border border-white/15 bg-black p-3 transition hover:border-[#F0B4CC]/40"
-                        data-testid={`resource-link-${title.toLowerCase().replace(/\s+/g, "-")}`}
-                      >
-                        <span
-                          className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl ring-1 ${iconBg} ${accent}`}
+                    {CLIENT_TOOLS.map((tool) => {
+                      const Icon = tool.icon;
+                      const opensAway = Boolean(tool.external || tool.href.startsWith("http"));
+                      return (
+                        <div
+                          key={tool.id}
+                          className={`overflow-hidden rounded-2xl border bg-[#0b0c10] transition hover:border-white/25 ${
+                            tool.featured ? "border-[#D3126A]/40" : "border-white/10"
+                          }`}
                         >
-                          <Icon className="h-5 w-5" aria-hidden="true" />
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          <span className="block text-[13.5px] font-semibold text-white">{title}</span>
-                          <span className="mt-0.5 block text-[11.5px] leading-4 text-white/60">{description}</span>
-                          <span className="mt-1.5 flex flex-wrap gap-1.5">
-                            {tags.map((tag) => (
-                              <span
-                                key={tag}
-                                className="rounded-md bg-white/[0.08] px-1.5 py-0.5 text-[10px] font-medium text-white/70"
-                              >
-                                {tag}
+                          <a
+                            href={tool.href}
+                            {...(opensAway ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                            className="group flex items-center gap-3 p-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/45"
+                            data-testid={`resource-link-${tool.id}`}
+                          >
+                            <span
+                              className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl ${
+                                tool.featured
+                                  ? "bg-[#D3126A] text-white shadow-[0_8px_20px_rgba(211,18,106,0.35)]"
+                                  : "bg-white/[0.06] text-white/90 ring-1 ring-white/10"
+                              }`}
+                            >
+                              <Icon className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
+                            </span>
+                            <span className="min-w-0 flex-1">
+                              <span className="flex flex-wrap items-center gap-2">
+                                <span className="text-[13.5px] font-semibold text-white">{tool.title}</span>
+                                {tool.badge && (
+                                  <span className="rounded-md bg-white/[0.08] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.06em] text-[#F0B4CC]">
+                                    {tool.badge}
+                                  </span>
+                                )}
                               </span>
-                            ))}
-                          </span>
-                        </span>
-                        <span className="hidden flex-shrink-0 items-center gap-1 text-[11px] font-semibold text-[#F0B4CC] sm:inline-flex">
-                          {cta}
-                          <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-                        </span>
-                        <ExternalLink className="h-3.5 w-3.5 flex-shrink-0 text-white/30 sm:hidden" aria-hidden="true" />
-                      </a>
-                    ))}
-
-                    <a
-                      href="/book"
-                      className="group flex items-center gap-3 rounded-2xl border border-[#F0B4CC]/55 bg-white p-3 shadow-[0_8px_24px_rgba(211,18,106,0.18)] transition hover:border-[#D3126A]"
-                      data-testid="resource-link-cyber-risk-assessment"
-                    >
-                      <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#D3126A] to-[#f472b6] text-white ring-1 ring-[#D3126A]/40 shadow-[0_0_18px_rgba(211,18,106,0.35)]">
-                        <Shield className="h-5 w-5" aria-hidden="true" />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block text-[13.5px] font-semibold text-[#1a1228]">Cyber risk assessment</span>
-                        <span className="mt-0.5 block text-[11.5px] leading-4 text-[#5A3A5E]">
-                          Map your gaps and get a prioritized next step
-                        </span>
-                        <span className="mt-1.5 flex flex-wrap gap-1.5">
-                          <span className="rounded-md bg-[#F0B4CC]/35 px-1.5 py-0.5 text-[10px] font-medium text-[#9d174d]">
-                            Assessment
-                          </span>
-                          <span className="rounded-md bg-[#F0B4CC]/35 px-1.5 py-0.5 text-[10px] font-medium text-[#9d174d]">
-                            Book now
-                          </span>
-                        </span>
-                      </span>
-                      <span className="hidden flex-shrink-0 items-center gap-1 text-[11px] font-semibold text-[#D3126A] sm:inline-flex">
-                        Book
-                        <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-                      </span>
-                      <ExternalLink className="h-3.5 w-3.5 flex-shrink-0 text-[#D3126A]/50 sm:hidden" aria-hidden="true" />
-                    </a>
+                              <span className="mt-0.5 block text-[12px] leading-4 text-white/55">{tool.description}</span>
+                            </span>
+                            <ChevronRight
+                              className="h-4 w-4 flex-shrink-0 text-white/35 transition group-hover:text-white/70"
+                              aria-hidden="true"
+                            />
+                          </a>
+                          {tool.guide && (
+                            <div className="px-3 pb-3 pl-[3.75rem]">
+                              <a
+                                href={tool.guide.href}
+                                className="text-[11.5px] font-medium text-[#F0B4CC] underline-offset-2 hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/45"
+                                data-testid="resource-link-remote-support-guide"
+                              >
+                                {tool.guide.label}
+                              </a>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
 
-                  <div className="rounded-2xl border border-[#fb7185]/40 bg-gradient-to-r from-[#D3126A]/20 via-[#1a1228] to-[#7c3aed]/20 p-3">
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                      <div className="flex min-w-0 flex-1 gap-2.5">
-                        <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#fb7185]/50 to-[#D3126A]/35 text-[#fecdd3] ring-1 ring-[#fda4af]/50 shadow-[0_0_18px_rgba(211,18,106,0.35)]">
-                          <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-                        </span>
-                        <div>
-                          <p className="text-[12px] font-semibold text-white">Security-sensitive issue?</p>
-                          <p className="mt-0.5 text-[11.5px] leading-4 text-white/60">
-                            Don&apos;t paste credentials into chat. Open a ticket and we&apos;ll move to a secure channel.
-                          </p>
-                        </div>
-                      </div>
-                      <Button
-                        type="button"
-                        onClick={() => setActiveTab("ticket")}
-                        className="h-9 flex-shrink-0 rounded-xl bg-[#D3126A] px-3 text-white shadow-[0_0_18px_rgba(211,18,106,0.35)] hover:bg-[#c01060]"
-                      >
-                        Create ticket
-                      </Button>
+                  <div className="mt-3 flex items-center gap-3 rounded-2xl border border-white/10 bg-[#0b0c10] p-3">
+                    <span className="h-10 w-[3px] flex-shrink-0 rounded-full bg-[#D3126A]" aria-hidden="true" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[13px] font-semibold text-white">Possible security incident?</p>
+                      <p className="mt-0.5 text-[11.5px] leading-4 text-white/55">
+                        Skip the tools and route it as urgent support.
+                      </p>
                     </div>
+                    <Button
+                      type="button"
+                      onClick={() => setActiveTab("ticket")}
+                      className="h-10 flex-shrink-0 rounded-xl bg-[#D3126A] px-2.5 text-[12px] text-white hover:bg-[#c01060]"
+                      data-testid="button-tools-go-to-support"
+                    >
+                      Go to Get Support
+                    </Button>
                   </div>
                 </div>
               )}
+              </div>
             </div>
-
-            <footer className="relative flex flex-shrink-0 items-center justify-between gap-3 border-t border-white/10 px-4 py-2.5 text-[11px] text-white/40">
-              <span className="truncate">
-                DE Desk ·{" "}
-                <span className={activeTab === "ticket" ? "font-semibold text-[#F0B4CC]" : undefined}>Ticket</span>
-                {" · "}
-                <span className={activeTab === "resources" ? "font-semibold text-[#F0B4CC]" : undefined}>Resources</span>
-                {" · Assist"}
-              </span>
-              <button
-                type="button"
-                onClick={() => setActiveTab("ticket")}
-                className="inline-flex items-center gap-1 font-semibold text-[#F0B4CC] hover:text-white"
-              >
-                Create ticket
-                <ExternalLink className="h-3 w-3" aria-hidden="true" />
-              </button>
-            </footer>
           </section>
         )}
       </div>

@@ -5,7 +5,7 @@ import rateLimit from "express-rate-limit";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { registerObjectStorageRoutes, ObjectStorageService } from "./replit_integrations/object_storage";
-import { zohoClient, zohoDeskService, zohoCRMService, zohoBillingService } from "./zoho";
+import { zohoClient, zohoDeskService, splitVisitorName, zohoCRMService, zohoBillingService } from "./zoho";
 import {
   parseZohoTicketId,
   validatePortalTicketUpload,
@@ -5704,10 +5704,10 @@ export async function registerRoutes(app: Express) {
     }
   });
 
-  // Public support widget ticket submission (Zoho ASAP fallback + local portal ticket)
+  // Public DE Desk ticket — Zoho Desk is the system of record; portal is a secondary copy.
   app.post("/api/portal/zoho/ticket", [widgetTicketRateLimiter, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { email, subject, description, priority, sessionId: advisorSessionId } = req.body;
+      const { email, subject, description, priority, sessionId: advisorSessionId, name } = req.body;
 
       if (!email || !subject || !description) {
         return res.status(400).json({ error: "Email, subject, and description are required" });
@@ -5722,30 +5722,52 @@ export async function registerRoutes(app: Express) {
         return res.status(400).json({ error: "Subject or description too long" });
       }
 
-      const ticketNumber = `TKT-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 5).toUpperCase()}`;
       const priorityValue = priority || "Medium";
-      const priorityLower = priorityValue.toLowerCase();
+      const priorityLower = String(priorityValue).toLowerCase();
 
-      let zohoTicketId: string | null = null;
-      try {
-        const { zohoClient } = await import("./zoho/zohoClient");
-        if (zohoClient.isDeskConfigured()) {
-          const zohoTicket = await zohoDeskService.createTicket({
-            subject,
-            description,
-            email,
-            priority: priorityValue,
-          });
-          zohoTicketId = zohoTicket.id;
-          console.log(`✅ Widget ticket synced to Zoho Desk: ${zohoTicket.id}`);
-        }
-      } catch (zohoErr: any) {
-        console.warn("Could not create Zoho Desk ticket from widget:", zohoErr?.message || zohoErr);
+      if (!zohoClient.isDeskConfigured()) {
+        console.error("[WIDGET TICKET] Zoho Desk is not configured");
+        return res.status(503).json({
+          error: "Support desk is temporarily unavailable. Please try again.",
+        });
       }
 
-      // Persist local portal ticket when the email maps to a portal account (FK-safe).
-      // Guests still get Zoho Desk (if configured) + notification; DE Desk session is linked by email.
-      let localTicket = null;
+      const { firstName, lastName } = splitVisitorName(
+        typeof name === "string" ? name : undefined,
+        String(email),
+      );
+
+      let zohoTicket;
+      try {
+        zohoTicket = await zohoDeskService.createTicket({
+          subject,
+          description,
+          email,
+          firstName,
+          lastName,
+          priority: priorityValue,
+        });
+      } catch (zohoErr: any) {
+        console.error("[WIDGET TICKET] Zoho Desk create failed:", zohoErr?.message || zohoErr);
+        return res.status(502).json({
+          error: "We couldn't open the ticket right now. Please try again.",
+        });
+      }
+
+      if (!zohoTicket?.id) {
+        console.error("[WIDGET TICKET] Zoho Desk returned no ticket id");
+        return res.status(502).json({
+          error: "We couldn't open the ticket right now. Please try again.",
+        });
+      }
+
+      const zohoTicketId = zohoTicket.id;
+      const ticketNumber =
+        zohoTicket.ticketNumber ||
+        `TKT-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 5).toUpperCase()}`;
+      console.log(`✅ Widget ticket created in Zoho Desk: ${zohoTicketId}`);
+
+      // Secondary: local portal ticket when the email maps to a portal account (FK-safe).
       try {
         if (typeof advisorSessionId === "string" && advisorSessionId.trim()) {
           try {
@@ -5763,7 +5785,7 @@ export async function registerRoutes(app: Express) {
           if (typeof advisorSessionId === "string" && advisorSessionId.trim()) {
             descriptionWithChat = `${description}\n\n---\nDE Desk session: ${advisorSessionId.trim()}`;
           }
-          localTicket = await storage.createPortalTicket({
+          const localTicket = await storage.createPortalTicket({
             clientId: portalUser.clientId,
             createdBy: portalUser.id,
             ticketNumber,
@@ -5774,32 +5796,20 @@ export async function registerRoutes(app: Express) {
             category: "de-desk",
           });
 
-          if (zohoTicketId) {
-            try {
-              await storage.updatePortalTicket(localTicket.id, { assignedTo: `zoho:${zohoTicketId}` });
-            } catch {}
-          }
-          console.log(`✅ Widget ticket created locally: ${ticketNumber}`);
+          try {
+            await storage.updatePortalTicket(localTicket.id, { assignedTo: `zoho:${zohoTicketId}` });
+          } catch {}
+          console.log(`✅ Widget ticket mirrored to portal: ${ticketNumber}`);
         }
       } catch (localErr: any) {
-        console.warn("Could not create local ticket from widget:", localErr?.message || localErr);
-      }
-
-      if (!zohoTicketId && !localTicket) {
-        console.log(`📋 Widget ticket queued (no Zoho/local account): ${ticketNumber} from ${email} — Subject: ${subject}`);
-        try {
-          const { default: notificationService } = await import("./services/notificationService");
-          if (notificationService.sendLeadAlert) {
-            await notificationService.sendLeadAlert({ name: email, email, company: "Support Widget", phone: "", source: "Support Widget Ticket", notes: `Subject: ${subject}\n\n${description}` });
-          }
-        } catch {}
+        console.warn("Could not mirror widget ticket to portal:", localErr?.message || localErr);
       }
 
       res.json({
         success: true,
-        ticketNumber: localTicket?.ticketNumber || ticketNumber,
+        ticketNumber,
         zohoTicketId,
-        message: zohoTicketId || localTicket ? "Your ticket has been created. We'll respond shortly." : "Your request has been received. A team member will contact you shortly.",
+        message: "Your support request has been received.",
       });
       logSecurityEvent("WIDGET_TICKET_CREATED", req, { email, ticketNumber, zohoTicketId });
     } catch (error: any) {

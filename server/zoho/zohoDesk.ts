@@ -1,5 +1,19 @@
 import { zohoClient } from './zohoClient';
 
+/** Zoho Desk requires lastName when creating a contact inline on a ticket. */
+export function splitVisitorName(
+  fullName: string | undefined,
+  email: string,
+): { firstName?: string; lastName: string } {
+  const trimmed = (fullName || "").trim();
+  if (!trimmed) {
+    return { lastName: email.split("@")[0] || "Visitor" };
+  }
+  const parts = trimmed.split(/\s+/);
+  if (parts.length === 1) return { lastName: parts[0] };
+  return { firstName: parts.slice(0, -1).join(" "), lastName: parts[parts.length - 1] };
+}
+
 export interface ZohoTicket {
   id: string;
   ticketNumber: string;
@@ -117,6 +131,8 @@ class ZohoDeskService {
     description: string;
     contactId?: string;
     email?: string;
+    firstName?: string;
+    lastName?: string;
     departmentId?: string;
     priority?: string;
   }): Promise<ZohoTicket> {
@@ -137,7 +153,17 @@ class ZohoDeskService {
       if (data.contactId) {
         ticketData.contactId = data.contactId;
       } else if (data.email) {
-        ticketData.contact = { email: data.email };
+        const { firstName, lastName } = splitVisitorName(
+          [data.firstName, data.lastName].filter(Boolean).join(" ") || undefined,
+          data.email,
+        );
+        ticketData.contact = {
+          email: data.email,
+          lastName: data.lastName?.trim() || lastName,
+          ...(data.firstName?.trim() || firstName
+            ? { firstName: data.firstName?.trim() || firstName }
+            : {}),
+        };
       }
       
       const response = await client.post('/tickets', ticketData, {
