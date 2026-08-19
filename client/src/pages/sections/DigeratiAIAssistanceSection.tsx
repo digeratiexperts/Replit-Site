@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { motion, useReducedMotion } from "framer-motion";
 import { useBooking } from "@/contexts/BookingContext";
 import { CTA } from "@/lib/ctaCopy";
+import { ParallaxStill } from "@/components/visual/ParallaxStill";
 import officeEveningImg from "@assets/de-arizona-office-evening.png";
 
 const capabilities = [
@@ -17,28 +18,27 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
   const { openBooking } = useBooking();
 
   return (
-    <section className="de-dark-chapter de-chapter-hairline relative overflow-hidden py-20">
+    <section className="de-dark-chapter de-chapter-hairline de-field-grain de-field-lit relative overflow-hidden py-20">
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid items-stretch gap-12 lg:grid-cols-2">
           <motion.div
-            className="flex justify-center lg:justify-start order-2 lg:order-1"
+            className="order-2 flex justify-center lg:order-1 lg:justify-start"
             initial={prefersReducedMotion ? {} : { opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="relative max-w-md w-full">
-              <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-                <img
+            <div className="relative w-full max-w-md lg:max-w-none lg:h-full">
+              <div className="relative flex aspect-[4/3] min-h-[16rem] overflow-hidden rounded-2xl border border-white/10 shadow-2xl lg:aspect-auto lg:h-full lg:min-h-[22rem]">
+                <ParallaxStill
                   src={officeEveningImg}
                   alt="Arizona professional office where Digerati Experts supports local businesses"
-                  loading="lazy"
-                  decoding="async"
+                  travel={10}
                   width={448}
                   height={300}
-                  className="w-full object-cover aspect-[4/3]"
+                  className="absolute inset-0"
                 />
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6">
+                <div className="relative mt-auto w-full bg-gradient-to-t from-black/90 to-transparent p-6 pt-16">
                   <p className="text-base font-medium text-white">Local operations. Human judgment.</p>
                   <p className="text-base text-white/75 mt-1">
                     Arizona-based · Principal-led · Always-on monitoring

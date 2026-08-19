@@ -79,7 +79,7 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
   return (
     <section
       id="newsletter"
-      className="de-dark-chapter de-chapter-hairline relative overflow-hidden py-14 md:py-20 lg:py-24"
+      className="de-dark-chapter de-chapter-hairline de-field-grain relative overflow-hidden py-14 md:py-20 lg:py-24"
     >
       <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
         <motion.div

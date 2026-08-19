@@ -157,6 +157,9 @@ html.de-store-gesture-lock body {
   --de-paper: #f7f5f2;
   --de-paper-raised: #ffffff;
   --de-paper-hairline: rgba(26, 18, 16, 0.1);
+  /* Film grain as premultiplied SVG so chapters can also keep fade pseudos. */
+  --de-field-grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='deGrain' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch' result='n'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23deGrain)'/%3E%3C/svg%3E");
+  --de-field-grain-paper: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='deGrainPaper' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch' result='n'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.045 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23deGrainPaper)'/%3E%3C/svg%3E");
   --de-fg: #ffffff;
   /* Floor ≥ ~4.5:1 body text on --de-bg / --de-surface / --de-raised.
    * Prefer these over ad-hoc text-white/50–/60 and pink-300 on dark fields. */
@@ -428,9 +431,21 @@ html.de-marketing-canvas body {
 /* Contained chapter field — one step lighter than the well so page black
  * shows in the gutters. Magenta pops on this quiet charcoal, not yellow. */
 .de-style-box {
+  position: relative;
+  isolation: isolate;
   background-color: var(--de-raised);
   border: 1px solid var(--de-hairline);
   border-radius: 1.5rem;
+}
+.de-style-box::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background-image: var(--de-field-grain);
+  background-size: 180px 180px;
 }
 .de-style-box-inset {
   background-color: var(--de-bg);
@@ -472,7 +487,51 @@ html.de-marketing-canvas body {
   box-shadow: 0 8px 32px rgba(26, 18, 16, 0.1);
 }
 
-/* Hairline fade between dark graphite and paper chapters. No parallax. */
+/*
+ * Film grain + corner lighting — opt-in per chapter.
+ * Grain is a background-image so fade ::before/::after stay available.
+ * .de-field-grain-film overlays photography (hero / CTA) above the still
+ * and under copy (z-index: 1 vs content z-10).
+ * Violet/magenta appear only as lighting. Never as a wash fill.
+ */
+.de-field-grain {
+  background-image: var(--de-field-grain);
+  background-size: 180px 180px;
+}
+
+.de-field-grain-paper {
+  background-image: var(--de-field-grain-paper);
+  background-size: 180px 180px;
+}
+
+.de-field-grain-film,
+.de-field-lit {
+  position: relative;
+  isolation: isolate;
+}
+
+.de-field-grain-film::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: var(--de-field-grain);
+  background-size: 180px 180px;
+}
+
+.de-field-lit::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 48% 70% at 92% -8%, rgba(211, 18, 106, 0.14) 0%, transparent 58%),
+    radial-gradient(ellipse 42% 64% at 6% 108%, rgba(91, 69, 224, 0.10) 0%, transparent 56%);
+}
+
+/* Hairline fade between dark graphite and paper chapters. Do not parallax the fade. */
 .de-chapter-fade-from-dark {
   position: relative;
 }
@@ -504,6 +563,23 @@ html.de-marketing-canvas body {
 }
 @media (prefers-reduced-motion: reduce) {
   .de-chapter-fade-to-dark::after {
+    height: 32px;
+  }
+}
+
+.de-chapter-fade-to-surface {
+  position: relative;
+}
+.de-chapter-fade-to-surface::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 72px;
+  background: linear-gradient(to bottom, transparent, var(--de-surface));
+}
+@media (prefers-reduced-motion: reduce) {
+  .de-chapter-fade-to-surface::after {
     height: 32px;
   }
 }
@@ -550,12 +626,23 @@ html.de-marketing-canvas body {
 }
 
 .de-process-band {
+  position: relative;
+  isolation: isolate;
   background-color: var(--de-surface);
   background-image:
     radial-gradient(ellipse 42% 120% at 16% -30%, rgba(91, 69, 224, 0.22) 0%, transparent 62%),
     radial-gradient(ellipse 34% 110% at 88% -24%, rgba(211, 18, 106, 0.14) 0%, transparent 60%);
   border-top: 1px solid var(--de-hairline);
   border-bottom: 1px solid var(--de-hairline);
+}
+.de-process-band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--de-field-grain);
+  background-size: 180px 180px;
 }
 
 /* Primary nav labels must never crop glyphs when type/logo scale up */

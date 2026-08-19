@@ -133,7 +133,7 @@ export const DigeratiContactSection = ({
 
   return (
     <section
-      className="de-dark-well de-chapter-hairline relative overflow-hidden py-16 lg:py-24"
+      className="de-dark-well de-chapter-hairline de-field-grain relative overflow-hidden py-16 lg:py-24"
       data-testid="homepage-contact-chapter"
     >
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -141,7 +141,8 @@ export const DigeratiContactSection = ({
           src={contactBgImage}
           alt=""
           loading="lazy"
-          className="absolute left-0 top-0 h-auto w-full opacity-[0.12]"
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover object-center opacity-[0.08]"
         />
       </div>
 

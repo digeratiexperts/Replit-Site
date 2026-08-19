@@ -62,7 +62,7 @@ export const DigeratiStatsSection = (): JSX.Element => {
   const facts = getHomepageCyberFacts();
 
   return (
-    <section className="de-dark-well relative py-6 lg:py-8">
+    <section className="de-dark-well de-field-grain relative py-6 lg:py-8">
       <div className="de-style-box relative mx-3 px-4 py-8 sm:mx-4 sm:px-8 md:py-16 lg:mx-6 lg:px-10 lg:py-20">
         <motion.div
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}

@@ -1,5 +1,6 @@
 import { Shield, Award, CheckCircle } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { ParallaxStill } from "@/components/visual/ParallaxStill";
 import ctaBgImage from "@assets/de-section-atmosphere.png";
 import { CTA } from "@/lib/ctaCopy";
 import { useBooking } from "@/contexts/BookingContext";
@@ -16,12 +17,16 @@ export const DigeratiCTASection = (): JSX.Element => {
   const { openBooking } = useBooking();
 
   return (
-    <section className="de-dark-well de-chapter-hairline relative overflow-hidden py-12 lg:py-16">
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <img src={ctaBgImage} alt="" loading="lazy" className="absolute top-0 left-0 w-full h-auto opacity-[0.15]" />
-      </div>
+    <section className="de-dark-well de-chapter-hairline de-field-grain-film de-field-lit relative overflow-hidden py-16 lg:py-24">
+      <ParallaxStill
+        src={ctaBgImage}
+        alt=""
+        travel={10}
+        className="pointer-events-none absolute inset-0 z-0"
+        imgClassName="opacity-[0.22]"
+      />
 
-      <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-6 text-center relative z-10">
+      <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-3 text-center sm:px-4 lg:px-6">
         <motion.div
           initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}

@@ -49,7 +49,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
 
   return (
     <>
-      <section className="de-paper-chapter de-chapter-fade-from-dark relative py-16 lg:py-24">
+      <section className="de-paper-chapter de-chapter-fade-from-dark de-chapter-fade-to-surface de-field-grain-paper relative py-16 lg:py-24">
         <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
           <motion.div
             className="mb-12 max-w-2xl md:mb-16"
@@ -125,7 +125,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
                 <li
                   key={step.number}
                   data-testid={step.testId}
-                  className={`lg:px-6 ${index > 0 ? "lg:border-l lg:border-[var(--de-hairline)]" : "lg:pl-0"}`}
+                  className={`flex h-full flex-col lg:px-6 ${index > 0 ? "lg:border-l lg:border-[var(--de-hairline)]" : "lg:pl-0"}`}
                 >
                   <p className="font-mono text-base font-semibold tracking-[0.18em] text-de-magenta-ink">
                     {String(step.number).padStart(2, "0")}

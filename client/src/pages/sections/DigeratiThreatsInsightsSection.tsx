@@ -135,7 +135,7 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
   return (
     <section
       ref={sectionRef}
-      className="de-dark-chapter de-chapter-hairline relative overflow-hidden py-10 md:py-14 lg:py-16"
+      className="de-dark-well de-chapter-hairline de-field-grain relative overflow-hidden py-10 md:py-14 lg:py-16"
       style={{ position: "relative" }}
     >
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">

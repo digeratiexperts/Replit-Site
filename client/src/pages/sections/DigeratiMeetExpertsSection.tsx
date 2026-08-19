@@ -24,7 +24,7 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
 
   return (
     <section
-      className="de-dark-well de-chapter-hairline relative overflow-hidden py-10 md:py-14 lg:py-16"
+      className="de-dark-well de-chapter-hairline de-field-grain relative overflow-hidden py-10 md:py-14 lg:py-16"
       data-testid="section-meet-experts"
     >
       <div

@@ -50,7 +50,7 @@ export const DigeratiAlertBanner = (): JSX.Element => {
   };
 
   return (
-    <section className="de-dark-well de-chapter-hairline relative overflow-hidden py-8 lg:py-16">
+    <section className="de-dark-well de-chapter-hairline de-field-grain relative overflow-hidden py-8 lg:py-16">
       <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
         <motion.div
           className="mb-8 text-center md:mb-16"
@@ -68,7 +68,7 @@ export const DigeratiAlertBanner = (): JSX.Element => {
         </motion.div>
 
         <motion.div
-          className="mb-8 grid gap-4 md:mb-12 md:grid-cols-3 md:gap-8"
+          className="mb-8 grid grid-cols-1 items-stretch gap-4 md:mb-12 md:grid-cols-3 md:gap-8"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -79,9 +79,9 @@ export const DigeratiAlertBanner = (): JSX.Element => {
               key={feature.title}
               variants={cardVariants}
               data-testid={feature.testId}
-              className="group relative"
+              className="group relative flex h-full"
             >
-              <div className="relative h-full rounded-2xl border border-de-hairline bg-de-raised p-6 transition-colors duration-300 group-hover:border-white/20">
+              <div className="relative flex h-full flex-col rounded-2xl border border-de-hairline bg-de-raised p-6 transition-colors duration-300 group-hover:border-white/20">
                 <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl border border-white/10 bg-white/5">
                   <feature.icon className="h-7 w-7 text-[#D3126A]" />
                 </div>
