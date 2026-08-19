@@ -12,8 +12,6 @@ const TOP_CHAPTERS = new Set([
   "services",
   "pricing",
   "industries",
-  "testimonials",
-  "faq",
   "contact",
 ]);
 
@@ -24,7 +22,6 @@ const DOCK_CHAPTERS = new Set([
   "services",
   "pricing",
   "industries",
-  "testimonials",
   "contact",
 ]);
 

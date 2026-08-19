@@ -12,6 +12,7 @@ import { useOptionalFullPageScroll } from '@/components/FullPageScroll';
 import { HomepageOnPageNav } from '@/components/HomepageSectionNav';
 import { PORTAL_LOGIN } from '@/lib/portalUrls';
 import { CTA } from '@/lib/ctaCopy';
+import { PRIMARY_PHONE } from '@/data/companyContact';
 
 const NoiseTexture = ({ id }: { id: string }) => (
   <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.025]" aria-hidden="true">
@@ -657,12 +658,12 @@ export function MegaMenu() {
         <div className="max-w-[var(--de-canvas)] mx-auto px-3 lg:px-5 flex flex-col md:flex-row items-center justify-end py-1.5 relative z-10 w-full">
           <div className="flex items-center flex-wrap gap-x-5 gap-y-1.5 md:gap-x-7 justify-center md:justify-end">
             <a
-              href="tel:+13254809870"
+              href={PRIMARY_PHONE.telHref}
               className="flex items-center text-white/95 hover:text-de-magenta-ink text-base font-semibold leading-none tracking-wide transition-colors"
               data-testid="utility-phone"
             >
               <Phone className="h-4 w-4 mr-1.5 text-de-magenta-ink shrink-0" />
-              <span className="hidden sm:inline">325-480-9870</span>
+              <span className="hidden sm:inline">{PRIMARY_PHONE.display}</span>
               <span className="sm:hidden">Call</span>
             </a>
 
@@ -1257,17 +1258,17 @@ export function MegaMenu() {
                 }}
               >
                 <a
-                  href="tel:+13254809870"
+                  href={PRIMARY_PHONE.telHref}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl border border-de-hairline bg-de-raised hover:border-white/25 transition-all group"
                   data-testid="mobile-call"
-                  aria-label="Call us at 325-480-9870"
+                  aria-label={`Call us at ${PRIMARY_PHONE.display}`}
                 >
                   <div className="w-10 h-10 rounded-lg border border-de-hairline bg-[#0a0a0a] flex items-center justify-center">
                     <Phone className="h-5 w-5 text-[#D3126A]" aria-hidden="true" />
                   </div>
                   <div>
                     <div className="text-base text-white/55">Call Us</div>
-                    <div className="font-semibold text-white group-hover:text-[#D3126A] transition-colors">325-480-9870</div>
+                    <div className="font-semibold text-white group-hover:text-[#D3126A] transition-colors">{PRIMARY_PHONE.display}</div>
                   </div>
                 </a>
 

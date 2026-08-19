@@ -33,7 +33,7 @@ const homepageSections: { id: string; label: string; theme: 'dark' | 'light'; sh
   { id: 'hero', label: 'Home', theme: 'dark' },
   { id: 'stats', label: 'Why DE', theme: 'dark' },
   { id: 'challenges', label: 'Problems', theme: 'dark', showInNav: false },
-  { id: 'services', label: 'Engage', theme: 'dark' },
+  { id: 'services', label: 'How It Works', theme: 'dark' },
   { id: 'protection', label: 'Protect', theme: 'light', showInNav: false },
   { id: 'testimonials', label: 'Proof', theme: 'dark', showInNav: false },
   { id: 'trust', label: 'Trust', theme: 'light', showInNav: false },
@@ -41,7 +41,7 @@ const homepageSections: { id: string; label: string; theme: 'dark' | 'light'; sh
   { id: 'industries', label: 'Industries', theme: 'dark' },
   { id: 'pricing', label: 'Packages', theme: 'dark' },
   { id: 'insights', label: 'Insights', theme: 'dark', showInNav: false },
-  { id: 'faq', label: 'FAQ', theme: 'light' },
+  { id: 'faq', label: 'FAQ', theme: 'light', showInNav: false },
   { id: 'cta', label: 'Next step', theme: 'dark', showInNav: false },
   { id: 'contact', label: 'Contact', theme: 'dark' },
 ];
@@ -83,7 +83,7 @@ export const DigeratiHomepage = (): JSX.Element => {
           <DigeratiWhatWeTackleSection />
         </ScrollSectionAuto>
 
-        {/* Engage */}
+        {/* How it works */}
         <ScrollSectionAuto id="services" chapter>
           <DigeratiServicesSection />
         </ScrollSectionAuto>

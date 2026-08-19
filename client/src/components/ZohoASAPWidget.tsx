@@ -682,7 +682,7 @@ export const ZohoASAPWidget = ({
             </span>
             <span className="hidden text-left sm:block">
               <span className="block text-sm font-semibold leading-4 tracking-tight">Ask DE</span>
-              <span className="block text-[11px] leading-4 text-white/55">Technology desk · live</span>
+              <span className="block text-[11px] leading-4 text-white/55">Technology desk</span>
             </span>
           </button>
         )}

@@ -9,6 +9,7 @@ import { parallaxTravelRange } from "@/components/visual/ParallaxStill";
 import heroBgImage from "@assets/de-hero-arizona-dusk.png";
 import { useBooking } from "@/contexts/BookingContext";
 import { CTA } from "@/lib/ctaCopy";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export const ModernHeroSection = (): JSX.Element => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -29,7 +30,7 @@ export const ModernHeroSection = (): JSX.Element => {
   const duskExtra = prefersReducedMotion ? 0 : 12;
 
   const features = [
-    { icon: FileCheck, text: "Insurance & Compliance Ready" },
+    { icon: FileCheck, text: "Insurance & Compliance-Ready" },
     { icon: Shield, text: "24/7 Human-Led Monitoring" },
     { icon: Building, text: "Built for Small Businesses" },
     { icon: CheckCircle, text: "Easy-to-Read Risk Reports" },
@@ -44,7 +45,7 @@ export const ModernHeroSection = (): JSX.Element => {
     <section
       ref={containerRef}
       id="home"
-      className="de-field-grain-film relative flex min-h-0 flex-col overflow-hidden lg:min-h-screen"
+      className="de-field-grain-film relative flex min-h-0 scroll-mt-[var(--de-nav-offset)] flex-col overflow-hidden lg:min-h-screen"
       style={{ position: "relative" }}
     >
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -54,16 +55,17 @@ export const ModernHeroSection = (): JSX.Element => {
           loading="eager"
           decoding="async"
           aria-hidden="true"
-          className="absolute left-0 w-full object-cover object-[center_82%]"
+          className="absolute left-0 w-full object-cover"
           style={{
             y: backgroundY,
             top: duskExtra ? `-${duskExtra}%` : 0,
             height: duskExtra ? `${100 + duskExtra * 2}%` : "100%",
-            opacity: 0.5,
+            opacity: 0.58,
+            objectPosition: "center 70%",
             WebkitMaskImage:
-              "linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.38) 16%, rgba(0,0,0,0.88) 46%, black 72%)",
+              "linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.55) 22%, rgba(0,0,0,0.9) 58%, black 82%)",
             maskImage:
-              "linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.38) 16%, rgba(0,0,0,0.88) 46%, black 72%)",
+              "linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.55) 22%, rgba(0,0,0,0.9) 58%, black 82%)",
           }}
         />
       </div>
@@ -73,14 +75,14 @@ export const ModernHeroSection = (): JSX.Element => {
         aria-hidden="true"
         style={{
           background:
-            "linear-gradient(90deg, rgba(5,3,18,0.92) 0%, rgba(5,3,18,0.70) 26%, rgba(5,3,18,0.22) 56%, rgba(5,3,18,0.06) 100%), linear-gradient(180deg, rgba(5,3,18,0.72) 0%, rgba(5,3,18,0.28) 34%, rgba(5,3,18,0.08) 62%, rgba(5,3,18,0.38) 100%)",
+            "linear-gradient(90deg, rgba(5,3,18,0.82) 0%, rgba(5,3,18,0.52) 42%, rgba(5,3,18,0.34) 68%, rgba(5,3,18,0.46) 100%), linear-gradient(180deg, rgba(5,3,18,0.58) 0%, rgba(5,3,18,0.22) 38%, rgba(5,3,18,0.16) 68%, rgba(5,3,18,0.62) 100%)",
         }}
       >
         <div
-          className="de-hero-glow absolute top-[8%] right-[-4%] w-[640px] h-[640px] pointer-events-none"
+          className="pointer-events-none absolute right-[-8%] top-[12%] h-[420px] w-[420px]"
           style={{
             background:
-              "radial-gradient(circle at 70% 35%, rgba(236, 72, 153, 0.20) 0%, rgba(139, 92, 246, 0.14) 38%, transparent 64%)",
+              "radial-gradient(circle at 60% 40%, rgba(211, 18, 106, 0.10) 0%, rgba(91, 69, 224, 0.08) 42%, transparent 70%)",
           }}
         />
       </div>
@@ -89,8 +91,8 @@ export const ModernHeroSection = (): JSX.Element => {
         className="relative z-10 flex flex-1 w-full items-center px-5 sm:px-8 lg:px-10 xl:px-12 pt-[calc(var(--de-nav-offset)+0.5rem)] pb-10 sm:pb-14 lg:pt-[calc(var(--de-nav-offset)+0.5rem)] lg:pb-16"
         style={{ y }}
       >
-        <div className="mx-auto w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.18fr)_minmax(0,0.82fr)] gap-8 lg:gap-10 xl:gap-12 items-start lg:items-center">
+        <div className="mx-auto w-full max-w-[var(--de-canvas)]">
+          <div className="grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(0,0.94fr)_minmax(0,1.06fr)] xl:items-center xl:gap-12">
             <motion.div
               className="flex flex-col gap-3.5 sm:gap-5 w-full min-w-0"
               initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
@@ -106,7 +108,7 @@ export const ModernHeroSection = (): JSX.Element => {
                 Arizona MSP · Cybersecurity &amp; Managed IT
               </motion.p>
 
-              <h1 className="text-[clamp(2.25rem,8vw,3.75rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white">
+              <h1 className="text-[clamp(2.25rem,4.4vw,3.75rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white">
                 <span>Your Arizona business,</span>
                 <br />
                 <span className="text-[#D3126A]">
@@ -114,17 +116,17 @@ export const ModernHeroSection = (): JSX.Element => {
                 </span>
               </h1>
 
-              <p className="text-base text-white/90 leading-relaxed max-w-xl sm:text-lg sm:text-white/85">
-                Cybersecurity and managed IT for growing businesses—reducing risk, supporting
+              <p className="max-w-[36rem] text-[17px] leading-[1.6] text-white/82 sm:text-lg">
+                Cybersecurity and managed IT for growing businesses, reducing risk, supporting
                 compliance, and keeping your team productive without building an internal IT
                 department.
               </p>
 
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-2.5">
+              <div className="grid grid-cols-1 gap-x-4 gap-y-2 min-[420px]:grid-cols-2 xl:grid-cols-4">
                 {features.map((feature, index) => (
                   <motion.div
                     key={feature.text}
-                    className="flex items-start gap-1.5 min-w-0"
+                    className="flex min-w-0 items-center gap-2"
                     initial={prefersReducedMotion ? false : { opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{
@@ -132,8 +134,8 @@ export const ModernHeroSection = (): JSX.Element => {
                       delay: prefersReducedMotion ? 0 : 0.1 + index * 0.03,
                     }}
                   >
-                    <feature.icon className="h-4 w-4 text-pink-400/90 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                    <span className="text-[15px] font-medium text-white/90 leading-snug sm:text-base sm:font-normal sm:text-white/80">{feature.text}</span>
+                    <feature.icon className="h-4 w-4 shrink-0 text-[#D3126A]" strokeWidth={1.75} aria-hidden="true" />
+                    <span className="text-[14px] font-medium leading-5 text-white/80">{feature.text}</span>
                   </motion.div>
                 ))}
               </div>
@@ -148,7 +150,7 @@ export const ModernHeroSection = (): JSX.Element => {
                     variant="brand"
                     className="h-12 w-full sm:w-auto px-6 sm:px-7 text-base font-semibold"
                   >
-                    {CTA.heroPrimary}
+                    {CTA.primary}
                     <ArrowRight className="ml-2 w-5 h-5" aria-hidden="true" />
                   </Button>
                   <Button
@@ -156,72 +158,56 @@ export const ModernHeroSection = (): JSX.Element => {
                     size="lg"
                     asChild
                     data-testid="button-hero-pricing"
-                    className="h-12 w-full sm:w-auto px-6 sm:px-7 text-base font-semibold bg-transparent text-white border border-white/35 hover:bg-white/5 hover:border-white/55 shadow-none"
+                    className="h-12 w-full rounded-lg border border-white/20 bg-[#151217] px-6 text-base font-semibold text-white shadow-none hover:bg-white/[0.06] hover:border-white/35 sm:w-auto sm:px-7"
                   >
                     <Link href={CTA.secondaryHref}>{CTA.secondary}</Link>
                   </Button>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-base text-white/75">
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[14px] text-white/70">
                   <span className="inline-flex items-center gap-1.5">
-                    <Check className="w-4 h-4 text-emerald-400" aria-hidden="true" />
+                    <Check className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
                     No obligation
                   </span>
                   <span className="inline-flex items-center gap-1.5">
-                    <Check className="w-4 h-4 text-emerald-400" aria-hidden="true" />
+                    <Check className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
                     Response within one business day
                   </span>
                 </div>
 
-                <p className="text-base text-white/75 max-w-xl leading-relaxed">
-                  Arizona-based · Principal-led · Recommendations sized to your business
-                  <span className="mx-2 text-white/25" aria-hidden="true">
-                    ·
-                  </span>
-                  Or call{" "}
+                <p className="text-[14px] leading-5 text-white/60">
+                  Arizona-based · Principal-led · Call{" "}
                   <a
-                    href="tel:+13254809870"
-                    className="text-pink-300 hover:text-pink-200 font-medium underline underline-offset-4 decoration-pink-400/40 hover:decoration-pink-300/70 transition-colors"
+                    href={PRIMARY_PHONE.telHref}
+                    className="font-medium text-white/80 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white hover:decoration-white/50"
                     data-testid="link-hero-phone"
                   >
-                    325-480-9870
+                    {PRIMARY_PHONE.display}
                   </a>
                 </p>
               </div>
             </motion.div>
 
-            <div className="hidden lg:flex relative justify-end w-full lg:pb-8">
+            <div className="relative flex w-full justify-center xl:justify-end xl:pb-2">
               <motion.div
-                className="relative w-full max-w-[500px] xl:max-w-[530px]"
-                initial={prefersReducedMotion ? false : { opacity: 0, x: 22 }}
-                animate={{ opacity: 1, x: 0 }}
+                className="relative w-full max-w-[560px] xl:max-w-[600px]"
+                initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{
-                  duration: prefersReducedMotion ? 0 : 0.5,
+                  duration: prefersReducedMotion ? 0 : 0.45,
                   delay: prefersReducedMotion ? 0 : 0.12,
                   ease: "easeOut",
                 }}
               >
-                <motion.div
-                  className="de-hero-glow absolute -inset-8 -z-10 rounded-[2.5rem] pointer-events-none"
+                <div
+                  className="pointer-events-none absolute -inset-6 -z-10 rounded-[1.75rem]"
                   aria-hidden="true"
                   style={{
                     background:
-                      "radial-gradient(ellipse at center, rgba(236, 72, 153, 0.32) 0%, rgba(139, 92, 246, 0.18) 42%, transparent 72%)",
+                      "radial-gradient(ellipse at center, rgba(91, 69, 224, 0.16) 0%, transparent 68%)",
                   }}
-                  animate={
-                    prefersReducedMotion
-                      ? undefined
-                      : { opacity: [0.55, 0.85, 0.55], scale: [1, 1.03, 1] }
-                  }
-                  transition={
-                    prefersReducedMotion
-                      ? undefined
-                      : { duration: 4.5, repeat: Infinity, ease: "easeInOut" }
-                  }
                 />
-                <div className="relative rounded-2xl overflow-hidden border border-white/12 shadow-2xl shadow-black/50">
-                  <DashboardMockup className="w-full" />
-                </div>
+                <DashboardMockup className="w-full" />
               </motion.div>
             </div>
           </div>
