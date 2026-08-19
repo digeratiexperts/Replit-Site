@@ -6,8 +6,8 @@ import {
   CheckCircle2,
   ChevronRight,
   FileText,
-  LayoutDashboard,
   LayoutGrid,
+  SquareArrowOutUpRight,
   Lock,
   Mail,
   MessageCircle,
@@ -95,7 +95,7 @@ const CLIENT_TOOLS: ClientTool[] = [
     title: "Client Portal",
     description: "Account, tickets, services and client resources.",
     href: PORTAL_LOGIN,
-    icon: LayoutDashboard,
+    icon: SquareArrowOutUpRight,
     featured: true,
     external: true,
   },
@@ -1167,7 +1167,7 @@ export const ZohoASAPWidget = ({
                               <span className="flex flex-wrap items-center gap-2">
                                 <span className="text-[13.5px] font-semibold text-white">{tool.title}</span>
                                 {tool.badge && (
-                                  <span className="rounded-md bg-white/[0.08] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.06em] text-[#F0B4CC]">
+                                  <span className="rounded-md bg-white/[0.08] px-1.5 py-0.5 text-[10px] font-semibold text-[#F0B4CC]">
                                     {tool.badge}
                                   </span>
                                 )}
@@ -1195,18 +1195,20 @@ export const ZohoASAPWidget = ({
                     })}
                   </div>
 
-                  <div className="mt-3 flex items-center gap-3 rounded-2xl border border-white/10 bg-[#0b0c10] p-3">
-                    <span className="h-10 w-[3px] flex-shrink-0 rounded-full bg-[#D3126A]" aria-hidden="true" />
-                    <div className="min-w-0 flex-1">
-                      <p className="text-[13px] font-semibold text-white">Possible security incident?</p>
-                      <p className="mt-0.5 text-[11.5px] leading-4 text-white/55">
-                        Skip the tools and route it as urgent support.
-                      </p>
+                  <div className="mt-3 rounded-2xl border border-white/10 bg-[#0b0c10] p-3">
+                    <div className="flex gap-3">
+                      <span className="h-10 w-[3px] flex-shrink-0 rounded-full bg-[#D3126A]" aria-hidden="true" />
+                      <div className="min-w-0">
+                        <p className="text-[13px] font-semibold text-white">Possible security incident?</p>
+                        <p className="mt-0.5 text-[11.5px] leading-4 text-white/55">
+                          Skip the tools and route it as urgent support.
+                        </p>
+                      </div>
                     </div>
                     <Button
                       type="button"
                       onClick={() => setActiveTab("ticket")}
-                      className="h-10 flex-shrink-0 rounded-xl bg-[#D3126A] px-2.5 text-[12px] text-white hover:bg-[#c01060]"
+                      className="mt-3 h-11 w-full rounded-xl bg-[#D3126A] text-[13px] text-white hover:bg-[#c01060]"
                       data-testid="button-tools-go-to-support"
                     >
                       Go to Get Support
