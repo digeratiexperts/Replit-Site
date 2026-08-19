@@ -7,6 +7,8 @@ import {
   ChevronRight,
   FileText,
   LayoutGrid,
+  Maximize2,
+  Minimize2,
   SquareArrowOutUpRight,
   Lock,
   Mail,
@@ -27,6 +29,8 @@ import { PORTAL_LOGIN } from "@/lib/portalUrls";
 import type { OpenMspAdvisorDetail } from "@/lib/openMspAdvisor";
 import { STORE_ADVISOR_SEED } from "@/lib/openMspAdvisor";
 import { analytics } from "@/lib/analytics";
+import { useDraggableWindow } from "@/hooks/useDraggableWindow";
+import type { DeskResizeEdge } from "@/lib/deskWindowGeometry";
 
 interface ZohoASAPWidgetProps {
   isEnabled?: boolean;
@@ -160,6 +164,7 @@ export const ZohoASAPWidget = ({
   const [showTicketExtras, setShowTicketExtras] = useState(false);
   const [dialogHeight, setDialogHeight] = useState<number | undefined>(undefined);
   const [reduceMotion, setReduceMotion] = useState(false);
+  const [canDrag, setCanDrag] = useState(false);
   const ticketFileRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLElement>(null);
   const chromeRef = useRef<HTMLDivElement>(null);
@@ -179,6 +184,20 @@ export const ZohoASAPWidget = ({
 
   const { toast } = useToast();
 
+  const deskDrag = useDraggableWindow({
+    enabled: canDrag,
+    open: isOpen,
+    storageKey: "de-desk-window-pos",
+  });
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 640px)");
+    const sync = () => setCanDrag(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const sync = () => setReduceMotion(mq.matches);
@@ -188,8 +207,8 @@ export const ZohoASAPWidget = ({
   }, []);
 
   useLayoutEffect(() => {
-    if (!isOpen) {
-      setDialogHeight(undefined);
+    if (!isOpen || deskDrag.size) {
+      if (!isOpen) setDialogHeight(undefined);
       return;
     }
 
@@ -222,7 +241,7 @@ export const ZohoASAPWidget = ({
       observer.disconnect();
       window.removeEventListener("resize", measure);
     };
-  }, [isOpen, activeTab, ticketResult, showTicketExtras, chatMessages, isChatSending]);
+  }, [isOpen, activeTab, ticketResult, showTicketExtras, chatMessages, isChatSending, deskDrag.size]);
 
   useEffect(() => {
     if (cookieBannerClear) return;
@@ -670,12 +689,24 @@ export const ZohoASAPWidget = ({
 
         {isOpen && (
           <section
-            ref={dialogRef}
-            className="absolute bottom-0 right-0 z-[100] flex w-[min(460px,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-[1.5rem] border-[3px] border-[#A78BFA]/75 bg-[#1a0b33] shadow-[0_0_0_1px_rgba(196,181,253,0.45),0_0_0_6px_rgba(124,58,237,0.22),0_28px_80px_rgba(50,15,90,0.7),0_0_100px_rgba(139,92,246,0.4)]"
+            ref={(node) => {
+              dialogRef.current = node;
+              deskDrag.panelRef.current = node;
+            }}
+            className={`${canDrag ? "fixed" : "absolute bottom-0 right-0"} z-[100] flex w-[min(460px,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-[1.5rem] border-[3px] border-[#A78BFA]/75 bg-[#1a0b33] shadow-[0_0_0_1px_rgba(196,181,253,0.45),0_0_0_6px_rgba(124,58,237,0.22),0_28px_80px_rgba(50,15,90,0.7),0_0_100px_rgba(139,92,246,0.4)]`}
             style={{
-              height: dialogHeight,
-              maxHeight: "min(86vh, calc(100dvh - 4.5rem))",
-              transition: reduceMotion ? undefined : "height 220ms ease",
+              ...(canDrag
+                ? deskDrag.pos
+                  ? { left: deskDrag.pos.x, top: deskDrag.pos.y, right: "auto", bottom: "auto" }
+                  : { right: "1rem", bottom: cookieBannerClear ? "1.25rem" : "7rem", left: "auto", top: "auto" }
+                : {}),
+              ...(canDrag && deskDrag.size
+                ? { width: deskDrag.size.w, height: deskDrag.size.h, maxHeight: "none" }
+                : {
+                    height: dialogHeight,
+                    maxHeight: "min(86vh, calc(100dvh - 4.5rem))",
+                    transition: reduceMotion ? undefined : "height 220ms ease",
+                  }),
             }}
             role="dialog"
             aria-modal="true"
@@ -692,7 +723,20 @@ export const ZohoASAPWidget = ({
 
             <div ref={chromeRef} className="relative flex-shrink-0">
               <header className="flex items-center justify-between gap-3 px-4 pb-1 pt-4">
-                <div className="flex min-w-0 items-center gap-3">
+                <div
+                  className={`flex min-w-0 items-center gap-3 ${
+                    canDrag
+                      ? deskDrag.dragging
+                        ? "cursor-grabbing select-none"
+                        : "cursor-grab select-none"
+                      : ""
+                  }`}
+                  onPointerDown={canDrag ? deskDrag.onHandlePointerDown : undefined}
+                  onDoubleClick={canDrag ? deskDrag.reset : undefined}
+                  style={canDrag ? { touchAction: "none" } : undefined}
+                  data-testid="desk-drag-handle"
+                  aria-label={canDrag ? "Move DE Desk window. Double-click to reset size and position." : undefined}
+                >
                   <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#D3126A] to-[#7c3aed] text-[12px] font-bold tracking-wide text-white shadow-[0_0_22px_rgba(211,18,106,0.4)]">
                     DE
                     <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#1a0b33] bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.85)]" />
@@ -708,15 +752,34 @@ export const ZohoASAPWidget = ({
                     </p>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setIsOpen(false)}
-                  className="rounded-xl border border-white/10 bg-white/[0.04] p-2 text-white/60 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/45"
-                  data-testid="button-close-widget"
-                  aria-label="Close DE Desk"
-                >
-                  <X size={16} aria-hidden="true" />
-                </button>
+                <div className="flex items-center gap-1.5">
+                  {canDrag && (
+                    <button
+                      type="button"
+                      className="rounded-xl border border-white/10 bg-white/[0.04] p-2 text-white/60 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/45"
+                      data-testid="button-expand-desk"
+                      aria-label={deskDrag.expanded ? "Reset DE Desk size" : "Expand DE Desk"}
+                      title={deskDrag.expanded ? "Reset size" : "Expand"}
+                      onPointerDown={(event) => event.stopPropagation()}
+                      onClick={deskDrag.toggleExpanded}
+                    >
+                      {deskDrag.expanded ? (
+                        <Minimize2 size={14} aria-hidden="true" />
+                      ) : (
+                        <Maximize2 size={14} aria-hidden="true" />
+                      )}
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setIsOpen(false)}
+                    className="rounded-xl border border-white/10 bg-white/[0.04] p-2 text-white/60 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/45"
+                    data-testid="button-close-widget"
+                    aria-label="Close DE Desk"
+                  >
+                    <X size={16} aria-hidden="true" />
+                  </button>
+                </div>
               </header>
 
               <nav className="mx-3 mb-2 grid grid-cols-3 border-b border-white/10" aria-label="Support options">
@@ -1218,10 +1281,90 @@ export const ZohoASAPWidget = ({
               )}
               </div>
             </div>
+            {canDrag && (
+              <>
+                {(["n", "s", "e", "w", "ne", "nw", "sw"] as DeskResizeEdge[]).map((edge) => (
+                  <button
+                    key={edge}
+                    type="button"
+                    className={`de-desk-resize-edge de-desk-resize-${edge}`}
+                    data-testid={`desk-resize-${edge}`}
+                    aria-label={`Resize DE Desk from the ${edge} edge`}
+                    onPointerDown={deskDrag.onResizePointerDown(edge)}
+                  />
+                ))}
+                <button
+                  type="button"
+                  className={`de-desk-resize de-desk-resize-se${deskDrag.resizing ? " is-active" : ""}`}
+                  data-testid="desk-resize-handle"
+                  aria-label="Resize DE Desk. Drag any edge or this corner, or use Expand in the header."
+                  onPointerDown={deskDrag.onResizePointerDown("se")}
+                >
+                  <span aria-hidden="true" />
+                </button>
+              </>
+            )}
           </section>
         )}
       </div>
 
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            .de-desk-resize-edge {
+              position: absolute;
+              border: 0;
+              padding: 0;
+              background: transparent;
+              touch-action: none;
+              z-index: 4;
+            }
+            .de-desk-resize-n { top: 0; left: 14px; right: 14px; height: 10px; cursor: ns-resize; }
+            .de-desk-resize-s { bottom: 0; left: 14px; right: 14px; height: 10px; cursor: ns-resize; }
+            .de-desk-resize-e { right: 0; top: 14px; bottom: 14px; width: 10px; cursor: ew-resize; }
+            .de-desk-resize-w { left: 0; top: 14px; bottom: 14px; width: 10px; cursor: ew-resize; }
+            .de-desk-resize-nw { top: 0; left: 0; width: 16px; height: 16px; cursor: nwse-resize; }
+            .de-desk-resize-ne { top: 0; right: 0; width: 16px; height: 16px; cursor: nesw-resize; }
+            .de-desk-resize-sw { bottom: 0; left: 0; width: 16px; height: 16px; cursor: nesw-resize; }
+            .de-desk-resize {
+              position: absolute;
+              right: 0;
+              bottom: 0;
+              width: 44px;
+              height: 44px;
+              border: 0;
+              background: transparent;
+              cursor: nwse-resize;
+              touch-action: none;
+              z-index: 5;
+            }
+            .de-desk-resize span {
+              position: absolute;
+              right: 8px;
+              bottom: 8px;
+              width: 14px;
+              height: 14px;
+              background:
+                linear-gradient(135deg, transparent 46%, rgba(255,255,255,0.35) 46%, rgba(255,255,255,0.35) 54%, transparent 54%),
+                linear-gradient(135deg, transparent 66%, rgba(255,255,255,0.35) 66%, rgba(255,255,255,0.35) 74%, transparent 74%),
+                linear-gradient(135deg, transparent 86%, rgba(255,255,255,0.35) 86%, rgba(255,255,255,0.35) 94%, transparent 94%);
+            }
+            .de-desk-resize:hover span,
+            .de-desk-resize.is-active span,
+            .de-desk-resize:focus-visible span {
+              background:
+                linear-gradient(135deg, transparent 46%, #d3126a 46%, #d3126a 54%, transparent 54%),
+                linear-gradient(135deg, transparent 66%, #d3126a 66%, #d3126a 74%, transparent 74%),
+                linear-gradient(135deg, transparent 86%, #d3126a 86%, #d3126a 94%, transparent 94%);
+            }
+            .de-desk-resize:focus-visible {
+              outline: 2px solid #d3126a;
+              outline-offset: -4px;
+              border-radius: 10px;
+            }
+          `,
+        }}
+      />
       {customCSS && <style dangerouslySetInnerHTML={{ __html: customCSS }} />}
     </>
   );
