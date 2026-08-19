@@ -1694,6 +1694,7 @@ export const ZohoASAPWidget = ({
               display: flex; flex-direction: column;
             }
             .de-desk-scroll { overflow-y: auto; gap: 0; }
+            .de-desk-scroll > * { flex-shrink: 0; }
             .de-desk-intro { margin: 0 0 10px; }
             .de-desk-intro h3 {
               font-family: "Space Grotesk", sans-serif;
