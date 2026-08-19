@@ -50,24 +50,26 @@ export function ParallaxStill({
   const extra = reduceMotion ? 0 : travel;
 
   return (
-    <div ref={ref} className={cn("relative overflow-hidden", className)}>
-      <motion.img
-        src={src}
-        alt={alt}
-        sizes={sizes}
-        loading={loading}
-        decoding="async"
-        width={width}
-        height={height}
-        aria-hidden={alt === "" ? true : undefined}
-        data-testid={testId}
-        className={cn("absolute left-0 w-full object-cover object-center", imgClassName)}
-        style={{
-          y,
-          top: extra ? `-${extra}%` : 0,
-          height: extra ? `${100 + extra * 2}%` : "100%",
-        }}
-      />
+    <div className={cn("relative overflow-hidden", className)}>
+      <div ref={ref} className="absolute inset-0">
+        <motion.img
+          src={src}
+          alt={alt}
+          sizes={sizes}
+          loading={loading}
+          decoding="async"
+          width={width}
+          height={height}
+          aria-hidden={alt === "" ? true : undefined}
+          data-testid={testId}
+          className={cn("absolute left-0 w-full object-cover object-center", imgClassName)}
+          style={{
+            y,
+            top: extra ? `-${extra}%` : 0,
+            height: extra ? `${100 + extra * 2}%` : "100%",
+          }}
+        />
+      </div>
     </div>
   );
 }
