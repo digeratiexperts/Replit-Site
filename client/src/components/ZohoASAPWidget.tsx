@@ -13,7 +13,6 @@ import {
   Flag,
   Headset,
   KeyRound,
-  LifeBuoy,
   Lock,
   Mail,
   Maximize2,
@@ -102,84 +101,12 @@ const QUICK_CHAT_PROMPTS: Array<{
   { label: "Ask an IT/security question", icon: MessageCircle, tone: "teal" },
 ];
 
-function DeskHeroArt({ variant }: { variant: "desk" | "ticket" | "resources" }) {
-  if (variant === "ticket") {
-    return (
-      <svg className="de-desk-hero-art" viewBox="0 0 120 120" fill="none" aria-hidden="true">
-        <defs>
-          <linearGradient id="deDeskTicketCard" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#2B2735" />
-            <stop offset="1" stopColor="#18151F" />
-          </linearGradient>
-          <linearGradient id="deDeskTicketShield" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#3A2E44" />
-            <stop offset="1" stopColor="#1C1722" />
-          </linearGradient>
-        </defs>
-        <g transform="rotate(-7 45 55)">
-          <rect x="14" y="18" width="66" height="80" rx="12" fill="url(#deDeskTicketCard)" stroke="rgba(255,255,255,0.08)" />
-          <rect x="34" y="10" width="26" height="12" rx="5" fill="#332C3D" stroke="rgba(255,255,255,0.1)" />
-          <rect x="26" y="40" width="40" height="5" rx="2.5" fill="#D3126A" />
-          <rect x="26" y="52" width="34" height="5" rx="2.5" fill="#3A3644" />
-          <rect x="26" y="64" width="24" height="5" rx="2.5" fill="#413B4C" />
-          <circle cx="40" cy="84" r="11" fill="rgba(211,18,106,0.14)" stroke="#D3126A" strokeWidth="1.5" />
-          <path d="M35 84l3.5 3.5L46 80" stroke="#D3126A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </g>
-        <g transform="rotate(10 90 90)">
-          <path d="M90 62c12 0 20 6 20 6v18c0 14-9 22-20 26-11-4-20-12-20-26V68s8-6 20-6z" fill="url(#deDeskTicketShield)" stroke="#D3126A" strokeWidth="1.5" />
-          <rect x="82" y="88" width="16" height="12" rx="3" fill="none" stroke="#D3126A" strokeWidth="1.6" />
-          <path d="M85 88v-5a5 5 0 0 1 10 0v5" fill="none" stroke="#D3126A" strokeWidth="1.6" />
-        </g>
-      </svg>
-    );
-  }
-  if (variant === "resources") {
-    return (
-      <svg className="de-desk-hero-art" viewBox="0 0 120 120" fill="none" aria-hidden="true">
-        <defs>
-          <linearGradient id="deDeskResBook" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#2B2735" />
-            <stop offset="1" stopColor="#18151F" />
-          </linearGradient>
-        </defs>
-        <g transform="rotate(-6 50 55)">
-          <rect x="18" y="22" width="60" height="70" rx="8" fill="#100E16" />
-          <rect x="22" y="18" width="60" height="70" rx="8" fill="url(#deDeskResBook)" stroke="rgba(255,255,255,0.08)" />
-          <rect x="30" y="30" width="30" height="4" rx="2" fill="#D3126A" />
-          <rect x="30" y="40" width="24" height="4" rx="2" fill="#3A3444" />
-          <rect x="30" y="50" width="26" height="4" rx="2" fill="#3A3444" />
-          <path d="M64 14v14l-6-4-6 4V14z" fill="#D3126A" />
-        </g>
-        <g transform="rotate(8 92 92)">
-          <circle cx="88" cy="82" r="16" fill="rgba(211,18,106,0.10)" stroke="#D3126A" strokeWidth="2.5" />
-          <line x1="99" y1="93" x2="112" y2="106" stroke="#D3126A" strokeWidth="4" strokeLinecap="round" />
-        </g>
-      </svg>
-    );
-  }
+function DeskIntro({ heading, detail }: { heading: string; detail: string }) {
   return (
-    <svg className="de-desk-hero-art" viewBox="0 0 120 120" fill="none" aria-hidden="true">
-      <defs>
-        <linearGradient id="deDeskChatBubble" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#2B2735" />
-          <stop offset="1" stopColor="#18151F" />
-        </linearGradient>
-        <linearGradient id="deDeskChatShield" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#3A2E44" />
-          <stop offset="1" stopColor="#1C1722" />
-        </linearGradient>
-      </defs>
-      <g transform="rotate(-6 42 50)">
-        <path d="M16 24h56a8 8 0 0 1 8 8v34a8 8 0 0 1-8 8H44l-14 12v-12h-14a8 8 0 0 1-8-8V32a8 8 0 0 1 8-8z" fill="url(#deDeskChatBubble)" stroke="rgba(255,255,255,0.08)" />
-        <circle cx="34" cy="50" r="3.4" fill="#D3126A" />
-        <circle cx="46" cy="50" r="3.4" fill="#E8E4EE" />
-        <circle cx="58" cy="50" r="3.4" fill="#413B4C" />
-      </g>
-      <g transform="rotate(10 90 90)">
-        <path d="M90 62c12 0 20 6 20 6v18c0 14-9 22-20 26-11-4-20-12-20-26V68s8-6 20-6z" fill="url(#deDeskChatShield)" stroke="#D3126A" strokeWidth="1.5" />
-        <path d="M82 90l5 5 11-11" stroke="#D3126A" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-      </g>
-    </svg>
+    <div className="de-desk-intro">
+      <h3>{heading}</h3>
+      <p>{detail}</p>
+    </div>
   );
 }
 
@@ -207,21 +134,14 @@ const RESOURCE_LINKS: Array<{
   icon: typeof BookOpen | typeof BookMagnifier;
   external?: boolean;
   guide?: { title: string; href: string };
-  tags: [string, string];
-  cta: string;
-  accent: string;
-  iconBg: string;
+  tone: "pink" | "violet" | "blue" | "teal";
 }> = [
   {
     title: "Client portal",
     description: "Tickets, services, approvals, and account management.",
     href: PORTAL_LOGIN,
     icon: ShieldCheck,
-    tags: ["Account access", "Self-service"],
-    cta: "Open portal",
-    accent: "text-[#fed7aa]",
-    iconBg:
-      "bg-gradient-to-br from-[#fb923c]/45 to-[#ea580c]/25 ring-[#fdba74]/55 shadow-[0_0_20px_rgba(251,146,60,0.3)]",
+    tone: "pink",
   },
   {
     title: "Start remote support",
@@ -230,33 +150,21 @@ const RESOURCE_LINKS: Array<{
     icon: Monitor,
     external: true,
     guide: { title: "Remote support guide", href: "/support/remote-support" },
-    tags: ["Live help", "Screen share"],
-    cta: "Start session",
-    accent: "text-[#e9d5ff]",
-    iconBg:
-      "bg-gradient-to-br from-[#a855f7]/45 to-[#7c3aed]/30 ring-[#c084fc]/55 shadow-[0_0_20px_rgba(168,85,247,0.35)]",
+    tone: "violet",
   },
   {
     title: "Knowledge base",
     description: "Guides and troubleshooting.",
     href: "/support/knowledge-base",
     icon: BookMagnifier,
-    tags: ["Guides", "Troubleshooting"],
-    cta: "Browse articles",
-    accent: "text-[#bbf7d0]",
-    iconBg:
-      "bg-gradient-to-br from-[#4ade80]/40 to-[#16a34a]/25 ring-[#86efac]/50 shadow-[0_0_20px_rgba(74,222,128,0.28)]",
+    tone: "teal",
   },
   {
     title: "System status",
     description: "Service advisories and known issues.",
     href: "/portal/status",
     icon: Activity,
-    tags: ["Advisories", "Known issues"],
-    cta: "View status",
-    accent: "text-[#bae6fd]",
-    iconBg:
-      "bg-gradient-to-br from-[#38bdf8]/40 to-[#0284c7]/25 ring-[#7dd3fc]/50 shadow-[0_0_20px_rgba(56,189,248,0.3)]",
+    tone: "blue",
   },
 ];
 
@@ -763,8 +671,7 @@ export const ZohoASAPWidget = ({
         behavior: reduceMotion ? "auto" : "smooth",
         block: "start",
       });
-      const focusId = fullName.trim() && email.trim() ? "support-message" : "support-name";
-      document.getElementById(focusId)?.focus();
+      document.getElementById("support-message")?.focus();
     });
   };
 
@@ -1072,20 +979,10 @@ export const ZohoASAPWidget = ({
                   <div className="de-desk-scroll" aria-live="polite">
                     {chatMessages.length === 1 ? (
                       <>
-                        <div className="de-desk-hero">
-                          <div className="de-desk-hero-dots" aria-hidden="true" />
-                          <div className="de-desk-hero-txt">
-                            <div className="de-desk-hero-ring">
-                              <MessageCircle aria-hidden="true" />
-                            </div>
-                            <h3>How can we help?</h3>
-                            <p>
-                              Tell me what broke, what you&apos;re evaluating, or what you&apos;re trying to
-                              protect — I&apos;ll give you a clear read and the sensible next step.
-                            </p>
-                          </div>
-                          <DeskHeroArt variant="desk" />
-                        </div>
+                        <DeskIntro
+                          heading="How can we help?"
+                          detail="Pick a starting point, or type below."
+                        />
                         <div className="de-desk-rows is-grid">
                           {QUICK_CHAT_PROMPTS.map(({ label, icon: Icon, tone, ticketChip }) => (
                             <button
@@ -1185,17 +1082,10 @@ export const ZohoASAPWidget = ({
                       </div>
                     ) : (
                       <>
-                        <div className="de-desk-hero">
-                          <div className="de-desk-hero-dots" aria-hidden="true" />
-                          <div className="de-desk-hero-txt">
-                            <div className="de-desk-hero-ring">
-                              <FileText aria-hidden="true" />
-                            </div>
-                            <h3>Get technical support</h3>
-                            <p>Tell us what&apos;s happening and we&apos;ll route it to the right place.</p>
-                          </div>
-                          <DeskHeroArt variant="ticket" />
-                        </div>
+                        <DeskIntro
+                          heading="Get technical support"
+                          detail="Choose what this is about, then describe it. We’ll route it."
+                        />
 
                         <div className="de-desk-rows" role="group" aria-label="Common support issues">
                           {DESK_TICKET_CHIPS.filter((chip) => chip.featured).map((chip) => {
@@ -1250,15 +1140,43 @@ export const ZohoASAPWidget = ({
                           </div>
                         </div>
 
-                        <div className="de-desk-details-head" ref={ticketDetailsRef}>
-                          <h4>Tell us the details</h4>
-                          <span className="de-desk-secure">
-                            <Lock aria-hidden="true" />
-                            Secure &amp; private
-                          </span>
-                        </div>
+                        <div className="de-desk-form" ref={ticketDetailsRef}>
+                            <div className="de-desk-field">
+                              <label htmlFor="support-message">What&apos;s happening?</label>
+                              <div className="de-desk-ta-wrap">
+                                <Textarea
+                                  id="support-message"
+                                  maxLength={2000}
+                                  placeholder="Describe the issue, affected device or service, and what you already tried. No passwords or MFA codes."
+                                  value={message}
+                                  onChange={(event) => setMessage(event.target.value)}
+                                  rows={4}
+                                  className="de-desk-input de-desk-ta"
+                                  data-testid="input-support-message"
+                                />
+                                <span className="de-desk-counter">{message.length} / 2000</span>
+                              </div>
+                            </div>
 
-                          <div className="de-desk-form">
+                            <div className="de-desk-field">
+                              <label htmlFor="support-subject">Subject</label>
+                              <div className="de-desk-input-wrap">
+                                <Tag aria-hidden="true" />
+                                <Input
+                                  id="support-subject"
+                                  maxLength={200}
+                                  placeholder="Brief description"
+                                  value={subject}
+                                  onChange={(event) => setSubject(event.target.value)}
+                                  data-testid="input-support-subject"
+                                  className="de-desk-input"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="de-desk-details-head">
+                              <h4>How we reach you</h4>
+                            </div>
                             <div className="de-desk-grid2">
                               <div className="de-desk-field">
                                 <label htmlFor="support-name">Full name</label>
@@ -1292,46 +1210,25 @@ export const ZohoASAPWidget = ({
                                 </div>
                               </div>
                             </div>
-
-                            <div className="de-desk-grid2">
-                              <div className="de-desk-field">
-                                <label htmlFor="support-company">Company</label>
-                                <div className="de-desk-input-wrap">
-                                  <Building2 aria-hidden="true" />
-                                  <Input
-                                    id="support-company"
-                                    autoComplete="organization"
-                                    placeholder="Company name"
-                                    value={company}
-                                    onChange={(event) => setCompany(event.target.value)}
-                                    data-testid="input-support-company"
-                                    className="de-desk-input"
-                                  />
-                                </div>
-                              </div>
-                              <div className="de-desk-field">
-                                <label htmlFor="support-priority">Priority</label>
-                                <div className="de-desk-input-wrap">
-                                  <Flag aria-hidden="true" />
-                                  <select
-                                    id="support-priority"
-                                    value={priority}
-                                    onChange={(event) =>
-                                      setPriority(event.target.value as "Low" | "Medium" | "High" | "Urgent")
-                                    }
-                                    className="de-desk-input de-desk-select"
-                                    data-testid="select-support-priority"
-                                  >
-                                    <option value="Low">Low</option>
-                                    <option value="Medium">Medium</option>
-                                    <option value="High">High</option>
-                                    <option value="Urgent">Urgent</option>
-                                  </select>
-                                  <ChevronDown className="de-desk-select-chev" aria-hidden="true" />
-                                </div>
+                            <div className="de-desk-field">
+                              <label htmlFor="support-company">Company</label>
+                              <div className="de-desk-input-wrap">
+                                <Building2 aria-hidden="true" />
+                                <Input
+                                  id="support-company"
+                                  autoComplete="organization"
+                                  placeholder="Company name"
+                                  value={company}
+                                  onChange={(event) => setCompany(event.target.value)}
+                                  data-testid="input-support-company"
+                                  className="de-desk-input"
+                                />
                               </div>
                             </div>
 
+                            <div className="de-desk-details-head">
+                              <h4>Routing</h4>
+                            </div>
                             <div className="de-desk-grid2">
                               <div className="de-desk-field">
                                 <label htmlFor="support-category">Category</label>
@@ -1355,36 +1252,25 @@ export const ZohoASAPWidget = ({
                                 </div>
                               </div>
                               <div className="de-desk-field">
-                                <label htmlFor="support-subject">Subject</label>
+                                <label htmlFor="support-priority">Priority</label>
                                 <div className="de-desk-input-wrap">
-                                  <Tag aria-hidden="true" />
-                                  <Input
-                                    id="support-subject"
-                                    maxLength={200}
-                                    placeholder="Brief description"
-                                    value={subject}
-                                    onChange={(event) => setSubject(event.target.value)}
-                                    data-testid="input-support-subject"
-                                    className="de-desk-input"
-                                  />
+                                  <Flag aria-hidden="true" />
+                                  <select
+                                    id="support-priority"
+                                    value={priority}
+                                    onChange={(event) =>
+                                      setPriority(event.target.value as "Low" | "Medium" | "High" | "Urgent")
+                                    }
+                                    className="de-desk-input de-desk-select"
+                                    data-testid="select-support-priority"
+                                  >
+                                    <option value="Low">Low</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="High">High</option>
+                                    <option value="Urgent">Urgent</option>
+                                  </select>
+                                  <ChevronDown className="de-desk-select-chev" aria-hidden="true" />
                                 </div>
-                              </div>
-                            </div>
-
-                            <div className="de-desk-field">
-                              <label htmlFor="support-message">What&apos;s happening?</label>
-                              <div className="de-desk-ta-wrap">
-                                <Textarea
-                                  id="support-message"
-                                  maxLength={2000}
-                                  placeholder="Describe the issue, affected device or service, and what you already tried. No passwords or MFA codes."
-                                  value={message}
-                                  onChange={(event) => setMessage(event.target.value)}
-                                  rows={3}
-                                  className="de-desk-input de-desk-ta"
-                                  data-testid="input-support-message"
-                                />
-                                <span className="de-desk-counter">{message.length} / 2000</span>
                               </div>
                             </div>
 
@@ -1433,24 +1319,17 @@ export const ZohoASAPWidget = ({
               {activeTab === "resources" && (
                 <div className="de-desk-panel" data-testid="panel-support-resources">
                   <div className="de-desk-scroll">
-                    <div className="de-desk-hero">
-                      <div className="de-desk-hero-dots" aria-hidden="true" />
-                      <div className="de-desk-hero-txt">
-                        <div className="de-desk-hero-ring">
-                          <BookOpen aria-hidden="true" />
-                        </div>
-                        <h3>Client tools</h3>
-                        <p>Open the portal, start remote support, check status, or browse the knowledge base.</p>
-                      </div>
-                      <DeskHeroArt variant="resources" />
-                    </div>
+                    <DeskIntro
+                      heading="Client tools"
+                      detail="Portal, remote support, guides, and status."
+                    />
 
-                    <div className="de-desk-rows is-grid">
-                      {RESOURCE_LINKS.map(({ title, description, href, icon: Icon, external, guide }, index) => (
+                    <div className="de-desk-rows">
+                      {RESOURCE_LINKS.map(({ title, description, href, icon: Icon, external, guide, tone }) => (
                         <div key={title} className="de-desk-tool-block">
                           <a
                             href={href}
-                            data-tone={index === 0 ? "pink" : "violet"}
+                            data-tone={tone}
                             {...(external || href.startsWith("http")
                               ? { target: "_blank", rel: "noopener noreferrer" }
                               : {})}
@@ -1464,12 +1343,13 @@ export const ZohoASAPWidget = ({
                               <span className="de-desk-row-t">{title}</span>
                               <span className="de-desk-row-d">{description}</span>
                             </span>
-                            <span className="de-desk-row-actions">
-                              <span className="de-desk-row-ext">
-                                <ExternalLink aria-hidden="true" />
+                            {external || href.startsWith("http") ? (
+                              <span className="de-desk-row-ext" aria-hidden="true">
+                                <ExternalLink />
                               </span>
+                            ) : (
                               <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
-                            </span>
+                            )}
                           </a>
                           {guide ? (
                             <a href={guide.href} className="de-desk-sublink" data-testid="resource-link-remote-support-guide">
@@ -1481,30 +1361,7 @@ export const ZohoASAPWidget = ({
                     </div>
 
                     <div className="de-desk-rows">
-                      <a
-                        href="/book"
-                        data-tone="pink"
-                        className="de-desk-row is-lg is-highlight"
-                        data-testid="resource-link-cyber-risk-assessment"
-                      >
-                        <span className="de-desk-row-ic">
-                          <Shield aria-hidden="true" />
-                        </span>
-                        <span className="de-desk-row-body">
-                          <span className="de-desk-row-t">
-                            Cyber Risk Assessment <span className="de-desk-badge-rec">Recommended</span>
-                          </span>
-                          <span className="de-desk-row-d">Map your gaps and get a prioritized next step.</span>
-                        </span>
-                        <span className="de-desk-row-actions">
-                          <span className="de-desk-row-ext">
-                            <ExternalLink aria-hidden="true" />
-                          </span>
-                          <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
-                        </span>
-                      </a>
-
-                      <div className="de-desk-row is-lg is-alert" data-tone="red">
+                      <div className="de-desk-row is-alert" data-tone="red">
                         <span className="de-desk-row-ic">
                           <AlertTriangle aria-hidden="true" />
                         </span>
@@ -1519,6 +1376,24 @@ export const ZohoASAPWidget = ({
                           Create ticket
                         </button>
                       </div>
+
+                      <a
+                        href="/book"
+                        data-tone="pink"
+                        className="de-desk-row is-highlight"
+                        data-testid="resource-link-cyber-risk-assessment"
+                      >
+                        <span className="de-desk-row-ic">
+                          <Shield aria-hidden="true" />
+                        </span>
+                        <span className="de-desk-row-body">
+                          <span className="de-desk-row-t">
+                            Cyber Risk Assessment <span className="de-desk-badge-rec">Recommended</span>
+                          </span>
+                          <span className="de-desk-row-d">Map your gaps and get a prioritized next step.</span>
+                        </span>
+                        <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -1819,6 +1694,16 @@ export const ZohoASAPWidget = ({
               display: flex; flex-direction: column;
             }
             .de-desk-scroll { overflow-y: auto; gap: 0; }
+            .de-desk-intro { margin: 0 0 10px; }
+            .de-desk-intro h3 {
+              font-family: "Space Grotesk", sans-serif;
+              font-size: 17px; font-weight: 700; color: var(--desk-ink);
+              letter-spacing: -0.01em;
+            }
+            .de-desk-intro p {
+              font-size: 13.5px; color: var(--desk-ink-muted); margin-top: 3px; line-height: 1.4;
+            }
+            .de-desk-intro + .de-desk-rows { margin-top: 0; }
             .de-desk-hero {
               position: relative; overflow: hidden;
               border-radius: 13px;
@@ -2001,7 +1886,7 @@ export const ZohoASAPWidget = ({
             .de-desk-section-head a { font-size: 12px; color: var(--desk-pink); font-weight: 600; }
             .de-desk-details-head {
               display: flex; align-items: center; justify-content: space-between;
-              margin: 12px 0 8px;
+              margin: 4px 0 0;
             }
             .de-desk-details-head h4 {
               font-family: "Space Grotesk", sans-serif;
@@ -2017,7 +1902,7 @@ export const ZohoASAPWidget = ({
               background: rgba(34,197,94,0.08);
             }
             .de-desk-secure svg { width: 10px; height: 10px; }
-            .de-desk-form { display: flex; flex-direction: column; gap: 10px; }
+            .de-desk-form { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
             .de-desk-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
             .de-desk-field label {
               display: block; font-size: 13px; font-weight: 600;
