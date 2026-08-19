@@ -67,7 +67,7 @@ export default function CaseStudies() {
         )}
 
         <motion.div
-          className="grid md:grid-cols-4 gap-6 bg-gradient-to-r from-[#1a0a2e] via-[#2d1060] to-[#1a0a2e] rounded-2xl p-8 text-white border border-white/10"
+          className="grid md:grid-cols-4 gap-6 bg-gradient-to-r from-[#050312] via-[#0a0a0a] to-[#050312] rounded-2xl p-8 text-white border border-white/10"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -76,7 +76,7 @@ export default function CaseStudies() {
           {focusAreas.map((item) => (
             <div key={item.value} className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
               <p className="text-xl font-bold mb-1">{item.value}</p>
-              <p className="text-purple-100 text-sm">{item.label}</p>
+              <p className="text-white/80 text-sm">{item.label}</p>
             </div>
           ))}
         </motion.div>
@@ -91,7 +91,7 @@ export default function CaseStudies() {
               transition={{ delay: index * 0.05, duration: 0.45 }}
             >
               <Card
-                className="overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 hover:border-[#5034ff]/50 hover:shadow-xl transition-all duration-300"
+                className="overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-accent/50 hover:shadow-xl transition-all duration-300"
                 data-testid={`case-study-card-${study.slug}`}
               >
                 <CardHeader className="border-b border-white/10 bg-white/[0.03]">
@@ -106,7 +106,7 @@ export default function CaseStudies() {
                     </div>
                     <Link
                       href={`/resources/case-studies/${study.slug}`}
-                      className="inline-flex items-center gap-2 text-sm font-medium text-violet-300 hover:text-violet-200"
+                      className="inline-flex items-center gap-2 text-sm font-medium text-de-accent-ink hover:text-de-accent-ink"
                       data-testid={`link-case-study-${study.slug}`}
                     >
                       View structure
@@ -145,15 +145,15 @@ export default function CaseStudies() {
                     </div>
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-violet-500/20 flex items-center justify-center">
-                          <Layers className="w-4 h-4 text-violet-300" />
+                        <div className="w-8 h-8 rounded-lg bg-de-raised flex items-center justify-center">
+                          <Layers className="w-4 h-4 text-de-accent-ink" />
                         </div>
                         <h4 className="font-semibold text-white">Stack</h4>
                       </div>
                       <ul className="space-y-1.5">
                         {study.stack.map((item) => (
                           <li key={item} className="text-gray-300 text-sm flex items-start gap-2">
-                            <span className="text-violet-400 mt-1">•</span>
+                            <span className="text-de-accent-ink mt-1">•</span>
                             {item}
                           </li>
                         ))}
@@ -173,7 +173,7 @@ export default function CaseStudies() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600" />
+          <div className="absolute inset-0 bg-de-raised" />
           <div className="relative p-8 md:p-12 text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
               Ready to discuss your environment?
@@ -184,7 +184,7 @@ export default function CaseStudies() {
             </p>
             <a
               href="/book"
-              className="inline-flex items-center justify-center bg-white text-purple-700 hover:bg-purple-50 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
+              className="inline-flex items-center justify-center bg-white text-de-accent hover:bg-de-paper-raised px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
               data-testid="button-contact-us"
             >
               {CTA.primary}

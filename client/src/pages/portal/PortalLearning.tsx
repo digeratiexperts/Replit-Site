@@ -221,7 +221,7 @@ export default function PortalLearning() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center gap-2">
-                  <Compass className="h-4 w-4 text-[#5034ff]" />
+                  <Compass className="h-4 w-4 text-[#D3126A]" />
                   Your mission path
                 </CardTitle>
                 <CardDescription>Tap a stop to study it. Progress saves on this device.</CardDescription>
@@ -238,7 +238,7 @@ export default function PortalLearning() {
                       onClick={() => setActiveId(lesson.id)}
                       className={`w-full text-left rounded-lg px-3 py-2.5 transition border ${
                         selected
-                          ? "border-[#5034ff]/50 bg-[#5034ff]/5"
+                          ? "border-[#D3126A]/50 bg-[#D3126A]/5"
                           : "border-transparent hover:bg-muted/60"
                       }`}
                     >
@@ -252,17 +252,17 @@ export default function PortalLearning() {
                         </div>
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="text-[11px] font-mono text-muted-foreground">
+                            <span className="text-sm font-mono text-muted-foreground">
                               {String(idx + 1).padStart(2, "0")}
                             </span>
                             {lesson.badge && (
-                              <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                              <Badge variant="secondary" className="text-xs px-1.5 py-0">
                                 {lesson.badge}
                               </Badge>
                             )}
                           </div>
                           <p className="text-sm font-medium leading-snug mt-0.5">{lesson.title}</p>
-                          <p className="text-[11px] text-muted-foreground mt-0.5">{lesson.minutes} min</p>
+                          <p className="text-sm text-muted-foreground mt-0.5">{lesson.minutes} min</p>
                         </div>
                       </div>
                     </button>
@@ -298,7 +298,7 @@ export default function PortalLearning() {
           <div className="lg:col-span-5 space-y-4">
             {active ? (
               <Card className="overflow-hidden">
-                <div className="h-1.5 bg-gradient-to-r from-[#5034ff] via-sky-500 to-emerald-400" />
+                <div className="h-1.5 bg-gradient-to-r from-[#D3126A] via-sky-500 to-emerald-400" />
                 <CardHeader>
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <div className="space-y-1">
@@ -321,7 +321,7 @@ export default function PortalLearning() {
 
                   <div>
                     <p className="text-sm font-semibold mb-2 flex items-center gap-1.5">
-                      <Sparkles className="h-4 w-4 text-[#5034ff]" />
+                      <Sparkles className="h-4 w-4 text-[#D3126A]" />
                       Walkthrough
                     </p>
                     <ol className="space-y-2.5">
@@ -404,7 +404,7 @@ export default function PortalLearning() {
                   <div key={doc.slug} className="border-b border-border/50 pb-2 last:border-0 last:pb-0">
                     <p className="text-sm font-medium leading-snug">{doc.title}</p>
                     {doc.category && (
-                      <p className="text-[11px] text-muted-foreground mt-0.5 capitalize">
+                      <p className="text-sm text-muted-foreground mt-0.5 capitalize">
                         {String(doc.category).replace(/_/g, " ")}
                       </p>
                     )}

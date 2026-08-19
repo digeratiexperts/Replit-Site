@@ -100,7 +100,7 @@ export default function MfaSetup() {
     return (
       <Card className="bg-white/5 border-white/10">
         <CardContent className="flex items-center justify-center py-8">
-          <Loader className="h-6 w-6 animate-spin text-violet-400" />
+          <Loader className="h-6 w-6 animate-spin text-de-magenta-ink" />
         </CardContent>
       </Card>
     );
@@ -112,7 +112,7 @@ export default function MfaSetup() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <ShieldCheck className="h-5 w-5 text-violet-400" />
+              <ShieldCheck className="h-5 w-5 text-de-magenta-ink" />
               <div>
                 <CardTitle className="text-white text-lg">Two-Factor Authentication</CardTitle>
                 <CardDescription className="text-gray-400">
@@ -174,7 +174,7 @@ export default function MfaSetup() {
                     className="p-4 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition text-left"
                     data-testid="button-setup-totp"
                   >
-                    <Smartphone className="h-6 w-6 text-violet-400 mb-2" />
+                    <Smartphone className="h-6 w-6 text-de-magenta-ink mb-2" />
                     <p className="text-sm font-medium text-white">Authenticator App</p>
                     <p className="text-xs text-gray-400 mt-1">Use Google Authenticator, Authy, or Microsoft Authenticator</p>
                   </button>
@@ -183,7 +183,7 @@ export default function MfaSetup() {
                     className="p-4 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition text-left"
                     data-testid="button-setup-email"
                   >
-                    <Mail className="h-6 w-6 text-violet-400 mb-2" />
+                    <Mail className="h-6 w-6 text-de-magenta-ink mb-2" />
                     <p className="text-sm font-medium text-white">Email Verification</p>
                     <p className="text-xs text-gray-400 mt-1">Receive a code via email each time you log in</p>
                   </button>
@@ -195,7 +195,7 @@ export default function MfaSetup() {
                       <p className="text-sm text-gray-300">Scan this QR code with your authenticator app:</p>
                       <img src={setupData.qrCode} alt="TOTP QR Code" className="mx-auto w-48 h-48 rounded-lg" data-testid="img-totp-qr" />
                       <p className="text-xs text-gray-500">
-                        Or enter manually: <code className="bg-white/10 px-2 py-1 rounded text-violet-300">{setupData.secret}</code>
+                        Or enter manually: <code className="bg-white/10 px-2 py-1 rounded text-de-magenta-ink">{setupData.secret}</code>
                       </p>
                     </div>
                   )}
@@ -223,7 +223,7 @@ export default function MfaSetup() {
                     <Button
                       onClick={() => confirmMutation.mutate()}
                       disabled={verifyCode.length < 6 || confirmMutation.isPending}
-                      className="flex-1 bg-violet-600 hover:bg-violet-700"
+                      className="flex-1 bg-[#D3126A] hover:bg-[#e01874]"
                       data-testid="button-confirm-setup"
                     >
                       {confirmMutation.isPending ? "Verifying..." : "Enable MFA"}
@@ -240,7 +240,7 @@ export default function MfaSetup() {
                 </div>
               ) : (
                 <div className="flex items-center justify-center py-4">
-                  <Loader className="h-6 w-6 animate-spin text-violet-400" />
+                  <Loader className="h-6 w-6 animate-spin text-de-magenta-ink" />
                   <span className="ml-2 text-gray-400 text-sm">Setting up...</span>
                 </div>
               )}
@@ -254,7 +254,7 @@ export default function MfaSetup() {
         <DialogContent className="bg-[#0f0d2e] border-white/20 text-white max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Key className="h-5 w-5 text-violet-400" />
+              <Key className="h-5 w-5 text-de-magenta-ink" />
               Backup Codes
             </DialogTitle>
             <DialogDescription className="text-gray-400">
@@ -263,7 +263,7 @@ export default function MfaSetup() {
           </DialogHeader>
           <div className="grid grid-cols-2 gap-2 p-4 bg-white/5 rounded-lg font-mono">
             {backupCodes?.map((code, i) => (
-              <div key={i} className="text-center py-1.5 bg-white/10 rounded text-sm text-violet-300" data-testid={`text-backup-code-${i}`}>
+              <div key={i} className="text-center py-1.5 bg-white/10 rounded text-sm text-de-magenta-ink" data-testid={`text-backup-code-${i}`}>
                 {code}
               </div>
             ))}
@@ -277,7 +277,7 @@ export default function MfaSetup() {
               <Copy className="mr-2 h-4 w-4" />
               Copy All
             </Button>
-            <Button onClick={() => setBackupCodes(null)} className="bg-violet-600 hover:bg-violet-700" data-testid="button-close-codes">
+            <Button onClick={() => setBackupCodes(null)} className="bg-[#D3126A] hover:bg-[#e01874]" data-testid="button-close-codes">
               I've Saved Them
             </Button>
           </DialogFooter>
@@ -341,7 +341,7 @@ export default function MfaSetup() {
             <Button
               onClick={() => regenMutation.mutate()}
               disabled={!regenPassword || regenMutation.isPending}
-              className="bg-violet-600 hover:bg-violet-700"
+              className="bg-[#D3126A] hover:bg-[#e01874]"
               data-testid="button-confirm-regen"
             >
               {regenMutation.isPending ? "Generating..." : "Generate New Codes"}

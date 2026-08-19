@@ -2,50 +2,53 @@
 
 ## Brand tokens
 
+One paper sheet. Magenta pops because the field stays cream.
+
 | Token | Value | Use |
 |-------|-------|-----|
-| Magenta | `#D3126A` | Primary CTA, active underline glow, user bubbles, brand mark |
-| Violet | `#5B45E0` / `#7c3aed` | Secondary accents, ticket submit gradient start |
-| Shell bg | `#1a0b33` | Modal background (deep violet, not flat black) |
-| Nested dark | `#12141c` / `#171922` | Ticket & Resources panels / cards |
-| Nested light | `#ffffff` / `#faf8fc` | Desk chat panel |
-| Online | Emerald glow on status dot | Availability |
-| Text light-on-dark | `white` / `white/65` / `white/45` | Hierarchy on dark |
-| Text dark-on-light | `#1a1228` / `#5A3A5E` / plum secondary | Desk chat body |
+| Magenta | `#D3126A` | Avatar, active underline, send, CTAs, user bubbles, incident rail, Urgent badge |
+| Violet | `#8B5CF6` | Icon-well accent only — never a wash fill or CTA gradient |
+| Field | paper `#F7F5F2` | Entire chrome: header, body, composer, footer |
+| Raised | `#FFFFFF` | Hero, rows, form card, composer input |
+| Hairline | `rgba(20,16,30,0.10)` | Paper borders |
+| Ink | `#17141F` / `#5C5668` | Titles and body on every tab |
+| Available | Emerald pip | Availability — say “available”, not “online” |
 
-Shell border/glow: cool purple frame `border-[3px] border-[#A78BFA]/75` on deep violet shell
-`bg-[#1a0b33]` + lavender outer ring/glow (not flat near-black).
+Do **not** use charcoal hero/rows, black footer, plum washes, or magenta→violet CTA gradients.
 
 ## Shared chrome (top → bottom)
 
-1. **Header** — gradient DE mark + green online pip; title “DE Desk”; subtitle “Answers · Tickets · Assist”; status pill + close
-2. **Tabs** — Desk | Ticket | Resources; active = `#F0B4CC` + magenta underline glow
-3. **Status row** — green/sky/amber dot + “DE Desk is online” | “Need a human? →”
-4. **Content** — nested rounded panel (`rounded-[1.2rem]`, `border-white/10`)
-5. **Footer** — “DE Desk · Ticket · Resources · Assist” | Create ticket
+1. **Header** — magenta DE mark + green pip; title “DE Desk”; subtitle “Ask · Support · Tools”; Expand (desktop) + close. On `sm+` the header moves the window; double-click resets size and position. Drag any edge or the south-east grip to resize. Expand grows toward the page from a bottom-right dock.
+2. **Tabs** — Ask DE | Get Support | Client Tools; active = dark label + magenta underline
+3. **Status row** — paper field; green/sky/amber dot + “DE Desk available” | “Open a support ticket” / on Get Support: “Ask DE instead”. When a person joins: “{name} joined the conversation”.
+4. **Content** — paper body; white raised hero + white raised rows / light inputs
+5. **Composer** — paper ask bar + white input + solid magenta send
+6. **Footer** — paper; “Ask DE · Get Support · Client Tools · Assist” (Assist → remote session) | Open a support ticket
 
-## Resources (approved)
+## Ask DE
 
-- Hero: “Your AI help desk” / “Get clear answers, fast.” + benefit row
-- Rows: colored icon well + title + description + capability tags + CTA arrow
-- Security CTA card with Create ticket
-- Labels are **functions** (Remote session, Remote support guide, Knowledge base, Client portal)
+- Paper hero “How can we help?”
+- Intent prompts in a 2×2 (all four visible): Something isn't working · Possible security incident · Help me choose services · Ask an IT/security question
+- Security prompt switches to Get Support and applies the incident chip
+- After send: magenta user bubbles, paper assistant bubbles labeled “Ask DE”
+- Shared paper composer under all tabs
 
-## Desk
+## Get Support
 
-- Light nested card fills content area
-- Assistant bubble: light surface, DE badge magenta
-- User bubble: magenta
-- Quick chips: icon well + label + chevron (2×2)
-- Composer: light field + magenta send; lock disclaimer under input
+- Paper hero “Get technical support” / “Tell us what's happening and we'll route it to the right place.”
+- Featured full-width **Possible security incident** (Urgent badge, magenta left rail, phishing/malware blurb)
+- Then 2×2: Email or Microsoft 365 · Can't sign in / MFA · Computer or device · Something else
+- Clicking a chip selects it, fills subject/category/priority, seeds a prompt, and moves focus into the form
+- Taxonomy under the form stays: Email, Access & Security, Network & VPN, Software & Applications, Hardware & Devices, Backup & Recovery, Collaboration, Other
+- Form on paper: Secure & private pill; light fields; solid magenta submit
 
-## Ticket
+## Client Tools
 
-- Dark nested panel matching Resources card language
-- Hero “How can we help?”
-- Quick subject chips (4)
-- Form card: Secure & Private badge; icon-prefixed fields; violet→magenta submit
-- Optional bottom ask bar that routes to Desk chat
+- Hero: “Client tools”
+- Major rows: Client portal · Start remote support · Knowledge base · System status
+- Remote support guide is a small sibling link under Start remote support
+- Assessment highlight + security alert with Create ticket stay
+- Do not add Pay Invoice / Billing here
 
 ## Primary file
 

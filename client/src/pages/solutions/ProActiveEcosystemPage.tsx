@@ -42,9 +42,9 @@ export default function ProActiveEcosystemPage() {
       />
 
       <main className="de-nav-clear pb-20">
-        <div className="mx-auto max-w-[100rem] px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[var(--de-canvas)] px-4 sm:px-6 lg:px-8">
           <header className="mb-14 max-w-3xl">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF477F]">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#F04C97]">
               Operating model
             </p>
             <h1 className="font-heading text-4xl font-semibold tracking-[-0.02em] text-white md:text-5xl">
@@ -57,7 +57,7 @@ export default function ProActiveEcosystemPage() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/book">
-                <Button className="h-12 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 px-6 font-semibold text-white">
+                <Button className="h-12 bg-[#D3126A] px-6 font-semibold text-white">
                   {CTA.primary}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -105,14 +105,14 @@ export default function ProActiveEcosystemPage() {
                   <span className="font-semibold text-white">Enterprise</span> — adds unified posture reporting, deeper compliance reporting, custom BCDR architecture support, privileged access program elements, quarterly executive reviews. Starts at {formatUserPrice("enterprise")} ({formatPrice(pricing.enterprise.monthlyMin)}/mo minimum).
                 </li>
               </ul>
-              <p className="mt-4 text-xs text-white/40">{PRICING_SCOPE_NOTE}</p>
+              <p className="mt-4 text-xs text-white/55">{PRICING_SCOPE_NOTE}</p>
             </div>
             <div>
               <h2 className="font-heading text-2xl font-semibold text-white">How engagement works</h2>
               <ol className="mt-6 space-y-5">
                 {lifecycle.map((step, i) => (
                   <li key={step.title} className="flex gap-4">
-                    <span className="font-mono text-xs font-semibold tracking-[0.16em] text-[#FF477F]">
+                    <span className="font-mono text-xs font-semibold tracking-[0.16em] text-[#F04C97]">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <div>
@@ -137,7 +137,7 @@ export default function ProActiveEcosystemPage() {
                 ongoing model: one accountable partner for day-to-day IT and cybersecurity.
               </p>
               <Link href="/solutions/standalone-services">
-                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[#FF477F]">
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[#F04C97]">
                   View standalone services
                   <ArrowRight className="h-3.5 w-3.5" />
                 </span>
@@ -154,7 +154,7 @@ export default function ProActiveEcosystemPage() {
                 want Digerati to own the operating model end to end.
               </p>
               <Link href="/solutions/co-managed-it">
-                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[#FF477F]">
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[#F04C97]">
                   See co-managed IT
                   <ArrowRight className="h-3.5 w-3.5" />
                 </span>

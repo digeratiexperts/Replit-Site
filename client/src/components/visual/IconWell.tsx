@@ -16,7 +16,7 @@ type IconWellProps = {
 };
 
 /**
- * Shared Lucide chrome for marketing cards — muted violet well, not 3D toys.
+ * Shared Lucide chrome — quiet well so magenta pops. Not a purple-tinted fill.
  */
 export function IconWell({
   icon: Icon,
@@ -27,8 +27,8 @@ export function IconWell({
   const s = sizeMap[size];
   const tone =
     surface === "dark"
-      ? "border-white/10 bg-violet-500/15 text-violet-300"
-      : "border-violet-200 bg-violet-50 text-violet-600";
+      ? "border-[var(--de-hairline)] bg-[#0a0a0a] text-[#D3126A]"
+      : "border-[var(--de-paper-hairline)] bg-white text-[#D3126A]";
 
   return (
     <span

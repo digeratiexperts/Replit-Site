@@ -10,7 +10,7 @@ interface ProductMediaProps {
 }
 
 /**
- * Dominant product visual: branded category hero + vendor mark overlay.
+ * Vendor plate is the subject. Category/Meshy art is atmosphere only.
  * Used by listing cards and product detail so imagery stays consistent.
  */
 export function ProductMedia({
@@ -32,10 +32,10 @@ export function ProductMedia({
 
   const logoBox =
     variant === "detail"
-      ? "h-36 w-36 sm:h-44 sm:w-44 md:h-52 md:w-52 p-6 sm:p-8"
+      ? "aspect-square w-[48%] max-w-[14rem] p-6 sm:p-8"
       : variant === "card"
-        ? "h-20 w-20 p-3"
-        : "h-12 w-12 p-2";
+        ? "aspect-square w-[46%] max-w-[11rem] p-4"
+        : "aspect-square w-[46%] max-w-[7rem] p-3";
 
   return (
     <div
@@ -46,11 +46,11 @@ export function ProductMedia({
       <img
         src={mediaSrc}
         alt=""
-        className="absolute inset-0 h-full w-full object-cover"
+        className="absolute inset-0 h-full w-full scale-110 object-cover opacity-50"
         loading={variant === "detail" ? "eager" : "lazy"}
         decoding="async"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/20" />
 
       <div className="absolute inset-0 flex items-center justify-center p-4">
         {visual.logoUrl ? (
@@ -84,12 +84,12 @@ export function ProductMedia({
       {(categoryBadge || visual.vendor) && variant !== "thumb" && (
         <div className="absolute left-3 top-3 z-10 flex max-w-[85%] flex-wrap gap-2 sm:left-4 sm:top-4">
           {categoryBadge && (
-            <span className="rounded-full border border-white/20 bg-black/50 px-2.5 py-1 text-[11px] font-medium text-white/90 backdrop-blur-sm sm:text-xs">
+            <span className="rounded-full border border-white/20 bg-black/50 px-2.5 py-1 text-sm font-medium text-white/90 backdrop-blur-sm sm:text-xs">
               {categoryBadge}
             </span>
           )}
           {visual.vendor && (
-            <span className="rounded-full border border-white/20 bg-black/50 px-2.5 py-1 text-[11px] font-medium text-white/90 backdrop-blur-sm sm:text-xs">
+            <span className="rounded-full border border-white/20 bg-black/50 px-2.5 py-1 text-sm font-medium text-white/90 backdrop-blur-sm sm:text-xs">
               {visual.vendor.name}
             </span>
           )}

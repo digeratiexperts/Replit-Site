@@ -64,9 +64,9 @@ const FeatureCard = ({
     <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-[#D3126A]/40 hover:bg-white/[0.08] transition-all duration-300 overflow-hidden">
       <CardHeader className="relative">
         <div className="w-12 h-12 rounded-xl bg-[#D3126A]/20 flex items-center justify-center mb-4">
-          {feature.icon || <Shield className="w-6 h-6 text-[#FF477F]" />}
+          {feature.icon || <Shield className="w-6 h-6 text-[#F04C97]" />}
         </div>
-        <CardTitle className="text-xl font-semibold text-white group-hover:text-[#FF477F] transition-colors">
+        <CardTitle className="text-xl font-semibold text-white group-hover:text-[#F04C97] transition-colors">
           {feature.title}
         </CardTitle>
       </CardHeader>
@@ -83,7 +83,7 @@ export default function GenericServicePage({
   description,
   features,
   benefits,
-  gradientColors = "from-[#D3126A] via-fuchsia-700 to-violet-800",
+  gradientColors = "from-[#050312] via-[#0a0a0a] to-[#050312]",
   stat,
   canonical,
   recommendedTier,
@@ -113,10 +113,10 @@ export default function GenericServicePage({
           >
             <div className="flex items-start gap-4">
               <div className="p-3 rounded-xl bg-[#D3126A]/20">
-                <AlertTriangle className="h-6 w-6 text-[#FF477F]" />
+                <AlertTriangle className="h-6 w-6 text-[#F04C97]" />
               </div>
               <div>
-                <div className="text-3xl font-bold text-[#FF477F]">{stat.value}</div>
+                <div className="text-3xl font-bold text-[#F04C97]">{stat.value}</div>
                 <p className="mt-1 text-white/80">{stat.label}</p>
                 <p className="mt-1 text-sm text-white/50">— {stat.source}</p>
               </div>
@@ -131,11 +131,11 @@ export default function GenericServicePage({
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-[#D3126A] to-[#FF477F] rounded-full" />
+          <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-[#D3126A] to-[#F04C97] rounded-full" />
           <p className="text-xl text-gray-300 leading-relaxed pl-6 max-w-4xl">{description}</p>
           {narrative?.whoFor && (
             <p className="text-base text-white/70 leading-relaxed pl-6 max-w-4xl mt-4">
-              <span className="text-[#FF477F] font-medium">Who this is for: </span>
+              <span className="text-[#F04C97] font-medium">Who this is for: </span>
               {narrative.whoFor}
             </p>
           )}
@@ -162,7 +162,7 @@ export default function GenericServicePage({
                   transition={{ delay: index * 0.05, duration: 0.35 }}
                   className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.04] border border-white/10"
                 >
-                  <AlertTriangle className="h-5 w-5 text-[#FF477F] mt-0.5 shrink-0" />
+                  <AlertTriangle className="h-5 w-5 text-[#F04C97] mt-0.5 shrink-0" />
                   <p className="text-white/85">{pain}</p>
                 </motion.div>
               ))}
@@ -179,7 +179,7 @@ export default function GenericServicePage({
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#D3126A] to-fuchsia-500 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-[#D3126A] flex items-center justify-center">
                 <Zap className="w-5 h-5 text-white" />
               </div>
               <h2 className="text-3xl font-bold text-white">What you get</h2>
@@ -200,7 +200,7 @@ export default function GenericServicePage({
         {narrative?.process && narrative.process.length > 0 && (
           <section data-testid="section-process">
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-lg bg-violet-600 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-de-accent flex items-center justify-center">
                 <ArrowRight className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -218,7 +218,7 @@ export default function GenericServicePage({
                   transition={{ delay: index * 0.08, duration: 0.4 }}
                   className="relative p-5 rounded-xl bg-white/[0.04] border border-white/10"
                 >
-                  <div className="text-xs font-semibold tracking-wide text-[#FF477F] mb-2">
+                  <div className="text-xs font-semibold tracking-wide text-[#F04C97] mb-2">
                     Step {index + 1}
                   </div>
                   <h3 className="text-lg font-semibold text-white mb-2">{step.title}</h3>
@@ -270,7 +270,7 @@ export default function GenericServicePage({
           <section className="grid md:grid-cols-2 gap-6" data-testid="section-local-proof">
             {narrative.arizonaNote && (
               <div className="p-6 rounded-2xl bg-white/[0.04] border border-white/10">
-                <div className="flex items-center gap-2 text-[#FF477F] mb-3">
+                <div className="flex items-center gap-2 text-[#F04C97] mb-3">
                   <MapPin className="h-5 w-5" />
                   <span className="text-sm font-semibold tracking-wide uppercase">Arizona operator</span>
                 </div>
@@ -279,7 +279,7 @@ export default function GenericServicePage({
             )}
             {narrative.proof && (
               <div className="p-6 rounded-2xl bg-[#D3126A]/10 border border-[#D3126A]/25">
-                <Quote className="h-6 w-6 text-[#FF477F] mb-3" />
+                <Quote className="h-6 w-6 text-[#F04C97] mb-3" />
                 <p className="text-lg text-white leading-relaxed mb-3">“{narrative.proof.quote}”</p>
                 <p className="text-sm text-white/55">— {narrative.proof.attribution}</p>
               </div>
@@ -295,7 +295,7 @@ export default function GenericServicePage({
             transition={{ duration: 0.5 }}
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-600 to-purple-500 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-de-raised flex items-center justify-center">
                 <Grid3X3 className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -334,7 +334,7 @@ export default function GenericServicePage({
           <section data-testid="section-faqs">
             <div className="flex items-center gap-3 mb-8">
               <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                <HelpCircle className="w-5 h-5 text-[#FF477F]" />
+                <HelpCircle className="w-5 h-5 text-[#F04C97]" />
               </div>
               <h2 className="text-3xl font-bold text-white">Questions owners actually ask</h2>
             </div>
@@ -359,7 +359,7 @@ export default function GenericServicePage({
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-[#D3126A] via-fuchsia-600 to-rose-500" />
+          <div className="absolute inset-0 bg-[#D3126A]" />
           <div className="absolute inset-0 opacity-30">
             <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
               <defs>
@@ -388,12 +388,12 @@ export default function GenericServicePage({
                 {CTA.primary}
               </a>
               <a
-                href="tel:480-519-5892"
+                href="tel:+13254809870"
                 className="group inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-[#D3126A] px-8 py-4 rounded-xl font-semibold transition-all"
                 data-testid="button-call"
               >
                 <Phone className="mr-2 h-5 w-5" />
-                Call 480-519-5892
+                Call 325-480-9870
               </a>
             </div>
           </div>

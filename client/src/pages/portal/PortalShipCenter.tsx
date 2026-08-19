@@ -34,7 +34,7 @@ export default function PortalShipCenter() {
               <CardTitle className="text-lg">Active Shipments</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold text-[#5034ff]">2</p>
+              <p className="text-3xl font-bold text-[#D3126A]">2</p>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Currently in transit</p>
             </CardContent>
           </Card>
@@ -65,8 +65,8 @@ export default function PortalShipCenter() {
                   data-testid={`row-shipment-${shipment.id}`}
                 >
                   <div className="flex items-center gap-4 flex-1">
-                    <div className="p-2 bg-[#5034ff]/10 rounded-lg">
-                      <Truck className="h-5 w-5 text-[#5034ff]" />
+                    <div className="p-2 bg-[#D3126A]/10 rounded-lg">
+                      <Truck className="h-5 w-5 text-[#D3126A]" />
                     </div>
                     <div>
                       <p className="font-medium text-gray-900 dark:text-white">{shipment.id}</p>
@@ -99,7 +99,7 @@ export default function PortalShipCenter() {
               <CardDescription>Schedule a new shipment for your business</CardDescription>
             </CardHeader>
             <CardContent>
-              <Button className="w-full bg-[#5034ff] hover:bg-[#5034ff]/90 text-white" data-testid="button-create-shipment">
+              <Button className="w-full bg-[#D3126A] hover:bg-[#D3126A]/90 text-white" data-testid="button-create-shipment">
                 <Package className="h-4 w-4 mr-2" />
                 New Shipment
               </Button>

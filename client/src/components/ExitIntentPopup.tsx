@@ -24,8 +24,8 @@ const BENEFITS = [
 ] as const;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_DISPLAY = "480-519-5892";
-const PHONE_HREF = "tel:480-519-5892";
+const PHONE_DISPLAY = "325-480-9870";
+const PHONE_HREF = "tel:+13254809870";
 
 interface ExitIntentPopupProps {
   delay?: number;
@@ -44,7 +44,6 @@ function validateBusinessEmail(value: string): string | null {
 
 export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
   const [isVisible, setIsVisible] = useState(false);
-  const [hasShown, setHasShown] = useState(false);
   const [email, setEmail] = useState("");
   const [fieldError, setFieldError] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -57,52 +56,64 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
   const emailRef = useRef<HTMLInputElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const shownRef = useRef(false);
 
-  const showPopup = useCallback(() => {
-    if (hasShown) return;
+  const showPopup = useCallback((force = false) => {
+    if (shownRef.current) return;
+    if (window.location.pathname.startsWith("/portal")) return;
+    if (!force) {
+      try {
+        if (sessionStorage.getItem("exitPopupDismissed")) return;
+      } catch {
+        /* private mode / blocked storage */
+      }
+    }
 
-    const dismissed = sessionStorage.getItem("exitPopupDismissed");
-    if (dismissed) return;
-
-    const isPortalPage = window.location.pathname.startsWith("/portal");
-    if (isPortalPage) return;
-
-    analytics.exitIntentShown();
+    shownRef.current = true;
+    try {
+      analytics.exitIntentShown();
+    } catch {
+      /* tracking must never block the offer */
+    }
     setIsVisible(true);
-    setHasShown(true);
-  }, [hasShown]);
+  }, []);
 
   useEffect(() => {
     try {
       if (new URLSearchParams(window.location.search).get("exit_intent") === "1") {
-        analytics.exitIntentShown();
-        setIsVisible(true);
-        setHasShown(true);
+        try {
+          sessionStorage.removeItem("exitPopupDismissed");
+        } catch {
+          /* ignore */
+        }
+        showPopup(true);
       }
     } catch {
       /* ignore malformed URLs */
     }
-  }, []);
+  }, [showPopup]);
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    let isReady = false;
+    if (window.location.pathname.startsWith("/portal")) return;
 
-    const handleMouseLeave = (e: MouseEvent) => {
-      if (e.clientY <= 0 && isReady) {
-        showPopup();
-      }
-    };
-
-    timeoutId = setTimeout(() => {
-      isReady = true;
+    // Desktop leave toward the tab/address chrome only. No timer, no scroll bait.
+    let armed = false;
+    const arm = window.setTimeout(() => {
+      armed = true;
     }, delay);
 
-    document.addEventListener("mouseleave", handleMouseLeave);
+    const leavingTowardChrome = (e: MouseEvent) => {
+      if (!armed) return;
+      if (e.clientY > 8) return;
+      showPopup();
+    };
+
+    const html = document.documentElement;
+    html.addEventListener("mouseleave", leavingTowardChrome);
 
     return () => {
-      clearTimeout(timeoutId);
-      document.removeEventListener("mouseleave", handleMouseLeave);
+      window.clearTimeout(arm);
+      html.removeEventListener("mouseleave", leavingTowardChrome);
     };
   }, [delay, showPopup]);
 
@@ -179,7 +190,7 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
         handleClose();
       }, 4000);
     } catch {
-      setSubmitError("We couldn’t send that. Try again, or call us at 480-519-5892.");
+      setSubmitError("We couldn’t send that. Try again, or call us at 325-480-9870.");
     } finally {
       setIsSubmitting(false);
     }
@@ -202,15 +213,15 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/75"
+            className="fixed inset-0 z-[10050] bg-black/80"
             onClick={handleClose}
             data-testid="overlay-exit-intent"
           />
 
-          <div className="pointer-events-none fixed inset-0 z-[101] flex items-center justify-center p-4">
+          <div className="pointer-events-none fixed inset-0 z-[10051] flex items-center justify-center p-4">
             <motion.div
               {...motionProps}
-              className="pointer-events-auto w-full max-w-[28rem]"
+              className="pointer-events-auto w-full max-w-[32rem]"
               data-testid="popup-exit-intent"
             >
               <div
@@ -219,72 +230,76 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                 aria-modal="true"
                 aria-labelledby={titleId}
                 aria-describedby={descId}
-                className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a] shadow-[0_24px_80px_rgba(0,0,0,0.6)]"
+                className="relative overflow-hidden rounded-2xl border border-[var(--de-paper-hairline)] bg-[var(--de-paper-raised)] shadow-[0_28px_80px_rgba(0,0,0,0.55)]"
               >
-                <div
-                  className="h-px bg-gradient-to-r from-[#D3126A] via-[#5B45E0]/80 to-transparent"
-                  aria-hidden="true"
-                />
+                <div className="h-1 bg-[#D3126A]" aria-hidden="true" />
 
-                <button
-                  ref={closeRef}
-                  type="button"
-                  onClick={handleClose}
-                  className="absolute right-2 top-2 z-10 inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg text-white/55 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
-                  aria-label="Close"
-                  data-testid="button-close-exit-popup"
-                >
-                  <X className="h-5 w-5" />
-                </button>
+                <div className="flex items-center justify-between gap-3 bg-[#0a0a0a] px-4 py-3 md:px-5">
+                  <img
+                    src={logoImage}
+                    alt="Digerati Experts"
+                    className="h-8 w-auto md:h-9"
+                    width={160}
+                    height={36}
+                  />
+                  <button
+                    ref={closeRef}
+                    type="button"
+                    onClick={handleClose}
+                    className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg text-white/55 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+                    aria-label="Close"
+                    data-testid="button-close-exit-popup"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
 
-                <div className="px-5 pb-6 pt-6 md:px-7 md:pb-7 md:pt-7">
+                <div className="bg-[var(--de-paper)] px-5 pb-6 pt-5 md:px-8 md:pb-8 md:pt-6">
                   {!isSuccess ? (
                     <>
-                      <img
-                        src={logoImage}
-                        alt="Digerati Experts"
-                        className="h-8 w-auto md:h-9"
-                        width={160}
-                        height={36}
-                      />
-
-                      <p className="mt-5 text-[11px] font-medium uppercase tracking-[0.16em] text-white/45">
+                      <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#D3126A]">
                         Cyber Risk Assessment
                       </p>
                       <h2
                         id={titleId}
-                        className="mt-2 font-heading text-[1.5rem] font-semibold leading-[1.2] tracking-[-0.02em] text-white md:text-[1.65rem]"
+                        className="mt-2 font-heading text-[1.55rem] font-semibold leading-[1.18] tracking-[-0.02em] text-[#1A1228] md:text-[1.75rem]"
                       >
                         Leave with a clear picture of your cyber risk.
                       </h2>
-                      <p id={descId} className="mt-3 text-sm leading-relaxed text-white/60">
+                      <p
+                        id={descId}
+                        className="mt-3 text-[16px] font-medium leading-relaxed text-[#2A2438]"
+                      >
                         Drop your work email. We’ll send a short intro — independent findings you can
                         use with your current IT or with us.
                       </p>
 
-                      <ul className="mt-5 grid grid-cols-1 gap-y-2 sm:grid-cols-2 sm:gap-x-6 text-[13px] leading-snug text-white/70">
+                      <ul className="mt-5 grid grid-cols-1 gap-x-6 gap-y-2.5 rounded-xl border border-[var(--de-paper-hairline)] bg-white px-4 py-3.5 sm:grid-cols-2">
                         {BENEFITS.map((item) => (
-                          <li key={item} className="flex items-baseline gap-2.5">
+                          <li key={item} className="flex items-baseline gap-2.5 text-[15px] font-semibold leading-snug text-[#1A1228]">
                             <span className="mt-[0.55em] h-px w-2.5 shrink-0 bg-[#D3126A]" aria-hidden="true" />
                             <span>{item}</span>
                           </li>
                         ))}
                       </ul>
 
-                      <form onSubmit={handleSubmit} className="mt-5 space-y-3" noValidate>
+                      <form onSubmit={handleSubmit} className="mt-6 space-y-3" noValidate>
                         <div>
-                          <label htmlFor="exit-intent-email" className="sr-only">
-                            Business email
+                          <label
+                            htmlFor="exit-intent-email"
+                            className="mb-1.5 block text-sm font-semibold text-[#1A1228]"
+                          >
+                            Work email
                           </label>
                           <div className="relative">
-                            <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6b5a78]" />
+                            <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#5A5368]" />
                             <Input
                               ref={emailRef}
                               id="exit-intent-email"
                               type="email"
                               autoComplete="email"
                               inputMode="email"
-                              placeholder="Work email"
+                              placeholder="name@company.com"
                               value={email}
                               aria-invalid={fieldError ? true : undefined}
                               aria-describedby={fieldError ? errorId : undefined}
@@ -293,17 +308,17 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                                 if (fieldError) setFieldError(null);
                                 if (submitError) setSubmitError(null);
                               }}
-                              className="h-12 border-[#ddd3e8] bg-[#F4F0FA] pl-11 text-[15px] text-[#1a1228] placeholder:text-[#6b5a78] hover:border-[#c4b5d4] focus-visible:border-[#D3126A] focus-visible:ring-[#D3126A]/40"
+                              className="h-12 border-[var(--de-paper-hairline)] bg-white pl-11 text-[16px] text-[#1A1228] placeholder:text-[#8A8496] hover:border-black/25 focus-visible:border-[#D3126A] focus-visible:ring-[#D3126A]/40"
                               data-testid="input-exit-popup-email"
                             />
                           </div>
                           {fieldError ? (
-                            <p id={errorId} role="alert" className="mt-2 text-sm text-rose-300">
+                            <p id={errorId} role="alert" className="mt-2 text-sm font-medium text-rose-700">
                               {fieldError}
                             </p>
                           ) : null}
                           {submitError ? (
-                            <p role="alert" className="mt-2 text-sm text-rose-300">
+                            <p role="alert" className="mt-2 text-sm font-medium text-rose-700">
                               {submitError}
                             </p>
                           ) : null}
@@ -312,7 +327,7 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#D3126A] via-[#c026d3] to-[#5B45E0] text-[15px] font-semibold text-white shadow-[0_8px_24px_rgba(211,18,106,0.32)] border border-pink-300/25 transition-all hover:from-[#e01874] hover:via-[#d946ef] hover:to-[#6b56f0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a] disabled:opacity-60"
+                          className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#D3126A] text-[16px] font-semibold text-white transition-colors hover:bg-[#f0187a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-paper)] disabled:opacity-60"
                           data-testid="button-get-checklist"
                         >
                           {isSubmitting ? (
@@ -326,37 +341,31 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                         </button>
                       </form>
 
-                      <p className="mt-4 text-sm text-white/45">
-                        Prefer to call?{" "}
-                        <a
-                          href={PHONE_HREF}
-                          className="font-medium text-white/70 underline-offset-2 hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]"
-                        >
-                          <Phone className="mr-1 inline h-3.5 w-3.5 align-[-2px]" aria-hidden="true" />
-                          {PHONE_DISPLAY}
-                        </a>
-                      </p>
-
-                      <p className="mt-2 text-xs leading-relaxed text-white/35">
-                        No spam. We only use this to follow up on the assessment.
-                      </p>
+                      <div className="mt-5 flex flex-col gap-2 border-t border-[var(--de-paper-hairline)] pt-4 sm:flex-row sm:items-center sm:justify-between">
+                        <p className="text-[15px] font-medium text-[#2A2438]">
+                          Prefer to call?{" "}
+                          <a
+                            href={PHONE_HREF}
+                            className="font-semibold text-[#1A1228] underline-offset-2 hover:text-[#D3126A] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]"
+                          >
+                            <Phone className="mr-1 inline h-3.5 w-3.5 align-[-2px]" aria-hidden="true" />
+                            {PHONE_DISPLAY}
+                          </a>
+                        </p>
+                        <p className="text-[13px] font-medium leading-relaxed text-[#5A5368]">
+                          No spam. Follow-up on the assessment only.
+                        </p>
+                      </div>
                     </>
                   ) : (
-                    <div className="py-4">
-                      <img
-                        src={logoImage}
-                        alt="Digerati Experts"
-                        className="h-8 w-auto"
-                        width={160}
-                        height={36}
-                      />
-                      <div className="mt-6 flex items-start gap-3">
-                        <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" aria-hidden="true" />
+                    <div className="py-6">
+                      <div className="flex items-start gap-3">
+                        <CheckCircle2 className="mt-0.5 h-6 w-6 shrink-0 text-emerald-600" aria-hidden="true" />
                         <div>
-                          <h2 className="font-heading text-xl font-semibold tracking-[-0.02em] text-white">
+                          <h2 className="font-heading text-xl font-semibold tracking-[-0.02em] text-[#1A1228]">
                             You’re on the list
                           </h2>
-                          <p className="mt-2 text-sm leading-relaxed text-white/60">
+                          <p className="mt-2 text-[16px] font-medium leading-relaxed text-[#2A2438]">
                             We’ll follow up with assessment next steps — no spam.
                           </p>
                         </div>

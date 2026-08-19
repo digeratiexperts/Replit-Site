@@ -24,24 +24,51 @@ That is **Cloudflare** on zone `digeratiexperts.com` stripping the `/portal` pat
 
 ## Cloudflare fix (required — DE dashboard)
 
-Zone: **digeratiexperts.com** → Rules → Redirect / Dynamic Redirects / Bulk Redirects / Page Rules.
+Close any stuck **Authenticate** / MCP OAuth tab. That loop cannot edit zone Redirect Rules.
 
-Find any rule that sends `/portal*` (or similar) to `portal.digeratiexperts.com` while rewriting the path.
+Zone: **`digeratiexperts.com`** (no hyphen). Do **not** edit `digerati-experts.com`. Do **not** touch Configuration Rule **“Portal and Techsales origin SSL”**.
 
-**Wrong:** target that drops `/portal` and produces `//login`.
+Live fingerprint (2026-08-14, Cloudflare edge — origin is already correct):
 
-**Right options:**
+| Request | `Location` (wrong) |
+|---|---|
+| `/portal` | `https://portal.digeratiexperts.com/` |
+| `/portal/login` | `https://portal.digeratiexperts.com//login` |
+| `/portal/foo` | `https://portal.digeratiexperts.com//foo` |
 
-1. **Best:** Delete the apex→portal path-stripping redirect. Serve `/portal/*` on apex via the same origin (already works), OR
-2. Redirect with path preserved — target must be:
-   `https://portal.digeratiexperts.com${http.request.uri.path}`
-   so `/portal/login` → `https://portal.digeratiexperts.com/portal/login` (single slash, keep `/portal`).
+That is a host rewrite that **strips the `/portal` prefix** and concatenates the leftover path onto `https://portal.digeratiexperts.com/` (trailing slash + `/login` = `//login`).
+
+### Clicks
+
+1. https://dash.cloudflare.com → open zone **digeratiexperts.com**
+2. Left nav **Rules** → **Redirect Rules** (Single Redirects). If the list is empty, also check **Rules** → **Page Rules**, then **Bulk Redirects**.
+3. Find the rule whose when/URL matches apex `/portal*` (or “path starts with `/portal`”) and whose then/URL goes to `portal.digeratiexperts.com` **without** keeping `/portal`. Typical names: Portal, Client Portal, `/portal`.
+
+**Best (recommended):** disable or delete that one rule. Origin already 301s apex `/portal/*` to `https://portal.digeratiexperts.com/portal/…` (path kept, single slash).
+
+**Or edit it** so the path is preserved:
+
+| If the rule looks like | Change target to |
+|---|---|
+| Dynamic: `concat("https://portal.digeratiexperts.com/", regex_replace(http.request.uri.path, "^/portal", ""))` | `concat("https://portal.digeratiexperts.com", http.request.uri.path)` |
+| Single Redirect wildcard `https://digeratiexperts.com/portal*` → `https://portal.digeratiexperts.com/$1` | `https://portal.digeratiexperts.com/portal$1` |
+| Page Rule `digeratiexperts.com/portal*` Forwarding URL `https://portal.digeratiexperts.com/$1` | `https://portal.digeratiexperts.com/portal$1` |
+
+Preserve query string. Status **301**. Result for `/portal/login` must be:
+
+`https://portal.digeratiexperts.com/portal/login`
 
 Never emit `//login`.
 
-After changing the rule: purge cache, re-test:
+4. **Deploy** / **Save** the rule (live immediately). Optional: Caching → Configuration → Purge Everything.
+
+### Verify
 
 ```bash
 curl -sSI https://digeratiexperts.com/portal/login | grep -i location
-# expect either 200 on apex, or 301 to https://portal.digeratiexperts.com/portal/login
+# expect 301 Location: https://portal.digeratiexperts.com/portal/login
+# (or 200 on apex — also fine)
+
+curl -sSI https://portal.digeratiexperts.com/portal/login | head -1
+# expect HTTP/2 200
 ```

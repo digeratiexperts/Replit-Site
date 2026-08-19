@@ -12,7 +12,7 @@ export default function MSA() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
             <div className="flex items-center gap-3 mb-6">
-              <FileText className="h-12 w-12 text-purple-400" />
+              <FileText className="h-12 w-12 text-de-accent-ink" />
               <h1 className="text-4xl md:text-5xl font-bold">Master Service Agreement</h1>
             </div>
             <p className="text-xl text-gray-300">
@@ -30,7 +30,7 @@ export default function MSA() {
               the provision of managed IT and security services by Digerati Experts to our clients.
             </p>
 
-            <div className="bg-purple-500/10 backdrop-blur-sm border border-purple-500/30 border-l-4 border-l-purple-500 p-6 rounded mb-8">
+            <div className="bg-de-raised backdrop-blur-sm border border-de-hairline border-l-4 border-l-de-accent p-6 rounded mb-8">
               <h3 className="text-xl font-semibold text-white mb-3">What's Included in Our MSA:</h3>
               <ul className="list-disc pl-6 text-gray-300 space-y-2">
                 <li>Scope of managed IT and security services</li>
@@ -55,7 +55,7 @@ export default function MSA() {
 
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
               <Button 
-                className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
+                className="bg-de-raised text-white hover: hover:to-blue-700"
                 onClick={() => window.location.href = 'mailto:legal@digeratiexperts.com?subject=MSA Request'}
                 data-testid="button-request-msa"
               >
@@ -65,17 +65,17 @@ export default function MSA() {
               <Button 
                 variant="outline"
                 className="border-white/20 text-white hover:bg-white/10"
-                onClick={() => window.location.href = 'tel:480-519-5892'}
+                onClick={() => window.location.href = 'tel:+13254809870'}
                 data-testid="button-call-legal"
               >
-                Call 480-519-5892
+                Call 325-480-9870
               </Button>
             </div>
 
             <div className="mt-12 bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-lg">
               <h3 className="text-xl font-semibold text-white mb-3">Contact Legal Department</h3>
               <p className="text-gray-300 mb-2"><strong className="text-white">Email:</strong> legal@digeratiexperts.com</p>
-              <p className="text-gray-300 mb-2"><strong className="text-white">Phone:</strong> 480-519-5892</p>
+              <p className="text-gray-300 mb-2"><strong className="text-white">Phone:</strong> 325-480-9870</p>
               <p className="text-gray-300"><strong className="text-white">Address:</strong> 3165 S Alma School Rd Suite 29, Chandler, AZ 85248</p>
             </div>
           </div>

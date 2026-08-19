@@ -71,7 +71,7 @@ export function HomepageOnPageNav() {
       data-testid="homepage-section-spy"
       className="border-t border-white/[0.08] bg-black/90"
     >
-      <div className="mx-auto flex max-w-[100rem] items-stretch px-2 sm:px-3 xl:px-5">
+      <div className="mx-auto flex max-w-[var(--de-canvas)] items-stretch px-2 sm:px-3 xl:px-5">
         <ul className="flex w-full min-h-9 items-stretch justify-start overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] lg:justify-center [&::-webkit-scrollbar]:hidden">
           {items.map(({ section, index }) => {
             const isActive = activeIndex === index;
@@ -83,10 +83,10 @@ export function HomepageOnPageNav() {
                     event.preventDefault();
                     goTo(index);
                   }}
-                  className={`relative inline-flex min-h-9 w-full items-center justify-center px-1 py-1.5 text-[10px] font-semibold tracking-wide whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-inset sm:px-2 sm:text-[11px] lg:min-h-8 lg:w-auto lg:px-3.5 lg:text-[13px] ${
+                  className={`relative inline-flex min-h-9 w-full items-center justify-center px-1 py-1.5 text-xs font-semibold tracking-wide whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-de-accent focus-visible:ring-inset sm:px-2 sm:text-sm lg:min-h-8 lg:w-auto lg:px-3.5 ${
                     isActive
                       ? "text-white"
-                      : "text-white/55 hover:text-white/90"
+                      : "text-de-muted-soft hover:text-white"
                   }`}
                   aria-current={isActive ? "location" : undefined}
                   data-testid={`nav-dot-${section.id}`}

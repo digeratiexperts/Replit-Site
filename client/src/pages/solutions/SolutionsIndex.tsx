@@ -141,13 +141,13 @@ const SolutionsIndex = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6">
-              <Shield className="w-4 h-4 text-violet-400" />
-              <span className="text-sm text-violet-300">Complete IT & Security Solutions</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-de-raised border border-de-hairline mb-6">
+              <Shield className="w-4 h-4 text-de-magenta-ink" />
+              <span className="text-sm text-de-magenta-ink">Complete IT & Security Solutions</span>
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
               The ProActive{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-violet-300 to-fuchsia-300">
+              <span className="text-de-magenta-ink">
                 Ecosystem
               </span>
             </h1>
@@ -203,20 +203,20 @@ const SolutionsIndex = () => {
                     ))}
                   </ul>
                   
-                  <a href="/book">
-                    <Button 
+                  <Button asChild 
                       className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
                       data-testid={`button-get-${plan.name.toLowerCase()}`}
                     >
-                      Cyber Risk Assessment
+                  <a href="/book">
+                    Cyber Risk Assessment
                       <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
                   </a>
+                </Button>
                 </motion.div>
               ))}
             </div>
             
-            <p className="text-center text-white/40 text-sm mt-6">
+            <p className="text-center text-white/55 text-sm mt-6">
               {getPricingFooterText()}. Final pricing tailored to your users, sites, and compliance needs.
             </p>
           </motion.section>
@@ -254,7 +254,7 @@ const SolutionsIndex = () => {
                 <motion.div
                   key={service.title}
                   variants={itemVariants}
-                  className="rounded-2xl border border-white/10 bg-[#151217] p-5 transition-all duration-300 hover:border-violet-500/30"
+                  className="rounded-2xl border border-white/10 bg-[#151217] p-5 transition-all duration-300 hover:border-de-hairline"
                   data-testid={`foundation-${index}`}
                 >
                   <div className="mb-4">
@@ -293,14 +293,14 @@ const SolutionsIndex = () => {
                 <motion.div
                   key={service.title}
                   variants={itemVariants}
-                  className="flex gap-4 rounded-2xl border border-white/10 bg-[#151217] p-5 transition-all duration-300 hover:border-violet-500/30"
+                  className="flex gap-4 rounded-2xl border border-white/10 bg-[#151217] p-5 transition-all duration-300 hover:border-de-hairline"
                   data-testid={`security-${index}`}
                 >
                   <IconWell icon={service.icon} size="md" surface="dark" />
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <h3 className="text-white font-semibold">{service.title}</h3>
-                      <span className="px-2 py-0.5 text-xs bg-violet-500/20 text-violet-300 rounded">
+                      <span className="px-2 py-0.5 text-xs bg-de-raised text-de-magenta-ink rounded">
                         {service.tier}
                       </span>
                     </div>
@@ -336,14 +336,14 @@ const SolutionsIndex = () => {
                 <motion.div
                   key={service.title}
                   variants={itemVariants}
-                  className="flex gap-4 rounded-2xl border border-white/10 bg-[#151217] p-5 transition-all duration-300 hover:border-violet-500/30"
+                  className="flex gap-4 rounded-2xl border border-white/10 bg-[#151217] p-5 transition-all duration-300 hover:border-de-hairline"
                   data-testid={`compliance-${index}`}
                 >
                   <IconWell icon={service.icon} size="md" surface="dark" />
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <h3 className="text-white font-semibold">{service.title}</h3>
-                      <span className="px-2 py-0.5 text-xs bg-violet-500/20 text-violet-300 rounded">
+                      <span className="px-2 py-0.5 text-xs bg-de-raised text-de-magenta-ink rounded">
                         {service.tier}
                       </span>
                     </div>
@@ -356,7 +356,7 @@ const SolutionsIndex = () => {
 
           {/* Why Choose Us */}
           <motion.section 
-            className="mb-20 rounded-2xl p-8 bg-gradient-to-br from-violet-900/20 to-violet-900/20 border border-violet-500/20"
+            className="mb-20 rounded-2xl p-8 bg-de-raised border border-de-hairline"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -374,8 +374,8 @@ const SolutionsIndex = () => {
                 { icon: Award, value: "Security-first", label: "Operating model", description: "IT + cyber together" }
               ].map((stat, index) => (
                 <div key={index} className="text-center p-4">
-                  <div className="w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center mx-auto mb-3">
-                    <stat.icon className="w-6 h-6 text-violet-400" />
+                  <div className="w-12 h-12 rounded-full bg-de-raised flex items-center justify-center mx-auto mb-3">
+                    <stat.icon className="w-6 h-6 text-de-magenta-ink" />
                   </div>
                   <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
                   <div className="text-white/80 font-medium text-sm">{stat.label}</div>
@@ -400,26 +400,26 @@ const SolutionsIndex = () => {
               Schedule a free 15-minute call to discuss your needs. No pressure, no obligation—just honest advice about what your business actually needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/book">
-                <Button 
+              <Button asChild 
                   size="lg"
-                  className="h-14 px-8 text-lg font-semibold bg-violet-600 hover:bg-violet-500 text-white shadow-lg shadow-violet-500/25"
+                  className="h-14 px-8 text-lg font-semibold bg-de-magenta hover:bg-de-magenta text-white shadow-lg shadow-none"
                   data-testid="button-final-cta"
                 >
-                  Schedule Free Consultation
+                  <a href="/book">
+                    Schedule Free Consultation
                   <ArrowRight className="w-5 h-5 ml-2" />
+                  </a>
                 </Button>
-              </a>
-              <a href="tel:480-519-5892">
-                <Button 
+              <Button asChild 
                   size="lg"
                   className="h-14 px-8 text-lg font-semibold bg-transparent border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50"
                   data-testid="button-call-us"
                 >
-                  <Phone className="w-5 h-5 mr-2" />
-                  480-519-5892
+                  <a href="tel:+13254809870">
+                    <Phone className="w-5 h-5 mr-2" />
+                  325-480-9870
+                  </a>
                 </Button>
-              </a>
             </div>
           </motion.section>
 

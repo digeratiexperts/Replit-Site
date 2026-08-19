@@ -43,9 +43,9 @@ export function StoreBundlesSection({ isLoggedIn, onAddBundle }: StoreBundlesSec
                 {products.map((p) => (
                   <li key={p.id} className="flex items-center justify-between gap-3 text-sm">
                     <Link href={`/store/product/${p.sku}`}>
-                      <span className="text-white/80 hover:text-[#c4b5fd]">{p.name}</span>
+                      <span className="text-white/80 hover:text-de-accent-ink">{p.name}</span>
                     </Link>
-                    <span className="flex-shrink-0 text-white/45">{formatPrice(p)}</span>
+                    <span className="flex-shrink-0 text-white/55">{formatPrice(p)}</span>
                   </li>
                 ))}
               </ul>
@@ -53,23 +53,24 @@ export function StoreBundlesSection({ isLoggedIn, onAddBundle }: StoreBundlesSec
                 {onAddBundle && (
                   <Button
                     size="sm"
-                    className="bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                    className="bg-de-accent text-white hover:bg-[#6548ff]"
                     onClick={() => onAddBundle(products.filter((p) => p.isCheckoutEnabled))}
                     data-testid={`button-add-bundle-${bundle.id}`}
                   >
                     Add all to cart
                   </Button>
                 )}
-                <Link href="/store/co-managed">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-white/15 bg-transparent text-white hover:bg-white/5"
-                  >
+                <Button
+                  asChild
+                  size="sm"
+                  variant="outline"
+                  className="border-white/15 bg-transparent text-white hover:bg-white/5"
+                >
+                  <Link href="/store/co-managed">
                     Browse related
                     <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             </div>
           );

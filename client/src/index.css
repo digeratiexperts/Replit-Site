@@ -10,24 +10,59 @@
 /* Performance & Accessibility Optimizations */
 html {
   scroll-behavior: smooth;
-  /* Scale down overall sizing - 14px base instead of 16px default */
-  /* This makes 100% zoom look similar to previous 87.5% zoom */
-  font-size: 14px;
+  /*
+   * Browser-default rem. The previous 14px root made every rem-based
+   * size (type, padding, gaps) read as ~87.5% zoom. Marketing pages
+   * need the full 16px scale so body copy and nav labels stay readable
+   * at 100% without asking visitors to pinch-zoom.
+   */
+  font-size: 16px;
   /* Keep in-page anchors clear of fixed MegaMenu chrome */
   scroll-padding-top: var(--de-nav-offset);
 }
 
-/* Slightly larger on very wide screens */
+/*
+ * Store owns horizontal trackpad / swipe so Chrome and Safari do not
+ * treat it as Back / Forward. Scoped to /store* via .de-store-gesture-lock.
+ */
+html.de-store-gesture-lock,
+html.de-store-gesture-lock body {
+  overscroll-behavior-x: none;
+  overflow-x: clip;
+  touch-action: pan-y pinch-zoom;
+}
+
+.de-store-h-rail {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
+  touch-action: pan-x pan-y;
+  -webkit-overflow-scrolling: touch;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: scroll-position;
+}
+
+/*
+ * Large-display type scale.
+ * 16px is the laptop/monitor default. TVs and 4K walls need a real step
+ * up so the first viewport reads from the couch — not a 1px bump.
+ */
 @media (min-width: 1920px) {
   html {
-    font-size: 15px;
+    font-size: 18px;
   }
 }
 
-/* Larger on 4K displays */
 @media (min-width: 2560px) {
   html {
-    font-size: 16px;
+    font-size: 20px;
+  }
+}
+
+@media (min-width: 3840px) {
+  html {
+    font-size: 22px;
   }
 }
 
@@ -122,47 +157,241 @@ html {
   --de-paper: #f7f5f2;
   --de-paper-raised: #ffffff;
   --de-paper-hairline: rgba(26, 18, 16, 0.1);
+  /* Film grain as premultiplied SVG so chapters can also keep fade pseudos. */
+  --de-field-grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='deGrain' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch' result='n'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23deGrain)'/%3E%3C/svg%3E");
+  --de-field-grain-paper: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='deGrainPaper' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch' result='n'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.045 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23deGrainPaper)'/%3E%3C/svg%3E");
   --de-fg: #ffffff;
-  --de-muted: rgba(255, 255, 255, 0.85);
-  --de-muted-soft: rgba(255, 255, 255, 0.72);
-  --de-accent: #ec4899;
-  --de-accent-2: #d946ef;
+  /* Floor ≥ ~4.5:1 body text on --de-bg / --de-surface / --de-raised.
+   * Prefer these over ad-hoc text-white/50–/60 and pink-300 on dark fields. */
+  --de-muted: rgba(255, 255, 255, 0.88);
+  --de-muted-soft: rgba(255, 255, 255, 0.78);
   --de-magenta: #D3126A;
+  /*
+   * Brand magenta only reaches ~3.6:1 on the dark ladder, which clears WCAG's
+   * 3:1 bar for icons and large headings but fails the 4.5:1 bar for body-size
+   * text and inline links. The lighter tint holds the same hue and clears
+   * 4.5:1 on --de-bg, --de-surface, and --de-raised. Fills stay --de-magenta;
+   * that lighter tint is for small text / links / icons on dark only.
+   *
+   * Accent pink budget:
+   *   fill / CTA        → --de-magenta (+ --de-magenta-hover)  Do not darken.
+   *   ink on dark       → --de-magenta-ink
+   *   ink on paper      → --de-magenta-paper-ink
+   * Do not invent #FF477F, #F9A8D4, pink-300, or fuchsia→rose CTA gradients
+   * for marketing chrome. Store category pills keep their locked hues.
+   */
+  --de-magenta-ink: #F04C97;
+  --de-magenta-paper-ink: #A30E52;
+  --de-magenta-hover: #e01874;
   --de-violet: #5B45E0;
-  --de-brand-energy: linear-gradient(
-    90deg,
-    #5b45e0 0%,
-    #8b3ad4 16%,
-    #d3126a 48%,
-    #e11d5a 74%,
-    #fb7185 100%
-  );
+
+  /*
+   * Per-page accent. The field, type, spacing and primary CTA stay identical
+   * sitewide; this is the one hue a page family is allowed to own, and it is
+   * only ever used for topical signals — eyebrows, glyphs, step numerals,
+   * category chips, inline links. Pages opt in with data-accent on their root.
+   *
+   * Every `-ink` value clears 4.5:1 on --de-bg / --de-surface / --de-raised.
+   * Violet and indigo are deliberately absent: they read as the old generic
+   * chrome and the accent-pop rule bars them as fills.
+   *
+   * Held as raw channels so Tailwind's alpha modifiers work: the catalog leans
+   * on bg-de-accent/10 and border-de-accent/30, which a hex var cannot express.
+   */
+  --de-accent-rgb: 211 18 106;
+  --de-accent-ink-rgb: 240 76 151;
+
+  /*
+   * Contained marketing canvas — black outer gutters on ultrawide only.
+   * 100rem ≈ 1400px at the 14px root: fills a laptop / 1440 window.
+   * 16:9 TVs (1920 / 4K) must use the screen, not sit as a postage stamp.
+   * Modest side inset keeps TV overscan from clipping chrome.
+   */
+  --de-canvas: 100rem;
+  --de-canvas-gutter: max(0px, calc((100vw - var(--de-canvas)) / 2));
+  --de-conversion-bar-h: 0px;
+  --de-section-dock-h: 0px;
+  --de-unified-bar-h: 0px;
+  --de-spy-h: 0px;
+  --de-sticky-cta-h: 0px;
+  --de-cookie-h: 0px;
+  --de-chrome-inset: 0.75rem;
+  --de-fab-rail: 0px;
+  --de-fab-h: 3.5rem;
 
   /*
    * Sticky MegaMenu clearance (utility bar + main nav).
-   * Utility must clear enlarged text-lg links (~3.25rem); never fix utility
-   * height below content or glyphs clip above the viewport.
+   * Keep these compact so the homepage hero can land in the first viewport.
    * MegaMenu publishes live --de-utility-h / --de-nav-offset from ResizeObserver.
    */
-  --de-utility-h: 3.25rem;
-  --de-nav-h: 6.5rem;
-  --de-nav-h-scrolled: 5.25rem;
+  --de-utility-h: 2.5rem;
+  --de-nav-h: 5.5rem;
+  --de-nav-h-scrolled: 4.5rem;
   --de-nav-chrome: calc(var(--de-utility-h) + var(--de-nav-h));
   --de-spy-h: 0px;
   --de-nav-offset: calc(var(--de-nav-chrome) + var(--de-spy-h) + 0.75rem);
   --de-nav-current-bottom: calc(var(--de-nav-chrome) + var(--de-spy-h));
 }
 
+/* 1080p TV / maximized 16:9 — fill the wall, keep a slim overscan gutter */
+@media (min-width: 1800px) {
+  :root {
+    --de-canvas: min(96vw, 1920px);
+  }
+}
+
+/* 1440p / small 4K CSS pixels — wider stage, still a readable measure */
+@media (min-width: 2560px) {
+  :root {
+    --de-canvas: min(92vw, 2400px);
+  }
+}
+
+/* True 4K CSS pixels (some TV browsers) — fill the wall, slim overscan inset */
+@media (min-width: 3200px) {
+  :root {
+    --de-canvas: min(94vw, 3600px);
+  }
+}
+
+/* Phones: one logo bar. Utility + chapter spy stay on lg+ (and in the menu). */
+@media (max-width: 1023px) {
+  :root {
+    --de-utility-h: 0px;
+    --de-nav-h: 4rem;
+    --de-nav-h-scrolled: 3.75rem;
+    --de-spy-h: 0px;
+  }
+}
+
+html.de-marketing-canvas,
+html.de-marketing-canvas body {
+  background-color: #000;
+}
+
+.de-site-canvas {
+  max-width: var(--de-canvas);
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 100%;
+  background-color: var(--de-bg);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
+  padding-bottom: calc(var(--de-unified-bar-h) + var(--de-sticky-cta-h) + var(--de-chrome-inset));
+}
+
+.de-fixed-in-canvas {
+  left: var(--de-canvas-gutter);
+  right: var(--de-canvas-gutter);
+}
+
+/*
+ * Bottom chrome: one unified capsule (menu + scroll-top + Ask DE).
+ * Sticky CTA / compare sit above that shell so close controls stay clear.
+ */
+.de-unified-bar {
+  position: fixed;
+  z-index: 55;
+  left: calc(var(--de-canvas-gutter) + var(--de-chrome-inset));
+  right: calc(var(--de-canvas-gutter) + var(--de-chrome-inset));
+  bottom: calc(var(--de-chrome-inset) + var(--de-cookie-h));
+}
+
+/*
+ * Glass lives on a static inset layer. Transform (Framer layout/scale) on the
+ * same node as backdrop-filter is what made the expanded bar look blurry.
+ */
+.de-unified-bar-shell {
+  isolation: isolate;
+  /* Width is animated as a layout length, never transform/scale. */
+  transform: none;
+}
+
+.de-unified-bar-glass {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .de-unified-bar-shell {
+    transition: none;
+  }
+}
+
+.de-bottom-bar {
+  position: fixed;
+  z-index: 50;
+  left: calc(var(--de-canvas-gutter) + var(--de-chrome-inset));
+  right: calc(var(--de-canvas-gutter) + var(--de-chrome-inset));
+  bottom: calc(
+    var(--de-chrome-inset) + var(--de-cookie-h) + var(--de-unified-bar-h) + 0.5rem
+  );
+}
+
+.de-fab-rail {
+  position: fixed;
+  z-index: 55;
+  right: calc(var(--de-canvas-gutter) + var(--de-chrome-inset));
+  bottom: calc(var(--de-chrome-inset) + var(--de-cookie-h));
+}
+
+.de-scroll-top {
+  position: fixed;
+  z-index: 54;
+  right: calc(var(--de-canvas-gutter) + var(--de-chrome-inset));
+  bottom: calc(
+    var(--de-chrome-inset) + var(--de-cookie-h) + var(--de-unified-bar-h) + 0.6rem
+  );
+}
+
+@media (max-width: 639px) {
+  .de-unified-bar,
+  .de-bottom-bar {
+    left: var(--de-chrome-inset);
+    right: var(--de-chrome-inset);
+  }
+}
+
+/*
+ * Homepage chapters fill one viewport under sticky chrome.
+ * Hidden (showInNav:false) blocks stay natural height and are not snap targets.
+ */
+.scroll-snap-chapter {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  scroll-margin-top: var(--de-nav-current-bottom, var(--de-nav-chrome));
+}
+
+.scroll-snap-chapter > *:last-child {
+  flex: 1 1 auto;
+}
+
 /* Homepage section snap — proximity only (no JS scroll hijack). */
 @media (min-width: 1024px) {
   html.de-section-snap {
     scroll-snap-type: y proximity;
+    /* Chapters use scroll-margin-top for live chrome; don't add html scroll-padding. */
+    scroll-padding-top: 0;
   }
 
-  html.de-section-snap .scroll-snap-section,
-  html.de-section-snap .scroll-snap-section-auto {
+  html.de-section-snap.de-snap-suppress {
+    scroll-snap-type: none;
+  }
+
+  html.de-section-snap .scroll-snap-chapter {
     scroll-snap-align: start;
     scroll-snap-stop: normal;
+  }
+
+  html.de-section-snap .scroll-snap-section:not(.scroll-snap-chapter),
+  html.de-section-snap .scroll-snap-section-auto:not(.scroll-snap-chapter) {
+    scroll-snap-align: none;
   }
 }
 
@@ -179,7 +408,13 @@ html {
 
 /* Dark chapters: well (#050312) vs surface (#0a0a0a) vs raised (#151217).
  * Adjacent siblings in the SAME chapter share a field + hairline.
- * Different chapters step the ladder so the page does not read as one slab. */
+ * Different chapters step the ladder so the page does not read as one slab.
+ *
+ * OpenMSP background ladder (values only — not their yellow or layout):
+ *   page ~#161616  →  --de-bg #050312  (canvas / well / inset cards)
+ *   box  ~#212121  →  --de-raised #151217  (contained style box)
+ *   inset ~#121212 →  --de-bg #050312  (cards sitting in the box)
+ * Use .de-style-box on 2–4 flat chapters. Do not wrap every section. */
 .de-dark-well {
   background-color: var(--de-bg);
 }
@@ -191,6 +426,30 @@ html {
 }
 .de-chapter-hairline {
   border-top: 1px solid var(--de-hairline);
+}
+
+/* Contained chapter field — one step lighter than the well so page black
+ * shows in the gutters. Magenta pops on this quiet charcoal, not yellow. */
+.de-style-box {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--de-raised);
+  border: 1px solid var(--de-hairline);
+  border-radius: 1.5rem;
+}
+.de-style-box::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background-image: var(--de-field-grain);
+  background-size: 180px 180px;
+}
+.de-style-box-inset {
+  background-color: var(--de-bg);
+  border: 1px solid var(--de-hairline);
 }
 
 /* Magenta seam — tasteful chapter chrome, not a blur blob. */
@@ -228,7 +487,51 @@ html {
   box-shadow: 0 8px 32px rgba(26, 18, 16, 0.1);
 }
 
-/* Hairline fade between dark graphite and paper chapters. No parallax. */
+/*
+ * Film grain + corner lighting — opt-in per chapter.
+ * Grain is a background-image so fade ::before/::after stay available.
+ * .de-field-grain-film overlays photography (hero / CTA) above the still
+ * and under copy (z-index: 1 vs content z-10).
+ * Violet/magenta appear only as lighting. Never as a wash fill.
+ */
+.de-field-grain {
+  background-image: var(--de-field-grain);
+  background-size: 180px 180px;
+}
+
+.de-field-grain-paper {
+  background-image: var(--de-field-grain-paper);
+  background-size: 180px 180px;
+}
+
+.de-field-grain-film,
+.de-field-lit {
+  position: relative;
+  isolation: isolate;
+}
+
+.de-field-grain-film::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: var(--de-field-grain);
+  background-size: 180px 180px;
+}
+
+.de-field-lit::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 48% 70% at 92% -8%, rgba(211, 18, 106, 0.14) 0%, transparent 58%),
+    radial-gradient(ellipse 42% 64% at 6% 108%, rgba(91, 69, 224, 0.10) 0%, transparent 56%);
+}
+
+/* Hairline fade between dark graphite and paper chapters. Do not parallax the fade. */
 .de-chapter-fade-from-dark {
   position: relative;
 }
@@ -264,14 +567,82 @@ html {
   }
 }
 
-/* Homepage statement band — violet → magenta → coral. Not a page-wide wash. */
-.de-brand-energy-band {
-  background-color: #d3126a;
+.de-chapter-fade-to-surface {
+  position: relative;
+}
+.de-chapter-fade-to-surface::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 72px;
+  background: linear-gradient(to bottom, transparent, var(--de-surface));
+}
+@media (prefers-reduced-motion: reduce) {
+  .de-chapter-fade-to-surface::after {
+    height: 32px;
+  }
+}
+
+/*
+ * Homepage process band — a charcoal slab that separates the paper "what we
+ * protect" chapter from the proof well below. Violet and magenta appear only as
+ * lighting so the magenta step numerals stay the brightest thing in the band.
+ */
+/*
+ * Approved page accents. Only these five; violet and indigo are deliberately
+ * absent because they read as the old generic chrome and the accent-pop rule
+ * bars them as fills.
+ */
+[data-accent="magenta"] {
+  --de-accent-rgb: 211 18 106;
+  --de-accent-ink-rgb: 240 76 151;
+}
+[data-accent="cyan"] {
+  --de-accent-rgb: 8 145 178;
+  --de-accent-ink-rgb: 34 211 238;
+}
+[data-accent="amber"] {
+  --de-accent-rgb: 180 83 9;
+  --de-accent-ink-rgb: 251 191 36;
+}
+[data-accent="emerald"] {
+  --de-accent-rgb: 4 120 87;
+  --de-accent-ink-rgb: 52 211 153;
+}
+[data-accent="rose"] {
+  --de-accent-rgb: 190 18 60;
+  --de-accent-ink-rgb: 251 113 133;
+}
+/*
+ * Electric blue is the Store. It is close to the legacy #5034ff the catalog was
+ * already built in, so the store keeps the identity it had instead of being
+ * repainted — but as a token, and pulled off the indigo edge that reads as the
+ * retired chrome.
+ */
+[data-accent="electric"] {
+  --de-accent-rgb: 29 111 242;
+  --de-accent-ink-rgb: 111 179 255;
+}
+
+.de-process-band {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--de-surface);
   background-image:
-    radial-gradient(ellipse 36% 90% at 22% -18%, rgba(255, 255, 255, 0.42) 0%, transparent 58%),
-    radial-gradient(circle 4.5rem at 16% 10%, rgba(255, 255, 255, 0.28) 0%, transparent 68%),
-    radial-gradient(circle 2.75rem at 30% 6%, rgba(255, 255, 255, 0.2) 0%, transparent 70%),
-    var(--de-brand-energy);
+    radial-gradient(ellipse 42% 120% at 16% -30%, rgba(91, 69, 224, 0.22) 0%, transparent 62%),
+    radial-gradient(ellipse 34% 110% at 88% -24%, rgba(211, 18, 106, 0.14) 0%, transparent 60%);
+  border-top: 1px solid var(--de-hairline);
+  border-bottom: 1px solid var(--de-hairline);
+}
+.de-process-band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--de-field-grain);
+  background-size: 180px 180px;
 }
 
 /* Primary nav labels must never crop glyphs when type/logo scale up */
@@ -285,6 +656,45 @@ html {
 .mega-menu-nav a,
 .mega-menu-nav button {
   line-height: 1.35;
+}
+
+/* Fit mega-menus to the viewport. Density lives on Solutions; scroll is a last resort. */
+.mega-menu-dropdown {
+  max-height: calc(100dvh - var(--de-nav-current-bottom) - var(--de-cookie-h, 0px) - 4.5rem);
+}
+
+.mega-menu-dropdown-scroll {
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+
+.mega-menu-dropdown-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mega-menu-dropdown-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mega-menu-dropdown-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.mega-menu-dropdown-fade {
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2.75rem;
+  background: linear-gradient(to bottom, transparent, #0a0118 88%);
+  z-index: 2;
 }
 
 /* Readable long-form marketing copy on dark pages */
@@ -359,7 +769,7 @@ textarea:focus-visible {
   left: 50%;
   transform: translateX(-50%);
   padding: 0.75rem 1.5rem;
-  background: rgb(139, 92, 246);
+  background: var(--de-magenta);
   color: white;
   font-weight: 600;
   border-radius: 0 0 8px 8px;
@@ -373,7 +783,7 @@ textarea:focus-visible {
 
 /* Optimized image loading placeholder */
 .img-loading {
-  background: linear-gradient(90deg, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.2) 50%, rgba(139, 92, 246, 0.1) 100%);
+  background: linear-gradient(90deg, rgba(211, 18, 106, 0.08) 0%, rgba(211, 18, 106, 0.16) 50%, rgba(211, 18, 106, 0.08) 100%);
   background-size: 200% 100%;
   animation: img-shimmer 1.5s ease-in-out infinite;
 }
@@ -435,7 +845,7 @@ textarea:focus-visible {
 
 .hover-lift:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 40px -12px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 12px 40px -12px rgb(var(--de-accent-rgb) / 0.3);
 }
 
 .hover-glow {
@@ -443,17 +853,15 @@ textarea:focus-visible {
 }
 
 .hover-glow:hover {
-  box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 0 30px rgb(var(--de-accent-rgb) / 0.3);
 }
 
 /* Text gradient animation */
 .text-gradient-animate {
-  background: linear-gradient(90deg, #a78bfa, #c084fc, #e879f9, #c084fc, #a78bfa);
-  background-size: 300% 100%;
+  background: var(--de-magenta);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradient-shift 4s ease infinite;
 }
 
 /* Glassmorphism utilities */
@@ -483,9 +891,10 @@ textarea:focus-visible {
 .scroll-progress {
   position: fixed;
   top: 0;
-  left: 0;
+  left: var(--de-canvas-gutter, 0px);
+  width: calc(100vw - (2 * var(--de-canvas-gutter, 0px)));
   height: 3px;
-  background: linear-gradient(90deg, #8b5cf6, #a855f7);
+  background: var(--de-magenta);
   z-index: 9999;
   transform-origin: left;
   transition: transform 0.1s ease-out;
@@ -518,8 +927,8 @@ textarea:focus-visible {
 
 .card-interactive:hover {
   transform: translateY(-2px);
-  border-color: rgba(139, 92, 246, 0.3);
-  box-shadow: 0 8px 30px -12px rgba(139, 92, 246, 0.25);
+  border-color: rgb(var(--de-accent-rgb) / 0.3);
+  box-shadow: 0 8px 30px -12px rgb(var(--de-accent-rgb) / 0.25);
 }
 
 .card-interactive:active {
@@ -532,7 +941,7 @@ textarea:focus-visible {
 }
 
 .focus-ring:focus-visible {
-  outline: 2px solid rgb(139, 92, 246);
+  outline: 2px solid rgb(var(--de-accent-rgb) / 1);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -549,7 +958,7 @@ textarea:focus-visible {
   left: 0;
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, #8b5cf6, #a855f7);
+  background: var(--de-magenta);
   transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -667,6 +1076,16 @@ input:-webkit-autofill:active {
   transition: background-color 5000s ease-in-out 0s;
 }
 
+/* Paper fields on dark cards keep warm fill + dark type when the browser autofills */
+input.de-paper-field:-webkit-autofill,
+input.de-paper-field:-webkit-autofill:hover,
+input.de-paper-field:-webkit-autofill:focus,
+input.de-paper-field:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--de-paper) inset !important;
+  -webkit-text-fill-color: #1a1228 !important;
+  caret-color: #1a1228;
+}
+
 /* Touch action for better mobile performance */
 .touch-pan {
   -ms-touch-action: pan-y;
@@ -754,7 +1173,7 @@ html {
 
 :root {
   --paragraph-2-font-family: "Inter", Helvetica;
-  --paragraph-2-font-size: 14px;
+  --paragraph-2-font-size: 1rem;
   --paragraph-2-font-style: normal;
   --paragraph-2-font-weight: 400;
   --paragraph-2-letter-spacing: 0px;
@@ -960,7 +1379,9 @@ html {
     line-height: 1.6;
   }
 
-  /* Typography system - Space Grotesk for headings */
+  /* Typography system — intentional three-role stack (Talos “one display font”
+   * guidance does not override DE brand): Space Grotesk headings, Inter body,
+   * Oxanium/JetBrains Mono for stats/telemetry only. */
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', system-ui, sans-serif;
     font-weight: 700;
@@ -1196,8 +1617,8 @@ button, [role="button"], a {
   @apply scale-105 z-10;
   color: #ffffff;
   background: transparent;
-  border-color: var(--c1, rgba(139, 92, 246, 1));
-  box-shadow: 0 0 16px color-mix(in srgb, var(--c1, #8b5cf6) 25%, transparent 75%);
+  border-color: var(--c1, var(--de-magenta));
+  box-shadow: 0 0 16px color-mix(in srgb, var(--c1, var(--de-magenta)) 25%, transparent 75%);
 }
 
 .honeycomb-grid {

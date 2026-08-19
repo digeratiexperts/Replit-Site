@@ -35,31 +35,31 @@ RESTRAINED VIOLET ACCENTS
 SOPHISTICATED 3D / DIGITAL VISUALIZATION
 Think high-end enterprise technology product visualization rather than generic cybersecurity artwork.
 ## COLOR
-Primary environment:
+Primary environment (keep these **unsaturated** so accents can pop):
 - near black `#0a0a0a` (`--de-surface`, marketing field)
-- charcoal `#151217` (`--de-raised`, cards)
+- charcoal `#151217` (`--de-raised`, cards / contained boxes)
 - graphite `--de-bg` `#050312` (deep well)
 - hairline `--de-hairline` `rgba(255,255,255,0.1)`
 - paper `--de-paper` `#f7f5f2`
 Accent:
-- deep violet `#5B45E0` / `#7c3aed`
-- restrained purple `#8B5CF6`
-- subtle lavender `#A78BFA`
-- brand magenta `#D3126A` (primary CTA, brand mark, active glow)
-Purple should primarily function as an accent or source of illumination.
-Avoid large areas of saturated neon purple.
-Avoid rainbow gradients.
-Avoid excessive bright white.
+- brand magenta `#D3126A` (primary CTA, brand mark, active border, colon, icon)
+- deep violet `#5B45E0` / `#7c3aed` — lighting only
+- restrained purple `#8B5CF6` / lavender `#A78BFA` — lighting only
+**Accent-pop rule:** magenta reads vibrant because boxes and backgrounds stay black/charcoal. Do not fill panels, chips, or section fields with violet/purple. No `#FF00FF`, no rainbow, no purple-wash chrome (`bg-violet-500/15`, indigo→purple CTA gradients).
 Homepage chapters must juxtapose this ladder (well / surface / paper / magenta) — do not flatten every section to one `#0a0a0a` slab.
+The DE mark is white type + gold 3-bar icon (`#e7b20d`). Gold is secondary only. Do not adopt reference-site yellow as a brand or CTA color.
+Executable rule: `.cursor/rules/dark-field-accent-pop.mdc`.
+Blog/Journal and Store palettes are locked — `.cursor/rules/blog-store-color-lock.mdc`.
 ## MATERIALS
 Preferred:
-- graphite
+- graphite wells and charcoal raised boxes (hairline, not color-filled)
 - gunmetal
-- smoked glass
+- smoked glass used sparingly
 - dark metal
 - subtle translucent materials
 - controlled reflective surfaces
 Avoid:
+- purple-filled chrome (tinted wells, glass-violet cards)
 - toy-like plastic
 - excessive chrome
 - cheap glossy surfaces

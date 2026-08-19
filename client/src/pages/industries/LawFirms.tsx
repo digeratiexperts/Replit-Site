@@ -23,7 +23,7 @@ export default function LawFirms() {
     <PageTemplate
       title="IT Solutions for Law Firms"
       subtitle="Protect client privilege, prevent data breaches, stay compliant—secure IT for Arizona attorneys"
-      gradientColors="from-violet-600 via-purple-600 to-fuchsia-600"
+      gradientColors="from-[#050312] via-[#0a0a0a] to-[#050312]"
     >
       <div className="space-y-16">
         {/* Risk Assessment Cards */}
@@ -36,7 +36,7 @@ export default function LawFirms() {
               return (
                 <Card key={idx} className="bg-white/5 backdrop-blur-sm border-white/10 hover:shadow-lg transition-all">
                   <CardContent className="pt-6">
-                    <Icon className="h-8 w-8 text-violet-400 mb-3" />
+                    <Icon className="h-8 w-8 text-de-accent-ink mb-3" />
                     <h3 className="font-semibold text-white mb-2">{item.factor}</h3>
                     <Badge className={`${severity} border`}>{item.severity}</Badge>
                   </CardContent>
@@ -102,10 +102,10 @@ export default function LawFirms() {
               const Icon = service.icon;
               return (
                 <div key={idx} className="group relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-purple-500 rounded-xl blur opacity-0 group-hover:opacity-15 transition-all" />
-                  <Card className="relative bg-white/5 backdrop-blur-sm hover:shadow-lg transition-all border border-white/10 group-hover:border-violet-500/30">
+                  <div className="absolute inset-0 bg-de-raised rounded-xl blur opacity-0 group-hover:opacity-15 transition-all" />
+                  <Card className="relative bg-white/5 backdrop-blur-sm hover:shadow-lg transition-all border border-white/10 group-hover:border-de-hairline">
                     <CardHeader>
-                      <Icon className="h-10 w-10 text-violet-400 mb-2 group-hover:scale-110 transition-transform" />
+                      <Icon className="h-10 w-10 text-de-accent-ink mb-2 group-hover:scale-110 transition-transform" />
                       <CardTitle className="text-white">{service.title}</CardTitle>
                       <p className="text-sm text-gray-400 mt-1">{service.desc}</p>
                     </CardHeader>
@@ -127,7 +127,7 @@ export default function LawFirms() {
         </div>
 
         {/* Compliance Dashboard */}
-        <div className="bg-violet-500/10 border border-violet-500/30 rounded-xl p-8">
+        <div className="bg-de-raised border border-de-hairline rounded-xl p-8">
           <h3 className="text-2xl font-bold mb-8 text-center text-white">ABA Compliance Checklist</h3>
           <div className="grid md:grid-cols-2 gap-6">
             {[
@@ -148,14 +148,14 @@ export default function LawFirms() {
 
         <div className="grid md:grid-cols-2 gap-6">
           <div className="p-6 rounded-2xl bg-white/[0.04] border border-white/10">
-            <p className="text-xs font-semibold tracking-wide uppercase text-[#FF477F] mb-3">Arizona law firms</p>
+            <p className="text-xs font-semibold tracking-wide uppercase text-[#F04C97] mb-3">Arizona law firms</p>
             <p className="text-white/85 leading-relaxed">
               Privilege, client files, and wire instructions are the attack surface. We work with East Valley and Greater Phoenix firms that need security
               without slowing partners who live in email and document review.
             </p>
           </div>
           <div className="p-6 rounded-2xl bg-[#D3126A]/10 border border-[#D3126A]/25">
-            <p className="text-xs font-semibold tracking-wide uppercase text-[#FF477F] mb-3">How engagement works</p>
+            <p className="text-xs font-semibold tracking-wide uppercase text-[#F04C97] mb-3">How engagement works</p>
             <ol className="space-y-2 text-white/85 list-decimal list-inside">
               <li>Map identity, email, DMS/cloud file exposure, and remote access</li>
               <li>Harden MFA, phishing controls, and privilege-aware access</li>
@@ -185,7 +185,7 @@ export default function LawFirms() {
         </div>
 
         {/* CTA */}
-        <div className="bg-gradient-to-r from-[#D3126A] via-fuchsia-600 to-rose-500 rounded-xl p-8 text-center text-white">
+        <div className="bg-[#D3126A] rounded-xl p-8 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Protect privilege with a clear security plan</h2>
           <p className="text-lg mb-6 text-white/90">Schedule a cyber risk assessment focused on law-firm email, access, and client data.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -197,11 +197,11 @@ export default function LawFirms() {
               {CTA.primary}
             </a>
             <a 
-              href="tel:480-519-5892"
+              href="tel:+13254809870"
               className="inline-flex items-center justify-center border-2 border-white bg-transparent text-white hover:bg-white/10 px-8 py-3 rounded-lg font-semibold transition-all"
               data-testid="button-call-law"
             >
-              Call 480-519-5892
+              Call 325-480-9870
             </a>
           </div>
         </div>

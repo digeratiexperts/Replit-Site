@@ -225,7 +225,7 @@ export function AdminAgents() {
         </div>
         <Button
           onClick={() => setShowUploadForm(!showUploadForm)}
-          className="bg-[#5034ff] text-white hover:bg-[#5c42ff] hover:text-white"
+          className="bg-[#D3126A] text-white hover:bg-[#e01874] hover:text-white"
           data-testid="button-upload-agent"
         >
           <Upload className="h-4 w-4 mr-2" />
@@ -235,7 +235,7 @@ export function AdminAgents() {
 
       {/* Upload Form */}
       {showUploadForm && (
-        <Card className="border-[#5034ff]/50">
+        <Card className="border-[#D3126A]/50">
           <CardHeader>
             <CardTitle>{editingId ? "Edit Agent" : "Add New Agent"}</CardTitle>
           </CardHeader>
@@ -330,7 +330,7 @@ export function AdminAgents() {
             <div className="flex gap-2 pt-4 border-t">
               <Button
                 onClick={handleUploadAgent}
-                className="flex-1 bg-[#5034ff] text-white hover:bg-[#5c42ff] hover:text-white"
+                className="flex-1 bg-[#D3126A] text-white hover:bg-[#e01874] hover:text-white"
                 data-testid="button-save-agent"
               >
                 {editingId ? "Update Agent" : "Save Agent"}

@@ -106,8 +106,12 @@ import {
   fetchHubCompanyDocuments,
   fetchHubCompanyOrders,
   fetchHubContractDownload,
+  persistHubAccountId,
   resolvePortalCompanyName,
-} from "./techSalesDocuments";
+  resolvePortalHubAccountId,
+} from "./integrations/techSalesClient";
+import { registerDeSyncRoutes } from "./integrations/deSyncRoutes";
+import { enqueueOutbox } from "./integrations/deSyncStore";
 
 const JWT_SECRET = process.env.JWT_SECRET || randomBytes(32).toString('hex');
 const SALT_ROUNDS = 12;
@@ -461,6 +465,51 @@ const logSecurityEvent = (event: string, req: AuthenticatedRequest, data: any) =
 export async function registerRoutes(app: Express) {
   // Register object storage routes for file uploads
   registerObjectStorageRoutes(app);
+  registerDeSyncRoutes(app, authMiddleware as any);
+
+  // Live MSP threat feed (CISA / FIRST / NVD / MSRC). Never invents CVEs.
+  app.get("/api/public/threats", async (req: Request, res: Response) => {
+    try {
+      const { getThreatFeed } = await import("./services/threat-intel/ingest");
+      const scope = req.query.scope === "all" ? "all" : "homepage";
+      const payload = await getThreatFeed(scope);
+      const cacheControl =
+        payload.status === "ok"
+          ? "public, max-age=300, stale-while-revalidate=3600"
+          : "public, max-age=60";
+      res.setHeader("Cache-Control", cacheControl);
+      res.json(payload);
+    } catch (error: any) {
+      console.error("public-threats error:", error);
+      res.status(500).json({
+        status: "empty",
+        generatedAt: null,
+        items: [],
+        sources: {},
+        attribution:
+          "Sources: CISA, NIST NVD, FIRST, and Microsoft MSRC. Digerati prioritizes items based on active exploitation, exploit probability, and relevance to SMB environments.",
+        message: "Unable to load the threat feed",
+      });
+    }
+  });
+
+  app.post("/api/internal/threats/refresh", async (req: Request, res: Response) => {
+    const { isLocalRequest, refreshThreatFeed } = await import("./services/threat-intel/ingest");
+    if (!isLocalRequest(req)) {
+      return res.status(403).json({ error: "Refresh is limited to localhost" });
+    }
+    try {
+      const feed = await refreshThreatFeed();
+      res.json({
+        ok: true,
+        generatedAt: feed.generatedAt,
+        count: feed.items.length,
+        sources: feed.sources,
+      });
+    } catch (error: any) {
+      res.status(502).json({ ok: false, error: error?.message || "Refresh failed" });
+    }
+  });
 
   // Public Google Business reviews (soft trust — never invents quotes)
   app.get("/api/google-reviews", async (_req: Request, res: Response) => {
@@ -510,6 +559,10 @@ export async function registerRoutes(app: Express) {
         sources: [],
         reviews: [],
         mapsUri: "https://maps.google.com/?cid=1710856351091471339",
+        listingUrls: {
+          google: "https://maps.google.com/?cid=1710856351091471339",
+        },
+        yelp: { status: "error" },
         google: {
           status: "error",
           configured: false,
@@ -679,7 +732,7 @@ export async function registerRoutes(app: Express) {
         description: description || "",
         ownerId: req.userId || "",
         icon: "📦",
-        color: "#5034ff",
+        color: "#D3126A",
       });
 
       res.json({ workspace });
@@ -727,7 +780,7 @@ export async function registerRoutes(app: Express) {
         name,
         createdBy: req.userId || "",
         description: description || "",
-        color: "#5034ff",
+        color: "#D3126A",
         isFavorite: false,
       });
 
@@ -871,7 +924,7 @@ export async function registerRoutes(app: Express) {
       const label = await storage.createLabel({
         workspaceId,
         name,
-        color: color || "#5034ff",
+        color: color || "#D3126A",
       });
 
       res.json({ label });
@@ -1528,6 +1581,16 @@ export async function registerRoutes(app: Express) {
       if (result.finalized && !result.rejected) {
         fulfillmentTicketId = await fulfillApprovedRequest(req.params.id, req);
       }
+      const client = req.user?.clientId ? portalClients.get(req.user.clientId) : undefined;
+      void enqueueOutbox({
+        eventType: "approval.submitted",
+        source: "portal",
+        destination: "hub",
+        entityType: "approval",
+        entityId: req.params.id,
+        canonicalAccountId: client?.hubAccountId || null,
+        payload: { action: "approve", note: req.body?.note || null, finalized: !!result.finalized },
+      });
       res.json({ success: true, ...result, fulfillmentTicketId });
     } catch (error: any) {
       const status = /Forbidden|not the current/i.test(error.message) ? 403 : 400;
@@ -1542,6 +1605,16 @@ export async function registerRoutes(app: Express) {
         actor: asOrgUser(req),
         action: "reject",
         note: req.body?.note,
+      });
+      const client = req.user?.clientId ? portalClients.get(req.user.clientId) : undefined;
+      void enqueueOutbox({
+        eventType: "approval.submitted",
+        source: "portal",
+        destination: "hub",
+        entityType: "approval",
+        entityId: req.params.id,
+        canonicalAccountId: client?.hubAccountId || null,
+        payload: { action: "reject", note: req.body?.note || null },
       });
       res.json({ success: true, ...result });
     } catch (error: any) {
@@ -3837,8 +3910,12 @@ export async function registerRoutes(app: Express) {
       try {
         const ctx = portalCompanyContext(req);
         companyName = ctx.companyName;
-        if (companyName) {
-          const hub = await fetchHubCompanyOrders(companyName);
+        if (companyName || ctx.hubAccountId) {
+          const hub = await fetchHubCompanyOrders(companyName || "", ctx.hubAccountId);
+          const mappedAccountId = hub?.accountId || hub?.matchedDeals?.find((d) => d.accountId)?.accountId;
+          if (ctx.companyId && mappedAccountId) {
+            await persistHubAccountId(ctx.companyId, mappedAccountId);
+          }
           if (hub?.orders) {
             hubSource = "ok";
             matchedDeals = hub.matchedDeals || [];
@@ -3989,7 +4066,7 @@ export async function registerRoutes(app: Express) {
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #333; }
     .header { text-align: center; margin-bottom: 40px; }
-    .logo { font-size: 24px; font-weight: bold; color: #5034ff; margin-bottom: 8px; }
+    .logo { font-size: 24px; font-weight: bold; color: #D3126A; margin-bottom: 8px; }
     .receipt-title { font-size: 18px; color: #666; }
     .order-info { display: flex; justify-content: space-between; margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px; }
     .order-info div { }
@@ -4084,7 +4161,7 @@ export async function registerRoutes(app: Express) {
 
   <div class="footer">
     <p>Thank you for your business!</p>
-    <p>Digerati Experts | support@digeratiexperts.com | (480) 555-1000</p>
+    <p>Digerati Experts | support@digeratiexperts.com | 325-480-9870</p>
   </div>
 </body>
 </html>
@@ -4137,13 +4214,18 @@ export async function registerRoutes(app: Express) {
       impersonatingCompanyId: jwtImpersonation || impersonatingCompanyId,
       getClient: (id) => portalClients.get(id),
     });
-    return { companyId, companyName };
+    const hubAccountId = resolvePortalHubAccountId({
+      clientId: companyId,
+      impersonatingCompanyId: jwtImpersonation || impersonatingCompanyId,
+      getClient: (id) => portalClients.get(id),
+    });
+    return { companyId, companyName, hubAccountId };
   }
 
   app.get("/api/portal/contracts", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { companyId, companyName } = portalCompanyContext(req);
-      if (!companyName) {
+      const { companyId, companyName, hubAccountId } = portalCompanyContext(req);
+      if (!companyName && !hubAccountId) {
         return res.json({
           contracts: [],
           library: [],
@@ -4154,7 +4236,11 @@ export async function registerRoutes(app: Express) {
         });
       }
 
-      const hub = await fetchHubCompanyDocuments(companyName);
+      const hub = await fetchHubCompanyDocuments(companyName || "", hubAccountId);
+      const mappedAccountId = hub?.accountId || hub?.matchedDeals?.find((d) => d.accountId)?.accountId;
+      if (companyId && mappedAccountId) {
+        await persistHubAccountId(companyId, mappedAccountId);
+      }
       if (!hub) {
         return res.json({
           contracts: [],
@@ -4196,12 +4282,12 @@ export async function registerRoutes(app: Express) {
       if (Number.isNaN(signatureId)) {
         return res.status(400).json({ message: "Invalid contract id" });
       }
-      const { companyName } = portalCompanyContext(req);
-      if (!companyName) {
+      const { companyName, hubAccountId } = portalCompanyContext(req);
+      if (!companyName && !hubAccountId) {
         return res.status(400).json({ message: "No company profile loaded" });
       }
       const kind = typeof req.query.kind === "string" ? req.query.kind : "signed_pdf";
-      const file = await fetchHubContractDownload(signatureId, companyName, kind);
+      const file = await fetchHubContractDownload(signatureId, companyName || "", kind, hubAccountId);
       if (!file) {
         return res.status(404).json({ message: "Document not available" });
       }
@@ -4211,6 +4297,29 @@ export async function registerRoutes(app: Express) {
     } catch (error: any) {
       logger.error("Failed to download contract", error);
       return res.status(500).json({ message: "Failed to download contract" });
+    }
+  });
+
+  app.post("/api/portal/contracts/:id/acknowledge", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { companyId, hubAccountId } = portalCompanyContext(req);
+      const envelope = await enqueueOutbox({
+        eventType: "document.acknowledged",
+        source: "portal",
+        destination: "hub",
+        entityType: "document",
+        entityId: String(req.params.id),
+        canonicalAccountId: hubAccountId,
+        payload: { portalClientId: companyId, kind: "acknowledge" },
+      });
+      return res.status(202).json({
+        ok: true,
+        eventId: envelope.eventId,
+        message: "Acknowledgement queued for TechSales. This is not an e-signature.",
+      });
+    } catch (error: any) {
+      logger.error("Failed to acknowledge contract", error);
+      return res.status(500).json({ message: "Failed to acknowledge document" });
     }
   });
 
@@ -5519,22 +5628,19 @@ export async function registerRoutes(app: Express) {
       if (!contactName || !contactEmail) {
         return res.status(400).json({ error: "Contact name and email are required" });
       }
-      
-      if (!requestedItems || !Array.isArray(requestedItems) || requestedItems.length === 0) {
-        return res.status(400).json({ error: "Requested items are required" });
+
+      const { canonicalizeQuoteItems } = await import("./storeQuoteCommerce");
+      const { insertQuoteRequest } = await import("./storeQuoteStore");
+      const { resolveClientPricingRows: resolveQuotePricing, toPriceOverrides: toQuoteOverrides } = await import("./storeClientPricing");
+      const pricingRows = await resolveQuotePricing(req.user?.clientId);
+      let canonicalItems;
+      try {
+        canonicalItems = canonicalizeQuoteItems(requestedItems, toQuoteOverrides(pricingRows));
+      } catch (error: any) {
+        return res.status(400).json({ error: error?.message || "Invalid quote items" });
       }
 
-      const { db } = await import("./db");
-      const { storeQuoteRequests } = await import("@shared/schema");
-      
-      // Generate quote number in QR-YYYYMMDD-XXXX format
-      const now = new Date();
-      const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
-      const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase();
-      const quoteNumber = `QR-${dateStr}-${randomSuffix}`;
-
-      const [quoteRequest] = await db.insert(storeQuoteRequests).values({
-        quoteNumber,
+      const quoteRequest = await insertQuoteRequest({
         userId: req.userId || null,
         clientId: req.user?.clientId || null,
         contactName,
@@ -5542,26 +5648,45 @@ export async function registerRoutes(app: Express) {
         contactPhone: contactPhone || null,
         companyName: companyName || null,
         message: message || null,
-        requestedItems,
-        status: "pending",
-      }).returning();
+        requestedItems: canonicalItems,
+      });
 
-      console.log(`[QUOTE REQUEST] Created: ${quoteNumber} for ${contactEmail}`);
+      console.log(`[QUOTE REQUEST] Created: ${quoteRequest.quoteNumber} for ${contactEmail}`);
+
+      void eventBus.emit(EventTypes.QUOTE_REQUESTED, {
+        id: quoteRequest.id,
+        quoteId: quoteRequest.id,
+        quoteNumber: quoteRequest.quoteNumber,
+        contactName,
+        contactEmail,
+        contactPhone,
+        companyName,
+        message,
+        source: "store_quote",
+        canonicalAccountId: req.user?.clientId ? portalClients.get(req.user.clientId)?.hubAccountId : null,
+      });
+
+      void import("./storeQuoteCrm")
+        .then(({ syncStoreQuoteToCrm }) => syncStoreQuoteToCrm(quoteRequest))
+        .catch((error: any) => {
+          console.warn("[store-quote] CRM sync skipped:", error?.message || error);
+        });
       
       logSecurityEvent("QUOTE_REQUESTED", req, { 
         quoteId: quoteRequest.id, 
-        quoteNumber,
+        quoteNumber: quoteRequest.quoteNumber,
         clientId: req.user?.clientId,
         userId: req.userId,
         contactEmail,
         companyName,
-        itemCount: requestedItems.length,
-        items: requestedItems.map((item: any) => ({ id: item.id, name: item.name, quantity: item.quantity }))
+        itemCount: canonicalItems.length,
+        items: canonicalItems.map((item) => ({ id: item.productId, name: item.name, quantity: item.quantity })),
       });
 
       res.json({
         id: quoteRequest.id,
         quoteNumber: quoteRequest.quoteNumber,
+        pdfUrl: `/api/store/quote-requests/${quoteRequest.id}/pdf`,
         message: "Quote request submitted successfully",
       });
     } catch (error: any) {
@@ -5570,42 +5695,66 @@ export async function registerRoutes(app: Express) {
     }
   });
 
+  const canAccessQuote = (req: AuthenticatedRequest, quoteRequest: { userId: string | null; clientId: string | null; contactEmail: string | null }) => {
+    const isAdmin = req.user?.role === "admin";
+    const ownsQuote =
+      (req.userId && quoteRequest.userId === req.userId) ||
+      (req.user?.clientId && quoteRequest.clientId === req.user.clientId) ||
+      (req.user?.email &&
+        quoteRequest.contactEmail?.toLowerCase() === req.user.email.toLowerCase());
+    return { isAdmin, ownsQuote: !!(isAdmin || ownsQuote) };
+  };
+
+  app.get("/api/store/quote-requests/:id/pdf", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { getQuoteRequest } = await import("./storeQuoteStore");
+      const { buildQuotePdf } = await import("./storeQuotePdf");
+      const quoteRequest = await getQuoteRequest(req.params.id);
+      if (!quoteRequest) {
+        return res.status(404).json({ error: "Quote request not found" });
+      }
+      const { ownsQuote } = canAccessQuote(req, quoteRequest);
+      if (!ownsQuote) {
+        return res.status(403).json({ error: "Access denied" });
+      }
+
+      const pdf = buildQuotePdf(quoteRequest);
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", `attachment; filename="${quoteRequest.quoteNumber}.pdf"`);
+      return res.send(pdf);
+    } catch (error: any) {
+      console.error("[GET QUOTE PDF ERROR]", error);
+      return res.status(500).json({ error: "Failed to generate quote PDF" });
+    }
+  });
+
   // Get quote request by ID — authenticated owner or admin only
   app.get("/api/store/quote-requests/:id", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { id } = req.params;
-      const { db } = await import("./db");
-      const { storeQuoteRequests } = await import("@shared/schema");
-      const { eq, or } = await import("drizzle-orm");
-      
-      const [quoteRequest] = await db.select().from(storeQuoteRequests).where(
-        or(
-          eq(storeQuoteRequests.id, id),
-          eq(storeQuoteRequests.quoteNumber, id)
-        )
-      ).limit(1);
+      const { getQuoteRequest } = await import("./storeQuoteStore");
+      const quoteRequest = await getQuoteRequest(req.params.id);
       
       if (!quoteRequest) {
         return res.status(404).json({ error: "Quote request not found" });
       }
 
-      const isAdmin = req.user?.role === "admin";
-      const ownsQuote =
-        (req.userId && quoteRequest.userId === req.userId) ||
-        (req.user?.clientId && quoteRequest.clientId === req.user.clientId) ||
-        (req.user?.email &&
-          quoteRequest.contactEmail?.toLowerCase() === req.user.email.toLowerCase());
-      if (!isAdmin && !ownsQuote) {
+      const { isAdmin, ownsQuote } = canAccessQuote(req, quoteRequest);
+      if (!ownsQuote) {
         return res.status(403).json({ error: "Access denied" });
       }
 
+      const payload = {
+        ...quoteRequest,
+        pdfUrl: `/api/store/quote-requests/${quoteRequest.id}/pdf`,
+      };
+
       // Never return internal assignment fields to non-admins
       if (!isAdmin) {
-        const { assignedTo, ...clientSafe } = quoteRequest as typeof quoteRequest & { assignedTo?: string | null };
+        const { assignedTo, ...clientSafe } = payload;
         return res.json(clientSafe);
       }
 
-      res.json(quoteRequest);
+      res.json(payload);
     } catch (error: any) {
       console.error("[GET QUOTE REQUEST ERROR]", error);
       res.status(500).json({ error: error.message || "Failed to get quote request" });
@@ -5979,33 +6128,13 @@ export async function registerRoutes(app: Express) {
 
   // ========== STORE CLIENT AUTH ROUTES ==========
 
-  // Demo client pricing - in production this would come from a database
-  const clientPricingData: Map<string, { productId: string; customPrice: number; discountPercent: number }[]> = new Map([
-    ["client-1", [
-      { productId: "prod-010", customPrice: 35, discountPercent: 10 },
-      { productId: "prod-011", customPrice: 22, discountPercent: 12 },
-      { productId: "prod-040", customPrice: 22.50, discountPercent: 10 },
-    ]],
-    ["client-2", [
-      { productId: "prod-010", customPrice: 32, discountPercent: 18 },
-      { productId: "prod-012", customPrice: 5, discountPercent: 17 },
-    ]],
-    ["client-3", [
-      { productId: "prod-010", customPrice: 37, discountPercent: 5 },
-      { productId: "prod-035", customPrice: 160, discountPercent: 9 },
-      { productId: "prod-036", customPrice: 200, discountPercent: 11 },
-    ]],
-    ["client-4", [
-      { productId: "prod-010", customPrice: 36, discountPercent: 8 },
-      { productId: "prod-030", customPrice: 179, discountPercent: 10 },
-    ]],
-    ["client-5", [
-      { productId: "prod-010", customPrice: 34, discountPercent: 13 },
-      { productId: "prod-011", customPrice: 20, discountPercent: 20 },
-      { productId: "prod-030", customPrice: 169, discountPercent: 15 },
-      { productId: "prod-040", customPrice: 20, discountPercent: 20 },
-    ]],
-  ]);
+  const {
+    listDemoClientPricing,
+    removeDemoClientPricing,
+    resolveClientPricingRows,
+    toPriceOverrides,
+    upsertDemoClientPricing,
+  } = await import("./storeClientPricing");
 
   // Get client info for store (returns client type)
   app.get("/api/store/client-info", [authMiddleware], async (req: AuthenticatedRequest, res: Response) => {
@@ -6053,7 +6182,7 @@ export async function registerRoutes(app: Express) {
         return res.json({ pricing: [] });
       }
 
-      const pricing = clientPricingData.get(user.clientId) || [];
+      const pricing = await resolveClientPricingRows(user.clientId);
       res.json({ pricing });
     } catch (error: any) {
       console.error("[ERROR] Failed to get client pricing:", error);
@@ -6106,26 +6235,13 @@ export async function registerRoutes(app: Express) {
         return res.status(400).json({ error: "Either custom price or discount percent is required" });
       }
       
-      // Get or create client pricing array
-      let clientPricing = clientPricingData.get(clientId) || [];
-      
-      // Check if pricing already exists for this product
-      const existingIndex = clientPricing.findIndex(p => p.productId === productId);
-      const oldPricing = existingIndex >= 0 ? clientPricing[existingIndex] : null;
-      
-      const newPricingEntry = {
+      const existingPricing = listDemoClientPricing(clientId);
+      const oldPricing = existingPricing.find((row) => row.productId === productId) || null;
+      const newPricingEntry = upsertDemoClientPricing(clientId, {
         productId,
         customPrice: customPrice || oldPricing?.customPrice || 0,
-        discountPercent: discountPercent !== undefined ? discountPercent : (oldPricing?.discountPercent || 0)
-      };
-      
-      if (existingIndex >= 0) {
-        clientPricing[existingIndex] = newPricingEntry;
-      } else {
-        clientPricing.push(newPricingEntry);
-      }
-      
-      clientPricingData.set(clientId, clientPricing);
+        discountPercent: discountPercent !== undefined ? discountPercent : (oldPricing?.discountPercent || 0),
+      });
       
       logSecurityEvent("CLIENT_PRICING_SET", req, { 
         clientId, 
@@ -6149,7 +6265,7 @@ export async function registerRoutes(app: Express) {
   app.get("/api/admin/client-pricing/:clientId", [authMiddleware, requireAdmin], async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { clientId } = req.params;
-      const pricing = clientPricingData.get(clientId) || [];
+      const pricing = await resolveClientPricingRows(clientId);
       
       res.json({ clientId, pricing });
     } catch (error: any) {
@@ -6163,11 +6279,7 @@ export async function registerRoutes(app: Express) {
     try {
       const { clientId, productId } = req.params;
       
-      let clientPricing = clientPricingData.get(clientId) || [];
-      const oldPricing = clientPricing.find(p => p.productId === productId);
-      
-      clientPricing = clientPricing.filter(p => p.productId !== productId);
-      clientPricingData.set(clientId, clientPricing);
+      const oldPricing = removeDemoClientPricing(clientId, productId);
       
       logSecurityEvent("CLIENT_PRICING_REMOVED", req, { 
         clientId, 

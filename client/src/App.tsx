@@ -7,20 +7,22 @@ import { HelmetProvider } from "react-helmet-async";
 import NotFound from "@/pages/not-found";
 import { lazy, Suspense, useEffect } from "react";
 import { analytics } from "@/lib/analytics";
-import { ScrollToTop } from "@/components/ScrollToTop";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { ExitIntentPopup } from "@/components/ExitIntentPopup";
 import { StickyCTABar } from "@/components/StickyCTABar";
+import { SiteBottomBar } from "@/components/SiteBottomBar";
 import { MarketingChrome } from "@/components/MarketingChrome";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PageLoadingSkeleton } from "@/components/LoadingSkeleton";
 import { AnnouncerProvider } from "@/components/AccessibleAnnouncer";
 import { useGlobalShortcuts } from "@/hooks/useKeyboardShortcuts";
+import { useStoreChromeGestures } from "@/hooks/useStoreChromeGestures";
 import { CartProvider } from "@/contexts/CartContext";
 import { BookingProvider } from "@/contexts/BookingContext";
 import { BookingModal } from "@/components/BookingModal";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { ShoppingCart } from "@/components/store/ShoppingCart";
+import { SolutionMobileBar } from "@/components/store/SolutionMobileBar";
 
 import { DigeratiHomepage } from "@/pages/DigeratiHomepage";
 
@@ -42,6 +44,7 @@ const LawFirms = lazy(() => import("@/pages/industries/LawFirms"));
 const RealEstate = lazy(() => import("@/pages/industries/RealEstate"));
 const Nonprofits = lazy(() => import("@/pages/industries/Nonprofits"));
 const AnimalHospitals = lazy(() => import("@/pages/industries/AnimalHospitals"));
+const IndustriesIndex = lazy(() => import("@/pages/industries/IndustriesIndex"));
 const CaseStudies = lazy(() => import("@/pages/resources/CaseStudies"));
 const CaseStudyDetail = lazy(() => import("@/pages/resources/CaseStudyDetail"));
 const Blog = lazy(() => import("@/pages/resources/Blog"));
@@ -52,6 +55,7 @@ const Videos = lazy(() => import("@/pages/resources/Videos"));
 const SecurityChecklist = lazy(() => import("@/pages/resources/SecurityChecklist"));
 const Datasheets = lazy(() => import("@/pages/resources/Datasheets"));
 const DowntimeCalculator = lazy(() => import("@/pages/resources/DowntimeCalculator"));
+const ResourcesIndex = lazy(() => import("@/pages/resources/ResourcesIndex"));
 const KnowledgeBase = lazy(() => import("@/pages/support/KnowledgeBase"));
 const RemoteSupport = lazy(() => import("@/pages/support/RemoteSupport"));
 const PayInvoice = lazy(() => import("@/pages/support/PayInvoice"));
@@ -141,6 +145,7 @@ const EcosystemMatrixOfficial = lazy(() => import("@/pages/EcosystemMatrixOffici
 const NetworkPlannerOfficial = lazy(() => import("@/pages/NetworkPlannerOfficial"));
 const Ebook = lazy(() => import("@/pages/resources/Ebook"));
 const BookingPage = lazy(() => import("@/pages/BookingPage"));
+const ContactPage = lazy(() => import("@/pages/Contact"));
 
 // Store pages
 const StoreLanding = lazy(() => import("@/pages/store/StoreLanding"));
@@ -207,9 +212,11 @@ function Router() {
         </Suspense>
       )} />
       <Route path="/solutions/proactive-enterprise-ecosystem" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <ProActiveEnterpriseEcosystemPage />
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense fallback={<PageLoadingSkeleton />}>
+            <ProActiveEnterpriseEcosystemPage />
+          </Suspense>
+        </ErrorBoundary>
       )} />
       <Route path="/solutions/standalone-services" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
@@ -244,8 +251,7 @@ function Router() {
         <Suspense fallback={<PageLoadingSkeleton />}>
           <CoManagedStore />
         </Suspense>
-      )} />
-      <Route path="/store/product/:sku" component={() => (
+      )} />      <Route path="/store/product/:sku" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <ProductDetail />
         </Suspense>
@@ -279,6 +285,11 @@ function Router() {
       )} />
       
       {/* Industries Pages */}
+      <Route path="/industries" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <IndustriesIndex />
+        </Suspense>
+      )} />
       <Route path="/industries/healthcare" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <Healthcare />
@@ -318,6 +329,11 @@ function Router() {
       ))}
       
       {/* Resources Pages */}
+      <Route path="/resources" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ResourcesIndex />
+        </Suspense>
+      )} />
       <Route path="/resources/case-studies/:slug" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <CaseStudyDetail />
@@ -844,7 +860,11 @@ function Router() {
 
       {/* Legacy / shorthand URLs → canonical routes */}
       <Route path="/assessment">{() => <Redirect to="/book" />}</Route>
-      <Route path="/contact">{() => <Redirect to="/#contact" />}</Route>
+      <Route path="/contact" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ContactPage />
+        </Suspense>
+      )} />
       <Route path="/case-studies">{() => <Redirect to="/resources/case-studies" />}</Route>
       <Route path="/solutions/endpoint-management">{() => <Redirect to="/solutions/threat-detection" />}</Route>
       <Route path="/solutions/identity-management">{() => <Redirect to="/solutions/unified-security" />}</Route>
@@ -864,9 +884,37 @@ function SpaPageViews() {
   return null;
 }
 
+/*
+ * Page families keep one hue of their own. It only ever colours topical
+ * signals — eyebrows, glyphs, chips, inline links — while the field, type,
+ * spacing and primary CTA stay identical sitewide. Anything unlisted inherits
+ * the brand magenta default.
+ */
+const ACCENT_BY_PREFIX: ReadonlyArray<readonly [string, string]> = [
+  ["/store", "electric"],
+  ["/support", "cyan"],
+  ["/resources", "amber"],
+  ["/case-studies", "amber"],
+];
+
+function accentFor(location: string): string | undefined {
+  const match = ACCENT_BY_PREFIX.find(([prefix]) => location.startsWith(prefix));
+  return match?.[1];
+}
+
 function AppContent() {
   useGlobalShortcuts();
-  
+  const [location] = useLocation();
+  useStoreChromeGestures(location);
+  const isPortal = location.startsWith("/portal");
+  const isHome = location === "/";
+  const accent = isPortal ? undefined : accentFor(location);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("de-marketing-canvas", !isPortal);
+    return () => document.documentElement.classList.remove("de-marketing-canvas");
+  }, [isPortal]);
+
   return (
     <AnnouncerProvider>
       <a href="#main-content" className="skip-link">
@@ -874,13 +922,17 @@ function AppContent() {
       </a>
       <ScrollProgress />
       <SpaPageViews />
-      <div id="main-content">
+      <div
+        id="main-content"
+        data-accent={accent}
+        className={isPortal ? undefined : "de-site-canvas"}
+      >
         <Router />
       </div>
       <MarketingChrome />
-      <ScrollToTop />
+      {!isHome && <SiteBottomBar />}
       <StickyCTABar />
-      <ExitIntentPopup delay={10000} />
+      <ExitIntentPopup delay={5000} />
       <CookieConsentBanner />
     </AnnouncerProvider>
   );
@@ -896,6 +948,7 @@ function App() {
               <TooltipProvider>
                 <Toaster />
                 <ShoppingCart />
+                <SolutionMobileBar />
                 <BookingModal />
                 <AppContent />
               </TooltipProvider>

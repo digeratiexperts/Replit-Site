@@ -1,6 +1,7 @@
 import { useEffect } from "react";
+import { COMPANY, PRIMARY_PHONE } from "@/data/companyContact";
 
-const SITE_URL = "https://digeratiexperts.com";
+const SITE_URL = COMPANY.website;
 
 interface JsonLdProps {
   data: Record<string, unknown> | Record<string, unknown>[];
@@ -29,7 +30,7 @@ export function JsonLd({ data, id = "jsonld" }: JsonLdProps) {
 
 const ORGANIZATION = {
   "@type": "Organization",
-  "name": "Digerati Experts",
+  "name": COMPANY.legalName,
   "url": SITE_URL,
   "logo": `${SITE_URL}/favicon-512x512.png`,
   "sameAs": [
@@ -38,9 +39,9 @@ const ORGANIZATION = {
   ],
   "contactPoint": {
     "@type": "ContactPoint",
-    "telephone": "+1-480-519-5892",
+    "telephone": PRIMARY_PHONE.schemaTelephone || PRIMARY_PHONE.e164,
     "contactType": "sales",
-    "email": "info@digeratiexperts.com",
+    "email": COMPANY.email,
     "areaServed": "US",
     "availableLanguage": "English"
   }
@@ -53,8 +54,8 @@ const LOCAL_BUSINESS = {
   "alternateName": "Digerati Experts MSP",
   "description": "Cybersecurity-first managed IT for Arizona businesses. Partner-backed monitoring, identity/endpoint protection, and accountable day-to-day IT in one operating model.",
   "url": SITE_URL,
-  "telephone": "+1-480-519-5892",
-  "email": "info@digeratiexperts.com",
+  "telephone": PRIMARY_PHONE.schemaTelephone || PRIMARY_PHONE.e164,
+  "email": COMPANY.email,
   "logo": `${SITE_URL}/favicon-512x512.png`,
   "image": `${SITE_URL}/favicon-512x512.png`,
   "priceRange": "$$",
@@ -102,7 +103,7 @@ const LOCAL_BUSINESS = {
   },
   "founder": {
     "@type": "Person",
-    "name": "Michael Torres"
+    "name": "Joseph R. Petro"
   },
   "sameAs": ORGANIZATION.sameAs,
   "contactPoint": ORGANIZATION.contactPoint,

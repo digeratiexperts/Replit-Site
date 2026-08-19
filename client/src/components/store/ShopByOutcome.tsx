@@ -18,7 +18,7 @@ export function ShopByOutcome({ selected, onSelect }: ShopByOutcomeProps) {
           Start with the result you need — we map it to real catalog categories.
         </p>
       </div>
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-7">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         {storeOutcomes.map((outcome) => {
           const isActive = selected === outcome.id;
           return (
@@ -26,7 +26,7 @@ export function ShopByOutcome({ selected, onSelect }: ShopByOutcomeProps) {
               key={outcome.id}
               type="button"
               onClick={() => onSelect(isActive ? null : outcome.id)}
-              className={`group rounded-xl border p-5 md:p-6 text-left transition-all duration-200 ${
+              className={`group rounded-xl border p-3.5 text-left transition-all duration-200 sm:p-5 md:p-6 ${
                 isActive
                   ? "border-[#D3126A]/55 bg-[#D3126A]/10 shadow-[0_0_24px_rgba(211,18,106,0.12)]"
                   : "border-white/10 bg-[#121212] hover:border-white/20 hover:bg-[#161616]"
@@ -42,13 +42,13 @@ export function ShopByOutcome({ selected, onSelect }: ShopByOutcomeProps) {
                 <img
                   src={outcomeCardUrl(outcome.id)}
                   alt=""
-                  className="h-14 w-full object-cover"
+                  className="h-24 w-full object-cover object-center sm:h-28"
                   loading="lazy"
                   decoding="async"
                 />
               </div>
               <p className="text-base font-semibold text-white">{outcome.label}</p>
-              <p className="mt-1.5 line-clamp-2 text-sm text-white/50">{outcome.blurb}</p>
+              <p className="mt-1.5 text-sm leading-snug text-white/50">{outcome.blurb}</p>
             </button>
           );
         })}

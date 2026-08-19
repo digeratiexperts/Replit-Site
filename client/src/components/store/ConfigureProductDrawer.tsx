@@ -149,7 +149,7 @@ export function ConfigureProductDrawer({
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
-            className="fixed right-0 top-0 z-[61] flex h-full w-full max-w-md flex-col border-l border-white/10 bg-[#0a0a0a]"
+            className="fixed right-0 top-0 z-[61] flex h-full min-h-0 w-full max-w-md flex-col overflow-hidden border-l border-white/10 bg-[#0a0a0a]"
             data-testid="configure-product-drawer"
             role="dialog"
             aria-modal="true"
@@ -157,8 +157,8 @@ export function ConfigureProductDrawer({
           >
             <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#5034ff]/30 bg-[#5034ff]/15">
-                  <Settings2 className="h-5 w-5 text-[#a78bfa]" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-de-accent/30 bg-de-accent/15">
+                  <Settings2 className="h-5 w-5 text-de-accent-ink" />
                 </div>
                 <div>
                   <h2 id="configure-drawer-title" className="text-lg font-semibold text-white">
@@ -180,7 +180,7 @@ export function ConfigureProductDrawer({
               </Button>
             </div>
 
-            <div className="flex-1 space-y-6 overflow-y-auto p-6">
+            <div className="min-h-0 flex-1 space-y-6 overflow-y-auto p-6 pb-8">
               <div className="flex gap-4">
                 <ProductMedia
                   product={product}
@@ -192,34 +192,9 @@ export function ConfigureProductDrawer({
                   <p className="mt-1 text-sm leading-relaxed text-white/65">
                     {getOutcomeLead(product)}
                   </p>
-                  <p className="mt-2 text-sm text-white/45">{formatPrice(product)}</p>
+                  <p className="mt-2 text-sm text-white/55">{formatPrice(product)}</p>
                 </div>
               </div>
-
-              {product.features.length > 0 && (
-                <div className="rounded-xl border border-white/10 bg-[#141414] p-4">
-                  <p className="mb-3 text-sm font-medium text-white/70">What you get</p>
-                  <ul className="space-y-2">
-                    {product.features.slice(0, 4).map((feature) => (
-                      <li key={feature} className="flex items-start gap-2 text-sm text-white/60">
-                        <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#a78bfa]" />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {(includedHint || upgradeName) && (
-                <div className="space-y-1.5 text-sm text-white/50">
-                  {includedHint && (
-                    <p className="text-[#a78bfa]/90" data-testid="configure-included-hint">
-                      {includedHint}
-                    </p>
-                  )}
-                  {upgradeName && <p>Upgrade path: {upgradeName}</p>}
-                </div>
-              )}
 
               <div className="rounded-xl border border-white/10 bg-[#141414] p-5">
                 <label
@@ -264,10 +239,35 @@ export function ConfigureProductDrawer({
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
-                <p className="mt-3 text-sm text-white/45">
+                <p className="mt-3 text-sm text-white/55">
                   Minimum {product.minimumQuantity || 1} {unit}
                 </p>
               </div>
+
+              {product.features.length > 0 && (
+                <div className="rounded-xl border border-white/10 bg-[#141414] p-4">
+                  <p className="mb-3 text-sm font-medium text-white/70">What you get</p>
+                  <ul className="space-y-2">
+                    {product.features.slice(0, 4).map((feature) => (
+                      <li key={feature} className="flex items-start gap-2 text-sm text-white/60">
+                        <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-de-accent-ink" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {(includedHint || upgradeName) && (
+                <div className="space-y-1.5 text-sm text-white/50">
+                  {includedHint && (
+                    <p className="text-de-accent-ink/90" data-testid="configure-included-hint">
+                      {includedHint}
+                    </p>
+                  )}
+                  {upgradeName && <p>Upgrade path: {upgradeName}</p>}
+                </div>
+              )}
 
               {recurring && product.pricingType !== "yearly" && (
                 <div className="rounded-xl border border-white/10 bg-[#141414] p-5">
@@ -278,7 +278,7 @@ export function ConfigureProductDrawer({
                       variant="outline"
                       className={
                         billingPeriod === "monthly"
-                          ? "h-10 flex-1 border-[#5034ff]/40 bg-[#5034ff]/20 text-white"
+                          ? "h-10 flex-1 border-de-accent/40 bg-de-accent/20 text-white"
                           : "h-10 flex-1 border-white/15 bg-transparent text-white/70"
                       }
                       onClick={() => setBillingPeriod("monthly")}
@@ -291,7 +291,7 @@ export function ConfigureProductDrawer({
                       variant="outline"
                       className={
                         billingPeriod === "yearly"
-                          ? "h-10 flex-1 border-[#5034ff]/40 bg-[#5034ff]/20 text-white"
+                          ? "h-10 flex-1 border-de-accent/40 bg-de-accent/20 text-white"
                           : "h-10 flex-1 border-white/15 bg-transparent text-white/70"
                       }
                       onClick={() => setBillingPeriod("yearly")}
@@ -300,7 +300,7 @@ export function ConfigureProductDrawer({
                       Annual estimate
                     </Button>
                   </div>
-                  <p className="mt-2 text-xs text-white/45">
+                  <p className="mt-2 text-xs text-white/55">
                     Cart keeps the catalog billing type; annual is an estimate (×12).
                   </p>
                 </div>
@@ -309,7 +309,7 @@ export function ConfigureProductDrawer({
               {addonProducts.length > 0 && (
                 <div className="rounded-xl border border-white/10 bg-[#141414] p-5">
                   <p className="mb-1 text-sm font-medium text-white/70">Recommended add-ons</p>
-                  <p className="mb-3 text-xs text-white/45">
+                  <p className="mb-3 text-xs text-white/55">
                     From catalog relationships — not a hardware quiz.
                   </p>
                   <ul className="space-y-2">
@@ -323,7 +323,7 @@ export function ConfigureProductDrawer({
                             onClick={() => toggleAddon(addon.id)}
                             className={`flex w-full items-start gap-3 rounded-lg border px-3 py-2.5 text-left transition-colors ${
                               checked
-                                ? "border-[#5034ff]/40 bg-[#5034ff]/15"
+                                ? "border-de-accent/40 bg-de-accent/15"
                                 : "border-white/10 bg-[#0a0a0a] hover:border-white/20"
                             }`}
                             data-testid={`toggle-addon-${addon.sku}`}
@@ -332,7 +332,7 @@ export function ConfigureProductDrawer({
                             <span
                               className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded border ${
                                 checked
-                                  ? "border-[#5034ff] bg-[#5034ff] text-white"
+                                  ? "border-de-accent bg-de-accent text-white"
                                   : "border-white/25"
                               }`}
                             >
@@ -361,7 +361,7 @@ export function ConfigureProductDrawer({
                   htmlFor="configure-env-notes"
                   className="mb-2 flex items-center gap-2 text-sm font-medium text-white/70"
                 >
-                  <FileText className="h-4 w-4 text-[#a78bfa]" />
+                  <FileText className="h-4 w-4 text-de-accent-ink" />
                   Environment notes
                 </label>
                 <Textarea
@@ -369,12 +369,12 @@ export function ConfigureProductDrawer({
                   value={environmentNotes}
                   onChange={(e) => setEnvironmentNotes(e.target.value)}
                   placeholder="Sites, identity stack, backup targets, constraints — optional context for quote or onboarding."
-                  className="min-h-[88px] border-white/15 bg-[#0a0a0a] text-sm text-white placeholder:text-white/35"
+                  className="min-h-[88px] border-white/15 bg-[#0a0a0a] text-sm text-white placeholder:text-white/55"
                   data-testid="input-configure-notes"
                 />
               </div>
 
-              <div className="rounded-xl border border-[#5034ff]/25 bg-[#5034ff]/10 p-5">
+              <div className="rounded-xl border border-de-accent/25 bg-de-accent/10 p-5">
                 <p className="text-sm text-white/60">
                   {qty} × ${unitPrice.toFixed(2)}
                   {recurring ? (billingPeriod === "yearly" ? " × 12" : " / mo") : ""}
@@ -388,12 +388,19 @@ export function ConfigureProductDrawer({
                     <span className="text-lg font-medium text-white/50">{periodSuffix}</span>
                   ) : null}
                 </p>
+                <p className="mt-2 text-xs text-white/55">
+                  {recurring
+                    ? billingPeriod === "yearly"
+                      ? "Adds to Annual in Your Solution."
+                      : "Adds to Monthly in Your Solution."
+                    : "Adds to Due Today in Your Solution."}
+                </p>
               </div>
             </div>
 
             <div className="space-y-3 border-t border-white/10 p-6">
               <Button
-                className="h-12 w-full bg-[#5034ff] text-base text-white hover:bg-[#6548ff]"
+                className="h-12 w-full bg-de-accent text-base text-white hover:bg-[#6548ff]"
                 onClick={() => onConfirm(buildPayload())}
                 data-testid="button-add-configured"
               >
@@ -411,12 +418,12 @@ export function ConfigureProductDrawer({
                 </Button>
               )}
               <a
-                href="tel:480-519-5892"
+                href="tel:+13254809870"
                 className="flex h-11 w-full items-center justify-center gap-2 rounded-md border border-white/15 text-sm text-white/75 transition-colors hover:bg-white/5 hover:text-white"
                 data-testid="link-configure-call"
               >
                 <Phone className="h-4 w-4" />
-                Need help sizing? 480-519-5892
+                Need help sizing? 325-480-9870
               </a>
             </div>
           </motion.aside>

@@ -578,10 +578,10 @@ export default function PortalChat() {
     <PortalLayout title="Chats / DE Desk">
       <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-4">
         {/* Ops header */}
-        <div className="overflow-hidden rounded-2xl border border-[#8B5CF6]/35 bg-gradient-to-br from-[#1a0f2e] via-[#140a24] to-[#0f0818] p-4 text-white shadow-[0_0_0_1px_rgba(167,139,250,0.2),0_20px_50px_rgba(40,10,70,0.35)] sm:p-5">
+        <div className="overflow-hidden rounded-2xl border border-[#D3126A]/35 bg-gradient-to-br from-[#151217] via-[#0a0a0a] to-[#050312] p-4 text-white shadow-[0_0_0_1px_rgba(211,18,106,0.2),0_20px_50px_rgba(40,10,70,0.35)] sm:p-5">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="min-w-0">
-              <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-[#A78BFA]/35 bg-[#8B5CF6]/15 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#E9D5FF]">
+              <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-[#F04C97]/35 bg-[#D3126A]/15 px-2.5 py-1 text-sm font-semibold uppercase tracking-[0.14em] text-[#F04C97]">
                 <Headphones className="h-3.5 w-3.5" aria-hidden />
                 Operations desk
               </div>
@@ -591,7 +591,7 @@ export default function PortalChat() {
                 IT-contact channel. Tickets stay under{" "}
                 <Link
                   href="/portal/tickets"
-                  className="font-medium text-[#F0B4CC] underline-offset-2 hover:underline"
+                  className="font-medium text-[#F04C97] underline-offset-2 hover:underline"
                 >
                   Support Tickets
                 </Link>
@@ -635,7 +635,7 @@ export default function PortalChat() {
               onClick={() => setChannel("website")}
               className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-3 text-sm font-semibold transition ${
                 channel === "website"
-                  ? "bg-gradient-to-r from-[#7c3aed] to-[#D3126A] text-white shadow-lg shadow-[#7c3aed]/25"
+                  ? "bg-gradient-to-r from-[#D3126A] to-[#D3126A] text-white shadow-lg shadow-[#D3126A]/25"
                   : "text-white/55 hover:bg-white/5 hover:text-white"
               }`}
             >
@@ -649,7 +649,7 @@ export default function PortalChat() {
               onClick={() => setChannel("portal")}
               className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-3 text-sm font-semibold transition ${
                 channel === "portal"
-                  ? "bg-gradient-to-r from-[#7c3aed] to-[#D3126A] text-white shadow-lg shadow-[#7c3aed]/25"
+                  ? "bg-gradient-to-r from-[#D3126A] to-[#D3126A] text-white shadow-lg shadow-[#D3126A]/25"
                   : "text-white/55 hover:bg-white/5 hover:text-white"
               }`}
             >
@@ -660,7 +660,7 @@ export default function PortalChat() {
         </div>
 
         {channel === "website" && (
-          <div className="overflow-hidden rounded-2xl border border-[#8B5CF6]/30 bg-[#12081f] text-white shadow-[0_0_0_1px_rgba(167,139,250,0.18),0_24px_60px_rgba(30,8,55,0.45)]">
+          <div className="overflow-hidden rounded-2xl border border-[#D3126A]/30 bg-[#151217] text-white shadow-[0_0_0_1px_rgba(211,18,106,0.18),0_24px_60px_rgba(30,8,55,0.45)]">
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-4 py-3">
               <div className="flex min-w-0 items-center gap-2">
                 <Users className="h-4 w-4 shrink-0 text-[#C4B5FD]" aria-hidden />
@@ -683,7 +683,7 @@ export default function PortalChat() {
             </div>
 
             {openDeskIds.length > 0 && (
-              <div className="flex gap-1.5 overflow-x-auto border-b border-white/10 bg-[#1a0f2e]/80 px-2 py-2">
+              <div className="flex gap-1.5 overflow-x-auto border-b border-white/10 bg-[#151217]/80 px-2 py-2">
                 {openDeskIds.map((id) => {
                   const s = deskSessions.find((d) => d.sessionId === id);
                   const label = s ? viewerLabel(s) : id.slice(0, 8);
@@ -693,7 +693,7 @@ export default function PortalChat() {
                       key={id}
                       className={`group flex max-w-[240px] items-center gap-1 rounded-lg border px-2 py-1.5 text-xs ${
                         active
-                          ? "border-[#A78BFA]/60 bg-[#7c3aed]/25 text-white"
+                          ? "border-[#F04C97]/60 bg-[#D3126A]/25 text-white"
                           : "border-transparent text-white/60 hover:bg-white/5"
                       }`}
                     >
@@ -735,7 +735,7 @@ export default function PortalChat() {
                   </div>
                 ) : (
                   <>
-                    <p className="border-b border-white/5 px-4 py-2 text-[10px] uppercase tracking-[0.14em] text-white/40">
+                    <p className="border-b border-white/5 px-4 py-2 text-xs uppercase tracking-[0.14em] text-white/40">
                       Long-press or right-click for options
                     </p>
                     <ul className="divide-y divide-white/5">
@@ -772,7 +772,7 @@ export default function PortalChat() {
                                   onTouchCancel={clearLongPress}
                                   className={`w-full px-4 py-3.5 text-left transition select-none ${
                                     active
-                                      ? "bg-[#7c3aed]/20"
+                                      ? "bg-[#D3126A]/20"
                                       : open
                                         ? "bg-white/[0.03]"
                                         : "hover:bg-white/[0.04]"
@@ -784,12 +784,12 @@ export default function PortalChat() {
                                         {sessionNameLabel(s)}
                                       </span>
                                       {sessionCompanyLabel(s) ? (
-                                        <span className="mt-0.5 block truncate text-[11px] font-normal text-white/45">
+                                        <span className="mt-0.5 block truncate text-sm font-normal text-white/45">
                                           {sessionCompanyLabel(s)}
                                         </span>
                                       ) : null}
                                     </span>
-                                    <span className="inline-flex shrink-0 items-center gap-1 text-[10px] text-white/45">
+                                    <span className="inline-flex shrink-0 items-center gap-1 text-xs text-white/45">
                                       <Clock3 className="h-3 w-3" aria-hidden />
                                       {formatClock(s.updatedAt)}
                                     </span>
@@ -797,7 +797,7 @@ export default function PortalChat() {
                                   <p className="mt-1 line-clamp-2 text-xs text-white/50">
                                     {s.preview || "DE Desk conversation"}
                                   </p>
-                                  <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[10px]">
+                                  <div className="mt-2 flex flex-wrap items-center gap-1.5 text-xs">
                                     <span className="rounded-full bg-white/5 px-2 py-0.5 text-white/55">
                                       {s.messageCount} msgs
                                     </span>
@@ -807,7 +807,7 @@ export default function PortalChat() {
                                       </span>
                                     )}
                                     {open && !active && (
-                                      <span className="rounded-full bg-[#A78BFA]/20 px-2 py-0.5 font-semibold text-[#DDD6FE]">
+                                      <span className="rounded-full bg-[#F04C97]/20 px-2 py-0.5 font-semibold text-[#F04C97]">
                                         Open
                                       </span>
                                     )}
@@ -819,7 +819,7 @@ export default function PortalChat() {
                                   </div>
                                 </button>
                               </ContextMenuTrigger>
-                              <ContextMenuContent className="w-56 border-white/10 bg-[#1a0f2e] text-white">
+                              <ContextMenuContent className="w-56 border-white/10 bg-[#151217] text-white">
                                 <ContextMenuItem
                                   className="gap-2 focus:bg-white/10 focus:text-white"
                                   onSelect={() => runDeskSessionAction(s, "open")}
@@ -893,10 +893,10 @@ export default function PortalChat() {
                 )}
               </aside>
 
-              <div className="flex min-h-[520px] flex-col bg-[#0d0618]">
+              <div className="flex min-h-[520px] flex-col bg-[#050312]">
                 {!selectedDesk ? (
                   <div className="flex flex-1 flex-col items-center justify-center gap-2 p-8 text-center">
-                    <div className="mb-2 flex h-14 w-14 items-center justify-center rounded-2xl border border-[#8B5CF6]/35 bg-[#7c3aed]/15">
+                    <div className="mb-2 flex h-14 w-14 items-center justify-center rounded-2xl border border-[#D3126A]/35 bg-[#D3126A]/15">
                       <MessageSquare className="h-6 w-6 text-[#C4B5FD]" aria-hidden />
                     </div>
                     <p className="text-sm font-medium text-white/80">
@@ -909,13 +909,13 @@ export default function PortalChat() {
                   </div>
                 ) : (
                   <>
-                    <div className="flex items-center justify-between gap-3 border-b border-white/10 bg-[#1a0f2e]/70 px-4 py-3">
+                    <div className="flex items-center justify-between gap-3 border-b border-white/10 bg-[#151217]/70 px-4 py-3">
                       <div className="min-w-0">
                         <p className="truncate text-sm font-semibold text-white">
                           {activeSession ? sessionNameLabel(activeSession) : "Name not given yet"}
                         </p>
                         {activeSession && sessionCompanyLabel(activeSession) ? (
-                          <p className="truncate text-[11px] text-white/45">
+                          <p className="truncate text-sm text-white/45">
                             {sessionCompanyLabel(activeSession)}
                           </p>
                         ) : null}
@@ -952,12 +952,12 @@ export default function PortalChat() {
                           </Button>
                         ) : null}
                         {activeSession?.agentActive ? (
-                          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-300">
+                          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-1 text-sm font-semibold text-emerald-300">
                             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
                             On desk
                           </span>
                         ) : (
-                          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-white/55">
+                          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-sm font-medium text-white/55">
                             Standby
                           </span>
                         )}
@@ -987,7 +987,7 @@ export default function PortalChat() {
                                       : "rounded-bl-md border border-white/10 bg-white/[0.06] text-white/90"
                                 }`}
                               >
-                                <div className="mb-1 flex items-center justify-between gap-3 text-[10px] uppercase tracking-[0.12em] opacity-70">
+                                <div className="mb-1 flex items-center justify-between gap-3 text-xs uppercase tracking-[0.12em] opacity-70">
                                   <span>
                                     {isUser
                                       ? "Visitor"
@@ -1010,7 +1010,7 @@ export default function PortalChat() {
 
                     <form
                       onSubmit={handleDeskReply}
-                      className="border-t border-white/10 bg-[#1a0f2e]/80 p-3"
+                      className="border-t border-white/10 bg-[#151217]/80 p-3"
                     >
                       <div className="flex gap-2">
                         <Textarea
@@ -1025,19 +1025,19 @@ export default function PortalChat() {
                           }}
                           placeholder="Reply as agent — visitor sees this in the website chat…"
                           rows={2}
-                          className="min-h-[56px] resize-none border-white/15 bg-[#0d0618] text-white placeholder:text-white/35 focus-visible:ring-[#8B5CF6]"
+                          className="min-h-[56px] resize-none border-white/15 bg-[#050312] text-white placeholder:text-white/35 focus-visible:ring-[#D3126A]"
                           disabled={deskSending}
                         />
                         <Button
                           type="submit"
                           disabled={!deskReply.trim() || deskSending}
-                          className="h-auto min-h-[56px] shrink-0 bg-gradient-to-br from-[#7c3aed] to-[#D3126A] px-4 text-white hover:opacity-95"
+                          className="h-auto min-h-[56px] shrink-0 bg-gradient-to-br from-[#D3126A] to-[#D3126A] px-4 text-white hover:opacity-95"
                           aria-label="Send agent reply"
                         >
                           <Send className="h-4 w-4" />
                         </Button>
                       </div>
-                      <p className="mt-2 text-[11px] text-white/40">
+                      <p className="mt-2 text-sm text-white/40">
                         Enter to send · Shift+Enter for newline · This channel is website DE Desk
                         only
                       </p>
@@ -1061,7 +1061,7 @@ export default function PortalChat() {
             )}
 
             {chatAllowed && (
-              <div className="flex h-[min(640px,70vh)] flex-col overflow-hidden rounded-2xl border border-[#8B5CF6]/30 bg-[#12081f] text-white shadow-[0_0_0_1px_rgba(167,139,250,0.18),0_24px_60px_rgba(30,8,55,0.45)]">
+              <div className="flex h-[min(640px,70vh)] flex-col overflow-hidden rounded-2xl border border-[#D3126A]/30 bg-[#151217] text-white shadow-[0_0_0_1px_rgba(211,18,106,0.18),0_24px_60px_rgba(30,8,55,0.45)]">
                 <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
                   <div>
                     <p className="text-sm font-semibold">Portal live chat</p>
@@ -1096,7 +1096,7 @@ export default function PortalChat() {
                         >
                           <p className="mb-1 text-xs font-medium opacity-70">{message.senderName}</p>
                           <p className="whitespace-pre-wrap text-sm">{message.content}</p>
-                          <p className="mt-1 text-[10px] opacity-60">
+                          <p className="mt-1 text-xs opacity-60">
                             {formatClock(message.timestamp)}
                           </p>
                         </div>
@@ -1108,7 +1108,7 @@ export default function PortalChat() {
 
                 <form
                   onSubmit={handleSendMessage}
-                  className="flex gap-2 border-t border-white/10 bg-[#1a0f2e]/80 p-3"
+                  className="flex gap-2 border-t border-white/10 bg-[#151217]/80 p-3"
                 >
                   <Textarea
                     placeholder="Type your portal message…"
@@ -1122,13 +1122,13 @@ export default function PortalChat() {
                     }}
                     disabled={!connected || sending}
                     rows={2}
-                    className="min-h-[52px] flex-1 resize-none border-white/15 bg-[#0d0618] text-white placeholder:text-white/35 focus-visible:ring-[#8B5CF6]"
+                    className="min-h-[52px] flex-1 resize-none border-white/15 bg-[#050312] text-white placeholder:text-white/35 focus-visible:ring-[#D3126A]"
                     data-testid="input-message"
                   />
                   <Button
                     type="submit"
                     disabled={!messageText.trim() || !connected || sending}
-                    className="h-auto min-h-[52px] shrink-0 bg-gradient-to-br from-[#7c3aed] to-[#D3126A] text-white"
+                    className="h-auto min-h-[52px] shrink-0 bg-gradient-to-br from-[#D3126A] to-[#D3126A] text-white"
                     data-testid="button-send-message"
                     aria-label="Send portal message"
                   >
@@ -1146,7 +1146,7 @@ export default function PortalChat() {
             9 AM–6 PM EST. Outside hours, open a ticket anytime from DE Desk or{" "}
             <Link
               href="/portal/tickets/create"
-              className="text-[#7c3aed] hover:underline dark:text-[#F0B4CC]"
+              className="text-[#D3126A] hover:underline dark:text-[#F04C97]"
             >
               create a ticket
             </Link>
@@ -1165,7 +1165,7 @@ export default function PortalChat() {
               data-desk-session-menu
               role="menu"
               aria-label={`Options for ${viewerLabel(session)}`}
-              className="fixed z-[80] w-56 overflow-hidden rounded-xl border border-white/15 bg-[#1a0f2e] p-1 text-white shadow-2xl"
+              className="fixed z-[80] w-56 overflow-hidden rounded-xl border border-white/15 bg-[#151217] p-1 text-white shadow-2xl"
               style={{ left: pos.left, top: pos.top }}
             >
               {(

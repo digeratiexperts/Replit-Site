@@ -1,9 +1,86 @@
-import { Calendar, User, ArrowRight, AlertCircle, Shield, Lock, Zap, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar, ArrowRight, AlertCircle, Shield, Bug, Lock, Zap, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import { Link } from "wouter";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { useRef, useState, useEffect, useMemo } from "react";
+import { useThreatFeed } from "@/hooks/useThreatFeed";
+import {
+  formatThreatDate,
+  THREAT_ATTRIBUTION,
+  type ThreatCategory,
+  type ThreatItem,
+} from "@shared/threatFeed";
+
+const categoryIcon: Record<ThreatCategory, JSX.Element> = {
+  "Active Exploitation": <AlertCircle className="h-5 w-5" />,
+  "Threat Advisory": <Shield className="h-5 w-5" />,
+  "Critical Vulnerability": <Bug className="h-5 w-5" />,
+  "Malware Activity": <Bug className="h-5 w-5" />,
+  Ransomware: <AlertCircle className="h-5 w-5" />,
+  "Microsoft Security": <Lock className="h-5 w-5" />,
+  "Digerati Advisory": <Shield className="h-5 w-5" />,
+};
+
+function categoryBadgeClass(item: ThreatItem): string {
+  if (item.severity === "critical") return "bg-red-500/20 text-red-400 border-red-500/30";
+  if (item.severity === "high") return "border-[#D3126A] bg-transparent text-white";
+  return "border-de-hairline bg-transparent text-white/70";
+}
+
+function InsightCard({ insight, index }: { insight: ThreatItem; index: number }) {
+  return (
+    <Card
+      className="h-full overflow-hidden border-de-hairline bg-de-raised transition-colors hover:border-white/20"
+      data-testid={`insight-card-${index}`}
+    >
+      <div className="h-1 bg-[#D3126A]" />
+      <CardHeader className="pb-3 p-4 sm:p-6">
+        <div className="flex items-center justify-between mb-3 gap-2">
+          <Badge className={`${categoryBadgeClass(insight)} shrink-0 border text-base`}>
+            <span className="flex items-center gap-1 whitespace-nowrap">
+              {categoryIcon[insight.category]}
+              <span className="hidden sm:inline">{insight.category}</span>
+              <span className="sm:hidden">{insight.category.split(" ")[0]}</span>
+            </span>
+          </Badge>
+          <span className="text-base text-gray-400 flex items-center gap-1 whitespace-nowrap">
+            <Calendar className="h-3 w-3" />
+            <span className="hidden sm:inline">{formatThreatDate(insight.publishedAt)}</span>
+            <span className="sm:hidden">{formatThreatDate(insight.publishedAt, "short")}</span>
+          </span>
+        </div>
+        <p className="mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-de-magenta-ink">
+          {insight.kicker}
+        </p>
+        <CardTitle className="text-base sm:text-lg text-white line-clamp-2">
+          {insight.title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="p-4 sm:p-6 pt-0">
+        <CardDescription className="text-gray-400 mb-4 line-clamp-3 text-base">
+          {insight.excerpt}
+        </CardDescription>
+        <div className="flex items-center justify-between pt-4 border-t border-white/10 gap-3">
+          <span className="text-base text-gray-400 truncate">
+            {insight.sourceName}
+            {insight.vendor ? ` · ${insight.vendor}` : ""}
+            {insight.cve ? ` · ${insight.cve}` : ""}
+          </span>
+          <a
+            href={insight.sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-base font-medium text-de-magenta-ink hover:text-[#f0187a] shrink-0"
+          >
+            Read source
+            <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 export const DigeratiThreatsInsightsSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -11,56 +88,18 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [activeCategory, setActiveCategory] = useState<"All" | ThreatCategory>("All");
+  const { payload, loading } = useThreatFeed("homepage");
+  const insights = payload.items;
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
-
-  // Parallax transforms - reduced for smoother scroll
-  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["-3%", "3%"]);
-  const floatingY = useTransform(scrollYProgress, [0, 1], [prefersReducedMotion ? 0 : 15, prefersReducedMotion ? 0 : -15]);
-  
-  const insights = [
-    {
-      category: "CISA Alert",
-      date: "January 7, 2026",
-      title: "KEV Added: HPE OneView Remote Code Execution (CVE-2025-37164)",
-      excerpt: "CISA added an HPE OneView code injection/RCE issue to the Known Exploited Vulnerabilities catalog. Apply vendor mitigations and patch per guidance.",
-      author: "Security Team",
-      readTime: "3 min read",
-      urgent: true,
-      icon: <AlertCircle className="h-5 w-5" />,
-      gradient: "from-red-500 to-orange-500",
-      slug: "kev-hpe-oneview-cve-2025-37164"
-    },
-    {
-      category: "Threat Analysis",
-      date: "December 5, 2025",
-      title: "Active Exploitation: React Server Components RCE Added to KEV",
-      excerpt: "CISA KEV lists an RCE risk tied to React Server Components endpoints (CVE-2025-55182). Prioritize exposure review and patch immediately.",
-      author: "Security Team",
-      readTime: "5 min read",
-      urgent: true,
-      icon: <Shield className="h-5 w-5" />,
-      gradient: "from-purple-500 to-pink-500",
-      slug: "kev-react-server-components-cve-2025-55182"
-    },
-    {
-      category: "Compliance Update",
-      date: "December 16, 2025",
-      title: "HIPAA Enforcement: OCR Settlement Includes $112,500 Payment",
-      excerpt: "HHS OCR announced a HIPAA Right of Access enforcement action resolved via settlement. Verify your access request workflows are compliant.",
-      author: "Compliance Team",
-      readTime: "4 min read",
-      urgent: false,
-      icon: <Lock className="h-5 w-5" />,
-      gradient: "from-violet-500 to-purple-500",
-      slug: "hhs-ocr-right-of-access-concentra-2025-12-16"
-    }
-  ];
-
-  const categories = ["All", "CISA Alerts", "Ransomware", "Compliance", "Best Practices"];
+  const categories = useMemo(() => {
+    const present = Array.from(new Set(insights.map((item) => item.category)));
+    return present.length ? (["All", ...present] as Array<"All" | ThreatCategory>) : [];
+  }, [insights]);
+  const displayed = useMemo(
+    () => (activeCategory === "All" ? insights : insights.filter((item) => item.category === activeCategory)),
+    [insights, activeCategory],
+  );
 
   const checkScrollButtons = () => {
     if (scrollContainerRef.current) {
@@ -73,273 +112,187 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (container) {
-      container.addEventListener('scroll', checkScrollButtons);
+      container.addEventListener("scroll", checkScrollButtons);
       checkScrollButtons();
-      return () => container.removeEventListener('scroll', checkScrollButtons);
+      return () => container.removeEventListener("scroll", checkScrollButtons);
     }
-  }, []);
+  }, [displayed.length]);
 
-  const scroll = (direction: 'left' | 'right') => {
+  const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
-      const scrollAmount = 320;
       scrollContainerRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
+        left: direction === "left" ? -320 : 320,
+        behavior: "smooth",
       });
     }
   };
 
-  return (
-    <section 
-      ref={sectionRef}
-      className="de-dark-chapter de-chapter-hairline relative overflow-hidden py-10 md:py-14 lg:py-16"
-      style={{ position: 'relative' }}
-    >
-      {/* Parallax violet accent glow */}
-      <motion.div 
-        className="absolute inset-0 pointer-events-none"
-        style={{ 
-          y: backgroundY,
-          background: "radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 60%)" 
-        }} 
-      />
-      
-      {/* Floating decorative element */}
-      <motion.div 
-        className="absolute top-20 right-16 w-4 h-4 rounded-full border border-violet-500/20 pointer-events-none hidden lg:block"
-        style={{ y: floatingY }}
-      />
+  const gridClass =
+    displayed.length >= 4
+      ? "hidden lg:grid grid-cols-2 xl:grid-cols-4 gap-6 mb-12"
+      : "hidden lg:grid grid-cols-3 gap-6 mb-12";
 
+  return (
+    <section
+      ref={sectionRef}
+      className="de-dark-well de-chapter-hairline de-field-grain relative overflow-hidden py-10 md:py-14 lg:py-16"
+      style={{ position: "relative" }}
+    >
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
-        <motion.div 
+        <motion.div
           className="text-center mb-8 md:mb-12"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.35 }}
         >
-          <Badge className="mb-3 md:mb-4 bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 text-xs md:text-sm">
+          <Badge className="mb-3 md:mb-4 bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 text-base">
             <Zap className="w-3 h-3 mr-1" />
             24/7 Security Response Team
           </Badge>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 px-2">
-            Recent Threats & <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-violet-400 to-purple-400">Insights</span>
+          <h2 className="mb-3 px-2 text-2xl font-bold text-white sm:text-3xl md:mb-4 md:text-4xl lg:text-5xl">
+            Recent Threats & Insights
+            <span className="text-[#D3126A]" aria-hidden="true">
+              :
+            </span>
           </h2>
           <p className="text-base md:text-lg lg:text-xl text-gray-400 max-w-3xl mx-auto px-4">
-            A short teaser of current alerts. Full feed, dates, and sources live on{" "}
-            <Link href="/resources/blog">
+            Current items prioritized by active exploitation, exploit probability, and SMB relevance.
+            Full stream, dates, and sources live on{" "}
+            <Link href="/resources/security-updates">
               <span className="font-semibold text-white/80 underline decoration-white/20 underline-offset-4 hover:text-white">
-                Resources
+                Security Updates
               </span>
             </Link>
             .
           </p>
         </motion.div>
 
-        {/* Category filters - horizontal scroll on mobile */}
-        <motion.div 
-          className="flex overflow-x-auto scrollbar-hide gap-2 mb-8 md:mb-10 pb-2 md:justify-center"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 8 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-30px" }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-        >
-          {categories.map((category, index) => (
-            <button
-              key={index}
-              className={`px-3 md:px-4 py-1.5 md:py-2 rounded-full transition-all duration-300 text-xs md:text-sm font-medium whitespace-nowrap flex-shrink-0 ${
-                index === 0
-                  ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-500/25"
-                  : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10"
-              }`}
-              data-testid={`filter-${category.toLowerCase().replace(/\s+/g, '-')}`}
-            >
-              {category}
-            </button>
-          ))}
-        </motion.div>
-
-        {/* Mobile: Horizontal scroll */}
-        <div className="lg:hidden relative mb-8">
-          {/* Scroll buttons */}
-          <button
-            onClick={() => scroll('left')}
-            className={`absolute left-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/80 backdrop-blur-sm border border-white/20 flex items-center justify-center transition-all ${
-              canScrollLeft ? 'opacity-100' : 'opacity-0 pointer-events-none'
-            }`}
-            aria-label="Scroll left"
-            data-testid="threats-scroll-left"
+        {categories.length > 2 && (
+          <motion.div
+            className="flex overflow-x-auto scrollbar-hide gap-2 mb-8 md:mb-10 pb-2 md:justify-center"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            initial={prefersReducedMotion ? {} : { opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-30px" }}
+            transition={{ duration: 0.3, delay: 0.1 }}
           >
-            <ChevronLeft className="w-5 h-5 text-white" />
-          </button>
-          
-          <button
-            onClick={() => scroll('right')}
-            className={`absolute right-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/80 backdrop-blur-sm border border-white/20 flex items-center justify-center transition-all ${
-              canScrollRight ? 'opacity-100' : 'opacity-0 pointer-events-none'
-            }`}
-            aria-label="Scroll right"
-            data-testid="threats-scroll-right"
-          >
-            <ChevronRight className="w-5 h-5 text-white" />
-          </button>
-
-          {/* Gradient edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-de-surface to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-de-surface to-transparent z-10 pointer-events-none" />
-
-          <div 
-            ref={scrollContainerRef}
-            className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 px-2 snap-x snap-mandatory"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-            {insights.map((insight, index) => (
-              <div
-                key={index}
-                className="flex-shrink-0 w-[300px] sm:w-[340px] snap-center"
+            {categories.map((category) => (
+              <button
+                key={category}
+                type="button"
+                onClick={() => setActiveCategory(category)}
+                className={`min-h-11 shrink-0 whitespace-nowrap rounded-xl border px-3 py-1.5 text-base font-medium transition-colors md:px-4 md:py-2 ${
+                  activeCategory === category
+                    ? "border-[#D3126A] bg-transparent text-white shadow-[inset_0_0_0_1px_#D3126A]"
+                    : "border-de-hairline bg-transparent text-white/55 hover:border-white/20 hover:text-white"
+                }`}
+                data-testid={`filter-${category.toLowerCase().replace(/\s+/g, "-")}`}
               >
-                <Card 
-                  className="h-full bg-white/5 backdrop-blur-xl border-white/10 hover:border-white/20 transition-all duration-300 hover:bg-white/[0.07] overflow-hidden"
-                  data-testid={`insight-card-${index}`}
-                >
-                  <div className={`h-1 bg-gradient-to-r ${insight.gradient}`} />
-                  
-                  <CardHeader className="pb-3 p-4 sm:p-6">
-                    <div className="flex items-center justify-between mb-3 gap-2">
-                      <Badge 
-                        className={`${
-                          insight.urgent 
-                            ? 'bg-red-500/20 text-red-400 border-red-500/30' 
-                            : 'bg-violet-500/20 text-violet-400 border-violet-500/30'
-                        } border text-xs`}
-                      >
-                        <span className="flex items-center gap-1">
-                          {insight.icon}
-                          <span className="hidden sm:inline">{insight.category}</span>
-                          <span className="sm:hidden">{insight.category.split(' ')[0]}</span>
-                        </span>
-                      </Badge>
-                      <span className="text-[10px] sm:text-xs text-gray-500 flex items-center gap-1 whitespace-nowrap">
-                        <Calendar className="h-3 w-3" />
-                        <span className="hidden sm:inline">{insight.date}</span>
-                        <span className="sm:hidden">{insight.date.split(',')[0]}</span>
-                      </span>
-                    </div>
-                    <CardTitle className="text-base sm:text-lg text-white line-clamp-2">
-                      {insight.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-4 sm:p-6 pt-0">
-                    <CardDescription className="text-gray-400 mb-4 line-clamp-3 text-base">
-                      {insight.excerpt}
-                    </CardDescription>
-                    <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                      <div className="flex items-center gap-2 text-[10px] sm:text-xs text-gray-500">
-                        <User className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                        <span className="hidden sm:inline">{insight.author}</span>
-                        <span className="sm:hidden">{insight.author.split(' ')[0]}</span>
-                        <span>•</span>
-                        <span>{insight.readTime}</span>
-                      </div>
-                      <Link 
-                        href="/resources/security-updates"
-                        className="text-purple-400 hover:text-purple-300 font-medium text-xs sm:text-sm flex items-center gap-1"
-                      >
-                        <span className="hidden sm:inline">Know More</span>
-                        <span className="sm:hidden">More</span>
-                        <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+                {category}
+              </button>
             ))}
+          </motion.div>
+        )}
+
+        {loading ? (
+          <div
+            className="mx-auto mb-12 max-w-2xl rounded-2xl border border-de-hairline bg-de-raised p-6 text-center md:p-8"
+            data-testid="insights-loading"
+          >
+            <p className="text-lg font-semibold text-white">Loading current threats…</p>
+            <p className="mt-2 text-base leading-relaxed text-white/55">
+              Checking CISA, FIRST, NVD, and Microsoft MSRC. Nothing is invented while this loads.
+            </p>
           </div>
-        </div>
-
-        {/* Desktop: Grid layout */}
-        <div className="hidden lg:grid grid-cols-3 gap-6 mb-12">
-          {insights.map((insight, index) => (
-            <motion.div
-              key={index}
-              initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-30px" }}
-              transition={{ duration: 0.35, delay: index * 0.06 }}
-            >
-              <Card 
-                className="group h-full bg-white/5 backdrop-blur-xl border-white/10 hover:border-white/20 transition-all duration-300 hover:bg-white/[0.07] overflow-hidden"
-                data-testid={`insight-card-${index}`}
+        ) : displayed.length === 0 ? (
+          <div
+            className="mx-auto mb-12 max-w-2xl rounded-2xl border border-de-hairline bg-de-raised p-6 text-center md:p-8"
+            data-testid="insights-empty"
+          >
+            <p className="text-lg font-semibold text-white">No current items meet the homepage threshold.</p>
+            <p className="mt-2 text-base leading-relaxed text-white/55">
+              We only promote threats with confirmed exploitation, high exploit probability, or clear
+              SMB relevance — and only within the last 45 days. The full stream stays on Security
+              Updates with dates and sources.
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="lg:hidden relative mb-8">
+              <button
+                onClick={() => scroll("left")}
+                className={`absolute left-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/80 backdrop-blur-sm border border-white/20 flex items-center justify-center transition-all ${
+                  canScrollLeft ? "opacity-100" : "opacity-0 pointer-events-none"
+                }`}
+                aria-label="Scroll left"
+                data-testid="threats-scroll-left"
               >
-                <div className={`h-1 bg-gradient-to-r ${insight.gradient}`} />
-                
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between mb-3">
-                    <Badge 
-                      className={`${
-                        insight.urgent 
-                          ? 'bg-red-500/20 text-red-400 border-red-500/30' 
-                          : 'bg-violet-500/20 text-violet-400 border-violet-500/30'
-                      } border`}
-                    >
-                      <span className="flex items-center gap-1">
-                        {insight.icon}
-                        {insight.category}
-                      </span>
-                    </Badge>
-                    <span className="text-xs text-gray-500 flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      {insight.date}
-                    </span>
+                <ChevronLeft className="w-5 h-5 text-white" />
+              </button>
+              <button
+                onClick={() => scroll("right")}
+                className={`absolute right-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/80 backdrop-blur-sm border border-white/20 flex items-center justify-center transition-all ${
+                  canScrollRight ? "opacity-100" : "opacity-0 pointer-events-none"
+                }`}
+                aria-label="Scroll right"
+                data-testid="threats-scroll-right"
+              >
+                <ChevronRight className="w-5 h-5 text-white" />
+              </button>
+              <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-de-surface to-transparent z-10 pointer-events-none" />
+              <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-de-surface to-transparent z-10 pointer-events-none" />
+              <div
+                ref={scrollContainerRef}
+                className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 px-2 snap-x snap-mandatory"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              >
+                {displayed.map((insight, index) => (
+                  <div key={insight.id} className="flex-shrink-0 w-[300px] sm:w-[340px] snap-center">
+                    <InsightCard insight={insight} index={index} />
                   </div>
-                  <CardTitle className="text-lg text-white line-clamp-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-purple-300 transition-all cursor-pointer">
-                    {insight.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-gray-400 mb-4 line-clamp-3">
-                    {insight.excerpt}
-                  </CardDescription>
-                  <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                      <User className="h-3.5 w-3.5" />
-                      <span>{insight.author}</span>
-                      <span>•</span>
-                      <span>{insight.readTime}</span>
-                    </div>
-                    <Link 
-                      href="/resources/security-updates"
-                      className="text-purple-400 hover:text-purple-300 font-medium text-sm flex items-center gap-1 group/btn"
-                    >
-                      Know More
-                      <ArrowRight className="h-3.5 w-3.5 group-hover/btn:translate-x-1 transition-transform" />
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+                ))}
+              </div>
+            </div>
 
-        <motion.div 
+            <div className={gridClass}>
+              {displayed.map((insight, index) => (
+                <motion.div
+                  key={insight.id}
+                  initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-30px" }}
+                  transition={{ duration: 0.35, delay: index * 0.06 }}
+                >
+                  <InsightCard insight={insight} index={index} />
+                </motion.div>
+              ))}
+            </div>
+          </>
+        )}
+
+        <p className="mx-auto mb-10 max-w-3xl text-center text-sm leading-relaxed text-white/45">
+          {payload.attribution || THREAT_ATTRIBUTION}
+        </p>
+
+        <motion.div
           className="text-center flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-30px" }}
           transition={{ duration: 0.35, delay: 0.2 }}
         >
-          <Link 
+          <Link
             href="/resources/security-updates"
-            className="px-6 md:px-8 py-2.5 md:py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-500 hover:to-indigo-500 transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 font-semibold inline-flex items-center gap-2 hover:scale-105 text-sm md:text-base"
+            className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[#D3126A] px-6 py-2.5 text-base font-semibold text-white transition-colors hover:bg-[#e01874] md:px-8 md:py-3"
             data-testid="view-all-updates"
           >
             View All Security Updates
             <ArrowRight className="h-4 w-4" />
           </Link>
-          <Link 
+          <Link
             href="/resources/blog"
-            className="px-6 md:px-8 py-2.5 md:py-3 border border-fuchsia-400/40 bg-white/[0.04] text-white rounded-lg hover:bg-fuchsia-500/15 hover:border-fuchsia-300/60 transition-all duration-300 font-semibold inline-flex items-center gap-2 text-sm md:text-base"
+            className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-de-hairline bg-transparent px-6 py-2.5 text-base font-semibold text-white transition-colors hover:border-white/25 md:px-8 md:py-3"
             data-testid="view-digerati-journal"
           >
             Read the Digerati Journal

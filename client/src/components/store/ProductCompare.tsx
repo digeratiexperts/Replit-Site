@@ -32,16 +32,21 @@ export function ProductCompareBar({
   if (selected.length < 2) return null;
   return (
     <div
-      className="fixed bottom-6 left-1/2 z-40 flex -translate-x-1/2 items-center gap-3 rounded-full border border-white/15 bg-[#121212]/95 px-5 py-3 shadow-xl backdrop-blur"
+      className="de-bottom-bar z-40 flex items-center justify-center pointer-events-none"
+      style={{
+        bottom:
+          "calc(var(--de-chrome-inset) + var(--de-cookie-h) + var(--de-unified-bar-h) + var(--de-sticky-cta-h) + 0.5rem)",
+      }}
       data-testid="compare-bar"
     >
-      <GitCompare className="h-5 w-5 text-[#a78bfa]" />
+      <div className="pointer-events-auto flex items-center gap-3 rounded-full border border-white/15 bg-[#121212]/95 px-5 py-3 shadow-xl backdrop-blur">
+      <GitCompare className="h-5 w-5 text-de-accent-ink" />
       <span className="text-sm font-medium text-white">
         {selected.length} selected for compare
       </span>
       <Button
         size="sm"
-        className="h-9 bg-[#5034ff] text-white hover:bg-[#6548ff]"
+        className="h-9 bg-de-accent text-white hover:bg-[#6548ff]"
         onClick={onOpen}
         data-testid="button-open-compare"
       >
@@ -56,6 +61,7 @@ export function ProductCompareBar({
       >
         Clear
       </Button>
+      </div>
     </div>
   );
 }
@@ -117,12 +123,12 @@ export function ProductCompareDrawer({
                     {selected.map((p) => (
                       <th key={p.id} className="p-3 align-top">
                         <p className="text-base font-semibold text-white">{p.name}</p>
-                        <p className="mt-1 text-sm text-[#a78bfa]">{formatPrice(p)}</p>
+                        <p className="mt-1 text-sm text-de-accent-ink">{formatPrice(p)}</p>
                         <div className="mt-2 flex flex-wrap gap-1">
                           {getProductTags(p).map((t) => (
                             <span
                               key={t}
-                              className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[11px] text-white/60"
+                              className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-sm text-white/60"
                             >
                               {t}
                             </span>

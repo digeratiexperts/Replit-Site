@@ -1,8 +1,9 @@
-import { Shield, Award, CheckCircle, Star } from "lucide-react";
+import { Shield, Award, CheckCircle } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { ParallaxStill } from "@/components/visual/ParallaxStill";
 import ctaBgImage from "@assets/de-section-atmosphere.png";
 import { CTA } from "@/lib/ctaCopy";
-
+import { useBooking } from "@/contexts/BookingContext";
 
 const badges = [
   { name: "Audit readiness support", icon: Shield },
@@ -13,147 +14,106 @@ const badges = [
 
 export const DigeratiCTASection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
-  
+  const { openBooking } = useBooking();
+
   return (
-    <section className="de-dark-well de-chapter-hairline relative overflow-hidden py-12 lg:py-16">
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <img src={ctaBgImage} alt="" loading="lazy" className="absolute top-0 left-0 w-full h-auto opacity-[0.15]" />
-      </div>
-      
-      <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-6 text-center relative z-10">
-        {/* Animated headline with light sweep */}
+    <section className="de-dark-well de-chapter-hairline de-field-grain-film de-field-lit relative overflow-hidden py-16 lg:py-24">
+      <ParallaxStill
+        src={ctaBgImage}
+        alt=""
+        travel={10}
+        className="pointer-events-none absolute inset-0 z-0"
+        imgClassName="opacity-[0.22]"
+      />
+
+      <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-3 text-center sm:px-4 lg:px-6">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="relative inline-block"
+          transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight mb-6 relative overflow-hidden">
-            <span className="relative z-10">
-              Start with a{" "}
-              <span className="text-violet-400">
-                Cyber Risk Assessment
-              </span>
-            </span>
-            {/* Light sweep animation - hidden for reduced motion */}
-            {!prefersReducedMotion && (
-              <motion.span
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"
-                initial={{ x: "-100%" }}
-                animate={{ x: "200%" }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  repeatDelay: 4,
-                  ease: "easeInOut",
-                }}
-              />
-            )}
+          <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight mb-6">
+            Start with a{" "}
+            <span className="text-[#D3126A]">Cyber Risk Assessment</span>
           </h2>
         </motion.div>
-        
+
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
           className="text-lg md:text-xl text-gray-300 leading-relaxed mb-2"
         >
           Discover identity, endpoint, email, backup, and operating gaps before you buy a package.
         </motion.p>
         <motion.p
-          initial={{ opacity: 0 }}
+          initial={prefersReducedMotion ? false : { opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-sm text-gray-400 mb-6"
+          transition={{ duration: 0.4, delay: 0.15 }}
+          className="text-base text-gray-300 mb-6"
         >
           Assessment-led recommendations. Final scope confirmed after we see the environment.
         </motion.p>
-        
-        {/* Stars */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex items-center justify-center gap-1 mb-4"
-        >
-          {[...Array(5)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, scale: 0 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.3, delay: 0.4 + i * 0.1 }}
-            >
-              <Star className="h-6 w-6 text-yellow-400 fill-current drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" />
-            </motion.div>
-          ))}
-        </motion.div>
-        
+
         <motion.p
-          initial={{ opacity: 0 }}
+          initial={prefersReducedMotion ? false : { opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.6 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
           className="text-gray-300 mb-10 font-semibold"
         >
           Serving Arizona professional services, healthcare, and growing SMBs.
         </motion.p>
-        
-        {/* CTA Button with intense glow */}
+
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.7 }}
+          transition={{ duration: 0.5, delay: 0.25 }}
+          className="flex flex-col items-center gap-4"
         >
-          <motion.button
-            className="h-14 px-10 rounded-xl bg-white text-black text-lg font-semibold inline-flex items-center justify-center gap-2 whitespace-nowrap transition-all duration-300 hover:bg-white/90"
+          <button
+            type="button"
+            className="h-14 px-10 rounded-xl bg-[#D3126A] text-white text-lg font-semibold inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors hover:bg-[#e01874]"
             data-testid="button-cta-assessment"
-            onClick={() => {
-              document.getElementById('assessment-form')?.scrollIntoView({ behavior: 'smooth' });
-            }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            onClick={() => openBooking("homepage-cta")}
           >
             {CTA.primary}
-          </motion.button>
+          </button>
+          <a
+            href="#contact"
+            className="text-sm font-medium text-white/85 underline-offset-4 transition-colors hover:text-white hover:underline"
+            data-testid="link-cta-contact"
+          >
+            Or send a message below
+          </a>
         </motion.div>
-        
-        {/* Floating Badge Strip */}
+
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.9 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
           className="mt-16"
         >
-          <p className="text-gray-500 text-sm uppercase tracking-wider mb-6">
-            Enterprise-Grade Compliance & Certifications
+          <p className="text-gray-400 text-base uppercase tracking-wider mb-6">
+            How we operate
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
-            {badges.map((badge, index) => {
+            {badges.map((badge) => {
               const IconComponent = badge.icon;
               return (
-                <motion.div
+                <div
                   key={badge.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: 1 + index * 0.1 }}
-                  whileHover={{ 
-                    scale: 1.05,
-                    borderColor: "rgba(139,92,246,0.5)"
-                  }}
-                  className="flex items-center gap-2 px-5 py-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full transition-all duration-300 hover:bg-white/10"
-                  data-testid={`badge-${badge.name.toLowerCase().replace(/\s+/g, '-')}`}
+                  className="flex items-center gap-2 rounded-xl border border-de-hairline bg-de-raised px-5 py-3"
+                  data-testid={`badge-${badge.name.toLowerCase().replace(/\s+/g, "-")}`}
                 >
-                  <IconComponent className="h-4 w-4 text-violet-400" />
+                  <IconComponent className="h-4 w-4 text-[#D3126A]" />
                   <span className="text-base font-medium text-gray-300">{badge.name}</span>
-                </motion.div>
+                </div>
               );
             })}
           </div>

@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { Shield, ArrowRight, MapPin, UserCheck, Scale } from "lucide-react";
+import { ParallaxStill } from "@/components/visual/ParallaxStill";
 import trustDeskImg from "@assets/de-trust-assessment-desk.png";
 import { CTA } from "@/lib/ctaCopy";
 
@@ -25,9 +26,9 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section className="de-paper-chapter de-chapter-fade-from-dark overflow-hidden py-14 md:py-20 lg:py-24" data-testid="section-trust-photo">
-      <div className="max-w-[100rem] mx-auto px-3 sm:px-4 lg:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+    <section className="de-paper-chapter de-chapter-fade-from-dark de-chapter-fade-to-dark de-field-grain-paper overflow-hidden py-14 md:py-20 lg:py-24" data-testid="section-trust-photo">
+      <div className="max-w-[var(--de-canvas)] mx-auto px-3 sm:px-4 lg:px-6">
+        <div className="grid grid-cols-1 items-stretch gap-12 lg:grid-cols-2 lg:gap-16">
           <motion.div
             initial={prefersReducedMotion ? {} : { opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -36,14 +37,14 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
           >
             <div className="flex items-center gap-2 mb-5">
               <Shield className="w-4 h-4 text-pink-600" aria-hidden="true" />
-              <span className="text-sm font-semibold text-pink-600 uppercase tracking-wider">
+              <span className="text-base font-semibold text-de-magenta uppercase tracking-wider">
                 Why Arizona businesses work with us
               </span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight mb-6 tracking-tight">
               Protection that fits{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-600 via-pink-600 to-violet-600">
+              <span className="text-[#D3126A]">
                 how you actually operate.
               </span>
             </h2>
@@ -61,7 +62,7 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
                   </div>
                   <div>
                     <p className="font-semibold text-gray-900">{pillar.title}</p>
-                    <p className="text-sm text-gray-600 leading-relaxed">{pillar.detail}</p>
+                    <p className="text-base text-gray-600 leading-relaxed">{pillar.detail}</p>
                   </div>
                 </div>
               ))}
@@ -69,7 +70,7 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
 
             <a
               href="/book"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white font-semibold px-7 py-3.5 text-base rounded-lg shadow-md shadow-pink-500/25 transition-all duration-200"
+              className="inline-flex items-center gap-2 rounded-lg bg-[#D3126A] px-7 py-3.5 text-base font-semibold text-white transition-colors duration-200 hover:bg-[#e01874] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-paper)]"
               data-testid="link-trust-cta"
             >
               {CTA.primary}
@@ -78,28 +79,27 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
           </motion.div>
 
           <motion.div
-            className="relative"
+            className="relative flex"
             initial={prefersReducedMotion ? {} : { opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <div className="relative overflow-hidden rounded-2xl border border-de-paper-hairline shadow-lg shadow-black/10">
-              <img
+            <div className="relative flex aspect-[4/3] w-full flex-col overflow-hidden rounded-2xl border border-de-paper-hairline shadow-lg shadow-black/10 lg:aspect-auto lg:min-h-full">
+              <ParallaxStill
                 src={trustDeskImg}
                 alt="Principal-led cyber risk assessment work for an Arizona business"
-                loading="lazy"
-                decoding="async"
+                travel={10}
                 width={960}
                 height={720}
-                className="w-full h-full object-cover aspect-[4/3]"
-                data-testid="img-trust-assessment-desk"
+                className="absolute inset-0"
+                testId="img-trust-assessment-desk"
               />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/75 via-black/35 to-transparent p-5">
-                <p className="text-white text-sm font-medium">
+              <div className="relative mt-auto bg-gradient-to-t from-black/75 via-black/35 to-transparent p-5 pt-16">
+                <p className="text-white text-base font-medium">
                   Principal-led assessments sized to how your business runs
                 </p>
-                <p className="text-white/75 text-xs mt-1">
+                <p className="text-white/80 text-base mt-1">
                   Arizona MSP · Cybersecurity & Managed IT
                 </p>
               </div>

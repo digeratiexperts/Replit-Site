@@ -1,0 +1,116 @@
+import { Link } from "wouter";
+import {
+  ArrowRight,
+  BarChart3,
+  BookOpen,
+  ClipboardCheck,
+  FileCheck,
+  Monitor,
+  Shield,
+  TrendingUp,
+} from "lucide-react";
+import { PageTemplate } from "@/components/PageTemplate";
+import { useSEO } from "@/hooks/useSEO";
+import { CTA } from "@/lib/ctaCopy";
+import { Button } from "@/components/ui/button";
+
+const resources = [
+  {
+    name: "Digerati Journal",
+    href: "/resources/blog",
+    description: "Field notes on managed IT, cybersecurity, and Arizona business risk.",
+    icon: BookOpen,
+  },
+  {
+    name: "Case Studies",
+    href: "/resources/case-studies",
+    description: "How Arizona organizations engage DE for security-first IT.",
+    icon: TrendingUp,
+  },
+  {
+    name: "Cyber Facts",
+    href: "/resources/cyber-facts",
+    description: "Sourced statistics and credibility facts you can verify.",
+    icon: Shield,
+  },
+  {
+    name: "Security Updates",
+    href: "/resources/security-updates",
+    description: "Curated threat and vulnerability updates with dates and sources.",
+    icon: FileCheck,
+  },
+  {
+    name: "Videos & Webinars",
+    href: "/resources/videos",
+    description: "Educational sessions for owners, operators, and IT partners.",
+    icon: Monitor,
+  },
+  {
+    name: "Downtime Calculator",
+    href: "/resources/downtime-calculator",
+    description: "Estimate what downtime actually costs your business.",
+    icon: BarChart3,
+  },
+  {
+    name: "Security Checklist",
+    href: "/resources/security-checklist",
+    description: "A practical posture checklist before you talk to any MSP.",
+    icon: ClipboardCheck,
+  },
+  {
+    name: "Datasheets",
+    href: "/resources/datasheets",
+    description: "Technical summaries for packages, services, and assessments.",
+    icon: FileCheck,
+  },
+];
+
+export default function ResourcesIndex() {
+  useSEO({
+    title: "Resources",
+    description:
+      "Cybersecurity and managed IT resources from Digerati Experts — journal, case studies, calculators, checklists, and security updates.",
+    canonical: "/resources",
+  });
+
+  return (
+    <PageTemplate
+      title="Resources"
+      subtitle="Practical guidance, tools, and updates — without the generic MSP brochure language."
+      breadcrumbs={[{ label: "Resources" }]}
+      actions={
+        <Button asChild variant="brand" size="lg">
+          <Link href="/book">{CTA.primary}</Link>
+        </Button>
+      }
+    >
+      <div className="mx-auto max-w-[var(--de-canvas)] px-4 pb-20 sm:px-6 lg:px-8">
+        <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {resources.map((resource) => {
+            const Icon = resource.icon;
+            return (
+              <li key={resource.href}>
+                <Link
+                  href={resource.href}
+                  className="group flex h-full flex-col rounded-2xl border border-de-hairline bg-de-raised p-6 transition-colors hover:border-de-magenta/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-de-magenta"
+                >
+                  <span className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-de-hairline bg-de-bg text-de-magenta-ink">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <h2 className="font-heading text-xl font-semibold text-white">{resource.name}</h2>
+                  <p className="mt-2 flex-1 text-base leading-relaxed text-de-muted-soft">
+                    {resource.description}
+                  </p>
+                  <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-de-magenta-ink">
+                    Open resource
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </PageTemplate>
+  );
+}

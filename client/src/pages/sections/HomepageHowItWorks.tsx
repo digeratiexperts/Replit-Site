@@ -1,6 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { VisualStage } from "@/components/visual/VisualStage";
-import { homepageSectionAccents } from "@/lib/visualAssets";
 import { useBooking } from "@/contexts/BookingContext";
 import { analytics } from "@/lib/analytics";
 import { CTA } from "@/lib/ctaCopy";
@@ -34,21 +32,13 @@ export function HomepageHowItWorks() {
   return (
     <section id="how-it-works" className="py-14 lg:py-20 bg-[#050312]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-6">
-          <VisualStage
-            still={homepageSectionAccents.howItWorks}
-            layout="editorial"
-            className="max-w-xs shrink-0"
-            alt="Central security core connected to endpoint and network nodes"
-          />
-          <div className="min-w-0">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-pink-300/90 mb-3">
-              How engagement works
-            </p>
-            <h2 className="text-2xl md:text-4xl font-bold text-white max-w-2xl">
-              A clear path from uncertainty to an accountable operating model
-            </h2>
-          </div>
+        <div className="mb-10 max-w-3xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-pink-300/90 mb-3">
+            How engagement works
+          </p>
+          <h2 className="text-2xl md:text-4xl font-bold text-white max-w-2xl">
+            A clear path from uncertainty to an accountable operating model
+          </h2>
         </div>
         <ol className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
           {steps.map((s) => (

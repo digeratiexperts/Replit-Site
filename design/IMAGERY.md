@@ -26,7 +26,9 @@ Characteristics:
 - restrained composition
 - generous negative space
 
-Generate as a **set**. Bleed the still into the UI (e.g. upper ~55% of an engage-path card) — same dark field as the card, not an inner rounded purple square.
+Generate as a **set**. Bleed the still into an editorial stage (`VisualStage`) —
+same dark field as the chapter, not an inner rounded purple square. Homepage
+engage-path cards use Lucide `IconWell`, not sculpture bleeds.
 
 ## Concept, not noun
 
@@ -53,8 +55,8 @@ Portal / mega-menu chrome stays Lucide.
 
 Public marketing placement:
 
-- **Sculptures** — engage-path cards and at most one editorial stage per section (`VisualStage` / `EngagePathVisual`). Field `#151217`. No inner purple square.
-- **Small cards** — Lucide in a muted violet `IconWell`. Not 40px 3D toys.
+- **Sculptures / Meshy / sci-fi hardware** — retired from public marketing (DE: high quality or not at all). Do not remount `VisualStage` stills. Chapters stand on type + `IconWell`.
+- **Offer + small cards** — Lucide in a muted violet `IconWell`. Not 40px 3D toys.
 
 ## Consistency (locked camera / materials)
 

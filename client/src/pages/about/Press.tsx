@@ -10,7 +10,7 @@ const NAP = {
   city: "Chandler",
   region: "AZ",
   postal: "85248",
-  phone: "(480) 519-5892",
+  phone: "325-480-9870",
   email: "info@digeratiexperts.com",
 };
 
@@ -37,7 +37,7 @@ export default function Press() {
             name: NAP.name,
             url: "https://digeratiexperts.com",
             email: NAP.email,
-            telephone: "+1-480-519-5892",
+            telephone: "+1-325-480-9870",
             address: {
               "@type": "PostalAddress",
               streetAddress: NAP.street,
@@ -50,7 +50,7 @@ export default function Press() {
         }}
       />
       <main className="mx-auto max-w-3xl px-6 py-20">
-        <p className="text-sm uppercase tracking-[0.2em] text-violet-300/80">Media</p>
+        <p className="text-sm uppercase tracking-[0.2em] text-de-magenta-ink/80">Media</p>
         <h1 className="mt-3 text-4xl font-semibold tracking-tight md:text-5xl">Press & media</h1>
         <p className="mt-4 text-lg text-white/70">
           Use this page for accurate company facts, citations, and interview requests. Please do not
@@ -78,17 +78,17 @@ export default function Press() {
             {NAP.city}, {NAP.region} {NAP.postal}
             <br />
             Phone:{" "}
-            <a className="text-violet-300 underline-offset-2 hover:underline" href="tel:+14805195892">
+            <a className="text-de-magenta-ink underline-offset-2 hover:underline" href="tel:+13254809870">
               {NAP.phone}
             </a>
             <br />
             Email:{" "}
-            <a className="text-violet-300 underline-offset-2 hover:underline" href={`mailto:${NAP.email}`}>
+            <a className="text-de-magenta-ink underline-offset-2 hover:underline" href={`mailto:${NAP.email}`}>
               {NAP.email}
             </a>
             <br />
             Web:{" "}
-            <a className="text-violet-300 underline-offset-2 hover:underline" href="https://digeratiexperts.com">
+            <a className="text-de-magenta-ink underline-offset-2 hover:underline" href="https://digeratiexperts.com">
               https://digeratiexperts.com
             </a>
           </address>
@@ -98,22 +98,22 @@ export default function Press() {
           <h2 className="text-2xl font-semibold">Linkable resources</h2>
           <ul className="list-disc space-y-2 pl-5 text-white/80">
             <li>
-              <Link href="/resources/case-studies" className="text-violet-300 hover:underline">
+              <Link href="/resources/case-studies" className="text-de-magenta-ink hover:underline">
                 Case studies
               </Link>
             </li>
             <li>
-              <Link href="/resources/blog" className="text-violet-300 hover:underline">
+              <Link href="/resources/blog" className="text-de-magenta-ink hover:underline">
                 Security & IT blog
               </Link>
             </li>
             <li>
-              <Link href="/trust/trust-center" className="text-violet-300 hover:underline">
+              <Link href="/trust/trust-center" className="text-de-magenta-ink hover:underline">
                 Trust center
               </Link>
             </li>
             <li>
-              <Link href="/book" className="text-violet-300 hover:underline">
+              <Link href="/book" className="text-de-magenta-ink hover:underline">
                 Free risk assessment
               </Link>
             </li>
@@ -124,7 +124,7 @@ export default function Press() {
           <h2 className="text-2xl font-semibold">Media contact</h2>
           <p className="text-white/75">
             Interview and citation requests:{" "}
-            <a className="text-violet-300 hover:underline" href={`mailto:${NAP.email}?subject=Media%20inquiry`}>
+            <a className="text-de-magenta-ink hover:underline" href={`mailto:${NAP.email}?subject=Media%20inquiry`}>
               {NAP.email}
             </a>{" "}
             · {NAP.phone}

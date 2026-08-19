@@ -19,15 +19,17 @@ Enterprise
 
 Shade ladder (Lucide lesson, DE hex — nested, juxtaposed, not leftover slabs):
 
-`--de-bg` `#050312` — deepest well (hero, credibility, proof after magenta, founder, closing CTA/contact/footer)
-`--de-surface` `#0a0a0a` — marketing field for a dark chapter (stats→engage, industries→insights)
-`--de-raised` `#151217` — cards / lifted panels inside a dark chapter
+`--de-bg` `#050312` — deepest well (page canvas, inset cards inside a style box, hero/credibility/proof/founder/closing)
+`--de-surface` `#0a0a0a` — marketing field for a full-bleed dark chapter
+`--de-raised` `#151217` — contained style box (2–4 flat chapters) and lifted panels/chips
 `--de-hairline` `rgba(255,255,255,0.1)` — 1px borders and same-chapter seams
-`--de-paper` `#f7f5f2` — one light chapter recipe (protect, trust, FAQ/newsletter)
+`--de-paper` `#f7f5f2` — one light chapter recipe (protect, trust, FAQ)
 `--de-paper-raised` `#ffffff` — cards on paper
 `--de-paper-hairline` `rgba(26, 18, 16, 0.1)`
 
-Adjacent same-chapter dark sections share one field with a hairline and internal lift (raised cards). Different chapters step well ↔ surface ↔ paper ↔ magenta so the page does not read as one `#0a0a0a` slab. Do not paint `#0f0f0f`, `#0f0f1a`, `#141418`, or cool `#F7FAFC` as competing page fields. Magenta how-it-works stays the only loud band.
+OpenMSP background mapping (do not copy their yellow): page `#161616` → `--de-bg`; box `#212121` → `--de-raised`; inset `#121212` → `--de-bg`. Utility: `.de-style-box` / `.de-style-box-inset`. Do not wrap every chapter.
+
+Adjacent same-chapter dark sections share one field with a hairline and internal lift (raised cards). Different chapters step well ↔ surface ↔ paper ↔ magenta so the page does not read as one `#0a0a0a` slab. Do not paint `#0f0f0f`, `#0f0f1a`, `#141418`, or cool `#F7FAFC` as competing page fields. Magenta how-it-works stays the only loud band. DE logo gold (`#e7b20d`) is a secondary mark color only — never a CTA fill.
 
 DE Desk shell `#1a0b33`
 Nested dark `#12141c` / `#171922`
@@ -39,11 +41,13 @@ Border:
 `--radius` `0.5rem` (shadcn)
 
 Primary:
-`#D3126A` (brand magenta — CTA, brand mark, active underline, user bubbles)
+`#D3126A` (brand magenta — CTA, brand mark, active underline, colon, icon, user bubbles)
 
 Accent violet:
-`#5B45E0` / `#7c3aed` (lighting, gradients, secondary accents)
-`#8B5CF6` / `#A78BFA` (lavender frame / glow)
+`#5B45E0` / `#7c3aed` (lighting only — not box fills)
+`#8B5CF6` / `#A78BFA` (lavender frame / glow, lighting only)
+
+**Accent pop:** magenta is loud because the field is quiet. Raised boxes = `--de-raised` + `--de-hairline`. Do not paint cards/chips/sections with violet or indigo fills. See `.cursor/rules/dark-field-accent-pop.mdc`.
 
 Primary text:
 `#ffffff` / `--de-fg`
@@ -66,7 +70,8 @@ Do not introduce a new purple, magenta, or near-black. Reuse these.
 - Headings: Space Grotesk, weight 600–700, letter-spacing `-0.015em` to `-0.03em`, line-height `1.15`
 - Body: Inter, weight 400, line-height `1.6` (prose `1.75`)
 - Stats/numbers: Oxanium, fallback JetBrains Mono
-- Root font-size: `14px` (`15px` at 1920px, `16px` at 2560px)
+- Root font-size: `16px` (`18px` at 1920px, `20px` at 2560px, `22px` at 3840px)
+- Small type: `text-xs` = `0.875rem` (14px), `text-sm` = `1rem` (16px) — lifted so chips and captions stay readable
 - Tailwind: `font-heading`, `font-sans` / `font-body`, `font-mono`
 
 ## Radius
@@ -80,7 +85,7 @@ Do not introduce a new purple, magenta, or near-black. Reuse these.
 - Container: centered, padding `1rem`, `2xl` max `1680px`
 - Sticky nav clearance: `--de-nav-offset` (MegaMenu ResizeObserver)
 - Homepage section jumps live in MegaMenu (`HomepageOnPageNav`) — no floating bottom dock
-- Dark marketing cards: `rounded-2xl border border-de-hairline bg-de-raised` with Lucide in `IconWell` (muted violet well)
+- Dark marketing cards: `rounded-2xl border border-de-hairline bg-de-raised` with Lucide in `IconWell` (quiet well, magenta icon)
 - Section padding pattern: `py-10 md:py-14 lg:py-16` (and nearby variants already in sections)
 - Touch targets: ~44×44px where practical (`min-h-11`)
 
@@ -102,3 +107,4 @@ Locked engage-path system: dark technical sculpture — graphite / smoked glass 
 3. Consistency over novelty.
 4. Purpose over ornament.
 5. Real visual composition over generic AI imagery.
+6. Accents pop because fields stay black/charcoal — never purple-filled boxes.

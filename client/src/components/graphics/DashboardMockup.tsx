@@ -9,19 +9,19 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
   const prefersReducedMotion = useReducedMotion();
 
   const reviewAreas = [
-    { icon: Lock, label: "Identity & access", tone: "from-violet-500/25 to-purple-600/20" },
-    { icon: Server, label: "Endpoints & devices", tone: "from-indigo-500/25 to-violet-600/20" },
-    { icon: Mail, label: "Email security", tone: "from-fuchsia-500/20 to-violet-600/20" },
-    { icon: FileCheck, label: "Backups & recovery", tone: "from-emerald-500/20 to-teal-600/15" },
+    { icon: Lock, label: "Identity & access" },
+    { icon: Server, label: "Endpoints & devices" },
+    { icon: Mail, label: "Email security" },
+    { icon: FileCheck, label: "Backups & recovery" },
   ];
 
   const postureBars = [
-    { label: "Identity", level: 78, color: "#8b5cf6" },
-    { label: "Endpoints", level: 84, color: "#a78bfa" },
-    { label: "Email", level: 72, color: "#c084fc" },
+    { label: "Identity", level: 78, color: "#D3126A" },
+    { label: "Endpoints", level: 84, color: "#f0187a" },
+    { label: "Email", level: 72, color: "#D3126A" },
     { label: "Backups", level: 88, color: "#34d399" },
-    { label: "Controls", level: 70, color: "#818cf8" },
-    { label: "Overall", level: 80, color: "#8b5cf6" },
+    { label: "Controls", level: 70, color: "#9ca3af" },
+    { label: "Overall", level: 80, color: "#D3126A" },
   ];
 
   return (
@@ -30,56 +30,49 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
       initial={prefersReducedMotion ? false : { opacity: 0, y: 28 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: prefersReducedMotion ? 0 : 0.55, ease: "easeOut" }}
-      aria-label="Preview of a Digerati Experts Cyber Risk Assessment report"
+      aria-label="Illustrative preview of a Digerati Experts Cyber Risk Assessment"
     >
       <div
         className="relative rounded-2xl overflow-hidden border border-white/12"
         style={{
           background:
-            "linear-gradient(145deg, rgba(12, 10, 22, 0.98) 0%, rgba(18, 12, 36, 0.96) 55%, rgba(10, 8, 20, 0.98) 100%)",
+            "linear-gradient(145deg, #0a0a0a 0%, #151217 55%, #0a0a0a 100%)",
           boxShadow: "0 24px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.06)",
         }}
       >
-        <div className="flex items-center gap-2 px-3.5 py-2.5 border-b border-white/8 bg-black/25">
+        <div className="flex items-center gap-2 px-3 py-2 border-b border-white/8 bg-black/25">
           <div className="flex gap-1" aria-hidden="true">
             <div className="w-2 h-2 rounded-full bg-white/20" />
             <div className="w-2 h-2 rounded-full bg-white/15" />
             <div className="w-2 h-2 rounded-full bg-white/10" />
           </div>
           <div className="flex-1 flex justify-center">
-            <div className="px-2.5 py-0.5 text-[11px] text-white/50 flex items-center gap-1.5">
-              <Shield className="w-3 h-3 text-pink-400/80" aria-hidden="true" />
+            <div className="px-2.5 py-0.5 text-base text-white/55 flex items-center gap-1.5">
+              <Shield className="w-3.5 h-3.5 text-pink-400/80" aria-hidden="true" />
               Cyber Risk Assessment
             </div>
           </div>
         </div>
 
-        <div className="p-4 sm:p-5 space-y-4">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-2.5">
-              <div
-                className="w-9 h-9 rounded-xl bg-gradient-to-br from-fuchsia-500/90 via-pink-500/90 to-violet-600/90 flex items-center justify-center border border-pink-300/20"
-                aria-hidden="true"
-              >
-                <Shield className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <div className="text-white font-semibold text-sm">Assessment overview</div>
-                <div className="text-white/45 text-xs">Identity · endpoints · email · backups</div>
-              </div>
+        <div className="p-3.5 sm:p-4 space-y-3">
+          <div className="flex items-start gap-3">
+            <div
+              className="w-9 h-9 rounded-xl bg-[#D3126A] flex items-center justify-center border border-[#D3126A]"
+              aria-hidden="true"
+            >
+              <Shield className="w-4 h-4 text-white" />
+            </div>
+            <div>
+              <div className="text-white font-semibold text-base">Cyber Risk Assessment</div>
+              <div className="text-white/50 text-base italic">Illustrative preview · not live customer data</div>
             </div>
           </div>
 
-          <p className="text-sm text-white/85 leading-relaxed">
-            A practical review of posture across identity, endpoints, email, backups, and
-            controls — sized to your Arizona business.
-          </p>
-
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-2">
             {reviewAreas.map((area, index) => (
               <motion.div
                 key={area.label}
-                className="flex items-center gap-2.5 p-3 rounded-xl bg-white/[0.035] border border-white/10"
+                className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.035] border border-white/10"
                 initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
@@ -87,27 +80,25 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
                   delay: prefersReducedMotion ? 0 : 0.15 + index * 0.06,
                 }}
               >
-                <div
-                  className={`w-8 h-8 rounded-lg bg-gradient-to-br ${area.tone} border border-white/10 flex items-center justify-center shrink-0`}
-                >
-                  <area.icon className="w-4 h-4 text-white" aria-hidden="true" />
+                <div className="w-8 h-8 rounded-lg border border-de-hairline bg-de-raised flex items-center justify-center shrink-0">
+                  <area.icon className="w-4 h-4 text-[#D3126A]" aria-hidden="true" />
                 </div>
-                <span className="text-xs sm:text-sm text-white font-medium">{area.label}</span>
+                <span className="text-base text-white font-medium">{area.label}</span>
               </motion.div>
             ))}
           </div>
 
           <motion.div
-            className="p-4 rounded-xl bg-white/[0.03] border border-white/10"
+            className="p-3 rounded-xl bg-white/[0.03] border border-white/10"
             initial={prefersReducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: prefersReducedMotion ? 0 : 0.4, delay: prefersReducedMotion ? 0 : 0.35 }}
           >
             <div className="flex items-center gap-2 mb-3">
-              <Activity className="w-4 h-4 text-violet-400" aria-hidden="true" />
-              <span className="text-white text-sm font-medium">Posture areas reviewed</span>
+              <Activity className="w-4 h-4 text-[#D3126A]" aria-hidden="true" />
+              <span className="text-white text-base font-medium">Posture across key areas</span>
             </div>
-            <div className="flex items-end gap-2 h-[72px]" aria-hidden="true">
+            <div className="flex items-end gap-2 h-[62px]" aria-hidden="true">
               {postureBars.map((bar, index) => (
                 <motion.div
                   key={bar.label}
@@ -120,28 +111,27 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
                     delay: prefersReducedMotion ? 0 : 0.45 + index * 0.05,
                     ease: "easeOut",
                   }}
-                  title={bar.label}
                 />
               ))}
             </div>
             <div className="flex justify-between mt-2" aria-hidden="true">
               {postureBars.map((bar) => (
-                <span key={bar.label} className="text-[9px] text-white/35 truncate max-w-[14%]">
+                <span key={bar.label} className="text-[14px] text-white/50 truncate max-w-[14%]">
                   {bar.label}
                 </span>
               ))}
             </div>
           </motion.div>
 
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {[
-              "Prioritized findings with clear business impact",
-              "Recommendations matched to your size and risk",
-              "No-obligation follow-up within one business day",
+              "Prioritized findings",
+              "Recommendations matched to your size",
+              "No obligation follow-up",
             ].map((line, index) => (
               <motion.div
                 key={line}
-                className="flex items-start gap-2.5 text-sm text-white"
+                className="flex items-start gap-2.5 text-base text-white"
                 initial={prefersReducedMotion ? false : { opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{

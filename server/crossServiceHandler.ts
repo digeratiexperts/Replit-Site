@@ -8,59 +8,7 @@ import { aiService } from "./aiService";
 import { storage } from "./storage";
 import { notificationService } from "./services/notificationService";
 import { logger } from "./logger";
-
-async function syncLeadToTechSales(payload: {
-  id?: string;
-  name?: string;
-  email?: string;
-  company?: string;
-  phone?: string;
-  message?: string;
-  source?: string;
-}): Promise<void> {
-  const url = (process.env.TECHSALES_SYNC_URL || "").trim();
-  const token = (process.env.TECHSALES_SYNC_TOKEN || "").trim();
-  if (!url || !token) {
-    logger.debug("TechSales lead sync skipped — TECHSALES_SYNC_URL/TOKEN not set");
-    return;
-  }
-
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-        "x-de-sync-token": token,
-      },
-      body: JSON.stringify({
-        id: payload.id || "",
-        name: payload.name || "",
-        email: payload.email || "",
-        company: payload.company || "",
-        phone: payload.phone || "",
-        message: payload.message || "",
-        source: payload.source || "website",
-      }),
-    });
-
-    if (!response.ok) {
-      const text = await response.text().catch(() => "");
-      logger.error("TechSales lead sync failed", {
-        status: response.status,
-        body: text.slice(0, 300),
-      });
-      return;
-    }
-
-    logger.info("TechSales lead sync ok", {
-      email: payload.email,
-      source: payload.source,
-    });
-  } catch (error) {
-    logger.error("TechSales lead sync error", error);
-  }
-}
+import { enqueueWebsiteCommand } from "./integrations/enqueueWebsiteCommand";
 
 export function setupCrossServiceHandlers() {
   // When payment is completed, automatically mark related invoices as paid
@@ -156,7 +104,7 @@ export function setupCrossServiceHandlers() {
         source: data.source,
       });
 
-      await syncLeadToTechSales({
+      await enqueueWebsiteCommand({
         id: data.id,
         name: data.name,
         email: data.email,
@@ -185,7 +133,7 @@ export function setupCrossServiceHandlers() {
         source: data.source || "contact_form",
       });
 
-      await syncLeadToTechSales({
+      await enqueueWebsiteCommand({
         id: data.id,
         name: data.name,
         email: data.email,
@@ -196,6 +144,26 @@ export function setupCrossServiceHandlers() {
       });
     } catch (error) {
       logger.error("Error handling contact form", error);
+    }
+  });
+
+  eventBus.on(EventTypes.QUOTE_REQUESTED, async (data) => {
+    try {
+      await enqueueWebsiteCommand(
+        {
+          id: data.id || data.quoteId,
+          name: data.name || data.contactName,
+          email: data.email || data.contactEmail,
+          company: data.company || data.companyName,
+          phone: data.phone || data.contactPhone,
+          message: data.message,
+          source: data.source || "store_quote",
+          canonicalAccountId: data.canonicalAccountId || null,
+        },
+        "quote.requested",
+      );
+    } catch (error) {
+      logger.error("Error queueing store quote for Hub", error);
     }
   });
 

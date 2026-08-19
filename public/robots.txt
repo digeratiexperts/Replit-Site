@@ -8,6 +8,8 @@ Disallow: /api/
 Disallow: /portal/
 Disallow: /admin/
 Disallow: /internal/
+Disallow: /official-network-planner
+Disallow: /de-ecosystem-matrix-offical
 Disallow: /store/checkout
 Disallow: /store/cart
 Disallow: /store/order-confirmation

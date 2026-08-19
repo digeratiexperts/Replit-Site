@@ -171,7 +171,7 @@ export function ServiceCapabilityMatrix({
     if (value === true) {
       return (
         <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full ${
-          isHighlighted ? 'bg-violet-500/30 text-violet-300' : 'bg-emerald-500/20 text-emerald-400'
+          isHighlighted ? 'bg-de-raised text-de-accent-ink' : 'bg-emerald-500/20 text-emerald-400'
         }`}>
           <Check className="w-4 h-4" />
         </span>
@@ -182,9 +182,9 @@ export function ServiceCapabilityMatrix({
     }
     if (value === "Add-on" || value === "Optional") {
       return (
-        <span className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${
+        <span className={`px-2 py-0.5 rounded-full text-sm font-medium ${
           isHighlighted 
-            ? 'bg-violet-500/20 text-violet-300 border border-violet-500/30' 
+            ? 'bg-de-raised text-de-accent-ink border border-de-hairline' 
             : 'bg-amber-500/15 text-amber-400 border border-amber-500/20'
         }`}>
           {value}
@@ -192,9 +192,9 @@ export function ServiceCapabilityMatrix({
       );
     }
     return (
-      <span className={`px-2 py-0.5 rounded-full text-[11px] font-medium ${
+      <span className={`px-2 py-0.5 rounded-full text-sm font-medium ${
         isHighlighted 
-          ? 'bg-violet-500/20 text-violet-300 border border-violet-500/30' 
+          ? 'bg-de-raised text-de-accent-ink border border-de-hairline' 
           : 'bg-white/5 text-white/70 border border-white/10'
       }`}>
         {value}
@@ -213,7 +213,7 @@ export function ServiceCapabilityMatrix({
     >
       {/* Tier Headers */}
       <div className="grid grid-cols-5 gap-1 p-3 bg-white/[0.03] border-b border-white/10">
-        <div className="text-white/40 text-xs font-medium uppercase tracking-wider flex items-center">
+        <div className="text-white/55 text-xs font-medium uppercase tracking-wider flex items-center">
           Capability
         </div>
         {tiers.map((tier) => (
@@ -221,20 +221,20 @@ export function ServiceCapabilityMatrix({
             key={tier.id}
             className={`text-center p-2 rounded-lg transition-all ${
               highlightTier === tier.id 
-                ? 'bg-violet-500/20 border border-violet-500/30' 
+                ? 'bg-de-raised border border-de-hairline' 
                 : tier.featured 
                   ? 'bg-emerald-500/10 border border-emerald-500/20' 
                   : ''
             }`}
           >
             <div className={`text-xs font-bold ${
-              highlightTier === tier.id ? 'text-violet-300' : 'text-white'
+              highlightTier === tier.id ? 'text-de-accent-ink' : 'text-white'
             }`}>
               {tier.name}
             </div>
-            <div className="text-[10px] text-white/50">{tier.price}</div>
+            <div className="text-xs text-white/50">{tier.price}</div>
             {highlightTier === tier.id && (
-              <div className="text-[9px] text-violet-400 mt-0.5">Recommended</div>
+              <div className="text-xs text-de-accent-ink mt-0.5">Recommended</div>
             )}
           </div>
         ))}
@@ -260,22 +260,22 @@ export function ServiceCapabilityMatrix({
                 {row.capability}
               </div>
               <div className={`text-center flex items-center justify-center ${
-                highlightTier === 'essentials' ? 'bg-violet-500/5 rounded' : ''
+                highlightTier === 'essentials' ? 'bg-de-raised rounded' : ''
               }`}>
                 {renderCellValue(row.essentials, 'essentials')}
               </div>
               <div className={`text-center flex items-center justify-center ${
-                highlightTier === 'office' ? 'bg-violet-500/5 rounded' : ''
+                highlightTier === 'office' ? 'bg-de-raised rounded' : ''
               }`}>
                 {renderCellValue(row.office, 'office')}
               </div>
               <div className={`text-center flex items-center justify-center ${
-                highlightTier === 'business' ? 'bg-violet-500/5 rounded' : ''
+                highlightTier === 'business' ? 'bg-de-raised rounded' : ''
               }`}>
                 {renderCellValue(row.business, 'business')}
               </div>
               <div className={`text-center flex items-center justify-center ${
-                highlightTier === 'enterprise' ? 'bg-violet-500/5 rounded' : ''
+                highlightTier === 'enterprise' ? 'bg-de-raised rounded' : ''
               }`}>
                 {renderCellValue(row.enterprise, 'enterprise')}
               </div>
@@ -287,7 +287,7 @@ export function ServiceCapabilityMatrix({
       {/* Footer Link */}
       <div className="p-4 bg-white/[0.02] border-t border-white/10">
         <Link href="/ecosystem-pricing">
-          <span className="inline-flex items-center gap-2 text-sm text-violet-400 hover:text-violet-300 transition-colors cursor-pointer">
+          <span className="inline-flex items-center gap-2 text-sm text-de-accent-ink hover:text-de-accent-ink transition-colors cursor-pointer">
             View complete service matrix
             <ChevronRight className="w-4 h-4" />
           </span>

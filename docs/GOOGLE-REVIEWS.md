@@ -1,9 +1,15 @@
-# Client reviews (Google + multi-source catalog)
+# Client reviews (Google + Yelp + Thumbtack feed)
 
-The homepage **Client Proof** section loads reviews from:
+The homepage **Client Proof** section loads a single carousel feed from:
 
 1. **Live Google Places** — when `GOOGLE_PLACE_ID` is a Place Details–valid `ChIJ…`
-2. **Curated catalog** — verbatim pastes in `client/src/data/reviewsCatalog.ts` (Google, Facebook, Clutch, other)
+2. **Live Yelp Fusion** — when `YELP_API_KEY` + `YELP_BUSINESS_ID` are set (optional)
+3. **Curated catalog** — verbatim pastes in `reviewsCatalog.ts` plus source files:
+   - `client/src/data/yelpReviewsManual.ts`
+   - `client/src/data/thumbtackReviewsManual.ts`
+   - Google pastes in `reviewsCatalog.ts` (`googleManualReviews`)
+
+Thumbtack has no public reviews API — catalog paste only. Failed APIs are omitted; the UI never shows raw errors.
 
 APIs:
 
@@ -57,7 +63,7 @@ File: [`client/src/data/reviewsCatalog.ts`](../client/src/data/reviewsCatalog.ts
 ```ts
 export const reviewsCatalog: CatalogReview[] = [
   {
-    source: "google", // or "facebook" | "clutch" | "other"
+    source: "google", // or "yelp" | "thumbtack" | "facebook" | "clutch" | "other"
     authorName: "Exact name from the platform",
     rating: 5,
     text: "Exact review body — verbatim",
@@ -67,6 +73,8 @@ export const reviewsCatalog: CatalogReview[] = [
 ];
 ```
 
+Yelp / Thumbtack: paste into the source-specific files (same shape). Leave arrays empty until verbatim copy is approved — do not invent quotes. Optional listing URLs: `YELP_LISTING_URL`, `THUMBTACK_LISTING_URL` in `reviewsCatalog.ts`.
+
 **How to paste Google reviews:**
 
 1. Open GBP → **Read reviews** (or Maps CID URL below).
@@ -74,7 +82,7 @@ export const reviewsCatalog: CatalogReview[] = [
 3. Add objects to `reviewsCatalog`; commit/deploy.
 4. Never invent or paraphrase into fake quotes.
 
-[`googleReviewsManual.ts`](../client/src/data/googleReviewsManual.ts) re-exports the catalog for older imports — **edit `reviewsCatalog.ts` only**.
+[`googleReviewsManual.ts`](../client/src/data/googleReviewsManual.ts) re-exports the merged catalog for older imports. Paste Yelp/Thumbtack into their manual files; Google pastes stay in `reviewsCatalog.ts`.
 
 Maps CTA (CID): `https://maps.google.com/?cid=1710856351091471339`
 
@@ -87,6 +95,8 @@ Maps CTA (CID): `https://maps.google.com/?cid=1710856351091471339`
 | `GOOGLE_PLACES_API_KEY` | `/home/digeratiexperts.com/shared/.env` (prod) or local `.env` | Google Cloud API key with **Places API** enabled |
 | `GOOGLE_PLACE_ID` | same | Place Details–valid `ChIJ…` only |
 | `GOOGLE_MAPS_CID` | same | Optional decimal CID for maps links. **Not** a substitute for Place ID |
+| `YELP_API_KEY` | same | Optional Yelp Fusion key (`YELP_FUSION_API_KEY` alias) |
+| `YELP_BUSINESS_ID` | same | Yelp business id for `/v3/businesses/{id}/reviews` |
 
 Aliases: `GOOGLE_MAPS_API_KEY` / `GBP_API_KEY` / `PLACES_API_KEY` and `GBP_PLACE_ID` / `PLACES_PLACE_ID`.
 
@@ -150,9 +160,10 @@ curl -fsS https://digeratiexperts.com/api/google-reviews | jq .
 
 ## UI behavior
 
-1. **With reviews** — source chips (when multiple), stars from real ratings only, Maps CTA.
-2. **Empty** — no filled decorative 5-star row; “Read us on Google” + honest copy.
-3. Live Google reviews always merge first; catalog fills other sources / interim Google pastes.
+1. **With reviews** — one carousel feed (auto-advance, pause on hover, no autoplay when `prefers-reduced-motion`), source pills, optional All / Google / Yelp / Thumbtack chips, Maps CTA.
+2. **Empty** — no filled decorative 5-star row; “Read us on Google” + honest copy. Empty Yelp/Thumbtack sources are omitted until data exists.
+3. Live Google (then live Yelp) merge first; catalog fills other sources / interim pastes.
+4. API failure → client falls back to the local catalog. Never render “API unavailable.”
 
 ## Follow-up (out of scope here)
 

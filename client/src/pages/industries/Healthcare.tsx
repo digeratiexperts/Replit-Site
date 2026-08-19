@@ -137,7 +137,7 @@ export default function Healthcare() {
     <PageTemplate
       title="Keep Patient Data Protected Without Becoming a HIPAA Expert"
       subtitle="Digerati manages security, backups, access controls, documentation, and ongoing IT behind Arizona practices so owners can focus on patients."
-      gradientColors="from-violet-600 via-purple-600 to-fuchsia-600"
+      gradientColors="from-[#050312] via-[#0a0a0a] to-[#050312]"
       icon={<Stethoscope className="w-10 h-10 text-white" />}
       breadcrumbs={[{ label: "Industries", href: "/" }, { label: "Healthcare" }]}
       actions={
@@ -174,7 +174,7 @@ export default function Healthcare() {
                 transition={{ delay: idx * 0.06, duration: 0.4 }}
                 className="flex items-center gap-3 p-4 rounded-xl bg-white/[0.04] border border-white/10"
               >
-                <div className="w-9 h-9 rounded-lg bg-gradient-to-r from-[#D3126A] to-fuchsia-600 flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 rounded-lg bg-[#D3126A] flex items-center justify-center shrink-0">
                   <Icon className="h-4 w-4 text-white" />
                 </div>
                 <p className="text-sm font-medium text-white/90 leading-snug">{item.label}</p>
@@ -186,10 +186,10 @@ export default function Healthcare() {
         {/* Supporting focus labels (elevated from prior metrics — not fake KPIs) */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: "Focus", value: "HIPAA", icon: Shield, color: "from-[#D3126A] to-fuchsia-600" },
-            { label: "Encryption", value: "AES-256", icon: Lock, color: "from-fuchsia-600 to-violet-600" },
-            { label: "Priority", value: "PHI", icon: Activity, color: "from-violet-600 to-[#D3126A]" },
-            { label: "Outcome", value: "Audit-ready evidence", icon: Heart, color: "from-[#D3126A] to-rose-500" },
+            { label: "Focus", value: "HIPAA", icon: Shield },
+            { label: "Encryption", value: "AES-256", icon: Lock },
+            { label: "Priority", value: "PHI", icon: Activity },
+            { label: "Outcome", value: "Audit-ready evidence", icon: Heart },
           ].map((metric, idx) => {
             const Icon = metric.icon;
             return (
@@ -202,13 +202,13 @@ export default function Healthcare() {
                 className="group relative"
               >
                 <div
-                  className={`absolute inset-0 bg-gradient-to-r ${metric.color} rounded-xl blur opacity-0 group-hover:opacity-30 transition-all duration-300`}
+                  className="absolute inset-0 bg-[#D3126A] rounded-xl blur opacity-0 group-hover:opacity-30 transition-all duration-300"
                 />
-                <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:border-violet-500/30 transition-all">
+                <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-hairline transition-all">
                   <CardContent className="pt-6">
                     <div className="flex items-start justify-between mb-3">
                       <div
-                        className={`w-10 h-10 rounded-lg bg-gradient-to-r ${metric.color} flex items-center justify-center`}
+                        className="w-10 h-10 rounded-lg bg-[#D3126A] flex items-center justify-center"
                       >
                         <Icon className="h-5 w-5 text-white" />
                       </div>
@@ -269,7 +269,7 @@ export default function Healthcare() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-violet-600 to-purple-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-de-raised flex items-center justify-center">
               <Shield className="w-5 h-5 text-white" />
             </div>
             Common healthcare IT &amp; security problems
@@ -285,10 +285,10 @@ export default function Healthcare() {
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.1, duration: 0.5 }}
                 >
-                  <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-violet-500/30 transition-all duration-300">
+                  <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-hairline transition-all duration-300">
                     <CardHeader>
-                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                        <Icon className="h-7 w-7 text-violet-400" />
+                      <div className="w-14 h-14 rounded-xl bg-de-raised flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                        <Icon className="h-7 w-7 text-de-accent-ink" />
                       </div>
                       <CardTitle className="text-xl text-white">{item.title}</CardTitle>
                     </CardHeader>
@@ -352,7 +352,7 @@ export default function Healthcare() {
                 transition={{ delay: idx * 0.08, duration: 0.4 }}
                 className="p-6 rounded-2xl bg-white/[0.04] border border-white/10"
               >
-                <p className="text-xs font-semibold tracking-wide uppercase text-[#FF477F] mb-2">
+                <p className="text-xs font-semibold tracking-wide uppercase text-[#F04C97] mb-2">
                   Pillar {idx + 1}
                 </p>
                 <h3 className="text-xl font-semibold text-white mb-2">{item.title}</h3>
@@ -393,12 +393,12 @@ export default function Healthcare() {
           transition={{ duration: 0.5 }}
           data-testid="section-security-stack"
         >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-violet-500/20 to-transparent rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-purple-500/20 to-transparent rounded-full blur-3xl" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-de-raised to-transparent rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-de-raised to-transparent rounded-full blur-3xl" />
 
           <div className="relative">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-violet-600 to-purple-600 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-de-raised flex items-center justify-center">
                 <FileCheck className="w-5 h-5 text-white" />
               </div>
               <h2 className="text-3xl font-bold text-white">Healthcare security stack &amp; outcomes</h2>
@@ -412,7 +412,7 @@ export default function Healthcare() {
               {securityStack.map((item, index) => (
                 <motion.div
                   key={item}
-                  className="flex items-center gap-3 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:border-violet-500/30 transition-all duration-300"
+                  className="flex items-center gap-3 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:border-de-hairline transition-all duration-300"
                   initial={prefersReducedMotion ? {} : { opacity: 0, x: -10 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
@@ -436,7 +436,7 @@ export default function Healthcare() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <p className="text-xs font-semibold tracking-wide uppercase text-[#FF477F] mb-3">
+            <p className="text-xs font-semibold tracking-wide uppercase text-[#F04C97] mb-3">
               Arizona practices
             </p>
             <p className="text-white/85 leading-relaxed">
@@ -450,7 +450,7 @@ export default function Healthcare() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <p className="text-xs font-semibold tracking-wide uppercase text-[#FF477F] mb-3">
+            <p className="text-xs font-semibold tracking-wide uppercase text-[#F04C97] mb-3">
               What proof looks like today
             </p>
             <p className="text-white/85 leading-relaxed mb-3">
@@ -461,7 +461,7 @@ export default function Healthcare() {
             </p>
             <a
               href="#assessment"
-              className="inline-flex items-center text-[#FF477F] hover:text-pink-300 font-medium"
+              className="inline-flex items-center text-[#F04C97] hover:text-de-magenta-ink font-medium"
             >
               Jump to what we check
               <ArrowRight className="ml-1.5 h-4 w-4" />
@@ -472,7 +472,7 @@ export default function Healthcare() {
         {/* 10. Free assessment module — major conversion block */}
         <motion.section
           id="assessment"
-          className="relative scroll-mt-28 rounded-2xl border border-[#D3126A]/35 bg-gradient-to-br from-[#D3126A]/15 via-white/[0.03] to-violet-900/20 p-8 md:p-12 overflow-hidden"
+          className="relative scroll-mt-28 rounded-2xl border border-[#D3126A]/35 bg-gradient-to-br from-[#D3126A]/15 via-white/[0.03] p-8 md:p-12 overflow-hidden"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -518,7 +518,7 @@ export default function Healthcare() {
         {/* 11. Simple 3-step engagement */}
         <section data-testid="section-process">
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-lg bg-violet-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-de-accent flex items-center justify-center">
               <ArrowRight className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -536,7 +536,7 @@ export default function Healthcare() {
                 transition={{ delay: index * 0.08, duration: 0.4 }}
                 className="relative p-5 rounded-xl bg-white/[0.04] border border-white/10"
               >
-                <div className="text-xs font-semibold tracking-wide text-[#FF477F] mb-2">
+                <div className="text-xs font-semibold tracking-wide text-[#F04C97] mb-2">
                   Step {index + 1}
                 </div>
                 <h3 className="text-lg font-semibold text-white mb-2">{step.title}</h3>
@@ -584,7 +584,7 @@ export default function Healthcare() {
           transition={{ duration: 0.5 }}
           data-testid="section-final-cta"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-[#D3126A] via-fuchsia-600 to-rose-500" />
+          <div className="absolute inset-0 bg-[#D3126A]" />
           <div className="relative p-8 md:p-12 text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
               {narrative?.ctaHeadline ?? "Protect patient data with a clear plan"}
@@ -603,12 +603,12 @@ export default function Healthcare() {
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </a>
               <a
-                href="tel:480-519-5892"
+                href="tel:+13254809870"
                 className="inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-[#D3126A] px-8 py-4 rounded-xl font-semibold transition-all"
                 data-testid="button-call-now"
               >
                 <Phone className="mr-2 h-5 w-5" />
-                Call 480-519-5892
+                Call 325-480-9870
               </a>
             </div>
           </div>

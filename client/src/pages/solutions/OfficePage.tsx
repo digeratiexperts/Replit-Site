@@ -165,9 +165,9 @@ function StatusBadge({ status, tooltip }: { status: InclusionStatus; tooltip?: s
       icon: <Check className="w-3 h-3" />
     },
     "limited": { 
-      bg: "bg-violet-500/20", 
-      text: "text-violet-300", 
-      border: "border-violet-500/30",
+      bg: "bg-de-raised", 
+      text: "text-de-accent-ink", 
+      border: "border-de-hairline",
       label: "Included",
       icon: <Info className="w-3 h-3" />
     },
@@ -180,7 +180,7 @@ function StatusBadge({ status, tooltip }: { status: InclusionStatus; tooltip?: s
     },
     "not-included": { 
       bg: "bg-white/5", 
-      text: "text-white/40", 
+      text: "text-white/55", 
       border: "border-white/10",
       label: "—",
       icon: null
@@ -227,9 +227,9 @@ function FAQItem({ question, answer, isOpen, onToggle, index }: {
       >
         <span className="font-semibold text-white pr-4">{question}</span>
         {isOpen ? (
-          <ChevronUp className="w-5 h-5 text-violet-400 flex-shrink-0" />
+          <ChevronUp className="w-5 h-5 text-de-accent-ink flex-shrink-0" />
         ) : (
-          <ChevronDown className="w-5 h-5 text-violet-400 flex-shrink-0" />
+          <ChevronDown className="w-5 h-5 text-de-accent-ink flex-shrink-0" />
         )}
       </button>
       {isOpen && (
@@ -243,10 +243,10 @@ function FAQItem({ question, answer, isOpen, onToggle, index }: {
 
 function StickyCTA() {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-gray-950/95 backdrop-blur-sm border-t border-white/10">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+    <div className="border-t border-white/10 bg-gray-950/80">
+      <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <Shield className="w-5 h-5 text-violet-400" />
+          <Shield className="w-5 h-5 text-de-accent-ink" />
           <span className="text-white font-medium">Office Package</span>
           <span className="text-white/60 text-sm hidden sm:inline">Complete IT for small offices (5–25 users)</span>
         </div>
@@ -324,10 +324,10 @@ export default function OfficePage() {
           
           {/* Hero Section */}
           <motion.section {...fadeInUp} className="relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 via-purple-600/10 to-transparent rounded-3xl pointer-events-none" />
+            <div className="absolute inset-0 bg-de-raised to-transparent rounded-3xl pointer-events-none" />
             <div className="relative bg-white/[0.02] border border-white/10 rounded-3xl p-8 md:p-12">
               <div className="max-w-3xl">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/20 border border-violet-500/30 text-violet-300 text-sm font-medium mb-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-de-raised border border-de-hairline text-de-accent-ink text-sm font-medium mb-6">
                   <Shield className="w-4 h-4" />
                   Fit for small offices
                 </div>
@@ -348,11 +348,11 @@ export default function OfficePage() {
                   <Button
                     asChild
                     size="lg"
-                    className="bg-white text-violet-700 hover:bg-violet-50 font-semibold shadow-lg"
+                    className="bg-white text-de-accent hover:bg-de-paper-raised font-semibold shadow-lg"
                     data-testid="btn-hero-consultation"
                   >
                     <a href="/book">
-                      Schedule Consultation
+                      {CTA.primary}
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </a>
                   </Button>
@@ -369,8 +369,8 @@ export default function OfficePage() {
             <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-white/[0.02] border border-white/10 rounded-xl p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-lg bg-violet-600/20 flex items-center justify-center">
-                    <Users className="w-5 h-5 text-violet-400" />
+                  <div className="w-10 h-10 rounded-lg bg-de-raised flex items-center justify-center">
+                    <Users className="w-5 h-5 text-de-accent-ink" />
                   </div>
                   <h3 className="text-lg font-semibold text-white">Your Organization</h3>
                 </div>
@@ -448,8 +448,8 @@ export default function OfficePage() {
           {/* Package Card */}
           <motion.section {...fadeInUp} id="package" className="scroll-mt-32">
             <div className="max-w-lg mx-auto">
-              <div className="relative bg-gradient-to-b from-violet-600/20 to-transparent rounded-2xl border-2 border-violet-500 overflow-hidden">
-                <div className="absolute top-0 left-0 right-0 bg-violet-600 text-white text-center text-sm py-1.5 font-medium">
+              <div className="relative bg-de-raised to-transparent rounded-2xl border-2 border-de-hairline overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 bg-de-accent text-white text-center text-sm py-1.5 font-medium">
                   Small-office operating model
                 </div>
                 <div className="p-8 pt-12">
@@ -505,7 +505,7 @@ export default function OfficePage() {
                     className="flex items-center justify-between px-6 py-4 hover:bg-white/[0.02]"
                   >
                     <span className="text-white/80">{row.label}</span>
-                    <span className="text-violet-300 font-medium">{row.value}</span>
+                    <span className="text-de-accent-ink font-medium">{row.value}</span>
                   </div>
                 ))}
               </div>
@@ -542,16 +542,16 @@ export default function OfficePage() {
                       data-testid={`category-toggle-${category.id}`}
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-violet-600/20 flex items-center justify-center text-violet-400">
+                        <div className="w-8 h-8 rounded-lg bg-de-raised flex items-center justify-center text-de-accent-ink">
                           {category.icon}
                         </div>
                         <span className="font-semibold text-white">{category.title}</span>
-                        <span className="text-white/40 text-sm">({category.rows.length} items)</span>
+                        <span className="text-white/55 text-sm">({category.rows.length} items)</span>
                       </div>
                       {expandedCategories.includes(category.id) ? (
-                        <ChevronUp className="w-5 h-5 text-white/40" />
+                        <ChevronUp className="w-5 h-5 text-white/55" />
                       ) : (
-                        <ChevronDown className="w-5 h-5 text-white/40" />
+                        <ChevronDown className="w-5 h-5 text-white/55" />
                       )}
                     </button>
                     
@@ -587,12 +587,12 @@ export default function OfficePage() {
                 <div className="flex items-center gap-3">
                   <AlertTriangle className="w-5 h-5 text-amber-400" />
                   <span className="font-semibold text-white">What's Not Included in Office</span>
-                  <span className="text-white/40 text-sm">(prevents scope questions)</span>
+                  <span className="text-white/55 text-sm">(prevents scope questions)</span>
                 </div>
                 {showNotIncluded ? (
-                  <ChevronUp className="w-5 h-5 text-white/40" />
+                  <ChevronUp className="w-5 h-5 text-white/55" />
                 ) : (
-                  <ChevronDown className="w-5 h-5 text-white/40" />
+                  <ChevronDown className="w-5 h-5 text-white/55" />
                 )}
               </button>
               
@@ -600,7 +600,7 @@ export default function OfficePage() {
                 <div className="border-t border-white/10 p-6 space-y-4">
                   {notIncludedItems.map((item, index) => (
                     <div key={index} className="flex items-start gap-3">
-                      <X className="w-5 h-5 text-white/40 flex-shrink-0 mt-0.5" />
+                      <X className="w-5 h-5 text-white/55 flex-shrink-0 mt-0.5" />
                       <div>
                         <p className="text-white font-medium">{item.item}</p>
                         <p className="text-white/50 text-sm">{item.reason}</p>
@@ -637,7 +637,7 @@ export default function OfficePage() {
           {/* Final CTA */}
           <motion.section {...fadeInUp}>
             <div className="relative rounded-2xl overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 opacity-90" />
+              <div className="absolute inset-0 bg-de-raised opacity-90" />
               <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] pointer-events-none" />
               <div className="relative py-16 px-8 text-center">
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -650,11 +650,11 @@ export default function OfficePage() {
                   <Button
                     asChild
                     size="lg"
-                    className="bg-white text-violet-700 hover:bg-violet-50 font-semibold shadow-lg"
+                    className="bg-white text-de-accent hover:bg-de-paper-raised font-semibold shadow-lg"
                     data-testid="btn-final-consultation"
                   >
                     <a href="/book">
-                      Schedule Consultation
+                      {CTA.primary}
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </a>
                   </Button>
@@ -664,9 +664,9 @@ export default function OfficePage() {
                     className="bg-transparent border border-white/30 text-white hover:bg-white/10"
                     data-testid="btn-final-call"
                   >
-                    <a href="tel:480-519-5892">
+                    <a href="tel:+13254809870">
                       <Phone className="mr-2 h-5 w-5" />
-                      Call 480-519-5892
+                      Call 325-480-9870
                     </a>
                   </Button>
                 </div>

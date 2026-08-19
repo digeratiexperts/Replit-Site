@@ -51,6 +51,12 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
         de: {
+          magenta: "var(--de-magenta)",
+          "magenta-ink": "var(--de-magenta-ink)",
+          "magenta-paper-ink": "var(--de-magenta-paper-ink)",
+          "magenta-hover": "var(--de-magenta-hover)",
+          accent: "rgb(var(--de-accent-rgb) / <alpha-value>)",
+          "accent-ink": "rgb(var(--de-accent-ink-rgb) / <alpha-value>)",
           bg: "var(--de-bg)",
           surface: "var(--de-surface)",
           raised: "var(--de-raised)",
@@ -58,12 +64,20 @@ module.exports = {
           paper: "var(--de-paper)",
           "paper-raised": "var(--de-paper-raised)",
           "paper-hairline": "var(--de-paper-hairline)",
+          muted: "var(--de-muted)",
+          "muted-soft": "var(--de-muted-soft)",
         },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      // Lift the small end of the scale so chips, spy nav, and captions
+      // stay readable after the 16px rem restore. text-base stays 1rem.
+      fontSize: {
+        xs: ["0.875rem", { lineHeight: "1.35" }],
+        sm: ["1rem", { lineHeight: "1.5" }],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

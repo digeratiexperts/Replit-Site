@@ -306,12 +306,12 @@ export default function BlogPost() {
             <p className="text-white/70 mb-8">
               The article you’re looking for doesn’t exist.
             </p>
-            <Link href="/resources/blog">
-              <Button className="bg-white text-violet-700 hover:bg-white/90">
+            <Button asChild className="bg-white text-de-accent hover:bg-white/90">
+              <Link href="/resources/blog">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to Blog
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </main>
         <DigeratiEnhancedFooterSection />
@@ -381,14 +381,14 @@ export default function BlogPost() {
           >
             <Link
               href="/"
-              className="hover:text-violet-400 transition-colors"
+              className="hover:text-de-accent-ink transition-colors"
             >
               Home
             </Link>
             <ChevronRight className="h-4 w-4" />
             <Link
               href="/resources/blog"
-              className="hover:text-violet-400 transition-colors"
+              className="hover:text-de-accent-ink transition-colors"
             >
               Blog
             </Link>
@@ -400,7 +400,7 @@ export default function BlogPost() {
 
           <Link
             href="/resources/blog"
-            className="inline-flex items-center text-violet-300 hover:text-violet-200 mb-8 transition-colors text-sm"
+            className="inline-flex items-center text-de-accent-ink hover:text-de-accent-ink mb-8 transition-colors text-sm"
             data-testid="link-back-blog"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -408,7 +408,7 @@ export default function BlogPost() {
           </Link>
 
           <header className="mb-10">
-            <Badge className="mb-5 bg-violet-500/15 text-violet-300 border-violet-500/30 backdrop-blur">
+            <Badge className="mb-5 bg-de-raised text-de-accent-ink border-de-hairline backdrop-blur">
               {post.category}
             </Badge>
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-[1.1] tracking-tight">
@@ -420,7 +420,7 @@ export default function BlogPost() {
 
             <div className="flex flex-wrap items-center gap-x-6 gap-y-4 pt-6 border-t border-white/10">
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center shadow-[0_0_18px_rgba(179,0,255,0.4)]">
+                <div className="w-11 h-11 rounded-full bg-de-raised flex items-center justify-center shadow-[0_0_18px_rgba(179,0,255,0.4)]">
                   <User className="h-5 w-5 text-white" />
                 </div>
                 <div>
@@ -456,7 +456,7 @@ export default function BlogPost() {
                 />
                 <button
                   onClick={() => handleShare("twitter")}
-                  className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.03] text-white/60 hover:text-white hover:border-violet-500/50 hover:bg-violet-500/10 transition-all flex items-center justify-center"
+                  className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.03] text-white/60 hover:text-white hover:border-de-hairline hover:bg-de-raised transition-all flex items-center justify-center"
                   aria-label="Share on Twitter"
                   data-testid="button-share-twitter"
                 >
@@ -464,7 +464,7 @@ export default function BlogPost() {
                 </button>
                 <button
                   onClick={() => handleShare("linkedin")}
-                  className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.03] text-white/60 hover:text-white hover:border-violet-500/50 hover:bg-violet-500/10 transition-all flex items-center justify-center"
+                  className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.03] text-white/60 hover:text-white hover:border-de-hairline hover:bg-de-raised transition-all flex items-center justify-center"
                   aria-label="Share on LinkedIn"
                   data-testid="button-share-linkedin"
                 >
@@ -472,7 +472,7 @@ export default function BlogPost() {
                 </button>
                 <button
                   onClick={handleCopyLink}
-                  className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.03] text-white/60 hover:text-white hover:border-violet-500/50 hover:bg-violet-500/10 transition-all flex items-center justify-center"
+                  className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.03] text-white/60 hover:text-white hover:border-de-hairline hover:bg-de-raised transition-all flex items-center justify-center"
                   aria-label="Copy link"
                   data-testid="button-share-copy"
                 >
@@ -499,13 +499,13 @@ export default function BlogPost() {
                   onClick={() => setView("overview")}
                   className={`w-full sm:w-auto px-4 sm:px-5 py-2.5 sm:py-2 rounded-xl sm:rounded-full text-sm font-medium transition-all text-center ${
                     view === "overview"
-                      ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-[0_0_18px_rgba(179,0,255,0.35)]"
+                      ? "bg-gradient-to-r  to-fuchsia-500 text-white shadow-[0_0_18px_rgba(179,0,255,0.35)]"
                       : "text-white/60 hover:text-white"
                   }`}
                   data-testid="tab-overview"
                 >
                   Overview
-                  <span className="ml-2 text-[11px] opacity-70">
+                  <span className="ml-2 text-sm opacity-70">
                     {body.overviewReadTime}
                   </span>
                 </button>
@@ -516,13 +516,13 @@ export default function BlogPost() {
                   onClick={() => setView("extended")}
                   className={`w-full sm:w-auto px-4 sm:px-5 py-2.5 sm:py-2 rounded-xl sm:rounded-full text-sm font-medium transition-all text-center ${
                     view === "extended"
-                      ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-[0_0_18px_rgba(179,0,255,0.35)]"
+                      ? "bg-gradient-to-r  to-fuchsia-500 text-white shadow-[0_0_18px_rgba(179,0,255,0.35)]"
                       : "text-white/60 hover:text-white"
                   }`}
                   data-testid="tab-extended"
                 >
                   Extended Deep Dive
-                  <span className="ml-2 text-[11px] opacity-70">
+                  <span className="ml-2 text-sm opacity-70">
                     {body.extendedReadTime}
                   </span>
                 </button>
@@ -554,9 +554,9 @@ export default function BlogPost() {
               <aside className="hidden lg:block lg:col-span-3" aria-label="Table of contents">
                 <div className="sticky top-28">
                   <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-white/[0.01] p-5 backdrop-blur-sm shadow-[0_10px_40px_-20px_rgba(179,0,255,0.4)]">
-                    <div className="flex items-center gap-2 text-[11px] font-bold text-white/80 mb-5 uppercase tracking-[0.18em]">
-                      <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-violet-500/15 border border-violet-400/30">
-                        <List className="h-3.5 w-3.5 text-violet-300" />
+                    <div className="flex items-center gap-2 text-sm font-bold text-white/80 mb-5 uppercase tracking-[0.18em]">
+                      <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-de-raised border border-de-hairline">
+                        <List className="h-3.5 w-3.5 text-de-accent-ink" />
                       </span>
                       In this article
                     </div>
@@ -577,7 +577,7 @@ export default function BlogPost() {
                           />
                           <span
                             aria-hidden
-                            className="absolute left-[10px] top-1 w-px bg-gradient-to-b from-violet-400 via-fuchsia-400 to-violet-400 transition-all duration-500"
+                            className="absolute left-[10px] top-1 w-px bg-de-raised transition-all duration-500"
                             style={{
                               height: `max(0px, calc(${progressPct}% - 4px))`,
                             }}
@@ -591,11 +591,11 @@ export default function BlogPost() {
                                   {/* Step dot */}
                                   <span
                                     aria-hidden
-                                    className={`absolute left-[3px] top-[11px] w-3.5 h-3.5 rounded-full border-2 transition-all duration-300 flex items-center justify-center text-[8px] font-bold ${
+                                    className={`absolute left-[3px] top-[11px] w-3.5 h-3.5 rounded-full border-2 transition-all duration-300 flex items-center justify-center text-[0.625rem] font-bold ${
                                       isActive
-                                        ? "bg-gradient-to-br from-violet-400 to-fuchsia-400 border-white/80 shadow-[0_0_12px_rgba(217,70,239,0.7)] scale-110"
+                                        ? "bg-de-accent border-white/80 scale-110"
                                         : isPast
-                                          ? "bg-violet-500/70 border-violet-300/60"
+                                          ? "bg-de-raised border-de-hairline"
                                           : "bg-[#0a0a0a] border-white/25"
                                     }`}
                                   >
@@ -614,14 +614,14 @@ export default function BlogPost() {
                                     }}
                                     className={`block text-sm leading-snug transition-all rounded-lg px-3 py-2 ${
                                       isActive
-                                        ? "bg-violet-500/10 text-white font-medium"
+                                        ? "bg-de-raised text-white font-medium"
                                         : isPast
-                                          ? "text-white/45 hover:text-white"
+                                          ? "text-white/55 hover:text-white"
                                           : "text-white/60 hover:text-white hover:bg-white/[0.04]"
                                     }`}
                                     data-testid={`toc-${h.id}`}
                                   >
-                                    <span className="text-[10px] font-bold opacity-50 mr-2 tabular-nums">
+                                    <span className="text-xs font-bold opacity-50 mr-2 tabular-nums">
                                       {String(i + 1).padStart(2, "0")}
                                     </span>
                                     {h.text}
@@ -632,15 +632,15 @@ export default function BlogPost() {
                           </ul>
                           {/* Progress meter */}
                           <div className="mt-5 pt-4 border-t border-white/10">
-                            <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-wider text-white/50 mb-2">
+                            <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-white/50 mb-2">
                               <span>Progress</span>
-                              <span className="text-violet-300 tabular-nums">
+                              <span className="text-de-accent-ink tabular-nums">
                                 {activeIdx < 0 ? 0 : activeIdx + 1}/{headings.length}
                               </span>
                             </div>
                             <div className="h-1 rounded-full bg-white/10 overflow-hidden">
                               <div
-                                className="h-full bg-gradient-to-r from-violet-400 via-fuchsia-400 to-violet-400 transition-all duration-500 rounded-full"
+                                className="h-full bg-de-raised transition-all duration-500 rounded-full"
                                 style={{ width: `${progressPct}%` }}
                               />
                             </div>
@@ -674,12 +674,12 @@ export default function BlogPost() {
                         id={id}
                         className="group scroll-mt-28 text-2xl md:text-[34px] font-bold text-white mt-16 mb-6 leading-[1.15] tracking-tight"
                       >
-                        <span className="bg-gradient-to-r from-white to-violet-100 bg-clip-text text-transparent">
+                        <span className="bg-gradient-to-r from-white bg-clip-text text-transparent">
                           {renderTokens(block.text, wordCounter)}
                         </span>
                         <span
                           aria-hidden
-                          className="block mt-3 h-px w-12 bg-gradient-to-r from-violet-400/70 to-fuchsia-400/0"
+                          className="block mt-3 h-px w-12 bg-de-raised"
                         />
                       </h2>
                     );
@@ -695,7 +695,7 @@ export default function BlogPost() {
                             key={i}
                             className="flex items-start gap-3 leading-[1.75] text-[17px]"
                           >
-                            <span className="mt-[10px] inline-block w-1.5 h-1.5 rounded-full bg-gradient-to-r from-violet-400 to-fuchsia-400 flex-shrink-0" />
+                            <span className="mt-[10px] inline-block w-1.5 h-1.5 rounded-full bg-de-raised flex-shrink-0" />
                             <span>{renderTokens(it, wordCounter)}</span>
                           </li>
                         ))}
@@ -707,17 +707,17 @@ export default function BlogPost() {
                     const toneCfg = {
                       insight: {
                         Icon: Sparkles,
-                        ring: "border-violet-400/40",
-                        bg: "from-violet-600/15 to-fuchsia-600/10",
-                        glow: "bg-violet-500/20",
-                        accent: "text-violet-200",
-                        chip: "bg-violet-500/20 text-violet-100 border-violet-400/40",
+                        ring: "border-de-hairline",
+                        bg: " to-fuchsia-600/10",
+                        glow: "bg-de-raised",
+                        accent: "text-de-accent-ink",
+                        chip: "bg-de-raised text-white/80 border-de-hairline",
                         defaultTitle: "Key insight",
                       },
                       warning: {
                         Icon: AlertTriangle,
                         ring: "border-fuchsia-400/50",
-                        bg: "from-fuchsia-600/20 to-violet-700/15",
+                        bg: "from-fuchsia-600/20 ",
                         glow: "bg-fuchsia-500/25",
                         accent: "text-fuchsia-200",
                         chip: "bg-fuchsia-500/20 text-fuchsia-100 border-fuchsia-400/40",
@@ -725,20 +725,20 @@ export default function BlogPost() {
                       },
                       note: {
                         Icon: Info,
-                        ring: "border-violet-400/35",
-                        bg: "from-violet-700/15 to-violet-900/10",
-                        glow: "bg-violet-500/20",
-                        accent: "text-violet-200",
-                        chip: "bg-violet-500/15 text-violet-100 border-violet-400/35",
+                        ring: "border-de-hairline",
+                        bg: " ",
+                        glow: "bg-de-raised",
+                        accent: "text-de-accent-ink",
+                        chip: "bg-de-raised text-white/80 border-de-hairline",
                         defaultTitle: "Note",
                       },
                       tip: {
                         Icon: Lightbulb,
-                        ring: "border-violet-300/40",
-                        bg: "from-violet-500/15 to-violet-700/10",
-                        glow: "bg-violet-400/20",
-                        accent: "text-violet-200",
-                        chip: "bg-violet-400/20 text-violet-100 border-violet-300/40",
+                        ring: "border-de-hairline",
+                        bg: " ",
+                        glow: "bg-de-raised",
+                        accent: "text-de-accent-ink",
+                        chip: "bg-de-raised text-white/80 border-de-hairline",
                         defaultTitle: "Pro tip",
                       },
                     }[tone];
@@ -758,7 +758,7 @@ export default function BlogPost() {
                             <Icon className="h-5 w-5" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <span className={`inline-block text-[10px] font-bold uppercase tracking-[0.14em] mb-2 px-2 py-0.5 rounded-full border ${toneCfg.chip}`}>
+                            <span className={`inline-block text-xs font-bold uppercase tracking-[0.14em] mb-2 px-2 py-0.5 rounded-full border ${toneCfg.chip}`}>
                               {renderTokens(block.title ?? toneCfg.defaultTitle, wordCounter)}
                             </span>
                             <p className="text-white/90 text-[16px] leading-[1.7]">
@@ -773,12 +773,12 @@ export default function BlogPost() {
                     return (
                       <figure
                         key={idx}
-                        className="relative my-10 pl-6 sm:pl-8 border-l-[3px] border-violet-400/70"
+                        className="relative my-10 pl-6 sm:pl-8 border-l-[3px] border-de-hairline"
                         data-testid="pullquote"
                       >
                         <Quote
                           aria-hidden
-                          className="absolute -left-[2px] -top-2 h-5 w-5 text-violet-400 bg-[#0a0a0a] px-0.5"
+                          className="absolute -left-[2px] -top-2 h-5 w-5 text-de-accent-ink bg-[#0a0a0a] px-0.5"
                         />
                         <blockquote className="text-white/90 text-xl sm:text-2xl leading-[1.45] font-serif italic">
                           “{renderTokens(block.text, wordCounter)}”
@@ -800,12 +800,12 @@ export default function BlogPost() {
                     return (
                       <figure
                         key={idx}
-                        className="relative my-10 pl-6 sm:pl-8 border-l-[3px] border-violet-400/70"
+                        className="relative my-10 pl-6 sm:pl-8 border-l-[3px] border-de-hairline"
                         data-testid="pullquote"
                       >
                         <Quote
                           aria-hidden
-                          className="absolute -left-[2px] -top-2 h-5 w-5 text-violet-400 bg-[#0a0a0a] px-0.5"
+                          className="absolute -left-[2px] -top-2 h-5 w-5 text-de-accent-ink bg-[#0a0a0a] px-0.5"
                         />
                         <blockquote className="text-white/90 text-xl sm:text-2xl leading-[1.45] font-serif italic">
                           “{renderTokens(raw.slice(2), wordCounter)}”
@@ -830,17 +830,17 @@ export default function BlogPost() {
                     const toneCfg = {
                       insight: {
                         Icon: Sparkles,
-                        ring: "border-violet-400/40",
-                        bg: "from-violet-600/15 to-fuchsia-600/10",
-                        glow: "bg-violet-500/20",
-                        accent: "text-violet-200",
-                        chip: "bg-violet-500/20 text-violet-100 border-violet-400/40",
+                        ring: "border-de-hairline",
+                        bg: " to-fuchsia-600/10",
+                        glow: "bg-de-raised",
+                        accent: "text-de-accent-ink",
+                        chip: "bg-de-raised text-white/80 border-de-hairline",
                         title: "Key insight",
                       },
                       warning: {
                         Icon: AlertTriangle,
                         ring: "border-fuchsia-400/50",
-                        bg: "from-fuchsia-600/20 to-violet-700/15",
+                        bg: "from-fuchsia-600/20 ",
                         glow: "bg-fuchsia-500/25",
                         accent: "text-fuchsia-200",
                         chip: "bg-fuchsia-500/20 text-fuchsia-100 border-fuchsia-400/40",
@@ -848,20 +848,20 @@ export default function BlogPost() {
                       },
                       note: {
                         Icon: Info,
-                        ring: "border-violet-400/35",
-                        bg: "from-violet-700/15 to-violet-900/10",
-                        glow: "bg-violet-500/20",
-                        accent: "text-violet-200",
-                        chip: "bg-violet-500/15 text-violet-100 border-violet-400/35",
+                        ring: "border-de-hairline",
+                        bg: " ",
+                        glow: "bg-de-raised",
+                        accent: "text-de-accent-ink",
+                        chip: "bg-de-raised text-white/80 border-de-hairline",
                         title: "Note",
                       },
                       tip: {
                         Icon: Lightbulb,
-                        ring: "border-violet-300/40",
-                        bg: "from-violet-500/15 to-violet-700/10",
-                        glow: "bg-violet-400/20",
-                        accent: "text-violet-200",
-                        chip: "bg-violet-400/20 text-violet-100 border-violet-300/40",
+                        ring: "border-de-hairline",
+                        bg: " ",
+                        glow: "bg-de-raised",
+                        accent: "text-de-accent-ink",
+                        chip: "bg-de-raised text-white/80 border-de-hairline",
                         title: "Pro tip",
                       },
                     }[tone];
@@ -881,7 +881,7 @@ export default function BlogPost() {
                             <Icon className="h-5 w-5" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <span className={`inline-block text-[10px] font-bold uppercase tracking-[0.14em] mb-2 px-2 py-0.5 rounded-full border ${toneCfg.chip}`}>
+                            <span className={`inline-block text-xs font-bold uppercase tracking-[0.14em] mb-2 px-2 py-0.5 rounded-full border ${toneCfg.chip}`}>
                               {renderTokens(toneCfg.title, wordCounter)}
                             </span>
                             <p className="text-white/90 text-[16px] leading-[1.7]">
@@ -900,7 +900,7 @@ export default function BlogPost() {
                       key={idx}
                       className={`text-white/85 text-[18px] leading-[1.85] mb-7 ${
                         isFirst
-                          ? "first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:text-7xl first-letter:font-bold first-letter:leading-[0.85] first-letter:bg-gradient-to-br first-letter:from-violet-300 first-letter:to-fuchsia-400 first-letter:bg-clip-text first-letter:text-transparent"
+                          ? "first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:text-7xl first-letter:font-bold first-letter:leading-[0.85] first-letter:text-de-accent-ink"
                           : ""
                       }`}
                     >
@@ -911,7 +911,7 @@ export default function BlogPost() {
               </article>
 
               {/* Bottom CTA */}
-              <Card className="mt-14 max-w-3xl border-violet-500/30 bg-gradient-to-br from-violet-600/15 via-[#0a0a0a] to-fuchsia-600/15 overflow-hidden">
+              <Card className="mt-14 max-w-3xl border-de-hairline bg-de-raised via-[#0a0a0a] to-fuchsia-600/15 overflow-hidden">
                 <CardContent className="p-7 sm:p-9 relative">
                   <div
                     aria-hidden
@@ -927,24 +927,25 @@ export default function BlogPost() {
                         "A short Cyber Risk Assessment shows where your environment actually stands and what to do first."}
                     </p>
                     <div className="flex flex-wrap gap-3">
-                      <Link href={body.bottomCta?.primaryHref ?? "/book"}>
-                        <Button data-testid="button-blog-assessment">
+                      <Button asChild data-testid="button-blog-assessment">
+                        <Link href={body.bottomCta?.primaryHref ?? "/book"}>
                           {body.bottomCta?.primaryLabel ??
                             "Schedule a Cyber Risk Assessment"}
                           <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      </Link>
+                        </Link>
+                      </Button>
                       {body.bottomCta?.secondaryLabel &&
                         body.bottomCta?.secondaryHref && (
-                          <Link href={body.bottomCta.secondaryHref}>
-                            <Button
-                              variant="outline"
-                              className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white hover:border-white/50"
-                              data-testid="button-blog-secondary"
-                            >
+                          <Button
+                            asChild
+                            variant="outline"
+                            className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white hover:border-white/50"
+                            data-testid="button-blog-secondary"
+                          >
+                            <Link href={body.bottomCta.secondaryHref}>
                               {body.bottomCta.secondaryLabel}
-                            </Button>
-                          </Link>
+                            </Link>
+                          </Button>
                         )}
                     </div>
                   </div>
@@ -954,7 +955,7 @@ export default function BlogPost() {
               {/* Author card */}
               <Card className="mt-8 max-w-3xl border-white/10 bg-white/[0.02]">
                 <CardContent className="p-6 flex items-start gap-5">
-                  <div className="w-14 h-14 flex-shrink-0 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center shadow-[0_0_20px_rgba(179,0,255,0.35)]">
+                  <div className="w-14 h-14 flex-shrink-0 rounded-full bg-de-raised flex items-center justify-center shadow-[0_0_20px_rgba(179,0,255,0.35)]">
                     <User className="h-6 w-6 text-white" />
                   </div>
                   <div className="flex-1">
@@ -971,7 +972,7 @@ export default function BlogPost() {
                     <div className="flex items-center gap-3">
                       <Link
                         href="/about"
-                        className="text-violet-300 hover:text-violet-200 text-sm inline-flex items-center"
+                        className="text-de-accent-ink hover:text-de-accent-ink text-sm inline-flex items-center"
                       >
                         About Digerati Experts
                         <ArrowRight className="ml-1 h-3.5 w-3.5" />
@@ -979,7 +980,7 @@ export default function BlogPost() {
                       <span className="text-white/20">•</span>
                       <Link
                         href="/#contact"
-                        className="text-violet-300 hover:text-violet-200 text-sm inline-flex items-center"
+                        className="text-de-accent-ink hover:text-de-accent-ink text-sm inline-flex items-center"
                       >
                         Get in touch
                         <ArrowRight className="ml-1 h-3.5 w-3.5" />
@@ -1000,7 +1001,7 @@ export default function BlogPost() {
                     variant="outline"
                     size="sm"
                     onClick={() => handleShare("twitter")}
-                    className="border-white/20 bg-transparent text-white/90 hover:text-white hover:bg-violet-500/10 hover:border-violet-500/60"
+                    className="border-white/20 bg-transparent text-white/90 hover:text-white hover:bg-de-raised hover:border-de-hairline"
                     data-testid="button-share-twitter-bottom"
                   >
                     <Twitter className="h-4 w-4 mr-2" />
@@ -1010,7 +1011,7 @@ export default function BlogPost() {
                     variant="outline"
                     size="sm"
                     onClick={() => handleShare("linkedin")}
-                    className="border-white/20 bg-transparent text-white/90 hover:text-white hover:bg-violet-500/10 hover:border-violet-500/60"
+                    className="border-white/20 bg-transparent text-white/90 hover:text-white hover:bg-de-raised hover:border-de-hairline"
                     data-testid="button-share-linkedin-bottom"
                   >
                     <Linkedin className="h-4 w-4 mr-2" />
@@ -1020,7 +1021,7 @@ export default function BlogPost() {
                     variant="outline"
                     size="sm"
                     onClick={handleCopyLink}
-                    className="border-white/20 bg-transparent text-white/90 hover:text-white hover:bg-violet-500/10 hover:border-violet-500/60"
+                    className="border-white/20 bg-transparent text-white/90 hover:text-white hover:bg-de-raised hover:border-de-hairline"
                     data-testid="button-share-copy-bottom"
                   >
                     {copied ? (
@@ -1057,7 +1058,7 @@ export default function BlogPost() {
                 </div>
                 <Link
                   href="/resources/blog"
-                  className="hidden sm:inline-flex items-center text-violet-300 hover:text-violet-200 text-sm font-medium"
+                  className="hidden sm:inline-flex items-center text-de-accent-ink hover:text-de-accent-ink text-sm font-medium"
                 >
                   All articles
                   <ArrowRight className="ml-1 h-4 w-4" />
@@ -1067,7 +1068,7 @@ export default function BlogPost() {
                 {relatedPosts.map((rp) => (
                   <Link key={rp.slug} href={`/resources/blog/${rp.slug}`}>
                     <Card
-                      className="group h-full overflow-hidden border-white/10 bg-white/[0.02] hover:border-violet-500/50 transition-all cursor-pointer"
+                      className="group h-full overflow-hidden border-white/10 bg-white/[0.02] hover:border-de-hairline transition-all cursor-pointer"
                       data-testid={`card-related-${rp.slug}`}
                     >
                       <div className="relative aspect-[16/9] overflow-hidden">
@@ -1084,13 +1085,13 @@ export default function BlogPost() {
                         </Badge>
                       </div>
                       <CardContent className="p-5">
-                        <h4 className="text-base font-semibold text-white mb-2 leading-snug group-hover:text-violet-300 transition-colors line-clamp-2">
+                        <h4 className="text-base font-semibold text-white mb-2 leading-snug group-hover:text-de-accent-ink transition-colors line-clamp-2">
                           {rp.title}
                         </h4>
                         <p className="text-sm text-white/55 line-clamp-2 mb-4 leading-relaxed">
                           {rp.excerpt}
                         </p>
-                        <span className="text-violet-300 text-sm inline-flex items-center font-medium">
+                        <span className="text-de-accent-ink text-sm inline-flex items-center font-medium">
                           Read article
                           <ArrowRight className="ml-1.5 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                         </span>

@@ -5,12 +5,14 @@ import express, { type Request, Response, NextFunction } from "express";
 import { createServer } from "http";
 import { registerRoutes, authMiddleware, requireRole } from "./routes";
 import { registerSecureZohoStoreCheckout } from "./secureStoreCheckout";
+import { registerStoreSolutionRoutes } from "./storeSolutionRoutes";
 import { registerPublicSupportChat } from "./publicSupportChat";
 import { createServer as createViteServer } from "vite";
 import path from "path";
 import fs from "fs";
 import cookieParser from "cookie-parser";
 import compression from "compression";
+import jwt from "jsonwebtoken";
 import { zohoPayments } from "./zohoPayments";
 import { setupCrossServiceHandlers } from "./crossServiceHandler";
 import { eventBus, EventTypes } from "./eventBus";
@@ -268,6 +270,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 registerSecureZohoStoreCheckout(app, authMiddleware as any, requireRole as any);
+registerStoreSolutionRoutes(app, authMiddleware as any);
 
 app.use((req, res, next) => {
   if (req.path.toLowerCase() === "/solutions/proactive-ecosystem-packages") {
@@ -304,6 +307,50 @@ app.use((req, res, next) => {
       .send("Gone. This legacy WordPress search URL is no longer available.");
   }
   next();
+});
+
+/**
+ * Internal commercial tools — defense in depth:
+ * X-Robots-Tag + robots.txt Disallow + auth gate (portal session cookie).
+ * Do not rely on client-side noindex alone.
+ */
+const INTERNAL_TOOL_PATHS = [
+  "/official-network-planner",
+  "/de-ecosystem-matrix-offical",
+];
+
+app.use((req, res, next) => {
+  const isInternalTool = INTERNAL_TOOL_PATHS.some(
+    (p) => req.path === p || req.path.startsWith(`${p}/`),
+  );
+  if (!isInternalTool) return next();
+
+  res.setHeader("X-Robots-Tag", "noindex, nofollow");
+
+  // In local/dev, allow tooling without portal cookie so DE can iterate.
+  if (app.get("env") !== "production") return next();
+
+  const token =
+    typeof req.cookies?.portalAuth === "string" ? req.cookies.portalAuth : "";
+  const secret = process.env.JWT_SECRET;
+  if (!token || !secret) {
+    const returnTo = encodeURIComponent(req.path);
+    return res.redirect(
+      302,
+      `https://portal.digeratiexperts.com/portal/login?returnTo=${returnTo}`,
+    );
+  }
+
+  try {
+    jwt.verify(token, secret);
+    return next();
+  } catch {
+    const returnTo = encodeURIComponent(req.path);
+    return res.redirect(
+      302,
+      `https://portal.digeratiexperts.com/portal/login?returnTo=${returnTo}`,
+    );
+  }
 });
 
 const publicDir = path.resolve(process.cwd(), "public");
@@ -441,6 +488,16 @@ function listEndpoints(): Array<{ method: string; path: string }> {
 
   server.listen(port, host, () => {
     log(`🚀 Running on http://${host}:${port}`);
+    void import("./integrations/deSyncWorker")
+      .then(({ startDeSyncWorker }) => startDeSyncWorker())
+      .catch((error) => {
+        log(`⚠️ de-sync worker not started: ${error?.message || error}`);
+      });
+    void import("./services/threat-intel/ingest")
+      .then(({ startThreatIntelScheduler }) => startThreatIntelScheduler())
+      .catch((error) => {
+        log(`⚠️ Threat-intel scheduler not started: ${error?.message || error}`);
+      });
     const slug = process.env.REPL_SLUG;
     const owner = process.env.REPL_OWNER;
     if (slug && owner) {

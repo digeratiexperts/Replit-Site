@@ -24,7 +24,7 @@ export const ScrollToTop = () => {
 
   useEffect(() => {
     let ticking = false;
-    
+
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
@@ -57,7 +57,7 @@ export const ScrollToTop = () => {
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: prefersReducedMotion ? "auto" : "smooth"
+      behavior: prefersReducedMotion ? "auto" : "smooth",
     });
   };
 
@@ -70,9 +70,7 @@ export const ScrollToTop = () => {
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
           transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
           onClick={scrollToTop}
-          className={`fixed right-6 z-50 p-3 bg-[#0a0a0a] hover:bg-[#151217] text-white rounded-full shadow-[0_10px_28px_rgba(0,0,0,0.45)] ring-2 ring-white/90 backdrop-blur-sm border border-white/20 transition-colors duration-200 group ${
-            cookieBannerClear ? "bottom-24" : "bottom-44"
-          }`}
+          className="de-scroll-top p-3 bg-de-raised hover:bg-de-accent text-white rounded-full shadow-lg shadow-none backdrop-blur-sm border border-de-hairline transition-colors duration-200 group"
           aria-label="Scroll to top"
           data-testid="button-scroll-to-top"
         >

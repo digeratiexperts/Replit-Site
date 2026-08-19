@@ -141,8 +141,8 @@ export function GuidedBuyingWizard({ open, onClose, onAddStack }: GuidedBuyingWi
           >
             <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#5034ff]/30 bg-[#5034ff]/15">
-                  <Sparkles className="h-5 w-5 text-[#a78bfa]" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-de-accent/30 bg-de-accent/15">
+                  <Sparkles className="h-5 w-5 text-de-accent-ink" />
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold text-white">Build my solution</h2>
@@ -163,7 +163,7 @@ export function GuidedBuyingWizard({ open, onClose, onAddStack }: GuidedBuyingWi
             <div className="border-b border-white/10 px-6 py-3">
               <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
                 <div
-                  className="h-full rounded-full bg-[#5034ff] transition-all"
+                  className="h-full rounded-full bg-de-accent transition-all"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -172,7 +172,7 @@ export function GuidedBuyingWizard({ open, onClose, onAddStack }: GuidedBuyingWi
             <div className="flex-1 overflow-y-auto p-6">
               {!showResult ? (
                 <div>
-                  <p className="mb-2 text-sm text-white/45">
+                  <p className="mb-2 text-sm text-white/55">
                     Step {step + 1} of {STEPS.length}
                   </p>
                   <h3 className="mb-5 text-2xl font-semibold text-white">{current.title}</h3>
@@ -191,7 +191,7 @@ export function GuidedBuyingWizard({ open, onClose, onAddStack }: GuidedBuyingWi
                           }
                           className={`flex w-full items-center rounded-xl border px-4 py-3.5 text-left text-base transition-colors ${
                             selected
-                              ? "border-[#5034ff]/50 bg-[#5034ff]/15 text-white"
+                              ? "border-de-accent/50 bg-de-accent/15 text-white"
                               : "border-white/10 bg-[#141414] text-white/75 hover:border-white/20 hover:bg-[#171717]"
                           }`}
                           data-testid={`guided-option-${current.key}-${opt.value}`}
@@ -223,7 +223,7 @@ export function GuidedBuyingWizard({ open, onClose, onAddStack }: GuidedBuyingWi
                       </li>
                     ))}
                   </ul>
-                  <div className="rounded-xl border border-[#5034ff]/25 bg-[#5034ff]/10 p-4">
+                  <div className="rounded-xl border border-de-accent/25 bg-de-accent/10 p-4">
                     <p className="text-sm text-white/60">Estimated list total (soft)</p>
                     <p className="mt-1 text-3xl font-bold text-white">
                       ${recommendation.recurringEstimate.toLocaleString()}
@@ -253,7 +253,7 @@ export function GuidedBuyingWizard({ open, onClose, onAddStack }: GuidedBuyingWi
                     Back
                   </Button>
                   <Button
-                    className="h-11 flex-1 bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                    className="h-11 flex-1 bg-de-accent text-white hover:bg-[#6548ff]"
                     onClick={() => {
                       if (step >= STEPS.length - 1) {
                         setShowResult(true);
@@ -270,7 +270,7 @@ export function GuidedBuyingWizard({ open, onClose, onAddStack }: GuidedBuyingWi
               ) : (
                 <>
                   <Button
-                    className="h-12 w-full bg-[#5034ff] text-base text-white hover:bg-[#6548ff]"
+                    className="h-12 w-full bg-de-accent text-base text-white hover:bg-[#6548ff]"
                     disabled={!recommendation?.products.length}
                     onClick={() => {
                       if (!recommendation) return;
@@ -297,16 +297,16 @@ export function GuidedBuyingWizard({ open, onClose, onAddStack }: GuidedBuyingWi
                       <MessageCircle className="mr-2 h-4 w-4" />
                       Talk to advisor
                     </Button>
-                    <a href="/book" className="flex-1">
-                      <Button
+                    <Button asChild
                         variant="outline"
                         className="h-11 w-full border-white/15 bg-transparent text-white hover:bg-white/5"
                         data-testid="button-guided-book"
                       >
-                        <Calendar className="mr-2 h-4 w-4" />
+                  <a href="/book" className="flex-1">
+                    <Calendar className="mr-2 h-4 w-4" />
                         Book architect
-                      </Button>
-                    </a>
+                  </a>
+                </Button>
                   </div>
                   <Button
                     variant="ghost"

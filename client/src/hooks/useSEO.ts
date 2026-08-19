@@ -13,9 +13,17 @@ const DEFAULT_DESCRIPTION = "Cybersecurity-first managed IT for Arizona business
 const SITE_URL = 'https://digeratiexperts.com';
 const DEFAULT_IMAGE = `${SITE_URL}/favicon-512x512.png`;
 
+function buildFullTitle(title: string): string {
+  const trimmed = title.trim();
+  if (!trimmed) return BASE_TITLE;
+  // Avoid "Page | Digerati Experts | Digerati Experts" when callers already include the brand.
+  if (trimmed === BASE_TITLE || trimmed.endsWith(`| ${BASE_TITLE}`)) return trimmed;
+  return `${trimmed} | ${BASE_TITLE}`;
+}
+
 export function useSEO({ title, description, canonical, ogImage, noIndex }: SEOProps) {
   useEffect(() => {
-    const fullTitle = title ? `${title} | ${BASE_TITLE}` : BASE_TITLE;
+    const fullTitle = buildFullTitle(title);
     const metaDescription = description || DEFAULT_DESCRIPTION;
     const canonicalUrl = canonical ? `${SITE_URL}${canonical}` : undefined;
     const image = ogImage || DEFAULT_IMAGE;

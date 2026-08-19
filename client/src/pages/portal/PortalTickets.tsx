@@ -79,7 +79,7 @@ export default function PortalTickets() {
           </div>
           <Link href="/portal/tickets/create">
             <Button
-              className="bg-[#5034ff] hover:bg-[#5034ff]/90 text-white"
+              className="bg-[#D3126A] hover:bg-[#D3126A]/90 text-white"
               data-testid="button-create-ticket"
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -108,7 +108,7 @@ export default function PortalTickets() {
                   variant={filter === status ? "default" : "outline"}
                   size="sm"
                   onClick={() => setFilter(status)}
-                  className={filter === status ? "bg-[#5034ff] hover:bg-[#5034ff]/90" : ""}
+                  className={filter === status ? "bg-[#D3126A] hover:bg-[#D3126A]/90" : ""}
                   data-testid={`button-filter-${status}`}
                 >
                   {status === "all" ? "All" : status.replace(/_/g, " ")}

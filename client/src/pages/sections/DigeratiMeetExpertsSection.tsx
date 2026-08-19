@@ -24,7 +24,7 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
 
   return (
     <section
-      className="de-dark-well de-chapter-hairline relative overflow-hidden py-10 md:py-14 lg:py-16"
+      className="de-dark-well de-chapter-hairline de-field-grain relative overflow-hidden py-10 md:py-14 lg:py-16"
       data-testid="section-meet-experts"
     >
       <div
@@ -32,14 +32,14 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
         aria-hidden="true"
       />
 
-      <div className="relative z-10 mx-auto max-w-[100rem] px-3 sm:px-4 lg:px-6">
+      <div className="relative z-10 mx-auto max-w-[var(--de-canvas)] px-3 sm:px-4 lg:px-6">
         <motion.div
           className="mb-8 md:mb-10"
           initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF477F] md:text-sm">
+          <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-de-magenta-ink">
             Human trust
           </p>
           <h2 className="mb-3 font-heading text-3xl font-semibold tracking-[-0.02em] text-white sm:text-4xl md:text-5xl">
@@ -61,12 +61,12 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
             initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "200px" }}
-            className="self-stretch overflow-hidden rounded-2xl border border-de-hairline bg-de-raised lg:col-span-5"
+            className="overflow-hidden rounded-2xl border border-de-hairline bg-de-raised lg:col-span-5 lg:self-start"
           >
             <img
               src="/images/founder/joe-petro-studio-blazer-white.jpg"
               alt="Joseph Petro, Founder of Digerati Experts"
-              className="aspect-[3/4] w-full object-cover object-center lg:aspect-auto lg:h-full lg:min-h-[28rem] lg:object-top"
+              className="block aspect-[3/4] w-full object-cover object-[center_20%]"
               loading="lazy"
               decoding="async"
               width={768}
@@ -98,11 +98,11 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
                   key={r.title}
                   className="w-full border-t-2 border-[#D3126A] pt-5"
                 >
-                  <p className="font-mono text-xs font-semibold tracking-[0.18em] text-white/55">
+                  <p className="font-mono text-base font-semibold tracking-[0.18em] text-white/65">
                     {String(index + 1).padStart(2, "0")}
                   </p>
                   <p className="mt-2 text-lg font-semibold text-white md:text-xl">{r.title}</p>
-                  <p className="mt-2 text-[15px] leading-relaxed text-white/90 md:text-base">{r.detail}</p>
+                  <p className="mt-2 text-base leading-relaxed text-white/90">{r.detail}</p>
                 </div>
               ))}
             </div>
@@ -110,7 +110,7 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
             <button
               type="button"
               onClick={() => openBooking("meet_experts")}
-              className="inline-flex h-12 min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-pink-300/25 bg-gradient-to-r from-[#D3126A] via-pink-600 to-[#5B45E0] px-8 text-base font-semibold text-white shadow-[0_0_22px_rgba(211,18,106,0.35)] transition-all hover:from-[#e01874] hover:via-pink-500 hover:to-[#6b56f0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a] sm:w-auto sm:min-w-[16rem]"
+              className="inline-flex h-12 min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#D3126A] px-8 text-base font-semibold text-white transition-colors hover:bg-[#e01874] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a] sm:w-auto sm:min-w-[16rem]"
               data-testid="button-talk-to-expert"
             >
               Talk to an expert

@@ -11,7 +11,7 @@ interface ScrollSection {
 interface FullPageScrollContextType {
   currentSection: number;
   totalSections: number;
-  scrollToSection: (index: number) => void;
+  scrollToSection: (index: number, opts?: { hash?: boolean }) => void;
   isSnapEnabled: boolean;
   toggleSnap: () => void;
   currentTheme: 'dark' | 'light';
@@ -35,6 +35,64 @@ export const useOptionalFullPageScroll = () => useContext(FullPageScrollContext)
 /** Viewport Y under the fixed header — logo/nav theme must follow this band, not center. */
 const HEADER_THEME_PROBE_Y = 96;
 
+function isNavChapter(section: ScrollSection): boolean {
+  return section.showInNav !== false;
+}
+
+function adjacentNavIndex(
+  sections: ScrollSection[],
+  from: number,
+  direction: 1 | -1
+): number {
+  let index = from + direction;
+  while (index >= 0 && index < sections.length) {
+    if (isNavChapter(sections[index])) return index;
+    index += direction;
+  }
+  return from;
+}
+
+function lastNavIndex(sections: ScrollSection[]): number {
+  for (let index = sections.length - 1; index >= 0; index -= 1) {
+    if (isNavChapter(sections[index])) return index;
+  }
+  return Math.max(0, sections.length - 1);
+}
+
+function cssVarPx(name: string): number {
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  if (!raw) return 0;
+  if (raw.endsWith("rem")) {
+    const rem = parseFloat(raw);
+    const root = parseFloat(getComputedStyle(document.documentElement).fontSize) || 14;
+    return rem * root;
+  }
+  return parseFloat(raw) || 0;
+}
+
+/** Live sticky MegaMenu bottom (utility + nav + spy, or compact scrolled bar). */
+function getStickyNavBottom(): number {
+  const nav = document.querySelector(".mega-menu-container");
+  if (nav instanceof HTMLElement) {
+    const bottom = nav.getBoundingClientRect().bottom;
+    if (bottom > 0) return Math.round(bottom);
+  }
+  const live = cssVarPx("--de-nav-current-bottom");
+  if (live > 0) return live;
+  return cssVarPx("--de-nav-chrome");
+}
+
+/**
+ * Chrome height after a non-hero jump: utility collapses, and on lg+ the spy TOC
+ * hands off to the dock. Predicting this avoids a gap of the previous section.
+ */
+function getDestinationChromePx(): number {
+  const compactNav = cssVarPx("--de-nav-h-scrolled");
+  const spy = window.innerWidth < 1024 ? cssVarPx("--de-spy-h") : 0;
+  if (compactNav > 0) return Math.round(compactNav + spy);
+  return getStickyNavBottom();
+}
+
 interface FullPageScrollProviderProps {
   children: React.ReactNode;
   sections: ScrollSection[];
@@ -56,6 +114,7 @@ export function FullPageScrollProvider({
   const containerRef = useRef<HTMLDivElement>(null);
   const isScrollingRef = useRef(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const navGenRef = useRef(0);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -66,22 +125,86 @@ export function FullPageScrollProvider({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const scrollToSection = useCallback((index: number) => {
+  const scrollToSection = useCallback((index: number, opts?: { hash?: boolean }) => {
     if (index < 0 || index >= sections.length) return;
-    
-    const sectionElement = document.getElementById(sections[index].id);
-    if (sectionElement) {
-      isScrollingRef.current = true;
-      sectionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      setCurrentSection(index);
-      
+
+    const target = sections[index];
+    const sectionElement = document.getElementById(target.id);
+    if (!sectionElement) return;
+
+    isScrollingRef.current = true;
+    const gen = ++navGenRef.current;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const root = document.documentElement;
+    root.classList.add("de-snap-suppress");
+
+    const isHero = index === 0 || target.id === "hero";
+    const chromePx = isHero ? 0 : getDestinationChromePx();
+    const rect = sectionElement.getBoundingClientRect();
+    const targetY = isHero
+      ? 0
+      : Math.max(0, Math.round(window.scrollY + rect.top - chromePx));
+
+    window.scrollTo({ top: targetY, behavior: reduceMotion ? "auto" : "smooth" });
+    setCurrentSection(index);
+
+    if (opts?.hash !== false) {
+      const nextHash = `#${target.id}`;
+      if (window.location.hash !== nextHash) {
+        history.pushState(null, "", nextHash);
+      }
+    }
+
+    const unlock = () => {
+      isScrollingRef.current = false;
+      root.classList.remove("de-snap-suppress");
+    };
+
+    const settle = () => {
+      if (gen !== navGenRef.current) return;
+      if (!isHero) {
+        const drift = Math.round(
+          sectionElement.getBoundingClientRect().top - getStickyNavBottom()
+        );
+        if (Math.abs(drift) > 2) {
+          window.scrollTo({
+            top: Math.max(0, window.scrollY + drift),
+            behavior: "auto",
+          });
+        }
+      }
+      unlock();
+    };
+
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
+    }
+
+    // Header utility collapse is 300ms — settle after that even for reduced motion.
+    const finish = () => {
+      if (gen !== navGenRef.current) return;
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = setTimeout(settle, reduceMotion ? 320 : 80);
+    };
+
+    if (reduceMotion) {
+      finish();
+      return;
+    }
+
+    const onScrollEnd = () => {
+      window.removeEventListener("scrollend", onScrollEnd);
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
+        scrollTimeoutRef.current = null;
       }
-      scrollTimeoutRef.current = setTimeout(() => {
-        isScrollingRef.current = false;
-      }, 800);
-    }
+      finish();
+    };
+    window.addEventListener("scrollend", onScrollEnd, { once: true });
+    scrollTimeoutRef.current = setTimeout(() => {
+      window.removeEventListener("scrollend", onScrollEnd);
+      finish();
+    }, 1200);
   }, [sections]);
 
   const toggleSnap = useCallback(() => {
@@ -190,7 +313,10 @@ export function FullPageScrollProvider({
       }
     };
     apply();
-    return () => root.classList.remove('de-section-snap');
+    return () => {
+      root.classList.remove('de-section-snap');
+      root.classList.remove('de-snap-suppress');
+    };
   }, [isSnapEnabled, isMobile, enableOnMobile]);
 
   useEffect(() => {
@@ -204,22 +330,59 @@ export function FullPageScrollProvider({
       
       if (e.key === 'ArrowDown' || e.key === 'PageDown') {
         e.preventDefault();
-        scrollToSection(Math.min(currentSection + 1, sections.length - 1));
+        scrollToSection(adjacentNavIndex(sections, currentSection, 1));
       } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
         e.preventDefault();
-        scrollToSection(Math.max(currentSection - 1, 0));
+        scrollToSection(adjacentNavIndex(sections, currentSection, -1));
       } else if (e.key === 'Home') {
         e.preventDefault();
         scrollToSection(0);
       } else if (e.key === 'End') {
         e.preventDefault();
-        scrollToSection(sections.length - 1);
+        scrollToSection(lastNavIndex(sections));
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isMobile, enableOnMobile, currentSection, sections.length, scrollToSection]);
+  }, [isMobile, enableOnMobile, currentSection, sections, scrollToSection]);
+
+  useEffect(() => {
+    const onHashNav = () => {
+      const id = window.location.hash.replace("#", "");
+      if (!id) {
+        scrollToSection(0, { hash: false });
+        return;
+      }
+      const idx = sections.findIndex((section) => section.id === id);
+      if (idx >= 0) {
+        scrollToSection(idx, { hash: false });
+      }
+    };
+    window.addEventListener("popstate", onHashNav);
+    window.addEventListener("hashchange", onHashNav);
+    return () => {
+      window.removeEventListener("popstate", onHashNav);
+      window.removeEventListener("hashchange", onHashNav);
+    };
+  }, [sections, scrollToSection]);
+
+  const didInitHashRef = useRef(false);
+  useEffect(() => {
+    if (didInitHashRef.current) return;
+    const id = window.location.hash.replace("#", "");
+    if (!id) {
+      didInitHashRef.current = true;
+      return;
+    }
+    const idx = sections.findIndex((section) => section.id === id);
+    didInitHashRef.current = true;
+    if (idx < 0) return;
+    const timer = window.setTimeout(() => {
+      scrollToSection(idx, { hash: false });
+    }, 100);
+    return () => window.clearTimeout(timer);
+  }, [sections, scrollToSection]);
 
   const effectiveSnapEnabled = isSnapEnabled && (!isMobile || enableOnMobile);
 
@@ -251,6 +414,8 @@ interface ScrollSectionProps {
   className?: string;
   fullHeight?: boolean;
   minHeight?: boolean;
+  /** Nav chapter: fill the viewport and snap under sticky chrome. */
+  chapter?: boolean;
 }
 
 export function ScrollSection({ 
@@ -258,16 +423,13 @@ export function ScrollSection({
   children, 
   className = '',
   fullHeight = false,
-  minHeight = true
+  minHeight = true,
+  chapter = true
 }: ScrollSectionProps) {
   return (
     <section
       id={id}
-      className={`scroll-snap-section ${fullHeight ? 'h-screen' : ''} ${minHeight ? 'min-h-screen' : ''} ${className}`}
-      style={{
-        scrollSnapAlign: 'start',
-        scrollSnapStop: 'normal'
-      }}
+      className={`scroll-snap-section ${chapter ? 'scroll-snap-chapter' : ''} ${fullHeight ? 'h-screen' : ''} ${minHeight && !chapter ? 'min-h-[100svh] lg:min-h-screen' : ''} ${className}`}
       data-testid={`section-${id}`}
     >
       {children}
@@ -278,15 +440,13 @@ export function ScrollSection({
 export function ScrollSectionAuto({ 
   id, 
   children, 
-  className = ''
+  className = '',
+  chapter = false
 }: Omit<ScrollSectionProps, 'fullHeight' | 'minHeight'>) {
   return (
     <section
       id={id}
-      className={`scroll-snap-section-auto ${className}`}
-      style={{
-        scrollSnapAlign: 'start'
-      }}
+      className={`scroll-snap-section-auto ${chapter ? 'scroll-snap-chapter' : ''} ${className}`}
       data-testid={`section-${id}`}
     >
       {children}

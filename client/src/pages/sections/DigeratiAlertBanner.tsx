@@ -50,25 +50,25 @@ export const DigeratiAlertBanner = (): JSX.Element => {
   };
 
   return (
-    <section className="de-dark-well de-chapter-hairline relative overflow-hidden py-12 lg:py-16">
+    <section className="de-dark-well de-chapter-hairline de-field-grain relative overflow-hidden py-8 lg:py-16">
       <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
         <motion.div
-          className="mb-12 text-center md:mb-16"
+          className="mb-8 text-center md:mb-16"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="mb-4 text-3xl font-bold leading-tight text-white md:text-4xl lg:text-5xl">
+          <h2 className="mb-3 text-2xl font-bold leading-tight text-white md:mb-4 md:text-4xl lg:text-5xl">
             We Exist to Protect and Enable Your Business
           </h2>
-          <p className="mx-auto max-w-3xl text-lg leading-relaxed text-white/65 md:text-xl">
+          <p className="mx-auto max-w-3xl text-base font-medium leading-relaxed text-white/80 md:text-xl md:font-normal md:text-white/65">
             If you're like most business leaders, you don't want another vendor — you want a security-first partner who proactively reduces risk, improves uptime, and keeps your team moving.
           </p>
         </motion.div>
 
         <motion.div
-          className="mb-12 grid gap-6 md:grid-cols-3 md:gap-8"
+          className="mb-8 grid grid-cols-1 items-stretch gap-4 md:mb-12 md:grid-cols-3 md:gap-8"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -79,11 +79,11 @@ export const DigeratiAlertBanner = (): JSX.Element => {
               key={feature.title}
               variants={cardVariants}
               data-testid={feature.testId}
-              className="group relative"
+              className="group relative flex h-full"
             >
-              <div className="relative h-full rounded-2xl border border-de-hairline bg-de-raised p-6 transition-colors duration-300 group-hover:border-white/20">
+              <div className="relative flex h-full flex-col rounded-2xl border border-de-hairline bg-de-raised p-6 transition-colors duration-300 group-hover:border-white/20">
                 <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-                  <feature.icon className="h-7 w-7 text-[#A78BFA]" />
+                  <feature.icon className="h-7 w-7 text-[#D3126A]" />
                 </div>
                 <h3 className="mb-3 text-xl font-bold text-white">{feature.title}</h3>
                 <p className="leading-relaxed text-white/60">{feature.description}</p>
@@ -98,7 +98,7 @@ export const DigeratiAlertBanner = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: prefersReducedMotion ? 0 : 0.15 }}
         >
-          <div className="relative overflow-hidden rounded-2xl border border-de-hairline bg-de-raised px-8 py-10 md:px-12 md:py-12">
+          <div className="relative overflow-hidden rounded-2xl border border-de-hairline bg-de-raised px-5 py-7 md:px-12 md:py-12">
             <div className="relative z-10 text-center">
               <h3 className="mb-4 text-2xl font-bold text-white md:text-3xl">
                 Ready to Secure Your Business?
@@ -108,27 +108,27 @@ export const DigeratiAlertBanner = (): JSX.Element => {
               </p>
 
               <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-                <a href="/book">
-                  <Button
+                <Button asChild
                     size="lg"
-                    className="h-14 rounded-xl bg-white px-8 font-semibold text-[#1A202C] shadow-lg transition-all duration-300 hover:bg-white/90 hover:scale-[1.02]"
+                    className="h-14 rounded-xl bg-[#D3126A] px-8 text-base font-semibold text-white shadow-none transition-colors hover:bg-[#e01874]"
                     data-testid="button-schedule-consultation-banner"
                   >
+                  <a href="/book">
                     <ArrowRight className="mr-2 h-5 w-5" />
                     Schedule Consultation
-                  </Button>
-                </a>
-                <a href="tel:480-519-5892">
-                  <Button
+                  </a>
+                </Button>
+                <Button asChild
                     variant="outline"
                     size="lg"
-                    className="h-14 rounded-xl border-2 border-white/25 bg-transparent px-8 font-semibold text-white hover:bg-white/10"
+                    className="h-14 rounded-xl border-2 border-white/25 bg-transparent px-8 text-base font-semibold text-white hover:bg-white/10"
                     data-testid="button-call-banner"
                   >
+                  <a href="tel:+13254809870">
                     <Phone className="mr-2 h-5 w-5" />
-                    Call 480-519-5892
-                  </Button>
-                </a>
+                    Call 325-480-9870
+                  </a>
+                </Button>
               </div>
             </div>
           </div>

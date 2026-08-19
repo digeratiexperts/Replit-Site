@@ -1,7 +1,7 @@
 export const DigeratiFooterSection = (): JSX.Element => {
   return (
     <footer className="bg-gray-900 text-white py-12">
-      <div className="max-w-[100rem] mx-auto px-3 sm:px-4 lg:px-6">
+      <div className="max-w-[var(--de-canvas)] mx-auto px-3 sm:px-4 lg:px-6">
         <div className="grid md:grid-cols-4 gap-8">
           <div>
             <h3 className="text-2xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent mb-4">
@@ -56,8 +56,8 @@ export const DigeratiFooterSection = (): JSX.Element => {
             </p>
             <div className="mt-4 md:mt-0 flex items-center space-x-4">
               <span className="text-gray-400">24/7 Emergency:</span>
-              <a href="tel:4805195892" className="text-violet-400 font-semibold hover:text-violet-300">
-                480-519-5892
+              <a href="tel:+13254809870" className="text-de-accent-ink font-semibold hover:text-violet-300">
+                325-480-9870
               </a>
             </div>
           </div>

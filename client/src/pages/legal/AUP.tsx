@@ -12,7 +12,7 @@ export default function AUP() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
             <div className="flex items-center gap-3 mb-6">
-              <ShieldAlert className="h-12 w-12 text-purple-400" />
+              <ShieldAlert className="h-12 w-12 text-de-accent-ink" />
               <h1 className="text-4xl md:text-5xl font-bold">Acceptable Use Policy</h1>
             </div>
             <p className="text-xl text-gray-300">
@@ -65,7 +65,7 @@ export default function AUP() {
             <h2 className="text-2xl font-bold text-white mb-4 mt-8">Request Full AUP</h2>
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
               <Button 
-                className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
+                className="bg-de-raised text-white hover: hover:to-blue-700"
                 onClick={() => window.location.href = 'mailto:legal@digeratiexperts.com?subject=AUP Request'}
                 data-testid="button-request-aup"
               >
@@ -75,9 +75,9 @@ export default function AUP() {
               <Button 
                 variant="outline"
                 className="border-white/20 text-white hover:bg-white/10"
-                onClick={() => window.location.href = 'tel:480-519-5892'}
+                onClick={() => window.location.href = 'tel:+13254809870'}
               >
-                Call 480-519-5892
+                Call 325-480-9870
               </Button>
             </div>
           </div>

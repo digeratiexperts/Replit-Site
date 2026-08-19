@@ -19,12 +19,12 @@ export default function BookingPage() {
       <div className="max-w-7xl mx-auto px-4 pb-16">
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <ZohoBookingWidget instanceId="page" className="rounded-2xl overflow-hidden border border-violet-500/20 shadow-xl shadow-violet-500/5" />
+            <ZohoBookingWidget instanceId="page" className="overflow-hidden rounded-2xl border border-de-hairline" />
           </div>
 
           <div className="space-y-6">
-            <div className="rounded-2xl border border-violet-500/20 bg-[#0d0d1a] p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 font-['Space_Grotesk']">
+            <div className="rounded-2xl border border-de-hairline bg-de-raised p-6">
+              <h3 className="mb-4 font-heading text-lg font-semibold text-white">
                 What to Expect
               </h3>
               <ul className="space-y-4">
@@ -46,33 +46,33 @@ export default function BookingPage() {
                   },
                 ].map((item, i) => (
                   <li key={i} className="flex gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <item.icon className="w-4 h-4 text-violet-400" />
+                    <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-de-hairline bg-[#0a0a0a]">
+                      <item.icon className="h-4 w-4 text-[#D3126A]" />
                     </div>
                     <div>
-                      <p className="text-white font-medium text-sm">{item.title}</p>
-                      <p className="text-gray-400 text-sm">{item.desc}</p>
+                      <p className="text-sm font-semibold text-white">{item.title}</p>
+                      <p className="text-sm font-medium text-white/70">{item.desc}</p>
                     </div>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="rounded-2xl border border-violet-500/20 bg-[#0d0d1a] p-6">
-              <h3 className="text-lg font-semibold text-white mb-3 font-['Space_Grotesk']">
+            <div className="rounded-2xl border border-de-hairline bg-de-raised p-6">
+              <h3 className="mb-3 font-heading text-lg font-semibold text-white">
                 Prefer to Call?
               </h3>
               <a
-                href="tel:+14805195892"
-                className="flex items-center gap-3 text-violet-400 hover:text-violet-300 transition-colors"
+                href="tel:+13254809870"
+                className="flex items-center gap-3 font-semibold text-white transition-colors hover:text-[#D3126A]"
                 data-testid="link-phone-booking"
               >
-                <Phone className="w-5 h-5" />
-                <span className="text-lg font-medium">(480) 519-5892</span>
+                <Phone className="h-5 w-5 text-[#D3126A]" />
+                <span className="text-lg">325-480-9870</span>
               </a>
             </div>
 
-            <div className="rounded-2xl border border-emerald-500/20 bg-[#0d0d1a] p-6">
+            <div className="rounded-2xl border border-de-hairline bg-de-raised p-6">
               <div className="flex items-center gap-2 mb-3">
                 <Calendar className="w-5 h-5 text-emerald-400" />
                 <h3 className="text-lg font-semibold text-white font-['Space_Grotesk']">

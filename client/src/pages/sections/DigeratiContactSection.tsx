@@ -4,13 +4,21 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { Mail, Phone, MapPin, Linkedin, Facebook, Twitter, Loader2, Clock, Shield } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Facebook, Twitter, Loader2, Clock, Shield, ArrowRight } from "lucide-react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { analytics } from "@/lib/analytics";
+import { CTA } from "@/lib/ctaCopy";
+import { IconWell } from "@/components/visual/IconWell";
+import {
+  COMPANY,
+  COMPANY_SOCIAL,
+  PRIMARY_PHONE,
+  formatAddressOneLine,
+} from "@/data/companyContact";
 import contactBgImage from "@assets/de-section-atmosphere.png";
 
 const contactFormSchema = z.object({
@@ -31,7 +39,47 @@ const contactFormSchema = z.object({
 
 type ContactFormData = z.infer<typeof contactFormSchema>;
 
-export const DigeratiContactSection = (): JSX.Element => {
+const directoryItems = [
+  {
+    icon: Mail,
+    label: "Email",
+    value: COMPANY.email,
+    href: `mailto:${COMPANY.email}`,
+    testId: "contact-email",
+    external: false,
+  },
+  {
+    icon: Phone,
+    label: "Phone",
+    value: PRIMARY_PHONE.display,
+    href: PRIMARY_PHONE.telHref,
+    testId: "contact-phone",
+    external: false,
+  },
+  {
+    icon: MapPin,
+    label: "Office",
+    value: formatAddressOneLine(),
+    href: COMPANY.mapsUrl,
+    testId: "contact-address",
+    external: true,
+  },
+] as const;
+
+const contactSocials = [
+  { ...COMPANY_SOCIAL.linkedin, icon: Linkedin, testId: "social-linkedin" },
+  { ...COMPANY_SOCIAL.facebook, icon: Facebook, testId: "social-facebook" },
+  { ...COMPANY_SOCIAL.twitter, icon: Twitter, testId: "social-twitter" },
+] as const;
+
+const fieldClass =
+  "h-11 bg-white border-[var(--de-paper-hairline)] text-[#1A1228] placeholder:text-black/55 focus-visible:ring-2 focus-visible:ring-[#D3126A]/40 focus-visible:border-[#D3126A]";
+
+export const DigeratiContactSection = ({
+  headingAs = "h2",
+}: {
+  headingAs?: "h1" | "h2";
+} = {}): JSX.Element => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const prefersReducedMotion = useReducedMotion();
@@ -50,27 +98,27 @@ export const DigeratiContactSection = (): JSX.Element => {
 
   const handleSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
-    
+
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      
+
       const result = await response.json();
-      
+
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to send message');
+        throw new Error(result.error || "Failed to send message");
       }
-      
+
       analytics.contactFormSubmitted(data.service || "general");
       toast({
         title: "Message Sent Successfully!",
         description: "We'll get back to you within 24 hours.",
         variant: "default",
       });
-      
+
       form.reset();
     } catch (error: any) {
       toast({
@@ -83,267 +131,295 @@ export const DigeratiContactSection = (): JSX.Element => {
     }
   };
 
-  const contactInfo = [
-    { icon: Mail, label: "info@digeratiexperts.com", href: "mailto:info@digeratiexperts.com" },
-    { icon: Phone, label: "480-519-5892", href: "tel:480-519-5892" },
-    { icon: MapPin, label: "3165 S Alma School Rd Suite 29, Chandler, AZ 85248", href: "#" },
-  ];
-
   return (
-    <section 
-      id="contact" 
-      className="de-dark-well de-chapter-hairline relative overflow-hidden py-8 lg:py-10"
+    <section
+      className="de-dark-well de-chapter-hairline de-field-grain relative overflow-hidden py-16 lg:py-24"
+      data-testid="homepage-contact-chapter"
     >
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <img src={contactBgImage} alt="" loading="lazy" className="absolute top-0 left-0 w-full h-auto opacity-[0.15]" />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <img
+          src={contactBgImage}
+          alt=""
+          loading="lazy"
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover object-center opacity-[0.08]"
+        />
       </div>
-      {/* Subtle accent */}
-      <div 
-        className="absolute top-0 right-0 w-[500px] h-[500px] pointer-events-none"
-        style={{ background: "radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.08) 0%, transparent 50%)" }}
-      />
 
-      <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* Left column - Info */}
+      <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
+        <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-12">
           <motion.div
-            initial={prefersReducedMotion ? {} : { opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            className="lg:col-span-6"
+            initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.45 }}
           >
-            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold leading-tight mb-3 text-white">
-              Ready to Secure Your Business?
-            </h2>
-            <p className="text-sm text-gray-300 mb-4 leading-relaxed">
-              Located in the heart of Chandler, we're your local cybersecurity experts. 
-              Whether you need immediate help or want to explore our services, we're here for you.
+            <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#F04C97]">
+              Contact
+            </p>
+            {headingAs === "h1" ? (
+              <h1 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
+                Ready to Secure Your Business?
+              </h1>
+            ) : (
+              <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
+                Ready to Secure Your Business?
+              </h2>
+            )}
+            <p className="mb-8 max-w-xl text-base leading-relaxed text-white/65 md:text-lg">
+              Located in the heart of Chandler, we&apos;re your local cybersecurity experts.
+              Whether you need immediate help or want to explore our services, we&apos;re here for you.
             </p>
 
-            {/* Contact info */}
-            <div className="space-y-2 mb-4">
-              {contactInfo.map((item) => (
-                <a 
-                  key={item.label}
+            <div className="mb-10 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+              <a
+                href="/book"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#D3126A] px-6 py-2.5 text-base font-semibold text-white transition-colors duration-200 hover:bg-[#e01874] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
+                data-testid="contact-cta-assessment"
+              >
+                {CTA.primary}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </a>
+              <a
+                href={PRIMARY_PHONE.telHref}
+                className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/20 px-6 py-2.5 text-base font-semibold text-white transition-colors hover:border-white/40 hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-de-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
+                data-testid="contact-cta-call"
+              >
+                Call {PRIMARY_PHONE.display}
+              </a>
+            </div>
+
+            <div className="grid border-t border-de-hairline md:grid-cols-2">
+              {directoryItems.map((item) => (
+                <a
+                  key={item.testId}
                   href={item.href}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10 hover:border-violet-500/30 hover:bg-white/[0.05] transition-all duration-300 group"
+                  {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  data-testid={item.testId}
+                  className={`group flex items-start gap-4 border-b border-de-hairline py-4 transition-colors hover:bg-white/[0.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-de-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)] ${
+                    item.testId === "contact-address" ? "md:col-span-2" : ""
+                  } ${item.testId === "contact-phone" ? "md:border-l md:pl-4" : ""}`}
                 >
-                  <div className="w-9 h-9 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center">
-                    <item.icon className="h-4 w-4 text-violet-400" />
-                  </div>
-                  <span className="text-sm text-white/70 group-hover:text-white transition-colors">{item.label}</span>
+                  <IconWell icon={item.icon} size="sm" surface="dark" />
+                  <span className="min-w-0 pt-1">
+                    <span className="block text-base font-semibold uppercase tracking-[0.16em] text-white/50">
+                      {item.label}
+                    </span>
+                    <span className="mt-1 block break-words text-base text-white/80 transition-colors group-hover:text-white md:text-lg">
+                      {item.value}
+                    </span>
+                  </span>
                 </a>
               ))}
             </div>
 
-            {/* Office Hours */}
-            <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10">
-              <div className="flex items-center gap-2 mb-2">
-                <Clock className="h-4 w-4 text-violet-400" />
+            <div className="mt-8" data-testid="contact-office-hours">
+              <div className="mb-3 flex items-center gap-3">
+                <IconWell icon={Clock} size="sm" surface="dark" />
                 <h3 className="text-base font-semibold text-white">Office Hours</h3>
               </div>
-              <div className="space-y-1 text-sm text-white/50">
-                <p>Monday - Friday: 7:00 AM - 6:00 PM MST</p>
-                <p>Saturday & Sunday: Emergency Support Only</p>
-                <p className="flex items-center gap-2 text-emerald-500 font-semibold mt-2">
-                  <Shield className="h-3 w-3" />
-                  24/7 Security Operations Center Always Active
-                </p>
-              </div>
+              <dl className="grid grid-cols-1 gap-2 text-base font-medium text-white/80 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-x-6 md:text-lg md:font-normal md:text-white/60">
+                <dt>Monday - Friday</dt>
+                <dd className="text-white/80">7:00 AM - 6:00 PM MST</dd>
+                <dt>Saturday &amp; Sunday</dt>
+                <dd className="text-white/80">Emergency Support Only</dd>
+              </dl>
+              <p className="mt-4 flex items-start gap-2 text-base font-medium text-emerald-400">
+                <Shield className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+                <span>24/7 Security Operations Center Always Active</span>
+              </p>
             </div>
 
-            {/* Social links - inline */}
-            <div className="flex items-center gap-3 mt-4">
-              <span className="text-xs text-gray-500">Follow us:</span>
-              {[
-                { icon: Linkedin, testId: "social-linkedin", href: "https://www.linkedin.com/company/digerati-experts" },
-                { icon: Facebook, testId: "social-facebook", href: "https://www.facebook.com/digeratiexperts" },
-                { icon: Twitter, testId: "social-twitter", href: "https://twitter.com/digeratiexperts" },
-              ].map((social) => (
-                <a 
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <span className="text-base text-white/55">Follow us:</span>
+              {contactSocials.map((social) => (
+                <a
                   key={social.testId}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
                   data-testid={social.testId}
-                  className="w-8 h-8 rounded-lg bg-white/[0.03] border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-violet-500/30 transition-all duration-300"
+                  aria-label={social.name}
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-de-hairline bg-de-raised text-white/60 transition-colors hover:border-white/25 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-de-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
                 >
-                  <social.icon className="h-4 w-4" />
+                  <social.icon className="h-4 w-4" aria-hidden="true" />
                 </a>
               ))}
             </div>
           </motion.div>
 
-          {/* Right column - Form */}
           <motion.div
-            initial={prefersReducedMotion ? {} : { opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            className="lg:col-span-6"
+            initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.45, delay: prefersReducedMotion ? 0 : 0.08 }}
           >
-            <div className="relative">
-              <div className="absolute -inset-1 bg-violet-500/5 blur-xl rounded-2xl" />
-              <div className="relative backdrop-blur-xl bg-white border border-gray-200 rounded-2xl p-4 md:p-5 shadow-xl">
-                <h3 className="text-lg font-bold text-gray-900 mb-0.5">Get in Touch</h3>
-                <p className="text-xs text-gray-500 mb-3">Fill out the form for a free consultation</p>
+            <div className="de-paper-lift-lg rounded-2xl p-6 md:p-8">
+              <h3 className="font-heading text-xl font-semibold tracking-[-0.02em] text-[#1A1228]">
+                Get in Touch
+              </h3>
+              <p className="mb-6 mt-1 text-base text-black/55">
+                Fill out the form for a free consultation
+              </p>
 
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-2">
-                    <FormField
-                      control={form.control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm text-gray-700 font-medium">Your Name *</FormLabel>
-                          <FormControl>
-                            <Input 
-                              placeholder="John Smith" 
-                              data-testid="input-contact-name"
-                              className="h-10 bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus-visible:ring-violet-500 focus-visible:border-violet-400"
-                              disabled={isSubmitting}
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-sm text-gray-700 font-medium">Business Email *</FormLabel>
-                            <FormControl>
-                              <Input 
-                                type="email" 
-                                placeholder="john@company.com" 
-                                data-testid="input-contact-email"
-                                className="h-10 bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus-visible:ring-violet-500 focus-visible:border-violet-400"
-                                disabled={isSubmitting}
-                                {...field} 
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="phone"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-sm text-gray-700 font-medium">Phone Number *</FormLabel>
-                            <FormControl>
-                              <Input 
-                                type="tel" 
-                                placeholder="(480) 000-0000" 
-                                data-testid="input-contact-phone"
-                                className="h-10 bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus-visible:ring-violet-500 focus-visible:border-violet-400"
-                                disabled={isSubmitting}
-                                {...field} 
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    
-                    <FormField
-                      control={form.control}
-                      name="company"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm text-gray-700 font-medium">Company Name</FormLabel>
-                          <FormControl>
-                            <Input 
-                              placeholder="Your Company Inc." 
-                              data-testid="input-contact-company"
-                              className="h-10 bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus-visible:ring-violet-500 focus-visible:border-violet-400"
-                              disabled={isSubmitting}
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name="service"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm text-gray-700 font-medium">Service Interested In</FormLabel>
-                          <Select 
-                            onValueChange={field.onChange} 
-                            defaultValue={field.value}
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem required>
+                        <FormLabel className="text-base font-medium text-[#1A1228]">Your Name *</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="John Smith"
+                            data-testid="input-contact-name"
+                            className={fieldClass}
                             disabled={isSubmitting}
-                          >
-                            <FormControl>
-                              <SelectTrigger 
-                                className="h-10 bg-gray-50 border-gray-200 text-gray-900 [&>span]:text-gray-400 focus:ring-violet-500"
-                                data-testid="select-contact-service"
-                              >
-                                <SelectValue placeholder="Select a service" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent className="bg-white border-gray-200">
-                              <SelectItem value="managed-security" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900">Managed Security Services</SelectItem>
-                              <SelectItem value="managed-it" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900">Managed IT Services</SelectItem>
-                              <SelectItem value="compliance" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900">Compliance & Governance</SelectItem>
-                              <SelectItem value="incident-response" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900">Incident Response</SelectItem>
-                              <SelectItem value="assessment" className="text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900">Security Assessment</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="grid gap-4 sm:grid-cols-2">
                     <FormField
                       control={form.control}
-                      name="message"
+                      name="email"
                       render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm text-gray-700 font-medium">Message</FormLabel>
+                        <FormItem required>
+                          <FormLabel className="text-base font-medium text-[#1A1228]">Business Email *</FormLabel>
                           <FormControl>
-                            <Textarea 
-                              placeholder="Tell us about your security needs..." 
-                              rows={3} 
-                              data-testid="textarea-contact-message"
-                              className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus-visible:ring-violet-500 focus-visible:border-violet-400 resize-none"
+                            <Input
+                              type="email"
+                              placeholder="john@company.com"
+                              data-testid="input-contact-email"
+                              className={fieldClass}
                               disabled={isSubmitting}
-                              {...field} 
+                              {...field}
                             />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                    
-                    <Button 
-                      className="w-full h-10 text-sm font-bold bg-violet-600 hover:bg-violet-700 border-0 shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all duration-300" 
-                      data-testid="button-send-message"
-                      type="submit"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                          Sending...
-                        </>
-                      ) : (
-                        "Send Message"
+
+                    <FormField
+                      control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem required>
+                          <FormLabel className="text-base font-medium text-[#1A1228]">Phone Number *</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="tel"
+                              placeholder="(480) 000-0000"
+                              data-testid="input-contact-phone"
+                              className={fieldClass}
+                              disabled={isSubmitting}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
                       )}
-                    </Button>
-                  </form>
-                </Form>
-              </div>
+                    />
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name="company"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-base font-medium text-[#1A1228]">Company Name</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Your Company Inc."
+                            data-testid="input-contact-company"
+                            className={fieldClass}
+                            disabled={isSubmitting}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="service"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-base font-medium text-[#1A1228]">Service Interested In</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          disabled={isSubmitting}
+                        >
+                          <FormControl>
+                            <SelectTrigger
+                              className="h-11 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] focus:ring-2 focus:ring-[#D3126A]/40 data-[placeholder]:text-black/55"
+                              data-testid="select-contact-service"
+                            >
+                              <SelectValue placeholder="Select a service" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className="border-[var(--de-paper-hairline)] bg-white">
+                            <SelectItem value="managed-security" className="text-base text-[#1A1228] focus:bg-black/5 focus:text-[#1A1228]">Managed Security Services</SelectItem>
+                            <SelectItem value="managed-it" className="text-base text-[#1A1228] focus:bg-black/5 focus:text-[#1A1228]">Managed IT Services</SelectItem>
+                            <SelectItem value="compliance" className="text-base text-[#1A1228] focus:bg-black/5 focus:text-[#1A1228]">Compliance & Governance</SelectItem>
+                            <SelectItem value="incident-response" className="text-base text-[#1A1228] focus:bg-black/5 focus:text-[#1A1228]">Incident Response</SelectItem>
+                            <SelectItem value="assessment" className="text-base text-[#1A1228] focus:bg-black/5 focus:text-[#1A1228]">Security Assessment</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="message"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-base font-medium text-[#1A1228]">Message</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Tell us about your security needs..."
+                            rows={4}
+                            data-testid="textarea-contact-message"
+                            className="resize-none border-[var(--de-paper-hairline)] bg-white text-[#1A1228] placeholder:text-black/55 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
+                            disabled={isSubmitting}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <Button
+                    className="h-11 w-full text-base font-semibold bg-[#1A1228] text-white transition-colors hover:bg-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2"
+                    data-testid="button-send-message"
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      "Send Message"
+                    )}
+                  </Button>
+                </form>
+              </Form>
             </div>
           </motion.div>
         </div>

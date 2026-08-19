@@ -13,7 +13,7 @@
     "test:watch": "vitest",
     "smoke:public": "node scripts/public-route-smoke.mjs",
     "db:push": "drizzle-kit push",
-    "test:advisor": "tsx --test server/services/msp-advisor/**/*.test.ts",
+    "test:advisor": "tsx --test server/services/msp-advisor/*.test.ts",
     "eval:advisor": "tsx server/services/msp-advisor/eval/score.ts"
   },
   "dependencies": {
@@ -132,6 +132,7 @@
     "autoprefixer": "^10.4.20",
     "drizzle-kit": "^0.31.4",
     "esbuild": "^0.25.0",
+    "playwright": "^1.62.1",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.20.5",

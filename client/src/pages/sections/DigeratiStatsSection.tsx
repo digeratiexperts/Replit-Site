@@ -2,9 +2,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "wouter";
 import { AlertTriangle, ArrowRight, DollarSign, MapPin, Shield } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { VisualStage } from "@/components/visual/VisualStage";
 import { IconWell } from "@/components/visual/IconWell";
-import { homepageSectionAccents } from "@/lib/visualAssets";
 import {
   getHomepageCyberFacts,
   type CyberAwarenessFact,
@@ -35,25 +33,25 @@ function FactCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.45, delay: index * 0.06 }}
-      className="h-full rounded-2xl border border-de-hairline bg-de-raised p-6 md:p-7"
+      className="de-style-box-inset h-full rounded-2xl p-6 md:p-7"
       data-testid={`homepage-stat-${index}`}
     >
       <IconWell icon={Icon} size="sm" surface="dark" />
-      <p className="mt-5 font-mono text-3xl font-semibold tracking-tight text-violet-300 md:text-4xl">
+      <p className="mt-5 font-mono text-3xl font-semibold tracking-tight text-white md:text-4xl">
         {fact.metric}
       </p>
-      <p className="mt-2 text-sm leading-relaxed text-white/75 md:text-base">{fact.statement}</p>
+      <p className="mt-2 text-base leading-relaxed text-white/75 md:text-lg">{fact.statement}</p>
       {fact.sourceUrl ? (
         <a
           href={fact.sourceUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 inline-block text-sm text-white/45 hover:text-white/70"
+          className="mt-4 inline-block border-t border-de-hairline pt-3 text-base font-medium text-white/70 hover:text-white"
         >
           {sourceLine}
         </a>
       ) : (
-        <p className="mt-2 text-sm text-white/45">{sourceLine}</p>
+        <p className="mt-4 border-t border-de-hairline pt-3 text-base font-medium text-white/70">{sourceLine}</p>
       )}
     </motion.div>
   );
@@ -64,41 +62,26 @@ export const DigeratiStatsSection = (): JSX.Element => {
   const facts = getHomepageCyberFacts();
 
   return (
-    <section className="de-dark-chapter de-chapter-hairline relative py-16 lg:py-24">
-      <div className="relative mx-auto max-w-[100rem] px-3 sm:px-4 lg:px-6">
-        <div className="mb-10 grid items-center gap-8 lg:mb-12 lg:grid-cols-12 lg:gap-10">
-          <motion.div
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.45 }}
-            className="lg:col-span-7"
-          >
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF477F]">
-              Why Digerati Experts
-            </p>
-            <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
-              The Threats Are Real
-            </h2>
-            <p className="max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">
-              Don&apos;t become a statistic. These numbers show why proactive security matters —
-              and why endpoint, identity, and recovery discipline have to be owned, not assumed.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex justify-center lg:col-span-5 lg:justify-end"
-          >
-            <VisualStage
-              still={homepageSectionAccents.statsThreats}
-              layout="spot"
-              alt="Graphite telemetry sculpture with smoked-glass plates and violet-lit nodes"
-            />
-          </motion.div>
-        </div>
+    <section className="de-dark-well de-field-grain relative py-6 lg:py-8">
+      <div className="de-style-box relative mx-3 px-4 py-8 sm:mx-4 sm:px-8 md:py-16 lg:mx-6 lg:px-10 lg:py-20">
+        <motion.div
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.45 }}
+          className="mb-10 max-w-3xl lg:mb-12"
+        >
+          <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-de-magenta-ink">
+            Why Digerati Experts
+          </p>
+          <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
+            The Threats Are Real
+          </h2>
+          <p className="max-w-2xl text-base font-medium leading-relaxed text-white/80 md:text-lg md:font-normal md:text-white/65">
+            Don&apos;t become a statistic. These numbers show why proactive security matters —
+            and why endpoint, identity, and recovery discipline have to be owned, not assumed.
+          </p>
+        </motion.div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
           {facts.map((fact, index) => (
@@ -113,7 +96,7 @@ export const DigeratiStatsSection = (): JSX.Element => {
 
         <p className="mt-6">
           <Link href="/resources/cyber-facts">
-            <span className="inline-flex items-center gap-1 text-sm font-semibold text-[#FF477F] hover:text-pink-300">
+            <span className="inline-flex items-center gap-1 text-base font-semibold text-de-magenta-ink hover:text-[#f0187a]">
               Full sourced facts
               <ArrowRight className="h-3.5 w-3.5" />
             </span>

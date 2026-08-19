@@ -4,22 +4,26 @@ import * as React from "react";
 import { cn } from "../../lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-[0.98]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-[0.98]",
   {
     variants: {
       variant: {
         default:
           "bg-primary text-primary-foreground shadow-md hover:bg-primary/90 hover:shadow-lg hover:-translate-y-0.5",
         brand:
-          "bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 text-white border border-pink-300/30 shadow-lg shadow-pink-500/30 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 hover:shadow-xl hover:shadow-pink-500/40 hover:-translate-y-0.5 focus-visible:ring-pink-400",
+          "bg-de-magenta text-white border-0 shadow-none hover:bg-de-magenta-hover hover:shadow-none focus-visible:ring-de-magenta",
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 hover:shadow-md",
+        // Transparent rather than bg-background: the filled variant is white,
+        // so every outline button a dark page styled with text-white rendered
+        // white-on-white and disappeared. Transparent works on both fields
+        // because the label keeps the surrounding text colour.
         outline:
-          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground hover:border-pink-400/50",
+          "border border-input bg-transparent hover:border-[#D3126A] hover:bg-[#D3126A]/10",
         secondary:
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 hover:shadow-md",
         ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline hover:text-pink-500",
+        link: "text-de-magenta-ink underline-offset-4 hover:underline hover:text-de-magenta-ink/90",
       },
       size: {
         default: "h-9 px-4 py-2",

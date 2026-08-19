@@ -298,7 +298,7 @@ export default function PortalOrders() {
                           <td className="py-4 px-3 max-w-[220px]">
                             <p className="truncate font-medium">{order.title || order.billingName || "—"}</p>
                             {order.hubStatus && (
-                              <p className="text-[11px] text-muted-foreground truncate">
+                              <p className="text-sm text-muted-foreground truncate">
                                 Hub: {order.hubStatus}
                               </p>
                             )}
@@ -346,11 +346,11 @@ export default function PortalOrders() {
                 <p className="text-gray-500 dark:text-gray-400 mb-2">No orders found</p>
                 <p className="text-sm text-gray-400 dark:text-gray-500">
                   {statusFilter !== "all" || sourceFilter !== "all" ? "Try a different filter or " : ""}
-                  <Link href="/store" className="text-[#5034ff] hover:underline">
+                  <Link href="/store" className="text-[#D3126A] hover:underline">
                     browse our store
                   </Link>
                   {" · "}
-                  <Link href="/portal/contracts" className="text-[#5034ff] hover:underline">
+                  <Link href="/portal/contracts" className="text-[#D3126A] hover:underline">
                     contracts
                   </Link>
                 </p>

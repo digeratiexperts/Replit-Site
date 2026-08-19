@@ -82,9 +82,10 @@ function unconfiguredPayload(
   mapsCid?: string,
 ): GoogleReviewsPayload {
   const hasCid = Boolean(mapsCid && mapsCid.trim());
+  // Public API message — never leak repo paths or operator runbooks into the browser.
   const message = hasCid
-    ? "GOOGLE_MAPS_CID is set, but live reviews still need a Places API place_id (ChIJ…) that Place Details accepts. Service-area Maps feature IDs / CIDs alone cannot fetch reviews. Open GBP → See your profile / Ask for reviews and paste a URL that contains placeid=ChIJ… or query_place_id=ChIJ…. See docs/GOOGLE-REVIEWS.md."
-    : "Connect Google Business Place ID and Places API key to load live reviews. See docs/GOOGLE-REVIEWS.md.";
+    ? "Google Maps listing is linked, but live reviews need a Place Details–valid place ID. Reviews stay hidden until configured."
+    : "Google reviews are not configured yet. Reviews stay hidden until a valid Place ID and Places API key are set.";
   return {
     status: "unconfigured",
     configured: false,
@@ -132,7 +133,9 @@ async function fetchLegacyPlaceDetails(
   url.searchParams.set("reviews_sort", "newest");
   url.searchParams.set("key", apiKey);
 
-  const res = await fetch(url.toString());
+  const res = await fetch(url.toString(), {
+    signal: AbortSignal.timeout(8000),
+  });
   if (!res.ok) {
     throw new Error(`Places API HTTP ${res.status}`);
   }
@@ -198,12 +201,14 @@ export async function getGoogleReviews(options?: {
       lower.includes("not_found") ||
       lower.includes("places status not_found")
     ) {
+      console.error(
+        "[googleReviews] Places API rejected GOOGLE_PLACE_ID (NOT_FOUND). " +
+          "Re-copy placeid=ChIJ… from GBP. " +
+          (mapsCid ? `GOOGLE_MAPS_CID=${mapsCid}. ` : "") +
+          "See docs/GOOGLE-REVIEWS.md.",
+      );
       message =
-        "Places API rejected GOOGLE_PLACE_ID (NOT_FOUND / no longer valid). " +
-        "Maps preview ChIJ / CID values for this service-area listing are not accepted by Place Details. " +
-        "Re-copy placeid=ChIJ… from GBP → See your profile or Ask for reviews. " +
-        (mapsCid ? `Recorded GOOGLE_MAPS_CID=${mapsCid}. ` : "") +
-        "See docs/GOOGLE-REVIEWS.md.";
+        "Google reviews could not be loaded for the configured listing. Try again later or open our Google Maps profile.";
     }
     console.error("[googleReviews]", message);
     return {

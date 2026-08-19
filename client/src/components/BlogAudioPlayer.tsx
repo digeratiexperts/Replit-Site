@@ -391,7 +391,7 @@ export function BlogAudioPlayer({
       className="flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 backdrop-blur-sm"
       data-testid="blog-audio-player"
     >
-      <Volume2 className="h-4 w-4 text-violet-300" />
+      <Volume2 className="h-4 w-4 text-de-accent-ink" />
       <span
         className="text-xs text-white/60 hidden sm:inline"
         title={
@@ -405,7 +405,7 @@ export function BlogAudioPlayer({
 
       <Button
         size="sm"
-        className="h-7 w-7 rounded-full bg-violet-600 hover:bg-violet-500 p-0 disabled:opacity-50"
+        className="h-7 w-7 rounded-full bg-de-accent hover:bg-de-accent p-0 disabled:opacity-50"
         onClick={togglePlay}
         disabled={loading}
         data-testid="button-audio-play"
@@ -434,11 +434,11 @@ export function BlogAudioPlayer({
       <div className="hidden sm:flex items-center gap-1.5">
         <div className="h-1 w-20 rounded-full bg-white/10 overflow-hidden">
           <div
-            className="h-full bg-violet-400 rounded-full transition-all duration-300"
+            className="h-full bg-de-accent rounded-full transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>
-        <span className="text-[10px] text-white/40 tabular-nums w-8 text-right">
+        <span className="text-xs text-white/55 tabular-nums w-8 text-right">
           {progress}%
         </span>
       </div>
@@ -454,7 +454,7 @@ export function BlogAudioPlayer({
             stop();
           }
         }}
-        className="hidden sm:block bg-transparent text-[11px] text-white/50 border-none outline-none cursor-pointer hover:text-white/70"
+        className="hidden sm:block bg-transparent text-sm text-white/50 border-none outline-none cursor-pointer hover:text-white/70"
         data-testid="select-audio-rate"
         title="Playback speed"
         aria-label="Playback speed"
@@ -486,7 +486,7 @@ export function BlogAudioPlayer({
             setMode("openai");
           }
         }}
-        className="hidden md:block bg-transparent text-[11px] text-white/50 border-none outline-none cursor-pointer hover:text-white/70 max-w-[120px]"
+        className="hidden md:block bg-transparent text-sm text-white/50 border-none outline-none cursor-pointer hover:text-white/70 max-w-[120px]"
         data-testid="select-audio-voice"
         title={
           mode === "browser"
@@ -506,7 +506,7 @@ export function BlogAudioPlayer({
       </select>
 
       {error && !isPlaying && !isPaused && (
-        <span className="text-[10px] text-amber-300/90 hidden sm:inline">
+        <span className="text-xs text-amber-300/90 hidden sm:inline">
           {error}
         </span>
       )}

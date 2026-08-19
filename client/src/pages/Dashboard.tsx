@@ -178,14 +178,14 @@ export function Dashboard() {
       <aside className="w-64 bg-white border-r border-slate-200 flex flex-col">
         <div className="p-4 border-b border-slate-200">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold text-de-accent-ink">
               TaskFlow
             </h1>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">
                   <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-indigo-100 text-indigo-600">
+                    <AvatarFallback className="bg-de-paper-raised text-de-accent">
                       {user?.username?.[0]?.toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
@@ -293,7 +293,7 @@ export function Dashboard() {
                 onClick={() => setCurrentProjectId(project.id)}
                 className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
                   currentProjectId === project.id
-                    ? "bg-indigo-50 text-indigo-600 font-medium"
+                    ? "bg-de-paper-raised text-de-accent font-medium"
                     : "text-slate-700 hover:bg-slate-100"
                 }`}
               >

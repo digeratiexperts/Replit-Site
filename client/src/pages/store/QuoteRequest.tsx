@@ -166,7 +166,7 @@ const QuoteRequest = () => {
               transition={{ duration: 0.5 }}
               className="bg-white/5 border border-white/10 rounded-xl p-12"
             >
-              <Package className="w-16 h-16 text-white/40 mx-auto mb-6" />
+              <Package className="w-16 h-16 text-white/55 mx-auto mb-6" />
               <h1 className="text-2xl font-bold text-white mb-4" data-testid="text-empty-cart-title">
                 No Items to Quote
               </h1>
@@ -174,7 +174,7 @@ const QuoteRequest = () => {
                 Add items to your cart before requesting a quote.
               </p>
               <Link href="/store">
-                <Button className="bg-violet-600 hover:bg-violet-500 text-white" data-testid="button-browse-store">
+                <Button className="bg-de-accent hover:bg-de-accent text-white" data-testid="button-browse-store">
                   Browse Store
                 </Button>
               </Link>
@@ -229,7 +229,7 @@ const QuoteRequest = () => {
               <div className="lg:col-span-3 space-y-8">
                 <div className="bg-white/5 border border-white/10 rounded-xl p-6" data-testid="section-contact-info">
                   <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-violet-400" />
+                    <FileText className="w-5 h-5 text-de-accent-ink" />
                     Contact Information
                   </h2>
 
@@ -242,8 +242,10 @@ const QuoteRequest = () => {
                         <Input
                           id="name"
                           {...register("name")}
+                          required
+                          aria-required={true}
                           placeholder="John Smith"
-                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-violet-500"
+                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-de-muted-soft focus:border-de-hairline"
                           data-testid="input-name"
                         />
                         {errors.name && (
@@ -260,8 +262,10 @@ const QuoteRequest = () => {
                           id="email"
                           type="email"
                           {...register("email")}
+                          required
+                          aria-required={true}
                           placeholder="john@company.com"
-                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-violet-500"
+                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-de-muted-soft focus:border-de-hairline"
                           data-testid="input-email"
                         />
                         {errors.email && (
@@ -282,7 +286,7 @@ const QuoteRequest = () => {
                           type="tel"
                           {...register("phone")}
                           placeholder="(555) 123-4567"
-                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-violet-500"
+                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-white/55 focus:border-de-hairline"
                           data-testid="input-phone"
                         />
                       </div>
@@ -294,7 +298,7 @@ const QuoteRequest = () => {
                           id="company"
                           {...register("company")}
                           placeholder="Acme Corp"
-                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-violet-500"
+                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-white/55 focus:border-de-hairline"
                           data-testid="input-company"
                         />
                       </div>
@@ -309,33 +313,33 @@ const QuoteRequest = () => {
                         {...register("message")}
                         placeholder="Tell us about your specific requirements or questions..."
                         rows={4}
-                        className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-violet-500 resize-none"
+                        className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-white/55 focus:border-de-hairline resize-none"
                         data-testid="input-message"
                       />
                     </div>
                   </form>
                 </div>
 
-                <div className="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6" data-testid="section-quote-info">
+                <div className="bg-de-raised border border-de-hairline rounded-xl p-6" data-testid="section-quote-info">
                   <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-violet-400" />
+                    <CheckCircle className="w-5 h-5 text-de-accent-ink" />
                     What to Expect
                   </h3>
                   <ul className="space-y-2 text-white/70 text-sm">
                     <li className="flex items-start gap-2">
-                      <span className="text-violet-400">•</span>
+                      <span className="text-de-accent-ink">•</span>
                       A Digerati Experts consultant will review your request
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-violet-400">•</span>
+                      <span className="text-de-accent-ink">•</span>
                       You'll receive a detailed quote within 1 business day
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-violet-400">•</span>
+                      <span className="text-de-accent-ink">•</span>
                       Custom pricing based on your specific needs
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-violet-400">•</span>
+                      <span className="text-de-accent-ink">•</span>
                       No obligation - review the quote at your convenience
                     </li>
                   </ul>
@@ -345,7 +349,7 @@ const QuoteRequest = () => {
               <div className="lg:col-span-2">
                 <div className="bg-white/5 border border-white/10 rounded-xl p-6 sticky top-28" data-testid="section-items-summary">
                   <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                    <MessageSquare className="w-5 h-5 text-violet-400" />
+                    <MessageSquare className="w-5 h-5 text-de-accent-ink" />
                     Items to Quote
                   </h2>
 
@@ -408,7 +412,7 @@ const QuoteRequest = () => {
                   <div className="border-t border-white/20 pt-4 space-y-2 mb-6">
                     <div className="flex justify-between text-lg font-semibold">
                       <span className="text-white">Estimated Total</span>
-                      <span className="text-violet-400" data-testid="text-estimated-total">
+                      <span className="text-de-accent-ink" data-testid="text-estimated-total">
                         {formatCurrency(getCartTotal())}
                       </span>
                     </div>
@@ -421,7 +425,7 @@ const QuoteRequest = () => {
                     type="submit"
                     form="quote-request-form"
                     disabled={isSubmitting}
-                    className="w-full bg-violet-600 hover:bg-violet-500 text-white py-6 text-lg font-semibold"
+                    className="w-full bg-de-accent hover:bg-de-accent text-white py-6 text-lg font-semibold"
                     data-testid="button-submit-quote"
                   >
                     {isSubmitting ? (

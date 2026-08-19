@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { ArrowRight, Calendar, ClipboardList, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { openMspAdvisor } from "@/lib/openMspAdvisor";
+import { CTA } from "@/lib/ctaCopy";
 
 interface StoreAssessmentPanelProps {
   variant?: "sticky" | "inline";
@@ -22,8 +23,8 @@ export function StoreAssessmentPanel({
   return (
     <aside className={shell} data-testid="store-assessment-panel">
       <div className="rounded-xl border border-white/10 bg-[#141414] p-5">
-        <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg border border-[#5034ff]/30 bg-[#5034ff]/15">
-          <ClipboardList className="h-5 w-5 text-[#a78bfa]" />
+        <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg border border-de-accent/30 bg-de-accent/15">
+          <ClipboardList className="h-5 w-5 text-de-accent-ink" />
         </div>
         <h3 className="text-lg font-semibold text-white">Not sure where to start?</h3>
         <p className="mt-2 text-sm leading-relaxed text-white/55">
@@ -31,15 +32,16 @@ export function StoreAssessmentPanel({
           to catalog items — no obligation.
         </p>
         <div className="mt-4 flex flex-col gap-2">
-          <a href="/book">
-            <Button
-              className="h-10 w-full bg-[#5034ff] text-white hover:bg-[#6548ff]"
+          <Button asChild
+              variant="brand"
+              className="h-10 w-full"
               data-testid="button-assessment-book"
             >
-              <Calendar className="mr-2 h-4 w-4" />
-              Book assessment
-            </Button>
-          </a>
+                  <a href="/book">
+                    <Calendar className="mr-2 h-4 w-4" />
+              {CTA.primaryShort}
+                  </a>
+                </Button>
           {onFilterAssessments && (
             <Button
               variant="outline"
@@ -64,10 +66,10 @@ export function StoreAssessmentPanel({
             Build my solution
           </Button>
         </div>
-        <p className="mt-3 text-xs text-white/40">
+        <p className="mt-3 text-xs text-white/55">
           Or call{" "}
-          <a href="tel:480-519-5892" className="text-[#a78bfa] hover:underline">
-            480-519-5892
+          <a href="tel:+13254809870" className="text-de-accent-ink hover:underline">
+            325-480-9870
           </a>
         </p>
       </div>
@@ -78,7 +80,7 @@ export function StoreAssessmentPanel({
           ProActive Ecosystem packages include layered security and support in one plan.
         </p>
         <Link href="/store/managed">
-          <span className="mt-3 inline-flex items-center text-sm text-[#a78bfa] hover:text-[#c4b5fd]">
+          <span className="mt-3 inline-flex items-center text-sm text-de-accent-ink hover:text-de-accent-ink">
             View managed packages
             <ArrowRight className="ml-1 h-3.5 w-3.5" />
           </span>

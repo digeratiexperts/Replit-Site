@@ -39,6 +39,7 @@ import { TenantSelector } from "@/components/portal/TenantSelector";
 import { useSEO } from "@/hooks/useSEO";
 import { navAllowed, readPortalUser, type NavKey } from "@/lib/portalRoles";
 import { portalGet, redirectToPortalLogin } from "@/lib/portalApi";
+import { usePortalHubEvents } from "@/hooks/usePortalHubEvents";
 
 interface PortalLayoutProps {
   children: React.ReactNode;
@@ -98,15 +99,16 @@ const adminItems = [
 const navLinkBase =
   "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors";
 const navLinkIdle =
-  "text-white/70 hover:bg-white/15 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5034ff]/60";
-const navLinkActive = "bg-[#5034ff] text-white hover:bg-[#5c42ff] hover:text-white";
+  "text-white/70 hover:bg-white/15 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/60";
+const navLinkActive = "bg-[#D3126A] text-white hover:bg-[#e01874] hover:text-white";
 const sidebarGhostBtn =
-  "text-white/70 hover:!bg-white/15 hover:!text-white focus-visible:ring-[#5034ff]";
+  "text-white/70 hover:!bg-white/15 hover:!text-white focus-visible:ring-[#D3126A]";
 
 export function PortalLayout({ children, title }: PortalLayoutProps) {
   const [location] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sessionReady, setSessionReady] = useState(false);
+  usePortalHubEvents();
   useSEO({
     title: `${title} | Client Portal`,
     description: "Digerati Experts Client Portal — secure access for existing clients.",

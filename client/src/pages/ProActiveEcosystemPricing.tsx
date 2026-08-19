@@ -147,7 +147,7 @@ const plans: PlanCard[] = [
       "Managed Workplace: limited / add-on",
       "No backup included by default",
     ],
-    gradient: "from-slate-500 to-violet-500",
+    gradient: "from-slate-500 ",
     borderColor: "border-slate-500/30",
     learnMoreUrl: pricing.it.learnMoreUrl,
   },
@@ -170,8 +170,8 @@ const plans: PlanCard[] = [
       "Threat Detection / SOC (add-on)",
       "BCDR, cloud backup, compliance reports (add-ons)",
     ],
-    gradient: "from-violet-500 to-purple-500",
-    borderColor: "border-violet-500/40",
+    gradient: " ",
+    borderColor: "border-de-hairline",
     learnMoreUrl: pricing.office.learnMoreUrl,
   },
   {
@@ -193,8 +193,8 @@ const plans: PlanCard[] = [
       "Budgeting / planning + 2× tech & security business reviews per year",
       "Spend-card controls included or available",
     ],
-    gradient: "from-purple-500 to-fuchsia-500",
-    borderColor: "border-purple-500/40",
+    gradient: " to-fuchsia-500",
+    borderColor: "border-de-hairline",
     learnMoreUrl: pricing.business.learnMoreUrl,
   },
   {
@@ -290,7 +290,7 @@ export default function ProActiveEcosystemPricing() {
           >
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
               ProActive Ecosystem{" "}
-              <span className="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">Pricing</span>
+              <span className="text-de-magenta-ink">Pricing</span>
             </h1>
             <p className="text-lg text-white/70 mb-3">
               Estimate your ProActive Ecosystem starting point. Final pricing is confirmed after assessment.
@@ -305,7 +305,7 @@ export default function ProActiveEcosystemPricing() {
           <section className="mb-14" aria-labelledby="estimator-heading">
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
               <h2 id="estimator-heading" className="flex items-center gap-3 text-xl font-semibold text-white mb-2">
-                <Calculator className="w-5 h-5 text-violet-400" />
+                <Calculator className="w-5 h-5 text-de-magenta-ink" />
                 Estimate Your Starting Point
               </h2>
               <p className="text-sm text-white/50 mb-6">Estimates only — exact pricing confirmed after assessment.</p>
@@ -352,13 +352,13 @@ export default function ProActiveEcosystemPricing() {
                 variants={fadeIn}
                 data-testid={`plan-card-${plan.id}`}
               >
-                <div className={`inline-flex self-start px-3 py-1 rounded-full bg-gradient-to-r ${plan.gradient} text-white text-xs font-semibold mb-4`}>
+                <div className={`inline-flex self-start px-3 py-1 rounded-full bg-de-magenta text-white text-xs font-semibold mb-4`}>
                   {plan.shortName}
                 </div>
                 <h3 className="text-lg font-bold text-white mb-1">{plan.name}</h3>
                 <p className="text-sm text-white/50 mb-4">{plan.tagline}</p>
                 <div className="mb-4">
-                  <p className="text-violet-300 font-semibold">{plan.priceLabel}</p>
+                  <p className="text-de-magenta-ink font-semibold">{plan.priceLabel}</p>
                   {plan.siteMin ? (
                     <p className="text-xs text-white/50 mt-1">${plan.siteMin.toLocaleString()}/site/mo minimum</p>
                   ) : null}
@@ -383,7 +383,7 @@ export default function ProActiveEcosystemPricing() {
                 <Link href={plan.learnMoreUrl}>
                   <Button
                     variant="outline"
-                    className="w-full border-violet-400/40 bg-white/5 text-white hover:border-violet-300/70 hover:bg-violet-500/20 hover:text-white"
+                    className="w-full border-de-hairline bg-white/5 text-white hover:border-de-hairline hover:bg-de-raised hover:text-white"
                   >
                     Learn More
                     <ArrowRight className="w-4 h-4 ml-2" />
@@ -393,7 +393,7 @@ export default function ProActiveEcosystemPricing() {
             ))}
           </section>
 
-          <p className="text-center text-sm text-white/40 mb-16 max-w-2xl mx-auto">
+          <p className="text-center text-sm text-white/55 mb-16 max-w-2xl mx-auto">
             All numbers shown are estimated starting points, not exact totals. Final pricing is confirmed after a brief
             assessment of your environment, security needs, and selected add-ons.
           </p>
@@ -413,7 +413,7 @@ export default function ProActiveEcosystemPricing() {
               {matrixCategories.map((category) => (
                 <div key={category.id} className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
                   <div className="flex items-center gap-3 px-5 py-4 border-b border-white/10">
-                    <span className="text-violet-400">{category.icon}</span>
+                    <span className="text-de-magenta-ink">{category.icon}</span>
                     <h3 className="font-semibold text-white">{category.title}</h3>
                     {category.ribbon && (
                       <span className="ml-auto text-xs text-amber-400/90 border border-amber-400/30 rounded-full px-3 py-1">
@@ -424,7 +424,7 @@ export default function ProActiveEcosystemPricing() {
                   <div className="overflow-x-auto">
                     <table className="w-full text-left">
                       <thead>
-                        <tr className="text-xs uppercase tracking-wide text-white/40">
+                        <tr className="text-xs uppercase tracking-wide text-white/55">
                           <th className="px-5 py-3 font-medium min-w-[220px]">Service</th>
                           <th className="px-3 py-3 font-medium text-center">IT</th>
                           <th className="px-3 py-3 font-medium text-center">Office</th>
@@ -440,7 +440,7 @@ export default function ProActiveEcosystemPricing() {
                                 {service.name}
                                 {service.tooltip && (
                                   <span title={service.tooltip}>
-                                    <Info className="w-3.5 h-3.5 text-white/30" aria-label={service.tooltip} />
+                                    <Info className="w-3.5 h-3.5 text-white/55" aria-label={service.tooltip} />
                                   </span>
                                 )}
                               </span>
@@ -458,7 +458,7 @@ export default function ProActiveEcosystemPricing() {
               ))}
             </div>
 
-            <p className="text-center text-xs text-white/40 mt-6 max-w-3xl mx-auto">
+            <p className="text-center text-xs text-white/55 mt-6 max-w-3xl mx-auto">
               Digerati Experts provides audit readiness, evidence support, framework mapping, and risk reporting. We do
               not provide legal compliance signoff or certification.
             </p>
@@ -467,28 +467,28 @@ export default function ProActiveEcosystemPricing() {
           {/* Relocated from homepage — keep tools, deepen pricing page */}
           <section className="mb-16" aria-label="Pricing calculators">
             <div className="mb-6 text-center">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#FF477F]">Pricing tools</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#F04C97]">Pricing tools</p>
               <h2 className="mt-2 text-3xl font-bold text-white">Calculate investment &amp; downtime risk</h2>
               <p className="mx-auto mt-2 max-w-2xl text-sm text-white/55">{PRICING_SCOPE_NOTE}</p>
-              <p className="mx-auto mt-2 max-w-2xl text-sm text-white/40">{NO_BLACK_BOX_TAGLINE}</p>
+              <p className="mx-auto mt-2 max-w-2xl text-sm text-white/55">{NO_BLACK_BOX_TAGLINE}</p>
             </div>
             <PricingToolsSection />
           </section>
 
           {/* CTA */}
-          <section className="text-center rounded-2xl border border-violet-500/30 bg-gradient-to-br from-violet-500/10 to-fuchsia-500/10 px-6 py-12">
-            <Layers className="w-10 h-10 text-violet-400 mx-auto mb-4" />
+          <section className="text-center rounded-2xl border border-de-hairline bg-de-raised px-6 py-12">
+            <Layers className="w-10 h-10 text-de-magenta-ink mx-auto mb-4" />
             <h2 className="text-3xl font-bold text-white mb-3">Ready to Confirm Your Pricing?</h2>
             <p className="text-white/70 max-w-2xl mx-auto mb-8">
               Schedule a brief assessment so we can scope users, devices, sites, backup, network, and compliance needs —
               then confirm your exact ProActive Ecosystem investment.
             </p>
-            <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
-              <Button size="lg" className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white">
-                {CTA.primary}
+            <Button asChild size="lg" variant="brand">
+                  <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                    {CTA.primary}
                 <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </a>
+                  </a>
+                </Button>
           </section>
         </main>
 

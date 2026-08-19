@@ -15,13 +15,14 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { CTA } from "@/lib/ctaCopy";
-import { EngagePathVisual } from "@/components/visual/EngagePathVisual";
 import { IconWell } from "@/components/visual/IconWell";
-import { engagePathVisualByTitle } from "@/lib/visualAssets";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 
 /**
  * Homepage engagement paths — three primary choices.
  * Capability cards also previewed here (same stack as Protect) so nothing feels deleted.
+ * Lucide IconWell (A+C), not engage-path sculptures — DE: 3D reads as tech-made, not business-first.
  */
 const paths: {
   icon: LucideIcon;
@@ -30,10 +31,12 @@ const paths: {
   link: string;
   cta: string;
   testId: string;
+  eyebrow?: string;
 }[] = [
   {
     icon: Shield,
     title: "Fully Managed IT & Cybersecurity",
+    eyebrow: "ProActive Ecosystem",
     description:
       "One accountable team for support, identity, endpoints, email, backup, and security operations — delivered through our ProActive Ecosystem.",
     link: "/solutions/proactive-ecosystem",
@@ -54,7 +57,7 @@ const paths: {
     title: "Cyber Risk Assessment",
     description:
       "Start with a practical review of identity, endpoints, email, backups, and security posture — then choose what to own together.",
-    link: "/#assessment-cta",
+    link: "/book",
     cta: CTA.primary,
     testId: "engage-assessment",
   },
@@ -110,7 +113,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
   return (
     <section
       id="services"
-      className="de-dark-chapter de-chapter-hairline relative overflow-hidden py-14 md:py-18 lg:py-22"
+      className="de-dark-chapter de-chapter-hairline de-field-grain relative overflow-hidden py-10 md:py-18 lg:py-22"
     >
       <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
         <motion.div
@@ -120,13 +123,13 @@ export const DigeratiServicesSection = (): JSX.Element => {
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.45 }}
         >
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#FF477F]">
+          <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-de-magenta-ink">
             How to work with us
           </p>
           <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
             Cybersecurity-First Managed IT
           </h2>
-          <p className="max-w-2xl text-base leading-relaxed text-white/65 md:text-lg">
+          <p className="max-w-2xl text-base font-medium leading-relaxed text-white/80 md:text-lg md:font-normal md:text-white/65">
             Three clear paths. Capability depth stays available here and under Protect — nothing
             removed.
           </p>
@@ -135,7 +138,6 @@ export const DigeratiServicesSection = (): JSX.Element => {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8">
           {paths.map((path, index) => {
             const Icon = path.icon;
-            const visual = engagePathVisualByTitle[path.title];
             return (
               <motion.div
                 key={path.title}
@@ -143,76 +145,123 @@ export const DigeratiServicesSection = (): JSX.Element => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.08 }}
-                className="flex h-full flex-col overflow-hidden rounded-2xl border border-de-hairline bg-de-raised"
+                className="flex h-full flex-col rounded-2xl border border-de-hairline bg-de-raised p-6 transition-colors hover:border-white/20 lg:p-8"
                 data-testid={path.testId}
               >
-                {visual ? (
-                  <EngagePathVisual still={visual} alt={visual.alt} />
-                ) : (
-                  <div className="flex aspect-[5/3] items-center justify-center bg-de-raised">
-                    <IconWell icon={Icon} size="md" surface="dark" />
-                  </div>
-                )}
-                <div className="flex flex-1 flex-col px-6 pb-7 pt-1 lg:px-8 lg:pb-8">
-                  <h3 className="mb-2 text-xl font-semibold text-white lg:text-2xl">{path.title}</h3>
-                  <p className="mb-5 flex-1 text-base leading-relaxed text-white/65">
-                    {path.description}
-                  </p>
-                  <Link href={path.link} data-testid={`link-${path.testId}`}>
-                    <span className="inline-flex items-center gap-2 text-sm font-medium text-violet-300 hover:text-violet-200">
-                      {path.cta}
-                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                    </span>
-                  </Link>
-                </div>
+                <IconWell icon={Icon} size="md" surface="dark" className="mb-5" />
+                <p
+                  className={`mb-2 min-h-4 text-base font-semibold uppercase tracking-[0.2em] ${
+                    path.eyebrow ? "text-white/45" : "invisible"
+                  }`}
+                  aria-hidden={!path.eyebrow}
+                >
+                  {path.eyebrow ?? "\u00a0"}
+                </p>
+                <h3 className="mb-2 text-xl font-semibold text-white lg:text-2xl">{path.title}</h3>
+                <p className="mb-5 flex-1 text-base font-medium leading-relaxed text-white/80 md:font-normal md:text-white/65">
+                  {path.description}
+                </p>
+                <Link
+                  href={path.link}
+                  data-testid={`link-${path.testId}`}
+                  className="inline-flex min-h-11 items-center gap-2 text-base font-medium text-de-magenta-ink hover:text-[#f0187a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-de-raised"
+                >
+                  {path.cta}
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
               </motion.div>
             );
           })}
         </div>
 
-        <p className="mt-6 text-sm text-white/50 md:text-base">
+        <p className="mt-6 text-base font-medium leading-relaxed text-white/80 md:text-lg md:font-normal md:text-white/55">
           Need one specific service?{" "}
           <Link href="/solutions/standalone-services">
-            <span className="font-semibold text-white/80 underline decoration-white/20 underline-offset-4 hover:text-white hover:decoration-white/50">
+            <span className="font-semibold text-white underline decoration-white/25 underline-offset-4 hover:text-white hover:decoration-white/50">
               View Standalone Services
             </span>
           </Link>
         </p>
 
-        <div className="mt-14 md:mt-16" data-testid="engage-capability-preview">
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <h3 className="text-lg font-semibold text-white md:text-xl">Security capabilities</h3>
-              <p className="mt-1 text-sm text-white/50 md:text-base">
-                Preview of the stack we manage — also detailed under Protect.
-              </p>
+        <div className="mt-16 md:mt-20" data-testid="engage-capability-preview">
+          <div className="mx-auto max-w-4xl text-center">
+            <h3 className="font-heading text-3xl font-semibold tracking-[-0.03em] text-white md:text-4xl lg:text-5xl">
+              ProActive Ecosystem
+              <span className="text-[#D3126A]" aria-hidden="true">
+                :
+              </span>
+            </h3>
+            <p className="mx-auto mt-3 max-w-2xl text-base text-white/55 md:text-lg">
+              Preview of the stack we manage — also detailed under Protect.
+            </p>
+          </div>
+
+          <Tabs defaultValue={capabilityPreview[0].title} className="mt-8 md:mt-10">
+            <div className="relative">
+              <div
+                className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-[var(--de-surface)] to-transparent md:hidden"
+                aria-hidden="true"
+              />
+              <TabsList
+                aria-label="Security capabilities"
+                className="h-auto w-full max-w-full justify-start gap-2.5 overflow-x-auto bg-transparent p-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:justify-center md:gap-3"
+              >
+                {capabilityPreview.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <TabsTrigger
+                      key={item.title}
+                      value={item.title}
+                      className={cn(
+                        "group h-auto min-h-11 shrink-0 rounded-xl border bg-transparent px-3.5 py-2.5 text-base font-medium text-white shadow-none",
+                        "hover:bg-white/[0.03] hover:text-white",
+                        "focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]",
+                        "data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-white",
+                        "border-[var(--de-hairline)] data-[state=active]:border-[#D3126A] data-[state=active]:shadow-[inset_0_0_0_1px_#D3126A]",
+                      )}
+                    >
+                      <Icon
+                        className="mr-2 h-4 w-4 shrink-0 text-white group-data-[state=active]:text-[#D3126A]"
+                        aria-hidden="true"
+                      />
+                      {item.title}
+                    </TabsTrigger>
+                  );
+                })}
+              </TabsList>
             </div>
+
+            {capabilityPreview.map((item) => (
+              <TabsContent
+                key={item.title}
+                value={item.title}
+                className="mt-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]"
+              >
+                <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
+                  <p className="font-heading text-xl font-semibold text-white md:text-2xl">{item.title}</p>
+                  <p className="mt-2 text-base leading-relaxed text-white/55 md:text-lg">{item.desc}</p>
+                  <Link href={item.link}>
+                    <span className="mt-5 inline-flex min-h-11 items-center gap-2 text-base font-medium text-white/80 underline decoration-white/20 underline-offset-4 hover:text-white hover:decoration-white/50">
+                      {item.title} details
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    </span>
+                  </Link>
+                </div>
+              </TabsContent>
+            ))}
+          </Tabs>
+
+          <div className="mt-8 flex justify-center md:mt-10">
             <Link href="/#protection" data-testid="link-see-security-stack">
-              <span className="inline-flex items-center gap-2 text-sm text-white/65 hover:text-white">
-                <Layers className="h-4 w-4 text-pink-400" aria-hidden="true" />
+              <span className="inline-flex min-h-11 items-center gap-2 text-base text-white/65 hover:text-white">
+                <Layers className="h-4 w-4 text-[#D3126A]" aria-hidden="true" />
                 See full Protect process
               </span>
             </Link>
           </div>
-          <div className="grid grid-cols-1 gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
-            {capabilityPreview.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link key={item.title} href={item.link}>
-                  <div className="flex cursor-pointer items-start gap-3">
-                    <IconWell icon={Icon} size="sm" surface="dark" />
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-white md:text-base">{item.title}</p>
-                      <p className="mt-0.5 text-sm leading-relaxed text-white/50">{item.desc}</p>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center gap-4 text-sm md:mt-12 md:text-base">
+        <div className="mt-10 flex flex-wrap items-center gap-4 text-base md:mt-12 md:text-lg">
           <Link href="/solutions/proactive-ecosystem" data-testid="link-proactive-ecosystem">
             <span className="inline-flex items-center gap-2 text-white/75 transition-colors hover:text-white">
               How the ProActive Ecosystem works

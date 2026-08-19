@@ -10,8 +10,6 @@ import {
   ShoppingCart,
   Lock,
   Phone,
-  User,
-  LogOut,
   MessageCircle,
   Sparkles,
 } from "lucide-react";
@@ -54,7 +52,6 @@ import {
 } from "@/data/storeMerchandising";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
-import { CartButton } from "@/components/store/CartButton";
 import { useStoreAuth } from "@/hooks/useStoreAuth";
 import { PORTAL_LOGIN } from "@/lib/portalUrls";
 import { openMspAdvisor } from "@/lib/openMspAdvisor";
@@ -77,6 +74,8 @@ import {
   MAX_COMPARE,
 } from "@/components/store/ProductCompare";
 import { CoverageScorePanel } from "@/components/store/CoverageScorePanel";
+import { StorePageAtmosphere } from "@/components/store/StorePageAtmosphere";
+import { StoreClientBar } from "@/components/store/StoreClientBar";
 
 const SORT_OPTIONS: StoreSortOption[] = ["recommended", "popular", "price_asc", "price_desc"];
 const PRICE_BAND_IDS = new Set(storePriceBandFilters.map((b) => b.id));
@@ -116,6 +115,23 @@ function parseCatalogSearch(searchString: string) {
   };
 }
 
+/** True when the catalog URL already names a filter — used to scroll past the hero. */
+export function catalogSearchHasDeepLink(searchString: string): boolean {
+  const parsed = parseCatalogSearch(searchString);
+  return (
+    parsed.outcome !== null ||
+    parsed.category !== "all" ||
+    parsed.vendor !== "all" ||
+    parsed.compliance !== "all" ||
+    parsed.size !== "all" ||
+    parsed.q.trim().length > 0 ||
+    parsed.billing !== "all" ||
+    parsed.priceBand !== "all" ||
+    parsed.purchasePath !== "all" ||
+    parsed.coverage !== "all"
+  );
+}
+
 const CoManagedStore = () => {
   const prefersReducedMotion = useReducedMotion();
   const searchString = useSearch();
@@ -124,12 +140,9 @@ const CoManagedStore = () => {
   const { addToCart, openCart, setClientPricing, items } = useCart();
   const {
     isLoggedIn,
-    user,
-    clientType,
     clientPricing,
     getProductPrice,
     loginRedirect,
-    logout,
   } = useStoreAuth();
 
   const catalogRef = useRef<HTMLDivElement>(null);
@@ -491,8 +504,29 @@ const CoManagedStore = () => {
   };
 
   const scrollToCatalog = () => {
-    catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "auto"
+      : "smooth";
+    catalogRef.current?.scrollIntoView({ behavior, block: "start" });
   };
+
+  // Deep links like /store/co-managed?outcome=protect used to land on the hero
+  // (~6k px above the filtered grid). Scroll once after mount so clicking an
+  // outcome actually shows the matching products.
+  useEffect(() => {
+    if (!catalogSearchHasDeepLink(searchString)) return;
+
+    let timeout = 0;
+    const frame = window.requestAnimationFrame(() => {
+      timeout = window.setTimeout(scrollToCatalog, 80);
+    });
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(timeout);
+    };
+    // Intentionally mount-only: later filter changes already call scrollToCatalog.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleOutcomeSelect = (id: StoreOutcomeId | null) => {
     setSelectedOutcome(id);
@@ -517,54 +551,13 @@ const CoManagedStore = () => {
       };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="relative min-h-screen bg-[#0a0a0a]">
+      <StorePageAtmosphere />
       <MegaMenu />
 
-      <main className="pb-20 de-nav-clear">
-        <div className="mx-auto max-w-[100rem] px-3 sm:px-4 lg:px-6">
-          {/* Auth & Cart */}
-          <div className="mb-4 flex items-center justify-between">
-            {isLoggedIn && user ? (
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 rounded-lg border border-[#5034ff]/20 bg-[#5034ff]/10 px-3 py-2">
-                  <User className="h-4 w-4 text-[#a78bfa]" />
-                  <span className="text-sm text-white" data-testid="text-user-greeting">
-                    Welcome,{" "}
-                    <span className="font-semibold text-[#c4b5fd]">
-                      {user.fullName || user.username}
-                    </span>
-                  </span>
-                  {clientType !== "public" && (
-                    <span className="ml-2 rounded-full bg-emerald-500/20 px-2 py-0.5 text-xs font-medium text-emerald-300">
-                      {clientType === "managed" ? "Managed Client" : "Co-Managed Client"}
-                    </span>
-                  )}
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={logout}
-                  className="text-white/60 hover:bg-[#5034ff]/10 hover:text-white"
-                  data-testid="button-store-logout"
-                >
-                  <LogOut className="mr-1 h-4 w-4" />
-                  Logout
-                </Button>
-              </div>
-            ) : (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={loginRedirect}
-                className="h-11 border-none bg-[#5034ff] px-5 text-base text-white hover:bg-[#6548ff]"
-                data-testid="button-store-login"
-              >
-                <User className="mr-2 h-4 w-4" />
-                Login for Client Pricing
-              </Button>
-            )}
-            <CartButton />
-          </div>
+      <main className="relative z-10 pb-20 de-nav-clear">
+        <div className="mx-auto max-w-[var(--de-canvas)] px-3 sm:px-4 lg:px-6">
+          <StoreClientBar />
 
           <div className="mb-8 flex items-center gap-2 text-base text-white/50">
             <Link href="/store" className="transition-colors hover:text-white">
@@ -581,21 +574,21 @@ const CoManagedStore = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
           >
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#5034ff]/25 bg-[#5034ff]/10 px-4 py-2">
-              <Users className="h-4 w-4 text-[#a78bfa]" />
-              <span className="text-sm text-[#c4b5fd]">Guided IT Storefront</span>
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-de-accent/25 bg-de-accent/10 px-4 py-2">
+              <Users className="h-4 w-4 text-de-accent-ink" />
+              <span className="text-sm text-de-accent-ink">Guided IT Storefront</span>
             </div>
-            <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl lg:text-6xl">
+            <h1 className="mb-4 text-[clamp(2rem,6vw,3.25rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white">
               Tell us what you&apos;re trying to{" "}
-              <span className="text-[#a78bfa]">accomplish.</span>
+              <span className="text-de-accent-ink">accomplish.</span>
             </h1>
             <p className="text-lg leading-relaxed text-white/70 md:text-xl">
               Shop by outcome, build a recommended stack with Ask Digerati, then buy from the live
               catalog when you know what you need.
             </p>
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Button
-                className="h-12 bg-[#5034ff] px-6 text-base text-white hover:bg-[#6548ff]"
+                className="h-12 w-full bg-de-accent px-6 text-base text-white hover:bg-[#6548ff] sm:w-auto"
                 onClick={() => setGuidedOpen(true)}
                 data-testid="button-build-solution"
               >
@@ -604,7 +597,7 @@ const CoManagedStore = () => {
               </Button>
               <Button
                 variant="outline"
-                className="h-12 border-white/20 bg-transparent px-6 text-base text-white hover:bg-white/5"
+                className="h-12 w-full border-white/20 bg-transparent px-6 text-base text-white hover:bg-white/5 sm:w-auto"
                 onClick={() => openMspAdvisor({ context: "store" })}
                 data-testid="button-ask-digerati"
               >
@@ -613,7 +606,7 @@ const CoManagedStore = () => {
               </Button>
               <Button
                 variant="ghost"
-                className="h-12 text-base text-white/70 hover:bg-white/5 hover:text-white"
+                className="h-12 w-full text-base text-white/70 hover:bg-white/5 hover:text-white sm:w-auto"
                 onClick={scrollToCatalog}
                 data-testid="button-browse-everything"
               >
@@ -651,7 +644,7 @@ const CoManagedStore = () => {
           <StoreBundlesSection isLoggedIn={isLoggedIn} onAddBundle={handleAddBundle} />
 
           {/* Catalog + sticky assessment */}
-          <div ref={catalogRef} className="scroll-mt-28">
+          <div ref={catalogRef} id="store-catalog" className="scroll-mt-28">
             <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <h2 className="text-3xl font-bold text-white md:text-4xl">Full catalog</h2>
@@ -714,7 +707,7 @@ const CoManagedStore = () => {
                     variant={selectedCategory === "all" ? "default" : "outline"}
                     className={
                       selectedCategory === "all"
-                        ? "bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                        ? "bg-de-accent text-white hover:bg-[#6548ff]"
                         : "border-white/15 bg-transparent text-white/80 hover:bg-white/5"
                     }
                     onClick={() => setSelectedCategory("all")}
@@ -732,7 +725,7 @@ const CoManagedStore = () => {
                         variant={selectedCategory === category ? "default" : "outline"}
                         className={
                           selectedCategory === category
-                            ? "bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                            ? "bg-de-accent text-white hover:bg-[#6548ff]"
                             : "border-white/15 bg-transparent text-white/80 hover:bg-white/5"
                         }
                         onClick={() => setSelectedCategory(category)}
@@ -745,7 +738,7 @@ const CoManagedStore = () => {
                 </div>
 
                 {selectedCategory !== "all" && (
-                  <div className="mb-6 rounded-xl border border-[#5034ff]/20 bg-[#5034ff]/10 p-4">
+                  <div className="mb-6 rounded-xl border border-de-accent/20 bg-de-accent/10 p-4">
                     <h3 className="mb-1 font-semibold text-white">
                       {categoryLabels[selectedCategory]}
                     </h3>
@@ -793,11 +786,11 @@ const CoManagedStore = () => {
                     data-testid="catalog-empty-state"
                   >
                     <p className="text-lg text-white/50">No products match these filters.</p>
-                    <p className="mt-2 text-sm text-white/40">
+                    <p className="mt-2 text-sm text-white/55">
                       Showing 0 of {visibleBase.length} products
                     </p>
                     <Button
-                      className="mt-4 bg-[#5034ff] text-white hover:bg-[#6548ff]"
+                      className="mt-4 bg-de-accent text-white hover:bg-[#6548ff]"
                       onClick={clearAllFilters}
                       data-testid="button-empty-clear-filters"
                     >
@@ -831,8 +824,8 @@ const CoManagedStore = () => {
             <div className="grid gap-6 md:grid-cols-2">
               <div className="rounded-xl border border-white/10 bg-[#141414] p-6">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-[#5034ff]/25 bg-[#5034ff]/15">
-                    <ShoppingCart className="h-5 w-5 text-[#a78bfa]" />
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-de-accent/25 bg-de-accent/15">
+                    <ShoppingCart className="h-5 w-5 text-de-accent-ink" />
                   </div>
                   <div>
                     <h3 className="mb-2 font-semibold text-white">Checkout enabled</h3>
@@ -846,14 +839,14 @@ const CoManagedStore = () => {
 
               <div className="rounded-xl border border-white/10 bg-[#141414] p-6">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-[#5034ff]/25 bg-[#5034ff]/15">
-                    <Lock className="h-5 w-5 text-[#a78bfa]" />
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-de-accent/25 bg-de-accent/15">
+                    <Lock className="h-5 w-5 text-de-accent-ink" />
                   </div>
                   <div>
                     <h3 className="mb-2 font-semibold text-white">Client-only products</h3>
                     <p className="text-sm text-white/60">
                       Some products require an existing client relationship.{" "}
-                      <Link href={PORTAL_LOGIN} className="text-[#a78bfa] hover:text-[#c4b5fd]">
+                      <Link href={PORTAL_LOGIN} className="text-de-accent-ink hover:text-de-accent-ink">
                         Log in to your portal
                       </Link>{" "}
                       for exclusive pricing.
@@ -894,7 +887,7 @@ const CoManagedStore = () => {
               <Link href="/store/managed">
                 <Button
                   size="lg"
-                  className="h-12 bg-[#5034ff] px-6 text-white hover:bg-[#6548ff]"
+                  className="h-12 bg-de-accent px-6 text-white hover:bg-[#6548ff]"
                   data-testid="button-view-managed"
                 >
                   View Managed IT Packages
@@ -910,16 +903,16 @@ const CoManagedStore = () => {
                 <MessageCircle className="mr-2 h-4 w-4" />
                 Ask Digerati
               </Button>
-              <a href="/book">
-                <Button
+              <Button asChild
                   size="lg"
                   className="h-12 border-2 border-white/25 bg-transparent px-6 text-white hover:bg-white/10"
                   data-testid="button-schedule-consult"
                 >
-                  <Phone className="mr-2 h-4 w-4" />
+                  <a href="/book">
+                    <Phone className="mr-2 h-4 w-4" />
                   Schedule Consultation
+                  </a>
                 </Button>
-              </a>
             </div>
           </motion.section>
         </div>

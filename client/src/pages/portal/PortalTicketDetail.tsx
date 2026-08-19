@@ -117,7 +117,7 @@ export default function PortalTicketDetail() {
     return (
       <PortalLayout title="Ticket Details">
         <div className="flex items-center justify-center min-h-[400px]">
-          <Loader2 className="h-8 w-8 animate-spin text-[#7c3aed]" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#D3126A]" />
         </div>
       </PortalLayout>
     );
@@ -327,7 +327,7 @@ export default function PortalTicketDetail() {
                       type="button"
                       variant="outline"
                       size="sm"
-                      className="gap-2 border-violet-300 bg-white text-violet-800 hover:bg-violet-50 dark:border-violet-500/40 dark:bg-transparent dark:text-violet-100"
+                      className="gap-2 border-[#D3126A]/40 bg-white text-[#1A1228] hover:bg-de-paper dark:border-[#D3126A]/40 dark:bg-transparent dark:text-white"
                       onClick={() => fileInputRef.current?.click()}
                       data-testid="button-choose-detail-files"
                     >
@@ -343,7 +343,7 @@ export default function PortalTicketDetail() {
                       {pendingFiles.map((file) => (
                         <li
                           key={`${file.name}-${file.size}`}
-                          className="flex items-center justify-between gap-2 rounded-md border border-violet-200 bg-white px-3 py-2 text-sm dark:border-violet-500/20 dark:bg-slate-900/60"
+                          className="flex items-center justify-between gap-2 rounded-md border border-[var(--de-paper-hairline)] bg-white px-3 py-2 text-sm dark:border-de-hairline dark:bg-slate-900/60"
                         >
                           <span className="min-w-0 truncate">{file.name}</span>
                           <button
@@ -368,7 +368,7 @@ export default function PortalTicketDetail() {
                   <Button
                     type="submit"
                     disabled={!commentText || addCommentMutation.isPending}
-                    className="bg-[#7c3aed] hover:bg-[#7c3aed]/90 text-white"
+                    className="bg-[#D3126A] hover:bg-[#D3126A]/90 text-white"
                     data-testid="button-send-comment"
                   >
                     {addCommentMutation.isPending ? (

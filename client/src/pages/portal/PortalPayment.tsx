@@ -128,7 +128,7 @@ export default function PortalPayment({ invoiceId }: PaymentProps) {
                     <CardTitle>Invoice Payment</CardTitle>
                     <CardDescription>{invoiceNumber}</CardDescription>
                   </div>
-                  <Badge className="bg-[#5034ff] hover:bg-[#5034ff]/90 text-white text-lg px-3 py-1">
+                  <Badge className="bg-[#D3126A] hover:bg-[#D3126A]/90 text-white text-lg px-3 py-1">
                     ${amountDue.toFixed(2)}
                   </Badge>
                 </div>
@@ -141,8 +141,8 @@ export default function PortalPayment({ invoiceId }: PaymentProps) {
               <Card
                 className={`cursor-pointer transition-all ${
                   selectedMethod === "card"
-                    ? "ring-2 ring-[#5034ff] border-[#5034ff]"
-                    : "hover:border-[#5034ff]/50"
+                    ? "ring-2 ring-[#D3126A] border-[#D3126A]"
+                    : "hover:border-[#D3126A]/50"
                 }`}
                 onClick={() => setSelectedMethod("card")}
                 data-testid="card-payment-method"
@@ -161,7 +161,7 @@ export default function PortalPayment({ invoiceId }: PaymentProps) {
                   </div>
                   {selectedMethod === "card" && (
                     <Button
-                      className="mt-4 w-full bg-[#5034ff] hover:bg-[#5034ff]/90 text-white"
+                      className="mt-4 w-full bg-[#D3126A] hover:bg-[#D3126A]/90 text-white"
                       onClick={handleZohoCheckout}
                       disabled={loading || amountDue <= 0}
                       data-testid="button-card-pay"
@@ -182,8 +182,8 @@ export default function PortalPayment({ invoiceId }: PaymentProps) {
               <Card
                 className={`cursor-pointer transition-all ${
                   selectedMethod === "zelle"
-                    ? "ring-2 ring-[#5034ff] border-[#5034ff]"
-                    : "hover:border-[#5034ff]/50"
+                    ? "ring-2 ring-[#D3126A] border-[#D3126A]"
+                    : "hover:border-[#D3126A]/50"
                 }`}
                 onClick={() => setSelectedMethod("zelle")}
                 data-testid="card-zelle-method"

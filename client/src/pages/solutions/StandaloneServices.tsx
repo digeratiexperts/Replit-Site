@@ -148,7 +148,7 @@ export default function StandaloneServices() {
           >
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight" data-testid="heading-standalone-hero">
               Need One Critical IT or{" "}
-              <span className="bg-gradient-to-r from-cyan-400 via-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
+              <span className="text-de-accent-ink">
                 Security Gap
               </span>{" "}
               Covered?
@@ -158,12 +158,12 @@ export default function StandaloneServices() {
               technology or security role — after we assess the environment, document the scope, and confirm ownership.
             </p>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 mt-10">
-              <a href={MEET_URL} target="_blank" rel="noopener noreferrer" data-testid="cta-hero-assessment">
-                <Button size="lg" className="w-full bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white">
-                  Start Cyber Risk Assessment
+              <Button asChild size="lg" className="w-full bg-de-raised  text-white">
+                  <a href={MEET_URL} target="_blank" rel="noopener noreferrer" data-testid="cta-hero-assessment">
+                    Start Cyber Risk Assessment
                   <ArrowRight className="w-4 h-4 ml-2" />
+                  </a>
                 </Button>
-              </a>
               <Link href="/proactive-ecosystem-pricing">
                 <Button size="lg" variant="outline" className="w-full border-white/20 text-white hover:bg-white/10" data-testid="cta-hero-compare">
                   Compare ProActive Ecosystem
@@ -189,13 +189,13 @@ export default function StandaloneServices() {
                   </li>
                 ))}
               </ul>
-              <a href={MEET_URL} target="_blank" rel="noopener noreferrer" data-testid="cta-standalone-scope">
-                <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                  Request Standalone Scope
+              <Button asChild variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                  <a href={MEET_URL} target="_blank" rel="noopener noreferrer" data-testid="cta-standalone-scope">
+                    Request Standalone Scope
+                  </a>
                 </Button>
-              </a>
             </div>
-            <div className="rounded-2xl border border-violet-500/30 bg-white/[0.03] p-7" data-testid="compare-ecosystem">
+            <div className="rounded-2xl border border-de-hairline bg-white/[0.03] p-7" data-testid="compare-ecosystem">
               <h2 className="text-xl font-bold text-white mb-4">ProActive Ecosystem</h2>
               <ul className="space-y-3 mb-6">
                 {[
@@ -204,7 +204,7 @@ export default function StandaloneServices() {
                   "Security-first technology management",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3 text-white/70">
-                    <CheckCircle className="w-5 h-5 text-violet-400 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="w-5 h-5 text-de-accent-ink mt-0.5 flex-shrink-0" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -271,12 +271,12 @@ export default function StandaloneServices() {
                   viewport={{ once: true }}
                   variants={fadeIn}
                 >
-                  <span className="w-11 h-11 rounded-xl bg-violet-500/15 flex items-center justify-center mb-4">
-                    <service.icon className="w-5 h-5 text-violet-300" />
+                  <span className="w-11 h-11 rounded-xl bg-de-raised flex items-center justify-center mb-4">
+                    <service.icon className="w-5 h-5 text-de-accent-ink" />
                   </span>
                   <h3 className="font-semibold text-white mb-2">{service.title}</h3>
                   <p className="text-sm text-white/60 leading-relaxed mb-4 flex-1">{service.description}</p>
-                  <p className="text-xs text-white/40">{service.meta}</p>
+                  <p className="text-xs text-white/55">{service.meta}</p>
                 </motion.article>
               ))}
             </div>
@@ -295,10 +295,10 @@ export default function StandaloneServices() {
               {engagementSteps.map((step, index) => (
                 <li key={step.title} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
                   <div className="flex items-center gap-3 mb-3">
-                    <span className="w-8 h-8 rounded-full bg-violet-500/20 text-violet-300 text-sm font-bold flex items-center justify-center">
+                    <span className="w-8 h-8 rounded-full bg-de-raised text-de-accent-ink text-sm font-bold flex items-center justify-center">
                       {index + 1}
                     </span>
-                    <step.icon className="w-5 h-5 text-white/40" />
+                    <step.icon className="w-5 h-5 text-white/55" />
                   </div>
                   <h3 className="font-semibold text-white text-sm mb-2">{step.title}</h3>
                   <p className="text-xs text-white/55 leading-relaxed">{step.description}</p>
@@ -327,7 +327,7 @@ export default function StandaloneServices() {
           </section>
 
           {/* Final CTA */}
-          <section className="text-center rounded-2xl border border-violet-500/30 bg-gradient-to-br from-violet-500/10 to-fuchsia-500/10 px-6 py-12">
+          <section className="text-center rounded-2xl border border-de-hairline bg-de-raised px-6 py-12">
             <h2 className="text-3xl font-bold text-white mb-3">
               Not Sure Whether You Need One Service or Full IT/Security Coverage?
             </h2>
@@ -336,12 +336,12 @@ export default function StandaloneServices() {
               standalone service or ProActive Ecosystem package is the safer path forward.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <a href={MEET_URL} target="_blank" rel="noopener noreferrer">
-                <Button size="lg" className="bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white">
-                  Start Cyber Risk Assessment
+              <Button asChild size="lg" className="bg-de-raised  text-white">
+                  <a href={MEET_URL} target="_blank" rel="noopener noreferrer">
+                    Start Cyber Risk Assessment
                   <ArrowRight className="w-4 h-4 ml-2" />
+                  </a>
                 </Button>
-              </a>
               <Link href="/proactive-ecosystem-pricing">
                 <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10">
                   Compare ProActive Ecosystem

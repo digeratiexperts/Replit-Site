@@ -380,7 +380,7 @@ export function setSecurityHeaders(req: Request, res: Response, next: NextFuncti
   ];
   res.setHeader("Content-Security-Policy", cspDirectives.join("; "));
 
-  // Portal + transactional store paths must not rank
+  // Portal, transactional store, and internal commercial tools must not rank
   const p = req.path || "";
   if (
     p.startsWith("/portal") ||
@@ -390,7 +390,11 @@ export function setSecurityHeaders(req: Request, res: Response, next: NextFuncti
     p.startsWith("/store/cart") ||
     p.startsWith("/store/order-confirmation") ||
     p.startsWith("/store/quote-confirmation") ||
-    p.startsWith("/store/quote-request")
+    p.startsWith("/store/quote-request") ||
+    p === "/official-network-planner" ||
+    p.startsWith("/official-network-planner/") ||
+    p === "/de-ecosystem-matrix-offical" ||
+    p.startsWith("/de-ecosystem-matrix-offical/")
   ) {
     res.setHeader("X-Robots-Tag", "noindex, nofollow");
   }

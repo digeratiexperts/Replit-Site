@@ -83,9 +83,18 @@ function RailScroller({
           </Button>
         </div>
       </div>
+      <div className="relative">
+        <div
+          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-6 bg-gradient-to-r from-[#0a0a0a] to-transparent sm:w-10"
+          aria-hidden="true"
+        />
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-6 bg-gradient-to-l from-[#0a0a0a] to-transparent sm:w-10"
+          aria-hidden="true"
+        />
       <div
         ref={scrollerRef}
-        className="flex gap-5 overflow-x-auto pb-2 scrollbar-thin"
+        className="de-store-h-rail flex gap-5 pb-2 scrollbar-thin"
         style={{ scrollSnapType: "x mandatory" }}
       >
         {products.map((product) => {
@@ -110,6 +119,7 @@ function RailScroller({
             </div>
           );
         })}
+      </div>
       </div>
     </div>
   );

@@ -21,7 +21,7 @@ export default function PrivacyPolicy() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
             <div className="flex items-center gap-3 mb-6">
-              <Shield className="h-12 w-12 text-purple-400" />
+              <Shield className="h-12 w-12 text-de-accent-ink" />
               <h1 className="text-4xl md:text-5xl font-bold">Privacy Policy</h1>
             </div>
             <p className="text-xl text-gray-300">
@@ -58,7 +58,7 @@ export default function PrivacyPolicy() {
             {/* Information We Collect */}
             <div className="mb-12">
               <h2 className="text-3xl font-bold text-white mb-4 flex items-center gap-3">
-                <Database className="h-8 w-8 text-purple-400" />
+                <Database className="h-8 w-8 text-de-accent-ink" />
                 2. Information We Collect
               </h2>
               
@@ -139,7 +139,7 @@ export default function PrivacyPolicy() {
             {/* Data Security */}
             <div className="mb-12">
               <h2 className="text-3xl font-bold text-white mb-4 flex items-center gap-3">
-                <Lock className="h-8 w-8 text-purple-400" />
+                <Lock className="h-8 w-8 text-de-accent-ink" />
                 4. Data Security Measures
               </h2>
               <p className="text-gray-300 mb-4">
@@ -296,7 +296,7 @@ export default function PrivacyPolicy() {
               </ul>
 
               <p className="text-gray-300 mb-4">
-                To exercise these rights, contact us at <strong className="text-white">privacy@digeratiexperts.com</strong> or call <strong className="text-white">480-519-5892</strong>.
+                To exercise these rights, contact us at <strong className="text-white">privacy@digeratiexperts.com</strong> or call <strong className="text-white">325-480-9870</strong>.
               </p>
 
               <p className="text-gray-300">
@@ -364,9 +364,9 @@ export default function PrivacyPolicy() {
             </div>
 
             {/* Contact Information */}
-            <div className="mb-12 bg-purple-500/10 backdrop-blur-sm border border-purple-500/30 border-l-4 border-l-purple-500 p-6 rounded">
+            <div className="mb-12 bg-de-raised backdrop-blur-sm border border-de-hairline border-l-4 border-l-de-accent p-6 rounded">
               <h2 className="text-3xl font-bold text-white mb-4 flex items-center gap-3">
-                <FileText className="h-8 w-8 text-purple-400" />
+                <FileText className="h-8 w-8 text-de-accent-ink" />
                 15. Contact Us
               </h2>
               <p className="text-gray-300 mb-4">
@@ -376,7 +376,7 @@ export default function PrivacyPolicy() {
               <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-4 rounded-lg">
                 <p className="text-white font-semibold mb-2">Digerati Experts - Privacy Team</p>
                 <p className="text-gray-300"><strong className="text-white">Email:</strong> privacy@digeratiexperts.com</p>
-                <p className="text-gray-300"><strong className="text-white">Phone:</strong> 480-519-5892</p>
+                <p className="text-gray-300"><strong className="text-white">Phone:</strong> 325-480-9870</p>
                 <p className="text-gray-300"><strong className="text-white">Address:</strong> 3165 S Alma School Rd Suite 29, Chandler, AZ 85248</p>
                 <p className="text-gray-300 mt-3"><strong className="text-white">Office Hours:</strong> Monday-Friday 7:00 AM - 6:00 PM MST</p>
                 <p className="text-gray-300"><strong className="text-white">Emergency Contact:</strong> Available 24/7 for active clients</p>

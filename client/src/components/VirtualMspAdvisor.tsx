@@ -196,7 +196,7 @@ export function VirtualMspAdvisor() {
           role: "assistant",
           content:
             e?.message ||
-            "I'm having trouble responding right now. Call 480-519-5892 or book at meet.digerati-experts.com.",
+            "I'm having trouble responding right now. Call 325-480-9870 or book at meet.digerati-experts.com.",
         },
       ]);
     } finally {
@@ -346,12 +346,12 @@ export function VirtualMspAdvisor() {
           className="absolute bottom-0 right-0 w-[min(420px,92vw)] h-[min(640px,80vh)] bg-white rounded-xl shadow-2xl overflow-hidden border border-slate-200 flex flex-col"
           data-testid="panel-msp-advisor"
         >
-          <div className="bg-gradient-to-r from-violet-800 to-slate-900 text-white p-4 flex justify-between items-start flex-shrink-0">
+          <div className="bg-de-raised text-white p-4 flex justify-between items-start flex-shrink-0">
             <div>
               <h3 className="font-semibold text-base" data-testid="text-advisor-title">
                 DE Desk
               </h3>
-              <p className="text-xs text-violet-100 mt-0.5">
+              <p className="text-xs text-white/80 mt-0.5">
                 Digerati Experts · IT, cybersecurity & compliance
               </p>
             </div>
@@ -374,7 +374,7 @@ export function VirtualMspAdvisor() {
                 <div
                   className={`max-w-[90%] rounded-2xl px-3 py-2 text-sm leading-relaxed whitespace-pre-wrap ${
                     t.role === "user"
-                      ? "bg-violet-700 text-white rounded-br-md"
+                      ? "bg-de-accent text-white rounded-br-md"
                       : "bg-white text-slate-800 border border-slate-200 rounded-bl-md shadow-sm"
                   }`}
                   data-testid={t.role === "user" ? "advisor-msg-user" : "advisor-msg-assistant"}
@@ -387,7 +387,7 @@ export function VirtualMspAdvisor() {
                           key={`${a.type}-${a.label}`}
                           type="button"
                           onClick={() => runAction(a)}
-                          className="text-xs font-medium px-2.5 py-1 rounded-full bg-violet-50 text-violet-800 border border-violet-200 hover:bg-violet-100"
+                          className="text-xs font-medium px-2.5 py-1 rounded-full bg-de-paper-raised text-de-accent border border-de-hairline hover:bg-de-paper-raised"
                           data-testid={`advisor-action-${a.type}`}
                         >
                           {a.label}
@@ -455,7 +455,7 @@ export function VirtualMspAdvisor() {
                 <div className="flex gap-2">
                   <Button
                     size="sm"
-                    className="flex-1 bg-violet-700 hover:bg-violet-800"
+                    className="flex-1 bg-de-accent hover:bg-de-accent"
                     onClick={submitLeadForm}
                     disabled={loading}
                     data-testid="advisor-lead-submit"
@@ -494,15 +494,15 @@ export function VirtualMspAdvisor() {
             <Button
               type="submit"
               disabled={loading || !input.trim()}
-              className="h-10 px-3 bg-violet-700 hover:bg-violet-800"
+              className="h-10 px-3 bg-de-accent hover:bg-de-accent"
               data-testid="advisor-send"
               aria-label="Send message"
             >
               <Send size={16} />
             </Button>
           </form>
-          <div className="px-3 pb-2 bg-white text-[10px] text-slate-400 text-center">
-            Not a general chatbot · Digerati Experts · 480-519-5892
+          <div className="px-3 pb-2 bg-white text-xs text-slate-400 text-center">
+            Not a general chatbot · Digerati Experts · 325-480-9870
           </div>
         </div>
       )}

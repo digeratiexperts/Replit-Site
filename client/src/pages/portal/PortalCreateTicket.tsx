@@ -175,10 +175,10 @@ export default function PortalCreateTicket() {
         )}
 
         {draftNotice && (
-          <div className="rounded-lg border border-violet-200 bg-violet-50 p-4 dark:border-violet-500/30 dark:bg-violet-500/10">
+          <div className="rounded-lg border border-[var(--de-paper-hairline)] bg-de-paper p-4 dark:border-[#D3126A]/30 dark:bg-[#D3126A]/10">
             <div className="flex gap-3">
-              <Info className="mt-0.5 h-5 w-5 shrink-0 text-violet-700 dark:text-violet-300" />
-              <p className="text-sm text-violet-900 dark:text-violet-100">
+              <Info className="mt-0.5 h-5 w-5 shrink-0 text-[#1A1228] dark:text-de-magenta-ink" />
+              <p className="text-sm text-[#1A1228] dark:text-white">
                 Prefilled from a website DE Desk session. Choose a category, add your notes, then
                 submit.
               </p>
@@ -202,7 +202,7 @@ export default function PortalCreateTicket() {
           <div className="flex gap-3">
             <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
             <p className="text-sm text-blue-800 dark:text-blue-300">
-              For urgent issues, please call our support team at 480-519-5892. Response time: Critical (1 hour), High (4 hours), Medium (24 hours).
+              For urgent issues, please call our support team at 325-480-9870. Response time: Critical (1 hour), High (4 hours), Medium (24 hours).
             </p>
           </div>
         </div>
@@ -306,8 +306,8 @@ export default function PortalCreateTicket() {
                     event.target.value = "";
                   }}
                 />
-                <div className="rounded-lg border-2 border-dashed border-violet-300/70 bg-violet-50/40 p-6 text-center dark:border-violet-500/30 dark:bg-violet-500/10">
-                  <Upload className="mx-auto mb-2 h-8 w-8 text-violet-600 dark:text-violet-300" />
+                <div className="rounded-lg border-2 border-dashed border-[#D3126A]/40 bg-de-paper/40 p-6 text-center dark:border-[#D3126A]/30 dark:bg-[#D3126A]/10">
+                  <Upload className="mx-auto mb-2 h-8 w-8 text-[#D3126A] dark:text-de-magenta-ink" />
                   <p className="mb-1 text-sm font-medium text-gray-800 dark:text-gray-200">
                     Screenshots, PDFs, or logs
                   </p>
@@ -319,7 +319,7 @@ export default function PortalCreateTicket() {
                     type="button"
                     variant="outline"
                     size="sm"
-                    className="mt-4 border-violet-300 bg-white text-violet-800 hover:bg-violet-50 dark:border-violet-500/40 dark:bg-transparent dark:text-violet-100"
+                    className="mt-4 border-[#D3126A]/40 bg-white text-[#1A1228] hover:bg-de-paper dark:border-[#D3126A]/40 dark:bg-transparent dark:text-white"
                     onClick={() => fileInputRef.current?.click()}
                     data-testid="button-choose-files"
                   >
@@ -330,7 +330,7 @@ export default function PortalCreateTicket() {
                       {files.map((file) => (
                         <li
                           key={`${file.name}-${file.size}`}
-                          className="flex items-center justify-between gap-2 rounded-md border border-violet-200 bg-white px-3 py-2 text-sm dark:border-violet-500/20 dark:bg-slate-900/60"
+                          className="flex items-center justify-between gap-2 rounded-md border border-[var(--de-paper-hairline)] bg-white px-3 py-2 text-sm dark:border-de-hairline dark:bg-slate-900/60"
                         >
                           <span className="min-w-0 truncate">{file.name}</span>
                           <button
@@ -353,7 +353,7 @@ export default function PortalCreateTicket() {
                 <Button
                   type="submit"
                   disabled={!formData.subject || !formData.category || !formData.description || submitting}
-                  className="bg-[#7c3aed] hover:bg-[#7c3aed]/90 text-white"
+                  className="bg-[#D3126A] hover:bg-[#D3126A]/90 text-white"
                   data-testid="button-submit"
                 >
                   {submitting ? "Creating..." : "Create Ticket"}

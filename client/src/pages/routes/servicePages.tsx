@@ -21,7 +21,7 @@ export const servicePageData = {
       "Compliance optional: add modules only when needed",
       "Monthly service summaries and quarterly business reviews available"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]",
     recommendedTier: "office" as const,
   },
   'managed-it-support': {
@@ -44,7 +44,7 @@ export const servicePageData = {
       "Stack-native support: we built these tools",
       "Help + education: users learn safer behaviors"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]",
     recommendedTier: "office" as const,
   },
   'managed-workplace': {
@@ -67,7 +67,7 @@ export const servicePageData = {
       "Zero-Trust identity posture at every login",
       "Automated offboarding: revoked access in minutes, not hours"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]",
     recommendedTier: "office" as const
   },
   'cloud-backup': {
@@ -90,7 +90,7 @@ export const servicePageData = {
       "Compliance-grade encryption audit trail",
       "Peace of mind: tested backups, not just 'set and forget'"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]",
     stat: { value: "54%", label: "used backups to restore encrypted data (lowest in 6 years)", source: "Sophos 2025" },
     recommendedTier: "office" as const,
   },
@@ -114,7 +114,7 @@ export const servicePageData = {
       "Reduced support tickets from malware/ransomware",
       "Lower breach risk from insider mistakes"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]",
     stat: toDisplayStat(getCyberFact("dbir-human-element-2026")),
     recommendedTier: "business" as const,
   },
@@ -138,7 +138,7 @@ export const servicePageData = {
       "Strategic IT planning and technology roadmap alignment",
       "Your IT team + DE stack = higher maturity without hiring"
     ],
-    gradientColors: "from-violet-700 via-purple-700 to-fuchsia-700",
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]",
     recommendedTier: "business" as const
   },
   'threat-detection': {
@@ -161,7 +161,7 @@ export const servicePageData = {
       "Compliance-ready incident documentation",
       "24/7 detection + real response, not 'good luck with alerts'"
     ],
-    gradientColors: "from-violet-700 via-purple-700 to-fuchsia-700",
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]",
     stat: toDisplayStat(getCyberFact("dbir-smb-ransomware-victims-2026")),
     recommendedTier: "business" as const,
   },
@@ -185,7 +185,7 @@ export const servicePageData = {
       "Compliance evidence and audit readiness",
       "Full SOC maturity without hiring SOC analysts"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]",
     recommendedTier: "business" as const,
   },
   'backup-disaster-recovery': {
@@ -209,7 +209,7 @@ export const servicePageData = {
       "Compliance-ready DR documentation",
       "Peace of mind: proven recovery capabilities"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]",
     recommendedTier: "enterprise" as const
   },
   'vcio-strategy': {
@@ -232,7 +232,7 @@ export const servicePageData = {
       "Reduced surprise costs and projects",
       "IT becomes a strategic business partner, not a cost center"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]",
     recommendedTier: "enterprise" as const,
   },
   'data-encryption': {
@@ -255,7 +255,7 @@ export const servicePageData = {
       "Default for healthcare, finance, and legal verticals",
       "Works alongside endpoint security, not instead of it"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]",
     recommendedTier: "business" as const,
   },
   'compliance-reports': {
@@ -278,7 +278,7 @@ export const servicePageData = {
       "Regulatory confidence: proactive, not reactive",
       "Clear roadmap to full compliance certification"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]",
     recommendedTier: "enterprise" as const,
   },
   'unified-security': {
@@ -301,7 +301,7 @@ export const servicePageData = {
       "Measurable risk reduction over time",
       "Compliance readiness score when modules active"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600",
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]",
     recommendedTier: "enterprise" as const,
   }
 };
@@ -323,7 +323,7 @@ export const industryPageData = {
       "Backup and recovery",
       "Cybersecurity insurance support"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600"
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
   },
   'real-estate': {
     title: "IT Solutions for Real Estate",
@@ -341,7 +341,7 @@ export const industryPageData = {
       "RESPA compliance support",
       "Transaction monitoring"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600"
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
   },
   'nonprofits': {
     title: "IT Solutions for Nonprofits",
@@ -359,7 +359,7 @@ export const industryPageData = {
       "Fundraising platform support",
       "Budget-friendly solutions"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600"
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
   },
   'professional-services': {
     title: "IT Solutions for Professional Services",
@@ -377,7 +377,7 @@ export const industryPageData = {
       "Document version control",
       "Compliance support for industry regulations"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600"
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
   }
 };
 
@@ -398,7 +398,7 @@ export const resourcePageData = {
       "Compliance updates",
       "Technology trends"
     ],
-    gradientColors: "from-violet-700 via-purple-700 to-fuchsia-700"
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
   },
   'videos': {
     title: "Videos & Webinars",
@@ -416,7 +416,7 @@ export const resourcePageData = {
       "Expert presenters",
       "Quarterly live webinars"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600"
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
   },
   'security-checklist': {
     title: "Security Checklist",
@@ -434,7 +434,7 @@ export const resourcePageData = {
       "Benchmark against peers",
       "Detailed report"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600"
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
   },
   'datasheets': {
     title: "Datasheets & Documentation",
@@ -452,7 +452,7 @@ export const resourcePageData = {
       "Compliance evidence",
       "Integration guides"
     ],
-    gradientColors: "from-violet-700 via-purple-700 to-fuchsia-700"
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
   }
 };
 
@@ -473,7 +473,7 @@ export const supportPageData = {
       "Multi-monitor support",
       "File transfer capability"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600"
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
   },
   'pay-invoice': {
     title: "Pay Invoice",
@@ -491,7 +491,7 @@ export const supportPageData = {
       "Payment history",
       "Secure portal access"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600"
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
   },
   'knowledge-base': {
     title: "Knowledge Base",
@@ -509,7 +509,7 @@ export const supportPageData = {
       "Video tutorials",
       "Printable guides"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600"
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
   },
   'system-status': {
     title: "System Status",
@@ -527,6 +527,6 @@ export const supportPageData = {
       "Uptime reports",
       "SLA tracking"
     ],
-    gradientColors: "from-violet-600 via-purple-600 to-fuchsia-600"
+    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
   }
 };

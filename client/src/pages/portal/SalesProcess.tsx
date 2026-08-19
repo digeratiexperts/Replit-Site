@@ -659,7 +659,7 @@ export default function SalesProcess() {
             Client Portal accounts do not include sales tooling.
           </p>
           <div className="flex flex-wrap gap-3">
-            <Button asChild className="bg-[#5034ff] hover:bg-[#5034ff]/90 text-white">
+            <Button asChild className="bg-[#D3126A] hover:bg-[#D3126A]/90 text-white">
               <a href="https://techsales.digerati-experts.com/" target="_blank" rel="noreferrer">
                 Open TechSales
               </a>
@@ -689,7 +689,7 @@ export default function SalesProcess() {
     const colorMap: Record<string, { border: string; bg: string; text: string; hoverBg: string }> = {
       cyan: { border: 'border-cyan-500/40', bg: 'bg-cyan-500/10', text: 'text-cyan-400', hoverBg: 'hover:bg-cyan-500/15' },
       orange: { border: 'border-orange-500/40', bg: 'bg-orange-500/10', text: 'text-orange-400', hoverBg: 'hover:bg-orange-500/15' },
-      violet: { border: 'border-violet-500/40', bg: 'bg-violet-500/10', text: 'text-violet-400', hoverBg: 'hover:bg-violet-500/15' },
+      violet: { border: 'border-[#D3126A]/40', bg: 'bg-[#D3126A]/10', text: 'text-de-magenta-ink', hoverBg: 'hover:bg-[#D3126A]/15' },
       emerald: { border: 'border-emerald-500/40', bg: 'bg-emerald-500/10', text: 'text-emerald-400', hoverBg: 'hover:bg-emerald-500/15' },
       blue: { border: 'border-blue-500/40', bg: 'bg-blue-500/10', text: 'text-blue-400', hoverBg: 'hover:bg-blue-500/15' },
       amber: { border: 'border-amber-500/40', bg: 'bg-amber-500/10', text: 'text-amber-400', hoverBg: 'hover:bg-amber-500/15' },
@@ -863,12 +863,12 @@ export default function SalesProcess() {
                   onClick={() => setShowTrack(!showTrack)}
                   className={`inline-flex items-center gap-2.5 px-3.5 py-3 rounded-full border font-black text-sm transition-all ${
                     showTrack 
-                      ? 'border-violet-500/70 bg-gradient-to-br from-violet-500/20 to-violet-500/5 text-white shadow-lg shadow-violet-500/15' 
-                      : 'border-white/10 bg-black/30 text-white/80 hover:border-violet-500/35'
+                      ? 'border-[#D3126A]/70 bg-gradient-to-br from-[#D3126A]/20 to-[#D3126A]/5 text-white shadow-lg shadow-[#D3126A]/15' 
+                      : 'border-white/10 bg-black/30 text-white/80 hover:border-[#D3126A]/35'
                   }`}
                   data-testid="toggle-track"
                 >
-                  <span className={`w-2.5 h-2.5 rounded-full border ${showTrack ? 'bg-violet-400 border-violet-500/75 shadow-violet-500/40 shadow-sm' : 'bg-white/25 border-white/20'}`} />
+                  <span className={`w-2.5 h-2.5 rounded-full border ${showTrack ? 'bg-[#D3126A] border-[#D3126A]/75 shadow-[#D3126A]/40 shadow-sm' : 'bg-white/25 border-white/20'}`} />
                   Track
                 </button>
                 <button
@@ -1096,27 +1096,27 @@ export default function SalesProcess() {
           {/* Sales Track Section - PURPLE THEME */}
           {showTrack && (
             <section 
-              className="px-5 py-5 border-b border-violet-500/20" 
+              className="px-5 py-5 border-b border-[#D3126A]/20" 
               style={{ background: 'linear-gradient(180deg, rgba(139,92,246,0.08) 0%, rgba(0,0,0,0.15) 100%)' }}
               data-testid="section-track"
             >
               <div className="flex items-center justify-between gap-4 mb-4 cursor-pointer" onClick={() => setShowTrack(!showTrack)}>
                 <div>
-                  <div className="text-xs text-violet-400 uppercase tracking-[0.16em] font-black mb-1">Sales Process Track</div>
+                  <div className="text-xs text-de-magenta-ink uppercase tracking-[0.16em] font-black mb-1">Sales Process Track</div>
                   <div className="text-lg font-black text-white">
                     {activeTab === 'ecosystem' ? 'ProActive Ecosystem' : 'Cybersecurity Track'}
                   </div>
                 </div>
-                <button className="w-10 h-10 rounded-xl border border-violet-500/30 bg-violet-500/10 text-violet-400 grid place-items-center transition-transform hover:bg-violet-500/20">
+                <button className="w-10 h-10 rounded-xl border border-[#D3126A]/30 bg-[#D3126A]/10 text-de-magenta-ink grid place-items-center transition-transform hover:bg-[#D3126A]/20">
                   <ChevronDown className="w-5 h-5" />
                 </button>
               </div>
 
               {/* Track Progress */}
-              <div className="p-4 rounded-2xl border border-violet-500/25 bg-gradient-to-r from-violet-500/10 to-purple-600/5 mb-4">
+              <div className="p-4 rounded-2xl border border-[#D3126A]/25 bg-gradient-to-r from-[#D3126A]/10 to-transparent mb-4">
                 <div className="flex justify-between items-baseline gap-4 mb-2.5">
-                  <div className="text-xs text-violet-300/80 font-extrabold uppercase tracking-widest">Track Progress</div>
-                  <div className="text-xs text-violet-300/80 font-extrabold">
+                  <div className="text-xs text-de-magenta-ink/80 font-extrabold uppercase tracking-widest">Track Progress</div>
+                  <div className="text-xs text-de-magenta-ink/80 font-extrabold">
                     Step {trackCards.findIndex(c => c.id === activeTrackCard) + 1} / {trackCards.length}
                   </div>
                 </div>
@@ -1133,7 +1133,7 @@ export default function SalesProcess() {
 
               {/* Row Header */}
               <div className="mb-4 px-1.5">
-                <div className="text-xs text-violet-400 uppercase tracking-[0.15em] font-extrabold mb-2">
+                <div className="text-xs text-de-magenta-ink uppercase tracking-[0.15em] font-extrabold mb-2">
                   {activeTab === 'ecosystem' ? 'Sales Process' : 'Cybersecurity Track'}
                 </div>
                 <div className="text-xl font-extrabold text-white leading-snug">
@@ -1146,7 +1146,7 @@ export default function SalesProcess() {
 
               {/* Track Timeline */}
               <div className="relative flex gap-5 overflow-x-auto pb-5 pt-8 px-1 scroll-smooth" style={{ scrollSnapType: 'x mandatory' }}>
-                <div className="absolute left-4 right-4 top-5 h-[3px] rounded-full bg-gradient-to-r from-violet-500/50 via-purple-400/40 to-fuchsia-400/30 pointer-events-none" />
+                <div className="absolute left-4 right-4 top-5 h-[3px] rounded-full bg-gradient-to-r from-[#D3126A]/50 via-[#D3126A]/40 to-[#D3126A]/30 pointer-events-none" />
                 
                 {filteredTrackCards.map(card => (
                   <article
@@ -1154,29 +1154,29 @@ export default function SalesProcess() {
                     onClick={() => openDrawer(card)}
                     className={`flex-shrink-0 w-[360px] max-w-[390px] rounded-[20px] border p-5 cursor-pointer transition-all duration-300 backdrop-blur-[18px] overflow-hidden ${
                       activeTrackCard === card.id
-                        ? 'border-violet-500 bg-gradient-to-br from-violet-500/20 to-purple-600/10 shadow-2xl shadow-violet-500/25 -translate-y-1 scale-[1.01]'
-                        : 'border-violet-500/25 bg-gradient-to-br from-violet-500/8 to-black/20 hover:border-violet-400 hover:-translate-y-1.5 hover:scale-[1.01] hover:shadow-2xl hover:shadow-violet-500/20'
+                        ? 'border-[#D3126A] bg-gradient-to-br from-[#D3126A]/20 to-transparent shadow-2xl shadow-[#D3126A]/25 -translate-y-1 scale-[1.01]'
+                        : 'border-[#D3126A]/25 bg-gradient-to-br from-[#D3126A]/8 to-black/20 hover:border-[#D3126A] hover:-translate-y-1.5 hover:scale-[1.01] hover:shadow-2xl hover:shadow-[#D3126A]/20'
                     }`}
                     style={{ scrollSnapAlign: 'start', boxShadow: '0 20px 60px rgba(0,0,0,.40)' }}
                     data-testid={`card-${card.id}`}
                   >
                     <div className="flex justify-between items-start gap-3 mb-3.5">
                       <h3 className="font-black text-base text-white leading-tight">{card.title}</h3>
-                      <span className="flex-shrink-0 px-3.5 py-2 rounded-full border border-violet-400/60 bg-violet-500/20 text-violet-300 font-black text-xs tracking-wide">
+                      <span className="flex-shrink-0 px-3.5 py-2 rounded-full border border-[#D3126A]/60 bg-[#D3126A]/20 text-de-magenta-ink font-black text-xs tracking-wide">
                         {card.badge}
                       </span>
                     </div>
                     
                     <ul className="list-disc pl-5 text-white/80 text-sm font-medium leading-relaxed mb-3.5">
                       {card.items.map((item, i) => (
-                        <li key={i} className="mb-2 marker:text-violet-400">{item}</li>
+                        <li key={i} className="mb-2 marker:text-de-magenta-ink">{item}</li>
                       ))}
                     </ul>
 
                     <div className="grid gap-3 mt-3.5">
                       {card.meta.map((m, i) => (
-                        <div key={i} className="flex justify-between items-center gap-3 px-3.5 py-3 rounded-xl border border-violet-500/20 bg-black/40 text-sm font-semibold text-white/80">
-                          <span className="text-violet-400 font-extrabold">{m.label}</span>
+                        <div key={i} className="flex justify-between items-center gap-3 px-3.5 py-3 rounded-xl border border-[#D3126A]/20 bg-black/40 text-sm font-semibold text-white/80">
+                          <span className="text-de-magenta-ink font-extrabold">{m.label}</span>
                           <span className="flex items-center gap-2 text-right">
                             {m.label === 'Meeting Type' && getMeetingIcon(m.value)}
                             <span className="max-w-[160px] truncate">{m.value}</span>
@@ -1186,7 +1186,7 @@ export default function SalesProcess() {
                     </div>
 
                     <button 
-                      className="mt-4 w-full py-3.5 rounded-xl border border-violet-500/40 bg-violet-500/10 text-violet-300 font-extrabold transition-all hover:-translate-y-0.5 hover:border-violet-400 hover:bg-violet-500/20"
+                      className="mt-4 w-full py-3.5 rounded-xl border border-[#D3126A]/40 bg-[#D3126A]/10 text-de-magenta-ink font-extrabold transition-all hover:-translate-y-0.5 hover:border-[#D3126A] hover:bg-[#D3126A]/20"
                       data-testid={`button-details-${card.id}`}
                     >
                       View Details
@@ -1293,7 +1293,7 @@ export default function SalesProcess() {
             <div className={`mx-5 mb-6 rounded-[20px] border p-5 backdrop-blur-[18px] ${
               drawerCard.scope === 'lead' 
                 ? 'border-orange-500/45' 
-                : 'border-violet-500/45'
+                : 'border-[#D3126A]/45'
             }`}
                  style={{ 
                    background: drawerCard.scope === 'lead'
@@ -1307,7 +1307,7 @@ export default function SalesProcess() {
                 <span className={`inline-flex items-center gap-2 px-3 py-2 rounded-full border font-black text-xs uppercase tracking-wider ${
                   drawerCard.scope === 'lead'
                     ? 'border-orange-500/55 bg-orange-500/15 text-orange-300'
-                    : 'border-violet-500/55 bg-violet-500/15 text-violet-300'
+                    : 'border-[#D3126A]/55 bg-[#D3126A]/15 text-de-magenta-ink'
                 }`}>
                   {drawerCard.phase}
                 </span>
@@ -1325,13 +1325,13 @@ export default function SalesProcess() {
               <div className="text-white/80 font-semibold leading-relaxed text-[15px]">
                 {drawerCard.meta.find(m => m.label === 'Meeting Type') && (
                   <p className="mb-3 flex items-center gap-2">
-                    <Calendar className={`w-4 h-4 ${drawerCard.scope === 'lead' ? 'text-orange-400' : 'text-violet-400'}`} />
-                    <b className={drawerCard.scope === 'lead' ? 'text-orange-400' : 'text-violet-400'}>Meeting Type:</b> {drawerCard.meta.find(m => m.label === 'Meeting Type')?.value}
+                    <Calendar className={`w-4 h-4 ${drawerCard.scope === 'lead' ? 'text-orange-400' : 'text-de-magenta-ink'}`} />
+                    <b className={drawerCard.scope === 'lead' ? 'text-orange-400' : 'text-de-magenta-ink'}>Meeting Type:</b> {drawerCard.meta.find(m => m.label === 'Meeting Type')?.value}
                   </p>
                 )}
                 
                 {drawerCard.details.title && (
-                  <p className="mb-2"><b className={drawerCard.scope === 'lead' ? 'text-orange-400' : 'text-violet-400'}>{drawerCard.details.title}:</b></p>
+                  <p className="mb-2"><b className={drawerCard.scope === 'lead' ? 'text-orange-400' : 'text-de-magenta-ink'}>{drawerCard.details.title}:</b></p>
                 )}
                 
                 <ul className="list-disc pl-6 space-y-2">

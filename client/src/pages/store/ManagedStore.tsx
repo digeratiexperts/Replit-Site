@@ -14,7 +14,9 @@ import {
   formatPrice,
   type StoreProduct
 } from "@/data/storeProducts";
-import { CartButton } from "@/components/store/CartButton";
+import { StoreClientBar } from "@/components/store/StoreClientBar";
+import { StorePageAtmosphere } from "@/components/store/StorePageAtmosphere";
+import { CTA } from "@/lib/ctaCopy";
 import { pricing, getPricingFooterText } from "@/data/pricing";
 import { ProductMedia } from "@/components/store/ProductMedia";
 import { getProductVisual } from "@/data/productImages";
@@ -55,14 +57,14 @@ const ManagedStore = () => {
       <motion.div
         variants={itemVariants}
         className={`relative overflow-hidden rounded-2xl border transition-all duration-300 hover:-translate-y-1 cursor-pointer ${
-          featured 
-            ? 'bg-violet-500/10 border-violet-500/40 shadow-[0_0_40px_rgba(139,92,246,0.2)]' 
-            : 'bg-white/[0.03] border-white/10 hover:border-violet-500/30'
+          featured
+            ? "bg-de-raised border-de-accent/35"
+            : "border-white/10 bg-white/[0.03] hover:border-de-hairline"
         }`}
         data-testid={`product-${product.id}`}
       >
       {featured && (
-        <div className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 px-3 py-1 bg-violet-600 text-white text-xs font-bold rounded-full flex items-center gap-1">
+        <div className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 px-3 py-1 bg-de-accent text-white text-xs font-bold rounded-full flex items-center gap-1">
           <Star className="w-3 h-3" />
           Most Popular
         </div>
@@ -77,7 +79,7 @@ const ManagedStore = () => {
 
       <div className="p-6">
       <div className="mb-4">
-        <span className="text-xs text-white/40 uppercase tracking-wider">{categoryLabels[product.category]}</span>
+        <span className="text-xs text-white/55 uppercase tracking-wider">{categoryLabels[product.category]}</span>
         {visual.vendor && (
           <span className="ml-2 text-xs text-white/50">{visual.vendor.name}</span>
         )}
@@ -86,7 +88,7 @@ const ManagedStore = () => {
 
       <div className="mb-4">
         {product.basePrice === 0 ? (
-          <span className="text-2xl font-bold text-violet-400">Custom Quote</span>
+          <span className="text-2xl font-bold text-de-accent-ink">Custom Quote</span>
         ) : (
           <>
             <span className="text-3xl font-black text-white">${product.basePrice}</span>
@@ -111,7 +113,7 @@ const ManagedStore = () => {
       <Button 
         className={`w-full ${
           featured 
-            ? 'bg-violet-600 hover:bg-violet-500 text-white' 
+            ? 'bg-de-accent hover:bg-de-accent text-white' 
             : 'bg-white/10 hover:bg-white/20 text-white border border-white/20'
         }`}
         onClick={(e) => {
@@ -131,20 +133,18 @@ const ManagedStore = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="relative min-h-screen bg-[#0a0a0a]">
+      <StorePageAtmosphere />
       <MegaMenu />
       
-      <main className="de-nav-clear pb-20">
+      <main className="relative z-10 de-nav-clear pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          {/* Breadcrumb with Cart Button */}
-          <div className="mb-8 flex items-center justify-between">
-            <div className="flex items-center gap-2 text-sm text-white/50">
-              <Link href="/store" className="hover:text-white transition-colors">Store</Link>
-              <span>/</span>
-              <span className="text-white">Managed Clients</span>
-            </div>
-            <CartButton />
+          <StoreClientBar />
+          <div className="mb-8 flex items-center gap-2 text-sm text-white/50">
+            <Link href="/store" className="transition-colors hover:text-white">Store</Link>
+            <span>/</span>
+            <span className="text-white">Managed Clients</span>
           </div>
 
           {/* Hero Section */}
@@ -154,13 +154,13 @@ const ManagedStore = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6">
-              <Building className="w-4 h-4 text-violet-400" />
-              <span className="text-sm text-violet-300">Managed IT Services</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-de-raised border border-de-hairline mb-6">
+              <Building className="w-4 h-4 text-de-accent-ink" />
+              <span className="text-sm text-de-accent-ink">Managed IT Services</span>
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+            <h1 className="mb-6 text-[clamp(2rem,6vw,3.25rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white">
               Full-Service{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-purple-300 to-fuchsia-300">
+              <span className="text-de-accent-ink">
                 Managed IT
               </span>
             </h1>
@@ -172,12 +172,12 @@ const ManagedStore = () => {
 
           {/* Contract Notice */}
           <motion.div 
-            className="mb-12 p-4 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-start gap-4"
+            className="mb-12 p-4 rounded-xl bg-de-raised border border-de-hairline flex items-start gap-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <Lock className="w-5 h-5 text-violet-400 mt-0.5 flex-shrink-0" />
+            <Lock className="w-5 h-5 text-de-accent-ink mt-0.5 flex-shrink-0" />
             <div>
               <h3 className="text-white font-semibold mb-1">Contract-Based Services</h3>
               <p className="text-white/60 text-sm">
@@ -210,7 +210,7 @@ const ManagedStore = () => {
               ))}
             </div>
             
-            <p className="text-center text-white/40 text-sm mt-6">
+            <p className="text-center text-white/55 text-sm mt-6">
               {getPricingFooterText()}. Final pricing tailored to your users, sites, and compliance needs.
             </p>
           </motion.section>
@@ -239,7 +239,7 @@ const ManagedStore = () => {
 
           {/* Why Choose Managed */}
           <motion.section 
-            className="mb-20 rounded-2xl p-8 bg-gradient-to-br from-violet-900/20 to-purple-900/20 border border-violet-500/20"
+            className="mb-20 rounded-2xl p-8 bg-de-raised border border-de-hairline"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -257,8 +257,8 @@ const ManagedStore = () => {
                 { icon: Award, value: "$50K+", label: "Avg. Savings", description: "Per client annually" }
               ].map((stat, index) => (
                 <div key={index} className="text-center p-4">
-                  <div className="w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center mx-auto mb-3">
-                    <stat.icon className="w-6 h-6 text-violet-400" />
+                  <div className="w-12 h-12 rounded-full bg-de-raised flex items-center justify-center mx-auto mb-3">
+                    <stat.icon className="w-6 h-6 text-de-accent-ink" />
                   </div>
                   <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
                   <div className="text-white/80 font-medium text-sm">{stat.label}</div>
@@ -276,41 +276,44 @@ const ManagedStore = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-              Ready to Get Started?
+            <h2 className="mb-4 text-2xl font-bold text-white md:text-3xl">
+              Need a package recommendation?
             </h2>
-            <p className="text-white/60 mb-8 max-w-xl mx-auto">
-              Schedule a free 15-minute call to discuss your needs. We'll help you choose the right plan 
-              and provide a customized quote for your organization.
+            <p className="mx-auto mb-8 max-w-xl text-white/60">
+              Start with a cyber risk assessment. We map the right ProActive tier to your users,
+              sites, and compliance needs — then quote the contract.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="/book">
-                <Button 
-                  size="lg"
-                  className="h-14 px-8 text-lg font-semibold bg-violet-600 hover:bg-violet-500 text-white shadow-lg shadow-violet-500/25"
-                  data-testid="button-final-cta"
-                >
-                  <Calendar className="w-5 h-5 mr-2" />
-                  Schedule Consultation
-                </Button>
-              </a>
-              <a href="tel:480-519-5892">
-                <Button 
-                  size="lg"
-                  className="h-14 px-8 text-lg font-semibold bg-transparent border-2 border-white/30 text-white hover:bg-white/10"
-                  data-testid="button-call-us"
-                >
-                  <Phone className="w-5 h-5 mr-2" />
-                  480-519-5892
-                </Button>
-              </a>
+            <div className="flex flex-col justify-center gap-4 sm:flex-row">
+              <Button
+                asChild
+                size="lg"
+                variant="brand"
+                className="h-14 px-8 text-lg font-semibold"
+                data-testid="button-final-cta"
+              >
+                <a href="/book">
+                  <Calendar className="mr-2 h-5 w-5" />
+                  {CTA.primary}
+                </a>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                className="h-14 border-2 border-white/30 bg-transparent px-8 text-lg font-semibold text-white hover:bg-white/10"
+                data-testid="button-call-us"
+              >
+                <a href="tel:+13254809870">
+                  <Phone className="mr-2 h-5 w-5" />
+                  325-480-9870
+                </a>
+              </Button>
             </div>
             
             <div className="mt-8">
               <Link href="/store/co-managed">
                 <Button 
                   variant="link" 
-                  className="text-violet-400 hover:text-violet-300"
+                  className="text-de-accent-ink hover:text-de-accent-ink"
                   data-testid="button-browse-comanaged"
                 >
                   Looking for individual products? Browse Co-Managed Store

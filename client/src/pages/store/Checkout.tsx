@@ -229,7 +229,7 @@ const Checkout = () => {
               <div className="lg:col-span-3 space-y-8">
                 <div className="bg-white/5 border border-white/10 rounded-xl p-6" data-testid="section-billing-info">
                   <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-violet-400" />
+                    <FileText className="w-5 h-5 text-de-accent-ink" />
                     Billing Information
                   </h2>
 
@@ -242,8 +242,10 @@ const Checkout = () => {
                         <Input
                           id="name"
                           {...register("name")}
+                          required
+                          aria-required={true}
                           placeholder="John Smith"
-                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-violet-500"
+                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-de-muted-soft focus:border-de-hairline"
                           data-testid="input-name"
                         />
                         {errors.name && (
@@ -260,8 +262,10 @@ const Checkout = () => {
                           id="email"
                           type="email"
                           {...register("email")}
+                          required
+                          aria-required={true}
                           placeholder="john@company.com"
-                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-violet-500"
+                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-de-muted-soft focus:border-de-hairline"
                           data-testid="input-email"
                         />
                         {errors.email && (
@@ -281,7 +285,7 @@ const Checkout = () => {
                           id="company"
                           {...register("company")}
                           placeholder="Acme Corp"
-                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-violet-500"
+                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-white/55 focus:border-de-hairline"
                           data-testid="input-company"
                         />
                       </div>
@@ -294,7 +298,7 @@ const Checkout = () => {
                           type="tel"
                           {...register("phone")}
                           placeholder="(555) 123-4567"
-                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-violet-500"
+                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-white/55 focus:border-de-hairline"
                           data-testid="input-phone"
                         />
                       </div>
@@ -304,7 +308,7 @@ const Checkout = () => {
 
                 <div className="bg-white/5 border border-white/10 rounded-xl p-6" data-testid="section-payment-method">
                   <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                    <CreditCard className="w-5 h-5 text-violet-400" />
+                    <CreditCard className="w-5 h-5 text-de-accent-ink" />
                     Payment Method
                   </h2>
 
@@ -317,14 +321,14 @@ const Checkout = () => {
                       htmlFor="payment-zoho"
                       className={`flex items-center gap-4 p-4 rounded-lg border cursor-pointer transition-all ${
                         paymentMethod === "zoho"
-                          ? "border-violet-500 bg-violet-500/10"
+                          ? "border-de-hairline bg-de-raised"
                           : "border-white/20 hover:border-white/40"
                       }`}
                     >
                       <RadioGroupItem value="zoho" id="payment-zoho" data-testid="radio-zoho" />
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <CreditCard className="w-5 h-5 text-violet-400" />
+                          <CreditCard className="w-5 h-5 text-de-accent-ink" />
                           <span className="font-medium text-white">Credit / Debit Card</span>
                         </div>
                         <p className="text-sm text-white/60 mt-1">
@@ -332,7 +336,7 @@ const Checkout = () => {
                         </p>
                       </div>
                       {paymentMethod === "zoho" && (
-                        <Check className="w-5 h-5 text-violet-400" />
+                        <Check className="w-5 h-5 text-de-accent-ink" />
                       )}
                     </label>
 
@@ -340,7 +344,7 @@ const Checkout = () => {
                       htmlFor="payment-quote"
                       className={`flex items-center gap-4 p-4 rounded-lg border cursor-pointer transition-all ${
                         paymentMethod === "quote_request"
-                          ? "border-violet-500 bg-violet-500/10"
+                          ? "border-de-hairline bg-de-raised"
                           : "border-white/20 hover:border-white/40"
                       }`}
                     >
@@ -355,7 +359,7 @@ const Checkout = () => {
                         </p>
                       </div>
                       {paymentMethod === "quote_request" && (
-                        <Check className="w-5 h-5 text-violet-400" />
+                        <Check className="w-5 h-5 text-de-accent-ink" />
                       )}
                     </label>
                   </RadioGroup>
@@ -365,7 +369,7 @@ const Checkout = () => {
               <div className="lg:col-span-2">
                 <div className="bg-white/5 border border-white/10 rounded-xl p-6 sticky top-28" data-testid="section-order-summary">
                   <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                    <ShoppingCart className="w-5 h-5 text-violet-400" />
+                    <ShoppingCart className="w-5 h-5 text-de-accent-ink" />
                     Order Summary
                   </h2>
 
@@ -448,7 +452,7 @@ const Checkout = () => {
                     )}
                     <div className="flex justify-between text-lg font-semibold pt-2 border-t border-white/10">
                       <span className="text-white">Due Today</span>
-                      <span className="text-violet-400" data-testid="text-total-due">
+                      <span className="text-de-accent-ink" data-testid="text-total-due">
                         {formatCurrency(getCartTotal())}
                       </span>
                     </div>
@@ -458,7 +462,7 @@ const Checkout = () => {
                     type="submit"
                     form="checkout-form"
                     disabled={isSubmitting}
-                    className="w-full mt-6 bg-violet-600 hover:bg-violet-500 text-white py-6 text-lg font-semibold"
+                    className="w-full mt-6 bg-de-accent hover:bg-de-accent text-white py-6 text-lg font-semibold"
                     data-testid="button-submit-order"
                   >
                     {isSubmitting ? (
@@ -479,13 +483,13 @@ const Checkout = () => {
                     )}
                   </Button>
 
-                  <p className="text-center text-white/40 text-xs mt-4">
+                  <p className="text-center text-white/55 text-xs mt-4">
                     By completing this order, you agree to our{" "}
-                    <Link href="/legal/terms-of-use" className="text-violet-400 hover:underline">
+                    <Link href="/legal/terms-of-use" className="text-de-accent-ink hover:underline">
                       Terms of Service
                     </Link>{" "}
                     and{" "}
-                    <Link href="/legal/privacy-policy" className="text-violet-400 hover:underline">
+                    <Link href="/legal/privacy-policy" className="text-de-accent-ink hover:underline">
                       Privacy Policy
                     </Link>
                   </p>

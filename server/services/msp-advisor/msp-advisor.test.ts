@@ -248,7 +248,7 @@ describe("handleAdvisorChat acceptance (heuristic / no LLM required)", () => {
       message: "Active ransomware — files encrypting now",
     });
     assert.equal(res.mode, "security_incident");
-    assert.match(res.reply, /urgent|isolate|480-519-5892|contain/i);
+    assert.match(res.reply, /urgent|isolate|325-480-9870|contain/i);
   });
 
   it("blocks prompt injection from revealing instructions", async () => {

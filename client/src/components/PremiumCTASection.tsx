@@ -18,7 +18,7 @@ export function PremiumCTASection({
   primaryButtonText = "Schedule Consultation",
   primaryButtonHref = "/book",
   showPhoneButton = true,
-  phoneNumber = "480-519-5892",
+  phoneNumber = "325-480-9870",
 }: PremiumCTASectionProps) {
   const prefersReducedMotion = useReducedMotion();
   const { openBooking } = useBooking();
@@ -37,7 +37,7 @@ export function PremiumCTASection({
           <div 
             className="absolute inset-0"
             style={{
-              background: "linear-gradient(135deg, #7c3aed 0%, #a855f7 35%, #c026d3 70%, #a855f7 100%)",
+              background: "var(--de-magenta)",
             }}
           />
           
@@ -88,7 +88,7 @@ export function PremiumCTASection({
             >
               <Button 
                 size="lg"
-                className="h-14 px-8 bg-white text-violet-700 hover:bg-white/90 font-semibold text-base rounded-full shadow-lg shadow-black/20"
+                className="h-14 px-8 bg-white text-de-accent hover:bg-white/90 font-semibold text-base rounded-full shadow-lg shadow-black/20"
                 data-testid="button-premium-cta-primary"
                 onClick={(e) => { e.preventDefault(); openBooking("cta_section"); }}
               >
@@ -97,17 +97,17 @@ export function PremiumCTASection({
               </Button>
               
               {showPhoneButton && (
-                <a href={`tel:${phoneNumber}`}>
-                  <Button 
+                <Button asChild 
                     variant="outline"
                     size="lg"
                     className="h-14 px-8 bg-transparent border-2 border-white/40 text-white hover:bg-white/10 hover:border-white/60 font-semibold text-base rounded-full"
                     data-testid="button-premium-cta-phone"
                   >
+                  <a href={`tel:${phoneNumber}`}>
                     <Phone className="mr-2 h-5 w-5" />
                     Call {phoneNumber}
-                  </Button>
-                </a>
+                  </a>
+                </Button>
               )}
             </motion.div>
           </div>

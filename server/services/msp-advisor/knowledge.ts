@@ -1,19 +1,24 @@
 import { pricing, formatUserPrice, formatMonthlyMin } from "../../../client/src/data/pricing";
 import { serviceCatalog } from "../../../client/src/data/serviceCatalog";
+import {
+  COMPANY,
+  PRIMARY_PHONE,
+  formatAddressOneLine,
+} from "../../../client/src/data/companyContact";
 import { PORTAL_LOGIN, PORTAL_HOME } from "../../../client/src/lib/portalUrls";
 import type { AdvisorMode, PageContext } from "./types";
 
 export const DE_COMPANY = {
-  name: "Digerati Experts",
-  phoneDisplay: "480-519-5892",
-  phoneE164: "+14805195892",
-  email: "info@digeratiexperts.com",
-  address: "3165 S Alma School Rd Suite 29, Chandler, AZ 85248",
-  area: "Arizona and Greater Phoenix (Chandler, Phoenix, Scottsdale, Tempe, Mesa, Gilbert)",
-  bookingUrl: "https://meet.digerati-experts.com/",
+  name: COMPANY.legalName,
+  phoneDisplay: PRIMARY_PHONE.display,
+  phoneE164: PRIMARY_PHONE.e164,
+  email: COMPANY.email,
+  address: formatAddressOneLine(),
+  area: COMPANY.areaServed,
+  bookingUrl: COMPANY.bookingUrl,
   portalLogin: PORTAL_LOGIN,
   portalHome: PORTAL_HOME,
-  website: "https://digeratiexperts.com",
+  website: COMPANY.website,
   positioning:
     "Cybersecurity-first managed IT (MSP/MSSP) helping Arizona businesses stabilize operations, reduce risk, and get clear ownership of technology outcomes.",
 } as const;

@@ -126,7 +126,7 @@ export default function PortalQBR() {
             Performance metrics, security posture, and strategic recommendations reviewed quarterly with your vCIO.
           </p>
           <Button
-            className="bg-[#5034ff] hover:bg-[#5034ff]/90"
+            className="bg-[#D3126A] hover:bg-[#D3126A]/90"
             onClick={() => window.location.href = "/book"}
             data-testid="button-schedule-qbr"
           >
@@ -139,7 +139,7 @@ export default function PortalQBR() {
           {qbrReports.map((report) => (
             <Card
               key={report.id}
-              className={`hover:border-[#5034ff]/50 transition-colors ${
+              className={`hover:border-[#D3126A]/50 transition-colors ${
                 report.status === "completed" ? "border-emerald-500/30" : ""
               }`}
               data-testid={`qbr-report-${report.id}`}
@@ -202,7 +202,7 @@ export default function PortalQBR() {
                 onClick={() => setActiveTab(tab.key as any)}
                 className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
                   activeTab === tab.key
-                    ? "border-[#5034ff] text-[#5034ff]"
+                    ? "border-[#D3126A] text-[#D3126A]"
                     : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
                 }`}
                 data-testid={`tab-qbr-${tab.key}`}
@@ -273,7 +273,7 @@ export default function PortalQBR() {
                       <defs>
                         <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                           <stop offset="0%" stopColor="#10b981" />
-                          <stop offset="100%" stopColor="#5034ff" />
+                          <stop offset="100%" stopColor="#D3126A" />
                         </linearGradient>
                       </defs>
                       <text x="50" y="50" textAnchor="middle" dominantBaseline="central" className="fill-current text-2xl font-bold" data-testid="text-security-score">
@@ -483,11 +483,11 @@ export default function PortalQBR() {
               </Card>
             ))}
 
-            <Card className="bg-gradient-to-r from-[#5034ff]/10 to-purple-500/10 border-[#5034ff]/30">
+            <Card className="bg-gradient-to-r from-[#D3126A]/10 to-transparent border-[#D3126A]/30">
               <CardContent className="pt-6">
                 <div className="flex flex-col md:flex-row items-center gap-6">
-                  <div className="w-16 h-16 rounded-2xl bg-[#5034ff]/20 flex items-center justify-center flex-shrink-0">
-                    <Target className="h-8 w-8 text-[#5034ff]" />
+                  <div className="w-16 h-16 rounded-2xl bg-[#D3126A]/20 flex items-center justify-center flex-shrink-0">
+                    <Target className="h-8 w-8 text-[#D3126A]" />
                   </div>
                   <div className="flex-1 text-center md:text-left">
                     <h3 className="text-xl font-bold mb-1">Discuss these recommendations</h3>
@@ -496,7 +496,7 @@ export default function PortalQBR() {
                     </p>
                   </div>
                   <Button
-                    className="bg-[#5034ff] hover:bg-[#5034ff]/90"
+                    className="bg-[#D3126A] hover:bg-[#D3126A]/90"
                     onClick={() => window.location.href = "/book"}
                     data-testid="button-discuss-recommendations"
                   >

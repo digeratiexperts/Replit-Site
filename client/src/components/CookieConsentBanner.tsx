@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "wouter";
 import { AnimatePresence, motion } from "framer-motion";
 import { saveConsent } from "@/lib/analytics";
@@ -19,6 +19,7 @@ export function CookieConsentBanner() {
   const [showPreferences, setShowPreferences] = useState(false);
   const [analyticsEnabled, setAnalyticsEnabled] = useState(true);
   const [marketingEnabled, setMarketingEnabled] = useState(true);
+  const bannerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!hasStoredConsent()) {
@@ -26,6 +27,25 @@ export function CookieConsentBanner() {
       return () => clearTimeout(timer);
     }
   }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const el = bannerRef.current;
+    if (!visible || !el) {
+      root.style.setProperty("--de-cookie-h", "0px");
+      return;
+    }
+    const publish = () => {
+      root.style.setProperty("--de-cookie-h", `${Math.round(el.offsetHeight)}px`);
+    };
+    publish();
+    const ro = new ResizeObserver(publish);
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      root.style.setProperty("--de-cookie-h", "0px");
+    };
+  }, [visible]);
 
   const finishConsent = () => {
     setVisible(false);
@@ -70,33 +90,34 @@ export function CookieConsentBanner() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 40 }}
               transition={{ duration: 0.3 }}
-              className="fixed bottom-[88px] left-4 right-4 md:left-auto md:right-6 md:w-[420px] z-[9995] rounded-2xl border border-violet-500/30 bg-[#0d0d1a] shadow-2xl shadow-black/50 p-6"
+              className="fixed bottom-[88px] left-4 right-4 md:left-auto z-[9995] rounded-2xl border border-de-hairline bg-de-raised shadow-2xl shadow-black/50 p-6 md:w-[420px]"
+              style={{ right: "calc(var(--de-canvas-gutter) + 1.5rem)" }}
               data-testid="cookie-preferences-panel"
             >
               <h3 className="text-white font-semibold text-lg mb-1 font-['Space_Grotesk']">Cookie Preferences</h3>
-              <p className="text-gray-400 text-sm mb-5 leading-relaxed">
+              <p className="text-gray-300 text-base mb-5 leading-relaxed">
                 Choose which cookies you allow. Strictly necessary cookies are always enabled.
               </p>
 
               <div className="space-y-4">
                 <div className="flex items-start justify-between gap-4 p-3 rounded-xl bg-white/5 border border-white/10">
                   <div>
-                    <p className="text-white text-sm font-medium">Strictly Necessary</p>
-                    <p className="text-gray-500 text-xs mt-0.5">Required for the site to function.</p>
+                    <p className="text-white text-base font-medium">Strictly Necessary</p>
+                    <p className="text-gray-400 text-base mt-0.5">Required for the site to function.</p>
                   </div>
-                  <span className="text-emerald-400 text-xs font-semibold mt-1 whitespace-nowrap">Always On</span>
+                  <span className="text-emerald-400 text-base font-semibold mt-1 whitespace-nowrap">Always On</span>
                 </div>
 
                 <label className="flex items-start justify-between gap-4 p-3 rounded-xl bg-white/5 border border-white/10 cursor-pointer">
                   <div>
-                    <p className="text-white text-sm font-medium">Analytics Cookies</p>
-                    <p className="text-gray-500 text-xs mt-0.5">Help us understand how visitors interact with the site.</p>
+                    <p className="text-white text-base font-medium">Analytics Cookies</p>
+                    <p className="text-gray-400 text-base mt-0.5">Help us understand how visitors interact with the site.</p>
                   </div>
                   <div
                     role="switch"
                     aria-checked={analyticsEnabled}
                     onClick={() => setAnalyticsEnabled(v => !v)}
-                    className={`relative mt-1 w-10 h-5 rounded-full flex-shrink-0 cursor-pointer transition-colors ${analyticsEnabled ? "bg-violet-500" : "bg-white/20"}`}
+                    className={`relative mt-1 w-10 h-5 rounded-full flex-shrink-0 cursor-pointer transition-colors ${analyticsEnabled ? "bg-[#D3126A]" : "bg-white/20"}`}
                     data-testid="toggle-analytics"
                   >
                     <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${analyticsEnabled ? "translate-x-5" : "translate-x-0"}`} />
@@ -105,14 +126,14 @@ export function CookieConsentBanner() {
 
                 <label className="flex items-start justify-between gap-4 p-3 rounded-xl bg-white/5 border border-white/10 cursor-pointer">
                   <div>
-                    <p className="text-white text-sm font-medium">Marketing Cookies</p>
-                    <p className="text-gray-500 text-xs mt-0.5">Used to deliver relevant ads and track campaign effectiveness.</p>
+                    <p className="text-white text-base font-medium">Marketing Cookies</p>
+                    <p className="text-gray-400 text-base mt-0.5">Used to deliver relevant ads and track campaign effectiveness.</p>
                   </div>
                   <div
                     role="switch"
                     aria-checked={marketingEnabled}
                     onClick={() => setMarketingEnabled(v => !v)}
-                    className={`relative mt-1 w-10 h-5 rounded-full flex-shrink-0 cursor-pointer transition-colors ${marketingEnabled ? "bg-violet-500" : "bg-white/20"}`}
+                    className={`relative mt-1 w-10 h-5 rounded-full flex-shrink-0 cursor-pointer transition-colors ${marketingEnabled ? "bg-[#D3126A]" : "bg-white/20"}`}
                     data-testid="toggle-marketing"
                   >
                     <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${marketingEnabled ? "translate-x-5" : "translate-x-0"}`} />
@@ -123,14 +144,14 @@ export function CookieConsentBanner() {
               <div className="flex gap-3 mt-5">
                 <button
                   onClick={savePreferences}
-                  className="flex-1 bg-violet-600 hover:bg-violet-500 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors"
+                  className="flex-1 min-h-11 bg-[#D3126A] hover:bg-[#e01874] text-white text-base font-semibold py-2.5 rounded-xl transition-colors"
                   data-testid="button-save-preferences"
                 >
                   Save Preferences
                 </button>
                 <button
                   onClick={() => setShowPreferences(false)}
-                  className="px-4 bg-white/10 hover:bg-white/20 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors"
+                  className="min-h-11 px-4 bg-white/10 hover:bg-white/20 text-white text-base font-semibold py-2.5 rounded-xl transition-colors"
                   data-testid="button-cancel-preferences"
                 >
                   Cancel
@@ -145,14 +166,15 @@ export function CookieConsentBanner() {
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="fixed bottom-0 left-0 right-0 z-[9991]"
+            className="fixed z-[9991] de-fixed-in-canvas bottom-0"
             data-testid="cookie-consent-banner"
           >
             <div
+              ref={bannerRef}
               className="relative overflow-hidden"
               style={{
-                background: "linear-gradient(90deg, #1e0a4a 0%, #2d1060 30%, #3b1578 60%, #2a0d6b 100%)",
-                borderTop: "1px solid rgba(139,92,246,0.3)",
+                background: "#0a0a0a",
+                borderTop: "1px solid rgba(255,255,255,0.1)",
               }}
             >
               <div
@@ -163,34 +185,42 @@ export function CookieConsentBanner() {
                 }}
               />
 
-              <div className="relative z-10 max-w-screen-2xl mx-auto px-4 md:px-8 py-3 md:py-4 flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-8">
-                <p className="hidden md:block text-gray-200 text-xs leading-relaxed flex-1 min-w-0">
+              <div className="relative z-10 max-w-screen-2xl mx-auto px-4 md:px-8 py-2.5 md:py-4 flex flex-col md:flex-row items-stretch md:items-center gap-2 md:gap-8">
+                <p className="hidden md:block text-gray-200 text-base leading-relaxed flex-1 min-w-0">
                   Digerati Experts uses cookies and similar tracking technologies to collect information you provide and to capture your interaction with our site. We use this information to enhance site navigation, personalize content, analyze your use of our website, and assist in our marketing efforts and customer service. To deliver the best experience, analytics and hosting service providers may have access to this information. By clicking "Accept All," you consent to our collection, use, and disclosure of such information. For more information about our data processing practices, please see our{" "}
                   <Link
                     href="/legal/privacy-policy"
-                    className="underline underline-offset-2 text-violet-300 hover:text-white transition-colors font-medium"
+                    className="underline underline-offset-2 text-[#D3126A] hover:text-white transition-colors font-medium"
                     data-testid="link-privacy-policy-cookie"
                   >
                     Privacy Policy
                   </Link>
                   .
                 </p>
-                <p className="md:hidden text-gray-200 text-xs leading-snug flex-1 min-w-0">
-                  We use cookies to run the site, measure performance, and support marketing. Details in our{" "}
+                <p className="md:hidden text-sm font-medium leading-snug text-gray-200 flex-1 min-w-0">
+                  We use cookies.{" "}
                   <Link
                     href="/legal/privacy-policy"
-                    className="underline underline-offset-2 text-violet-300 hover:text-white transition-colors font-medium"
+                    className="underline underline-offset-2 text-[#D3126A] hover:text-white transition-colors font-semibold"
                     data-testid="link-privacy-policy-cookie-mobile"
                   >
-                    Privacy Policy
+                    Privacy
                   </Link>
-                  .
+                  {" · "}
+                  <button
+                    type="button"
+                    onClick={() => setShowPreferences(v => !v)}
+                    className="underline underline-offset-2 text-[#D3126A] hover:text-white font-semibold"
+                    data-testid="button-manage-cookie-preferences-mobile"
+                  >
+                    Preferences
+                  </button>
                 </p>
 
                 <div className="flex items-center gap-2 flex-shrink-0 flex-wrap w-full md:w-auto justify-between md:justify-end">
                   <button
                     onClick={() => setShowPreferences(v => !v)}
-                    className="text-violet-300 hover:text-white text-sm font-semibold underline underline-offset-2 transition-colors whitespace-nowrap px-1 min-h-11"
+                    className="hidden md:inline-flex text-[#D3126A] hover:text-white text-base font-semibold underline underline-offset-2 transition-colors whitespace-nowrap px-1 min-h-11"
                     data-testid="button-manage-cookie-preferences"
                   >
                     Manage Cookie Preferences
@@ -199,7 +229,7 @@ export function CookieConsentBanner() {
                   <div className="flex items-center gap-2 ml-auto md:ml-0">
                     <button
                       onClick={reject}
-                      className="min-h-11 px-5 py-2 rounded text-sm font-semibold bg-[#0a0a1a] border border-white/20 text-white hover:bg-white/10 transition-colors whitespace-nowrap"
+                      className="min-h-11 px-5 py-2 rounded text-base font-semibold bg-[#0a0a1a] border border-white/20 text-white hover:bg-white/10 transition-colors whitespace-nowrap"
                       data-testid="button-reject-all-cookies"
                     >
                       Reject All
@@ -207,7 +237,7 @@ export function CookieConsentBanner() {
 
                     <button
                       onClick={accept}
-                      className="min-h-11 px-5 py-2 rounded text-sm font-semibold bg-[#0a0a1a] border border-white/20 text-white hover:bg-white/10 transition-colors whitespace-nowrap"
+                      className="min-h-11 px-5 py-2 rounded text-base font-semibold bg-[#0a0a1a] border border-white/20 text-white hover:bg-white/10 transition-colors whitespace-nowrap"
                       data-testid="button-accept-all-cookies"
                     >
                       Accept All

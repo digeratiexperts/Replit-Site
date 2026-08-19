@@ -300,7 +300,7 @@ export default function PortalLogin() {
                   </div>
 
                   <div className="flex justify-end">
-                    <a href="/portal/forgot-password" className="text-xs text-violet-400 hover:underline" data-testid="link-forgot-password">
+                    <a href="/portal/forgot-password" className="text-xs text-de-magenta-ink hover:underline" data-testid="link-forgot-password">
                       Forgot password?
                     </a>
                   </div>
@@ -310,7 +310,7 @@ export default function PortalLogin() {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-[#5034ff] hover:bg-[#5034ff]/90 text-white font-semibold"
+                    className="w-full bg-[#D3126A] hover:bg-[#D3126A]/90 text-white font-semibold"
                     data-testid="button-login"
                   >
                     {loading ? "Signing in..." : "Sign In"}
@@ -321,7 +321,7 @@ export default function PortalLogin() {
                 <div className="mt-6 pt-6 border-t border-white/10">
                   <p className="text-xs text-gray-400 text-center mb-3">
                     Don't have an account?{" "}
-                    <a href="/portal/signup" className="text-[#5034ff] hover:underline" data-testid="link-signup">
+                    <a href="/portal/signup" className="text-de-magenta-ink hover:underline" data-testid="link-signup">
                       Sign Up
                     </a>
                   </p>
@@ -335,7 +335,7 @@ export default function PortalLogin() {
             <>
               <CardHeader className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="h-6 w-6 text-violet-400" />
+                  <ShieldCheck className="h-6 w-6 text-de-magenta-ink" />
                   <CardTitle className="text-2xl text-white">Verify Your Identity</CardTitle>
                 </div>
                 <CardDescription className="text-gray-300">
@@ -375,7 +375,7 @@ export default function PortalLogin() {
                   <Button
                     type="submit"
                     disabled={loading || mfaCode.length < 6}
-                    className="w-full bg-[#5034ff] hover:bg-[#5034ff]/90 text-white font-semibold"
+                    className="w-full bg-[#D3126A] hover:bg-[#D3126A]/90 text-white font-semibold"
                     data-testid="button-verify-mfa"
                   >
                     {loading ? "Verifying..." : "Verify & Sign In"}

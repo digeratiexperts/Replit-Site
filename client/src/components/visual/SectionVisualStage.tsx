@@ -42,8 +42,8 @@ export function SectionVisualStage({
   const s = sizeMap[size];
   const framed =
     surface === "dark"
-      ? "border-white/10 bg-gradient-to-br from-violet-500/15 via-fuchsia-500/[0.07] to-transparent shadow-[0_0_60px_-20px_rgba(168,85,247,0.45)]"
-      : "border-violet-200/80 bg-gradient-to-br from-violet-50 via-white to-fuchsia-50/60 shadow-lg shadow-violet-500/10";
+      ? "border-white/10 bg-gradient-to-br  via-fuchsia-500/[0.07] to-transparent shadow-[0_0_60px_-20px_rgba(168,85,247,0.45)]"
+      : "border-de-hairline bg-gradient-to-br  via-white to-fuchsia-50/60 shadow-lg shadow-none";
 
   return (
     <div

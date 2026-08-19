@@ -12,7 +12,7 @@ export default function DPA() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
             <div className="flex items-center gap-3 mb-6">
-              <Database className="h-12 w-12 text-purple-400" />
+              <Database className="h-12 w-12 text-de-accent-ink" />
               <h1 className="text-4xl md:text-5xl font-bold">Data Processing Agreement</h1>
             </div>
             <p className="text-xl text-gray-300">
@@ -46,7 +46,7 @@ export default function DPA() {
               </ul>
             </div>
 
-            <div className="bg-purple-500/10 backdrop-blur-sm border border-purple-500/30 border-l-4 border-l-purple-500 p-6 rounded mb-8">
+            <div className="bg-de-raised backdrop-blur-sm border border-de-hairline border-l-4 border-l-de-accent p-6 rounded mb-8">
               <h3 className="text-xl font-semibold text-white mb-3">Compliance Frameworks:</h3>
               <ul className="list-disc pl-6 text-gray-300 space-y-2">
                 <li><strong className="text-white">HIPAA:</strong> Business Associate Agreement provisions for Protected Health Information</li>
@@ -64,7 +64,7 @@ export default function DPA() {
 
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
               <Button 
-                className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
+                className="bg-de-raised text-white hover: hover:to-blue-700"
                 onClick={() => window.location.href = 'mailto:legal@digeratiexperts.com?subject=DPA Request'}
                 data-testid="button-request-dpa"
               >
@@ -74,9 +74,9 @@ export default function DPA() {
               <Button 
                 variant="outline"
                 className="border-white/20 text-white hover:bg-white/10"
-                onClick={() => window.location.href = 'tel:480-519-5892'}
+                onClick={() => window.location.href = 'tel:+13254809870'}
               >
-                Call 480-519-5892
+                Call 325-480-9870
               </Button>
             </div>
           </div>

@@ -27,17 +27,17 @@ export default function TicketConfirmation() {
           We’ll follow up at the email you provided. For urgent production issues, call us now.
         </p>
         <a
-          href="tel:480-519-5892"
-          className="inline-flex items-center gap-2 text-2xl font-bold text-purple-300 hover:text-purple-200"
+          href="tel:+13254809870"
+          className="inline-flex items-center gap-2 text-2xl font-bold text-de-accent-ink hover:text-de-accent-ink"
         >
           <Phone className="h-6 w-6" />
-          480-519-5892
+          325-480-9870
         </a>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Button onClick={() => setLocation("/support/knowledge-base")} variant="outline">
             Browse Knowledge Base
           </Button>
-          <Button onClick={() => setLocation("/")} className="bg-violet-600 hover:bg-violet-500">
+          <Button onClick={() => setLocation("/")} className="bg-de-accent hover:bg-de-accent">
             Back to Home
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>

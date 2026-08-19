@@ -12,7 +12,7 @@ export default function SLA() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
             <div className="flex items-center gap-3 mb-6">
-              <Clock className="h-12 w-12 text-purple-400" />
+              <Clock className="h-12 w-12 text-de-accent-ink" />
               <h1 className="text-4xl md:text-5xl font-bold">Service Level Agreement</h1>
             </div>
             <p className="text-xl text-gray-300">
@@ -35,24 +35,24 @@ export default function SLA() {
               <div className="space-y-3">
                 <div className="flex justify-between items-center border-b border-white/10 pb-2">
                   <span className="font-semibold text-white">Critical (Active Breach/System Down)</span>
-                  <span className="text-purple-400 font-bold">15 minutes</span>
+                  <span className="text-de-accent-ink font-bold">15 minutes</span>
                 </div>
                 <div className="flex justify-between items-center border-b border-white/10 pb-2">
                   <span className="font-semibold text-white">High (Major Functionality Impaired)</span>
-                  <span className="text-purple-400 font-bold">1 hour</span>
+                  <span className="text-de-accent-ink font-bold">1 hour</span>
                 </div>
                 <div className="flex justify-between items-center border-b border-white/10 pb-2">
                   <span className="font-semibold text-white">Medium (Partial Loss)</span>
-                  <span className="text-purple-400 font-bold">4 hours</span>
+                  <span className="text-de-accent-ink font-bold">4 hours</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="font-semibold text-white">Low (Questions/Minor Issues)</span>
-                  <span className="text-purple-400 font-bold">Next business day</span>
+                  <span className="text-de-accent-ink font-bold">Next business day</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-purple-500/10 backdrop-blur-sm border border-purple-500/30 border-l-4 border-l-purple-500 p-6 rounded mb-8">
+            <div className="bg-de-raised backdrop-blur-sm border border-de-hairline border-l-4 border-l-de-accent p-6 rounded mb-8">
               <h3 className="text-xl font-semibold text-white mb-3">SLA Commitments Include:</h3>
               <ul className="list-disc pl-6 text-gray-300 space-y-2">
                 <li>99.9% uptime for SOC monitoring and security services</li>
@@ -72,7 +72,7 @@ export default function SLA() {
 
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
               <Button 
-                className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
+                className="bg-de-raised text-white hover: hover:to-blue-700"
                 onClick={() => window.location.href = 'mailto:legal@digeratiexperts.com?subject=SLA Request'}
                 data-testid="button-request-sla"
               >
@@ -82,9 +82,9 @@ export default function SLA() {
               <Button 
                 variant="outline"
                 className="border-white/20 text-white hover:bg-white/10"
-                onClick={() => window.location.href = 'tel:480-519-5892'}
+                onClick={() => window.location.href = 'tel:+13254809870'}
               >
-                Call 480-519-5892
+                Call 325-480-9870
               </Button>
             </div>
           </div>

@@ -73,7 +73,7 @@ function formatLineAmount(service: ServiceItem, quantity: number): string {
 }
 
 const fieldClass =
-  "bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#5034ff]/40";
+  "bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#D3126A]/40";
 const labelClass = "text-slate-700";
 const cardClass = "bg-white border-slate-200 shadow-sm";
 
@@ -281,7 +281,7 @@ export function OrderForm() {
     <Card className={`${cardClass} sticky top-6`}>
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-slate-900 text-base">
-          <Calculator className="w-4 h-4 text-[#5034ff]" />
+          <Calculator className="w-4 h-4 text-[#D3126A]" />
           Order Summary
         </CardTitle>
       </CardHeader>
@@ -331,7 +331,7 @@ export function OrderForm() {
             )}
 
             {pricing.hasCustom && (
-              <div className="rounded-md bg-violet-50 border border-violet-100 px-3 py-2 text-sm text-violet-800">
+              <div className="rounded-md bg-de-paper border border-[var(--de-paper-hairline)] px-3 py-2 text-sm text-[#1A1228]">
                 Includes custom-quoted services — final pricing after review.
               </div>
             )}
@@ -350,13 +350,13 @@ export function OrderForm() {
             <Separator className="bg-slate-200" />
             <div>
               <h4 className="text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
-                <FileText className="w-4 h-4 text-[#5034ff]" />
+                <FileText className="w-4 h-4 text-[#D3126A]" />
                 Required Documents ({requiredDocuments.length})
               </h4>
               <div className="space-y-1 max-h-36 overflow-y-auto">
                 {requiredDocuments.map((doc) => (
                   <div key={doc.key} className="flex items-center gap-2 text-xs text-slate-500">
-                    <Check className="w-3 h-3 text-[#5034ff] shrink-0" />
+                    <Check className="w-3 h-3 text-[#D3126A] shrink-0" />
                     <span className="truncate">{doc.name}</span>
                   </div>
                 ))}
@@ -367,7 +367,7 @@ export function OrderForm() {
 
         {continueLabel && (
           <Button
-            className="w-full bg-[#5034ff] hover:bg-[#4028d4] text-white"
+            className="w-full bg-[#D3126A] hover:bg-[#e01874] text-white"
             disabled={selectedServices.length === 0}
             onClick={() => setStep("details")}
             data-testid="continue-to-details"
@@ -393,15 +393,15 @@ export function OrderForm() {
                 {i > 0 && <ChevronRight className="w-4 h-4 text-slate-300 hidden sm:block" />}
                 <div
                   className={`flex items-center gap-2 ${
-                    active ? "text-[#5034ff]" : done ? "text-slate-700" : "text-slate-400"
+                    active ? "text-[#D3126A]" : done ? "text-slate-700" : "text-slate-400"
                   }`}
                 >
                   <div
                     className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-semibold ${
                       active
-                        ? "bg-[#5034ff] text-white"
+                        ? "bg-[#D3126A] text-white"
                         : done
-                          ? "bg-violet-100 text-[#5034ff]"
+                          ? "bg-de-paper text-[#D3126A]"
                           : "bg-slate-100 text-slate-500"
                     }`}
                   >
@@ -420,7 +420,7 @@ export function OrderForm() {
               <Card className={cardClass}>
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-slate-900 text-lg">
-                    <Server className="w-5 h-5 text-[#5034ff]" />
+                    <Server className="w-5 h-5 text-[#D3126A]" />
                     Select Your Services
                   </CardTitle>
                   <CardDescription className="text-slate-500">
@@ -436,7 +436,7 @@ export function OrderForm() {
                           <TabsTrigger
                             key={category.id}
                             value={category.id}
-                            className="text-xs data-[state=active]:bg-white data-[state=active]:text-[#5034ff] data-[state=active]:shadow-sm text-slate-600"
+                            className="text-xs data-[state=active]:bg-white data-[state=active]:text-[#D3126A] data-[state=active]:shadow-sm text-slate-600"
                           >
                             <IconComponent className="w-3.5 h-3.5 mr-1" />
                             <span className="hidden sm:inline">{category.name.split(" ")[0]}</span>
@@ -459,14 +459,14 @@ export function OrderForm() {
                                 key={service.id}
                                 className={`relative px-3 py-2.5 rounded-lg border transition-all cursor-pointer ${
                                   isSelected
-                                    ? "border-[#5034ff] bg-violet-50/80 ring-1 ring-[#5034ff]/20"
+                                    ? "border-[#D3126A] bg-de-paper ring-1 ring-[#D3126A]/20"
                                     : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/80"
                                 }`}
                                 onClick={() => toggleService(service.id, service)}
                                 data-testid={`service-card-${service.id}`}
                               >
                                 {service.isPopular && (
-                                  <Badge className="absolute -top-2 right-3 bg-[#5034ff] text-white text-[10px] px-1.5 py-0">
+                                  <Badge className="absolute -top-2 right-3 bg-[#D3126A] text-white text-xs px-1.5 py-0">
                                     <Star className="w-2.5 h-2.5 mr-0.5" />
                                     Popular
                                   </Badge>
@@ -481,9 +481,9 @@ export function OrderForm() {
                                       {service.tier && (
                                         <Badge
                                           variant="outline"
-                                          className={`text-[10px] h-5 ${
+                                          className={`text-xs h-5 ${
                                             service.tier === "enterprise"
-                                              ? "border-violet-300 text-violet-700 bg-violet-50"
+                                              ? "border-[#D3126A]/40 text-[#1A1228] bg-de-paper"
                                               : service.tier === "business"
                                                 ? "border-blue-300 text-blue-700 bg-blue-50"
                                                 : "border-slate-300 text-slate-600 bg-slate-50"
@@ -501,13 +501,13 @@ export function OrderForm() {
                                       {service.features.slice(0, 3).map((feature, i) => (
                                         <span
                                           key={i}
-                                          className="text-[11px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded"
+                                          className="text-sm bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded"
                                         >
                                           {feature}
                                         </span>
                                       ))}
                                       {service.features.length > 3 && (
-                                        <span className="text-[11px] text-[#5034ff]">
+                                        <span className="text-sm text-[#D3126A]">
                                           +{service.features.length - 3} more
                                         </span>
                                       )}
@@ -518,17 +518,17 @@ export function OrderForm() {
                                     <div
                                       className={`font-semibold leading-tight ${
                                         isCustomPricing(service)
-                                          ? "text-sm text-violet-700"
+                                          ? "text-sm text-[#1A1228]"
                                           : "text-lg text-slate-900"
                                       }`}
                                     >
                                       {price.primary}
                                     </div>
                                     {price.secondary && (
-                                      <div className="text-[11px] text-slate-400">{price.secondary}</div>
+                                      <div className="text-sm text-slate-400">{price.secondary}</div>
                                     )}
                                     {service.minQuantity > 1 && (
-                                      <div className="text-[11px] text-slate-400">
+                                      <div className="text-sm text-slate-400">
                                         Min: {service.minQuantity}
                                       </div>
                                     )}
@@ -537,12 +537,12 @@ export function OrderForm() {
 
                                 {isSelected && (
                                   <div
-                                    className="mt-2.5 pt-2.5 border-t border-violet-200/80 flex items-center justify-between gap-3"
+                                    className="mt-2.5 pt-2.5 border-t border-[var(--de-paper-hairline)] flex items-center justify-between gap-3"
                                     onClick={(e) => e.stopPropagation()}
                                   >
                                     <div className="flex items-center gap-1.5">
-                                      <Check className="w-4 h-4 text-[#5034ff]" />
-                                      <span className="text-[#5034ff] font-medium text-sm">Selected</span>
+                                      <Check className="w-4 h-4 text-[#D3126A]" />
+                                      <span className="text-[#D3126A] font-medium text-sm">Selected</span>
                                     </div>
 
                                     {service.pricingType !== "flat" &&
@@ -573,7 +573,7 @@ export function OrderForm() {
                                               <Plus className="w-3.5 h-3.5" />
                                             </Button>
                                           </div>
-                                          <span className="text-[#5034ff] font-medium text-sm">
+                                          <span className="text-[#D3126A] font-medium text-sm">
                                             ${(service.basePrice * qty).toLocaleString()}/mo
                                           </span>
                                         </div>
@@ -603,7 +603,7 @@ export function OrderForm() {
               <Card className={cardClass}>
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-slate-900 text-lg">
-                    <Building2 className="w-5 h-5 text-[#5034ff]" />
+                    <Building2 className="w-5 h-5 text-[#D3126A]" />
                     Company Information
                   </CardTitle>
                 </CardHeader>
@@ -728,7 +728,7 @@ export function OrderForm() {
               <Card className={cardClass}>
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-slate-900 text-lg">
-                    <User className="w-5 h-5 text-[#5034ff]" />
+                    <User className="w-5 h-5 text-[#D3126A]" />
                     Authorized Signatory
                   </CardTitle>
                   <CardDescription className="text-slate-500">
@@ -805,7 +805,7 @@ export function OrderForm() {
               <Card className={cardClass}>
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-slate-900 text-lg">
-                    <Calendar className="w-5 h-5 text-[#5034ff]" />
+                    <Calendar className="w-5 h-5 text-[#D3126A]" />
                     Service Configuration
                   </CardTitle>
                 </CardHeader>
@@ -926,7 +926,7 @@ export function OrderForm() {
                   Back to Services
                 </Button>
                 <Button
-                  className="flex-1 bg-[#5034ff] hover:bg-[#4028d4] text-white"
+                  className="flex-1 bg-[#D3126A] hover:bg-[#e01874] text-white"
                   onClick={() => setStep("review")}
                   data-testid="continue-to-review"
                 >
@@ -940,7 +940,7 @@ export function OrderForm() {
               <Card className={`${cardClass} sticky top-6`}>
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-slate-900 text-base">
-                    <DollarSign className="w-4 h-4 text-[#5034ff]" />
+                    <DollarSign className="w-4 h-4 text-[#D3126A]" />
                     Pricing Summary
                   </CardTitle>
                 </CardHeader>
@@ -981,7 +981,7 @@ export function OrderForm() {
                       </div>
                     )}
                     {pricing.hasCustom && (
-                      <p className="text-xs text-violet-700 bg-violet-50 border border-violet-100 rounded-md px-2 py-1.5">
+                      <p className="text-xs text-[#1A1228] bg-de-paper border border-[var(--de-paper-hairline)] rounded-md px-2 py-1.5">
                         Custom quote items included — priced after review.
                       </p>
                     )}
@@ -990,7 +990,7 @@ export function OrderForm() {
                       pricing.hasCustom && (
                         <div className="flex justify-between">
                           <span className="text-slate-500 text-sm">Pricing</span>
-                          <span className="text-violet-700 font-semibold">Custom quote</span>
+                          <span className="text-[#1A1228] font-semibold">Custom quote</span>
                         </div>
                       )}
                   </div>
@@ -1013,7 +1013,7 @@ export function OrderForm() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="rounded-lg border border-slate-200 bg-slate-50/60 p-4">
                     <h4 className="font-semibold text-slate-900 mb-3 flex items-center gap-2 text-sm">
-                      <Building2 className="w-4 h-4 text-[#5034ff]" />
+                      <Building2 className="w-4 h-4 text-[#D3126A]" />
                       Company
                     </h4>
                     <div className="space-y-1 text-sm">
@@ -1033,7 +1033,7 @@ export function OrderForm() {
 
                   <div className="rounded-lg border border-slate-200 bg-slate-50/60 p-4">
                     <h4 className="font-semibold text-slate-900 mb-3 flex items-center gap-2 text-sm">
-                      <User className="w-4 h-4 text-[#5034ff]" />
+                      <User className="w-4 h-4 text-[#D3126A]" />
                       Authorized Signatory
                     </h4>
                     <div className="space-y-1 text-sm">
@@ -1050,7 +1050,7 @@ export function OrderForm() {
 
                 <div>
                   <h4 className="font-semibold text-slate-900 mb-3 flex items-center gap-2 text-sm">
-                    <Server className="w-4 h-4 text-[#5034ff]" />
+                    <Server className="w-4 h-4 text-[#D3126A]" />
                     Selected Services
                   </h4>
                   <div className="space-y-2">
@@ -1073,7 +1073,7 @@ export function OrderForm() {
                           </div>
                           <p
                             className={`font-semibold whitespace-nowrap ${
-                              isCustomPricing(service) ? "text-violet-700 text-sm" : "text-[#5034ff] text-lg"
+                              isCustomPricing(service) ? "text-[#1A1228] text-sm" : "text-[#D3126A] text-lg"
                             }`}
                           >
                             {formatLineAmount(service, selected.quantity)}
@@ -1088,7 +1088,7 @@ export function OrderForm() {
 
                 <div>
                   <h4 className="font-semibold text-slate-900 mb-3 flex items-center gap-2 text-sm">
-                    <FileText className="w-4 h-4 text-[#5034ff]" />
+                    <FileText className="w-4 h-4 text-[#D3126A]" />
                     Documents to be Signed
                   </h4>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -1097,7 +1097,7 @@ export function OrderForm() {
                         key={doc.key}
                         className="flex items-center gap-2 text-sm text-slate-700 p-2 bg-slate-50 border border-slate-200 rounded"
                       >
-                        <FileText className="w-4 h-4 text-[#5034ff] shrink-0" />
+                        <FileText className="w-4 h-4 text-[#D3126A] shrink-0" />
                         <span className="truncate">{doc.name}</span>
                       </div>
                     ))}
@@ -1106,7 +1106,7 @@ export function OrderForm() {
 
                 <Separator className="bg-slate-200" />
 
-                <div className="bg-violet-50 border border-violet-200 rounded-lg p-4">
+                <div className="bg-de-paper border border-[var(--de-paper-hairline)] rounded-lg p-4">
                   <div className="flex flex-wrap justify-between items-center gap-4">
                     <div>
                       <p className="text-slate-500 text-sm">Total Monthly Investment</p>
@@ -1116,7 +1116,7 @@ export function OrderForm() {
                           <span className="text-base font-normal text-slate-500">/mo</span>
                         </p>
                       ) : pricing.hasCustom ? (
-                        <p className="text-2xl font-bold text-violet-700">Custom quote</p>
+                        <p className="text-2xl font-bold text-[#1A1228]">Custom quote</p>
                       ) : (
                         <p className="text-3xl font-bold text-slate-900">$0/mo</p>
                       )}
@@ -1126,7 +1126,7 @@ export function OrderForm() {
                         </p>
                       )}
                       {pricing.hasCustom && pricing.monthlyTotal > 0 && (
-                        <p className="text-violet-700 text-sm mt-1">
+                        <p className="text-[#1A1228] text-sm mt-1">
                           + custom-quoted services (priced after review)
                         </p>
                       )}
@@ -1139,7 +1139,7 @@ export function OrderForm() {
                 </div>
 
                 <div className="flex items-start gap-3 p-4 bg-slate-50 border border-slate-200 rounded-lg">
-                  <Info className="w-5 h-5 text-[#5034ff] flex-shrink-0 mt-0.5" />
+                  <Info className="w-5 h-5 text-[#D3126A] flex-shrink-0 mt-0.5" />
                   <p className="text-sm text-slate-500">
                     Upon submission, our team will prepare your service agreement documents. You will
                     receive an email at{" "}
@@ -1160,7 +1160,7 @@ export function OrderForm() {
                     Back
                   </Button>
                   <Button
-                    className="flex-1 bg-[#5034ff] hover:bg-[#4028d4] text-white"
+                    className="flex-1 bg-[#D3126A] hover:bg-[#e01874] text-white"
                     onClick={handleSubmit}
                     disabled={isSubmitting}
                     data-testid="submit-order"

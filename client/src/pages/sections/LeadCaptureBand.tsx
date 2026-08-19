@@ -27,7 +27,7 @@ const assessmentFormSchema = z.object({
 type AssessmentFormData = z.infer<typeof assessmentFormSchema>;
 
 const benefits = [
-  { icon: Shield, text: "Full vulnerability assessment included", color: "text-violet-400" },
+  { icon: Shield, text: "Full vulnerability assessment included", color: "text-de-accent-ink" },
   { icon: CheckCircle, text: "Results delivered within 48 hours", color: "text-green-400" },
   { icon: Clock, text: "No commitment required", color: "text-purple-400" },
   { icon: Award, text: "Expert recommendations included", color: "text-yellow-400" },
@@ -112,7 +112,7 @@ export const LeadCaptureBand = (): JSX.Element => {
             className="space-y-6"
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-600/20 border border-violet-500/30">
-              <span className="text-violet-400 text-base font-medium">Limited Time Offer</span>
+              <span className="text-de-accent-ink text-base font-medium">Limited Time Offer</span>
             </div>
             
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
@@ -158,7 +158,7 @@ export const LeadCaptureBand = (): JSX.Element => {
             
             <Card className="relative backdrop-blur-xl bg-white/95 dark:bg-gray-900/95 shadow-[0_20px_70px_-15px_rgba(139,92,246,0.4)] border-0 ring-1 ring-white/20">
               <CardHeader className="pb-4">
-                <CardTitle className="text-xl xl:text-2xl bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                <CardTitle className="text-xl xl:text-2xl text-[#D3126A]">
                   Get Started Today
                 </CardTitle>
                 <CardDescription className="text-sm">
@@ -173,13 +173,13 @@ export const LeadCaptureBand = (): JSX.Element => {
                         control={form.control}
                         name="fullName"
                         render={({ field }) => (
-                          <FormItem>
+                          <FormItem required>
                             <FormLabel className="text-sm">Full Name *</FormLabel>
                             <FormControl>
                               <Input 
                                 placeholder="John Smith" 
                                 data-testid="input-lead-full-name"
-                                className="h-11 focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200"
+                                className="h-11 focus-visible:ring-[#D3126A] focus-visible:ring-offset-0 transition-all duration-200"
                                 disabled={isSubmitting}
                                 {...field} 
                               />
@@ -193,14 +193,14 @@ export const LeadCaptureBand = (): JSX.Element => {
                         control={form.control}
                         name="email"
                         render={({ field }) => (
-                          <FormItem>
+                          <FormItem required>
                             <FormLabel className="text-sm">Email Address *</FormLabel>
                             <FormControl>
                               <Input 
                                 type="email" 
                                 placeholder="john@company.com" 
                                 data-testid="input-lead-email"
-                                className="h-11 focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200"
+                                className="h-11 focus-visible:ring-[#D3126A] focus-visible:ring-offset-0 transition-all duration-200"
                                 disabled={isSubmitting}
                                 {...field} 
                               />
@@ -216,14 +216,14 @@ export const LeadCaptureBand = (): JSX.Element => {
                         control={form.control}
                         name="phone"
                         render={({ field }) => (
-                          <FormItem>
+                          <FormItem required>
                             <FormLabel className="text-sm">Phone Number *</FormLabel>
                             <FormControl>
                               <Input 
                                 type="tel" 
                                 placeholder="(480) 000-0000" 
                                 data-testid="input-lead-phone"
-                                className="h-11 focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200"
+                                className="h-11 focus-visible:ring-[#D3126A] focus-visible:ring-offset-0 transition-all duration-200"
                                 disabled={isSubmitting}
                                 {...field} 
                               />
@@ -237,13 +237,13 @@ export const LeadCaptureBand = (): JSX.Element => {
                         control={form.control}
                         name="company"
                         render={({ field }) => (
-                          <FormItem>
+                          <FormItem required>
                             <FormLabel className="text-sm">Company Name *</FormLabel>
                             <FormControl>
                               <Input 
                                 placeholder="Your Company Inc." 
                                 data-testid="input-lead-company"
-                                className="h-11 focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200"
+                                className="h-11 focus-visible:ring-[#D3126A] focus-visible:ring-offset-0 transition-all duration-200"
                                 disabled={isSubmitting}
                                 {...field} 
                               />
@@ -259,7 +259,7 @@ export const LeadCaptureBand = (): JSX.Element => {
                     </p>
                     
                     <Button 
-                      className="w-full h-12 text-base bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-600 focus-visible:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-violet-500/25" 
+                      className="w-full h-12 text-base bg-de-magenta text-white hover:bg-de-magenta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-de-magenta focus-visible:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-[#D3126A]/25" 
                       data-testid="button-lead-submit"
                       type="submit"
                       disabled={isSubmitting}

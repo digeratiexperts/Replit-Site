@@ -41,6 +41,16 @@ const step3Schema = z.object({
 const fullFormSchema = step1Schema.merge(step2Schema).merge(step3Schema);
 type FormData = z.infer<typeof fullFormSchema>;
 
+/** Same paper-field recipe as the contact form — dark ink on white inputs. */
+const paperFieldClass =
+  "h-11 bg-white border-[var(--de-paper-hairline)] text-[#1A1228] placeholder:text-black/55 focus-visible:ring-2 focus-visible:ring-[#D3126A]/40 focus-visible:border-[#D3126A]";
+
+const paperSelectClass =
+  "h-11 bg-white border-[var(--de-paper-hairline)] text-[#1A1228] focus:ring-[#D3126A]/40";
+
+const paperOutlineClass =
+  "border-[var(--de-paper-hairline)] text-[#1A1228] hover:border-[#D3126A] hover:bg-de-paper hover:text-[#1A1228]";
+
 const getPlanMatch = (data: {
   seats: number;
   enterpriseToggle: boolean;
@@ -213,20 +223,21 @@ export default function LeadQuoteWizard() {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto p-6">
+    <div className="min-h-screen bg-de-bg px-4 py-16 md:py-20">
+      <div className="de-paper-lift-lg mx-auto w-full max-w-2xl rounded-2xl p-6 text-[#1A1228] md:p-8">
       {/* Progress indicator */}
       <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-1 items-center gap-2">
           {[1, 2, 3].map((step) => (
             <div
               key={step}
               className={`h-2 flex-1 rounded-full transition-colors ${
-                step <= currentStep ? 'bg-purple-600' : 'bg-gray-200'
+                step <= currentStep ? 'bg-[#D3126A]' : 'bg-gray-200'
               }`}
             />
           ))}
         </div>
-        <span className="text-sm text-gray-600 ml-4">Step {currentStep} of 3</span>
+        <span className="ml-4 text-sm text-black/55">Step {currentStep} of 3</span>
       </div>
 
       <Form {...form}>
@@ -235,8 +246,8 @@ export default function LeadQuoteWizard() {
           {currentStep === 1 && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">How many users?</h2>
-                <p className="text-gray-600">Includes employees and shared devices.</p>
+                <h1 className="mb-2 text-2xl font-bold text-[#1A1228]">How many users?</h1>
+                <p className="text-black/55">Includes employees and shared devices.</p>
               </div>
 
               <FormField
@@ -244,7 +255,7 @@ export default function LeadQuoteWizard() {
                 name="seats"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>User Count: {field.value}</FormLabel>
+                    <FormLabel className="text-[#1A1228]">User Count: {field.value}</FormLabel>
                     <FormControl>
                       <input
                         type="range"
@@ -253,7 +264,7 @@ export default function LeadQuoteWizard() {
                         {...field}
                         onChange={(e) => field.onChange(parseInt(e.target.value))}
                         disabled={form.watch('enterpriseToggle')}
-                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#D3126A]"
                       />
                     </FormControl>
                     <FormMessage />
@@ -274,16 +285,16 @@ export default function LeadQuoteWizard() {
                         className="h-4 w-4 rounded border-gray-300"
                       />
                     </FormControl>
-                    <FormLabel className="!mt-0">More than 100 users? We'll tailor enterprise sizing.</FormLabel>
+                    <FormLabel className="!mt-0 text-[#1A1228]">More than 100 users? We'll tailor enterprise sizing.</FormLabel>
                   </FormItem>
                 )}
               />
 
               <div className="flex gap-3">
-                <Button variant="outline" type="button" onClick={() => setLocation('/')}>
+                <Button variant="outline" type="button" className={paperOutlineClass} onClick={() => setLocation('/')}>
                   Skip and talk to us
                 </Button>
-                <Button className="ml-auto" onClick={handleStep1Next}>
+                <Button variant="brand" type="button" className="ml-auto" onClick={handleStep1Next}>
                   Next <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
@@ -294,8 +305,8 @@ export default function LeadQuoteWizard() {
           {currentStep === 2 && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">What do you need?</h2>
-                <p className="text-gray-600">Help us understand your infrastructure needs.</p>
+                <h1 className="mb-2 text-2xl font-bold text-[#1A1228]">What do you need?</h1>
+                <p className="text-black/55">Help us understand your infrastructure needs.</p>
               </div>
 
               <FormField
@@ -303,10 +314,10 @@ export default function LeadQuoteWizard() {
                 name="connectivity"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Do you need secure connectivity and cloud storage?</FormLabel>
+                    <FormLabel className="text-[#1A1228]">Do you need secure connectivity and cloud storage?</FormLabel>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className={paperSelectClass}>
                           <SelectValue />
                         </SelectTrigger>
                       </FormControl>
@@ -326,10 +337,10 @@ export default function LeadQuoteWizard() {
                 name="devices"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Do you need desktops and laptops managed?</FormLabel>
+                    <FormLabel className="text-[#1A1228]">Do you need desktops and laptops managed?</FormLabel>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className={paperSelectClass}>
                           <SelectValue />
                         </SelectTrigger>
                       </FormControl>
@@ -345,10 +356,10 @@ export default function LeadQuoteWizard() {
               />
 
               <div className="flex gap-3">
-                <Button variant="outline" onClick={() => setCurrentStep(1)}>
+                <Button variant="outline" type="button" className={paperOutlineClass} onClick={() => setCurrentStep(1)}>
                   <ChevronLeft className="mr-2 h-4 w-4" /> Back
                 </Button>
-                <Button className="ml-auto" onClick={handleStep2Next}>
+                <Button variant="brand" type="button" className="ml-auto" onClick={handleStep2Next}>
                   See My Best Plan <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
@@ -359,20 +370,21 @@ export default function LeadQuoteWizard() {
           {currentStep === 3 && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Show Me The Best Plan!</h2>
-                <p className="text-gray-600">We'll need a few details to confirm your perfect fit.</p>
+                <h1 className="mb-2 text-2xl font-bold text-[#1A1228]">Show Me The Best Plan!</h1>
+                <p className="text-black/55">We'll need a few details to confirm your perfect fit.</p>
               </div>
 
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Company Email *</FormLabel>
+                  <FormItem required>
+                    <FormLabel className="text-[#1A1228]">Company Email *</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
                         placeholder="your.name@company.com"
+                        className={paperFieldClass}
                         {...field}
                       />
                     </FormControl>
@@ -381,15 +393,15 @@ export default function LeadQuoteWizard() {
                 )}
               />
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <FormField
                   control={form.control}
                   name="firstName"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>First Name *</FormLabel>
+                    <FormItem required>
+                      <FormLabel className="text-[#1A1228]">First Name *</FormLabel>
                       <FormControl>
-                        <Input placeholder="First name" {...field} />
+                        <Input placeholder="First name" className={paperFieldClass} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -400,10 +412,10 @@ export default function LeadQuoteWizard() {
                   control={form.control}
                   name="lastName"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Last Name *</FormLabel>
+                    <FormItem required>
+                      <FormLabel className="text-[#1A1228]">Last Name *</FormLabel>
                       <FormControl>
-                        <Input placeholder="Last name" {...field} />
+                        <Input placeholder="Last name" className={paperFieldClass} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -415,10 +427,10 @@ export default function LeadQuoteWizard() {
                 control={form.control}
                 name="company"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Company Name *</FormLabel>
+                  <FormItem required>
+                    <FormLabel className="text-[#1A1228]">Company Name *</FormLabel>
                     <FormControl>
-                      <Input placeholder="Your company" {...field} />
+                      <Input placeholder="Your company" className={paperFieldClass} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -438,17 +450,17 @@ export default function LeadQuoteWizard() {
                         className="h-4 w-4 rounded border-gray-300"
                       />
                     </FormControl>
-                    <FormLabel className="!mt-0 text-sm">I agree to be contacted about my plan match</FormLabel>
+                    <FormLabel className="!mt-0 text-sm text-[#1A1228]">I agree to be contacted about my plan match</FormLabel>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
               <div className="flex gap-3">
-                <Button variant="outline" onClick={() => setCurrentStep(2)}>
+                <Button variant="outline" type="button" className={paperOutlineClass} onClick={() => setCurrentStep(2)}>
                   <ChevronLeft className="mr-2 h-4 w-4" /> Back
                 </Button>
-                <Button type="submit" className="ml-auto" disabled={isSubmitting}>
+                <Button type="submit" variant="brand" className="ml-auto" disabled={isSubmitting}>
                   {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Get My Instant Match
                 </Button>
@@ -457,6 +469,7 @@ export default function LeadQuoteWizard() {
           )}
         </form>
       </Form>
+      </div>
     </div>
   );
 }

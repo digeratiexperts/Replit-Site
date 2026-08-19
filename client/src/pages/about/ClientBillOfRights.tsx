@@ -84,9 +84,9 @@ export default function ClientBillOfRights() {
             We greatly appreciate the trust and confidence our clients have placed in Digerati Experts. 
             Your security is our mission, and exceptional service is our standard.
           </p>
-          <div className="inline-block px-6 py-4 rounded-xl border border-pink-500/35 bg-pink-500/10">
+          <div className="inline-block px-6 py-4 rounded-xl border border-de-magenta/35 bg-de-magenta/10">
             <p className="text-white/90">
-              We pledge to uphold the <span className="text-pink-300 font-semibold">highest standards</span> of 
+              We pledge to uphold the <span className="text-de-magenta-ink font-semibold">highest standards</span> of 
               technical support, cybersecurity excellence, and customer satisfaction
             </p>
           </div>
@@ -99,24 +99,24 @@ export default function ClientBillOfRights() {
             {rights.map((right, index) => (
               <article 
                 key={index}
-                className="rounded-xl border border-white/10 bg-white/[0.03] p-6 md:p-8 hover:border-pink-500/30 hover:bg-white/[0.05] transition-all"
+                className="rounded-xl border border-white/10 bg-white/[0.03] p-6 md:p-8 hover:border-de-magenta/30 hover:bg-white/[0.05] transition-all"
                 data-testid={`card-right-${index}`}
               >
                 <div className="flex items-start gap-5 mb-5">
-                  <div className="w-12 h-12 rounded-xl bg-pink-500/15 border border-pink-500/30 flex items-center justify-center text-pink-300 flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-de-magenta/15 border border-de-magenta/30 flex items-center justify-center text-de-magenta-ink flex-shrink-0">
                     {right.icon}
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold text-white mb-3">{right.title}</h3>
                     <p className="text-white/85 leading-relaxed">
-                      <span className="text-pink-300 font-medium">You have a right</span> {right.rightText.replace(/^You have (a |the )?right ?(to)?/i, '')}
+                      <span className="text-de-magenta-ink font-medium">You have a right</span> {right.rightText.replace(/^You have (a |the )?right ?(to)?/i, '')}
                     </p>
                   </div>
                 </div>
                 <div className="ml-0 md:ml-17 pl-0 md:pl-[68px]">
-                  <div className="pl-4 border-l-2 border-violet-500/50 bg-violet-500/5 py-3 pr-4 rounded-r-lg">
+                  <div className="pl-4 border-l-2 border-de-hairline bg-de-raised py-3 pr-4 rounded-r-lg">
                     <p className="text-white/80 text-sm leading-relaxed">
-                      <span className="text-pink-300 font-semibold">We Pledge</span> {right.pledgeText.replace(/^We Pledge /i, '')}
+                      <span className="text-de-magenta-ink font-semibold">We Pledge</span> {right.pledgeText.replace(/^We Pledge /i, '')}
                     </p>
                   </div>
                 </div>
@@ -132,7 +132,7 @@ export default function ClientBillOfRights() {
             Our Commitment to Excellence
           </h2>
           <p className="text-white/85 leading-relaxed text-lg">
-            Most of our clients come from referrals from satisfied customers. We <span className="text-pink-300 font-medium">want</span> you to recommend us, 
+            Most of our clients come from referrals from satisfied customers. We <span className="text-de-magenta-ink font-medium">want</span> you to recommend us, 
             but we understand that you will only do this if you are extremely pleased with our services. 
             That's why we work so hard to go above and beyond. The establishment of our Client Bill of Rights, 
             along with our continual investment in people, processes, and technology, clearly demonstrates 
@@ -146,7 +146,7 @@ export default function ClientBillOfRights() {
           <p className="text-white/50 mb-4">See also our money-back guarantee</p>
           <Link 
             href="/about/guarantee"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-violet-600 hover:bg-violet-500 text-white font-medium transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-de-magenta hover:bg-de-magenta text-white font-medium transition-colors"
             data-testid="link-guarantee"
           >
             100% Money-Back Guarantee

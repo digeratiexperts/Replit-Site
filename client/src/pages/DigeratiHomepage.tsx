@@ -1,6 +1,6 @@
 import { MegaMenu } from "@/components/MegaMenu";
 import { FullPageScrollProvider, ScrollSectionAuto } from "@/components/FullPageScroll";
-import { useEffect } from "react";
+import { SiteBottomBar } from "@/components/SiteBottomBar";
 import { useSEO } from "@/hooks/useSEO";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/JsonLd";
 
@@ -41,7 +41,7 @@ const homepageSections: { id: string; label: string; theme: 'dark' | 'light'; sh
   { id: 'industries', label: 'Industries', theme: 'dark' },
   { id: 'pricing', label: 'Packages', theme: 'dark' },
   { id: 'insights', label: 'Insights', theme: 'dark', showInNav: false },
-  { id: 'faq', label: 'FAQ', theme: 'light', showInNav: false },
+  { id: 'faq', label: 'FAQ', theme: 'light' },
   { id: 'cta', label: 'Next step', theme: 'dark', showInNav: false },
   { id: 'contact', label: 'Contact', theme: 'dark' },
 ];
@@ -53,39 +53,28 @@ export const DigeratiHomepage = (): JSX.Element => {
     canonical: '/',
   });
 
-  // Handle hash navigation - scroll to anchor when navigating from other pages
-  useEffect(() => {
-    const hash = window.location.hash;
-    if (hash) {
-      const targetId = hash.replace('#', '');
-      // Small delay to ensure DOM is ready
-      const timer = setTimeout(() => {
-        const element = document.getElementById(targetId);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, []);
-
   return (
     <FullPageScrollProvider sections={homepageSections} enableOnMobile={false}>
-      {/* Ask DE sits bottom-right; extra lift only while the cookie banner is visible */}
-      <div className="de-dark-well min-h-screen pb-8">
+      {/* Live shade well + A+C canvas base. Ask DE sits bottom-right.
+          Chapter fields are neighbor-aware: well → style-box → well → surface →
+          paper → process band → well → paper → well → style-box → surface →
+          well (insights) → surface (office photo) → paper (lead+FAQ) →
+          surface (newsletter) → cinematic well (CTA) → quiet well (contact). */}
+      <div className="de-dark-well min-h-screen bg-[#050312] pb-8">
         <OrganizationJsonLd />
         <WebSiteJsonLd />
         {/* Navigation — chat lives in App MarketingChrome sitewide */}
         <MegaMenu />
+        <SiteBottomBar />
 
         {/* Home — Cybersecurity-First hero + Assessment / Talk to Expert CTAs */}
-        <ScrollSectionAuto id="hero">
+        <ScrollSectionAuto id="hero" chapter>
           <ModernHeroSection />
           <DigeratiAlertBanner />
         </ScrollSectionAuto>
 
         {/* Why DE */}
-        <ScrollSectionAuto id="stats">
+        <ScrollSectionAuto id="stats" chapter>
           <DigeratiStatsSection />
         </ScrollSectionAuto>
 
@@ -95,7 +84,7 @@ export const DigeratiHomepage = (): JSX.Element => {
         </ScrollSectionAuto>
 
         {/* Engage */}
-        <ScrollSectionAuto id="services">
+        <ScrollSectionAuto id="services" chapter>
           <DigeratiServicesSection />
         </ScrollSectionAuto>
 
@@ -119,12 +108,12 @@ export const DigeratiHomepage = (): JSX.Element => {
         </ScrollSectionAuto>
 
         {/* Industries */}
-        <ScrollSectionAuto id="industries">
+        <ScrollSectionAuto id="industries" chapter>
           <DigeratiIndustriesSection />
         </ScrollSectionAuto>
 
         {/* Packages — fit-based operating models */}
-        <ScrollSectionAuto id="pricing">
+        <ScrollSectionAuto id="pricing" chapter>
           <DigeratiPricingSection />
         </ScrollSectionAuto>
 
@@ -136,11 +125,10 @@ export const DigeratiHomepage = (): JSX.Element => {
           <DigeratiAIAssistanceSection />
         </ScrollSectionAuto>
 
-        {/* Lead form below the fold — hero stays a single Schedule CTA */}
         <DigeratiLeadFormSection />
 
         {/* FAQ before Next step — live cleanness */}
-        <ScrollSectionAuto id="faq">
+        <ScrollSectionAuto id="faq" chapter>
           <DigeratiFAQSection />
           <DigeratiNewsletterSection />
         </ScrollSectionAuto>
@@ -151,7 +139,7 @@ export const DigeratiHomepage = (): JSX.Element => {
         </ScrollSectionAuto>
 
         {/* Contact */}
-        <ScrollSectionAuto id="contact" className="scroll-mt-20 pt-8">
+        <ScrollSectionAuto id="contact" chapter className="scroll-mt-20">
           <DigeratiContactSection />
           <DigeratiEnhancedFooterSection />
         </ScrollSectionAuto>
