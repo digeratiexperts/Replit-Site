@@ -5,6 +5,7 @@ import { analytics } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Building, FileCheck, Shield, Check } from "lucide-react";
 import { DashboardMockup } from "@/components/graphics";
+import { parallaxTravelRange } from "@/components/visual/ParallaxStill";
 import heroBgImage from "@assets/de-hero-arizona-dusk.png";
 import { useBooking } from "@/contexts/BookingContext";
 import { CTA } from "@/lib/ctaCopy";
@@ -20,7 +21,12 @@ export const ModernHeroSection = (): JSX.Element => {
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 20]);
-  const backgroundY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["0%", "8%"]);
+  const backgroundY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    parallaxTravelRange(prefersReducedMotion, 12),
+  );
+  const duskExtra = prefersReducedMotion ? 0 : 12;
 
   const features = [
     { icon: FileCheck, text: "Insurance & Compliance Ready" },
@@ -38,7 +44,7 @@ export const ModernHeroSection = (): JSX.Element => {
     <section
       ref={containerRef}
       id="home"
-      className="relative flex min-h-0 lg:min-h-screen flex-col overflow-hidden"
+      className="de-field-grain-film relative flex min-h-0 flex-col overflow-hidden lg:min-h-screen"
       style={{ position: "relative" }}
     >
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -47,10 +53,13 @@ export const ModernHeroSection = (): JSX.Element => {
           alt=""
           loading="eager"
           decoding="async"
-          className="absolute inset-0 w-full h-full object-cover object-[center_82%]"
+          aria-hidden="true"
+          className="absolute left-0 w-full object-cover object-[center_82%]"
           style={{
             y: backgroundY,
-            opacity: 0.46,
+            top: duskExtra ? `-${duskExtra}%` : 0,
+            height: duskExtra ? `${100 + duskExtra * 2}%` : "100%",
+            opacity: 0.5,
             WebkitMaskImage:
               "linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.38) 16%, rgba(0,0,0,0.88) 46%, black 72%)",
             maskImage:
@@ -219,7 +228,7 @@ export const ModernHeroSection = (): JSX.Element => {
         </div>
       </motion.div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#050312]/80 to-transparent z-10 pointer-events-none" />
+      <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 h-24 bg-gradient-to-t from-[#050312] to-transparent" />
     </section>
   );
 };

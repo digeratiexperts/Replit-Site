@@ -36,7 +36,7 @@ export const DigeratiFAQSection = (): JSX.Element => {
   };
 
   return (
-    <section className="de-paper-chapter py-16 md:py-20 lg:py-24">
+    <section className="de-paper-chapter de-paper-hairline de-chapter-fade-to-surface de-field-grain-paper py-16 md:py-20 lg:py-24">
       <FAQJsonLd faqs={faqs} />
       <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-6">
         {/* Header */}

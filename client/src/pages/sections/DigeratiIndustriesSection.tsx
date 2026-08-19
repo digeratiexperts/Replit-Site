@@ -127,7 +127,7 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
   return (
     <section 
       ref={sectionRef}
-      className="de-dark-well relative overflow-hidden py-6 md:py-8"
+      className="de-dark-well de-field-grain relative overflow-hidden py-6 md:py-8"
       style={{ position: 'relative' }}
     >
       <div className="de-style-box relative z-10 mx-3 px-4 py-8 sm:mx-4 sm:px-8 md:py-14 lg:mx-6 lg:px-10 lg:py-16">

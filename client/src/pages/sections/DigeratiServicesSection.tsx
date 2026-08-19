@@ -113,7 +113,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
   return (
     <section
       id="services"
-      className="de-dark-chapter de-chapter-hairline relative overflow-hidden py-10 md:py-18 lg:py-22"
+      className="de-dark-chapter de-chapter-hairline de-field-grain relative overflow-hidden py-10 md:py-18 lg:py-22"
     >
       <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
         <motion.div

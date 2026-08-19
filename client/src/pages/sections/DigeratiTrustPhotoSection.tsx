@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { Shield, ArrowRight, MapPin, UserCheck, Scale } from "lucide-react";
+import { ParallaxStill } from "@/components/visual/ParallaxStill";
 import trustDeskImg from "@assets/de-trust-assessment-desk.png";
 import { CTA } from "@/lib/ctaCopy";
 
@@ -25,9 +26,9 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <section className="de-paper-chapter de-chapter-fade-from-dark overflow-hidden py-14 md:py-20 lg:py-24" data-testid="section-trust-photo">
+    <section className="de-paper-chapter de-chapter-fade-from-dark de-chapter-fade-to-dark de-field-grain-paper overflow-hidden py-14 md:py-20 lg:py-24" data-testid="section-trust-photo">
       <div className="max-w-[var(--de-canvas)] mx-auto px-3 sm:px-4 lg:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 items-stretch gap-12 lg:grid-cols-2 lg:gap-16">
           <motion.div
             initial={prefersReducedMotion ? {} : { opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -78,24 +79,23 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
           </motion.div>
 
           <motion.div
-            className="relative"
+            className="relative flex"
             initial={prefersReducedMotion ? {} : { opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <div className="relative overflow-hidden rounded-2xl border border-de-paper-hairline shadow-lg shadow-black/10">
-              <img
+            <div className="relative flex aspect-[4/3] w-full flex-col overflow-hidden rounded-2xl border border-de-paper-hairline shadow-lg shadow-black/10 lg:aspect-auto lg:min-h-full">
+              <ParallaxStill
                 src={trustDeskImg}
                 alt="Principal-led cyber risk assessment work for an Arizona business"
-                loading="lazy"
-                decoding="async"
+                travel={10}
                 width={960}
                 height={720}
-                className="w-full h-full object-cover aspect-[4/3]"
-                data-testid="img-trust-assessment-desk"
+                className="absolute inset-0"
+                testId="img-trust-assessment-desk"
               />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/75 via-black/35 to-transparent p-5">
+              <div className="relative mt-auto bg-gradient-to-t from-black/75 via-black/35 to-transparent p-5 pt-16">
                 <p className="text-white text-base font-medium">
                   Principal-led assessments sized to how your business runs
                 </p>

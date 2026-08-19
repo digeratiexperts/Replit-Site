@@ -10,7 +10,7 @@ export const DigeratiPricingSection = (): JSX.Element => {
   return (
     <section
       data-testid="homepage-pricing"
-      className="de-dark-chapter de-chapter-hairline relative py-10 md:py-20 lg:py-24"
+      className="de-dark-chapter de-chapter-hairline de-field-grain relative py-10 md:py-20 lg:py-24"
     >
       <div className="relative z-10 mx-auto max-w-[var(--de-canvas)] px-3 sm:px-4 lg:px-6">
         <motion.div

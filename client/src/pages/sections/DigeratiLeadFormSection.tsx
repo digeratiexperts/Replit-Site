@@ -84,7 +84,7 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
   return (
     <section 
       id="assessment-form"
-      className="de-paper-chapter de-chapter-fade-from-dark relative overflow-hidden py-16 md:py-20 lg:py-24"
+      className="de-paper-chapter de-chapter-fade-from-dark de-field-grain-paper relative overflow-hidden py-16 md:py-20 lg:py-24"
     >
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
         <div className="max-w-4xl mx-auto">

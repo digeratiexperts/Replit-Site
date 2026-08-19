@@ -104,7 +104,7 @@ function ProofCta({
 
 export function HomepageProofSection() {
   return (
-    <section id="proof" className="de-dark-well de-chapter-hairline py-14 lg:py-20">
+    <section id="proof" className="de-dark-well de-chapter-hairline de-field-grain py-14 lg:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
           <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-de-magenta-ink">

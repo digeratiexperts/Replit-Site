@@ -136,7 +136,7 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
   return (
     <section
       id="testimonials"
-      className="de-dark-well de-chapter-hairline relative overflow-hidden py-14 md:py-18 lg:py-20"
+      className="de-dark-well de-chapter-hairline de-field-grain relative overflow-hidden py-14 md:py-18 lg:py-20"
       data-testid="section-client-proof"
     >
       <div className="mx-auto max-w-[var(--de-canvas)] px-3 sm:px-4 lg:px-6">

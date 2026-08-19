@@ -55,7 +55,11 @@ export const DigeratiHomepage = (): JSX.Element => {
 
   return (
     <FullPageScrollProvider sections={homepageSections} enableOnMobile={false}>
-      {/* Live shade well + A+C canvas base. Ask DE sits bottom-right. */}
+      {/* Live shade well + A+C canvas base. Ask DE sits bottom-right.
+          Chapter fields are neighbor-aware: well → style-box → well → surface →
+          paper → process band → well → paper → well → style-box → surface →
+          well (insights) → surface (office photo) → paper (lead+FAQ) →
+          surface (newsletter) → cinematic well (CTA) → quiet well (contact). */}
       <div className="de-dark-well min-h-screen bg-[#050312] pb-8">
         <OrganizationJsonLd />
         <WebSiteJsonLd />
