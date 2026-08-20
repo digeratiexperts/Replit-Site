@@ -1,26 +1,36 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Activity,
-  BookOpenText,
+  AlertTriangle,
+  BookOpen,
   Building2,
   CheckCircle2,
+  ChevronDown,
   ChevronRight,
+  ClipboardList,
+  ExternalLink,
   FileText,
-  LayoutGrid,
-  Maximize2,
-  Minimize2,
-  SquareArrowOutUpRight,
+  Flag,
+  Headset,
+  KeyRound,
+  LifeBuoy,
   Lock,
   Mail,
+  Maximize2,
+  Minimize2,
+  Monitor,
   MessageCircle,
-  MonitorPlay,
   Paperclip,
+  Scale,
+  Search,
   Send,
+  Shield,
+  ShieldCheck,
+  Tag,
+  Ticket,
   User,
   X,
 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
@@ -30,7 +40,12 @@ import type { OpenMspAdvisorDetail } from "@/lib/openMspAdvisor";
 import { STORE_ADVISOR_SEED } from "@/lib/openMspAdvisor";
 import { analytics } from "@/lib/analytics";
 import { useDraggableWindow } from "@/hooks/useDraggableWindow";
-import type { DeskResizeEdge } from "@/lib/deskWindowGeometry";
+import {
+  DESK_TICKET_CATEGORIES,
+  DESK_TICKET_CHIPS,
+  applyDeskTicketChip,
+  type DeskTicketChipId,
+} from "@/lib/deskTicketChips";
 
 interface ZohoASAPWidgetProps {
   isEnabled?: boolean;
@@ -55,77 +70,193 @@ type TicketResult = {
   message: string;
 };
 
+type ChatHeadsUp = {
+  id: string;
+  from: string;
+  preview: string;
+  kind: "in" | "out";
+  live?: boolean;
+};
+
+function previewChatLine(content: string, max = 108) {
+  const text = content.replace(/\s+/g, " ").trim();
+  return text.length > max ? `${text.slice(0, max - 1)}…` : text;
+}
+
 const CHAT_WELCOME: ChatMessage = {
   id: "welcome",
   role: "assistant",
   content:
-    "DE Desk is here. Describe the outage, the risk, or the question — we'll take it and give you a clear next step.",
+    "DE Desk here. Tell me what broke, what you're evaluating, or what you're trying to protect — I'll give you a clear read and the sensible next step.",
 };
 
-/** Optional starters — chips that seed the composer, not a competing card grid. */
-const CHAT_STARTERS = [
-  { label: "Something isn't working", seed: "Something isn't working: " },
-  { label: "Possible security incident", seed: "Possible security incident: " },
-] as const;
+const QUICK_CHAT_PROMPTS: Array<{
+  label: string;
+  icon: typeof Shield;
+  tone: "violet" | "blue" | "teal" | "red";
+  ticketChip?: DeskTicketChipId;
+}> = [
+  { label: "Something isn't working", icon: Monitor, tone: "blue" },
+  { label: "Possible security incident", icon: AlertTriangle, tone: "red", ticketChip: "security-incident" },
+  { label: "Help me choose services", icon: Scale, tone: "violet" },
+  { label: "Ask an IT/security question", icon: MessageCircle, tone: "teal" },
+];
 
-const TICKET_PRIORITIES = ["Low", "Medium", "High", "Urgent"] as const;
+function DeskHeroArt({ variant }: { variant: "desk" | "ticket" | "resources" }) {
+  if (variant === "ticket") {
+    return (
+      <svg className="de-desk-hero-art" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="deDeskTicketCard" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#2B2735" />
+            <stop offset="1" stopColor="#18151F" />
+          </linearGradient>
+          <linearGradient id="deDeskTicketShield" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#3A2E44" />
+            <stop offset="1" stopColor="#1C1722" />
+          </linearGradient>
+        </defs>
+        <g transform="rotate(-7 45 55)">
+          <rect x="14" y="18" width="66" height="80" rx="12" fill="url(#deDeskTicketCard)" stroke="rgba(255,255,255,0.08)" />
+          <rect x="34" y="10" width="26" height="12" rx="5" fill="#332C3D" stroke="rgba(255,255,255,0.1)" />
+          <rect x="26" y="40" width="40" height="5" rx="2.5" fill="#D3126A" />
+          <rect x="26" y="52" width="34" height="5" rx="2.5" fill="#3A3644" />
+          <rect x="26" y="64" width="24" height="5" rx="2.5" fill="#413B4C" />
+          <circle cx="40" cy="84" r="11" fill="rgba(211,18,106,0.14)" stroke="#D3126A" strokeWidth="1.5" />
+          <path d="M35 84l3.5 3.5L46 80" stroke="#D3126A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </g>
+        <g transform="rotate(10 90 90)">
+          <path d="M90 62c12 0 20 6 20 6v18c0 14-9 22-20 26-11-4-20-12-20-26V68s8-6 20-6z" fill="url(#deDeskTicketShield)" stroke="#D3126A" strokeWidth="1.5" />
+          <rect x="82" y="88" width="16" height="12" rx="3" fill="none" stroke="#D3126A" strokeWidth="1.6" />
+          <path d="M85 88v-5a5 5 0 0 1 10 0v5" fill="none" stroke="#D3126A" strokeWidth="1.6" />
+        </g>
+      </svg>
+    );
+  }
+  if (variant === "resources") {
+    return (
+      <svg className="de-desk-hero-art" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="deDeskResBook" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#2B2735" />
+            <stop offset="1" stopColor="#18151F" />
+          </linearGradient>
+        </defs>
+        <g transform="rotate(-6 50 55)">
+          <rect x="18" y="22" width="60" height="70" rx="8" fill="#100E16" />
+          <rect x="22" y="18" width="60" height="70" rx="8" fill="url(#deDeskResBook)" stroke="rgba(255,255,255,0.08)" />
+          <rect x="30" y="30" width="30" height="4" rx="2" fill="#D3126A" />
+          <rect x="30" y="40" width="24" height="4" rx="2" fill="#3A3444" />
+          <rect x="30" y="50" width="26" height="4" rx="2" fill="#3A3444" />
+          <path d="M64 14v14l-6-4-6 4V14z" fill="#D3126A" />
+        </g>
+        <g transform="rotate(8 92 92)">
+          <circle cx="88" cy="82" r="16" fill="rgba(211,18,106,0.10)" stroke="#D3126A" strokeWidth="2.5" />
+          <line x1="99" y1="93" x2="112" y2="106" stroke="#D3126A" strokeWidth="4" strokeLinecap="round" />
+        </g>
+      </svg>
+    );
+  }
+  return (
+    <svg className="de-desk-hero-art" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="deDeskChatBubble" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#2B2735" />
+          <stop offset="1" stopColor="#18151F" />
+        </linearGradient>
+        <linearGradient id="deDeskChatShield" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#3A2E44" />
+          <stop offset="1" stopColor="#1C1722" />
+        </linearGradient>
+      </defs>
+      <g transform="rotate(-6 42 50)">
+        <path d="M16 24h56a8 8 0 0 1 8 8v34a8 8 0 0 1-8 8H44l-14 12v-12h-14a8 8 0 0 1-8-8V32a8 8 0 0 1 8-8z" fill="url(#deDeskChatBubble)" stroke="rgba(255,255,255,0.08)" />
+        <circle cx="34" cy="50" r="3.4" fill="#D3126A" />
+        <circle cx="46" cy="50" r="3.4" fill="#E8E4EE" />
+        <circle cx="58" cy="50" r="3.4" fill="#413B4C" />
+      </g>
+      <g transform="rotate(10 90 90)">
+        <path d="M90 62c12 0 20 6 20 6v18c0 14-9 22-20 26-11-4-20-12-20-26V68s8-6 20-6z" fill="url(#deDeskChatShield)" stroke="#D3126A" strokeWidth="1.5" />
+        <path d="M82 90l5 5 11-11" stroke="#D3126A" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+      </g>
+    </svg>
+  );
+}
 
-const TICKET_CATEGORIES = [
-  "Email",
-  "Access & Security",
-  "Network & VPN",
-  "Software & Applications",
-  "Hardware & Devices",
-  "Backup & Recovery",
-  "Collaboration",
-  "Other",
-] as const;
+function BookMagnifier({ className }: { className?: string }) {
+  return (
+    <span className={`relative inline-flex items-center justify-center ${className ?? "h-5 w-5"}`} aria-hidden="true">
+      <BookOpen className="h-full w-full" />
+      <Search className="absolute -bottom-[12%] -right-[14%] h-[58%] w-[58%]" strokeWidth={2.75} />
+    </span>
+  );
+}
 
-type ClientTool = {
-  id: string;
+const TICKET_CHIP_ICONS: Record<DeskTicketChipId, typeof Shield> = {
+  "security-incident": AlertTriangle,
+  "email-m365": Mail,
+  "sign-in": KeyRound,
+  device: Monitor,
+  "something-else": ClipboardList,
+};
+
+const RESOURCE_LINKS: Array<{
   title: string;
   description: string;
   href: string;
-  icon: LucideIcon;
-  featured?: boolean;
-  badge?: string;
-  guide?: { label: string; href: string };
+  icon: typeof BookOpen | typeof BookMagnifier;
   external?: boolean;
-};
-
-const CLIENT_TOOLS: ClientTool[] = [
+  guide?: { title: string; href: string };
+  tags: [string, string];
+  cta: string;
+  accent: string;
+  iconBg: string;
+}> = [
   {
-    id: "portal",
-    title: "Client Portal",
-    description: "Account, tickets, services and client resources.",
+    title: "Client portal",
+    description: "Tickets, services, approvals, and account management.",
     href: PORTAL_LOGIN,
-    icon: SquareArrowOutUpRight,
-    featured: true,
-    external: true,
+    icon: ShieldCheck,
+    tags: ["Account access", "Self-service"],
+    cta: "Open portal",
+    accent: "text-[#fed7aa]",
+    iconBg:
+      "bg-gradient-to-br from-[#fb923c]/45 to-[#ea580c]/25 ring-[#fdba74]/55 shadow-[0_0_20px_rgba(251,146,60,0.3)]",
   },
   {
-    id: "remote",
-    title: "Start Remote Support",
-    description: "Launch a secure technician support session.",
+    title: "Start remote support",
+    description: "Connect securely with a technician.",
     href: "https://assist.zoho.com/",
-    icon: MonitorPlay,
-    badge: "Fastest",
-    guide: { label: "Remote support guide", href: "/support/remote-support" },
+    icon: Monitor,
     external: true,
+    guide: { title: "Remote support guide", href: "/support/remote-support" },
+    tags: ["Live help", "Screen share"],
+    cta: "Start session",
+    accent: "text-[#e9d5ff]",
+    iconBg:
+      "bg-gradient-to-br from-[#a855f7]/45 to-[#7c3aed]/30 ring-[#c084fc]/55 shadow-[0_0_20px_rgba(168,85,247,0.35)]",
   },
   {
-    id: "help",
-    title: "Help Center",
-    description: "Guides, common fixes and client documentation.",
+    title: "Knowledge base",
+    description: "Guides and troubleshooting.",
     href: "/support/knowledge-base",
-    icon: BookOpenText,
+    icon: BookMagnifier,
+    tags: ["Guides", "Troubleshooting"],
+    cta: "Browse articles",
+    accent: "text-[#bbf7d0]",
+    iconBg:
+      "bg-gradient-to-br from-[#4ade80]/40 to-[#16a34a]/25 ring-[#86efac]/50 shadow-[0_0_20px_rgba(74,222,128,0.28)]",
   },
   {
-    id: "status",
-    title: "Service Status",
-    description: "Check availability of DE-managed services.",
+    title: "System status",
+    description: "Service advisories and known issues.",
     href: "/portal/status",
     icon: Activity,
+    tags: ["Advisories", "Known issues"],
+    cta: "View status",
+    accent: "text-[#bae6fd]",
+    iconBg:
+      "bg-gradient-to-br from-[#38bdf8]/40 to-[#0284c7]/25 ring-[#7dd3fc]/50 shadow-[0_0_20px_rgba(56,189,248,0.3)]",
   },
 ];
 
@@ -150,6 +281,11 @@ export const ZohoASAPWidget = ({
   const chatEndRef = useRef<HTMLDivElement>(null);
   const pollSinceRef = useRef<string | null>(null);
   const knownMsgIdsRef = useRef<Set<string>>(new Set(["welcome"]));
+  const activeTabRef = useRef<ActiveTab>(activeTab);
+  const agentNameRef = useRef<string | null>(null);
+  const headsUpTimerRef = useRef<number | null>(null);
+  const [unreadChatCount, setUnreadChatCount] = useState(0);
+  const [headsUp, setHeadsUp] = useState<ChatHeadsUp | null>(null);
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -158,18 +294,12 @@ export const ZohoASAPWidget = ({
   const [message, setMessage] = useState("");
   const [priority, setPriority] = useState<"Low" | "Medium" | "High" | "Urgent">("Medium");
   const [category, setCategory] = useState("");
+  const [selectedTicketChip, setSelectedTicketChip] = useState<DeskTicketChipId | null>(null);
+  const ticketDetailsRef = useRef<HTMLDivElement>(null);
   const [attachmentName, setAttachmentName] = useState<string | null>(null);
   const [isTicketSending, setIsTicketSending] = useState(false);
   const [ticketResult, setTicketResult] = useState<TicketResult | null>(null);
-  const [showTicketExtras, setShowTicketExtras] = useState(false);
-  const [dialogHeight, setDialogHeight] = useState<number | undefined>(undefined);
-  const [reduceMotion, setReduceMotion] = useState(false);
-  const [canDrag, setCanDrag] = useState(false);
   const ticketFileRef = useRef<HTMLInputElement>(null);
-  const dialogRef = useRef<HTMLElement>(null);
-  const chromeRef = useRef<HTMLDivElement>(null);
-  const panelMeasureRef = useRef<HTMLDivElement>(null);
-  const chatInputRef = useRef<HTMLTextAreaElement>(null);
 
   const [cookieBannerClear, setCookieBannerClear] = useState(() => {
     try {
@@ -181,14 +311,44 @@ export const ZohoASAPWidget = ({
       return false;
     }
   });
-
-  const { toast } = useToast();
+  const [canDrag, setCanDrag] = useState(false);
 
   const deskDrag = useDraggableWindow({
     enabled: canDrag,
     open: isOpen,
     storageKey: "de-desk-window-pos",
   });
+
+  const { toast } = useToast();
+  activeTabRef.current = activeTab;
+  agentNameRef.current = agentName;
+
+  useEffect(() => () => {
+    if (headsUpTimerRef.current) window.clearTimeout(headsUpTimerRef.current);
+  }, []);
+
+  const clearHeadsUpTimer = () => {
+    if (headsUpTimerRef.current) {
+      window.clearTimeout(headsUpTimerRef.current);
+      headsUpTimerRef.current = null;
+    }
+  };
+
+  const showHeadsUp = (next: ChatHeadsUp, holdMs = next.kind === "in" && next.live ? 12000 : 7000) => {
+    if (activeTabRef.current === "chat") return;
+    setHeadsUp(next);
+    clearHeadsUpTimer();
+    headsUpTimerRef.current = window.setTimeout(() => setHeadsUp(null), holdMs);
+  };
+
+  const selectTab = (id: ActiveTab) => {
+    setActiveTab(id);
+    if (id === "chat") {
+      setUnreadChatCount(0);
+      setHeadsUp(null);
+      clearHeadsUpTimer();
+    }
+  };
 
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 640px)");
@@ -197,51 +357,6 @@ export const ZohoASAPWidget = ({
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
   }, []);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => setReduceMotion(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-
-  useLayoutEffect(() => {
-    if (!isOpen || deskDrag.size) {
-      if (!isOpen) setDialogHeight(undefined);
-      return;
-    }
-
-    const measure = () => {
-      const dialog = dialogRef.current;
-      const chrome = chromeRef.current;
-      const panel = panelMeasureRef.current;
-      if (!dialog || !chrome || !panel) return;
-      const vh = window.innerHeight;
-      const maxH = Math.min(Math.round(vh * 0.86), vh - 72);
-      const prevHeight = dialog.style.height;
-      const prevMax = dialog.style.maxHeight;
-      dialog.style.height = "auto";
-      dialog.style.maxHeight = "none";
-      const next = Math.min(maxH, chrome.offsetHeight + panel.scrollHeight + 16);
-      dialog.style.height = prevHeight;
-      dialog.style.maxHeight = prevMax;
-      setDialogHeight(next);
-    };
-
-    measure();
-    const panel = panelMeasureRef.current;
-    const chrome = chromeRef.current;
-    if (!panel) return;
-    const observer = new ResizeObserver(measure);
-    observer.observe(panel);
-    if (chrome) observer.observe(chrome);
-    window.addEventListener("resize", measure);
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", measure);
-    };
-  }, [isOpen, activeTab, ticketResult, showTicketExtras, chatMessages, isChatSending, deskDrag.size]);
 
   useEffect(() => {
     if (cookieBannerClear) return;
@@ -331,6 +446,13 @@ export const ZohoASAPWidget = ({
   }, [isOpen]);
 
   useEffect(() => {
+    window.dispatchEvent(new CustomEvent("de-desk-open-change", { detail: { open: isOpen } }));
+    return () => {
+      window.dispatchEvent(new CustomEvent("de-desk-open-change", { detail: { open: false } }));
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
     const onOpen = (event: Event) => {
       const detail = (event as CustomEvent<OpenMspAdvisorDetail>).detail || {};
       setIsOpen(true);
@@ -352,6 +474,20 @@ export const ZohoASAPWidget = ({
     chatEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [activeTab, chatMessages]);
 
+  useEffect(() => {
+    if (activeTab === "chat" || !isChatSending) return;
+    showHeadsUp(
+      {
+        id: "pending-reply",
+        from: "DE Desk",
+        preview: agentLive ? "Delivering to the specialist…" : "Working on your message…",
+        kind: "in",
+        live: agentLive,
+      },
+      20000,
+    );
+  }, [activeTab, isChatSending, agentLive]);
+
   // Pull portal agent (and any missed) messages into the website desk
   useEffect(() => {
     if (!advisorSessionId || !isOpen) return;
@@ -361,6 +497,7 @@ export const ZohoASAPWidget = ({
       if (typeof live === "boolean") setAgentLive(live);
       if (name) setAgentName(name);
       if (!incoming.length) return;
+      const added: ChatMessage[] = [];
       setChatMessages((current) => {
         const next = [...current];
         const recentAssistantContent = new Set(
@@ -387,16 +524,32 @@ export const ZohoASAPWidget = ({
           knownMsgIdsRef.current.add(msg.id);
           if (msg.createdAt) pollSinceRef.current = msg.createdAt;
           if (msg.role === "assistant") recentAssistantContent.add(msg.content.trim());
-          next.push({
+          const incomingMsg = {
             id: msg.id,
             role: msg.role,
             content: msg.content,
             senderName: msg.senderName,
             createdAt: msg.createdAt,
-          });
+          };
+          next.push(incomingMsg);
+          added.push(incomingMsg);
         }
         return next;
       });
+      if (added.length && activeTabRef.current !== "chat") {
+        setUnreadChatCount((count) => count + added.length);
+        const last = added[added.length - 1];
+        showHeadsUp({
+          id: last.id,
+          from:
+            last.role === "agent"
+              ? last.senderName || name || agentNameRef.current || "Specialist"
+              : "DE Desk",
+          preview: previewChatLine(last.content),
+          kind: "in",
+          live: last.role === "agent" || !!live,
+        });
+      }
     };
 
     const poll = async () => {
@@ -419,12 +572,12 @@ export const ZohoASAPWidget = ({
     };
 
     void poll();
-    const id = window.setInterval(poll, 2500);
+    const id = window.setInterval(poll, agentLive ? 1600 : 2400);
     return () => {
       cancelled = true;
       window.clearInterval(id);
     };
-  }, [advisorSessionId, isOpen]);
+  }, [advisorSessionId, isOpen, agentLive]);
 
   const handleSendChat = async (prompt?: string) => {
     const content = (prompt ?? chatInput).trim();
@@ -450,6 +603,14 @@ export const ZohoASAPWidget = ({
     setChatMessages((current) => [...current, userMessage]);
     setChatInput("");
     setIsChatSending(true);
+    if (activeTabRef.current !== "chat") {
+      showHeadsUp({
+        id: userMessage.id,
+        from: "You",
+        preview: previewChatLine(content, 90),
+        kind: "out",
+      }, 4000);
+    }
 
     try {
       const response = await fetch("/api/public/advisor/chat", {
@@ -512,6 +673,16 @@ export const ZohoASAPWidget = ({
           senderName: data.agentLive ? data.agentName || "DE Desk" : null,
         },
       ]);
+      if (activeTabRef.current !== "chat") {
+        setUnreadChatCount((count) => count + 1);
+        showHeadsUp({
+          id: assistantId,
+          from: data.agentLive ? String(data.agentName || "Specialist") : "DE Desk",
+          preview: previewChatLine(replyContent),
+          kind: "in",
+          live: !!data.agentLive,
+        });
+      }
     } catch (error) {
       const description = error instanceof Error ? error.message : "Chat is temporarily unavailable.";
       setChatMessages((current) => [
@@ -522,9 +693,17 @@ export const ZohoASAPWidget = ({
           content: `${description} You can create a support ticket here and the team will follow up.`,
         },
       ]);
+      if (activeTabRef.current !== "chat") {
+        showHeadsUp({
+          id: `assistant-error-${Date.now()}`,
+          from: "DE Desk",
+          preview: previewChatLine(description),
+          kind: "in",
+        });
+      }
       toast({
         title: "Chat unavailable",
-        description: "Your message was not submitted as a ticket. Use Get Support if you need team follow-up.",
+        description: "Your message was not submitted as a ticket. Use the Ticket tab if you need team follow-up.",
         variant: "destructive",
       });
     } finally {
@@ -567,6 +746,26 @@ export const ZohoASAPWidget = ({
       return;
     }
     setAttachmentName(file.name);
+  };
+
+  const applyTicketChip = (chipId: DeskTicketChipId) => {
+    const chip = DESK_TICKET_CHIPS.find((item) => item.id === chipId);
+    if (!chip) return;
+    const next = applyDeskTicketChip(chip, { message });
+    setSelectedTicketChip(next.chipId);
+    setSubject(next.subject);
+    setCategory(next.category);
+    setPriority(next.priority);
+    setMessage(next.message);
+    window.requestAnimationFrame(() => {
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      ticketDetailsRef.current?.scrollIntoView({
+        behavior: reduceMotion ? "auto" : "smooth",
+        block: "start",
+      });
+      const focusId = fullName.trim() && email.trim() ? "support-message" : "support-name";
+      document.getElementById(focusId)?.focus();
+    });
   };
 
   const handleSubmitTicket = async () => {
@@ -635,8 +834,8 @@ export const ZohoASAPWidget = ({
       setMessage("");
       setPriority("Medium");
       setCategory("");
+      setSelectedTicketChip(null);
       setAttachmentName(null);
-      setShowTicketExtras(false);
       if (ticketFileRef.current) ticketFileRef.current.value = "";
 
       toast({
@@ -658,446 +857,535 @@ export const ZohoASAPWidget = ({
 
   if (!isEnabled) return null;
 
+  const dockClear = cookieBannerClear
+    ? "calc(var(--de-chrome-inset) + env(safe-area-inset-bottom, 0px) + var(--de-cookie-h, 0px) + var(--de-unified-bar-h, 0px))"
+    : "calc(5.75rem + var(--de-cookie-h, 0px) + var(--de-unified-bar-h, 0px))";
+
+  const canvasRight = "calc(var(--de-canvas-gutter) + var(--de-chrome-inset))";
+
+  const deskWindowStyle = canDrag
+    ? {
+        ...(deskDrag.pos
+          ? {
+              left: deskDrag.pos.x,
+              top: deskDrag.pos.y,
+              right: "auto",
+              bottom: "auto",
+            }
+          : {
+              right: canvasRight,
+              bottom: dockClear,
+              left: "auto",
+              top: "auto",
+            }),
+        ...(deskDrag.size
+          ? {
+              width: deskDrag.size.w,
+              height: deskDrag.size.h,
+              maxWidth: "none",
+              maxHeight: "none",
+            }
+          : {}),
+      }
+    : undefined;
+
   return (
     <>
-      {/* Bottom-right utility — cookie banner lifts it; no second nav bar */}
-      <div
-        className={`fixed z-[100] right-3 sm:right-4 ${
-          cookieBannerClear ? "bottom-5" : "bottom-28"
-        }`}
-        data-testid="widget-zoho-asap-container"
-      >
-        {!isOpen && (
-          <button
-            type="button"
-            onClick={() => setIsOpen(true)}
-            className="group flex h-14 items-center gap-3 rounded-full border border-white/12 bg-[#0a0a0a]/95 px-4 pr-5 text-white shadow-[0_12px_40px_rgba(0,0,0,0.45)] backdrop-blur-md transition duration-200 hover:-translate-y-0.5 hover:border-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            data-testid="button-open-asap-widget"
-            aria-label="Open DE Desk"
-            aria-expanded={isOpen}
-          >
-            <span className="relative flex h-9 w-9 items-center justify-center rounded-full bg-[#D3126A] text-sm font-bold tracking-tight">
-              DE
-              <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#0a0a0a] bg-emerald-400" />
-            </span>
-            <span className="hidden text-left sm:block">
-              <span className="block text-sm font-semibold leading-4 tracking-tight">Ask DE</span>
-              <span className="block text-[11px] leading-4 text-white/55">Technology desk</span>
-            </span>
-          </button>
-        )}
-
         {isOpen && (
           <section
-            ref={(node) => {
-              dialogRef.current = node;
-              deskDrag.panelRef.current = node;
-            }}
-            className={`${canDrag ? "fixed" : "absolute bottom-0 right-0"} z-[100] flex w-[min(460px,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-[1.5rem] border-[3px] border-[#A78BFA]/75 bg-[#1a0b33] shadow-[0_0_0_1px_rgba(196,181,253,0.45),0_0_0_6px_rgba(124,58,237,0.22),0_28px_80px_rgba(50,15,90,0.7),0_0_100px_rgba(139,92,246,0.4)]`}
-            style={{
-              ...(canDrag
-                ? deskDrag.pos
-                  ? { left: deskDrag.pos.x, top: deskDrag.pos.y, right: "auto", bottom: "auto" }
-                  : { right: "1rem", bottom: cookieBannerClear ? "1.25rem" : "7rem", left: "auto", top: "auto" }
-                : {}),
-              ...(canDrag && deskDrag.size
-                ? { width: deskDrag.size.w, height: deskDrag.size.h, maxHeight: "none" }
-                : {
-                    height: dialogHeight,
-                    maxHeight: "min(86vh, calc(100dvh - 4.5rem))",
-                    transition: reduceMotion ? undefined : "height 220ms ease",
-                  }),
-            }}
+            ref={deskDrag.panelRef}
+            className="de-desk-shell fixed inset-x-3 top-[max(0.75rem,env(safe-area-inset-top))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[100] flex max-h-[100dvh] w-auto flex-col overflow-hidden sm:inset-auto sm:h-[min(760px,calc(100dvh-5.5rem))] sm:max-h-[min(86vh,calc(100dvh-4.5rem))] sm:w-[410px] sm:max-w-[calc(100vw-2rem)]"
+            style={deskWindowStyle}
             role="dialog"
             aria-modal="true"
             aria-label="DE Desk help"
           >
-            <div
-              className="pointer-events-none absolute inset-0"
-              style={{
-                backgroundImage:
-                  "radial-gradient(ellipse 80% 55% at 10% 0%, rgba(167,139,250,0.42), transparent 58%), radial-gradient(ellipse 65% 50% at 100% 5%, rgba(211,18,106,0.24), transparent 55%), linear-gradient(180deg, rgba(124,58,237,0.28) 0%, rgba(26,11,51,0.2) 38%, transparent 70%)",
-              }}
-              aria-hidden="true"
-            />
-
-            <div ref={chromeRef} className="relative flex-shrink-0">
-              <header className="flex items-center justify-between gap-3 px-4 pb-1 pt-4">
-                <div
-                  className={`flex min-w-0 items-center gap-3 ${
-                    canDrag
-                      ? deskDrag.dragging
-                        ? "cursor-grabbing select-none"
-                        : "cursor-grab select-none"
-                      : ""
-                  }`}
-                  onPointerDown={canDrag ? deskDrag.onHandlePointerDown : undefined}
-                  onDoubleClick={canDrag ? deskDrag.reset : undefined}
-                  style={canDrag ? { touchAction: "none" } : undefined}
-                  data-testid="desk-drag-handle"
-                  aria-label={canDrag ? "Move DE Desk window. Double-click to reset size and position." : undefined}
+            <header className="de-desk-head">
+              <div
+                className={`de-desk-id ${
+                  canDrag
+                    ? deskDrag.dragging
+                      ? "cursor-grabbing select-none"
+                      : "cursor-grab select-none"
+                    : ""
+                }`}
+                onPointerDown={canDrag ? deskDrag.onHandlePointerDown : undefined}
+                onDoubleClick={canDrag ? deskDrag.reset : undefined}
+                style={canDrag ? { touchAction: "none" } : undefined}
+                data-testid="desk-drag-handle"
+                aria-label={canDrag ? "Move DE Desk window. Double-click to reset size and position." : undefined}
+              >
+                <div className="de-desk-avatar">
+                  DE
+                  <span className="de-desk-avatar-dot" />
+                </div>
+                <div className="min-w-0">
+                  <h2 data-testid="text-widget-title">DE Desk</h2>
+                  <p data-testid="text-widget-status">
+                    {agentLive
+                      ? `${agentName || "Specialist"} joined · live handoff`
+                      : "Ask · Support · Tools"}
+                  </p>
+                </div>
+              </div>
+              {canDrag ? (
+                <button
+                  type="button"
+                  className="de-desk-close"
+                  data-testid="button-expand-desk"
+                  aria-label={deskDrag.expanded ? "Reset DE Desk size" : "Expand DE Desk"}
+                  title={deskDrag.expanded ? "Reset size" : "Expand"}
+                  onPointerDown={(event) => event.stopPropagation()}
+                  onClick={deskDrag.toggleExpanded}
                 >
-                  <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#D3126A] to-[#7c3aed] text-[12px] font-bold tracking-wide text-white shadow-[0_0_22px_rgba(211,18,106,0.4)]">
-                    DE
-                    <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#1a0b33] bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.85)]" />
-                  </div>
-                  <div className="min-w-0">
-                    <h2 className="truncate text-[16px] font-semibold tracking-tight text-white" data-testid="text-widget-title">
-                      DE Desk
-                    </h2>
-                    <p className="truncate text-[11px] text-white/55" data-testid="text-widget-status">
-                      {agentLive
-                        ? `${agentName || "Specialist"} joined · live handoff`
-                        : "DE Desk is available"}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  {canDrag && (
-                    <button
-                      type="button"
-                      className="rounded-xl border border-white/10 bg-white/[0.04] p-2 text-white/60 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/45"
-                      data-testid="button-expand-desk"
-                      aria-label={deskDrag.expanded ? "Reset DE Desk size" : "Expand DE Desk"}
-                      title={deskDrag.expanded ? "Reset size" : "Expand"}
-                      onPointerDown={(event) => event.stopPropagation()}
-                      onClick={deskDrag.toggleExpanded}
-                    >
-                      {deskDrag.expanded ? (
-                        <Minimize2 size={14} aria-hidden="true" />
-                      ) : (
-                        <Maximize2 size={14} aria-hidden="true" />
-                      )}
-                    </button>
+                  {deskDrag.expanded ? (
+                    <Minimize2 size={13} aria-hidden="true" />
+                  ) : (
+                    <Maximize2 size={13} aria-hidden="true" />
                   )}
-                  <button
-                    type="button"
-                    onClick={() => setIsOpen(false)}
-                    className="rounded-xl border border-white/10 bg-white/[0.04] p-2 text-white/60 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/45"
-                    data-testid="button-close-widget"
-                    aria-label="Close DE Desk"
-                  >
-                    <X size={16} aria-hidden="true" />
-                  </button>
-                </div>
-              </header>
+                </button>
+              ) : null}
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="de-desk-close"
+                data-testid="button-close-widget"
+                aria-label="Close DE Desk"
+              >
+                <X size={13} aria-hidden="true" />
+              </button>
+            </header>
 
-              <nav className="mx-3 mb-2 grid grid-cols-3 border-b border-white/10" aria-label="Support options">
-                {(
-                  [
-                    { id: "chat" as const, label: "Ask DE", icon: MessageCircle },
-                    { id: "ticket" as const, label: "Get Support", icon: FileText },
-                    { id: "resources" as const, label: "Client Tools", icon: LayoutGrid },
-                  ]
-                ).map(({ id, label, icon: Icon }) => {
-                  const isActive = activeTab === id;
-                  return (
-                    <button
-                      key={id}
-                      type="button"
-                      onClick={() => setActiveTab(id)}
-                      className={`relative flex min-h-11 items-center justify-center gap-1.5 px-1 text-[12px] font-semibold transition sm:text-[12.5px] ${
-                        isActive ? "text-white" : "text-white/45 hover:text-white/80"
-                      }`}
-                      data-testid={`button-tab-${id}`}
-                      aria-current={isActive ? "page" : undefined}
-                    >
-                      <Icon
-                        className={`h-3.5 w-3.5 ${isActive ? "text-[#F0B4CC]" : ""}`}
-                        aria-hidden="true"
-                      />
-                      <span className={isActive ? "text-[#F0B4CC]" : undefined}>{label}</span>
-                      {isActive && (
-                        <span className="absolute inset-x-3 bottom-0 h-[2px] rounded-full bg-[#D3126A] shadow-[0_0_12px_rgba(211,18,106,0.95)]" />
-                      )}
-                    </button>
-                  );
-                })}
-              </nav>
+            <nav className="de-desk-tabs" aria-label="Support options">
+              {(
+                [
+                  { id: "chat" as const, label: "Ask DE", icon: MessageCircle },
+                  { id: "ticket" as const, label: "Get Support", icon: FileText },
+                  { id: "resources" as const, label: "Client Tools", icon: BookOpen },
+                ]
+              ).map(({ id, label, icon: Icon }) => {
+                const isActive = activeTab === id;
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => selectTab(id)}
+                    className={`de-desk-tab${isActive ? " is-active" : ""}${
+                      id === "chat" && unreadChatCount > 0 ? " has-unread" : ""
+                    }`}
+                    data-testid={`button-tab-${id}`}
+                    aria-current={isActive ? "page" : undefined}
+                    aria-label={
+                      id === "chat" && unreadChatCount > 0
+                        ? `Ask DE, ${unreadChatCount} new ${unreadChatCount === 1 ? "message" : "messages"}`
+                        : undefined
+                    }
+                  >
+                    <Icon aria-hidden="true" />
+                    {label}
+                    {id === "chat" && unreadChatCount > 0 ? (
+                      <span className="de-desk-tab-badge" aria-hidden="true">
+                        {unreadChatCount > 9 ? "9+" : unreadChatCount}
+                      </span>
+                    ) : null}
+                  </button>
+                );
+              })}
+            </nav>
+
+            <div className="de-desk-status">
+              <div className="de-desk-status-l">
+                <span
+                  className={`de-desk-status-dot${
+                    agentLive
+                      ? " is-live"
+                      : assistantAvailable === false
+                        ? " is-wait"
+                        : assistantAvailable === true
+                          ? " is-on"
+                          : ""
+                  }`}
+                />
+                {agentLive
+                  ? `${agentName || "Support specialist"} joined the conversation`
+                  : assistantAvailable === true
+                    ? "DE Desk available"
+                    : assistantAvailable === false
+                      ? "Get Support available"
+                      : "Connecting…"}
+              </div>
+              <button
+                type="button"
+                onClick={() => selectTab(activeTab === "ticket" ? "chat" : "ticket")}
+                className="de-desk-status-r"
+              >
+                {activeTab === "ticket" ? "Ask DE instead" : "Open a support ticket"}
+                <span className="de-desk-status-ic">
+                  <Headset aria-hidden="true" />
+                </span>
+              </button>
             </div>
 
-            <div className="relative min-h-0 flex-1 overflow-y-auto px-3 pb-3">
-              <div ref={panelMeasureRef}>
-              {activeTab === "chat" && (
+            <div className="de-desk-body">
+              {headsUp && activeTab !== "chat" ? (
                 <div
-                  className="flex min-h-[320px] flex-col overflow-hidden rounded-[1.2rem] border border-white/10 bg-[#f7f5f2] shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
-                  data-testid="panel-support-chat"
+                  className={`de-desk-heads-up${headsUp.kind === "out" ? " is-out" : ""}${
+                    headsUp.live ? " is-live" : ""
+                  }`}
+                  role="status"
+                  aria-live="polite"
+                  data-testid="desk-chat-heads-up"
                 >
-                  <div className="min-h-[200px] flex-1 space-y-3.5 overflow-y-auto px-3.5 py-4" aria-live="polite">
-                    {chatMessages.map((chatMessage, index) => {
-                      const isUser = chatMessage.role === "user";
-                      const isAgent = chatMessage.role === "agent";
-                      const isOpening = !isUser && index === 0;
-                      return (
-                        <div
-                          key={chatMessage.id}
-                          className={`flex ${isUser ? "justify-end" : "justify-start"}`}
-                        >
-                          <div className={`max-w-[92%] ${isUser ? "" : "flex gap-2.5"}`}>
-                            {!isUser && (
-                              <div className="relative mt-0.5 h-8 w-8 flex-shrink-0">
-                                <span
-                                  className={`flex h-8 w-8 items-center justify-center rounded-full text-[10px] font-bold text-white ${
-                                    isAgent ? "bg-[#3d5a73]" : "bg-[#151217]"
-                                  }`}
-                                >
-                                  {isAgent ? "AG" : "DE"}
-                                </span>
-                                {isOpening && (
-                                  <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#f7f5f2] bg-emerald-400" />
-                                )}
-                              </div>
-                            )}
-                            <div>
+                  <button
+                    type="button"
+                    className="de-desk-heads-up-main"
+                    onClick={() => selectTab("chat")}
+                  >
+                    <span className="de-desk-heads-up-mark" aria-hidden="true">
+                      {headsUp.kind === "out" ? "You" : headsUp.live ? "AG" : "DE"}
+                    </span>
+                    <span className="de-desk-heads-up-copy">
+                      <span className="de-desk-heads-up-top">
+                        <strong>{headsUp.from}</strong>
+                        <em>{headsUp.kind === "out" ? "sent" : "now"}</em>
+                      </span>
+                      <span className="de-desk-heads-up-preview">{headsUp.preview}</span>
+                      <span className="de-desk-heads-up-hint">
+                        Reply below — or open Ask DE
+                      </span>
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    className="de-desk-heads-up-x"
+                    onClick={() => {
+                      setHeadsUp(null);
+                      clearHeadsUpTimer();
+                    }}
+                    aria-label="Dismiss chat notification"
+                  >
+                    <X size={12} aria-hidden="true" />
+                  </button>
+                </div>
+              ) : null}
+              {activeTab === "chat" && (
+                <div className="de-desk-panel" data-testid="panel-support-chat">
+                  <div className="de-desk-scroll" aria-live="polite">
+                    {chatMessages.length === 1 ? (
+                      <>
+                        <div className="de-desk-hero">
+                          <div className="de-desk-hero-dots" aria-hidden="true" />
+                          <div className="de-desk-hero-txt">
+                            <div className="de-desk-hero-ring">
+                              <MessageCircle aria-hidden="true" />
+                            </div>
+                            <h3>How can we help?</h3>
+                            <p>
+                              Tell me what broke, what you&apos;re evaluating, or what you&apos;re trying to
+                              protect — I&apos;ll give you a clear read and the sensible next step.
+                            </p>
+                          </div>
+                          <DeskHeroArt variant="desk" />
+                        </div>
+                        <div className="de-desk-rows is-grid">
+                          {QUICK_CHAT_PROMPTS.map(({ label, icon: Icon, tone, ticketChip }) => (
+                            <button
+                              key={label}
+                              type="button"
+                              data-tone={tone}
+                              data-testid={`ask-prompt-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                              onClick={() => {
+                                if (ticketChip) {
+                                  selectTab("ticket");
+                                  applyTicketChip(ticketChip);
+                                  return;
+                                }
+                                void handleSendChat(label);
+                              }}
+                              className={`de-desk-row${ticketChip ? " is-incident" : ""}`}
+                            >
+                              <span className="de-desk-row-ic">
+                                <Icon aria-hidden="true" />
+                              </span>
+                              <span className="de-desk-row-t">{label}</span>
+                              <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      chatMessages.map((chatMessage) => {
+                        const isUser = chatMessage.role === "user";
+                        const isAgent = chatMessage.role === "agent";
+                        return (
+                          <div
+                            key={chatMessage.id}
+                            className={`flex ${isUser ? "justify-end" : "justify-start"}`}
+                          >
+                            <div
+                              className={`de-desk-bubble ${
+                                isUser ? "is-user" : isAgent ? "is-agent" : "is-bot"
+                              }`}
+                            >
                               {!isUser && (
-                                <div className="mb-1.5 flex items-center gap-2">
-                                  <span className="text-[12px] font-semibold text-[#151217]">
-                                    {isAgent ? chatMessage.senderName || agentName || "Specialist" : "DE Desk"}
-                                  </span>
-                                  {isOpening && (
-                                    <span className="text-[11px] font-medium text-emerald-700">
-                                      Available
-                                    </span>
-                                  )}
+                                <div className="de-desk-bubble-meta">
+                                  <span>{isAgent ? "AG" : "DE"}</span>
+                                  {isAgent ? chatMessage.senderName || agentName || "Agent" : "Ask DE"}
                                 </div>
                               )}
-                              <div
-                                className={`px-3.5 py-2.5 text-[13.5px] leading-relaxed ${
-                                  isUser
-                                    ? "rounded-2xl rounded-br-md bg-[#D3126A] text-white shadow-[0_8px_22px_rgba(211,18,106,0.28)]"
-                                    : isAgent
-                                      ? "rounded-2xl rounded-bl-md border border-[#d4e6f4] bg-[#eef5f9] text-[#1a2434]"
-                                      : "rounded-2xl rounded-bl-md bg-[#151217] text-[#f7f5f2]"
-                                }`}
-                              >
-                                <p className="whitespace-pre-wrap">{chatMessage.content}</p>
-                              </div>
-                              {isOpening && chatMessages.length === 1 && (
-                                <div className="mt-2.5 flex flex-wrap gap-1.5">
-                                  {CHAT_STARTERS.map(({ label, seed }) => (
-                                    <button
-                                      key={label}
-                                      type="button"
-                                      onClick={() => {
-                                        setChatInput(seed);
-                                        requestAnimationFrame(() => chatInputRef.current?.focus());
-                                      }}
-                                      className="rounded-full border border-[#d8d2cc] bg-white px-2.5 py-1 text-[11px] font-medium text-[#3d342f] transition hover:border-[#151217] hover:text-[#151217] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/45"
-                                    >
-                                      {label}
-                                    </button>
-                                  ))}
-                                </div>
-                              )}
+                              <p className="whitespace-pre-wrap">{chatMessage.content}</p>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })
+                    )}
 
                     {isChatSending && (
                       <div className="flex justify-start">
-                        <div className="rounded-2xl rounded-bl-md bg-[#151217] px-3.5 py-2.5 text-xs text-[#f7f5f2]/70">
+                        <div className="de-desk-bubble is-bot">
                           <span className="inline-flex items-center gap-2">
                             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#D3126A]" />
-                            {agentLive ? "Delivering to specialist…" : "Reading your note…"}
+                            {agentLive ? "Delivering to specialist…" : "Thinking it through…"}
                           </span>
                         </div>
                       </div>
                     )}
                     <div ref={chatEndRef} />
                   </div>
-
-                  <div className="border-t border-[#e4dfd8] bg-white px-3 py-3">
-                    <div className="flex items-end gap-2">
-                      <Textarea
-                        ref={chatInputRef}
-                        value={chatInput}
-                        onChange={(event) => setChatInput(event.target.value)}
-                        onKeyDown={(event) => {
-                          if (event.key === "Enter" && !event.shiftKey) {
-                            event.preventDefault();
-                            void handleSendChat();
-                          }
-                        }}
-                        maxLength={2000}
-                        rows={2}
-                        placeholder={
-                          agentLive
-                            ? `Message ${agentName || "the specialist"}…`
-                            : "Type the issue — we're ready now"
-                        }
-                        className="min-h-[48px] resize-none rounded-xl border-[#d8d2cc] bg-[#f7f5f2] text-[13.5px] text-[#151217] placeholder:text-[#7a7168] focus-visible:ring-[#D3126A]/70"
-                        disabled={isChatSending}
-                        data-testid="input-support-chat"
-                        aria-label="Chat message"
-                      />
-                      <Button
-                        type="button"
-                        onClick={() => void handleSendChat()}
-                        disabled={!chatInput.trim() || isChatSending}
-                        className="h-12 w-12 flex-shrink-0 rounded-xl bg-[#D3126A] p-0 text-white shadow-[0_8px_22px_rgba(211,18,106,0.35)] hover:bg-[#c01060]"
-                        data-testid="button-send-support-chat"
-                        aria-label="Send chat message"
-                      >
-                        <Send className="h-4 w-4" aria-hidden="true" />
-                      </Button>
-                    </div>
-                    <p className="mt-2 text-[10.5px] leading-4 text-[#7a7168]">
-                      <Lock className="mr-1 inline h-3 w-3 align-[-2px]" aria-hidden="true" />
-                      {agentLive
-                        ? "A Digerati agent is in this thread. Never share passwords or MFA codes."
-                        : "Never share passwords, MFA codes, or private keys."}
-                    </p>
-                  </div>
                 </div>
               )}
 
               {activeTab === "ticket" && (
-                <div
-                  className="overflow-hidden rounded-[1.2rem] border border-white/10 bg-[#12141c] p-3.5"
-                  data-testid="panel-support-ticket"
-                >
+                <div className="de-desk-panel" data-testid="panel-support-ticket">
+                  <div className="de-desk-scroll">
                     {ticketResult ? (
-                      <div className="flex flex-col items-center px-2 py-6 text-center">
-                        <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-emerald-400/15 text-emerald-300">
-                          <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
+                      <div className="de-desk-hero de-desk-success">
+                        <div className="de-desk-hero-ring">
+                          <CheckCircle2 aria-hidden="true" />
                         </div>
-                        <h3 className="text-[15px] font-semibold text-white">Support request received</h3>
+                        <h3>Support request received</h3>
                         {ticketResult.ticketNumber && (
-                          <p className="mt-2 rounded-lg border border-white/10 bg-[#0b0c10] px-3 py-1.5 font-mono text-xs font-semibold text-white/80">
-                            {ticketResult.ticketNumber}
-                          </p>
+                          <p className="de-desk-ticket-ref">{ticketResult.ticketNumber}</p>
                         )}
-                        <p className="mt-3 max-w-sm text-sm leading-5 text-white/65">{ticketResult.message}</p>
-                        <div className="mt-5 flex flex-wrap justify-center gap-2">
-                          <Button
+                        <p>{ticketResult.message}</p>
+                        <div className="de-desk-success-actions">
+                          <button
                             type="button"
-                            variant="outline"
                             onClick={() => {
                               setTicketResult(null);
-                              setActiveTab("chat");
+                              selectTab("chat");
                             }}
-                            className="border-white/15 bg-transparent text-white hover:bg-white/10"
+                            className="de-desk-row"
                           >
-                            Back to desk
-                          </Button>
-                          <Button
-                            type="button"
-                            onClick={() => setTicketResult(null)}
-                            className="bg-[#D3126A] text-white hover:bg-[#c01060]"
-                          >
-                            Open another ticket
-                          </Button>
+                            <span className="de-desk-row-t">Back to Ask DE</span>
+                          </button>
+                          <button type="button" onClick={() => setTicketResult(null)} className="de-desk-btn-grad">
+                            Create another ticket
+                          </button>
                         </div>
                       </div>
                     ) : (
-                      <form
-                        className="space-y-2.5"
-                        onSubmit={(event) => {
-                          event.preventDefault();
-                          void handleSubmitTicket();
-                        }}
-                      >
-                          <div>
-                            <h3 className="text-[15px] font-semibold tracking-tight text-white">
-                              Open a support ticket
-                            </h3>
-                            <p className="mt-1 text-[12px] leading-5 text-white/55">
-                              Tell us what happened. We&apos;ll route it to the desk.
-                            </p>
+                      <>
+                        <div className="de-desk-hero">
+                          <div className="de-desk-hero-dots" aria-hidden="true" />
+                          <div className="de-desk-hero-txt">
+                            <div className="de-desk-hero-ring">
+                              <FileText aria-hidden="true" />
+                            </div>
+                            <h3>Get technical support</h3>
+                            <p>Tell us what&apos;s happening and we&apos;ll route it to the right place.</p>
                           </div>
+                          <DeskHeroArt variant="ticket" />
+                        </div>
 
-                          <div className="space-y-2.5">
-                            <div>
-                              <label htmlFor="support-name" className="mb-1.5 block text-[11px] font-semibold text-white">
-                                Name
-                              </label>
-                              <div className="relative">
-                                <User className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#6b5a78]" aria-hidden="true" />
-                                <Input
-                                  id="support-name"
-                                  autoComplete="name"
-                                  placeholder="Your name"
-                                  value={fullName}
-                                  onChange={(event) => setFullName(event.target.value)}
-                                  data-testid="input-support-name"
-                                  className="h-10 rounded-xl border border-white/15 bg-[#f7f5f2] pl-9 text-[13.5px] text-[#151217] placeholder:text-[#7a7168] focus-visible:ring-[#D3126A]/50"
-                                />
+                        <div className="de-desk-rows" role="group" aria-label="Common support issues">
+                          {DESK_TICKET_CHIPS.filter((chip) => chip.featured).map((chip) => {
+                            const Icon = TICKET_CHIP_ICONS[chip.id];
+                            const selected = selectedTicketChip === chip.id;
+                            return (
+                              <button
+                                key={chip.id}
+                                type="button"
+                                data-tone={chip.tone}
+                                data-testid={`ticket-chip-${chip.id}`}
+                                aria-pressed={selected}
+                                onClick={() => applyTicketChip(chip.id)}
+                                className={`de-desk-row is-lg is-incident${selected ? " is-selected" : ""}`}
+                              >
+                                <span className="de-desk-row-ic">
+                                  <Icon aria-hidden="true" />
+                                </span>
+                                <span className="de-desk-row-body">
+                                  <span className="de-desk-row-t">
+                                    {chip.label}
+                                    <span className="de-desk-badge-urgent">Urgent</span>
+                                  </span>
+                                  {chip.blurb ? <span className="de-desk-row-d">{chip.blurb}</span> : null}
+                                </span>
+                                <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
+                              </button>
+                            );
+                          })}
+                          <div className="de-desk-rows is-grid">
+                            {DESK_TICKET_CHIPS.filter((chip) => !chip.featured).map((chip) => {
+                              const Icon = TICKET_CHIP_ICONS[chip.id];
+                              const selected = selectedTicketChip === chip.id;
+                              return (
+                                <button
+                                  key={chip.id}
+                                  type="button"
+                                  data-tone={chip.tone}
+                                  data-testid={`ticket-chip-${chip.id}`}
+                                  aria-pressed={selected}
+                                  onClick={() => applyTicketChip(chip.id)}
+                                  className={`de-desk-row${selected ? " is-selected" : ""}`}
+                                >
+                                  <span className="de-desk-row-ic">
+                                    <Icon aria-hidden="true" />
+                                  </span>
+                                  <span className="de-desk-row-t">{chip.label}</span>
+                                  <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        <div className="de-desk-details-head" ref={ticketDetailsRef}>
+                          <h4>Tell us the details</h4>
+                          <span className="de-desk-secure">
+                            <Lock aria-hidden="true" />
+                            Secure &amp; private
+                          </span>
+                        </div>
+
+                          <div className="de-desk-form">
+                            <div className="de-desk-grid2">
+                              <div className="de-desk-field">
+                                <label htmlFor="support-name">Full name</label>
+                                <div className="de-desk-input-wrap">
+                                  <User aria-hidden="true" />
+                                  <Input
+                                    id="support-name"
+                                    autoComplete="name"
+                                    placeholder="Jane Smith"
+                                    value={fullName}
+                                    onChange={(event) => setFullName(event.target.value)}
+                                    data-testid="input-support-name"
+                                    className="de-desk-input"
+                                  />
+                                </div>
+                              </div>
+                              <div className="de-desk-field">
+                                <label htmlFor="support-email">Work email</label>
+                                <div className="de-desk-input-wrap">
+                                  <Mail aria-hidden="true" />
+                                  <Input
+                                    id="support-email"
+                                    type="email"
+                                    autoComplete="email"
+                                    placeholder="you@company.com"
+                                    value={email}
+                                    onChange={(event) => setEmail(event.target.value)}
+                                    data-testid="input-support-email"
+                                    className="de-desk-input"
+                                  />
+                                </div>
                               </div>
                             </div>
-                            <div>
-                              <label htmlFor="support-email" className="mb-1.5 block text-[11px] font-semibold text-white">
-                                Work email
-                              </label>
-                              <div className="relative">
-                                <Mail className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#6b5a78]" aria-hidden="true" />
-                                <Input
-                                  id="support-email"
-                                  type="email"
-                                  autoComplete="email"
-                                  placeholder="you@company.com"
-                                  value={email}
-                                  onChange={(event) => setEmail(event.target.value)}
-                                  required
-                                  data-testid="input-support-email"
-                                  className="h-10 rounded-xl border border-white/15 bg-[#f7f5f2] pl-9 text-[13.5px] text-[#151217] placeholder:text-[#7a7168] focus-visible:ring-[#D3126A]/50"
-                                />
+
+                            <div className="de-desk-grid2">
+                              <div className="de-desk-field">
+                                <label htmlFor="support-company">Company</label>
+                                <div className="de-desk-input-wrap">
+                                  <Building2 aria-hidden="true" />
+                                  <Input
+                                    id="support-company"
+                                    autoComplete="organization"
+                                    placeholder="Company name"
+                                    value={company}
+                                    onChange={(event) => setCompany(event.target.value)}
+                                    data-testid="input-support-company"
+                                    className="de-desk-input"
+                                  />
+                                </div>
+                              </div>
+                              <div className="de-desk-field">
+                                <label htmlFor="support-priority">Priority</label>
+                                <div className="de-desk-input-wrap">
+                                  <Flag aria-hidden="true" />
+                                  <select
+                                    id="support-priority"
+                                    value={priority}
+                                    onChange={(event) =>
+                                      setPriority(event.target.value as "Low" | "Medium" | "High" | "Urgent")
+                                    }
+                                    className="de-desk-input de-desk-select"
+                                    data-testid="select-support-priority"
+                                  >
+                                    <option value="Low">Low</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="High">High</option>
+                                    <option value="Urgent">Urgent</option>
+                                  </select>
+                                  <ChevronDown className="de-desk-select-chev" aria-hidden="true" />
+                                </div>
                               </div>
                             </div>
-                            <div>
-                              <label htmlFor="support-subject" className="mb-1.5 block text-[11px] font-semibold text-white">
-                                What&apos;s happening?
-                              </label>
-                              <Input
-                                id="support-subject"
-                                maxLength={200}
-                                placeholder="Short summary"
-                                value={subject}
-                                onChange={(event) => setSubject(event.target.value)}
-                                required
-                                data-testid="input-support-subject"
-                                className="h-10 rounded-xl border border-white/15 bg-[#f7f5f2] text-[13.5px] text-[#151217] placeholder:text-[#7a7168] focus-visible:ring-[#D3126A]/50"
-                              />
-                            </div>
-                            <div>
-                              <label htmlFor="support-message" className="mb-1.5 block text-[11px] font-semibold text-white">
-                                Details
-                              </label>
-                              <Textarea
-                                id="support-message"
-                                maxLength={5000}
-                                placeholder="What broke, who is affected, and what you already tried."
-                                value={message}
-                                onChange={(event) => setMessage(event.target.value)}
-                                rows={2}
-                                required
-                                className="min-h-[72px] resize-none rounded-xl border border-white/15 bg-[#f7f5f2] text-[13.5px] text-[#151217] placeholder:text-[#7a7168] focus-visible:ring-[#D3126A]/50"
-                                data-testid="input-support-message"
-                              />
+
+                            <div className="de-desk-grid2">
+                              <div className="de-desk-field">
+                                <label htmlFor="support-category">Category</label>
+                                <div className="de-desk-input-wrap">
+                                  <ClipboardList aria-hidden="true" />
+                                  <select
+                                    id="support-category"
+                                    value={category}
+                                    onChange={(event) => setCategory(event.target.value)}
+                                    className="de-desk-input de-desk-select"
+                                    data-testid="select-support-category"
+                                  >
+                                    <option value="">Select a category</option>
+                                    {DESK_TICKET_CATEGORIES.map((item) => (
+                                      <option key={item} value={item}>
+                                        {item}
+                                      </option>
+                                    ))}
+                                  </select>
+                                  <ChevronDown className="de-desk-select-chev" aria-hidden="true" />
+                                </div>
+                              </div>
+                              <div className="de-desk-field">
+                                <label htmlFor="support-subject">Subject</label>
+                                <div className="de-desk-input-wrap">
+                                  <Tag aria-hidden="true" />
+                                  <Input
+                                    id="support-subject"
+                                    maxLength={200}
+                                    placeholder="Brief description"
+                                    value={subject}
+                                    onChange={(event) => setSubject(event.target.value)}
+                                    data-testid="input-support-subject"
+                                    className="de-desk-input"
+                                  />
+                                </div>
+                              </div>
                             </div>
 
-                            <div>
-                              <p className="mb-1.5 text-[11px] font-semibold text-white">Urgency</p>
-                              <div className="grid grid-cols-4 gap-1.5" role="group" aria-label="Ticket urgency">
-                                {TICKET_PRIORITIES.map((level) => {
-                                  const selected = priority === level;
-                                  return (
-                                    <button
-                                      key={level}
-                                      type="button"
-                                      onClick={() => setPriority(level)}
-                                      className={`min-h-9 rounded-lg px-1 text-[11px] font-semibold transition ${
-                                        selected
-                                          ? "bg-white text-[#151217]"
-                                          : "border border-white/15 bg-transparent text-white/60 hover:text-white"
-                                      }`}
-                                      aria-pressed={selected}
-                                    >
-                                      {level}
-                                    </button>
-                                  );
-                                })}
+                            <div className="de-desk-field">
+                              <label htmlFor="support-message">What&apos;s happening?</label>
+                              <div className="de-desk-ta-wrap">
+                                <Textarea
+                                  id="support-message"
+                                  maxLength={2000}
+                                  placeholder="Describe the issue, affected device or service, and what you already tried. No passwords or MFA codes."
+                                  value={message}
+                                  onChange={(event) => setMessage(event.target.value)}
+                                  rows={3}
+                                  className="de-desk-input de-desk-ta"
+                                  data-testid="input-support-message"
+                                />
+                                <span className="de-desk-counter">{message.length} / 2000</span>
                               </div>
                             </div>
 
@@ -1110,180 +1398,226 @@ export const ZohoASAPWidget = ({
                                 onChange={(event) => handleTicketFile(event.target.files?.[0])}
                                 data-testid="input-support-attachment"
                               />
-                              <button
-                                type="button"
-                                onClick={() => ticketFileRef.current?.click()}
-                                className="inline-flex min-h-10 items-center gap-2 text-[12px] font-medium text-white/65 transition hover:text-white"
-                              >
-                                <Paperclip className="h-3.5 w-3.5" aria-hidden="true" />
-                                {attachmentName || "Attach a screenshot (optional)"}
+                              <button type="button" onClick={() => ticketFileRef.current?.click()} className="de-desk-attach">
+                                <Paperclip aria-hidden="true" />
+                                <span>
+                                  <span className="de-desk-attach-t">{attachmentName || "Attach file or screenshot"}</span>
+                                  <span className="de-desk-attach-h">
+                                    PNG, JPG, PDF up to 10MB. We&apos;ll collect the file after the ticket is opened.
+                                  </span>
+                                </span>
                               </button>
                             </div>
 
-                            <button
-                              type="button"
-                              onClick={() => setShowTicketExtras((open) => !open)}
-                              className="text-[12px] font-medium text-white/55 underline-offset-2 hover:text-white hover:underline"
-                              aria-expanded={showTicketExtras}
-                            >
-                              {showTicketExtras ? "Hide extra details" : "Add company or category"}
-                            </button>
-
-                            {showTicketExtras && (
-                              <div className="space-y-3">
-                                <div>
-                                  <label htmlFor="support-company" className="mb-1.5 block text-[11px] font-semibold text-white">
-                                    Company
-                                  </label>
-                                  <div className="relative">
-                                    <Building2 className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#6b5a78]" aria-hidden="true" />
-                                    <Input
-                                      id="support-company"
-                                      autoComplete="organization"
-                                      placeholder="Company name"
-                                      value={company}
-                                      onChange={(event) => setCompany(event.target.value)}
-                                      data-testid="input-support-company"
-                                      className="h-10 rounded-xl border border-white/15 bg-[#f7f5f2] pl-9 text-[13.5px] text-[#151217] placeholder:text-[#7a7168] focus-visible:ring-[#D3126A]/50"
-                                    />
-                                  </div>
-                                </div>
-                                <div>
-                                  <label htmlFor="support-category" className="mb-1.5 block text-[11px] font-semibold text-white">
-                                    Category
-                                  </label>
-                                  <select
-                                    id="support-category"
-                                    value={category}
-                                    onChange={(event) => setCategory(event.target.value)}
-                                    className="h-10 w-full appearance-none rounded-xl border border-white/15 bg-[#f7f5f2] px-3 text-[13px] text-[#151217] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/50"
-                                    data-testid="select-support-category"
-                                  >
-                                    <option value="">Select a category</option>
-                                    {TICKET_CATEGORIES.map((item) => (
-                                      <option key={item} value={item}>
-                                        {item}
-                                      </option>
-                                    ))}
-                                  </select>
-                                </div>
-                              </div>
-                            )}
-
-                            <p className="text-[10.5px] leading-4 text-white/45">
-                              <Lock className="mr-1 inline h-3 w-3 align-[-2px]" aria-hidden="true" />
+                            <p className="de-desk-caption">
+                              <Lock aria-hidden="true" />
                               Never share passwords, MFA codes, or private keys.
                             </p>
 
-                            <Button
-                              type="submit"
+                            <button
+                              type="button"
+                              onClick={() => void handleSubmitTicket()}
                               disabled={isTicketSending}
-                              className="h-11 w-full rounded-xl bg-[#D3126A] text-white shadow-[0_10px_28px_rgba(211,18,106,0.28)] hover:bg-[#c01060]"
+                              className="de-desk-btn-grad"
                               data-testid="button-submit-support"
                             >
-                              {isTicketSending ? "Opening ticket…" : "Submit ticket"}
-                              {!isTicketSending && <Send size={15} className="ml-2" aria-hidden="true" />}
-                            </Button>
+                              {isTicketSending ? "Creating ticket…" : "Create ticket"}
+                              {!isTicketSending && <Ticket aria-hidden="true" />}
+                            </button>
                           </div>
-                      </form>
+                      </>
                     )}
+                  </div>
                 </div>
               )}
 
               {activeTab === "resources" && (
-                <div
-                  className="rounded-[1.2rem] border border-white/10 bg-[#12141c] p-3.5"
-                  data-testid="panel-support-resources"
-                >
-                  <div className="px-0.5 pb-3">
-                    <h3 className="text-[15px] font-semibold tracking-tight text-white">Your client shortcuts</h3>
-                    <p className="mt-1 text-[12px] leading-5 text-white/55">Go directly to the tool you need.</p>
-                  </div>
-
-                  <div className="space-y-2">
-                    {CLIENT_TOOLS.map((tool) => {
-                      const Icon = tool.icon;
-                      const opensAway = Boolean(tool.external || tool.href.startsWith("http"));
-                      return (
-                        <div
-                          key={tool.id}
-                          className={`overflow-hidden rounded-2xl border bg-[#0b0c10] transition hover:border-white/25 ${
-                            tool.featured ? "border-[#D3126A]/40" : "border-white/10"
-                          }`}
-                        >
-                          <a
-                            href={tool.href}
-                            {...(opensAway ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                            className="group flex items-center gap-3 p-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/45"
-                            data-testid={`resource-link-${tool.id}`}
-                          >
-                            <span
-                              className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl ${
-                                tool.featured
-                                  ? "bg-[#D3126A] text-white shadow-[0_8px_20px_rgba(211,18,106,0.35)]"
-                                  : "bg-white/[0.06] text-white/90 ring-1 ring-white/10"
-                              }`}
-                            >
-                              <Icon className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
-                            </span>
-                            <span className="min-w-0 flex-1">
-                              <span className="flex flex-wrap items-center gap-2">
-                                <span className="text-[13.5px] font-semibold text-white">{tool.title}</span>
-                                {tool.badge && (
-                                  <span className="rounded-md bg-white/[0.08] px-1.5 py-0.5 text-[10px] font-semibold text-[#F0B4CC]">
-                                    {tool.badge}
-                                  </span>
-                                )}
-                              </span>
-                              <span className="mt-0.5 block text-[12px] leading-4 text-white/55">{tool.description}</span>
-                            </span>
-                            <ChevronRight
-                              className="h-4 w-4 flex-shrink-0 text-white/35 transition group-hover:text-white/70"
-                              aria-hidden="true"
-                            />
-                          </a>
-                          {tool.guide && (
-                            <div className="px-3 pb-3 pl-[3.75rem]">
-                              <a
-                                href={tool.guide.href}
-                                className="text-[11.5px] font-medium text-[#F0B4CC] underline-offset-2 hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/45"
-                                data-testid="resource-link-remote-support-guide"
-                              >
-                                {tool.guide.label}
-                              </a>
-                            </div>
-                          )}
+                <div className="de-desk-panel" data-testid="panel-support-resources">
+                  <div className="de-desk-scroll">
+                    <div className="de-desk-hero">
+                      <div className="de-desk-hero-dots" aria-hidden="true" />
+                      <div className="de-desk-hero-txt">
+                        <div className="de-desk-hero-ring">
+                          <BookOpen aria-hidden="true" />
                         </div>
-                      );
-                    })}
-                  </div>
+                        <h3>Client tools</h3>
+                        <p>Open the portal, start remote support, check status, or browse the knowledge base.</p>
+                      </div>
+                      <DeskHeroArt variant="resources" />
+                    </div>
 
-                  <div className="mt-3 rounded-2xl border border-white/10 bg-[#0b0c10] p-3">
-                    <div className="flex gap-3">
-                      <span className="h-10 w-[3px] flex-shrink-0 rounded-full bg-[#D3126A]" aria-hidden="true" />
-                      <div className="min-w-0">
-                        <p className="text-[13px] font-semibold text-white">Possible security incident?</p>
-                        <p className="mt-0.5 text-[11.5px] leading-4 text-white/55">
-                          Skip the tools and route it as urgent support.
-                        </p>
+                    <div className="de-desk-rows is-grid">
+                      {RESOURCE_LINKS.map(({ title, description, href, icon: Icon, external, guide }, index) => (
+                        <div key={title} className="de-desk-tool-block">
+                          <a
+                            href={href}
+                            data-tone={index === 0 ? "pink" : "violet"}
+                            {...(external || href.startsWith("http")
+                              ? { target: "_blank", rel: "noopener noreferrer" }
+                              : {})}
+                            className="de-desk-row"
+                            data-testid={`resource-link-${title.toLowerCase().replace(/\s+/g, "-")}`}
+                          >
+                            <span className="de-desk-row-ic">
+                              <Icon aria-hidden="true" />
+                            </span>
+                            <span className="de-desk-row-body">
+                              <span className="de-desk-row-t">{title}</span>
+                              <span className="de-desk-row-d">{description}</span>
+                            </span>
+                            <span className="de-desk-row-actions">
+                              <span className="de-desk-row-ext">
+                                <ExternalLink aria-hidden="true" />
+                              </span>
+                              <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
+                            </span>
+                          </a>
+                          {guide ? (
+                            <a href={guide.href} className="de-desk-sublink" data-testid="resource-link-remote-support-guide">
+                              {guide.title}
+                            </a>
+                          ) : null}
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="de-desk-rows">
+                      <a
+                        href="/book"
+                        data-tone="pink"
+                        className="de-desk-row is-lg is-highlight"
+                        data-testid="resource-link-cyber-risk-assessment"
+                      >
+                        <span className="de-desk-row-ic">
+                          <Shield aria-hidden="true" />
+                        </span>
+                        <span className="de-desk-row-body">
+                          <span className="de-desk-row-t">
+                            Cyber Risk Assessment <span className="de-desk-badge-rec">Recommended</span>
+                          </span>
+                          <span className="de-desk-row-d">Map your gaps and get a prioritized next step.</span>
+                        </span>
+                        <span className="de-desk-row-actions">
+                          <span className="de-desk-row-ext">
+                            <ExternalLink aria-hidden="true" />
+                          </span>
+                          <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
+                        </span>
+                      </a>
+
+                      <div className="de-desk-row is-lg is-alert" data-tone="red">
+                        <span className="de-desk-row-ic">
+                          <AlertTriangle aria-hidden="true" />
+                        </span>
+                        <span className="de-desk-row-body">
+                          <span className="de-desk-row-t">Security-sensitive issue?</span>
+                          <span className="de-desk-row-d">
+                            Don&apos;t paste credentials into chat. Open a ticket and we&apos;ll move to a secure
+                            channel.
+                          </span>
+                        </span>
+                        <button type="button" onClick={() => selectTab("ticket")} className="de-desk-btn-mini">
+                          Create ticket
+                        </button>
                       </div>
                     </div>
-                    <Button
-                      type="button"
-                      onClick={() => setActiveTab("ticket")}
-                      className="mt-3 h-11 w-full rounded-xl bg-[#D3126A] text-[13px] text-white hover:bg-[#c01060]"
-                      data-testid="button-tools-go-to-support"
-                    >
-                      Go to Get Support
-                    </Button>
                   </div>
                 </div>
               )}
-              </div>
             </div>
-            {canDrag && (
+
+            <div className={`de-desk-composer${headsUp || unreadChatCount ? " is-live" : ""}`}>
+              <input
+                type="text"
+                value={chatInput}
+                onChange={(event) => setChatInput(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    void handleSendChat();
+                  }
+                }}
+                maxLength={2000}
+                placeholder={
+                  activeTab === "ticket"
+                    ? "Reply to Ask DE without leaving this ticket…"
+                    : activeTab === "resources"
+                      ? "Reply to Ask DE while you browse tools…"
+                      : agentLive
+                        ? `Message ${agentName || "the specialist"}…`
+                        : "Ask about risk, stack, pricing, or an outage..."
+                }
+                disabled={isChatSending}
+                data-testid="input-support-chat"
+                aria-label={
+                  activeTab === "chat"
+                    ? "Ask DE message"
+                    : "Reply to Ask DE from this tab"
+                }
+              />
+              <button
+                type="button"
+                onClick={() => void handleSendChat()}
+                disabled={!chatInput.trim() || isChatSending}
+                className="de-desk-send"
+                data-testid="button-send-support-chat"
+                aria-label="Send chat message"
+              >
+                <Send aria-hidden="true" />
+              </button>
+            </div>
+            <p className="de-desk-composer-caption">
+              <Lock aria-hidden="true" />
+              {activeTab !== "chat"
+                ? "Same Ask DE thread on every tab — reply here without switching."
+                : agentLive
+                  ? "A Digerati agent is in this thread. Never share passwords or MFA codes."
+                  : "Never share passwords, MFA codes, or private keys."}
+            </p>
+
+            <footer className="de-desk-foot">
+              <p className="de-desk-foot-nav">
+                <button
+                  type="button"
+                  className={activeTab === "chat" ? "is-active" : undefined}
+                  onClick={() => selectTab("chat")}
+                >
+                  Ask DE
+                </button>
+                <span aria-hidden="true">·</span>
+                <button
+                  type="button"
+                  className={activeTab === "ticket" ? "is-active" : undefined}
+                  onClick={() => selectTab("ticket")}
+                >
+                  Get Support
+                </button>
+                <span aria-hidden="true">·</span>
+                <button
+                  type="button"
+                  className={activeTab === "resources" ? "is-active" : undefined}
+                  onClick={() => selectTab("resources")}
+                >
+                  Client Tools
+                </button>
+                <span aria-hidden="true">·</span>
+                <a
+                  href="https://assist.zoho.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="de-desk-foot-assist"
+                >
+                  Assist
+                </a>
+              </p>
+              <button type="button" onClick={() => selectTab("ticket")} className="de-desk-foot-cta">
+                Open a support ticket
+                <ExternalLink aria-hidden="true" />
+              </button>
+            </footer>
+            {canDrag ? (
               <>
-                {(["n", "s", "e", "w", "ne", "nw", "sw"] as DeskResizeEdge[]).map((edge) => (
+                {(["n", "s", "e", "w", "ne", "nw", "sw"] as const).map((edge) => (
                   <button
                     key={edge}
                     type="button"
@@ -1303,14 +1637,614 @@ export const ZohoASAPWidget = ({
                   <span aria-hidden="true" />
                 </button>
               </>
-            )}
+            ) : null}
           </section>
         )}
-      </div>
 
       <style
         dangerouslySetInnerHTML={{
           __html: `
+            .de-desk-shell {
+              --desk-shell: #f7f5f2;
+              --desk-shell-soft: #ffffff;
+              --desk-shell-border: rgba(20,16,30,0.08);
+              --desk-shell-border-strong: rgba(20,16,30,0.14);
+              --desk-shell-text: #17141f;
+              --desk-shell-muted: #5c5668;
+              --desk-shell-dim: #726c82;
+              --desk-well: #ffffff;
+              --desk-surface: #f7f5f2;
+              --desk-box: #ffffff;
+              --desk-inset: #ffffff;
+              --desk-border: rgba(20,16,30,0.10);
+              --desk-border-strong: rgba(20,16,30,0.16);
+              --desk-ink: #17141f;
+              --desk-ink-muted: #5c5668;
+              --desk-ink-dim: #726c82;
+              --desk-pink: #d3126a;
+              --desk-violet: #8b5cf6;
+              --desk-blue: #3b9eff;
+              --desk-teal: #22d3ee;
+              --desk-red: #f0455b;
+              --desk-green: #22c55e;
+              --desk-cta: #d3126a;
+              background: var(--desk-shell);
+              border: 1px solid var(--desk-shell-border-strong);
+              border-radius: 20px;
+              box-shadow: 0 34px 90px -22px rgba(0,0,0,0.45), 0 0 0 1px rgba(20,16,30,0.04), 0 0 70px -16px rgba(211,18,106,0.16);
+              color: var(--desk-shell-text);
+            }
+            .de-desk-shell ::selection {
+              background: color-mix(in srgb, #D3126A 38%, transparent);
+              color: #fff;
+              -webkit-text-fill-color: #fff;
+            }
+            .de-desk-shell nav[aria-label="Support options"] ::selection,
+            .de-desk-shell nav[aria-label="Support options"] *::selection {
+              background: transparent;
+              color: inherit;
+              -webkit-text-fill-color: inherit;
+            }
+            .de-desk-head {
+              display: flex;
+              align-items: center;
+              gap: 11px;
+              padding: 17px 17px 15px;
+              border-bottom: 1px solid var(--desk-shell-border);
+              flex-shrink: 0;
+            }
+            .de-desk-id { display: flex; align-items: center; gap: 11px; min-width: 0; flex: 1; }
+            .de-desk-avatar {
+              position: relative;
+              width: 37px; height: 37px;
+              border-radius: 11px;
+              background: var(--desk-pink);
+              color: #fff;
+              display: flex; align-items: center; justify-content: center;
+              flex: none;
+              font-family: "Space Grotesk", sans-serif;
+              font-weight: 700;
+              font-size: 13px;
+              box-shadow: 0 4px 14px -2px rgba(211,18,106,0.5);
+            }
+            .de-desk-avatar-dot {
+              position: absolute; right: -2px; bottom: -2px;
+              width: 9px; height: 9px; border-radius: 50%;
+              background: var(--desk-green);
+              border: 2px solid var(--desk-shell);
+            }
+            .de-desk-avatar-dot::after,
+            .de-desk-status-dot.is-on::after {
+              content: "";
+              position: absolute; inset: -3px; border-radius: 50%;
+              background: var(--desk-green);
+              opacity: 0.4;
+              animation: de-desk-pulse 2s ease-out infinite;
+            }
+            @keyframes de-desk-pulse {
+              0% { transform: scale(0.6); opacity: 0.5; }
+              100% { transform: scale(2.2); opacity: 0; }
+            }
+            @media (prefers-reduced-motion: reduce) {
+              .de-desk-avatar-dot::after,
+              .de-desk-status-dot.is-on::after { animation: none; }
+            }
+            .de-desk-id h2 {
+              font-family: "Space Grotesk", sans-serif;
+              font-weight: 600;
+              font-size: 16px;
+              color: var(--desk-shell-text);
+              line-height: 1.2;
+            }
+            .de-desk-id p { font-size: 13px; color: var(--desk-shell-muted); margin-top: 1px; }
+            .de-desk-close {
+              width: 30px; height: 30px; border-radius: 9px;
+              border: 1px solid var(--desk-shell-border-strong);
+              background: var(--desk-shell-soft);
+              color: var(--desk-shell-muted);
+              display: flex; align-items: center; justify-content: center;
+              flex: none;
+            }
+            .de-desk-close:hover { color: var(--desk-pink); border-color: var(--desk-pink); }
+            .de-desk-tabs {
+              display: flex; justify-content: space-between; gap: 12px;
+              padding: 0 17px;
+              border-bottom: 1px solid var(--desk-shell-border);
+              flex-shrink: 0;
+            }
+            .de-desk-tab {
+              background: none; border: none;
+              padding: 12px 0;
+              font-family: "Space Grotesk", sans-serif;
+              font-weight: 600; font-size: 15px;
+              color: var(--desk-shell-dim);
+              display: flex; align-items: center; gap: 6px;
+              position: relative;
+            }
+            .de-desk-tab svg { width: 14px; height: 14px; }
+            .de-desk-tab.is-active { color: var(--desk-shell-text); }
+            .de-desk-tab.is-active::after {
+              content: "";
+              position: absolute; left: 0; right: 0; bottom: -1px;
+              height: 2px; border-radius: 2px;
+              background: var(--desk-pink);
+              box-shadow: 0 0 8px rgba(211,18,106,0.5);
+            }
+            .de-desk-tab-badge {
+              min-width: 16px; height: 16px; padding: 0 4px;
+              border-radius: 999px;
+              background: var(--desk-pink); color: #fff;
+              font-size: 9px; font-weight: 700; line-height: 16px;
+              letter-spacing: 0; text-align: center;
+            }
+            .de-desk-tab.has-unread { color: var(--desk-shell-text); }
+            .de-desk-status {
+              display: flex; align-items: center; justify-content: space-between;
+              padding: 9px 17px;
+              background: var(--desk-shell);
+              border-bottom: 1px solid var(--desk-shell-border);
+              font-size: 13px;
+              flex-shrink: 0;
+            }
+            .de-desk-status-l {
+              display: flex; align-items: center; gap: 6px;
+              color: var(--desk-shell-muted); font-weight: 500;
+            }
+            .de-desk-status-dot {
+              width: 6px; height: 6px; border-radius: 50%;
+              background: #c4c0cc; position: relative;
+            }
+            .de-desk-status-dot.is-on { background: var(--desk-green); }
+            .de-desk-status-dot.is-live { background: #3b9eff; }
+            .de-desk-status-dot.is-wait { background: #e8a23d; }
+            .de-desk-status-r {
+              display: flex; align-items: center; gap: 7px;
+              color: var(--desk-pink); font-weight: 600;
+            }
+            .de-desk-status-ic {
+              width: 22px; height: 22px; border-radius: 7px;
+              border: 1.5px solid var(--desk-pink);
+              display: flex; align-items: center; justify-content: center;
+              background: rgba(211,18,106,0.10);
+            }
+            .de-desk-status-ic svg { width: 11px; height: 11px; }
+            .de-desk-body {
+              min-height: 0; flex: 1;
+              background: var(--desk-shell);
+              position: relative;
+              padding: 17px;
+              display: flex; flex-direction: column;
+            }
+            .de-desk-panel, .de-desk-scroll {
+              min-height: 0; flex: 1;
+              display: flex; flex-direction: column;
+            }
+            .de-desk-scroll { overflow-y: auto; gap: 0; }
+            .de-desk-hero {
+              position: relative; overflow: hidden;
+              border-radius: 13px;
+              border: 1px solid var(--desk-border-strong);
+              background: var(--desk-box);
+              padding: 16px 16px;
+              display: flex; align-items: center; gap: 12px;
+              box-shadow: 0 10px 24px -16px rgba(20,16,30,0.18);
+              flex-shrink: 0;
+            }
+            .de-desk-hero::before {
+              content: "";
+              position: absolute; inset: 0;
+              background-image: radial-gradient(rgba(20,16,30,0.06) 1px, transparent 1.15px);
+              background-size: 7px 7px;
+              opacity: 0.45;
+              pointer-events: none;
+            }
+            .de-desk-hero-dots {
+              position: absolute; top: 0; right: 0; bottom: 0; width: 42%;
+              background: radial-gradient(ellipse at 80% 20%, rgba(211,18,106,0.16), transparent 58%);
+              pointer-events: none;
+            }
+            .de-desk-hero-txt { flex: 1; min-width: 0; position: relative; z-index: 1; }
+            .de-desk-hero-ring {
+              width: 38px; height: 38px; border-radius: 50%;
+              border: 1.5px solid var(--desk-pink);
+              display: flex; align-items: center; justify-content: center;
+              color: var(--desk-pink);
+              margin-bottom: 10px;
+              background: rgba(211,18,106,0.10);
+            }
+            .de-desk-hero-ring svg { width: 17px; height: 17px; }
+            .de-desk-hero h3 {
+              font-family: "Space Grotesk", sans-serif;
+              font-size: 18px; font-weight: 700; color: var(--desk-ink);
+              letter-spacing: -0.01em;
+            }
+            .de-desk-hero p {
+              font-size: 14px; color: var(--desk-ink-muted); margin-top: 5px;
+              line-height: 1.5; max-width: 210px;
+            }
+            .de-desk-hero-art { width: 86px; height: 86px; flex: none; position: relative; z-index: 1; }
+            .de-desk-rows { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+            .de-desk-rows.is-grid {
+              display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+            }
+            .de-desk-rows > .de-desk-rows.is-grid { margin-top: 0; }
+            .de-desk-row {
+              display: flex; align-items: center; gap: 10px;
+              padding: 9px 11px; border-radius: 12px;
+              background: var(--desk-box);
+              border: 1px solid var(--desk-border);
+              color: var(--desk-ink); text-align: left; width: 100%;
+              box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+              transition: background 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
+            }
+            .de-desk-row:hover {
+              background: #f3f0ec;
+              border-color: var(--desk-border-strong);
+              transform: translateY(-1px);
+            }
+            .de-desk-row.is-selected {
+              border-color: #D3126A;
+              background: #fff;
+              box-shadow: inset 0 0 0 1px rgba(211,18,106,0.16);
+            }
+            .de-desk-row.is-selected .de-desk-row-chev { color: #D3126A; }
+            .de-desk-row.is-incident {
+              background: #fff;
+              border-color: rgba(211,18,106,0.42);
+              box-shadow: inset 3px 0 0 #D3126A;
+              align-items: flex-start;
+            }
+            .de-desk-row.is-incident .de-desk-row-ic {
+              border-color: #D3126A;
+              color: #D3126A;
+              background: rgba(211,18,106,0.06);
+            }
+            .de-desk-row.is-incident .de-desk-row-t {
+              display: flex;
+              flex-wrap: wrap;
+              align-items: center;
+              gap: 6px 0;
+            }
+            .de-desk-row.is-incident:hover {
+              background: #fff;
+              border-color: #D3126A;
+            }
+            .de-desk-badge-urgent {
+              display: inline-block;
+              font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em;
+              text-transform: uppercase;
+              color: #fff; background: #D3126A;
+              border-radius: 5px; padding: 2px 6px;
+              vertical-align: middle; margin-left: 8px;
+            }
+            .de-desk-tool-block { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+            .de-desk-sublink {
+              align-self: flex-start;
+              margin: 0 0 2px 42px;
+              padding: 2px 0 4px;
+              font-size: 12.5px; font-weight: 600;
+              color: #D3126A; text-decoration: none;
+            }
+            .de-desk-sublink:hover,
+            .de-desk-sublink:focus-visible { text-decoration: underline; }
+            .de-desk-rows.is-grid .de-desk-row { padding: 9px 10px; align-items: flex-start; }
+            .de-desk-rows.is-grid .de-desk-row-t { font-size: 13.5px; line-height: 1.3; }
+            .de-desk-rows.is-grid .de-desk-tool-block .de-desk-row-actions { display: none; }
+            .de-desk-row[data-tone="violet"] { --c: var(--desk-violet); }
+            .de-desk-row[data-tone="blue"] { --c: var(--desk-blue); }
+            .de-desk-row[data-tone="teal"] { --c: var(--desk-teal); }
+            .de-desk-row[data-tone="red"] { --c: var(--desk-red); }
+            .de-desk-row[data-tone="pink"] { --c: var(--desk-pink); }
+            .de-desk-row-ic {
+              width: 32px; height: 32px; border-radius: 10px;
+              background: var(--desk-inset);
+              border: 1.5px solid var(--c, var(--desk-pink));
+              color: var(--c, var(--desk-pink));
+              display: flex; align-items: center; justify-content: center;
+              flex: none; position: relative; overflow: hidden;
+            }
+            .de-desk-row-ic::after {
+              content: ""; position: absolute; inset: 0;
+              background: linear-gradient(180deg, rgba(255,255,255,0.10), transparent 55%);
+            }
+            .de-desk-row-ic svg { width: 15px; height: 15px; position: relative; z-index: 1; }
+            .de-desk-row.is-lg .de-desk-row-ic { width: 46px; height: 46px; border-radius: 13px; }
+            .de-desk-row.is-lg .de-desk-row-ic svg { width: 20px; height: 20px; }
+            .de-desk-row-body { flex: 1; min-width: 0; }
+            .de-desk-row-t { font-size: 14.5px; font-weight: 600; color: var(--desk-ink); }
+            .de-desk-row.is-lg .de-desk-row-t { font-size: 13.5px; }
+            .de-desk-row-d { display: block; font-size: 13px; color: var(--desk-ink-muted); margin-top: 2px; line-height: 1.4; }
+            .de-desk-badge-rec {
+              display: inline-block;
+              font-size: 9.5px; font-weight: 700; letter-spacing: 0.03em;
+              color: var(--desk-pink);
+              background: rgba(211,18,106,0.16);
+              border: 1px solid rgba(211,18,106,0.4);
+              border-radius: 5px; padding: 2px 6px;
+              vertical-align: middle; margin-left: 6px;
+              text-transform: uppercase;
+            }
+            .de-desk-row-chev { width: 14px; height: 14px; color: var(--desk-ink-dim); flex: none; }
+            .de-desk-row-actions { display: flex; align-items: center; gap: 6px; flex: none; }
+            .de-desk-row-ext {
+              width: 27px; height: 27px; border-radius: 8px;
+              border: 1px solid var(--desk-border-strong);
+              display: flex; align-items: center; justify-content: center;
+              color: var(--desk-ink-muted);
+            }
+            .de-desk-row-ext svg { width: 12px; height: 12px; }
+            .de-desk-row:hover .de-desk-row-ext { border-color: var(--c, var(--desk-pink)); color: var(--c, var(--desk-pink)); }
+            .de-desk-row.is-highlight {
+              background: var(--desk-box);
+              border-color: rgba(211,18,106,0.45);
+              box-shadow: inset 0 0 0 1px rgba(211,18,106,0.12);
+            }
+            .de-desk-row.is-alert {
+              background: var(--desk-box);
+              border-color: rgba(240,69,91,0.45);
+              align-items: flex-start;
+            }
+            .de-desk-row.is-alert .de-desk-row-body { padding-top: 2px; }
+            .de-desk-btn-mini {
+              background: var(--desk-cta); color: #fff; border: none;
+              font-weight: 600; font-size: 12px; padding: 9px 14px;
+              border-radius: 9px; flex: none; white-space: nowrap;
+              align-self: center;
+            }
+            .de-desk-section-head {
+              display: flex; align-items: center; justify-content: space-between;
+              margin: 20px 0 2px;
+            }
+            .de-desk-section-head h4 {
+              font-family: "Space Grotesk", sans-serif;
+              font-size: 14.5px; font-weight: 600; color: var(--desk-shell-text);
+            }
+            .de-desk-section-head a { font-size: 12px; color: var(--desk-pink); font-weight: 600; }
+            .de-desk-details-head {
+              display: flex; align-items: center; justify-content: space-between;
+              margin: 12px 0 8px;
+            }
+            .de-desk-details-head h4 {
+              font-family: "Space Grotesk", sans-serif;
+              font-size: 13px; font-weight: 700;
+              letter-spacing: 0.06em; text-transform: uppercase;
+              color: var(--desk-shell-muted);
+            }
+            .de-desk-secure {
+              display: flex; align-items: center; gap: 5px;
+              border: 1px solid var(--desk-green); color: #178a4c;
+              border-radius: 999px; padding: 3px 9px;
+              font-size: 12px; font-weight: 600;
+              background: rgba(34,197,94,0.08);
+            }
+            .de-desk-secure svg { width: 10px; height: 10px; }
+            .de-desk-form { display: flex; flex-direction: column; gap: 10px; }
+            .de-desk-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+            .de-desk-field label {
+              display: block; font-size: 13px; font-weight: 600;
+              color: var(--desk-shell-muted); margin-bottom: 6px;
+            }
+            .de-desk-input-wrap { position: relative; }
+            .de-desk-input-wrap > svg {
+              position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+              width: 13px; height: 13px; color: var(--desk-ink-dim); pointer-events: none;
+            }
+            .de-desk-shell .de-desk-input {
+              width: 100%;
+              height: 40px;
+              background: var(--desk-inset) !important;
+              border: 1px solid var(--desk-border) !important;
+              color: var(--desk-ink) !important;
+              border-radius: 10px;
+              padding: 10px 11px 10px 32px;
+              font-size: 14px;
+              box-shadow: none !important;
+            }
+            .de-desk-shell .de-desk-input::placeholder { color: var(--desk-ink-dim); }
+            .de-desk-shell .de-desk-select { appearance: none; padding-right: 28px; }
+            .de-desk-select-chev {
+              position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+              width: 12px; height: 12px; color: var(--desk-ink-dim); pointer-events: none;
+            }
+            .de-desk-ta-wrap { position: relative; }
+            .de-desk-shell .de-desk-ta {
+              min-height: 80px; height: auto; padding-left: 11px; resize: vertical;
+              line-height: 1.5;
+            }
+            .de-desk-counter {
+              position: absolute; right: 10px; bottom: 8px;
+              font-size: 10px; color: var(--desk-ink-dim); pointer-events: none;
+            }
+            .de-desk-attach {
+              display: flex; align-items: flex-start; gap: 9px;
+              width: 100%; text-align: left;
+              margin-top: 2px; padding: 12px;
+              border: 1px dashed var(--desk-border-strong);
+              border-radius: 11px; background: var(--desk-inset);
+            }
+            .de-desk-attach:hover { border-color: var(--desk-pink); }
+            .de-desk-attach svg { width: 14px; height: 14px; color: var(--desk-ink-dim); flex: none; margin-top: 2px; }
+            .de-desk-attach-t { display: block; font-size: 14px; font-weight: 600; color: var(--desk-ink); }
+            .de-desk-attach-h { display: block; font-size: 12.5px; color: var(--desk-ink-muted); margin-top: 1px; }
+            .de-desk-caption {
+              display: flex; align-items: center; gap: 6px;
+              font-size: 13px; color: var(--desk-shell-muted);
+            }
+            .de-desk-caption svg { width: 11px; height: 11px; }
+            .de-desk-btn-grad {
+              width: 100%; margin-top: 4px;
+              background: var(--desk-cta); border: none; color: #fff;
+              font-weight: 600; font-size: 13.5px; padding: 13px;
+              border-radius: 11px;
+              display: flex; align-items: center; justify-content: center; gap: 8px;
+              box-shadow: 0 14px 30px -10px rgba(211,18,106,0.45);
+            }
+            .de-desk-btn-grad:hover { filter: brightness(1.08); }
+            .de-desk-btn-grad:disabled { opacity: 0.6; }
+            .de-desk-btn-grad svg { width: 14px; height: 14px; }
+            .de-desk-bubble {
+              max-width: 90%;
+              padding: 11px 14px;
+              font-size: 13.5px; line-height: 1.5;
+              border-radius: 14px;
+            }
+            .de-desk-bubble.is-user {
+              background: var(--desk-pink); color: #fff;
+              border-bottom-right-radius: 6px;
+            }
+            .de-desk-bubble.is-bot, .de-desk-bubble.is-agent {
+              background: var(--desk-box); color: var(--desk-ink);
+              border: 1px solid var(--desk-border);
+              border-bottom-left-radius: 6px;
+            }
+            .de-desk-bubble-meta {
+              display: flex; align-items: center; gap: 8px;
+              margin-bottom: 6px;
+              font-size: 10px; font-weight: 600;
+              letter-spacing: 0.14em; text-transform: uppercase;
+              color: var(--desk-pink);
+            }
+            .de-desk-bubble-meta span {
+              width: 16px; height: 16px; border-radius: 4px;
+              background: var(--desk-pink); color: #fff;
+              display: inline-flex; align-items: center; justify-content: center;
+              font-size: 8px; letter-spacing: 0;
+            }
+            .de-desk-success { flex-direction: column; align-items: flex-start; }
+            .de-desk-success p { max-width: none; }
+            .de-desk-ticket-ref {
+              font-family: ui-monospace, monospace;
+              font-size: 13px; font-weight: 600; color: var(--desk-pink);
+              margin-top: 8px;
+            }
+            .de-desk-success-actions { display: flex; flex-direction: column; gap: 8px; width: 100%; margin-top: 14px; }
+            .de-desk-heads-up {
+              position: absolute;
+              left: 10px; right: 10px; bottom: 10px;
+              z-index: 6;
+              display: flex; align-items: stretch; gap: 4px;
+              padding: 8px 8px 8px 8px;
+              border-radius: 16px;
+              background: var(--desk-box);
+              border: 1px solid rgba(211,18,106,0.42);
+              box-shadow: 0 16px 36px rgba(20,16,30,0.16), 0 0 0 1px rgba(211,18,106,0.10);
+              animation: de-desk-heads-in 0.28s ease-out;
+            }
+            .de-desk-heads-up.is-out { border-color: rgba(255,255,255,0.16); }
+            .de-desk-heads-up.is-live { border-color: #3b9eff; }
+            .de-desk-heads-up-main {
+              flex: 1; min-width: 0;
+              display: flex; align-items: flex-start; gap: 10px;
+              text-align: left; background: none; border: none; color: inherit;
+              padding: 2px 4px;
+            }
+            .de-desk-heads-up-mark {
+              width: 28px; height: 28px; border-radius: 9px; flex: none;
+              display: inline-flex; align-items: center; justify-content: center;
+              background: var(--desk-pink); color: #fff;
+              font-size: 9px; font-weight: 700; letter-spacing: 0.04em;
+            }
+            .de-desk-heads-up.is-out .de-desk-heads-up-mark { background: #3a3644; }
+            .de-desk-heads-up.is-live .de-desk-heads-up-mark { background: #3b9eff; }
+            .de-desk-heads-up-copy { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+            .de-desk-heads-up-top {
+              display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+            }
+            .de-desk-heads-up-top strong {
+              font-size: 13.5px; font-weight: 700; color: var(--desk-ink);
+            }
+            .de-desk-heads-up-top em {
+              font-style: normal; font-size: 11px; color: var(--desk-ink-dim); flex: none;
+            }
+            .de-desk-heads-up-preview {
+              font-size: 13.5px; line-height: 1.35; color: var(--desk-ink-muted);
+              display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+            }
+            .de-desk-heads-up-hint {
+              font-size: 10.5px; font-weight: 600; color: var(--desk-pink); margin-top: 2px;
+            }
+            .de-desk-heads-up-x {
+              width: 28px; height: 28px; border-radius: 8px; flex: none; align-self: flex-start;
+              border: none; background: transparent; color: var(--desk-ink-dim);
+              display: flex; align-items: center; justify-content: center;
+            }
+            .de-desk-heads-up-x:hover { color: var(--desk-ink); background: rgba(20,16,30,0.06); }
+            @keyframes de-desk-heads-in {
+              from { opacity: 0; transform: translateY(10px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+            @media (prefers-reduced-motion: reduce) {
+              .de-desk-heads-up { animation: none; }
+            }
+            .de-desk-composer {
+              display: flex; gap: 8px;
+              padding: 12px 17px 10px;
+              border-top: 1px solid var(--desk-shell-border);
+              background: var(--desk-shell);
+              color: var(--desk-ink);
+              flex-shrink: 0;
+            }
+            .de-desk-composer.is-live input {
+              border-color: rgba(211,18,106,0.55);
+              box-shadow: 0 0 0 3px rgba(211,18,106,0.14);
+            }
+            .de-desk-composer input {
+              flex: 1;
+              background: var(--desk-well);
+              border: 1px solid var(--desk-border);
+              border-radius: 11px;
+              padding: 11px 13px;
+              color: var(--desk-ink); font-size: 14px;
+            }
+            .de-desk-composer input::placeholder { color: var(--desk-ink-dim); }
+            .de-desk-composer input:focus {
+              outline: none;
+              border-color: var(--desk-pink);
+              box-shadow: 0 0 0 3px rgba(211,18,106,0.12);
+            }
+            .de-desk-send {
+              width: 41px; height: 41px; border-radius: 11px;
+              background: var(--desk-cta); border: none;
+              display: flex; align-items: center; justify-content: center;
+              flex: none;
+              box-shadow: 0 12px 26px -8px rgba(211,18,106,0.45);
+            }
+            .de-desk-send:disabled { opacity: 0.5; }
+            .de-desk-send svg { width: 16px; height: 16px; color: #fff; }
+            .de-desk-composer-caption {
+              display: flex; align-items: center; gap: 6px;
+              padding: 0 17px 10px;
+              background: var(--desk-shell);
+              font-size: 12.5px; color: var(--desk-ink-muted);
+              flex-shrink: 0;
+            }
+            .de-desk-composer-caption svg { width: 11px; height: 11px; color: var(--desk-ink); }
+            .de-desk-foot {
+              display: flex; align-items: center; justify-content: space-between;
+              padding: 11px 17px;
+              border-top: 1px solid var(--desk-shell-border);
+              background: var(--desk-shell);
+              color: var(--desk-ink-muted);
+              flex-shrink: 0;
+            }
+            .de-desk-foot-nav {
+              font-size: 13px; color: var(--desk-ink-muted);
+              display: flex; align-items: center; gap: 5px; min-width: 0;
+            }
+            .de-desk-foot-nav button,
+            .de-desk-foot-assist {
+              background: none; border: none; padding: 0;
+              font: inherit; color: inherit; cursor: pointer;
+            }
+            .de-desk-foot-nav button:hover,
+            .de-desk-foot-assist:hover { color: var(--desk-ink); }
+            .de-desk-foot-nav .is-active { color: var(--desk-pink); font-weight: 600; }
+            .de-desk-foot-assist { text-decoration: underline; text-underline-offset: 2px; }
+            .de-desk-foot-cta {
+              font-size: 13px; color: var(--desk-pink); font-weight: 600;
+              display: flex; align-items: center; gap: 4px; flex: none;
+            }
+            .de-desk-foot-cta svg { width: 11px; height: 11px; }
             .de-desk-resize-edge {
               position: absolute;
               border: 0;
@@ -1345,9 +2279,9 @@ export const ZohoASAPWidget = ({
               width: 14px;
               height: 14px;
               background:
-                linear-gradient(135deg, transparent 46%, rgba(255,255,255,0.35) 46%, rgba(255,255,255,0.35) 54%, transparent 54%),
-                linear-gradient(135deg, transparent 66%, rgba(255,255,255,0.35) 66%, rgba(255,255,255,0.35) 74%, transparent 74%),
-                linear-gradient(135deg, transparent 86%, rgba(255,255,255,0.35) 86%, rgba(255,255,255,0.35) 94%, transparent 94%);
+                linear-gradient(135deg, transparent 46%, #5c5668 46%, #5c5668 54%, transparent 54%),
+                linear-gradient(135deg, transparent 66%, #5c5668 66%, #5c5668 74%, transparent 74%),
+                linear-gradient(135deg, transparent 86%, #5c5668 86%, #5c5668 94%, transparent 94%);
             }
             .de-desk-resize:hover span,
             .de-desk-resize.is-active span,
@@ -1361,6 +2295,18 @@ export const ZohoASAPWidget = ({
               outline: 2px solid #d3126a;
               outline-offset: -4px;
               border-radius: 10px;
+            }
+            @media (min-width: 640px) {
+              .de-desk-foot { padding-right: 36px; }
+            }
+            @media (max-width: 480px) {
+              .de-desk-foot-cta { display: none; }
+            }
+            @media (max-width: 420px) {
+              .de-desk-grid2 { grid-template-columns: 1fr; }
+              .de-desk-hero-art { display: none; }
+              .de-desk-tab { font-size: 14px; }
+              .de-desk-hero h3 { font-size: 17px; }
             }
           `,
         }}
