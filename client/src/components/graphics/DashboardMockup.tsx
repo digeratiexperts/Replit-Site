@@ -56,7 +56,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
         <div className="flex items-center gap-2 border-b border-white/[0.08] bg-black/30 px-3 py-1.5">
           <div className="flex gap-1" aria-hidden="true">
             <div className="h-2 w-2 rounded-full bg-white/20" />
-            <div className="h-2 w-2 rounded-full bg-white/14" />
+            <div className="h-2 w-2 rounded-full bg-white/10" />
             <div className="h-2 w-2 rounded-full bg-white/10" />
           </div>
           <div className="flex flex-1 items-center justify-center gap-1.5 text-[12px] text-white/50">
@@ -71,7 +71,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
               <p className="text-[15px] font-semibold tracking-tight text-white">
                 What the assessment reviews
               </p>
-              <p className="mt-1 max-w-[28rem] text-[13px] leading-5 text-white/58">
+              <p className="mt-1 max-w-[28rem] text-[13px] leading-5 text-white/60">
                 Review of identity, endpoints, email, backups, and foundational security controls.
               </p>
             </div>
@@ -146,7 +146,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
 
           <ul className="space-y-1.5">
             {OUTCOMES.map((line) => (
-              <li key={line} className="flex items-start gap-2 text-[13px] leading-5 text-white/88">
+              <li key={line} className="flex items-start gap-2 text-[13px] leading-5 text-white/90">
                 <CheckCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-400" aria-hidden="true" />
                 <span>{line}</span>
               </li>

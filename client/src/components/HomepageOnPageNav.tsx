@@ -69,7 +69,7 @@ export function HomepageOnPageNav() {
       ref={rootRef}
       aria-label="On this page"
       data-testid="homepage-section-spy"
-      className="border-t border-white/[0.08] bg-black/90"
+      className="hidden border-t border-white/[0.08] bg-black/90 max-lg:!hidden lg:block"
     >
       <div className="mx-auto flex max-w-[var(--de-canvas)] items-stretch px-2 sm:px-3 xl:px-5">
         <ul className="flex w-full min-h-9 items-stretch justify-start overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] lg:justify-center [&::-webkit-scrollbar]:hidden">
