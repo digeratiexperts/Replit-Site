@@ -44,8 +44,8 @@ function nearestNavIndex(
 
 /**
  * Slim homepage table of contents under the global MegaMenu.
- * Hidden on large screens once the compact sticky header takes over — the
- * floating Protected? dock is the scrolled state of this same system.
+ * Desktop secondary row only — never inside the compact logo bar below lg.
+ * Mobile/tablet jumps live in the MegaMenu drawer.
  */
 export function HomepageOnPageNav() {
   const ctx = useOptionalFullPageScroll();
@@ -86,7 +86,7 @@ export function HomepageOnPageNav() {
       ref={rootRef}
       aria-label="On this page"
       data-testid="homepage-section-spy"
-      className="hidden border-t border-white/[0.08] bg-black/90 lg:block"
+      className="hidden border-t border-white/[0.08] bg-black/90 max-lg:!hidden lg:block"
     >
       <div className="mx-auto flex max-w-[var(--de-canvas)] items-stretch px-2 sm:px-3 xl:px-5">
         <ul className="flex w-full min-h-9 items-stretch justify-start overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] md:justify-between [&::-webkit-scrollbar]:hidden">

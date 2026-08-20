@@ -1,7 +1,8 @@
 import { useEffect, useId, useRef } from "react";
-import { X, ExternalLink, Clock, Shield, CheckCircle } from "lucide-react";
+import { X, ExternalLink, Clock, Shield, CheckCircle, Calendar } from "lucide-react";
 import { useBooking } from "@/contexts/BookingContext";
 import { ZohoBookingWidget } from "@/components/ZohoBookingWidget";
+import { COMPANY } from "@/data/companyContact";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
 
@@ -88,7 +89,7 @@ export function BookingModal() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6"
+          className="fixed inset-0 z-[10060] flex items-end justify-center p-0 sm:items-center sm:p-6"
           onClick={(e) => {
             if (e.target === overlayRef.current) closeBooking();
           }}
@@ -98,7 +99,7 @@ export function BookingModal() {
 
           <motion.div
             {...motionProps}
-            className="relative flex max-h-[min(92vh,52rem)] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-de-hairline bg-[#050312] shadow-[0_28px_80px_rgba(0,0,0,0.55)]"
+            className="relative flex w-full max-w-4xl flex-col overflow-hidden rounded-t-2xl border border-de-hairline bg-[#050312] shadow-[0_28px_80px_rgba(0,0,0,0.55)] sm:rounded-2xl max-h-[min(92dvh,52rem)] sm:max-h-[min(92vh,52rem)] mb-[calc(var(--de-unified-bar-h,0px)+var(--de-chrome-inset,0.75rem)+env(safe-area-inset-bottom,0px))] sm:mb-0"
             data-testid="booking-modal"
           >
             <div
@@ -142,7 +143,7 @@ export function BookingModal() {
                 </div>
               </div>
 
-              <div className="grid min-h-0 flex-1 overflow-y-auto lg:grid-cols-[minmax(17rem,0.9fr)_minmax(0,1.15fr)]">
+              <div className="grid min-h-0 flex-1 overflow-y-auto pb-6 lg:grid-cols-[minmax(17rem,0.9fr)_minmax(0,1.15fr)] lg:pb-0">
                 <aside className="border-b border-de-hairline bg-de-raised px-5 py-6 md:px-7 md:py-8 lg:border-b-0 lg:border-r">
                   <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#D3126A]">
                     Cyber Risk Assessment
@@ -174,9 +175,23 @@ export function BookingModal() {
                   </ul>
                 </aside>
 
-                <div className="min-h-[22rem] bg-[#050312] p-4 md:p-6">
+                <div className="min-h-[22rem] bg-[#050312] p-4 pb-8 md:p-6">
                   <ZohoBookingWidget instanceId="modal" className="h-full min-h-[22rem]" height="520px" />
                 </div>
+              </div>
+
+              <div className="shrink-0 border-t border-de-hairline bg-[#0a0a0a] p-3 lg:hidden">
+                <a
+                  href={COMPANY.bookingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#D3126A] px-5 text-base font-semibold text-white transition-colors hover:bg-[#f0187a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+                  data-testid="link-open-booking-sheet"
+                >
+                  <Calendar className="h-4 w-4" aria-hidden="true" />
+                  Open scheduling calendar
+                  <ExternalLink className="h-4 w-4 opacity-80" aria-hidden="true" />
+                </a>
               </div>
             </div>
           </motion.div>

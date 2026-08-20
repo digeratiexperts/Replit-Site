@@ -116,7 +116,7 @@ export const ModernHeroSection = (): JSX.Element => {
                 </span>
               </h1>
 
-              <p className="max-w-[36rem] text-[17px] leading-[1.6] text-white/82 sm:text-lg">
+              <p className="max-w-[36rem] text-[17px] leading-[1.6] text-white/80 sm:text-lg">
                 Cybersecurity and managed IT for growing businesses, reducing risk, supporting
                 compliance, and keeping your team productive without building an internal IT
                 department.

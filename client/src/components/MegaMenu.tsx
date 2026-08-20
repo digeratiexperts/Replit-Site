@@ -710,8 +710,8 @@ export function MegaMenu() {
         <div className="max-w-[var(--de-canvas)] mx-auto w-full">
           <div
             ref={navBarRef}
-            className={`flex items-center justify-between gap-3 px-3 xl:px-5 overflow-visible transition-all duration-300 ${
-            isScrolled ? 'min-h-[var(--de-nav-h-scrolled)] h-[var(--de-nav-h-scrolled)]' : 'min-h-[var(--de-nav-h)] h-[var(--de-nav-h)]'
+            className={`flex items-center justify-between gap-3 px-3 xl:px-5 transition-all duration-300 max-lg:overflow-hidden ${
+            isScrolled ? 'min-h-[var(--de-nav-h-scrolled)] h-[var(--de-nav-h-scrolled)] overflow-hidden' : 'min-h-[var(--de-nav-h)] h-[var(--de-nav-h)] overflow-visible'
           }`}>
             {/* Logo */}
             <a
@@ -1096,9 +1096,10 @@ export function MegaMenu() {
 
         <div
           ref={spyBarRef}
-          className={`w-full overflow-hidden motion-reduce:transition-none ${
+          className={`w-full overflow-hidden motion-reduce:transition-none max-lg:!hidden ${
             isScrolled ? "hidden" : "hidden lg:block"
           }`}
+          aria-hidden={isScrolled || undefined}
         >
           <HomepageOnPageNav />
         </div>
@@ -1106,8 +1107,10 @@ export function MegaMenu() {
         {/* Mobile/Tablet Menu — charcoal field, magenta pop */}
         <div 
           className={`lg:hidden fixed de-fixed-in-canvas z-40 transition-all duration-300 ${
-            mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+            mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'pointer-events-none hidden'
           }`}
+          hidden={!mobileMenuOpen}
+          aria-hidden={!mobileMenuOpen}
           style={{ 
             top: 'var(--de-nav-current-bottom)',
             height: 'calc(100dvh - var(--de-nav-current-bottom))'
