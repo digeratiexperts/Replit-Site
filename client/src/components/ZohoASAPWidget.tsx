@@ -17,9 +17,7 @@ import {
   Paperclip,
   Search,
   Send,
-  Shield,
   ShieldCheck,
-  Ticket,
   User,
   X,
 } from "lucide-react";
@@ -108,56 +106,44 @@ const RESOURCE_LINKS: Array<{
   icon: typeof BookOpen | typeof BookMagnifier;
   external?: boolean;
   guide?: { title: string; href: string };
-  tags: [string, string];
-  cta: string;
-  accent: string;
-  iconBg: string;
+  tone: "pink" | "violet" | "blue" | "teal";
+  featured?: boolean;
+  badge?: string;
 }> = [
   {
-    title: "Client portal",
-    description: "Tickets, services, approvals, and account management.",
+    title: "Client Portal",
+    description: "Account, tickets, services and client resources.",
     href: PORTAL_LOGIN,
     icon: ShieldCheck,
-    tags: ["Account access", "Self-service"],
-    cta: "Open portal",
-    accent: "text-[#fed7aa]",
-    iconBg:
-      "bg-gradient-to-br from-[#fb923c]/45 to-[#ea580c]/25 ring-[#fdba74]/55 shadow-[0_0_20px_rgba(251,146,60,0.3)]",
+    tone: "pink",
+    featured: true,
   },
   {
-    title: "Start remote support",
-    description: "Connect securely with a technician.",
+    title: "Start Remote Support",
+    description: "Launch a secure technician support session.",
     href: "https://assist.zoho.com/",
     icon: Monitor,
     external: true,
-    guide: { title: "Remote support guide", href: "/support/remote-support" },
-    tags: ["Live help", "Screen share"],
-    cta: "Start session",
-    accent: "text-[#e9d5ff]",
-    iconBg:
-      "bg-gradient-to-br from-[#a855f7]/45 to-[#7c3aed]/30 ring-[#c084fc]/55 shadow-[0_0_20px_rgba(168,85,247,0.35)]",
+    guide: {
+      title: "Remote support guide",
+      href: "/support/remote-support",
+    },
+    tone: "violet",
+    badge: "Fastest",
   },
   {
-    title: "Knowledge base",
-    description: "Guides and troubleshooting.",
+    title: "Help Center",
+    description: "Guides, common fixes and client documentation.",
     href: "/support/knowledge-base",
     icon: BookMagnifier,
-    tags: ["Guides", "Troubleshooting"],
-    cta: "Browse articles",
-    accent: "text-[#bbf7d0]",
-    iconBg:
-      "bg-gradient-to-br from-[#4ade80]/40 to-[#16a34a]/25 ring-[#86efac]/50 shadow-[0_0_20px_rgba(74,222,128,0.28)]",
+    tone: "teal",
   },
   {
-    title: "System status",
-    description: "Service advisories and known issues.",
+    title: "Service Status",
+    description: "Check availability of DE-managed services.",
     href: "/portal/status",
     icon: Activity,
-    tags: ["Advisories", "Known issues"],
-    cta: "View status",
-    accent: "text-[#bae6fd]",
-    iconBg:
-      "bg-gradient-to-br from-[#38bdf8]/40 to-[#0284c7]/25 ring-[#7dd3fc]/50 shadow-[0_0_20px_rgba(56,189,248,0.3)]",
+    tone: "blue",
   },
 ];
 
@@ -201,7 +187,6 @@ export const ZohoASAPWidget = ({
   const [isTicketSending, setIsTicketSending] = useState(false);
   const [ticketResult, setTicketResult] = useState<TicketResult | null>(null);
   const [showTicketMore, setShowTicketMore] = useState(false);
-  const [showMoreTools, setShowMoreTools] = useState(false);
   const ticketFileRef = useRef<HTMLInputElement>(null);
 
   const [cookieBannerClear, setCookieBannerClear] = useState(() => {
@@ -1052,6 +1037,23 @@ export const ZohoASAPWidget = ({
                           <p>Tell us what happened. We&apos;ll route it to the desk.</p>
                         </div>
 
+                        <p className="de-desk-urgency-label" id="support-issue-label">What kind of issue is this?</p>
+                        <div className="de-desk-issues" role="group" aria-labelledby="support-issue-label">
+                          {DESK_TICKET_CHIPS.map((chip) => (
+                            <button
+                              key={chip.id}
+                              type="button"
+                              className={`de-desk-issue${selectedTicketChip === chip.id ? " is-on" : ""}${
+                                chip.id === "security-incident" ? " is-incident" : ""
+                              }`}
+                              data-testid={`ticket-issue-${chip.id}`}
+                              onClick={() => applyTicketChip(chip.id)}
+                            >
+                              {chip.label}
+                            </button>
+                          ))}
+                        </div>
+
                         {selectedTicketChip === "security-incident" ? (
                           <p className="de-desk-route-note" data-testid="ticket-chip-security-incident">
                             Routed as a possible security incident.
@@ -1222,98 +1224,128 @@ export const ZohoASAPWidget = ({
               )}
 
               {activeTab === "resources" && (
-                <div className="de-desk-panel" data-testid="panel-support-resources">
+                <div
+                  className="de-desk-panel de-desk-tools-panel"
+                  data-testid="panel-support-resources"
+                >
                   <div className="de-desk-scroll">
-                    <div className="de-desk-ticket-lead">
-                      <h3>Client tools</h3>
-                      <p>The two places clients use most.</p>
+                    <div className="de-desk-tools-intro">
+                      <h3>Your client shortcuts</h3>
+                      <p>Go directly to the tool you need.</p>
                     </div>
-                    <div className="de-desk-rows">
-                      {RESOURCE_LINKS.slice(0, 1).map(({ title, description, href, icon: Icon }) => (
-                        <a
-                          key={title}
-                          href={href}
-                          className="de-desk-row"
-                          data-testid={`resource-link-${title.toLowerCase().replace(/\s+/g, "-")}`}
-                        >
-                          <span className="de-desk-row-ic">
-                            <Icon aria-hidden="true" />
-                          </span>
-                          <span className="de-desk-row-body">
-                            <span className="de-desk-row-t">{title}</span>
-                            <span className="de-desk-row-d">{description}</span>
-                          </span>
-                          <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
-                        </a>
-                      ))}
-                      <button
-                        type="button"
-                        className="de-desk-row"
-                        data-testid="resource-link-get-support"
-                        onClick={() => selectTab("ticket")}
-                      >
-                        <span className="de-desk-row-ic">
-                          <Ticket aria-hidden="true" />
-                        </span>
-                        <span className="de-desk-row-body">
-                          <span className="de-desk-row-t">Get Support</span>
-                          <span className="de-desk-row-d">Open a ticket for an outage or incident.</span>
-                        </span>
-                        <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
-                      </button>
-                    </div>
-                    <button
-                      type="button"
-                      className="de-desk-more-toggle"
-                      aria-expanded={showMoreTools}
-                      onClick={() => setShowMoreTools((open) => !open)}
+
+                    <div
+                      className="de-desk-tools-list"
+                      aria-label="Client tools"
                     >
-                      {showMoreTools ? "Hide more tools" : "More tools"}
-                    </button>
-                    {showMoreTools ? (
-                      <div className="de-desk-rows">
-                        {RESOURCE_LINKS.slice(1).map(({ title, description, href, icon: Icon, external, guide }) => (
-                          <div key={title} className="de-desk-tool-block">
+                      {RESOURCE_LINKS.map(
+                        ({
+                          title,
+                          description,
+                          href,
+                          icon: Icon,
+                          external,
+                          guide,
+                          tone,
+                          featured,
+                          badge,
+                        }) => (
+                          <div
+                            key={title}
+                            className={`de-desk-tool-group${
+                              featured ? " is-featured" : ""
+                            }`}
+                          >
                             <a
                               href={href}
-                              {...(external || href.startsWith("http")
-                                ? { target: "_blank", rel: "noopener noreferrer" }
-                                : {})}
-                              className="de-desk-row"
-                              data-testid={`resource-link-${title.toLowerCase().replace(/\s+/g, "-")}`}
+                              data-tone={tone}
+                              {...(
+                                external || href.startsWith("http")
+                                  ? {
+                                      target: "_blank",
+                                      rel: "noopener noreferrer",
+                                    }
+                                  : {}
+                              )}
+                              className="de-desk-tool-link"
+                              data-testid={`resource-link-${title
+                                .toLowerCase()
+                                .replace(/\s+/g, "-")}`}
                             >
-                              <span className="de-desk-row-ic">
+                              <span className="de-desk-tool-icon">
                                 <Icon aria-hidden="true" />
                               </span>
-                              <span className="de-desk-row-body">
-                                <span className="de-desk-row-t">{title}</span>
-                                <span className="de-desk-row-d">{description}</span>
+
+                              <span className="de-desk-tool-copy">
+                                <span className="de-desk-tool-title-line">
+                                  <span className="de-desk-tool-title">
+                                    {title}
+                                  </span>
+
+                                  {badge ? (
+                                    <span className="de-desk-tool-badge">
+                                      {badge}
+                                    </span>
+                                  ) : null}
+                                </span>
+
+                                <span className="de-desk-tool-description">
+                                  {description}
+                                </span>
                               </span>
-                              <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
+
+                              {external || href.startsWith("http") ? (
+                                <ExternalLink
+                                  className="de-desk-tool-arrow"
+                                  aria-hidden="true"
+                                />
+                              ) : (
+                                <ChevronRight
+                                  className="de-desk-tool-arrow"
+                                  aria-hidden="true"
+                                />
+                              )}
                             </a>
+
                             {guide ? (
-                              <a href={guide.href} className="de-desk-sublink" data-testid="resource-link-remote-support-guide">
+                              <a
+                                href={guide.href}
+                                className="de-desk-tool-guide"
+                                data-testid="resource-link-remote-support-guide"
+                              >
                                 {guide.title}
+                                <ChevronRight aria-hidden="true" />
                               </a>
                             ) : null}
                           </div>
-                        ))}
-                        <a
-                          href="/book"
-                          className="de-desk-row"
-                          data-testid="resource-link-cyber-risk-assessment"
-                        >
-                          <span className="de-desk-row-ic">
-                            <Shield aria-hidden="true" />
-                          </span>
-                          <span className="de-desk-row-body">
-                            <span className="de-desk-row-t">Cyber Risk Assessment</span>
-                            <span className="de-desk-row-d">Map gaps and get a prioritized next step.</span>
-                          </span>
-                          <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
-                        </a>
-                      </div>
-                    ) : null}
+                        ),
+                      )}
+                    </div>
+
+                    <div className="de-desk-security-escape">
+                      <span className="de-desk-security-icon">
+                        <AlertTriangle aria-hidden="true" />
+                      </span>
+
+                      <span className="de-desk-security-copy">
+                        <strong>Possible security incident?</strong>
+                        <span>
+                          Skip the tools and route it as urgent support.
+                        </span>
+                      </span>
+
+                      <button
+                        type="button"
+                        className="de-desk-security-action"
+                        data-testid="button-tools-security-escape"
+                        onClick={() => {
+                          selectTab("ticket");
+                          applyTicketChip("security-incident");
+                        }}
+                      >
+                        Go to Get Support
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
@@ -1391,23 +1423,23 @@ export const ZohoASAPWidget = ({
         dangerouslySetInnerHTML={{
           __html: `
             .de-desk-shell {
-              --desk-shell: #1a0b33;
+              --desk-shell: #0a0a0a;
               --desk-shell-soft: rgba(0,0,0,0.28);
               --desk-shell-border: rgba(255,255,255,0.10);
-              --desk-shell-border-strong: rgba(167,139,250,0.72);
+              --desk-shell-border-strong: rgba(255,255,255,0.16);
               --desk-shell-text: #ffffff;
-              --desk-shell-muted: rgba(247,245,242,0.68);
-              --desk-shell-dim: rgba(247,245,242,0.46);
-              --desk-paper: #f7f5f2;
-              --desk-well: #0b0c10;
+              --desk-shell-muted: rgba(255,255,255,0.68);
+              --desk-shell-dim: rgba(255,255,255,0.46);
+              --desk-paper: #0a0a0a;
+              --desk-well: #0a0a0a;
               --desk-surface: #0a0a0a;
               --desk-box: #151217;
-              --desk-inset: #fcfaf7;
+              --desk-inset: #151217;
               --desk-border: rgba(255,255,255,0.10);
               --desk-border-strong: rgba(255,255,255,0.16);
-              --desk-ink: #17141f;
-              --desk-ink-muted: #5c5668;
-              --desk-ink-dim: #726c82;
+              --desk-ink: #ffffff;
+              --desk-ink-muted: rgba(255,255,255,0.68);
+              --desk-ink-dim: rgba(255,255,255,0.46);
               --desk-pink: #d3126a;
               --desk-violet: #8b5cf6;
               --desk-blue: #3b9eff;
@@ -1417,10 +1449,10 @@ export const ZohoASAPWidget = ({
               --desk-cta: #d3126a;
               position: relative;
               color-scheme: dark;
-              background: #1a0b33;
-              border: 2px solid var(--desk-shell-border-strong);
-              border-radius: 24px;
-              box-shadow: 0 0 0 1px rgba(196,181,253,0.28), 0 28px 80px rgba(20,8,40,0.62);
+              background: var(--de-surface, #0a0a0a);
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              border-radius: 16px;
+              box-shadow: 0 22px 56px rgba(0,0,0,0.48);
               color: var(--desk-shell-text);
             }
             .de-desk-shell::before {
@@ -1428,9 +1460,7 @@ export const ZohoASAPWidget = ({
               position: absolute;
               inset: 0;
               pointer-events: none;
-              background:
-                radial-gradient(ellipse 80% 50% at 8% 0%, rgba(167,139,250,0.42), transparent 58%),
-                radial-gradient(ellipse 70% 46% at 100% 0%, rgba(211,18,106,0.26), transparent 55%);
+              background: radial-gradient(ellipse 70% 36% at 50% 0%, rgba(91,69,224,0.08), transparent 62%);
             }
             .de-desk-shell :is(button, a, input, textarea, select):focus-visible {
               outline: 2px solid var(--desk-pink);
@@ -1459,15 +1489,17 @@ export const ZohoASAPWidget = ({
             .de-desk-id { display: flex; align-items: center; gap: 11px; min-width: 0; flex: 1; }
             .de-desk-avatar {
               position: relative;
-              width: 40px; height: 40px;
-              border-radius: 50%;
-              background: linear-gradient(135deg, #D3126A 0%, #7c3aed 100%);
+              width: 32px; height: 32px;
+              border-radius: 9px;
+              background: var(--de-raised, #151217);
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
               color: #fff;
               display: flex; align-items: center; justify-content: center;
               flex: none;
               font-family: "Space Grotesk", sans-serif;
               font-weight: 700;
-              font-size: 13px;
+              font-size: 11px;
+              letter-spacing: 0.02em;
             }
             .de-desk-avatar-dot {
               position: absolute; right: -2px; bottom: -2px;
@@ -1500,10 +1532,10 @@ export const ZohoASAPWidget = ({
             }
             .de-desk-id p { font-size: 13px; color: var(--desk-shell-muted); margin-top: 1px; }
             .de-desk-close {
-              width: 36px; height: 36px; border-radius: 50%;
-              border: 1px solid rgba(255,255,255,0.12);
-              background: rgba(0,0,0,0.28);
-              color: rgba(255,255,255,0.82);
+              width: 36px; height: 36px; border-radius: 9px;
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              background: transparent;
+              color: rgba(255,255,255,0.72);
               display: flex; align-items: center; justify-content: center;
               flex: none;
             }
@@ -1576,17 +1608,16 @@ export const ZohoASAPWidget = ({
               position: relative;
               z-index: 1;
               min-height: 0; flex: 1;
-              margin: 10px 10px 0;
+              margin: 0;
               padding: 16px 16px 8px;
               display: flex; flex-direction: column;
-              background: var(--desk-paper);
-              border-radius: 18px 18px 0 0;
+              background: transparent;
               color: var(--desk-ink);
             }
             .de-desk-shell[data-tab="ticket"] .de-desk-body,
             .de-desk-shell[data-tab="resources"] .de-desk-body {
-              background: var(--desk-well);
-              color: #f7f5f2;
+              background: transparent;
+              color: #fff;
             }
             .de-desk-panel, .de-desk-scroll {
               min-height: 0; flex: 1;
@@ -1627,7 +1658,7 @@ export const ZohoASAPWidget = ({
             .de-desk-hero-ring svg { width: 17px; height: 17px; }
             .de-desk-hero h3 {
               font-family: "Space Grotesk", sans-serif;
-              font-size: 18px; font-weight: 700; color: var(--desk-ink);
+              font-size: 18px; font-weight: 700; color: #fff;
               letter-spacing: -0.01em;
             }
             .de-desk-hero p {
@@ -1643,10 +1674,10 @@ export const ZohoASAPWidget = ({
             .de-desk-row {
               display: flex; align-items: center; gap: 10px;
               min-height: 44px;
-              padding: 11px 12px; border-radius: 12px;
+              padding: 11px 12px; border-radius: 10px;
               background: var(--desk-box);
               border: 1px solid var(--desk-border);
-              color: var(--desk-ink); text-align: left; width: 100%;
+              color: #fff; text-align: left; width: 100%;
               transition: background 0.16s ease, border-color 0.16s ease;
             }
             .de-desk-row:hover {
@@ -1707,22 +1738,19 @@ export const ZohoASAPWidget = ({
             .de-desk-row[data-tone="red"] { --c: var(--desk-red); }
             .de-desk-row[data-tone="pink"] { --c: var(--desk-pink); }
             .de-desk-row-ic {
-              width: 32px; height: 32px; border-radius: 10px;
-              background: var(--desk-inset);
-              border: 1.5px solid var(--c, var(--desk-pink));
-              color: var(--c, var(--desk-pink));
+              width: 32px; height: 32px; border-radius: 8px;
+              background: #0a0a0a;
+              border: 1px solid var(--desk-border);
+              color: rgba(255,255,255,0.82);
               display: flex; align-items: center; justify-content: center;
               flex: none; position: relative; overflow: hidden;
             }
-            .de-desk-row-ic::after {
-              content: ""; position: absolute; inset: 0;
-              background: linear-gradient(180deg, rgba(255,255,255,0.10), transparent 55%);
-            }
+            .de-desk-row-ic::after { content: none; }
             .de-desk-row-ic svg { width: 15px; height: 15px; position: relative; z-index: 1; }
             .de-desk-row.is-lg .de-desk-row-ic { width: 46px; height: 46px; border-radius: 13px; }
             .de-desk-row.is-lg .de-desk-row-ic svg { width: 20px; height: 20px; }
             .de-desk-row-body { flex: 1; min-width: 0; }
-            .de-desk-row-t { font-size: 14.5px; font-weight: 600; color: var(--desk-ink); }
+            .de-desk-row-t { font-size: 14.5px; font-weight: 600; color: #fff; }
             .de-desk-row.is-lg .de-desk-row-t { font-size: 13.5px; }
             .de-desk-row-d { display: block; font-size: 13px; color: var(--desk-ink-muted); margin-top: 2px; line-height: 1.4; }
             .de-desk-badge-rec {
@@ -1809,23 +1837,42 @@ export const ZohoASAPWidget = ({
               display: flex; align-items: center; justify-content: center;
               font-size: 9px; font-weight: 700; flex: none;
             }
-            .de-desk-msg-id .de-desk-avatar-dot { border-color: #f7f5f2; }
+            .de-desk-msg-id .de-desk-avatar-dot { border-color: #0a0a0a; }
             .de-desk-msg-col { min-width: 0; flex: 1; }
             .de-desk-msg.is-user .de-desk-msg-col { flex: 0 1 auto; }
             .de-desk-msg-who {
               display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px;
             }
-            .de-desk-msg-who strong { font-size: 13px; font-weight: 700; color: #17141f; }
-            .de-desk-msg-who em { font-style: normal; font-size: 12px; font-weight: 600; color: #15803d; }
+            .de-desk-msg-who strong { font-size: 13px; font-weight: 700; color: #fff; }
+            .de-desk-msg-who em { font-style: normal; font-size: 12px; font-weight: 600; color: #4ade80; }
             .de-desk-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
             .de-desk-chip {
-              border: 1px solid rgba(20,16,30,0.12);
-              background: #fff; color: #17141f;
+              border: 1px solid var(--desk-border);
+              background: transparent; color: rgba(255,255,255,0.78);
               border-radius: 999px;
-              padding: 8px 12px;
-              font-size: 13px; font-weight: 600;
+              padding: 7px 11px;
+              font-size: 12.5px; font-weight: 500;
             }
-            .de-desk-chip:hover { border-color: #D3126A; }
+            .de-desk-chip:hover { border-color: #D3126A; color: #fff; }
+            .de-desk-issues {
+              display: flex; flex-wrap: wrap; gap: 6px;
+            }
+            .de-desk-issue {
+              border: 1px solid var(--desk-border);
+              background: var(--desk-box);
+              color: rgba(255,255,255,0.82);
+              border-radius: 999px;
+              min-height: 36px;
+              padding: 6px 11px;
+              font-size: 12.5px; font-weight: 600;
+            }
+            .de-desk-issue:hover { border-color: var(--desk-border-strong); color: #fff; }
+            .de-desk-issue.is-on {
+              border-color: #D3126A;
+              color: #fff;
+              box-shadow: inset 0 0 0 1px rgba(211,18,106,0.28);
+            }
+            .de-desk-issue.is-incident.is-on { background: rgba(211,18,106,0.12); }
             .de-desk-urgency-label {
               display: block; font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 6px;
             }
@@ -1841,7 +1888,7 @@ export const ZohoASAPWidget = ({
               background: transparent; color: #fff;
               font-size: 13px; font-weight: 600;
             }
-            .de-desk-urgency button.is-on { background: #fff; color: #111; }
+            .de-desk-urgency button.is-on { background: #D3126A; color: #fff; }
             .de-desk-more-toggle {
               align-self: flex-start;
               background: none; border: 0; padding: 8px 0;
@@ -1856,23 +1903,24 @@ export const ZohoASAPWidget = ({
             .de-desk-input-wrap { position: relative; }
             .de-desk-input-wrap > svg {
               position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
-              width: 13px; height: 13px; color: var(--desk-ink-dim); pointer-events: none;
+              width: 13px; height: 13px; color: rgba(255,255,255,0.46); pointer-events: none;
             }
             .de-desk-shell .de-desk-input {
               width: 100%;
               min-height: 44px;
               height: 44px;
-              background: #fcfaf7 !important;
-              border: 0 !important;
-              color: #17141f !important;
-              border-radius: 14px;
+              background: var(--de-raised, #151217) !important;
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10)) !important;
+              color: #fff !important;
+              border-radius: 10px;
               padding: 10px 14px 10px 32px;
               font-size: 14px;
               box-shadow: none !important;
             }
             .de-desk-shell .de-desk-input.is-bare { padding-left: 14px; }
-            .de-desk-shell .de-desk-input::placeholder { color: var(--desk-ink-dim); }
+            .de-desk-shell .de-desk-input::placeholder { color: rgba(255,255,255,0.40); }
             .de-desk-shell .de-desk-select { appearance: none; padding-right: 28px; }
+            .de-desk-shell .de-desk-select option { background: #151217; color: #fff; }
             .de-desk-select-chev {
               position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
               width: 12px; height: 12px; color: var(--desk-ink-dim); pointer-events: none;
@@ -1891,11 +1939,11 @@ export const ZohoASAPWidget = ({
               width: 100%; text-align: left;
               margin-top: 2px; padding: 12px;
               border: 1px dashed var(--desk-border-strong);
-              border-radius: 11px; background: var(--desk-inset);
+              border-radius: 10px; background: var(--desk-box);
             }
             .de-desk-attach:hover { border-color: var(--desk-pink); }
             .de-desk-attach svg { width: 14px; height: 14px; color: var(--desk-ink-dim); flex: none; margin-top: 2px; }
-            .de-desk-attach-t { display: block; font-size: 14px; font-weight: 600; color: var(--desk-ink); }
+            .de-desk-attach-t { display: block; font-size: 14px; font-weight: 600; color: #fff; }
             .de-desk-attach-h { display: block; font-size: 12.5px; color: var(--desk-ink-muted); margin-top: 1px; }
             .de-desk-caption {
               display: flex; align-items: center; gap: 6px;
@@ -1982,7 +2030,7 @@ export const ZohoASAPWidget = ({
               display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
             }
             .de-desk-heads-up-top strong {
-              font-size: 13.5px; font-weight: 700; color: var(--desk-ink);
+              font-size: 13.5px; font-weight: 700; color: #fff;
             }
             .de-desk-heads-up-top em {
               font-style: normal; font-size: 11px; color: var(--desk-ink-dim); flex: none;
@@ -2011,11 +2059,11 @@ export const ZohoASAPWidget = ({
               position: relative;
               z-index: 1;
               display: flex; gap: 8px;
-              margin: 0 10px;
-              padding: 8px 16px 8px;
-              border-top: 1px solid rgba(20,16,30,0.08);
-              background: var(--desk-paper);
-              color: #17141f;
+              margin: 0;
+              padding: 12px 16px 10px;
+              border-top: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              background: transparent;
+              color: #fff;
               flex-shrink: 0;
             }
             .de-desk-composer.is-live input {
@@ -2025,17 +2073,17 @@ export const ZohoASAPWidget = ({
             .de-desk-composer input {
               flex: 1;
               min-height: 48px;
-              background: #ece8e3;
-              border: 0;
-              border-radius: 12px;
-              padding: 11px 13px;
-              color: #17141f; font-size: 14px;
+              background: var(--de-raised, #151217);
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              border-radius: 10px;
+              padding: 12px 14px;
+              color: #fff; font-size: 15px;
             }
             .de-desk-shell input:-webkit-autofill,
             .de-desk-shell textarea:-webkit-autofill {
-              -webkit-box-shadow: 0 0 0 1000px var(--desk-inset) inset;
-              -webkit-text-fill-color: var(--desk-ink);
-              caret-color: var(--desk-ink);
+              -webkit-box-shadow: 0 0 0 1000px #151217 inset;
+              -webkit-text-fill-color: #fff;
+              caret-color: #fff;
             }
             .de-desk-composer input::placeholder { color: var(--desk-ink-dim); }
             .de-desk-composer input:focus {
@@ -2055,18 +2103,17 @@ export const ZohoASAPWidget = ({
               position: relative;
               z-index: 1;
               display: flex; align-items: center; gap: 6px;
-              margin: 0 10px 10px;
-              padding: 0 16px 12px;
-              border-radius: 0 0 18px 18px;
-              background: var(--desk-paper);
-              font-size: 12.5px; color: #5c5668;
+              margin: 0;
+              padding: 0 16px 14px;
+              background: transparent;
+              font-size: 12px; color: rgba(255,255,255,0.46);
               flex-shrink: 0;
             }
-            .de-desk-composer-caption svg { width: 11px; height: 11px; color: #5c5668; }
+            .de-desk-composer-caption svg { width: 11px; height: 11px; color: rgba(255,255,255,0.46); }
             .de-desk-shell[data-tab="ticket"] .de-desk-body,
             .de-desk-shell[data-tab="resources"] .de-desk-body {
-              margin-bottom: 10px;
-              border-radius: 18px;
+              margin-bottom: 0;
+              border-radius: 0;
               padding-bottom: 16px;
             }
             .de-desk-shell[data-tab="resources"] .de-desk-row,
@@ -2079,6 +2126,274 @@ export const ZohoASAPWidget = ({
             .de-desk-shell[data-tab="resources"] .de-desk-row-d { color: rgba(247,245,242,0.62); }
             .de-desk-shell[data-tab="ticket"] .de-desk-heads-up-top strong,
             .de-desk-shell[data-tab="resources"] .de-desk-heads-up-top strong { color: #f7f5f2; }
+            .de-desk-tools-panel .de-desk-scroll {
+              gap: 0;
+              padding: 0;
+            }
+            .de-desk-tools-intro {
+              margin: 1px 0 14px;
+            }
+            .de-desk-tools-intro h3 {
+              margin: 0;
+              font-family: "Space Grotesk", sans-serif;
+              font-size: 17px;
+              font-weight: 700;
+              line-height: 1.25;
+              letter-spacing: -0.015em;
+              color: #fff;
+            }
+            .de-desk-tools-intro p {
+              margin: 4px 0 0;
+              color: rgba(255,255,255,0.68);
+              font-size: 13.5px;
+              line-height: 1.45;
+            }
+            .de-desk-tools-list,
+            .de-desk-security-escape {
+              --desk-ink: #17141f;
+              --desk-ink-muted: #5c5668;
+              --desk-ink-dim: #726c82;
+              --desk-border: rgba(20,16,30,0.08);
+              --desk-border-strong: rgba(20,16,30,0.12);
+            }
+            .de-desk-tools-list {
+              overflow: hidden;
+              width: 100%;
+              border: 1px solid var(--desk-border-strong);
+              border-radius: 15px;
+              background: #fff;
+              box-shadow:
+                0 1px 0 rgba(255,255,255,0.9) inset,
+                0 12px 28px -24px rgba(20,16,30,0.34);
+            }
+            .de-desk-tool-group {
+              position: relative;
+              background: #fff;
+              border-bottom: 1px solid var(--desk-border);
+            }
+            .de-desk-tool-group:last-child {
+              border-bottom: 0;
+            }
+            .de-desk-tool-group.is-featured {
+              background:
+                linear-gradient(
+                  90deg,
+                  rgba(211,18,106,0.055),
+                  rgba(211,18,106,0.018) 62%,
+                  transparent
+                ),
+                #fff;
+            }
+            .de-desk-tool-group.is-featured::before {
+              content: "";
+              position: absolute;
+              left: 0;
+              top: 11px;
+              bottom: 11px;
+              width: 3px;
+              border-radius: 0 999px 999px 0;
+              background: var(--desk-pink);
+            }
+            .de-desk-tool-link {
+              --tool-color: var(--desk-pink);
+              display: flex;
+              width: 100%;
+              min-width: 0;
+              align-items: center;
+              gap: 12px;
+              padding: 14px 14px 14px 15px;
+              color: var(--desk-ink);
+              text-align: left;
+              text-decoration: none;
+              transition:
+                background-color 150ms ease,
+                color 150ms ease;
+            }
+            .de-desk-tool-link[data-tone="pink"] { --tool-color: var(--desk-pink); }
+            .de-desk-tool-link[data-tone="violet"] { --tool-color: var(--desk-violet); }
+            .de-desk-tool-link[data-tone="blue"] { --tool-color: var(--desk-blue); }
+            .de-desk-tool-link[data-tone="teal"] { --tool-color: #1095a7; }
+            .de-desk-tool-link:hover { background: rgba(20,16,30,0.025); }
+            .de-desk-tool-link:focus-visible,
+            .de-desk-tool-guide:focus-visible,
+            .de-desk-security-action:focus-visible {
+              outline: 2px solid var(--desk-pink);
+              outline-offset: -2px;
+            }
+            .de-desk-tool-icon {
+              display: inline-flex;
+              flex: 0 0 auto;
+              width: 39px;
+              height: 39px;
+              align-items: center;
+              justify-content: center;
+              border: 1px solid color-mix(in srgb, var(--tool-color) 42%, transparent);
+              border-radius: 11px;
+              background: color-mix(in srgb, var(--tool-color) 7%, #fff);
+              color: var(--tool-color);
+            }
+            .de-desk-tool-icon svg { width: 17px; height: 17px; stroke-width: 1.9; }
+            .de-desk-tool-copy {
+              display: block;
+              flex: 1 1 auto;
+              min-width: 0;
+            }
+            .de-desk-tool-title-line {
+              display: flex;
+              min-width: 0;
+              align-items: center;
+              gap: 7px;
+            }
+            .de-desk-tool-title {
+              color: var(--desk-ink);
+              font-family: "Space Grotesk", sans-serif;
+              font-size: 14.5px;
+              font-weight: 650;
+              line-height: 1.3;
+            }
+            .de-desk-tool-description {
+              display: block;
+              margin-top: 2px;
+              color: var(--desk-ink-muted);
+              font-size: 12.75px;
+              line-height: 1.4;
+            }
+            .de-desk-tool-badge {
+              display: inline-flex;
+              flex: 0 0 auto;
+              align-items: center;
+              min-height: 19px;
+              padding: 2px 7px;
+              border: 1px solid rgba(139,92,246,0.22);
+              border-radius: 999px;
+              background: rgba(139,92,246,0.075);
+              color: #6d48c7;
+              font-size: 9.5px;
+              font-weight: 700;
+              line-height: 1;
+              letter-spacing: 0.025em;
+              text-transform: uppercase;
+            }
+            .de-desk-tool-arrow {
+              width: 15px;
+              height: 15px;
+              flex: 0 0 auto;
+              color: var(--desk-ink-dim);
+              stroke-width: 1.8;
+              transition:
+                color 150ms ease,
+                transform 150ms ease;
+            }
+            .de-desk-tool-link:hover .de-desk-tool-arrow {
+              color: var(--tool-color);
+              transform: translateX(1px);
+            }
+            .de-desk-tool-guide {
+              display: inline-flex;
+              align-items: center;
+              gap: 2px;
+              margin: -5px 14px 10px 66px;
+              padding: 3px 2px;
+              color: var(--desk-pink);
+              font-size: 11.75px;
+              font-weight: 650;
+              line-height: 1.3;
+              text-decoration: none;
+            }
+            .de-desk-tool-guide svg { width: 11px; height: 11px; }
+            .de-desk-tool-guide:hover {
+              text-decoration: underline;
+              text-underline-offset: 3px;
+            }
+            .de-desk-security-escape {
+              display: flex;
+              width: 100%;
+              align-items: center;
+              gap: 10px;
+              margin-top: 14px;
+              padding: 11px 12px;
+              border: 1px solid rgba(211,18,106,0.24);
+              border-radius: 13px;
+              background: #fcfaf7;
+            }
+            .de-desk-security-icon {
+              display: inline-flex;
+              flex: 0 0 auto;
+              width: 31px;
+              height: 31px;
+              align-items: center;
+              justify-content: center;
+              border-radius: 9px;
+              background: rgba(211,18,106,0.09);
+              color: var(--desk-pink);
+            }
+            .de-desk-security-icon svg { width: 15px; height: 15px; stroke-width: 2; }
+            .de-desk-security-copy {
+              display: flex;
+              flex: 1 1 auto;
+              min-width: 0;
+              flex-direction: column;
+            }
+            .de-desk-security-copy strong {
+              color: var(--desk-ink);
+              font-size: 12.75px;
+              font-weight: 700;
+              line-height: 1.3;
+            }
+            .de-desk-security-copy span {
+              margin-top: 2px;
+              color: var(--desk-ink-muted);
+              font-size: 11.75px;
+              line-height: 1.35;
+            }
+            .de-desk-security-action {
+              flex: 0 0 auto;
+              min-height: 34px;
+              padding: 8px 11px;
+              border: 0;
+              border-radius: 9px;
+              background: var(--desk-pink);
+              color: #fff;
+              font-size: 11.5px;
+              font-weight: 700;
+              line-height: 1;
+              box-shadow: 0 5px 14px -8px rgba(211,18,106,0.72);
+              transition:
+                background-color 150ms ease,
+                transform 150ms ease,
+                box-shadow 150ms ease;
+            }
+            .de-desk-security-action:hover {
+              background: #bd105f;
+              transform: translateY(-1px);
+              box-shadow: 0 8px 18px -9px rgba(211,18,106,0.76);
+            }
+            @media (max-width: 639px) {
+              .de-desk-tools-intro { margin-bottom: 12px; }
+              .de-desk-tools-list { border-radius: 14px; }
+              .de-desk-tool-link {
+                gap: 11px;
+                padding: 13px 12px 13px 13px;
+              }
+              .de-desk-tool-icon { width: 37px; height: 37px; }
+              .de-desk-tool-guide { margin-left: 61px; }
+              .de-desk-security-escape {
+                align-items: flex-start;
+                flex-wrap: wrap;
+              }
+              .de-desk-security-copy { padding-top: 1px; }
+              .de-desk-security-action {
+                width: 100%;
+                margin-left: 41px;
+              }
+            }
+            @media (prefers-reduced-motion: reduce) {
+              .de-desk-tool-link,
+              .de-desk-tool-arrow,
+              .de-desk-security-action { transition: none; }
+              .de-desk-tool-link:hover .de-desk-tool-arrow,
+              .de-desk-security-action:hover { transform: none; }
+            }
             .de-desk-foot {
               display: flex; align-items: center; justify-content: space-between;
               padding: 11px 17px;

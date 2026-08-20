@@ -1,5 +1,5 @@
 ---
-description: DE Desk widget visual + copy playbook (one paper theme, function labels)
+description: DE Desk widget visual + copy playbook (graphite shell, Client Tools launcher)
 globs: client/src/components/ZohoASAPWidget.tsx,client/src/pages/portal/PortalChat.tsx
 alwaysApply: false
 ---
@@ -10,32 +10,31 @@ Primary file: `client/src/components/ZohoASAPWidget.tsx`. Full playbook: `.curso
 
 ## Shell (all tabs)
 
-- **One paper theme** for Ask DE / Get Support / Client Tools — header, tabs, status, body, composer, and footer all sit on `#F7F5F2`.
-- **White raised cards** for hero, prompt rows, tool rows, and form fields.
-- Brand magenta `#D3126A` for avatar, active underline, send, CTAs, incident rail. Violet `#8B5CF6` is icon-well accent only — no purple wash fills.
-- Active tab: dark label + magenta underline. Inactive: muted shell dim.
-- High contrast: dark ink on paper. Do not restore charcoal boxes or a black footer.
+- **One graphite shell** (`--de-surface` / hairline). No purple glow. No cream-in-purple nested card.
+- Magenta `#D3126A` for avatar emphasis, active underline, send, CTAs, incident rail. Violet is lighting only.
+- Active tab: light label + magenta underline.
+- Composer, status strip, and repeated footer stay off Client Tools.
 
 ## Tab content
 
-| Tab | Panel inside paper shell |
-|-----|--------------------------|
-| **Ask DE** | Paper hero + intent prompt rows; conversation uses magenta user / paper assistant bubbles. |
-| **Get Support** | Same hero language + featured incident card + 2×2 chips + light inputs. |
-| **Client Tools** | Same hero language + portal / remote / KB / status rows + assessment highlight + security alert. |
+| Tab | Job |
+|-----|-----|
+| **Ask DE** | Conversational UI on graphite. Composer dominant. Two quiet chips. |
+| **Get Support** | Issue choices + dark raised form + magenta submit. |
+| **Client Tools** | White grouped launcher: Portal (featured), Remote Support + Fastest + guide, Help Center, Service Status, then security escape → `selectTab("ticket")` + `applyTicketChip("security-incident")`. |
 
-Do not invent a third unrelated theme per tab. Elevate in place; ask DE before removing CTAs, tabs, disclaimers, or resource links.
+Do not put Cyber Risk Assessment, billing, or a 2×2 grid on Client Tools.
 
 ## Copy
 
-- Label **functions**, not vendor products (e.g. “Remote session”, not “Zoho Assist”).
-- Keep links/endpoints; change visible titles/tags only.
+- Label **functions**, not vendor products.
+- Keep links/endpoints; change visible titles only.
 - Portal login via `PORTAL_LOGIN` — never invent `//login`.
 
 ## Logic
 
-Preserve chat send/poll, agent live, ticket submit, resources links, analytics, ASAP bootstrap, cookie offset, `de-open-msp-advisor`.
+Preserve chat send/poll, agent live, ticket submit (fail-closed), resources links, analytics, ASAP bootstrap, cookie offset, `de-open-msp-advisor`, drag/resize/expand, unread/heads-up.
 
-The composer stays on **all three tabs** and is the same Ask DE thread. Sending from Get Support or Client Tools must **not** force a tab switch. Incoming replies while on another tab show an Android-style heads-up over the panel plus an Ask DE tab badge; the visitor can reply in the shared composer or tap the toast to open Ask DE.
+Composer is **Ask DE only**. Incoming replies on other tabs: heads-up + Ask DE badge.
 
-Do not say “online” unless a human has joined. Status CTA is “Open a support ticket” / “Ask DE instead”, never “Need help now?”. Do not add billing as a Desk choice.
+Do not say “online” unless a human has joined. Do not add billing as a Desk choice.

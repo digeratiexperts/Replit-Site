@@ -1,54 +1,70 @@
 # DE Desk tokens and structure
 
+Rejected shots (do not restore): `design/approved/desk-ask-de-target.png`, `desk-get-support-target.png` — cream-in-purple.
+
 ## Brand tokens
 
-One paper sheet. Magenta pops because the field stays cream.
+Outer chrome is graphite DE app. Client Tools’ **list only** is a white grouped surface.
 
 | Token | Value | Use |
 |-------|-------|-----|
-| Magenta | `#D3126A` | Avatar, active underline, send, CTAs, user bubbles, incident rail, Urgent badge |
-| Violet | `#8B5CF6` | Icon-well accent only — never a wash fill or CTA gradient |
-| Field | paper `#F7F5F2` | Entire chrome: header, body, composer, footer |
-| Raised | `#FFFFFF` | Hero, rows, form card, composer input |
-| Hairline | `rgba(20,16,30,0.10)` | Paper borders |
-| Ink | `#17141F` / `#5C5668` | Titles and body on every tab |
-| Available | Emerald pip | Availability — say “available”, not “online” |
+| Shell | `--de-surface` `#0a0a0a` | One outer frame |
+| Shell border | `--de-hairline` `rgba(255,255,255,0.10)` | Single hairline — no lavender glow |
+| Raised | `--de-raised` `#151217` | Inputs, assistant bubbles, tool icon wells on dark |
+| Magenta | `#D3126A` | Active underline, send, submit, featured rail, security action |
+| Violet | `#8B5CF6` | Header lighting only; Fastest badge is a small exception |
+| Ask DE / ticket field | graphite | Light-on-dark transcript and dark raised form fields |
+| Tools list | `#fff` on paper-ink | Grouped launcher rows inside the graphite shell |
+| Tools ink | `#17141F` / `#5C5668` | Titles and blurbs on the white list |
+| Available | Emerald pip | Say “available”, not “online” |
 
-Do **not** use charcoal hero/rows, black footer, plum washes, or magenta→violet CTA gradients.
+Do **not** paint the whole widget paper. Do **not** nest a cream card in a purple glow.
 
 ## Shared chrome (top → bottom)
 
-1. **Header** — magenta DE mark + green pip; title “DE Desk”; subtitle “Ask · Support · Tools”; Expand (desktop) + close. On `sm+` the header moves the window; double-click resets size and position. Drag any edge or the south-east grip to resize. Expand grows toward the page from a bottom-right dock.
-2. **Tabs** — Ask DE | Get Support | Client Tools; active = dark label + magenta underline
-3. **Status row** — paper field; green/sky/amber dot + “DE Desk available” | “Open a support ticket” / on Get Support: “Ask DE instead”. When a person joins: “{name} joined the conversation”.
-4. **Content** — paper body; white raised hero + white raised rows / light inputs
-5. **Composer** — paper ask bar + white input + solid magenta send
-6. **Footer** — paper; “Ask DE · Get Support · Client Tools · Assist” (Assist → remote session) | Open a support ticket
+1. **One `.de-desk-shell`** — `role="dialog"` `aria-label="DE Desk help"` `data-testid="desk-modal"`. `data-tab` is `chat` \| `ticket` \| `resources`.
+2. **Header** — compact DE mark + green available pip; title “DE Desk”; subtitle “DE Desk is available” (or “{name} joined · live handoff”). Expand + close. On `sm+` the header moves the window; double-click resets. Drag any edge or the south-east grip to resize.
+3. **Tabs** — Ask DE \| Get Support \| Client Tools. Active = light label + magenta underline. Unread count badges Ask DE only.
+4. **Body** — same graphite field on every tab. No status row. No footer tab list.
+5. **Composer (Ask DE only)** — raised dark input + magenta send. Placeholder: “Type the issue — we're ready now”.
+6. **Lock line (Ask DE only)** — “Never share passwords, MFA codes, or private keys.”
 
 ## Ask DE
 
-- Paper hero “How can we help?”
-- Intent prompts in a 2×2 (all four visible): Something isn't working · Possible security incident · Help me choose services · Ask an IT/security question
-- Security prompt switches to Get Support and applies the incident chip
-- After send: magenta user bubbles, paper assistant bubbles labeled “Ask DE”
-- Shared paper composer under all tabs
+- Dark transcript. Opening: “DE” avatar + “DE Desk” + green **Available**.
+- Greeting: “DE Desk is here. Describe the outage, the risk, or the question — we'll take it and give you a clear next step.”
+- **Two quiet chips:** “Something isn't working” · “Possible security incident”.
+- Security chip routes to Get Support and applies the incident chip. The other chip sends that line into chat.
+- After send: magenta user bubbles; raised assistant bubbles.
 
 ## Get Support
 
-- Paper hero “Get technical support” / “Tell us what's happening and we'll route it to the right place.”
-- Featured full-width **Possible security incident** (Urgent badge, magenta left rail, phishing/malware blurb)
-- Then 2×2: Email or Microsoft 365 · Can't sign in / MFA · Computer or device · Something else
-- Clicking a chip selects it, fills subject/category/priority, seeds a prompt, and moves focus into the form
-- Taxonomy under the form stays: Email, Access & Security, Network & VPN, Software & Applications, Hardware & Devices, Backup & Recovery, Collaboration, Other
-- Form on paper: Secure & private pill; light fields; solid magenta submit
+- Lead: “Open a support ticket” / “Tell us what happened. We'll route it to the desk.”
+- Quiet issue choices from `DESK_TICKET_CHIPS`, then Name, Work email, What's happening?, Details, Urgency. Default **Medium**. Selected urgency is magenta, not a white pill.
+- Dark raised inputs, white type, magenta **Create ticket**.
+- If the incident chip fired, show “Routed as a possible security incident.”
+- Company, category, attachment behind **More details**.
 
 ## Client Tools
 
-- Hero: “Client tools”
-- Major rows: Client portal · Start remote support · Knowledge base · System status
-- Remote support guide is a small sibling link under Start remote support
-- Assessment highlight + security alert with Create ticket stay
-- Do not add Pay Invoice / Billing here
+Authoritative structure for this tab:
+
+1. Intro: “Your client shortcuts” / “Go directly to the tool you need.”
+2. One white grouped list:
+   - **Client Portal** (`PORTAL_LOGIN`) — featured, magenta rail
+   - **Start Remote Support** (`https://assist.zoho.com/`) — Fastest badge + Remote support guide sublink
+   - **Help Center** (`/support/knowledge-base`)
+   - **Service Status** (`/portal/status`)
+3. Security escape → `selectTab("ticket")` + `applyTicketChip("security-incident")`
+
+Do **not** put Cyber Risk Assessment, More tools, composer, status strip, or a repeated footer on this tab.
+
+## a11y
+
+- Visible `:focus-visible` (magenta ring).
+- Interactive controls ~44px where practical.
+- `prefers-reduced-motion` on pulse, heads-up, and tool-row motion.
+- Ticket submit is fail-closed: treat `!response.ok` or missing `zohoTicketId` as failure.
 
 ## Primary file
 
