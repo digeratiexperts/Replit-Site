@@ -71,11 +71,11 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
               <p className="text-[15px] font-semibold tracking-tight text-white">
                 What the assessment reviews
               </p>
-              <p className="mt-1 max-w-[28rem] text-[13px] leading-5 text-white/60">
+              <p className="mt-1 max-w-[28rem] text-[13px] leading-5 de-copy-on-dark-muted">
                 Review of identity, endpoints, email, backups, and foundational security controls.
               </p>
             </div>
-            <span className="shrink-0 rounded-md border border-white/10 bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.08em] text-white/45">
+            <span className="shrink-0 rounded-md border border-white/10 bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.08em] text-white/70">
               Illustrative preview
             </span>
           </div>
@@ -111,7 +111,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
                   {OVERALL_SCORE}
                   <span className="text-[12px] font-medium text-white/45"> / 100</span>
                 </span>
-                <span className="ml-1.5 text-[10px] text-white/35">Illustrative</span>
+                <span className="ml-1.5 text-[10px] text-white/60">Illustrative</span>
               </p>
             </div>
             <div className="flex h-[78px] items-end gap-2" aria-hidden="true">
@@ -135,7 +135,7 @@ export const DashboardMockup = ({ className = "" }: { className?: string }) => {
                 <span
                   key={bar.label}
                   className={`max-w-[16%] truncate text-center text-[11px] leading-4 ${
-                    bar.overall ? "font-medium text-white/70" : "text-white/45"
+                    bar.overall ? "font-medium text-white/70" : "text-white/70"
                   }`}
                 >
                   {bar.label}

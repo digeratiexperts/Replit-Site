@@ -200,6 +200,7 @@ export const ZohoASAPWidget = ({
     }
   });
   const [canDrag, setCanDrag] = useState(false);
+  const ignoreDismissUntilRef = useRef(0);
 
   const deskDrag = useDraggableWindow({
     enabled: canDrag,
@@ -343,6 +344,7 @@ export const ZohoASAPWidget = ({
   useEffect(() => {
     const onOpen = (event: Event) => {
       const detail = (event as CustomEvent<OpenMspAdvisorDetail>).detail || {};
+      ignoreDismissUntilRef.current = Date.now() + 400;
       setIsOpen(true);
       setActiveTab("chat");
       const seed =
@@ -782,13 +784,15 @@ export const ZohoASAPWidget = ({
         {isOpen && (
           <section
             ref={deskDrag.panelRef}
-            className="de-desk-shell fixed inset-x-3 top-[max(0.75rem,env(safe-area-inset-top))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[100] flex max-h-[100dvh] w-auto flex-col overflow-hidden sm:inset-auto sm:h-[min(760px,calc(100dvh-5.5rem))] sm:max-h-[min(86vh,calc(100dvh-4.5rem))] sm:w-[410px] sm:max-w-[calc(100vw-2rem)]"
+            className="de-desk-shell fixed inset-x-3 top-[max(0.75rem,env(safe-area-inset-top))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-[10040] flex max-h-[100dvh] w-auto flex-col overflow-hidden sm:inset-auto sm:h-[min(760px,calc(100dvh-5.5rem))] sm:max-h-[min(86vh,calc(100dvh-4.5rem))] sm:w-[410px] sm:max-w-[calc(100vw-2rem)]"
             style={deskWindowStyle}
             role="dialog"
             aria-modal="true"
             aria-label="DE Desk help"
             data-testid="desk-modal"
             data-tab={activeTab}
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={(event) => event.stopPropagation()}
           >
             <header className="de-desk-head">
               <div
@@ -837,7 +841,10 @@ export const ZohoASAPWidget = ({
               ) : null}
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  if (Date.now() < ignoreDismissUntilRef.current) return;
+                  setIsOpen(false);
+                }}
                 className="de-desk-close"
                 data-testid="button-close-widget"
                 aria-label="Close DE Desk"
@@ -1447,7 +1454,10 @@ export const ZohoASAPWidget = ({
               --desk-red: #f0455b;
               --desk-green: #22c55e;
               --desk-cta: #d3126a;
-              position: relative;
+              /* Unlayered rule must stay position:fixed. A relative value here
+                 beat Tailwind fixed and laid the dialog out after the page. */
+              position: fixed;
+              z-index: 10040;
               color-scheme: dark;
               background: var(--de-surface, #0a0a0a);
               border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));

@@ -116,7 +116,7 @@ export const ModernHeroSection = (): JSX.Element => {
                 </span>
               </h1>
 
-              <p className="max-w-[36rem] text-[17px] leading-[1.6] text-white/80 sm:text-lg">
+              <p className="de-copy-on-dark max-w-[36rem] text-[17px] leading-[1.6] sm:text-lg">
                 Cybersecurity and managed IT for growing businesses, reducing risk, supporting
                 compliance, and keeping your team productive without building an internal IT
                 department.
@@ -135,7 +135,7 @@ export const ModernHeroSection = (): JSX.Element => {
                     }}
                   >
                     <feature.icon className="h-4 w-4 shrink-0 text-[#D3126A]" strokeWidth={1.75} aria-hidden="true" />
-                    <span className="text-[14px] font-medium leading-5 text-white/80">{feature.text}</span>
+                    <span className="de-copy-on-dark text-[14px] font-medium leading-5">{feature.text}</span>
                   </motion.div>
                 ))}
               </div>

@@ -520,6 +520,15 @@ html.de-marketing-canvas body {
   background-size: 180px 180px;
 }
 
+/* Unlayered so this beats `body { @apply text-foreground }` (near-black).
+   Tailwind `text-white/82` / `/58` / `/45` can fail to emit and inherit ink. */
+.de-copy-on-dark {
+  color: rgba(255, 255, 255, 0.88);
+}
+.de-copy-on-dark-muted {
+  color: rgba(255, 255, 255, 0.76);
+}
+
 .de-field-lit::before {
   content: "";
   position: absolute;
