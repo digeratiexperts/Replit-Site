@@ -1,0 +1,66 @@
+---
+description: Govern stock, photography, motion, vector, and licensed visual assets used by Cursor.
+globs:
+  - design/assets/**
+  - design/IMAGERY.md
+  - client/src/lib/visualAssets.ts
+  - client/public/images/**
+  - client/public/video/**
+alwaysApply: true
+---
+
+# DE asset workflow
+
+Use the existing DE visual system; do not create a competing asset system.
+
+## Source preference
+For new externally sourced content, prefer in this order when a suitable licensed asset is available:
+1. Adobe Stock Free
+2. Unsplash
+3. Motion Array Free
+4. Pixabay
+5. Vecteezy or Freepik only after verifying the exact asset license and attribution requirement.
+
+Never assume an asset is free merely because it can be previewed or downloaded. Never use watermarked previews, scraped copies, search-engine thumbnails, competitor-owned imagery, or assets with unknown provenance.
+
+## Brand gate
+Before using any candidate, read `design/IMAGERY.md`, `.cursor/rules/brand.mdc`, and relevant page-specific rules. Existing Blog and Store color locks remain authoritative.
+
+Reject generic hacker hoodies, glowing padlocks/shields, random laptops, robots, binary-code wallpaper, cyberpunk/neon grids, rainbow gradients, stock-photo handshakes, or imagery that reads as generic AI cyber art.
+
+Prefer authentic enterprise technology, infrastructure, business environments, Arizona/Phoenix context where relevant, restrained abstract technology, editorial photography, and high-quality motion that supports rather than competes with typography.
+
+## Intake and provenance
+Every external candidate must have a source note under `design/assets/source-notes/` using `TEMPLATE.md` before it is approved for production use. Record provider, exact source URL, asset/author ID where available, license class, commercial-use status, attribution requirement, model/property-release concerns, download date, original filename, intended placement, and reviewer notes.
+
+If licensing is uncertain, mark the asset blocked and do not ship it.
+
+## File handling
+- Raw/source/licensed originals belong in the designated non-public source location, never directly under `client/public`.
+- Do not overwrite originals.
+- Public files must be optimized derivatives only.
+- Prefer WebP/AVIF for photographic stills when supported; preserve PNG only when alpha is required. Use JPEG only when it is the best photographic fallback.
+- For motion, ship only the smallest production-appropriate derivative and provide a reduced-motion/static fallback when the placement animates.
+- Use descriptive kebab-case filenames that describe concept/placement, not provider download IDs alone.
+
+## Approval flow
+`inbox -> review -> approved source -> optimized public derivative -> registry -> rendered QA`
+
+A downloaded asset is not automatically approved. Approval requires brand fit, licensing/provenance, crop/responsive usability, performance suitability, and placement QA.
+
+## Public registry
+When an external still is actually used on the public site, register it in `client/src/lib/visualAssets.ts` rather than scattering unexplained hard-coded asset paths. Extend the source union/type deliberately if a new provider is introduced.
+
+Do not re-enable retired Meshy/sculpture assets just because they exist in inventory.
+
+## Placement QA
+Verify the real rendered placement at 390, 768, and 1440 when the asset is materially visible. Check focal crop, text contrast, CLS/layout stability, loading behavior, alt text, reduced motion, and whether the image still looks intentional beside neighboring sections.
+
+## Stop conditions
+Do not ship an asset when any of these are unresolved:
+- license/provenance is unknown;
+- required attribution is missing;
+- recognizable trademark/person/property creates an unresolved endorsement/release risk;
+- only a watermarked or preview version is available;
+- image quality is insufficient at rendered size;
+- the asset conflicts with `design/IMAGERY.md` or page-specific design locks.
