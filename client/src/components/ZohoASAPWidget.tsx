@@ -3,17 +3,11 @@ import {
   Activity,
   AlertTriangle,
   BookOpen,
-  Building2,
   CheckCircle2,
-  ChevronDown,
   ChevronRight,
-  ClipboardList,
   ExternalLink,
   FileText,
-  Flag,
-  Headset,
-  KeyRound,
-  LifeBuoy,
+  LayoutGrid,
   Lock,
   Mail,
   Maximize2,
@@ -21,12 +15,10 @@ import {
   Monitor,
   MessageCircle,
   Paperclip,
-  Scale,
   Search,
   Send,
   Shield,
   ShieldCheck,
-  Tag,
   Ticket,
   User,
   X,
@@ -43,8 +35,10 @@ import { useDraggableWindow } from "@/hooks/useDraggableWindow";
 import {
   DESK_TICKET_CATEGORIES,
   DESK_TICKET_CHIPS,
+  DESK_TICKET_PRIORITIES,
   applyDeskTicketChip,
   type DeskTicketChipId,
+  type DeskTicketPriority,
 } from "@/lib/deskTicketChips";
 
 interface ZohoASAPWidgetProps {
@@ -87,101 +81,16 @@ const CHAT_WELCOME: ChatMessage = {
   id: "welcome",
   role: "assistant",
   content:
-    "DE Desk here. Tell me what broke, what you're evaluating, or what you're trying to protect — I'll give you a clear read and the sensible next step.",
+    "DE Desk is here. Describe the outage, the risk, or the question — we'll take it and give you a clear next step.",
 };
 
 const QUICK_CHAT_PROMPTS: Array<{
   label: string;
-  icon: typeof Shield;
-  tone: "violet" | "blue" | "teal" | "red";
   ticketChip?: DeskTicketChipId;
 }> = [
-  { label: "Something isn't working", icon: Monitor, tone: "blue" },
-  { label: "Possible security incident", icon: AlertTriangle, tone: "red", ticketChip: "security-incident" },
-  { label: "Help me choose services", icon: Scale, tone: "violet" },
-  { label: "Ask an IT/security question", icon: MessageCircle, tone: "teal" },
+  { label: "Something isn't working" },
+  { label: "Possible security incident", ticketChip: "security-incident" },
 ];
-
-function DeskHeroArt({ variant }: { variant: "desk" | "ticket" | "resources" }) {
-  if (variant === "ticket") {
-    return (
-      <svg className="de-desk-hero-art" viewBox="0 0 120 120" fill="none" aria-hidden="true">
-        <defs>
-          <linearGradient id="deDeskTicketCard" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#2B2735" />
-            <stop offset="1" stopColor="#18151F" />
-          </linearGradient>
-          <linearGradient id="deDeskTicketShield" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#3A2E44" />
-            <stop offset="1" stopColor="#1C1722" />
-          </linearGradient>
-        </defs>
-        <g transform="rotate(-7 45 55)">
-          <rect x="14" y="18" width="66" height="80" rx="12" fill="url(#deDeskTicketCard)" stroke="rgba(255,255,255,0.08)" />
-          <rect x="34" y="10" width="26" height="12" rx="5" fill="#332C3D" stroke="rgba(255,255,255,0.1)" />
-          <rect x="26" y="40" width="40" height="5" rx="2.5" fill="#D3126A" />
-          <rect x="26" y="52" width="34" height="5" rx="2.5" fill="#3A3644" />
-          <rect x="26" y="64" width="24" height="5" rx="2.5" fill="#413B4C" />
-          <circle cx="40" cy="84" r="11" fill="rgba(211,18,106,0.14)" stroke="#D3126A" strokeWidth="1.5" />
-          <path d="M35 84l3.5 3.5L46 80" stroke="#D3126A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </g>
-        <g transform="rotate(10 90 90)">
-          <path d="M90 62c12 0 20 6 20 6v18c0 14-9 22-20 26-11-4-20-12-20-26V68s8-6 20-6z" fill="url(#deDeskTicketShield)" stroke="#D3126A" strokeWidth="1.5" />
-          <rect x="82" y="88" width="16" height="12" rx="3" fill="none" stroke="#D3126A" strokeWidth="1.6" />
-          <path d="M85 88v-5a5 5 0 0 1 10 0v5" fill="none" stroke="#D3126A" strokeWidth="1.6" />
-        </g>
-      </svg>
-    );
-  }
-  if (variant === "resources") {
-    return (
-      <svg className="de-desk-hero-art" viewBox="0 0 120 120" fill="none" aria-hidden="true">
-        <defs>
-          <linearGradient id="deDeskResBook" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#2B2735" />
-            <stop offset="1" stopColor="#18151F" />
-          </linearGradient>
-        </defs>
-        <g transform="rotate(-6 50 55)">
-          <rect x="18" y="22" width="60" height="70" rx="8" fill="#100E16" />
-          <rect x="22" y="18" width="60" height="70" rx="8" fill="url(#deDeskResBook)" stroke="rgba(255,255,255,0.08)" />
-          <rect x="30" y="30" width="30" height="4" rx="2" fill="#D3126A" />
-          <rect x="30" y="40" width="24" height="4" rx="2" fill="#3A3444" />
-          <rect x="30" y="50" width="26" height="4" rx="2" fill="#3A3444" />
-          <path d="M64 14v14l-6-4-6 4V14z" fill="#D3126A" />
-        </g>
-        <g transform="rotate(8 92 92)">
-          <circle cx="88" cy="82" r="16" fill="rgba(211,18,106,0.10)" stroke="#D3126A" strokeWidth="2.5" />
-          <line x1="99" y1="93" x2="112" y2="106" stroke="#D3126A" strokeWidth="4" strokeLinecap="round" />
-        </g>
-      </svg>
-    );
-  }
-  return (
-    <svg className="de-desk-hero-art" viewBox="0 0 120 120" fill="none" aria-hidden="true">
-      <defs>
-        <linearGradient id="deDeskChatBubble" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#2B2735" />
-          <stop offset="1" stopColor="#18151F" />
-        </linearGradient>
-        <linearGradient id="deDeskChatShield" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#3A2E44" />
-          <stop offset="1" stopColor="#1C1722" />
-        </linearGradient>
-      </defs>
-      <g transform="rotate(-6 42 50)">
-        <path d="M16 24h56a8 8 0 0 1 8 8v34a8 8 0 0 1-8 8H44l-14 12v-12h-14a8 8 0 0 1-8-8V32a8 8 0 0 1 8-8z" fill="url(#deDeskChatBubble)" stroke="rgba(255,255,255,0.08)" />
-        <circle cx="34" cy="50" r="3.4" fill="#D3126A" />
-        <circle cx="46" cy="50" r="3.4" fill="#E8E4EE" />
-        <circle cx="58" cy="50" r="3.4" fill="#413B4C" />
-      </g>
-      <g transform="rotate(10 90 90)">
-        <path d="M90 62c12 0 20 6 20 6v18c0 14-9 22-20 26-11-4-20-12-20-26V68s8-6 20-6z" fill="url(#deDeskChatShield)" stroke="#D3126A" strokeWidth="1.5" />
-        <path d="M82 90l5 5 11-11" stroke="#D3126A" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-      </g>
-    </svg>
-  );
-}
 
 function BookMagnifier({ className }: { className?: string }) {
   return (
@@ -191,14 +100,6 @@ function BookMagnifier({ className }: { className?: string }) {
     </span>
   );
 }
-
-const TICKET_CHIP_ICONS: Record<DeskTicketChipId, typeof Shield> = {
-  "security-incident": AlertTriangle,
-  "email-m365": Mail,
-  "sign-in": KeyRound,
-  device: Monitor,
-  "something-else": ClipboardList,
-};
 
 const RESOURCE_LINKS: Array<{
   title: string;
@@ -299,6 +200,8 @@ export const ZohoASAPWidget = ({
   const [attachmentName, setAttachmentName] = useState<string | null>(null);
   const [isTicketSending, setIsTicketSending] = useState(false);
   const [ticketResult, setTicketResult] = useState<TicketResult | null>(null);
+  const [showTicketMore, setShowTicketMore] = useState(false);
+  const [showMoreTools, setShowMoreTools] = useState(false);
   const ticketFileRef = useRef<HTMLInputElement>(null);
 
   const [cookieBannerClear, setCookieBannerClear] = useState(() => {
@@ -899,6 +802,8 @@ export const ZohoASAPWidget = ({
             role="dialog"
             aria-modal="true"
             aria-label="DE Desk help"
+            data-testid="desk-modal"
+            data-tab={activeTab}
           >
             <header className="de-desk-head">
               <div
@@ -924,7 +829,7 @@ export const ZohoASAPWidget = ({
                   <p data-testid="text-widget-status">
                     {agentLive
                       ? `${agentName || "Specialist"} joined · live handoff`
-                      : "Ask · Support · Tools"}
+                      : "DE Desk is available"}
                   </p>
                 </div>
               </div>
@@ -961,7 +866,7 @@ export const ZohoASAPWidget = ({
                 [
                   { id: "chat" as const, label: "Ask DE", icon: MessageCircle },
                   { id: "ticket" as const, label: "Get Support", icon: FileText },
-                  { id: "resources" as const, label: "Client Tools", icon: BookOpen },
+                  { id: "resources" as const, label: "Client Tools", icon: LayoutGrid },
                 ]
               ).map(({ id, label, icon: Icon }) => {
                 const isActive = activeTab === id;
@@ -993,39 +898,6 @@ export const ZohoASAPWidget = ({
               })}
             </nav>
 
-            <div className="de-desk-status">
-              <div className="de-desk-status-l">
-                <span
-                  className={`de-desk-status-dot${
-                    agentLive
-                      ? " is-live"
-                      : assistantAvailable === false
-                        ? " is-wait"
-                        : assistantAvailable === true
-                          ? " is-on"
-                          : ""
-                  }`}
-                />
-                {agentLive
-                  ? `${agentName || "Support specialist"} joined the conversation`
-                  : assistantAvailable === true
-                    ? "DE Desk available"
-                    : assistantAvailable === false
-                      ? "Get Support available"
-                      : "Connecting…"}
-              </div>
-              <button
-                type="button"
-                onClick={() => selectTab(activeTab === "ticket" ? "chat" : "ticket")}
-                className="de-desk-status-r"
-              >
-                {activeTab === "ticket" ? "Ask DE instead" : "Open a support ticket"}
-                <span className="de-desk-status-ic">
-                  <Headset aria-hidden="true" />
-                </span>
-              </button>
-            </div>
-
             <div className="de-desk-body">
               {headsUp && activeTab !== "chat" ? (
                 <div
@@ -1051,7 +923,7 @@ export const ZohoASAPWidget = ({
                       </span>
                       <span className="de-desk-heads-up-preview">{headsUp.preview}</span>
                       <span className="de-desk-heads-up-hint">
-                        Reply below — or open Ask DE
+                        Open Ask DE to reply
                       </span>
                     </span>
                   </button>
@@ -1071,74 +943,63 @@ export const ZohoASAPWidget = ({
               {activeTab === "chat" && (
                 <div className="de-desk-panel" data-testid="panel-support-chat">
                   <div className="de-desk-scroll" aria-live="polite">
-                    {chatMessages.length === 1 ? (
-                      <>
-                        <div className="de-desk-hero">
-                          <div className="de-desk-hero-dots" aria-hidden="true" />
-                          <div className="de-desk-hero-txt">
-                            <div className="de-desk-hero-ring">
-                              <MessageCircle aria-hidden="true" />
+                    {chatMessages.map((chatMessage, index) => {
+                      const isUser = chatMessage.role === "user";
+                      const isAgent = chatMessage.role === "agent";
+                      const isOpening = !isUser && index === 0;
+                      return (
+                        <div
+                          key={chatMessage.id}
+                          className={`de-desk-msg ${isUser ? "is-user" : "is-bot"}`}
+                        >
+                          {!isUser ? (
+                            <div className="de-desk-msg-id" aria-hidden="true">
+                              {isAgent ? "AG" : "DE"}
+                              {isOpening ? <span className="de-desk-avatar-dot" /> : null}
                             </div>
-                            <h3>How can we help?</h3>
-                            <p>
-                              Tell me what broke, what you&apos;re evaluating, or what you&apos;re trying to
-                              protect — I&apos;ll give you a clear read and the sensible next step.
-                            </p>
-                          </div>
-                          <DeskHeroArt variant="desk" />
-                        </div>
-                        <div className="de-desk-rows is-grid">
-                          {QUICK_CHAT_PROMPTS.map(({ label, icon: Icon, tone, ticketChip }) => (
-                            <button
-                              key={label}
-                              type="button"
-                              data-tone={tone}
-                              data-testid={`ask-prompt-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-                              onClick={() => {
-                                if (ticketChip) {
-                                  selectTab("ticket");
-                                  applyTicketChip(ticketChip);
-                                  return;
-                                }
-                                void handleSendChat(label);
-                              }}
-                              className={`de-desk-row${ticketChip ? " is-incident" : ""}`}
-                            >
-                              <span className="de-desk-row-ic">
-                                <Icon aria-hidden="true" />
-                              </span>
-                              <span className="de-desk-row-t">{label}</span>
-                              <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
-                            </button>
-                          ))}
-                        </div>
-                      </>
-                    ) : (
-                      chatMessages.map((chatMessage) => {
-                        const isUser = chatMessage.role === "user";
-                        const isAgent = chatMessage.role === "agent";
-                        return (
-                          <div
-                            key={chatMessage.id}
-                            className={`flex ${isUser ? "justify-end" : "justify-start"}`}
-                          >
+                          ) : null}
+                          <div className="de-desk-msg-col">
+                            {!isUser ? (
+                              <div className="de-desk-msg-who">
+                                <strong>
+                                  {isAgent ? chatMessage.senderName || agentName || "Agent" : "DE Desk"}
+                                </strong>
+                                {isOpening ? <em>Available</em> : null}
+                              </div>
+                            ) : null}
                             <div
                               className={`de-desk-bubble ${
                                 isUser ? "is-user" : isAgent ? "is-agent" : "is-bot"
                               }`}
                             >
-                              {!isUser && (
-                                <div className="de-desk-bubble-meta">
-                                  <span>{isAgent ? "AG" : "DE"}</span>
-                                  {isAgent ? chatMessage.senderName || agentName || "Agent" : "Ask DE"}
-                                </div>
-                              )}
                               <p className="whitespace-pre-wrap">{chatMessage.content}</p>
                             </div>
+                            {isOpening && chatMessages.length === 1 ? (
+                              <div className="de-desk-chips" role="group" aria-label="Common questions">
+                                {QUICK_CHAT_PROMPTS.map(({ label, ticketChip }) => (
+                                  <button
+                                    key={label}
+                                    type="button"
+                                    data-testid={`ask-prompt-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                                    onClick={() => {
+                                      if (ticketChip) {
+                                        selectTab("ticket");
+                                        applyTicketChip(ticketChip);
+                                        return;
+                                      }
+                                      void handleSendChat(label);
+                                    }}
+                                    className="de-desk-chip"
+                                  >
+                                    {label}
+                                  </button>
+                                ))}
+                              </div>
+                            ) : null}
                           </div>
-                        );
-                      })
-                    )}
+                        </div>
+                      );
+                    })}
 
                     {isChatSending && (
                       <div className="flex justify-start">
@@ -1185,247 +1046,176 @@ export const ZohoASAPWidget = ({
                         </div>
                       </div>
                     ) : (
-                      <>
-                        <div className="de-desk-hero">
-                          <div className="de-desk-hero-dots" aria-hidden="true" />
-                          <div className="de-desk-hero-txt">
-                            <div className="de-desk-hero-ring">
-                              <FileText aria-hidden="true" />
-                            </div>
-                            <h3>Get technical support</h3>
-                            <p>Tell us what&apos;s happening and we&apos;ll route it to the right place.</p>
-                          </div>
-                          <DeskHeroArt variant="ticket" />
+                      <div className="de-desk-form" ref={ticketDetailsRef}>
+                        <div className="de-desk-ticket-lead">
+                          <h3>Open a support ticket</h3>
+                          <p>Tell us what happened. We&apos;ll route it to the desk.</p>
                         </div>
 
-                        <div className="de-desk-rows" role="group" aria-label="Common support issues">
-                          {DESK_TICKET_CHIPS.filter((chip) => chip.featured).map((chip) => {
-                            const Icon = TICKET_CHIP_ICONS[chip.id];
-                            const selected = selectedTicketChip === chip.id;
-                            return (
-                              <button
-                                key={chip.id}
-                                type="button"
-                                data-tone={chip.tone}
-                                data-testid={`ticket-chip-${chip.id}`}
-                                aria-pressed={selected}
-                                onClick={() => applyTicketChip(chip.id)}
-                                className={`de-desk-row is-lg is-incident${selected ? " is-selected" : ""}`}
-                              >
-                                <span className="de-desk-row-ic">
-                                  <Icon aria-hidden="true" />
-                                </span>
-                                <span className="de-desk-row-body">
-                                  <span className="de-desk-row-t">
-                                    {chip.label}
-                                    <span className="de-desk-badge-urgent">Urgent</span>
-                                  </span>
-                                  {chip.blurb ? <span className="de-desk-row-d">{chip.blurb}</span> : null}
-                                </span>
-                                <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
-                              </button>
-                            );
-                          })}
-                          <div className="de-desk-rows is-grid">
-                            {DESK_TICKET_CHIPS.filter((chip) => !chip.featured).map((chip) => {
-                              const Icon = TICKET_CHIP_ICONS[chip.id];
-                              const selected = selectedTicketChip === chip.id;
-                              return (
-                                <button
-                                  key={chip.id}
-                                  type="button"
-                                  data-tone={chip.tone}
-                                  data-testid={`ticket-chip-${chip.id}`}
-                                  aria-pressed={selected}
-                                  onClick={() => applyTicketChip(chip.id)}
-                                  className={`de-desk-row${selected ? " is-selected" : ""}`}
-                                >
-                                  <span className="de-desk-row-ic">
-                                    <Icon aria-hidden="true" />
-                                  </span>
-                                  <span className="de-desk-row-t">{chip.label}</span>
-                                  <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
-                                </button>
-                              );
-                            })}
+                        {selectedTicketChip === "security-incident" ? (
+                          <p className="de-desk-route-note" data-testid="ticket-chip-security-incident">
+                            Routed as a possible security incident.
+                          </p>
+                        ) : null}
+
+                        <div className="de-desk-field">
+                          <label htmlFor="support-name">Name</label>
+                          <div className="de-desk-input-wrap">
+                            <User aria-hidden="true" />
+                            <Input
+                              id="support-name"
+                              autoComplete="name"
+                              placeholder="Your name"
+                              value={fullName}
+                              onChange={(event) => setFullName(event.target.value)}
+                              data-testid="input-support-name"
+                              className="de-desk-input"
+                            />
                           </div>
                         </div>
-
-                        <div className="de-desk-details-head" ref={ticketDetailsRef}>
-                          <h4>Tell us the details</h4>
-                          <span className="de-desk-secure">
-                            <Lock aria-hidden="true" />
-                            Secure &amp; private
+                        <div className="de-desk-field">
+                          <label htmlFor="support-email">Work email</label>
+                          <div className="de-desk-input-wrap">
+                            <Mail aria-hidden="true" />
+                            <Input
+                              id="support-email"
+                              type="email"
+                              autoComplete="email"
+                              placeholder="you@company.com"
+                              value={email}
+                              onChange={(event) => setEmail(event.target.value)}
+                              data-testid="input-support-email"
+                              className="de-desk-input"
+                            />
+                          </div>
+                        </div>
+                        <div className="de-desk-field">
+                          <label htmlFor="support-subject">What&apos;s happening?</label>
+                          <Input
+                            id="support-subject"
+                            maxLength={200}
+                            placeholder="Short summary"
+                            value={subject}
+                            onChange={(event) => setSubject(event.target.value)}
+                            data-testid="input-support-subject"
+                            className="de-desk-input is-bare"
+                          />
+                        </div>
+                        <div className="de-desk-field">
+                          <label htmlFor="support-message">Details</label>
+                          <Textarea
+                            id="support-message"
+                            maxLength={2000}
+                            placeholder="What broke, who is affected, and what you already tried."
+                            value={message}
+                            onChange={(event) => setMessage(event.target.value)}
+                            rows={4}
+                            className="de-desk-input de-desk-ta is-bare"
+                            data-testid="input-support-message"
+                          />
+                        </div>
+                        <div className="de-desk-field">
+                          <span className="de-desk-urgency-label" id="support-urgency-label">
+                            Urgency
                           </span>
+                          <div className="de-desk-urgency" role="group" aria-labelledby="support-urgency-label">
+                            {DESK_TICKET_PRIORITIES.map((level) => (
+                              <button
+                                key={level}
+                                type="button"
+                                className={priority === level ? "is-on" : undefined}
+                                aria-pressed={priority === level}
+                                data-testid={`select-support-priority-${level.toLowerCase()}`}
+                                onClick={() => setPriority(level)}
+                              >
+                                {level}
+                              </button>
+                            ))}
+                          </div>
+                          <select
+                            id="support-priority"
+                            value={priority}
+                            onChange={(event) => setPriority(event.target.value as DeskTicketPriority)}
+                            className="sr-only"
+                            data-testid="select-support-priority"
+                            tabIndex={-1}
+                            aria-hidden="true"
+                          >
+                            {DESK_TICKET_PRIORITIES.map((level) => (
+                              <option key={level} value={level}>
+                                {level}
+                              </option>
+                            ))}
+                          </select>
                         </div>
 
-                          <div className="de-desk-form">
-                            <div className="de-desk-grid2">
-                              <div className="de-desk-field">
-                                <label htmlFor="support-name">Full name</label>
-                                <div className="de-desk-input-wrap">
-                                  <User aria-hidden="true" />
-                                  <Input
-                                    id="support-name"
-                                    autoComplete="name"
-                                    placeholder="Jane Smith"
-                                    value={fullName}
-                                    onChange={(event) => setFullName(event.target.value)}
-                                    data-testid="input-support-name"
-                                    className="de-desk-input"
-                                  />
-                                </div>
-                              </div>
-                              <div className="de-desk-field">
-                                <label htmlFor="support-email">Work email</label>
-                                <div className="de-desk-input-wrap">
-                                  <Mail aria-hidden="true" />
-                                  <Input
-                                    id="support-email"
-                                    type="email"
-                                    autoComplete="email"
-                                    placeholder="you@company.com"
-                                    value={email}
-                                    onChange={(event) => setEmail(event.target.value)}
-                                    data-testid="input-support-email"
-                                    className="de-desk-input"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="de-desk-grid2">
-                              <div className="de-desk-field">
-                                <label htmlFor="support-company">Company</label>
-                                <div className="de-desk-input-wrap">
-                                  <Building2 aria-hidden="true" />
-                                  <Input
-                                    id="support-company"
-                                    autoComplete="organization"
-                                    placeholder="Company name"
-                                    value={company}
-                                    onChange={(event) => setCompany(event.target.value)}
-                                    data-testid="input-support-company"
-                                    className="de-desk-input"
-                                  />
-                                </div>
-                              </div>
-                              <div className="de-desk-field">
-                                <label htmlFor="support-priority">Priority</label>
-                                <div className="de-desk-input-wrap">
-                                  <Flag aria-hidden="true" />
-                                  <select
-                                    id="support-priority"
-                                    value={priority}
-                                    onChange={(event) =>
-                                      setPriority(event.target.value as "Low" | "Medium" | "High" | "Urgent")
-                                    }
-                                    className="de-desk-input de-desk-select"
-                                    data-testid="select-support-priority"
-                                  >
-                                    <option value="Low">Low</option>
-                                    <option value="Medium">Medium</option>
-                                    <option value="High">High</option>
-                                    <option value="Urgent">Urgent</option>
-                                  </select>
-                                  <ChevronDown className="de-desk-select-chev" aria-hidden="true" />
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="de-desk-grid2">
-                              <div className="de-desk-field">
-                                <label htmlFor="support-category">Category</label>
-                                <div className="de-desk-input-wrap">
-                                  <ClipboardList aria-hidden="true" />
-                                  <select
-                                    id="support-category"
-                                    value={category}
-                                    onChange={(event) => setCategory(event.target.value)}
-                                    className="de-desk-input de-desk-select"
-                                    data-testid="select-support-category"
-                                  >
-                                    <option value="">Select a category</option>
-                                    {DESK_TICKET_CATEGORIES.map((item) => (
-                                      <option key={item} value={item}>
-                                        {item}
-                                      </option>
-                                    ))}
-                                  </select>
-                                  <ChevronDown className="de-desk-select-chev" aria-hidden="true" />
-                                </div>
-                              </div>
-                              <div className="de-desk-field">
-                                <label htmlFor="support-subject">Subject</label>
-                                <div className="de-desk-input-wrap">
-                                  <Tag aria-hidden="true" />
-                                  <Input
-                                    id="support-subject"
-                                    maxLength={200}
-                                    placeholder="Brief description"
-                                    value={subject}
-                                    onChange={(event) => setSubject(event.target.value)}
-                                    data-testid="input-support-subject"
-                                    className="de-desk-input"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-
+                        <button
+                          type="button"
+                          className="de-desk-more-toggle"
+                          aria-expanded={showTicketMore}
+                          onClick={() => setShowTicketMore((open) => !open)}
+                        >
+                          {showTicketMore ? "Hide extra details" : "More details"}
+                        </button>
+                        {showTicketMore ? (
+                          <div className="de-desk-more">
                             <div className="de-desk-field">
-                              <label htmlFor="support-message">What&apos;s happening?</label>
-                              <div className="de-desk-ta-wrap">
-                                <Textarea
-                                  id="support-message"
-                                  maxLength={2000}
-                                  placeholder="Describe the issue, affected device or service, and what you already tried. No passwords or MFA codes."
-                                  value={message}
-                                  onChange={(event) => setMessage(event.target.value)}
-                                  rows={3}
-                                  className="de-desk-input de-desk-ta"
-                                  data-testid="input-support-message"
-                                />
-                                <span className="de-desk-counter">{message.length} / 2000</span>
-                              </div>
-                            </div>
-
-                            <div>
-                              <input
-                                ref={ticketFileRef}
-                                type="file"
-                                accept="image/png,image/jpeg,application/pdf,.png,.jpg,.jpeg,.pdf"
-                                className="sr-only"
-                                onChange={(event) => handleTicketFile(event.target.files?.[0])}
-                                data-testid="input-support-attachment"
+                              <label htmlFor="support-company">Company</label>
+                              <Input
+                                id="support-company"
+                                autoComplete="organization"
+                                placeholder="Company name"
+                                value={company}
+                                onChange={(event) => setCompany(event.target.value)}
+                                data-testid="input-support-company"
+                                className="de-desk-input is-bare"
                               />
-                              <button type="button" onClick={() => ticketFileRef.current?.click()} className="de-desk-attach">
-                                <Paperclip aria-hidden="true" />
-                                <span>
-                                  <span className="de-desk-attach-t">{attachmentName || "Attach file or screenshot"}</span>
-                                  <span className="de-desk-attach-h">
-                                    PNG, JPG, PDF up to 10MB. We&apos;ll collect the file after the ticket is opened.
-                                  </span>
-                                </span>
-                              </button>
                             </div>
-
-                            <p className="de-desk-caption">
-                              <Lock aria-hidden="true" />
-                              Never share passwords, MFA codes, or private keys.
-                            </p>
-
-                            <button
-                              type="button"
-                              onClick={() => void handleSubmitTicket()}
-                              disabled={isTicketSending}
-                              className="de-desk-btn-grad"
-                              data-testid="button-submit-support"
-                            >
-                              {isTicketSending ? "Creating ticket…" : "Create ticket"}
-                              {!isTicketSending && <Ticket aria-hidden="true" />}
+                            <div className="de-desk-field">
+                              <label htmlFor="support-category">Category</label>
+                              <select
+                                id="support-category"
+                                value={category}
+                                onChange={(event) => setCategory(event.target.value)}
+                                className="de-desk-input de-desk-select is-bare"
+                                data-testid="select-support-category"
+                              >
+                                <option value="">Select a category</option>
+                                {DESK_TICKET_CATEGORIES.map((item) => (
+                                  <option key={item} value={item}>
+                                    {item}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                            <input
+                              ref={ticketFileRef}
+                              type="file"
+                              accept="image/png,image/jpeg,application/pdf,.png,.jpg,.jpeg,.pdf"
+                              className="sr-only"
+                              onChange={(event) => handleTicketFile(event.target.files?.[0])}
+                              data-testid="input-support-attachment"
+                            />
+                            <button type="button" onClick={() => ticketFileRef.current?.click()} className="de-desk-attach">
+                              <Paperclip aria-hidden="true" />
+                              <span>
+                                <span className="de-desk-attach-t">{attachmentName || "Attach file or screenshot"}</span>
+                                <span className="de-desk-attach-h">PNG, JPG, or PDF up to 10MB.</span>
+                              </span>
                             </button>
                           </div>
-                      </>
+                        ) : null}
+
+                        <button
+                          type="button"
+                          onClick={() => void handleSubmitTicket()}
+                          disabled={isTicketSending}
+                          className="de-desk-btn-grad"
+                          data-testid="button-submit-support"
+                        >
+                          {isTicketSending ? "Creating ticket…" : "Create ticket"}
+                        </button>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -1434,187 +1224,143 @@ export const ZohoASAPWidget = ({
               {activeTab === "resources" && (
                 <div className="de-desk-panel" data-testid="panel-support-resources">
                   <div className="de-desk-scroll">
-                    <div className="de-desk-hero">
-                      <div className="de-desk-hero-dots" aria-hidden="true" />
-                      <div className="de-desk-hero-txt">
-                        <div className="de-desk-hero-ring">
-                          <BookOpen aria-hidden="true" />
-                        </div>
-                        <h3>Client tools</h3>
-                        <p>Open the portal, start remote support, check status, or browse the knowledge base.</p>
-                      </div>
-                      <DeskHeroArt variant="resources" />
+                    <div className="de-desk-ticket-lead">
+                      <h3>Client tools</h3>
+                      <p>The two places clients use most.</p>
                     </div>
-
-                    <div className="de-desk-rows is-grid">
-                      {RESOURCE_LINKS.map(({ title, description, href, icon: Icon, external, guide }, index) => (
-                        <div key={title} className="de-desk-tool-block">
-                          <a
-                            href={href}
-                            data-tone={index === 0 ? "pink" : "violet"}
-                            {...(external || href.startsWith("http")
-                              ? { target: "_blank", rel: "noopener noreferrer" }
-                              : {})}
-                            className="de-desk-row"
-                            data-testid={`resource-link-${title.toLowerCase().replace(/\s+/g, "-")}`}
-                          >
-                            <span className="de-desk-row-ic">
-                              <Icon aria-hidden="true" />
-                            </span>
-                            <span className="de-desk-row-body">
-                              <span className="de-desk-row-t">{title}</span>
-                              <span className="de-desk-row-d">{description}</span>
-                            </span>
-                            <span className="de-desk-row-actions">
-                              <span className="de-desk-row-ext">
-                                <ExternalLink aria-hidden="true" />
-                              </span>
-                              <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
-                            </span>
-                          </a>
-                          {guide ? (
-                            <a href={guide.href} className="de-desk-sublink" data-testid="resource-link-remote-support-guide">
-                              {guide.title}
-                            </a>
-                          ) : null}
-                        </div>
-                      ))}
-                    </div>
-
                     <div className="de-desk-rows">
-                      <a
-                        href="/book"
-                        data-tone="pink"
-                        className="de-desk-row is-lg is-highlight"
-                        data-testid="resource-link-cyber-risk-assessment"
-                      >
-                        <span className="de-desk-row-ic">
-                          <Shield aria-hidden="true" />
-                        </span>
-                        <span className="de-desk-row-body">
-                          <span className="de-desk-row-t">
-                            Cyber Risk Assessment <span className="de-desk-badge-rec">Recommended</span>
+                      {RESOURCE_LINKS.slice(0, 1).map(({ title, description, href, icon: Icon }) => (
+                        <a
+                          key={title}
+                          href={href}
+                          className="de-desk-row"
+                          data-testid={`resource-link-${title.toLowerCase().replace(/\s+/g, "-")}`}
+                        >
+                          <span className="de-desk-row-ic">
+                            <Icon aria-hidden="true" />
                           </span>
-                          <span className="de-desk-row-d">Map your gaps and get a prioritized next step.</span>
-                        </span>
-                        <span className="de-desk-row-actions">
-                          <span className="de-desk-row-ext">
-                            <ExternalLink aria-hidden="true" />
+                          <span className="de-desk-row-body">
+                            <span className="de-desk-row-t">{title}</span>
+                            <span className="de-desk-row-d">{description}</span>
                           </span>
                           <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
-                        </span>
-                      </a>
-
-                      <div className="de-desk-row is-lg is-alert" data-tone="red">
+                        </a>
+                      ))}
+                      <button
+                        type="button"
+                        className="de-desk-row"
+                        data-testid="resource-link-get-support"
+                        onClick={() => selectTab("ticket")}
+                      >
                         <span className="de-desk-row-ic">
-                          <AlertTriangle aria-hidden="true" />
+                          <Ticket aria-hidden="true" />
                         </span>
                         <span className="de-desk-row-body">
-                          <span className="de-desk-row-t">Security-sensitive issue?</span>
-                          <span className="de-desk-row-d">
-                            Don&apos;t paste credentials into chat. Open a ticket and we&apos;ll move to a secure
-                            channel.
-                          </span>
+                          <span className="de-desk-row-t">Get Support</span>
+                          <span className="de-desk-row-d">Open a ticket for an outage or incident.</span>
                         </span>
-                        <button type="button" onClick={() => selectTab("ticket")} className="de-desk-btn-mini">
-                          Create ticket
-                        </button>
-                      </div>
+                        <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
+                      </button>
                     </div>
+                    <button
+                      type="button"
+                      className="de-desk-more-toggle"
+                      aria-expanded={showMoreTools}
+                      onClick={() => setShowMoreTools((open) => !open)}
+                    >
+                      {showMoreTools ? "Hide more tools" : "More tools"}
+                    </button>
+                    {showMoreTools ? (
+                      <div className="de-desk-rows">
+                        {RESOURCE_LINKS.slice(1).map(({ title, description, href, icon: Icon, external, guide }) => (
+                          <div key={title} className="de-desk-tool-block">
+                            <a
+                              href={href}
+                              {...(external || href.startsWith("http")
+                                ? { target: "_blank", rel: "noopener noreferrer" }
+                                : {})}
+                              className="de-desk-row"
+                              data-testid={`resource-link-${title.toLowerCase().replace(/\s+/g, "-")}`}
+                            >
+                              <span className="de-desk-row-ic">
+                                <Icon aria-hidden="true" />
+                              </span>
+                              <span className="de-desk-row-body">
+                                <span className="de-desk-row-t">{title}</span>
+                                <span className="de-desk-row-d">{description}</span>
+                              </span>
+                              <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
+                            </a>
+                            {guide ? (
+                              <a href={guide.href} className="de-desk-sublink" data-testid="resource-link-remote-support-guide">
+                                {guide.title}
+                              </a>
+                            ) : null}
+                          </div>
+                        ))}
+                        <a
+                          href="/book"
+                          className="de-desk-row"
+                          data-testid="resource-link-cyber-risk-assessment"
+                        >
+                          <span className="de-desk-row-ic">
+                            <Shield aria-hidden="true" />
+                          </span>
+                          <span className="de-desk-row-body">
+                            <span className="de-desk-row-t">Cyber Risk Assessment</span>
+                            <span className="de-desk-row-d">Map gaps and get a prioritized next step.</span>
+                          </span>
+                          <ChevronRight className="de-desk-row-chev" aria-hidden="true" />
+                        </a>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               )}
             </div>
 
-            <div className={`de-desk-composer${headsUp || unreadChatCount ? " is-live" : ""}`}>
-              <input
-                type="text"
-                value={chatInput}
-                onChange={(event) => setChatInput(event.target.value)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" && !event.shiftKey) {
-                    event.preventDefault();
-                    void handleSendChat();
-                  }
-                }}
-                maxLength={2000}
-                placeholder={
-                  activeTab === "ticket"
-                    ? "Reply to Ask DE without leaving this ticket…"
-                    : activeTab === "resources"
-                      ? "Reply to Ask DE while you browse tools…"
-                      : agentLive
+            {activeTab === "chat" ? (
+              <>
+                <div className={`de-desk-composer${headsUp || unreadChatCount ? " is-live" : ""}`}>
+                  <input
+                    type="text"
+                    value={chatInput}
+                    onChange={(event) => setChatInput(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" && !event.shiftKey) {
+                        event.preventDefault();
+                        void handleSendChat();
+                      }
+                    }}
+                    maxLength={2000}
+                    placeholder={
+                      agentLive
                         ? `Message ${agentName || "the specialist"}…`
-                        : "Ask about risk, stack, pricing, or an outage..."
-                }
-                disabled={isChatSending}
-                data-testid="input-support-chat"
-                aria-label={
-                  activeTab === "chat"
-                    ? "Ask DE message"
-                    : "Reply to Ask DE from this tab"
-                }
-              />
-              <button
-                type="button"
-                onClick={() => void handleSendChat()}
-                disabled={!chatInput.trim() || isChatSending}
-                className="de-desk-send"
-                data-testid="button-send-support-chat"
-                aria-label="Send chat message"
-              >
-                <Send aria-hidden="true" />
-              </button>
-            </div>
-            <p className="de-desk-composer-caption">
-              <Lock aria-hidden="true" />
-              {activeTab !== "chat"
-                ? "Same Ask DE thread on every tab — reply here without switching."
-                : agentLive
-                  ? "A Digerati agent is in this thread. Never share passwords or MFA codes."
-                  : "Never share passwords, MFA codes, or private keys."}
-            </p>
-
-            <footer className="de-desk-foot">
-              <p className="de-desk-foot-nav">
-                <button
-                  type="button"
-                  className={activeTab === "chat" ? "is-active" : undefined}
-                  onClick={() => selectTab("chat")}
-                >
-                  Ask DE
-                </button>
-                <span aria-hidden="true">·</span>
-                <button
-                  type="button"
-                  className={activeTab === "ticket" ? "is-active" : undefined}
-                  onClick={() => selectTab("ticket")}
-                >
-                  Get Support
-                </button>
-                <span aria-hidden="true">·</span>
-                <button
-                  type="button"
-                  className={activeTab === "resources" ? "is-active" : undefined}
-                  onClick={() => selectTab("resources")}
-                >
-                  Client Tools
-                </button>
-                <span aria-hidden="true">·</span>
-                <a
-                  href="https://assist.zoho.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="de-desk-foot-assist"
-                >
-                  Assist
-                </a>
-              </p>
-              <button type="button" onClick={() => selectTab("ticket")} className="de-desk-foot-cta">
-                Open a support ticket
-                <ExternalLink aria-hidden="true" />
-              </button>
-            </footer>
+                        : "Type the issue — we're ready now"
+                    }
+                    disabled={isChatSending}
+                    data-testid="input-support-chat"
+                    aria-label="Ask DE message"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => void handleSendChat()}
+                    disabled={!chatInput.trim() || isChatSending}
+                    className="de-desk-send"
+                    data-testid="button-send-support-chat"
+                    aria-label="Send chat message"
+                  >
+                    <Send aria-hidden="true" />
+                  </button>
+                </div>
+                <p className="de-desk-composer-caption">
+                  <Lock aria-hidden="true" />
+                  {agentLive
+                    ? "A Digerati agent is in this thread. Never share passwords or MFA codes."
+                    : "Never share passwords, MFA codes, or private keys."}
+                </p>
+              </>
+            ) : null}
             {canDrag ? (
               <>
                 {(["n", "s", "e", "w", "ne", "nw", "sw"] as const).map((edge) => (
@@ -1645,19 +1391,20 @@ export const ZohoASAPWidget = ({
         dangerouslySetInnerHTML={{
           __html: `
             .de-desk-shell {
-              --desk-shell: #f7f5f2;
-              --desk-shell-soft: #ffffff;
-              --desk-shell-border: rgba(20,16,30,0.08);
-              --desk-shell-border-strong: rgba(20,16,30,0.14);
-              --desk-shell-text: #17141f;
-              --desk-shell-muted: #5c5668;
-              --desk-shell-dim: #726c82;
-              --desk-well: #ffffff;
-              --desk-surface: #f7f5f2;
-              --desk-box: #ffffff;
-              --desk-inset: #ffffff;
-              --desk-border: rgba(20,16,30,0.10);
-              --desk-border-strong: rgba(20,16,30,0.16);
+              --desk-shell: #1a0b33;
+              --desk-shell-soft: rgba(0,0,0,0.28);
+              --desk-shell-border: rgba(255,255,255,0.10);
+              --desk-shell-border-strong: rgba(167,139,250,0.72);
+              --desk-shell-text: #ffffff;
+              --desk-shell-muted: rgba(247,245,242,0.68);
+              --desk-shell-dim: rgba(247,245,242,0.46);
+              --desk-paper: #f7f5f2;
+              --desk-well: #0b0c10;
+              --desk-surface: #0a0a0a;
+              --desk-box: #151217;
+              --desk-inset: #fcfaf7;
+              --desk-border: rgba(255,255,255,0.10);
+              --desk-border-strong: rgba(255,255,255,0.16);
               --desk-ink: #17141f;
               --desk-ink-muted: #5c5668;
               --desk-ink-dim: #726c82;
@@ -1668,11 +1415,26 @@ export const ZohoASAPWidget = ({
               --desk-red: #f0455b;
               --desk-green: #22c55e;
               --desk-cta: #d3126a;
-              background: var(--desk-shell);
-              border: 1px solid var(--desk-shell-border-strong);
-              border-radius: 20px;
-              box-shadow: 0 34px 90px -22px rgba(0,0,0,0.45), 0 0 0 1px rgba(20,16,30,0.04), 0 0 70px -16px rgba(211,18,106,0.16);
+              position: relative;
+              color-scheme: dark;
+              background: #1a0b33;
+              border: 2px solid var(--desk-shell-border-strong);
+              border-radius: 24px;
+              box-shadow: 0 0 0 1px rgba(196,181,253,0.28), 0 28px 80px rgba(20,8,40,0.62);
               color: var(--desk-shell-text);
+            }
+            .de-desk-shell::before {
+              content: "";
+              position: absolute;
+              inset: 0;
+              pointer-events: none;
+              background:
+                radial-gradient(ellipse 80% 50% at 8% 0%, rgba(167,139,250,0.42), transparent 58%),
+                radial-gradient(ellipse 70% 46% at 100% 0%, rgba(211,18,106,0.26), transparent 55%);
+            }
+            .de-desk-shell :is(button, a, input, textarea, select):focus-visible {
+              outline: 2px solid var(--desk-pink);
+              outline-offset: 2px;
             }
             .de-desk-shell ::selection {
               background: color-mix(in srgb, #D3126A 38%, transparent);
@@ -1686,26 +1448,26 @@ export const ZohoASAPWidget = ({
               -webkit-text-fill-color: inherit;
             }
             .de-desk-head {
+              position: relative;
+              z-index: 1;
               display: flex;
               align-items: center;
               gap: 11px;
-              padding: 17px 17px 15px;
-              border-bottom: 1px solid var(--desk-shell-border);
+              padding: 16px 16px 10px;
               flex-shrink: 0;
             }
             .de-desk-id { display: flex; align-items: center; gap: 11px; min-width: 0; flex: 1; }
             .de-desk-avatar {
               position: relative;
-              width: 37px; height: 37px;
-              border-radius: 11px;
-              background: var(--desk-pink);
+              width: 40px; height: 40px;
+              border-radius: 50%;
+              background: linear-gradient(135deg, #D3126A 0%, #7c3aed 100%);
               color: #fff;
               display: flex; align-items: center; justify-content: center;
               flex: none;
               font-family: "Space Grotesk", sans-serif;
               font-weight: 700;
               font-size: 13px;
-              box-shadow: 0 4px 14px -2px rgba(211,18,106,0.5);
             }
             .de-desk-avatar-dot {
               position: absolute; right: -2px; bottom: -2px;
@@ -1738,22 +1500,25 @@ export const ZohoASAPWidget = ({
             }
             .de-desk-id p { font-size: 13px; color: var(--desk-shell-muted); margin-top: 1px; }
             .de-desk-close {
-              width: 30px; height: 30px; border-radius: 9px;
-              border: 1px solid var(--desk-shell-border-strong);
-              background: var(--desk-shell-soft);
-              color: var(--desk-shell-muted);
+              width: 36px; height: 36px; border-radius: 50%;
+              border: 1px solid rgba(255,255,255,0.12);
+              background: rgba(0,0,0,0.28);
+              color: rgba(255,255,255,0.82);
               display: flex; align-items: center; justify-content: center;
               flex: none;
             }
-            .de-desk-close:hover { color: var(--desk-pink); border-color: var(--desk-pink); }
+            .de-desk-close:hover { color: #fff; border-color: rgba(255,255,255,0.28); }
             .de-desk-tabs {
+              position: relative;
+              z-index: 1;
               display: flex; justify-content: space-between; gap: 12px;
-              padding: 0 17px;
-              border-bottom: 1px solid var(--desk-shell-border);
+              padding: 0 16px;
+              border-bottom: 1px solid rgba(255,255,255,0.12);
               flex-shrink: 0;
             }
             .de-desk-tab {
               background: none; border: none;
+              min-height: 44px;
               padding: 12px 0;
               font-family: "Space Grotesk", sans-serif;
               font-weight: 600; font-size: 15px;
@@ -1768,7 +1533,6 @@ export const ZohoASAPWidget = ({
               position: absolute; left: 0; right: 0; bottom: -1px;
               height: 2px; border-radius: 2px;
               background: var(--desk-pink);
-              box-shadow: 0 0 8px rgba(211,18,106,0.5);
             }
             .de-desk-tab-badge {
               min-width: 16px; height: 16px; padding: 0 4px;
@@ -1809,11 +1573,20 @@ export const ZohoASAPWidget = ({
             }
             .de-desk-status-ic svg { width: 11px; height: 11px; }
             .de-desk-body {
-              min-height: 0; flex: 1;
-              background: var(--desk-shell);
               position: relative;
-              padding: 17px;
+              z-index: 1;
+              min-height: 0; flex: 1;
+              margin: 10px 10px 0;
+              padding: 16px 16px 8px;
               display: flex; flex-direction: column;
+              background: var(--desk-paper);
+              border-radius: 18px 18px 0 0;
+              color: var(--desk-ink);
+            }
+            .de-desk-shell[data-tab="ticket"] .de-desk-body,
+            .de-desk-shell[data-tab="resources"] .de-desk-body {
+              background: var(--desk-well);
+              color: #f7f5f2;
             }
             .de-desk-panel, .de-desk-scroll {
               min-height: 0; flex: 1;
@@ -1822,25 +1595,24 @@ export const ZohoASAPWidget = ({
             .de-desk-scroll { overflow-y: auto; gap: 0; }
             .de-desk-hero {
               position: relative; overflow: hidden;
-              border-radius: 13px;
-              border: 1px solid var(--desk-border-strong);
+              border-radius: 12px;
+              border: 1px solid var(--desk-border);
               background: var(--desk-box);
               padding: 16px 16px;
               display: flex; align-items: center; gap: 12px;
-              box-shadow: 0 10px 24px -16px rgba(20,16,30,0.18);
               flex-shrink: 0;
             }
             .de-desk-hero::before {
               content: "";
               position: absolute; inset: 0;
-              background-image: radial-gradient(rgba(20,16,30,0.06) 1px, transparent 1.15px);
+              background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1.15px);
               background-size: 7px 7px;
-              opacity: 0.45;
+              opacity: 0.35;
               pointer-events: none;
             }
             .de-desk-hero-dots {
               position: absolute; top: 0; right: 0; bottom: 0; width: 42%;
-              background: radial-gradient(ellipse at 80% 20%, rgba(211,18,106,0.16), transparent 58%);
+              background: radial-gradient(ellipse at 80% 20%, rgba(91,69,224,0.16), transparent 58%);
               pointer-events: none;
             }
             .de-desk-hero-txt { flex: 1; min-width: 0; position: relative; z-index: 1; }
@@ -1870,26 +1642,25 @@ export const ZohoASAPWidget = ({
             .de-desk-rows > .de-desk-rows.is-grid { margin-top: 0; }
             .de-desk-row {
               display: flex; align-items: center; gap: 10px;
-              padding: 9px 11px; border-radius: 12px;
+              min-height: 44px;
+              padding: 11px 12px; border-radius: 12px;
               background: var(--desk-box);
               border: 1px solid var(--desk-border);
               color: var(--desk-ink); text-align: left; width: 100%;
-              box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
-              transition: background 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
+              transition: background 0.16s ease, border-color 0.16s ease;
             }
             .de-desk-row:hover {
-              background: #f3f0ec;
+              background: #1b181e;
               border-color: var(--desk-border-strong);
-              transform: translateY(-1px);
             }
             .de-desk-row.is-selected {
               border-color: #D3126A;
-              background: #fff;
-              box-shadow: inset 0 0 0 1px rgba(211,18,106,0.16);
+              background: var(--desk-box);
+              box-shadow: inset 0 0 0 1px rgba(211,18,106,0.28);
             }
             .de-desk-row.is-selected .de-desk-row-chev { color: #D3126A; }
             .de-desk-row.is-incident {
-              background: #fff;
+              background: var(--desk-box);
               border-color: rgba(211,18,106,0.42);
               box-shadow: inset 3px 0 0 #D3126A;
               align-items: flex-start;
@@ -1897,7 +1668,7 @@ export const ZohoASAPWidget = ({
             .de-desk-row.is-incident .de-desk-row-ic {
               border-color: #D3126A;
               color: #D3126A;
-              background: rgba(211,18,106,0.06);
+              background: rgba(211,18,106,0.12);
             }
             .de-desk-row.is-incident .de-desk-row-t {
               display: flex;
@@ -1906,7 +1677,7 @@ export const ZohoASAPWidget = ({
               gap: 6px 0;
             }
             .de-desk-row.is-incident:hover {
-              background: #fff;
+              background: #1b181e;
               border-color: #D3126A;
             }
             .de-desk-badge-urgent {
@@ -2012,17 +1783,75 @@ export const ZohoASAPWidget = ({
             }
             .de-desk-secure {
               display: flex; align-items: center; gap: 5px;
-              border: 1px solid var(--desk-green); color: #178a4c;
+              border: 1px solid rgba(34,197,94,0.45); color: #86efac;
               border-radius: 999px; padding: 3px 9px;
               font-size: 12px; font-weight: 600;
-              background: rgba(34,197,94,0.08);
+              background: rgba(34,197,94,0.10);
             }
             .de-desk-secure svg { width: 10px; height: 10px; }
-            .de-desk-form { display: flex; flex-direction: column; gap: 10px; }
+            .de-desk-form { display: flex; flex-direction: column; gap: 12px; }
+            .de-desk-ticket-lead h3 {
+              font-family: "Space Grotesk", sans-serif;
+              font-size: 20px; font-weight: 700; color: #fff;
+            }
+            .de-desk-ticket-lead p {
+              margin-top: 6px; font-size: 14px; line-height: 1.45; color: rgba(247,245,242,0.68);
+            }
+            .de-desk-route-note {
+              font-size: 13px; font-weight: 600; color: #F0B4CC;
+            }
+            .de-desk-msg { display: flex; gap: 10px; align-items: flex-start; }
+            .de-desk-msg.is-user { justify-content: flex-end; }
+            .de-desk-msg-id {
+              position: relative;
+              width: 32px; height: 32px; border-radius: 50%;
+              background: #151217; color: #fff;
+              display: flex; align-items: center; justify-content: center;
+              font-size: 9px; font-weight: 700; flex: none;
+            }
+            .de-desk-msg-id .de-desk-avatar-dot { border-color: #f7f5f2; }
+            .de-desk-msg-col { min-width: 0; flex: 1; }
+            .de-desk-msg.is-user .de-desk-msg-col { flex: 0 1 auto; }
+            .de-desk-msg-who {
+              display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px;
+            }
+            .de-desk-msg-who strong { font-size: 13px; font-weight: 700; color: #17141f; }
+            .de-desk-msg-who em { font-style: normal; font-size: 12px; font-weight: 600; color: #15803d; }
+            .de-desk-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+            .de-desk-chip {
+              border: 1px solid rgba(20,16,30,0.12);
+              background: #fff; color: #17141f;
+              border-radius: 999px;
+              padding: 8px 12px;
+              font-size: 13px; font-weight: 600;
+            }
+            .de-desk-chip:hover { border-color: #D3126A; }
+            .de-desk-urgency-label {
+              display: block; font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 6px;
+            }
+            .de-desk-urgency {
+              display: grid; grid-template-columns: repeat(4, 1fr);
+              gap: 4px; padding: 4px;
+              border-radius: 999px;
+              background: #12141c;
+              border: 1px solid rgba(255,255,255,0.12);
+            }
+            .de-desk-urgency button {
+              min-height: 40px; border: 0; border-radius: 999px;
+              background: transparent; color: #fff;
+              font-size: 13px; font-weight: 600;
+            }
+            .de-desk-urgency button.is-on { background: #fff; color: #111; }
+            .de-desk-more-toggle {
+              align-self: flex-start;
+              background: none; border: 0; padding: 8px 0;
+              color: #D3126A; font-size: 13px; font-weight: 600;
+            }
+            .de-desk-more { display: flex; flex-direction: column; gap: 12px; }
             .de-desk-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
             .de-desk-field label {
               display: block; font-size: 13px; font-weight: 600;
-              color: var(--desk-shell-muted); margin-bottom: 6px;
+              color: #fff; margin-bottom: 6px;
             }
             .de-desk-input-wrap { position: relative; }
             .de-desk-input-wrap > svg {
@@ -2031,15 +1860,17 @@ export const ZohoASAPWidget = ({
             }
             .de-desk-shell .de-desk-input {
               width: 100%;
-              height: 40px;
-              background: var(--desk-inset) !important;
-              border: 1px solid var(--desk-border) !important;
-              color: var(--desk-ink) !important;
-              border-radius: 10px;
-              padding: 10px 11px 10px 32px;
+              min-height: 44px;
+              height: 44px;
+              background: #fcfaf7 !important;
+              border: 0 !important;
+              color: #17141f !important;
+              border-radius: 14px;
+              padding: 10px 14px 10px 32px;
               font-size: 14px;
               box-shadow: none !important;
             }
+            .de-desk-shell .de-desk-input.is-bare { padding-left: 14px; }
             .de-desk-shell .de-desk-input::placeholder { color: var(--desk-ink-dim); }
             .de-desk-shell .de-desk-select { appearance: none; padding-right: 28px; }
             .de-desk-select-chev {
@@ -2073,11 +1904,11 @@ export const ZohoASAPWidget = ({
             .de-desk-caption svg { width: 11px; height: 11px; }
             .de-desk-btn-grad {
               width: 100%; margin-top: 4px;
+              min-height: 44px;
               background: var(--desk-cta); border: none; color: #fff;
-              font-weight: 600; font-size: 13.5px; padding: 13px;
+              font-weight: 600; font-size: 14px; padding: 12px;
               border-radius: 11px;
               display: flex; align-items: center; justify-content: center; gap: 8px;
-              box-shadow: 0 14px 30px -10px rgba(211,18,106,0.45);
             }
             .de-desk-btn-grad:hover { filter: brightness(1.08); }
             .de-desk-btn-grad:disabled { opacity: 0.6; }
@@ -2093,8 +1924,8 @@ export const ZohoASAPWidget = ({
               border-bottom-right-radius: 6px;
             }
             .de-desk-bubble.is-bot, .de-desk-bubble.is-agent {
-              background: var(--desk-box); color: var(--desk-ink);
-              border: 1px solid var(--desk-border);
+              background: #151217; color: #f7f5f2;
+              border: 0;
               border-bottom-left-radius: 6px;
             }
             .de-desk-bubble-meta {
@@ -2124,10 +1955,10 @@ export const ZohoASAPWidget = ({
               z-index: 6;
               display: flex; align-items: stretch; gap: 4px;
               padding: 8px 8px 8px 8px;
-              border-radius: 16px;
+              border-radius: 14px;
               background: var(--desk-box);
               border: 1px solid rgba(211,18,106,0.42);
-              box-shadow: 0 16px 36px rgba(20,16,30,0.16), 0 0 0 1px rgba(211,18,106,0.10);
+              box-shadow: 0 16px 36px rgba(0,0,0,0.45);
               animation: de-desk-heads-in 0.28s ease-out;
             }
             .de-desk-heads-up.is-out { border-color: rgba(255,255,255,0.16); }
@@ -2168,7 +1999,7 @@ export const ZohoASAPWidget = ({
               border: none; background: transparent; color: var(--desk-ink-dim);
               display: flex; align-items: center; justify-content: center;
             }
-            .de-desk-heads-up-x:hover { color: var(--desk-ink); background: rgba(20,16,30,0.06); }
+            .de-desk-heads-up-x:hover { color: var(--desk-ink); background: rgba(255,255,255,0.08); }
             @keyframes de-desk-heads-in {
               from { opacity: 0; transform: translateY(10px); }
               to { opacity: 1; transform: translateY(0); }
@@ -2177,11 +2008,14 @@ export const ZohoASAPWidget = ({
               .de-desk-heads-up { animation: none; }
             }
             .de-desk-composer {
+              position: relative;
+              z-index: 1;
               display: flex; gap: 8px;
-              padding: 12px 17px 10px;
-              border-top: 1px solid var(--desk-shell-border);
-              background: var(--desk-shell);
-              color: var(--desk-ink);
+              margin: 0 10px;
+              padding: 8px 16px 8px;
+              border-top: 1px solid rgba(20,16,30,0.08);
+              background: var(--desk-paper);
+              color: #17141f;
               flex-shrink: 0;
             }
             .de-desk-composer.is-live input {
@@ -2190,11 +2024,18 @@ export const ZohoASAPWidget = ({
             }
             .de-desk-composer input {
               flex: 1;
-              background: var(--desk-well);
-              border: 1px solid var(--desk-border);
-              border-radius: 11px;
+              min-height: 48px;
+              background: #ece8e3;
+              border: 0;
+              border-radius: 12px;
               padding: 11px 13px;
-              color: var(--desk-ink); font-size: 14px;
+              color: #17141f; font-size: 14px;
+            }
+            .de-desk-shell input:-webkit-autofill,
+            .de-desk-shell textarea:-webkit-autofill {
+              -webkit-box-shadow: 0 0 0 1000px var(--desk-inset) inset;
+              -webkit-text-fill-color: var(--desk-ink);
+              caret-color: var(--desk-ink);
             }
             .de-desk-composer input::placeholder { color: var(--desk-ink-dim); }
             .de-desk-composer input:focus {
@@ -2203,22 +2044,41 @@ export const ZohoASAPWidget = ({
               box-shadow: 0 0 0 3px rgba(211,18,106,0.12);
             }
             .de-desk-send {
-              width: 41px; height: 41px; border-radius: 11px;
+              width: 44px; height: 44px; border-radius: 11px;
               background: var(--desk-cta); border: none;
               display: flex; align-items: center; justify-content: center;
               flex: none;
-              box-shadow: 0 12px 26px -8px rgba(211,18,106,0.45);
             }
             .de-desk-send:disabled { opacity: 0.5; }
             .de-desk-send svg { width: 16px; height: 16px; color: #fff; }
             .de-desk-composer-caption {
+              position: relative;
+              z-index: 1;
               display: flex; align-items: center; gap: 6px;
-              padding: 0 17px 10px;
-              background: var(--desk-shell);
-              font-size: 12.5px; color: var(--desk-ink-muted);
+              margin: 0 10px 10px;
+              padding: 0 16px 12px;
+              border-radius: 0 0 18px 18px;
+              background: var(--desk-paper);
+              font-size: 12.5px; color: #5c5668;
               flex-shrink: 0;
             }
-            .de-desk-composer-caption svg { width: 11px; height: 11px; color: var(--desk-ink); }
+            .de-desk-composer-caption svg { width: 11px; height: 11px; color: #5c5668; }
+            .de-desk-shell[data-tab="ticket"] .de-desk-body,
+            .de-desk-shell[data-tab="resources"] .de-desk-body {
+              margin-bottom: 10px;
+              border-radius: 18px;
+              padding-bottom: 16px;
+            }
+            .de-desk-shell[data-tab="resources"] .de-desk-row,
+            .de-desk-shell[data-tab="ticket"] .de-desk-row {
+              background: #151217;
+              color: #f7f5f2;
+            }
+            .de-desk-shell[data-tab="resources"] .de-desk-row-t,
+            .de-desk-shell[data-tab="ticket"] .de-desk-row-t { color: #f7f5f2; }
+            .de-desk-shell[data-tab="resources"] .de-desk-row-d { color: rgba(247,245,242,0.62); }
+            .de-desk-shell[data-tab="ticket"] .de-desk-heads-up-top strong,
+            .de-desk-shell[data-tab="resources"] .de-desk-heads-up-top strong { color: #f7f5f2; }
             .de-desk-foot {
               display: flex; align-items: center; justify-content: space-between;
               padding: 11px 17px;
@@ -2233,7 +2093,8 @@ export const ZohoASAPWidget = ({
             }
             .de-desk-foot-nav button,
             .de-desk-foot-assist {
-              background: none; border: none; padding: 0;
+              background: none; border: none; padding: 8px 2px;
+              min-height: 44px;
               font: inherit; color: inherit; cursor: pointer;
             }
             .de-desk-foot-nav button:hover,
@@ -2279,9 +2140,9 @@ export const ZohoASAPWidget = ({
               width: 14px;
               height: 14px;
               background:
-                linear-gradient(135deg, transparent 46%, #5c5668 46%, #5c5668 54%, transparent 54%),
-                linear-gradient(135deg, transparent 66%, #5c5668 66%, #5c5668 74%, transparent 74%),
-                linear-gradient(135deg, transparent 86%, #5c5668 86%, #5c5668 94%, transparent 94%);
+                linear-gradient(135deg, transparent 46%, rgba(247,245,242,0.42) 46%, rgba(247,245,242,0.42) 54%, transparent 54%),
+                linear-gradient(135deg, transparent 66%, rgba(247,245,242,0.42) 66%, rgba(247,245,242,0.42) 74%, transparent 74%),
+                linear-gradient(135deg, transparent 86%, rgba(247,245,242,0.42) 86%, rgba(247,245,242,0.42) 94%, transparent 94%);
             }
             .de-desk-resize:hover span,
             .de-desk-resize.is-active span,
