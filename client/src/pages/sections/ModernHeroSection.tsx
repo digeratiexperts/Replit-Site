@@ -45,7 +45,7 @@ export const ModernHeroSection = (): JSX.Element => {
     <section
       ref={containerRef}
       id="home"
-      className="de-field-grain-film relative flex min-h-0 scroll-mt-[var(--de-nav-offset)] flex-col overflow-hidden lg:min-h-screen"
+      className="de-field-grain-film relative flex min-h-[100svh] shrink-0 scroll-mt-[var(--de-nav-offset)] flex-col lg:min-h-screen"
       style={{ position: "relative" }}
     >
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -55,17 +55,17 @@ export const ModernHeroSection = (): JSX.Element => {
           loading="eager"
           decoding="async"
           aria-hidden="true"
-          className="absolute left-0 w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover"
           style={{
             y: backgroundY,
             top: duskExtra ? `-${duskExtra}%` : 0,
             height: duskExtra ? `${100 + duskExtra * 2}%` : "100%",
-            opacity: 0.58,
-            objectPosition: "center 70%",
+            opacity: 0.82,
+            objectPosition: "center 42%",
             WebkitMaskImage:
-              "linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.55) 22%, rgba(0,0,0,0.9) 58%, black 82%)",
+              "linear-gradient(to bottom, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.92) 36%, black 78%)",
             maskImage:
-              "linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.55) 22%, rgba(0,0,0,0.9) 58%, black 82%)",
+              "linear-gradient(to bottom, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.92) 36%, black 78%)",
           }}
         />
       </div>
@@ -75,7 +75,7 @@ export const ModernHeroSection = (): JSX.Element => {
         aria-hidden="true"
         style={{
           background:
-            "linear-gradient(90deg, rgba(5,3,18,0.82) 0%, rgba(5,3,18,0.52) 42%, rgba(5,3,18,0.34) 68%, rgba(5,3,18,0.46) 100%), linear-gradient(180deg, rgba(5,3,18,0.58) 0%, rgba(5,3,18,0.22) 38%, rgba(5,3,18,0.16) 68%, rgba(5,3,18,0.62) 100%)",
+            "linear-gradient(90deg, rgba(5,3,18,0.62) 0%, rgba(5,3,18,0.34) 38%, rgba(5,3,18,0.18) 68%, rgba(5,3,18,0.40) 100%), linear-gradient(180deg, rgba(5,3,18,0.42) 0%, rgba(5,3,18,0.12) 38%, rgba(5,3,18,0.10) 68%, rgba(5,3,18,0.55) 100%)",
         }}
       >
         <div
@@ -88,7 +88,7 @@ export const ModernHeroSection = (): JSX.Element => {
       </div>
 
       <motion.div
-        className="relative z-10 flex flex-1 w-full items-center px-5 sm:px-8 lg:px-10 xl:px-12 pt-[calc(var(--de-nav-offset)+0.5rem)] pb-10 sm:pb-14 lg:pt-[calc(var(--de-nav-offset)+0.5rem)] lg:pb-16"
+        className="relative z-10 flex flex-1 w-full items-center px-5 sm:px-8 lg:px-10 xl:px-12 pt-[calc(var(--de-nav-offset)+1.25rem)] pb-14 sm:pb-16 lg:pt-[calc(var(--de-nav-offset)+2rem)] lg:pb-24"
         style={{ y }}
       >
         <div className="mx-auto w-full max-w-[var(--de-canvas)]">
