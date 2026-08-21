@@ -42,14 +42,8 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
   const [pricingExpanded, setPricingExpanded] = useState(false);
 
   return (
-    <section id="calculators" className="py-14 md:py-18 lg:py-20 relative overflow-hidden bg-[#0a0a0a]">
-      {/* Subtle background accent */}
-      <div 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] pointer-events-none opacity-30"
-        style={{ background: "radial-gradient(ellipse, rgba(139, 92, 246, 0.1) 0%, transparent 60%)" }}
-      />
-
-      <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
+    <section id="calculators" className="relative overflow-hidden py-6 md:py-8">
+      <div className="relative z-10 mx-auto max-w-4xl px-0">
         {/* Section header */}
         <motion.div 
           className="text-center mb-8 md:mb-10"
@@ -79,7 +73,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
             viewport={{ once: true, margin: "-30px" }}
             transition={{ duration: 0.3 }}
           >
-            <Card className="bg-[#111111] border border-white/[0.08] rounded-xl overflow-hidden">
+            <Card className="overflow-hidden rounded-xl border border-de-hairline bg-de-raised">
               {/* Accordion trigger */}
               <button
                 onClick={() => setDowntimeExpanded(!downtimeExpanded)}
@@ -209,12 +203,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                       </div>
 
                       {/* Results area */}
-                      <div 
-                        className="p-6 md:p-8 border-t border-white/[0.06]"
-                        style={{
-                          background: "linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(168, 85, 247, 0.05) 50%, rgba(192, 38, 211, 0.03) 100%)",
-                        }}
-                      >
+                      <div className="border-t border-white/10 bg-de-bg p-6 md:p-8">
                         <div className="grid sm:grid-cols-2 gap-6">
                           <div className="text-center sm:text-left">
                             <p className="text-xs font-bold text-white/50 uppercase tracking-widest mb-2">Per-Incident Cost</p>
@@ -257,7 +246,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
             viewport={{ once: true, margin: "-30px" }}
             transition={{ duration: 0.3, delay: 0.05 }}
           >
-            <Card className="bg-[#111111] border border-white/[0.08] rounded-xl overflow-hidden">
+            <Card className="overflow-hidden rounded-xl border border-de-hairline bg-de-raised">
               {/* Accordion trigger */}
               <button
                 onClick={() => setPricingExpanded(!pricingExpanded)}
@@ -346,12 +335,7 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                       </div>
 
                       {/* Results area */}
-                      <div 
-                        className="p-6 md:p-8 border-t border-white/[0.06]"
-                        style={{
-                          background: "linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(168, 85, 247, 0.05) 50%, rgba(192, 38, 211, 0.03) 100%)",
-                        }}
-                      >
+                      <div className="border-t border-white/10 bg-de-bg p-6 md:p-8">
                         <div className="text-center">
                           <p className="text-xs font-bold text-white/50 uppercase tracking-widest mb-2">Estimated Monthly Cost</p>
                           <p className="text-4xl md:text-5xl font-bold text-de-magenta-ink">
