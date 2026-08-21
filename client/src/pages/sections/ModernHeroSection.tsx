@@ -21,13 +21,12 @@ export const ModernHeroSection = (): JSX.Element => {
     offset: ["start start", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 20]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 16]);
   const backgroundY = useTransform(
     scrollYProgress,
     [0, 1],
-    parallaxTravelRange(prefersReducedMotion, 12),
+    parallaxTravelRange(prefersReducedMotion, 8),
   );
-  const duskExtra = prefersReducedMotion ? 0 : 12;
 
   const features = [
     { icon: FileCheck, text: "Insurance & Compliance-Ready" },
@@ -58,14 +57,8 @@ export const ModernHeroSection = (): JSX.Element => {
           className="absolute inset-0 h-full w-full object-cover"
           style={{
             y: backgroundY,
-            top: duskExtra ? `-${duskExtra}%` : 0,
-            height: duskExtra ? `${100 + duskExtra * 2}%` : "100%",
-            opacity: 0.82,
-            objectPosition: "center 42%",
-            WebkitMaskImage:
-              "linear-gradient(to bottom, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.92) 36%, black 78%)",
-            maskImage:
-              "linear-gradient(to bottom, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.92) 36%, black 78%)",
+            opacity: 0.94,
+            objectPosition: "center 64%",
           }}
         />
       </div>
@@ -75,7 +68,7 @@ export const ModernHeroSection = (): JSX.Element => {
         aria-hidden="true"
         style={{
           background:
-            "linear-gradient(90deg, rgba(5,3,18,0.62) 0%, rgba(5,3,18,0.34) 38%, rgba(5,3,18,0.18) 68%, rgba(5,3,18,0.40) 100%), linear-gradient(180deg, rgba(5,3,18,0.42) 0%, rgba(5,3,18,0.12) 38%, rgba(5,3,18,0.10) 68%, rgba(5,3,18,0.55) 100%)",
+            "linear-gradient(90deg, rgba(5,3,18,0.48) 0%, rgba(5,3,18,0.22) 46%, rgba(5,3,18,0.08) 78%, rgba(5,3,18,0.18) 100%), linear-gradient(180deg, rgba(5,3,18,0.28) 0%, rgba(5,3,18,0.06) 42%, rgba(5,3,18,0.08) 72%, rgba(5,3,18,0.42) 100%)",
         }}
       >
         <div
@@ -88,13 +81,13 @@ export const ModernHeroSection = (): JSX.Element => {
       </div>
 
       <motion.div
-        className="relative z-10 flex flex-1 w-full items-center px-5 sm:px-8 lg:px-10 xl:px-12 pt-[calc(var(--de-nav-offset)+1.25rem)] pb-14 sm:pb-16 lg:pt-[calc(var(--de-nav-offset)+2rem)] lg:pb-24"
+        className="relative z-10 flex flex-1 w-full items-center px-5 sm:px-8 lg:px-10 xl:px-12 pt-[calc(var(--de-nav-offset)+1.75rem)] pb-16 sm:pb-20 lg:pt-[calc(var(--de-nav-offset)+2.25rem)] lg:pb-28"
         style={{ y }}
       >
         <div className="mx-auto w-full max-w-[var(--de-canvas)]">
-          <div className="grid grid-cols-1 items-start gap-8 xl:grid-cols-[minmax(0,0.94fr)_minmax(0,1.06fr)] xl:items-center xl:gap-12">
+          <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,0.96fr)_minmax(0,1.04fr)] lg:gap-12">
             <motion.div
-              className="flex flex-col gap-3.5 sm:gap-5 w-full min-w-0"
+              className="flex flex-col gap-5 sm:gap-6 w-full min-w-0"
               initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: prefersReducedMotion ? 0 : 0.4, ease: "easeOut" }}
@@ -122,7 +115,7 @@ export const ModernHeroSection = (): JSX.Element => {
                 department.
               </p>
 
-              <div className="grid grid-cols-1 gap-x-4 gap-y-2 min-[420px]:grid-cols-2 xl:grid-cols-4">
+              <div className="grid grid-cols-1 gap-x-4 gap-y-2.5 min-[420px]:grid-cols-2">
                 {features.map((feature, index) => (
                   <motion.div
                     key={feature.text}
@@ -188,9 +181,12 @@ export const ModernHeroSection = (): JSX.Element => {
               </div>
             </motion.div>
 
-            <div className="relative flex w-full justify-center xl:justify-end xl:pb-2">
+            <div
+              className="relative flex w-full justify-center lg:justify-end"
+              data-testid="hero-assessment-card"
+            >
               <motion.div
-                className="relative w-full max-w-[560px] xl:max-w-[600px]"
+                className="relative w-full max-w-[560px] lg:max-w-[600px]"
                 initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
