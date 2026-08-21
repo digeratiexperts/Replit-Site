@@ -11,14 +11,46 @@ import {
 } from "./storeProducts";
 import { getVendorForSku } from "./vendorLogos";
 
+/**
+ * Locked storefront taxonomy (nouns, not verbs that imply a result):
+ * Protect · Recover · Communicate · Operate · Compliance
+ *
+ * Retired public ids (still accepted on ?outcome= URLs):
+ * modernize → communicate; support_it / outsource / secure_remote → operate
+ */
 export type StoreOutcomeId =
   | "protect"
-  | "modernize"
-  | "compliance"
   | "recover"
-  | "support_it"
-  | "outsource"
-  | "secure_remote";
+  | "communicate"
+  | "operate"
+  | "compliance";
+
+/** Old catalog URL values → current outcome. */
+export const legacyStoreOutcomeAliases: Record<string, StoreOutcomeId> = {
+  modernize: "communicate",
+  support_it: "operate",
+  outsource: "operate",
+  secure_remote: "operate",
+};
+
+export function resolveStoreOutcomeId(raw: string | null | undefined): StoreOutcomeId | null {
+  if (!raw) return null;
+  if (raw === "protect" || raw === "recover" || raw === "communicate" || raw === "operate" || raw === "compliance") {
+    return raw;
+  }
+  return legacyStoreOutcomeAliases[raw] ?? null;
+}
+
+/**
+ * Reserved Compliance children — readiness work only, not certification claims.
+ * Do not merchandise these as HIPAA/PCI/SOC 2 “compliant” badges until DE wires real SKUs.
+ */
+export const complianceReadinessTracks = [
+  { id: "hipaa_readiness", label: "HIPAA Readiness" },
+  { id: "pci_readiness", label: "PCI DSS Readiness" },
+  { id: "soc2_readiness", label: "SOC 2 Readiness" },
+  { id: "cyber_insurance_readiness", label: "Cyber Insurance Readiness" },
+] as const;
 
 export type MerchandisingRailId =
   | "popular"
@@ -77,7 +109,7 @@ export const storePurchasePathFilters: {
   label: string;
   blurb: string;
 }[] = [
-  { id: "checkout", label: "Can checkout", blurb: "Add to cart and purchase online" },
+  { id: "checkout", label: "Can checkout", blurb: "Add to Solution and purchase online" },
   { id: "quote", label: "Quote first", blurb: "Custom, zero-list, or high-touch SKUs" },
 ];
 
@@ -125,34 +157,6 @@ export const storeOutcomes: StoreOutcome[] = [
     accent: "text-rose-300",
   },
   {
-    id: "modernize",
-    label: "Modernize",
-    blurb: "Cloud phone, network, and provisioning",
-    categories: ["ucaas_subscriptions", "ucaas_setup", "networking_managed", "networking_projects", "hardware_provisioning"],
-    skuHints: [
-      "DE-SVC-UC-SEAT-STD-MO",
-      "DE-SVC-NET-MANAGED-CORE-MO",
-      "DE-HW-PROV-ENDPOINT-OT",
-      "DE-SVC-CM-SAAS-MGMT-MO",
-    ],
-    keywords: ["microsoft", "m365", "office 365", "teams", "ucaas", "voip", "wifi", "cloud", "saas"],
-    accent: "text-sky-300",
-  },
-  {
-    id: "compliance",
-    label: "Compliance",
-    blurb: "Policies, assessments, and readiness",
-    categories: ["digital_templates", "digital_assessments"],
-    skuHints: [
-      "DE-DIG-TPL-POLICY-CORE-OT",
-      "DE-DIG-TPL-POLICY-ADV-OT",
-      "DE-DIG-ASMT-CSRA-OT",
-      "DE-DIG-TRN-AWARE-BASIC-YR",
-    ],
-    keywords: ["compliance", "policy", "audit", "hipaa readiness", "soc readiness", "risk assessment"],
-    accent: "text-amber-300",
-  },
-  {
     id: "recover",
     label: "Recover",
     blurb: "Continuity, IR, and cutover support",
@@ -167,46 +171,54 @@ export const storeOutcomes: StoreOutcome[] = [
     accent: "text-orange-300",
   },
   {
-    id: "support_it",
-    label: "Support IT Team",
-    blurb: "Helpdesk overflow and consulting",
-    categories: ["comanaged_subscriptions", "professional_services", "comanaged_onboarding"],
+    id: "communicate",
+    label: "Communicate",
+    blurb: "Calling, meetings, and unified communications",
+    categories: ["ucaas_subscriptions", "ucaas_setup"],
     skuHints: [
-      "DE-SVC-CM-HELPDESK-ASSIST-MO",
-      "DE-SVC-BLK-5HR-OT",
-      "DE-SVC-BLK-10HR-OT",
-      "DE-SVC-CONSULT-SYS-HR",
+      "DE-SVC-UC-SEAT-STD-MO",
+      "DE-SVC-UC-SEAT-PRO-MO",
     ],
-    keywords: ["helpdesk", "support", "ticket", "overflow", "vCIO", "consulting", "it team"],
-    accent: "text-emerald-300",
+    keywords: ["ucaas", "voip", "calling", "meetings", "phone", "teams voice", "communications"],
+    accent: "text-sky-300",
   },
   {
-    id: "outsource",
-    label: "Outsource",
-    blurb: "Full managed packages & custom builds",
-    categories: ["contract_services", "comanaged_subscriptions"],
+    id: "operate",
+    label: "Operate",
+    blurb: "Helpdesk, network, and managed operating packages",
+    categories: [
+      "contract_services",
+      "comanaged_onboarding",
+      "networking_managed",
+      "networking_projects",
+      "hardware_provisioning",
+      "professional_services",
+    ],
     skuHints: [
+      "DE-SVC-CM-HELPDESK-ASSIST-MO",
+      "DE-SVC-NET-MANAGED-CORE-MO",
       "DE-SVC-MGD-OFFICE-MO",
       "DE-SVC-MGD-BUSINESS-MO",
       "DE-SVC-MGD-ENTERPRISE-MO",
-      "DE-SVC-COMANAGED-CUSTOM-MO",
+      "DE-SVC-BLK-5HR-OT",
+      "DE-HW-PROV-ENDPOINT-OT",
     ],
-    keywords: ["managed", "outsource", "msp", "proactive", "full service", "ecosystem"],
-    accent: "text-lime-300",
+    keywords: ["helpdesk", "support", "managed", "network", "wifi", "provisioning", "msp", "vCIO"],
+    accent: "text-emerald-300",
   },
   {
-    id: "secure_remote",
-    label: "Secure Remote",
-    blurb: "Identity, endpoints, and remote-ready tooling",
-    categories: ["comanaged_subscriptions", "hardware_provisioning", "ucaas_subscriptions"],
+    id: "compliance",
+    label: "Compliance",
+    blurb: "Policies, assessments, and audit readiness",
+    categories: ["digital_templates", "digital_assessments"],
     skuHints: [
-      "DE-SVC-CM-IDENTITY-CORE-MO",
-      "DE-SVC-CM-ENDPOINT-CORE-MO",
-      "DE-HW-PROV-ENDPOINT-OT",
-      "DE-SVC-UC-SEAT-PRO-MO",
+      "DE-DIG-TPL-POLICY-CORE-OT",
+      "DE-DIG-TPL-POLICY-ADV-OT",
+      "DE-DIG-ASMT-CSRA-OT",
+      "DE-DIG-TRN-AWARE-BASIC-YR",
     ],
-    keywords: ["remote", "wfh", "hybrid", "sso", "mfa", "identity", "vpn", "laptop"],
-    accent: "text-cyan-300",
+    keywords: ["compliance", "policy", "audit", "readiness", "risk assessment", "evidence"],
+    accent: "text-amber-300",
   },
 ];
 
@@ -634,6 +646,12 @@ export const outcomeLeads: Record<string, string> = {
 
 export function getOutcomeLead(product: StoreProduct): string {
   return outcomeLeads[product.sku] || product.shortDescription || product.description;
+}
+
+/** Outcome label only when the SKU is explicitly hinted — never invented. */
+export function getBestForLabel(product: StoreProduct): string | null {
+  const hinted = storeOutcomes.find((outcome) => outcome.skuHints.includes(product.sku));
+  return hinted?.label ?? null;
 }
 
 /** Soft discovery tags for cards (not rainbow category paint). */
@@ -1234,7 +1252,7 @@ export type GuidedBuyingAnswers = {
   locations: "1" | "2-5" | "6+";
   productivity: "m365" | "google" | "mixed" | "unsure";
   itStaff: "internal" | "none" | "partial";
-  objective: "protect" | "modernize" | "compliance" | "recover" | "support_it" | "outsource";
+  objective: StoreOutcomeId;
 };
 
 export type GuidedRecommendation = {
@@ -1267,7 +1285,7 @@ export function buildGuidedRecommendation(answers: GuidedBuyingAnswers): GuidedR
   const seats = sizeToSeats(answers.companySize);
   const skus: string[] = [];
 
-  if (answers.itStaff === "none" || answers.objective === "outsource") {
+  if (answers.itStaff === "none" || answers.objective === "operate") {
     // Full managed packages are consult/contract — recommend a buyable co-managed starter instead.
     skus.push(
       "DE-SVC-CM-ENDPOINT-CORE-MO",
@@ -1284,7 +1302,7 @@ export function buildGuidedRecommendation(answers: GuidedBuyingAnswers): GuidedR
     if (answers.productivity === "m365" || answers.productivity === "mixed") {
       skus.push("DE-SVC-CM-SAAS-MGMT-MO");
     }
-    if (answers.itStaff === "partial" || answers.objective === "support_it") {
+    if (answers.itStaff === "partial") {
       skus.push("DE-SVC-CM-HELPDESK-ASSIST-MO");
     }
   }
@@ -1292,8 +1310,11 @@ export function buildGuidedRecommendation(answers: GuidedBuyingAnswers): GuidedR
   if (answers.objective === "recover") {
     skus.push("DE-DIG-TPL-BCP-OT", "DE-DIG-TPL-IR-RUNBOOK-OT");
   }
-  if (answers.objective === "modernize") {
-    skus.push("DE-SVC-UC-SEAT-STD-MO", "DE-SVC-NET-MANAGED-CORE-MO");
+  if (answers.objective === "communicate") {
+    skus.push("DE-SVC-UC-SEAT-STD-MO");
+  }
+  if (answers.objective === "operate" && answers.itStaff !== "none") {
+    skus.push("DE-SVC-NET-MANAGED-CORE-MO");
   }
   if (
     answers.objective === "compliance" ||
@@ -1354,7 +1375,7 @@ export function buildGuidedRecommendation(answers: GuidedBuyingAnswers): GuidedR
   return {
     headline: `Recommended for your ${sizeLabel}`,
     summary: `${
-      answers.itStaff === "none" || answers.objective === "outsource"
+      answers.itStaff === "none" || answers.objective === "operate"
         ? "Checkout-ready co-managed starter (full managed packages are consultative). "
         : ""
     }Starting stack for a ${industryLabel} shop${

@@ -9,6 +9,7 @@ import {
   type StoreProduct,
 } from "@/data/storeProducts";
 import {
+  getBestForLabel,
   getIncludedInHint,
   getOutcomeLead,
   getProductBySku,
@@ -18,6 +19,8 @@ import {
 } from "@/data/storeMerchandising";
 import { getProductVisual } from "@/data/productImages";
 import { ProductMedia } from "@/components/store/ProductMedia";
+import { useCart } from "@/contexts/CartContext";
+import { getSolutionChips } from "@/lib/storeSolutionIntelligence";
 
 /**
  * Soft accent colors — pills only, not whole-card rainbow.
@@ -90,6 +93,12 @@ export function StoreProductCard({
     .slice(0, 2) as string[];
   const visual = getProductVisual(product);
   const vendor = visual.vendor;
+  const { items } = useCart();
+  const solutionChips = getSolutionChips(
+    product,
+    items.map((item) => item.product),
+  );
+  const bestFor = getBestForLabel(product);
 
   return (
     <article
@@ -159,6 +168,9 @@ export function StoreProductCard({
         >
           {getOutcomeLead(product)}
         </p>
+        {bestFor && (
+          <p className="mb-3 text-sm text-white/55">Best for: {bestFor}</p>
+        )}
 
         {!compact && (
           <ul className="mb-4 space-y-2">
@@ -185,13 +197,26 @@ export function StoreProductCard({
           ))}
         </div>
 
-        {(includedHint || worksWithNames.length > 0 || relationships?.upgradeTo?.length) && (
+        {(includedHint || worksWithNames.length > 0 || relationships?.upgradeTo?.length || solutionChips.length > 0) && (
           <div className="mb-4 space-y-1 text-sm text-de-accent-ink/90">
             {includedHint && (
               <p data-testid={`included-hint-${product.id}`}>{includedHint}</p>
             )}
             {worksWithNames.length > 0 && (
               <p className="text-white/55">Works with: {worksWithNames.join(", ")}</p>
+            )}
+            {solutionChips.length > 0 && (
+              <div className="flex flex-wrap gap-1.5" aria-label="Solution status">
+                {solutionChips.map((chip) => (
+                  <span
+                    key={chip.label}
+                    className="inline-flex items-center rounded-full border border-de-hairline bg-de-raised px-2 py-0.5 text-xs text-white/70"
+                    data-testid={`solution-chip-${product.id}`}
+                  >
+                    {chip.label}
+                  </span>
+                ))}
+              </div>
             )}
             {relationships?.upgradeTo?.[0] && (
               <p className="text-white/55">
@@ -285,7 +310,7 @@ export function StoreProductCard({
                 data-testid={`button-add-${product.id}`}
               >
                 <ShoppingCart className="mr-1.5 h-4 w-4" />
-                Add
+                Add to Solution
               </Button>
             )}
           </div>

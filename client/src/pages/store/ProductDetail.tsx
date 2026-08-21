@@ -50,10 +50,15 @@ import {
   type ConfigureConfirmPayload,
 } from "@/components/store/ConfigureProductDrawer";
 import { StoreTrustStrip } from "@/components/store/StoreTrustStrip";
+import { PRIMARY_PHONE } from "@/data/companyContact";
+import { getSolutionChips, recommendationWhy } from "@/lib/storeSolutionIntelligence";
+import { computeSolutionSnapshot } from "@shared/storeCommerce";
+import { formatSnapshotMoney } from "@/lib/solutionSnapshotView";
+import { cn } from "@/lib/utils";
 
 const ProductDetail = () => {
   const { sku } = useParams<{ sku: string }>();
-  const { addToCart, openCart, setClientPricing } = useCart();
+  const { addToCart, openCart, setClientPricing, items } = useCart();
   const { toast } = useToast();
   const [quantity, setQuantity] = useState(1);
   const [configureOpen, setConfigureOpen] = useState(false);
@@ -123,6 +128,14 @@ const ProductDetail = () => {
   const seoImage = visual.heroUrl.startsWith("http")
     ? visual.heroUrl
     : `https://digeratiexperts.com${visual.heroUrl}`;
+  const solutionChips = getSolutionChips(
+    product,
+    items.map((item) => item.product),
+  );
+  const previewLine = computeSolutionSnapshot(
+    [{ productId: product.id, sku: product.sku, quantity }],
+    storeProducts,
+  ).lines[0];
 
   const handleQuantityChange = (delta: number) => {
     setQuantity((prev) => Math.max(minQty, prev + delta));
@@ -131,8 +144,8 @@ const ProductDetail = () => {
   const handleAddToCart = () => {
     addToCart(product, quantity, productPricing.price);
     toast({
-      title: "Added to Cart",
-      description: `${quantity}x ${product.name} has been added to your cart.`,
+      title: "Added to Solution",
+      description: `${quantity}x ${product.name} has been added to your solution.`,
     });
     openCart();
   };
@@ -145,8 +158,8 @@ const ProductDetail = () => {
       addToCart(addon, isConfigurableProduct(addon) ? qty : 1, price);
     });
     toast({
-      title: "Added to Cart",
-      description: `${qty}x ${configured.name} has been added to your cart.`,
+      title: "Added to Solution",
+      description: `${qty}x ${configured.name} has been added to your solution.`,
     });
     openCart();
     setConfigureOpen(false);
@@ -245,6 +258,23 @@ const ProductDetail = () => {
               <p className="mb-3 text-lg font-medium leading-relaxed text-white/85">
                 {getOutcomeLead(product)}
               </p>
+              {solutionChips.length > 0 && (
+                <div className="mb-4 flex flex-wrap gap-2" aria-label="Solution status">
+                  {solutionChips.map((chip) => (
+                    <span
+                      key={`${chip.kind}-${chip.label}`}
+                      className={cn(
+                        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium",
+                        chip.kind === "in_solution"
+                          ? "border-[#D3126A]/50 bg-[#D3126A]/10 text-[#F7A8C8]"
+                          : "border-de-hairline bg-de-raised text-white/70",
+                      )}
+                    >
+                      {chip.label}
+                    </span>
+                  ))}
+                </div>
+              )}
               <p
                 className="mb-6 text-base leading-relaxed text-white/60"
                 data-testid="product-description"
@@ -291,14 +321,11 @@ const ProductDetail = () => {
                         className="text-3xl font-bold text-de-accent-ink"
                         data-testid="product-price"
                       >
-                        ${productPricing.price.toFixed(2)}
+                        {formatPrice(product, productPricing.price)}
                       </span>
                       <span className="text-xl text-white/55 line-through">
-                        ${product.basePrice.toFixed(2)}
+                        {formatPrice(product)}
                       </span>
-                      {product.pricingUnit && (
-                        <span className="text-sm text-white/50">per {product.pricingUnit}</span>
-                      )}
                     </div>
                     <div className="flex items-center gap-2 text-de-accent-ink">
                       <Tag className="h-4 w-4" />
@@ -315,9 +342,6 @@ const ProductDetail = () => {
                     >
                       {formatPrice(product)}
                     </span>
-                    {product.pricingUnit && (
-                      <span className="ml-2 text-sm text-white/50">per {product.pricingUnit}</span>
-                    )}
                     {!isLoggedIn && (
                       <div className="mt-2">
                         <Button
@@ -328,11 +352,21 @@ const ProductDetail = () => {
                           data-testid="button-login-for-pricing"
                         >
                           <User className="mr-1 h-3 w-3" />
-                          Log in for potential client pricing
+                          Sign in to view your client pricing
                         </Button>
                       </div>
                     )}
                   </div>
+                )}
+                {previewLine && (
+                  <p className="mt-3 text-sm text-white/55" data-testid="product-line-total">
+                    Line total · {formatSnapshotMoney(previewLine.lineTotal)}
+                    {previewLine.bucket === "monthly"
+                      ? " / month"
+                      : previewLine.bucket === "annual"
+                        ? " / year"
+                        : " due today"}
+                  </p>
                 )}
               </div>
 
@@ -365,12 +399,12 @@ const ProductDetail = () => {
                   </a>
                 </Button>
                   <a
-                    href="tel:+13254809870"
+                    href={PRIMARY_PHONE.telHref}
                     className="flex h-12 w-full items-center justify-center gap-2 rounded-md border border-white/15 text-white/80 transition-colors hover:bg-white/5 hover:text-white"
                     data-testid="button-call-product"
                   >
                     <Phone className="h-5 w-5" />
-                    Call 325-480-9870
+                    Call {PRIMARY_PHONE.display}
                   </a>
                 </div>
               ) : (
@@ -454,7 +488,7 @@ const ProductDetail = () => {
                         data-testid="button-add-to-cart"
                       >
                         <ShoppingCart className="mr-2 h-5 w-5" />
-                        Add to Cart - ${(productPricing.price * quantity).toFixed(2)}
+                        Add to Solution — ${(productPricing.price * quantity).toFixed(2)}
                         {productPricing.hasDiscount && (
                           <span className="ml-2 text-sm text-de-accent-ink">
                             (You save $
@@ -477,12 +511,12 @@ const ProductDetail = () => {
 
                   <div className="grid gap-2 sm:grid-cols-2">
                     <a
-                      href="tel:+13254809870"
+                      href={PRIMARY_PHONE.telHref}
                       className="flex h-11 items-center justify-center gap-2 rounded-md border border-white/15 text-sm text-white/75 transition-colors hover:bg-white/5 hover:text-white"
                       data-testid="button-call-product"
                     >
                       <Phone className="h-4 w-4" />
-                      325-480-9870
+                      {PRIMARY_PHONE.display}
                     </a>
                     <a
                       href="/book"
@@ -531,7 +565,7 @@ const ProductDetail = () => {
                                   {related.name}
                                 </span>
                                 <span className="block text-sm text-white/55 line-clamp-1">
-                                  {getOutcomeLead(related)}
+                                  {recommendationWhy(related, [product]) ?? getOutcomeLead(related)}
                                 </span>
                               </span>
                               <ArrowRight className="h-4 w-4 flex-shrink-0 text-white/55 group-hover:text-de-accent-ink" />
@@ -579,7 +613,7 @@ const ProductDetail = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <h2 className="mb-6 text-2xl font-bold text-white">Related products</h2>
+              <h2 className="mb-6 text-2xl font-bold text-white">Recommended with this service</h2>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 {relatedProducts.map((related) => (
                   <Link key={related.id} href={`/store/product/${related.sku}`}>
@@ -600,7 +634,7 @@ const ProductDetail = () => {
                           {related.name}
                         </h3>
                         <p className="mb-3 line-clamp-2 text-sm text-white/50">
-                          {getOutcomeLead(related)}
+                          {recommendationWhy(related, [product]) ?? getOutcomeLead(related)}
                         </p>
                         <div className="flex items-center justify-between">
                           <span className="font-semibold text-de-accent-ink">
@@ -640,7 +674,7 @@ const ProductDetail = () => {
                 className="bg-de-accent text-white hover:bg-[#6548ff]"
                 onClick={handleAddToCart}
               >
-                Add
+                Add to Solution
               </Button>
             )}
           </div>

@@ -2,6 +2,7 @@ import { PageTemplate } from "@/components/PageTemplate";
 import { Calendar, Phone, Shield, Clock, CheckCircle } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { ZohoBookingWidget } from "@/components/ZohoBookingWidget";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function BookingPage() {
   useSEO({
@@ -63,12 +64,12 @@ export default function BookingPage() {
                 Prefer to Call?
               </h3>
               <a
-                href="tel:+13254809870"
+                href={PRIMARY_PHONE.telHref}
                 className="flex items-center gap-3 font-semibold text-white transition-colors hover:text-[#D3126A]"
                 data-testid="link-phone-booking"
               >
                 <Phone className="h-5 w-5 text-[#D3126A]" />
-                <span className="text-lg">325-480-9870</span>
+                <span className="text-lg">{PRIMARY_PHONE.display}</span>
               </a>
             </div>
 

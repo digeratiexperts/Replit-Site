@@ -1,6 +1,7 @@
 import { billingLabel, money } from "@shared/storeCommerce";
 import type { CanonicalQuoteLine, QuoteTotals } from "./storeQuoteCommerce";
 import { quoteTotals } from "./storeQuoteCommerce";
+import { PRIMARY_PHONE } from "@shared/companyContact";
 
 export type QuotePdfInput = {
   quoteNumber: string;
@@ -106,7 +107,7 @@ export function buildQuotePdf(quote: QuotePdfInput): Buffer {
 
   body.push(
     "Digerati Experts  |  digeratiexperts.com",
-    "Questions: sales@digerati-experts.com  |  325-480-9870",
+    `Questions: sales@digerati-experts.com   |  ${PRIMARY_PHONE.display}`,
   );
 
   const filtered = body.filter((line) => line !== undefined);

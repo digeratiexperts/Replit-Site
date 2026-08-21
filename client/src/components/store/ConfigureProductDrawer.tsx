@@ -14,6 +14,7 @@ import {
   isConfigurableProduct,
 } from "@/data/storeMerchandising";
 import { ProductMedia } from "@/components/store/ProductMedia";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export interface ConfigureConfirmPayload {
   product: StoreProduct;
@@ -404,7 +405,7 @@ export function ConfigureProductDrawer({
                 onClick={() => onConfirm(buildPayload())}
                 data-testid="button-add-configured"
               >
-                Add to Solution Cart
+                Add to Solution
               </Button>
               {onRequestQuote && (
                 <Button
@@ -418,12 +419,12 @@ export function ConfigureProductDrawer({
                 </Button>
               )}
               <a
-                href="tel:+13254809870"
+                href={PRIMARY_PHONE.telHref}
                 className="flex h-11 w-full items-center justify-center gap-2 rounded-md border border-white/15 text-sm text-white/75 transition-colors hover:bg-white/5 hover:text-white"
                 data-testid="link-configure-call"
               >
                 <Phone className="h-4 w-4" />
-                Need help sizing? 325-480-9870
+                Need help sizing? {PRIMARY_PHONE.display}
               </a>
             </div>
           </motion.aside>

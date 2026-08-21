@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { PortalLayout } from "./PortalLayout";
 import { ArrowLeft, Printer, Download, Package, CreditCard, MapPin, HelpCircle, CheckCircle, Clock, Mail, Phone } from "lucide-react";
 import { portalGet } from "@/lib/portalApi";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 interface LineItem {
   sku: string;
@@ -383,12 +384,12 @@ export default function PortalOrderDetail() {
                     support@digeratiexperts.com
                   </a>
                   <a
-                    href="tel:+13254809870"
+                    href={PRIMARY_PHONE.telHref}
                     className="flex items-center gap-2 text-[#D3126A] hover:underline"
                     data-testid="link-support-phone"
                   >
                     <Phone className="h-4 w-4" />
-                    325-480-9870
+                    {PRIMARY_PHONE.display}
                   </a>
                 </div>
                 <Link href="/portal/tickets/create">

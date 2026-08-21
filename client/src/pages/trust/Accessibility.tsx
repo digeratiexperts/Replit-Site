@@ -2,6 +2,7 @@ import { PageTemplate } from "@/components/PageTemplate";
 import { Card, CardContent } from "@/components/ui/card";
 import { Eye, Mail, Phone, MapPin, CheckCircle, Monitor, Ear, Hand, Brain } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function Accessibility() {
   const prefersReducedMotion = useReducedMotion() ?? false;
@@ -208,7 +209,7 @@ export default function Accessibility() {
             </div>
             <div className="flex items-center gap-3 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
               <Phone className="w-5 h-5 text-de-magenta-ink" />
-              <span className="text-gray-300">325-480-9870</span>
+              <span className="text-gray-300">{PRIMARY_PHONE.display}</span>
             </div>
             <div className="flex items-center gap-3 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
               <MapPin className="w-5 h-5 text-de-magenta-ink" />

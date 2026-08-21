@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, AlertCircle, Shield, Lock, DollarSign, TrendingDown } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { CTA } from "@/lib/ctaCopy";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function RealEstate() {
   useSEO({
@@ -154,7 +155,7 @@ export default function RealEstate() {
           </div>
           <div className="text-center">
             <p className="text-lg font-semibold mb-2">Someone to call</p>
-            <p className="text-white/70 text-sm">Arizona team when a closing looks off — 325-480-9870.</p>
+            <p className="text-white/70 text-sm">Arizona team when a closing looks off — {PRIMARY_PHONE.display}.</p>
           </div>
         </div>
 
@@ -171,11 +172,11 @@ export default function RealEstate() {
               {CTA.primary}
             </a>
             <a 
-              href="tel:+13254809870"
+              href={PRIMARY_PHONE.telHref}
               className="inline-flex items-center justify-center border-2 border-white bg-transparent text-white hover:bg-white/10 px-8 py-3 rounded-lg font-semibold transition-all"
               data-testid="button-call-real-estate"
             >
-              Call 325-480-9870
+              Call {PRIMARY_PHONE.display}
             </a>
           </div>
         </div>

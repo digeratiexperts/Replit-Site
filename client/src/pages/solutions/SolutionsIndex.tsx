@@ -10,6 +10,7 @@ import {
 import { useSEO } from "@/hooks/useSEO";
 import { pricingTiers, getPricingFooterText } from "@/data/pricing";
 import { IconWell } from "@/components/visual/IconWell";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 const SolutionsIndex = () => {
   const prefersReducedMotion = useReducedMotion();
@@ -415,9 +416,9 @@ const SolutionsIndex = () => {
                   className="h-14 px-8 text-lg font-semibold bg-transparent border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50"
                   data-testid="button-call-us"
                 >
-                  <a href="tel:+13254809870">
+                  <a href={PRIMARY_PHONE.telHref}>
                     <Phone className="w-5 h-5 mr-2" />
-                  325-480-9870
+                  {PRIMARY_PHONE.display}
                   </a>
                 </Button>
             </div>

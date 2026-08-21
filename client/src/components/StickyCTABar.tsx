@@ -4,6 +4,7 @@ import { Shield, ArrowRight, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useBooking } from "@/contexts/BookingContext";
 import { CTA } from "@/lib/ctaCopy";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export function StickyCTABar() {
   const [isVisible, setIsVisible] = useState(false);
@@ -120,12 +121,12 @@ export function StickyCTABar() {
 
                 <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
                   <a
-                    href="tel:+13254809870"
+                    href={PRIMARY_PHONE.telHref}
                     className="hidden md:flex items-center gap-2 text-white/75 hover:text-white transition-colors text-base"
                     data-testid="link-phone-sticky"
                   >
                     <Phone className="w-4 h-4" />
-                    <span>325-480-9870</span>
+                    <span>{PRIMARY_PHONE.display}</span>
                   </a>
 
                   <Button

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { apiRequest } from "@/lib/queryClient";
 import { CTA } from "@/lib/ctaCopy";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 const PUBLIC_EMAIL_DOMAINS = [
   "gmail.com",
@@ -24,8 +25,6 @@ const BENEFITS = [
 ] as const;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_DISPLAY = "325-480-9870";
-const PHONE_HREF = "tel:+13254809870";
 
 interface ExitIntentPopupProps {
   delay?: number;
@@ -203,7 +202,7 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
         handleClose();
       }, 4000);
     } catch {
-      setSubmitError("We couldn’t send that. Try again, or call us at 325-480-9870.");
+      setSubmitError(`We couldn’t send that. Try again, or call us at ${PRIMARY_PHONE.display}.`);
     } finally {
       setIsSubmitting(false);
     }
@@ -358,11 +357,11 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
                         <p className="text-[15px] font-medium text-[#2A2438]">
                           Prefer to call?{" "}
                           <a
-                            href={PHONE_HREF}
+                            href={PRIMARY_PHONE.telHref}
                             className="font-semibold text-[#1A1228] underline-offset-2 hover:text-[#D3126A] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]"
                           >
                             <Phone className="mr-1 inline h-3.5 w-3.5 align-[-2px]" aria-hidden="true" />
-                            {PHONE_DISPLAY}
+                            {PRIMARY_PHONE.display}
                           </a>
                         </p>
                         <p className="text-[13px] font-medium leading-relaxed text-[#5A5368]">

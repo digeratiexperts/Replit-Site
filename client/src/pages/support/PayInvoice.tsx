@@ -1,6 +1,7 @@
 import { PageTemplate } from "@/components/PageTemplate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, CreditCard, Lock, Download, Zap, Shield, ExternalLink, ArrowRight } from "lucide-react";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 const PORTAL_LOGIN = "https://portal.digeratiexperts.com/portal/login";
 const PORTAL_INVOICES = "https://portal.digeratiexperts.com/portal/invoices";
@@ -144,7 +145,7 @@ export default function PayInvoice() {
               Contact Support
             </a>
             <a 
-              href="tel:+13254809870"
+              href={PRIMARY_PHONE.telHref}
               className="inline-flex items-center justify-center border-2 border-green-500 text-green-400 hover:bg-green-500/10 px-8 py-3 rounded-lg font-semibold transition-all"
               data-testid="button-call-payment"
             >

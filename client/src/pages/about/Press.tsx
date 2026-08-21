@@ -3,6 +3,7 @@ import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhanced
 import { useSEO } from "@/hooks/useSEO";
 import { JsonLd } from "@/components/JsonLd";
 import { Link } from "wouter";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 const NAP = {
   name: "Digerati Experts",
@@ -10,7 +11,7 @@ const NAP = {
   city: "Chandler",
   region: "AZ",
   postal: "85248",
-  phone: "325-480-9870",
+  phone: PRIMARY_PHONE.display,
   email: "info@digeratiexperts.com",
 };
 
@@ -37,7 +38,7 @@ export default function Press() {
             name: NAP.name,
             url: "https://digeratiexperts.com",
             email: NAP.email,
-            telephone: "+1-325-480-9870",
+            telephone: PRIMARY_PHONE.schemaTelephone,
             address: {
               "@type": "PostalAddress",
               streetAddress: NAP.street,
@@ -78,7 +79,7 @@ export default function Press() {
             {NAP.city}, {NAP.region} {NAP.postal}
             <br />
             Phone:{" "}
-            <a className="text-de-magenta-ink underline-offset-2 hover:underline" href="tel:+13254809870">
+            <a className="text-de-magenta-ink underline-offset-2 hover:underline" href={PRIMARY_PHONE.telHref}>
               {NAP.phone}
             </a>
             <br />

@@ -6,6 +6,7 @@ import { useLocation } from "wouter";
 import { analytics } from "@/lib/analytics";
 import type { OpenMspAdvisorDetail } from "@/lib/openMspAdvisor";
 import { STORE_ADVISOR_SEED } from "@/lib/openMspAdvisor";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 type PageType =
   | "home"
@@ -196,7 +197,7 @@ export function VirtualMspAdvisor() {
           role: "assistant",
           content:
             e?.message ||
-            "I'm having trouble responding right now. Call 325-480-9870 or book at meet.digerati-experts.com.",
+            `I'm having trouble responding right now. Call ${PRIMARY_PHONE.display} or book at meet.digerati-experts.com.`,
         },
       ]);
     } finally {
@@ -502,7 +503,7 @@ export function VirtualMspAdvisor() {
             </Button>
           </form>
           <div className="px-3 pb-2 bg-white text-xs text-slate-400 text-center">
-            Not a general chatbot · Digerati Experts · 325-480-9870
+            Not a general chatbot · Digerati Experts · {PRIMARY_PHONE.display}
           </div>
         </div>
       )}

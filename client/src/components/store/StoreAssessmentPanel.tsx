@@ -3,6 +3,7 @@ import { ArrowRight, Calendar, ClipboardList, MessageCircle } from "lucide-react
 import { Button } from "@/components/ui/button";
 import { openMspAdvisor } from "@/lib/openMspAdvisor";
 import { CTA } from "@/lib/ctaCopy";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 interface StoreAssessmentPanelProps {
   variant?: "sticky" | "inline";
@@ -68,8 +69,8 @@ export function StoreAssessmentPanel({
         </div>
         <p className="mt-3 text-xs text-white/55">
           Or call{" "}
-          <a href="tel:+13254809870" className="text-de-accent-ink hover:underline">
-            325-480-9870
+          <a href={PRIMARY_PHONE.telHref} className="text-de-accent-ink hover:underline">
+            {PRIMARY_PHONE.display}
           </a>
         </p>
       </div>

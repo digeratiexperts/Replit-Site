@@ -30,6 +30,7 @@ import { useToast } from "@/hooks/use-toast";
 import { CoverageScorePanel } from "@/components/store/CoverageScorePanel";
 import { analytics } from "@/lib/analytics";
 import { CTA } from "@/lib/ctaCopy";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export function ShoppingCart() {
   const {
@@ -434,11 +435,11 @@ export function ShoppingCart() {
                       Estimated onboarding: typically 7–10 business days after kickoff (varies by
                       stack). Questions?{" "}
                       <a
-                        href="tel:+13254809870"
+                        href={PRIMARY_PHONE.telHref}
                         className="inline-flex items-center gap-1 text-de-accent-ink hover:text-de-accent-ink"
                       >
                         <Phone className="h-3 w-3" />
-                        325-480-9870
+                        {PRIMARY_PHONE.display}
                       </a>
                     </p>
                   </>
@@ -458,7 +459,7 @@ export function ShoppingCart() {
                   {totals.monthly > 0 && (
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-white/60">Monthly</span>
-                      <span className="text-white">${totals.monthly.toFixed(2)}/mo</span>
+                      <span className="text-white">${totals.monthly.toFixed(2)} / month</span>
                     </div>
                   )}
                   {totals.annual > 0 && (

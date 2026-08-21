@@ -11,22 +11,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useSEO } from "@/hooks/useSEO";
-import { useCart, isRecurringPricing } from "@/contexts/CartContext";
+import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
-import { type PricingType } from "@/data/storeProducts";
+import { SolutionOrderSummary } from "@/components/store/SolutionOrderSummary";
+import { snapshotSubmitLines } from "@/lib/solutionSnapshotView";
 import {
   ArrowLeft,
   FileText,
   MessageSquare,
   Loader2,
   Package,
-  RefreshCw,
   CheckCircle,
 } from "lucide-react";
-
-const formatCurrency = (amount: number): string => {
-  return `$${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-};
 
 const quoteRequestSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -38,21 +34,9 @@ const quoteRequestSchema = z.object({
 
 type QuoteRequestFormData = z.infer<typeof quoteRequestSchema>;
 
-const pricingUnitLabels: Record<string, string> = {
-  monthly: "/mo",
-  yearly: "/yr",
-  per_user: "/user/mo",
-  per_endpoint: "/endpoint/mo",
-  per_device: "/device/mo",
-  per_location: "/location/mo",
-  per_seat: "/seat/mo",
-  one_time: "",
-  per_hour: "/hr",
-};
-
 const QuoteRequest = () => {
   const [, navigate] = useLocation();
-  const { items, getCartTotal, clearCart } = useCart();
+  const { items, snapshot, clearCart } = useCart();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -78,18 +62,11 @@ const QuoteRequest = () => {
     },
   });
 
-  const getPricingLabel = (pricingType: PricingType) => {
-    return pricingUnitLabels[pricingType] || "";
-  };
-
-  const recurringItems = items.filter((item) => isRecurringPricing(item.product.pricingType));
-  const oneTimeItems = items.filter((item) => !isRecurringPricing(item.product.pricingType));
-
   const onSubmit = async (data: QuoteRequestFormData) => {
     if (items.length === 0) {
       toast({
         title: "No Items",
-        description: "Please add items to your cart before requesting a quote.",
+        description: "Please add items to your solution before requesting a quote.",
         variant: "destructive",
       });
       return;
@@ -97,15 +74,7 @@ const QuoteRequest = () => {
 
     setIsSubmitting(true);
     try {
-      const requestedItems = items.map((item) => ({
-        productId: item.product.id,
-        sku: item.product.sku,
-        name: item.product.name,
-        quantity: item.quantity,
-        unitPrice: item.product.basePrice,
-        pricingType: item.product.pricingType,
-        total: item.product.basePrice * item.quantity,
-      }));
+      const requestedItems = snapshotSubmitLines(snapshot);
 
       const portalToken = localStorage.getItem("portalToken");
       if (!portalToken) {
@@ -171,7 +140,7 @@ const QuoteRequest = () => {
                 No Items to Quote
               </h1>
               <p className="text-white/60 mb-8" data-testid="text-empty-cart-message">
-                Add items to your cart before requesting a quote.
+                Add items to your solution before requesting a quote.
               </p>
               <Link href="/store">
                 <Button className="bg-de-accent hover:bg-de-accent text-white" data-testid="button-browse-store">
@@ -347,100 +316,38 @@ const QuoteRequest = () => {
               </div>
 
               <div className="lg:col-span-2">
-                <div className="bg-white/5 border border-white/10 rounded-xl p-6 sticky top-28" data-testid="section-items-summary">
-                  <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                    <MessageSquare className="w-5 h-5 text-de-accent-ink" />
-                    Items to Quote
-                  </h2>
-
-                  <div className="space-y-4 mb-6">
-                    {recurringItems.length > 0 && (
-                      <div>
-                        <div className="flex items-center gap-2 text-sm text-white/60 mb-3">
-                          <RefreshCw className="w-4 h-4" />
-                          Recurring Services
-                        </div>
-                        {recurringItems.map((item) => (
-                          <div
-                            key={item.product.id}
-                            className="flex justify-between items-start py-3 border-b border-white/10"
-                            data-testid={`quote-item-${item.product.id}`}
-                          >
-                            <div className="flex-1">
-                              <p className="text-white font-medium text-sm">{item.product.name}</p>
-                              <p className="text-white/50 text-xs">
-                                {item.quantity}x {formatCurrency(item.product.basePrice)}
-                                {getPricingLabel(item.product.pricingType)}
-                              </p>
-                            </div>
-                            <p className="text-white font-medium text-sm">
-                              {formatCurrency(item.product.basePrice * item.quantity)}
-                              {getPricingLabel(item.product.pricingType)}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    {oneTimeItems.length > 0 && (
-                      <div>
-                        <div className="flex items-center gap-2 text-sm text-white/60 mb-3">
-                          <Package className="w-4 h-4" />
-                          One-Time Purchases
-                        </div>
-                        {oneTimeItems.map((item) => (
-                          <div
-                            key={item.product.id}
-                            className="flex justify-between items-start py-3 border-b border-white/10"
-                            data-testid={`quote-item-${item.product.id}`}
-                          >
-                            <div className="flex-1">
-                              <p className="text-white font-medium text-sm">{item.product.name}</p>
-                              <p className="text-white/50 text-xs">
-                                {item.quantity}x {formatCurrency(item.product.basePrice)}
-                              </p>
-                            </div>
-                            <p className="text-white font-medium text-sm">
-                              {formatCurrency(item.product.basePrice * item.quantity)}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="border-t border-white/20 pt-4 space-y-2 mb-6">
-                    <div className="flex justify-between text-lg font-semibold">
-                      <span className="text-white">Estimated Total</span>
-                      <span className="text-de-accent-ink" data-testid="text-estimated-total">
-                        {formatCurrency(getCartTotal())}
-                      </span>
-                    </div>
-                    <p className="text-white/50 text-xs">
-                      Final pricing may vary based on your specific requirements
-                    </p>
-                  </div>
-
-                  <Button
-                    type="submit"
-                    form="quote-request-form"
-                    disabled={isSubmitting}
-                    className="w-full bg-de-accent hover:bg-de-accent text-white py-6 text-lg font-semibold"
-                    data-testid="button-submit-quote"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                        Submitting...
-                      </>
-                    ) : (
-                      <>
-                        <MessageSquare className="w-5 h-5 mr-2" />
-                        Submit Quote Request
-                      </>
-                    )}
-                  </Button>
-                </div>
+                <SolutionOrderSummary
+                  snapshot={snapshot}
+                  title="Items to Quote"
+                  titleIcon={<MessageSquare className="h-5 w-5 text-de-accent-ink" />}
+                  testId="section-items-summary"
+                  footer={
+                    <>
+                      <p className="mt-3 text-xs text-white/50">
+                        Final pricing may vary based on your specific requirements
+                      </p>
+                      <Button
+                        type="submit"
+                        form="quote-request-form"
+                        disabled={isSubmitting}
+                        className="mt-6 w-full bg-de-accent py-6 text-lg font-semibold text-white hover:bg-de-accent"
+                        data-testid="button-submit-quote"
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                            Submitting...
+                          </>
+                        ) : (
+                          <>
+                            <MessageSquare className="mr-2 h-5 w-5" />
+                            Submit Quote Request
+                          </>
+                        )}
+                      </Button>
+                    </>
+                  }
+                />
               </div>
             </div>
           </motion.div>

@@ -1,5 +1,6 @@
 import { DE_COMPANY } from "./knowledge";
 import type { AdvisorAction, AdvisorActionType } from "./types";
+import { PRIMARY_PHONE } from "@shared/companyContact";
 
 const ALLOWED_TYPES: AdvisorActionType[] = [
   "schedule_consultation",
@@ -131,7 +132,7 @@ export function defaultActionsForMode(mode?: string): AdvisorAction[] {
   if (mode === "security_incident") {
     return [
       materializeAction("request_callback", "Emergency callback")!,
-      materializeAction("contact_sales", "Call 325-480-9870")!,
+      materializeAction("contact_sales", `Call ${PRIMARY_PHONE.display}`)!,
     ];
   }
   if (mode === "existing_client") {
