@@ -11,8 +11,8 @@ Outer chrome is graphite DE app. Client Tools’ **list only** is a white groupe
 | Shell | `--de-surface` `#0a0a0a` | One outer frame |
 | Shell border | `--de-hairline` `rgba(255,255,255,0.10)` | Single hairline — no lavender glow |
 | Raised | `--de-raised` `#151217` | Inputs, assistant bubbles, tool icon wells on dark |
-| Magenta | `#D3126A` | Active underline, send, submit, featured rail, security action |
-| Violet | `#8B5CF6` | Header lighting only; Fastest badge is a small exception |
+| Magenta | `#D3126A` | Active underline, send, submit, featured rail, Fastest badge, security action, 1px shell cap |
+| Violet | `#8B5CF6` | Do not fill chrome, badges, or wells. Lighting only if used at all. |
 | Ask DE / ticket field | graphite | Light-on-dark transcript and dark raised form fields |
 | Tools list | `#fff` on paper-ink | Grouped launcher rows inside the graphite shell |
 | Tools ink | `#17141F` / `#5C5668` | Titles and blurbs on the white list |
@@ -55,7 +55,7 @@ Authoritative structure for this tab:
    - **Start Remote Support** (`https://assist.zoho.com/`) — Fastest badge + Remote support guide sublink
    - **Help Center** (`/support/knowledge-base`)
    - **Service Status** (`/portal/status`)
-3. Security escape → `selectTab("ticket")` + `applyTicketChip("security-incident")`
+3. **Security escape** → `selectTab("ticket")` + `applyTicketChip("security-incident")` on a graphite raised row with a magenta rail. Do not use a second cream card.
 
 Do **not** put Cyber Risk Assessment, More tools, composer, status strip, or a repeated footer on this tab.
 

@@ -61,6 +61,7 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
   const showPopup = useCallback((force = false) => {
     if (shownRef.current) return;
     if (window.location.pathname.startsWith("/portal")) return;
+    if (document.documentElement.hasAttribute("data-de-desk-open")) return;
     if (!force) {
       try {
         if (sessionStorage.getItem("exitPopupDismissed")) return;
@@ -92,6 +93,18 @@ export function ExitIntentPopup({ delay = 30000 }: ExitIntentPopupProps) {
       /* ignore malformed URLs */
     }
   }, [showPopup]);
+
+  useEffect(() => {
+    if (document.documentElement.hasAttribute("data-de-desk-open")) {
+      setIsVisible(false);
+    }
+    const onDesk = (event: Event) => {
+      const open = !!(event as CustomEvent<{ open?: boolean }>).detail?.open;
+      if (open) setIsVisible(false);
+    };
+    window.addEventListener("de-desk-open-change", onDesk as EventListener);
+    return () => window.removeEventListener("de-desk-open-change", onDesk as EventListener);
+  }, []);
 
   useEffect(() => {
     if (window.location.pathname.startsWith("/portal")) return;

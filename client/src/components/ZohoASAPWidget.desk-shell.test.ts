@@ -25,4 +25,20 @@ describe("DE Desk shell positioning", () => {
     expect(src).toMatch(/ignoreDismissUntilRef/);
     expect(src).toMatch(/Date\.now\(\) \+ 400/);
   });
+
+  it("keeps graphite chrome with a magenta cap instead of purple-wash or cream fields", () => {
+    expect(src).toMatch(/inset 0 1px 0 #D3126A/);
+    expect(src).toMatch(/\.de-desk-shell::before \{\s*content:\s*none;/);
+    expect(src).toMatch(/background: var\(--de-raised, #151217\) !important;/);
+    expect(src).not.toMatch(/radial-gradient\(ellipse 70% 36% at 50% 0%, rgba\(91,69,224/);
+    expect(src).not.toMatch(/background:\s*#fcfaf7/);
+    expect(src).toMatch(/import \{ PORTAL_LOGIN \} from "@\/lib\/portalUrls"/);
+    expect(src).toMatch(/href: PORTAL_LOGIN/);
+    expect(src).not.toMatch(/\/\/login/);
+  });
+
+  it("keeps Get Support optional fields behind a distinct control, not a second Details label", () => {
+    expect(src).toMatch(/Add company, category, or a file/);
+    expect(src).not.toMatch(/>More details</);
+  });
 });

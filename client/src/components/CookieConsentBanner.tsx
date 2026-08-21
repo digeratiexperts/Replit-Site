@@ -19,6 +19,7 @@ export function CookieConsentBanner() {
   const [showPreferences, setShowPreferences] = useState(false);
   const [analyticsEnabled, setAnalyticsEnabled] = useState(true);
   const [marketingEnabled, setMarketingEnabled] = useState(true);
+  const [deskOpen, setDeskOpen] = useState(false);
   const bannerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -29,9 +30,19 @@ export function CookieConsentBanner() {
   }, []);
 
   useEffect(() => {
+    const onDesk = (event: Event) => {
+      const open = !!(event as CustomEvent<{ open?: boolean }>).detail?.open;
+      setDeskOpen(open);
+      if (open) setShowPreferences(false);
+    };
+    window.addEventListener("de-desk-open-change", onDesk as EventListener);
+    return () => window.removeEventListener("de-desk-open-change", onDesk as EventListener);
+  }, []);
+
+  useEffect(() => {
     const root = document.documentElement;
     const el = bannerRef.current;
-    if (!visible || !el) {
+    if (!visible || !el || deskOpen) {
       root.style.setProperty("--de-cookie-h", "0px");
       return;
     }
@@ -45,7 +56,7 @@ export function CookieConsentBanner() {
       ro.disconnect();
       root.style.setProperty("--de-cookie-h", "0px");
     };
-  }, [visible]);
+  }, [visible, deskOpen]);
 
   const finishConsent = () => {
     setVisible(false);
@@ -72,7 +83,7 @@ export function CookieConsentBanner() {
     <AnimatePresence>
       {visible && (
         <>
-          {showPreferences && (
+          {showPreferences && !deskOpen && (
             <motion.div
               key="prefs-overlay"
               initial={{ opacity: 0 }}
@@ -83,7 +94,7 @@ export function CookieConsentBanner() {
             />
           )}
 
-          {showPreferences && (
+          {showPreferences && !deskOpen && (
             <motion.div
               key="prefs-panel"
               initial={{ opacity: 0, y: 40 }}
@@ -166,8 +177,11 @@ export function CookieConsentBanner() {
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="fixed z-[9991] de-fixed-in-canvas bottom-0"
+            className={`fixed z-[9991] de-fixed-in-canvas bottom-0${
+              deskOpen ? " invisible pointer-events-none" : ""
+            }`}
             data-testid="cookie-consent-banner"
+            aria-hidden={deskOpen || undefined}
           >
             <div
               ref={bannerRef}

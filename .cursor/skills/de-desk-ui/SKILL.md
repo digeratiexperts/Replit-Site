@@ -31,7 +31,7 @@ Rejected (do **not** restore):
 
 - **One shell.** Near-black/graphite field, hairline border, restrained shadow. No second modal, hero card, or inset “window.”
 - **One field for every tab.** Light-on-dark throughout. Do not paint Ask DE cream and the other tabs black.
-- Magenta `#D3126A` is the only loud color: active tab underline, send, submit, selected issue, user bubbles. Violet is **subtle header illumination only**.
+- Magenta `#D3126A` is the only loud color: active tab underline, send, submit, selected issue, user bubbles, Fastest badge, 1px shell cap. Do not fill boxes with violet.
 - **Ask DE** is a conversational UI (conversation first, composer dominant, two quiet suggestion chips).
 - **Get Support** is a service-desk form: issue choices, then dark raised fields, magenta submit.
 - **Client Tools** is a compact launcher: Portal (featured), Remote Support + Fastest + guide, Help Center, Service Status, then a small security escape. No assessment, no More tools, no composer on this tab.
