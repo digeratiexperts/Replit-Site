@@ -19,9 +19,9 @@ Primary file: `client/src/components/ZohoASAPWidget.tsx`. Full playbook: `.curso
 
 | Tab | Job |
 |-----|-----|
-| **Ask DE** | Conversational UI on graphite. Composer dominant. Two quiet chips. |
-| **Get Support** | Issue choices + dark raised form + magenta submit. |
-| **Client Tools** | White grouped launcher: Portal (featured), Remote Support + Fastest + guide, Help Center, Service Status, then security escape → `selectTab("ticket")` + `applyTicketChip("security-incident")`. |
+| **Ask DE** | Conversational UI on graphite. Composer dominant. Discovery chips. |
+| **Get Support** | Incident rail + focused issue list + dark form + magenta submit. |
+| **Client Tools** | Unauth: sign-in front door. Auth: Support / Secure services / Account launcher. Never a fake RMM or portal. |
 
 Do not put Cyber Risk Assessment, billing, or a 2×2 grid on Client Tools.
 

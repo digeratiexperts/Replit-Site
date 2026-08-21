@@ -32,13 +32,19 @@ describe("DE Desk shell positioning", () => {
     expect(src).toMatch(/background: var\(--de-raised, #151217\) !important;/);
     expect(src).not.toMatch(/radial-gradient\(ellipse 70% 36% at 50% 0%, rgba\(91,69,224/);
     expect(src).not.toMatch(/background:\s*#fcfaf7/);
-    expect(src).toMatch(/import \{ PORTAL_LOGIN \} from "@\/lib\/portalUrls"/);
-    expect(src).toMatch(/href: PORTAL_LOGIN/);
+    expect(src).toMatch(/PORTAL_LOGIN/);
+    expect(src).toMatch(/from "@\/lib\/portalUrls"/);
+    expect(src).toMatch(/href=\{PORTAL_LOGIN\}/);
     expect(src).not.toMatch(/\/\/login/);
+    expect(src).toMatch(/Sign in to Client Tools/);
+    expect(src).not.toMatch(/My Devices|Software Library|System Health Check/);
+    expect(src).not.toMatch(/href: "\/portal\/status"/);
   });
 
   it("keeps Get Support optional fields behind a distinct control, not a second Details label", () => {
     expect(src).toMatch(/Add company, category, or a file/);
     expect(src).not.toMatch(/>More details</);
+    expect(src).toMatch(/Possible security incident/);
+    expect(src).toMatch(/What do you need help with\?/);
   });
 });

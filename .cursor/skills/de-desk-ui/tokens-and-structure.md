@@ -33,31 +33,32 @@ Do **not** paint the whole widget paper. Do **not** nest a cream card in a purpl
 
 - Dark transcript. Opening: “DE” avatar + “DE Desk” + green **Available**.
 - Greeting: “DE Desk is here. Describe the outage, the risk, or the question — we'll take it and give you a clear next step.”
-- **Two quiet chips:** “Something isn't working” · “Possible security incident”.
-- Security chip routes to Get Support and applies the incident chip. The other chip sends that line into chat.
+- Discovery chips (IT help, cybersecurity, compliance, evaluating managed IT) plus **Possible security incident** (routes to Get Support).
 - After send: magenta user bubbles; raised assistant bubbles.
 
 ## Get Support
 
-- Lead: “Open a support ticket” / “Tell us what happened. We'll route it to the desk.”
-- Quiet issue choices from `DESK_TICKET_CHIPS`, then Name, Work email, What's happening?, Details, Urgency. Default **Medium**. Selected urgency is magenta, not a white pill.
+- Lead: “Get support” / “Tell us what happened. We'll route it to the desk.”
+- Featured **Possible security incident** rail, then a vertical list from `DESK_STANDARD_TICKET_CHIPS`, then Name, Work email, What's happening?, Details, Urgency. Default **Medium**.
 - Dark raised inputs, white type, magenta **Create ticket**.
 - If the incident chip fired, show “Routed as a possible security incident.”
-- Company, category, attachment behind **More details**.
+- Company, category, attachment behind **Add company, category, or a file**.
 
 ## Client Tools
 
-Authoritative structure for this tab:
+Unauthenticated (default on the marketing site):
 
-1. Intro: “Your client shortcuts” / “Go directly to the tool you need.”
-2. One white grouped list:
-   - **Client Portal** (`PORTAL_LOGIN`) — featured, magenta rail
-   - **Start Remote Support** (`https://assist.zoho.com/`) — Fastest badge + Remote support guide sublink
-   - **Help Center** (`/support/knowledge-base`)
-   - **Service Status** (`/portal/status`)
-3. **Security escape** → `selectTab("ticket")` + `applyTicketChip("security-incident")` on a graphite raised row with a magenta rail. Do not use a second cream card.
+1. “Already a Digerati Experts client?”
+2. Magenta **Sign in to Client Tools** → `PORTAL_LOGIN`
+3. “Need help right now?” → Submit a support request (Get Support tab) and Start remote support (`REMOTE_SUPPORT_HREF`)
 
-Do **not** put Cyber Risk Assessment, More tools, composer, status strip, or a repeated footer on this tab.
+Authenticated (real `/api/portal/me` session only):
+
+- Support: Create ticket, View my tickets, Start remote support
+- Secure services: Secure file exchange, Account & password help
+- Account: Open client portal, Documents & agreements
+
+Do **not** invent service status, devices, software libraries, or vendor product names. Do **not** put Cyber Risk Assessment, More tools, composer, or a repeated footer on this tab.
 
 ## a11y
 

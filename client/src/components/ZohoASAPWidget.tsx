@@ -1,23 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  Activity,
-  AlertTriangle,
-  BookOpen,
   CheckCircle2,
   ChevronRight,
   ExternalLink,
   FileText,
+  FolderLock,
+  KeyRound,
   LayoutGrid,
+  LifeBuoy,
   Lock,
+  LogIn,
   Mail,
   Maximize2,
   Minimize2,
   Monitor,
   MessageCircle,
   Paperclip,
-  Search,
   Send,
-  ShieldCheck,
+  ShieldAlert,
+  Ticket,
   User,
   X,
 } from "lucide-react";
@@ -25,12 +26,22 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
-import { PORTAL_LOGIN } from "@/lib/portalUrls";
+import {
+  PORTAL_CONTRACTS,
+  PORTAL_FILES,
+  PORTAL_HOME,
+  PORTAL_LOGIN,
+  PORTAL_TICKETS,
+  REMOTE_SUPPORT_HREF,
+} from "@/lib/portalUrls";
+import { readPortalUser } from "@/lib/portalRoles";
 import type { OpenMspAdvisorDetail } from "@/lib/openMspAdvisor";
 import { STORE_ADVISOR_SEED } from "@/lib/openMspAdvisor";
 import { analytics } from "@/lib/analytics";
 import { useDraggableWindow } from "@/hooks/useDraggableWindow";
 import {
+  DESK_INCIDENT_CHIP,
+  DESK_STANDARD_TICKET_CHIPS,
   DESK_TICKET_CATEGORIES,
   DESK_TICKET_CHIPS,
   DESK_TICKET_PRIORITIES,
@@ -86,66 +97,42 @@ const QUICK_CHAT_PROMPTS: Array<{
   label: string;
   ticketChip?: DeskTicketChipId;
 }> = [
-  { label: "Something isn't working" },
+  { label: "I need IT help" },
+  { label: "I'm concerned about cybersecurity" },
+  { label: "I need help with compliance" },
+  { label: "I'm evaluating managed IT" },
   { label: "Possible security incident", ticketChip: "security-incident" },
 ];
 
-function BookMagnifier({ className }: { className?: string }) {
-  return (
-    <span className={`relative inline-flex items-center justify-center ${className ?? "h-5 w-5"}`} aria-hidden="true">
-      <BookOpen className="h-full w-full" />
-      <Search className="absolute -bottom-[12%] -right-[14%] h-[58%] w-[58%]" strokeWidth={2.75} />
-    </span>
-  );
+type DeskPortalSession = {
+  fullName?: string | null;
+  email?: string | null;
+};
+
+async function peekDeskPortalSession(): Promise<DeskPortalSession | null> {
+  try {
+    const headers: Record<string, string> = {};
+    const token = typeof window !== "undefined" ? window.localStorage.getItem("portalToken") : null;
+    if (token) headers.Authorization = `Bearer ${token}`;
+    const response = await fetch("/api/portal/me", { credentials: "include", headers });
+    if (!response.ok) return null;
+    const data = (await response.json()) as { user?: DeskPortalSession };
+    const user = data.user;
+    if (!user?.email && !user?.fullName) return null;
+    return { fullName: user.fullName, email: user.email };
+  } catch {
+    return null;
+  }
 }
 
-const RESOURCE_LINKS: Array<{
+type DeskLauncherItem = {
   title: string;
-  description: string;
-  href: string;
-  icon: typeof BookOpen | typeof BookMagnifier;
+  href?: string;
+  icon: typeof FileText;
   external?: boolean;
-  guide?: { title: string; href: string };
-  tone: "pink" | "violet" | "blue" | "teal";
-  featured?: boolean;
-  badge?: string;
-}> = [
-  {
-    title: "Client Portal",
-    description: "Account, tickets, services and client resources.",
-    href: PORTAL_LOGIN,
-    icon: ShieldCheck,
-    tone: "pink",
-    featured: true,
-  },
-  {
-    title: "Start Remote Support",
-    description: "Launch a secure technician support session.",
-    href: "https://assist.zoho.com/",
-    icon: Monitor,
-    external: true,
-    guide: {
-      title: "Remote support guide",
-      href: "/support/remote-support",
-    },
-    tone: "violet",
-    badge: "Fastest",
-  },
-  {
-    title: "Help Center",
-    description: "Guides, common fixes and client documentation.",
-    href: "/support/knowledge-base",
-    icon: BookMagnifier,
-    tone: "teal",
-  },
-  {
-    title: "Service Status",
-    description: "Check availability of DE-managed services.",
-    href: "/portal/status",
-    icon: Activity,
-    tone: "blue",
-  },
-];
+  onSelect?: () => void;
+  testId: string;
+};
 
 export const ZohoASAPWidget = ({
   isEnabled = true,
@@ -155,6 +142,11 @@ export const ZohoASAPWidget = ({
 }: ZohoASAPWidgetProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<ActiveTab>("chat");
+  const [portalSession, setPortalSession] = useState<DeskPortalSession | null>(() => {
+    const cached = typeof window !== "undefined" ? readPortalUser() : null;
+    if (!cached?.email && !cached?.fullName) return null;
+    return { fullName: cached.fullName, email: cached.email };
+  });
   const [location] = useLocation();
   const [advisorSessionId, setAdvisorSessionId] = useState<string | null>(null);
   const [pendingSeed, setPendingSeed] = useState<string | null>(null);
@@ -236,6 +228,24 @@ export const ZohoASAPWidget = ({
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
   }, []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    let cancelled = false;
+    void peekDeskPortalSession().then((session) => {
+      if (cancelled) return;
+      setPortalSession(session);
+      if (session?.email) {
+        setEmail((current) => current || session.email || "");
+      }
+      if (session?.fullName) {
+        setFullName((current) => current || session.fullName || "");
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     // Keep the existing Zoho ASAP bootstrap available for Desk integrations, but
@@ -624,6 +634,72 @@ export const ZohoASAPWidget = ({
     });
   };
 
+  const openSupportWithChip = (chipId: DeskTicketChipId) => {
+    selectTab("ticket");
+    applyTicketChip(chipId);
+  };
+
+  const authToolGroups: Array<{ heading: string; items: DeskLauncherItem[] }> = [
+    {
+      heading: "Support",
+      items: [
+        {
+          title: "Create Support Ticket",
+          icon: Ticket,
+          testId: "resource-link-create-support-ticket",
+          onSelect: () => openSupportWithChip("something-not-working"),
+        },
+        {
+          title: "View My Tickets",
+          href: PORTAL_TICKETS,
+          icon: FileText,
+          testId: "resource-link-view-my-tickets",
+        },
+        {
+          title: "Start Remote Support",
+          href: REMOTE_SUPPORT_HREF,
+          icon: Monitor,
+          external: true,
+          testId: "resource-link-start-remote-support",
+        },
+      ],
+    },
+    {
+      heading: "Secure services",
+      items: [
+        {
+          title: "Secure File Exchange",
+          href: PORTAL_FILES,
+          icon: FolderLock,
+          testId: "resource-link-secure-file-exchange",
+        },
+        {
+          title: "Account & Password Help",
+          icon: KeyRound,
+          testId: "resource-link-account-password-help",
+          onSelect: () => openSupportWithChip("sign-in"),
+        },
+      ],
+    },
+    {
+      heading: "Account",
+      items: [
+        {
+          title: "Open Client Portal",
+          href: PORTAL_HOME,
+          icon: LayoutGrid,
+          testId: "resource-link-open-client-portal",
+        },
+        {
+          title: "Documents & Agreements",
+          href: PORTAL_CONTRACTS,
+          icon: FileText,
+          testId: "resource-link-documents-agreements",
+        },
+      ],
+    },
+  ];
+
   const handleSubmitTicket = async () => {
     if (!email || !subject || !message) {
       toast({
@@ -1005,19 +1081,34 @@ export const ZohoASAPWidget = ({
                     ) : (
                       <div className="de-desk-form" ref={ticketDetailsRef}>
                         <div className="de-desk-ticket-lead">
-                          <h3>Open a support ticket</h3>
+                          <h3>Get support</h3>
                           <p>Tell us what happened. We&apos;ll route it to the desk.</p>
                         </div>
 
-                        <p className="de-desk-urgency-label" id="support-issue-label">Issue type</p>
-                        <div className="de-desk-issues" role="group" aria-labelledby="support-issue-label">
-                          {DESK_TICKET_CHIPS.map((chip) => (
+                        <button
+                          type="button"
+                          className={`de-desk-incident${
+                            selectedTicketChip === "security-incident" ? " is-on" : ""
+                          }`}
+                          data-testid="ticket-issue-security-incident"
+                          onClick={() => applyTicketChip("security-incident")}
+                        >
+                          <span className="de-desk-incident-icon">
+                            <ShieldAlert aria-hidden="true" />
+                          </span>
+                          <span className="de-desk-incident-copy">
+                            <strong>Possible security incident</strong>
+                            <span>{DESK_INCIDENT_CHIP.blurb}</span>
+                          </span>
+                        </button>
+
+                        <p className="de-desk-urgency-label" id="support-issue-label">What do you need help with?</p>
+                        <div className="de-desk-issue-list" role="group" aria-labelledby="support-issue-label">
+                          {DESK_STANDARD_TICKET_CHIPS.map((chip) => (
                             <button
                               key={chip.id}
                               type="button"
-                              className={`de-desk-issue${selectedTicketChip === chip.id ? " is-on" : ""}${
-                                chip.id === "security-incident" ? " is-incident" : ""
-                              }`}
+                              className={`de-desk-issue-row${selectedTicketChip === chip.id ? " is-on" : ""}`}
                               data-testid={`ticket-issue-${chip.id}`}
                               onClick={() => applyTicketChip(chip.id)}
                             >
@@ -1202,123 +1293,111 @@ export const ZohoASAPWidget = ({
                   data-testid="panel-support-resources"
                 >
                   <div className="de-desk-scroll">
-                    <div className="de-desk-tools-intro">
-                      <h3>Your client shortcuts</h3>
-                      <p>Go directly to the tool you need.</p>
-                    </div>
-
-                    <div
-                      className="de-desk-tools-list"
-                      aria-label="Client tools"
-                    >
-                      {RESOURCE_LINKS.map(
-                        ({
-                          title,
-                          description,
-                          href,
-                          icon: Icon,
-                          external,
-                          guide,
-                          tone,
-                          featured,
-                          badge,
-                        }) => (
-                          <div
-                            key={title}
-                            className={`de-desk-tool-group${
-                              featured ? " is-featured" : ""
-                            }`}
-                          >
-                            <a
-                              href={href}
-                              data-tone={tone}
-                              {...(
-                                external || href.startsWith("http")
-                                  ? {
-                                      target: "_blank",
-                                      rel: "noopener noreferrer",
-                                    }
-                                  : {}
-                              )}
-                              className="de-desk-tool-link"
-                              data-testid={`resource-link-${title
-                                .toLowerCase()
-                                .replace(/\s+/g, "-")}`}
-                            >
-                              <span className="de-desk-tool-icon">
-                                <Icon aria-hidden="true" />
-                              </span>
-
-                              <span className="de-desk-tool-copy">
-                                <span className="de-desk-tool-title-line">
-                                  <span className="de-desk-tool-title">
-                                    {title}
-                                  </span>
-
-                                  {badge ? (
-                                    <span className="de-desk-tool-badge">
-                                      {badge}
+                    {portalSession ? (
+                      <>
+                        <div className="de-desk-tools-intro">
+                          <h3>Client Tools</h3>
+                          <p>
+                            Welcome back
+                            {portalSession.fullName ? `, ${portalSession.fullName.split(" ")[0]}` : ""}.
+                          </p>
+                        </div>
+                        {authToolGroups.map((group) => (
+                          <div key={group.heading} className="de-desk-launch-group">
+                            <p className="de-desk-launch-heading">{group.heading}</p>
+                            <div className="de-desk-launch-list">
+                              {group.items.map((item) => {
+                                const Icon = item.icon;
+                                if (item.onSelect) {
+                                  return (
+                                    <button
+                                      key={item.title}
+                                      type="button"
+                                      className="de-desk-launch-row"
+                                      data-testid={item.testId}
+                                      onClick={item.onSelect}
+                                    >
+                                      <span className="de-desk-launch-icon">
+                                        <Icon aria-hidden="true" />
+                                      </span>
+                                      <span className="de-desk-launch-title">{item.title}</span>
+                                      <ChevronRight className="de-desk-tool-arrow" aria-hidden="true" />
+                                    </button>
+                                  );
+                                }
+                                return (
+                                  <a
+                                    key={item.title}
+                                    href={item.href}
+                                    className="de-desk-launch-row"
+                                    data-testid={item.testId}
+                                    {...(item.external || item.href?.startsWith("http")
+                                      ? { target: "_blank", rel: "noopener noreferrer" }
+                                      : {})}
+                                  >
+                                    <span className="de-desk-launch-icon">
+                                      <Icon aria-hidden="true" />
                                     </span>
-                                  ) : null}
-                                </span>
-
-                                <span className="de-desk-tool-description">
-                                  {description}
-                                </span>
-                              </span>
-
-                              {external || href.startsWith("http") ? (
-                                <ExternalLink
-                                  className="de-desk-tool-arrow"
-                                  aria-hidden="true"
-                                />
-                              ) : (
-                                <ChevronRight
-                                  className="de-desk-tool-arrow"
-                                  aria-hidden="true"
-                                />
-                              )}
-                            </a>
-
-                            {guide ? (
-                              <a
-                                href={guide.href}
-                                className="de-desk-tool-guide"
-                                data-testid="resource-link-remote-support-guide"
-                              >
-                                {guide.title}
-                                <ChevronRight aria-hidden="true" />
-                              </a>
-                            ) : null}
+                                    <span className="de-desk-launch-title">{item.title}</span>
+                                    {item.external || item.href?.startsWith("http") ? (
+                                      <ExternalLink className="de-desk-tool-arrow" aria-hidden="true" />
+                                    ) : (
+                                      <ChevronRight className="de-desk-tool-arrow" aria-hidden="true" />
+                                    )}
+                                  </a>
+                                );
+                              })}
+                            </div>
                           </div>
-                        ),
-                      )}
-                    </div>
-
-                    <div className="de-desk-security-escape">
-                      <span className="de-desk-security-icon">
-                        <AlertTriangle aria-hidden="true" />
-                      </span>
-
-                      <span className="de-desk-security-copy">
-                        <strong>Possible security incident?</strong>
-                        <span>
-                          Skip the tools and route it as urgent support.
-                        </span>
-                      </span>
-
-                      <button
-                        type="button"
-                        className="de-desk-security-action"
-                        data-testid="button-tools-security-escape"
-                        onClick={() => {
-                          selectTab("ticket");
-                          applyTicketChip("security-incident");
-                        }}
-                      >
-                        Go to Get Support
-                      </button>
-                    </div>
+                        ))}
+                      </>
+                    ) : (
+                      <div className="de-desk-tools-gate">
+                        <div className="de-desk-tools-intro">
+                          <h3>Client Tools</h3>
+                          <p className="de-desk-tools-kicker">Already a Digerati Experts client?</p>
+                          <p>
+                            Access support, service resources, and your secure client portal.
+                          </p>
+                        </div>
+                        <a
+                          href={PORTAL_LOGIN}
+                          className="de-desk-signin"
+                          data-testid="resource-link-sign-in-to-client-tools"
+                        >
+                          <LogIn aria-hidden="true" />
+                          Sign in to Client Tools
+                        </a>
+                        <div className="de-desk-tools-now">
+                          <p className="de-desk-launch-heading">Need help right now?</p>
+                          <button
+                            type="button"
+                            className="de-desk-launch-row"
+                            data-testid="resource-link-submit-support-request"
+                            onClick={() => selectTab("ticket")}
+                          >
+                            <span className="de-desk-launch-icon">
+                              <LifeBuoy aria-hidden="true" />
+                            </span>
+                            <span className="de-desk-launch-title">Submit a support request</span>
+                            <ChevronRight className="de-desk-tool-arrow" aria-hidden="true" />
+                          </button>
+                          <a
+                            href={REMOTE_SUPPORT_HREF}
+                            className="de-desk-launch-row"
+                            data-testid="resource-link-start-remote-support"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <span className="de-desk-launch-icon">
+                              <Monitor aria-hidden="true" />
+                            </span>
+                            <span className="de-desk-launch-title">Start remote support</span>
+                            <ExternalLink className="de-desk-tool-arrow" aria-hidden="true" />
+                          </a>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -1829,6 +1908,63 @@ export const ZohoASAPWidget = ({
               font-size: 12.5px; font-weight: 500;
             }
             .de-desk-chip:hover { border-color: #D3126A; color: #fff; }
+            .de-desk-incident {
+              display: flex; align-items: flex-start; gap: 12px;
+              width: 100%; text-align: left;
+              min-height: 52px;
+              margin: 2px 0 14px;
+              padding: 12px 13px;
+              border: 1px solid rgba(211,18,106,0.42);
+              border-radius: 12px;
+              background: rgba(211,18,106,0.10);
+              color: #fff;
+              box-shadow: inset 3px 0 0 #D3126A;
+            }
+            .de-desk-incident:hover { background: rgba(211,18,106,0.16); }
+            .de-desk-incident.is-on {
+              border-color: #D3126A;
+              background: rgba(211,18,106,0.18);
+            }
+            .de-desk-incident-icon {
+              display: inline-flex; flex: none;
+              width: 32px; height: 32px; margin-top: 1px;
+              align-items: center; justify-content: center;
+              border-radius: 9px;
+              border: 1px solid rgba(211,18,106,0.38);
+              background: rgba(211,18,106,0.16);
+              color: #D3126A;
+            }
+            .de-desk-incident-icon svg { width: 16px; height: 16px; }
+            .de-desk-incident-copy { display: flex; flex-direction: column; min-width: 0; }
+            .de-desk-incident-copy strong {
+              font-size: 13.5px; font-weight: 700; line-height: 1.3;
+            }
+            .de-desk-incident-copy span {
+              margin-top: 3px;
+              color: rgba(255,255,255,0.64);
+              font-size: 12px; line-height: 1.4;
+            }
+            .de-desk-issue-list {
+              display: flex; flex-direction: column;
+              gap: 4px;
+              margin-bottom: 14px;
+            }
+            .de-desk-issue-row {
+              width: 100%; text-align: left;
+              min-height: 40px;
+              padding: 9px 12px;
+              border: 1px solid var(--desk-border);
+              border-radius: 9px;
+              background: var(--desk-box);
+              color: rgba(255,255,255,0.86);
+              font-size: 13px; font-weight: 600;
+            }
+            .de-desk-issue-row:hover { border-color: rgba(255,255,255,0.22); color: #fff; }
+            .de-desk-issue-row.is-on {
+              border-color: #D3126A;
+              color: #fff;
+              box-shadow: inset 0 0 0 1px rgba(211,18,106,0.28);
+            }
             .de-desk-issues {
               display: flex; flex-wrap: wrap; gap: 6px;
             }
@@ -2123,6 +2259,79 @@ export const ZohoASAPWidget = ({
               color: rgba(255,255,255,0.68);
               font-size: 13.5px;
               line-height: 1.45;
+            }
+            .de-desk-tools-kicker {
+              margin: 10px 0 6px !important;
+              color: #fff !important;
+              font-family: "Space Grotesk", sans-serif;
+              font-size: 15px !important;
+              font-weight: 650;
+              line-height: 1.35 !important;
+            }
+            .de-desk-tools-gate { display: flex; flex-direction: column; gap: 0; }
+            .de-desk-signin {
+              display: inline-flex;
+              align-items: center; justify-content: center; gap: 8px;
+              min-height: 44px;
+              margin: 16px 0 18px;
+              padding: 11px 16px;
+              border: 0; border-radius: 10px;
+              background: #D3126A; color: #fff;
+              font-size: 14.5px; font-weight: 700;
+              text-decoration: none;
+              box-shadow: 0 8px 18px -10px rgba(211,18,106,0.8);
+            }
+            .de-desk-signin:hover { background: #bd105f; }
+            .de-desk-signin svg { width: 16px; height: 16px; }
+            .de-desk-signin:focus-visible,
+            .de-desk-launch-row:focus-visible {
+              outline: 2px solid #D3126A;
+              outline-offset: 2px;
+            }
+            .de-desk-tools-now {
+              padding-top: 16px;
+              border-top: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+            }
+            .de-desk-launch-group { margin-bottom: 14px; }
+            .de-desk-launch-heading {
+              margin: 0 0 8px;
+              color: rgba(255,255,255,0.52);
+              font-size: 11px;
+              font-weight: 700;
+              letter-spacing: 0.08em;
+              text-transform: uppercase;
+            }
+            .de-desk-launch-list,
+            .de-desk-tools-now {
+              display: flex; flex-direction: column; gap: 4px;
+            }
+            .de-desk-launch-row {
+              display: flex; align-items: center; gap: 10px;
+              width: 100%; min-height: 44px;
+              padding: 8px 10px;
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              border-radius: 10px;
+              background: var(--de-raised, #151217);
+              color: #f7f5f2;
+              text-align: left;
+              text-decoration: none;
+            }
+            .de-desk-launch-row:hover {
+              border-color: rgba(255,255,255,0.22);
+              background: #1a171c;
+            }
+            .de-desk-launch-icon {
+              display: inline-flex; flex: none;
+              width: 28px; height: 28px;
+              align-items: center; justify-content: center;
+              border-radius: 8px;
+              border: 1px solid rgba(255,255,255,0.10);
+              color: #D3126A;
+            }
+            .de-desk-launch-icon svg { width: 14px; height: 14px; }
+            .de-desk-launch-title {
+              flex: 1; min-width: 0;
+              font-size: 13.5px; font-weight: 650;
             }
             .de-desk-tools-list {
               --desk-ink: #17141f;
