@@ -1,9 +1,13 @@
 import { PageTemplate } from "@/components/PageTemplate";
+import { ConversionPathBar } from "@/components/ConversionPathBar";
 import { Badge } from "@/components/ui/badge";
 import { useSEO } from "@/hooks/useSEO";
 import { Link, useParams } from "wouter";
 import { ArrowLeft, CheckCircle, Layers, Route, Zap, Info } from "lucide-react";
 import { caseStudyBySlug } from "@/data/caseStudies";
+
+const cardClass = "rounded-2xl border border-de-hairline bg-de-raised";
+const insetClass = "rounded-lg border border-de-hairline bg-de-bg";
 
 export default function CaseStudyDetail() {
   const params = useParams<{ slug: string }>();
@@ -12,9 +16,7 @@ export default function CaseStudyDetail() {
   useSEO({
     title: study ? study.title : "Case Study",
     description: study?.summary || "Digerati Experts case study structure.",
-    canonical: study
-      ? `/resources/case-studies/${study.slug}`
-      : "/resources/case-studies",
+    canonical: study ? `/resources/case-studies/${study.slug}` : "/resources/case-studies",
   });
 
   if (!study) {
@@ -23,16 +25,16 @@ export default function CaseStudyDetail() {
         title="Case study not found"
         subtitle="That story isn’t published yet."
         breadcrumbs={[
-          { label: "Resources", href: "/" },
+          { label: "Resources", href: "/resources" },
           { label: "Case Studies", href: "/resources/case-studies" },
           { label: "Not found" },
         ]}
       >
         <Link
           href="/resources/case-studies"
-          className="inline-flex items-center gap-2 text-de-accent-ink hover:text-de-accent-ink"
+          className="inline-flex items-center gap-2 text-de-accent-ink hover:underline"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           Back to case studies
         </Link>
       </PageTemplate>
@@ -40,19 +42,9 @@ export default function CaseStudyDetail() {
   }
 
   const sections = [
-    { title: "Challenge", body: study.challenge, icon: Zap, tone: "text-red-400 bg-red-500/20" },
-    {
-      title: "Approach",
-      body: study.approach,
-      icon: Route,
-      tone: "text-blue-400 bg-blue-500/20",
-    },
-    {
-      title: "Outcome",
-      body: study.outcome,
-      icon: CheckCircle,
-      tone: "text-green-400 bg-green-500/20",
-    },
+    { title: "Challenge", body: study.challenge, icon: Zap },
+    { title: "Approach", body: study.approach, icon: Route },
+    { title: "Outcome", body: study.outcome, icon: CheckCircle },
   ];
 
   return (
@@ -60,36 +52,32 @@ export default function CaseStudyDetail() {
       title={study.title}
       subtitle={study.summary}
       breadcrumbs={[
-        { label: "Resources", href: "/" },
+        { label: "Resources", href: "/resources" },
         { label: "Case Studies", href: "/resources/case-studies" },
         { label: study.industry },
       ]}
     >
-      <div className="space-y-10 max-w-4xl">
+      <div className="max-w-4xl space-y-10">
         <div className="flex flex-wrap gap-2">
-          <Badge className="bg-white/10 text-white/80 border-0">{study.industry}</Badge>
+          <Badge className="border-0 bg-de-raised text-white/80">{study.industry}</Badge>
           {study.status === "sample" ? (
-            <Badge className="bg-amber-500/20 text-amber-200 border border-amber-500/30">
+            <Badge className="border border-de-hairline bg-transparent text-white/70">
               Coming soon / Sample structure
             </Badge>
           ) : (
-            <Badge className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-              Approved client story
-            </Badge>
+            <Badge className="border border-de-hairline bg-de-bg text-de-accent-ink">Approved client story</Badge>
           )}
           {study.clientLabel && (
-            <Badge className="bg-de-raised text-de-accent-ink border border-de-hairline">
-              {study.clientLabel}
-            </Badge>
+            <Badge className="border border-de-hairline bg-de-raised text-de-accent-ink">{study.clientLabel}</Badge>
           )}
         </div>
 
         {study.status === "sample" && (
-          <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-5 flex gap-3">
-            <Info className="h-5 w-5 text-amber-400 flex-shrink-0 mt-0.5" />
-            <p className="text-sm text-amber-100/90 leading-relaxed">
-              This page is a labeled structure shell. Placeholders are waiting for DE-approved
-              copy — no fabricated customer names or ROI metrics.
+          <div className={`flex gap-3 p-5 ${cardClass}`}>
+            <Info className="mt-0.5 h-5 w-5 shrink-0 text-de-accent-ink" aria-hidden="true" />
+            <p className="text-sm leading-relaxed text-white/80">
+              This page is a labeled structure shell. Placeholders are waiting for DE-approved copy — no fabricated
+              customer names or ROI metrics.
             </p>
           </div>
         )}
@@ -98,31 +86,28 @@ export default function CaseStudyDetail() {
           {sections.map((section) => {
             const Icon = section.icon;
             return (
-              <section key={section.title} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${section.tone}`}>
-                    <Icon className="w-4 h-4" />
+              <section key={section.title} className={`p-6 ${cardClass}`}>
+                <div className="mb-3 flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-de-hairline bg-de-bg">
+                    <Icon className="h-4 w-4 text-de-accent-ink" aria-hidden="true" />
                   </div>
                   <h2 className="text-xl font-semibold text-white">{section.title}</h2>
                 </div>
-                <p className="text-gray-300 leading-relaxed">{section.body}</p>
+                <p className="leading-relaxed text-white/75">{section.body}</p>
               </section>
             );
           })}
 
-          <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-lg bg-de-raised flex items-center justify-center">
-                <Layers className="w-4 h-4 text-de-accent-ink" />
+          <section className={`p-6 ${cardClass}`}>
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-de-hairline bg-de-bg">
+                <Layers className="h-4 w-4 text-de-accent-ink" aria-hidden="true" />
               </div>
               <h2 className="text-xl font-semibold text-white">Stack</h2>
             </div>
-            <ul className="grid sm:grid-cols-2 gap-2">
+            <ul className="grid gap-2 sm:grid-cols-2">
               {study.stack.map((item) => (
-                <li
-                  key={item}
-                  className="rounded-lg border border-white/10 bg-black/20 px-4 py-3 text-gray-200 text-sm"
-                >
+                <li key={item} className={`px-4 py-3 text-sm text-white/80 ${insetClass}`}>
                   {item}
                 </li>
               ))}
@@ -132,12 +117,17 @@ export default function CaseStudyDetail() {
 
         <Link
           href="/resources/case-studies"
-          className="inline-flex items-center gap-2 text-de-accent-ink hover:text-de-accent-ink"
+          className="inline-flex items-center gap-2 text-de-accent-ink hover:underline"
           data-testid="link-back-case-studies"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           All case studies
         </Link>
+
+        <ConversionPathBar
+          headline="Discuss an engagement like this"
+          body="We publish client stories with permission. Start with an assessment to see whether this structure fits your environment."
+        />
       </div>
     </PageTemplate>
   );

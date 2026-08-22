@@ -1,4 +1,5 @@
-import { pricing } from "@/data/pricing";
+import { estimateMonthly, pricing, type PricingTierKey } from "@/data/pricing";
+import { ConversionPathBar } from "@/components/ConversionPathBar";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,11 +24,11 @@ const industryMultipliers: Record<string, { name: string; multiplier: number }> 
   'finance': { name: 'Financial Services', multiplier: 2.3 },
 };
 
-const servicePackages: Record<string, { name: string; price: number }> = {
-  [String(pricing.it.user)]: { name: 'IT', price: pricing.it.user },
-  [String(pricing.office.user)]: { name: 'Office', price: pricing.office.user },
-  [String(pricing.business.user)]: { name: 'Business', price: pricing.business.user },
-  [String(pricing.enterprise.user)]: { name: 'Enterprise', price: pricing.enterprise.user },
+const servicePackages: Record<PricingTierKey, { name: string; key: PricingTierKey }> = {
+  it: { name: pricing.it.label, key: "it" },
+  office: { name: pricing.office.label, key: "office" },
+  business: { name: pricing.business.label, key: "business" },
+  enterprise: { name: pricing.enterprise.label, key: "enterprise" },
 };
 
 export default function DowntimeCalculator() {
@@ -53,8 +54,7 @@ export default function DowntimeCalculator() {
 
   // Service calculator state
   const [serviceEmployees, setServiceEmployees] = useState('10');
-  const [servicePackage, setServicePackage] = useState('245');
-  const [includeBackup, setIncludeBackup] = useState(false);
+  const [servicePackage, setServicePackage] = useState<PricingTierKey>("business");
   const [showServiceResults, setShowServiceResults] = useState(false);
   const [serviceResult, setServiceResult] = useState({ monthly: 0, quarterly: 0, annual: 0 });
 
@@ -79,14 +79,8 @@ export default function DowntimeCalculator() {
 
   const calculateService = () => {
     const emp = parseFloat(serviceEmployees) || 0;
-    const price = servicePackages[servicePackage]?.price || 245;
-    const backupAddon = includeBackup ? 25 : 0;
-
-    const monthly = emp * (price + backupAddon);
-    const quarterly = monthly * 3 * 0.9; // 10% discount
-    const annual = monthly * 12 * 0.85; // 15% discount
-
-    setServiceResult({ monthly, quarterly, annual });
+    const monthly = estimateMonthly(servicePackage, emp, 1);
+    setServiceResult({ monthly, quarterly: monthly * 3, annual: monthly * 12 });
     setShowServiceResults(true);
   };
 
@@ -95,33 +89,33 @@ export default function DowntimeCalculator() {
       case 'critical':
         return <span className="inline-block px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wide bg-red-500/15 border-2 border-red-500/40 text-white">Critical Risk - Immediate Action Required</span>;
       case 'high':
-        return <span className="inline-block px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wide bg-[#FFB800]/15 border-2 border-[#FFB800]/40 text-white">High Risk - Protection Recommended</span>;
+        return <span className="inline-block px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wide bg-[#D3126A]/15 border-2 border-[#D3126A]/40 text-white">High Risk - Protection Recommended</span>;
       case 'moderate':
-        return <span className="inline-block px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wide bg-[#FFB800]/15 border-2 border-[#FFB800]/40 text-white">Moderate Risk - Consider Protection</span>;
+        return <span className="inline-block px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wide bg-[#D3126A]/15 border-2 border-[#D3126A]/40 text-white">Moderate Risk - Consider Protection</span>;
       default:
         return <span className="inline-block px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wide bg-emerald-500/15 border-2 border-emerald-500/40 text-white">Low Risk - Maintain Vigilance</span>;
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0e27]">
+    <div className="min-h-screen bg-[#050312]">
       <MegaMenu />
       
       {/* Hero Section */}
       <section className="de-nav-clear pb-16 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#FFB800]/10 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#FFB800]/5 rounded-full blur-[120px]" />
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#D3126A]/10 rounded-full blur-[120px]" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#D3126A]/5 rounded-full blur-[120px]" />
         </div>
         
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FFB800]/10 border border-[#FFB800]/30 mb-6">
-              <Calculator className="w-4 h-4 text-[#FFB800]" />
-              <span className="text-sm text-[#FFB800] font-medium">Business Impact Calculator</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#D3126A]/10 border border-[#D3126A]/30 mb-6">
+              <Calculator className="w-4 h-4 text-[#D3126A]" />
+              <span className="text-sm text-[#D3126A] font-medium">Business Impact Calculator</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              IT Cost <span className="text-[#FFB800]">Calculators</span>
+              IT Cost <span className="text-[#D3126A]">Calculators</span>
             </h1>
             <p className="text-lg text-gray-400 max-w-2xl mx-auto">
               Understand the true cost of IT downtime and get accurate service estimates for your business.
@@ -129,15 +123,15 @@ export default function DowntimeCalculator() {
           </div>
 
           {/* Calculator Container */}
-          <div className="bg-[#1a1a3e] rounded-xl border-2 border-[#FFB800]/15 shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden">
+          <div className="bg-[#050312] rounded-xl border-2 border-[#D3126A]/15 shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden">
             {/* Tabs */}
-            <div className="flex border-b-2 border-[#FFB800]/15">
+            <div className="flex border-b-2 border-[#D3126A]/15">
               <button
                 onClick={() => setActiveTab('downtime')}
                 className={`flex-1 px-6 py-5 text-sm font-bold uppercase tracking-wider transition-all duration-300 border-b-3 ${
                   activeTab === 'downtime'
-                    ? 'text-[#FFB800] bg-[#FFB800]/10 border-b-[#FFB800] shadow-[0_0_10px_rgba(255,184,0,0.3)]'
-                    : 'text-gray-400 hover:text-white hover:bg-[#FFB800]/5 border-b-transparent'
+                    ? 'text-[#D3126A] bg-[#D3126A]/10 border-b-[#D3126A] shadow-[0_0_10px_rgba(211,18,106),0.3)]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#D3126A]/5 border-b-transparent'
                 }`}
                 data-testid="tab-downtime-cost"
               >
@@ -148,8 +142,8 @@ export default function DowntimeCalculator() {
                 onClick={() => setActiveTab('service')}
                 className={`flex-1 px-6 py-5 text-sm font-bold uppercase tracking-wider transition-all duration-300 border-b-3 ${
                   activeTab === 'service'
-                    ? 'text-[#FFB800] bg-[#FFB800]/10 border-b-[#FFB800] shadow-[0_0_10px_rgba(255,184,0,0.3)]'
-                    : 'text-gray-400 hover:text-white hover:bg-[#FFB800]/5 border-b-transparent'
+                    ? 'text-[#D3126A] bg-[#D3126A]/10 border-b-[#D3126A] shadow-[0_0_10px_rgba(211,18,106),0.3)]'
+                    : 'text-gray-400 hover:text-white hover:bg-[#D3126A]/5 border-b-transparent'
                 }`}
                 data-testid="tab-service-cost"
               >
@@ -174,15 +168,15 @@ export default function DowntimeCalculator() {
                   <div className="mb-6">
                     <Label className="text-xs font-semibold uppercase tracking-wide text-white mb-2 block">Industry</Label>
                     <Select value={industry} onValueChange={setIndustry}>
-                      <SelectTrigger className="h-14 bg-[#252550] border-2 border-[#FFB800]/15 text-white hover:border-[#FFB800] focus:border-[#FFB800] focus:ring-2 focus:ring-[#FFB800]/30 transition-all" data-testid="select-calc-industry">
+                      <SelectTrigger className="h-14 bg-[#151217] border-2 border-[#D3126A]/15 text-white hover:border-[#D3126A] focus:border-[#D3126A] focus:ring-2 focus:ring-[#D3126A]/30 transition-all" data-testid="select-calc-industry">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-[#252550] border-[#FFB800]/30">
+                      <SelectContent className="bg-[#151217] border-[#D3126A]/30">
                         {Object.entries(industryMultipliers).map(([key, { name, multiplier }]) => (
                           <SelectItem 
                             key={key} 
                             value={key} 
-                            className="text-white hover:bg-[#FFB800]/20 focus:bg-[#FFB800]/20 focus:text-white"
+                            className="text-white hover:bg-[#D3126A]/20 focus:bg-[#D3126A]/20 focus:text-white"
                             data-testid={`option-calc-${key}`}
                           >
                             {name} ({multiplier}×)
@@ -200,7 +194,7 @@ export default function DowntimeCalculator() {
                         type="number"
                         value={employees}
                         onChange={(e) => setEmployees(e.target.value)}
-                        className="h-14 bg-[#252550] border-2 border-[#FFB800]/15 text-white placeholder:text-white/70 hover:border-[#FFB800] focus:border-[#FFB800] focus:ring-2 focus:ring-[#FFB800]/30 transition-all"
+                        className="h-14 bg-[#151217] border-2 border-[#D3126A]/15 text-white placeholder:text-white/70 hover:border-[#D3126A] focus:border-[#D3126A] focus:ring-2 focus:ring-[#D3126A]/30 transition-all"
                         placeholder="25"
                         data-testid="input-employees"
                       />
@@ -211,7 +205,7 @@ export default function DowntimeCalculator() {
                         type="number"
                         value={hourlyWage}
                         onChange={(e) => setHourlyWage(e.target.value)}
-                        className="h-14 bg-[#252550] border-2 border-[#FFB800]/15 text-white placeholder:text-white/70 hover:border-[#FFB800] focus:border-[#FFB800] focus:ring-2 focus:ring-[#FFB800]/30 transition-all"
+                        className="h-14 bg-[#151217] border-2 border-[#D3126A]/15 text-white placeholder:text-white/70 hover:border-[#D3126A] focus:border-[#D3126A] focus:ring-2 focus:ring-[#D3126A]/30 transition-all"
                         placeholder="35"
                         data-testid="input-hourly-wage"
                       />
@@ -225,7 +219,7 @@ export default function DowntimeCalculator() {
                       type="number"
                       value={downtimeHours}
                       onChange={(e) => setDowntimeHours(e.target.value)}
-                      className="h-14 bg-[#252550] border-2 border-[#FFB800]/15 text-white placeholder:text-white/70 hover:border-[#FFB800] focus:border-[#FFB800] focus:ring-2 focus:ring-[#FFB800]/30 transition-all"
+                      className="h-14 bg-[#151217] border-2 border-[#D3126A]/15 text-white placeholder:text-white/70 hover:border-[#D3126A] focus:border-[#D3126A] focus:ring-2 focus:ring-[#D3126A]/30 transition-all"
                       placeholder="4"
                       data-testid="input-downtime-hours"
                     />
@@ -233,12 +227,12 @@ export default function DowntimeCalculator() {
 
                   {/* Advanced Options */}
                   <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen}>
-                    <CollapsibleTrigger className="w-full flex items-center justify-between px-5 py-4 bg-[#252550] border-2 border-[#FFB800]/15 rounded-lg text-xs font-semibold uppercase tracking-wide text-white hover:border-[#FFB800] hover:bg-[#FFB800]/5 transition-all mb-6" data-testid="toggle-advanced-options">
+                    <CollapsibleTrigger className="w-full flex items-center justify-between px-5 py-4 bg-[#151217] border-2 border-[#D3126A]/15 rounded-lg text-xs font-semibold uppercase tracking-wide text-white hover:border-[#D3126A] hover:bg-[#D3126A]/5 transition-all mb-6" data-testid="toggle-advanced-options">
                       <span>Advanced Options (RTO/RPO & Annual Impact)</span>
-                      {advancedOpen ? <Minus className="w-5 h-5 text-[#FFB800]" /> : <Plus className="w-5 h-5 text-[#FFB800]" />}
+                      {advancedOpen ? <Minus className="w-5 h-5 text-[#D3126A]" /> : <Plus className="w-5 h-5 text-[#D3126A]" />}
                     </CollapsibleTrigger>
                     <CollapsibleContent className="mb-6">
-                      <div className="p-6 bg-[#252550] border-2 border-[#FFB800]/15 rounded-lg space-y-4">
+                      <div className="p-6 bg-[#151217] border-2 border-[#D3126A]/15 rounded-lg space-y-4">
                         <div className="grid md:grid-cols-2 gap-4">
                           <div>
                             <Label className="text-xs font-semibold uppercase tracking-wide text-white mb-2 block">RTO - Recovery Time Objective (Hours)</Label>
@@ -246,7 +240,7 @@ export default function DowntimeCalculator() {
                               type="number"
                               value={rtoHours}
                               onChange={(e) => setRtoHours(e.target.value)}
-                              className="h-12 bg-[#1a1a3e] border-2 border-[#FFB800]/15 text-white placeholder:text-white/70 hover:border-[#FFB800] focus:border-[#FFB800] transition-all"
+                              className="h-12 bg-[#050312] border-2 border-[#D3126A]/15 text-white placeholder:text-white/70 hover:border-[#D3126A] focus:border-[#D3126A] transition-all"
                               placeholder="4"
                               data-testid="input-rto"
                             />
@@ -257,7 +251,7 @@ export default function DowntimeCalculator() {
                               type="number"
                               value={rpoHours}
                               onChange={(e) => setRpoHours(e.target.value)}
-                              className="h-12 bg-[#1a1a3e] border-2 border-[#FFB800]/15 text-white placeholder:text-white/70 hover:border-[#FFB800] focus:border-[#FFB800] transition-all"
+                              className="h-12 bg-[#050312] border-2 border-[#D3126A]/15 text-white placeholder:text-white/70 hover:border-[#D3126A] focus:border-[#D3126A] transition-all"
                               placeholder="1"
                               data-testid="input-rpo"
                             />
@@ -269,7 +263,7 @@ export default function DowntimeCalculator() {
                             type="number"
                             value={incidentsPerYear}
                             onChange={(e) => setIncidentsPerYear(e.target.value)}
-                            className="h-12 bg-[#1a1a3e] border-2 border-[#FFB800]/15 text-white placeholder:text-white/70 hover:border-[#FFB800] focus:border-[#FFB800] transition-all"
+                            className="h-12 bg-[#050312] border-2 border-[#D3126A]/15 text-white placeholder:text-white/70 hover:border-[#D3126A] focus:border-[#D3126A] transition-all"
                             placeholder="4"
                             data-testid="input-incidents"
                           />
@@ -281,7 +275,7 @@ export default function DowntimeCalculator() {
                   {/* Calculate Button */}
                   <Button
                     onClick={calculateDowntime}
-                    className="w-full h-14 bg-gradient-to-r from-[#FFB800] to-[#FFC933] text-[#0a0e27] font-bold text-sm uppercase tracking-wider hover:shadow-[0_8px_30px_rgba(255,184,0,0.5)] hover:-translate-y-0.5 transition-all duration-300"
+                    className="h-14 w-full bg-[#D3126A] text-sm font-bold uppercase tracking-wider text-white transition-colors hover:bg-[#b80f5c]"
                     data-testid="button-calculate-downtime"
                   >
                     Calculate Cost <ArrowRight className="ml-2 h-5 w-5" />
@@ -289,19 +283,19 @@ export default function DowntimeCalculator() {
 
                   {/* Results */}
                   {showDowntimeResults && (
-                    <div className="mt-8 p-8 bg-[#252550] rounded-xl border-2 border-[#FFB800]/15 relative overflow-hidden animate-in slide-in-from-bottom-4 duration-500">
-                      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#FFB800] to-transparent" />
+                    <div className="mt-8 p-8 bg-[#151217] rounded-xl border-2 border-[#D3126A]/15 relative overflow-hidden animate-in slide-in-from-bottom-4 duration-500">
+                      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#D3126A] to-transparent" />
                       
                       <div className="grid md:grid-cols-2 gap-8 mb-6">
                         <div>
                           <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Per-Incident Cost</p>
-                          <p className="text-4xl font-extrabold text-[#FFB800] drop-shadow-[0_0_20px_rgba(255,184,0,0.3)]" data-testid="result-per-incident">
+                          <p className="text-4xl font-extrabold text-[#D3126A] drop-shadow-[0_0_20px_rgba(211,18,106),0.3)]" data-testid="result-per-incident">
                             ${downtimeResult.perIncident.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </p>
                         </div>
                         <div>
                           <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Annual Downtime Cost</p>
-                          <p className="text-5xl font-extrabold text-[#FFB800] drop-shadow-[0_0_20px_rgba(255,184,0,0.3)]" data-testid="result-annual">
+                          <p className="text-5xl font-extrabold text-[#D3126A] drop-shadow-[0_0_20px_rgba(211,18,106),0.3)]" data-testid="result-annual">
                             ${downtimeResult.annual.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </p>
                         </div>
@@ -312,7 +306,7 @@ export default function DowntimeCalculator() {
                       </div>
 
                       <p className="text-sm text-gray-400 italic">
-                        Based on <strong className="text-[#FFB800]">{employees}</strong> employees at <strong className="text-[#FFB800]">${hourlyWage}/hr</strong> with <strong className="text-[#FFB800]">{downtimeHours} hours</strong> downtime per incident. Industry multiplier: <strong className="text-[#FFB800]">{industryMultipliers[industry]?.multiplier}×</strong>
+                        Based on <strong className="text-[#D3126A]">{employees}</strong> employees at <strong className="text-[#D3126A]">${hourlyWage}/hr</strong> with <strong className="text-[#D3126A]">{downtimeHours} hours</strong> downtime per incident. Industry multiplier: <strong className="text-[#D3126A]">{industryMultipliers[industry]?.multiplier}×</strong>
                       </p>
                     </div>
                   )}
@@ -326,25 +320,25 @@ export default function DowntimeCalculator() {
                     Estimate Your Service Investment
                   </h2>
                   <p className="text-gray-400 mb-8">
-                    Get an instant quote based on your team size and protection level. Volume discounts apply.
+                    Estimate from published per-user rates and monthly minimums. Final pricing is confirmed after assessment.
                   </p>
 
                   {/* Service Package */}
                   <div className="mb-6">
                     <Label className="text-xs font-semibold uppercase tracking-wide text-white mb-2 block">Service Package</Label>
-                    <Select value={servicePackage} onValueChange={setServicePackage}>
-                      <SelectTrigger className="h-14 bg-[#252550] border-2 border-[#FFB800]/15 text-white hover:border-[#FFB800] focus:border-[#FFB800] focus:ring-2 focus:ring-[#FFB800]/30 transition-all" data-testid="select-service-package">
+                    <Select value={servicePackage} onValueChange={(value) => setServicePackage(value as PricingTierKey)}>
+                      <SelectTrigger className="h-14 bg-[#151217] border-2 border-[#D3126A]/15 text-white hover:border-[#D3126A] focus:border-[#D3126A] focus:ring-2 focus:ring-[#D3126A]/30 transition-all" data-testid="select-service-package">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-[#252550] border-[#FFB800]/30">
-                        {Object.entries(servicePackages).map(([key, { name, price }]) => (
+                      <SelectContent className="bg-[#151217] border-[#D3126A]/30">
+                        {Object.entries(servicePackages).map(([key, { name }]) => (
                           <SelectItem 
                             key={key} 
                             value={key} 
-                            className="text-white hover:bg-[#FFB800]/20 focus:bg-[#FFB800]/20 focus:text-white"
+                            className="text-white hover:bg-[#D3126A]/20 focus:bg-[#D3126A]/20 focus:text-white"
                             data-testid={`option-package-${key}`}
                           >
-                            {name} (${price}/user/month)
+                            {name} (${pricing[key as PricingTierKey].user}/user/month · {pricing[key as PricingTierKey].monthlyMin.toLocaleString()}/mo minimum)
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -358,30 +352,20 @@ export default function DowntimeCalculator() {
                       type="number"
                       value={serviceEmployees}
                       onChange={(e) => setServiceEmployees(e.target.value)}
-                      className="h-14 bg-[#252550] border-2 border-[#FFB800]/15 text-white placeholder:text-white/70 hover:border-[#FFB800] focus:border-[#FFB800] focus:ring-2 focus:ring-[#FFB800]/30 transition-all"
+                      className="h-14 bg-[#151217] border-2 border-[#D3126A]/15 text-white placeholder:text-white/70 hover:border-[#D3126A] focus:border-[#D3126A] focus:ring-2 focus:ring-[#D3126A]/30 transition-all"
                       placeholder="10"
                       data-testid="input-service-employees"
                     />
                   </div>
 
-                  {/* Add-ons */}
-                  <div className="mb-6 p-4 bg-[#252550] border-2 border-[#FFB800]/15 rounded-lg">
-                    <label className="flex items-center gap-3 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={includeBackup}
-                        onChange={(e) => setIncludeBackup(e.target.checked)}
-                        className="w-5 h-5 rounded border-2 border-[#FFB800]/30 bg-[#1a1a3e] accent-[#FFB800]"
-                        data-testid="checkbox-backup"
-                      />
-                      <span className="text-white">Add Cloud Backup (+$25/user/month)</span>
-                    </label>
-                  </div>
+                  <p className="mb-6 text-sm text-white/55">
+                    Backup, network, and compliance add-ons are scoped after assessment — not published as a per-user add-on rate here.
+                  </p>
 
                   {/* Calculate Button */}
                   <Button
                     onClick={calculateService}
-                    className="w-full h-14 bg-gradient-to-r from-[#FFB800] to-[#FFC933] text-[#0a0e27] font-bold text-sm uppercase tracking-wider hover:shadow-[0_8px_30px_rgba(255,184,0,0.5)] hover:-translate-y-0.5 transition-all duration-300"
+                    className="h-14 w-full bg-[#D3126A] text-sm font-bold uppercase tracking-wider text-white transition-colors hover:bg-[#b80f5c]"
                     data-testid="button-calculate-service"
                   >
                     Calculate Cost <ArrowRight className="ml-2 h-5 w-5" />
@@ -389,26 +373,26 @@ export default function DowntimeCalculator() {
 
                   {/* Results */}
                   {showServiceResults && (
-                    <div className="mt-8 p-8 bg-[#252550] rounded-xl border-2 border-[#FFB800]/15 relative overflow-hidden animate-in slide-in-from-bottom-4 duration-500">
-                      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#FFB800] to-transparent" />
+                    <div className="mt-8 p-8 bg-[#151217] rounded-xl border-2 border-[#D3126A]/15 relative overflow-hidden animate-in slide-in-from-bottom-4 duration-500">
+                      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#D3126A] to-transparent" />
                       
                       <div className="space-y-6">
                         <div>
                           <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Monthly Investment</p>
-                          <p className="text-5xl font-extrabold text-[#FFB800] drop-shadow-[0_0_20px_rgba(255,184,0,0.3)]" data-testid="result-monthly">
+                          <p className="text-5xl font-extrabold text-[#D3126A] drop-shadow-[0_0_20px_rgba(211,18,106),0.3)]" data-testid="result-monthly">
                             ${serviceResult.monthly.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </p>
                         </div>
                         
-                        <div className="grid md:grid-cols-2 gap-6 pt-6 border-t border-[#FFB800]/15">
+                        <div className="grid md:grid-cols-2 gap-6 pt-6 border-t border-[#D3126A]/15">
                           <div>
-                            <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-1">Quarterly (10% off)</p>
+                            <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-1">Quarterly (3 × monthly)</p>
                             <p className="text-2xl font-bold text-emerald-400" data-testid="result-quarterly">
                               ${serviceResult.quarterly.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </p>
                           </div>
                           <div>
-                            <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-1">Annual (15% off)</p>
+                            <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-1">Annual (12 × monthly)</p>
                             <p className="text-2xl font-bold text-emerald-400" data-testid="result-annual-service">
                               ${serviceResult.annual.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </p>
@@ -417,7 +401,7 @@ export default function DowntimeCalculator() {
                       </div>
 
                       <p className="text-sm text-gray-400 italic mt-6">
-                        <strong className="text-[#FFB800]">{servicePackages[servicePackage]?.name}</strong> for <strong className="text-[#FFB800]">{serviceEmployees}</strong> employees{includeBackup && <> with <strong className="text-[#FFB800]">Cloud Backup</strong></>}.
+                        <strong className="text-[#D3126A]">{servicePackages[servicePackage]?.name}</strong> for <strong className="text-[#D3126A]">{serviceEmployees}</strong> users, including the published monthly minimum.
                       </p>
                     </div>
                   )}
@@ -426,14 +410,11 @@ export default function DowntimeCalculator() {
             </div>
           </div>
 
-          {/* CTA Section */}
-          <div className="mt-12 text-center">
-            <div className="inline-flex items-center gap-3 px-6 py-4 bg-[#1a1a3e]/50 rounded-xl border border-[#FFB800]/20">
-              <Shield className="w-6 h-6 text-[#FFB800]" />
-              <p className="text-gray-300">
-                Ready to protect your business? <a href="/book" className="text-[#FFB800] hover:text-[#FFC933] font-semibold underline underline-offset-4">Schedule a Free Consultation</a>
-              </p>
-            </div>
+          <div className="mt-12">
+            <ConversionPathBar
+              headline="Ready to confirm the real number?"
+              body="This calculator is an estimate. A Cyber Risk Assessment confirms users, sites, backup, and the monthly floor that actually applies."
+            />
           </div>
         </div>
       </section>

@@ -398,6 +398,7 @@ function Router() {
       ))}
       
       {/* About Pages */}
+      <Route path="/about/mission">{() => <Redirect to="/about/mission-values" />}</Route>
       <Route path="/about/mission-values" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <MissionValues />
@@ -896,8 +897,7 @@ function SpaPageViews() {
 const ACCENT_BY_PREFIX: ReadonlyArray<readonly [string, string]> = [
   ["/store", "electric"],
   ["/support", "cyan"],
-  ["/resources", "amber"],
-  ["/case-studies", "amber"],
+  ["/resources/blog", "amber"],
 ];
 
 function accentFor(location: string): string | undefined {

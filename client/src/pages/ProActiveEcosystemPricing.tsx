@@ -13,6 +13,7 @@ import { Link } from "wouter";
 import { pricing, estimateMonthly, PRICING_SCOPE_NOTE, NO_BLACK_BOX_TAGLINE, type PricingTierKey } from "@/data/pricing";
 import { PricingToolsSection } from "./sections/PricingToolsSection";
 import { CTA } from "@/lib/ctaCopy";
+import { ConversionPathBar } from "@/components/ConversionPathBar";
 import { ProActiveCoverageMap } from "@/components/pricing/ProActiveCoverageMap";
 import {
   categoryLayer,
@@ -325,7 +326,7 @@ export default function ProActiveEcosystemPricing() {
                     min={1}
                     value={userCount}
                     onChange={(e) => setUserCount(e.target.value === "" ? "" : Math.max(1, Number(e.target.value)))}
-                    className="bg-white/5 border-white/10 text-white"
+                    className="border-de-hairline bg-de-bg text-white"
                     data-testid="input-user-count"
                   />
                 </label>
@@ -338,7 +339,7 @@ export default function ProActiveEcosystemPricing() {
                     min={1}
                     value={siteCount}
                     onChange={(e) => setSiteCount(e.target.value === "" ? "" : Math.max(1, Number(e.target.value)))}
-                    className="bg-white/5 border-white/10 text-white"
+                    className="border-de-hairline bg-de-bg text-white"
                     data-testid="input-site-count"
                   />
                 </label>
@@ -560,20 +561,10 @@ export default function ProActiveEcosystemPricing() {
           </section>
 
           {/* CTA */}
-          <section className="text-center rounded-2xl border border-de-hairline bg-de-raised px-6 py-12">
-            <Layers className="w-10 h-10 text-de-magenta-ink mx-auto mb-4" />
-            <h2 className="text-3xl font-bold text-white mb-3">Ready to Confirm Your Pricing?</h2>
-            <p className="text-white/70 max-w-2xl mx-auto mb-8">
-              Schedule a brief assessment so we can scope users, devices, sites, backup, network, and compliance needs —
-              then confirm your exact ProActive Ecosystem investment.
-            </p>
-            <Button asChild size="lg" variant="brand">
-                  <a href="/book">
-                    {CTA.primary}
-                <ArrowRight className="ml-2 h-4 w-4" />
-                  </a>
-                </Button>
-          </section>
+          <ConversionPathBar
+            headline="Ready to confirm your pricing?"
+            body="Schedule a brief assessment so we can scope users, devices, sites, backup, network, and compliance needs — then confirm your exact ProActive Ecosystem investment."
+          />
         </main>
 
         <DigeratiEnhancedFooterSection />

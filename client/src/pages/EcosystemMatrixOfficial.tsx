@@ -91,13 +91,13 @@ export default function EcosystemMatrixOfficial() {
   };
 
   const renderBadge = (value: string | boolean) => {
-    if (value === true) return <Badge className="bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border-emerald-500/30"><Check className="w-3 h-3" /></Badge>;
+    if (value === true) return <Badge className="border-de-hairline bg-de-bg text-de-accent-ink hover:bg-de-bg"><Check className="w-3 h-3" /></Badge>;
     if (value === false || value === "—") return <span className="text-white/20">—</span>;
     
     const isPro = typeof value === 'string' && (value.includes("VIP") || value.includes("MDR") || value.includes("Full"));
     
     return (
-      <Badge variant="outline" className={`${isPro ? 'border-de-hairline text-de-magenta-ink bg-de-raised' : 'border-white/10 text-white/70 bg-white/5'}`}>
+      <Badge variant="outline" className={`${isPro ? 'border-de-hairline text-de-magenta-ink bg-de-raised' : 'border-de-hairline text-white/70 bg-de-bg'}`}>
         {value}
       </Badge>
     );
@@ -130,7 +130,7 @@ export default function EcosystemMatrixOfficial() {
             </h1>
             <p className="text-white/60 text-lg">Security-First IT bundles · Compare tiers · Explore add-ons</p>
             <div className="flex gap-4 mt-4 text-sm font-medium">
-              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-400"></span> Included</span>
+              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#D3126A]"></span> Included</span>
               <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-de-magenta"></span> Premium</span>
               <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-white/20"></span> N/A</span>
             </div>
@@ -141,7 +141,7 @@ export default function EcosystemMatrixOfficial() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/55" />
               <Input 
                 placeholder="Search features..." 
-                className="pl-10 bg-white/5 border-white/10 focus:border-de-hairline"
+                className="pl-10 border-de-hairline bg-de-raised focus:border-[#D3126A]"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -155,7 +155,7 @@ export default function EcosystemMatrixOfficial() {
               >
                 <Zap className="w-4 h-4 mr-2" /> Highlight Upgrades
               </Button>
-              <div className="flex bg-white/5 rounded-md p-1 border border-white/10">
+              <div className="flex rounded-md border border-de-hairline bg-de-raised p-1">
                 <Button 
                   variant="ghost" 
                   size="sm" 
@@ -185,22 +185,22 @@ export default function EcosystemMatrixOfficial() {
         </div>
 
         {/* TIERS HEADER */}
-        <div className="grid grid-cols-5 gap-4 mb-6 sticky top-0 z-40 bg-[#0a0a0f]/80 backdrop-blur-md py-4 border-b border-white/10">
+        <div className="grid grid-cols-5 gap-4 mb-6 sticky top-0 z-40 bg-de-bg py-4 border-b border-de-hairline">
           <div className="text-white/55 font-bold uppercase text-xs self-center">Capability</div>
-          <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-center">
-            <Badge variant="secondary" className="mb-2 bg-slate-500/20 text-slate-400">IT</Badge>
+          <div className="p-4 rounded-xl bg-de-raised border border-de-hairline text-center">
+            <Badge variant="secondary" className="mb-2 border border-de-hairline bg-de-bg text-white/70">IT</Badge>
             <h3 className="font-bold text-lg">IT</h3>
             <p className="text-xs text-white/50">${pricing.it.user} /user·mo</p>
           </div>
-          <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-center">
-            <Badge variant="secondary" className="mb-2 bg-de-raised text-de-magenta-ink">Office</Badge>
+          <div className="p-4 rounded-xl bg-de-raised border border-de-hairline text-center">
+            <Badge variant="secondary" className="mb-2 bg-de-bg text-de-magenta-ink">Office</Badge>
             <h3 className="font-bold text-lg text-de-magenta-ink">Office</h3>
             <p className="text-xs text-de-magenta-ink/60">${pricing.office.user} /user·mo</p>
           </div>
-          <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-center">
-            <Badge variant="secondary" className="mb-2 bg-fuchsia-500/20 text-fuchsia-400">Business</Badge>
-            <h3 className="font-bold text-lg text-fuchsia-300">Business</h3>
-            <p className="text-xs text-fuchsia-400/60">${pricing.business.user} /user·mo</p>
+          <div className="p-4 rounded-xl bg-de-raised border border-de-hairline text-center">
+            <Badge variant="secondary" className="mb-2 bg-de-bg text-de-magenta-ink">Business</Badge>
+            <h3 className="font-bold text-lg text-white">Business</h3>
+            <p className="text-xs text-white/50">${pricing.business.user} /user·mo</p>
           </div>
           <div className="p-4 rounded-xl bg-de-raised border border-de-hairline text-center">
             <Badge variant="secondary" className="mb-2 bg-de-raised text-de-magenta-ink">Custom</Badge>
@@ -212,9 +212,9 @@ export default function EcosystemMatrixOfficial() {
         {/* MATRIX BODY */}
         <div className="space-y-8">
           {filteredData.map((section) => (
-            <div key={section.id} className="rounded-2xl border border-white/10 overflow-hidden bg-white/[0.02]">
+            <div key={section.id} className="overflow-hidden rounded-2xl border border-de-hairline bg-de-raised">
               <button 
-                className="w-full flex items-center justify-between p-4 bg-white/5 hover:bg-white/[0.08] transition-colors"
+                className="flex w-full items-center justify-between border-b border-de-hairline bg-de-raised p-4 transition-colors hover:bg-de-bg"
                 onClick={() => toggleSection(section.id)}
               >
                 <h2 className="text-xl font-bold flex items-center gap-2">

@@ -1,214 +1,163 @@
 import { PageTemplate } from "@/components/PageTemplate";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Heart, Target, Users, Shield, Zap, Clock, Award, Star } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { ConversionPathBar } from "@/components/ConversionPathBar";
+import { IconWell } from "@/components/visual/IconWell";
+import { Button } from "@/components/ui/button";
+import { Heart, Target, Users, Shield, Zap, Clock, Award, Star, ArrowRight } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
+import { CTA } from "@/lib/ctaCopy";
+import { PRIMARY_PHONE } from "@/data/companyContact";
+
+const cardClass = "rounded-2xl border border-de-hairline bg-de-raised";
+const insetClass = "rounded-xl border border-de-hairline bg-de-bg";
+
+const values = [
+  {
+    icon: Shield,
+    title: "Security First",
+    description:
+      "We believe every business deserves enterprise-level security, regardless of size. We stay ahead of threats so you don't have to.",
+  },
+  {
+    icon: Users,
+    title: "Partnership",
+    description:
+      "We're not just your IT provider – we're your technology partner. Your success is our success, and we're invested in your long-term growth.",
+  },
+  {
+    icon: Target,
+    title: "Proactive Approach",
+    description:
+      "We prevent problems before they happen. Our proactive monitoring and maintenance keep your systems running smoothly 24/7.",
+  },
+  {
+    icon: Heart,
+    title: "Local Commitment",
+    description:
+      "Based in Chandler, Arizona, we're proud to serve businesses throughout the Phoenix metro area with personalized, local support.",
+  },
+];
+
+const differentiators = [
+  {
+    icon: Users,
+    title: "Human-First Technology",
+    desc: "While we use advanced tools and automation, every client has a dedicated team of real people who know your business.",
+  },
+  {
+    icon: Award,
+    title: "Compliance Expertise",
+    desc: "We specialize in helping businesses meet complex compliance requirements like HIPAA, PCI DSS, and SOC 2.",
+  },
+  {
+    icon: Star,
+    title: "Transparent Pricing",
+    desc: "No hidden fees, no surprises. You'll always know exactly what you're paying for and why.",
+  },
+  {
+    icon: Clock,
+    title: "15-Minute Response",
+    desc: "When you need help, we're there – with a 15-minute first-response target during business hours, as published in our SLA.",
+  },
+];
 
 export default function MissionValues() {
-  const prefersReducedMotion = useReducedMotion() ?? false;
-
   useSEO({
-    title: 'Mission & Values - Our Commitment',
-    description: 'Digerati Experts mission and core values. Security-first IT, local partnership, and proactive protection for Arizona businesses.',
-    canonical: '/about/mission',
+    title: "Mission & Values - Our Commitment",
+    description:
+      "Digerati Experts mission and core values. Security-first IT, local partnership, and proactive protection for Arizona businesses.",
+    canonical: "/about/mission-values",
   });
-  
-  const values = [
-    {
-      icon: Shield,
-      title: "Security First",
-      description: "We believe every business deserves enterprise-level security, regardless of size. We stay ahead of threats so you don't have to.",
-      gradient: " "
-    },
-    {
-      icon: Users,
-      title: "Partnership",
-      description: "We're not just your IT provider – we're your technology partner. Your success is our success, and we're invested in your long-term growth.",
-      gradient: " "
-    },
-    {
-      icon: Target,
-      title: "Proactive Approach",
-      description: "We prevent problems before they happen. Our proactive monitoring and maintenance keep your systems running smoothly 24/7.",
-      gradient: " to-fuchsia-600"
-    },
-    {
-      icon: Heart,
-      title: "Local Commitment",
-      description: "Based in Chandler, Arizona, we're proud to serve businesses throughout the Phoenix metro area with personalized, local support.",
-      gradient: "from-fuchsia-500 to-pink-600"
-    }
-  ];
-
-  const differentiators = [
-    { icon: Users, title: "Human-First Technology", desc: "While we use advanced tools and automation, every client has a dedicated team of real people who know your business." },
-    { icon: Award, title: "Compliance Expertise", desc: "We specialize in helping businesses meet complex compliance requirements like HIPAA, PCI DSS, and SOC 2." },
-    { icon: Star, title: "Transparent Pricing", desc: "No hidden fees, no surprises. You'll always know exactly what you're paying for and why." },
-    { icon: Clock, title: "15-Minute Response", desc: "When you need help, we're there – with an industry-leading 15-minute response time during business hours." }
-  ];
 
   return (
     <PageTemplate
       title="Mission & Values"
       subtitle="Our commitment to partnership and protecting Arizona businesses."
-      icon={<Heart className="w-10 h-10 text-white" />}
-      breadcrumbs={[{ label: "About", href: "/" }, { label: "Mission & Values" }]}
+      icon={<Heart className="h-10 w-10 text-de-accent-ink" />}
+      breadcrumbs={[{ label: "About" }, { label: "Mission & Values" }]}
+      actions={
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Button asChild variant="brand" size="lg" className="h-12 px-6 font-semibold">
+            <a href="/book">
+              {CTA.primary}
+              <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
+            </a>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="h-12 border-white/20 px-6 font-semibold text-white hover:bg-white/10"
+          >
+            <a href={PRIMARY_PHONE.telHref}>Call {PRIMARY_PHONE.display}</a>
+          </Button>
+        </div>
+      }
     >
       <div className="space-y-16">
-        {/* Mission Statement */}
-        <motion.div 
-          className="text-center max-w-4xl mx-auto"
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-de-raised border border-de-hairline mb-6">
-            <Zap className="w-8 h-8 text-white" />
+        <div className="mx-auto max-w-4xl text-center">
+          <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-de-hairline bg-de-raised">
+            <Zap className="h-8 w-8 text-de-accent-ink" aria-hidden="true" />
           </div>
-          <h2 className="text-3xl font-bold mb-6 text-white">Our Mission</h2>
-          <p className="text-xl text-gray-300 leading-relaxed">
-            To empower small and medium-sized businesses in Arizona with enterprise-grade IT security and support, 
+          <h2 className="mb-6 text-3xl font-bold text-white">Our Mission</h2>
+          <p className="text-xl leading-relaxed text-white/80">
+            To empower small and medium-sized businesses in Arizona with enterprise-grade IT security and support,
             making advanced cybersecurity accessible and affordable for organizations of all sizes.
           </p>
-        </motion.div>
+        </div>
 
-        {/* Core Values */}
         <div>
-          <motion.h2 
-            className="text-3xl font-bold text-center mb-10 text-white"
-            initial={prefersReducedMotion ? {} : { opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            Our Core Values
-          </motion.h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            {values.map((value, index) => {
+          <h2 className="mb-10 text-center text-3xl font-bold text-white">Our Core Values</h2>
+          <div className="grid gap-6 md:grid-cols-2">
+            {values.map((value) => {
               const Icon = value.icon;
               return (
-                <motion.div
-                  key={index}
-                  initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
-                >
-                  <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-hairline hover:bg-white/10 transition-all duration-300 overflow-hidden">
-                    <div className={`absolute top-0 right-0 w-32 h-32 bg-de-magenta opacity-[0.06] rounded-bl-full`} />
-                    <CardHeader>
-                      <div className={`w-14 h-14 rounded-xl border border-de-hairline bg-de-bg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                        <Icon className="h-7 w-7 text-white" />
-                      </div>
-                      <CardTitle className="text-2xl text-white">{value.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-400 leading-relaxed">{value.description}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
+                <article key={value.title} className={`de-interactive-card p-6 md:p-8 ${cardClass}`}>
+                  <IconWell icon={Icon} size="md" surface="dark" />
+                  <h3 className="mt-4 text-2xl font-semibold text-white">{value.title}</h3>
+                  <p className="mt-3 leading-relaxed text-white/70">{value.description}</p>
+                </article>
               );
             })}
           </div>
         </div>
 
-        {/* What Sets Us Apart */}
-        <motion.div 
-          className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 md:p-12 overflow-hidden"
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-de-raised to-transparent rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-de-raised to-transparent rounded-full blur-3xl" />
-          
-          <div className="relative">
-            <h2 className="text-3xl font-bold mb-8 text-white">What Sets Us Apart</h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              {differentiators.map((item, index) => {
-                const Icon = item.icon;
-                return (
-                  <motion.div 
-                    key={index}
-                    className="flex gap-4 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:border-de-hairline hover:bg-white/10 transition-all duration-300"
-                    initial={prefersReducedMotion ? {} : { opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1, duration: 0.3 }}
-                  >
-                    <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-de-raised border border-de-hairline flex items-center justify-center">
-                      <Icon className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-white mb-1">{item.title}</h3>
-                      <p className="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
+        <section className={`p-8 md:p-12 ${cardClass}`}>
+          <h2 className="mb-8 text-3xl font-bold text-white">What Sets Us Apart</h2>
+          <div className="grid gap-6 md:grid-cols-2">
+            {differentiators.map((item) => {
+              const Icon = item.icon;
+              return (
+                <div key={item.title} className={`flex gap-4 p-4 ${insetClass}`}>
+                  <IconWell icon={Icon} size="sm" surface="dark" />
+                  <div>
+                    <h3 className="mb-1 font-semibold text-white">{item.title}</h3>
+                    <p className="text-sm leading-relaxed text-white/65">{item.desc}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        </motion.div>
+        </section>
 
-        {/* Stats Section */}
-        <motion.div 
-          className="grid md:grid-cols-4 gap-6 bg-de-surface rounded-2xl p-8 text-white"
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          {[
-            { value: "10+", label: "Years Experience" },
-            { value: "AZ", label: "Based in Arizona" },
-            { value: "1", label: "Accountable operating model" },
-            { value: "MSP+MSSP", label: "IT + security together" }
-          ].map((stat, idx) => (
-            <div key={idx} className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
-              <p className="text-3xl font-bold mb-1">{stat.value}</p>
-              <p className="text-white/80 text-sm">{stat.label}</p>
-            </div>
-          ))}
-        </motion.div>
+        <div className={`grid gap-4 p-8 md:grid-cols-3 ${cardClass}`}>
+          <div className={`p-4 text-center ${insetClass}`}>
+            <p className="text-lg font-semibold text-white">Arizona</p>
+            <p className="mt-1 text-sm text-white/60">Based in Chandler, serving Greater Phoenix.</p>
+          </div>
+          <div className={`p-4 text-center ${insetClass}`}>
+            <p className="text-lg font-semibold text-white">One operating model</p>
+            <p className="mt-1 text-sm text-white/60">Accountable ownership across IT and security.</p>
+          </div>
+          <div className={`p-4 text-center ${insetClass}`}>
+            <p className="text-lg font-semibold text-white">MSP + MSSP</p>
+            <p className="mt-1 text-sm text-white/60">IT and security delivered together.</p>
+          </div>
+        </div>
 
-        {/* CTA */}
-        <motion.div 
-          className="relative rounded-2xl overflow-hidden"
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="absolute inset-0 bg-de-surface" />
-          <div className="absolute inset-0 opacity-20">
-            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="mission-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#mission-grid)" />
-            </svg>
-          </div>
-          
-          <div className="relative p-8 md:p-12 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Ready to Experience the Difference?</h2>
-            <p className="text-lg md:text-xl mb-8 text-white/90 max-w-2xl mx-auto">
-              Join the Arizona businesses that trust Digerati Experts with their IT and security.
-            </p>
-            <a 
-              href="/book"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center bg-white text-de-magenta hover:bg-de-paper-raised px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
-              data-testid="button-schedule"
-            >
-              Schedule Free Consultation
-            </a>
-          </div>
-        </motion.div>
+        <ConversionPathBar
+          headline="Ready to experience the difference?"
+          body="Start with a Cyber Risk Assessment — we’ll map risk and the right next step for your Arizona business."
+        />
       </div>
     </PageTemplate>
   );

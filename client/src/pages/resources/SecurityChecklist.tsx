@@ -1,12 +1,12 @@
-import { MegaMenu } from "@/components/MegaMenu";
-import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageTemplate } from "@/components/PageTemplate";
+import { ConversionPathBar } from "@/components/ConversionPathBar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Shield, Download, ExternalLink, Lock, Server, Users, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Shield, Download, Lock, Server, Users, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { CTA } from "@/lib/ctaCopy";
+import { useSEO } from "@/hooks/useSEO";
 
 interface ChecklistItem {
   id: string;
@@ -98,83 +98,84 @@ export default function SecurityChecklist() {
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "critical": return "bg-red-500/20 text-red-400 border-red-500/30";
-      case "high": return "bg-orange-500/20 text-orange-400 border-orange-500/30";
-      case "medium": return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
-      default: return "bg-gray-500/20 text-gray-400 border-gray-500/30";
+      case "critical":
+        return "border border-red-500/40 bg-transparent text-red-300";
+      case "high":
+        return "border border-de-hairline bg-transparent text-white";
+      case "medium":
+        return "border border-de-hairline bg-transparent text-white/70";
+      default:
+        return "border border-de-hairline bg-transparent text-white/55";
     }
   };
 
-  return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <MegaMenu />
-      
-      <main className="de-nav-clear pb-20">
-        <div className="container mx-auto px-4 max-w-5xl">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <Badge className="mb-4 bg-de-raised text-de-accent-ink border-de-hairline">
-              Security Checklist
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Business Security Checklist
-            </h1>
-            <p className="text-xl text-white/70 max-w-3xl mx-auto">
-              Use this interactive checklist to assess your organization's security posture. Complete these essential items to strengthen your defenses.
-            </p>
-          </div>
+  useSEO({
+    title: "Business Security Checklist",
+    description:
+      "Interactive security checklist for Arizona businesses. Assess access control, endpoints, network, backups, and training before you talk to an MSP.",
+    canonical: "/resources/security-checklist",
+  });
 
-          {/* Progress Card */}
-          <Card className="mb-8 bg-de-raised border-de-hairline">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
+  return (
+    <PageTemplate
+      title="Business Security Checklist"
+      subtitle="Use this interactive checklist to assess your organization's security posture. Complete these essential items to strengthen your defenses."
+      icon={<Shield className="h-10 w-10 text-de-accent-ink" />}
+      breadcrumbs={[{ label: "Resources", href: "/resources" }, { label: "Security Checklist" }]}
+      actions={
+        <Button asChild variant="brand" size="lg" className="h-12 px-6 font-semibold" data-testid="button-get-assessment">
+          <a href="/book">{CTA.primary}</a>
+        </Button>
+      }
+    >
+      <div className="mx-auto max-w-5xl space-y-12">
+          <div className="rounded-2xl border border-de-hairline bg-de-raised p-6">
+              <div className="mb-4 flex items-center justify-between">
                 <div>
-                  <h3 className="text-xl font-bold text-white">Your Progress</h3>
-                  <p className="text-white/70">{completedItems} of {totalItems} items completed</p>
+                  <h2 className="text-xl font-bold text-white">Your Progress</h2>
+                  <p className="text-white/70">
+                    {completedItems} of {totalItems} items completed
+                  </p>
                 </div>
                 <div className="text-4xl font-bold text-de-accent-ink">{percentComplete}%</div>
               </div>
-              <div className="w-full bg-white/10 rounded-full h-4">
-                <div 
-                  className="bg-de-raised h-4 rounded-full transition-all duration-500"
+              <div className="h-4 w-full rounded-full bg-de-bg">
+                <div
+                  className="h-4 rounded-full bg-[#D3126A] transition-all duration-500"
                   style={{ width: `${percentComplete}%` }}
                 />
               </div>
-              <div className="mt-4 flex gap-4">
-                <Button variant="outline" className="border-de-hairline bg-transparent text-white/70 hover:bg-de-raised hover:text-de-accent-ink hover:border-de-hairline" data-testid="button-download-pdf">
+              <div className="mt-4">
+                <Button
+                  variant="outline"
+                  className="border-de-hairline bg-transparent text-white/70 hover:bg-de-bg hover:text-white"
+                  data-testid="button-download-pdf"
+                >
                   <Download className="mr-2 h-4 w-4" />
                   Download PDF
                 </Button>
-                <Button 
-                  className="bg-white text-de-accent hover:bg-white/90"
-                  onClick={() => window.location.href = "/book"}
-                  data-testid="button-get-assessment"
-                >
-                  {CTA.primary}
-                  <ExternalLink className="ml-2 h-4 w-4" />
-                </Button>
               </div>
-            </CardContent>
-          </Card>
+          </div>
 
-          {/* Checklist Categories */}
           <div className="space-y-8">
             {checklistData.map((category) => (
-              <Card key={category.name} className="bg-white/[0.02] border-white/10" data-testid={`card-category-${category.name.toLowerCase().replace(/\s+/g, '-')}`}>
-                <CardHeader>
-                  <CardTitle className="text-xl text-white flex items-center gap-3">
-                    <category.icon className="h-6 w-6 text-de-accent-ink" />
+              <section
+                key={category.name}
+                className="rounded-2xl border border-de-hairline bg-de-raised p-6"
+                data-testid={`card-category-${category.name.toLowerCase().replace(/\s+/g, "-")}`}
+              >
+                  <h2 className="mb-6 flex items-center gap-3 text-xl font-semibold text-white">
+                    <category.icon className="h-6 w-6 text-de-accent-ink" aria-hidden="true" />
                     {category.name}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                  </h2>
+                  <div className="space-y-4">
                   {category.items.map((item) => (
-                    <div 
+                    <div
                       key={item.id}
-                      className={`p-4 rounded-lg border transition-colors ${
-                        checkedItems.has(item.id) 
-                          ? "bg-green-500/10 border-green-500/30" 
-                          : "bg-white/5 border-white/10"
+                      className={`rounded-lg border p-4 transition-colors ${
+                        checkedItems.has(item.id)
+                          ? "border-[#D3126A]/40 bg-de-bg"
+                          : "border-de-hairline bg-de-bg"
                       }`}
                     >
                       <div className="flex items-start gap-4">
@@ -182,53 +183,38 @@ export default function SecurityChecklist() {
                           id={item.id}
                           checked={checkedItems.has(item.id)}
                           onCheckedChange={() => toggleItem(item.id)}
-                          className="mt-1 border-white/30 data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500"
+                          className="mt-1 border-white/30 data-[state=checked]:border-[#D3126A] data-[state=checked]:bg-[#D3126A]"
                           data-testid={`checkbox-${item.id}`}
                         />
                         <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-1">
-                            <label 
-                              htmlFor={item.id} 
-                              className={`font-medium cursor-pointer ${checkedItems.has(item.id) ? "text-green-400 line-through" : "text-white"}`}
+                          <div className="mb-1 flex items-center gap-3">
+                            <label
+                              htmlFor={item.id}
+                              className={`cursor-pointer font-medium ${checkedItems.has(item.id) ? "text-white/55 line-through" : "text-white"}`}
                             >
                               {item.title}
                             </label>
-                            <Badge className={getPriorityColor(item.priority)}>
-                              {item.priority}
-                            </Badge>
+                            <Badge className={getPriorityColor(item.priority)}>{item.priority}</Badge>
                           </div>
-                          <p className="text-sm text-gray-400">{item.description}</p>
+                          <p className="text-sm text-white/55">{item.description}</p>
                         </div>
                         {checkedItems.has(item.id) && (
-                          <CheckCircle2 className="h-5 w-5 text-green-400" />
+                          <CheckCircle2 className="h-5 w-5 text-de-accent-ink" aria-hidden="true" />
                         )}
                       </div>
                     </div>
                   ))}
-                </CardContent>
-              </Card>
+                  </div>
+              </section>
             ))}
           </div>
 
-          {/* CTA */}
-          <Card className="mt-12 bg-white/[0.02] border-white/10">
-            <CardContent className="p-8 text-center">
-              <h3 className="text-2xl font-bold text-white mb-2">Need Help Completing Your Checklist?</h3>
-              <p className="text-white/70 mb-6">Our security experts can help you implement these controls and more. Schedule a free consultation.</p>
-              <Button 
-                className="bg-de-accent hover:bg-de-accent text-white"
-                onClick={() => window.location.href = "/book"}
-                data-testid="button-schedule-consultation"
-              >
-                Schedule Free Consultation
-                <ExternalLink className="ml-2 h-4 w-4" />
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
-
-      <DigeratiEnhancedFooterSection />
-    </div>
+          <ConversionPathBar
+            headline="Need help completing your checklist?"
+            body="Our security experts can help you implement these controls. Start with a Cyber Risk Assessment."
+            primaryTestId="button-schedule-consultation"
+          />
+      </div>
+    </PageTemplate>
   );
 }

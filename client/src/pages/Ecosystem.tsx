@@ -6,42 +6,36 @@ export default function Ecosystem() {
   const servicePillars = [
     { 
       name: "DE WORKPLACE", 
-      color: " ", 
       icon: Users,
       desc: "SMART HR · SMART Identity · SMART Communications · Team Collaboration",
       details: ["Email + Calendar + Chat", "MFA + SSO + Password Manager", "UCaaS + Video Conferencing", "File Storage + Wiki + Projects"]
     },
     { 
       name: "DE SECURITY", 
-      color: "from-cyan-600 to-blue-600", 
       icon: Shield,
       desc: "Email Protection · EDR · SOC/MDR · Security Awareness · DLP",
       details: ["24/7 Threat Monitoring", "Endpoint Detection & Response", "Phishing Protection", "Security Logging & Reporting"]
     },
     { 
       name: "DE INFRASTRUCTURE", 
-      color: "from-emerald-600 to-teal-600", 
       icon: Server,
       desc: "Managed Network · Firewall · Remote Access · Site Connectivity",
       details: ["Firewall + Switching + Wi-Fi", "ISP Coordination + Failover", "SASE / ZTNA Architecture", "Network Segmentation"]
     },
     { 
       name: "DE SUPPORT", 
-      color: "from-amber-600 to-orange-600", 
       icon: HeadphonesIcon,
       desc: "Service Desk · Vendor Management · Change Requests · Config Mgmt",
       details: ["User Support for DE Systems", "Vendor Escalations", "Standards-Based Configuration", "Access Changes"]
     },
     { 
       name: "DE BACKUP & RECOVERY", 
-      color: "from-rose-600 to-pink-600", 
       icon: Building2,
       desc: "Backup Strategy · Restore Testing · DR Runbooks · Off-site Backup",
       details: ["Endpoints + SaaS Backup", "Verified Restore Testing", "Cold / Warm / Hot Site Planning", "Business Continuity"]
     },
     { 
       name: "DE COMPLIANCE", 
-      color: " ", 
       icon: FileCheck,
       desc: "HIPAA · GDPR · FTC Safeguards · Cyber Insurance · Policy Enforcement",
       details: ["Compliance Modules", "Evidence Support", "Audit-Ready Documentation", "Framework Mapping"]
@@ -51,21 +45,18 @@ export default function Ecosystem() {
   const tiers = [
     { 
       name: pricing.office.name, 
-      color: "from-blue-600 to-cyan-600", 
       price: `$${pricing.office.user}`,
       desc: "Core security-first IT for small teams",
       highlights: ["Email + MFA + SSO", "EDR + Email Protection", "Managed Network", "Service Desk + Backup"]
     },
     { 
       name: pricing.business.name, 
-      color: " ", 
       price: `$${pricing.business.user}`,
       desc: "SOC/MDR + SMART HR + vCIO advisory",
       highlights: ["Everything in Office", "SOC / MDR Monitoring", "SMART HR Workflows", "Security Awareness + vCIO"]
     },
     { 
       name: pricing.enterprise.name, 
-      color: "from-cyan-500 to-teal-500", 
       price: `$${pricing.enterprise.user}`,
       desc: "Full compliance + advanced controls",
       highlights: ["Everything in Business", "HIPAA/GDPR Modules", "Pen Testing + DR Runbooks", "AI & Cloud Automation"]
@@ -73,7 +64,7 @@ export default function Ecosystem() {
   ];
 
   return (
-    <section className="min-h-screen de-nav-clear pb-16 px-6 bg-gradient-to-br from-[#07041a] via-[#0f0b2c] to-[#1a1143] text-white">
+    <section className="min-h-screen bg-de-bg de-nav-clear px-6 pb-16 text-white">
       <div className="max-w-7xl mx-auto">
         <motion.div 
           className="text-center mb-16"
@@ -102,7 +93,7 @@ export default function Ecosystem() {
               return (
                 <div
                   key={pillar.name}
-                  className="rounded-2xl p-6 bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 hover:bg-white/[0.08] transition-all duration-300"
+                  className="rounded-2xl border border-de-hairline bg-de-raised p-6 transition-colors hover:border-[#D3126A]/40"
                 >
                   <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl border border-de-hairline bg-de-bg mb-4`}>
                     <Icon className="w-6 h-6 text-de-magenta" />
@@ -112,7 +103,7 @@ export default function Ecosystem() {
                   <ul className="space-y-1">
                     {pillar.details.map((detail, idx) => (
                       <li key={idx} className="text-xs text-white/70 flex items-center gap-2">
-                        <span className="w-1 h-1 rounded-full bg-cyan-400" />
+                        <span className="h-1 w-1 rounded-full bg-[#D3126A]" />
                         {detail}
                       </li>
                     ))}
@@ -133,7 +124,7 @@ export default function Ecosystem() {
             {tiers.map((tier, index) => (
               <div
                 key={tier.name}
-                className="rounded-2xl p-8 bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-300 flex flex-col"
+                className="flex flex-col rounded-2xl border border-de-hairline bg-de-raised p-8 transition-colors hover:border-[#D3126A]/40"
               >
                 <div className={`inline-block px-4 py-1.5 rounded-lg bg-de-magenta text-white text-sm font-bold mb-4 w-fit`}>
                   {tier.name}
@@ -146,14 +137,14 @@ export default function Ecosystem() {
                 <ul className="space-y-2 flex-grow">
                   {tier.highlights.map((highlight, idx) => (
                     <li key={idx} className="text-sm text-gray-400 flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-1.5 flex-shrink-0" />
+                      <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#D3126A]" />
                       {highlight}
                     </li>
                   ))}
                 </ul>
                 <a
                   href="/book"
-                  className="block w-full mt-6 py-3 rounded-lg text-center font-semibold transition-all bg-white/10 text-white hover:bg-white/20 border border-white/20"
+                  className="mt-6 block w-full rounded-lg border border-[#D3126A] bg-[#D3126A] py-3 text-center font-semibold text-white transition-colors hover:bg-[#b80f5c]"
                 >
                   Get My Cyber Risk Assessment
                 </a>

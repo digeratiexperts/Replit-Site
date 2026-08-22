@@ -10,6 +10,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { PageTemplate } from "@/components/PageTemplate";
+import { ConversionPathBar } from "@/components/ConversionPathBar";
 import { useSEO } from "@/hooks/useSEO";
 import { CTA } from "@/lib/ctaCopy";
 import { Button } from "@/components/ui/button";
@@ -110,6 +111,12 @@ export default function ResourcesIndex() {
             );
           })}
         </ul>
+        <div className="mt-16">
+          <ConversionPathBar
+            headline="Need a recommendation, not a PDF?"
+            body="A Cyber Risk Assessment maps which resource — and which operating model — actually fits your Arizona business."
+          />
+        </div>
       </div>
     </PageTemplate>
   );

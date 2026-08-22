@@ -33,6 +33,7 @@ import { CTA } from "@/lib/ctaCopy";
 import { COMPANY, COMPANY_SOCIAL, PRIMARY_PHONE } from "@/data/companyContact";
 import { GREATER_PHOENIX_CITIES, cityPageSlug } from "@/data/greaterPhoenixCities";
 import { IconWell } from "@/components/visual/IconWell";
+import { ConversionPathBar } from "@/components/ConversionPathBar";
 import heroBgImage from "@assets/de-hero-arizona-dusk.png";
 
 const assessmentFormSchema = z.object({
@@ -245,7 +246,7 @@ export function LocationServicePage(props: LocationPageProps) {
             className="de-hero-glow absolute top-[8%] right-[-4%] h-[640px] w-[640px] pointer-events-none"
             style={{
               background:
-                "radial-gradient(circle at 70% 35%, rgba(211, 18, 106, 0.20) 0%, rgba(139, 92, 246, 0.10) 38%, transparent 64%)",
+                "radial-gradient(circle at 70% 35%, rgba(211, 18, 106, 0.20) 0%, transparent 64%)",
             }}
           />
         </div>
@@ -664,35 +665,11 @@ export function LocationServicePage(props: LocationPageProps) {
       </section>
 
       <section className="bg-[var(--de-surface)] py-20">
-        <div className="mx-auto w-[min(94vw,1200px)] px-4 text-center">
-          <motion.div
-            initial={fadeUp}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: prefersReducedMotion ? 0 : 0.35 }}
-          >
-            <h2 className="mb-6 text-3xl font-bold text-white md:text-4xl">{props.cta}</h2>
-            <p className="mb-8 text-xl text-white/75">
-              Contact our {props.city} team today for your free consultation
-            </p>
-            <div className="flex flex-col justify-center gap-4 sm:flex-row">
-              <Button asChild size="lg" variant="brand" className="px-8 py-6 text-lg font-semibold">
-                <a href="#city-assessment">
-                  {CTA.primary} <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
-                </a>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="border-white/35 bg-transparent px-8 py-6 text-lg font-semibold text-white hover:border-white/55 hover:bg-white/5"
-              >
-                <a href={PRIMARY_PHONE.telHref}>
-                  <Phone className="mr-2 h-5 w-5" aria-hidden="true" /> Call {PRIMARY_PHONE.display}
-                </a>
-              </Button>
-            </div>
-          </motion.div>
+        <div className="mx-auto w-[min(94vw,1200px)] px-4">
+          <ConversionPathBar
+            headline={props.cta}
+            body={`Contact our ${props.city} team today — start with a Cyber Risk Assessment.`}
+          />
         </div>
       </section>
 

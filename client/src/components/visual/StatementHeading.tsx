@@ -8,7 +8,7 @@ export function shouldAppendStatementColon(text: string): boolean {
 
 /**
  * Statement heading with the Trust/Engage magenta (or page-family) colon.
- * Accent ink follows `data-accent` so Resources stays amber.
+ * Accent ink follows `data-accent` so Journal/blog stays amber.
  */
 export function StatementHeading({
   as: Tag = "h1",

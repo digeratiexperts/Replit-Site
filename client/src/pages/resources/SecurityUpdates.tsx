@@ -1,12 +1,11 @@
-import { MegaMenu } from "@/components/MegaMenu";
-import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
+import { PageTemplate } from "@/components/PageTemplate";
+import { ConversionPathBar } from "@/components/ConversionPathBar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, ArrowRight, Search, AlertCircle, Shield, Lock, Bug, ExternalLink } from "lucide-react";
+import { Calendar, Search, AlertCircle, Shield, Lock, Bug, ExternalLink } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useMemo, useState } from "react";
-import { useBooking } from "@/contexts/BookingContext";
-import { CTA } from "@/lib/ctaCopy";
+import { useSEO } from "@/hooks/useSEO";
 import { useThreatFeed } from "@/hooks/useThreatFeed";
 import {
   formatUpdateDisplayDate,
@@ -44,7 +43,6 @@ function badgeClass(item: Pick<ThreatItem, "severity"> | { severity?: string }):
 }
 
 export default function SecurityUpdates() {
-  const { openBooking } = useBooking();
   const { payload, loading } = useThreatFeed("all");
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
@@ -65,25 +63,21 @@ export default function SecurityUpdates() {
     return matchesCategory && matchesSearch;
   });
 
-  return (
-    <div className="min-h-screen bg-[var(--de-bg)]">
-      <MegaMenu />
+  useSEO({
+    title: "Security Updates",
+    description:
+      "A scored stream of actively exploited vulnerabilities, CISA advisories, and Microsoft security updates from Digerati Experts.",
+    canonical: "/resources/security-updates",
+  });
 
-      <main className="de-nav-clear pb-20">
-        <div className="container mx-auto px-4 max-w-7xl">
-          <div className="text-center mb-12">
-            <Badge className="mb-4 bg-red-500/20 text-red-400 border-red-500/30">
-              <AlertCircle className="w-3 h-3 mr-1" />
-              Security Intelligence
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Security Updates
-            </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              A scored stream of actively exploited vulnerabilities, CISA advisories, and Microsoft
-              security updates — not a generic CVE ticker.
-            </p>
-          </div>
+  return (
+    <PageTemplate
+      title="Security Updates"
+      subtitle="A scored stream of actively exploited vulnerabilities, CISA advisories, and Microsoft security updates — not a generic CVE ticker."
+      icon={<Shield className="h-10 w-10 text-de-accent-ink" />}
+      breadcrumbs={[{ label: "Resources", href: "/resources" }, { label: "Security Updates" }]}
+    >
+      <div className="space-y-12">
 
           <div className="flex flex-col md:flex-row gap-4 mb-8">
             <div className="relative flex-1">
@@ -237,27 +231,11 @@ export default function SecurityUpdates() {
             </section>
           )}
 
-          <div className="mt-16 text-center">
-            <div className="rounded-2xl border border-de-hairline bg-de-raised p-8 max-w-2xl mx-auto">
-              <h3 className="text-2xl font-bold text-white mb-4">Need help prioritizing a patch?</h3>
-              <p className="text-white/60 mb-6">
-                We can map these items against your stack and tell you what actually needs attention
-                this week.
-              </p>
-              <button
-                type="button"
-                onClick={() => openBooking("security_updates")}
-                className="inline-flex min-h-11 items-center rounded-lg bg-[#D3126A] px-6 py-2.5 text-base font-semibold text-white hover:bg-[#e01874]"
-              >
-                {CTA.primary}
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </main>
-
-      <DigeratiEnhancedFooterSection />
-    </div>
+          <ConversionPathBar
+            headline="Need help prioritizing a patch?"
+            body="We can map these items against your stack and tell you what actually needs attention this week."
+          />
+      </div>
+    </PageTemplate>
   );
 }

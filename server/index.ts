@@ -276,6 +276,9 @@ app.use((req, res, next) => {
   if (req.path.toLowerCase() === "/solutions/proactive-ecosystem-packages") {
     return res.redirect(301, "/solutions/proactive-ecosystem");
   }
+  if (req.path === "/about/mission") {
+    return res.redirect(301, "/about/mission-values");
+  }
   next();
 });
 

@@ -50,7 +50,7 @@ function InternalToolGate({ children }: { children: React.ReactNode }) {
 
   if (gate === "checking") {
     return (
-      <div className="min-h-screen bg-[#0a1020] text-white flex items-center justify-center p-8">
+      <div className="flex min-h-screen items-center justify-center bg-de-bg p-8 text-white">
         <Helmet>
           <title>Networking Planner | Digerati Experts</title>
           <meta name="robots" content="noindex, nofollow" />
@@ -65,15 +65,15 @@ function InternalToolGate({ children }: { children: React.ReactNode }) {
       typeof window !== "undefined" ? window.location.pathname : "/official-network-planner",
     );
     return (
-      <div className="min-h-screen bg-[#0a1020] text-white flex items-center justify-center p-8">
+      <div className="flex min-h-screen items-center justify-center bg-de-bg p-8 text-white">
         <Helmet>
           <title>Internal Tool | Digerati Experts</title>
           <meta name="robots" content="noindex, nofollow" />
           <meta name="description" content="Internal Digerati Experts tooling. Authentication required." />
         </Helmet>
-        <div className="max-w-md text-center space-y-4 border border-white/10 rounded-2xl p-8 bg-[#141b2b]">
-          <div className="mx-auto w-12 h-12 rounded-full bg-amber-500/15 flex items-center justify-center">
-            <Lock className="w-6 h-6 text-amber-300" aria-hidden="true" />
+        <div className="max-w-md space-y-4 rounded-2xl border border-de-hairline bg-de-raised p-8 text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-de-hairline bg-de-bg">
+            <Lock className="h-6 w-6 text-de-accent-ink" aria-hidden="true" />
           </div>
           <h1 className="text-xl font-bold">Internal tool — sign-in required</h1>
           <p className="text-slate-400 text-sm leading-relaxed">
@@ -213,7 +213,7 @@ function NetworkPlannerOfficialApp() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a1020] text-white">
+    <div className="min-h-screen bg-de-bg text-white">
       <Helmet>
         <title>Networking Planner | Digerati Experts</title>
         <meta name="description" content="Plan your CloudShield SASE and CoreStack network packages with our interactive pricing calculator. Configure sites, users, and hardware for accurate cost estimates." />
@@ -223,12 +223,12 @@ function NetworkPlannerOfficialApp() {
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
-      <div className="mx-auto max-w-[1120px] rounded-[18px] bg-[radial-gradient(900px_500px_at_8%_-10%,rgba(211,18,106,0.14)_0%,transparent_60%),radial-gradient(900px_520px_at_100%_110%,rgba(11,163,255,0.12)_0%,transparent_60%),#0a1020] p-7">
+      <div className="mx-auto max-w-[1120px] rounded-[18px] bg-[radial-gradient(900px_500px_at_8%_-10%,rgba(211,18,106,0.14)_0%,transparent_60%),#050312] p-7">
         
         {/* Header */}
         <header className="flex flex-col md:flex-row items-start justify-between gap-4 mb-6">
           <div className="flex items-start gap-4">
-            <div className="px-3 py-2 rounded-xl bg-de-raised border border-white/15 text-de-accent-ink font-bold text-sm">
+            <div className="rounded-xl border border-de-hairline bg-de-raised px-3 py-2 text-de-accent-ink font-bold text-sm">
               Networking
             </div>
             <div>
@@ -239,45 +239,45 @@ function NetworkPlannerOfficialApp() {
             </div>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" className="border-white/15 text-slate-200 hover:bg-white/5" onClick={handleReset} data-testid="button-reset">
+            <Button variant="outline" className="border-de-hairline text-white hover:bg-de-raised" onClick={handleReset} data-testid="button-reset">
               <RotateCcw className="w-4 h-4 mr-2" /> Reset
             </Button>
-            <Button className="bg-gradient-to-r from-amber-500 to-orange-500 text-black font-bold border border-orange-400 shadow-lg shadow-orange-500/25" onClick={() => window.print()} data-testid="button-print">
+            <Button className="bg-[#D3126A] font-semibold text-white hover:bg-[#b80f5c]" onClick={() => window.print()} data-testid="button-print">
               <Printer className="w-4 h-4 mr-2" /> Print / Save
             </Button>
           </div>
         </header>
 
         {/* Solutions */}
-        <section className="bg-gradient-to-b from-[#141b2b] to-[#0f1525] border border-white/10 rounded-2xl p-5 mb-4 shadow-xl">
+        <section className="rounded-2xl border border-de-hairline bg-de-raised p-5 mb-4 shadow-xl">
           <h2 className="text-xl font-extrabold text-white/80 mb-4">Solutions</h2>
           <div className="grid md:grid-cols-2 gap-4">
             <label className="cursor-pointer group">
-              <div className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${cloudShield ? 'bg-[#182346] border-amber-500 shadow-[0_0_0_2px_rgba(255,155,22,0.18)]' : 'bg-gradient-to-b from-[#10182a] to-[#0b1220] border-white/10 hover:border-white/20'}`} onClick={() => setCloudShield(!cloudShield)} data-testid="toggle-cloudshield">
-                <div className="w-9 h-9 rounded-lg bg-de-raised border border-white/15 flex items-center justify-center">
+              <div className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${cloudShield ? 'border-[#D3126A] bg-de-bg' : 'border-de-hairline bg-de-bg hover:border-white/25'}`} onClick={() => setCloudShield(!cloudShield)} data-testid="toggle-cloudshield">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-de-hairline bg-de-bg">
                   <Shield className="w-5 h-5 text-de-accent-ink" />
                 </div>
                 <div className="flex-1">
                   <div className="font-extrabold text-white/80">CloudShield</div>
                   <div className="text-xs text-slate-400">(SASE)</div>
                 </div>
-                <div className={`w-6 h-6 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 border border-orange-400 flex items-center justify-center shadow-lg shadow-orange-500/25 transition-all ${cloudShield ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
-                  <Check className="w-4 h-4 text-black" strokeWidth={3} />
+                <div className={`flex h-6 w-6 items-center justify-center rounded-lg border border-[#D3126A] bg-[#D3126A] transition-all ${cloudShield ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
+                  <Check className="w-4 h-4 text-white" strokeWidth={3} />
                 </div>
               </div>
             </label>
 
             <label className="cursor-pointer group">
-              <div className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${coreStack ? 'bg-[#182346] border-amber-500 shadow-[0_0_0_2px_rgba(255,155,22,0.18)]' : 'bg-gradient-to-b from-[#10182a] to-[#0b1220] border-white/10 hover:border-white/20'}`} onClick={() => setCoreStack(!coreStack)} data-testid="toggle-corestack">
-                <div className="w-9 h-9 rounded-lg bg-de-raised border border-white/15 flex items-center justify-center">
-                  <Server className="w-5 h-5 text-cyan-300" />
+              <div className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${coreStack ? 'border-[#D3126A] bg-de-bg' : 'border-de-hairline bg-de-bg hover:border-white/25'}`} onClick={() => setCoreStack(!coreStack)} data-testid="toggle-corestack">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-de-hairline bg-de-bg">
+                  <Server className="w-5 h-5 text-de-accent-ink" />
                 </div>
                 <div className="flex-1">
                   <div className="font-extrabold text-white/80">CoreStack</div>
                   <div className="text-xs text-slate-400">(Network)</div>
                 </div>
-                <div className={`w-6 h-6 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 border border-orange-400 flex items-center justify-center shadow-lg shadow-orange-500/25 transition-all ${coreStack ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
-                  <Check className="w-4 h-4 text-black" strokeWidth={3} />
+                <div className={`flex h-6 w-6 items-center justify-center rounded-lg border border-[#D3126A] bg-[#D3126A] transition-all ${coreStack ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
+                  <Check className="w-4 h-4 text-white" strokeWidth={3} />
                 </div>
               </div>
             </label>
@@ -286,7 +286,7 @@ function NetworkPlannerOfficialApp() {
         </section>
 
         {/* Environment */}
-        <section className="bg-gradient-to-b from-[#141b2b] to-[#0f1525] border border-white/10 rounded-2xl p-5 mb-4 shadow-xl">
+        <section className="rounded-2xl border border-de-hairline bg-de-raised p-5 mb-4 shadow-xl">
           <h2 className="text-xl font-extrabold text-white/80 mb-4">Your Environment</h2>
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -296,7 +296,7 @@ function NetworkPlannerOfficialApp() {
                 min={1} 
                 value={sites} 
                 onChange={(e) => setSites(Math.max(1, parseInt(e.target.value) || 1))}
-                className="bg-[#0e1524] border-white/15 focus:border-de-hairline"
+                className="border-de-hairline bg-de-bg focus:border-de-hairline"
                 data-testid="input-sites"
               />
             </div>
@@ -307,7 +307,7 @@ function NetworkPlannerOfficialApp() {
                 min={0} 
                 value={users} 
                 onChange={(e) => setUsers(Math.max(0, parseInt(e.target.value) || 0))}
-                className="bg-[#0e1524] border-white/15 focus:border-de-hairline"
+                className="border-de-hairline bg-de-bg focus:border-de-hairline"
                 data-testid="input-users"
               />
             </div>
@@ -316,7 +316,7 @@ function NetworkPlannerOfficialApp() {
 
         {/* CloudShield Needs */}
         {cloudShield && (
-          <section className="bg-gradient-to-b from-[#141b2b] to-[#0f1525] border border-white/10 rounded-2xl p-5 mb-4 shadow-xl">
+          <section className="rounded-2xl border border-de-hairline bg-de-raised p-5 mb-4 shadow-xl">
             <h2 className="text-xl font-extrabold text-white/80 mb-4">CloudShield (SASE) — Networking Needs</h2>
             <div className="grid md:grid-cols-4 gap-4">
               <TooltipProvider>
@@ -329,7 +329,7 @@ function NetworkPlannerOfficialApp() {
                     </TooltipTrigger>
                     <TooltipContent><p>Recurring add-on ($49 each)</p></TooltipContent>
                   </Tooltip>
-                  <Input type="number" min={0} value={csUplinksPerSite} onChange={(e) => setCsUplinksPerSite(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" data-testid="input-uplinks" />
+                  <Input type="number" min={0} value={csUplinksPerSite} onChange={(e) => setCsUplinksPerSite(Math.max(0, parseInt(e.target.value) || 0))} className="border-de-hairline bg-de-bg" data-testid="input-uplinks" />
                 </div>
 
                 <div className="space-y-2">
@@ -341,7 +341,7 @@ function NetworkPlannerOfficialApp() {
                     </TooltipTrigger>
                     <TooltipContent><p>Recurring ($59/site) + setup $199</p></TooltipContent>
                   </Tooltip>
-                  <Input type="number" min={0} value={csWarmSites} onChange={(e) => setCsWarmSites(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" data-testid="input-warm-spare" />
+                  <Input type="number" min={0} value={csWarmSites} onChange={(e) => setCsWarmSites(Math.max(0, parseInt(e.target.value) || 0))} className="border-de-hairline bg-de-bg" data-testid="input-warm-spare" />
                 </div>
 
                 <div className="space-y-2">
@@ -353,7 +353,7 @@ function NetworkPlannerOfficialApp() {
                     </TooltipTrigger>
                     <TooltipContent><p>Recurring add-on ($29 each)</p></TooltipContent>
                   </Tooltip>
-                  <Input type="number" min={0} value={csIpsec} onChange={(e) => setCsIpsec(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" data-testid="input-ipsec" />
+                  <Input type="number" min={0} value={csIpsec} onChange={(e) => setCsIpsec(Math.max(0, parseInt(e.target.value) || 0))} className="border-de-hairline bg-de-bg" data-testid="input-ipsec" />
                 </div>
 
                 <div className="space-y-2">
@@ -365,7 +365,7 @@ function NetworkPlannerOfficialApp() {
                     </TooltipTrigger>
                     <TooltipContent><p>Recurring add-on ($19 each)</p></TooltipContent>
                   </Tooltip>
-                  <Input type="number" min={0} value={csIPs} onChange={(e) => setCsIPs(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" data-testid="input-cloud-ips" />
+                  <Input type="number" min={0} value={csIPs} onChange={(e) => setCsIPs(Math.max(0, parseInt(e.target.value) || 0))} className="border-de-hairline bg-de-bg" data-testid="input-cloud-ips" />
                 </div>
               </TooltipProvider>
             </div>
@@ -374,16 +374,16 @@ function NetworkPlannerOfficialApp() {
 
         {/* CoreStack Needs */}
         {coreStack && (
-          <section className="bg-gradient-to-b from-[#141b2b] to-[#0f1525] border border-white/10 rounded-2xl p-5 mb-4 shadow-xl">
+          <section className="rounded-2xl border border-de-hairline bg-de-raised p-5 mb-4 shadow-xl">
             <h2 className="text-xl font-extrabold text-white/80 mb-4">CoreStack (Network) — Needs</h2>
             <div className="grid md:grid-cols-3 gap-4 mb-4">
               <div className="space-y-2">
                 <Label className="text-slate-400">Gateway model (per site)</Label>
                 <Select value={gateway} onValueChange={setGateway}>
-                  <SelectTrigger className="bg-[#0e1524] border-white/15" data-testid="select-gateway">
+                  <SelectTrigger className="border-de-hairline bg-de-bg" data-testid="select-gateway">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-[#141b2b] border-white/15">
+                  <SelectContent className="border-de-hairline bg-de-raised">
                     {gatewayOptions.map(g => (
                       <SelectItem key={g.id} value={g.id}>{g.name}</SelectItem>
                     ))}
@@ -393,10 +393,10 @@ function NetworkPlannerOfficialApp() {
               <div className="space-y-2">
                 <Label className="text-slate-400">Billing term</Label>
                 <Select value={billingTerm} onValueChange={(v) => setBillingTerm(v as "mo" | "1y" | "3y")}>
-                  <SelectTrigger className="bg-[#0e1524] border-white/15" data-testid="select-billing-term">
+                  <SelectTrigger className="border-de-hairline bg-de-bg" data-testid="select-billing-term">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-[#141b2b] border-white/15">
+                  <SelectContent className="border-de-hairline bg-de-raised">
                     <SelectItem value="mo">Monthly</SelectItem>
                     <SelectItem value="1y">1 Year</SelectItem>
                     <SelectItem value="3y">3 Years</SelectItem>
@@ -405,14 +405,14 @@ function NetworkPlannerOfficialApp() {
               </div>
               <div className="space-y-2">
                 <Label className="text-slate-400">Info</Label>
-                <div className="bg-white/5 border border-white/15 rounded-xl px-3 py-2.5 text-slate-300 text-sm min-h-[42px] flex items-center">
+                <div className="flex min-h-[42px] items-center rounded-xl border border-de-hairline bg-de-bg px-3 py-2.5 text-sm text-white/75">
                   {selectedGateway.description} — ${gatewayPrice}/mo
                 </div>
               </div>
             </div>
 
             <div className="flex items-center gap-2 mb-4">
-              <Checkbox id="tenG" checked={tenG} onCheckedChange={(c) => setTenG(!!c)} className="border-white/15 data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500" />
+              <Checkbox id="tenG" checked={tenG} onCheckedChange={(c) => setTenG(!!c)} className="border-white/15 data-[state=checked]:bg-[#D3126A] data-[state=checked]:border-[#D3126A]" />
               <Label htmlFor="tenG" className="text-slate-300 cursor-pointer">High performance / 10G uplinks required (+$99/site)</Label>
             </div>
 
@@ -421,19 +421,19 @@ function NetworkPlannerOfficialApp() {
               <div className="grid md:grid-cols-4 gap-4">
                 <div className="space-y-2">
                   <Label className="text-slate-400">8-port PoE switches</Label>
-                  <Input type="number" min={0} value={sw8} onChange={(e) => setSw8(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" data-testid="input-sw8" />
+                  <Input type="number" min={0} value={sw8} onChange={(e) => setSw8(Math.max(0, parseInt(e.target.value) || 0))} className="border-de-hairline bg-de-bg" data-testid="input-sw8" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-slate-400">24-port PoE switches</Label>
-                  <Input type="number" min={0} value={sw24} onChange={(e) => setSw24(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" data-testid="input-sw24" />
+                  <Input type="number" min={0} value={sw24} onChange={(e) => setSw24(Math.max(0, parseInt(e.target.value) || 0))} className="border-de-hairline bg-de-bg" data-testid="input-sw24" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-slate-400">48-port PoE switches</Label>
-                  <Input type="number" min={0} value={sw48} onChange={(e) => setSw48(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" data-testid="input-sw48" />
+                  <Input type="number" min={0} value={sw48} onChange={(e) => setSw48(Math.max(0, parseInt(e.target.value) || 0))} className="border-de-hairline bg-de-bg" data-testid="input-sw48" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-slate-400">WiFi access points</Label>
-                  <Input type="number" min={0} value={aps} onChange={(e) => setAps(Math.max(0, parseInt(e.target.value) || 0))} className="bg-[#0e1524] border-white/15" data-testid="input-aps" />
+                  <Input type="number" min={0} value={aps} onChange={(e) => setAps(Math.max(0, parseInt(e.target.value) || 0))} className="border-de-hairline bg-de-bg" data-testid="input-aps" />
                 </div>
               </div>
             </fieldset>
@@ -441,25 +441,25 @@ function NetworkPlannerOfficialApp() {
         )}
 
         {/* Summary */}
-        <section className="bg-gradient-to-b from-[#141b2b] to-[#0f1525] border border-white/10 rounded-2xl p-5 shadow-xl">
+        <section className="rounded-2xl border border-de-hairline bg-de-raised p-5 shadow-xl">
           <h2 className="text-xl font-extrabold text-white/80 mb-4">Summary</h2>
           <div className="grid md:grid-cols-4 gap-3 mb-6">
-            <div className="bg-gradient-to-b from-[#10182a] to-[#0b1220] border border-white/10 rounded-xl p-4 shadow-inner">
+            <div className="rounded-xl border border-de-hairline bg-de-bg p-4">
               <div className="text-xs text-de-accent-ink mb-1">Monthly Recurring</div>
               <div className="text-2xl font-black text-white" data-testid="text-total-mrc">${pricing.totalMRC.toLocaleString()}</div>
             </div>
-            <div className="bg-gradient-to-b from-[#10182a] to-[#0b1220] border border-white/10 rounded-xl p-4 shadow-inner">
+            <div className="rounded-xl border border-de-hairline bg-de-bg p-4">
               <div className="text-xs text-de-accent-ink mb-1">One-Time Setup</div>
               <div className="text-2xl font-black text-white" data-testid="text-total-nrc">${pricing.totalNRC.toLocaleString()}</div>
             </div>
-            <div className="bg-gradient-to-b from-[#182346] to-[#101a39] border border-white/15 rounded-xl p-4 shadow-inner">
-              <div className="text-xs text-cyan-300 mb-1">Per User Cost</div>
+            <div className="rounded-xl border border-de-hairline bg-de-bg p-4">
+              <div className="text-xs text-de-accent-ink mb-1">Per User Cost</div>
               <div className="text-2xl font-black text-white" data-testid="text-per-user">${pricing.perUser}</div>
             </div>
             {pricing.mergedDiscount > 0 && (
-              <div className="bg-gradient-to-b from-[#182346] to-[#101a39] border border-amber-500/30 rounded-xl p-4 shadow-inner">
-                <div className="text-xs text-amber-400 mb-1">Bundle Savings</div>
-                <div className="text-2xl font-black text-emerald-400" data-testid="text-bundle-savings">-${pricing.mergedDiscount}</div>
+              <div className="rounded-xl border border-[#D3126A]/40 bg-de-bg p-4">
+                <div className="text-xs text-de-accent-ink mb-1">Bundle Savings</div>
+                <div className="text-2xl font-black text-white" data-testid="text-bundle-savings">-${pricing.mergedDiscount}</div>
               </div>
             )}
           </div>
@@ -467,7 +467,7 @@ function NetworkPlannerOfficialApp() {
           {/* Breakdown */}
           <div className="grid md:grid-cols-2 gap-4">
             {cloudShield && (
-              <div className="bg-white/[0.02] border border-white/10 rounded-xl p-4">
+              <div className="rounded-xl border border-de-hairline bg-de-bg p-4">
                 <h3 className="font-bold text-de-accent-ink mb-3">CloudShield (SASE)</h3>
                 <table className="w-full text-sm">
                   <tbody className="divide-y divide-white/5">
@@ -484,8 +484,8 @@ function NetworkPlannerOfficialApp() {
             )}
 
             {coreStack && (
-              <div className="bg-white/[0.02] border border-white/10 rounded-xl p-4">
-                <h3 className="font-bold text-cyan-300 mb-3">CoreStack (Network)</h3>
+              <div className="rounded-xl border border-de-hairline bg-de-bg p-4">
+                <h3 className="mb-3 font-bold text-de-accent-ink">CoreStack (Network)</h3>
                 <table className="w-full text-sm">
                   <tbody className="divide-y divide-white/5">
                     <tr><td className="py-2 text-slate-400">Gateway ({selectedGateway.name} × {sites} sites)</td><td className="py-2 text-right font-semibold">${(gatewayPrice * sites).toLocaleString()}</td></tr>
@@ -504,10 +504,10 @@ function NetworkPlannerOfficialApp() {
 
           {/* CTA */}
           <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
-            <Button className="bg-gradient-to-r from-amber-500 to-orange-500 text-black font-bold px-8 py-6 text-lg border border-orange-400 shadow-lg shadow-orange-500/25" data-testid="button-request-quote">
+            <Button className="bg-[#D3126A] px-8 py-6 text-lg font-semibold text-white hover:bg-[#b80f5c]" data-testid="button-request-quote">
               Request Custom Quote
             </Button>
-            <Button variant="outline" className="border-white/15 text-slate-200 px-8 py-6" data-testid="button-schedule-call">
+            <Button variant="outline" className="border-de-hairline px-8 py-6 text-white" data-testid="button-schedule-call">
               Schedule Discovery Call
             </Button>
           </div>

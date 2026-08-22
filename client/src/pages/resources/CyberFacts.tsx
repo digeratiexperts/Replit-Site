@@ -1,17 +1,16 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, forwardRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { Link } from "wouter";
-import { MegaMenu } from "@/components/MegaMenu";
-import { DigeratiEnhancedFooterSection } from "../sections/DigeratiEnhancedFooterSection";
+import { PageTemplate } from "@/components/PageTemplate";
+import { ConversionPathBar } from "@/components/ConversionPathBar";
 import { Button } from "@/components/ui/button";
-import { 
-  Shield, AlertTriangle, Users, DollarSign, Clock, 
+import {
+  Shield, Users, DollarSign, Clock,
   ExternalLink, Copy, Check, RefreshCw, Sparkles,
-  Filter, ChevronDown, Lock, MapPin, ArrowLeft
+  Filter, ChevronDown, Lock, MapPin,
 } from "lucide-react";
-import { FloatingParticles } from "@/components/graphics";
 import { useSEO } from "@/hooks/useSEO";
 import { useToast } from "@/hooks/use-toast";
+import { CTA } from "@/lib/ctaCopy";
 import {
   cyberAwarenessFacts,
   formatFactSource,
@@ -19,7 +18,6 @@ import {
 } from "@/data/cyberAwarenessFacts";
 
 type FactCategory = "ransomware" | "identity" | "human" | "recovery" | "financial" | "arizona";
-type AccentColor = "violet" | "purple" | "fuchsia";
 
 interface CyberFact {
   id: string;
@@ -29,16 +27,15 @@ interface CyberFact {
   source: string;
   sourceUrl: string;
   category: FactCategory;
-  accent: AccentColor;
 }
 
-const categoryInfo: Record<FactCategory, { icon: React.ReactNode; label: string; color: string }> = {
-  ransomware: { icon: <Lock className="w-4 h-4" />, label: "Ransomware", color: "violet" },
-  identity: { icon: <Shield className="w-4 h-4" />, label: "Identity & Access", color: "purple" },
-  human: { icon: <Users className="w-4 h-4" />, label: "Human Element", color: "fuchsia" },
-  recovery: { icon: <Clock className="w-4 h-4" />, label: "Recovery", color: "purple" },
-  financial: { icon: <DollarSign className="w-4 h-4" />, label: "Financial Impact", color: "violet" },
-  arizona: { icon: <MapPin className="w-4 h-4" />, label: "Arizona", color: "fuchsia" },
+const categoryInfo: Record<FactCategory, { icon: React.ReactNode; label: string }> = {
+  ransomware: { icon: <Lock className="w-4 h-4" />, label: "Ransomware" },
+  identity: { icon: <Shield className="w-4 h-4" />, label: "Identity & Access" },
+  human: { icon: <Users className="w-4 h-4" />, label: "Human Element" },
+  recovery: { icon: <Clock className="w-4 h-4" />, label: "Recovery" },
+  financial: { icon: <DollarSign className="w-4 h-4" />, label: "Financial Impact" },
+  arizona: { icon: <MapPin className="w-4 h-4" />, label: "Arizona" },
 };
 
 function categorizeFact(fact: CyberAwarenessFact): FactCategory {
@@ -50,12 +47,6 @@ function categorizeFact(fact: CyberAwarenessFact): FactCategory {
     return "financial";
   }
   return "financial";
-}
-
-function accentForCategory(category: FactCategory): AccentColor {
-  if (category === "arizona" || category === "human") return "fuchsia";
-  if (category === "identity" || category === "recovery") return "purple";
-  return "violet";
 }
 
 function shortLabel(fact: CyberAwarenessFact): string {
@@ -81,7 +72,6 @@ const canonicalFacts: CyberFact[] = cyberAwarenessFacts.map((fact) => {
     source: formatFactSource(fact),
     sourceUrl: fact.sourceUrl || "#",
     category,
-    accent: accentForCategory(category),
   };
 });
 
@@ -95,7 +85,6 @@ const secondaryFacts: CyberFact[] = [
     source: "Sophos State of Ransomware 2025",
     sourceUrl: "https://greymatter.com/wp-content/uploads/2025/06/sophos-state-of-ransomware-2025.pdf",
     category: "financial",
-    accent: "purple",
   },
   {
     id: "backup-restores",
@@ -105,7 +94,6 @@ const secondaryFacts: CyberFact[] = [
     source: "Sophos State of Ransomware 2025",
     sourceUrl: "https://greymatter.com/wp-content/uploads/2025/06/sophos-state-of-ransomware-2025.pdf",
     category: "recovery",
-    accent: "purple",
   },
   {
     id: "internet-crime",
@@ -115,7 +103,6 @@ const secondaryFacts: CyberFact[] = [
     source: "FBI IC3 Annual Report 2024",
     sourceUrl: "https://www.ic3.gov/AnnualReport/Reports/2024_IC3Report.pdf",
     category: "financial",
-    accent: "violet",
   },
 ];
 
@@ -131,27 +118,6 @@ const featuredFacts = allFacts.filter((f) =>
   ].includes(f.id),
 );
 
-const accentStyles: Record<AccentColor, { bg: string; border: string; glow: string; stat: string }> = {
-  violet: {
-    bg: "bg-de-raised",
-    border: "border-de-hairline hover:border-de-hairline",
-    glow: "hover:shadow-none",
-    stat: "text-de-accent-ink",
-  },
-  purple: {
-    bg: "bg-de-raised",
-    border: "border-de-hairline hover:border-de-hairline",
-    glow: "hover:shadow-none",
-    stat: "text-de-accent-ink",
-  },
-  fuchsia: {
-    bg: "bg-de-raised",
-    border: "border-de-hairline hover:border-de-accent/40",
-    glow: "hover:shadow-none",
-    stat: "text-de-accent-ink",
-  },
-};
-
 interface FactCardProps {
   fact: CyberFact;
   featured?: boolean;
@@ -159,79 +125,70 @@ interface FactCardProps {
   copiedId: string | null;
 }
 
-const FactCard = ({ fact, featured = false, onCopy, copiedId }: FactCardProps) => {
-  const styles = accentStyles[fact.accent];
+const FactCard = forwardRef<HTMLDivElement, FactCardProps>(function FactCard(
+  { fact, featured = false, onCopy, copiedId },
+  ref,
+) {
   const isCopied = copiedId === fact.id;
-  
+
   return (
     <motion.div
+      ref={ref}
       layout
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      whileHover={{ y: -4 }}
-      className={`relative group rounded-2xl border backdrop-blur-xl transition-all duration-300 
-        bg-gradient-to-br ${styles.bg} ${styles.border} ${styles.glow}
-        hover:shadow-2xl ${featured ? 'p-8 md:p-10' : 'p-6'}`}
+      className={`relative rounded-2xl border border-de-hairline bg-de-raised ${featured ? "p-8 md:p-10" : "p-6"}`}
       data-testid={`fact-card-${fact.id}`}
     >
-      {/* Category badge */}
       <div className="absolute top-4 right-4 flex items-center gap-2">
-        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium 
-          bg-white/5 border border-white/10 text-white/60`}>
+        <span className="inline-flex items-center gap-1.5 rounded-md border border-de-hairline bg-de-bg px-2.5 py-1 text-xs font-medium text-white/60">
           {categoryInfo[fact.category].icon}
           {categoryInfo[fact.category].label}
         </span>
       </div>
 
-      {/* Stat & Label */}
-      <div className={`flex items-baseline gap-4 flex-wrap ${featured ? 'mb-6 pb-6 border-b border-white/10' : 'mb-4'}`}>
-        <span className={`font-black tracking-tight ${styles.stat}
-          ${featured ? 'text-5xl md:text-7xl' : 'text-3xl md:text-4xl'}`}>
+      <div className={`flex flex-wrap items-baseline gap-4 ${featured ? "mb-6 border-b border-de-hairline pb-6" : "mb-4"}`}>
+        <span className={`font-black tracking-tight text-de-accent-ink ${featured ? "text-5xl md:text-7xl" : "text-3xl md:text-4xl"}`}>
           {fact.stat}
         </span>
-        <span className={`font-bold uppercase tracking-wider text-white/60
-          ${featured ? 'text-base' : 'text-xs'}`}>
+        <span className={`font-bold uppercase tracking-wider text-white/60 ${featured ? "text-base" : "text-xs"}`}>
           {fact.label}
         </span>
       </div>
 
-      {/* Text */}
-      <p className={`text-white/80 font-medium leading-relaxed ${featured ? 'text-lg md:text-xl mb-6' : 'text-sm mb-4'}`}>
+      <p className={`font-medium leading-relaxed text-white/80 ${featured ? "mb-6 text-lg md:text-xl" : "mb-4 text-sm"}`}>
         {fact.text}
       </p>
 
-      {/* Source & Actions */}
-      <div className={`flex items-center justify-between gap-4 flex-wrap
-        ${featured ? 'p-4 -mx-4 -mb-4 md:-mx-6 md:-mb-6 bg-white/5 rounded-b-2xl border-t border-white/10' : ''}`}>
-        <a 
-          href={fact.sourceUrl} 
-          target="_blank" 
+      <div className={`flex flex-wrap items-center justify-between gap-4 ${featured ? "rounded-xl border border-de-hairline bg-de-bg p-4" : ""}`}>
+        <a
+          href={fact.sourceUrl}
+          target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-sm text-de-accent-ink hover:text-de-accent-ink transition-colors"
+          className="inline-flex items-center gap-2 text-sm text-de-accent-ink hover:underline"
           data-testid={`fact-source-${fact.id}`}
         >
           <span className="text-white/55">Source:</span>
           <span className="font-medium">{fact.source}</span>
-          <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+          <ExternalLink className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
         </a>
-        
+
         <Button
           variant="ghost"
           size="sm"
           onClick={() => onCopy(fact)}
-          className={`opacity-0 group-hover:opacity-100 transition-opacity text-white/60 hover:text-white hover:bg-white/10
-            ${isCopied ? 'opacity-100 text-emerald-400' : ''}`}
+          className={`text-white/70 hover:bg-white/10 hover:text-white ${isCopied ? "text-de-accent-ink" : ""}`}
           data-testid={`btn-copy-${fact.id}`}
         >
           {isCopied ? (
             <>
-              <Check className="w-4 h-4 mr-1.5" />
+              <Check className="mr-1.5 h-4 w-4" />
               Copied!
             </>
           ) : (
             <>
-              <Copy className="w-4 h-4 mr-1.5" />
+              <Copy className="mr-1.5 h-4 w-4" />
               Copy
             </>
           )}
@@ -239,7 +196,7 @@ const FactCard = ({ fact, featured = false, onCopy, copiedId }: FactCardProps) =
       </div>
     </motion.div>
   );
-};
+});
 
 const CyberFacts = () => {
   const prefersReducedMotion = useReducedMotion();
@@ -303,46 +260,19 @@ const CyberFacts = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f]">
-      <MegaMenu />
-      <FloatingParticles />
-      
-      <main className="relative z-10 de-nav-clear pb-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Back Link */}
-          <Link href="/resources/blog" className="inline-flex items-center gap-2 text-de-accent-ink hover:text-de-accent-ink transition-colors mb-8" data-testid="link-back">
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Blog</span>
-          </Link>
-          
-          {/* Page Header */}
-          <motion.div
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-de-raised border border-de-hairline text-de-accent-ink text-sm font-medium mb-4">
-              <Sparkles className="w-4 h-4" />
-              <span>Credibility Layer</span>
-            </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 tracking-tight" data-testid="heading-cyber-facts">
-              Real Cybersecurity Facts
-              <span className="block text-de-accent-ink">
-                (With Sources)
-              </span>
-            </h1>
-            <p className="text-white/60 text-lg max-w-2xl mx-auto">
-              Use these across your site to support why proactive cybersecurity matters: 
-              identity, ransomware, email fraud, and recovery cost.
-            </p>
-          </motion.div>
-
-          {/* Divider */}
-          <div className="h-px bg-gradient-to-r from-transparent to-transparent mb-16" />
-
-          {/* Section 1: Today's Cyber Fact */}
-          <section className="mb-20">
+    <PageTemplate
+      title="Real Cybersecurity Facts"
+      subtitle="Sourced statistics — identity, ransomware, email fraud, and recovery cost. Use them with the source link attached."
+      icon={<Shield className="h-10 w-10 text-de-accent-ink" />}
+      breadcrumbs={[{ label: "Resources", href: "/resources" }, { label: "Cyber Facts" }]}
+      actions={
+        <Button asChild variant="brand" size="lg" className="h-12 px-6 font-semibold">
+          <a href="/book">{CTA.primary}</a>
+        </Button>
+      }
+    >
+      <div className="space-y-16" data-testid="heading-cyber-facts">
+          <section>
             <div className="flex items-center justify-between gap-4 flex-wrap mb-8">
               <div>
                 <h2 className="text-2xl md:text-3xl font-bold text-white mb-1">Today's Cyber Fact</h2>
@@ -436,7 +366,7 @@ const CyberFacts = () => {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="absolute right-0 top-full mt-2 w-56 rounded-xl bg-[#1a1a2e] border border-white/10 shadow-2xl overflow-hidden z-50"
+                      className="absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-xl border border-de-hairline bg-de-raised"
                     >
                       <button
                         onClick={() => { setSelectedCategory("all"); setIsFilterOpen(false); }}
@@ -488,11 +418,12 @@ const CyberFacts = () => {
             </div>
           </section>
 
-        </div>
-      </main>
-
-      <DigeratiEnhancedFooterSection />
-    </div>
+          <ConversionPathBar
+            headline="Want these facts applied to your environment?"
+            body="A Cyber Risk Assessment maps sourced industry risk to what is actually running in your Arizona office."
+          />
+      </div>
+    </PageTemplate>
   );
 };
 

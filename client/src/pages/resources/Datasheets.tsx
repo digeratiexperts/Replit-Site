@@ -1,11 +1,12 @@
 import { Link } from "wouter";
-import { MegaMenu } from "@/components/MegaMenu";
-import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageTemplate } from "@/components/PageTemplate";
+import { ConversionPathBar } from "@/components/ConversionPathBar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Download, FileText, ExternalLink, Shield, Server, Cloud, Users, Lock, BarChart } from "lucide-react";
 import { resources as registryResources } from "@/data/resourceRegistry";
+import { useSEO } from "@/hooks/useSEO";
+import { CTA } from "@/lib/ctaCopy";
 
 interface Document {
   id: number;
@@ -158,54 +159,46 @@ const documents: Document[] = [
     pages: 6,
     icon: Shield,
   },
-].map((doc) => ({
+].map((doc): Document => ({
   ...doc,
   downloadUrl: resolveDownloadUrl(doc.title),
 }));
 
 const categories = ["All", "Services", "Security", "Backup", "Compliance", "Training", "Research"];
 
-const getTypeColor = (type: string) => {
-  switch (type) {
-    case "datasheet": return "bg-de-raised text-de-accent-ink border-de-hairline";
-    case "whitepaper": return "bg-de-raised text-de-accent-ink border-de-hairline";
-    case "guide": return "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
-    case "infographic": return "bg-de-raised text-de-accent-ink border-de-hairline";
-    default: return "bg-white/10 text-white/70 border-white/20";
-  }
-};
+const getTypeColor = (_type: string) =>
+  "border border-de-hairline bg-de-bg text-de-accent-ink";
 
 export default function Datasheets() {
   const downloadableCount = documents.filter((d) => d.downloadUrl).length;
 
-  return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <MegaMenu />
-      
-      <main className="de-nav-clear pb-20">
-        <div className="container mx-auto px-4 max-w-7xl">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <Badge className="mb-4 bg-de-raised text-de-accent-ink border-de-hairline">
-              Resource Library
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Datasheets & Documentation
-            </h1>
-            <p className="text-xl text-white/70 max-w-3xl mx-auto">
-              Browse our service documentation. {downloadableCount} documents are available for immediate PDF download;
-              others can be requested and we&apos;ll send the latest version.
-            </p>
-          </div>
+  useSEO({
+    title: "Datasheets & Documentation",
+    description:
+      "Digerati Experts service datasheets and documentation. Download available PDFs or request the latest version.",
+    canonical: "/resources/datasheets",
+  });
 
-          {/* Category Filter */}
-          <div className="flex flex-wrap gap-2 justify-center mb-12">
+  return (
+    <PageTemplate
+      title="Datasheets & Documentation"
+      subtitle={`Browse our service documentation. ${downloadableCount} documents are available for immediate PDF download; others can be requested and we'll send the latest version.`}
+      icon={<FileText className="h-10 w-10 text-de-accent-ink" />}
+      breadcrumbs={[{ label: "Resources", href: "/resources" }, { label: "Datasheets" }]}
+      actions={
+        <Button asChild variant="brand" size="lg" className="h-12 px-6 font-semibold">
+          <Link href="/book">{CTA.primary}</Link>
+        </Button>
+      }
+    >
+      <div className="space-y-12">
+          <div className="flex flex-wrap justify-center gap-2">
             {categories.map((category) => (
               <Button
                 key={category}
                 variant="outline"
                 size="sm"
-                className="border-de-hairline bg-transparent text-white/70 hover:bg-de-raised hover:text-de-accent-ink hover:border-de-hairline"
+                className="border-de-hairline bg-transparent text-white/70 hover:border-de-hairline hover:bg-de-raised hover:text-white"
                 data-testid={`button-filter-${category.toLowerCase()}`}
               >
                 {category}
@@ -213,33 +206,28 @@ export default function Datasheets() {
             ))}
           </div>
 
-          {/* Document Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {documents.map((doc) => (
-              <Card key={doc.id} className="bg-white/[0.02] border-white/10 hover:border-de-hairline transition-colors" data-testid={`card-document-${doc.id}`}>
-                <CardHeader>
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="w-12 h-12 rounded-lg bg-de-raised flex items-center justify-center">
-                      <doc.icon className="h-6 w-6 text-de-accent-ink" />
+              <article key={doc.id} className="rounded-2xl border border-de-hairline bg-de-raised p-6" data-testid={`card-document-${doc.id}`}>
+                <div className="mb-2 flex items-start justify-between">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-de-hairline bg-de-bg">
+                      <doc.icon className="h-6 w-6 text-de-accent-ink" aria-hidden="true" />
                     </div>
                     <Badge className={getTypeColor(doc.type)}>
                       {doc.type}
                     </Badge>
                   </div>
-                  <CardTitle className="text-lg text-white">{doc.title}</CardTitle>
-                  <CardDescription className="text-white/60">
-                    {doc.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between text-sm text-white/50 mb-4">
+                  <h2 className="mt-4 text-lg font-semibold text-white">{doc.title}</h2>
+                  <p className="mt-2 text-white/60">{doc.description}</p>
+                  <div className="mb-4 mt-4 flex items-center justify-between text-sm text-white/50">
                     <span>{doc.category}</span>
                     <span>{doc.pages ? `${doc.pages} pages` : "Document"}</span>
                   </div>
                   {doc.downloadUrl ? (
                     <Button
                       asChild
-                      className="w-full bg-de-accent hover:bg-de-accent text-white"
+                      variant="brand"
+                      className="w-full"
                       data-testid={`button-download-${doc.id}`}
                     >
                       <a href={doc.downloadUrl} download target="_blank" rel="noopener noreferrer">
@@ -251,7 +239,7 @@ export default function Datasheets() {
                     <Button
                       asChild
                       variant="outline"
-                      className="w-full border-de-hairline text-de-accent-ink hover:bg-de-raised hover:text-de-accent-ink"
+                      className="w-full border-de-hairline text-white hover:bg-de-bg"
                       data-testid={`button-request-${doc.id}`}
                     >
                       <Link href="/book">
@@ -260,40 +248,20 @@ export default function Datasheets() {
                       </Link>
                     </Button>
                   )}
-                </CardContent>
-              </Card>
+              </article>
             ))}
           </div>
 
-          {/* Request Custom Content */}
-          <Card className="mt-12 bg-de-raised border-de-hairline">
-            <CardContent className="p-8">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                <div>
-                  <h3 className="text-2xl font-bold text-white mb-2">Need Custom Documentation?</h3>
-                  <p className="text-white/70">We can provide tailored proposals, assessments, and documentation for your specific needs.</p>
-                </div>
-                <Button 
-                  className="bg-white text-de-accent hover:bg-white/90 whitespace-nowrap"
-                  onClick={() => window.location.href = "/book"}
-                  data-testid="button-request-docs"
-                >
-                  Request Documents
-                  <ExternalLink className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <ConversionPathBar
+            headline="Need custom documentation?"
+            body="We can provide tailored proposals, assessments, and documentation for your specific needs."
+            primaryTestId="button-request-docs"
+          />
 
-          {/* Legal Notice */}
-          <div className="mt-8 text-center text-sm text-white/70">
-            <p>All documents are for informational purposes. Contact us for specific pricing and service details.</p>
-            <p className="mt-1">© {new Date().getFullYear()} Digerati Experts. All rights reserved.</p>
-          </div>
-        </div>
-      </main>
-
-      <DigeratiEnhancedFooterSection />
-    </div>
+          <p className="text-center text-sm text-white/55">
+            All documents are for informational purposes. Contact us for specific pricing and service details.
+          </p>
+      </div>
+    </PageTemplate>
   );
 }

@@ -5,7 +5,7 @@ import { DigeratiEnhancedFooterSection } from "./sections/DigeratiEnhancedFooter
 import { Button } from "@/components/ui/button";
 import { 
   ChevronDown, ChevronUp, Shield, Server, Users, 
-  Monitor, Cloud, Key, Settings, Phone, HardDrive,
+  Monitor, Cloud, Key, Settings, HardDrive,
   FileCheck, Building2, Check, X, Star, Zap
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
@@ -137,16 +137,16 @@ const tiers = [
     name: "ProActive Business", 
     subtitle: `Starting at $${pricing.business.user} /user·mo*`,
     ribbon: "Operations",
-    gradient: "from-emerald-500 to-teal-500",
-    borderColor: "border-emerald-500/30"
+    gradient: "",
+    borderColor: "border-de-hairline"
   },
   { 
     id: "enterprise", 
     name: "ProActive Enterprise", 
     subtitle: `Starting at $${pricing.enterprise.user} /user·mo*`,
     ribbon: "Custom",
-    gradient: "from-amber-500 to-orange-500",
-    borderColor: "border-amber-500/30"
+    gradient: "",
+    borderColor: "border-de-hairline"
   }
 ];
 
@@ -174,7 +174,7 @@ const EcosystemPricing = () => {
   const renderCellValue = (value: string | boolean, tierIndex: number) => {
     if (value === true) {
       return (
-        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400">
+        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full border border-de-hairline bg-de-bg text-de-accent-ink">
           <Check className="w-4 h-4" />
         </span>
       );
@@ -203,7 +203,7 @@ const EcosystemPricing = () => {
     return (
       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
         isPro 
-          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' 
+          ? 'bg-de-bg text-white border border-de-hairline' 
           : 'bg-de-raised text-de-magenta-ink border border-de-hairline'
       }`}>
         {value}
@@ -251,7 +251,7 @@ const EcosystemPricing = () => {
             {/* Legend */}
             <div className="flex flex-wrap justify-center gap-6 text-sm">
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-emerald-400"></span>
+                <span className="w-3 h-3 rounded-full bg-[#D3126A]"></span>
                 <span className="text-white/60">Included / ✓</span>
               </div>
               <div className="flex items-center gap-2">
@@ -297,7 +297,7 @@ const EcosystemPricing = () => {
           </div>
 
           {/* Tier Headers - Sticky */}
-          <div className="sticky top-16 z-20 bg-[#0a0a0f]/95 backdrop-blur-xl border-b border-white/10 mb-6 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+          <div className="sticky top-16 z-20 bg-de-bg border-b border-de-hairline mb-6 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
             <div className="max-w-[1600px] mx-auto">
               <div className="grid grid-cols-5 gap-2 py-4">
                 <div className="text-white/55 text-sm font-medium flex items-center">
@@ -306,7 +306,7 @@ const EcosystemPricing = () => {
                 {tiers.map((tier, index) => (
                   <div 
                     key={tier.id}
-                    className={`text-center p-3 rounded-xl border ${tier.borderColor} bg-white/[0.02]`}
+                    className={`text-center p-3 rounded-xl border ${tier.borderColor} bg-de-raised`}
                     data-testid={`tier-header-${tier.id}`}
                   >
                     <div className={`text-xs font-semibold text-de-magenta-ink uppercase tracking-wide mb-1`}>
@@ -383,12 +383,12 @@ const EcosystemPricing = () => {
                             {renderCellValue(row.office, 1)}
                           </div>
                           <div className={`text-center flex items-center justify-center ${
-                            highlightUpgrades && row.business !== row.office ? 'bg-emerald-500/10 rounded-lg' : ''
+                            highlightUpgrades && row.business !== row.office ? 'bg-[#D3126A]/10 rounded-lg' : ''
                           }`}>
                             {renderCellValue(row.business, 2)}
                           </div>
                           <div className={`text-center flex items-center justify-center ${
-                            highlightUpgrades && row.enterprise !== row.business ? 'bg-amber-500/10 rounded-lg' : ''
+                            highlightUpgrades && row.enterprise !== row.business ? 'bg-[#D3126A]/10 rounded-lg' : ''
                           }`}>
                             {renderCellValue(row.enterprise, 3)}
                           </div>
@@ -403,7 +403,7 @@ const EcosystemPricing = () => {
 
           {/* Pricing Note */}
           <motion.div
-            className="mt-8 p-6 rounded-xl border border-white/10 bg-white/[0.02] text-center"
+            className="mt-8 p-6 rounded-xl border border-de-hairline bg-de-raised text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
@@ -413,17 +413,14 @@ const EcosystemPricing = () => {
               Contact us for a custom quote based on your specific requirements.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Button asChild 
-                  className="bg-de-raised hover: hover: text-white"
-                  data-testid="btn-book-call"
-                >
+              <Button asChild variant="brand" data-testid="btn-book-call">
                   <a href="/book">
-                    <Phone className="w-4 h-4 mr-2" />
-                  Book a Call
+                    Get My Cyber Risk Assessment
                   </a>
                 </Button>
               <Button asChild 
-                  className="bg-white/10 border border-white/20 text-white hover:bg-white/20"
+                  variant="outline"
+                  className="border-de-hairline bg-transparent text-white hover:bg-de-bg"
                   data-testid="btn-compare-packages"
                 >
                   <a href="/proactive-ecosystem-pricing">
