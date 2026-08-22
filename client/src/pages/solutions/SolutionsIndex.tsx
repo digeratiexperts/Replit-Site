@@ -13,6 +13,7 @@ import { IconWell } from "@/components/visual/IconWell";
 import { PRIMARY_PHONE } from "@/data/companyContact";
 import { CTA } from "@/lib/ctaCopy";
 import { StatementHeading } from "@/components/visual/StatementHeading";
+import { ConversionPathBar } from "@/components/ConversionPathBar";
 import { revealInView, revealInitial, revealTransition, revealViewport } from "@/lib/animations";
 
 const SolutionsIndex = () => {
@@ -207,7 +208,7 @@ const SolutionsIndex = () => {
                   <ul className="space-y-3 mb-6">
                     {plan.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-2">
-                        <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                        <CheckCircle className="w-4 h-4 text-de-accent-ink mt-0.5 flex-shrink-0" />
                         <span className="text-white/80 text-sm">{feature}</span>
                       </li>
                     ))}
@@ -400,39 +401,10 @@ const SolutionsIndex = () => {
             </div>
           </motion.section>
 
-          {/* Final CTA */}
-          <motion.section 
-            className="text-center"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <StatementHeading as="h2" className="mb-4 text-2xl md:text-3xl">
-              Ready to Get Protected
-            </StatementHeading>
-            <p className="mx-auto mb-8 max-w-xl text-white/60">
-              Schedule a free 15-minute call to discuss your needs. No pressure, no obligation—just honest advice about what your business actually needs.
-            </p>
-            <div className="flex flex-col justify-center gap-4 sm:flex-row">
-              <Button asChild size="lg" variant="brand" className="h-14 px-8 text-lg font-semibold" data-testid="button-final-cta">
-                  <a href="/book">
-                    {CTA.primary}
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                  </a>
-                </Button>
-              <Button asChild 
-                  size="lg"
-                  className="h-14 px-8 text-lg font-semibold bg-transparent border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50"
-                  data-testid="button-call-us"
-                >
-                  <a href={PRIMARY_PHONE.telHref}>
-                    <Phone className="w-5 h-5 mr-2" />
-                  {PRIMARY_PHONE.display}
-                  </a>
-                </Button>
-            </div>
-          </motion.section>
+          <ConversionPathBar
+            headline="Ready to get protected"
+            body="Schedule a Cyber Risk Assessment to discuss your needs. No pressure, no obligation — honest advice about what your business actually needs."
+          />
 
         </div>
       </main>

@@ -28,9 +28,9 @@ type AssessmentFormData = z.infer<typeof assessmentFormSchema>;
 
 const benefits = [
   { icon: Shield, text: "Full vulnerability assessment included", color: "text-de-accent-ink" },
-  { icon: CheckCircle, text: "Results delivered within 48 hours", color: "text-green-400" },
-  { icon: Clock, text: "No commitment required", color: "text-purple-400" },
-  { icon: Award, text: "Expert recommendations included", color: "text-yellow-400" },
+  { icon: CheckCircle, text: "Results delivered within 48 hours", color: "text-de-accent-ink" },
+  { icon: Clock, text: "No commitment required", color: "text-de-accent-ink" },
+  { icon: Award, text: "Expert recommendations included", color: "text-de-accent-ink" },
 ];
 
 export const LeadCaptureBand = (): JSX.Element => {
@@ -88,16 +88,10 @@ export const LeadCaptureBand = (): JSX.Element => {
   return (
     <section 
       id="assessment-form"
-      className="relative py-16 lg:py-20 overflow-hidden bg-gradient-to-b from-[#0a0118] via-[#0d0720] to-[#0a0118]"
+      className="relative py-16 lg:py-20 overflow-hidden bg-de-bg"
     >
-      {/* Background effects */}
       <div className="absolute inset-0">
-        <div 
-          className="absolute inset-0"
-          style={{
-            background: "radial-gradient(circle at 30% 50%, rgba(139, 92, 246, 0.15) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(34, 211, 238, 0.1) 0%, transparent 50%)"
-          }}
-        />
+        <div className="absolute inset-0 bg-de-raised/30" />
       </div>
 
       <div className="relative z-10 mx-auto w-[min(94vw,1400px)] px-4 sm:px-6 lg:px-8">
@@ -111,13 +105,13 @@ export const LeadCaptureBand = (): JSX.Element => {
             transition={{ duration: 0.6 }}
             className="space-y-6"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-600/20 border border-violet-500/30">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-de-hairline bg-de-raised">
               <span className="text-de-accent-ink text-base font-medium">Limited Time Offer</span>
             </div>
             
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
               Get Your{" "}
-              <span className="bg-gradient-to-r from-violet-300 via-purple-300 to-fuchsia-300 bg-clip-text text-transparent">
+              <span className="text-de-accent-ink">
                 Cyber Risk Assessment
               </span>
             </h2>
@@ -136,7 +130,7 @@ export const LeadCaptureBand = (): JSX.Element => {
                   transition={{ duration: 0.4, delay: index * 0.1 }}
                   className="flex items-center gap-3"
                 >
-                  <div className={`p-2 rounded-lg bg-white/5 ${benefit.color}`}>
+                  <div className={`p-2 rounded-lg border border-de-hairline bg-de-raised ${benefit.color}`}>
                     <benefit.icon className="w-4 h-4" />
                   </div>
                   <span className="text-gray-300 text-base">{benefit.text}</span>
@@ -154,9 +148,9 @@ export const LeadCaptureBand = (): JSX.Element => {
             className="relative"
           >
             {/* Glow effect behind card */}
-            <div className="absolute -inset-4 bg-gradient-to-br from-violet-600/20 via-transparent to-purple-600/20 blur-3xl" />
+            <div className="absolute -inset-4 bg-de-raised/40 blur-3xl" />
             
-            <Card className="relative backdrop-blur-xl bg-white/95 dark:bg-gray-900/95 shadow-[0_20px_70px_-15px_rgba(139,92,246,0.4)] border-0 ring-1 ring-white/20">
+            <Card className="relative border border-de-hairline bg-white shadow-none">
               <CardHeader className="pb-4">
                 <CardTitle className="text-xl xl:text-2xl text-[#D3126A]">
                   Get Started Today

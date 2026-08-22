@@ -344,8 +344,8 @@ export const DigeratiCalculatorsSection = (props: CalculatorProps): JSX.Element 
                           <p className="text-base text-white/50 mt-2">
                             ${servicePackage}/user/month
                           </p>
-                          <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-                            <span className="text-sm font-semibold text-emerald-400">
+                          <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-de-hairline bg-de-bg">
+                            <span className="text-sm font-semibold text-de-accent-ink">
                               Quarterly: ${(serviceCost * 3 * 0.9).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} (save 10%)
                             </span>
                           </div>

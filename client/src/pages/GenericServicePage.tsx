@@ -270,7 +270,7 @@ export default function GenericServicePage({
                   viewport={revealViewport}
                   transition={{ ...revealTransition, delay: createStaggerDelay(index) }}
                 >
-                  <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
+                  <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-de-accent-ink" />
                   <span className="font-medium text-white/80">{benefit}</span>
                 </motion.div>
               ))}

@@ -226,7 +226,7 @@ export const DigeratiContactSection = ({
                 <dt>Saturday &amp; Sunday</dt>
                 <dd className="text-white/80">Emergency Support Only</dd>
               </dl>
-              <p className="mt-4 flex items-start gap-2 text-base font-medium text-emerald-400">
+              <p className="mt-4 flex items-start gap-2 text-base font-medium text-de-accent-ink">
                 <Shield className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
                 <span>24/7 Security Operations Center Always Active</span>
               </p>

@@ -82,20 +82,19 @@ export const DigeratiHeroSection = (): JSX.Element => {
 
   return (
     <section id="home" className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600"></div>
-      <div className="absolute inset-0 bg-gradient-to-b from-purple-700/50 to-transparent"></div>
+      <div className="absolute inset-0 bg-de-bg"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-de-raised/40 to-transparent"></div>
       
-      {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-400 rounded-full opacity-30 blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-400 rounded-full opacity-30 blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-de-raised rounded-full opacity-40 blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-de-raised rounded-full opacity-40 blur-3xl"></div>
       </div>
 
       <div className="relative max-w-[var(--de-canvas)] mx-auto px-3 sm:px-4 lg:px-6 pt-[calc(var(--de-nav-offset)+0.5rem)] pb-24 lg:pt-[calc(var(--de-nav-offset)+2rem)] lg:pb-32">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="text-white">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-              <span className="text-yellow-400" style={{color: '#FFD700'}}>Hackers Don't Wait.</span>
+              <span className="text-de-accent-ink">Hackers Don't Wait.</span>
               <br />
               <span className="text-white">Protect Your Business Now.</span>
             </h1>
@@ -104,21 +103,21 @@ export const DigeratiHeroSection = (): JSX.Element => {
             </p>
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
-                <CheckCircle className="h-5 w-5 text-green-400 mb-1" />
-                <p className="text-xs text-gray-100">Insurance &<br/>Compliance-Ready</p>
+              <div className="bg-de-raised border border-de-hairline rounded-lg p-3">
+                <CheckCircle className="h-5 w-5 text-de-accent-ink mb-1" />
+                <p className="text-xs text-white/80">Insurance &<br/>Compliance-Ready</p>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
-                <Shield className="h-5 w-5 text-blue-400 mb-1" />
-                <p className="text-xs text-gray-100">24/7 Human-Led<br/>Monitoring</p>
+              <div className="bg-de-raised border border-de-hairline rounded-lg p-3">
+                <Shield className="h-5 w-5 text-de-accent-ink mb-1" />
+                <p className="text-xs text-white/80">24/7 Human-Led<br/>Monitoring</p>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
-                <Building className="h-5 w-5 text-purple-400 mb-1" />
-                <p className="text-xs text-gray-100">Built for Small<br/>Businesses</p>
+              <div className="bg-de-raised border border-de-hairline rounded-lg p-3">
+                <Building className="h-5 w-5 text-de-accent-ink mb-1" />
+                <p className="text-xs text-white/80">Built for Small<br/>Businesses</p>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
-                <FileCheck className="h-5 w-5 text-yellow-400 mb-1" />
-                <p className="text-xs text-gray-100">Easy-to-Read<br/>Risk Reports</p>
+              <div className="bg-de-raised border border-de-hairline rounded-lg p-3">
+                <FileCheck className="h-5 w-5 text-de-accent-ink mb-1" />
+                <p className="text-xs text-white/80">Easy-to-Read<br/>Risk Reports</p>
               </div>
             </div>
 
@@ -127,7 +126,7 @@ export const DigeratiHeroSection = (): JSX.Element => {
                 href="/book"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="h-12 px-8 rounded-md bg-white text-purple-700 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl inline-flex items-center justify-center gap-2 whitespace-nowrap text-base font-semibold"
+                className="inline-flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-md bg-[#D3126A] px-8 text-base font-semibold text-white hover:bg-[#e01874] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2"
                 data-testid="button-hero-start"
                 aria-label="Get Cyber Risk Assessment - Schedule with our experts"
               >
@@ -135,10 +134,10 @@ export const DigeratiHeroSection = (): JSX.Element => {
               </a>
               <a
                 href={PRIMARY_PHONE.telHref}
-                className="h-12 px-8 rounded-md border-2 border-white bg-transparent text-white hover:bg-white hover:text-purple-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-purple-600 transition-all duration-200 inline-flex items-center justify-center gap-2 whitespace-nowrap text-base font-semibold group"
+                className="inline-flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-md border-2 border-white bg-transparent px-8 text-base font-semibold text-white hover:bg-white hover:text-[#D3126A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)] group"
                 data-testid="button-hero-phone"
               >
-                <Phone className="h-5 w-5 group-hover:text-purple-600 transition-colors duration-200" />
+                <Phone className="h-5 w-5 group-hover:text-[#D3126A] transition-colors duration-200" />
                 {PRIMARY_PHONE.display}
               </a>
             </div>
@@ -146,7 +145,7 @@ export const DigeratiHeroSection = (): JSX.Element => {
 
           <div className="relative" id="assessment-form">
             <div className="relative z-10">
-              <Card className="backdrop-blur-md bg-white/95 shadow-2xl">
+              <Card className="border border-de-hairline bg-white shadow-none">
                 <CardHeader>
                   <CardTitle className="text-2xl">Get Started Today</CardTitle>
                   <CardDescription>Lock In 80% Off Your Cyber Risk Assessment — Act Now to Identify Vulnerabilities Before Hackers Do.</CardDescription>
@@ -164,7 +163,7 @@ export const DigeratiHeroSection = (): JSX.Element => {
                               <Input 
                                 placeholder="John Smith" 
                                 data-testid="input-full-name"
-                                className="focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200"
+                                className="focus-visible:ring-[#D3126A] focus-visible:ring-offset-0 transition-all duration-200"
                                 disabled={isSubmitting}
                                 {...field} 
                               />
@@ -185,7 +184,7 @@ export const DigeratiHeroSection = (): JSX.Element => {
                                 type="email" 
                                 placeholder="john@company.com" 
                                 data-testid="input-email"
-                                className="focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200"
+                                className="focus-visible:ring-[#D3126A] focus-visible:ring-offset-0 transition-all duration-200"
                                 disabled={isSubmitting}
                                 {...field} 
                               />
@@ -206,7 +205,7 @@ export const DigeratiHeroSection = (): JSX.Element => {
                                 type="tel" 
                                 placeholder="(480) 000-0000" 
                                 data-testid="input-phone"
-                                className="focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200"
+                                className="focus-visible:ring-[#D3126A] focus-visible:ring-offset-0 transition-all duration-200"
                                 disabled={isSubmitting}
                                 {...field} 
                               />
@@ -226,7 +225,7 @@ export const DigeratiHeroSection = (): JSX.Element => {
                               <Input 
                                 placeholder="Your Company Inc." 
                                 data-testid="input-company"
-                                className="focus-visible:ring-purple-600 focus-visible:ring-offset-0 transition-all duration-200"
+                                className="focus-visible:ring-[#D3126A] focus-visible:ring-offset-0 transition-all duration-200"
                                 disabled={isSubmitting}
                                 {...field} 
                               />
@@ -241,7 +240,7 @@ export const DigeratiHeroSection = (): JSX.Element => {
                       </p>
                       
                       <Button 
-                        className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg" 
+                        className="w-full bg-[#D3126A] text-white hover:bg-[#e01874] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2" 
                         data-testid="button-submit"
                         type="submit"
                         disabled={isSubmitting}

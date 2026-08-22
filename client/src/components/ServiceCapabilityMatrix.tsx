@@ -171,7 +171,7 @@ export function ServiceCapabilityMatrix({
     if (value === true) {
       return (
         <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full ${
-          isHighlighted ? 'bg-de-raised text-de-accent-ink' : 'bg-emerald-500/20 text-emerald-400'
+          isHighlighted ? 'bg-de-raised text-de-accent-ink' : 'bg-de-bg text-de-accent-ink'
         }`}>
           <Check className="w-4 h-4" />
         </span>
@@ -204,7 +204,7 @@ export function ServiceCapabilityMatrix({
 
   return (
     <motion.div
-      className={`rounded-2xl border border-white/10 overflow-hidden bg-white/[0.02] ${className}`}
+      className={`rounded-2xl border border-de-hairline overflow-hidden bg-de-raised ${className}`}
       initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -212,7 +212,7 @@ export function ServiceCapabilityMatrix({
       data-testid="service-capability-matrix"
     >
       {/* Tier Headers */}
-      <div className="grid grid-cols-5 gap-1 p-3 bg-white/[0.03] border-b border-white/10">
+      <div className="grid grid-cols-5 gap-1 p-3 bg-de-bg border-b border-de-hairline">
         <div className="text-white/55 text-xs font-medium uppercase tracking-wider flex items-center">
           Capability
         </div>
@@ -223,7 +223,7 @@ export function ServiceCapabilityMatrix({
               highlightTier === tier.id 
                 ? 'bg-de-raised border border-de-hairline' 
                 : tier.featured 
-                  ? 'bg-emerald-500/10 border border-emerald-500/20' 
+                  ? 'bg-de-bg border border-de-hairline' 
                   : ''
             }`}
           >
@@ -244,7 +244,7 @@ export function ServiceCapabilityMatrix({
       {filteredCategories.map((category) => (
         <div key={category.id} className="border-b border-white/5 last:border-b-0">
           {/* Category Header */}
-          <div className="px-4 py-2 bg-white/[0.02] border-b border-white/5">
+          <div className="px-4 py-2 bg-de-bg border-b border-de-hairline">
             <span className="text-sm font-semibold text-white/80">{category.title}</span>
           </div>
           

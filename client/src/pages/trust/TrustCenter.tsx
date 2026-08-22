@@ -132,7 +132,7 @@ export default function TrustCenter() {
                       viewport={{ once: true }}
                       transition={{ delay: idx * 0.05, duration: 0.3 }}
                     >
-                      <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
+                      <CheckCircle className="w-5 h-5 text-de-accent-ink flex-shrink-0" />
                       <span className="text-gray-300">{control}</span>
                     </motion.div>
                   ))}
@@ -153,7 +153,7 @@ export default function TrustCenter() {
                       viewport={{ once: true }}
                       transition={{ delay: idx * 0.05, duration: 0.3 }}
                     >
-                      <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
+                      <CheckCircle className="w-5 h-5 text-de-accent-ink flex-shrink-0" />
                       <span className="text-gray-300">{control}</span>
                     </motion.div>
                   ))}

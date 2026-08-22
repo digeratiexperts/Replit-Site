@@ -93,7 +93,7 @@ export function TierDetailTemplate({ config }: { config: TierPageConfig }) {
           <ul className="space-y-3">
             {config.outcomes.map((item) => (
               <li key={item} className="flex items-start gap-3 text-white/85 leading-relaxed">
-                <CheckCircle className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="w-5 h-5 text-de-accent-ink mt-0.5 flex-shrink-0" />
                 <span>{item}</span>
               </li>
             ))}
@@ -105,7 +105,7 @@ export function TierDetailTemplate({ config }: { config: TierPageConfig }) {
           <div className="grid sm:grid-cols-2 gap-x-8 gap-y-3">
             {config.included.map((item) => (
               <div key={item} className="flex items-start gap-3 text-white/85 leading-relaxed">
-                <CheckCircle className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="w-5 h-5 text-de-accent-ink mt-0.5 flex-shrink-0" />
                 <span>{item}</span>
               </div>
             ))}

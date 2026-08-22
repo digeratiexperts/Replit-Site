@@ -1,11 +1,11 @@
 import { PRIMARY_PHONE } from "@/data/companyContact";
 export const DigeratiFooterSection = (): JSX.Element => {
   return (
-    <footer className="bg-gray-900 text-white py-12">
+    <footer className="bg-de-bg text-white py-12">
       <div className="max-w-[var(--de-canvas)] mx-auto px-3 sm:px-4 lg:px-6">
         <div className="grid md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent mb-4">
+            <h3 className="mb-4 text-2xl font-bold text-white">
               Digerati Experts
             </h3>
             <p className="text-gray-400 mb-4">
@@ -19,11 +19,11 @@ export const DigeratiFooterSection = (): JSX.Element => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Services</h4>
             <ul className="space-y-2">
-              <li><a href="/solutions/security-operations" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1">Managed Security</a></li>
-              <li><a href="/solutions/managed-it-support" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1">Managed IT</a></li>
-              <li><a href="/solutions/compliance-reports" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1">Compliance Services</a></li>
-              <li><a href="/solutions/threat-detection" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1">Incident Response</a></li>
-              <li><a href="/solutions/security-awareness" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 rounded px-1">Security Training</a></li>
+              <li><a href="/solutions/security-operations" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)] rounded px-1">Managed Security</a></li>
+              <li><a href="/solutions/managed-it-support" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)] rounded px-1">Managed IT</a></li>
+              <li><a href="/solutions/compliance-reports" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)] rounded px-1">Compliance Services</a></li>
+              <li><a href="/solutions/threat-detection" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)] rounded px-1">Incident Response</a></li>
+              <li><a href="/solutions/security-awareness" className="text-gray-400 hover:text-white transition-colors duration-200 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)] rounded px-1">Security Training</a></li>
             </ul>
           </div>
 
@@ -57,7 +57,7 @@ export const DigeratiFooterSection = (): JSX.Element => {
             </p>
             <div className="mt-4 md:mt-0 flex items-center space-x-4">
               <span className="text-gray-400">24/7 Emergency:</span>
-              <a href={PRIMARY_PHONE.telHref} className="text-de-accent-ink font-semibold hover:text-violet-300">
+              <a href={PRIMARY_PHONE.telHref} className="text-de-accent-ink font-semibold hover:text-white">
                 {PRIMARY_PHONE.display}
               </a>
             </div>

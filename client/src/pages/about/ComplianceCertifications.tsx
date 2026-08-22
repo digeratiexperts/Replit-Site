@@ -62,7 +62,7 @@ const complianceFrameworks = [
     name: "PCI DSS",
     fullName: "Payment Card Industry Data Security Standard",
     icon: CreditCard,
-    color: "from-fuchsia-500 ",
+    color: "",
     description: "Security standards for organizations that handle credit card transactions and cardholder data.",
     industries: ["Retail", "E-commerce", "Restaurants", "Hotels", "Financial Services", "Healthcare with Payment Processing"],
     keyRequirements: [
@@ -115,7 +115,7 @@ const complianceFrameworks = [
     name: "FTC Safeguards",
     fullName: "FTC Safeguards Rule (GLBA)",
     icon: Building2,
-    color: " to-fuchsia-500",
+    color: "",
     description: "Required security program for non-banking financial institutions under Gramm-Leach-Bliley Act.",
     industries: ["Tax Preparers", "Accountants", "Financial Advisors", "Mortgage Brokers", "Auto Dealers", "Collection Agencies"],
     keyRequirements: [
@@ -259,7 +259,7 @@ export default function ComplianceCertifications() {
                       <ul className="space-y-3">
                         {framework.keyRequirements.map((req, i) => (
                           <li key={i} className="flex items-start gap-3" data-testid={`item-requirement-${framework.id}-${i}`}>
-                            <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                            <CheckCircle2 className="w-5 h-5 text-de-accent-ink flex-shrink-0 mt-0.5" />
                             <span className="text-white/70 text-sm">{req}</span>
                           </li>
                         ))}

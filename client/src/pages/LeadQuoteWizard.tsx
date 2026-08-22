@@ -12,6 +12,8 @@ import { ArrowRight, ChevronLeft, Loader2 } from 'lucide-react';
 import { isValidCorporateEmail } from '@/lib/emailValidator';
 import { useLocation } from 'wouter';
 import { useSEO } from '@/hooks/useSEO';
+import { MegaMenu } from '@/components/MegaMenu';
+import { DigeratiEnhancedFooterSection } from '@/pages/sections/DigeratiEnhancedFooterSection';
 
 // Step 1: Seat sizing
 const step1Schema = z.object({
@@ -223,7 +225,9 @@ export default function LeadQuoteWizard() {
   };
 
   return (
-    <div className="min-h-screen bg-de-bg px-4 py-16 md:py-20">
+    <div className="min-h-screen bg-de-bg">
+      <MegaMenu />
+      <main className="de-nav-clear px-4 py-16 md:py-20">
       <div className="de-paper-lift-lg mx-auto w-full max-w-2xl rounded-2xl p-6 text-[#1A1228] md:p-8">
       {/* Progress indicator */}
       <div className="flex items-center justify-between mb-8">
@@ -470,6 +474,8 @@ export default function LeadQuoteWizard() {
         </form>
       </Form>
       </div>
+      </main>
+      <DigeratiEnhancedFooterSection />
     </div>
   );
 }

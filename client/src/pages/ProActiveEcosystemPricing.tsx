@@ -226,8 +226,8 @@ const PREVIEW_BULLETS = 5;
 const MatrixCell = ({ value }: { value: CellValue }) => {
   if (value === true) {
     return (
-      <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto">
-        <Check className="w-3 h-3 text-emerald-400" />
+      <div className="w-5 h-5 rounded-full bg-de-bg border border-de-hairline flex items-center justify-center mx-auto">
+        <Check className="w-3 h-3 text-de-accent-ink" />
       </div>
     );
   }
@@ -398,7 +398,7 @@ export default function ProActiveEcosystemPricing() {
                         !expanded && index >= PREVIEW_BULLETS && "hidden",
                       )}
                     >
-                      <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-400" />
+                      <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-de-accent-ink" />
                       <span>{bullet}</span>
                     </li>
                   ))}

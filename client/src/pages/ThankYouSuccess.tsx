@@ -1,197 +1,164 @@
-import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, Calendar, Clock, MapPin, Video, ExternalLink } from "lucide-react";
-import { MegaMenu } from "@/components/MegaMenu";
-import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
+import { CheckCircle, Calendar, Clock, MapPin, Video, ArrowRight } from "lucide-react";
 import { SiGoogle } from "react-icons/si";
-import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
+import { PageTemplate } from "@/components/PageTemplate";
+import { ConversionPathBar } from "@/components/ConversionPathBar";
+import { IconWell } from "@/components/visual/IconWell";
 import { useSEO } from "@/hooks/useSEO";
+import { CTA } from "@/lib/ctaCopy";
 import { PRIMARY_PHONE } from "@/data/companyContact";
+
+const cardClass = "rounded-2xl border border-de-hairline bg-de-raised";
+const insetClass = "rounded-xl border border-de-hairline bg-de-bg";
 
 export default function ThankYouSuccess() {
   useSEO({
-    title: 'Thank You',
-    description: 'Thank you for contacting Digerati Experts. We will be in touch shortly to discuss your IT and cybersecurity needs.',
+    title: "Thank You",
+    description:
+      "Thank you for contacting Digerati Experts. We will be in touch shortly to discuss your IT and cybersecurity needs.",
     noIndex: true,
   });
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      <MegaMenu />
-      
-      {/* Dark Header Section */}
-      <section className="bg-gradient-to-b from-slate-800 to-slate-900 de-nav-clear pb-20 px-4">
-        <div className="max-w-2xl mx-auto text-center">
-          {/* Logo */}
-          <div className="mb-8">
-            <img 
-              src={logoImage} 
-              alt="Digerati Experts" 
-              className="h-12 mx-auto"
-              data-testid="img-logo"
-            />
-          </div>
-          
-          {/* Success Checkmark */}
-          <div className="mb-6 flex justify-center">
-            <div className="bg-slate-700/50 rounded-full p-4">
-              <div className="bg-gradient-to-br from-green-400 to-emerald-500 rounded-full p-2">
-                <CheckCircle className="h-8 w-8 text-white" strokeWidth={3} />
+    <PageTemplate
+      title="Thank You"
+      subtitle="Your form has been successfully submitted. Our team will review it and get back to you shortly."
+      icon={<CheckCircle className="h-8 w-8" />}
+      breadcrumbs={[{ label: "Contact", href: "/contact" }, { label: "Thank You" }]}
+      showBackButton={false}
+    >
+      <div className="mx-auto max-w-2xl space-y-10">
+        <p className="sr-only" data-testid="text-thank-you-title">
+          Thank You!
+        </p>
+        <p className="sr-only" data-testid="text-thank-you-message">
+          Your form has been successfully submitted. Our team will review it and get back to you shortly.
+        </p>
+
+        <section className={`p-8 md:p-10 ${cardClass}`}>
+          <h2 className="mb-4 text-center text-2xl font-bold text-white md:text-3xl">
+            Here&apos;s What You Can Do Next
+          </h2>
+          <p className="mb-2 text-center text-white/70">
+            Book a private session with our cybersecurity consultant.
+          </p>
+          <p className="mb-2 text-center text-white/70">
+            Identify how you can better protect your business from cyber threats.
+          </p>
+          <p className="mb-8 text-center text-white/70">
+            If you qualify, you will receive a <strong className="text-de-accent-ink">free security assessment</strong>.
+          </p>
+
+          <div className="border-t border-de-hairline" />
+
+          <div className="mt-8 text-center">
+            <div className="mb-4 flex justify-center">
+              <IconWell icon={Calendar} size="md" surface="dark" />
+            </div>
+            <h3 className="mb-2 text-xl font-bold text-white">Schedule Your Consultation</h3>
+            <p className="mb-6 text-sm text-white/65">
+              Thank you for your interest. Click below to book a time that works for you.
+              <br />
+              Call our office at{" "}
+              <a href={PRIMARY_PHONE.telHref} className="text-de-accent-ink hover:underline">
+                {PRIMARY_PHONE.display}
+              </a>{" "}
+              if you have any questions.
+            </p>
+
+            <div className={`mx-auto mb-6 max-w-sm p-6 text-left ${insetClass}`}>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 text-white/80">
+                  <Clock className="h-4 w-4 text-white/45" aria-hidden="true" />
+                  <span className="text-sm">30 Minutes</span>
+                </div>
+                <div className="flex items-center gap-3 text-white/80">
+                  <Video className="h-4 w-4 text-white/45" aria-hidden="true" />
+                  <span className="text-sm">Video Conference or Phone Call</span>
+                </div>
+                <div className="flex items-center gap-3 text-white/80">
+                  <MapPin className="h-4 w-4 text-white/45" aria-hidden="true" />
+                  <span className="text-sm">America/Phoenix (MST)</span>
+                </div>
               </div>
             </div>
+
+            <Button asChild size="lg" variant="brand" className="h-12 px-8 text-lg" data-testid="button-book-consultation">
+              <a href="/book">
+                {CTA.primary}
+                <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
+              </a>
+            </Button>
           </div>
-          
-          {/* Thank You Message */}
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4" data-testid="text-thank-you-title">
-            Thank You!
-          </h1>
-          <p className="text-lg text-slate-300 max-w-lg mx-auto" data-testid="text-thank-you-message">
-            Your form has been successfully submitted. Our team will review it and get back to you shortly.
-          </p>
-        </div>
-      </section>
-      
-      {/* White Card Section */}
-      <section className="flex-1 bg-slate-100 py-12 px-4 -mt-4">
-        <div className="max-w-2xl mx-auto">
-          <Card className="bg-white shadow-xl border-0 rounded-2xl overflow-hidden">
-            <CardContent className="p-8 md:p-12">
-              {/* Section Title */}
-              <h2 className="text-2xl md:text-3xl font-bold text-slate-900 text-center mb-4">
-                Here's What You Can Do Next
-              </h2>
-              
-              <p className="text-slate-600 text-center mb-2">
-                Book a private session with our cybersecurity consultant.
-              </p>
-              <p className="text-slate-600 text-center mb-2">
-                Identify how you can better protect your business from cyber threats.
-              </p>
-              <p className="text-slate-600 text-center mb-8">
-                If you qualify, you will receive a <strong className="text-de-accent">free security assessment</strong>.
-              </p>
-              
-              {/* Divider */}
-              <div className="border-t border-slate-200 my-8" />
-              
-              {/* Meeting Scheduled Card */}
-              <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-de-paper-raised rounded-full mb-4">
-                  <Calendar className="h-8 w-8 text-de-accent" />
-                </div>
-                
-                <h3 className="text-xl font-bold text-slate-900 mb-2">
-                  Schedule Your Consultation
-                </h3>
-                <p className="text-slate-600 text-sm mb-6">
-                  Thank you for your interest. Click below to book a time that works for you.<br />
-                  Call our office at <a href={PRIMARY_PHONE.telHref} className="text-de-accent hover:underline">{PRIMARY_PHONE.display}</a> if you have any questions.
-                </p>
-                
-                {/* Meeting Details */}
-                <div className="bg-slate-50 rounded-xl p-6 mb-6 text-left max-w-sm mx-auto">
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 text-slate-700">
-                      <Clock className="h-4 w-4 text-slate-400" />
-                      <span className="text-sm">30 Minutes</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-slate-700">
-                      <Video className="h-4 w-4 text-slate-400" />
-                      <span className="text-sm">Video Conference or Phone Call</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-slate-700">
-                      <MapPin className="h-4 w-4 text-slate-400" />
-                      <span className="text-sm">America/Phoenix (MST)</span>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Book Now Button */}
-                <Button 
-                  asChild 
-                  size="lg"
-                  className="bg-[#D3126A] px-8 py-6 text-lg text-white shadow-lg hover:bg-[#e01874] rounded-xl"
-                  data-testid="button-book-consultation"
-                >
-                  <a href="/book">
-                    Book Your Free Consultation <ExternalLink className="ml-2 h-5 w-5" />
-                  </a>
-                </Button>
-              </div>
-              
-              {/* Divider */}
-              <div className="border-t border-slate-200 my-8" />
-              
-              {/* Calendar Buttons */}
-              <div className="text-center">
-                <p className="text-sm text-slate-500 mb-4">Already have an appointment? Add it to your calendar:</p>
-                <div className="flex flex-wrap justify-center gap-3">
-                  <Button 
-                    variant="outline" 
-                    className="border-slate-300 hover:bg-slate-50"
-                    data-testid="button-google-calendar"
-                    asChild
-                  >
-                    <a href="https://calendar.google.com">
-                      <SiGoogle className="h-4 w-4 mr-2" />
-                      Google Calendar
-                    </a>
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="border-slate-300 hover:bg-slate-50"
-                    data-testid="button-outlook-calendar"
-                    asChild
-                  >
-                    <a href="https://outlook.live.com/calendar">
-                      <Calendar className="h-4 w-4 mr-2" />
-                      Outlook Calendar
-                    </a>
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="border-slate-300 hover:bg-slate-50"
-                    data-testid="button-apple-calendar"
-                    asChild
-                  >
-                    <a href="https://www.icloud.com/calendar">
-                      <Calendar className="h-4 w-4 mr-2" />
-                      iCloud Calendar
-                    </a>
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-      
-      {/* Trust Badges Section */}
-      <section className="bg-slate-800 py-8 px-4">
-        <div className="max-w-4xl mx-auto flex flex-wrap justify-center items-center gap-6">
-          {/* Google Reviews — no fabricated star rating */}
+
+          <div className="my-8 border-t border-de-hairline" />
+
+          <div className="text-center">
+            <p className="mb-4 text-sm text-white/55">Already have an appointment? Add it to your calendar:</p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Button
+                variant="outline"
+                className="border-de-hairline bg-de-bg text-white hover:bg-white/10 hover:text-white"
+                data-testid="button-google-calendar"
+                asChild
+              >
+                <a href="https://calendar.google.com">
+                  <SiGoogle className="mr-2 h-4 w-4" aria-hidden="true" />
+                  Google Calendar
+                </a>
+              </Button>
+              <Button
+                variant="outline"
+                className="border-de-hairline bg-de-bg text-white hover:bg-white/10 hover:text-white"
+                data-testid="button-outlook-calendar"
+                asChild
+              >
+                <a href="https://outlook.live.com/calendar">
+                  <Calendar className="mr-2 h-4 w-4" aria-hidden="true" />
+                  Outlook Calendar
+                </a>
+              </Button>
+              <Button
+                variant="outline"
+                className="border-de-hairline bg-de-bg text-white hover:bg-white/10 hover:text-white"
+                data-testid="button-apple-calendar"
+                asChild
+              >
+                <a href="https://www.icloud.com/calendar">
+                  <Calendar className="mr-2 h-4 w-4" aria-hidden="true" />
+                  iCloud Calendar
+                </a>
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        <div className="flex flex-wrap items-center justify-center gap-4">
           <a
             href="/#google-reviews"
-            className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-[#1A1228] transition-colors hover:bg-de-paper"
+            className={`flex items-center gap-2 px-4 py-3 transition-colors hover:border-white/25 ${insetClass}`}
             data-testid="link-thank-you-reviews"
           >
-            <SiGoogle className="h-6 w-6 text-blue-500" aria-hidden="true" />
-            <div>
-              <div className="text-xs font-semibold text-slate-700">Google Reviews</div>
-              <div className="text-xs text-black/55 underline">See client reviews</div>
-            </div>
+            <SiGoogle className="h-5 w-5 text-white" aria-hidden="true" />
+            <span>
+              <span className="block text-xs font-semibold text-white">Google Reviews</span>
+              <span className="block text-xs text-white/55 underline">See client reviews</span>
+            </span>
           </a>
-          
-          {/* Google Partner Badge */}
-          <div className="flex items-center gap-2 bg-white rounded-lg px-4 py-2">
-            <SiGoogle className="h-6 w-6 text-blue-500" />
-            <div className="text-xs font-semibold text-slate-700">Google Partner</div>
+          <div className={`flex items-center gap-2 px-4 py-3 ${insetClass}`}>
+            <SiGoogle className="h-5 w-5 text-white" aria-hidden="true" />
+            <span className="text-xs font-semibold text-white">Google Partner</span>
           </div>
         </div>
-      </section>
-      
-      <DigeratiEnhancedFooterSection />
-    </div>
+
+        <ConversionPathBar
+          headline="Book your Cyber Risk Assessment"
+          body="Pick a time. We review identity, endpoints, email, backups, and operating reality — then recommend a fit."
+          primaryHref="/book"
+          primaryLabel={CTA.primary}
+          primaryTestId="button-thank-you-assessment"
+        />
+      </div>
+    </PageTemplate>
   );
 }

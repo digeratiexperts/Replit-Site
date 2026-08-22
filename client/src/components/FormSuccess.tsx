@@ -38,7 +38,7 @@ export function FormSuccess({
           damping: 15
         }}
       >
-        <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center">
+        <div className="w-16 h-16 rounded-full bg-[#D3126A]/15 flex items-center justify-center">
           <motion.div
             initial={{ pathLength: 0 }}
             animate={{ pathLength: 1 }}
@@ -47,13 +47,13 @@ export function FormSuccess({
               duration: prefersReducedMotion ? 0 : 0.3
             }}
           >
-            <Check className="w-8 h-8 text-emerald-500" aria-hidden="true" />
+            <Check className="w-8 h-8 text-de-accent-ink" aria-hidden="true" />
           </motion.div>
         </div>
         
         {!prefersReducedMotion && (
           <motion.div
-            className="absolute inset-0 rounded-full bg-emerald-500/20"
+            className="absolute inset-0 rounded-full bg-[#D3126A]/15"
             initial={{ scale: 1, opacity: 0.5 }}
             animate={{ scale: 1.5, opacity: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}

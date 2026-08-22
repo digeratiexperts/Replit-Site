@@ -146,7 +146,7 @@ export const DigeratiEnhancedFooterSection = (): JSX.Element => {
                 Get the latest cybersecurity insights and IT tips delivered to your inbox.
               </p>
               {isSubscribed ? (
-                <div className="flex items-center gap-2 text-emerald-400">
+                <div className="flex items-center gap-2 text-de-accent-ink">
                   <CheckCircle className="h-5 w-5" aria-hidden="true" />
                   <span className="text-base">Thank you for subscribing!</span>
                 </div>

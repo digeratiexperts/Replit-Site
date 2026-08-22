@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/useSEO";
 import { Link } from "wouter";
 import { CTA } from "@/lib/ctaCopy";
+import { ConversionPathBar } from "@/components/ConversionPathBar";
 import {
   Monitor, Shield, Radar, Database, Network, GraduationCap,
   FileCheck, Briefcase, ArrowRight, CheckCircle, ClipboardCheck,
@@ -132,8 +133,7 @@ export default function StandaloneServices() {
     : { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      <div className="fixed inset-0 bg-gradient-to-b from-[#0a0118] via-[#0d0720] to-[#050312]" aria-hidden="true" />
+    <div className="relative min-h-screen overflow-hidden bg-de-bg">
       <div className="relative z-10">
         <MegaMenu />
 
@@ -173,7 +173,7 @@ export default function StandaloneServices() {
 
           {/* Standalone vs Ecosystem */}
           <section className="grid md:grid-cols-2 gap-6 mb-20" aria-label="Standalone versus ProActive Ecosystem">
-            <div className="rounded-2xl border border-cyan-500/30 bg-white/[0.03] p-7" data-testid="compare-standalone">
+            <div className="rounded-2xl border border-de-hairline bg-de-raised p-7" data-testid="compare-standalone">
               <h2 className="text-xl font-bold text-white mb-4">Standalone Services</h2>
               <ul className="space-y-3 mb-6">
                 {[
@@ -183,7 +183,7 @@ export default function StandaloneServices() {
                   "Clear responsibilities before work begins",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3 text-white/70">
-                    <CheckCircle className="w-5 h-5 text-cyan-400 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="w-5 h-5 text-de-accent-ink mt-0.5 flex-shrink-0" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -194,7 +194,7 @@ export default function StandaloneServices() {
                   </a>
                 </Button>
             </div>
-            <div className="rounded-2xl border border-de-hairline bg-white/[0.03] p-7" data-testid="compare-ecosystem">
+            <div className="rounded-2xl border border-de-hairline bg-de-raised p-7" data-testid="compare-ecosystem">
               <h2 className="text-xl font-bold text-white mb-4">ProActive Ecosystem</h2>
               <ul className="space-y-3 mb-6">
                 {[
@@ -218,14 +218,14 @@ export default function StandaloneServices() {
 
           {/* Required first step */}
           <motion.section
-            className="rounded-2xl border border-white/10 bg-white/[0.02] p-8 md:p-10 mb-20"
+            className="mb-20 rounded-2xl border border-de-hairline bg-de-raised p-8 md:p-10"
             initial={prefersReducedMotion ? undefined : "hidden"}
             whileInView={prefersReducedMotion ? undefined : "visible"}
             viewport={{ once: true }}
             variants={fadeIn}
             aria-labelledby="assessment-heading"
           >
-            <span className="inline-block px-3 py-1 rounded-full bg-cyan-500/15 text-cyan-300 text-xs font-semibold uppercase tracking-wide mb-4">
+            <span className="mb-4 inline-block rounded-full border border-de-hairline bg-de-bg px-3 py-1 text-xs font-semibold uppercase tracking-wide text-de-accent-ink">
               Required First Step
             </span>
             <h2 id="assessment-heading" className="text-3xl font-bold text-white mb-4">
@@ -244,7 +244,7 @@ export default function StandaloneServices() {
             <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {assessmentDeliverables.map((item) => (
                 <li key={item} className="flex items-start gap-3 text-white/70">
-                  <CheckCircle className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-5 h-5 text-de-accent-ink mt-0.5 flex-shrink-0" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -264,7 +264,7 @@ export default function StandaloneServices() {
               {standaloneServices.map((service) => (
                 <motion.article
                   key={service.title}
-                  className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 flex flex-col"
+                  className="flex flex-col rounded-2xl border border-de-hairline bg-de-raised p-6"
                   initial={prefersReducedMotion ? undefined : "hidden"}
                   whileInView={prefersReducedMotion ? undefined : "visible"}
                   viewport={{ once: true }}
@@ -292,7 +292,7 @@ export default function StandaloneServices() {
             </div>
             <ol className="grid md:grid-cols-5 gap-5">
               {engagementSteps.map((step, index) => (
-                <li key={step.title} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+                <li key={step.title} className="rounded-2xl border border-de-hairline bg-de-raised p-5">
                   <div className="flex items-center gap-3 mb-3">
                     <span className="w-8 h-8 rounded-full bg-de-raised text-de-accent-ink text-sm font-bold flex items-center justify-center">
                       {index + 1}
@@ -307,7 +307,7 @@ export default function StandaloneServices() {
           </section>
 
           {/* Boundaries */}
-          <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-8 md:p-10 mb-20" aria-labelledby="boundaries-heading">
+          <section className="mb-20 rounded-2xl border border-de-hairline bg-de-raised p-8 md:p-10" aria-labelledby="boundaries-heading">
             <h2 id="boundaries-heading" className="text-3xl font-bold text-white mb-3">
               No Blind Spots. No Finger-Pointing. No Unclear Ownership.
             </h2>
@@ -318,36 +318,27 @@ export default function StandaloneServices() {
             <ul className="space-y-3">
               {boundaries.map((item) => (
                 <li key={item} className="flex items-start gap-3 text-white/70">
-                  <CheckCircle className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-5 h-5 text-de-accent-ink mt-0.5 flex-shrink-0" />
                   <span>{item}</span>
                 </li>
               ))}
             </ul>
           </section>
 
-          {/* Final CTA */}
-          <section className="text-center rounded-2xl border border-de-hairline bg-de-raised px-6 py-12">
-            <h2 className="text-3xl font-bold text-white mb-3">
-              Not Sure Whether You Need One Service or Full IT/Security Coverage?
-            </h2>
-            <p className="text-white/70 max-w-2xl mx-auto mb-8">
-              Start with a Cyber Risk Assessment. We will identify the risks, clarify the scope, and recommend whether a
-              standalone service or ProActive Ecosystem package is the safer path forward.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Button asChild size="lg" variant="brand">
-                  <a href="/book">
-                    {CTA.primary}
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                  </a>
-                </Button>
-              <Link href="/proactive-ecosystem-pricing">
-                <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                  Compare ProActive Ecosystem
-                </Button>
-              </Link>
-            </div>
-          </section>
+          <ConversionPathBar
+            headline="Not sure whether you need one service or full coverage?"
+            body="Start with a Cyber Risk Assessment. We will identify the risks, clarify the scope, and recommend whether a standalone service or ProActive Ecosystem package is the safer path forward."
+            extraAction={
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="h-12 border-white/70 bg-transparent px-8 font-semibold text-white hover:bg-white/10 hover:text-white"
+              >
+                <Link href="/proactive-ecosystem-pricing">Compare ProActive Ecosystem</Link>
+              </Button>
+            }
+          />
         </main>
 
         <DigeratiEnhancedFooterSection />

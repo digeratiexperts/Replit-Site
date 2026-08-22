@@ -147,12 +147,12 @@ export function ServiceMatrix({
         return (
           <motion.div
             key={plan.name}
-            className="relative rounded-2xl p-6 border border-white/10 bg-white/[0.03] backdrop-blur-xl overflow-hidden group hover:-translate-y-1 transition-all duration-300"
+            className="relative overflow-hidden rounded-2xl border border-de-hairline bg-de-raised p-6 group hover:-translate-y-1 transition-all duration-300"
             variants={cardVariants}
             data-testid={`plan-${plan.name.toLowerCase()}`}
           >
             <div className="flex items-center justify-between mb-4">
-              <span className="inline-flex px-3 py-1 rounded-full text-xs font-bold bg-white/5 text-white border border-white/10">
+              <span className="inline-flex px-3 py-1 rounded-full text-xs font-bold bg-de-bg text-white border border-de-hairline">
                 {plan.name}
               </span>
               {isHighlighted && (
@@ -177,7 +177,7 @@ export function ServiceMatrix({
             <ul className="space-y-3 mb-6">
               {plan.features.map((feature, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm">
-                  <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-4 h-4 text-de-accent-ink flex-shrink-0 mt-0.5" />
                   <span className="text-white/80">{feature}</span>
                 </li>
               ))}
@@ -186,7 +186,8 @@ export function ServiceMatrix({
             {showCTA && (
               <Button
                 asChild
-                className="w-full bg-white/10 hover:bg-white/20 text-white"
+                className="w-full border-de-hairline bg-de-bg text-white hover:bg-de-raised hover:text-white"
+                variant="outline"
                 data-testid={`button-learn-more-${plan.name.toLowerCase()}`}
               >
                 <Link href={plan.learnMoreUrl}>

@@ -16,21 +16,21 @@ export const DigeratiProtectEnableSection = (): JSX.Element => {
       description: "Every system, endpoint, and user is protected - by design, not by reaction.",
       icon: Shield,
       image: securityImg,
-      gradient: "from-violet-600 to-purple-600"
+      gradient: "from-[#151217] to-[#0a0a0a]"
     },
     {
       title: "Co-Managed or Fully Managed",
       description: "We support your internal IT or serve as your outsourced technology team.",
       icon: Users,
       image: techWorkImg,
-      gradient: "from-purple-500 to-fuchsia-500"
+      gradient: "from-[#151217] to-[#050312]"
     },
     {
       title: "Executive-Level Transparency",
       description: "Reports, KPIs, and compliance insights that make sense - and drive decisions.",
       icon: BarChart,
       image: codeImg,
-      gradient: "from-fuchsia-400 to-pink-500"
+      gradient: "from-[#0a0a0a] to-[#151217]"
     }
   ];
 
@@ -39,13 +39,13 @@ export const DigeratiProtectEnableSection = (): JSX.Element => {
       icon: Lock,
       title: "Security by Design",
       description: "Every solution we implement has security built into its foundation, not added as an afterthought.",
-      gradient: "from-violet-500 to-purple-600"
+      gradient: "from-[#151217] to-[#0a0a0a]"
     },
     {
       icon: Code,
       title: "Technology Excellence",
       description: "We leverage cutting-edge tools and platforms to deliver enterprise-grade solutions to businesses of all sizes.",
-      gradient: "from-purple-500 to-fuchsia-600"
+      gradient: "from-[#151217] to-[#050312]"
     }
   ];
 
@@ -73,11 +73,10 @@ export const DigeratiProtectEnableSection = (): JSX.Element => {
   };
 
   return (
-    <section className="py-20 bg-white relative overflow-hidden">
-      {/* Background decoration */}
+    <section className="py-20 bg-de-bg relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-100/50 rounded-full blur-[150px]" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-fuchsia-100/50 rounded-full blur-[150px]" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-de-raised/40 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-de-raised/40 rounded-full blur-[150px]" />
       </div>
 
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
@@ -88,10 +87,10 @@ export const DigeratiProtectEnableSection = (): JSX.Element => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6 text-gray-900">
-            We Exist to <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">Protect and Enable</span> Your Business
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6 text-white">
+            We Exist to <span className="text-de-accent-ink">Protect and Enable</span> Your Business
           </h2>
-          <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
+          <p className="text-lg md:text-xl text-white/70 leading-relaxed">
             If you're like most business leaders, you don't want another vendor — you want a security-first partner 
             who proactively reduces risk, improves uptime, and keeps your team moving.
           </p>
@@ -154,15 +153,15 @@ export const DigeratiProtectEnableSection = (): JSX.Element => {
           {additionalFeatures.map((feature) => (
             <div 
               key={feature.title}
-              className="bg-gray-50 border border-gray-200 rounded-xl p-6 hover:border-purple-300 hover:shadow-lg transition-all duration-300"
+              className="bg-de-raised border border-de-hairline rounded-xl p-6 hover:border-[#D3126A]/40 transition-all duration-300"
             >
               <div className="flex items-start gap-4">
-                <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${feature.gradient} flex items-center justify-center flex-shrink-0`}>
-                  <feature.icon className="h-6 w-6 text-white" />
+                <div className={`w-12 h-12 rounded-lg border border-de-hairline bg-de-bg flex items-center justify-center flex-shrink-0`}>
+                  <feature.icon className="h-6 w-6 text-de-accent-ink" />
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h4>
-                  <p className="text-gray-600 text-base leading-relaxed">
+                  <h4 className="text-lg font-semibold text-white mb-2">{feature.title}</h4>
+                  <p className="text-white/70 text-base leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
@@ -180,7 +179,7 @@ export const DigeratiProtectEnableSection = (): JSX.Element => {
         >
           <Button asChild 
               size="lg"
-              className="h-14 px-8 text-lg font-bold bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+              className="h-14 px-8 text-lg font-bold bg-[#D3126A] hover:bg-[#e01874] text-white shadow-none"
               data-testid="button-partner-with-us"
             >
                   <a href="/book">

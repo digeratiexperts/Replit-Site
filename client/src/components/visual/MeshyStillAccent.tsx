@@ -38,8 +38,8 @@ export function MeshyStillAccent({
   const s = sizeMap[size];
   const frameClass =
     surface === "dark"
-      ? "rounded-xl border border-white/10 bg-gradient-to-br  via-fuchsia-500/[0.06] to-transparent"
-      : "rounded-xl border border-de-hairline bg-gradient-to-br  via-white to-fuchsia-50/50";
+      ? "rounded-xl border border-white/10 bg-de-raised"
+      : "rounded-xl border border-de-hairline bg-white";
 
   return (
     <div

@@ -161,7 +161,7 @@ const howItWorks = [
 
 function CompareCell({ value }: { value: boolean | string }) {
   if (value === true) {
-    return <Check className="w-5 h-5 text-emerald-400 mx-auto" />;
+    return <Check className="w-5 h-5 text-de-accent-ink mx-auto" />;
   }
   if (value === false) {
     return <X className="w-5 h-5 text-white/55 mx-auto" />;
