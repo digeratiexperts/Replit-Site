@@ -1,15 +1,15 @@
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
-import { FileText, Download, Mail } from "lucide-react";
+import { FileText, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function MSA() {
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen bg-de-bg">
       <MegaMenu />
       
-      <section className="bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 text-white de-nav-clear pb-20">
+      <section className="de-dark-well de-field-grain de-field-lit text-white de-nav-clear pb-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
             <div className="flex items-center gap-3 mb-6">
@@ -31,7 +31,7 @@ export default function MSA() {
               the provision of managed IT and security services by Digerati Experts to our clients.
             </p>
 
-            <div className="bg-de-raised backdrop-blur-sm border border-de-hairline border-l-4 border-l-de-accent p-6 rounded mb-8">
+            <div className="border border-de-hairline bg-de-raised border-l-4 border-l-de-accent p-6 rounded mb-8">
               <h3 className="text-xl font-semibold text-white mb-3">What's Included in Our MSA:</h3>
               <ul className="list-disc pl-6 text-gray-300 space-y-2">
                 <li>Scope of managed IT and security services</li>
@@ -56,7 +56,7 @@ export default function MSA() {
 
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
               <Button 
-                className="bg-de-raised text-white hover: hover:to-blue-700"
+                className="bg-[#D3126A] text-white hover:bg-[#B80E5C]"
                 onClick={() => window.location.href = 'mailto:legal@digeratiexperts.com?subject=MSA Request'}
                 data-testid="button-request-msa"
               >
@@ -73,7 +73,7 @@ export default function MSA() {
               </Button>
             </div>
 
-            <div className="mt-12 bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-lg">
+            <div className="mt-12 border border-de-hairline bg-de-raised p-6 rounded-lg">
               <h3 className="text-xl font-semibold text-white mb-3">Contact Legal Department</h3>
               <p className="text-gray-300 mb-2"><strong className="text-white">Email:</strong> legal@digeratiexperts.com</p>
               <p className="text-gray-300 mb-2"><strong className="text-white">Phone:</strong> {PRIMARY_PHONE.display}</p>

@@ -6,10 +6,10 @@ import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function AUP() {
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen bg-de-bg">
       <MegaMenu />
       
-      <section className="bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 text-white de-nav-clear pb-20">
+      <section className="de-dark-well de-field-grain de-field-lit text-white de-nav-clear pb-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
             <div className="flex items-center gap-3 mb-6">
@@ -31,7 +31,7 @@ export default function AUP() {
               services, systems, and networks.
             </p>
 
-            <div className="bg-red-500/10 backdrop-blur-sm border border-red-500/30 border-l-4 border-l-red-500 p-6 rounded mb-8">
+            <div className="border border-de-hairline border-l-4 border-l-de-accent bg-de-raised p-6 rounded mb-8">
               <h3 className="text-xl font-semibold text-white mb-3">Prohibited Activities:</h3>
               <ul className="list-disc pl-6 text-gray-300 space-y-2">
                 <li>Illegal activities or violation of any laws</li>
@@ -45,7 +45,7 @@ export default function AUP() {
               </ul>
             </div>
 
-            <div className="bg-green-500/10 backdrop-blur-sm border border-green-500/30 border-l-4 border-l-green-500 p-6 rounded mb-8">
+            <div className="border border-de-hairline bg-de-raised p-6 rounded mb-8">
               <h3 className="text-xl font-semibold text-white mb-3">Permitted Uses:</h3>
               <ul className="list-disc pl-6 text-gray-300 space-y-2">
                 <li>Legitimate business operations and communications</li>
@@ -66,7 +66,7 @@ export default function AUP() {
             <h2 className="text-2xl font-bold text-white mb-4 mt-8">Request Full AUP</h2>
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
               <Button 
-                className="bg-de-raised text-white hover: hover:to-blue-700"
+                className="bg-[#D3126A] text-white hover:bg-[#B80E5C]"
                 onClick={() => window.location.href = 'mailto:legal@digeratiexperts.com?subject=AUP Request'}
                 data-testid="button-request-aup"
               >

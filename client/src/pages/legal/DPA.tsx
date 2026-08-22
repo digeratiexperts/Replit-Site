@@ -6,10 +6,10 @@ import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function DPA() {
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen bg-de-bg">
       <MegaMenu />
       
-      <section className="bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 text-white de-nav-clear pb-20">
+      <section className="de-dark-well de-field-grain de-field-lit text-white de-nav-clear pb-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
             <div className="flex items-center gap-3 mb-6">
@@ -32,7 +32,7 @@ export default function DPA() {
               and other data protection regulations.
             </p>
 
-            <div className="bg-blue-500/10 backdrop-blur-sm border border-blue-500/30 border-l-4 border-l-blue-500 p-6 rounded mb-8">
+            <div className="border border-de-hairline border-l-4 border-l-de-accent bg-de-raised p-6 rounded mb-8">
               <h3 className="text-xl font-semibold text-white mb-3">DPA Covers:</h3>
               <ul className="list-disc pl-6 text-gray-300 space-y-2">
                 <li>Scope and duration of data processing activities</li>
@@ -47,7 +47,7 @@ export default function DPA() {
               </ul>
             </div>
 
-            <div className="bg-de-raised backdrop-blur-sm border border-de-hairline border-l-4 border-l-de-accent p-6 rounded mb-8">
+            <div className="border border-de-hairline bg-de-raised border-l-4 border-l-de-accent p-6 rounded mb-8">
               <h3 className="text-xl font-semibold text-white mb-3">Compliance Frameworks:</h3>
               <ul className="list-disc pl-6 text-gray-300 space-y-2">
                 <li><strong className="text-white">HIPAA:</strong> Business Associate Agreement provisions for Protected Health Information</li>
@@ -65,7 +65,7 @@ export default function DPA() {
 
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
               <Button 
-                className="bg-de-raised text-white hover: hover:to-blue-700"
+                className="bg-[#D3126A] text-white hover:bg-[#B80E5C]"
                 onClick={() => window.location.href = 'mailto:legal@digeratiexperts.com?subject=DPA Request'}
                 data-testid="button-request-dpa"
               >

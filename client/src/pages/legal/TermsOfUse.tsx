@@ -14,11 +14,11 @@ export default function TermsOfUse() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen bg-de-bg">
       <MegaMenu />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 text-white de-nav-clear pb-20">
+      <section className="de-dark-well de-field-grain de-field-lit text-white de-nav-clear pb-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
             <div className="flex items-center gap-3 mb-6">
@@ -63,7 +63,7 @@ export default function TermsOfUse() {
             {/* Definitions */}
             <div className="mb-12">
               <h2 className="text-3xl font-bold text-white mb-4">2. Definitions</h2>
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-6 rounded-lg">
+              <div className="border border-de-hairline bg-de-raised p-6 rounded-lg">
                 <ul className="space-y-3 text-gray-300">
                   <li><strong className="text-white">"Services"</strong> means all managed IT services, managed security services, cybersecurity solutions, compliance support, and related services provided by Digerati Experts.</li>
                   <li><strong className="text-white">"MSP"</strong> means Managed Service Provider.</li>
@@ -126,7 +126,7 @@ export default function TermsOfUse() {
               
               <h3 className="text-2xl font-semibold text-white mb-3 mt-6">4.1 Response Times</h3>
               <div className="overflow-x-auto">
-                <table className="min-w-full bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg">
+                <table className="min-w-full border border-de-hairline bg-de-raised rounded-lg">
                   <thead className="bg-white/10">
                     <tr>
                       <th className="py-3 px-4 text-left text-white font-semibold border-b border-white/10">Priority Level</th>
@@ -207,7 +207,7 @@ export default function TermsOfUse() {
             </div>
 
             {/* Compliance & Regulations */}
-            <div className="mb-12 bg-blue-500/10 backdrop-blur-sm border border-blue-500/30 border-l-4 border-l-blue-500 p-6 rounded">
+            <div className="mb-12 border border-de-hairline border-l-4 border-l-de-accent bg-de-raised p-6 rounded">
               <h2 className="text-3xl font-bold text-white mb-4">6. Compliance and Regulatory Support</h2>
               
               <h3 className="text-2xl font-semibold text-white mb-3 mt-6">6.1 HIPAA Compliance</h3>
@@ -294,7 +294,7 @@ export default function TermsOfUse() {
             </div>
 
             {/* Warranties and Disclaimers */}
-            <div className="mb-12 bg-amber-500/10 backdrop-blur-sm border border-amber-500/30 border-l-4 border-l-amber-500 p-6 rounded">
+            <div className="mb-12 border border-de-hairline border-l-4 border-l-de-accent bg-de-raised p-6 rounded">
               <h2 className="text-3xl font-bold text-white mb-4 flex items-center gap-3">
                 <AlertTriangle className="h-8 w-8 text-amber-400" />
                 9. Warranties and Disclaimers
@@ -446,13 +446,13 @@ export default function TermsOfUse() {
             </div>
 
             {/* Contact Information */}
-            <div className="mb-12 bg-de-raised backdrop-blur-sm border border-de-hairline border-l-4 border-l-de-accent p-6 rounded">
+            <div className="mb-12 border border-de-hairline bg-de-raised border-l-4 border-l-de-accent p-6 rounded">
               <h2 className="text-3xl font-bold text-white mb-4">15. Contact Information</h2>
               <p className="text-gray-300 mb-4">
                 For questions about these Terms of Service, please contact:
               </p>
               
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-4 rounded-lg">
+              <div className="border border-de-hairline bg-de-raised p-4 rounded-lg">
                 <p className="text-white font-semibold mb-2">Digerati Experts - Legal Department</p>
                 <p className="text-gray-300"><strong className="text-white">Email:</strong> legal@digeratiexperts.com</p>
                 <p className="text-gray-300"><strong className="text-white">Phone:</strong> {PRIMARY_PHONE.display}</p>

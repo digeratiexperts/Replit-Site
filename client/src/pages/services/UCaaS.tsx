@@ -24,6 +24,8 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
 import { ServiceJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
 import { PRIMARY_PHONE } from "@/data/companyContact";
+import { CTA } from "@/lib/ctaCopy";
+import { IconWell } from "@/components/visual/IconWell";
 
 export default function UCaaS() {
   const prefersReducedMotion = useReducedMotion() ?? false;
@@ -165,13 +167,21 @@ export default function UCaaS() {
     <PageTemplate
       title="UCaaS: Voice & Meetings"
       subtitle="We design, secure, and run your phone system and meeting stack so it actually supports the business"
-      gradientColors="from-[#050312] via-[#0a0a0a] to-[#050312]"
-      variant="dark"
       icon={<Phone className="h-10 w-10 text-de-accent-ink" />}
       breadcrumbs={[
         { label: "Solutions", href: "/solutions" },
         { label: "UCaaS" }
       ]}
+      actions={
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Button asChild variant="brand" size="lg" className="h-12 px-6 font-semibold">
+            <a href="/book">
+              {CTA.primary}
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </a>
+          </Button>
+        </div>
+      }
     >
       <ServiceJsonLd
         name="Unified Communications (UCaaS)"
@@ -191,10 +201,8 @@ export default function UCaaS() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center">
-              <AlertTriangle className="w-5 h-5 text-red-400" />
-            </div>
+            <div className="mb-8 flex items-center gap-3">
+            <IconWell icon={AlertTriangle} size="sm" surface="dark" />
             <h2 className="text-3xl font-bold text-white">What's broken right now</h2>
           </div>
           
@@ -208,11 +216,11 @@ export default function UCaaS() {
                 transition={{ delay: index * 0.1, duration: 0.5 }}
               >
                 <Card 
-                  className="h-full bg-white/5 backdrop-blur-sm border border-red-500/20 hover:border-red-500/40 transition-all"
+                  className="h-full border-de-hairline bg-de-raised"
                   data-testid={`card-broken-${item.title.toLowerCase().replace(/\s+/g, '-')}`}
                 >
                   <CardHeader>
-                    <div className="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center mb-3">
+                    <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl border border-de-hairline bg-de-bg">
                       {item.icon}
                     </div>
                     <CardTitle className="text-xl text-white">{item.title}</CardTitle>
@@ -232,29 +240,24 @@ export default function UCaaS() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="relative bg-white/5 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-white/10 overflow-hidden"
+          className="relative overflow-hidden rounded-2xl border border-de-hairline bg-de-raised p-8 md:p-12"
         >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-amber-500/10 to-transparent rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-red-500/10 to-transparent rounded-full blur-3xl" />
-          
           <div className="relative">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
-                <DollarSign className="w-5 h-5 text-amber-400" />
-              </div>
+            <div className="mb-8 flex items-center gap-3">
+              <IconWell icon={DollarSign} size="sm" surface="dark" />
               <h2 className="text-3xl font-bold text-white">The hidden bill</h2>
             </div>
             
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-                  <DollarSign className="h-5 w-5 text-amber-400" />
+                  <DollarSign className="h-5 w-5 text-de-accent-ink" />
                   Business impact
                 </h3>
                 <ul className="space-y-3">
                   {hiddenBillItems.business.map((item, index) => (
                     <li key={index} className="flex items-start gap-3">
-                      <X className="h-5 w-5 text-red-400 mt-0.5 flex-shrink-0" />
+                      <X className="mt-0.5 h-5 w-5 shrink-0 text-white/45" />
                       <span className="text-gray-300">{item}</span>
                     </li>
                   ))}
@@ -263,13 +266,13 @@ export default function UCaaS() {
               
               <div>
                 <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-                  <Scale className="h-5 w-5 text-red-400" />
+                  <Scale className="h-5 w-5 text-de-accent-ink" />
                   Liability & compliance
                 </h3>
                 <ul className="space-y-3">
                   {hiddenBillItems.liability.map((item, index) => (
                     <li key={index} className="flex items-start gap-3">
-                      <AlertTriangle className="h-5 w-5 text-amber-400 mt-0.5 flex-shrink-0" />
+                      <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-de-accent-ink" />
                       <span className="text-gray-300">{item}</span>
                     </li>
                   ))}
@@ -286,10 +289,8 @@ export default function UCaaS() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-lg bg-de-raised flex items-center justify-center">
-              <Headphones className="w-5 h-5 text-white" />
-            </div>
+            <div className="mb-8 flex items-center gap-3">
+            <IconWell icon={Headphones} size="sm" surface="dark" />
             <h2 className="text-3xl font-bold text-white">What we actually do</h2>
           </div>
           
@@ -303,12 +304,11 @@ export default function UCaaS() {
                 transition={{ delay: index * 0.1, duration: 0.5 }}
               >
                 <Card 
-                  className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-hairline hover:bg-white/[0.08] transition-all duration-300"
+                  className="group h-full border-de-hairline bg-de-raised"
                   data-testid={`card-service-${card.title.toLowerCase().replace(/\s+/g, '-')}`}
                 >
-                  <div className="absolute inset-0 bg-de-raised to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
                   <CardHeader className="relative">
-                    <div className="w-12 h-12 rounded-xl bg-de-raised flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <div className="relative mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-de-hairline bg-de-bg">
                       {card.icon}
                     </div>
                     <CardTitle className="text-xl font-semibold text-white group-hover:text-de-accent-ink transition-colors">
@@ -350,7 +350,7 @@ export default function UCaaS() {
                 className="relative"
               >
                 <Card 
-                  className="h-full bg-white/[0.03] border-white/10 backdrop-blur-sm hover:border-de-hairline transition-all"
+                  className="h-full border-de-hairline bg-de-raised"
                   data-testid={`card-pricing-${tier.name.toLowerCase().replace(/\s+/g, '-')}`}
                 >
                   <CardHeader>
@@ -365,7 +365,7 @@ export default function UCaaS() {
                     <ul className="space-y-3">
                       {tier.features.map((feature, featureIndex) => (
                         <li key={featureIndex} className="flex items-start gap-3">
-                          <CheckCircle className="h-5 w-5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                          <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-de-accent-ink" />
                           <span className="text-gray-300">{feature}</span>
                         </li>
                       ))}
@@ -391,8 +391,8 @@ export default function UCaaS() {
             </p>
           </div>
           
-          <div className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 overflow-hidden">
-            <div className="grid grid-cols-3 bg-white/5">
+          <div className="overflow-hidden rounded-2xl border border-de-hairline bg-de-raised">
+            <div className="grid grid-cols-3 border-b border-de-hairline bg-de-bg">
               <div className="p-4 font-semibold text-gray-400">Feature</div>
               <div className="p-4 font-semibold text-gray-400 text-center border-l border-white/10">DIY</div>
               <div className="p-4 font-semibold text-de-accent-ink text-center border-l border-white/10 bg-de-raised">
@@ -402,12 +402,12 @@ export default function UCaaS() {
             {comparisonItems.map((item, index) => (
               <div 
                 key={item.feature} 
-                className={`grid grid-cols-3 ${index % 2 === 0 ? 'bg-white/[0.02]' : ''}`}
+                className={`grid grid-cols-3 ${index % 2 === 0 ? "bg-de-bg/40" : ""}`}
                 data-testid={`row-comparison-${index}`}
               >
                 <div className="p-4 text-white font-medium">{item.feature}</div>
                 <div className="p-4 text-gray-400 text-center border-l border-white/10">{item.diy}</div>
-                <div className="p-4 text-emerald-400 text-center border-l border-white/10 bg-de-raised font-medium">
+                <div className="border-l border-de-hairline bg-de-bg p-4 text-center font-medium text-de-accent-ink">
                   {item.digerati}
                 </div>
               </div>
@@ -421,51 +421,27 @@ export default function UCaaS() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="relative rounded-2xl overflow-hidden"
+          className="rounded-2xl border border-de-hairline bg-de-raised p-8 text-center md:p-12"
         >
-          <div className="absolute inset-0 bg-de-raised" />
-          
-          <div className="absolute inset-0 opacity-30">
-            <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="cta-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#cta-grid)" />
-            </svg>
-          </div>
-          
-          <div className="absolute -top-20 -right-20 w-64 h-64 bg-de-accent/20 rounded-full blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-de-raised rounded-full blur-3xl" />
-          
-          <div className="relative p-8 md:p-12 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
-              Ready to fix your phone system?
-            </h2>
-            <p className="text-lg md:text-xl mb-8 text-white/90 max-w-2xl mx-auto">
-              Book a 15-minute call to discuss your current setup and see if we're a fit.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a 
-                href="/book" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-center justify-center bg-white text-de-accent hover:bg-gray-100 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
-                data-testid="button-schedule-call"
-              >
-                <ArrowRight className="mr-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                Schedule a Call
+          <h2 className="mb-4 text-3xl font-bold text-white md:text-4xl">
+            Ready to fix your phone system?
+          </h2>
+          <p className="mx-auto mb-8 max-w-2xl text-lg text-white/70 md:text-xl">
+            Book a 15-minute call to discuss your current setup and see if we're a fit.
+          </p>
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
+            <Button asChild variant="brand" size="lg" className="h-12 px-8 font-semibold" data-testid="button-schedule-call">
+              <a href="/book">
+                {CTA.primary}
+                <ArrowRight className="ml-1 h-5 w-5" />
               </a>
-              <a 
-                href={PRIMARY_PHONE.telHref}
-                className="group inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-de-accent px-8 py-4 rounded-xl font-semibold transition-all"
-                data-testid="button-call-now"
-              >
-                <Phone className="mr-2 h-5 w-5" />
+            </Button>
+            <Button asChild variant="outline" size="lg" className="h-12 border-white/20 px-8 font-semibold text-white hover:bg-white/10" data-testid="button-call-now">
+              <a href={PRIMARY_PHONE.telHref}>
+                <Phone className="mr-1 h-5 w-5" />
                 Call {PRIMARY_PHONE.display}
               </a>
-            </div>
+            </Button>
           </div>
         </motion.section>
       </div>

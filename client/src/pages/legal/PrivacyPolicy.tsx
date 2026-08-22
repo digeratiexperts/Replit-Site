@@ -14,11 +14,11 @@ export default function PrivacyPolicy() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen bg-de-bg">
       <MegaMenu />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 text-white de-nav-clear pb-20">
+      <section className="de-dark-well de-field-grain de-field-lit text-white de-nav-clear pb-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
             <div className="flex items-center gap-3 mb-6">
@@ -176,7 +176,7 @@ export default function PrivacyPolicy() {
             </div>
 
             {/* Arizona Data Breach Notification */}
-            <div className="mb-12 bg-amber-500/10 backdrop-blur-sm border border-amber-500/30 border-l-4 border-l-amber-500 p-6 rounded">
+            <div className="mb-12 border border-de-hairline border-l-4 border-l-de-accent bg-de-raised p-6 rounded">
               <h2 className="text-3xl font-bold text-white mb-4 flex items-center gap-3">
                 <AlertTriangle className="h-8 w-8 text-amber-400" />
                 5. Arizona Data Breach Notification
@@ -306,7 +306,7 @@ export default function PrivacyPolicy() {
             </div>
 
             {/* HIPAA Clients */}
-            <div className="mb-12 bg-blue-500/10 backdrop-blur-sm border border-blue-500/30 border-l-4 border-l-blue-500 p-6 rounded">
+            <div className="mb-12 border border-de-hairline border-l-4 border-l-de-accent bg-de-raised p-6 rounded">
               <h2 className="text-3xl font-bold text-white mb-4">10. HIPAA-Covered Clients</h2>
               <p className="text-gray-300 mb-4">
                 For healthcare clients handling Protected Health Information (PHI), we act as a Business Associate 
@@ -365,7 +365,7 @@ export default function PrivacyPolicy() {
             </div>
 
             {/* Contact Information */}
-            <div className="mb-12 bg-de-raised backdrop-blur-sm border border-de-hairline border-l-4 border-l-de-accent p-6 rounded">
+            <div className="mb-12 border border-de-hairline bg-de-raised border-l-4 border-l-de-accent p-6 rounded">
               <h2 className="text-3xl font-bold text-white mb-4 flex items-center gap-3">
                 <FileText className="h-8 w-8 text-de-accent-ink" />
                 15. Contact Us
@@ -374,7 +374,7 @@ export default function PrivacyPolicy() {
                 If you have questions about this Privacy Policy or wish to exercise your privacy rights, please contact:
               </p>
               
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 p-4 rounded-lg">
+              <div className="border border-de-hairline bg-de-raised p-4 rounded-lg">
                 <p className="text-white font-semibold mb-2">Digerati Experts - Privacy Team</p>
                 <p className="text-gray-300"><strong className="text-white">Email:</strong> privacy@digeratiexperts.com</p>
                 <p className="text-gray-300"><strong className="text-white">Phone:</strong> {PRIMARY_PHONE.display}</p>

@@ -5,6 +5,8 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
 import { ServiceJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
 import { pricing } from "@/data/pricing";
+import { CTA } from "@/lib/ctaCopy";
+import { IconWell } from "@/components/visual/IconWell";
 import {
   Shield,
   Users,
@@ -169,10 +171,10 @@ function CompareCell({ value }: { value: boolean | string }) {
 
 function FAQItem({ question, answer, isOpen, onToggle, index }: { question: string; answer: string; isOpen: boolean; onToggle: () => void; index: number }) {
   return (
-    <div className="border border-white/10 rounded-xl overflow-hidden">
+    <div className="overflow-hidden rounded-xl border border-de-hairline bg-de-raised">
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-5 text-left hover:bg-white/5 transition-colors"
+        className="flex w-full items-center justify-between p-5 text-left hover:bg-de-bg/60 transition-colors"
         aria-expanded={isOpen}
         data-testid={`faq-toggle-${index}`}
       >
@@ -213,7 +215,18 @@ export default function ManagedWorkplace() {
   return (
     <PageTemplate 
       title="Managed Workplace" 
-      subtitle="Identity, Devices & Apps Management"
+      subtitle="We manage identity, devices, email, and app access so your staff stays productive—and your business stays protected. New hires ready in 1 day, not a week."
+      breadcrumbs={[{ label: "Solutions", href: "/solutions" }, { label: "Managed Workplace" }]}
+      actions={
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Button asChild variant="brand" size="lg" className="h-12 px-6 font-semibold" data-testid="btn-hero-consultation">
+            <a href="/book">
+              {CTA.primary}
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </a>
+          </Button>
+        </div>
+      }
     >
       <ServiceJsonLd
         name="Managed Workplace"
@@ -225,53 +238,21 @@ export default function ManagedWorkplace() {
         { name: "Solutions", url: "/solutions" },
         { name: "Managed Workplace", url: "/solutions/managed-workplace" }
       ]} />
-      <div className="space-y-24">
-        {/* Hero Section */}
-        <motion.section {...fadeInUp} className="relative">
-          <div className="absolute inset-0 bg-de-raised to-transparent rounded-3xl pointer-events-none" />
-          <div className="relative bg-white/[0.02] border border-white/10 rounded-3xl p-8 md:p-12">
-            <div className="max-w-4xl">
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-                Managed Workplace for{" "}
-                <span className="text-de-accent-ink">
-                  security-first teams
-                </span>
-              </h1>
-              <p className="text-xl text-white/70 mb-8 leading-relaxed max-w-3xl">
-                We manage identity, devices, email, and app access so your staff stays productive—and your business stays protected. New hires ready in 1 day, not a week.
-              </p>
-              
-              <div className="flex flex-wrap gap-4 mb-8">
-                <Button
-                  asChild
-                  size="lg"
-                  className="bg-white text-de-accent hover:bg-de-paper-raised font-semibold shadow-lg"
-                  data-testid="btn-hero-consultation"
-                >
-                  <a href="/book">
-                    Schedule Consultation
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </a>
-                </Button>
-              </div>
-
-              <div className="flex flex-wrap gap-4">
-                <div className="flex items-center gap-2 text-sm text-white/60">
-                  <Shield className="w-4 h-4 text-de-accent-ink" />
-                  <span>Zero-trust access policies</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-white/60">
-                  <UserPlus className="w-4 h-4 text-de-accent-ink" />
-                  <span>Onboarding automation</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-white/60">
-                  <Laptop className="w-4 h-4 text-de-accent-ink" />
-                  <span>Standardized device baseline</span>
-                </div>
-              </div>
-            </div>
+      <div className="space-y-20">
+        <div className="flex flex-wrap gap-4">
+          <div className="flex items-center gap-2 text-sm text-white/60">
+            <Shield className="h-4 w-4 text-de-accent-ink" />
+            <span>Zero-trust access policies</span>
           </div>
-        </motion.section>
+          <div className="flex items-center gap-2 text-sm text-white/60">
+            <UserPlus className="h-4 w-4 text-de-accent-ink" />
+            <span>Onboarding automation</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-white/60">
+            <Laptop className="h-4 w-4 text-de-accent-ink" />
+            <span>Standardized device baseline</span>
+          </div>
+        </div>
 
         {/* Outcomes Section */}
         <motion.section {...fadeInUp}>
@@ -287,11 +268,11 @@ export default function ManagedWorkplace() {
                 key={index}
                 {...fadeInUp}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white/[0.03] border border-white/10 rounded-xl p-6 hover:bg-white/[0.05] transition-colors"
+                className="de-interactive-card rounded-xl border border-de-hairline bg-de-raised p-6"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-de-raised flex items-center justify-center flex-shrink-0">
-                    <outcome.icon className="w-6 h-6 text-white" />
+                  <div className="w-12 h-12 rounded-xl bg-de-bg border border-de-hairline flex items-center justify-center flex-shrink-0">
+                    <outcome.icon className="w-6 h-6 text-de-accent-ink" />
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-white mb-1">{outcome.text}</h3>
@@ -317,7 +298,7 @@ export default function ManagedWorkplace() {
                 transition={{ delay: index * 0.15 }}
                 className="relative"
               >
-                <div className="bg-white/[0.03] border border-white/10 rounded-xl p-8 text-center h-full">
+                <div className="h-full rounded-xl border border-de-hairline bg-de-raised p-8 text-center">
                   <div className="w-16 h-16 rounded-full bg-de-raised flex items-center justify-center mx-auto mb-6">
                     <span className="text-2xl font-bold text-white">{step.step}</span>
                   </div>
@@ -341,12 +322,12 @@ export default function ManagedWorkplace() {
             <h2 className="text-3xl font-bold text-white mb-4">Choose Your Package</h2>
             <p className="text-white/60 mb-6">Clear pricing, clear inclusions. Pick what fits your team.</p>
             
-            <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full p-1">
+            <div className="inline-flex items-center gap-2 rounded-xl border border-de-hairline bg-de-bg p-1">
               <button
                 onClick={() => setPricingMode('per_user')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                   pricingMode === 'per_user' 
-                    ? 'bg-de-accent text-white' 
+                    ? 'bg-[#D3126A] text-white' 
                     : 'text-white/60 hover:text-white'
                 }`}
                 data-testid="btn-pricing-per-user"
@@ -355,9 +336,9 @@ export default function ManagedWorkplace() {
               </button>
               <button
                 onClick={() => setPricingMode('monthly')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                   pricingMode === 'monthly' 
-                    ? 'bg-de-accent text-white' 
+                    ? 'bg-[#D3126A] text-white' 
                     : 'text-white/60 hover:text-white'
                 }`}
                 data-testid="btn-pricing-monthly"
@@ -373,7 +354,7 @@ export default function ManagedWorkplace() {
                 key={pkg.sku}
                 {...fadeInUp}
                 transition={{ delay: index * 0.1 }}
-                className="relative rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02]"
+                className="relative overflow-hidden rounded-2xl border border-de-hairline bg-de-raised"
               >
                 <div className="p-8">
                   <h3 className="text-2xl font-bold text-white mb-2">{pkg.name}</h3>
@@ -406,13 +387,13 @@ export default function ManagedWorkplace() {
                   <div className="space-y-3 mb-6">
                     {pkg.includes.map((item, i) => (
                       <div key={i} className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                        <CheckCircle className="w-5 h-5 text-de-accent-ink flex-shrink-0 mt-0.5" />
                         <span className="text-white/80 text-sm">{item}</span>
                       </div>
                     ))}
                   </div>
 
-                  <div className="bg-white/5 rounded-lg p-4 mb-6">
+                  <div className="mb-6 rounded-lg border border-de-hairline bg-de-bg p-4">
                     <p className="text-sm text-white/60 mb-2">Key Outcomes:</p>
                     {pkg.outcomes.map((outcome, i) => (
                       <div key={i} className="flex items-center gap-2 text-sm text-de-accent-ink">
@@ -424,11 +405,8 @@ export default function ManagedWorkplace() {
 
                   <Button
                     asChild
-                    className={`w-full ${
-                      pkg.featured 
-                        ? 'bg-white text-de-accent hover:bg-de-paper-raised' 
-                        : 'bg-de-accent text-white hover:bg-de-accent'
-                    }`}
+                    variant="brand"
+                    className="w-full font-semibold"
                     data-testid={`btn-package-${pkg.sku}`}
                   >
                     <a href="/book">
@@ -505,7 +483,7 @@ export default function ManagedWorkplace() {
                 key={index}
                 {...fadeInUp}
                 transition={{ delay: index * 0.05 }}
-                className="bg-white/[0.03] border border-white/10 rounded-xl p-5 hover:border-de-hairline transition-colors"
+                className="de-interactive-card rounded-xl border border-de-hairline bg-de-raised p-5"
               >
                 <h3 className="text-white font-semibold mb-2">{addon.name}</h3>
                 <p className="text-white/60 text-sm">{addon.description}</p>
@@ -537,7 +515,7 @@ export default function ManagedWorkplace() {
 
         {/* What Happens After You Book */}
         <motion.section {...fadeInUp}>
-          <div className="bg-de-raised to-transparent rounded-2xl border border-white/10 p-8 md:p-12">
+          <div className="rounded-2xl border border-de-hairline bg-de-raised p-8 md:p-12">
             <h2 className="text-2xl font-bold text-white mb-6 text-center">What Happens After You Book?</h2>
             <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
               <div className="text-center">
@@ -566,42 +544,26 @@ export default function ManagedWorkplace() {
         </motion.section>
 
         {/* Final CTA */}
-        <motion.section {...fadeInUp}>
-          <div className="relative rounded-2xl overflow-hidden">
-            <div className="absolute inset-0 bg-de-raised opacity-90" />
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] pointer-events-none" />
-            <div className="relative py-16 px-8 text-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                Ready to Simplify Your Workplace?
-              </h2>
-              <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
-                Book a consultation to discuss your team's needs. Get a quote within 24 hours.
-              </p>
-              <div className="flex flex-wrap justify-center gap-4">
-                <Button
-                  asChild
-                  size="lg"
-                  className="bg-white text-de-accent hover:bg-de-paper-raised font-semibold shadow-lg"
-                  data-testid="btn-final-consultation"
-                >
-                  <a href="/book">
-                    Schedule Consultation
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </a>
-                </Button>
-                <Button
-                  asChild
-                  size="lg"
-                  className="bg-transparent border border-white/30 text-white hover:bg-white/10"
-                  data-testid="btn-final-call"
-                >
-                  <a href={PRIMARY_PHONE.telHref}>
-                    <Phone className="mr-2 h-5 w-5" />
-                    Call {PRIMARY_PHONE.display}
-                  </a>
-                </Button>
-              </div>
-            </div>
+        <motion.section {...fadeInUp} className="rounded-2xl border border-de-hairline bg-de-raised p-8 text-center md:p-12">
+          <h2 className="mb-4 text-3xl font-bold text-white md:text-4xl">
+            Ready to Simplify Your Workplace?
+          </h2>
+          <p className="mx-auto mb-8 max-w-2xl text-lg text-white/70">
+            Book a consultation to discuss your team's needs. Get a quote within 24 hours.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Button asChild variant="brand" size="lg" className="h-12 px-8 font-semibold" data-testid="btn-final-consultation">
+              <a href="/book">
+                {CTA.primary}
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </a>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="h-12 border-white/20 px-8 font-semibold text-white hover:bg-white/10" data-testid="btn-final-call">
+              <a href={PRIMARY_PHONE.telHref}>
+                <Phone className="mr-2 h-5 w-5" />
+                Call {PRIMARY_PHONE.display}
+              </a>
+            </Button>
           </div>
         </motion.section>
       </div>

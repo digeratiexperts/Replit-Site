@@ -1,139 +1,132 @@
 import { PageTemplate } from "@/components/PageTemplate";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, Shield, Clock, RefreshCw, Zap, Eye } from "lucide-react";
+import { IconWell } from "@/components/visual/IconWell";
+import { Button } from "@/components/ui/button";
+import { CheckCircle, Shield, Clock, RefreshCw, Zap, Phone } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 import { PRIMARY_PHONE } from "@/data/companyContact";
 
+const cardClass = "rounded-2xl border border-de-hairline bg-de-raised";
+
 export default function RemoteSupport() {
+  useSEO({
+    title: "Remote Support | Digerati Experts",
+    description:
+      "Secure remote assistance from Digerati Experts technicians. Join a Zoho Assist session, open a ticket, or call support.",
+    canonical: "/support/remote-support",
+  });
+
   const features = [
-    { icon: Clock, title: "Instant Connection", color: "from-blue-500 to-cyan-500", points: ["Connect in under 2 minutes", "No software required", "Windows, Mac, Linux"] },
-    { icon: Shield, title: "Secure & Encrypted", color: "from-green-500 to-emerald-500", points: ["End-to-end encryption", "Session recording", "HIPAA-aligned session controls"] },
-    { icon: RefreshCw, title: "Screen Sharing", color: " ", points: ["Full control capability", "Multi-monitor support", "File transfer included"] },
-    { icon: Zap, title: "24/7 Availability", color: "from-amber-500 to-orange-500", points: ["Round-the-clock support", "15-min response time", "Senior engineer escalation"] }
+    { icon: Clock, title: "Instant Connection", points: ["Connect in under 2 minutes", "No software required", "Windows, Mac, Linux"] },
+    { icon: Shield, title: "Secure & Encrypted", points: ["End-to-end encryption", "Session recording", "HIPAA-aligned session controls"] },
+    { icon: RefreshCw, title: "Screen Sharing", points: ["Full control capability", "Multi-monitor support", "File transfer included"] },
+    { icon: Zap, title: "24/7 Availability", points: ["Round-the-clock support", "15-min response time for critical issues", "Senior engineer escalation"] },
   ];
 
   return (
     <PageTemplate
       title="Remote Support"
       subtitle="Instant, secure remote assistance from our expert MSP technicians"
-      gradientColors="from-[#050312] via-[#0a0a0a] to-[#050312]"
+      breadcrumbs={[{ label: "Support", href: "/about/support" }, { label: "Remote Support" }]}
+      actions={
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Button asChild variant="brand" size="lg" className="h-12 px-6 font-semibold" data-testid="button-zoho-assist-hero">
+            <a href="https://assist.zoho.com/" target="_blank" rel="noopener noreferrer">
+              Open Zoho Assist
+            </a>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="h-12 border-white/20 px-6 font-semibold text-white hover:bg-white/10">
+            <a href="/support/submit-ticket">Submit Support Request</a>
+          </Button>
+        </div>
+      }
     >
       <div className="space-y-16">
-        {/* How It Works */}
-        <div className="text-center max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold mb-6 text-white">How Remote Support Works</h2>
-          <p className="text-xl text-gray-300 leading-relaxed">
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="mb-6 text-3xl font-bold text-white">How Remote Support Works</h2>
+          <p className="text-xl leading-relaxed text-white/70">
             When issues arise, our MSP technicians can securely access your systems to diagnose and resolve problems in minutes. No downtime, no delays.
           </p>
         </div>
 
-        {/* Feature Grid with Modern Design */}
-        <div className="grid md:grid-cols-2 gap-6">
-          {features.map((feature, idx) => {
+        <div className="grid gap-6 md:grid-cols-2">
+          {features.map((feature) => {
             const Icon = feature.icon;
             return (
-              <div key={idx} className="group relative">
-                <div className={`absolute inset-0 bg-gradient-to-r ${feature.color} rounded-xl blur opacity-0 group-hover:opacity-15 transition-all`} />
-                <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:border-blue-400/50 transition-all h-full">
-                  <CardHeader>
-                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${feature.color} text-white flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
-                      <Icon className="h-6 w-6" />
-                    </div>
-                    <CardTitle className="text-white">{feature.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-3">
-                      {feature.points.map((point, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0 mt-0.5" />
-                          <span className="text-gray-300">{point}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
+              <div key={feature.title} className={`de-interactive-card h-full p-6 ${cardClass}`}>
+                <IconWell icon={Icon} size="md" surface="dark" className="mb-3" />
+                <h3 className="mb-4 text-xl font-semibold text-white">{feature.title}</h3>
+                <ul className="space-y-3">
+                  {feature.points.map((point) => (
+                    <li key={point} className="flex items-start gap-2">
+                      <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-de-accent-ink" aria-hidden="true" />
+                      <span className="text-white/80">{point}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             );
           })}
         </div>
 
-        {/* Connection Process */}
-        <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10">
-          <h3 className="text-2xl font-bold mb-8 text-center text-white">Simple 3-Step Process</h3>
-          <div className="grid md:grid-cols-3 gap-6">
+        <div className={`p-8 ${cardClass}`}>
+          <h3 className="mb-8 text-center text-2xl font-bold text-white">Simple 3-Step Process</h3>
+          <div className="grid gap-6 md:grid-cols-3">
             {[
               { step: 1, title: "Request Support", desc: "Submit ticket or call our MSP team", time: "< 1 min" },
               { step: 2, title: "Share Access", desc: "Secure connection established instantly", time: "< 2 mins" },
-              { step: 3, title: "We Fix It", desc: "Expert technicians resolve your issue", time: "Fast" }
-            ].map((process, idx) => (
-              <div key={idx} className="relative">
-                {idx < 2 && (
-                  <div className="hidden md:block absolute top-12 left-[60%] w-[40%] h-1 bg-gradient-to-r from-blue-400 to-transparent" />
-                )}
-                <Card className="text-center bg-white/5 backdrop-blur-sm border border-white/10">
-                  <CardContent className="pt-6">
-                    <div className="w-12 h-12 rounded-full bg-de-raised text-white flex items-center justify-center font-bold mx-auto mb-4">
-                      {process.step}
-                    </div>
-                    <h4 className="font-semibold text-lg mb-2 text-white">{process.title}</h4>
-                    <p className="text-gray-400 text-sm mb-2">{process.desc}</p>
-                    <p className="text-blue-400 font-medium text-sm">{process.time}</p>
-                  </CardContent>
-                </Card>
+              { step: 3, title: "We Fix It", desc: "Expert technicians resolve your issue", time: "Fast" },
+            ].map((process) => (
+              <div key={process.step} className="rounded-xl border border-de-hairline bg-de-bg p-6 text-center">
+                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-de-hairline bg-de-raised font-bold text-white">
+                  {process.step}
+                </div>
+                <h4 className="mb-2 text-lg font-semibold text-white">{process.title}</h4>
+                <p className="mb-2 text-sm text-white/60">{process.desc}</p>
+                <p className="text-sm font-medium text-de-accent-ink">{process.time}</p>
               </div>
             ))}
           </div>
         </div>
 
-        {/* MSP Statistics */}
-        <div className="grid md:grid-cols-4 gap-6 bg-de-raised rounded-xl p-8 text-white">
+        <div className={`grid gap-6 p-8 md:grid-cols-4 ${cardClass}`}>
           <div className="text-center">
-            <p className="text-4xl font-bold mb-2">2 mins</p>
-            <p className="text-blue-100">Avg Connection Time</p>
+            <p className="mb-2 text-3xl font-bold text-white">2 mins</p>
+            <p className="text-sm text-white/60">Typical connection time</p>
           </div>
-          <div className="text-center border-l border-r border-blue-400">
-            <p className="text-4xl font-bold mb-2">15 min</p>
-            <p className="text-blue-100">Response Guarantee</p>
+          <div className="text-center md:border-l md:border-de-hairline">
+            <p className="mb-2 text-3xl font-bold text-white">15 min</p>
+            <p className="text-sm text-white/60">Critical response (SLA)</p>
           </div>
-          <div className="text-center">
-            <p className="text-4xl font-bold mb-2">99.9%</p>
-            <p className="text-blue-100">Uptime SLA</p>
+          <div className="text-center md:border-l md:border-de-hairline">
+            <p className="mb-2 text-3xl font-bold text-white">24/7</p>
+            <p className="text-sm text-white/60">Availability</p>
           </div>
-          <div className="text-center border-l border-blue-400">
-            <p className="text-4xl font-bold mb-2">24/7</p>
-            <p className="text-blue-100">Availability</p>
+          <div className="text-center md:border-l md:border-de-hairline">
+            <p className="mb-2 text-3xl font-bold text-white">Encrypted</p>
+            <p className="text-sm text-white/60">Zoho Assist sessions</p>
           </div>
         </div>
 
-        {/* Zoho Assist CTA — restored from 61f25fc */}
-        <div className="bg-de-raised rounded-xl p-8 text-center text-white">
-          <h2 className="text-3xl font-bold mb-4">Need Immediate Help?</h2>
-          <p className="text-lg mb-6 text-blue-100">
+        <div className={`p-8 text-center ${cardClass}`}>
+          <h2 className="mb-4 text-3xl font-bold text-white">Need Immediate Help?</h2>
+          <p className="mb-6 text-lg text-white/70">
             Join a secure Zoho Assist session with our MSP technicians, or open a ticket if you need us to reach out.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="https://assist.zoho.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center bg-white text-blue-700 hover:bg-blue-50 px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
-              data-testid="button-zoho-assist-remote"
-            >
-              Open Zoho Assist
-            </a>
-            <a
-              href="/support/submit-ticket"
-              className="inline-flex items-center justify-center border-2 border-white bg-transparent text-white hover:bg-white/10 px-8 py-3 rounded-lg font-semibold transition-all"
-              data-testid="button-submit-ticket-remote"
-            >
-              Submit Support Request
-            </a>
-            <a
-              href={PRIMARY_PHONE.telHref}
-              className="inline-flex items-center justify-center border-2 border-white bg-transparent text-white hover:bg-white/10 px-8 py-3 rounded-lg font-semibold transition-all"
-              data-testid="button-call-remote"
-            >
-              Call Support
-            </a>
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
+            <Button asChild variant="brand" size="lg" className="h-12 px-8 font-semibold" data-testid="button-zoho-assist-remote">
+              <a href="https://assist.zoho.com/" target="_blank" rel="noopener noreferrer">
+                Open Zoho Assist
+              </a>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="h-12 border-white/20 px-8 font-semibold text-white hover:bg-white/10" data-testid="button-submit-ticket-remote">
+              <a href="/support/submit-ticket">Submit Support Request</a>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="h-12 border-white/20 px-8 font-semibold text-white hover:bg-white/10" data-testid="button-call-remote">
+              <a href={PRIMARY_PHONE.telHref}>
+                <Phone className="mr-1 h-5 w-5" />
+                Call Support
+              </a>
+            </Button>
           </div>
         </div>
       </div>

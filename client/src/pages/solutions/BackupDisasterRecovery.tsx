@@ -33,6 +33,7 @@ import {
   BarChart3
 } from "lucide-react";
 import { PRIMARY_PHONE } from "@/data/companyContact";
+import { CTA } from "@/lib/ctaCopy";
 
 const bcdrData = {
   packages: [
@@ -97,7 +98,7 @@ const bcdrData = {
   ],
   features: [
     {
-      title: "Guaranteed RPO/RTO Targets",
+      title: "Contract-defined RPO/RTO targets",
       description: "Committed recovery time and data-loss objectives documented in your agreement",
       deliverable: "RPO/RTO commitment document",
       included_in: ["business", "enterprise"],
@@ -195,10 +196,10 @@ function FAQItem({ question, answer, isOpen, onToggle, index }: {
   index: number 
 }) {
   return (
-    <div className="border border-white/10 rounded-xl overflow-hidden">
+    <div className="overflow-hidden rounded-xl border border-de-hairline bg-de-raised">
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-5 text-left hover:bg-white/5 transition-colors"
+        className="flex w-full items-center justify-between p-5 text-left hover:bg-de-bg/60 transition-colors"
         aria-expanded={isOpen}
         data-testid={`faq-toggle-${index}`}
       >
@@ -237,14 +238,14 @@ function RPOPickerComponent() {
   const recommendation = getRecommendation();
 
   return (
-    <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-8">
+    <div className="rounded-2xl border border-de-hairline bg-de-raised p-8">
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div>
           <label className="block text-white/60 text-sm mb-2">Critical Systems</label>
           <select
             value={criticalSystems}
             onChange={(e) => setCriticalSystems(e.target.value)}
-            className="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white focus:border-de-hairline focus:outline-none"
+            className="w-full rounded-lg border border-de-hairline bg-de-bg px-4 py-3 text-white focus:border-[#D3126A] focus:outline-none"
             data-testid="picker-systems"
           >
             <option value="1-5">1–5 systems</option>
@@ -258,7 +259,7 @@ function RPOPickerComponent() {
           <select
             value={targetRTO}
             onChange={(e) => setTargetRTO(e.target.value)}
-            className="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white focus:border-de-hairline focus:outline-none"
+            className="w-full rounded-lg border border-de-hairline bg-de-bg px-4 py-3 text-white focus:border-[#D3126A] focus:outline-none"
             data-testid="picker-rto"
           >
             <option value="72h">72 hours</option>
@@ -273,7 +274,7 @@ function RPOPickerComponent() {
           <select
             value={targetRPO}
             onChange={(e) => setTargetRPO(e.target.value)}
-            className="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white focus:border-de-hairline focus:outline-none"
+            className="w-full rounded-lg border border-de-hairline bg-de-bg px-4 py-3 text-white focus:border-[#D3126A] focus:outline-none"
             data-testid="picker-rpo"
           >
             <option value="24h">24 hours</option>
@@ -290,7 +291,7 @@ function RPOPickerComponent() {
             className={`w-full px-4 py-3 rounded-lg border transition-colors ${
               warmStandby 
                 ? 'bg-de-accent border-de-hairline text-white' 
-                : 'bg-white/5 border-white/20 text-white/60'
+                : 'border-de-hairline bg-de-bg text-white/60'
             }`}
             data-testid="picker-standby"
           >
@@ -308,7 +309,8 @@ function RPOPickerComponent() {
           </div>
           <Button
             asChild
-            className="bg-white text-de-accent hover:bg-de-paper-raised font-semibold"
+            className="font-semibold"
+            variant="brand"
             data-testid="btn-picker-quote"
           >
             <a href="/book">
@@ -327,7 +329,7 @@ export default function BackupDisasterRecovery() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   useSEO({
-    title: "Backup & Disaster Recovery (BCDR) - Tested Recovery with Guaranteed Targets | Digerati Experts",
+    title: "Backup & Disaster Recovery (BCDR) | Digerati Experts",
     description: "Recover in hours, not days. BCDR with documented RPO/RTO targets, scheduled restore testing, and DR runbooks. Your business comes back up on a timeline you define.",
     canonical: "/solutions/backup-disaster-recovery"
   });
@@ -342,89 +344,44 @@ export default function BackupDisasterRecovery() {
   return (
     <PageTemplate 
       title="Backup & Disaster Recovery" 
-      subtitle="Tested Recovery with Guaranteed Targets"
+      subtitle="Documented RPO/RTO targets, scheduled restore testing, and runbooks your team can follow. Your business comes back up on a timeline you define."
+      breadcrumbs={[{ label: "Solutions", href: "/solutions" }, { label: "Backup & Disaster Recovery" }]}
+      actions={
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Button asChild variant="brand" size="lg" className="h-12 px-6 font-semibold" data-testid="btn-hero-assessment">
+            <a href="/book">
+              {CTA.primary}
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </a>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="h-12 border-white/20 px-6 font-semibold text-white hover:bg-white/10" data-testid="btn-hero-quote">
+            <a href="#packages">Get a BCDR Quote</a>
+          </Button>
+        </div>
+      }
     >
       <ServiceJsonLd
         name="Backup & Disaster Recovery (BCDR)"
         description="Recover in hours, not days. BCDR with documented RPO/RTO targets, scheduled restore testing, and DR runbooks."
         url="/solutions/backup-disaster-recovery"
-        price="750"
       />
       <BreadcrumbJsonLd items={[
         { name: "Home", url: "/" },
         { name: "Solutions", url: "/solutions" },
         { name: "Backup & Disaster Recovery", url: "/solutions/backup-disaster-recovery" }
       ]} />
-      <div className="space-y-24">
-        {/* Hero Section */}
-        <motion.section {...fadeInUp} className="relative">
-          <div className="absolute inset-0 bg-de-raised to-transparent rounded-3xl pointer-events-none" />
-          <div className="relative bg-white/[0.02] border border-white/10 rounded-3xl p-8 md:p-12">
-            <div className="max-w-4xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-300 text-sm font-medium mb-6">
-                <AlertTriangle className="w-4 h-4" />
-                $1.53M average ransomware recovery cost (Sophos 2025)
-              </div>
-              
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-                Recover in hours—
-                <span className="text-de-accent-ink">
-                  not days
-                </span>
-              </h1>
-              <p className="text-xl text-white/70 mb-8 leading-relaxed max-w-3xl">
-                BCDR isn't just "we have backups." It's documented RPO/RTO targets, scheduled restore testing, and runbooks your team can follow. Your business comes back up on a timeline you define.
-              </p>
-              
-              <div className="flex flex-wrap gap-4 mb-8">
-                <Button
-                  asChild
-                  size="lg"
-                  className="bg-white text-de-accent hover:bg-de-paper-raised font-semibold shadow-lg"
-                  data-testid="btn-hero-assessment"
-                >
-                  <a href="/book">
-                    Schedule BCDR Assessment
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </a>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  size="lg"
-                  className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-                  data-testid="btn-hero-quote"
-                >
-                  <a href="#packages">
-                    Get a BCDR Quote
-                  </a>
-                </Button>
-              </div>
-
-              <div className="flex flex-wrap gap-4">
-                <div className="flex items-center gap-2 text-sm text-white/60">
-                  <Target className="w-4 h-4 text-de-accent-ink" />
-                  <span>RPO/RTO in writing</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-white/60">
-                  <RefreshCw className="w-4 h-4 text-de-accent-ink" />
-                  <span>Scheduled restore testing</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-white/60">
-                  <ClipboardCheck className="w-4 h-4 text-de-accent-ink" />
-                  <span>DR runbooks + tabletop exercises</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.section>
+      <div className="space-y-20">
+        <div className="inline-flex items-center gap-2 rounded-full border border-de-hairline bg-de-raised px-3 py-1.5 text-sm font-medium text-white/80">
+          <AlertTriangle className="h-4 w-4 text-de-accent-ink" />
+          $1.53M average ransomware recovery cost (Sophos 2025)
+        </div>
 
         {/* What We Protect */}
         <motion.section {...fadeInUp}>
           <div className="flex flex-wrap justify-center gap-6 md:gap-12">
             {bcdrData.protectedSystems.map((system, index) => (
               <div key={index} className="flex items-center gap-3 text-white/70">
-                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-de-hairline bg-de-raised">
                   <system.icon className="w-6 h-6 text-de-accent-ink" />
                 </div>
                 <span className="font-medium">{system.name}</span>
@@ -435,7 +392,7 @@ export default function BackupDisasterRecovery() {
 
         {/* BCDR in Plain English */}
         <motion.section {...fadeInUp}>
-          <div className="bg-white/[0.02] border border-white/10 rounded-2xl p-8 md:p-12">
+          <div className="rounded-2xl border border-de-hairline bg-de-raised p-8 md:p-12">
             <h2 className="text-3xl font-bold text-white mb-6 text-center">BCDR in 30 Seconds</h2>
             <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
               <div className="text-center">
@@ -486,7 +443,7 @@ export default function BackupDisasterRecovery() {
                 key={index}
                 {...fadeInUp}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white/[0.03] border border-white/10 rounded-xl p-6 hover:bg-white/[0.05] transition-colors"
+                className="de-interactive-card rounded-xl border border-de-hairline bg-de-raised p-6"
               >
                 <div className="flex items-start gap-4 mb-4">
                   <div className="w-12 h-12 rounded-xl bg-de-raised flex items-center justify-center flex-shrink-0">
@@ -534,9 +491,9 @@ export default function BackupDisasterRecovery() {
                 key={index}
                 {...fadeInUp}
                 transition={{ delay: index * 0.05 }}
-                className="flex items-start gap-3 bg-white/[0.02] border border-white/10 rounded-xl p-5"
+                className="flex items-start gap-3 rounded-xl border border-de-hairline bg-de-raised p-5"
               >
-                <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-de-accent-ink" />
                 <div>
                   <h3 className="font-semibold text-white text-sm">{item.name}</h3>
                   <p className="text-white/50 text-xs">{item.description}</p>
@@ -559,7 +516,7 @@ export default function BackupDisasterRecovery() {
                 key={pkg.sku}
                 {...fadeInUp}
                 transition={{ delay: index * 0.1 }}
-                className="relative rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02]"
+                className="relative overflow-hidden rounded-2xl border border-de-hairline bg-de-raised"
               >
                 <div className="p-8">
                   <h3 className="text-2xl font-bold text-white">{pkg.name}</h3>
@@ -567,11 +524,11 @@ export default function BackupDisasterRecovery() {
                   <p className="text-white/60 text-sm mb-6">{pkg.best_for}</p>
                   
                   <div className="flex gap-4 mb-6">
-                    <div className="bg-white/5 rounded-lg px-3 py-2 text-center flex-1">
+                    <div className="flex-1 rounded-lg border border-de-hairline bg-de-bg px-3 py-2 text-center">
                       <p className="text-xs text-white/50 mb-1">RPO</p>
                       <p className="text-sm font-semibold text-white">{pkg.rpo}</p>
                     </div>
-                    <div className="bg-white/5 rounded-lg px-3 py-2 text-center flex-1">
+                    <div className="flex-1 rounded-lg border border-de-hairline bg-de-bg px-3 py-2 text-center">
                       <p className="text-xs text-white/50 mb-1">RTO</p>
                       <p className="text-sm font-semibold text-white">{pkg.rto}</p>
                     </div>
@@ -580,13 +537,13 @@ export default function BackupDisasterRecovery() {
                   <div className="space-y-3 mb-6">
                     {pkg.includes.map((item, i) => (
                       <div key={i} className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                        <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-de-accent-ink" />
                         <span className="text-white/80 text-sm">{item}</span>
                       </div>
                     ))}
                   </div>
 
-                  <div className="bg-white/5 rounded-lg p-3 mb-6 text-center">
+                  <div className="mb-6 rounded-lg border border-de-hairline bg-de-bg p-3 text-center">
                     <p className="text-xs text-white/50">Test Cadence</p>
                     <p className="text-sm font-semibold text-de-accent-ink">{pkg.test_cadence}</p>
                   </div>
@@ -598,11 +555,8 @@ export default function BackupDisasterRecovery() {
 
                   <Button
                     asChild
-                    className={`w-full ${
-                      pkg.featured 
-                        ? 'bg-white text-de-accent hover:bg-de-paper-raised' 
-                        : 'bg-de-accent text-white hover:bg-de-accent'
-                    }`}
+                    variant="brand"
+                    className="w-full font-semibold"
                     data-testid={`btn-package-${pkg.sku}`}
                   >
                     <a href="/book">
@@ -634,7 +588,7 @@ export default function BackupDisasterRecovery() {
                 transition={{ delay: index * 0.15 }}
                 className="relative"
               >
-                <div className="bg-white/[0.03] border border-white/10 rounded-xl p-8 text-center h-full">
+                <div className="h-full rounded-xl border border-de-hairline bg-de-raised p-8 text-center">
                   <div className="w-16 h-16 rounded-full bg-de-raised flex items-center justify-center mx-auto mb-6">
                     <span className="text-2xl font-bold text-white">{step.step}</span>
                   </div>
@@ -675,7 +629,7 @@ export default function BackupDisasterRecovery() {
 
         {/* What Happens Next */}
         <motion.section {...fadeInUp}>
-          <div className="bg-de-raised to-transparent rounded-2xl border border-white/10 p-8 md:p-12">
+          <div className="rounded-2xl border border-de-hairline bg-de-raised p-8 md:p-12">
             <h2 className="text-2xl font-bold text-white mb-6 text-center">What Happens After You Book?</h2>
             <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
               <div className="text-center">
@@ -704,42 +658,26 @@ export default function BackupDisasterRecovery() {
         </motion.section>
 
         {/* Final CTA */}
-        <motion.section {...fadeInUp}>
-          <div className="relative rounded-2xl overflow-hidden">
-            <div className="absolute inset-0 bg-de-raised opacity-90" />
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] pointer-events-none" />
-            <div className="relative py-16 px-8 text-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                Ready to Know You Can Recover?
-              </h2>
-              <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
-                Schedule a BCDR assessment. We'll scope your environment and provide a quote within 24 hours.
-              </p>
-              <div className="flex flex-wrap justify-center gap-4">
-                <Button
-                  asChild
-                  size="lg"
-                  className="bg-white text-de-accent hover:bg-de-paper-raised font-semibold shadow-lg"
-                  data-testid="btn-final-assessment"
-                >
-                  <a href="/book">
-                    Schedule BCDR Assessment
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </a>
-                </Button>
-                <Button
-                  asChild
-                  size="lg"
-                  className="bg-transparent border border-white/30 text-white hover:bg-white/10"
-                  data-testid="btn-final-call"
-                >
-                  <a href={PRIMARY_PHONE.telHref}>
-                    <Phone className="mr-2 h-5 w-5" />
-                    Call {PRIMARY_PHONE.display}
-                  </a>
-                </Button>
-              </div>
-            </div>
+        <motion.section {...fadeInUp} className="rounded-2xl border border-de-hairline bg-de-raised p-8 text-center md:p-12">
+          <h2 className="mb-4 text-3xl font-bold text-white md:text-4xl">
+            Ready to Know You Can Recover?
+          </h2>
+          <p className="mx-auto mb-8 max-w-2xl text-lg text-white/70">
+            Schedule a BCDR assessment. We'll scope your environment and provide a quote within 24 hours.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Button asChild variant="brand" size="lg" className="h-12 px-8 font-semibold" data-testid="btn-final-assessment">
+              <a href="/book">
+                {CTA.primary}
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </a>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="h-12 border-white/20 px-8 font-semibold text-white hover:bg-white/10" data-testid="btn-final-call">
+              <a href={PRIMARY_PHONE.telHref}>
+                <Phone className="mr-2 h-5 w-5" />
+                Call {PRIMARY_PHONE.display}
+              </a>
+            </Button>
           </div>
         </motion.section>
       </div>
