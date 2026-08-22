@@ -4,13 +4,12 @@ import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhanced
 import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/useSEO";
 import { Link } from "wouter";
+import { CTA } from "@/lib/ctaCopy";
 import {
   Monitor, Shield, Radar, Database, Network, GraduationCap,
   FileCheck, Briefcase, ArrowRight, CheckCircle, ClipboardCheck,
   Map, FileText, PlayCircle, Search,
 } from "lucide-react";
-
-const MEET_URL = "https://meet.digerati-experts.com/";
 
 const standaloneServices = [
   {
@@ -158,9 +157,9 @@ export default function StandaloneServices() {
               technology or security role — after we assess the environment, document the scope, and confirm ownership.
             </p>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 mt-10">
-              <Button asChild size="lg" className="w-full bg-de-raised  text-white">
-                  <a href={MEET_URL} target="_blank" rel="noopener noreferrer" data-testid="cta-hero-assessment">
-                    Start Cyber Risk Assessment
+              <Button asChild size="lg" variant="brand" className="w-full">
+                  <a href="/book" data-testid="cta-hero-assessment">
+                    {CTA.primary}
                   <ArrowRight className="w-4 h-4 ml-2" />
                   </a>
                 </Button>
@@ -190,7 +189,7 @@ export default function StandaloneServices() {
                 ))}
               </ul>
               <Button asChild variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                  <a href={MEET_URL} target="_blank" rel="noopener noreferrer" data-testid="cta-standalone-scope">
+                  <a href="/book" data-testid="cta-standalone-scope">
                     Request Standalone Scope
                   </a>
                 </Button>
@@ -336,9 +335,9 @@ export default function StandaloneServices() {
               standalone service or ProActive Ecosystem package is the safer path forward.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Button asChild size="lg" className="bg-de-raised  text-white">
-                  <a href={MEET_URL} target="_blank" rel="noopener noreferrer">
-                    Start Cyber Risk Assessment
+              <Button asChild size="lg" variant="brand">
+                  <a href="/book">
+                    {CTA.primary}
                   <ArrowRight className="w-4 h-4 ml-2" />
                   </a>
                 </Button>

@@ -23,7 +23,7 @@ export default function PayInvoice() {
     <PageTemplate
       title="Pay Your Invoice"
       subtitle="Pay invoices securely through the Digerati Experts Client Portal"
-      gradientColors="from-green-600 via-emerald-600 to-teal-600"
+      gradientColors="from-[#050312] via-[#0a0a0a] to-[#050312]"
     >
       <div className="space-y-16">
         {/* Prominent portal CTA — this page is not a live card form */}

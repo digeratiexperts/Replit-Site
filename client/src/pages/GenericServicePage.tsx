@@ -291,7 +291,10 @@ export default function GenericServicePage({
                 <p className="text-sm text-white/70">Compare what’s included at each tier</p>
               </div>
             </div>
-            <ServiceCapabilityMatrix serviceKey={serviceKey} highlightTier={recommendedTier} />
+            <ServiceCapabilityMatrix
+              serviceKey={serviceKey}
+              highlightTier={recommendedTier === "it" ? "essentials" : recommendedTier}
+            />
           </motion.div>
         )}
 

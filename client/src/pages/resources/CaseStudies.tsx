@@ -53,11 +53,11 @@ export default function CaseStudies() {
       title="Case Studies"
       subtitle="Real Arizona engagements — challenge, approach, and outcome."
       icon={<Target className="w-10 h-10 text-white" />}
-      breadcrumbs={[{ label: "Resources", href: "/" }, { label: "Case Studies" }]}
+      breadcrumbs={[{ label: "Resources", href: "/resources" }, { label: "Case Studies" }]}
     >
       <div className="space-y-16">
         {!hasPublished && (
-          <div className="rounded-xl border border-white/15 bg-white/[0.04] p-5 md:p-6">
+          <div className="rounded-xl border border-de-hairline bg-de-raised p-5 md:p-6">
             <p className="font-semibold text-white mb-1">Client stories in progress</p>
             <p className="text-sm text-white/65 leading-relaxed">
               We publish case studies with client permission. Browse the frameworks below, or talk
@@ -67,14 +67,14 @@ export default function CaseStudies() {
         )}
 
         <motion.div
-          className="grid md:grid-cols-4 gap-6 bg-gradient-to-r from-[#050312] via-[#0a0a0a] to-[#050312] rounded-2xl p-8 text-white border border-white/10"
+          className="grid gap-6 rounded-2xl border border-de-hairline bg-de-raised p-8 text-white md:grid-cols-4"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
           {focusAreas.map((item) => (
-            <div key={item.value} className="text-center p-4 bg-white/10 rounded-xl backdrop-blur-sm">
+            <div key={item.value} className="rounded-xl border border-de-hairline bg-de-bg p-4 text-center">
               <p className="text-xl font-bold mb-1">{item.value}</p>
               <p className="text-white/80 text-sm">{item.label}</p>
             </div>

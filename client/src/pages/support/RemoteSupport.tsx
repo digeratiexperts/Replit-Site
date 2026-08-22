@@ -15,7 +15,7 @@ export default function RemoteSupport() {
     <PageTemplate
       title="Remote Support"
       subtitle="Instant, secure remote assistance from our expert MSP technicians"
-      gradientColors="from-blue-600  "
+      gradientColors="from-[#050312] via-[#0a0a0a] to-[#050312]"
     >
       <div className="space-y-16">
         {/* How It Works */}

@@ -23,7 +23,7 @@ export default function Insurance() {
         "Continuous compliance monitoring for insurance requirements",
         "Strategic security decisions that reduce insurance risk"
       ]}
-      gradientColors="from-emerald-600 via-teal-600 to-cyan-600"
+      gradientColors="from-[#050312] via-[#0a0a0a] to-[#050312]"
     />
   );
 }

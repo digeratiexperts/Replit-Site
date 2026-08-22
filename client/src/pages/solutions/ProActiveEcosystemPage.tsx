@@ -48,7 +48,7 @@ export default function ProActiveEcosystemPage() {
               Operating model
             </p>
             <h1 className="font-heading text-4xl font-semibold tracking-[-0.02em] text-white md:text-5xl">
-              The ProActive Ecosystem
+              The ProActive Ecosystem<span className="text-de-accent-ink" aria-hidden="true">:</span>
             </h1>
             <p className="mt-5 text-lg leading-relaxed text-white/70">
               ProActive is the umbrella — not a single “Office package.” It is a cybersecurity-first
@@ -76,7 +76,7 @@ export default function ProActiveEcosystemPage() {
               { icon: Layers, title: "One accountable model", body: "Support, workplace, security operations, and strategy sit in one operating relationship instead of a pile of vendors." },
               { icon: GitBranch, title: "Fit, not upsell theater", body: "We match users, devices, locations, infrastructure, compliance, and whether you need fully managed or co-managed coverage." },
             ].map((item) => (
-              <div key={item.title} className="rounded-2xl border border-white/10 bg-[#151217] p-6">
+              <div key={item.title} className="de-interactive-card rounded-2xl border border-de-hairline bg-de-raised p-6">
                 <IconWell icon={item.icon} size="sm" surface="dark" />
                 <h2 className="mt-4 text-lg font-semibold text-white">{item.title}</h2>
                 <p className="mt-2 text-sm leading-relaxed text-white/60">{item.body}</p>

@@ -23,7 +23,7 @@ export default function Support() {
         "Reduced repeat incidents through root-cause analysis",
         "A principal-led team that stays accountable"
       ]}
-      gradientColors="from-blue-600 via-cyan-600 to-teal-600"
+      gradientColors="from-[#050312] via-[#0a0a0a] to-[#050312]"
     />
   );
 }
