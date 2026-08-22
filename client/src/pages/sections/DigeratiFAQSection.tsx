@@ -1,6 +1,7 @@
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { revealInitial, revealInView, revealTransition, revealViewport } from "@/lib/animations";
 import { FAQJsonLd } from "@/components/JsonLd";
 
 interface FAQ {
@@ -41,10 +42,10 @@ export const DigeratiFAQSection = (): JSX.Element => {
       <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-6">
         {/* Header */}
         <motion.div
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.35 }}
+          initial={prefersReducedMotion ? false : revealInitial}
+          whileInView={revealInView}
+          viewport={revealViewport}
+          transition={revealTransition}
           className="text-center mb-8 md:mb-10"
         >
           <h2 className="mb-4 px-2 font-heading text-3xl font-semibold tracking-[-0.02em] text-[#1A1228] sm:text-4xl md:mb-5 md:text-5xl">
@@ -63,10 +64,10 @@ export const DigeratiFAQSection = (): JSX.Element => {
             return (
               <motion.div
                 key={index}
-                initial={prefersReducedMotion ? {} : { opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-30px" }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
+                initial={prefersReducedMotion ? false : revealInitial}
+                whileInView={revealInView}
+                viewport={revealViewport}
+                transition={{ ...revealTransition, delay: index * 0.04 }}
                 data-testid={`faq-${index}`}
               >
                 <div 

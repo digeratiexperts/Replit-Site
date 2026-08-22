@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
+import { revealTransition, revealViewport } from "@/lib/animations";
 import { Shield, ArrowRight, MapPin, UserCheck, Scale } from "lucide-react";
 import { ParallaxStill } from "@/components/visual/ParallaxStill";
 import trustDeskImg from "@assets/de-trust-assessment-desk.png";
@@ -30,10 +31,10 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
       <div className="max-w-[var(--de-canvas)] mx-auto px-3 sm:px-4 lg:px-6">
         <div className="grid grid-cols-1 items-stretch gap-12 lg:grid-cols-2 lg:gap-16">
           <motion.div
-            initial={prefersReducedMotion ? {} : { opacity: 0, x: -20 }}
+            initial={prefersReducedMotion ? false : { opacity: 0.55, x: -12 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5 }}
+            viewport={revealViewport}
+            transition={revealTransition}
           >
             <div className="flex items-center gap-2 mb-5">
               <Shield className="w-4 h-4 text-pink-600" aria-hidden="true" />
@@ -80,16 +81,16 @@ export const DigeratiTrustPhotoSection = (): JSX.Element => {
 
           <motion.div
             className="relative flex"
-            initial={prefersReducedMotion ? {} : { opacity: 0, x: 20 }}
+            initial={prefersReducedMotion ? false : { opacity: 0.55, x: 12 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            viewport={revealViewport}
+            transition={revealTransition}
           >
             <div className="relative flex aspect-[4/3] w-full flex-col overflow-hidden rounded-2xl border border-de-paper-hairline shadow-lg shadow-black/10 lg:aspect-auto lg:min-h-full">
               <ParallaxStill
                 src={trustDeskImg}
                 alt="Principal-led cyber risk assessment work for an Arizona business"
-                travel={10}
+                travel={6}
                 width={960}
                 height={720}
                 className="absolute inset-0"

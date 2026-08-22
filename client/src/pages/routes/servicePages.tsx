@@ -194,7 +194,7 @@ export const servicePageData = {
     description: "BCDR is guaranteed continuity, not just 'we have backups.' Agreed RPO/RTO targets, image-based backups, scheduled restore tests, and DR runbooks. Your business comes back up on a timeline you define—not when backups finally work.",
     stat: { value: "$1.53M", label: "average ransomware recovery cost (excluding ransom)", source: "Sophos 2025" },
     features: [
-      { title: "Guaranteed RTO/RTO Targets", description: "Committed recovery time and data-loss objectives with SLA backing" },
+      { title: "Guaranteed RPO/RTO Targets", description: "Committed recovery time and data-loss objectives with SLA backing" },
       { title: "Image-Based Backups", description: "DE Server/VM backup features for full-system restore, not file-by-file recovery" },
       { title: "Scheduled Restore Tests", description: "Regular failover drills to confirm your systems can actually be restored" },
       { title: "DR Runbooks & Tabletop Exercises", description: "Documented recovery procedures with periodic team exercises" },

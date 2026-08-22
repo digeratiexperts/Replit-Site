@@ -83,7 +83,7 @@ export function HomepageOnPageNav() {
                     event.preventDefault();
                     goTo(index);
                   }}
-                  className={`relative inline-flex min-h-9 w-full items-center justify-center px-1 py-1.5 text-xs font-semibold tracking-wide whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-de-accent focus-visible:ring-inset sm:px-2 sm:text-sm lg:min-h-8 lg:w-auto lg:px-3.5 ${
+                  className={`group relative inline-flex min-h-9 w-full items-center justify-center px-1 py-1.5 text-xs font-semibold tracking-wide whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-de-accent focus-visible:ring-inset sm:px-2 sm:text-sm lg:min-h-8 lg:w-auto lg:px-3.5 ${
                     isActive
                       ? "text-white"
                       : "text-de-muted-soft hover:text-white"
@@ -95,7 +95,9 @@ export function HomepageOnPageNav() {
                   <span
                     aria-hidden="true"
                     className={`pointer-events-none absolute inset-x-1 bottom-0 h-0.5 rounded-full transition-opacity lg:inset-x-2 ${
-                      isActive ? "bg-[#D3126A] opacity-100" : "opacity-0"
+                      isActive
+                        ? "bg-[#D3126A] opacity-100"
+                        : "bg-white/45 opacity-0 group-hover:opacity-70 group-focus-visible:opacity-70"
                     }`}
                   />
                 </a>

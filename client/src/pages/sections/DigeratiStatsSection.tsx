@@ -7,6 +7,7 @@ import {
   getHomepageCyberFacts,
   type CyberAwarenessFact,
 } from "@/data/cyberAwarenessFacts";
+import { revealInitial, revealInView, revealTransition, revealViewport } from "@/lib/animations";
 
 const factIcons: Record<string, LucideIcon> = {
   "dbir-ransomware-2026": AlertTriangle,
@@ -27,31 +28,44 @@ function FactCard({
   const Icon = factIcons[fact.id] ?? AlertTriangle;
   const sourceLine = `— ${fact.source} ${fact.year}`;
 
-  return (
-    <motion.div
-      initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.45, delay: index * 0.06 }}
-      className="de-style-box-inset h-full rounded-2xl p-6 md:p-7"
-      data-testid={`homepage-stat-${index}`}
-    >
+  const body = (
+    <>
       <IconWell icon={Icon} size="sm" surface="dark" />
       <p className="mt-5 font-mono text-3xl font-semibold tracking-tight text-white md:text-4xl">
         {fact.metric}
       </p>
       <p className="mt-2 text-base leading-relaxed text-white/75 md:text-lg">{fact.statement}</p>
+      <p className="mt-4 border-t border-de-hairline pt-3 text-base font-medium text-white/70 group-hover:text-white">
+        {sourceLine}
+      </p>
+    </>
+  );
+
+  return (
+    <motion.div
+      initial={prefersReducedMotion ? false : revealInitial}
+      whileInView={revealInView}
+      viewport={revealViewport}
+      transition={{ ...revealTransition, delay: index * 0.04 }}
+      className="h-full"
+    >
       {fact.sourceUrl ? (
         <a
           href={fact.sourceUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-4 inline-block border-t border-de-hairline pt-3 text-base font-medium text-white/70 hover:text-white"
+          className="de-interactive-tile de-style-box-inset group flex h-full flex-col rounded-2xl p-6 hover:border-[#D3126A] md:p-7"
+          data-testid={`homepage-stat-${index}`}
         >
-          {sourceLine}
+          {body}
         </a>
       ) : (
-        <p className="mt-4 border-t border-de-hairline pt-3 text-base font-medium text-white/70">{sourceLine}</p>
+        <div
+          className="de-style-box-inset h-full rounded-2xl p-6 md:p-7"
+          data-testid={`homepage-stat-${index}`}
+        >
+          {body}
+        </div>
       )}
     </motion.div>
   );
@@ -65,10 +79,10 @@ export const DigeratiStatsSection = (): JSX.Element => {
     <section className="de-dark-well de-field-grain relative py-6 lg:py-8">
       <div className="de-style-box relative mx-3 px-4 py-8 sm:mx-4 sm:px-8 md:py-16 lg:mx-6 lg:px-10 lg:py-20">
         <motion.div
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45 }}
+          initial={prefersReducedMotion ? false : revealInitial}
+          whileInView={revealInView}
+          viewport={revealViewport}
+          transition={revealTransition}
           className="mb-10 max-w-3xl lg:mb-12"
         >
           <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-de-magenta-ink">

@@ -84,7 +84,7 @@ export default function ResourcesIndex() {
         </Button>
       }
     >
-      <div className="mx-auto max-w-[var(--de-canvas)] px-4 pb-20 sm:px-6 lg:px-8">
+      <div className="pb-4">
         <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {resources.map((resource) => {
             const Icon = resource.icon;
@@ -92,16 +92,16 @@ export default function ResourcesIndex() {
               <li key={resource.href}>
                 <Link
                   href={resource.href}
-                  className="group flex h-full flex-col rounded-2xl border border-de-hairline bg-de-raised p-6 transition-colors hover:border-de-magenta/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-de-magenta"
+                  className="de-interactive-card group flex h-full flex-col rounded-2xl border border-de-hairline bg-de-raised p-6 focus-visible:outline-none"
                 >
-                  <span className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-de-hairline bg-de-bg text-de-magenta-ink">
+                  <span className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-de-hairline bg-de-bg text-de-accent-ink">
                     <Icon className="h-5 w-5" aria-hidden="true" />
                   </span>
                   <h2 className="font-heading text-xl font-semibold text-white">{resource.name}</h2>
                   <p className="mt-2 flex-1 text-base leading-relaxed text-de-muted-soft">
                     {resource.description}
                   </p>
-                  <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-de-magenta-ink">
+                  <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-de-accent-ink">
                     Open resource
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                   </span>

@@ -1,5 +1,4 @@
 import { PageTemplate } from "@/components/PageTemplate";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   CheckCircle,
   Phone,
@@ -20,6 +19,10 @@ import { ServiceCapabilityMatrix } from "@/components/ServiceCapabilityMatrix";
 import { pageNarratives, type PageNarrative } from "@/pages/routes/pageNarratives";
 import { CTA } from "@/lib/ctaCopy";
 import { PRIMARY_PHONE } from "@/data/companyContact";
+import { IconWell } from "@/components/visual/IconWell";
+import { StatementHeading } from "@/components/visual/StatementHeading";
+import { createStaggerDelay, revealInView, revealInitial, revealTransition, revealViewport } from "@/lib/animations";
+import { Button } from "@/components/ui/button";
 
 interface ServiceFeature {
   title: string;
@@ -56,26 +59,25 @@ const FeatureCard = ({
   index: number;
   prefersReducedMotion: boolean;
 }) => (
-  <motion.div
-    initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ delay: index * 0.1, duration: 0.5 }}
+  <motion.article
+    initial={prefersReducedMotion ? false : revealInitial}
+    whileInView={revealInView}
+    viewport={revealViewport}
+    transition={{ ...revealTransition, delay: createStaggerDelay(index) }}
+    className="de-interactive-card group h-full rounded-2xl border border-de-hairline bg-de-raised p-6"
   >
-    <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-[#D3126A]/40 hover:bg-white/[0.08] transition-all duration-300 overflow-hidden">
-      <CardHeader className="relative">
-        <div className="w-12 h-12 rounded-xl bg-[#D3126A]/20 flex items-center justify-center mb-4">
-          {feature.icon || <Shield className="w-6 h-6 text-[#F04C97]" />}
-        </div>
-        <CardTitle className="text-xl font-semibold text-white group-hover:text-[#F04C97] transition-colors">
-          {feature.title}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="relative">
-        <p className="text-white/80 leading-relaxed">{feature.description}</p>
-      </CardContent>
-    </Card>
-  </motion.div>
+    <div className="mb-4">
+      {feature.icon ? (
+        <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-de-hairline bg-de-bg text-de-accent-ink">
+          {feature.icon}
+        </span>
+      ) : (
+        <IconWell icon={Shield} size="md" surface="dark" />
+      )}
+    </div>
+    <h3 className="font-heading text-xl font-semibold text-white">{feature.title}</h3>
+    <p className="mt-2 leading-relaxed text-white/75">{feature.description}</p>
+  </motion.article>
 );
 
 export default function GenericServicePage({
@@ -84,7 +86,6 @@ export default function GenericServicePage({
   description,
   features,
   benefits,
-  gradientColors = "from-[#050312] via-[#0a0a0a] to-[#050312]",
   stat,
   canonical,
   recommendedTier,
@@ -101,23 +102,21 @@ export default function GenericServicePage({
   });
 
   return (
-    <PageTemplate title={title} subtitle={subtitle} gradientColors={gradientColors} variant="dark">
+    <PageTemplate title={title} subtitle={subtitle} variant="dark">
       <div className="space-y-16">
         {stat && (
           <motion.div
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="p-6 rounded-2xl bg-[#D3126A]/10 border border-[#D3126A]/25"
+            initial={prefersReducedMotion ? false : revealInitial}
+            whileInView={revealInView}
+            viewport={revealViewport}
+            transition={revealTransition}
+            className="rounded-2xl border border-de-hairline bg-de-raised p-6"
             data-testid="service-stat-callout"
           >
             <div className="flex items-start gap-4">
-              <div className="p-3 rounded-xl bg-[#D3126A]/20">
-                <AlertTriangle className="h-6 w-6 text-[#F04C97]" />
-              </div>
+              <IconWell icon={AlertTriangle} size="md" surface="dark" />
               <div>
-                <div className="text-3xl font-bold text-[#F04C97]">{stat.value}</div>
+                <div className="font-heading text-3xl font-semibold text-de-accent-ink">{stat.value}</div>
                 <p className="mt-1 text-white/80">{stat.label}</p>
                 <p className="mt-1 text-sm text-white/50">— {stat.source}</p>
               </div>
@@ -126,17 +125,16 @@ export default function GenericServicePage({
         )}
 
         <motion.div
-          className="relative"
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          initial={prefersReducedMotion ? false : revealInitial}
+          whileInView={revealInView}
+          viewport={revealViewport}
+          transition={revealTransition}
+          className="max-w-4xl border-l-2 border-[#D3126A] pl-6"
         >
-          <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-[#D3126A] to-[#F04C97] rounded-full" />
-          <p className="text-xl text-gray-300 leading-relaxed pl-6 max-w-4xl">{description}</p>
+          <p className="text-xl leading-relaxed text-white/80">{description}</p>
           {narrative?.whoFor && (
-            <p className="text-base text-white/70 leading-relaxed pl-6 max-w-4xl mt-4">
-              <span className="text-[#F04C97] font-medium">Who this is for: </span>
+            <p className="mt-4 text-base leading-relaxed text-white/70">
+              <span className="font-medium text-de-accent-ink">Who this is for: </span>
               {narrative.whoFor}
             </p>
           )}
@@ -144,26 +142,26 @@ export default function GenericServicePage({
 
         {narrative?.painPoints && narrative.painPoints.length > 0 && (
           <section data-testid="section-pain-points">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-lg bg-[#D3126A] flex items-center justify-center">
-                <ListChecks className="w-5 h-5 text-white" />
-              </div>
+            <div className="mb-6 flex items-center gap-3">
+              <IconWell icon={ListChecks} size="sm" surface="dark" />
               <div>
-                <h2 className="text-3xl font-bold text-white">Is this you?</h2>
-                <p className="text-white/60 text-sm">If two or more feel familiar, this page is for your office.</p>
+                <StatementHeading as="h2" className="text-3xl">
+                  Is this you
+                </StatementHeading>
+                <p className="text-sm text-white/60">If two or more feel familiar, this page is for your office.</p>
               </div>
             </div>
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid gap-4 md:grid-cols-2">
               {narrative.painPoints.map((pain, index) => (
                 <motion.div
-                  key={index}
-                  initial={prefersReducedMotion ? {} : { opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.05, duration: 0.35 }}
-                  className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.04] border border-white/10"
+                  key={pain}
+                  initial={prefersReducedMotion ? false : revealInitial}
+                  whileInView={revealInView}
+                  viewport={revealViewport}
+                  transition={{ ...revealTransition, delay: createStaggerDelay(index) }}
+                  className="de-interactive-card flex items-start gap-3 rounded-xl border border-de-hairline bg-de-raised p-4"
                 >
-                  <AlertTriangle className="h-5 w-5 text-[#F04C97] mt-0.5 shrink-0" />
+                  <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-de-accent-ink" />
                   <p className="text-white/85">{pain}</p>
                 </motion.div>
               ))}
@@ -173,22 +171,16 @@ export default function GenericServicePage({
 
         {features.length > 0 && (
           <div>
-            <motion.div
-              className="flex items-center gap-3 mb-8"
-              initial={prefersReducedMotion ? {} : { opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="w-10 h-10 rounded-lg bg-[#D3126A] flex items-center justify-center">
-                <Zap className="w-5 h-5 text-white" />
-              </div>
-              <h2 className="text-3xl font-bold text-white">What you get</h2>
-            </motion.div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="mb-8 flex items-center gap-3">
+              <IconWell icon={Zap} size="sm" surface="dark" />
+              <StatementHeading as="h2" className="text-3xl">
+                What you get
+              </StatementHeading>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {features.map((feature, index) => (
                 <FeatureCard
-                  key={index}
+                  key={feature.title}
                   feature={feature}
                   index={index}
                   prefersReducedMotion={prefersReducedMotion}
@@ -200,30 +192,30 @@ export default function GenericServicePage({
 
         {narrative?.process && narrative.process.length > 0 && (
           <section data-testid="section-process">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-lg bg-de-accent flex items-center justify-center">
-                <ArrowRight className="w-5 h-5 text-white" />
-              </div>
+            <div className="mb-8 flex items-center gap-3">
+              <IconWell icon={ArrowRight} size="sm" surface="dark" />
               <div>
-                <h2 className="text-3xl font-bold text-white">How engagement works</h2>
-                <p className="text-white/60 text-sm">A clear path — not a black box of tickets.</p>
+                <StatementHeading as="h2" className="text-3xl">
+                  How engagement works
+                </StatementHeading>
+                <p className="text-sm text-white/60">A clear path — not a black box of tickets.</p>
               </div>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               {narrative.process.map((step, index) => (
                 <motion.div
                   key={step.title}
-                  initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.08, duration: 0.4 }}
-                  className="relative p-5 rounded-xl bg-white/[0.04] border border-white/10"
+                  initial={prefersReducedMotion ? false : revealInitial}
+                  whileInView={revealInView}
+                  viewport={revealViewport}
+                  transition={{ ...revealTransition, delay: createStaggerDelay(index) }}
+                  className="de-interactive-card rounded-xl border border-de-hairline bg-de-raised p-5"
                 >
-                  <div className="text-xs font-semibold tracking-wide text-[#F04C97] mb-2">
+                  <div className="mb-2 text-xs font-semibold tracking-wide text-de-accent-ink">
                     Step {index + 1}
                   </div>
-                  <h3 className="text-lg font-semibold text-white mb-2">{step.title}</h3>
-                  <p className="text-sm text-white/70 leading-relaxed">{step.description}</p>
+                  <h3 className="mb-2 text-lg font-semibold text-white">{step.title}</h3>
+                  <p className="text-sm leading-relaxed text-white/70">{step.description}</p>
                 </motion.div>
               ))}
             </div>
@@ -232,56 +224,51 @@ export default function GenericServicePage({
 
         {benefits.length > 0 && (
           <motion.div
-            className="relative bg-white/5 backdrop-blur-sm rounded-2xl p-8 md:p-12 overflow-hidden border border-white/10"
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            className="rounded-2xl border border-de-hairline bg-de-raised p-8 md:p-12"
+            initial={prefersReducedMotion ? false : revealInitial}
+            whileInView={revealInView}
+            viewport={revealViewport}
+            transition={revealTransition}
           >
-            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#D3126A]/15 to-transparent rounded-full blur-3xl" />
-            <div className="relative">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center">
-                  <CheckCircle className="w-5 h-5 text-white" />
-                </div>
-                <h2 className="text-3xl font-bold text-white">Outcomes that matter</h2>
-              </div>
-              <div className="grid md:grid-cols-2 gap-4">
-                {benefits.map((benefit, index) => (
-                  <motion.div
-                    key={index}
-                    className="flex items-start gap-3 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:border-emerald-500/30 hover:bg-white/[0.08] transition-all duration-300"
-                    initial={prefersReducedMotion ? {} : { opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.05, duration: 0.3 }}
-                  >
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center">
-                      <CheckCircle className="h-4 w-4 text-white" />
-                    </div>
-                    <span className="text-gray-300 font-medium">{benefit}</span>
-                  </motion.div>
-                ))}
-              </div>
+            <div className="mb-8 flex items-center gap-3">
+              <IconWell icon={CheckCircle} size="sm" surface="dark" />
+              <StatementHeading as="h2" className="text-3xl">
+                Outcomes that matter
+              </StatementHeading>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              {benefits.map((benefit, index) => (
+                <motion.div
+                  key={benefit}
+                  className="flex items-start gap-3 rounded-xl border border-de-hairline bg-de-bg p-4"
+                  initial={prefersReducedMotion ? false : revealInitial}
+                  whileInView={revealInView}
+                  viewport={revealViewport}
+                  transition={{ ...revealTransition, delay: createStaggerDelay(index) }}
+                >
+                  <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
+                  <span className="font-medium text-white/80">{benefit}</span>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
         )}
 
         {(narrative?.arizonaNote || narrative?.proof) && (
-          <section className="grid md:grid-cols-2 gap-6" data-testid="section-local-proof">
+          <section className="grid gap-6 md:grid-cols-2" data-testid="section-local-proof">
             {narrative.arizonaNote && (
-              <div className="p-6 rounded-2xl bg-white/[0.04] border border-white/10">
-                <div className="flex items-center gap-2 text-[#F04C97] mb-3">
+              <div className="rounded-2xl border border-de-hairline bg-de-raised p-6">
+                <div className="mb-3 flex items-center gap-2 text-de-accent-ink">
                   <MapPin className="h-5 w-5" />
-                  <span className="text-sm font-semibold tracking-wide uppercase">Arizona operator</span>
+                  <span className="text-sm font-semibold uppercase tracking-wide">Arizona operator</span>
                 </div>
-                <p className="text-white/85 leading-relaxed">{narrative.arizonaNote}</p>
+                <p className="leading-relaxed text-white/85">{narrative.arizonaNote}</p>
               </div>
             )}
             {narrative.proof && (
-              <div className="p-6 rounded-2xl bg-[#D3126A]/10 border border-[#D3126A]/25">
-                <Quote className="h-6 w-6 text-[#F04C97] mb-3" />
-                <p className="text-lg text-white leading-relaxed mb-3">“{narrative.proof.quote}”</p>
+              <div className="rounded-2xl border border-[#D3126A]/35 bg-de-bg p-6">
+                <Quote className="mb-3 h-6 w-6 text-de-accent-ink" />
+                <p className="mb-3 text-lg leading-relaxed text-white">“{narrative.proof.quote}”</p>
                 <p className="text-sm text-white/55">— {narrative.proof.attribution}</p>
               </div>
             )}
@@ -290,18 +277,18 @@ export default function GenericServicePage({
 
         {serviceKey && (
           <motion.div
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            initial={prefersReducedMotion ? false : revealInitial}
+            whileInView={revealInView}
+            viewport={revealViewport}
+            transition={revealTransition}
           >
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-lg bg-de-raised flex items-center justify-center">
-                <Grid3X3 className="w-5 h-5 text-white" />
-              </div>
+            <div className="mb-6 flex items-center gap-3">
+              <IconWell icon={Grid3X3} size="sm" surface="dark" />
               <div>
-                <h2 className="text-2xl font-bold text-white">Service tiers</h2>
-                <p className="text-white/80 text-sm">Compare what’s included at each tier</p>
+                <StatementHeading as="h2" className="text-2xl">
+                  Service tiers
+                </StatementHeading>
+                <p className="text-sm text-white/70">Compare what’s included at each tier</p>
               </div>
             </div>
             <ServiceCapabilityMatrix serviceKey={serviceKey} highlightTier={recommendedTier} />
@@ -310,16 +297,16 @@ export default function GenericServicePage({
 
         {recommendedTier && (
           <motion.div
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            initial={prefersReducedMotion ? false : revealInitial}
+            whileInView={revealInView}
+            viewport={revealViewport}
+            transition={revealTransition}
           >
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-white mb-2 text-center">
+            <div className="mb-8 text-center">
+              <StatementHeading as="h2" className="text-2xl">
                 Where this capability typically lives
-              </h2>
-              <p className="text-white/80 text-center">
+              </StatementHeading>
+              <p className="mt-2 text-white/70">
                 Fit language — not a ranking. Confirm the operating model in your Cyber Risk Assessment.
               </p>
             </div>
@@ -333,20 +320,17 @@ export default function GenericServicePage({
 
         {narrative?.faqs && narrative.faqs.length > 0 && (
           <section data-testid="section-faqs">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                <HelpCircle className="w-5 h-5 text-[#F04C97]" />
-              </div>
-              <h2 className="text-3xl font-bold text-white">Questions owners actually ask</h2>
+            <div className="mb-8 flex items-center gap-3">
+              <IconWell icon={HelpCircle} size="sm" surface="dark" />
+              <StatementHeading as="h2" className="text-3xl">
+                Questions owners actually ask
+              </StatementHeading>
             </div>
-            <div className="space-y-4 max-w-4xl">
+            <div className="max-w-4xl space-y-4">
               {narrative.faqs.map((faq) => (
-                <div
-                  key={faq.q}
-                  className="p-5 rounded-xl bg-white/[0.04] border border-white/10"
-                >
-                  <h3 className="text-lg font-semibold text-white mb-2">{faq.q}</h3>
-                  <p className="text-white/70 leading-relaxed">{faq.a}</p>
+                <div key={faq.q} className="rounded-xl border border-de-hairline bg-de-raised p-5">
+                  <h3 className="mb-2 text-lg font-semibold text-white">{faq.q}</h3>
+                  <p className="leading-relaxed text-white/70">{faq.a}</p>
                 </div>
               ))}
             </div>
@@ -354,49 +338,37 @@ export default function GenericServicePage({
         )}
 
         <motion.div
-          className="relative rounded-2xl overflow-hidden"
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          className="rounded-2xl border border-[#D3126A]/40 bg-[#D3126A] px-8 py-10 text-center md:px-12 md:py-12"
+          initial={prefersReducedMotion ? false : revealInitial}
+          whileInView={revealInView}
+          viewport={revealViewport}
+          transition={revealTransition}
         >
-          <div className="absolute inset-0 bg-[#D3126A]" />
-          <div className="absolute inset-0 opacity-30">
-            <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="cta-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#cta-grid)" />
-            </svg>
-          </div>
-          <div className="relative p-8 md:p-12 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
-              {narrative?.ctaHeadline || "Schedule your cyber risk assessment"}
-            </h2>
-            <p className="text-lg md:text-xl mb-8 text-white/90 max-w-2xl mx-auto">
-              {narrative?.ctaBody ||
-                "We’ll map risk, stack gaps, and the right next step for your Arizona business — without a hard sell."}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="/book"
-                className="group inline-flex items-center justify-center bg-white text-[#D3126A] hover:bg-pink-50 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
-                data-testid="button-contact"
-              >
-                <ArrowRight className="mr-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+          <h2 className="mb-4 font-heading text-3xl font-semibold text-white md:text-4xl">
+            {narrative?.ctaHeadline || "Schedule your cyber risk assessment"}
+          </h2>
+          <p className="mx-auto mb-8 max-w-2xl text-lg text-white/90 md:text-xl">
+            {narrative?.ctaBody ||
+              "We’ll map risk, stack gaps, and the right next step for your Arizona business — without a hard sell."}
+          </p>
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
+            <Button asChild size="lg" className="h-12 bg-white px-8 font-semibold text-[#D3126A] hover:bg-white/95">
+              <a href="/book" data-testid="button-contact">
                 {CTA.primary}
+                <ArrowRight className="ml-1 h-5 w-5" />
               </a>
-              <a
-                href={PRIMARY_PHONE.telHref}
-                className="group inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-[#D3126A] px-8 py-4 rounded-xl font-semibold transition-all"
-                data-testid="button-call"
-              >
-                <Phone className="mr-2 h-5 w-5" />
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="h-12 border-white/70 bg-transparent px-8 font-semibold text-white hover:bg-white/10 hover:text-white"
+            >
+              <a href={PRIMARY_PHONE.telHref} data-testid="button-call">
+                <Phone className="mr-1 h-5 w-5" />
                 Call {PRIMARY_PHONE.display}
               </a>
-            </div>
+            </Button>
           </div>
         </motion.div>
       </div>

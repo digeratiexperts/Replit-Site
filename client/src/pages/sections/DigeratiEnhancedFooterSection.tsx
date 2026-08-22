@@ -12,7 +12,7 @@ const FooterLink = ({ href, children, testId }: { href: string; children: React.
     <a
       href={href}
       {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className="text-base text-white/55 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
+      className="text-base text-white/55 underline decoration-transparent underline-offset-4 transition-colors hover:text-white hover:decoration-[#D3126A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
       data-testid={testId}
     >
       {children}

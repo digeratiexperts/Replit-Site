@@ -13,6 +13,9 @@ import {
   BadgeDollarSign,
   ArrowRight,
 } from "lucide-react";
+import { IconWell } from "@/components/visual/IconWell";
+import { StatementHeading } from "@/components/visual/StatementHeading";
+import { CTA } from "@/lib/ctaCopy";
 
 export interface TierPageConfig {
   id: string;
@@ -39,14 +42,14 @@ const SectionHeading = ({
   children,
 }: {
   icon: typeof CheckCircle;
-  children: React.ReactNode;
+  children: string;
 }) => (
-  <h2 className="flex items-center gap-3 text-2xl font-bold text-white mb-5 tracking-tight">
-    <span className="w-10 h-10 rounded-lg bg-pink-500/15 border border-pink-400/25 flex items-center justify-center">
-      <Icon className="w-5 h-5 text-de-magenta-ink" />
-    </span>
-    {children}
-  </h2>
+  <div className="mb-5 flex items-center gap-3">
+    <IconWell icon={Icon} size="sm" surface="dark" />
+    <StatementHeading as="h2" className="text-2xl">
+      {children}
+    </StatementHeading>
+  </div>
 );
 
 export function TierDetailTemplate({ config }: { config: TierPageConfig }) {
@@ -55,8 +58,6 @@ export function TierDetailTemplate({ config }: { config: TierPageConfig }) {
     description: config.seoDescription,
     canonical: config.canonicalPath,
   });
-
-  const isExternalCta = config.ctaPrimary.href.startsWith("http");
 
   return (
     <PageTemplate
@@ -69,7 +70,7 @@ export function TierDetailTemplate({ config }: { config: TierPageConfig }) {
     >
       <div className="max-w-5xl mx-auto space-y-14">
         <section>
-          <span className="inline-block px-3 py-1 rounded-full bg-de-magenta/15 border border-de-magenta/30 text-de-magenta-ink text-sm font-semibold mb-4">
+          <span className="mb-4 inline-block rounded-full border border-de-hairline bg-de-bg px-3 py-1 text-sm font-semibold text-de-accent-ink">
             {config.heroBadge}
           </span>
           <p className="text-lg text-white/85 leading-relaxed">{config.positioning}</p>
@@ -131,7 +132,7 @@ export function TierDetailTemplate({ config }: { config: TierPageConfig }) {
             {config.addOnsOrUpgrades.map((addOn) => (
               <div
                 key={addOn.label}
-                className="rounded-xl border border-white/10 bg-white/[0.03] p-5 hover:border-pink-400/30 transition-colors"
+                className="de-interactive-card rounded-xl border border-de-hairline bg-de-raised p-5"
               >
                 <h3 className="font-semibold text-white mb-2">{addOn.label}</h3>
                 <p className="text-sm text-white/75 leading-relaxed">{addOn.desc}</p>
@@ -140,39 +141,23 @@ export function TierDetailTemplate({ config }: { config: TierPageConfig }) {
           </div>
         </section>
 
-        <section className="rounded-xl border border-white/10 bg-white/[0.03] p-6">
+        <section className="rounded-xl border border-de-hairline bg-de-raised p-6">
           <SectionHeading icon={CalendarClock}>Reporting & Review Cadence</SectionHeading>
           <p className="text-white/85 leading-relaxed">{config.reviewCadence}</p>
         </section>
 
-        <section className="rounded-xl border border-pink-400/25 bg-de-raised p-6">
+        <section className="rounded-xl border border-de-hairline bg-de-raised p-6">
           <SectionHeading icon={BadgeDollarSign}>Pricing</SectionHeading>
           <p className="text-white/85 leading-relaxed mb-6">{config.pricingNote}</p>
           <div className="flex flex-col sm:flex-row gap-4">
-            {isExternalCta ? (
-              <Button asChild size="lg" variant="brand" className="w-full sm:w-auto">
-                <a href={config.ctaPrimary.href} target="_blank" rel="noopener noreferrer">
-                  {config.ctaPrimary.label}
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </a>
-              </Button>
-            ) : (
-              <Button asChild size="lg" variant="brand" className="w-full sm:w-auto">
-                <Link href={config.ctaPrimary.href}>
-                  {config.ctaPrimary.label}
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Link>
-              </Button>
-            )}
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="w-full sm:w-auto border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
-            >
-              <Link href="/proactive-ecosystem-pricing">
-                Compare All Packages
+            <Button asChild size="lg" variant="brand" className="w-full sm:w-auto">
+              <Link href="/book">
+                {CTA.primary}
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="w-full border-de-hairline bg-de-bg text-white hover:text-white sm:w-auto">
+              <Link href="/proactive-ecosystem-pricing">{CTA.secondary}</Link>
             </Button>
           </div>
         </section>

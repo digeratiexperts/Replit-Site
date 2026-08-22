@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { revealInitial, revealInView, revealTransition, revealViewport } from "@/lib/animations";
 import { analytics } from "@/lib/analytics";
 import { CTA } from "@/lib/ctaCopy";
 import { IconWell } from "@/components/visual/IconWell";
@@ -150,17 +151,17 @@ export const DigeratiContactSection = ({
         <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-12">
           <motion.div
             className="lg:col-span-6"
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.45 }}
+            initial={prefersReducedMotion ? false : revealInitial}
+            whileInView={revealInView}
+            viewport={revealViewport}
+            transition={revealTransition}
           >
             <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#F04C97]">
               Contact
             </p>
             {headingAs === "h1" ? (
               <h1 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
-                Ready to Secure Your Business?
+                Ready to Secure Your Business<span className="text-de-accent-ink" aria-hidden="true">?</span>
               </h1>
             ) : (
               <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">
@@ -251,17 +252,17 @@ export const DigeratiContactSection = ({
 
           <motion.div
             className="lg:col-span-6"
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.45, delay: prefersReducedMotion ? 0 : 0.08 }}
+            initial={prefersReducedMotion ? false : revealInitial}
+            whileInView={revealInView}
+            viewport={revealViewport}
+            transition={revealTransition}
           >
             <div className="de-paper-lift-lg rounded-2xl p-6 md:p-8">
               <h3 className="font-heading text-xl font-semibold tracking-[-0.02em] text-[#1A1228]">
                 Get in Touch
               </h3>
               <p className="mb-6 mt-1 text-base text-black/55">
-                Fill out the form for a free consultation
+                Tell us about the environment. We&apos;ll follow up on a Cyber Risk Assessment — no hard sell.
               </p>
 
               <Form {...form}>

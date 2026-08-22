@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
+import { REVEAL_ROOT_MARGIN } from "@/lib/animations";
 
 interface UseIntersectionObserverOptions {
   threshold?: number | number[];
@@ -11,8 +12,8 @@ export function useIntersectionObserver<T extends HTMLElement = HTMLDivElement>(
   options: UseIntersectionObserverOptions = {}
 ) {
   const {
-    threshold = 0.1,
-    rootMargin = "0px",
+    threshold = 0.08,
+    rootMargin = REVEAL_ROOT_MARGIN,
     triggerOnce = true,
     enabled = true,
   } = options;

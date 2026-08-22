@@ -2,6 +2,8 @@ import { Shield, Users, Activity, ArrowRight, Phone } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { PRIMARY_PHONE } from "@/data/companyContact";
+import { revealInitial, revealInView, revealTransition, revealViewport } from "@/lib/animations";
+import { Link } from "wouter";
 
 export const DigeratiAlertBanner = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -11,43 +13,42 @@ export const DigeratiAlertBanner = (): JSX.Element => {
       icon: Shield,
       title: "Security-First Operations",
       description: "Every system, endpoint, and user is protected - by design, not by reaction.",
-      testId: "card-security-first"
+      testId: "card-security-first",
+      href: "/solutions/proactive-ecosystem",
     },
     {
       icon: Users,
       title: "Co-Managed or Fully Managed",
       description: "We support your internal IT or serve as your outsourced technology team.",
-      testId: "card-co-managed"
+      testId: "card-co-managed",
+      href: "/solutions/co-managed-it",
     },
     {
       icon: Activity,
       title: "Executive-Level Transparency",
       description: "Reports, KPIs, and compliance insights that make sense - and drive decisions.",
-      testId: "card-transparency"
+      testId: "card-transparency",
+      href: "/trust",
     }
   ];
 
   const containerVariants = prefersReducedMotion ? undefined : {
-    hidden: { opacity: 0 },
+    hidden: {},
     visible: {
-      opacity: 1,
       transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.2
+        staggerChildren: 0.045,
+        delayChildren: 0,
       }
     }
   };
 
   const cardVariants = prefersReducedMotion ? undefined : {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0.55, y: 12 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut"
-      }
-    }
+      transition: revealTransition,
+    },
   };
 
   return (
@@ -55,10 +56,10 @@ export const DigeratiAlertBanner = (): JSX.Element => {
       <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
         <motion.div
           className="mb-8 text-center md:mb-16"
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          initial={prefersReducedMotion ? false : revealInitial}
+          whileInView={revealInView}
+          viewport={revealViewport}
+          transition={revealTransition}
         >
           <h2 className="mb-3 text-2xl font-bold leading-tight text-white md:mb-4 md:text-4xl lg:text-5xl">
             We Exist to Protect and Enable Your Business
@@ -73,31 +74,34 @@ export const DigeratiAlertBanner = (): JSX.Element => {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={revealViewport}
         >
           {features.map((feature) => (
             <motion.div
               key={feature.title}
               variants={cardVariants}
-              data-testid={feature.testId}
-              className="group relative flex h-full"
+              className="h-full"
             >
-              <div className="relative flex h-full flex-col rounded-2xl border border-de-hairline bg-de-raised p-6 transition-colors duration-300 group-hover:border-white/20">
-                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl border border-white/10 bg-white/5">
+              <Link
+                href={feature.href}
+                data-testid={feature.testId}
+                className="de-interactive-tile group relative flex h-full flex-col rounded-2xl border border-de-hairline bg-de-raised p-6 hover:border-[#D3126A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
+              >
+                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl border border-white/10 bg-white/5 transition-colors group-hover:border-[#D3126A]">
                   <feature.icon className="h-7 w-7 text-[#D3126A]" />
                 </div>
                 <h3 className="mb-3 text-xl font-bold text-white">{feature.title}</h3>
-                <p className="leading-relaxed text-white/60">{feature.description}</p>
-              </div>
+                <p className="leading-relaxed text-white/60 group-hover:text-white/75">{feature.description}</p>
+              </Link>
             </motion.div>
           ))}
         </motion.div>
 
         <motion.div
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: prefersReducedMotion ? 0 : 0.15 }}
+          initial={prefersReducedMotion ? false : revealInitial}
+          whileInView={revealInView}
+          viewport={revealViewport}
+          transition={revealTransition}
         >
           <div className="relative overflow-hidden rounded-2xl border border-de-hairline bg-de-raised px-5 py-7 md:px-12 md:py-12">
             <div className="relative z-10 text-center">

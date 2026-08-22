@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
+import { revealInitial, revealInView, revealTransition, revealViewport } from "@/lib/animations";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -91,10 +92,10 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
         <div className="max-w-4xl mx-auto">
           <motion.div 
             className="text-center mb-10"
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: prefersReducedMotion ? 0 : 0.6 }}
+            initial={prefersReducedMotion ? false : revealInitial}
+            whileInView={revealInView}
+            viewport={revealViewport}
+            transition={revealTransition}
           >
             <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#D3126A]">
               Cyber Risk Assessment
@@ -109,10 +110,10 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
 
           <motion.div
             className="de-paper-lift-lg rounded-2xl p-8 md:p-10"
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: prefersReducedMotion ? 0 : 0.6, delay: prefersReducedMotion ? 0 : 0.2 }}
+            initial={prefersReducedMotion ? false : revealInitial}
+            whileInView={revealInView}
+            viewport={revealViewport}
+            transition={revealTransition}
           >
             <Form {...form}>
               <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
@@ -234,10 +235,10 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
 
           <motion.p 
             className="mt-6 text-center text-base text-black/70"
-            initial={prefersReducedMotion ? {} : { opacity: 0 }}
+            initial={prefersReducedMotion ? false : { opacity: 0.55 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: prefersReducedMotion ? 0 : 0.4, duration: prefersReducedMotion ? 0 : 0.5 }}
+            viewport={revealViewport}
+            transition={revealTransition}
           >
             Prefer to call?{" "}
             <a 

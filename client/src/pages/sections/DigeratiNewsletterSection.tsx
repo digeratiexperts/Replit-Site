@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { motion, useReducedMotion } from "framer-motion";
+import { revealInitial, revealInView, revealTransition, revealViewport } from "@/lib/animations";
 import { IconWell } from "@/components/visual/IconWell";
 import { GREATER_PHOENIX_CITIES } from "@/data/greaterPhoenixCities";
 
@@ -83,10 +84,10 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
     >
       <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
         <motion.div
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45 }}
+          initial={prefersReducedMotion ? false : revealInitial}
+          whileInView={revealInView}
+          viewport={revealViewport}
+          transition={revealTransition}
         >
           <div className="mb-10 md:mb-12">
             <h2 className="font-heading text-xl font-semibold tracking-[-0.02em] text-white md:text-2xl">

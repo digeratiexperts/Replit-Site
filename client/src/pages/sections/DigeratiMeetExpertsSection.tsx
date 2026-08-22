@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
+import { revealInitial, revealInView, revealTransition, revealViewport } from "@/lib/animations";
 import { ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import { useBooking } from "@/contexts/BookingContext";
@@ -35,9 +36,10 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
       <div className="relative z-10 mx-auto max-w-[var(--de-canvas)] px-3 sm:px-4 lg:px-6">
         <motion.div
           className="mb-8 md:mb-10"
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          initial={prefersReducedMotion ? false : revealInitial}
+          whileInView={revealInView}
+          viewport={revealViewport}
+          transition={revealTransition}
         >
           <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-de-magenta-ink">
             Human trust
@@ -58,9 +60,10 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
 
         <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-12 lg:gap-10">
           <motion.div
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "200px" }}
+            initial={prefersReducedMotion ? false : revealInitial}
+            whileInView={revealInView}
+            viewport={revealViewport}
+            transition={revealTransition}
             className="overflow-hidden rounded-2xl border border-de-hairline bg-de-raised lg:col-span-5 lg:self-start"
           >
             <img
@@ -96,7 +99,7 @@ export const DigeratiMeetExpertsSection = (): JSX.Element => {
               {roles.map((r, index) => (
                 <div
                   key={r.title}
-                  className="w-full border-t-2 border-[#D3126A] pt-5"
+                  className="w-full border-t-2 border-[#D3126A] pt-5 transition-colors hover:border-[#f0187a]"
                 >
                   <p className="font-mono text-base font-semibold tracking-[0.18em] text-white/65">
                     {String(index + 1).padStart(2, "0")}

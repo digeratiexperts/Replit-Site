@@ -2,6 +2,7 @@ import { Briefcase, Calculator, Stethoscope, Home, Heart, ArrowRight, ChevronLef
 import { motion, useReducedMotion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useRef, useState, useEffect } from "react";
+import { revealInitial, revealInView, revealTransition, revealViewport } from "@/lib/animations";
 
 import lawBooksImg from "@assets/Rectangle-152058_1767027918697.png";
 import lawScalesImg from "@assets/Rectangle-152058-1_1767027918697.png";
@@ -87,41 +88,32 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
   };
 
   const containerVariants = prefersReducedMotion ? undefined : {
-    hidden: { opacity: 0 },
+    hidden: { opacity: 0.7 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.06,
-        delayChildren: 0.1
-      }
-    }
+        staggerChildren: 0.045,
+        delayChildren: 0,
+      },
+    },
   };
 
   const cardVariants = prefersReducedMotion ? undefined : {
-    hidden: { 
-      opacity: 0, 
-      y: 20,
-      scale: 0.98
-    },
-    visible: { 
-      opacity: 1, 
+    hidden: { opacity: 0.55, y: 12 },
+    visible: {
+      opacity: 1,
       y: 0,
-      scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 150,
-        damping: 20
-      }
-    }
+      transition: revealTransition,
+    },
   };
 
   const titleVariants = prefersReducedMotion ? undefined : {
-    hidden: { opacity: 0, y: 15 },
-    visible: { 
-      opacity: 1, 
+    hidden: { opacity: 0.55, y: 12 },
+    visible: {
+      opacity: 1,
       y: 0,
-      transition: { duration: 0.4, ease: "easeOut" }
-    }
+      transition: revealTransition,
+    },
   };
 
   return (
@@ -135,7 +127,7 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
           className="text-center mb-8 md:mb-12 lg:mb-16"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={revealViewport}
           variants={titleVariants}
         >
           <div className="mb-4 inline-flex items-center gap-2 rounded-xl border border-de-hairline bg-de-raised px-3 py-1.5 md:mb-6 md:px-4 md:py-2">
@@ -193,13 +185,12 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
               <a 
                 key={industry.testId}
                 href={`/industries/${industry.slug}`}
-                className="group relative block flex-shrink-0 w-[280px] snap-center"
+                className="group relative block w-[280px] flex-shrink-0 snap-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-raised)]"
                 data-testid={industry.testId}
               >
-                <div className="relative h-[320px] overflow-hidden rounded-2xl border border-de-hairline transition-colors duration-300 hover:border-[#D3126A]/50">
-                  {/* B&W Image with hover color */}
-                  <div 
-                    className="absolute inset-0 bg-cover bg-center transition-all duration-500 group-hover:scale-105 grayscale group-hover:grayscale-0"
+                <div className="relative h-[320px] overflow-hidden rounded-2xl border border-de-hairline transition-colors duration-200 hover:border-[#D3126A] group-focus-visible:border-[#D3126A]">
+                  <div
+                    className="absolute inset-0 bg-cover bg-center grayscale transition-[filter] duration-300 group-hover:grayscale-0 group-focus-visible:grayscale-0"
                     style={{ backgroundImage: `url(${industry.image})` }}
                   />
                   
@@ -217,6 +208,10 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
                     </h3>
                     <p className="text-gray-200 text-base leading-relaxed">
                       {industry.description}
+                    </p>
+                    <p className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-white/80">
+                      View {industry.name}
+                      <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                     </p>
                   </div>
                 </div>
@@ -241,20 +236,19 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
+          viewport={revealViewport}
         >
           {industries.map((industry) => (
             <motion.a 
               key={industry.testId}
               href={`/industries/${industry.slug}`}
-              className="group relative block"
+              className="group relative block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-raised)]"
               data-testid={industry.testId}
               variants={cardVariants}
             >
-              <div className="relative h-72 overflow-hidden rounded-2xl border border-de-hairline transition-colors duration-300 hover:border-[#D3126A]/50">
-                {/* B&W Image with hover color */}
-                <div 
-                  className="absolute inset-0 bg-cover bg-center transition-all duration-500 group-hover:scale-105 grayscale group-hover:grayscale-0"
+              <div className="relative h-72 overflow-hidden rounded-2xl border border-de-hairline transition-colors duration-200 hover:border-[#D3126A] group-focus-visible:border-[#D3126A]">
+                <div
+                  className="absolute inset-0 bg-cover bg-center grayscale transition-[filter] duration-300 group-hover:grayscale-0 group-focus-visible:grayscale-0"
                   style={{ backgroundImage: `url(${industry.image})` }}
                 />
                 
@@ -273,6 +267,10 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
                   <p className="text-base leading-relaxed text-gray-200">
                     {industry.description}
                   </p>
+                  <p className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-white/80">
+                    View {industry.name}
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true" />
+                  </p>
                 </div>
               </div>
             </motion.a>
@@ -281,10 +279,10 @@ export const DigeratiIndustriesSection = (): JSX.Element => {
 
         <motion.div 
           className="text-center mt-8 md:mt-12"
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          initial={prefersReducedMotion ? false : revealInitial}
+          whileInView={revealInView}
+          viewport={revealViewport}
+          transition={revealTransition}
         >
           <Button asChild 
               size="lg"

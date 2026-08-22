@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { revealInitial, revealInView, revealTransition, revealViewport } from "@/lib/animations";
 import { ArrowRight, Building2, Loader2, Quote } from "lucide-react";
 import { Link } from "wouter";
 import { useBooking } from "@/contexts/BookingContext";
@@ -143,10 +144,10 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
       <div className="mx-auto max-w-[var(--de-canvas)] px-3 sm:px-4 lg:px-6">
         <motion.div
           className="mb-10 text-center md:mb-14"
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
+          initial={prefersReducedMotion ? false : revealInitial}
+          whileInView={revealInView}
+          viewport={revealViewport}
+          transition={revealTransition}
         >
           <p className="mb-3 text-base font-medium uppercase tracking-wide text-de-magenta-ink">
             Client proof
@@ -161,9 +162,10 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
         </motion.div>
 
         <motion.div
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          initial={prefersReducedMotion ? false : revealInitial}
+          whileInView={revealInView}
+          viewport={revealViewport}
+          transition={revealTransition}
           className="mb-8 rounded-2xl border border-de-hairline bg-de-raised p-6 md:p-8"
           data-testid="proof-reviews-slot"
           id="google-reviews"
@@ -257,10 +259,10 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
         </motion.div>
 
         <motion.div
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.05 }}
+          initial={prefersReducedMotion ? false : revealInitial}
+          whileInView={revealInView}
+          viewport={revealViewport}
+          transition={revealTransition}
           className="mb-8 rounded-2xl border border-de-hairline bg-de-raised p-7 md:p-8"
           data-testid="proof-outcomes"
         >
@@ -270,7 +272,10 @@ export const DigeratiTestimonialsSection = (): JSX.Element => {
           </div>
           <ul className="grid gap-4 md:grid-cols-3 md:gap-6">
             {outcomes.map((o) => (
-              <li key={o.title} className="border-t border-white/8 pt-4 md:border-t-0 md:pt-0">
+              <li
+                key={o.title}
+                className="rounded-xl border border-transparent p-3 transition-colors hover:border-de-hairline hover:bg-white/[0.03]"
+              >
                 <p className="text-base font-medium text-white">{o.title}</p>
                 <p className="text-base leading-relaxed text-white/55">{o.detail}</p>
               </li>

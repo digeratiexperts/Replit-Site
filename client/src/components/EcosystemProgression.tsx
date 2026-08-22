@@ -50,38 +50,41 @@ export function EcosystemProgression({ compact = false, detailed = false }: Ecos
 
       <ol className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {pricingTiers.map((tier, index) => (
-          <li
-            key={tier.id}
-            className="relative flex flex-col rounded-xl border border-[var(--de-hairline)] bg-[var(--de-bg)] p-5 md:p-6"
-            data-testid={detailed ? `pricing-summary-${tier.id}` : `ecosystem-model-${tier.id}`}
-          >
-            <p className="font-mono text-base font-semibold tracking-[0.16em] text-white/50">
-              {String(index + 1).padStart(2, "0")}
-            </p>
-            <p className="mt-2 font-heading text-xl font-semibold text-white">{tier.name}</p>
-            <p className="mt-1 text-base text-white/55">{formatUserPrice(tier.id)}</p>
-            {detailed && (
-              <p className="mt-1 text-base text-white/50">
-                {formatPrice(tier.monthlyMin)} monthly minimum
+          <li key={tier.id}>
+            <Link
+              href={tier.learnMoreUrl}
+              data-testid={detailed ? `pricing-summary-${tier.id}` : `ecosystem-model-${tier.id}`}
+              className="de-interactive-tile group relative flex h-full flex-col rounded-xl border border-[var(--de-hairline)] bg-[var(--de-bg)] p-5 md:p-6 hover:border-[#D3126A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]"
+            >
+              <p className="font-mono text-base font-semibold tracking-[0.16em] text-white/50">
+                {String(index + 1).padStart(2, "0")}
               </p>
-            )}
-            <p className="mt-3 flex-1 text-base leading-relaxed text-white/60">{fit[tier.id]}</p>
-            {detailed && (
-              <ul className="mt-4 space-y-1.5">
-                {highlights[tier.id].map((item) => (
-                  <li key={item} className="text-base text-white/70">
-                    <span className="mr-2 text-[#D3126A]" aria-hidden="true">
-                      ·
-                    </span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            )}
-            <Link href={tier.learnMoreUrl}>
-              <span className="mt-5 inline-flex min-h-11 items-center gap-1 text-base font-semibold text-de-magenta-ink transition-colors hover:text-[#f0187a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]">
+              <p className="mt-2 font-heading text-xl font-semibold text-white">{tier.name}</p>
+              <p className="mt-1 text-base text-white/55">{formatUserPrice(tier.id)}</p>
+              {detailed && (
+                <p className="mt-1 text-base text-white/50">
+                  {formatPrice(tier.monthlyMin)} monthly minimum
+                </p>
+              )}
+              <p className="mt-3 flex-1 text-base leading-relaxed text-white/60">{fit[tier.id]}</p>
+              {detailed && (
+                <ul className="mt-4 space-y-1.5">
+                  {highlights[tier.id].map((item) => (
+                    <li key={item} className="text-base text-white/70">
+                      <span className="mr-2 text-[#D3126A]" aria-hidden="true">
+                        ·
+                      </span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <span className="mt-5 inline-flex min-h-11 items-center gap-1 text-base font-semibold text-de-magenta-ink transition-colors group-hover:text-[#f0187a]">
                 {tier.label}
-                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                <ArrowRight
+                  className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
               </span>
             </Link>
           </li>

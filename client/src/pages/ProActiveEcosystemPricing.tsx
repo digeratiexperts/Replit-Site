@@ -291,9 +291,8 @@ export default function ProActiveEcosystemPricing() {
             animate={prefersReducedMotion ? undefined : "visible"}
             variants={fadeIn}
           >
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              ProActive Ecosystem{" "}
-              <span className="text-de-magenta-ink">Pricing</span>
+            <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl">
+              ProActive Ecosystem Pricing<span className="text-de-accent-ink" aria-hidden="true">:</span>
             </h1>
             <p className="text-lg text-white/70 mb-3">
               Estimate your ProActive Ecosystem starting point. Final pricing is confirmed after assessment.
@@ -356,7 +355,7 @@ export default function ProActiveEcosystemPricing() {
               <motion.article
                 key={plan.id}
                 className={cn(
-                  "relative flex flex-col rounded-2xl border bg-de-raised p-6",
+                  "de-interactive-card relative flex flex-col rounded-2xl border bg-de-raised p-6",
                   selected ? "border-[#D3126A]" : "border-de-hairline",
                 )}
                 initial={prefersReducedMotion ? undefined : "hidden"}
@@ -569,9 +568,9 @@ export default function ProActiveEcosystemPricing() {
               then confirm your exact ProActive Ecosystem investment.
             </p>
             <Button asChild size="lg" variant="brand">
-                  <a href="https://meet.digerati-experts.com/" target="_blank" rel="noopener noreferrer">
+                  <a href="/book">
                     {CTA.primary}
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
           </section>

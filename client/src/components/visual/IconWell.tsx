@@ -27,14 +27,14 @@ export function IconWell({
   const s = sizeMap[size];
   const tone =
     surface === "dark"
-      ? "border-[var(--de-hairline)] bg-[#0a0a0a] text-[#D3126A]"
-      : "border-[var(--de-paper-hairline)] bg-white text-[#D3126A]";
+      ? "border-[var(--de-hairline)] bg-[#0a0a0a] text-de-accent-ink"
+      : "border-[var(--de-paper-hairline)] bg-white text-de-magenta-paper-ink";
 
   return (
     <span
       className={[
         s.box,
-        "inline-flex shrink-0 items-center justify-center rounded-xl border",
+        "inline-flex shrink-0 items-center justify-center rounded-xl border transition-colors duration-200 group-hover:border-de-accent",
         tone,
         className,
       ]

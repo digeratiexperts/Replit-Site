@@ -3,6 +3,7 @@ import { Search, FileText, Settings, Activity, KeyRound, Monitor, Mail, Wifi, Da
 import { Link } from "wouter";
 import { IconWell } from "@/components/visual/IconWell";
 import type { LucideIcon } from "lucide-react";
+import { revealInitial, revealInView, revealTransition, revealViewport } from "@/lib/animations";
 
 const domains = [
   { icon: KeyRound, title: "Identity", link: "/solutions/unified-security", desc: "SSO, MFA, and access architecture." },
@@ -13,13 +14,21 @@ const domains = [
   { icon: Radio, title: "Security Operations", link: "/solutions/security-operations", desc: "Detection, response, and human triage." },
 ];
 
-const steps: { number: number; title: string; description: string; icon: LucideIcon; testId: string }[] = [
+const steps: {
+  number: number;
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  testId: string;
+  href: string;
+}[] = [
   {
     number: 1,
     title: "Assessment",
     description: "Review identity, endpoints, email, backups, network, and operating reality.",
     icon: Search,
     testId: "step-discovery",
+    href: "/book",
   },
   {
     number: 2,
@@ -27,6 +36,7 @@ const steps: { number: number; title: string; description: string; icon: LucideI
     description: "Match the operating model to the environment — fit, not a ranking ladder.",
     icon: FileText,
     testId: "step-planning",
+    href: "/solutions/proactive-ecosystem",
   },
   {
     number: 3,
@@ -34,6 +44,7 @@ const steps: { number: number; title: string; description: string; icon: LucideI
     description: "Documented credentials you own. Controls sized to the model we matched.",
     icon: Settings,
     testId: "step-implementation",
+    href: "/solutions/proactive-ecosystem",
   },
   {
     number: 4,
@@ -41,6 +52,7 @@ const steps: { number: number; title: string; description: string; icon: LucideI
     description: "Day-to-day support, security operations where included, and reviews at that tier’s cadence.",
     icon: Activity,
     testId: "step-protection",
+    href: "/solutions/proactive-ecosystem",
   },
 ];
 
@@ -53,10 +65,10 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
         <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
           <motion.div
             className="mb-12 max-w-2xl md:mb-16"
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.35 }}
+            initial={prefersReducedMotion ? false : revealInitial}
+            whileInView={revealInView}
+            viewport={revealViewport}
+            transition={revealTransition}
           >
             <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-de-magenta">
               What we protect
@@ -77,13 +89,17 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
             {domains.map((item) => {
               const Icon = item.icon;
               return (
-                <Link key={item.title} href={item.link}>
-                  <div className="flex cursor-pointer items-start gap-3">
-                    <IconWell icon={Icon} size="sm" surface="light" />
-                    <div className="min-w-0">
-                      <p className="text-base font-semibold text-gray-900 md:text-lg">{item.title}</p>
-                      <p className="mt-0.5 text-base leading-relaxed text-gray-600">{item.desc}</p>
-                    </div>
+                <Link
+                  key={item.title}
+                  href={item.link}
+                  className="group flex min-h-11 items-start gap-3 rounded-xl border border-transparent p-2 -m-2 transition-colors hover:border-[var(--de-paper-hairline)] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7f5f2]"
+                >
+                  <IconWell icon={Icon} size="sm" surface="light" />
+                  <div className="min-w-0">
+                    <p className="text-base font-semibold text-gray-900 md:text-lg group-hover:text-[#A30E52]">
+                      {item.title}
+                    </p>
+                    <p className="mt-0.5 text-base leading-relaxed text-gray-600">{item.desc}</p>
                   </div>
                 </Link>
               );
@@ -124,21 +140,26 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
               return (
                 <li
                   key={step.number}
-                  data-testid={step.testId}
-                  className={`flex h-full flex-col lg:px-6 ${index > 0 ? "lg:border-l lg:border-[var(--de-hairline)]" : "lg:pl-0"}`}
+                  className={`${index > 0 ? "lg:border-l lg:border-[var(--de-hairline)]" : "lg:pl-0"} lg:px-6`}
                 >
-                  <p className="font-mono text-base font-semibold tracking-[0.18em] text-de-magenta-ink">
-                    {String(step.number).padStart(2, "0")}
-                  </p>
-                  <span className="mt-3 mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-[var(--de-hairline)] bg-[var(--de-bg)] text-[#D3126A]">
-                    <IconComponent className="h-5 w-5" aria-hidden="true" />
-                  </span>
-                  <h4 className="mb-2 text-lg font-semibold text-white">
-                    {step.title}
-                  </h4>
-                  <p className="text-base leading-relaxed text-white/75 md:text-lg">
-                    {step.description}
-                  </p>
+                  <Link
+                    href={step.href}
+                    data-testid={step.testId}
+                    className="de-interactive-tile group flex h-full flex-col rounded-xl border border-transparent p-3 hover:border-de-hairline hover:bg-white/[0.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]"
+                  >
+                    <p className="font-mono text-base font-semibold tracking-[0.18em] text-de-magenta-ink">
+                      {String(step.number).padStart(2, "0")}
+                    </p>
+                    <span className="mt-3 mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-[var(--de-hairline)] bg-[var(--de-bg)] text-[#D3126A] transition-colors group-hover:border-[#D3126A]">
+                      <IconComponent className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                    <h4 className="mb-2 text-lg font-semibold text-white">
+                      {step.title}
+                    </h4>
+                    <p className="text-base leading-relaxed text-white/75 md:text-lg">
+                      {step.description}
+                    </p>
+                  </Link>
                 </li>
               );
             })}

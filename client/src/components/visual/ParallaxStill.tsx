@@ -33,7 +33,7 @@ export function ParallaxStill({
   alt,
   className,
   imgClassName,
-  travel = 12,
+  travel = 6,
   sizes,
   loading = "lazy",
   width,

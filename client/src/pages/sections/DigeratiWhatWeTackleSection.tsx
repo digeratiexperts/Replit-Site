@@ -3,11 +3,13 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "wouter";
 import { IconWell } from "@/components/visual/IconWell";
 import type { LucideIcon } from "lucide-react";
+import { revealInitial, revealInView, revealTransition, revealViewport } from "@/lib/animations";
 
 type Challenge = {
   icon: LucideIcon;
   title: string;
   description: string;
+  href: string;
 };
 
 const challenges: Challenge[] = [
@@ -16,36 +18,42 @@ const challenges: Challenge[] = [
     title: "Ransomware & Malware",
     description:
       "Advanced threat detection and rapid response to eliminate malicious attacks before damage occurs",
+    href: "/solutions/threat-detection",
   },
   {
     icon: Database,
     title: "Data Loss Prevention",
     description:
       "Comprehensive backup strategies with tested disaster recovery ensuring business continuity",
+    href: "/solutions/backup-disaster-recovery",
   },
   {
     icon: AlertTriangle,
     title: "Compliance Gaps",
     description:
       "Navigate HIPAA, PCI DSS, and SOC 2 requirements with continuous monitoring and reporting",
+    href: "/resources/cyber-facts",
   },
   {
     icon: Lock,
     title: "Phishing & Social Engineering",
     description:
       "Multi-layered email security combined with ongoing employee security awareness training",
+    href: "/solutions/security-operations",
   },
   {
     icon: Shield,
     title: "Zero-Day Vulnerabilities",
     description:
       "Proactive patch management and security assessments to close gaps before exploitation",
+    href: "/solutions/threat-detection",
   },
   {
     icon: Users,
     title: "Insider Threats",
     description:
       "User behavior analytics and access controls to prevent internal security breaches",
+    href: "/solutions/unified-security",
   },
 ];
 
@@ -58,10 +66,10 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
         <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-16">
           <motion.div
             className="lg:col-span-5"
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.45 }}
+            initial={prefersReducedMotion ? false : revealInitial}
+            whileInView={revealInView}
+            viewport={revealViewport}
+            transition={revealTransition}
           >
             <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-de-magenta-ink">
               Problems we solve
@@ -87,22 +95,26 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
               return (
                 <motion.div
                   key={challenge.title}
-                  data-testid={`tackle-card-${index}`}
-                  initial={prefersReducedMotion ? {} : { opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.35, delay: index * 0.04 }}
-                  className="flex gap-4"
+                  initial={prefersReducedMotion ? false : revealInitial}
+                  whileInView={revealInView}
+                  viewport={revealViewport}
+                  transition={{ ...revealTransition, delay: index * 0.04 }}
                 >
-                  <IconWell icon={Icon} size="sm" surface="dark" />
-                  <div className="min-w-0">
-                    <h3 className="mb-1 text-base font-semibold text-white md:text-lg">
-                      {challenge.title}
-                    </h3>
-                    <p className="text-base leading-relaxed text-white/55 md:text-lg">
-                      {challenge.description}
-                    </p>
-                  </div>
+                  <Link
+                    href={challenge.href}
+                    data-testid={`tackle-card-${index}`}
+                    className="de-interactive-tile group flex gap-4 rounded-xl border border-transparent p-3 hover:border-de-hairline hover:bg-white/[0.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
+                  >
+                    <IconWell icon={Icon} size="sm" surface="dark" />
+                    <div className="min-w-0">
+                      <h3 className="mb-1 text-base font-semibold text-white md:text-lg">
+                        {challenge.title}
+                      </h3>
+                      <p className="text-base leading-relaxed text-white/55 md:text-lg group-hover:text-white/70">
+                        {challenge.description}
+                      </p>
+                    </div>
+                  </Link>
                 </motion.div>
               );
             })}

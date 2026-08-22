@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { motion } from "framer-motion";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { REVEAL_ROOT_MARGIN, revealEase } from "@/lib/animations";
 
 interface RevealOnScrollProps {
   children: ReactNode;
@@ -18,21 +19,22 @@ export function RevealOnScroll({
   className,
   direction = "up",
   delay = 0,
-  duration = 0.5,
-  threshold = 0.1,
+  duration = 0.3,
+  threshold = 0.08,
   triggerOnce = true,
 }: RevealOnScrollProps) {
   const prefersReducedMotion = useReducedMotion();
   const { ref, isIntersecting } = useIntersectionObserver({
     threshold,
+    rootMargin: REVEAL_ROOT_MARGIN,
     triggerOnce,
   });
 
   const directionOffsets = {
-    up: { y: 30, x: 0 },
-    down: { y: -30, x: 0 },
-    left: { y: 0, x: 30 },
-    right: { y: 0, x: -30 },
+    up: { y: 12, x: 0 },
+    down: { y: -12, x: 0 },
+    left: { y: 0, x: 12 },
+    right: { y: 0, x: -12 },
     none: { y: 0, x: 0 },
   };
 
@@ -50,12 +52,16 @@ export function RevealOnScroll({
     <motion.div
       ref={ref}
       className={className}
-      initial={{ opacity: 0, x: offset.x, y: offset.y }}
-      animate={isIntersecting ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x: offset.x, y: offset.y }}
+      initial={{ opacity: 0.55, x: offset.x, y: offset.y }}
+      animate={
+        isIntersecting
+          ? { opacity: 1, x: 0, y: 0 }
+          : { opacity: 0.55, x: offset.x, y: offset.y }
+      }
       transition={{
         duration,
         delay,
-        ease: [0.22, 1, 0.36, 1],
+        ease: revealEase,
       }}
     >
       {children}
@@ -73,12 +79,13 @@ interface StaggerContainerProps {
 export function StaggerContainer({
   children,
   className,
-  staggerDelay = 0.1,
-  threshold = 0.1,
+  staggerDelay = 0.045,
+  threshold = 0.08,
 }: StaggerContainerProps) {
   const prefersReducedMotion = useReducedMotion();
   const { ref, isIntersecting } = useIntersectionObserver({
     threshold,
+    rootMargin: REVEAL_ROOT_MARGIN,
     triggerOnce: true,
   });
 
@@ -111,13 +118,13 @@ export function StaggerContainer({
 }
 
 export const staggerItemVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0.55, y: 12 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.4,
-      ease: [0.22, 1, 0.36, 1],
+      duration: 0.3,
+      ease: revealEase,
     },
   },
 };

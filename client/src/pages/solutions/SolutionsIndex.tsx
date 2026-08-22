@@ -11,6 +11,9 @@ import { useSEO } from "@/hooks/useSEO";
 import { pricingTiers, getPricingFooterText } from "@/data/pricing";
 import { IconWell } from "@/components/visual/IconWell";
 import { PRIMARY_PHONE } from "@/data/companyContact";
+import { CTA } from "@/lib/ctaCopy";
+import { StatementHeading } from "@/components/visual/StatementHeading";
+import { revealInView, revealInitial, revealTransition, revealViewport } from "@/lib/animations";
 
 const SolutionsIndex = () => {
   const prefersReducedMotion = useReducedMotion();
@@ -129,33 +132,37 @@ const SolutionsIndex = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="min-h-screen bg-de-bg">
       <MegaMenu />
       
       <main className="de-nav-clear pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          {/* Hero Section */}
           <motion.div 
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            className="mb-16 text-center"
+            initial={prefersReducedMotion ? false : revealInitial}
+            animate={prefersReducedMotion ? undefined : revealInView}
+            transition={revealTransition}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-de-raised border border-de-hairline mb-6">
-              <Shield className="w-4 h-4 text-de-magenta-ink" />
-              <span className="text-sm text-de-magenta-ink">Complete IT & Security Solutions</span>
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-de-hairline bg-de-raised px-4 py-2">
+              <Shield className="h-4 w-4 text-de-accent-ink" />
+              <span className="text-sm text-de-accent-ink">Complete IT & Security Solutions</span>
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              The ProActive{" "}
-              <span className="text-de-magenta-ink">
-                Ecosystem
-              </span>
-            </h1>
-            <p className="text-xl text-white/70 max-w-3xl mx-auto leading-relaxed">
+            <StatementHeading as="h1" className="mb-6 text-4xl md:text-5xl lg:text-6xl">
+              The ProActive Ecosystem
+            </StatementHeading>
+            <p className="mx-auto max-w-3xl text-xl leading-relaxed text-white/70">
               Everything your business needs to stay secure, productive, and compliant—all in one monthly subscription. 
               No surprise bills. No nickel-and-diming. Just predictable, professional IT.
             </p>
+            <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+              <Button asChild variant="brand" size="lg" className="h-12">
+                <a href="/book">{CTA.primary}<ArrowRight className="ml-2 h-4 w-4" /></a>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="h-12 border-de-hairline bg-de-raised text-white hover:text-white">
+                <a href={CTA.secondaryHref}>{CTA.secondary}</a>
+              </Button>
+            </div>
           </motion.div>
 
           {/* Pricing Tiers */}
@@ -166,8 +173,10 @@ const SolutionsIndex = () => {
             whileInView="visible"
             viewport={{ once: true }}
           >
-            <div className="text-center mb-10">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">Four operating models. One matched to your environment.</h2>
+            <div className="mb-10 text-center">
+              <StatementHeading as="h2" className="mb-3 text-2xl md:text-3xl">
+                Four operating models. One matched to your environment
+              </StatementHeading>
               <p className="text-white/60">Baseline capabilities are shared. Network, backup, SOC, BCDR, and governance depth increase by fit — not because a higher tier is universally “better.”</p>
             </div>
             
@@ -176,7 +185,7 @@ const SolutionsIndex = () => {
                 <motion.div
                   key={plan.name}
                   variants={itemVariants}
-                  className="relative rounded-2xl p-6 border backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 bg-white/[0.03] border-white/10 hover:border-white/20"
+                  className="de-interactive-card relative rounded-2xl border border-de-hairline bg-de-raised p-6"
                   data-testid={`plan-${plan.name.toLowerCase()}`}
                 >
                   <div className="flex items-center justify-between mb-4">
@@ -204,15 +213,12 @@ const SolutionsIndex = () => {
                     ))}
                   </ul>
                   
-                  <Button asChild 
-                      className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
-                      data-testid={`button-get-${plan.name.toLowerCase()}`}
-                    >
-                  <a href="/book">
-                    Cyber Risk Assessment
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                  </a>
-                </Button>
+                  <Button asChild variant="outline" className="w-full border-de-hairline bg-de-bg text-white hover:text-white" data-testid={`button-get-${plan.name.toLowerCase()}`}>
+                    <a href="/book">
+                      {CTA.primaryShort}
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </a>
+                  </Button>
                 </motion.div>
               ))}
             </div>
@@ -224,17 +230,19 @@ const SolutionsIndex = () => {
 
           {/* Foundation Services - What's Included in ALL Plans */}
           <motion.section 
-            className="mb-20 rounded-2xl p-8 bg-white/[0.02] border border-white/10"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            className="mb-20 rounded-2xl border border-de-hairline bg-de-raised p-8"
+            initial={prefersReducedMotion ? false : revealInitial}
+            whileInView={revealInView}
+            viewport={revealViewport}
+            transition={revealTransition}
           >
-            <div className="text-center mb-10">
-              <span className="inline-flex items-center px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium mb-4">
+            <div className="mb-10 text-center">
+              <span className="mb-4 inline-flex items-center rounded-full border border-de-hairline bg-de-bg px-3 py-1 text-xs font-medium text-white/70">
                 Baseline vs depth
               </span>
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">What every model starts from</h2>
+              <StatementHeading as="h2" className="mb-3 text-2xl md:text-3xl">
+                What every model starts from
+              </StatementHeading>
               <p className="text-white/60 max-w-2xl mx-auto">
                 Service desk, endpoint foundation, identity guidance, and a documented environment are the baseline.
                 Managed network and endpoint backup typically arrive at Office. Security operations, awareness training,
@@ -255,7 +263,7 @@ const SolutionsIndex = () => {
                 <motion.div
                   key={service.title}
                   variants={itemVariants}
-                  className="rounded-2xl border border-white/10 bg-[#151217] p-5 transition-all duration-300 hover:border-de-hairline"
+                  className="de-interactive-card rounded-2xl border border-de-hairline bg-de-bg p-5"
                   data-testid={`foundation-${index}`}
                 >
                   <div className="mb-4">
@@ -277,8 +285,10 @@ const SolutionsIndex = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="text-center mb-10">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">Security & Protection</h2>
+            <div className="mb-10 text-center">
+              <StatementHeading as="h2" className="mb-3 text-2xl md:text-3xl">
+                Security & Protection
+              </StatementHeading>
               <p className="text-white/60">Advanced security features for businesses that need more than baseline protection.</p>
             </div>
             
@@ -294,7 +304,7 @@ const SolutionsIndex = () => {
                 <motion.div
                   key={service.title}
                   variants={itemVariants}
-                  className="flex gap-4 rounded-2xl border border-white/10 bg-[#151217] p-5 transition-all duration-300 hover:border-de-hairline"
+                  className="de-interactive-card flex gap-4 rounded-2xl border border-de-hairline bg-de-raised p-5"
                   data-testid={`security-${index}`}
                 >
                   <IconWell icon={service.icon} size="md" surface="dark" />
@@ -321,8 +331,10 @@ const SolutionsIndex = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="text-center mb-10">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">Compliance & Strategy</h2>
+            <div className="mb-10 text-center">
+              <StatementHeading as="h2" className="mb-3 text-2xl md:text-3xl">
+                Compliance & Strategy
+              </StatementHeading>
               <p className="text-white/60">Governance, audit readiness, and executive IT guidance for regulated industries.</p>
             </div>
             
@@ -337,7 +349,7 @@ const SolutionsIndex = () => {
                 <motion.div
                   key={service.title}
                   variants={itemVariants}
-                  className="flex gap-4 rounded-2xl border border-white/10 bg-[#151217] p-5 transition-all duration-300 hover:border-de-hairline"
+                  className="de-interactive-card flex gap-4 rounded-2xl border border-de-hairline bg-de-raised p-5"
                   data-testid={`compliance-${index}`}
                 >
                   <IconWell icon={service.icon} size="md" surface="dark" />
@@ -363,8 +375,10 @@ const SolutionsIndex = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="text-center mb-10">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">Why Arizona Businesses Choose Us</h2>
+            <div className="mb-10 text-center">
+              <StatementHeading as="h2" className="text-2xl md:text-3xl">
+                Why Arizona Businesses Choose Us
+              </StatementHeading>
             </div>
             
             <div className="grid md:grid-cols-4 gap-6">
@@ -394,21 +408,17 @@ const SolutionsIndex = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-              Ready to Get Protected?
-            </h2>
-            <p className="text-white/60 mb-8 max-w-xl mx-auto">
+            <StatementHeading as="h2" className="mb-4 text-2xl md:text-3xl">
+              Ready to Get Protected
+            </StatementHeading>
+            <p className="mx-auto mb-8 max-w-xl text-white/60">
               Schedule a free 15-minute call to discuss your needs. No pressure, no obligation—just honest advice about what your business actually needs.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild 
-                  size="lg"
-                  className="h-14 px-8 text-lg font-semibold bg-de-magenta hover:bg-de-magenta text-white shadow-lg shadow-none"
-                  data-testid="button-final-cta"
-                >
+            <div className="flex flex-col justify-center gap-4 sm:flex-row">
+              <Button asChild size="lg" variant="brand" className="h-14 px-8 text-lg font-semibold" data-testid="button-final-cta">
                   <a href="/book">
-                    Schedule Free Consultation
-                  <ArrowRight className="w-5 h-5 ml-2" />
+                    {CTA.primary}
+                  <ArrowRight className="ml-2 h-5 w-5" />
                   </a>
                 </Button>
               <Button asChild 

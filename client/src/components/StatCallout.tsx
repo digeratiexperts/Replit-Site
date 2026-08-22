@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { AlertTriangle, Shield, TrendingUp, DollarSign, Clock, Users, Lock, Bug } from "lucide-react";
 import { getCyberFact, toDisplayStat } from "@/data/cyberAwarenessFacts";
+import { revealInitial, revealInView, revealTransition, revealViewport } from "@/lib/animations";
 
 export interface Stat {
   value: string;
@@ -50,11 +51,11 @@ export const StatCallout = ({ stat, variant = "dark", size = "md" }: StatCallout
 
   return (
     <motion.div
-      initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
-      className={`rounded-2xl ${sizeClasses[size]} ${variantClasses[variant]}`}
+      initial={prefersReducedMotion ? false : revealInitial}
+      whileInView={revealInView}
+      viewport={revealViewport}
+      transition={revealTransition}
+      className={`de-interactive-tile rounded-2xl hover:border-[#D3126A] ${sizeClasses[size]} ${variantClasses[variant]}`}
       data-testid="stat-callout"
     >
       <div className="flex items-start gap-4">
@@ -87,10 +88,10 @@ export const StatBanner = ({ stat, variant = "dark" }: StatBannerProps) => {
 
   return (
     <motion.div
-      initial={prefersReducedMotion ? {} : { opacity: 0 }}
+      initial={prefersReducedMotion ? false : { opacity: 0.55 }}
       whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
+      viewport={revealViewport}
+      transition={revealTransition}
       className={`py-4 px-6 rounded-xl text-center ${
         variant === "dark" 
           ? "bg-de-raised border border-de-hairline" 
@@ -129,10 +130,10 @@ export const StatGrid = ({ stats, variant = "dark", columns = 3 }: StatGridProps
       {stats.map((stat, index) => (
         <motion.div
           key={index}
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: index * 0.1 }}
+          initial={prefersReducedMotion ? false : revealInitial}
+          whileInView={revealInView}
+          viewport={revealViewport}
+          transition={{ ...revealTransition, delay: index * 0.04 }}
           className={`p-6 rounded-2xl text-center ${
             variant === "dark"
               ? "bg-white/[0.04] border border-white/10"

@@ -9,7 +9,8 @@
 
 /* Performance & Accessibility Optimizations */
 html {
-  scroll-behavior: smooth;
+  /* Native document scroll — CSS smooth + proximity snap fought the wheel. */
+  scroll-behavior: auto;
   /*
    * Browser-default rem. The previous 14px root made every rem-based
    * size (type, padding, gaps) read as ~87.5% zoom. Marketing pages
@@ -267,6 +268,38 @@ html.de-store-gesture-lock body {
 html.de-marketing-canvas,
 html.de-marketing-canvas body {
   background-color: #000;
+  overflow-x: clip;
+}
+
+/*
+ * Marketing tiles: hairline + lift, never scale. Hover-only on fine pointers;
+ * keyboard/touch still get focus-visible and the real click-through.
+ */
+.de-interactive-tile {
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .de-interactive-tile:hover {
+    transform: translateY(-3px);
+  }
+}
+
+.de-interactive-tile:focus-visible {
+  outline: 2px solid #d3126a;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .de-interactive-tile,
+  .de-interactive-tile:hover {
+    transition-duration: 0.01ms;
+    transform: none;
+  }
 }
 
 .de-site-canvas {
@@ -457,6 +490,37 @@ html[data-sticky-cta-scrolling="true"] .de-bottom-bar {
 .de-style-box-inset {
   background-color: var(--de-bg);
   border: 1px solid var(--de-hairline);
+}
+
+/* Inner-page cards: lift + accent hairline. No scale (generic SaaS).
+ * Uses --de-accent-rgb so Resources stays amber and Store stays electric. */
+.de-interactive-card {
+  transition:
+    border-color 0.2s ease-out,
+    transform 0.18s ease-out,
+    background-color 0.2s ease-out;
+}
+@media (hover: hover) and (pointer: fine) {
+  .de-interactive-card:hover {
+    border-color: rgb(var(--de-accent-rgb) / 0.72);
+    transform: translateY(-3px);
+  }
+}
+.de-interactive-card:active {
+  transform: translateY(0);
+}
+.de-interactive-card:focus-visible {
+  outline: 2px solid rgb(var(--de-accent-rgb));
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .de-interactive-card {
+    transition: border-color 0.2s ease-out, background-color 0.2s ease-out;
+  }
+  .de-interactive-card:hover,
+  .de-interactive-card:active {
+    transform: none;
+  }
 }
 
 /* Magenta seam — tasteful chapter chrome, not a blur blob. */
@@ -1036,11 +1100,11 @@ textarea:focus-visible {
   }
 }
 
-/* Safari smooth scrolling fix */
+/* Safari: keep native wheel/trackpad; in-page jumps use JS scrollTo. */
 @supports (-webkit-touch-callout: none) {
   html {
-    -webkit-scroll-behavior: smooth;
-    scroll-behavior: smooth;
+    -webkit-scroll-behavior: auto;
+    scroll-behavior: auto;
   }
   
   .smooth-scroll {
@@ -1510,9 +1574,9 @@ html {
 
 /* ===== GLOBAL UI IMPROVEMENTS ===== */
 
-/* Smooth scrolling for entire page */
+/* Native document scroll — a later smooth rule used to fight the wheel. */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
 }
 
 /* Respect reduced motion preference */

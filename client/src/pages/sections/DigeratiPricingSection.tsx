@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "wouter";
 import { PRICING_SCOPE_NOTE } from "@/data/pricing";
 import { EcosystemProgression } from "@/components/EcosystemProgression";
+import { revealInitial, revealInView, revealViewport } from "@/lib/animations";
 
 export const DigeratiPricingSection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
@@ -14,9 +15,9 @@ export const DigeratiPricingSection = (): JSX.Element => {
     >
       <div className="relative z-10 mx-auto max-w-[var(--de-canvas)] px-3 sm:px-4 lg:px-6">
         <motion.div
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          initial={prefersReducedMotion ? false : revealInitial}
+          whileInView={revealInView}
+          viewport={revealViewport}
         >
           <EcosystemProgression detailed />
         </motion.div>

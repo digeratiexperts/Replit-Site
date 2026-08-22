@@ -1,6 +1,7 @@
 import { ArrowRight, CheckCircle, Shield, Radio, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, useReducedMotion } from "framer-motion";
+import { revealTransition, revealViewport } from "@/lib/animations";
 import { useBooking } from "@/contexts/BookingContext";
 import { CTA } from "@/lib/ctaCopy";
 import { ParallaxStill } from "@/components/visual/ParallaxStill";
@@ -23,17 +24,17 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
         <div className="grid items-stretch gap-12 lg:grid-cols-2">
           <motion.div
             className="order-2 flex justify-center lg:order-1 lg:justify-start"
-            initial={prefersReducedMotion ? {} : { opacity: 0, x: -24 }}
+            initial={prefersReducedMotion ? false : { opacity: 0.55, x: -12 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            viewport={revealViewport}
+            transition={revealTransition}
           >
             <div className="relative w-full max-w-md lg:max-w-none lg:h-full">
               <div className="relative flex aspect-[4/3] min-h-[16rem] overflow-hidden rounded-2xl border border-white/10 shadow-2xl lg:aspect-auto lg:h-full lg:min-h-[22rem]">
                 <ParallaxStill
                   src={officeEveningImg}
                   alt="Arizona professional office where Digerati Experts supports local businesses"
-                  travel={10}
+                  travel={6}
                   width={448}
                   height={300}
                   className="absolute inset-0"
@@ -50,10 +51,10 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
 
           <motion.div
             className="order-1 lg:order-2"
-            initial={prefersReducedMotion ? {} : { opacity: 0, x: 24 }}
+            initial={prefersReducedMotion ? false : { opacity: 0.55, x: 12 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            viewport={revealViewport}
+            transition={revealTransition}
           >
             <div className="inline-flex items-center gap-2 text-base font-medium text-de-magenta-ink mb-4">
               <Radio className="h-4 w-4" aria-hidden />

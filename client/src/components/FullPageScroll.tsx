@@ -109,7 +109,7 @@ export function FullPageScrollProvider({
   const [headerTheme, setHeaderTheme] = useState<'dark' | 'light'>(
     () => sections[0]?.theme || 'dark'
   );
-  const [isSnapEnabled, setIsSnapEnabled] = useState(true);
+  const [isSnapEnabled, setIsSnapEnabled] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const isScrollingRef = useRef(false);
@@ -321,13 +321,22 @@ export function FullPageScrollProvider({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (isMobile && !enableOnMobile) return;
-      
       if (e.key === 'Escape') {
         setIsSnapEnabled(false);
         return;
       }
-      
+
+      // Snap is off by default. Do not steal native page/form scrolling.
+      if (!isSnapEnabled || (isMobile && !enableOnMobile)) return;
+
+      const target = e.target;
+      if (
+        target instanceof HTMLElement &&
+        target.closest('input, textarea, select, [contenteditable="true"]')
+      ) {
+        return;
+      }
+
       if (e.key === 'ArrowDown' || e.key === 'PageDown') {
         e.preventDefault();
         scrollToSection(adjacentNavIndex(sections, currentSection, 1));
@@ -345,7 +354,7 @@ export function FullPageScrollProvider({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isMobile, enableOnMobile, currentSection, sections, scrollToSection]);
+  }, [isMobile, enableOnMobile, isSnapEnabled, currentSection, sections, scrollToSection]);
 
   useEffect(() => {
     const onHashNav = () => {
@@ -397,9 +406,8 @@ export function FullPageScrollProvider({
       sectionProgress,
       sections,
     }}>
-      <div 
+      <div
         ref={containerRef}
-        className="scroll-smooth"
         data-header-theme={headerTheme}
       >
         {children}

@@ -1,11 +1,10 @@
-import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useRef } from "react";
 import { Link } from "wouter";
 import { analytics } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Building, FileCheck, Shield, Check } from "lucide-react";
 import { DashboardMockup } from "@/components/graphics";
-import { parallaxTravelRange } from "@/components/visual/ParallaxStill";
 import heroBgImage from "@assets/de-hero-arizona-dusk.png";
 import { useBooking } from "@/contexts/BookingContext";
 import { CTA } from "@/lib/ctaCopy";
@@ -15,18 +14,6 @@ export const ModernHeroSection = (): JSX.Element => {
   const containerRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
   const { openBooking } = useBooking();
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 16]);
-  const backgroundY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    parallaxTravelRange(prefersReducedMotion, 8),
-  );
 
   const features = [
     { icon: FileCheck, text: "Insurance & Compliance-Ready" },
@@ -48,7 +35,7 @@ export const ModernHeroSection = (): JSX.Element => {
       style={{ position: "relative" }}
     >
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <motion.img
+        <img
           src={heroBgImage}
           alt=""
           loading="eager"
@@ -56,7 +43,6 @@ export const ModernHeroSection = (): JSX.Element => {
           aria-hidden="true"
           className="absolute inset-0 h-full w-full object-cover"
           style={{
-            y: backgroundY,
             opacity: 0.94,
             objectPosition: "center 64%",
           }}
@@ -64,7 +50,7 @@ export const ModernHeroSection = (): JSX.Element => {
       </div>
 
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none overflow-hidden"
         aria-hidden="true"
         style={{
           background:
@@ -72,7 +58,7 @@ export const ModernHeroSection = (): JSX.Element => {
         }}
       >
         <div
-          className="pointer-events-none absolute right-[-8%] top-[12%] h-[420px] w-[420px]"
+          className="pointer-events-none absolute right-0 top-[12%] h-[320px] w-[320px]"
           style={{
             background:
               "radial-gradient(circle at 60% 40%, rgba(211, 18, 106, 0.10) 0%, rgba(91, 69, 224, 0.08) 42%, transparent 70%)",
@@ -82,7 +68,6 @@ export const ModernHeroSection = (): JSX.Element => {
 
       <motion.div
         className="relative z-10 flex flex-1 w-full items-center px-5 sm:px-8 lg:px-10 xl:px-12 pt-[calc(var(--de-nav-offset)+1.75rem)] pb-16 sm:pb-20 lg:pt-[calc(var(--de-nav-offset)+2.25rem)] lg:pb-28"
-        style={{ y }}
       >
         <div className="mx-auto w-full max-w-[var(--de-canvas)]">
           <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,0.96fr)_minmax(0,1.04fr)] lg:gap-12">

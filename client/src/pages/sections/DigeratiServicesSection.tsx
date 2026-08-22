@@ -18,6 +18,7 @@ import { CTA } from "@/lib/ctaCopy";
 import { IconWell } from "@/components/visual/IconWell";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { revealInitial, revealInView, revealTransition, revealViewport } from "@/lib/animations";
 
 /**
  * Homepage engagement paths — three primary choices.
@@ -118,10 +119,10 @@ export const DigeratiServicesSection = (): JSX.Element => {
       <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
         <motion.div
           className="mb-10 max-w-2xl md:mb-14"
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.45 }}
+          initial={prefersReducedMotion ? false : revealInitial}
+          whileInView={revealInView}
+          viewport={revealViewport}
+          transition={revealTransition}
         >
           <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-de-magenta-ink">
             How to work with us
@@ -141,33 +142,40 @@ export const DigeratiServicesSection = (): JSX.Element => {
             return (
               <motion.div
                 key={path.title}
-                initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.08 }}
-                className="flex h-full flex-col rounded-2xl border border-de-hairline bg-de-raised p-6 transition-colors hover:border-white/20 lg:p-8"
-                data-testid={path.testId}
+                initial={prefersReducedMotion ? false : revealInitial}
+                whileInView={revealInView}
+                viewport={revealViewport}
+                transition={{ ...revealTransition, delay: index * 0.045 }}
+                className="h-full"
               >
-                <IconWell icon={Icon} size="md" surface="dark" className="mb-5" />
-                <p
-                  className={`mb-2 min-h-4 text-base font-semibold uppercase tracking-[0.2em] ${
-                    path.eyebrow ? "text-white/45" : "invisible"
-                  }`}
-                  aria-hidden={!path.eyebrow}
-                >
-                  {path.eyebrow ?? "\u00a0"}
-                </p>
-                <h3 className="mb-2 text-xl font-semibold text-white lg:text-2xl">{path.title}</h3>
-                <p className="mb-5 flex-1 text-base font-medium leading-relaxed text-white/80 md:font-normal md:text-white/65">
-                  {path.description}
-                </p>
                 <Link
                   href={path.link}
-                  data-testid={`link-${path.testId}`}
-                  className="inline-flex min-h-11 items-center gap-2 text-base font-medium text-de-magenta-ink hover:text-[#f0187a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-de-raised"
+                  data-testid={path.testId}
+                  className="de-interactive-tile group flex h-full flex-col rounded-2xl border border-de-hairline bg-de-raised p-6 hover:border-[#D3126A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)] lg:p-8"
                 >
-                  {path.cta}
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  <IconWell icon={Icon} size="md" surface="dark" className="mb-5" />
+                  <p
+                    className={`mb-2 min-h-4 text-base font-semibold uppercase tracking-[0.2em] ${
+                      path.eyebrow ? "text-white/45" : "invisible"
+                    }`}
+                    aria-hidden={!path.eyebrow}
+                  >
+                    {path.eyebrow ?? "\u00a0"}
+                  </p>
+                  <h3 className="mb-2 text-xl font-semibold text-white lg:text-2xl">{path.title}</h3>
+                  <p className="mb-5 flex-1 text-base font-medium leading-relaxed text-white/80 md:font-normal md:text-white/65">
+                    {path.description}
+                  </p>
+                  <span
+                    data-testid={`link-${path.testId}`}
+                    className="inline-flex min-h-11 items-center gap-2 text-base font-medium text-de-magenta-ink group-hover:text-[#f0187a]"
+                  >
+                    {path.cta}
+                    <ArrowRight
+                      className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
+                      aria-hidden="true"
+                    />
+                  </span>
                 </Link>
               </motion.div>
             );

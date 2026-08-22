@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion, useReducedMotion } from "framer-motion";
+import { revealInitial, revealInView, revealTransition, revealViewport } from "@/lib/animations";
 import { useRef, useState, useEffect, useMemo } from "react";
 import { useThreatFeed } from "@/hooks/useThreatFeed";
 import {
@@ -31,7 +32,7 @@ function categoryBadgeClass(item: ThreatItem): string {
 function InsightCard({ insight, index }: { insight: ThreatItem; index: number }) {
   return (
     <Card
-      className="h-full overflow-hidden border-de-hairline bg-de-raised transition-colors hover:border-white/20"
+      className="de-interactive-tile h-full overflow-hidden border-de-hairline bg-de-raised hover:border-[#D3126A]"
       data-testid={`insight-card-${index}`}
     >
       <div className="h-1 bg-[#D3126A]" />
@@ -141,10 +142,10 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
         <motion.div
           className="text-center mb-8 md:mb-12"
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.35 }}
+          initial={prefersReducedMotion ? false : revealInitial}
+          whileInView={revealInView}
+          viewport={revealViewport}
+          transition={revealTransition}
         >
           <Badge className="mb-3 md:mb-4 bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 text-base">
             <Zap className="w-3 h-3 mr-1" />
@@ -172,10 +173,10 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
           <motion.div
             className="flex overflow-x-auto scrollbar-hide gap-2 mb-8 md:mb-10 pb-2 md:justify-center"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-            initial={prefersReducedMotion ? {} : { opacity: 0, y: 8 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-30px" }}
-            transition={{ duration: 0.3, delay: 0.1 }}
+            initial={prefersReducedMotion ? false : revealInitial}
+            whileInView={revealInView}
+            viewport={revealViewport}
+            transition={revealTransition}
           >
             {categories.map((category) => (
               <button
@@ -259,10 +260,10 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
               {displayed.map((insight, index) => (
                 <motion.div
                   key={insight.id}
-                  initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-30px" }}
-                  transition={{ duration: 0.35, delay: index * 0.06 }}
+                  initial={prefersReducedMotion ? false : revealInitial}
+                  whileInView={revealInView}
+                  viewport={revealViewport}
+                  transition={{ ...revealTransition, delay: index * 0.04 }}
                 >
                   <InsightCard insight={insight} index={index} />
                 </motion.div>
@@ -277,10 +278,10 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
 
         <motion.div
           className="text-center flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4"
-          initial={prefersReducedMotion ? {} : { opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-30px" }}
-          transition={{ duration: 0.35, delay: 0.2 }}
+          initial={prefersReducedMotion ? false : revealInitial}
+          whileInView={revealInView}
+          viewport={revealViewport}
+          transition={revealTransition}
         >
           <Link
             href="/resources/security-updates"
