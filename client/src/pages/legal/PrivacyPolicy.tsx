@@ -1,47 +1,24 @@
-import { MegaMenu } from "@/components/MegaMenu";
-import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
+import { LegalDocumentLayout } from "@/components/LegalDocumentLayout";
 import { Shield, Lock, Database, FileText, AlertTriangle } from "lucide-react";
-import { useSEO } from "@/hooks/useSEO";
 import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function PrivacyPolicy() {
   const lastUpdated = "November 6, 2025";
 
-  useSEO({
-    title: 'Privacy Policy',
-    description: 'Digerati Experts privacy policy. Learn how we collect, use, and protect your personal information in accordance with Arizona and federal laws.',
-    canonical: '/privacy',
-  });
-
   return (
-    <div className="min-h-screen bg-de-bg">
-      <MegaMenu />
-      
-      {/* Hero Section */}
-      <section className="de-dark-well de-field-grain de-field-lit text-white de-nav-clear pb-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl">
-            <div className="flex items-center gap-3 mb-6">
-              <Shield className="h-12 w-12 text-de-accent-ink" />
-              <h1 className="text-4xl md:text-5xl font-bold">Privacy Policy</h1>
-            </div>
-            <p className="text-xl text-gray-300">
-              Last Updated: {lastUpdated}
-            </p>
-            <p className="mt-4 text-lg text-gray-300">
-              Digerati Experts is committed to protecting your privacy and the security of your data. 
-              This Privacy Policy explains how we collect, use, disclose, and safeguard your information 
+    <LegalDocumentLayout
+      title="Privacy Policy"
+      subtitle={`Last Updated: ${lastUpdated}`}
+      description="Digerati Experts privacy policy. How we collect, use, and protect personal information in accordance with Arizona and federal laws."
+      canonical="/legal/privacy-policy"
+      icon={<Shield className="h-8 w-8" />}
+    >
+            <p className="mb-8 text-lg leading-relaxed text-white/80">
+              Digerati Experts is committed to protecting your privacy and the security of your data.
+              This Privacy Policy explains how we collect, use, disclose, and safeguard your information
               in accordance with Arizona and federal laws.
             </p>
-          </div>
-        </div>
-      </section>
 
-      {/* Main Content */}
-      <section className="py-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-          <div className="prose prose-lg prose-invert max-w-none">
-            
             {/* Introduction */}
             <div className="mb-12">
               <h2 className="text-3xl font-bold text-white mb-4">1. Introduction</h2>
@@ -393,11 +370,6 @@ export default function PrivacyPolicy() {
                 © {new Date().getFullYear()} Digerati Experts. All rights reserved.
               </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <DigeratiEnhancedFooterSection />
-    </div>
+    </LegalDocumentLayout>
   );
 }

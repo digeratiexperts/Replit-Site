@@ -1,19 +1,21 @@
 import { Link } from "wouter";
-import { 
-  Star, 
-  Shield, 
-  MessageCircle, 
-  Award, 
-  Zap, 
-  DollarSign, 
-  Mail, 
+import {
+  Star,
+  Shield,
+  MessageCircle,
+  Award,
+  Zap,
+  DollarSign,
+  Mail,
   Target,
 } from "lucide-react";
-import { MegaMenu } from "@/components/MegaMenu";
-import { DigeratiEnhancedFooterSection } from "../sections/DigeratiEnhancedFooterSection";
+import { PageTemplate } from "@/components/PageTemplate";
+import { IconWell } from "@/components/visual/IconWell";
+import { Button } from "@/components/ui/button";
+import { useSEO } from "@/hooks/useSEO";
 
 interface RightCard {
-  icon: JSX.Element;
+  icon: typeof Star;
   title: string;
   rightText: string;
   pledgeText: string;
@@ -21,49 +23,49 @@ interface RightCard {
 
 const rights: RightCard[] = [
   {
-    icon: <Star className="w-6 h-6" />,
+    icon: Star,
     title: "Complete Satisfaction",
     rightText: "You have a right to expect complete satisfaction from all services you receive from Digerati Experts. If you are ever unhappy with a service provided, we will correct and redeliver that service until you are completely satisfied with the result.",
     pledgeText: "We Pledge to make it right—at no additional cost to you—until we've exceeded your expectations."
   },
   {
-    icon: <Shield className="w-6 h-6" />,
+    icon: Shield,
     title: "Compliance-First Solutions",
     rightText: "You have the right to trust that we are recommending and delivering solutions that meet all relevant compliance requirements for your industry—including HIPAA, PCI-DSS, FTC Safeguards, and SOC 2 standards.",
     pledgeText: "We Pledge to never recommend or deliver a service that would put you at risk for non-compliance."
   },
   {
-    icon: <MessageCircle className="w-6 h-6" />,
+    icon: MessageCircle,
     title: "Plain English Communication",
     rightText: "You have the right to get answers to your questions in plain English, not techno-babble. We believe technology should empower you, not confuse you.",
     pledgeText: "We Pledge to explain recommendations clearly and answer your questions without talking down to you or making you feel foolish for asking."
   },
   {
-    icon: <Award className="w-6 h-6" />,
+    icon: Award,
     title: "Professionalism & Respect",
     rightText: "You have a right to expect the highest levels of personal accountability, professionalism, and empowerment in every interaction with our organization.",
     pledgeText: "We Pledge to treat you with courtesy, responsiveness, integrity, and respect—ensuring every interaction is a positive, cooperative experience."
   },
   {
-    icon: <Zap className="w-6 h-6" />,
+    icon: Zap,
     title: "Proactive Innovation",
     rightText: "You have a right to expect us to lead the way in finding, vetting, and recommending new technologies that can protect your business from cyber threats, increase efficiency, lower costs, and improve operations.",
     pledgeText: "We Pledge to constantly seek better solutions to help your business thrive—not just to pad our pockets."
   },
   {
-    icon: <DollarSign className="w-6 h-6" />,
+    icon: DollarSign,
     title: "Transparent Pricing",
     rightText: "You have a right to know exactly what a project, solution, or service will cost before we begin. No surprises, no confusion, no hidden fees.",
     pledgeText: "We Pledge to deliver solutions on budget with straightforward, clear billing—without mistakes, hidden fees, or unexpected expenses."
   },
   {
-    icon: <Mail className="w-6 h-6" />,
+    icon: Mail,
     title: "Your Preferred Communication",
     rightText: "You have a right to communicate with us in your preferred method—whether that's through our website, ticketing system, email, phone, or in person.",
     pledgeText: "We Pledge to make it easy for you to reach us your way—never forcing you to use a portal or communication method you're uncomfortable with."
   },
   {
-    icon: <Target className="w-6 h-6" />,
+    icon: Target,
     title: "Single Point of Contact",
     rightText: "You have the right to a single, trusted account representative who understands your business and can help with any IT-related issue—from vendor coordination to security concerns.",
     pledgeText: "We Pledge to provide you with a known contact who can address all your technology needs, including computers, networks, phones, security systems, and vendor relationships."
@@ -71,90 +73,76 @@ const rights: RightCard[] = [
 ];
 
 export default function ClientBillOfRights() {
+  useSEO({
+    title: "Client Bill of Rights",
+    description:
+      "Digerati Experts Client Bill of Rights: satisfaction, compliance-first recommendations, plain English, transparent pricing, and a single point of contact.",
+    canonical: "/about/client-bill-of-rights",
+  });
+
   return (
-    <div className="min-h-screen bg-[#050312]">
-      <MegaMenu />
-
-      <section className="de-nav-clear pb-16 px-6 de-prose-dark">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight" data-testid="heading-bill-of-rights">
-            Client Bill of Rights
-          </h1>
-          <p className="text-lg text-white/85 leading-relaxed mb-8 max-w-2xl mx-auto">
-            We greatly appreciate the trust and confidence our clients have placed in Digerati Experts. 
-            Your security is our mission, and exceptional service is our standard.
+    <PageTemplate
+      title="Client Bill of Rights"
+      subtitle="We greatly appreciate the trust and confidence our clients have placed in Digerati Experts. Your security is our mission, and exceptional service is our standard."
+      breadcrumbs={[{ label: "About" }, { label: "Client Bill of Rights" }]}
+    >
+      <div className="mx-auto max-w-5xl space-y-12">
+        <div className="rounded-xl border border-de-hairline bg-de-raised p-6 text-center">
+          <p className="text-white/85">
+            We pledge to uphold the <span className="font-semibold text-de-accent-ink">highest standards</span> of
+            technical support, cybersecurity excellence, and customer satisfaction
           </p>
-          <div className="inline-block px-6 py-4 rounded-xl border border-de-magenta/35 bg-de-magenta/10">
-            <p className="text-white/90">
-              We pledge to uphold the <span className="text-de-magenta-ink font-semibold">highest standards</span> of 
-              technical support, cybersecurity excellence, and customer satisfaction
-            </p>
-          </div>
         </div>
-      </section>
 
-      <section className="pb-20 px-6 de-prose-dark">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid gap-6">
-            {rights.map((right, index) => (
-              <article 
-                key={index}
-                className="rounded-xl border border-white/10 bg-white/[0.03] p-6 md:p-8 hover:border-de-magenta/30 hover:bg-white/[0.05] transition-all"
-                data-testid={`card-right-${index}`}
-              >
-                <div className="flex items-start gap-5 mb-5">
-                  <div className="w-12 h-12 rounded-xl bg-de-magenta/15 border border-de-magenta/30 flex items-center justify-center text-de-magenta-ink flex-shrink-0">
-                    {right.icon}
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-white mb-3">{right.title}</h3>
-                    <p className="text-white/85 leading-relaxed">
-                      <span className="text-de-magenta-ink font-medium">You have a right</span> {right.rightText.replace(/^You have (a |the )?right ?(to)?/i, '')}
-                    </p>
-                  </div>
+        <div className="grid gap-6">
+          {rights.map((right, index) => (
+            <article
+              key={right.title}
+              className="de-interactive-card rounded-xl border border-de-hairline bg-de-raised p-6 md:p-8"
+              data-testid={`card-right-${index}`}
+            >
+              <div className="mb-5 flex items-start gap-5">
+                <IconWell icon={right.icon} size="md" surface="dark" />
+                <div>
+                  <h3 className="mb-3 text-xl font-semibold text-white">{right.title}</h3>
+                  <p className="leading-relaxed text-white/80">
+                    <span className="font-medium text-de-accent-ink">You have a right</span>{" "}
+                    {right.rightText.replace(/^You have (a |the )?right ?(to)?/i, "")}
+                  </p>
                 </div>
-                <div className="ml-0 md:ml-17 pl-0 md:pl-[68px]">
-                  <div className="pl-4 border-l-2 border-de-hairline bg-de-raised py-3 pr-4 rounded-r-lg">
-                    <p className="text-white/80 text-sm leading-relaxed">
-                      <span className="text-de-magenta-ink font-semibold">We Pledge</span> {right.pledgeText.replace(/^We Pledge /i, '')}
-                    </p>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
+              </div>
+              <div className="rounded-r-lg border-l-2 border-[#D3126A] bg-de-bg py-3 pl-4 pr-4 md:ml-[68px]">
+                <p className="text-sm leading-relaxed text-white/75">
+                  <span className="font-semibold text-de-accent-ink">We Pledge</span>{" "}
+                  {right.pledgeText.replace(/^We Pledge /i, "")}
+                </p>
+              </div>
+            </article>
+          ))}
         </div>
-      </section>
 
-      <section className="py-20 px-6 border-t border-white/[0.06]">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-6" data-testid="heading-commitment">
+        <section className="rounded-2xl border border-de-hairline bg-de-raised p-8 text-center md:p-10">
+          <h2 className="mb-6 text-2xl font-bold text-white md:text-3xl" data-testid="heading-commitment">
             Our Commitment to Excellence
           </h2>
-          <p className="text-white/85 leading-relaxed text-lg">
-            Most of our clients come from referrals from satisfied customers. We <span className="text-de-magenta-ink font-medium">want</span> you to recommend us, 
-            but we understand that you will only do this if you are extremely pleased with our services. 
-            That's why we work so hard to go above and beyond. The establishment of our Client Bill of Rights, 
-            along with our continual investment in people, processes, and technology, clearly demonstrates 
+          <p className="text-lg leading-relaxed text-white/80">
+            Most of our clients come from referrals from satisfied customers. We <span className="font-medium text-de-accent-ink">want</span> you to recommend us,
+            but we understand that you will only do this if you are extremely pleased with our services.
+            That's why we work so hard to go above and beyond. The establishment of our Client Bill of Rights,
+            along with our continual investment in people, processes, and technology, clearly demonstrates
             our unwavering commitment to your success and security.
           </p>
-        </div>
-      </section>
+        </section>
 
-      <section className="py-12 px-6 border-t border-white/[0.06]">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="text-white/50 mb-4">See also our money-back guarantee</p>
-          <Link 
-            href="/about/guarantee"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-de-magenta hover:bg-de-magenta text-white font-medium transition-colors"
-            data-testid="link-guarantee"
-          >
-            100% Money-Back Guarantee
-          </Link>
+        <div className="rounded-2xl border border-[#D3126A]/40 bg-[#D3126A] px-8 py-10 text-center">
+          <p className="mb-6 text-white/90">See also our money-back guarantee</p>
+          <Button asChild size="lg" className="h-12 bg-white px-8 font-semibold text-[#D3126A] hover:bg-white/95">
+            <Link href="/about/guarantee" data-testid="link-guarantee">
+              100% Money-Back Guarantee
+            </Link>
+          </Button>
         </div>
-      </section>
-
-      <DigeratiEnhancedFooterSection />
-    </div>
+      </div>
+    </PageTemplate>
   );
 }

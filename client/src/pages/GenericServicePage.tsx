@@ -3,7 +3,6 @@ import {
   CheckCircle,
   Phone,
   ArrowRight,
-  Shield,
   Zap,
   AlertTriangle,
   Grid3X3,
@@ -50,6 +49,30 @@ interface GenericServicePageProps {
   narrative?: PageNarrative;
 }
 
+function breadcrumbsFromCanonical(
+  canonical: string | undefined,
+  title: string,
+): { label: string; href?: string }[] | undefined {
+  if (!canonical) return undefined;
+  const family = canonical.startsWith("/solutions/")
+    ? { label: "Solutions", href: "/solutions" }
+    : canonical.startsWith("/industries/")
+      ? { label: "Industries", href: "/industries" }
+      : canonical.startsWith("/resources/")
+        ? { label: "Resources", href: "/resources" }
+        : canonical.startsWith("/support/")
+          ? { label: "Support", href: "/about/support" }
+          : canonical.startsWith("/about/")
+            ? { label: "About" }
+            : canonical.startsWith("/trust/")
+              ? { label: "Trust", href: "/trust/trust-center" }
+              : canonical.startsWith("/legal/")
+                ? { label: "Legal" }
+                : null;
+  if (!family) return undefined;
+  return [family, { label: title }];
+}
+
 const FeatureCard = ({
   feature,
   index,
@@ -72,7 +95,7 @@ const FeatureCard = ({
           {feature.icon}
         </span>
       ) : (
-        <IconWell icon={Shield} size="md" surface="dark" />
+        <span className="mb-1 block h-1 w-8 bg-[#D3126A]" aria-hidden="true" />
       )}
     </div>
     <h3 className="font-heading text-xl font-semibold text-white">{feature.title}</h3>
@@ -94,6 +117,7 @@ export default function GenericServicePage({
 }: GenericServicePageProps) {
   const prefersReducedMotion = useReducedMotion() ?? false;
   const narrative = narrativeProp ?? (serviceKey ? pageNarratives[serviceKey] : undefined);
+  const breadcrumbs = breadcrumbsFromCanonical(canonical, title);
 
   useSEO({
     title,
@@ -102,7 +126,7 @@ export default function GenericServicePage({
   });
 
   return (
-    <PageTemplate title={title} subtitle={subtitle} variant="dark">
+    <PageTemplate title={title} subtitle={subtitle} variant="dark" breadcrumbs={breadcrumbs}>
       <div className="space-y-16">
         {stat && (
           <motion.div

@@ -1,6 +1,7 @@
-import { Phone, Mail, MapPin, Check } from "lucide-react";
-import { MegaMenu } from "@/components/MegaMenu";
-import { DigeratiEnhancedFooterSection } from "../sections/DigeratiEnhancedFooterSection";
+import { Phone, MapPin, Check } from "lucide-react";
+import { PageTemplate } from "@/components/PageTemplate";
+import { Button } from "@/components/ui/button";
+import { useSEO } from "@/hooks/useSEO";
 import { CTA } from "@/lib/ctaCopy";
 import { PRIMARY_PHONE } from "@/data/companyContact";
 
@@ -29,113 +30,110 @@ const questions = [
 ];
 
 export default function TwentyOneQuestions() {
+  useSEO({
+    title: "21 Questions Before Hiring an IT Company",
+    description:
+      "21 questions Arizona businesses should ask before hiring an IT support company. Use this comparison chart to evaluate MSPs.",
+    canonical: "/about/21-questions",
+  });
+
   return (
-    <div className="min-h-screen bg-[#050312]">
-      <MegaMenu />
+    <PageTemplate
+      title="21 Questions You MUST Ask Before Hiring An IT Support Company"
+      subtitle="A modern MSP is identity-first, security-led, and business-aligned. Use this chart to compare the real difference."
+      breadcrumbs={[{ label: "About" }, { label: "21 Questions" }]}
+    >
+      <div className="space-y-12">
+        <p className="text-sm font-semibold uppercase tracking-wider text-de-accent-ink">
+          Elite IT & Cybersecurity for Phoenix Businesses
+        </p>
 
-      <section className="de-nav-clear pb-16 px-6 de-prose-dark">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12 pb-8 border-b-4 border-pink-400">
-            <p className="text-de-magenta-ink font-semibold text-sm uppercase tracking-wider mb-4">
-              Elite IT & Cybersecurity for Phoenix Businesses
-            </p>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 tracking-tight" data-testid="heading-21-questions">
-              21 Questions You MUST Ask Before<br className="hidden md:block" />
-              Hiring An IT Support Company
-            </h1>
-            <p className="text-white/85 text-lg max-w-3xl mx-auto leading-relaxed">
-              A modern MSP is identity-first, security-led, and business-aligned. 
-              Use this chart to compare the real difference.
-            </p>
-          </div>
-
-          <div className="overflow-x-auto -mx-6 px-6 mb-12">
-            <table className="w-full min-w-[800px] border-collapse" data-testid="comparison-table">
-              <thead>
-                <tr>
-                  <th className="bg-[#1a1a2e] text-white text-left p-4 font-bold text-sm border border-white/10 w-[45%]">
-                    Critical Question
-                  </th>
-                  <th className="bg-[#1a1a2e] text-white text-center p-4 font-bold text-sm border border-white/10 w-[13.75%]">
-                    Company A<br /><span className="text-white/55">_______</span>
-                  </th>
-                  <th className="bg-[#1a1a2e] text-white text-center p-4 font-bold text-sm border border-white/10 w-[13.75%]">
-                    Company B<br /><span className="text-white/55">_______</span>
-                  </th>
-                  <th className="bg-[#1a1a2e] text-white text-center p-4 font-bold text-sm border border-white/10 w-[13.75%]">
-                    Company C<br /><span className="text-white/55">_______</span>
-                  </th>
-                  <th className="bg-de-raised text-white text-center p-4 font-bold text-sm border border-de-hairline w-[13.75%]">
-                    DIGERATI<br />EXPERTS
-                  </th>
+        <p className="mb-3 text-sm text-white/55 md:hidden">
+          Swipe sideways to compare companies.
+        </p>
+        <div className="-mx-4 overflow-x-auto px-4 sm:-mx-6 sm:px-6">
+          <table className="w-full min-w-[800px] border-collapse" data-testid="comparison-table">
+            <thead>
+              <tr>
+                <th className="w-[45%] border border-de-hairline bg-de-raised p-4 text-left text-sm font-bold text-white">
+                  Critical Question
+                </th>
+                <th className="w-[13.75%] border border-de-hairline bg-de-bg p-4 text-center text-sm font-bold text-white">
+                  Company A<br /><span className="text-white/55">_______</span>
+                </th>
+                <th className="w-[13.75%] border border-de-hairline bg-de-bg p-4 text-center text-sm font-bold text-white">
+                  Company B<br /><span className="text-white/55">_______</span>
+                </th>
+                <th className="w-[13.75%] border border-de-hairline bg-de-bg p-4 text-center text-sm font-bold text-white">
+                  Company C<br /><span className="text-white/55">_______</span>
+                </th>
+                <th className="w-[13.75%] border border-de-hairline bg-de-raised p-4 text-center text-sm font-bold text-white">
+                  DIGERATI<br />EXPERTS
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {questions.map((question, index) => (
+                <tr key={question} className={index % 2 === 0 ? "bg-de-bg" : "bg-de-raised/60"}>
+                  <td
+                    className="border border-de-hairline p-4 text-sm font-medium leading-relaxed text-white"
+                    data-testid={`question-${index}`}
+                  >
+                    {question}
+                  </td>
+                  <td className="border border-de-hairline p-4" />
+                  <td className="border border-de-hairline p-4" />
+                  <td className="border border-de-hairline p-4" />
+                  <td className="border border-de-hairline bg-de-raised p-4 text-center">
+                    {index === 17 ? (
+                      <span className="block text-xs font-bold leading-tight text-de-accent-ink" data-testid="special-note">
+                        Phoenix-based<br />& US Only!
+                      </span>
+                    ) : (
+                      <Check className="mx-auto h-7 w-7 text-de-accent-ink" strokeWidth={3} data-testid={`check-${index}`} />
+                    )}
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {questions.map((question, index) => (
-                  <tr key={index} className={index % 2 === 0 ? "" : "bg-white/[0.02]"}>
-                    <td className="bg-[#1e1e2e] text-white font-medium p-4 text-sm border border-white/10 leading-relaxed" data-testid={`question-${index}`}>
-                      {question}
-                    </td>
-                    <td className="bg-[#2a2a3e] text-center p-4 border border-white/10"></td>
-                    <td className="bg-[#2a2a3e] text-center p-4 border border-white/10"></td>
-                    <td className="bg-[#2a2a3e] text-center p-4 border border-white/10"></td>
-                    <td className="bg-de-raised text-center p-4 border border-de-hairline">
-                      {index === 17 ? (
-                        <span className="text-de-magenta-ink font-bold text-xs leading-tight block" data-testid="special-note">
-                          Phoenix-based<br />& US Only!
-                        </span>
-                      ) : (
-                        <Check className="w-7 h-7 text-de-magenta-ink mx-auto" strokeWidth={3} data-testid={`check-${index}`} />
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-          <div className="bg-gradient-to-br from-[#1a1a2e] to-[#2a2a3e] border-4 border-de-hairline rounded-xl p-8 md:p-12 text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-6" data-testid="heading-cta">
-              Ready to experience the Digerati Experts difference?
-            </h2>
-            <a 
-              href={PRIMARY_PHONE.telHref} 
-              className="text-3xl md:text-4xl font-bold text-de-magenta-ink hover:text-de-magenta-ink transition-colors block mb-6"
-              data-testid="link-phone"
-            >
-              <Phone className="w-8 h-8 inline-block mr-3 -mt-1" />
-              {PRIMARY_PHONE.display}
-            </a>
-            <p className="text-white/80 text-lg font-medium leading-relaxed">
-              Call now for your FREE 30-Day Risk-Free Pilot<br />
-              <span className="text-white/60">Serving Phoenix, Scottsdale, Tempe, Chandler, Mesa & Surrounding Areas</span>
-            </p>
-            <div className="mt-8">
-              <a
-                href="/book"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-de-magenta hover:bg-de-magenta text-white font-semibold px-8 py-4 rounded-lg transition-colors"
-                data-testid="button-schedule"
-              >
+        <div className="rounded-2xl border border-[#D3126A]/40 bg-[#D3126A] px-8 py-10 text-center md:px-12 md:py-12">
+          <h2 className="mb-6 text-2xl font-bold text-white md:text-3xl" data-testid="heading-cta">
+            Ready to experience the Digerati Experts difference?
+          </h2>
+          <a
+            href={PRIMARY_PHONE.telHref}
+            className="mb-6 block text-3xl font-bold text-white md:text-4xl"
+            data-testid="link-phone"
+          >
+            <Phone className="mr-3 inline-block h-8 w-8 -mt-1" />
+            {PRIMARY_PHONE.display}
+          </a>
+          <p className="text-lg font-medium leading-relaxed text-white/90">
+            Call now for your FREE 30-Day Risk-Free Pilot<br />
+            <span className="text-white/75">Serving Phoenix, Scottsdale, Tempe, Chandler, Mesa & Surrounding Areas</span>
+          </p>
+          <div className="mt-8">
+            <Button asChild size="lg" className="h-12 bg-white px-8 font-semibold text-[#D3126A] hover:bg-white/95">
+              <a href="/book" data-testid="button-schedule">
                 {CTA.primary}
               </a>
-            </div>
-          </div>
-
-          <div className="text-center py-8 border-t border-white/10">
-            <p className="text-white font-semibold mb-2">
-              DIGERATI EXPERTS | {PRIMARY_PHONE.display} | info@digeratiexperts.com
-            </p>
-            <p className="text-white/50 text-sm flex items-center justify-center gap-2">
-              <MapPin className="w-4 h-4" />
-              Serving Phoenix Metro Area | Chandler, Arizona | www.digeratiexperts.com
-            </p>
+            </Button>
           </div>
         </div>
-      </section>
 
-      <DigeratiEnhancedFooterSection />
-    </div>
+        <div className="border-t border-de-hairline py-6 text-center">
+          <p className="mb-2 font-semibold text-white">
+            DIGERATI EXPERTS | {PRIMARY_PHONE.display} | info@digeratiexperts.com
+          </p>
+          <p className="flex items-center justify-center gap-2 text-sm text-white/55">
+            <MapPin className="h-4 w-4" />
+            Serving Phoenix Metro Area | Chandler, Arizona | www.digeratiexperts.com
+          </p>
+        </div>
+      </div>
+    </PageTemplate>
   );
 }

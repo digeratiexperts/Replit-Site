@@ -1,10 +1,9 @@
 import { Link } from "wouter";
 import { ArrowRight, Layers, Shield, Users, ClipboardCheck, GitBranch } from "lucide-react";
-import { MegaMenu } from "@/components/MegaMenu";
-import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
 import { EcosystemProgression } from "@/components/EcosystemProgression";
 import { IconWell } from "@/components/visual/IconWell";
 import { Button } from "@/components/ui/button";
+import { PageTemplate } from "@/components/PageTemplate";
 import { useSEO } from "@/hooks/useSEO";
 import { BreadcrumbJsonLd, ServiceJsonLd } from "@/components/JsonLd";
 import { CTA } from "@/lib/ctaCopy";
@@ -26,8 +25,24 @@ export default function ProActiveEcosystemPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <MegaMenu />
+    <PageTemplate
+      title="The ProActive Ecosystem"
+      subtitle="ProActive is the umbrella — not a single “Office package.” It is a cybersecurity-first managed IT operating model that progresses IT → Office → Business → Enterprise. Each tier is a fit for a different environment, not a merchandising rank."
+      breadcrumbs={[{ label: "Solutions", href: "/solutions" }, { label: "ProActive Ecosystem" }]}
+      actions={
+        <div className="flex flex-wrap gap-3">
+          <Button asChild className="h-12 bg-[#D3126A] px-6 font-semibold text-white">
+            <Link href="/book">
+              {CTA.primary}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+          <Button asChild variant="outline" className="h-12 border-white/20 px-6 font-semibold text-white hover:bg-white/10">
+            <Link href="/proactive-ecosystem-pricing">{CTA.secondary}</Link>
+          </Button>
+        </div>
+      }
+    >
       <ServiceJsonLd
         name="ProActive Ecosystem"
         description="Cybersecurity-first managed IT operating model with four fit-based tiers: IT, Office, Business, and Enterprise."
@@ -41,36 +56,8 @@ export default function ProActiveEcosystemPage() {
         ]}
       />
 
-      <main className="de-nav-clear pb-20">
-        <div className="mx-auto max-w-[var(--de-canvas)] px-4 sm:px-6 lg:px-8">
-          <header className="mb-14 max-w-3xl">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#F04C97]">
-              Operating model
-            </p>
-            <h1 className="font-heading text-4xl font-semibold tracking-[-0.02em] text-white md:text-5xl">
-              The ProActive Ecosystem<span className="text-de-accent-ink" aria-hidden="true">:</span>
-            </h1>
-            <p className="mt-5 text-lg leading-relaxed text-white/70">
-              ProActive is the umbrella — not a single “Office package.” It is a cybersecurity-first
-              managed IT operating model that progresses IT → Office → Business → Enterprise. Each
-              tier is a fit for a different environment, not a merchandising rank.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/book">
-                <Button className="h-12 bg-[#D3126A] px-6 font-semibold text-white">
-                  {CTA.primary}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/proactive-ecosystem-pricing">
-                <Button variant="outline" className="h-12 border-white/20 bg-white/5 px-6 font-semibold text-white hover:bg-white/10">
-                  {CTA.secondary}
-                </Button>
-              </Link>
-            </div>
-          </header>
-
-          <section className="mb-16 grid gap-6 md:grid-cols-3">
+      <div className="space-y-16">
+          <section className="grid gap-6 md:grid-cols-3">
             {[
               { icon: Shield, title: "Cybersecurity-first IT", body: "Identity, endpoints, email, and recovery are designed in — not bolted on after a help-desk contract." },
               { icon: Layers, title: "One accountable model", body: "Support, workplace, security operations, and strategy sit in one operating relationship instead of a pile of vendors." },
@@ -126,7 +113,7 @@ export default function ProActiveEcosystemPage() {
           </section>
 
           <section className="mb-16 grid gap-6 md:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 bg-[#151217] p-6">
+            <div className="rounded-2xl border border-de-hairline bg-de-raised p-6">
               <div className="flex items-center gap-3">
                 <IconWell icon={ClipboardCheck} size="sm" surface="dark" />
                 <h2 className="text-lg font-semibold text-white">Standalone vs ProActive</h2>
@@ -143,7 +130,7 @@ export default function ProActiveEcosystemPage() {
                 </span>
               </Link>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-[#151217] p-6">
+            <div className="rounded-2xl border border-de-hairline bg-de-raised p-6">
               <div className="flex items-center gap-3">
                 <IconWell icon={Users} size="sm" surface="dark" />
                 <h2 className="text-lg font-semibold text-white">Co-managed vs ProActive</h2>
@@ -162,7 +149,7 @@ export default function ProActiveEcosystemPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-white/10 bg-[#151217] p-6 md:flex md:items-center md:justify-between md:gap-8 md:p-8">
+          <section className="rounded-2xl border border-de-hairline bg-de-raised p-6 md:flex md:items-center md:justify-between md:gap-8 md:p-8">
             <div className="max-w-xl">
               <h2 className="text-xl font-semibold text-white">Compare capabilities and operating depth</h2>
               <p className="mt-2 text-sm leading-relaxed text-white/60">
@@ -177,9 +164,7 @@ export default function ProActiveEcosystemPage() {
               </span>
             </Link>
           </section>
-        </div>
-      </main>
-      <DigeratiEnhancedFooterSection />
-    </div>
+      </div>
+    </PageTemplate>
   );
 }

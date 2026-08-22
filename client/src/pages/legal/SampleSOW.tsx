@@ -1,104 +1,105 @@
-import { MegaMenu } from "@/components/MegaMenu";
-import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
+import { LegalDocumentLayout } from "@/components/LegalDocumentLayout";
 import { FileText, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function SampleSOW() {
   return (
-    <div className="min-h-screen bg-de-bg">
-      <MegaMenu />
-      
-      <section className="de-dark-well de-field-grain de-field-lit text-white de-nav-clear pb-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl">
-            <div className="flex items-center gap-3 mb-6">
-              <FileText className="h-12 w-12 text-de-accent-ink" />
-              <h1 className="text-4xl md:text-5xl font-bold">Sample Statement of Work</h1>
-            </div>
-            <p className="text-xl text-gray-300">
-              Example SOW Template for Managed Services Engagement
-            </p>
-          </div>
+    <LegalDocumentLayout
+      title="Sample Statement of Work"
+      subtitle="Example SOW Template for Managed Services Engagement"
+      description="Typical Digerati Experts Statement of Work (SOW) components for managed services engagements. Request a customized SOW for your project."
+      canonical="/legal/sample-sow"
+      icon={<FileText className="h-8 w-8" />}
+    >
+      <p className="mb-6 text-lg text-white/80">
+        Our Statement of Work (SOW) defines the specific services, deliverables, timelines, and
+        pricing for each client engagement. Each SOW is customized to your unique requirements.
+      </p>
+
+      <div className="mb-8 rounded border border-de-hairline border-l-4 border-l-de-accent bg-de-raised p-6">
+        <h3 className="mb-3 text-xl font-semibold text-white">Typical SOW Components:</h3>
+        <ul className="list-disc space-y-2 pl-6 text-white/75">
+          <li>
+            <strong className="text-white">Project Overview:</strong> Description of services and objectives
+          </li>
+          <li>
+            <strong className="text-white">Scope of Services:</strong> Detailed list of deliverables and tasks
+          </li>
+          <li>
+            <strong className="text-white">Service Levels:</strong> Response times and availability commitments
+          </li>
+          <li>
+            <strong className="text-white">Timeline:</strong> Project phases and milestone dates
+          </li>
+          <li>
+            <strong className="text-white">Pricing:</strong> Fees, payment schedule, and terms
+          </li>
+          <li>
+            <strong className="text-white">Client Responsibilities:</strong> Required resources and access
+          </li>
+          <li>
+            <strong className="text-white">Assumptions:</strong> Dependencies and constraints
+          </li>
+          <li>
+            <strong className="text-white">Acceptance Criteria:</strong> Conditions for project completion
+          </li>
+        </ul>
+      </div>
+
+      <div className="mb-8 grid gap-6 md:grid-cols-2">
+        <div className="rounded-lg border border-de-hairline bg-de-raised p-6">
+          <h3 className="mb-3 text-lg font-semibold text-white">Common SOW Types:</h3>
+          <ul className="list-disc space-y-1 pl-6 text-sm text-white/75">
+            <li>Managed IT Services - Ongoing</li>
+            <li>Security Assessment Project</li>
+            <li>HIPAA Compliance Audit</li>
+            <li>Cloud Migration Project</li>
+            <li>Disaster Recovery Implementation</li>
+            <li>Network Infrastructure Upgrade</li>
+          </ul>
         </div>
-      </section>
 
-      <section className="py-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-          <div className="prose prose-lg prose-invert max-w-none">
-            <p className="text-lg text-gray-300 mb-6">
-              Our Statement of Work (SOW) defines the specific services, deliverables, timelines, and 
-              pricing for each client engagement. Each SOW is customized to your unique requirements.
-            </p>
-
-            <div className="border border-de-hairline bg-de-raised border-l-4 border-l-de-accent p-6 rounded mb-8">
-              <h3 className="text-xl font-semibold text-white mb-3">Typical SOW Components:</h3>
-              <ul className="list-disc pl-6 text-gray-300 space-y-2">
-                <li><strong className="text-white">Project Overview:</strong> Description of services and objectives</li>
-                <li><strong className="text-white">Scope of Services:</strong> Detailed list of deliverables and tasks</li>
-                <li><strong className="text-white">Service Levels:</strong> Response times and availability commitments</li>
-                <li><strong className="text-white">Timeline:</strong> Project phases and milestone dates</li>
-                <li><strong className="text-white">Pricing:</strong> Fees, payment schedule, and terms</li>
-                <li><strong className="text-white">Client Responsibilities:</strong> Required resources and access</li>
-                <li><strong className="text-white">Assumptions:</strong> Dependencies and constraints</li>
-                <li><strong className="text-white">Acceptance Criteria:</strong> Conditions for project completion</li>
-              </ul>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
-              <div className="border border-de-hairline bg-de-raised p-6 rounded-lg">
-                <h3 className="text-lg font-semibold text-white mb-3">Common SOW Types:</h3>
-                <ul className="list-disc pl-6 text-gray-300 space-y-1 text-sm">
-                  <li>Managed IT Services - Ongoing</li>
-                  <li>Security Assessment Project</li>
-                  <li>HIPAA Compliance Audit</li>
-                  <li>Cloud Migration Project</li>
-                  <li>Disaster Recovery Implementation</li>
-                  <li>Network Infrastructure Upgrade</li>
-                </ul>
-              </div>
-
-              <div className="border border-de-hairline bg-de-raised p-6 rounded-lg">
-                <h3 className="text-lg font-semibold text-white mb-3">SOW Benefits:</h3>
-                <ul className="list-disc pl-6 text-gray-300 space-y-1 text-sm">
-                  <li>Clear scope and expectations</li>
-                  <li>Fixed pricing and timelines</li>
-                  <li>Defined deliverables</li>
-                  <li>Measurable success criteria</li>
-                  <li>Risk mitigation</li>
-                  <li>Legal protection for both parties</li>
-                </ul>
-              </div>
-            </div>
-
-            <h2 className="text-2xl font-bold text-white mb-4 mt-8">Request a Custom SOW</h2>
-            <p className="text-gray-300 mb-6">
-              Ready to start a project? Contact us to schedule a discovery call and receive a customized 
-              Statement of Work tailored to your specific needs and objectives.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 mt-8">
-              <Button 
-                className="bg-[#D3126A] text-white hover:bg-[#B80E5C]"
-                onClick={() => window.location.href = 'mailto:legal@digeratiexperts.com?subject=SOW Request'}
-                data-testid="button-request-sow"
-              >
-                <Mail className="h-5 w-5 mr-2" />
-                Request Custom SOW
-              </Button>
-              <Button 
-                variant="outline"
-                className="border-white/20 text-white hover:bg-white/10"
-                onClick={() => window.location.href = PRIMARY_PHONE.telHref}
-              >
-                Call {PRIMARY_PHONE.display}
-              </Button>
-            </div>
-          </div>
+        <div className="rounded-lg border border-de-hairline bg-de-raised p-6">
+          <h3 className="mb-3 text-lg font-semibold text-white">SOW Benefits:</h3>
+          <ul className="list-disc space-y-1 pl-6 text-sm text-white/75">
+            <li>Clear scope and expectations</li>
+            <li>Fixed pricing and timelines</li>
+            <li>Defined deliverables</li>
+            <li>Measurable success criteria</li>
+            <li>Risk mitigation</li>
+            <li>Legal protection for both parties</li>
+          </ul>
         </div>
-      </section>
+      </div>
 
-      <DigeratiEnhancedFooterSection />
-    </div>
+      <h2 className="mb-4 mt-8 text-2xl font-bold text-white">Request a Custom SOW</h2>
+      <p className="mb-6 text-white/75">
+        Ready to start a project? Contact us to schedule a discovery call and receive a customized
+        Statement of Work tailored to your specific needs and objectives.
+      </p>
+
+      <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+        <Button
+          variant="brand"
+          onClick={() => {
+            window.location.href = "mailto:legal@digeratiexperts.com?subject=SOW Request";
+          }}
+          data-testid="button-request-sow"
+        >
+          <Mail className="mr-2 h-5 w-5" />
+          Request Custom SOW
+        </Button>
+        <Button
+          variant="outline"
+          className="border-white/20 text-white hover:bg-white/10"
+          onClick={() => {
+            window.location.href = PRIMARY_PHONE.telHref;
+          }}
+        >
+          Call {PRIMARY_PHONE.display}
+        </Button>
+      </div>
+    </LegalDocumentLayout>
   );
 }

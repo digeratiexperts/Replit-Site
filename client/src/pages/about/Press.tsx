@@ -1,8 +1,7 @@
-import { MegaMenu } from "@/components/MegaMenu";
-import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
-import { useSEO } from "@/hooks/useSEO";
+import { PageTemplate } from "@/components/PageTemplate";
 import { JsonLd } from "@/components/JsonLd";
 import { Link } from "wouter";
+import { useSEO } from "@/hooks/useSEO";
 import { PRIMARY_PHONE } from "@/data/companyContact";
 
 const NAP = {
@@ -24,8 +23,11 @@ export default function Press() {
   });
 
   return (
-    <div className="min-h-screen bg-[#0b0b12] text-white">
-      <MegaMenu />
+    <PageTemplate
+      title="Press & media"
+      subtitle="Use this page for accurate company facts, citations, and interview requests. Please do not invent metrics, client names, or certifications not listed here."
+      breadcrumbs={[{ label: "About" }, { label: "Press & Media" }]}
+    >
       <JsonLd
         id="press-org"
         data={{
@@ -50,17 +52,11 @@ export default function Press() {
           },
         }}
       />
-      <main className="mx-auto max-w-3xl px-6 py-20">
-        <p className="text-sm uppercase tracking-[0.2em] text-de-magenta-ink/80">Media</p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight md:text-5xl">Press & media</h1>
-        <p className="mt-4 text-lg text-white/70">
-          Use this page for accurate company facts, citations, and interview requests. Please do not
-          invent metrics, client names, or certifications not listed here.
-        </p>
 
-        <section className="mt-12 space-y-4">
-          <h2 className="text-2xl font-semibold">Boilerplate</h2>
-          <p className="rounded-lg border border-white/10 bg-white/5 p-5 text-white/80 leading-relaxed">
+      <div className="mx-auto max-w-3xl space-y-12">
+        <section className="space-y-4">
+          <h2 className="text-2xl font-semibold text-white">Boilerplate</h2>
+          <p className="rounded-lg border border-de-hairline bg-de-raised p-5 leading-relaxed text-white/80">
             Digerati Experts is an Arizona-based managed IT and managed security provider helping
             small and mid-size organizations protect operations, patient and client data, and
             compliance readiness. The firm combines managed IT, cybersecurity, and documentation into
@@ -69,9 +65,9 @@ export default function Press() {
           </p>
         </section>
 
-        <section className="mt-12 space-y-3">
-          <h2 className="text-2xl font-semibold">Official NAP (use exactly)</h2>
-          <address className="not-italic rounded-lg border border-white/10 bg-white/5 p-5 text-white/85 leading-relaxed">
+        <section className="space-y-3">
+          <h2 className="text-2xl font-semibold text-white">Official NAP (use exactly)</h2>
+          <address className="not-italic rounded-lg border border-de-hairline bg-de-raised p-5 leading-relaxed text-white/85">
             {NAP.name}
             <br />
             {NAP.street}
@@ -79,60 +75,59 @@ export default function Press() {
             {NAP.city}, {NAP.region} {NAP.postal}
             <br />
             Phone:{" "}
-            <a className="text-de-magenta-ink underline-offset-2 hover:underline" href={PRIMARY_PHONE.telHref}>
+            <a className="text-de-accent-ink underline-offset-2 hover:underline" href={PRIMARY_PHONE.telHref}>
               {NAP.phone}
             </a>
             <br />
             Email:{" "}
-            <a className="text-de-magenta-ink underline-offset-2 hover:underline" href={`mailto:${NAP.email}`}>
+            <a className="text-de-accent-ink underline-offset-2 hover:underline" href={`mailto:${NAP.email}`}>
               {NAP.email}
             </a>
             <br />
             Web:{" "}
-            <a className="text-de-magenta-ink underline-offset-2 hover:underline" href="https://digeratiexperts.com">
+            <a className="text-de-accent-ink underline-offset-2 hover:underline" href="https://digeratiexperts.com">
               https://digeratiexperts.com
             </a>
           </address>
         </section>
 
-        <section className="mt-12 space-y-3">
-          <h2 className="text-2xl font-semibold">Linkable resources</h2>
+        <section className="space-y-3">
+          <h2 className="text-2xl font-semibold text-white">Linkable resources</h2>
           <ul className="list-disc space-y-2 pl-5 text-white/80">
             <li>
-              <Link href="/resources/case-studies" className="text-de-magenta-ink hover:underline">
+              <Link href="/resources/case-studies" className="text-de-accent-ink hover:underline">
                 Case studies
               </Link>
             </li>
             <li>
-              <Link href="/resources/blog" className="text-de-magenta-ink hover:underline">
+              <Link href="/resources/blog" className="text-de-accent-ink hover:underline">
                 Security & IT blog
               </Link>
             </li>
             <li>
-              <Link href="/trust/trust-center" className="text-de-magenta-ink hover:underline">
+              <Link href="/trust/trust-center" className="text-de-accent-ink hover:underline">
                 Trust center
               </Link>
             </li>
             <li>
-              <Link href="/book" className="text-de-magenta-ink hover:underline">
+              <Link href="/book" className="text-de-accent-ink hover:underline">
                 Free risk assessment
               </Link>
             </li>
           </ul>
         </section>
 
-        <section className="mt-12 space-y-3">
-          <h2 className="text-2xl font-semibold">Media contact</h2>
+        <section className="space-y-3">
+          <h2 className="text-2xl font-semibold text-white">Media contact</h2>
           <p className="text-white/75">
             Interview and citation requests:{" "}
-            <a className="text-de-magenta-ink hover:underline" href={`mailto:${NAP.email}?subject=Media%20inquiry`}>
+            <a className="text-de-accent-ink hover:underline" href={`mailto:${NAP.email}?subject=Media%20inquiry`}>
               {NAP.email}
             </a>{" "}
             · {NAP.phone}
           </p>
         </section>
-      </main>
-      <DigeratiEnhancedFooterSection />
-    </div>
+      </div>
+    </PageTemplate>
   );
 }

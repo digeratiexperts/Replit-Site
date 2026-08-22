@@ -1,90 +1,83 @@
-import { MegaMenu } from "@/components/MegaMenu";
-import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
+import { LegalDocumentLayout } from "@/components/LegalDocumentLayout";
 import { Database, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function DPA() {
   return (
-    <div className="min-h-screen bg-de-bg">
-      <MegaMenu />
-      
-      <section className="de-dark-well de-field-grain de-field-lit text-white de-nav-clear pb-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl">
-            <div className="flex items-center gap-3 mb-6">
-              <Database className="h-12 w-12 text-de-accent-ink" />
-              <h1 className="text-4xl md:text-5xl font-bold">Data Processing Agreement</h1>
-            </div>
-            <p className="text-xl text-gray-300">
-              Version 2025.1 | Effective January 1, 2025
-            </p>
-          </div>
-        </div>
-      </section>
+    <LegalDocumentLayout
+      title="Data Processing Agreement"
+      subtitle="Version 2025.1 | Effective January 1, 2025"
+      description="Digerati Experts Data Processing Agreement (DPA) covers how client data is processed and protected, including HIPAA BAA, GDPR, CCPA, and PCI DSS provisions."
+      canonical="/legal/dpa"
+      icon={<Database className="h-8 w-8" />}
+    >
+      <p className="mb-6 text-lg text-white/80">
+        Our Data Processing Agreement (DPA) governs how Digerati Experts processes and protects
+        client data, including provisions for GDPR compliance, HIPAA Business Associate requirements,
+        and other data protection regulations.
+      </p>
 
-      <section className="py-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-          <div className="prose prose-lg prose-invert max-w-none">
-            <p className="text-lg text-gray-300 mb-6">
-              Our Data Processing Agreement (DPA) governs how Digerati Experts processes and protects 
-              client data, including provisions for GDPR compliance, HIPAA Business Associate requirements, 
-              and other data protection regulations.
-            </p>
+      <div className="mb-8 rounded border border-de-hairline border-l-4 border-l-de-accent bg-de-raised p-6">
+        <h3 className="mb-3 text-xl font-semibold text-white">DPA Covers:</h3>
+        <ul className="list-disc space-y-2 pl-6 text-white/75">
+          <li>Scope and duration of data processing activities</li>
+          <li>Types of personal data processed</li>
+          <li>Security measures and technical safeguards</li>
+          <li>Data subject rights and procedures</li>
+          <li>Data breach notification requirements</li>
+          <li>Subprocessor agreements and approvals</li>
+          <li>Data transfer mechanisms and safeguards</li>
+          <li>Audit rights and compliance verification</li>
+          <li>Data retention and deletion procedures</li>
+        </ul>
+      </div>
 
-            <div className="border border-de-hairline border-l-4 border-l-de-accent bg-de-raised p-6 rounded mb-8">
-              <h3 className="text-xl font-semibold text-white mb-3">DPA Covers:</h3>
-              <ul className="list-disc pl-6 text-gray-300 space-y-2">
-                <li>Scope and duration of data processing activities</li>
-                <li>Types of personal data processed</li>
-                <li>Security measures and technical safeguards</li>
-                <li>Data subject rights and procedures</li>
-                <li>Data breach notification requirements</li>
-                <li>Subprocessor agreements and approvals</li>
-                <li>Data transfer mechanisms and safeguards</li>
-                <li>Audit rights and compliance verification</li>
-                <li>Data retention and deletion procedures</li>
-              </ul>
-            </div>
+      <div className="mb-8 rounded border border-de-hairline border-l-4 border-l-de-accent bg-de-raised p-6">
+        <h3 className="mb-3 text-xl font-semibold text-white">Compliance Frameworks:</h3>
+        <ul className="list-disc space-y-2 pl-6 text-white/75">
+          <li>
+            <strong className="text-white">HIPAA:</strong> Business Associate Agreement provisions for Protected Health Information
+          </li>
+          <li>
+            <strong className="text-white">GDPR:</strong> Standard Contractual Clauses for EU data transfers
+          </li>
+          <li>
+            <strong className="text-white">CCPA:</strong> Service provider obligations for California residents
+          </li>
+          <li>
+            <strong className="text-white">PCI DSS:</strong> Cardholder data processing requirements
+          </li>
+        </ul>
+      </div>
 
-            <div className="border border-de-hairline bg-de-raised border-l-4 border-l-de-accent p-6 rounded mb-8">
-              <h3 className="text-xl font-semibold text-white mb-3">Compliance Frameworks:</h3>
-              <ul className="list-disc pl-6 text-gray-300 space-y-2">
-                <li><strong className="text-white">HIPAA:</strong> Business Associate Agreement provisions for Protected Health Information</li>
-                <li><strong className="text-white">GDPR:</strong> Standard Contractual Clauses for EU data transfers</li>
-                <li><strong className="text-white">CCPA:</strong> Service provider obligations for California residents</li>
-                <li><strong className="text-white">PCI DSS:</strong> Cardholder data processing requirements</li>
-              </ul>
-            </div>
+      <h2 className="mb-4 mt-8 text-2xl font-bold text-white">Request Our DPA</h2>
+      <p className="mb-6 text-white/75">
+        To receive our Data Processing Agreement or discuss specific data protection requirements
+        for your organization, please contact our legal team.
+      </p>
 
-            <h2 className="text-2xl font-bold text-white mb-4 mt-8">Request Our DPA</h2>
-            <p className="text-gray-300 mb-6">
-              To receive our Data Processing Agreement or discuss specific data protection requirements 
-              for your organization, please contact our legal team.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 mt-8">
-              <Button 
-                className="bg-[#D3126A] text-white hover:bg-[#B80E5C]"
-                onClick={() => window.location.href = 'mailto:legal@digeratiexperts.com?subject=DPA Request'}
-                data-testid="button-request-dpa"
-              >
-                <Mail className="h-5 w-5 mr-2" />
-                Request DPA via Email
-              </Button>
-              <Button 
-                variant="outline"
-                className="border-white/20 text-white hover:bg-white/10"
-                onClick={() => window.location.href = PRIMARY_PHONE.telHref}
-              >
-                Call {PRIMARY_PHONE.display}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <DigeratiEnhancedFooterSection />
-    </div>
+      <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+        <Button
+          variant="brand"
+          onClick={() => {
+            window.location.href = "mailto:legal@digeratiexperts.com?subject=DPA Request";
+          }}
+          data-testid="button-request-dpa"
+        >
+          <Mail className="mr-2 h-5 w-5" />
+          Request DPA via Email
+        </Button>
+        <Button
+          variant="outline"
+          className="border-white/20 text-white hover:bg-white/10"
+          onClick={() => {
+            window.location.href = PRIMARY_PHONE.telHref;
+          }}
+        >
+          Call {PRIMARY_PHONE.display}
+        </Button>
+      </div>
+    </LegalDocumentLayout>
   );
 }

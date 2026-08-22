@@ -1,8 +1,8 @@
-import { Shield, CheckCircle2, FileCheck, Building2, Heart, CreditCard, Lock, Award, ArrowRight, Clock, Users, FileText, ClipboardCheck } from "lucide-react";
+import { Shield, CheckCircle2, FileCheck, Building2, Heart, CreditCard, Lock, Award, ArrowRight, Clock, Users, FileText } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { MegaMenu } from "@/components/MegaMenu";
-import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
+import { PageTemplate } from "@/components/PageTemplate";
+import { useSEO } from "@/hooks/useSEO";
 import { motion } from "framer-motion";
 import { CTA } from "@/lib/ctaCopy";
 
@@ -149,72 +149,33 @@ const teamCredentials = [
 ];
 
 export default function ComplianceCertifications() {
+  useSEO({
+    title: "Compliance Frameworks We Support",
+    description:
+      "HIPAA, CMMC, PCI DSS, SOC 2, and FTC Safeguards support from Digerati Experts. Framework names describe customer requirements — not Digerati certifications.",
+    canonical: "/about/compliance-certifications",
+  });
+
   return (
-    <div className="min-h-screen bg-slate-950">
-      <MegaMenu />
-
-        {/* Hero Section */}
-        <section className="relative de-nav-clear pb-20 overflow-hidden">
-          <div className="absolute inset-0 bg-de-raised" />
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-de-magenta/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-de-magenta/10 rounded-full blur-3xl" />
-          
-          <div className="relative container mx-auto px-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="max-w-4xl mx-auto text-center"
-              data-testid="section-hero-compliance"
-            >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-de-raised border border-de-hairline mb-6" data-testid="badge-compliance-header">
-                <ClipboardCheck className="w-4 h-4 text-de-magenta-ink" />
-                <span className="text-de-magenta-ink text-sm font-medium">Compliance & risk reporting</span>
-              </div>
-              
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6" data-testid="heading-compliance-hero">
-                Navigate Compliance with{" "}
-                <span className="text-de-magenta-ink">
-                  Confidence
-                </span>
-              </h1>
-              
-              <p className="text-xl text-white/70 mb-8 max-w-3xl mx-auto" data-testid="text-compliance-description">
-                From HIPAA to CMMC to PCI-DSS, we help Arizona businesses map controls, gather evidence,
-                and prepare for audits and cyber-insurance reviews. Framework names describe customer
-                requirements — Digerati is not SOC 2 Type II certified and does not certify your organization.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button
-                  asChild
-                  size="lg"
-                  variant="brand"
-                  className="px-8 font-semibold"
-                  data-testid="button-compliance-assessment"
-                >
-                  <a href="/book">
-                    {CTA.primary}
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </a>
-                </Button>
-                <Button
-                  asChild
-                  size="lg"
-                  variant="outline"
-                  className="border-de-hairline text-de-magenta-ink hover:bg-de-paper-raised hover:text-de-magenta-paper-ink"
-                  data-testid="button-download-guide"
-                >
-                  <Link href="/resources/security-checklist">
-                    Download Compliance Guide
-                  </Link>
-                </Button>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Why Compliance Matters */}
+    <PageTemplate
+      title="Navigate Compliance with Confidence"
+      subtitle="From HIPAA to CMMC to PCI-DSS, we help Arizona businesses map controls, gather evidence, and prepare for audits and cyber-insurance reviews. Framework names describe customer requirements — Digerati is not SOC 2 Type II certified and does not certify your organization."
+      breadcrumbs={[{ label: "About" }, { label: "Compliance" }]}
+      actions={
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Button asChild size="lg" variant="brand" className="h-12 px-8 font-semibold" data-testid="button-compliance-assessment">
+            <a href="/book">
+              {CTA.primary}
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </a>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="h-12 border-white/20 px-6 font-semibold text-white hover:bg-white/10" data-testid="button-download-guide">
+            <Link href="/resources/security-checklist">Download Compliance Guide</Link>
+          </Button>
+        </div>
+      }
+    >
+      <div className="space-y-16">
         <section className="py-16 border-t border-white/10" data-testid="section-why-compliance">
           <div className="container mx-auto px-6">
             <div className="grid md:grid-cols-4 gap-6">
@@ -230,7 +191,7 @@ export default function ComplianceCertifications() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
                   viewport={{ once: true }}
-                  className="p-6 rounded-xl bg-white/[0.02] border border-white/10 text-center"
+                  className="rounded-xl border border-de-hairline bg-de-raised p-6 text-center"
                   data-testid={`card-why-compliance-${item.id}`}
                 >
                   <div className="w-12 h-12 rounded-lg bg-de-raised flex items-center justify-center mx-auto mb-4">
@@ -265,7 +226,7 @@ export default function ComplianceCertifications() {
                   transition={{ delay: index * 0.1 }}
                   viewport={{ once: true }}
                   id={framework.id}
-                  className="rounded-2xl border border-white/10 overflow-hidden bg-white/[0.02]"
+                  className="overflow-hidden rounded-2xl border border-de-hairline bg-de-raised"
                   data-testid={`section-compliance-${framework.id}`}
                 >
                   {/* Header */}
@@ -324,7 +285,7 @@ export default function ComplianceCertifications() {
 
                   {/* Industries */}
                   <div className="px-6 pb-6">
-                    <div className="p-4 rounded-lg bg-white/[0.04] border border-white/[0.08]" data-testid={`list-industries-${framework.id}`}>
+                    <div className="rounded-lg border border-de-hairline bg-de-bg p-4" data-testid={`list-industries-${framework.id}`}>
                       <span className="text-white/50 text-xs uppercase tracking-wider">Industries We Serve:</span>
                       <div className="flex flex-wrap gap-2 mt-2">
                         {framework.industries.map((industry, i) => (
@@ -350,7 +311,7 @@ export default function ComplianceCertifications() {
             </div>
             <div className="flex flex-wrap justify-center gap-6" data-testid="list-certifications">
               {teamCredentials.map((cert, i) => (
-                <div key={i} className="flex items-center gap-3 px-6 py-3 rounded-xl bg-white/[0.04] border border-white/10" data-testid={`badge-certification-${i}`}>
+                <div key={i} className="flex items-center gap-3 rounded-xl border border-de-hairline bg-de-raised px-6 py-3" data-testid={`badge-certification-${i}`}>
                   <cert.icon className="h-5 w-5 text-de-accent-ink" aria-hidden="true" />
                   <span className="text-white/80 font-medium">{cert.name}</span>
                 </div>
@@ -359,47 +320,38 @@ export default function ComplianceCertifications() {
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="py-20 bg-de-raised">
-          <div className="container mx-auto px-6">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                Map your compliance gaps
-              </h2>
-              <p className="text-white/70 mb-8">
-                Start with a Cyber Risk Assessment to understand current posture, identify gaps,
-                and decide what to run with your current IT or with us.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button
-                  asChild
-                  size="lg"
-                  variant="brand"
-                  className="px-8 font-semibold"
-                  data-testid="button-schedule-assessment"
-                >
-                  <a href="/book">
-                    {CTA.primary}
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </a>
-                </Button>
-                <Button
-                  asChild
-                  size="lg"
-                  variant="outline"
-                  className="border-de-hairline text-de-magenta-ink hover:bg-de-paper-raised hover:text-de-magenta-paper-ink"
-                  data-testid="button-contact-us"
-                >
-                  <Link href="/#contact">
-                    Contact Us
-                  </Link>
-                </Button>
-              </div>
-            </div>
+        <section className="rounded-2xl border border-[#D3126A]/40 bg-[#D3126A] px-8 py-10 text-center md:px-12 md:py-12">
+          <h2 className="mb-6 text-3xl font-bold text-white md:text-4xl">
+            Map your compliance gaps
+          </h2>
+          <p className="mx-auto mb-8 max-w-2xl text-white/90">
+            Start with a Cyber Risk Assessment to understand current posture, identify gaps,
+            and decide what to run with your current IT or with us.
+          </p>
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
+            <Button
+              asChild
+              size="lg"
+              className="h-12 bg-white px-8 font-semibold text-[#D3126A] hover:bg-white/95"
+              data-testid="button-schedule-assessment"
+            >
+              <a href="/book">
+                {CTA.primary}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </a>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="h-12 border-white/70 bg-transparent px-8 font-semibold text-white hover:bg-white/10 hover:text-white"
+              data-testid="button-contact-us"
+            >
+              <Link href="/contact">Contact Us</Link>
+            </Button>
           </div>
         </section>
-
-      <DigeratiEnhancedFooterSection />
-    </div>
+      </div>
+    </PageTemplate>
   );
 }

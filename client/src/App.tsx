@@ -392,7 +392,7 @@ function Router() {
       {Object.entries(resourcePageData).map(([key, data]) => (
         <Route key={key} path={`/resources/${key}`} component={() => (
           <Suspense fallback={<PageLoadingSkeleton />}>
-            <GenericServicePage {...data} />
+            <GenericServicePage {...data} canonical={`/resources/${key}`} />
           </Suspense>
         )} />
       ))}
@@ -478,11 +478,14 @@ function Router() {
       {Object.entries(supportPageData).map(([key, data]) => (
         <Route key={key} path={`/support/${key}`} component={() => (
           <Suspense fallback={<PageLoadingSkeleton />}>
-            <GenericServicePage {...data} />
+            <GenericServicePage {...data} canonical={`/support/${key}`} />
           </Suspense>
         )} />
       ))}
       
+      <Route path="/privacy">{() => <Redirect to="/legal/privacy-policy" />}</Route>
+      <Route path="/terms">{() => <Redirect to="/legal/terms-of-use" />}</Route>
+
       {/* Legal Pages */}
       <Route path="/legal/privacy-policy" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>

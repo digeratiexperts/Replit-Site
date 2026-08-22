@@ -1,47 +1,24 @@
-import { MegaMenu } from "@/components/MegaMenu";
-import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
+import { LegalDocumentLayout } from "@/components/LegalDocumentLayout";
 import { FileText, Shield, AlertTriangle, Scale, Clock, DollarSign } from "lucide-react";
-import { useSEO } from "@/hooks/useSEO";
 import { PRIMARY_PHONE } from "@/data/companyContact";
 
 export default function TermsOfUse() {
   const lastUpdated = "November 6, 2025";
 
-  useSEO({
-    title: 'Terms of Service',
-    description: 'Digerati Experts terms of service. Read the terms and conditions governing use of our managed security and IT services.',
-    canonical: '/terms',
-  });
-
   return (
-    <div className="min-h-screen bg-de-bg">
-      <MegaMenu />
-      
-      {/* Hero Section */}
-      <section className="de-dark-well de-field-grain de-field-lit text-white de-nav-clear pb-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl">
-            <div className="flex items-center gap-3 mb-6">
-              <FileText className="h-12 w-12 text-de-accent-ink" />
-              <h1 className="text-4xl md:text-5xl font-bold">Terms of Service</h1>
-            </div>
-            <p className="text-xl text-gray-300">
-              Last Updated: {lastUpdated}
-            </p>
-            <p className="mt-4 text-lg text-gray-300">
-              Please read these Terms of Service carefully before using Digerati Experts' managed security 
-              and IT services. These terms govern your use of our services and establish the framework for 
+    <LegalDocumentLayout
+      title="Terms of Service"
+      subtitle={`Last Updated: ${lastUpdated}`}
+      description="Digerati Experts terms of service governing use of managed security and IT services."
+      canonical="/legal/terms-of-use"
+      icon={<FileText className="h-8 w-8" />}
+    >
+            <p className="mb-8 text-lg leading-relaxed text-white/80">
+              Please read these Terms of Service carefully before using Digerati Experts' managed security
+              and IT services. These terms govern your use of our services and establish the framework for
               our partnership in protecting your business.
             </p>
-          </div>
-        </div>
-      </section>
 
-      {/* Main Content */}
-      <section className="py-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-          <div className="prose prose-lg prose-invert max-w-none">
-            
             {/* Acceptance */}
             <div className="mb-12">
               <h2 className="text-3xl font-bold text-white mb-4">1. Acceptance of Terms</h2>
@@ -469,11 +446,6 @@ export default function TermsOfUse() {
                 © {new Date().getFullYear()} Digerati Experts. All rights reserved.
               </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <DigeratiEnhancedFooterSection />
-    </div>
+    </LegalDocumentLayout>
   );
 }

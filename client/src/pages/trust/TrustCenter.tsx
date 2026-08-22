@@ -1,17 +1,27 @@
 import { PageTemplate } from "@/components/PageTemplate";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Lock, FileCheck, Award, Eye, Server, CheckCircle, Mail, Phone } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useSEO } from "@/hooks/useSEO";
+import { Button } from "@/components/ui/button";
 import { PRIMARY_PHONE } from "@/data/companyContact";
+
+const cardClass = "rounded-2xl border border-de-hairline bg-de-raised";
 
 export default function TrustCenter() {
   const prefersReducedMotion = useReducedMotion() ?? false;
+
+  useSEO({
+    title: "Trust Center",
+    description:
+      "Digerati Experts Trust Center: security practices, compliance support, and how to request questionnaires. Framework names describe customer requirements — not Digerati certifications.",
+    canonical: "/trust/trust-center",
+  });
   
   const complianceSupport = [
-    { icon: FileCheck, title: "HIPAA-aligned security and compliance support", desc: "Business Associate Agreements available for healthcare clients. Framework alignment — not a HIPAA certification.", gradient: " to-fuchsia-600" },
-    { icon: Award, title: "SOC 2 readiness and control alignment", desc: "Control mapping, evidence support, and readiness work for customer SOC 2 programs. Digerati is not SOC 2 Type II certified.", gradient: " " },
-    { icon: Lock, title: "Cyber insurance readiness", desc: "Controls and documentation insurers commonly request during underwriting and renewals.", gradient: "from-fuchsia-500 to-pink-600" },
-    { icon: Shield, title: "Security and compliance reporting", desc: "Questionnaires, control evidence, and reporting support for vendor reviews and audits.", gradient: " " },
+    { icon: FileCheck, title: "HIPAA-aligned security and compliance support", desc: "Business Associate Agreements available for healthcare clients. Framework alignment — not a HIPAA certification." },
+    { icon: Award, title: "SOC 2 readiness and control alignment", desc: "Control mapping, evidence support, and readiness work for customer SOC 2 programs. Digerati is not SOC 2 Type II certified." },
+    { icon: Lock, title: "Cyber insurance readiness", desc: "Controls and documentation insurers commonly request during underwriting and renewals." },
+    { icon: Shield, title: "Security and compliance reporting", desc: "Questionnaires, control evidence, and reporting support for vendor reviews and audits." },
   ];
 
   const technicalControls = [
@@ -36,9 +46,8 @@ export default function TrustCenter() {
     <PageTemplate
       title="Trust Center"
       subtitle="Security, Compliance, and Privacy Information"
-      icon={<Shield className="w-10 h-10 text-white" />}
-      gradientColors="from-slate-700 via-slate-800 to-slate-900"
-      breadcrumbs={[{ label: "Trust", href: "/" }, { label: "Trust Center" }]}
+      icon={<Shield className="w-10 h-10" />}
+      breadcrumbs={[{ label: "Trust", href: "/trust/trust-center" }, { label: "Trust Center" }]}
     >
       <div className="space-y-16">
         {/* Intro */}
@@ -70,18 +79,13 @@ export default function TrustCenter() {
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.1, duration: 0.5 }}
                 >
-                  <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-hairline hover:shadow-xl transition-all duration-300 overflow-hidden">
-                    <div className={`absolute top-0 right-0 w-24 h-24 bg-de-magenta opacity-[0.06] rounded-bl-full`} />
-                    <CardHeader>
-                      <div className={`w-14 h-14 rounded-xl border border-de-hairline bg-de-bg flex items-center justify-center mb-4`}>
-                        <Icon className="h-7 w-7 text-de-magenta" />
-                      </div>
-                      <CardTitle className="text-xl text-white">{item.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-400 leading-relaxed">{item.desc}</p>
-                    </CardContent>
-                  </Card>
+                  <div className={`de-interactive-card relative h-full overflow-hidden p-6 ${cardClass}`}>
+                    <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl border border-de-hairline bg-de-bg">
+                      <Icon className="h-7 w-7 text-de-accent-ink" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-white">{item.title}</h3>
+                    <p className="mt-3 leading-relaxed text-white/65">{item.desc}</p>
+                  </div>
                 </motion.div>
               );
             })}
@@ -89,7 +93,7 @@ export default function TrustCenter() {
         </div>
 
         {/* Honest empty hook — only populate when a current report/attestation exists */}
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8 md:p-10">
+        <div className={`p-8 md:p-10 ${cardClass}`}>
           <h2 className="text-2xl font-bold text-white mb-3">Verified Certifications & Attestations</h2>
           <p className="text-gray-400 leading-relaxed max-w-3xl">
             No independent SOC 2 Type II report or HIPAA certification is published here. When a current, documented attestation is available, it will be listed in this section.
@@ -98,14 +102,12 @@ export default function TrustCenter() {
 
         {/* Security Practices */}
         <motion.div 
-          className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 md:p-12 overflow-hidden"
+          className={`relative overflow-hidden p-8 md:p-12 ${cardClass}`}
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-de-raised to-transparent rounded-full blur-3xl" />
-          
           <div className="relative">
             <div className="flex items-center gap-3 mb-8">
               <div className="w-12 h-12 rounded-lg bg-de-raised border border-de-hairline flex items-center justify-center">
@@ -124,7 +126,7 @@ export default function TrustCenter() {
                   {technicalControls.map((control, idx) => (
                     <motion.div 
                       key={idx}
-                      className="flex items-center gap-3 p-3 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10"
+                      className="flex items-center gap-3 rounded-lg border border-de-hairline bg-de-bg p-3"
                       initial={prefersReducedMotion ? {} : { opacity: 0, x: -10 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
@@ -145,7 +147,7 @@ export default function TrustCenter() {
                   {adminControls.map((control, idx) => (
                     <motion.div 
                       key={idx}
-                      className="flex items-center gap-3 p-3 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10"
+                      className="flex items-center gap-3 rounded-lg border border-de-hairline bg-de-bg p-3"
                       initial={prefersReducedMotion ? {} : { opacity: 0, x: -10 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
@@ -163,7 +165,7 @@ export default function TrustCenter() {
 
         {/* Infrastructure Security */}
         <motion.div 
-          className="bg-white/5 backdrop-blur-sm border-l-4 border-de-hairline border border-white/10 rounded-xl p-8"
+          className="rounded-xl border border-de-hairline border-l-4 border-l-[#D3126A] bg-de-raised p-8"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -183,7 +185,7 @@ export default function TrustCenter() {
               { label: "Monitoring", value: "Real-time security information and event management (SIEM)" },
               { label: "Backups", value: "Encrypted, geographically distributed, tested regularly" }
             ].map((item, idx) => (
-              <div key={idx} className="p-4 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
+              <div key={idx} className="rounded-lg border border-de-hairline bg-de-bg p-4">
                 <span className="font-semibold text-white">{item.label}:</span>{" "}
                 <span className="text-gray-300">{item.value}</span>
               </div>
@@ -193,7 +195,7 @@ export default function TrustCenter() {
 
         {/* Privacy & Data Protection */}
         <motion.div 
-          className="bg-white/5 backdrop-blur-sm border-l-4 border-de-hairline border border-white/10 rounded-xl p-8"
+          className="rounded-xl border border-de-hairline border-l-4 border-l-[#D3126A] bg-de-raised p-8"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -213,7 +215,7 @@ export default function TrustCenter() {
               { label: "Client Rights", value: "Access, correction, deletion, and portability rights" },
               { label: "No Data Selling", value: "We never sell client data to third parties" }
             ].map((item, idx) => (
-              <div key={idx} className="p-4 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
+              <div key={idx} className="rounded-lg border border-de-hairline bg-de-bg p-4">
                 <span className="font-semibold text-white">{item.label}:</span>{" "}
                 <span className="text-gray-300">{item.value}</span>
               </div>
@@ -221,49 +223,35 @@ export default function TrustCenter() {
           </div>
         </motion.div>
 
-        {/* CTA */}
-        <motion.div 
-          className="relative rounded-2xl overflow-hidden"
+        <motion.div
+          className="rounded-2xl border border-[#D3126A]/40 bg-[#D3126A] px-8 py-10 text-center md:px-12 md:py-12"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute inset-0 bg-de-surface" />
-          <div className="absolute inset-0 opacity-20">
-            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="trust-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#trust-grid)" />
-            </svg>
-          </div>
-          
-          <div className="relative p-8 md:p-12 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Need Security Documentation?</h2>
-            <p className="text-lg md:text-xl mb-8 text-white/90 max-w-2xl mx-auto">
-              Request security questionnaires or framework-alignment documentation for vendor onboarding.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a 
-                href="mailto:security@digeratiexperts.com?subject=Security Documentation Request"
-                className="group inline-flex items-center justify-center bg-white text-de-magenta hover:bg-de-paper-raised px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
-                data-testid="button-request-docs"
-              >
+          <h2 className="mb-4 text-3xl font-bold text-white md:text-4xl">Need Security Documentation?</h2>
+          <p className="mx-auto mb-8 max-w-2xl text-lg text-white/90 md:text-xl">
+            Request security questionnaires or framework-alignment documentation for vendor onboarding.
+          </p>
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
+            <Button asChild size="lg" className="h-12 bg-white px-8 font-semibold text-[#D3126A] hover:bg-white/95">
+              <a href="mailto:security@digeratiexperts.com?subject=Security Documentation Request" data-testid="button-request-docs">
                 <Mail className="mr-2 h-5 w-5" />
                 Request Documentation
               </a>
-              <a 
-                href={PRIMARY_PHONE.telHref}
-                className="inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-de-magenta px-8 py-4 rounded-xl font-semibold transition-all"
-                data-testid="button-call-trust"
-              >
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="h-12 border-white/70 bg-transparent px-8 font-semibold text-white hover:bg-white/10 hover:text-white"
+            >
+              <a href={PRIMARY_PHONE.telHref} data-testid="button-call-trust">
                 <Phone className="mr-2 h-5 w-5" />
                 Call {PRIMARY_PHONE.display}
               </a>
-            </div>
+            </Button>
           </div>
         </motion.div>
       </div>
