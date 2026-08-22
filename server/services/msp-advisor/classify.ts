@@ -22,7 +22,7 @@ const CYBER =
   /\b(phish|phishing|malware|edr|mdr|firewall|vpn|zero\s*trust|mfa|2fa|endpoint|siem|soc|threat|vulnerability|pen\s*test|email\s*security|awareness)\b/i;
 
 const IT_SUPPORT =
-  /\b(reset\s+(windows|password|pc)|printer|wifi|wi-fi|slow\s+computer|blue\s+screen|bsod|outlook\s+not|can'?t\s+login|vpn\s+won'?t|install\s+software|help\s+desk|troubleshoot)\b/i;
+  /\b(it help|need (some )?it\b|need help with (my |our )?(it|computer|laptop|pc|printer|email|network|wifi|wi-fi|vpn|outlook)|something('s| is)? (broken|down|not working)|reset\s+(windows|password|pc)|printer|wifi|wi-fi|slow\s+computer|blue\s+screen|bsod|outlook\s+not|can'?t\s+login|vpn\s+won'?t|install\s+software|help\s+desk|troubleshoot)\b/i;
 
 const ASSESSMENT =
   /\b(assessment|cyber\s*risk|security\s*review|gap\s*analysis|readiness|evaluate\s+(our|my)\s+(security|it))\b/i;
@@ -62,6 +62,32 @@ export function classifyMode(message: string, page?: PageContext): AdvisorMode {
   if (page?.pageType === "support") return "existing_client";
 
   return "msp_discovery";
+}
+
+/** Visitor is reacting to the bot, not starting a new topic. */
+export function isMetaDialogue(message: string): boolean {
+  return /\b(what do you mean|that'?s weird|that is weird|canned|scripted|robot|keep saying|you keep|why do you|stop repeating|said that already|you already said|copy[- ]paste)\b/i.test(
+    message,
+  );
+}
+
+export function isCannedLanguageComplaint(message: string): boolean {
+  return /\b(canned|scripted|robot|repeat|keep saying|copy[- ]paste|generic)\b/i.test(message);
+}
+
+export function askedForHuman(message: string): boolean {
+  return /\b(call|phone|book|schedule|talk to (a )?(human|person|someone)|speak (to|with)|real person)\b/i.test(
+    message,
+  );
+}
+
+export function isThinFollowUp(message: string): boolean {
+  const text = message.trim();
+  if (isMetaDialogue(text) || isCannedLanguageComplaint(text)) return true;
+  if (text.length > 0 && text.length < 28 && !/[?]/.test(text) && !IT_SUPPORT.test(text) && !CYBER.test(text) && !MSP.test(text) && !COMPLIANCE.test(text) && !PRICING.test(text)) {
+    return true;
+  }
+  return false;
 }
 
 export function isPromptInjectionAttempt(message: string): boolean {

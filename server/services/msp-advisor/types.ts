@@ -61,6 +61,8 @@ export interface ConversationProfile {
   qualificationConfidence: number;
   decisionRole?: string;
   desiredOutcome?: string;
+  /** Joke / declined company — treat as walk-in, do not collapse the thread. */
+  companyInformal?: boolean;
 }
 
 export interface AdvisorAction {
@@ -88,6 +90,10 @@ export interface AdvisorSession {
   pageContext?: PageContext;
   /** Substantive first question held until name + company are collected. */
   heldUserMessage?: string;
+  /** First real ask — kept after identity so later turns do not forget it. */
+  originalIntent?: string;
+  lastAssistantReply?: string;
+  fallbackVariant?: number;
 }
 
 export interface AdvisorChatRequest {
@@ -110,6 +116,8 @@ export interface AdvisorChatResponse {
   /** Server-persisted assistant/ack message — widget uses these to avoid poll duplicates. */
   messageId?: string;
   messageCreatedAt?: string;
+  /** Ask DE should offer Get Support chips under this reply. */
+  suggestSupportChips?: boolean;
 }
 
 export interface AdvisorActionRequest {

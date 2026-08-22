@@ -152,6 +152,20 @@ export function extractContactNameFromText(message: string): string | undefined 
   return cleanPersonName(text);
 }
 
+const INFORMAL_COMPANY =
+  /^(your\s+(mom|mama|mother)|yo\s+mama|none|n\/a|n\.a\.|na|idk|skip|pass|nope|no|private|asdf+|test(ing)?|foo|bar|baz|-|\.|walk-?in|personal|myself|me|n\/a)$/i;
+
+/** Joke, declined, or nonsense company — accept as a walk-in, do not stall. */
+export function isInformalCompanyName(name: string | undefined | null): boolean {
+  if (!name) return false;
+  const text = name.replace(/\s+/g, " ").trim();
+  if (!text) return false;
+  if (INFORMAL_COMPANY.test(text)) return true;
+  if (/\byour\s+(mom|mama|mother)\b/i.test(text)) return true;
+  if (/\b(rather not|prefer not|none of your|mind your own)\b/i.test(text)) return true;
+  return false;
+}
+
 export function extractCompanyNameFromText(message: string, opts?: { allowBare?: boolean }): string | undefined {
   const text = message.trim();
   if (!text) return undefined;
@@ -255,6 +269,7 @@ export function scoreQualification(profile: ConversationProfile): number {
 export function knownFactsList(profile: ConversationProfile): string[] {
   const facts: string[] = [];
   if (profile.companyName) facts.push(`companyName=${profile.companyName}`);
+  if (profile.companyInformal) facts.push("companyInformal=true (walk-in — do not moralize or dump a sales pitch)");
   if (profile.contactName) facts.push(`contactName=${profile.contactName}`);
   if (profile.email) facts.push(`email=${profile.email}`);
   if (profile.phone) facts.push(`phone=${profile.phone}`);

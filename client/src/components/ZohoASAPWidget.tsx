@@ -66,6 +66,7 @@ type ChatMessage = {
   content: string;
   senderName?: string | null;
   createdAt?: string;
+  supportChips?: DeskTicketChipId[];
 };
 
 type TicketResult = {
@@ -102,6 +103,14 @@ const QUICK_CHAT_PROMPTS: Array<{
   { label: "I need help with compliance" },
   { label: "I'm evaluating managed IT" },
   { label: "Possible security incident", ticketChip: "security-incident" },
+];
+
+const ASK_IT_HELP_CHIPS: DeskTicketChipId[] = [
+  "something-not-working",
+  "sign-in",
+  "email",
+  "device",
+  "network",
 ];
 
 type DeskPortalSession = {
@@ -529,6 +538,9 @@ export const ZohoASAPWidget = ({
       knownMsgIdsRef.current.add(assistantId);
       pollSinceRef.current = createdAt;
 
+      const supportChips =
+        data.suggestSupportChips && data.mode === "it_support" ? ASK_IT_HELP_CHIPS : undefined;
+
       setChatMessages((current) => [
         ...current,
         {
@@ -537,6 +549,7 @@ export const ZohoASAPWidget = ({
           content: replyContent,
           createdAt,
           senderName: data.agentLive ? data.agentName || "DE Desk" : null,
+          supportChips,
         },
       ]);
       if (activeTabRef.current !== "chat") {
@@ -1027,6 +1040,25 @@ export const ZohoASAPWidget = ({
                                     {label}
                                   </button>
                                 ))}
+                              </div>
+                            ) : null}
+                            {chatMessage.supportChips?.length ? (
+                              <div className="de-desk-chips" role="group" aria-label="Open a support ticket">
+                                {chatMessage.supportChips.map((chipId) => {
+                                  const chip = DESK_TICKET_CHIPS.find((item) => item.id === chipId);
+                                  if (!chip) return null;
+                                  return (
+                                    <button
+                                      key={chip.id}
+                                      type="button"
+                                      data-testid={`ask-support-chip-${chip.id}`}
+                                      onClick={() => openSupportWithChip(chip.id)}
+                                      className="de-desk-chip"
+                                    >
+                                      {chip.label}
+                                    </button>
+                                  );
+                                })}
                               </div>
                             ) : null}
                           </div>

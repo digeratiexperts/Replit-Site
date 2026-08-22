@@ -150,9 +150,12 @@ export function defaultActionsForMode(mode?: string): AdvisorAction[] {
       materializeAction("schedule_consultation")!,
     ];
   }
+  if (mode === "it_support" || mode === "cloud_m365") {
+    return [materializeAction("leave_message", "Open a support request")!];
+  }
   return [
+    materializeAction("leave_message", "Open a support request")!,
     materializeAction("request_assessment")!,
-    materializeAction("schedule_consultation")!,
   ];
 }
 

@@ -1,7 +1,14 @@
 import { getOpenAI } from "../../openaiService";
 import { withOpenAIGuard } from "../openai-config";
-import { classifyMode, isPromptInjectionAttempt } from "./classify";
-import { selectKnowledgeSlice, DE_COMPANY } from "./knowledge";
+import {
+  classifyMode,
+  isPromptInjectionAttempt,
+  isMetaDialogue,
+  isCannedLanguageComplaint,
+  askedForHuman,
+  isThinFollowUp,
+} from "./classify";
+import { selectKnowledgeSlice } from "./knowledge";
 import {
   extractProfileFromText,
   mergeProfile,
@@ -9,9 +16,11 @@ import {
   extractContactNameFromText,
   extractCompanyNameFromText,
   isSubstantiveAdvisorQuestion,
+  isInformalCompanyName,
 } from "./profile";
-import { buildSystemPrompt, OFF_TOPIC_FALLBACK, INCIDENT_FALLBACK, AI_UNAVAILABLE_FALLBACK } from "./prompt";
+import { buildSystemPrompt, INTERNAL_REFUSAL, BANNED_CANNED_OPENER } from "./prompt";
 import { sanitizeActions, assertNoInternalLeak, defaultActionsForMode } from "./actions";
+import { buildHeuristicReply, ensureFreshReply, isNearDuplicate } from "./fallback";
 import {
   appendMessage,
   getOrCreateSession,
@@ -21,7 +30,7 @@ import { appendDeskMessage, isDeskAgentLive } from "./persist";
 import type {
   AdvisorChatRequest,
   AdvisorChatResponse,
-  AdvisorMode,
+  ConversationProfile,
   ModelAdvisorOutput,
 } from "./types";
 
@@ -65,47 +74,11 @@ function parseModelJson(raw: string): ModelAdvisorOutput | null {
   }
 }
 
-function heuristicReply(mode: AdvisorMode, message: string): ModelAdvisorOutput {
-  if (mode === "off_topic") {
-    return {
-      reply: OFF_TOPIC_FALLBACK,
-      mode,
-      proposedActions: [{ type: "request_assessment" }],
-      analyticsEvents: ["off_topic_redirected"],
-    };
+function applyCompanyGuess(profile: ConversationProfile, raw: string): ConversationProfile {
+  if (isInformalCompanyName(raw)) {
+    return mergeProfile(profile, { companyName: "Walk-in", companyInformal: true });
   }
-  if (mode === "security_incident") {
-    return {
-      reply: INCIDENT_FALLBACK,
-      mode,
-      proposedActions: [{ type: "request_callback" }, { type: "contact_sales" }],
-      analyticsEvents: ["qualified_question"],
-    };
-  }
-  if (mode === "existing_client") {
-    return {
-      reply: `If you're an existing Digerati Experts client, the fastest path is the Client Portal for tickets and account tools: ${DE_COMPANY.portalLogin}. You can also leave a message here or call ${DE_COMPANY.phoneDisplay}. What do you need help with today?`,
-      mode,
-      proposedActions: [{ type: "open_portal" }, { type: "leave_message" }],
-      analyticsEvents: ["support_routed"],
-    };
-  }
-  if (mode === "pricing") {
-    return {
-      reply: `Our ProActive packages are sized by users and outcomes — IT from $125/user/mo ($1,600/mo minimum), Office $165/user/mo ($2,400/mo minimum), Business $245/user/mo ($5,400/mo minimum), and Enterprise $345/user/mo ($9,000/mo minimum). The right fit depends on your team size, security needs, and compliance requirements. About how many users do you support?`,
-      mode,
-      proposedActions: [{ type: "request_assessment" }, { type: "schedule_consultation" }],
-      analyticsEvents: ["qualified_question", "service_recommended"],
-      profilePatch: { recommendedServices: ["ProActive"] },
-    };
-  }
-
-  return {
-    reply: `${AI_UNAVAILABLE_FALLBACK}\n\nYou asked: “${message.slice(0, 180)}”. Tell me your approximate user count and main IT or security concern and I’ll recommend a DE path.`,
-    mode,
-    proposedActions: [{ type: "request_assessment" }, { type: "schedule_consultation" }],
-    analyticsEvents: ["qualified_question"],
-  };
+  return mergeProfile(profile, { companyName: raw, companyInformal: false });
 }
 
 async function callModel(system: string, history: Array<{ role: "user" | "assistant"; content: string }>, userMessage: string): Promise<string | null> {
@@ -235,14 +208,16 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
     };
   }
 
-  const skipIdentity = mode === "security_incident";
+  const skipIdentity = mode === "security_incident" || mode === "existing_client";
   if (!skipIdentity && !profile.contactName) {
     if (isSubstantiveAdvisorQuestion(message) && !session.heldUserMessage) {
       session.heldUserMessage = message;
+      session.originalIntent = session.originalIntent || message;
     }
     const reply = identityNamePrompt();
     appendMessage(session, "user", message);
     appendMessage(session, "assistant", reply);
+    session.lastAssistantReply = reply;
     session.lastMode = mode === "off_topic" ? "msp_discovery" : mode;
     const persisted = await persistTurn(session.id, message, reply, profile, page?.pathname);
     return {
@@ -257,11 +232,13 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
     };
   }
 
+  let justCollectedInformalCompany = false;
   if (!skipIdentity && !profile.companyName) {
     const collectedNameThisTurn = Boolean(!priorName && profile.contactName);
     const companyGuess = extractCompanyNameFromText(message, { allowBare: !collectedNameThisTurn });
     if (companyGuess && companyGuess.toLowerCase() !== (profile.contactName || "").toLowerCase()) {
-      profile = mergeProfile(profile, { companyName: companyGuess });
+      justCollectedInformalCompany = isInformalCompanyName(companyGuess);
+      profile = applyCompanyGuess(profile, companyGuess);
       updateProfile(session, profile);
     }
   }
@@ -270,6 +247,7 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
     const reply = identityCompanyPrompt(profile.contactName);
     appendMessage(session, "user", message);
     appendMessage(session, "assistant", reply);
+    session.lastAssistantReply = reply;
     session.lastMode = mode === "off_topic" ? "msp_discovery" : mode;
     const persisted = await persistTurn(session.id, message, reply, profile, page?.pathname);
     return {
@@ -284,16 +262,35 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
     };
   }
 
-  if (session.heldUserMessage && session.heldUserMessage !== message) {
-    message = session.heldUserMessage;
-    session.heldUserMessage = undefined;
-    mode = classifyMode(message, page);
+  const held = session.heldUserMessage;
+  if (held && !session.originalIntent) {
+    session.originalIntent = held;
+  } else if (!session.originalIntent && isSubstantiveAdvisorQuestion(userTurn)) {
+    session.originalIntent = userTurn;
+  }
+  session.heldUserMessage = undefined;
+
+  const cannedComplaint = isCannedLanguageComplaint(userTurn);
+  const metaTurn = isMetaDialogue(userTurn) || cannedComplaint;
+  if (metaTurn && session.lastMode && session.lastMode !== "off_topic") {
+    mode = session.lastMode;
+  } else if (held && held !== userTurn) {
+    mode = classifyMode(held, page);
+  } else if (isThinFollowUp(userTurn) && session.lastMode && session.lastMode !== "off_topic") {
+    mode = session.lastMode;
   } else {
-    session.heldUserMessage = undefined;
+    mode = classifyMode(userTurn, page);
   }
 
   const knowledge = selectKnowledgeSlice(mode, page);
-  const system = buildSystemPrompt({ mode, knowledge, profile, page });
+  const system = buildSystemPrompt({
+    mode,
+    knowledge,
+    profile,
+    page,
+    originalIntent: session.originalIntent,
+    lastUserMessage: userTurn,
+  });
 
   const history = session.messages.map((m) => ({
     role: m.role,
@@ -302,16 +299,41 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
 
   appendMessage(session, "user", userTurn);
 
+  const modelUserTurn = [
+    session.originalIntent && session.originalIntent !== userTurn
+      ? `Original request (still open): ${session.originalIntent}`
+      : "",
+    profile.companyInformal
+      ? "Company was given informally — treat as a walk-in. Do not moralize or dump a sales pitch."
+      : "",
+    `Latest message: ${userTurn}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const heuristicInput = {
+    mode,
+    userMessage: userTurn,
+    originalIntent: session.originalIntent,
+    profile,
+    lastAssistantReply: session.lastAssistantReply,
+    fallbackVariant: session.fallbackVariant || 0,
+    justCollectedInformalCompany,
+    cannedComplaint,
+    askedForHuman: askedForHuman(userTurn),
+  };
+
   let modelOut: ModelAdvisorOutput | null = null;
   try {
-    const raw = await callModel(system, history, message);
+    const raw = await callModel(system, history, modelUserTurn);
     if (raw) modelOut = parseModelJson(raw);
   } catch (err) {
     console.error("[msp-advisor] model call failed:", err);
   }
 
   if (!modelOut?.reply) {
-    modelOut = heuristicReply(mode, message);
+    modelOut = buildHeuristicReply(heuristicInput);
+    session.fallbackVariant = (session.fallbackVariant || 0) + 1;
   }
 
   // Prefer heuristic mode for safety-critical modes
@@ -321,17 +343,38 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
     mode = modelOut.mode;
   }
 
-  if (mode === "off_topic" && !modelOut.reply.includes("focused on business IT")) {
-    modelOut.reply = OFF_TOPIC_FALLBACK;
-    modelOut.analyticsEvents = [...(modelOut.analyticsEvents || []), "off_topic_redirected"];
+  if (!assertNoInternalLeak(modelOut.reply)) {
+    modelOut.reply = INTERNAL_REFUSAL;
   }
 
-  if (!assertNoInternalLeak(modelOut.reply)) {
-    modelOut.reply = AI_UNAVAILABLE_FALLBACK;
+  if (new RegExp(BANNED_CANNED_OPENER, "i").test(modelOut.reply)) {
+    modelOut = buildHeuristicReply(heuristicInput);
+    session.fallbackVariant = (session.fallbackVariant || 0) + 1;
+  }
+
+  if (justCollectedInformalCompany && !/walk-in/i.test(modelOut.reply)) {
+    modelOut.reply = `I'll put you down as a walk-in for now. ${modelOut.reply}`;
+  }
+  if (cannedComplaint && !/\b(right|sorry|fair|canned)\b/i.test(modelOut.reply)) {
+    modelOut.reply = `You're right — I'll drop the script. ${modelOut.reply}`;
+  }
+
+  modelOut.reply = ensureFreshReply(modelOut.reply, {
+    ...heuristicInput,
+    mode,
+    fallbackVariant: session.fallbackVariant || 0,
+  });
+  if (isNearDuplicate(modelOut.reply, session.lastAssistantReply)) {
+    session.fallbackVariant = (session.fallbackVariant || 0) + 1;
+    modelOut.reply = buildHeuristicReply({
+      ...heuristicInput,
+      mode,
+      fallbackVariant: session.fallbackVariant,
+    }).reply;
   }
 
   profile = mergeProfile(profile, modelOut.profilePatch);
-  profile = mergeProfile(profile, extractProfileFromText(message));
+  profile = mergeProfile(profile, extractProfileFromText(userTurn));
   updateProfile(session, profile);
 
   const actions = sanitizeActions(modelOut.proposedActions, { mode });
@@ -357,9 +400,11 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
   }
 
   appendMessage(session, "assistant", modelOut.reply);
+  session.lastAssistantReply = modelOut.reply;
   session.lastMode = mode;
 
   const persisted = await persistTurn(session.id, userTurn, modelOut.reply, profile, page?.pathname);
+  const suggestSupportChips = mode === "it_support" || mode === "security_incident";
 
   return {
     sessionId: session.id,
@@ -369,6 +414,7 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
     actions,
     analyticsEvents,
     knownFacts: knownFactsList(profile),
+    suggestSupportChips,
     ...persisted,
   };
 }

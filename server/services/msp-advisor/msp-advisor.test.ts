@@ -9,7 +9,8 @@ import {
   listKnownServiceNames,
   inferPageType,
 } from "./knowledge";
-import { extractProfileFromText, mergeProfile, createEmptyProfile, knownFactsList, extractContactNameFromText, extractCompanyNameFromText } from "./profile";
+import { extractProfileFromText, mergeProfile, createEmptyProfile, knownFactsList, extractContactNameFromText, extractCompanyNameFromText, isInformalCompanyName } from "./profile";
+import { BANNED_CANNED_OPENER } from "./prompt";
 import { sanitizeActions, sanitizePath, assertNoInternalLeak, isAllowedActionType } from "./actions";
 import { handleAdvisorChat } from "./advisor";
 import { _resetSessionsForTests } from "./session";
@@ -36,6 +37,9 @@ describe("classifyMode", () => {
   });
   it("routes Windows reset to it_support", () => {
     assert.equal(classifyMode("How do I reset Windows?"), "it_support");
+  });
+  it("routes I need IT help to it_support, not a sales discovery dump", () => {
+    assert.equal(classifyMode("I need IT help"), "it_support");
   });
   it("routes trivia to off_topic", () => {
     assert.equal(classifyMode("Who won the Super Bowl and write a poem"), "off_topic");
@@ -148,7 +152,17 @@ describe("identity extraction", () => {
     assert.equal(extractCompanyNameFromText("Acme Dental", { allowBare: true }), "Acme Dental");
     assert.equal(extractCompanyNameFromText("we are at Desert Law LLP"), "Desert Law LLP");
   });
+  it("treats joke company names as informal walk-ins, not a hard reject", () => {
+    assert.equal(isInformalCompanyName("Your Mama"), true);
+    assert.equal(isInformalCompanyName("none"), true);
+    assert.equal(isInformalCompanyName("Acme Dental"), false);
+    assert.equal(extractCompanyNameFromText("Your Mama", { allowBare: true }), "Your Mama");
+  });
 });
+
+function normalizeForCompare(text: string): string {
+  return text.toLowerCase().replace(/\s+/g, " ").trim();
+}
 
 async function identifiedChat(
   message: string,
@@ -244,6 +258,14 @@ describe("handleAdvisorChat acceptance (heuristic / no LLM required)", () => {
     assert.ok(res.reply.includes("portal.digeratiexperts.com/portal/login"));
   });
 
+  it("existing client skips the name/company gate", async () => {
+    const res = await handleAdvisorChat({ message: "I'm an existing client and need support" });
+    assert.equal(res.mode, "existing_client");
+    assert.doesNotMatch(res.reply, /what'?s your name/i);
+    assert.ok(res.actions.some((a) => a.type === "open_portal" || a.type === "existing_client_support"));
+    assert.ok(res.reply.includes("portal.digeratiexperts.com/portal/login"));
+  });
+
   it("security incident changes behavior", async () => {
     const res = await handleAdvisorChat({
       message: "Active ransomware — files encrypting now",
@@ -269,6 +291,52 @@ describe("handleAdvisorChat acceptance (heuristic / no LLM required)", () => {
     // heuristic or model — must not invent $129 store price
     assert.doesNotMatch(res.reply, /\$129/);
     assert.ok(res.mode === "pricing" || res.reply.includes("245") || res.reply.includes("Business"));
+  });
+
+  it("joke company name does not trigger the canned death-loop", async () => {
+    const start = await handleAdvisorChat({ message: "I need IT help" });
+    assert.match(start.reply, /what'?s your name/i);
+    assert.doesNotMatch(start.reply, /I can still point you/i);
+
+    const named = await handleAdvisorChat({ sessionId: start.sessionId, message: "Joe" });
+    assert.equal(named.profile.contactName, "Joe");
+    assert.match(named.reply, /company/i);
+
+    const joked = await handleAdvisorChat({ sessionId: named.sessionId, message: "Your Mama" });
+    assert.equal(joked.profile.contactName, "Joe");
+    assert.equal(joked.profile.companyInformal, true);
+    assert.equal(joked.profile.companyName, "Walk-in");
+    assert.match(joked.reply, /walk-in/i);
+    assert.doesNotMatch(joked.reply, /I can still point you/i);
+    assert.doesNotMatch(joked.reply, /You asked:/i);
+    assert.doesNotMatch(joked.reply, /recommend a DE path/i);
+    assert.ok(
+      /get support|broken|email|device|network|sign-?in|ticket/i.test(joked.reply),
+      `expected support discovery, got: ${joked.reply}`,
+    );
+    assert.equal(joked.mode, "it_support");
+    assert.equal(joked.suggestSupportChips, true);
+
+    const meta = await handleAdvisorChat({
+      sessionId: joked.sessionId,
+      message: "what do you mean I can still? thats weird",
+    });
+    assert.equal(meta.profile.contactName, "Joe");
+    assert.notEqual(normalizeForCompare(meta.reply), normalizeForCompare(joked.reply));
+    assert.doesNotMatch(meta.reply, /I can still point you/i);
+    assert.doesNotMatch(meta.reply, /You asked:/i);
+
+    const complaint = await handleAdvisorChat({
+      sessionId: meta.sessionId,
+      message: "Why do you keep saying canned things?",
+    });
+    assert.equal(complaint.profile.contactName, "Joe");
+    assert.notEqual(normalizeForCompare(complaint.reply), normalizeForCompare(joked.reply));
+    assert.notEqual(normalizeForCompare(complaint.reply), normalizeForCompare(meta.reply));
+    assert.match(complaint.reply, /right|fair|sorry|canned/i);
+    assert.doesNotMatch(complaint.reply, /I can still point you/i);
+    assert.doesNotMatch(complaint.reply, /You asked:/i);
+    assert.ok(!complaint.reply.includes(BANNED_CANNED_OPENER));
   });
 
   it("cannot invent a DE package via navigate sanitize", () => {

@@ -123,6 +123,11 @@ export function selectKnowledgeSlice(mode: AdvisorMode, page?: PageContext): str
       "EXISTING CLIENT MODE: Prioritize portal/support paths. Do not run heavy prospect qualification.",
     );
   }
+  if (mode === "it_support") {
+    parts.push(
+      "IT SUPPORT MODE: Discover the symptom (email, device, network, sign-in). Point them to Get Support in this DE Desk window. Do not pitch a Cyber Risk Assessment unless they asked about buying or assessments.",
+    );
+  }
   if (mode === "compliance" || page?.pageType === "compliance") {
     parts.push(
       "Compliance focus: assessments, framework mapping, evidence, audit readiness. Repeat the compliance disclaimer.",
