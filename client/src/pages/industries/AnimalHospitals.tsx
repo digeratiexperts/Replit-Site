@@ -1,10 +1,14 @@
 import { PageTemplate } from "@/components/PageTemplate";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Shield, Lock, FileCheck, CheckCircle, Phone, Heart, Activity, PawPrint, AlertTriangle, Database, Clock, Users } from "lucide-react";
+import { IconWell } from "@/components/visual/IconWell";
+import { Button } from "@/components/ui/button";
+import { Shield, Lock, CheckCircle, Phone, Activity, PawPrint, AlertTriangle, Database, Users, ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useSEO } from "@/hooks/useSEO";
+import { CTA } from "@/lib/ctaCopy";
 import { PRIMARY_PHONE } from "@/data/companyContact";
+
+const cardClass = "rounded-2xl border border-de-hairline bg-de-raised";
+const insetClass = "rounded-xl border border-de-hairline bg-de-bg";
 
 export default function AnimalHospitals() {
   useSEO({
@@ -14,33 +18,30 @@ export default function AnimalHospitals() {
     canonical: "/industries/animal-hospitals",
   });
   const prefersReducedMotion = useReducedMotion() ?? false;
-  
-  const metrics = [
-    { label: "Data Protection", value: "100%", icon: Shield, color: " " },
-    { label: "System Uptime", value: "99.95%", icon: Activity, color: " to-fuchsia-500" },
-    { label: "Response Time", value: "<15min", icon: Clock, color: " " },
-    { label: "Veterinary Clients", value: "20+", icon: Heart, color: " to-fuchsia-500" }
+
+  const focusAreas = [
+    { label: "Practice systems", value: "PIMS, imaging, and billing", icon: Activity },
+    { label: "Client records", value: "Access control and backup", icon: Shield },
+    { label: "Payments", value: "PCI-aware processing", icon: Lock },
+    { label: "Continuity", value: "Restore-tested recovery paths", icon: Database },
   ];
 
   const challenges = [
-    { 
-      icon: Database, 
-      title: "Patient Records Security", 
+    {
+      icon: Database,
+      title: "Patient Records Security",
       description: "Protect sensitive pet medical records and client payment information with enterprise-grade encryption.",
-      color: "text-de-accent-ink"
     },
-    { 
-      icon: Lock, 
-      title: "Payment Card Compliance", 
+    {
+      icon: Lock,
+      title: "Payment Card Compliance",
       description: "Maintain PCI DSS compliance for credit card transactions and client billing systems.",
-      color: "text-de-accent-ink"
     },
-    { 
-      icon: Users, 
-      title: "Multi-Location Management", 
+    {
+      icon: Users,
+      title: "Multi-Location Management",
       description: "Seamlessly manage IT across multiple clinic locations with centralized security and monitoring.",
-      color: "text-de-accent-ink"
-    }
+    },
   ];
 
   const securityFeatures = [
@@ -53,74 +54,78 @@ export default function AnimalHospitals() {
     "Endpoint Security (EDR)",
     "Security Awareness Training",
     "Remote Access Security",
-    "Compliance Documentation"
+    "Compliance Documentation",
   ];
 
   return (
     <PageTemplate
       title="IT Solutions for Veterinary Practices"
       subtitle="Secure, reliable IT solutions designed specifically for animal hospitals and veterinary clinics across Arizona."
-      gradientColors="from-[#050312] via-[#0a0a0a] to-[#050312]"
-      icon={<PawPrint className="w-10 h-10 text-white" />}
-      breadcrumbs={[{ label: "Industries", href: "/" }, { label: "Animal Hospitals" }]}
+      icon={<PawPrint className="h-10 w-10 text-de-accent-ink" />}
+      breadcrumbs={[{ label: "Industries", href: "/industries" }, { label: "Animal Hospitals" }]}
+      actions={
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Button asChild variant="brand" size="lg" className="h-12 px-6 font-semibold" data-testid="button-hero-vet">
+            <a href="/book">
+              {CTA.primary}
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </a>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="h-12 border-white/20 px-6 font-semibold text-white hover:bg-white/10"
+          >
+            <a href={PRIMARY_PHONE.telHref}>Call {PRIMARY_PHONE.display}</a>
+          </Button>
+        </div>
+      }
     >
       <div className="space-y-16">
-        {/* Metrics Dashboard */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {metrics.map((metric, idx) => {
-            const Icon = metric.icon;
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {focusAreas.map((item, idx) => {
+            const Icon = item.icon;
             return (
               <motion.div
-                key={idx}
+                key={item.label}
                 initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1, duration: 0.5 }}
-                className="group relative"
+                className={`de-interactive-card p-6 ${cardClass}`}
               >
-                <div className={`absolute inset-0 bg-gradient-to-r ${metric.color} rounded-xl blur opacity-0 group-hover:opacity-30 transition-all duration-300`} />
-                <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-hairline hover:shadow-lg transition-all">
-                  <CardContent className="pt-6">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${metric.color} flex items-center justify-center`}>
-                        <Icon className="h-5 w-5 text-white" />
-                      </div>
-                      <Badge variant="outline" className="text-xs border-white/20 text-gray-300">Key Metric</Badge>
-                    </div>
-                    <p className="text-3xl font-bold text-white">{metric.value}</p>
-                    <p className="text-sm text-gray-400 mt-1">{metric.label}</p>
-                  </CardContent>
-                </Card>
+                <Icon className="mb-3 h-5 w-5 text-de-accent-ink" aria-hidden="true" />
+                <p className="text-lg font-semibold text-white">{item.value}</p>
+                <p className="mt-1 text-sm text-white/55">{item.label}</p>
               </motion.div>
             );
           })}
         </div>
 
-        {/* Risk Alert */}
-        <motion.div 
-          className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-8"
+        <motion.div
+          className={`p-8 ${cardClass}`}
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
           <div className="flex gap-4">
-            <AlertTriangle className="h-8 w-8 text-amber-400 flex-shrink-0 mt-1" />
+            <IconWell icon={AlertTriangle} size="md" surface="dark" />
             <div>
-              <h3 className="text-xl font-bold text-white mb-2">Veterinary Practices Are Prime Targets</h3>
-              <p className="text-gray-300 leading-relaxed">
-                Animal hospitals store valuable client payment data, pet insurance information, and personal contact details. 
-                Cybercriminals increasingly target veterinary practices knowing they often lack enterprise-grade security. 
+              <h3 className="mb-2 text-xl font-bold text-white">Veterinary Practices Are Prime Targets</h3>
+              <p className="leading-relaxed text-white/75">
+                Animal hospitals store valuable client payment data, pet insurance information, and personal contact details.
+                Cybercriminals increasingly target veterinary practices knowing they often lack enterprise-grade security.
                 A single ransomware attack can halt operations, disrupt patient care, and damage your reputation.
               </p>
             </div>
           </div>
         </motion.div>
 
-        {/* Challenges Grid */}
         <div>
-          <motion.h2 
-            className="text-2xl md:text-3xl font-bold text-white mb-8 text-center"
+          <motion.h2
+            className="mb-8 text-center text-2xl font-bold text-white md:text-3xl"
             initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -128,92 +133,78 @@ export default function AnimalHospitals() {
           >
             Challenges We Solve for Veterinary Practices
           </motion.h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid gap-6 md:grid-cols-3">
             {challenges.map((challenge, idx) => {
               const Icon = challenge.icon;
               return (
                 <motion.div
-                  key={idx}
+                  key={challenge.title}
                   initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.1, duration: 0.5 }}
+                  className={`de-interactive-card h-full p-6 ${cardClass}`}
                 >
-                  <Card className="bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-hairline transition-all h-full">
-                    <CardHeader>
-                      <div className={`w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center mb-4`}>
-                        <Icon className={`h-6 w-6 ${challenge.color}`} />
-                      </div>
-                      <CardTitle className="text-xl text-white">{challenge.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-400">{challenge.description}</p>
-                    </CardContent>
-                  </Card>
+                  <Icon className="mb-4 h-6 w-6 text-de-accent-ink" aria-hidden="true" />
+                  <h3 className="text-xl font-semibold text-white">{challenge.title}</h3>
+                  <p className="mt-3 text-white/65">{challenge.description}</p>
                 </motion.div>
               );
             })}
           </div>
         </div>
 
-        {/* Security Features */}
         <motion.div
+          className={`p-8 ${cardClass}`}
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <Card className="bg-de-raised border border-de-hairline">
-            <CardHeader>
-              <CardTitle className="text-2xl text-white flex items-center gap-3">
-                <Shield className="h-7 w-7 text-de-accent-ink" />
-                Complete Security for Your Practice
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid sm:grid-cols-2 gap-4">
-                {securityFeatures.map((feature, idx) => (
-                  <div key={idx} className="flex items-center gap-3">
-                    <CheckCircle className="h-5 w-5 text-emerald-500 flex-shrink-0" />
-                    <span className="text-gray-200">{feature}</span>
-                  </div>
-                ))}
+          <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold text-white">
+            <IconWell icon={Shield} size="sm" surface="dark" />
+            Complete Security for Your Practice
+          </h2>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {securityFeatures.map((feature) => (
+              <div key={feature} className={`flex items-center gap-3 p-3 ${insetClass}`}>
+                <CheckCircle className="h-5 w-5 shrink-0 text-de-accent-ink" aria-hidden="true" />
+                <span className="text-white/80">{feature}</span>
               </div>
-            </CardContent>
-          </Card>
+            ))}
+          </div>
         </motion.div>
 
-        {/* Why Choose Us */}
         <motion.div
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center"
+          className={`p-8 text-center md:p-12 ${cardClass}`}
         >
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-            Trusted by Veterinary Practices Across Arizona
+          <h2 className="mb-4 text-2xl font-bold text-white md:text-3xl">
+            Built for Arizona animal hospitals
           </h2>
-          <p className="text-lg text-gray-400 max-w-3xl mx-auto mb-8">
-            From small clinics to multi-location animal hospitals, we understand the unique IT needs of veterinary practices. 
+          <p className="mx-auto mb-8 max-w-3xl text-lg text-white/70">
+            From small clinics to multi-location animal hospitals, we understand the unique IT needs of veterinary practices.
             Our team provides responsive support so you can focus on what matters most – caring for your patients.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
-              href="/book"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-de-accent hover:bg-de-accent text-white font-semibold rounded-lg transition-colors"
-              data-testid="button-schedule-call"
-            >
-              <Phone className="h-5 w-5" />
-              Schedule a Consultation
-            </a>
-            <a 
-              href={PRIMARY_PHONE.telHref}
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-lg border border-white/20 transition-colors"
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
+            <Button asChild variant="brand" size="lg" className="h-12 px-8 font-semibold" data-testid="button-schedule-call">
+              <a href="/book">{CTA.primary}</a>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="h-12 border-white/20 px-8 font-semibold text-white hover:bg-white/10"
               data-testid="button-call-now"
             >
-              Call {PRIMARY_PHONE.display}
-            </a>
+              <a href={PRIMARY_PHONE.telHref}>
+                <Phone className="mr-1 h-5 w-5" />
+                Call {PRIMARY_PHONE.display}
+              </a>
+            </Button>
           </div>
         </motion.div>
       </div>

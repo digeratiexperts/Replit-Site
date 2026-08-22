@@ -1,5 +1,6 @@
 import { PageTemplate } from "@/components/PageTemplate";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { IconWell } from "@/components/visual/IconWell";
+import { Button } from "@/components/ui/button";
 import {
   Shield,
   Lock,
@@ -28,6 +29,9 @@ import { CTA } from "@/lib/ctaCopy";
 import { PRIMARY_PHONE } from "@/data/companyContact";
 
 const narrative = pageNarratives.healthcare;
+
+const cardClass = "rounded-2xl border border-de-hairline bg-de-raised";
+const insetClass = "rounded-xl border border-de-hairline bg-de-bg";
 
 export default function Healthcare() {
   const prefersReducedMotion = useReducedMotion() ?? false;
@@ -138,54 +142,46 @@ export default function Healthcare() {
     <PageTemplate
       title="Keep Patient Data Protected Without Becoming a HIPAA Expert"
       subtitle="Digerati manages security, backups, access controls, documentation, and ongoing IT behind Arizona practices so owners can focus on patients."
-      gradientColors="from-[#050312] via-[#0a0a0a] to-[#050312]"
-      icon={<Stethoscope className="w-10 h-10 text-white" />}
-      breadcrumbs={[{ label: "Industries", href: "/" }, { label: "Healthcare" }]}
+      icon={<Stethoscope className="w-10 h-10 text-de-accent-ink" />}
+      breadcrumbs={[{ label: "Industries", href: "/industries" }, { label: "Healthcare" }]}
       actions={
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-          <a
-            href="/book"
-            className="inline-flex items-center justify-center bg-white text-[#D3126A] hover:bg-pink-50 px-7 py-3.5 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl"
-            data-testid="button-hero-assessment"
-          >
-            {CTA.primary}
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </a>
-          <a
-            href="#assessment"
-            className="inline-flex items-center justify-center border-2 border-white/70 bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-[#D3126A] px-7 py-3.5 rounded-xl font-semibold transition-all"
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Button asChild variant="brand" size="lg" className="h-12 px-6 font-semibold" data-testid="button-hero-assessment">
+            <a href="/book">
+              {CTA.primary}
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </a>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="h-12 border-white/20 px-6 font-semibold text-white hover:bg-white/10"
             data-testid="button-hero-see-checks"
           >
-            See What We Check
-          </a>
+            <a href="#assessment">See What We Check</a>
+          </Button>
         </div>
       }
     >
       <div className="space-y-16">
-        {/* 2. Trust / proof strip — honest positioning only */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3" data-testid="section-trust-strip">
-          {trustStrip.map((item, idx) => {
-            const Icon = item.icon;
-            return (
-              <motion.div
-                key={item.label}
-                initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.06, duration: 0.4 }}
-                className="flex items-center gap-3 p-4 rounded-xl bg-white/[0.04] border border-white/10"
-              >
-                <div className="w-9 h-9 rounded-lg bg-[#D3126A] flex items-center justify-center shrink-0">
-                  <Icon className="h-4 w-4 text-white" />
-                </div>
-                <p className="text-sm font-medium text-white/90 leading-snug">{item.label}</p>
-              </motion.div>
-            );
-          })}
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-testid="section-trust-strip">
+          {trustStrip.map((item, idx) => (
+            <motion.div
+              key={item.label}
+              initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.06, duration: 0.4 }}
+              className={`flex items-center gap-3 p-4 ${cardClass}`}
+            >
+              <IconWell icon={item.icon} size="sm" surface="dark" />
+              <p className="text-sm font-medium leading-snug text-white/90">{item.label}</p>
+            </motion.div>
+          ))}
         </div>
 
-        {/* Supporting focus labels (elevated from prior metrics — not fake KPIs) */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {[
             { label: "Focus", value: "HIPAA", icon: Shield },
             { label: "Encryption", value: "AES-256", icon: Lock },
@@ -200,32 +196,18 @@ export default function Healthcare() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.08, duration: 0.45 }}
-                className="group relative"
+                className={`de-interactive-card p-6 ${cardClass}`}
               >
-                <div
-                  className="absolute inset-0 bg-[#D3126A] rounded-xl blur opacity-0 group-hover:opacity-30 transition-all duration-300"
-                />
-                <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-hairline transition-all">
-                  <CardContent className="pt-6">
-                    <div className="flex items-start justify-between mb-3">
-                      <div
-                        className="w-10 h-10 rounded-lg bg-[#D3126A] flex items-center justify-center"
-                      >
-                        <Icon className="h-5 w-5 text-white" />
-                      </div>
-                    </div>
-                    <p className="text-2xl font-bold text-white">{metric.value}</p>
-                    <p className="text-sm text-gray-400 mt-1">{metric.label}</p>
-                  </CardContent>
-                </Card>
+                <Icon className="mb-3 h-5 w-5 text-de-accent-ink" aria-hidden="true" />
+                <p className="text-2xl font-bold text-white">{metric.value}</p>
+                <p className="mt-1 text-sm text-white/55">{metric.label}</p>
               </motion.div>
             );
           })}
         </div>
 
-        {/* 3. Pain section */}
         <motion.div
-          className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-8"
+          className={`p-8 ${cardClass}`}
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -233,26 +215,23 @@ export default function Healthcare() {
           data-testid="section-pain"
         >
           <div className="flex gap-4">
-            <AlertTriangle className="h-8 w-8 text-amber-400 flex-shrink-0 mt-1" />
+            <IconWell icon={AlertTriangle} size="md" surface="dark" />
             <div className="w-full">
-              <h2 className="text-2xl md:text-3xl font-bold text-amber-300 mb-3">
-                Is your practice exposed?
+              <h2 className="mb-3 font-heading text-2xl font-semibold text-white md:text-3xl">
+                Is your practice exposed<span className="text-de-accent-ink" aria-hidden="true">:</span>
               </h2>
-              <p className="text-amber-200/90 mb-6 max-w-3xl">
+              <p className="mb-6 max-w-3xl text-white/70">
                 Healthcare practices are high-value targets because downtime hits patients and PHI
                 creates regulatory and trust risk. Ask yourself the questions owners usually postpone
                 until after something breaks.
               </p>
-              <div className="grid md:grid-cols-2 gap-3">
+              <div className="grid gap-3 md:grid-cols-2">
                 {painQuestions.map((item) => {
                   const Icon = item.icon;
                   return (
-                    <div
-                      key={item.text}
-                      className="flex items-start gap-3 p-3 rounded-lg bg-amber-500/5 border border-amber-500/20"
-                    >
-                      <Icon className="h-5 w-5 text-amber-400 mt-0.5 shrink-0" />
-                      <span className="text-amber-100/90">{item.text}</span>
+                    <div key={item.text} className={`flex items-start gap-3 p-3 ${insetClass}`}>
+                      <Icon className="mt-0.5 h-5 w-5 shrink-0 text-de-accent-ink" />
+                      <span className="text-white/80">{item.text}</span>
                     </div>
                   );
                 })}
@@ -261,21 +240,18 @@ export default function Healthcare() {
           </div>
         </motion.div>
 
-        {/* 4. Common problems */}
         <div data-testid="section-common-problems">
           <motion.h2
-            className="text-3xl font-bold mb-8 flex items-center gap-3 text-white"
+            className="mb-8 flex items-center gap-3 text-3xl font-bold text-white"
             initial={prefersReducedMotion ? {} : { opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="w-10 h-10 rounded-lg bg-de-raised flex items-center justify-center">
-              <Shield className="w-5 h-5 text-white" />
-            </div>
+            <IconWell icon={Shield} size="sm" surface="dark" />
             Common healthcare IT &amp; security problems
           </motion.h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid gap-6 md:grid-cols-3">
             {commonProblems.map((item, idx) => {
               const Icon = item.icon;
               return (
@@ -285,36 +261,26 @@ export default function Healthcare() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.1, duration: 0.5 }}
+                  className={`de-interactive-card h-full p-6 ${cardClass}`}
                 >
-                  <Card className="group h-full bg-white/5 backdrop-blur-sm border border-white/10 hover:border-de-hairline transition-all duration-300">
-                    <CardHeader>
-                      <div className="w-14 h-14 rounded-xl bg-de-raised flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                        <Icon className="h-7 w-7 text-de-accent-ink" />
-                      </div>
-                      <CardTitle className="text-xl text-white">{item.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-400 leading-relaxed">{item.description}</p>
-                    </CardContent>
-                  </Card>
+                  <Icon className="mb-4 h-7 w-7 text-de-accent-ink" aria-hidden="true" />
+                  <h3 className="text-xl font-semibold text-white">{item.title}</h3>
+                  <p className="mt-3 leading-relaxed text-white/65">{item.description}</p>
                 </motion.div>
               );
             })}
           </div>
         </div>
 
-        {/* 5. Consequences — operational, no fake stats */}
         <section data-testid="section-consequences">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-lg bg-rose-600 flex items-center justify-center">
-              <AlertTriangle className="w-5 h-5 text-white" />
-            </div>
+          <div className="mb-6 flex items-center gap-3">
+            <IconWell icon={AlertTriangle} size="sm" surface="dark" />
             <div>
               <h2 className="text-3xl font-bold text-white">What exposure costs a practice</h2>
-              <p className="text-white/60 text-sm">Operational and financial pressure — without invented statistics.</p>
+              <p className="text-sm text-white/55">Operational and financial pressure — without invented statistics.</p>
             </div>
           </div>
-          <div className="grid md:grid-cols-2 gap-3">
+          <div className="grid gap-3 md:grid-cols-2">
             {consequences.map((item, idx) => (
               <motion.div
                 key={item}
@@ -322,28 +288,25 @@ export default function Healthcare() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.05, duration: 0.35 }}
-                className="flex items-start gap-3 p-4 rounded-xl bg-rose-500/10 border border-rose-500/25"
+                className={`flex items-start gap-3 p-4 ${insetClass}`}
               >
-                <span className="text-rose-400 font-bold mt-0.5">●</span>
-                <p className="text-rose-100/90">{item}</p>
+                <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-de-accent-ink" aria-hidden="true" />
+                <p className="text-white/80">{item}</p>
               </motion.div>
             ))}
           </div>
         </section>
 
-        {/* 6. How Digerati solves */}
         <section data-testid="section-how-we-solve">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-lg bg-[#D3126A] flex items-center justify-center">
-              <Layers className="w-5 h-5 text-white" />
-            </div>
+          <div className="mb-3 flex items-center gap-3">
+            <IconWell icon={Layers} size="sm" surface="dark" />
             <h2 className="text-3xl font-bold text-white">How Digerati solves them</h2>
           </div>
-          <p className="text-white/70 mb-8 max-w-3xl">
+          <p className="mb-8 max-w-3xl text-white/70">
             IT, cybersecurity, and compliance as one operating program — so security is not bolted onto
             break/fix support after the fact.
           </p>
-          <div className="grid md:grid-cols-3 gap-5">
+          <div className="grid gap-5 md:grid-cols-3">
             {howWeSolve.map((item, idx) => (
               <motion.div
                 key={item.title}
@@ -351,22 +314,21 @@ export default function Healthcare() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.08, duration: 0.4 }}
-                className="p-6 rounded-2xl bg-white/[0.04] border border-white/10"
+                className={`p-6 ${cardClass}`}
               >
-                <p className="text-xs font-semibold tracking-wide uppercase text-[#F04C97] mb-2">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#F04C97]">
                   Pillar {idx + 1}
                 </p>
-                <h3 className="text-xl font-semibold text-white mb-2">{item.title}</h3>
-                <p className="text-white/70 leading-relaxed">{item.description}</p>
+                <h3 className="mb-2 text-xl font-semibold text-white">{item.title}</h3>
+                <p className="leading-relaxed text-white/70">{item.description}</p>
               </motion.div>
             ))}
           </div>
         </section>
 
-        {/* 7. Differentiation */}
         <section data-testid="section-differentiation">
-          <h2 className="text-3xl font-bold text-white mb-6">Why Digerati instead of ordinary IT support</h2>
-          <div className="space-y-3 max-w-4xl">
+          <h2 className="mb-6 text-3xl font-bold text-white">Why Digerati instead of ordinary IT support</h2>
+          <div className="max-w-4xl space-y-3">
             {differentiation.map((item, idx) => (
               <motion.div
                 key={item}
@@ -374,160 +336,127 @@ export default function Healthcare() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.05, duration: 0.3 }}
-                className="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/10"
+                className={`flex items-start gap-3 p-4 ${insetClass}`}
               >
-                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center mt-0.5">
-                  <CheckCircle className="h-4 w-4 text-white" />
-                </div>
-                <span className="text-gray-300 font-medium">{item}</span>
+                <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-de-accent-ink" aria-hidden="true" />
+                <span className="font-medium text-white/80">{item}</span>
               </motion.div>
             ))}
           </div>
         </section>
 
-        {/* 8. Healthcare security stack — supporting evidence */}
         <motion.div
-          className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 md:p-12 overflow-hidden"
+          className={`p-8 md:p-12 ${cardClass}`}
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
           data-testid="section-security-stack"
         >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-de-raised to-transparent rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-de-raised to-transparent rounded-full blur-3xl" />
-
-          <div className="relative">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-lg bg-de-raised flex items-center justify-center">
-                <FileCheck className="w-5 h-5 text-white" />
-              </div>
-              <h2 className="text-3xl font-bold text-white">Healthcare security stack &amp; outcomes</h2>
-            </div>
-            <p className="text-white/65 mb-8 max-w-3xl">
-              Technical and administrative controls that support HIPAA-aware operations. These are the
-              building blocks behind the program — not the headline promise.
-            </p>
-
-            <div className="grid md:grid-cols-2 gap-4">
-              {securityStack.map((item, index) => (
-                <motion.div
-                  key={item}
-                  className="flex items-center gap-3 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:border-de-hairline transition-all duration-300"
-                  initial={prefersReducedMotion ? {} : { opacity: 0, x: -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.04, duration: 0.3 }}
-                >
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center">
-                    <CheckCircle className="h-4 w-4 text-white" />
-                  </div>
-                  <span className="text-gray-300 font-medium">{item}</span>
-                </motion.div>
-              ))}
-            </div>
+          <div className="mb-3 flex items-center gap-3">
+            <IconWell icon={FileCheck} size="sm" surface="dark" />
+            <h2 className="text-3xl font-bold text-white">Healthcare security stack &amp; outcomes</h2>
+          </div>
+          <p className="mb-8 max-w-3xl text-white/65">
+            Technical and administrative controls that support HIPAA-aware operations. These are the
+            building blocks behind the program — not the headline promise.
+          </p>
+          <div className="grid gap-4 md:grid-cols-2">
+            {securityStack.map((item, index) => (
+              <motion.div
+                key={item}
+                className={`flex items-center gap-3 p-4 ${insetClass}`}
+                initial={prefersReducedMotion ? {} : { opacity: 0, x: -10 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.04, duration: 0.3 }}
+              >
+                <CheckCircle className="h-5 w-5 shrink-0 text-de-accent-ink" aria-hidden="true" />
+                <span className="font-medium text-white/80">{item}</span>
+              </motion.div>
+            ))}
           </div>
         </motion.div>
 
-        {/* 9. Honesty-safe proof — assessment deliverable, not fake quotes */}
-        <section className="grid md:grid-cols-2 gap-6" data-testid="section-proof">
+        <section className="grid gap-6 md:grid-cols-2" data-testid="section-proof">
           <motion.div
-            className="p-6 rounded-2xl bg-white/[0.04] border border-white/10"
+            className={`p-6 ${cardClass}`}
             initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <p className="text-xs font-semibold tracking-wide uppercase text-[#F04C97] mb-3">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[#F04C97]">
               Arizona practices
             </p>
-            <p className="text-white/85 leading-relaxed">
+            <p className="leading-relaxed text-white/85">
               {narrative?.arizonaNote ??
                 "East Valley clinics, dental offices, and specialty practices need HIPAA-aware IT without a hospital-sized IT department."}
             </p>
           </motion.div>
           <motion.div
-            className="p-6 rounded-2xl bg-[#D3126A]/10 border border-[#D3126A]/25"
+            className="rounded-2xl border border-[#D3126A]/35 bg-de-raised p-6"
             initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <p className="text-xs font-semibold tracking-wide uppercase text-[#F04C97] mb-3">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[#F04C97]">
               What proof looks like today
             </p>
-            <p className="text-white/85 leading-relaxed mb-3">
+            <p className="mb-3 leading-relaxed text-white/85">
               We do not publish named healthcare testimonials here yet. Instead of inventing quotes or
               outcome percentages, we show you the assessment deliverable: a clear prioritized risk
               summary, control gaps, and recommended next steps you can act on with us or your current
               provider.
             </p>
-            <a
-              href="#assessment"
-              className="inline-flex items-center text-[#F04C97] hover:text-de-magenta-ink font-medium"
-            >
+            <a href="#assessment" className="inline-flex items-center font-medium text-[#F04C97] hover:text-white">
               Jump to what we check
               <ArrowRight className="ml-1.5 h-4 w-4" />
             </a>
           </motion.div>
         </section>
 
-        {/* 10. Free assessment module — major conversion block */}
         <motion.section
           id="assessment"
-          className="relative scroll-mt-28 rounded-2xl border border-[#D3126A]/35 bg-gradient-to-br from-[#D3126A]/15 via-white/[0.03] p-8 md:p-12 overflow-hidden"
+          className={`scroll-mt-28 p-8 md:p-12 ${cardClass}`}
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
           data-testid="section-assessment"
         >
-          <div className="absolute top-0 right-0 w-72 h-72 bg-[#D3126A]/20 rounded-full blur-3xl pointer-events-none" />
-          <div className="relative">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-lg bg-[#D3126A] flex items-center justify-center">
-                <ListChecks className="w-5 h-5 text-white" />
-              </div>
-              <h2 className="text-3xl font-bold text-white">What the Cyber Risk Assessment includes</h2>
-            </div>
-            <p className="text-white/75 mb-8 max-w-3xl text-lg">
-              A prioritized risk summary — not a sales pitch. You leave knowing what is urgent, what can
-              wait, and what evidence you are missing.
-            </p>
-            <div className="grid md:grid-cols-2 gap-3 mb-8">
-              {assessmentIncludes.map((item) => (
-                <div
-                  key={item}
-                  className="flex items-start gap-3 p-4 rounded-xl bg-black/20 border border-white/10"
-                >
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center mt-0.5">
-                    <CheckCircle className="h-4 w-4 text-white" />
-                  </div>
-                  <span className="text-white/90">{item}</span>
-                </div>
-              ))}
-            </div>
-            <a
-              href="/book"
-              className="inline-flex items-center justify-center bg-white text-[#D3126A] hover:bg-pink-50 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl"
-              data-testid="button-assessment-module-cta"
-            >
-              {CTA.primary}
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </a>
+          <div className="mb-3 flex items-center gap-3">
+            <IconWell icon={ListChecks} size="sm" surface="dark" />
+            <h2 className="text-3xl font-bold text-white">What the Cyber Risk Assessment includes</h2>
           </div>
+          <p className="mb-8 max-w-3xl text-lg text-white/75">
+            A prioritized risk summary — not a sales pitch. You leave knowing what is urgent, what can
+            wait, and what evidence you are missing.
+          </p>
+          <div className="mb-8 grid gap-3 md:grid-cols-2">
+            {assessmentIncludes.map((item) => (
+              <div key={item} className={`flex items-start gap-3 p-4 ${insetClass}`}>
+                <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-de-accent-ink" aria-hidden="true" />
+                <span className="text-white/90">{item}</span>
+              </div>
+            ))}
+          </div>
+          <Button asChild variant="brand" size="lg" className="h-12 px-8 font-semibold" data-testid="button-assessment-module-cta">
+            <a href="/book">
+              {CTA.primary}
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </a>
+          </Button>
         </motion.section>
 
-        {/* 11. Simple 3-step engagement */}
         <section data-testid="section-process">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-lg bg-de-accent flex items-center justify-center">
-              <ArrowRight className="w-5 h-5 text-white" />
-            </div>
+          <div className="mb-8 flex items-center gap-3">
+            <IconWell icon={ArrowRight} size="sm" surface="dark" />
             <div>
               <h2 className="text-3xl font-bold text-white">How engagement works</h2>
-              <p className="text-white/60 text-sm">Three clear steps — not a black box of tickets.</p>
+              <p className="text-sm text-white/55">Three clear steps — not a black box of tickets.</p>
             </div>
           </div>
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid gap-4 md:grid-cols-3">
             {engagementSteps.map((step, index) => (
               <motion.div
                 key={step.title}
@@ -535,83 +464,76 @@ export default function Healthcare() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.08, duration: 0.4 }}
-                className="relative p-5 rounded-xl bg-white/[0.04] border border-white/10"
+                className={`p-5 ${cardClass}`}
               >
-                <div className="text-xs font-semibold tracking-wide text-[#F04C97] mb-2">
+                <div className="mb-2 text-xs font-semibold tracking-wide text-[#F04C97]">
                   Step {index + 1}
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">{step.title}</h3>
-                <p className="text-sm text-white/70 leading-relaxed">{step.description}</p>
+                <h3 className="mb-2 text-lg font-semibold text-white">{step.title}</h3>
+                <p className="text-sm leading-relaxed text-white/70">{step.description}</p>
               </motion.div>
             ))}
           </div>
         </section>
 
-        {/* 12. Pricing expectations / engagement fit — no invented prices */}
-        <section
-          className="p-8 rounded-2xl bg-white/[0.04] border border-white/10"
-          data-testid="section-fit"
-        >
-          <h2 className="text-3xl font-bold text-white mb-4">Engagement fit</h2>
-          <p className="text-white/80 leading-relaxed max-w-3xl mb-4">
+        <section className={`p-8 ${cardClass}`} data-testid="section-fit">
+          <h2 className="mb-4 text-3xl font-bold text-white">Engagement fit</h2>
+          <p className="mb-4 max-w-3xl leading-relaxed text-white/80">
             Best fit for growing Arizona practices — typically clinics and specialty offices in the
-            roughly <span className="text-white font-medium">10–75 employee</span> range — that need
+            roughly <span className="font-medium text-white">10–75 employee</span> range — that need
             more than break/fix IT without building hospital-scale infrastructure.
           </p>
-          <p className="text-white/65 leading-relaxed max-w-3xl">
+          <p className="max-w-3xl leading-relaxed text-white/65">
             We do not list package prices on this page. Final scope and investment are confirmed after
             the assessment based on users, systems, risk profile, and whether you want us to collaborate
             with an existing provider or take full ownership.
           </p>
         </section>
 
-        {/* 13. FAQ */}
-        <section className="space-y-4 max-w-4xl" data-testid="section-faq">
-          <h2 className="text-3xl font-bold text-white mb-2">Questions practice owners ask</h2>
+        <section className="max-w-4xl space-y-4" data-testid="section-faq">
+          <h2 className="mb-2 text-3xl font-bold text-white">Questions practice owners ask</h2>
           {(narrative?.faqs ?? []).map((faq) => (
-            <div key={faq.q} className="p-5 rounded-xl bg-white/[0.04] border border-white/10">
-              <h3 className="text-lg font-semibold text-white mb-2">{faq.q}</h3>
-              <p className="text-white/70 leading-relaxed">{faq.a}</p>
+            <div key={faq.q} className={`p-5 ${cardClass}`}>
+              <h3 className="mb-2 text-lg font-semibold text-white">{faq.q}</h3>
+              <p className="leading-relaxed text-white/70">{faq.a}</p>
             </div>
           ))}
         </section>
 
-        {/* 14. Strong final CTA */}
         <motion.div
-          className="relative rounded-2xl overflow-hidden"
+          className={`p-8 text-center md:p-12 ${cardClass}`}
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
           data-testid="section-final-cta"
         >
-          <div className="absolute inset-0 bg-[#D3126A]" />
-          <div className="relative p-8 md:p-12 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
-              {narrative?.ctaHeadline ?? "Protect patient data with a clear plan"}
-            </h2>
-            <p className="text-lg md:text-xl mb-8 text-white/90 max-w-2xl mx-auto">
-              {narrative?.ctaBody ??
-                "Schedule a free HIPAA-focused cyber risk assessment for your Arizona practice."}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="/book"
-                className="group inline-flex items-center justify-center bg-white text-[#D3126A] hover:bg-pink-50 px-8 py-4 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"
-                data-testid="button-get-assessment"
-              >
+          <h2 className="mb-4 text-3xl font-bold text-white md:text-4xl">
+            {narrative?.ctaHeadline ?? "Protect patient data with a clear plan"}
+          </h2>
+          <p className="mx-auto mb-8 max-w-2xl text-lg text-white/70 md:text-xl">
+            {narrative?.ctaBody ??
+              "Schedule a free HIPAA-focused cyber risk assessment for your Arizona practice."}
+          </p>
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
+            <Button asChild variant="brand" size="lg" className="h-12 px-8 font-semibold" data-testid="button-get-assessment">
+              <a href="/book">
                 {CTA.primary}
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="ml-1 h-4 w-4" />
               </a>
-              <a
-                href={PRIMARY_PHONE.telHref}
-                className="inline-flex items-center justify-center border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-[#D3126A] px-8 py-4 rounded-xl font-semibold transition-all"
-                data-testid="button-call-now"
-              >
-                <Phone className="mr-2 h-5 w-5" />
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="h-12 border-white/20 px-8 font-semibold text-white hover:bg-white/10"
+              data-testid="button-call-now"
+            >
+              <a href={PRIMARY_PHONE.telHref}>
+                <Phone className="mr-1 h-5 w-5" />
                 Call {PRIMARY_PHONE.display}
               </a>
-            </div>
+            </Button>
           </div>
         </motion.div>
       </div>

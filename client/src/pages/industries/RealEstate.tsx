@@ -1,9 +1,13 @@
 import { PageTemplate } from "@/components/PageTemplate";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, AlertCircle, Shield, Lock, DollarSign, TrendingDown } from "lucide-react";
+import { IconWell } from "@/components/visual/IconWell";
+import { Button } from "@/components/ui/button";
+import { CheckCircle, AlertCircle, Shield, Lock, DollarSign, TrendingDown, Home, Phone, ArrowRight } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { CTA } from "@/lib/ctaCopy";
 import { PRIMARY_PHONE } from "@/data/companyContact";
+
+const cardClass = "rounded-2xl border border-de-hairline bg-de-raised";
+const insetClass = "rounded-xl border border-de-hairline bg-de-bg";
 
 export default function RealEstate() {
   useSEO({
@@ -12,6 +16,7 @@ export default function RealEstate() {
       "Protect Arizona brokerages from wire fraud and BEC with managed email security, MFA, and accountable IT support.",
     canonical: "/industries/real-estate",
   });
+
   const focusAreas = [
     { title: "Wire instruction fraud", body: "Verify-before-send workflows and mailbox protection for closings.", icon: Shield },
     { title: "Business email compromise", body: "MFA, email filtering, and staff awareness for brokerages.", icon: AlertCircle },
@@ -23,41 +28,60 @@ export default function RealEstate() {
     <PageTemplate
       title="IT Solutions for Real Estate Professionals"
       subtitle="Prevent wire fraud, protect transaction data, stay compliant—secure IT for Arizona real estate"
-      gradientColors="from-[#050312] via-[#0a0a0a] to-[#050312]"
+      icon={<Home className="h-10 w-10 text-de-accent-ink" />}
+      breadcrumbs={[{ label: "Industries", href: "/industries" }, { label: "Real Estate" }]}
+      actions={
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Button asChild variant="brand" size="lg" className="h-12 px-6 font-semibold" data-testid="button-hero-real-estate">
+            <a href="/book">
+              {CTA.primary}
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </a>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="h-12 border-white/20 px-6 font-semibold text-white hover:bg-white/10"
+          >
+            <a href={PRIMARY_PHONE.telHref}>Call {PRIMARY_PHONE.display}</a>
+          </Button>
+        </div>
+      }
     >
       <div className="space-y-16">
-        {/* Wire Fraud Statistics - Modern Dashboard */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {focusAreas.map((item) => {
             const Icon = item.icon;
             return (
-              <Card key={item.title} className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:shadow-lg transition-all">
-                <CardContent className="pt-6">
-                  <Icon className="h-6 w-6 text-de-accent-ink mb-3" />
-                  <p className="font-semibold text-white">{item.title}</p>
-                  <p className="text-sm text-gray-400 mt-2 leading-relaxed">{item.body}</p>
-                </CardContent>
-              </Card>
+              <div key={item.title} className={`de-interactive-card p-6 ${cardClass}`}>
+                <Icon className="mb-3 h-6 w-6 text-de-accent-ink" aria-hidden="true" />
+                <p className="font-semibold text-white">{item.title}</p>
+                <p className="mt-2 text-sm leading-relaxed text-white/60">{item.body}</p>
+              </div>
             );
           })}
         </div>
 
-        {/* Wire Fraud Warning */}
-        <div className="bg-red-500/10 backdrop-blur-sm border border-red-500/30 rounded-xl p-8">
+        <div className={`p-8 ${cardClass}`}>
           <div className="flex gap-4">
-            <AlertCircle className="h-8 w-8 text-red-400 flex-shrink-0 mt-1" />
+            <IconWell icon={AlertCircle} size="md" surface="dark" />
             <div>
-              <h3 className="text-2xl font-bold text-white mb-3">Real Estate Wire Fraud: Active Threat</h3>
-              <p className="text-red-200 mb-4">Criminals impersonate title companies, attorneys, and lenders with sophisticated phishing attacks targeting high-value transactions.</p>
-              <div className="space-y-2 text-red-200">
+              <h3 className="mb-3 text-2xl font-bold text-white">Real Estate Wire Fraud: Active Threat</h3>
+              <p className="mb-4 text-white/75">
+                Criminals impersonate title companies, attorneys, and lenders with sophisticated phishing attacks targeting high-value transactions.
+              </p>
+              <div className="space-y-2 text-white/75">
                 {[
                   "Fake wire instructions sent via email spoofing",
                   "Lost client funds (often non-recoverable)",
                   "TRID/RESPA violations from inadequate data security",
-                  "Reputation damage and regulatory action"
-                ].map((item, idx) => (
-                  <div key={idx} className="flex gap-2">
-                    <span className="font-bold">●</span>
+                  "Reputation damage and regulatory action",
+                ].map((item) => (
+                  <div key={item} className="flex gap-2">
+                    <span className="font-bold text-de-accent-ink" aria-hidden="true">
+                      ●
+                    </span>
                     {item}
                   </div>
                 ))}
@@ -66,118 +90,108 @@ export default function RealEstate() {
           </div>
         </div>
 
-        {/* Transaction Security Services */}
         <div className="space-y-6">
           <h2 className="text-3xl font-bold text-white">Transaction Security Services</h2>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid gap-6 md:grid-cols-2">
             {[
-              { 
-                icon: DollarSign, 
-                title: "Wire Fraud Prevention", 
+              {
+                icon: DollarSign,
+                title: "Wire Fraud Prevention",
                 desc: "Multi-layer protection",
-                features: ["Email authentication (DMARC/SPF)", "Business email compromise detection", "MFA for all systems", "Out-of-band verification", "Staff training on tactics"]
+                features: ["Email authentication (DMARC/SPF)", "Business email compromise detection", "MFA for all systems", "Out-of-band verification", "Staff training on tactics"],
               },
-              { 
-                icon: Lock, 
-                title: "Document Security", 
+              {
+                icon: Lock,
+                title: "Document Security",
                 desc: "Transaction protection",
-                features: ["End-to-end encrypted sharing", "Closing document protection", "Access controls", "Audit trails for access", "TRID compliance tracking"]
+                features: ["End-to-end encrypted sharing", "Closing document protection", "Access controls", "Audit trails for access", "TRID compliance tracking"],
               },
-              { 
-                icon: Shield, 
-                title: "TRID & RESPA Compliance", 
+              {
+                icon: Shield,
+                title: "TRID & RESPA Compliance",
                 desc: "Federal requirements",
-                features: ["Document retention tracking", "Secure eSignature with audit", "APR calculation docs", "Compliance certifications", "Closing disclosure logging"]
+                features: ["Document retention tracking", "Secure eSignature with audit", "APR calculation docs", "Compliance certifications", "Closing disclosure logging"],
               },
-              { 
-                icon: TrendingDown, 
-                title: "Ransomware Protection", 
+              {
+                icon: TrendingDown,
+                title: "Ransomware Protection",
                 desc: "Closing continuity",
-                features: ["Real-time backup", "Immutable backups", "Fast recovery", "Guaranteed RTO/RPO", "Incident response"]
-              }
-            ].map((service, idx) => {
+                features: ["Real-time backup", "Immutable backups", "Fast recovery", "Contract-defined RTO/RPO", "Incident response"],
+              },
+            ].map((service) => {
               const Icon = service.icon;
               return (
-                <div key={idx} className="group relative">
-                  <div className="absolute inset-0 bg-de-raised rounded-xl blur opacity-0 group-hover:opacity-15 transition-all" />
-                  <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:shadow-lg transition-all group-hover:border-de-hairline">
-                    <CardHeader>
-                      <Icon className="h-10 w-10 text-de-accent-ink mb-2 group-hover:scale-110 transition-transform" />
-                      <CardTitle className="text-white">{service.title}</CardTitle>
-                      <p className="text-sm text-gray-400 mt-1">{service.desc}</p>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-2">
-                        {service.features.map((f, i) => (
-                          <li key={i} className="flex gap-2 text-sm text-gray-300">
-                            <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                            {f}
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
+                <div key={service.title} className={`de-interactive-card p-6 ${cardClass}`}>
+                  <Icon className="mb-2 h-10 w-10 text-de-accent-ink" aria-hidden="true" />
+                  <h3 className="text-xl font-semibold text-white">{service.title}</h3>
+                  <p className="mt-1 text-sm text-white/55">{service.desc}</p>
+                  <ul className="mt-4 space-y-2">
+                    {service.features.map((f) => (
+                      <li key={f} className="flex gap-2 text-sm text-white/80">
+                        <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-de-accent-ink" aria-hidden="true" />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               );
             })}
           </div>
         </div>
 
-        {/* Protection Checklist */}
-        <div className="bg-de-raised backdrop-blur-sm rounded-xl p-8 border border-de-hairline">
-          <h3 className="text-2xl font-bold mb-6 text-white">Wire Fraud Prevention Checklist</h3>
-          <div className="grid md:grid-cols-2 gap-4">
+        <div className={`p-8 ${cardClass}`}>
+          <h3 className="mb-6 text-2xl font-bold text-white">Wire Fraud Prevention Checklist</h3>
+          <div className="grid gap-4 md:grid-cols-2">
             {[
-              { q: "Do you verify wire instructions via phone?", status: "essential" },
-              { q: "Are your email systems protected against spoofing?", status: "critical" },
-              { q: "Is MFA enabled on all systems?", status: "critical" },
-              { q: "Do agents know fraud warning signs?", status: "essential" },
-              { q: "Can you recover from ransomware?", status: "critical" },
-              { q: "Do you have documented security procedures?", status: "required" }
-            ].map((item, idx) => (
-              <div key={idx} className="flex gap-3 p-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg hover:bg-white/10 transition-all">
-                <CheckCircle className="h-6 w-6 text-emerald-500 flex-shrink-0 mt-0.5" />
-                <span className="text-gray-300 text-sm">{item.q}</span>
+              "Do you verify wire instructions via phone?",
+              "Are your email systems protected against spoofing?",
+              "Is MFA enabled on all systems?",
+              "Do agents know fraud warning signs?",
+              "Can you recover from ransomware?",
+              "Do you have documented security procedures?",
+            ].map((q) => (
+              <div key={q} className={`flex gap-3 p-3 ${insetClass}`}>
+                <CheckCircle className="mt-0.5 h-6 w-6 shrink-0 text-de-accent-ink" aria-hidden="true" />
+                <span className="text-sm text-white/80">{q}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Protection ROI */}
-        <div className="grid md:grid-cols-3 gap-6 rounded-xl border border-white/10 bg-[#151217] p-8 text-white">
+        <div className={`grid gap-6 p-8 md:grid-cols-3 ${cardClass}`}>
           <div className="text-center">
-            <p className="text-lg font-semibold mb-2">Verify before you wire</p>
-            <p className="text-white/70 text-sm">Out-of-band confirmation for instruction changes — not a claimed $0-loss guarantee.</p>
+            <p className="mb-2 text-lg font-semibold text-white">Verify before you wire</p>
+            <p className="text-sm text-white/70">Out-of-band confirmation for instruction changes — not a claimed $0-loss guarantee.</p>
           </div>
-          <div className="text-center md:border-l md:border-r border-white/10 md:px-6">
-            <p className="text-lg font-semibold mb-2">Mailbox defenses</p>
-            <p className="text-white/70 text-sm">MFA and email protection sized to how brokerages actually work.</p>
+          <div className="text-center md:border-l md:border-r md:border-de-hairline md:px-6">
+            <p className="mb-2 text-lg font-semibold text-white">Mailbox defenses</p>
+            <p className="text-sm text-white/70">MFA and email protection sized to how brokerages actually work.</p>
           </div>
           <div className="text-center">
-            <p className="text-lg font-semibold mb-2">Someone to call</p>
-            <p className="text-white/70 text-sm">Arizona team when a closing looks off — {PRIMARY_PHONE.display}.</p>
+            <p className="mb-2 text-lg font-semibold text-white">Someone to call</p>
+            <p className="text-sm text-white/70">Arizona team when a closing looks off — {PRIMARY_PHONE.display}.</p>
           </div>
         </div>
 
-        {/* CTA */}
-        <div className="rounded-xl border border-white/10 bg-[#151217] p-8 text-center text-white">
-          <h2 className="text-3xl font-bold mb-4">Protect Your Transactions Today</h2>
-          <p className="text-lg mb-6 text-white/70">Start with a Cyber Risk Assessment for your brokerage.</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
-              href="/book" 
-              className="inline-flex items-center justify-center bg-[#D3126A] hover:bg-[#B80E5C] text-white px-8 py-3 rounded-lg font-semibold transition-all border border-pink-300/25"
-              data-testid="button-schedule-real-estate"
-            >
-              {CTA.primary}
-            </a>
-            <a 
-              href={PRIMARY_PHONE.telHref}
-              className="inline-flex items-center justify-center border-2 border-white bg-transparent text-white hover:bg-white/10 px-8 py-3 rounded-lg font-semibold transition-all"
+        <div className={`p-8 text-center ${cardClass}`}>
+          <h2 className="mb-4 text-3xl font-bold text-white">Protect Your Transactions Today</h2>
+          <p className="mb-6 text-lg text-white/70">Start with a Cyber Risk Assessment for your brokerage.</p>
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
+            <Button asChild variant="brand" size="lg" className="h-12 px-8 font-semibold" data-testid="button-schedule-real-estate">
+              <a href="/book">{CTA.primary}</a>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="h-12 border-white/20 px-8 font-semibold text-white hover:bg-white/10"
               data-testid="button-call-real-estate"
             >
-              Call {PRIMARY_PHONE.display}
-            </a>
+              <a href={PRIMARY_PHONE.telHref}>
+                <Phone className="mr-1 h-5 w-5" />
+                Call {PRIMARY_PHONE.display}
+              </a>
+            </Button>
           </div>
         </div>
       </div>

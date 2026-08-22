@@ -1,9 +1,13 @@
 import { PageTemplate } from "@/components/PageTemplate";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Heart, Users, Shield, Zap, TrendingUp, DollarSign, Target } from "lucide-react";
+import { IconWell } from "@/components/visual/IconWell";
+import { Button } from "@/components/ui/button";
+import { CheckCircle, Heart, Users, Shield, Zap, TrendingUp, Target, Phone, ArrowRight } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
+import { CTA } from "@/lib/ctaCopy";
 import { PRIMARY_PHONE } from "@/data/companyContact";
+
+const cardClass = "rounded-2xl border border-de-hairline bg-de-raised";
+const insetClass = "rounded-xl border border-de-hairline bg-de-bg";
 
 export default function Nonprofits() {
   useSEO({
@@ -12,55 +16,70 @@ export default function Nonprofits() {
       "Affordable managed IT and security for Arizona nonprofits — protect donor data, grant systems, and board confidence.",
     canonical: "/industries/nonprofits",
   });
-  const savings = [
-    { metric: "IT Cost Savings", value: "40%", icon: DollarSign, color: "text-de-accent-ink" },
-    { metric: "Staff Time Saved", value: "6 hrs/wk", icon: Zap, color: "text-de-accent-ink" },
-    { metric: "Donor Confidence", value: "+85%", icon: Heart, color: "text-de-accent-ink" },
-    { metric: "Audit Pass Rate", value: "100%", icon: CheckCircle, color: "text-emerald-500" }
+
+  const focusAreas = [
+    { title: "Donor data", body: "Access control and encryption for donation systems and CRM.", icon: Heart },
+    { title: "Grant evidence", body: "Documentation funders and auditors typically request.", icon: Shield },
+    { title: "Right-sized IT", body: "Support that does not assume a hospital-sized IT department.", icon: Zap },
+    { title: "Arizona partner", body: "A local operator you can call — not a ticket mill.", icon: Users },
   ];
 
   return (
     <PageTemplate
       title="IT Solutions for Nonprofits"
       subtitle="Cost-effective, compliant IT for mission-driven organizations in Arizona"
-      gradientColors="from-[#050312] via-[#0a0a0a] to-[#050312]"
+      icon={<Heart className="h-10 w-10 text-de-accent-ink" />}
+      breadcrumbs={[{ label: "Industries", href: "/industries" }, { label: "Nonprofits" }]}
+      actions={
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Button asChild variant="brand" size="lg" className="h-12 px-6 font-semibold" data-testid="button-hero-nonprofit">
+            <a href="/book">
+              {CTA.primary}
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </a>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="h-12 border-white/20 px-6 font-semibold text-white hover:bg-white/10"
+          >
+            <a href={PRIMARY_PHONE.telHref}>Call {PRIMARY_PHONE.display}</a>
+          </Button>
+        </div>
+      }
     >
       <div className="space-y-16">
-        {/* Impact Metrics */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {savings.map((item, idx) => {
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {focusAreas.map((item) => {
             const Icon = item.icon;
             return (
-              <div key={idx} className="relative group">
-                <div className="absolute inset-0 bg-de-raised rounded-xl blur opacity-0 group-hover:opacity-20 transition-all" />
-                <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:shadow-lg transition-all">
-                  <CardContent className="pt-6">
-                    <Icon className={`h-6 w-6 ${item.color} mb-3`} />
-                    <p className="text-3xl font-bold text-white">{item.value}</p>
-                    <p className="text-sm text-gray-400 mt-2">{item.metric}</p>
-                  </CardContent>
-                </Card>
+              <div key={item.title} className={`de-interactive-card p-6 ${cardClass}`}>
+                <Icon className="mb-3 h-6 w-6 text-de-accent-ink" aria-hidden="true" />
+                <p className="font-semibold text-white">{item.title}</p>
+                <p className="mt-2 text-sm leading-relaxed text-white/60">{item.body}</p>
               </div>
             );
           })}
         </div>
 
-        {/* Why Nonprofits Struggle */}
-        <div className="bg-de-raised backdrop-blur-sm border border-de-hairline rounded-xl p-8">
+        <div className={`p-8 ${cardClass}`}>
           <div className="flex gap-4">
-            <Target className="h-8 w-8 text-de-accent-ink flex-shrink-0 mt-1" />
+            <IconWell icon={Target} size="md" surface="dark" />
             <div>
-              <h3 className="text-2xl font-bold text-white mb-3">Nonprofit IT Challenges</h3>
-              <div className="space-y-2 text-white/50">
+              <h3 className="mb-3 text-2xl font-bold text-white">Nonprofit IT Challenges</h3>
+              <div className="space-y-2 text-white/75">
                 {[
                   "Limited IT budgets—every dollar matters for mission",
                   "Volunteer staff with limited technical expertise",
                   "Donor data privacy requirements (PII protection)",
                   "Grant compliance requirements (security evidence)",
-                  "Rapid growth strains IT infrastructure"
-                ].map((item, idx) => (
-                  <div key={idx} className="flex gap-2">
-                    <span className="text-de-accent-ink font-bold">•</span>
+                  "Rapid growth strains IT infrastructure",
+                ].map((item) => (
+                  <div key={item} className="flex gap-2">
+                    <span className="font-bold text-de-accent-ink" aria-hidden="true">
+                      •
+                    </span>
                     <span>{item}</span>
                   </div>
                 ))}
@@ -69,123 +88,108 @@ export default function Nonprofits() {
           </div>
         </div>
 
-        {/* Mission-Focused Services */}
         <div className="space-y-6">
           <h2 className="text-3xl font-bold text-white">Nonprofit-Specific IT Services</h2>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid gap-6 md:grid-cols-2">
             {[
-              { 
-                icon: Zap, 
-                title: "Nonprofit Pricing", 
+              {
+                icon: Zap,
+                title: "Nonprofit Pricing",
                 desc: "20% discount for 501(c)(3)s",
-                features: ["20% managed IT discount", "No setup or onboarding fees", "Microsoft nonprofit grants", "Scaled pricing for growth", "Flexible service tiers"]
+                features: ["20% managed IT discount", "No setup or onboarding fees", "Microsoft nonprofit grants", "Scaled pricing for growth", "Flexible service tiers"],
               },
-              { 
-                icon: Shield, 
-                title: "Donor Data Protection", 
+              {
+                icon: Shield,
+                title: "Donor Data Protection",
                 desc: "Secure donation processing",
-                features: ["PCI DSS compliance", "Encrypted donor database", "GDPR/state privacy", "Secure online donations", "Backup protection"]
+                features: ["PCI DSS compliance", "Encrypted donor database", "GDPR/state privacy", "Secure online donations", "Backup protection"],
               },
-              { 
-                icon: Users, 
-                title: "Grant Compliance", 
+              {
+                icon: Users,
+                title: "Grant Compliance",
                 desc: "Meet funder requirements",
-                features: ["Security documentation", "Data retention procedures", "Vendor risk management", "Incident response planning", "Compliance evidence packets"]
+                features: ["Security documentation", "Data retention procedures", "Vendor risk management", "Incident response planning", "Compliance evidence packets"],
               },
-              { 
-                icon: TrendingUp, 
-                title: "Scalable Growth", 
+              {
+                icon: TrendingUp,
+                title: "Scalable Growth",
                 desc: "IT grows with mission",
-                features: ["Add users without overhaul", "Remote team support", "Cloud app integration", "Multi-office capability", "Nonprofit software support"]
-              }
-            ].map((service, idx) => {
+                features: ["Add users without overhaul", "Remote team support", "Cloud app integration", "Multi-office capability", "Nonprofit software support"],
+              },
+            ].map((service) => {
               const Icon = service.icon;
               return (
-                <div key={idx} className="group relative">
-                  <div className="absolute inset-0 bg-de-raised rounded-xl blur opacity-0 group-hover:opacity-15 transition-all" />
-                  <Card className="relative bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 hover:shadow-lg transition-all group-hover:border-de-hairline">
-                    <CardHeader>
-                      <Icon className="h-10 w-10 text-de-accent-ink mb-2 group-hover:scale-110 transition-transform" />
-                      <CardTitle className="text-white">{service.title}</CardTitle>
-                      <p className="text-sm text-gray-400 mt-1">{service.desc}</p>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-2">
-                        {service.features.map((f, i) => (
-                          <li key={i} className="flex gap-2 text-sm text-gray-300">
-                            <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                            {f}
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
+                <div key={service.title} className={`de-interactive-card p-6 ${cardClass}`}>
+                  <Icon className="mb-2 h-10 w-10 text-de-accent-ink" aria-hidden="true" />
+                  <h3 className="text-xl font-semibold text-white">{service.title}</h3>
+                  <p className="mt-1 text-sm text-white/55">{service.desc}</p>
+                  <ul className="mt-4 space-y-2">
+                    {service.features.map((f) => (
+                      <li key={f} className="flex gap-2 text-sm text-white/80">
+                        <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-de-accent-ink" aria-hidden="true" />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               );
             })}
           </div>
         </div>
 
-        {/* Supported Programs */}
-        <div className="bg-de-raised backdrop-blur-sm rounded-xl p-8 border border-de-hairline">
-          <h3 className="text-2xl font-bold mb-8 text-center text-white">Nonprofit Programs We Support</h3>
-          <div className="grid md:grid-cols-3 gap-4">
+        <div className={`p-8 ${cardClass}`}>
+          <h3 className="mb-8 text-center text-2xl font-bold text-white">Nonprofit Programs We Support</h3>
+          <div className="grid gap-4 md:grid-cols-3">
             {[
               "Microsoft Nonprofit Grants",
               "Google Workspace for Nonprofits",
               "Adobe Creative Cloud Discounts",
               "Salesforce Nonprofit Edition",
               "Neon CRM Integration",
-              "QuickBooks Nonprofit Pricing"
-            ].map((prog, idx) => (
-              <div key={idx} className="flex items-center gap-3 p-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg hover:bg-white/10 transition-all">
-                <CheckCircle className="h-5 w-5 text-emerald-500 flex-shrink-0" />
-                <span className="text-gray-300 font-medium">{prog}</span>
+              "QuickBooks Nonprofit Pricing",
+            ].map((prog) => (
+              <div key={prog} className={`flex items-center gap-3 p-3 ${insetClass}`}>
+                <CheckCircle className="h-5 w-5 shrink-0 text-de-accent-ink" aria-hidden="true" />
+                <span className="font-medium text-white/80">{prog}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Success Story */}
-        <div className="grid md:grid-cols-3 gap-6 bg-de-raised rounded-xl p-8 text-white">
-          <div className="text-center p-4 bg-white/10 rounded-lg backdrop-blur-sm">
-            <p className="text-3xl font-bold mb-1">40%</p>
-            <p className="text-white/70">IT Cost Reduction</p>
-            <p className="text-xs text-white/50 mt-2">20% nonprofit discount + efficient management</p>
+        <div className={`grid gap-6 p-8 md:grid-cols-3 ${cardClass}`}>
+          <div className="text-center">
+            <p className="mb-2 text-lg font-semibold text-white">Mission-first pricing</p>
+            <p className="text-sm text-white/70">20% managed IT discount for 501(c)(3) organizations, with vendor nonprofit programs where eligible.</p>
           </div>
-          <div className="text-center p-4 bg-white/10 rounded-lg backdrop-blur-sm border-l border-r border-de-hairline">
-            <p className="text-3xl font-bold mb-1">100%</p>
-            <p className="text-white/70">Audit Pass Rate</p>
-            <p className="text-xs text-white/50 mt-2">Grant compliance documentation</p>
+          <div className="text-center md:border-l md:border-r md:border-de-hairline md:px-6">
+            <p className="mb-2 text-lg font-semibold text-white">Grant-ready evidence</p>
+            <p className="text-sm text-white/70">Documentation funders typically request — not a claimed 100% audit pass rate.</p>
           </div>
-          <div className="text-center p-4 bg-white/10 rounded-lg backdrop-blur-sm">
-            <p className="text-3xl font-bold mb-1">24/7</p>
-            <p className="text-white/70">Support Available</p>
-            <p className="text-xs text-white/50 mt-2">Dedicated MSP partner for mission</p>
+          <div className="text-center">
+            <p className="mb-2 text-lg font-semibold text-white">Someone to call</p>
+            <p className="text-sm text-white/70">Arizona team for donor-data and grant-system issues — {PRIMARY_PHONE.display}.</p>
           </div>
         </div>
 
-        {/* CTA */}
-        <div className="bg-de-raised rounded-xl p-8 text-center text-white">
-          <h2 className="text-3xl font-bold mb-4">Focus on Your Mission</h2>
-          <p className="text-lg mb-6 text-white/70">Let us handle technology. Get nonprofit pricing + free consultation.</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
-              href="/book" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center bg-white text-de-accent hover:bg-de-paper-raised px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
-              data-testid="button-schedule-nonprofit"
-            >
-              Schedule Free Consultation
-            </a>
-            <a 
-              href={PRIMARY_PHONE.telHref}
-              className="inline-flex items-center justify-center border-2 border-white bg-transparent text-white hover:bg-white/10 px-8 py-3 rounded-lg font-semibold transition-all"
+        <div className={`p-8 text-center ${cardClass}`}>
+          <h2 className="mb-4 text-3xl font-bold text-white">Focus on Your Mission</h2>
+          <p className="mb-6 text-lg text-white/70">Let us handle technology. Start with a Cyber Risk Assessment and nonprofit pricing conversation.</p>
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
+            <Button asChild variant="brand" size="lg" className="h-12 px-8 font-semibold" data-testid="button-schedule-nonprofit">
+              <a href="/book">{CTA.primary}</a>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="h-12 border-white/20 px-8 font-semibold text-white hover:bg-white/10"
               data-testid="button-call-nonprofit"
             >
-              Call {PRIMARY_PHONE.display}
-            </a>
+              <a href={PRIMARY_PHONE.telHref}>
+                <Phone className="mr-1 h-5 w-5" />
+                Call {PRIMARY_PHONE.display}
+              </a>
+            </Button>
           </div>
         </div>
       </div>
