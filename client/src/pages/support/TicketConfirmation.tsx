@@ -18,27 +18,33 @@ export default function TicketConfirmation() {
     <PageTemplate
       title="Ticket Submitted"
       subtitle="Thanks — our support team has received your request."
-      gradientColors="from-slate-600 via-slate-700 to-gray-800"
+      breadcrumbs={[{ label: "Support", href: "/about/support" }, { label: "Ticket Submitted" }]}
     >
-      <div className="max-w-xl mx-auto text-center space-y-8">
+      <div className="mx-auto max-w-xl space-y-8 text-center">
         <div className="flex justify-center">
-          <CheckCircle className="h-16 w-16 text-green-400" />
+          <span className="inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-de-hairline bg-de-raised text-de-accent-ink">
+            <CheckCircle className="h-8 w-8" aria-hidden="true" />
+          </span>
         </div>
-        <p className="text-gray-300 text-lg">
+        <p className="text-lg text-white/70">
           We’ll follow up at the email you provided. For urgent production issues, call us now.
         </p>
         <a
           href={PRIMARY_PHONE.telHref}
-          className="inline-flex items-center gap-2 text-2xl font-bold text-de-accent-ink hover:text-de-accent-ink"
+          className="inline-flex items-center gap-2 text-2xl font-bold text-de-accent-ink hover:text-white"
         >
           <Phone className="h-6 w-6" />
           {PRIMARY_PHONE.display}
         </a>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Button onClick={() => setLocation("/support/knowledge-base")} variant="outline">
+        <div className="flex flex-col justify-center gap-3 sm:flex-row">
+          <Button
+            onClick={() => setLocation("/support/knowledge-base")}
+            variant="outline"
+            className="h-12 border-white/20 font-semibold text-white hover:bg-white/10"
+          >
             Browse Knowledge Base
           </Button>
-          <Button onClick={() => setLocation("/")} className="bg-de-accent hover:bg-de-accent">
+          <Button onClick={() => setLocation("/")} variant="brand" className="h-12 font-semibold">
             Back to Home
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
