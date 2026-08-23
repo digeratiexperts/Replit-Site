@@ -14,9 +14,10 @@ import {
 import { fetchPublicCatalog, pingHub } from "./techSalesClient";
 import { addPortalSseClient } from "./portalSse";
 import type { DeSyncEventType } from "./deSyncContract";
-import { getClient } from "../portalAuthStore";
+import { getClient, listUniqueUsers } from "../portalAuthStore";
 import { ensureDeSyncSchema } from "./ensureDeSyncSchema";
 import { logger } from "../logger";
+import { assertPortalCommandAllowed } from "./tenantIdentity";
 
 type AuthedRequest = Request & {
   user?: { role?: string; clientId?: string | null };
@@ -143,6 +144,30 @@ export function registerDeSyncRoutes(app: Express, authMiddleware: AuthMiddlewar
         return res.status(400).json({ error: "Unsupported portal command" });
       }
       const client = req.user?.clientId ? getClient(req.user.clientId) : undefined;
+      const actor = listUniqueUsers().find((user) => user.id === req.userId);
+      const commandGate = assertPortalCommandAllowed({
+        actor: {
+          id: req.userId,
+          role: req.user?.role || actor?.role,
+          storeRole: actor?.storeRole,
+          clientId: req.user?.clientId || actor?.clientId,
+          isActive: actor?.isActive,
+        },
+        client: client
+          ? {
+              id: client.id,
+              companyName: client.companyName,
+              serviceType: client.serviceType,
+              status: client.status,
+              hubAccountId: client.hubAccountId,
+            }
+          : null,
+        eventType,
+        payload: req.body?.payload && typeof req.body.payload === "object" ? req.body.payload : {},
+      });
+      if (!commandGate.ok) {
+        return res.status(commandGate.status).json({ error: commandGate.error, code: commandGate.code });
+      }
       const envelope = await enqueueOutbox({
         eventType,
         source: "portal",

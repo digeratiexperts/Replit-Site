@@ -35,7 +35,39 @@ Status key: **LIVE** working in production · **PARTIAL** new durable path along
 portal_client_id  ↔  canonicalAccountId (Hub accounts.id)  ↔  zoho_account_id
 ```
 
-Company name is display/search only after the first successful match is persisted (`portal_clients.hub_account_id` + Hub `sync_identities`).
+Company name is display/search only after the first successful match is persisted (`portal_clients.hub_account_id`). Hub `sync_identities` is still a documented hole (not a table yet).
+
+### Tenant IDs
+
+| System | Client/tenant id | Notes |
+|--------|------------------|-------|
+| Website Client Portal | `portal_clients.id` | JWT `clientId`. Org users scoped to this. |
+| Hub / TechSales | `accounts.id` | Canonical commercial id. Survives suspect → former. |
+| Zoho CRM | Accounts.id (`accounts.zoho_id` / payload `zohoAccountId`) | Never use Deal id to merge accounts. |
+| Zoho Desk | ticket/contact/account ids | Portal tickets sync Desk; list is local + email scoped. |
+| Zoho Books/Billing | customer_id resolved by email at invoice read | Not persisted on `portal_clients`. |
+| Zoho Payments | checkout metadata | Store/portal checkout. |
+| Zoho WorkDrive | Hub `zoho-workdrive` | Hub-only today. |
+
+### Maturity-stage holes
+
+| Stage | Portal | Hub lifecycle | Break |
+|-------|--------|---------------|-------|
+| prospect | `serviceType=prospect` | suspect/prospect/lead | Register creates portal client without `hub_account_id`; website-lead creates Hub account without `portalClientId`. |
+| quoted | quote request / Hub quote | qualified_opportunity | Mapping lands only after orders/documents pull or Hub event with `portalClientId`. |
+| onboarded | no dedicated serviceType | client_pending_activation | No write-back of Hub activation onto portal `serviceType`. |
+| active | `managed` | active_client | Books customer id is email-lookup only. |
+| co-managed | `comanaged` | active_client + serviceRelationship | Hub serviceRelationship is not synced back. |
+
+Portal commands fail closed on disabled users, viewer role, and claimed Hub/portal id mismatch. Hub order/document bridges fail closed on unknown `accountId` (no name fallback) and no longer substring-match company names.
+
+## Canonical CSRA
+
+`$2,500` one-time everywhere: store `DE-DIG-ASMT-CSRA-OT`, portal order form, Hub `OT-ASSESSMENT`. `$999` is retired, not a second SKU. Do not auto-credit toward a later ProActive package. ProActive packages stay mutually exclusive.
+
+## Zoho Agents readiness
+
+Existing surface only — not Zoho Agent Studio. Hub `POST /api/webhooks/zoho/events` (`agent.response`) now requires at least one tenant id. Website documents the same scopes/ids in `server/integrations/zohoAgentsReadiness.ts`. Missing: Hub `/api/integrations/v1/*` receivers (website still falls back to legacy lead webhook), Hub `sync_identities` table, Zoho Books customer id on portal clients, Marketing Automation / SEO product (no existing integration — do not invent).
 
 ## Secrets (migration)
 
