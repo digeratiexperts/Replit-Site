@@ -180,7 +180,7 @@ export async function listApprovalsForUser(user: OrgUserFields, scope: "mine" | 
     .select()
     .from(portalApprovalSteps)
     .where(eq(portalApprovalSteps.approverUserId, user.id));
-  const myReqIds = Array.from(new Set(mySteps.map((s) => s.requestId)));
+  const myReqIds = Array.from(new Set(mySteps.map((s: any) => s.requestId))).filter(Boolean) as string[];
   if (myReqIds.length) {
     addRows(
       await db.select().from(portalApprovalRequests).where(inArray(portalApprovalRequests.id, myReqIds)),
@@ -224,10 +224,10 @@ export async function listApprovalsForUser(user: OrgUserFields, scope: "mine" | 
   }
 
   const requests = Array.from(map.values()).sort(
-    (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+    (a: any, b: any) => b.createdAt.getTime() - a.createdAt.getTime(),
   );
 
-  const enriched = [];
+  const enriched: any[] = [];
   for (const request of requests) {
     const steps = await db
       .select()
@@ -238,7 +238,7 @@ export async function listApprovalsForUser(user: OrgUserFields, scope: "mine" | 
     enriched.push({
       ...request,
       requesterName: requester?.fullName || request.requesterUserId,
-      steps: steps.map((s) => {
+      steps: steps.map((s: any) => {
         const approver = s.approverUserId ? findUserById(s.approverUserId) : null;
         return {
           ...s,
@@ -277,7 +277,7 @@ export async function actOnApproval(opts: {
     throw new Error("Request is no longer actionable");
   }
 
-  const current = steps.find((s) => s.status === "pending");
+  const current = steps.find((s: any) => s.status === "pending");
   if (!current) throw new Error("No pending approval step");
 
   const isAssignee = current.approverUserId === opts.actor.id;
@@ -320,7 +320,7 @@ export async function actOnApproval(opts: {
   }
 
   // approve — advance or finalize
-  const remaining = steps.filter((s) => s.id !== current.id && s.status === "pending");
+  const remaining = steps.filter((s: any) => s.id !== current.id && s.status === "pending");
   if (remaining.length === 0) {
     const [updated] = await db
       .update(portalApprovalRequests)

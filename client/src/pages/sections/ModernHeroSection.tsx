@@ -77,14 +77,20 @@ export const ModernHeroSection = (): JSX.Element => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: prefersReducedMotion ? 0 : 0.4, ease: "easeOut" }}
             >
-              <motion.p
-                className="text-sm font-semibold uppercase tracking-[0.16em] text-pink-300/95 sm:text-base sm:tracking-[0.18em]"
+              <motion.div
+                className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-pink-500/15 via-purple-500/10 to-violet-500/15 border border-pink-500/30 backdrop-blur-md self-start shadow-sm shadow-pink-500/10"
                 initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: prefersReducedMotion ? 0 : 0.3, delay: prefersReducedMotion ? 0 : 0.05 }}
               >
-                Arizona MSP · Cybersecurity &amp; Managed IT
-              </motion.p>
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                </span>
+                <span className="text-xs sm:text-sm font-semibold uppercase tracking-[0.16em] text-pink-200">
+                  Arizona MSP · Cybersecurity &amp; Managed IT
+                </span>
+              </motion.div>
 
               <h1 className="text-[clamp(1.7rem,3.2vw,3.55rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white">
                 <span className="whitespace-nowrap">Your Arizona business,</span>
@@ -92,11 +98,21 @@ export const ModernHeroSection = (): JSX.Element => {
                 <span className="text-[#D3126A]">protected 24/7.</span>
               </h1>
 
-              <p className="de-copy-on-dark max-w-[36rem] text-[17px] leading-[1.6] sm:text-lg">
-                Cybersecurity and managed IT for growing businesses, reducing risk, supporting
-                compliance, and keeping your team productive without building an internal IT
-                department.
-              </p>
+              <div className="relative max-w-xl my-1 rounded-xl bg-slate-950/40 backdrop-blur-md border border-white/10 p-4 sm:p-5 shadow-lg shadow-purple-950/20 overflow-hidden group">
+                <div
+                  className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-fuchsia-500 via-pink-500 to-violet-500"
+                  aria-hidden="true"
+                />
+                <div
+                  className="absolute -left-4 top-1/2 -translate-y-1/2 w-24 h-24 bg-pink-500/15 rounded-full blur-xl pointer-events-none"
+                  aria-hidden="true"
+                />
+                <p className="relative text-base md:text-lg text-white/95 leading-relaxed pl-1 sm:pl-2">
+                  Cybersecurity and managed IT for growing businesses—reducing risk, supporting
+                  compliance, and keeping your team productive without building an internal IT
+                  department.
+                </p>
+              </div>
 
               <div className="grid grid-cols-1 gap-x-4 gap-y-2.5 min-[420px]:grid-cols-2">
                 {features.map((feature, index) => (

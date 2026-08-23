@@ -95,7 +95,7 @@ export async function generateAIChatResponse(
  */
 export function shouldEscalateToHuman(
   userMessage: string,
-  context: ChatContext
+  context?: Partial<ChatContext>
 ): boolean {
   const text = userMessage.toLowerCase();
 

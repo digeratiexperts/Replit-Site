@@ -434,7 +434,9 @@ export class MemStorage implements IStorage {
       description: project.description || null,
       icon: project.icon || null,
       color: project.color || null,
-      isFavorite: project.isFavorite || false,
+      defaultView: (project as any).defaultView ?? null,
+      isFavorite: project.isFavorite ?? false,
+      isArchived: (project as any).isArchived ?? false,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -466,6 +468,8 @@ export class MemStorage implements IStorage {
     const newBoard: Board = {
       id: generateId(),
       ...board,
+      position: (board as any).position ?? 0,
+      isCollapsed: (board as any).isCollapsed ?? null,
       color: board.color || null,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -491,11 +495,11 @@ export class MemStorage implements IStorage {
   }
 
   async getTasksByProjectId(projectId: string): Promise<Task[]> {
-    return Array.from(this.tasks.values()).filter(t => t.projectId === projectId && !t.isArchived);
+    return Array.from(this.tasks.values()).filter(t => t.projectId === projectId);
   }
 
   async getTasksByBoardId(boardId: string): Promise<Task[]> {
-    return Array.from(this.tasks.values()).filter(t => t.boardId === boardId && !t.isArchived);
+    return Array.from(this.tasks.values()).filter(t => t.boardId === boardId);
   }
 
   async createTask(task: InsertTask): Promise<Task> {
@@ -503,15 +507,21 @@ export class MemStorage implements IStorage {
       id: generateId(),
       ...task,
       description: task.description || null,
-      priority: task.priority || "medium",
+      boardId: task.boardId || null,
       status: task.status || "todo",
-      dueDate: task.dueDate || null,
+      priority: task.priority || "medium",
       position: task.position || 0,
-      isArchived: task.isArchived || false,
-      completedAt: null,
+      dueDate: task.dueDate || null,
+      startDate: task.startDate || null,
+      estimatedHours: task.estimatedHours || null,
+      actualHours: task.actualHours || null,
       assigneeId: task.assigneeId || null,
+      parentTaskId: task.parentTaskId || null,
+      isArchived: task.isArchived || false,
+      customFields: task.customFields || null,
       createdAt: new Date(),
       updatedAt: new Date(),
+      completedAt: null,
     };
     this.tasks.set(newTask.id, newTask);
     return newTask;
@@ -521,7 +531,7 @@ export class MemStorage implements IStorage {
     const task = this.tasks.get(id);
     if (!task) return undefined;
     const updated = { ...task, ...data, updatedAt: new Date() };
-    if (data.status === "done") {
+    if ((data.status as string) === "done") {
       updated.completedAt = new Date();
     }
     this.tasks.set(id, updated);
@@ -581,8 +591,11 @@ export class MemStorage implements IStorage {
     const newMessage: PortalChatMessage = {
       id: generateId(),
       ...message,
+      ticketId: message.ticketId || null,
+      encryptedContent: null,
       isRead: message.isRead || false,
       createdAt: new Date(),
+      updatedAt: new Date(),
     };
     this.chatMessages.set(newMessage.id, newMessage);
     return newMessage;
@@ -958,9 +971,9 @@ export class DatabaseStorage implements IStorage {
   async updateTask(id: string, data: UpdateTask): Promise<Task | undefined> {
     const db = await this.getDb();
     const updateData: any = { ...data, updatedAt: new Date() };
-    if (data.status === "done") {
+    if ((data.status as string) === "done") {
       updateData.completedAt = new Date();
-    } else if (data.status && data.status !== "done") {
+    } else if (data.status && (data.status as string) !== "done") {
       updateData.completedAt = null;
     }
     const [updated] = await db.update(tasks).set(updateData).where(eq(tasks.id, id)).returning();

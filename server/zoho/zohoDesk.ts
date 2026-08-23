@@ -68,10 +68,10 @@ class ZohoDeskService {
     
     try {
       const departments = await this.getDepartments();
-      if (departments.length > 0) {
+      if (departments.length > 0 && departments[0].id) {
         this.defaultDepartmentId = departments[0].id;
         console.log(`✅ Zoho Desk default department: ${departments[0].name || departments[0].id}`);
-        return this.defaultDepartmentId;
+        return departments[0].id;
       }
     } catch (err: any) {
       console.warn('Could not fetch departments:', err.message);

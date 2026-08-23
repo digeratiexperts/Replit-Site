@@ -5,6 +5,7 @@ interface ZohoTokenResponse {
   token_type: string;
   expires_in: number;
   api_domain: string;
+  scope?: string;
 }
 
 class ZohoClient {
