@@ -12,6 +12,7 @@ import {
   PortalTicketUploadError,
 } from "./portalTicketUploads";
 import { PORTAL_TICKET_MAX_FILE_BYTES } from "@shared/portalTicketFileRules";
+import { validatePortalOrderSelection } from "@shared/portalOrderCatalog";
 import {
   clearZohoPkceCookie,
   createZohoStartPayload,
@@ -3147,6 +3148,19 @@ export async function registerRoutes(app: Express) {
       if (!user) return res.status(404).json({ message: "User not found" });
 
       const payload = req.body || {};
+      const validated = validatePortalOrderSelection(payload.selectedServices);
+      if (!validated.ok) {
+        return res.status(400).json({ message: validated.error, code: validated.code });
+      }
+      payload.selectedServices = validated.lines;
+      payload.pricing = {
+        ...(payload.pricing && typeof payload.pricing === "object" ? payload.pricing : {}),
+        monthlyTotal: validated.monthlyTotal,
+        oneTimeTotal: validated.oneTimeTotal,
+        hasCustom: validated.hasQuoteItems,
+        payableCheckout: validated.payableCheckout,
+      };
+
       const saved = await saveOrderForm({
         userId: user.id,
         clientId: user.clientId || null,

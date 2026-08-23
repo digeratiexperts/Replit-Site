@@ -22,6 +22,7 @@ export interface ServiceCategory {
   services: ServiceItem[];
 }
 
+/** Advisor knowledge only. Portal /portal/order-form uses shared/portalOrderCatalog.ts. */
 export const serviceCatalog: ServiceCategory[] = [
   {
     id: 'core',

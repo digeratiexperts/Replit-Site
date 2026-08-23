@@ -8,20 +8,23 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Server, Shield, Database, Network, Phone, ClipboardCheck, Users,
-  Check, Plus, Minus, ChevronRight, FileText, Send, Calculator,
-  Building2, User, Calendar, DollarSign, Star, Info
+  Server, Shield, ClipboardCheck, Check, ChevronRight, FileText, Send, Calculator,
+  Building2, User, Calendar, DollarSign, Info
 } from "lucide-react";
-import { serviceCatalog, coreDocuments, getDocumentKeysForServices, type ServiceItem } from "@/data/serviceCatalog";
+import { coreDocuments } from "@/data/serviceCatalog";
+import { pricing } from "@/data/pricing";
+import {
+  catalogUnitPrice,
+  getPortalOrderItem,
+  portalOrderDocumentKeys,
+  PORTAL_ORDER_SELECTABLE,
+  validatePortalOrderSelection,
+  type PortalOrderCatalogItem,
+} from "@shared/portalOrderCatalog";
 import { useToast } from "@/hooks/use-toast";
 import { portalPost } from "@/lib/portalApi";
 import { useLocation } from "wouter";
-
-const iconMap: Record<string, any> = {
-  Server, Shield, Database, Network, Phone, ClipboardCheck, Users
-};
 
 interface SelectedService {
   serviceId: string;
@@ -52,24 +55,24 @@ interface ClientInfo {
   notes: string;
 }
 
-function isCustomPricing(service: ServiceItem): boolean {
-  return service.pricingType === "custom" || service.basePrice === 0;
-}
-
-function formatServicePrice(service: ServiceItem): { primary: string; secondary?: string } {
-  if (isCustomPricing(service)) {
-    return { primary: "Custom quote", secondary: `per ${service.pricingUnit}` };
+function formatServicePrice(service: PortalOrderCatalogItem): { primary: string; secondary?: string } {
+  if (service.checkoutMode === "quote_after_review") {
+    const published = service.tier ? pricing[service.tier] : null;
+    return {
+      primary: "Priced after review",
+      secondary: published ? `starts at $${published.user.toLocaleString()}/user` : undefined,
+    };
   }
+  const price = catalogUnitPrice(service);
   return {
-    primary: `$${service.basePrice.toLocaleString()}`,
-    secondary: `per ${service.pricingUnit}${service.pricingType !== "flat" ? "/mo" : ""}`,
+    primary: `$${price.toLocaleString()}`,
+    secondary: "one-time catalog price",
   };
 }
 
-function formatLineAmount(service: ServiceItem, quantity: number): string {
-  if (isCustomPricing(service)) return "Custom quote";
-  const amount = `$${(service.basePrice * quantity).toLocaleString()}`;
-  return service.pricingType !== "flat" ? `${amount}/mo` : amount;
+function formatLineAmount(service: PortalOrderCatalogItem): string {
+  if (service.checkoutMode === "quote_after_review") return "Priced after review";
+  return `$${catalogUnitPrice(service).toLocaleString()}`;
 }
 
 const fieldClass =
@@ -105,74 +108,52 @@ export function OrderForm() {
     notes: "",
   });
 
-  const toggleService = (serviceId: string, service: ServiceItem) => {
+  const toggleService = (service: PortalOrderCatalogItem) => {
     setSelectedServices((prev) => {
-      const existing = prev.find((s) => s.serviceId === serviceId);
+      const existing = prev.find((s) => s.serviceId === service.id);
       if (existing) {
-        return prev.filter((s) => s.serviceId !== serviceId);
+        return prev.filter((s) => s.serviceId !== service.id);
       }
-      return [...prev, { serviceId, quantity: service.minQuantity }];
+      const next = service.exclusiveGroup
+        ? prev.filter((s) => getPortalOrderItem(s.serviceId)?.exclusiveGroup !== service.exclusiveGroup)
+        : prev;
+      return [...next, { serviceId: service.id, quantity: service.minQuantity }];
     });
   };
 
-  const updateQuantity = (serviceId: string, delta: number) => {
-    setSelectedServices((prev) =>
-      prev.map((s) => {
-        if (s.serviceId === serviceId) {
-          const service = getServiceFromCatalog(serviceId);
-          const newQty = Math.max(service?.minQuantity || 1, s.quantity + delta);
-          return { ...s, quantity: newQty };
-        }
-        return s;
-      }),
-    );
-  };
-
-  const getServiceFromCatalog = (serviceId: string): ServiceItem | undefined => {
-    for (const category of serviceCatalog) {
-      const service = category.services.find((s) => s.id === serviceId);
-      if (service) return service;
-    }
-    return undefined;
+  const getServiceFromCatalog = (serviceId: string): PortalOrderCatalogItem | undefined => {
+    return getPortalOrderItem(serviceId);
   };
 
   const isServiceSelected = (serviceId: string) => {
     return selectedServices.some((s) => s.serviceId === serviceId);
   };
 
-  const getQuantity = (serviceId: string) => {
-    return selectedServices.find((s) => s.serviceId === serviceId)?.quantity || 0;
-  };
-
-  const pricing = useMemo(() => {
-    let monthlyTotal = 0;
-    let oneTimeTotal = 0;
-    let hasCustom = false;
-
-    for (const selected of selectedServices) {
-      const service = getServiceFromCatalog(selected.serviceId);
-      if (!service) continue;
-
-      if (isCustomPricing(service)) {
-        hasCustom = true;
-        continue;
-      }
-
-      const lineTotal = service.basePrice * selected.quantity;
-
-      if (service.pricingType === "flat") {
-        oneTimeTotal += lineTotal;
-      } else {
-        monthlyTotal += lineTotal;
-      }
+  const orderPricing = useMemo(() => {
+    const validated = validatePortalOrderSelection(selectedServices);
+    if (!validated.ok) {
+      return {
+        monthlyTotal: 0,
+        oneTimeTotal: 0,
+        annualTotal: 0,
+        hasCustom: selectedServices.length > 0,
+        payableCheckout: false,
+        error: validated.error,
+      };
     }
-
-    return { monthlyTotal, oneTimeTotal, annualTotal: monthlyTotal * 12, hasCustom };
+    return {
+      monthlyTotal: validated.monthlyTotal,
+      oneTimeTotal: validated.oneTimeTotal,
+      annualTotal: 0,
+      hasCustom: validated.hasQuoteItems,
+      payableCheckout: validated.payableCheckout,
+      error: null as string | null,
+    };
   }, [selectedServices]);
 
   const requiredDocuments = useMemo(() => {
     const serviceIds = selectedServices.map((s) => s.serviceId);
-    const docKeys = getDocumentKeysForServices(serviceIds);
+    const docKeys = portalOrderDocumentKeys(serviceIds);
 
     const allDocs = [
       ...coreDocuments,
@@ -202,8 +183,18 @@ export function OrderForm() {
     setIsSubmitting(true);
 
     try {
+      const validated = validatePortalOrderSelection(selectedServices);
+      if (!validated.ok) {
+        toast({
+          title: "Invalid service mix",
+          description: validated.error,
+          variant: "destructive",
+        });
+        return;
+      }
+
       const serviceIds = selectedServices.map((s) => s.serviceId);
-      const documentKeys = getDocumentKeysForServices(serviceIds);
+      const documentKeys = portalOrderDocumentKeys(serviceIds);
 
       const orderData = {
         serviceSelections: documentKeys,
@@ -230,16 +221,19 @@ export function OrderForm() {
           contractTerm: clientInfo.contractTerm,
           notes: clientInfo.notes,
         },
-        selectedServices: selectedServices.map((s) => ({
-          serviceId: s.serviceId,
-          quantity: s.quantity,
-          serviceName: getServiceFromCatalog(s.serviceId)?.name || s.serviceId,
+        selectedServices: validated.lines.map((line) => ({
+          serviceId: line.id,
+          sku: line.sku,
+          hubSku: line.hubSku,
+          quantity: line.quantity,
+          serviceName: line.name,
         })),
         pricing: {
-          monthlyTotal: pricing.monthlyTotal,
-          oneTimeTotal: pricing.oneTimeTotal,
+          monthlyTotal: validated.monthlyTotal,
+          oneTimeTotal: validated.oneTimeTotal,
           contractTerm: parseInt(clientInfo.contractTerm),
-          hasCustom: pricing.hasCustom,
+          hasCustom: validated.hasQuoteItems,
+          payableCheckout: validated.payableCheckout,
         },
         name: `Service Order - ${clientInfo.legalName} - ${new Date().toLocaleDateString()}`,
       };
@@ -302,7 +296,7 @@ export function OrderForm() {
                       {selected.quantity > 1 && ` ×${selected.quantity}`}
                     </span>
                     <span className="text-slate-900 font-medium whitespace-nowrap">
-                      {formatLineAmount(service, selected.quantity)}
+                      {formatLineAmount(service)}
                     </span>
                   </div>
                 );
@@ -311,35 +305,35 @@ export function OrderForm() {
 
             <Separator className="bg-slate-200" />
 
-            {pricing.monthlyTotal > 0 && (
+            {orderPricing.monthlyTotal > 0 && (
               <div className="flex justify-between items-baseline">
                 <span className="text-slate-500 text-sm">Monthly Total</span>
                 <span className="text-lg font-semibold text-slate-900">
-                  ${pricing.monthlyTotal.toLocaleString()}
+                  ${orderPricing.monthlyTotal.toLocaleString()}
                   <span className="text-sm font-normal text-slate-500">/mo</span>
                 </span>
               </div>
             )}
 
-            {pricing.oneTimeTotal > 0 && (
+            {orderPricing.oneTimeTotal > 0 && (
               <div className="flex justify-between items-baseline">
                 <span className="text-slate-500 text-sm">One-Time</span>
                 <span className="text-lg font-semibold text-slate-900">
-                  ${pricing.oneTimeTotal.toLocaleString()}
+                  ${orderPricing.oneTimeTotal.toLocaleString()}
                 </span>
               </div>
             )}
 
-            {pricing.hasCustom && (
+            {orderPricing.hasCustom && (
               <div className="rounded-md bg-de-paper border border-[var(--de-paper-hairline)] px-3 py-2 text-sm text-[#1A1228]">
                 Includes custom-quoted services — final pricing after review.
               </div>
             )}
 
-            {pricing.monthlyTotal > 0 && (
+            {orderPricing.monthlyTotal > 0 && (
               <div className="flex justify-between text-xs">
                 <span className="text-slate-400">Annual Value</span>
-                <span className="text-slate-500">${pricing.annualTotal.toLocaleString()}/yr</span>
+                <span className="text-slate-500">${orderPricing.annualTotal.toLocaleString()}/yr</span>
               </div>
             )}
           </>
@@ -424,70 +418,58 @@ export function OrderForm() {
                     Select Your Services
                   </CardTitle>
                   <CardDescription className="text-slate-500">
-                    Choose the services that best fit your business needs
+                    Choose CSRA, one ProActive ecosystem package, or both. Security, Core IT, and BCDR
+                    are included inside the selected package — they cannot be stacked as separate checkouts.
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <Tabs defaultValue="core" className="w-full">
-                    <TabsList className="flex flex-wrap h-auto gap-1 mb-4 bg-slate-100 p-1">
-                      {serviceCatalog.map((category) => {
-                        const IconComponent = iconMap[category.icon] || Server;
-                        return (
-                          <TabsTrigger
-                            key={category.id}
-                            value={category.id}
-                            className="text-xs data-[state=active]:bg-white data-[state=active]:text-[#D3126A] data-[state=active]:shadow-sm text-slate-600"
-                          >
-                            <IconComponent className="w-3.5 h-3.5 mr-1" />
-                            <span className="hidden sm:inline">{category.name.split(" ")[0]}</span>
-                          </TabsTrigger>
-                        );
-                      })}
-                    </TabsList>
-
-                    {serviceCatalog.map((category) => (
-                      <TabsContent key={category.id} value={category.id} className="space-y-2 mt-0">
-                        <p className="text-slate-500 text-sm mb-3">{category.description}</p>
+                <CardContent className="space-y-6">
+                  {(["assessment", "ecosystem"] as const).map((group) => {
+                    const items = PORTAL_ORDER_SELECTABLE.filter((item) =>
+                      group === "assessment" ? item.id === "csra-assessment" : item.id !== "csra-assessment",
+                    );
+                    return (
+                      <div key={group} className="space-y-2">
+                        <h3 className="text-sm font-semibold text-slate-800 flex items-center gap-2">
+                          {group === "assessment" ? (
+                            <ClipboardCheck className="w-4 h-4 text-[#D3126A]" />
+                          ) : (
+                            <Shield className="w-4 h-4 text-[#D3126A]" />
+                          )}
+                          {group === "assessment" ? "Assessment" : "ProActive ecosystem (pick one)"}
+                        </h3>
                         <div className="grid gap-2">
-                          {category.services.map((service) => {
+                          {items.map((service) => {
                             const isSelected = isServiceSelected(service.id);
-                            const qty = getQuantity(service.id);
                             const price = formatServicePrice(service);
-
                             return (
                               <div
                                 key={service.id}
+                                role="button"
+                                tabIndex={0}
                                 className={`relative px-3 py-2.5 rounded-lg border transition-all cursor-pointer ${
                                   isSelected
                                     ? "border-[#D3126A] bg-de-paper ring-1 ring-[#D3126A]/20"
                                     : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/80"
                                 }`}
-                                onClick={() => toggleService(service.id, service)}
+                                onClick={() => toggleService(service)}
+                                onKeyDown={(event) => {
+                                  if (event.key === "Enter" || event.key === " ") {
+                                    event.preventDefault();
+                                    toggleService(service);
+                                  }
+                                }}
                                 data-testid={`service-card-${service.id}`}
                               >
-                                {service.isPopular && (
-                                  <Badge className="absolute -top-2 right-3 bg-[#D3126A] text-white text-xs px-1.5 py-0">
-                                    <Star className="w-2.5 h-2.5 mr-0.5" />
-                                    Popular
-                                  </Badge>
-                                )}
-
                                 <div className="flex items-start justify-between gap-3">
                                   <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                                      <h3 className="font-semibold text-slate-900 text-sm leading-snug">
+                                      <h4 className="font-semibold text-slate-900 text-sm leading-snug">
                                         {service.name}
-                                      </h3>
+                                      </h4>
                                       {service.tier && (
                                         <Badge
                                           variant="outline"
-                                          className={`text-xs h-5 ${
-                                            service.tier === "enterprise"
-                                              ? "border-[#D3126A]/40 text-[#1A1228] bg-de-paper"
-                                              : service.tier === "business"
-                                                ? "border-blue-300 text-blue-700 bg-blue-50"
-                                                : "border-slate-300 text-slate-600 bg-slate-50"
-                                          }`}
+                                          className="text-xs h-5 border-slate-300 text-slate-600 bg-slate-50"
                                         >
                                           {service.tier.charAt(0).toUpperCase() + service.tier.slice(1)}
                                         </Badge>
@@ -496,28 +478,21 @@ export function OrderForm() {
                                     <p className="text-slate-500 text-xs mb-1.5 line-clamp-2">
                                       {service.description}
                                     </p>
-
                                     <div className="flex flex-wrap gap-1">
-                                      {service.features.slice(0, 3).map((feature, i) => (
+                                      {service.features.slice(0, 3).map((feature) => (
                                         <span
-                                          key={i}
+                                          key={feature}
                                           className="text-sm bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded"
                                         >
                                           {feature}
                                         </span>
                                       ))}
-                                      {service.features.length > 3 && (
-                                        <span className="text-sm text-[#D3126A]">
-                                          +{service.features.length - 3} more
-                                        </span>
-                                      )}
                                     </div>
                                   </div>
-
-                                  <div className="text-right shrink-0 min-w-[5.5rem]">
+                                  <div className="text-right shrink-0 min-w-[6.5rem]">
                                     <div
                                       className={`font-semibold leading-tight ${
-                                        isCustomPricing(service)
+                                        service.checkoutMode === "quote_after_review"
                                           ? "text-sm text-[#1A1228]"
                                           : "text-lg text-slate-900"
                                       }`}
@@ -527,66 +502,26 @@ export function OrderForm() {
                                     {price.secondary && (
                                       <div className="text-sm text-slate-400">{price.secondary}</div>
                                     )}
-                                    {service.minQuantity > 1 && (
-                                      <div className="text-sm text-slate-400">
-                                        Min: {service.minQuantity}
-                                      </div>
-                                    )}
                                   </div>
                                 </div>
-
                                 {isSelected && (
-                                  <div
-                                    className="mt-2.5 pt-2.5 border-t border-[var(--de-paper-hairline)] flex items-center justify-between gap-3"
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    <div className="flex items-center gap-1.5">
-                                      <Check className="w-4 h-4 text-[#D3126A]" />
-                                      <span className="text-[#D3126A] font-medium text-sm">Selected</span>
-                                    </div>
-
-                                    {service.pricingType !== "flat" &&
-                                      service.pricingType !== "custom" &&
-                                      !isCustomPricing(service) && (
-                                        <div className="flex items-center gap-2">
-                                          <span className="text-slate-500 text-xs">Qty</span>
-                                          <div className="flex items-center gap-1.5">
-                                            <Button
-                                              size="sm"
-                                              variant="outline"
-                                              className="h-7 w-7 p-0 border-slate-200"
-                                              onClick={() => updateQuantity(service.id, -1)}
-                                              data-testid={`decrease-${service.id}`}
-                                            >
-                                              <Minus className="w-3.5 h-3.5" />
-                                            </Button>
-                                            <span className="w-8 text-center font-medium text-slate-900 text-sm">
-                                              {qty}
-                                            </span>
-                                            <Button
-                                              size="sm"
-                                              variant="outline"
-                                              className="h-7 w-7 p-0 border-slate-200"
-                                              onClick={() => updateQuantity(service.id, 1)}
-                                              data-testid={`increase-${service.id}`}
-                                            >
-                                              <Plus className="w-3.5 h-3.5" />
-                                            </Button>
-                                          </div>
-                                          <span className="text-[#D3126A] font-medium text-sm">
-                                            ${(service.basePrice * qty).toLocaleString()}/mo
-                                          </span>
-                                        </div>
-                                      )}
+                                  <div className="mt-2.5 pt-2.5 border-t border-[var(--de-paper-hairline)] flex items-center gap-1.5">
+                                    <Check className="w-4 h-4 text-[#D3126A]" />
+                                    <span className="text-[#D3126A] font-medium text-sm">Selected</span>
                                   </div>
                                 )}
                               </div>
                             );
                           })}
                         </div>
-                      </TabsContent>
-                    ))}
-                  </Tabs>
+                      </div>
+                    );
+                  })}
+                  {orderPricing.error && (
+                    <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-md px-3 py-2">
+                      {orderPricing.error}
+                    </p>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -954,7 +889,7 @@ export function OrderForm() {
                         <div key={selected.serviceId} className="flex justify-between gap-3 text-sm">
                           <span className="text-slate-600 truncate">{service.shortName}</span>
                           <span className="text-slate-900 font-medium whitespace-nowrap">
-                            {formatLineAmount(service, selected.quantity)}
+                            {formatLineAmount(service)}
                           </span>
                         </div>
                       );
@@ -964,30 +899,30 @@ export function OrderForm() {
                   <Separator className="bg-slate-200" />
 
                   <div className="space-y-2">
-                    {pricing.monthlyTotal > 0 && (
+                    {orderPricing.monthlyTotal > 0 && (
                       <div className="flex justify-between">
                         <span className="text-slate-500 text-sm">Monthly</span>
                         <span className="text-lg font-semibold text-slate-900">
-                          ${pricing.monthlyTotal.toLocaleString()}
+                          ${orderPricing.monthlyTotal.toLocaleString()}
                         </span>
                       </div>
                     )}
-                    {pricing.oneTimeTotal > 0 && (
+                    {orderPricing.oneTimeTotal > 0 && (
                       <div className="flex justify-between">
                         <span className="text-slate-500 text-sm">One-Time</span>
                         <span className="text-slate-900 font-medium">
-                          ${pricing.oneTimeTotal.toLocaleString()}
+                          ${orderPricing.oneTimeTotal.toLocaleString()}
                         </span>
                       </div>
                     )}
-                    {pricing.hasCustom && (
+                    {orderPricing.hasCustom && (
                       <p className="text-xs text-[#1A1228] bg-de-paper border border-[var(--de-paper-hairline)] rounded-md px-2 py-1.5">
                         Custom quote items included — priced after review.
                       </p>
                     )}
-                    {pricing.monthlyTotal === 0 &&
-                      pricing.oneTimeTotal === 0 &&
-                      pricing.hasCustom && (
+                    {orderPricing.monthlyTotal === 0 &&
+                      orderPricing.oneTimeTotal === 0 &&
+                      orderPricing.hasCustom && (
                         <div className="flex justify-between">
                           <span className="text-slate-500 text-sm">Pricing</span>
                           <span className="text-[#1A1228] font-semibold">Custom quote</span>
@@ -1066,17 +1001,19 @@ export function OrderForm() {
                           <div className="min-w-0">
                             <p className="text-slate-900 font-medium text-sm">{service.name}</p>
                             <p className="text-slate-500 text-xs">
-                              {isCustomPricing(service)
-                                ? `${selected.quantity} ${service.pricingUnit}(s) · Custom quote`
-                                : `${selected.quantity} ${service.pricingUnit}(s) @ $${service.basePrice}/${service.pricingUnit}`}
+                              {service.checkoutMode === "quote_after_review"
+                                ? `${service.hubSku} · priced after review`
+                                : `${service.hubSku} · catalog price`}
                             </p>
                           </div>
                           <p
                             className={`font-semibold whitespace-nowrap ${
-                              isCustomPricing(service) ? "text-[#1A1228] text-sm" : "text-[#D3126A] text-lg"
+                              service.checkoutMode === "quote_after_review"
+                                ? "text-[#1A1228] text-sm"
+                                : "text-[#D3126A] text-lg"
                             }`}
                           >
-                            {formatLineAmount(service, selected.quantity)}
+                            {formatLineAmount(service)}
                           </p>
                         </div>
                       );
@@ -1109,25 +1046,20 @@ export function OrderForm() {
                 <div className="bg-de-paper border border-[var(--de-paper-hairline)] rounded-lg p-4">
                   <div className="flex flex-wrap justify-between items-center gap-4">
                     <div>
-                      <p className="text-slate-500 text-sm">Total Monthly Investment</p>
-                      {pricing.monthlyTotal > 0 ? (
+                      <p className="text-slate-500 text-sm">
+                        {orderPricing.payableCheckout ? "Catalog total" : "Pricing"}
+                      </p>
+                      {orderPricing.payableCheckout ? (
                         <p className="text-3xl font-bold text-slate-900">
-                          ${pricing.monthlyTotal.toLocaleString()}
-                          <span className="text-base font-normal text-slate-500">/mo</span>
+                          ${orderPricing.oneTimeTotal.toLocaleString()}
+                          <span className="text-base font-normal text-slate-500"> one-time</span>
                         </p>
-                      ) : pricing.hasCustom ? (
-                        <p className="text-2xl font-bold text-[#1A1228]">Custom quote</p>
                       ) : (
-                        <p className="text-3xl font-bold text-slate-900">$0/mo</p>
+                        <p className="text-2xl font-bold text-[#1A1228]">Priced after review</p>
                       )}
-                      {pricing.oneTimeTotal > 0 && (
-                        <p className="text-slate-500 text-sm">
-                          + ${pricing.oneTimeTotal.toLocaleString()} one-time
-                        </p>
-                      )}
-                      {pricing.hasCustom && pricing.monthlyTotal > 0 && (
+                      {orderPricing.hasCustom && (
                         <p className="text-[#1A1228] text-sm mt-1">
-                          + custom-quoted services (priced after review)
+                          Package lines are quoted after review. They are not a payable checkout total.
                         </p>
                       )}
                     </div>
@@ -1162,7 +1094,7 @@ export function OrderForm() {
                   <Button
                     className="flex-1 bg-[#D3126A] hover:bg-[#e01874] text-white"
                     onClick={handleSubmit}
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || Boolean(orderPricing.error) || selectedServices.length === 0}
                     data-testid="submit-order"
                   >
                     {isSubmitting ? (
