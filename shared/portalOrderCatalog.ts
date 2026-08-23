@@ -14,9 +14,9 @@
  * - Exactly one ProActive ecosystem package per order (IT / Office / Business /
  *   Enterprise). Security Stack / Core IT / BCDR "tiers" in the old portal
  *   picker are package components, not separately stackable exclusive packages.
- * - CSRA (store DE-DIG-ASMT-CSRA-OT / Hub OT-ASSESSMENT) may stand alone or
- *   sit with that single package. Hub marks OT-ASSESSMENT as quote-time and
- *   possibly credited when a package is present — do not auto-credit.
+ * - CSRA (store DE-DIG-ASMT-CSRA-OT / Hub OT-ASSESSMENT) is $2,500 one-time.
+ *   It may stand alone or sit with that single package. Do not auto-credit
+ *   the assessment toward a later ProActive agreement.
  * - Contract-only ProActive lines are never a payable checkout total.
  */
 
@@ -314,8 +314,8 @@ export function validatePortalOrderSelection(rawLines: unknown): PortalOrderVali
 
   const hasQuoteItems = lines.some((line) => line.pricedAfterReview);
   const oneTimeTotal = lines.reduce((sum, line) => sum + (line.pricedAfterReview ? 0 : line.lineTotal), 0);
-  // Hub OT-ASSESSMENT may be credited when a package is present — do not
-  // present a payable checkout total for the mixed CSRA + package case.
+  // Mixed CSRA + ProActive is not a payable checkout: the package is still
+  // quote-after-review. Do not treat the $2,500 as a credit against the package.
   const payableCheckout = !hasQuoteItems && oneTimeTotal > 0;
 
   return {

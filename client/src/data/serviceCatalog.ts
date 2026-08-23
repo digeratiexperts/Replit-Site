@@ -1,3 +1,5 @@
+import { CANONICAL_CSRA_ONE_TIME } from "@shared/canonicalCsra";
+
 export interface ServiceItem {
   id: string;
   name: string;
@@ -319,7 +321,7 @@ export const serviceCatalog: ServiceCategory[] = [
         description: 'Comprehensive security posture evaluation',
         category: 'compliance',
         pricingType: 'flat',
-        basePrice: 2500,
+        basePrice: CANONICAL_CSRA_ONE_TIME,
         pricingUnit: 'assessment',
         minQuantity: 1,
         documentKey: 'csra-ultimate-cybersecurity-risk-assessment',

@@ -1,3 +1,4 @@
+import { CANONICAL_CSRA_ONE_TIME, CANONICAL_CSRA_STORE_SKU } from "@shared/canonicalCsra";
 import { pricing } from "./pricing";
 
 export type ProductCategory = 
@@ -946,13 +947,13 @@ export const storeProducts: StoreProduct[] = [
   },
   {
     id: "prod-071",
-    sku: "DE-DIG-ASMT-CSRA-OT",
+    sku: CANONICAL_CSRA_STORE_SKU,
     name: "Cybersecurity Risk Assessment",
     shortDescription: "Guided workshop",
     description: "Comprehensive cybersecurity risk assessment with guided workshop and expert analysis.",
     category: "digital_assessments",
     pricingType: "one_time",
-    basePrice: 999,
+    basePrice: CANONICAL_CSRA_ONE_TIME,
     isContractOnly: false,
     isCheckoutEnabled: true,
     isClientOnly: false,

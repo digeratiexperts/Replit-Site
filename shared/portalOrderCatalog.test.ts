@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getStoreProductBySku } from "../client/src/data/storeCatalog";
+import { CANONICAL_CSRA_ONE_TIME, CANONICAL_CSRA_STORE_SKU, LEGACY_CSRA_ONE_TIME } from "./canonicalCsra";
 import {
   catalogUnitPrice,
   CSRA_PORTAL_ITEM,
@@ -21,11 +22,11 @@ describe("portal order catalog (Intelligence-Hub rules)", () => {
     ]);
   });
 
-  it("uses the store catalog CSRA price and does not invent a $2,500 total", () => {
-    const store = getStoreProductBySku("DE-DIG-ASMT-CSRA-OT");
-    expect(store?.basePrice).toBeGreaterThan(0);
-    expect(catalogUnitPrice(CSRA_PORTAL_ITEM)).toBe(store?.basePrice);
-    expect(catalogUnitPrice(CSRA_PORTAL_ITEM)).not.toBe(2500);
+  it("uses the canonical $2,500 CSRA price from the store catalog", () => {
+    const store = getStoreProductBySku(CANONICAL_CSRA_STORE_SKU);
+    expect(store?.basePrice).toBe(CANONICAL_CSRA_ONE_TIME);
+    expect(catalogUnitPrice(CSRA_PORTAL_ITEM)).toBe(CANONICAL_CSRA_ONE_TIME);
+    expect(catalogUnitPrice(CSRA_PORTAL_ITEM)).not.toBe(LEGACY_CSRA_ONE_TIME);
   });
 
   it("allows a CSRA-only order as a payable catalog line", () => {
@@ -106,7 +107,8 @@ describe("portal order catalog (Intelligence-Hub rules)", () => {
     ]);
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(result.oneTimeTotal).toBe(catalogUnitPrice(CSRA_PORTAL_ITEM));
-    expect(result.oneTimeTotal).not.toBe(2500);
+    expect(result.oneTimeTotal).toBe(CANONICAL_CSRA_ONE_TIME);
+    expect(result.lines[0].unitPrice).toBe(CANONICAL_CSRA_ONE_TIME);
+    expect(result.oneTimeTotal).not.toBe(1);
   });
 });
