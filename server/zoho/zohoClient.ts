@@ -5,6 +5,7 @@ interface ZohoTokenResponse {
   token_type: string;
   expires_in: number;
   api_domain: string;
+  scope?: string;
 }
 
 class ZohoClient {
@@ -151,7 +152,7 @@ class ZohoClient {
   }
 
   isDeskConfigured(): boolean {
-    return !!(this.clientId && this.clientSecret && (this.deskRefreshToken || this.refreshToken));
+    return !!(this.clientId && this.clientSecret && (this.getDeskRefreshToken() || this.refreshToken));
   }
 }
 

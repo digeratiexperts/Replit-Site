@@ -27,15 +27,15 @@ export function ProductMedia({
     variant === "detail"
       ? "aspect-[4/3] sm:aspect-square rounded-2xl"
       : variant === "card"
-        ? "aspect-[16/10] rounded-xl"
+        ? "aspect-[16/7] rounded-xl"
         : "aspect-square rounded-lg";
 
   const logoBox =
     variant === "detail"
       ? "h-36 w-36 sm:h-44 sm:w-44 md:h-52 md:w-52 p-6 sm:p-8"
       : variant === "card"
-        ? "h-20 w-20 p-3"
-        : "h-12 w-12 p-2";
+        ? "h-11 w-11 p-2 sm:h-12 sm:w-12"
+        : "h-9 w-9 p-1.5";
 
   return (
     <div
@@ -50,12 +50,12 @@ export function ProductMedia({
         loading={variant === "detail" ? "eager" : "lazy"}
         decoding="async"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 
-      <div className="absolute inset-0 flex items-center justify-center p-4">
+      <div className="absolute inset-0 flex items-center justify-center p-3">
         {visual.logoUrl ? (
           <div
-            className={`flex items-center justify-center rounded-2xl border border-white/15 bg-white shadow-[0_12px_40px_rgba(0,0,0,0.35)] ${logoBox}`}
+            className={`flex items-center justify-center rounded-xl border border-white/15 bg-white shadow-[0_8px_24px_rgba(0,0,0,0.4)] ${logoBox}`}
           >
             <img
               src={visual.logoUrl}
@@ -68,11 +68,11 @@ export function ProductMedia({
           </div>
         ) : (
           <div
-            className={`flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm ${logoBox}`}
+            className={`flex items-center justify-center rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm ${logoBox}`}
           >
             <span
               className={`font-semibold tracking-wide text-white/80 ${
-                variant === "detail" ? "text-2xl" : "text-xs"
+                variant === "detail" ? "text-2xl" : "text-[10px]"
               }`}
             >
               DE
@@ -82,14 +82,14 @@ export function ProductMedia({
       </div>
 
       {(categoryBadge || visual.vendor) && variant !== "thumb" && (
-        <div className="absolute left-3 top-3 z-10 flex max-w-[85%] flex-wrap gap-2 sm:left-4 sm:top-4">
+        <div className="absolute left-2.5 top-2.5 z-10 flex max-w-[85%] flex-wrap gap-1.5">
           {categoryBadge && (
-            <span className="rounded-full border border-white/20 bg-black/50 px-2.5 py-1 text-[11px] font-medium text-white/90 backdrop-blur-sm sm:text-xs">
+            <span className="rounded-full border border-white/20 bg-black/60 px-2 py-0.5 text-[10px] font-medium text-white/90 backdrop-blur-sm">
               {categoryBadge}
             </span>
           )}
           {visual.vendor && (
-            <span className="rounded-full border border-white/20 bg-black/50 px-2.5 py-1 text-[11px] font-medium text-white/90 backdrop-blur-sm sm:text-xs">
+            <span className="rounded-full border border-white/20 bg-black/60 px-2 py-0.5 text-[10px] font-medium text-white/90 backdrop-blur-sm">
               {visual.vendor.name}
             </span>
           )}

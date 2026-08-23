@@ -111,14 +111,20 @@ export const ModernHeroSection = (): JSX.Element => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: prefersReducedMotion ? 0 : 0.4, ease: "easeOut" }}
             >
-              <motion.p
-                className="text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] text-pink-300/95"
+              <motion.div
+                className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-pink-500/15 via-purple-500/10 to-violet-500/15 border border-pink-500/30 backdrop-blur-md self-start shadow-sm shadow-pink-500/10"
                 initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: prefersReducedMotion ? 0 : 0.3, delay: prefersReducedMotion ? 0 : 0.05 }}
               >
-                Arizona MSP · Cybersecurity &amp; Managed IT
-              </motion.p>
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                </span>
+                <span className="text-xs sm:text-sm font-semibold uppercase tracking-[0.16em] text-pink-200">
+                  Arizona MSP · Cybersecurity &amp; Managed IT
+                </span>
+              </motion.div>
 
               <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-[3.25rem] font-bold leading-[1.08] tracking-[-0.02em] text-white">
                 Your Arizona business,{" "}
@@ -127,11 +133,21 @@ export const ModernHeroSection = (): JSX.Element => {
                 </span>
               </h1>
 
-              <p className="text-base md:text-lg text-white/85 leading-relaxed max-w-xl">
-                Cybersecurity and managed IT for growing businesses—reducing risk, supporting
-                compliance, and keeping your team productive without building an internal IT
-                department.
-              </p>
+              <div className="relative max-w-xl my-1 rounded-xl bg-slate-950/40 backdrop-blur-md border border-white/10 p-4 sm:p-5 shadow-lg shadow-purple-950/20 overflow-hidden group">
+                <div
+                  className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-fuchsia-500 via-pink-500 to-violet-500"
+                  aria-hidden="true"
+                />
+                <div
+                  className="absolute -left-4 top-1/2 -translate-y-1/2 w-24 h-24 bg-pink-500/15 rounded-full blur-xl pointer-events-none"
+                  aria-hidden="true"
+                />
+                <p className="relative text-base md:text-lg text-white/95 leading-relaxed pl-1 sm:pl-2">
+                  Cybersecurity and managed IT for growing businesses—reducing risk, supporting
+                  compliance, and keeping your team productive without building an internal IT
+                  department.
+                </p>
+              </div>
 
               <div className="grid grid-cols-1 xs:grid-cols-2 gap-x-4 gap-y-1.5 sm:flex sm:flex-wrap sm:gap-x-5 sm:gap-y-2">
                 {features.map((feature, index) => (
@@ -157,10 +173,12 @@ export const ModernHeroSection = (): JSX.Element => {
                   size="lg"
                   data-testid="button-hero-schedule"
                   onClick={handleSchedule}
-                  className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-semibold bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white border border-pink-300/35 shadow-lg shadow-pink-500/40 hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300"
+                  className="group relative overflow-hidden h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-semibold bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 text-white border border-pink-300/35 shadow-lg shadow-pink-500/40 hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300"
                 >
-                  Schedule Your Cyber Risk Assessment
-                  <ArrowRight className="ml-2 w-5 h-5" aria-hidden="true" />
+                  <span className="relative z-10 flex items-center">
+                    Schedule Your Cyber Risk Assessment
+                    <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
+                  </span>
                 </Button>
 
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-white/75">

@@ -95,20 +95,26 @@ export const DigeratiServicesSection = (): JSX.Element => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.08 }}
-                className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-8 lg:p-10"
+                className="group relative overflow-hidden flex h-full flex-col rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-xl p-8 lg:p-10 transition-all duration-300 hover:border-violet-400/50 hover:shadow-2xl hover:shadow-violet-950/50 hover:-translate-y-1.5"
                 data-testid={path.testId}
               >
-                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-xl bg-violet-500/20">
-                  <Icon className="h-8 w-8 text-violet-300" aria-hidden="true" />
+                {/* Top gradient accent line */}
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-violet-500/30 to-transparent group-hover:via-pink-500/70 transition-all duration-500" />
+                
+                {/* Ambient glow */}
+                <div className="absolute -right-8 -top-8 w-28 h-28 bg-violet-500/10 rounded-full blur-2xl group-hover:bg-pink-500/15 transition-all duration-500 pointer-events-none" />
+
+                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-xl bg-violet-500/15 border border-violet-500/30 shadow-inner shadow-violet-500/20 group-hover:scale-105 group-hover:border-pink-500/40 group-hover:bg-pink-500/20 transition-all duration-300">
+                  <Icon className="h-8 w-8 text-violet-300 group-hover:text-pink-300 transition-colors" aria-hidden="true" />
                 </div>
-                <h3 className="mb-3 text-2xl font-semibold text-white lg:text-3xl">{path.title}</h3>
-                <p className="mb-7 flex-1 text-lg leading-relaxed text-white/65 lg:text-xl">
+                <h3 className="mb-3 text-2xl font-semibold text-white lg:text-3xl tracking-tight">{path.title}</h3>
+                <p className="mb-7 flex-1 text-base leading-relaxed text-white/70 lg:text-lg">
                   {path.description}
                 </p>
                 <Link href={path.link} data-testid={`link-${path.testId}`}>
-                  <span className="inline-flex items-center gap-2 text-lg font-medium text-violet-300 hover:text-violet-200">
+                  <span className="inline-flex items-center gap-2 text-base font-semibold text-violet-300 group-hover:text-pink-300 transition-colors">
                     {path.cta}
-                    <ArrowRight className="h-5 w-5" aria-hidden="true" />
+                    <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1.5" aria-hidden="true" />
                   </span>
                 </Link>
               </motion.div>
@@ -121,12 +127,12 @@ export const DigeratiServicesSection = (): JSX.Element => {
           <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
             <div>
               <h3 className="text-2xl font-bold text-white md:text-3xl">Security capabilities</h3>
-              <p className="mt-2 text-base text-white/55 md:text-lg">
+              <p className="mt-2 text-base text-white/60 md:text-lg">
                 Preview of the stack we manage — also detailed under Protect.
               </p>
             </div>
             <Link href="/#protection" data-testid="link-see-security-stack">
-              <span className="inline-flex items-center gap-2 text-base text-white/75 hover:text-white">
+              <span className="inline-flex items-center gap-2 text-base font-medium text-white/75 hover:text-pink-300 transition-colors">
                 <Layers className="h-5 w-5 text-pink-400" aria-hidden="true" />
                 See full Protect process
               </span>
@@ -137,12 +143,15 @@ export const DigeratiServicesSection = (): JSX.Element => {
               const Icon = item.icon;
               return (
                 <Link key={item.title} href={item.link}>
-                  <div className="h-full cursor-pointer rounded-xl border border-white/10 bg-white/[0.04] p-5 transition-all hover:border-violet-400/40 hover:bg-white/[0.06]">
+                  <div className="group relative overflow-hidden h-full cursor-pointer rounded-xl border border-white/10 bg-slate-900/40 backdrop-blur-md p-5 transition-all duration-300 hover:border-violet-400/40 hover:bg-slate-900/70 hover:shadow-lg hover:shadow-violet-950/30 hover:-translate-y-0.5">
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-transparent via-violet-500/0 to-transparent group-hover:via-pink-500 transition-all duration-300" />
                     <div className="mb-2 flex items-center gap-2.5">
-                      <Icon className="h-5 w-5 text-violet-300" aria-hidden="true" />
-                      <p className="text-base font-semibold text-white md:text-lg">{item.title}</p>
+                      <div className="p-1.5 rounded-lg bg-violet-500/15 border border-violet-500/20 text-violet-300 group-hover:text-pink-300 group-hover:border-pink-500/30 transition-all">
+                        <Icon className="h-4 w-4" aria-hidden="true" />
+                      </div>
+                      <p className="text-base font-semibold text-white md:text-lg tracking-tight group-hover:text-pink-200 transition-colors">{item.title}</p>
                     </div>
-                    <p className="text-sm leading-relaxed text-white/55 md:text-base">{item.desc}</p>
+                    <p className="text-sm leading-relaxed text-white/60 md:text-base pl-8">{item.desc}</p>
                   </div>
                 </Link>
               );

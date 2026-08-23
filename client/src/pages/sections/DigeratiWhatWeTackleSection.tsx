@@ -80,10 +80,16 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               {/* Card */}
-              <div className="relative bg-white/5 rounded-2xl p-7 lg:p-8 h-full border border-white/10 hover:border-white/20 transition-all duration-300 group-hover:bg-white/[0.07]">
+              <div className="relative overflow-hidden bg-slate-900/60 backdrop-blur-xl rounded-2xl p-7 lg:p-8 h-full border border-white/10 transition-all duration-300 group-hover:border-violet-400/40 group-hover:shadow-2xl group-hover:shadow-violet-950/40 group-hover:-translate-y-1">
+                {/* Subtle top accent */}
+                <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${challenge.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+
+                {/* Ambient glow */}
+                <div className={`absolute -right-8 -top-8 w-28 h-28 bg-gradient-to-br ${challenge.gradient} opacity-0 group-hover:opacity-15 rounded-full blur-2xl transition-opacity duration-500 pointer-events-none`} />
+
                 {/* Icon container with gradient */}
                 <div className="mb-5">
-                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-xl bg-gradient-to-br ${challenge.gradient} bg-opacity-20 border border-white/10 group-hover:scale-110 transition-transform duration-300`}>
+                  <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br ${challenge.gradient} bg-opacity-20 border border-white/15 shadow-inner shadow-white/10 group-hover:scale-105 transition-transform duration-300`}>
                     <div className="text-white">
                       {challenge.icon}
                     </div>
@@ -91,15 +97,12 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
                 </div>
                 
                 {/* Content */}
-                <h3 className="text-xl md:text-2xl font-semibold text-white mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-300 transition-all">
+                <h3 className="text-xl md:text-2xl font-semibold text-white mb-3 tracking-tight group-hover:text-pink-200 transition-colors">
                   {challenge.title}
                 </h3>
-                <p className="text-gray-400 text-base md:text-lg leading-relaxed">
+                <p className="text-white/65 text-base md:text-lg leading-relaxed">
                   {challenge.description}
                 </p>
-
-                {/* Subtle corner accent */}
-                <div className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${challenge.gradient} opacity-5 rounded-tr-2xl rounded-bl-full`} />
               </div>
             </motion.div>
           ))}
@@ -107,24 +110,24 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
 
         {/* Bottom CTA */}
         <motion.div 
-          className="text-center mt-16"
+          className="text-center mt-14 md:mt-16"
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <p className="text-lg text-gray-400 mb-6">
-            Don't see your specific challenge? We handle it all.
+          <p className="text-lg text-white/70 mb-6">
+            Don't see your specific challenge? We handle custom infrastructure and security architectures.
           </p>
           <a 
             href="/book"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center px-10 py-4 text-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-purple-500 hover:to-indigo-500 transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-105"
+            className="group relative overflow-hidden inline-flex items-center gap-2 px-8 py-3.5 text-base sm:text-lg bg-gradient-to-r from-fuchsia-600 via-pink-600 to-rose-500 text-white font-semibold rounded-xl hover:from-fuchsia-500 hover:via-pink-500 hover:to-rose-400 transition-all duration-300 shadow-lg shadow-pink-500/30 hover:shadow-xl hover:shadow-pink-500/40 hover:-translate-y-0.5 border border-pink-300/30"
             data-testid="tackle-cta"
           >
-            Discuss Your Security Needs
-            <Shield className="ml-2 h-5 w-5" />
+            <span>Talk to a Security Expert</span>
+            <span className="text-xl transition-transform duration-300 group-hover:translate-x-1">→</span>
           </a>
         </motion.div>
       </div>

@@ -190,11 +190,14 @@ export function authMiddleware(req: AuthenticatedRequest, res: Response, next: N
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
     const live = portalAuthGetUser(decoded.email) || (decoded.userId ? findUserById(decoded.userId) : null);
+    if (live && ((live as any).disabled || (live as any).status === "disabled" || (live as any).status === "revoked")) {
+      return res.status(401).json({ error: "Account disabled or revoked" });
+    }
     req.user = {
-      id: decoded.userId,
-      email: decoded.email,
-      role: decoded.role,
-      storeRole: decoded.storeRole || "public",
+      id: live?.id ?? decoded.userId,
+      email: live?.email ?? decoded.email,
+      role: live?.role ?? decoded.role,
+      storeRole: (live as any)?.storeRole ?? decoded.storeRole ?? "public",
       clientId: live?.clientId ?? decoded.clientId ?? null,
       orgRole: live?.orgRole ?? decoded.orgRole ?? "staff",
       departmentId: live?.departmentId ?? decoded.departmentId ?? null,
@@ -204,7 +207,7 @@ export function authMiddleware(req: AuthenticatedRequest, res: Response, next: N
       impersonatingCompanyId: (decoded as any).impersonatingCompanyId || null,
       impersonatingCompanyName: (decoded as any).impersonatingCompanyName || null,
     };
-    req.userId = decoded.userId;
+    req.userId = live?.id ?? decoded.userId;
     
     // Optional session validation from cookies
     const sessionId = req.cookies?.sessionId;
@@ -331,13 +334,8 @@ function publicPortalUser(user: any, storeRole: StoreRole) {
     isCompanyItContact: !!user.isCompanyItContact,
   };
   return {
-    id: user.id,
-    email: user.email,
     username: user.username,
-    fullName: user.fullName,
-    role: user.role,
     storeRole,
-    clientId: user.clientId || null,
     ...orgPublicUser(org),
   };
 }
@@ -1133,7 +1131,7 @@ export async function registerRoutes(app: Express) {
     try {
       const live = portalAuthGetUser(req.user!.email) || findUserById(req.userId!);
       if (!live) return res.status(404).json({ error: "User not found" });
-      let storeRole: StoreRole = (live.storeRole as StoreRole) || "prospect";
+      let storeRole: StoreRole = ((live as any).storeRole as StoreRole) || "prospect";
       if (live.role === "admin") storeRole = "admin";
       const user = publicPortalUser(live, storeRole);
       const mgr = managerSummaryForUser(live as OrgUserFields);
@@ -1264,7 +1262,7 @@ export async function registerRoutes(app: Express) {
       }
       const isParty =
         bundle.request.requesterUserId === org.id ||
-        bundle.steps.some((s) => s.approverUserId === org.id) ||
+        bundle.steps.some((s: any) => s.approverUserId === org.id) ||
         canAccessApprovals(org) ||
         org.role === "admin";
       if (!isParty) return res.status(403).json({ error: "Forbidden" });
@@ -1274,7 +1272,7 @@ export async function registerRoutes(app: Express) {
         approval: {
           ...bundle.request,
           requesterName: requester?.fullName,
-          steps: bundle.steps.map((s) => ({
+          steps: bundle.steps.map((s: any) => ({
             ...s,
             approverName: s.approverUserId ? findUserById(s.approverUserId)?.fullName : null,
           })),
@@ -1986,11 +1984,11 @@ export async function registerRoutes(app: Express) {
       }
 
       // Delete any existing tokens for this user
-      for (const [token, data] of emailVerificationTokens.entries()) {
+      Array.from(emailVerificationTokens.entries()).forEach(([token, data]) => {
         if (data.email === email) {
           emailVerificationTokens.delete(token);
         }
-      }
+      });
 
       // Generate new verification token
       const verificationToken = randomId();
@@ -2037,9 +2035,9 @@ export async function registerRoutes(app: Express) {
       if (!user) return res.json(SAFE_RESPONSE);
 
       // Invalidate any existing reset tokens for this user
-      for (const [tok, data] of passwordResetTokens.entries()) {
+      Array.from(passwordResetTokens.entries()).forEach(([tok, data]) => {
         if (data.email === email) passwordResetTokens.delete(tok);
-      }
+      });
 
       const resetToken = randomId();
       const ONE_HOUR = 60 * 60 * 1000;
@@ -2507,16 +2505,19 @@ export async function registerRoutes(app: Express) {
       if (challenge.method === 'email') {
         verified = challenge.emailCode === code.trim();
       } else if (challenge.method === 'totp' && user.mfaTotpSecret) {
-        const { authenticator } = await import('otplib');
-        verified = authenticator.verify({ token: code.trim(), secret: user.mfaTotpSecret });
+        const otplib = await import('otplib');
+        const auth = (otplib as any).authenticator || (otplib as any).default?.authenticator || otplib;
+        verified = auth.verify({ token: code.trim(), secret: user.mfaTotpSecret });
       }
 
-      if (!verified && user.mfaBackupCodes?.length > 0) {
+      const backupCodes = (user as any).mfaBackupCodes || [];
+      if (!verified && backupCodes.length > 0) {
         const codeUpper = code.trim().toUpperCase();
-        const idx = user.mfaBackupCodes.indexOf(codeUpper);
+        const idx = backupCodes.indexOf(codeUpper);
         if (idx !== -1) {
           verified = true;
-          user.mfaBackupCodes.splice(idx, 1);
+          backupCodes.splice(idx, 1);
+          (user as any).mfaBackupCodes = backupCodes;
           portalUsers.set(user.email, user);
           if (user.username) portalUsers.set(user.username, user);
         }
@@ -2595,10 +2596,11 @@ export async function registerRoutes(app: Express) {
       }
 
       if (method === 'totp') {
-        const { authenticator } = await import('otplib');
+        const otplib = await import('otplib');
+        const auth = (otplib as any).authenticator || (otplib as any).default?.authenticator || otplib;
         const QRCode = await import('qrcode');
-        const secret = authenticator.generateSecret();
-        const otpauthUrl = authenticator.keyuri(user.email, 'Digerati Experts', secret);
+        const secret = auth.generateSecret();
+        const otpauthUrl = auth.keyuri(user.email, 'Digerati Experts', secret);
         const qrCodeDataUrl = await QRCode.toDataURL(otpauthUrl);
 
         const setupToken = randomId();
@@ -2657,8 +2659,9 @@ export async function registerRoutes(app: Express) {
       let verified = false;
 
       if (method === 'totp') {
-        const { authenticator } = await import('otplib');
-        verified = authenticator.verify({ token: code.trim(), secret: setup.secret });
+        const otplib = await import('otplib');
+        const auth = (otplib as any).authenticator || (otplib as any).default?.authenticator || otplib;
+        verified = auth.verify({ token: code.trim(), secret: setup.secret });
       } else if (method === 'email') {
         verified = setup.secret === code.trim();
       }
@@ -2955,7 +2958,7 @@ export async function registerRoutes(app: Express) {
       // Fallback to local tickets if Zoho didn't return data
       if (!zohoDataFetched) {
         const tickets = await storage.getPortalTickets(req.userId || "");
-        openTickets = tickets.filter(t => t.status === "open" || t.status === "in-progress").length;
+        openTickets = tickets.filter(t => t.status === "open" || (t.status as string) === "in-progress" || (t.status as string) === "in_progress").length;
         resolvedTickets = tickets.filter(t => t.status === "resolved" || t.status === "closed").length;
         recentTickets = tickets.slice(0, 5).map(t => ({
           id: t.id,
@@ -3322,11 +3325,11 @@ export async function registerRoutes(app: Express) {
           .map((sub) => ({
             id: sub.subscription_id,
             serviceName: sub.plan?.name || sub.name || "Subscription",
-            description: sub.plan?.description || "",
+            description: (sub.plan as any)?.description || "",
             status: sub.status === "live" ? "active" : sub.status,
             monthlyPrice: sub.amount != null ? String(sub.amount) : "",
             userCount: undefined,
-            startDate: sub.current_term_starts_at || sub.created_at || "",
+            startDate: sub.current_term_starts_at || (sub as any).created_at || (sub as any).created_time || "",
           }));
 
         return res.json(services);
@@ -3573,8 +3576,8 @@ export async function registerRoutes(app: Express) {
           if (clauses.length) {
             const rows = await portalDb.select().from(storeQuoteRequests).where(dOr(...clauses));
             storeQuotes = rows
-              .filter((q) => !statusFilter || String(q.status) === statusFilter || statusFilter === "pending")
-              .map((q) => {
+              .filter((q: any) => !statusFilter || String(q.status) === statusFilter || statusFilter === "pending")
+              .map((q: any) => {
                 const items = Array.isArray(q.requestedItems) ? q.requestedItems : [];
                 return {
                   id: `sq-${q.id}`,
@@ -3809,7 +3812,7 @@ export async function registerRoutes(app: Express) {
     </div>
     <div>
       <div class="label">Status</div>
-      <div class="value">${(order.status || "pending").replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</div>
+      <div class="value">${(order.status || "pending").replace(/_/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase())}</div>
     </div>
     ${order.paidAt ? `
     <div>
@@ -4256,7 +4259,7 @@ export async function registerRoutes(app: Express) {
       } else {
         // Regular user - get their company
         const user = portalUsers.get(req.user?.email || "");
-        if (user) {
+        if (user && user.clientId) {
           const company = portalClients.get(user.clientId);
           if (company) {
             clientId = user.clientId;
@@ -4465,7 +4468,7 @@ export async function registerRoutes(app: Express) {
           Lead_Status: 'New',
           Description: `Quote Wizard: Recommended Plan: ${recommendedPlan}, Seats: ${seats}, Connectivity: ${connectivity}, Devices: ${devices}`,
         });
-        zohoLeadId = zohoLead?.details?.id || zohoLead?.id;
+        zohoLeadId = (zohoLead as any)?.details?.id || zohoLead?.id;
         console.log("[ZOHO] Quote wizard lead created:", zohoLeadId);
       } catch (zohoError: any) {
         console.error("[ZOHO] Failed to create quote lead (non-blocking):", zohoError.message);
@@ -4658,7 +4661,7 @@ export async function registerRoutes(app: Express) {
           Lead_Status: "New",
           Description: summary.slice(0, 32000),
         });
-        zohoLeadId = zohoLead?.details?.id || zohoLead?.id;
+        zohoLeadId = (zohoLead as any)?.details?.id || zohoLead?.id;
       } catch (zohoError: any) {
         console.error("[msp-advisor] Zoho lead failed (non-blocking):", zohoError?.message);
       }
@@ -4736,7 +4739,7 @@ export async function registerRoutes(app: Express) {
           Lead_Status: 'New',
           Description: `Free assessment request submitted from ${source || "homepage hero"}`,
         });
-        zohoLeadId = zohoLead?.details?.id || zohoLead?.id;
+        zohoLeadId = (zohoLead as any)?.details?.id || zohoLead?.id;
         console.log("[ZOHO] Assessment lead created:", zohoLeadId);
       } catch (zohoError: any) {
         console.error("[ZOHO] Failed to create assessment lead (non-blocking):", zohoError.message);
@@ -4817,7 +4820,7 @@ export async function registerRoutes(app: Express) {
           Description: message || '',
           Lead_Status: 'New',
         });
-        zohoLeadId = zohoLead?.details?.id || zohoLead?.id;
+        zohoLeadId = (zohoLead as any)?.details?.id || (zohoLead as any)?.id;
         console.log("[ZOHO] Lead created:", zohoLeadId);
       } catch (zohoError: any) {
         console.error("[ZOHO] Failed to create lead (non-blocking):", zohoError.message);
@@ -4893,7 +4896,7 @@ export async function registerRoutes(app: Express) {
             Lead_Status: 'New',
             Description: 'Subscribed to newsletter',
           });
-          zohoLeadId = zohoLead?.details?.id || zohoLead?.id;
+          zohoLeadId = (zohoLead as any)?.details?.id || (zohoLead as any)?.id;
           console.log("[ZOHO] Newsletter lead created:", zohoLeadId);
         } else {
           console.log("[ZOHO] Lead already exists for:", email);
@@ -5545,8 +5548,8 @@ export async function registerRoutes(app: Express) {
         console.log(`📋 Widget ticket queued (no Zoho/local account): ${ticketNumber} from ${email} — Subject: ${subject}`);
         try {
           const { default: notificationService } = await import("./services/notificationService");
-          if (notificationService.sendLeadAlert) {
-            await notificationService.sendLeadAlert({ name: email, email, company: "Support Widget", phone: "", source: "Support Widget Ticket", notes: `Subject: ${subject}\n\n${description}` });
+          if (notificationService.sendNewLeadNotification) {
+            await notificationService.sendNewLeadNotification({ name: email, email, company: "Support Widget", phone: "", source: "Support Widget Ticket", message: `Subject: ${subject}\n\n${description}` });
           }
         } catch {}
       }

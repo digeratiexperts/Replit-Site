@@ -141,7 +141,7 @@ export const tasks = pgTable("tasks", {
   actualHours: integer("actual_hours"),
   assigneeId: varchar("assignee_id").references(() => users.id, { onDelete: "set null" }),
   createdBy: varchar("created_by").notNull().references(() => users.id),
-  parentTaskId: varchar("parent_task_id").references(() => tasks.id, { onDelete: "set null" }),
+  parentTaskId: varchar("parent_task_id").references((): any => tasks.id, { onDelete: "set null" }),
   isArchived: boolean("is_archived").default(false),
   customFields: jsonb("custom_fields"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
