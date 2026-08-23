@@ -28,7 +28,7 @@ type AssessmentFormData = z.infer<typeof assessmentFormSchema>;
 
 const benefits = [
   { icon: Shield, text: "Full vulnerability assessment included", color: "text-de-accent-ink" },
-  { icon: CheckCircle, text: "Results delivered within 48 hours", color: "text-de-accent-ink" },
+  { icon: CheckCircle, text: "Written findings after we review your environment", color: "text-de-accent-ink" },
   { icon: Clock, text: "No commitment required", color: "text-de-accent-ink" },
   { icon: Award, text: "Expert recommendations included", color: "text-de-accent-ink" },
 ];
@@ -106,7 +106,7 @@ export const LeadCaptureBand = (): JSX.Element => {
             className="space-y-6"
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-de-hairline bg-de-raised">
-              <span className="text-de-accent-ink text-base font-medium">Limited Time Offer</span>
+              <span className="text-de-accent-ink text-base font-medium">Cyber Risk Assessment</span>
             </div>
             
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
@@ -117,7 +117,7 @@ export const LeadCaptureBand = (): JSX.Element => {
             </h2>
             
             <p className="text-lg text-gray-300 leading-relaxed max-w-lg">
-              Lock in 80% off your Cyber Risk Assessment. Our security experts will identify vulnerabilities before hackers do.
+              Request a Cyber Risk Assessment. Our security experts will identify vulnerabilities and prioritize what to fix first.
             </p>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">

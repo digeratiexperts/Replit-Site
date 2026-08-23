@@ -72,7 +72,7 @@ const serviceCategories: ServiceCategory[] = [
       { capability: "Immutable Backup Copies", essentials: false, office: false, business: true, enterprise: true },
       { capability: "Verified Restore Testing", essentials: false, office: "Quarterly", business: "Monthly", enterprise: "Weekly" },
       { capability: "Disaster Recovery (DRaaS)", essentials: false, office: "Optional", business: "Optional", enterprise: true },
-      { capability: "RTO/RPO Guarantees", essentials: false, office: false, business: "Standard", enterprise: "Custom SLA" },
+      { capability: "Agreed RPO/RTO targets", essentials: false, office: false, business: "Standard", enterprise: "Custom SLA" },
     ]
   },
   {
@@ -186,7 +186,7 @@ const EcosystemPricing = () => {
     }
     if (value === "Add-on") {
       return (
-        <span className="px-2 py-1 rounded-full text-xs font-medium bg-amber-500/20 text-amber-400 border border-amber-500/30">
+        <span className="px-2 py-1 rounded-full text-xs font-medium bg-de-raised text-white/70 border border-de-hairline">
           Add-on
         </span>
       );

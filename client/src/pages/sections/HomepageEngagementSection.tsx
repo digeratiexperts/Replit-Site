@@ -67,7 +67,7 @@ export function HomepageEngagementSection() {
           ))}
         </div>
 
-        <div className="rounded-2xl border border-pink-400/25 bg-gradient-to-r from-pink-500/10 via-violet-500/10 to-transparent p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-5">
+        <div className="rounded-2xl border border-de-hairline bg-de-raised p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-5">
           <IconWell icon={ClipboardCheck} size="md" surface="dark" className="shrink-0" />
           <div className="flex-1">
             <h3 className="text-lg font-semibold text-white">Not sure? Start with a Cyber Risk Assessment</h3>

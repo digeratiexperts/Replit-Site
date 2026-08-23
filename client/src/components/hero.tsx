@@ -9,7 +9,7 @@ export default function Hero() {
         Digerati Experts’ ProActive Ecosystem.
       </p>
       <a
-        href="/ecosystem"
+        href="/solutions/proactive-ecosystem"
         className="px-6 py-3 bg-dewhite text-deblack rounded-2xl font-semibold hover:bg-delightblue transition"
       >
         Explore Ecosystem Tiers

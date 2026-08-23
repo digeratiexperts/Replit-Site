@@ -595,7 +595,7 @@ export default function Ebook() {
               <div className="mt-12 grid md:grid-cols-3 gap-6 text-left">
                 {[
                   { title: "6 Chapters", desc: "Comprehensive coverage of risk assessment fundamentals", icon: "📚" },
-                  { title: "Real Case Studies", desc: "Learn from actual Arizona business experiences", icon: "📊" },
+                  { title: "Practical scenarios", desc: "Common patterns Arizona businesses run into", icon: "📊" },
                   { title: "Actionable Roadmap", desc: "90-day plan to improve your security posture", icon: "🗺️" }
                 ].map((item, idx) => (
                   <motion.div 

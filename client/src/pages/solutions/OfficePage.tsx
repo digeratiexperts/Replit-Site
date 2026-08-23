@@ -100,7 +100,7 @@ const matrixCategories: MatrixCategory[] = [
       { id: "restore-testing", capability: "Verified restore testing", status: "limited", tooltip: "Quarterly test of sample restore; full DR test is add-on" },
       { id: "server-backup", capability: "Server/VM backup", status: "optional", tooltip: "Available as add-on" },
       { id: "draas", capability: "Disaster recovery / warm standby", status: "optional", tooltip: "DRaaS available for critical systems" },
-      { id: "rpo-rto", capability: "Guaranteed RPO/RTO targets", status: "optional", tooltip: "SLA-backed recovery targets available as add-on" }
+      { id: "rpo-rto", capability: "Agreed RPO/RTO targets", status: "optional", tooltip: "Contract-defined recovery targets available as add-on" }
     ]
   }
 ];
@@ -159,9 +159,9 @@ function StatusBadge({ status, tooltip }: { status: InclusionStatus; tooltip?: s
   
   const config = {
     "included": { 
-      bg: "bg-emerald-500/20", 
-      text: "text-emerald-400", 
-      border: "border-emerald-500/30",
+      bg: "bg-de-raised", 
+      text: "text-de-accent-ink", 
+      border: "border-de-hairline",
       label: "Included",
       icon: <Check className="w-3 h-3" />
     },
@@ -173,9 +173,9 @@ function StatusBadge({ status, tooltip }: { status: InclusionStatus; tooltip?: s
       icon: <Info className="w-3 h-3" />
     },
     "optional": { 
-      bg: "bg-amber-500/20", 
-      text: "text-amber-400", 
-      border: "border-amber-500/30",
+      bg: "bg-de-raised", 
+      text: "text-white/70", 
+      border: "border-de-hairline",
       label: "Add-On",
       icon: <Zap className="w-3 h-3" />
     },
@@ -377,45 +377,45 @@ export default function OfficePage() {
                 </div>
                 <ul className="space-y-3 text-white/70">
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-de-accent-ink flex-shrink-0 mt-0.5" />
                     <span>5–25 users (minimum 5)</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-de-accent-ink flex-shrink-0 mt-0.5" />
                     <span>No internal IT staff or part-time IT stretched thin</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-de-accent-ink flex-shrink-0 mt-0.5" />
                     <span>Need reliable help desk without hourly billing surprises</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-de-accent-ink flex-shrink-0 mt-0.5" />
                     <span>Want security basics handled without becoming an expert</span>
                   </li>
                 </ul>
               </div>
               <div className="bg-white/[0.02] border border-white/10 rounded-xl p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-lg bg-emerald-600/20 flex items-center justify-center">
-                    <FileCheck className="w-5 h-5 text-emerald-400" />
+                  <div className="w-10 h-10 rounded-lg bg-de-raised flex items-center justify-center">
+                    <FileCheck className="w-5 h-5 text-de-accent-ink" />
                   </div>
                   <h3 className="text-lg font-semibold text-white">Outcomes You Get</h3>
                 </div>
                 <ul className="space-y-3 text-white/70">
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-de-accent-ink flex-shrink-0 mt-0.5" />
                     <span>One monthly price—no surprise invoices</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-de-accent-ink flex-shrink-0 mt-0.5" />
                     <span>Issues resolved without you managing the fix</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-de-accent-ink flex-shrink-0 mt-0.5" />
                     <span>Security baseline for identity, endpoints, and email</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-de-accent-ink flex-shrink-0 mt-0.5" />
                     <span>Backup + restore that's tested, not assumed</span>
                   </li>
                 </ul>
@@ -437,8 +437,8 @@ export default function OfficePage() {
                   transition={{ delay: index * 0.05 }}
                   className="flex items-center gap-3 bg-white/[0.03] border border-white/10 rounded-xl p-4"
                 >
-                  <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
-                    <Check className="w-4 h-4 text-emerald-400" />
+                  <div className="w-8 h-8 rounded-full bg-de-raised flex items-center justify-center flex-shrink-0">
+                    <Check className="w-4 h-4 text-de-accent-ink" />
                   </div>
                   <span className="text-white font-medium">{bullet.label}</span>
                 </motion.div>
@@ -469,7 +469,7 @@ export default function OfficePage() {
                     <p className="text-white/80 font-medium text-sm">Includes:</p>
                     {officeRecommendedBullets.map((bullet) => (
                       <div key={bullet.id} className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                        <Check className="w-5 h-5 text-de-accent-ink flex-shrink-0 mt-0.5" />
                         <span className="text-white/80 text-sm">{bullet.label}</span>
                       </div>
                     ))}
@@ -586,7 +586,7 @@ export default function OfficePage() {
                 data-testid="btn-not-included-toggle"
               >
                 <div className="flex items-center gap-3">
-                  <AlertTriangle className="w-5 h-5 text-amber-400" />
+                  <AlertTriangle className="w-5 h-5 text-de-accent-ink" />
                   <span className="font-semibold text-white">What's Not Included in Office</span>
                   <span className="text-white/55 text-sm">(prevents scope questions)</span>
                 </div>

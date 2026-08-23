@@ -37,7 +37,7 @@ export const servicePageData = {
       { title: "Repeat Issue Reduction", description: "Tracking and follow-up to reduce repeat incidents over time" }
     ],
     benefits: [
-      "First-response SLA: 15-minute response guarantee",
+      "First-response SLA: 15-minute response target during business hours",
       "Reduced repeat incident rate",
       "Users guided toward solutions, not band-aids",
       "Vendor issues resolved—we handle ISPs, SaaS vendors, hardware vendors",
@@ -190,11 +190,11 @@ export const servicePageData = {
   },
   'backup-disaster-recovery': {
     title: "Backup & Disaster Recovery (BCDR)",
-    subtitle: "Tested recovery with guaranteed targets—business won't stay down",
-    description: "BCDR is guaranteed continuity, not just 'we have backups.' Agreed RPO/RTO targets, image-based backups, scheduled restore tests, and DR runbooks. Your business comes back up on a timeline you define—not when backups finally work.",
+    subtitle: "Tested recovery with agreed targets—business won't stay down",
+    description: "BCDR is tested continuity, not just 'we have backups.' Agreed RPO/RTO targets, image-based backups, scheduled restore tests, and DR runbooks. Your business comes back up on a timeline you define—not when backups finally work.",
     stat: { value: "$1.53M", label: "average ransomware recovery cost (excluding ransom)", source: "Sophos 2025" },
     features: [
-      { title: "Guaranteed RPO/RTO Targets", description: "Committed recovery time and data-loss objectives with SLA backing" },
+      { title: "Agreed RPO/RTO Targets", description: "Contract-defined recovery time and data-loss objectives with SLA backing" },
       { title: "Image-Based Backups", description: "DE Server/VM backup features for full-system restore, not file-by-file recovery" },
       { title: "Scheduled Restore Tests", description: "Regular failover drills to confirm your systems can actually be restored" },
       { title: "DR Runbooks & Tabletop Exercises", description: "Documented recovery procedures with periodic team exercises" },
@@ -203,7 +203,7 @@ export const servicePageData = {
     ],
     benefits: [
       "Restore your entire business, not just files",
-      "Predictable recovery with guaranteed targets",
+      "Predictable recovery with agreed targets",
       "Tested and verified recovery procedures",
       "Reduced downtime and business impact",
       "Compliance-ready DR documentation",

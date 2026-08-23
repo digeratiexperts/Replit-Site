@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "wouter";
 import { PageTemplate } from "@/components/PageTemplate";
 import { ConversionPathBar } from "@/components/ConversionPathBar";
@@ -36,18 +37,21 @@ const TITLE_TO_REGISTRY: Record<string, string[]> = {
   "Endpoint Detection & Response": [],
 };
 
+/** Registry lists draft PDF paths. Only expose Download when the file is actually shipped. */
+const SHIPPED_DATASHEET_FILES = new Set<string>();
+
 function resolveDownloadUrl(title: string): string | undefined {
   const candidates = TITLE_TO_REGISTRY[title] ?? [];
   for (const candidate of candidates) {
     const match = registryResources.find(
       (r) => r.title.toLowerCase() === candidate.toLowerCase()
     );
-    if (match?.file) return match.file;
+    if (match?.file && SHIPPED_DATASHEET_FILES.has(match.file)) return match.file;
   }
   const exact = registryResources.find(
     (r) => r.title.toLowerCase() === title.toLowerCase()
   );
-  if (exact?.file) return exact.file;
+  if (exact?.file && SHIPPED_DATASHEET_FILES.has(exact.file)) return exact.file;
   return undefined;
 }
 
@@ -170,19 +174,27 @@ const getTypeColor = (_type: string) =>
   "border border-de-hairline bg-de-bg text-de-accent-ink";
 
 export default function Datasheets() {
+  const [activeCategory, setActiveCategory] = useState("All");
+  const visibleDocuments = documents.filter(
+    (d) => activeCategory === "All" || d.category === activeCategory,
+  );
   const downloadableCount = documents.filter((d) => d.downloadUrl).length;
 
   useSEO({
     title: "Datasheets & Documentation",
     description:
-      "Digerati Experts service datasheets and documentation. Download available PDFs or request the latest version.",
+      "Digerati Experts service datasheets and documentation. Request the latest version — PDFs are sent when a current file is available.",
     canonical: "/resources/datasheets",
   });
 
   return (
     <PageTemplate
       title="Datasheets & Documentation"
-      subtitle={`Browse our service documentation. ${downloadableCount} documents are available for immediate PDF download; others can be requested and we'll send the latest version.`}
+      subtitle={
+        downloadableCount > 0
+          ? `Browse our service documentation. ${downloadableCount} documents are available for immediate PDF download; others can be requested and we'll send the latest version.`
+          : "Browse our service documentation. Request a document and we'll send the current version — PDFs are not hosted for automatic download yet."
+      }
       icon={<FileText className="h-10 w-10 text-de-accent-ink" />}
       breadcrumbs={[{ label: "Resources", href: "/resources" }, { label: "Datasheets" }]}
       actions={
@@ -198,8 +210,14 @@ export default function Datasheets() {
                 key={category}
                 variant="outline"
                 size="sm"
-                className="border-de-hairline bg-transparent text-white/70 hover:border-de-hairline hover:bg-de-raised hover:text-white"
+                className={
+                  activeCategory === category
+                    ? "border-[#D3126A] bg-de-raised text-white"
+                    : "border-de-hairline bg-transparent text-white/70 hover:border-de-hairline hover:bg-de-raised hover:text-white"
+                }
+                aria-pressed={activeCategory === category}
                 data-testid={`button-filter-${category.toLowerCase()}`}
+                onClick={() => setActiveCategory(category)}
               >
                 {category}
               </Button>
@@ -207,7 +225,7 @@ export default function Datasheets() {
           </div>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {documents.map((doc) => (
+            {visibleDocuments.map((doc) => (
               <article key={doc.id} className="rounded-2xl border border-de-hairline bg-de-raised p-6" data-testid={`card-document-${doc.id}`}>
                 <div className="mb-2 flex items-start justify-between">
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-de-hairline bg-de-bg">
@@ -221,7 +239,7 @@ export default function Datasheets() {
                   <p className="mt-2 text-white/60">{doc.description}</p>
                   <div className="mb-4 mt-4 flex items-center justify-between text-sm text-white/50">
                     <span>{doc.category}</span>
-                    <span>{doc.pages ? `${doc.pages} pages` : "Document"}</span>
+                    <span>On request</span>
                   </div>
                   {doc.downloadUrl ? (
                     <Button

@@ -12,15 +12,15 @@ export const locationPageData = {
     keywordPhrase: "Managed IT Chandler",
     whyChooseUs: [
       "Local Chandler-based team with deep community connections",
-      "15-minute response time guarantee for critical issues",
+      "15-minute first-response target during business hours for critical issues",
       "Support for Arizona-specific compliance requirements (HIPAA, ADA)",
       "Same-day onsite support available",
       "Understanding of Chandler business ecosystem"
     ],
     localProof: {
       officeLocation: "Chandler, AZ (Primary Office)",
-      yearsServing: "Trusted by Chandler businesses since 2015",
-      testimonialCount: "40+ Chandler client reviews and case studies",
+      yearsServing: "Local Chandler team",
+      testimonialCount: "Published reviews appear on the reviews page when available",
       industries: ["Healthcare practices", "Law firms", "Accounting firms", "Manufacturing", "Nonprofit organizations"]
     },
     serviceFocus: [
@@ -53,8 +53,8 @@ export const locationPageData = {
     ],
     localProof: {
       officeLocation: "Phoenix office location serving metro area",
-      yearsServing: "Trusted partner for Phoenix enterprises",
-      testimonialCount: "Enterprise client case studies and success stories",
+      yearsServing: "Greater Phoenix coverage",
+      testimonialCount: "Published reviews appear on the reviews page when available",
       industries: ["Large healthcare networks", "Enterprise law firms", "Biotech firms", "Government contractors"]
     },
     serviceFocus: [
@@ -87,8 +87,8 @@ export const locationPageData = {
     ],
     localProof: {
       officeLocation: "Mesa service office",
-      yearsServing: "10+ years serving East Valley businesses",
-      testimonialCount: "30+ Mesa business testimonials",
+      yearsServing: "East Valley coverage",
+      testimonialCount: "Published reviews appear on the reviews page when available",
       industries: ["Manufacturing", "Distribution", "Professional services", "Retail"]
     },
     serviceFocus: [
@@ -121,8 +121,8 @@ export const locationPageData = {
     ],
     localProof: {
       officeLocation: "Gilbert area coverage",
-      yearsServing: "Serving Gilbert's growth corridor",
-      testimonialCount: "25+ Gilbert client success stories",
+      yearsServing: "Gilbert and East Valley coverage",
+      testimonialCount: "Published reviews appear on the reviews page when available",
       industries: ["Technology startups", "Professional services", "Healthcare", "E-commerce"]
     },
     serviceFocus: [
@@ -155,8 +155,8 @@ export const locationPageData = {
     ],
     localProof: {
       officeLocation: "Tempe service area",
-      yearsServing: "Supporting Tempe's tech ecosystem",
-      testimonialCount: "Tech company case studies",
+      yearsServing: "Tempe and central-valley coverage",
+      testimonialCount: "Published reviews appear on the reviews page when available",
       industries: ["Tech startups", "Software companies", "Consulting firms", "Education tech"]
     },
     serviceFocus: [
@@ -189,8 +189,8 @@ export const locationPageData = {
     ],
     localProof: {
       officeLocation: "Scottsdale service coverage",
-      yearsServing: "Trusted by Scottsdale executives",
-      testimonialCount: "Executive testimonials and case studies",
+      yearsServing: "Scottsdale and North Valley coverage",
+      testimonialCount: "Published reviews appear on the reviews page when available",
       industries: ["Executive firms", "Medical practices", "Professional services", "Real estate", "Hospitality"]
     },
     serviceFocus: [

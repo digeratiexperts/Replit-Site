@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { Link } from "wouter";
 import { pricing } from "@/data/pricing";
+import { CTA } from "@/lib/ctaCopy";
 import { 
   Search, 
   Moon, 
@@ -259,8 +261,9 @@ export default function EcosystemMatrixOfficial() {
             Billing rule: Minimums apply when per-user total &lt; minimum.
           </p>
           <div className="mt-6 flex justify-center gap-4">
-            <Button className="bg-de-magenta hover:bg-de-magenta">Book Technical Assessment</Button>
-            <Button variant="outline" className="border-white/10">Download PDF Matrix</Button>
+            <Button asChild className="bg-de-magenta hover:bg-de-magenta">
+              <Link href="/book">{CTA.primary}</Link>
+            </Button>
           </div>
         </div>
       </div>

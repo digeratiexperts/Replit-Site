@@ -60,7 +60,7 @@ const allCategories: CategoryData[] = [
       { capability: "Immutable Backup Copies", essentials: false, office: false, business: true, enterprise: true },
       { capability: "Verified Restore Testing", essentials: false, office: "Quarterly", business: "Monthly", enterprise: "Weekly" },
       { capability: "Disaster Recovery (DRaaS)", essentials: false, office: "Optional", business: "Optional", enterprise: true },
-      { capability: "RTO/RPO Guarantees", essentials: false, office: false, business: "Standard", enterprise: "Custom SLA" },
+      { capability: "Agreed RPO/RTO targets", essentials: false, office: false, business: "Standard", enterprise: "Custom SLA" },
     ]
   },
   {

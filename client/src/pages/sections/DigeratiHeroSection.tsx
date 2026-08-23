@@ -148,7 +148,7 @@ export const DigeratiHeroSection = (): JSX.Element => {
               <Card className="border border-de-hairline bg-white shadow-none">
                 <CardHeader>
                   <CardTitle className="text-2xl">Get Started Today</CardTitle>
-                  <CardDescription>Lock In 80% Off Your Cyber Risk Assessment — Act Now to Identify Vulnerabilities Before Hackers Do.</CardDescription>
+                  <CardDescription>Request a Cyber Risk Assessment — we’ll identify vulnerabilities and send independent findings you can use with your current IT or with us.</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Form {...form}>

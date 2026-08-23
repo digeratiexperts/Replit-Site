@@ -3,7 +3,7 @@ import { ConversionPathBar } from "@/components/ConversionPathBar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Shield, Download, Lock, Server, Users, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Shield, Lock, Server, Users, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { CTA } from "@/lib/ctaCopy";
 import { useSEO } from "@/hooks/useSEO";
@@ -147,12 +147,12 @@ export default function SecurityChecklist() {
               </div>
               <div className="mt-4">
                 <Button
+                  asChild
                   variant="outline"
                   className="border-de-hairline bg-transparent text-white/70 hover:bg-de-bg hover:text-white"
-                  data-testid="button-download-pdf"
+                  data-testid="button-request-checklist"
                 >
-                  <Download className="mr-2 h-4 w-4" />
-                  Download PDF
+                  <a href="/book">Request a reviewed checklist</a>
                 </Button>
               </div>
           </div>

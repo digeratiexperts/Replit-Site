@@ -188,7 +188,7 @@ export function StickyCTABar() {
           data-testid="sticky-cta-bar"
           data-sticky-cta-chrome="true"
         >
-          <div className="relative overflow-hidden rounded-2xl border border-pink-400/35 bg-de-raised backdrop-blur-lg shadow-lg shadow-pink-500/20">
+          <div className="relative overflow-hidden rounded-2xl border border-de-hairline bg-de-raised">
             <button
               onClick={handleDismiss}
               className="absolute top-2 right-2 z-10 p-1.5 rounded-full hover:bg-white/10 transition-colors"
