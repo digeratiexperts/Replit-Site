@@ -102,17 +102,17 @@ export function StoreProductCard({
 
   return (
     <article
-      className="relative flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-[#121216]/90 transition-all duration-300 hover:border-[#5034ff]/45 hover:bg-[#161622] hover:shadow-xl hover:shadow-[#5034ff]/10 hover:-translate-y-1 group"
+      className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-black/10 bg-[#FAF9F6] text-[#1A1228] transition-all duration-300 hover:border-[#5034ff]/50 hover:bg-white hover:shadow-[0_20px_50px_rgba(0,0,0,0.25)] hover:-translate-y-1.5 group"
       data-testid={`product-${product.id}`}
     >
       {onCompareToggle && !isContract && (
-        <label className="absolute right-2.5 top-2.5 z-20 flex cursor-pointer items-center gap-1.5 rounded-full border border-white/15 bg-black/65 px-2 py-0.5 text-[11px] text-white/70 backdrop-blur-md hover:text-white">
+        <label className="absolute right-2.5 top-2.5 z-20 flex cursor-pointer items-center gap-1.5 rounded-full border border-black/10 bg-white/90 px-2.5 py-0.5 text-[11px] font-semibold text-[#1A1228] shadow-sm backdrop-blur-md hover:bg-white transition-colors">
           <input
             type="checkbox"
             checked={compareSelected}
             disabled={!compareSelected && compareDisabled}
             onChange={() => onCompareToggle(product)}
-            className="h-3.5 w-3.5 rounded border-white/30 bg-transparent accent-[#5034ff]"
+            className="h-3.5 w-3.5 rounded border-black/30 bg-transparent accent-[#5034ff]"
             data-testid={`compare-check-${product.id}`}
           />
           Compare
@@ -123,7 +123,7 @@ export function StoreProductCard({
         <ProductMedia
           product={product}
           variant="card"
-          className="rounded-none border-0 border-b border-white/10"
+          className="rounded-none border-0 border-b border-black/10"
           categoryBadge={categoryLabels[product.category]}
         />
       </Link>
@@ -132,28 +132,28 @@ export function StoreProductCard({
         <div className="mb-2">
           <div className="mb-1.5 flex flex-wrap items-center gap-1">
             {vendor && (
-              <span className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[10px] font-medium text-white/70">
+              <span className="rounded-full border border-black/10 bg-black/[0.05] px-2 py-0.5 text-[10px] font-semibold text-[#4A4556]">
                 {vendor.name}
               </span>
             )}
             <span
-              className={`rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider ${accent}`}
+              className={`rounded-full bg-[#181520] border border-black/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${accent}`}
             >
               {categoryLabels[product.category]}
             </span>
             {product.isClientOnly && (
-              <span className="rounded-full border border-[#5034ff]/30 bg-[#5034ff]/15 px-2 py-0.5 text-[10px] font-medium text-[#c4b5fd]">
+              <span className="rounded-full border border-[#5034ff]/30 bg-[#5034ff]/10 px-2 py-0.5 text-[10px] font-bold text-[#5034ff]">
                 Client pricing
               </span>
             )}
             {isContract && (
-              <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[10px] font-medium text-amber-200">
+              <span className="rounded-full border border-amber-600/30 bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold text-amber-800">
                 Consult
               </span>
             )}
           </div>
           <h3
-            className="text-base font-semibold leading-snug text-white transition-colors group-hover:text-[#c4b5fd] line-clamp-2"
+            className="text-base font-bold leading-snug text-[#1A1228] transition-colors group-hover:text-[#5034ff] line-clamp-2"
           >
             <Link href={`/store/product/${product.sku}`}>
               <span title={product.name}>
@@ -164,13 +164,13 @@ export function StoreProductCard({
         </div>
 
         <p
-          className="mb-3 text-xs leading-relaxed text-white/70 line-clamp-2 sm:text-sm"
+          className="mb-3 text-xs leading-relaxed text-[#4A4556] line-clamp-2 sm:text-sm font-medium"
         >
           {getOutcomeLead(product)}
         </p>
 
         {includedHint && (
-          <div className="mb-3 text-xs font-medium text-[#a78bfa]/95">
+          <div className="mb-3 text-xs font-semibold text-[#5034ff]">
             <p className="line-clamp-1" data-testid={`included-hint-${product.id}`}>{includedHint}</p>
           </div>
         )}
@@ -180,7 +180,7 @@ export function StoreProductCard({
             {solutionChips.map((chip) => (
               <span
                 key={chip.label}
-                className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-xs text-white/70"
+                className="inline-flex items-center rounded-full border border-black/10 bg-black/[0.04] px-2 py-0.5 text-xs font-medium text-[#2A2438]"
                 data-testid={`solution-chip-${product.id}`}
               >
                 {chip.label}
@@ -189,25 +189,25 @@ export function StoreProductCard({
           </div>
         )}
 
-        <div className="mt-auto border-t border-white/10 pt-3">
+        <div className="mt-auto border-t border-black/10 pt-3.5">
           <div className="mb-3 flex items-baseline justify-between gap-2">
             {hasDiscount ? (
               <div>
                 <div className="flex items-baseline gap-1.5">
-                  <span className="text-lg sm:text-xl font-bold text-white" data-testid={`price-${product.id}`}>
+                  <span className="text-lg sm:text-xl font-bold text-[#1A1228]" data-testid={`price-${product.id}`}>
                     ${price.toFixed(2)}
                   </span>
-                  <span className="text-xs text-white/40 line-through">
+                  <span className="text-xs text-black/40 line-through">
                     ${product.basePrice.toFixed(2)}
                   </span>
                 </div>
-                <span className="mt-0.5 inline-flex items-center gap-1 text-xs font-medium text-[#a78bfa]">
+                <span className="mt-0.5 inline-flex items-center gap-1 text-xs font-semibold text-[#5034ff]">
                   <Tag className="h-3 w-3" />
                   {discountPercent}% off
                 </span>
               </div>
             ) : (
-              <span className="text-lg sm:text-xl font-bold text-white" data-testid={`price-${product.id}`}>
+              <span className="text-lg sm:text-xl font-bold text-[#1A1228]" data-testid={`price-${product.id}`}>
                 {product.basePrice === 0 && isContract ? "Custom quote" : formatPrice(product)}
               </span>
             )}
@@ -218,7 +218,7 @@ export function StoreProductCard({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-9 w-full border-white/15 bg-transparent text-xs text-white hover:bg-white/10 hover:border-white/30"
+                className="h-9 w-full border border-black/15 bg-white text-xs font-semibold text-[#1A1228] hover:bg-black/5 hover:border-black/30 transition-colors shadow-sm"
                 data-testid={`button-details-${product.id}`}
               >
                 <Eye className="mr-1 h-3.5 w-3.5" />
@@ -230,7 +230,7 @@ export function StoreProductCard({
               <a href="/book" className="flex-1">
                 <Button
                   size="sm"
-                  className="h-9 w-full bg-[#5034ff] text-xs font-semibold text-white hover:bg-[#6548ff] shadow-md shadow-[#5034ff]/25"
+                  className="h-9 w-full bg-[#5034ff] text-xs font-bold text-white hover:bg-[#6548ff] shadow-md shadow-[#5034ff]/25 transition-all"
                   data-testid={`button-consult-${product.id}`}
                 >
                   Schedule
@@ -239,7 +239,7 @@ export function StoreProductCard({
             ) : product.isClientOnly && !isLoggedIn ? (
               <Button
                 size="sm"
-                className="h-9 flex-1 bg-[#5034ff] text-xs font-semibold text-white hover:bg-[#6548ff] shadow-md shadow-[#5034ff]/25"
+                className="h-9 flex-1 bg-[#5034ff] text-xs font-bold text-white hover:bg-[#6548ff] shadow-md shadow-[#5034ff]/25 transition-all"
                 onClick={(e) => {
                   e.preventDefault();
                   onLoginRequired?.();
@@ -252,7 +252,7 @@ export function StoreProductCard({
             ) : configurable ? (
               <Button
                 size="sm"
-                className="h-9 flex-1 bg-[#5034ff] text-xs font-semibold text-white hover:bg-[#6548ff] shadow-md shadow-[#5034ff]/25"
+                className="h-9 flex-1 bg-[#5034ff] text-xs font-bold text-white hover:bg-[#6548ff] shadow-md shadow-[#5034ff]/25 transition-all"
                 onClick={(e) => {
                   e.preventDefault();
                   onConfigure?.(product);
@@ -265,7 +265,7 @@ export function StoreProductCard({
             ) : (
               <Button
                 size="sm"
-                className="h-9 flex-1 bg-[#5034ff] text-xs font-semibold text-white hover:bg-[#6548ff] shadow-md shadow-[#5034ff]/25"
+                className="h-9 flex-1 bg-[#5034ff] text-xs font-bold text-white hover:bg-[#6548ff] shadow-md shadow-[#5034ff]/25 transition-all"
                 onClick={(e) => onAddToCart(product, e)}
                 data-testid={`button-add-${product.id}`}
               >
