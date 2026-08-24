@@ -4,6 +4,12 @@ import { resolveClientPricingRows, resolveUnitPrice, toPriceOverrides } from "./
 
 type StoreRole = "public" | "prospect" | "managed" | "comanaged" | "admin";
 
+const RECURRING_STORE_CATEGORIES = new Set<StoreProduct["category"]>([
+  "comanaged_subscriptions",
+  "networking_managed",
+  "ucaas_subscriptions",
+]);
+
 type CheckoutRequest = Request & {
   userId?: string;
   user?: {
@@ -42,6 +48,24 @@ function isPurchasableForRole(product: StoreProduct, role: StoreRole): boolean {
   if (role === "admin") return true;
   if (role !== "comanaged") return false;
   return product.requiredClientType === "public" || product.requiredClientType === "comanaged";
+}
+
+/**
+ * These catalog families are recurring services. Until the Store creates or
+ * amends an authoritative Zoho subscription, they must not be charged through
+ * a one-time hosted Payment Session.
+ */
+export function isRecurringSubscriptionProduct(product: StoreProduct): boolean {
+  return RECURRING_STORE_CATEGORIES.has(product.category);
+}
+
+export function recurringCheckoutSkus(items: CanonicalCheckoutLineItem[]): string[] {
+  return items
+    .filter((item) => {
+      const product = storeProducts.find((candidate) => candidate.id === item.productId);
+      return !!product && isRecurringSubscriptionProduct(product);
+    })
+    .map((item) => item.sku);
 }
 
 export function canonicalizeCheckoutLineItems(
@@ -110,6 +134,15 @@ export function registerSecureZohoStoreCheckout(
   authMiddleware: AuthMiddleware,
   requireRole: RoleMiddlewareFactory,
 ) {
+  // Registration happens during server boot. In production this starts the
+  // existing paid-order reconciler immediately, so a restart does not leave
+  // already-paid work stranded until another webhook happens to arrive.
+  void import("./services/orderFulfillment")
+    .then(({ startOrderFulfillmentReconciliation }) => startOrderFulfillmentReconciliation())
+    .catch((error) => {
+      console.error("[ORDER FULFILLMENT RECONCILER START ERROR]", error);
+    });
+
   app.post(
     "/api/store/checkout/zoho",
     [authMiddleware as any, requireRole("comanaged", "admin") as any],
@@ -138,6 +171,22 @@ export function registerSecureZohoStoreCheckout(
           return res.status(400).json({ error: error?.message || "Invalid checkout cart" });
         }
 
+        const recurringSkus = recurringCheckoutSkus(lineItems);
+        if (recurringSkus.length > 0) {
+          console.warn("[SECURITY] RECURRING_CHECKOUT_BLOCKED", {
+            userId: req.userId,
+            clientId: req.user?.clientId,
+            skus: recurringSkus,
+          });
+          return res.status(409).json({
+            code: "SUBSCRIPTION_BILLING_REQUIRED",
+            quoteRequired: true,
+            skus: recurringSkus,
+            error:
+              "Recurring services require subscription billing setup before online payment. Request a quote for these items.",
+          });
+        }
+
         const trustedTotal = canonicalCheckoutTotal(lineItems);
         const suppliedTotal = Number(req.body?.total);
         const suppliedSubtotal = Number(req.body?.subtotal);
@@ -157,6 +206,20 @@ export function registerSecureZohoStoreCheckout(
           });
         }
 
+        const dbModule = await import("./db");
+        await dbModule.initPromise;
+        if (!dbModule.dbReady || !dbModule.db) {
+          console.error("[SECURITY] CHECKOUT_DATABASE_UNAVAILABLE", {
+            userId: req.userId,
+            clientId: req.user?.clientId,
+          });
+          return res.status(503).json({
+            code: "DURABLE_DATABASE_REQUIRED",
+            error: "Checkout is temporarily unavailable because durable order storage is not connected.",
+          });
+        }
+        const db = dbModule.db;
+
         const { zohoPayments } = await import("./zohoPayments");
         if (!zohoPayments.isConfigured()) {
           return res.status(503).json({
@@ -170,7 +233,6 @@ export function registerSecureZohoStoreCheckout(
           .toUpperCase()}`;
         const baseUrl = process.env.APP_URL || "https://digeratiexperts.com";
 
-        const { db } = await import("./db");
         const { storeOrders } = await import("@shared/schema");
         const { eq } = await import("drizzle-orm");
 
