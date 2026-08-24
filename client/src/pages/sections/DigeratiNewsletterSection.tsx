@@ -97,8 +97,8 @@ export const DigeratiNewsletterSection = (): JSX.Element => {
               </span>
             </h2>
             <p className="mt-2 max-w-3xl text-base leading-relaxed text-white/55">
-              Framework names describe customer requirements Digerati helps organizations address —
-              not certifications Digerati holds.
+              Framework names describe customer requirements Digerati Experts helps organizations address —
+              not certifications DE holds.
             </p>
             <ul className="mt-5 flex flex-wrap gap-2.5">
               {complianceItems.map((item) => (

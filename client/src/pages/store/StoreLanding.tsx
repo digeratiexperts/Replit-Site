@@ -242,7 +242,7 @@ const StoreLanding = () => {
                       data-testid="button-ask-digerati"
                     >
                       <MessageCircle className="mr-2 h-5 w-5" />
-                      Ask Digerati
+                      Ask DE
                     </Button>
                     {showFullCatalog && (
                       <Link href="/store/co-managed?catalog=full">

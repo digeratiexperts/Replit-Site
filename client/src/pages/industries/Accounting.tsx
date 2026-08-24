@@ -143,7 +143,7 @@ export default function Accounting() {
         <div className={`p-8 md:p-12 ${cardClass}`}>
           <h3 className="mb-3 text-center text-2xl font-bold text-white">Security & Compliance Support</h3>
           <p className="mx-auto mb-8 max-w-2xl text-center text-sm text-white/55">
-            Framework names describe customer requirements we help organizations address — not certifications Digerati holds.
+            Framework names describe customer requirements we help organizations address — not certifications DE holds.
           </p>
           <div className="grid gap-4 md:grid-cols-4">
             {[

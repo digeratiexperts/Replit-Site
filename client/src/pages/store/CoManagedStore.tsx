@@ -590,7 +590,7 @@ const CoManagedStore = () => {
               <span className="text-de-accent-ink">accomplish.</span>
             </h1>
             <p className="text-lg leading-relaxed text-white/70 md:text-xl">
-              Shop by outcome, build a recommended stack with Ask Digerati, then buy from the live
+              Shop by outcome, build a recommended stack with Ask DE, then buy from the live
               catalog when you know what you need.
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
@@ -609,7 +609,7 @@ const CoManagedStore = () => {
                 data-testid="button-ask-digerati"
               >
                 <MessageCircle className="mr-2 h-5 w-5" />
-                Ask Digerati
+                Ask DE
               </Button>
               <Button
                 variant="ghost"
@@ -930,7 +930,7 @@ const CoManagedStore = () => {
                 data-testid="button-advisor-cta"
               >
                 <MessageCircle className="mr-2 h-4 w-4" />
-                Ask Digerati
+                Ask DE
               </Button>
               <Button asChild
                   size="lg"

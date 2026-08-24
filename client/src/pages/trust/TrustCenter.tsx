@@ -19,7 +19,7 @@ export default function TrustCenter() {
   
   const complianceSupport = [
     { icon: FileCheck, title: "HIPAA-aligned security and compliance support", desc: "Business Associate Agreements available for healthcare clients. Framework alignment — not a HIPAA certification." },
-    { icon: Award, title: "SOC 2 readiness and control alignment", desc: "Control mapping, evidence support, and readiness work for customer SOC 2 programs. Digerati is not SOC 2 Type II certified." },
+    { icon: Award, title: "SOC 2 readiness and control alignment", desc: "Control mapping, evidence support, and readiness work for customer SOC 2 programs. Digerati Experts is not SOC 2 Type II certified." },
     { icon: Lock, title: "Cyber insurance readiness", desc: "Controls and documentation insurers commonly request during underwriting and renewals." },
     { icon: Shield, title: "Security and compliance reporting", desc: "Questionnaires, control evidence, and reporting support for vendor reviews and audits." },
   ];
@@ -66,7 +66,7 @@ export default function TrustCenter() {
         <div>
           <h2 className="text-2xl font-bold text-white mb-2 text-center">Security & Compliance Support</h2>
           <p className="text-gray-400 text-center max-w-2xl mx-auto mb-8">
-            These names describe frameworks and customer requirements Digerati helps organizations address. They are not certifications Digerati holds.
+            These names describe frameworks and customer requirements Digerati Experts helps organizations address. They are not certifications DE holds.
           </p>
           <div className="grid md:grid-cols-2 gap-6">
             {complianceSupport.map((item, idx) => {

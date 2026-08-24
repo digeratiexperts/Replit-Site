@@ -138,7 +138,7 @@ export default function ProActiveEcosystemPage() {
               <p className="mt-4 text-sm leading-relaxed text-white/65">
                 Co-managed extends an internal IT team with DE operations, security coverage, and
                 escalation — you keep the team. Fully managed ProActive is for organizations that
-                want Digerati to own the operating model end to end.
+                want DE to own the operating model end to end.
               </p>
               <Link href="/solutions/co-managed-it">
                 <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[#F04C97]">

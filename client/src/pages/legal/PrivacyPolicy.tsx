@@ -146,7 +146,7 @@ export default function PrivacyPolicy() {
               <h3 className="text-2xl font-semibold text-white mb-3 mt-6">4.3 Security & Compliance Support</h3>
               <ul className="list-disc pl-6 text-gray-300 space-y-2">
                 <li>HIPAA-aligned security and compliance support, including Business Associate Agreements for healthcare clients</li>
-                <li>SOC 2 readiness and control alignment for customer programs (Digerati is not SOC 2 Type II certified)</li>
+                <li>SOC 2 readiness and control alignment for customer programs (Digerati Experts is not SOC 2 Type II certified)</li>
                 <li>Cyber insurance readiness and security/compliance reporting support</li>
                 <li>Team members hold CISSP, CCSP, CEH, and Security+ certifications</li>
               </ul>

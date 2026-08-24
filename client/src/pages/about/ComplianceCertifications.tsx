@@ -159,7 +159,7 @@ export default function ComplianceCertifications() {
   return (
     <PageTemplate
       title="Navigate Compliance with Confidence"
-      subtitle="From HIPAA to CMMC to PCI-DSS, we help Arizona businesses map controls, gather evidence, and prepare for audits and cyber-insurance reviews. Framework names describe customer requirements — Digerati is not SOC 2 Type II certified and does not certify your organization."
+      subtitle="From HIPAA to CMMC to PCI-DSS, we help Arizona businesses map controls, gather evidence, and prepare for audits and cyber-insurance reviews. Framework names describe customer requirements — Digerati Experts is not SOC 2 Type II certified and does not certify your organization."
       breadcrumbs={[{ label: "About" }, { label: "Compliance" }]}
       actions={
         <div className="flex flex-col gap-3 sm:flex-row">

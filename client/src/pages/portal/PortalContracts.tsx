@@ -193,7 +193,7 @@ export function PortalContracts() {
 
         {error && (
           <Alert variant="destructive">
-            <AlertDescription>Failed to load contracts. Try again or contact Digerati.</AlertDescription>
+            <AlertDescription>Failed to load contracts. Try again or contact DE.</AlertDescription>
           </Alert>
         )}
 
