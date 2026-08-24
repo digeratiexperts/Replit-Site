@@ -42,9 +42,40 @@ describe("DE Desk shell positioning", () => {
   });
 
   it("keeps Get Support optional fields behind a distinct control, not a second Details label", () => {
-    expect(src).toMatch(/Add company, category, or a file/);
+    expect(src).toMatch(/Add company or category/);
     expect(src).not.toMatch(/>More details</);
     expect(src).toMatch(/Possible security incident/);
     expect(src).toMatch(/What do you need help with\?/);
+  });
+
+  it("uses underline tabs and honest available copy without SOC chrome", () => {
+    expect(src).toMatch(/role="tablist"/);
+    expect(src).toMatch(/role="tab"/);
+    expect(src).toMatch(/aria-selected=\{isActive\}/);
+    expect(src).not.toMatch(/aria-current=\{isActive \? "page"/);
+    expect(src).toMatch(/DE Desk is available/);
+    expect(src).not.toMatch(/AZ SOC Live/);
+    expect(src).toMatch(/\.de-desk-tab\.is-active::after/);
+    expect(src).not.toMatch(/\.de-desk-tab\.is-active \{\s*background: #D3126A;/);
+    expect(src).toMatch(/previous\?\.focus/);
+    expect(src).toMatch(/useEscapeKey/);
+  });
+
+  it("keeps Arizona perk copy in Get Support and does not add extra Tools phone chrome", () => {
+    expect(src).toMatch(/100% Arizona-based engineering desk/);
+    expect(src).toMatch(/Direct portal tracking &amp; phone escalation/);
+    expect(src).not.toMatch(/Direct Desk:/);
+    expect(src).not.toMatch(/resource-link-phone-support/);
+    expect(src).not.toMatch(/className="de-desk-foot"/);
+    expect(src).toMatch(/href=\{PRIMARY_PHONE\.telHref\}/);
+    expect(src).toMatch(/href=\{PORTAL_LOGIN\}/);
+    expect(src).not.toMatch(/\/\/login/);
+  });
+
+  it("does not fake a widget file upload", () => {
+    expect(src).not.toMatch(/input-support-attachment/);
+    expect(src).not.toMatch(/type="file"/);
+    expect(src).toMatch(/aria-invalid=\{ticketFieldErrors/);
+    expect(src).toMatch(/support-submit-error/);
   });
 });

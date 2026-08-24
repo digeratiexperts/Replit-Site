@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import {
   CheckCircle2,
   ChevronRight,
@@ -16,7 +16,6 @@ import {
   Minimize2,
   Monitor,
   MessageCircle,
-  Paperclip,
   Phone,
   Send,
   Shield,
@@ -45,6 +44,7 @@ import type { OpenMspAdvisorDetail } from "@/lib/openMspAdvisor";
 import { STORE_ADVISOR_SEED } from "@/lib/openMspAdvisor";
 import { analytics } from "@/lib/analytics";
 import { useDraggableWindow } from "@/hooks/useDraggableWindow";
+import { useEscapeKey } from "@/hooks/useFocusTrap";
 import {
   DESK_INCIDENT_CHIP,
   DESK_STANDARD_TICKET_CHIPS,
@@ -94,21 +94,22 @@ function previewChatLine(content: string, max = 108) {
 }
 
 function getDeskChipIcon(id: DeskTicketChipId) {
+  const iconClass = "w-3.5 h-3.5 text-[#D3126A] shrink-0";
   switch (id) {
     case "something-not-working":
-      return <Wrench className="w-3.5 h-3.5 text-blue-400 shrink-0" aria-hidden="true" />;
+      return <Wrench className={iconClass} aria-hidden="true" />;
     case "sign-in":
-      return <KeyRound className="w-3.5 h-3.5 text-purple-400 shrink-0" aria-hidden="true" />;
+      return <KeyRound className={iconClass} aria-hidden="true" />;
     case "email":
-      return <Mail className="w-3.5 h-3.5 text-sky-400 shrink-0" aria-hidden="true" />;
+      return <Mail className={iconClass} aria-hidden="true" />;
     case "device":
-      return <Monitor className="w-3.5 h-3.5 text-emerald-400 shrink-0" aria-hidden="true" />;
+      return <Monitor className={iconClass} aria-hidden="true" />;
     case "network":
-      return <Wifi className="w-3.5 h-3.5 text-teal-400 shrink-0" aria-hidden="true" />;
+      return <Wifi className={iconClass} aria-hidden="true" />;
     case "security-concern":
-      return <Shield className="w-3.5 h-3.5 text-pink-400 shrink-0" aria-hidden="true" />;
+      return <Shield className={iconClass} aria-hidden="true" />;
     default:
-      return <HelpCircle className="w-3.5 h-3.5 text-zinc-400 shrink-0" aria-hidden="true" />;
+      return <HelpCircle className={iconClass} aria-hidden="true" />;
   }
 }
 
@@ -209,11 +210,13 @@ export const ZohoASAPWidget = ({
   const [category, setCategory] = useState("");
   const [selectedTicketChip, setSelectedTicketChip] = useState<DeskTicketChipId | null>(null);
   const ticketDetailsRef = useRef<HTMLDivElement>(null);
-  const [attachmentName, setAttachmentName] = useState<string | null>(null);
   const [isTicketSending, setIsTicketSending] = useState(false);
   const [ticketResult, setTicketResult] = useState<TicketResult | null>(null);
   const [showTicketMore, setShowTicketMore] = useState(false);
-  const ticketFileRef = useRef<HTMLInputElement>(null);
+  const [ticketFieldErrors, setTicketFieldErrors] = useState<
+    Partial<Record<"email" | "subject" | "message", string>>
+  >({});
+  const [ticketSubmitError, setTicketSubmitError] = useState<string | null>(null);
 
   const [canDrag, setCanDrag] = useState(false);
   const ignoreDismissUntilRef = useRef(0);
@@ -223,10 +226,54 @@ export const ZohoASAPWidget = ({
     open: isOpen,
     storageKey: "de-desk-window-pos",
   });
-
   const { toast } = useToast();
   activeTabRef.current = activeTab;
   agentNameRef.current = agentName;
+
+  useEscapeKey(() => {
+    if (Date.now() < ignoreDismissUntilRef.current) return;
+    setIsOpen(false);
+  }, isOpen);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const previous = document.activeElement as HTMLElement | null;
+    const getFocusable = () => {
+      const container = deskDrag.panelRef.current;
+      if (!container) return [];
+      return Array.from(
+        container.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => el.offsetParent !== null);
+    };
+    window.requestAnimationFrame(() => {
+      getFocusable()[0]?.focus();
+    });
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "Tab") return;
+      const container = deskDrag.panelRef.current;
+      const items = getFocusable();
+      if (!container || items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      if (event.shiftKey) {
+        if (active === first || !container.contains(active)) {
+          event.preventDefault();
+          last.focus();
+        }
+      } else if (active === last || !container.contains(active)) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      previous?.focus?.();
+    };
+  }, [isOpen, deskDrag.panelRef]);
 
   useEffect(() => () => {
     if (headsUpTimerRef.current) window.clearTimeout(headsUpTimerRef.current);
@@ -624,34 +671,6 @@ export const ZohoASAPWidget = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pendingSeed, isOpen, activeTab]);
 
-  const handleTicketFile = (file: File | undefined) => {
-    if (!file) {
-      setAttachmentName(null);
-      return;
-    }
-    const allowed = ["image/png", "image/jpeg", "application/pdf"];
-    const okType = allowed.includes(file.type) || /\.(png|jpe?g|pdf)$/i.test(file.name);
-    if (!okType) {
-      toast({
-        title: "File type not supported",
-        description: "Please choose a PNG, JPG, or PDF.",
-        variant: "destructive",
-      });
-      if (ticketFileRef.current) ticketFileRef.current.value = "";
-      return;
-    }
-    if (file.size > 10 * 1024 * 1024) {
-      toast({
-        title: "File is too large",
-        description: "Please keep attachments under 10MB.",
-        variant: "destructive",
-      });
-      if (ticketFileRef.current) ticketFileRef.current.value = "";
-      return;
-    }
-    setAttachmentName(file.name);
-  };
-
   const applyTicketChip = (chipId: DeskTicketChipId) => {
     const chip = DESK_TICKET_CHIPS.find((item) => item.id === chipId);
     if (!chip) return;
@@ -739,27 +758,36 @@ export const ZohoASAPWidget = ({
   ];
 
   const handleSubmitTicket = async () => {
-    if (!email || !subject || !message) {
+    const nextErrors: Partial<Record<"email" | "subject" | "message", string>> = {};
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim()) {
+      nextErrors.email = "Enter your work email.";
+    } else if (!emailPattern.test(email.trim())) {
+      nextErrors.email = "Enter a valid email address.";
+    }
+    if (!subject.trim()) nextErrors.subject = "Summarize what’s happening.";
+    if (!message.trim()) nextErrors.message = "Add a few details so we can route this.";
+
+    setTicketFieldErrors(nextErrors);
+    if (Object.keys(nextErrors).length) {
+      setTicketSubmitError("Please complete the required fields below.");
       toast({
         title: "Missing information",
         description: "Please enter your email, subject, and message.",
         variant: "destructive",
       });
-      return;
-    }
-
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email.trim())) {
-      toast({
-        title: "Check your email",
-        description: "Please enter a valid email address.",
-        variant: "destructive",
-      });
+      const firstId = nextErrors.email
+        ? "support-email"
+        : nextErrors.subject
+          ? "support-subject"
+          : "support-message";
+      document.getElementById(firstId)?.focus();
       return;
     }
 
     setIsTicketSending(true);
     setTicketResult(null);
+    setTicketSubmitError(null);
 
     const description = [
       message.trim(),
@@ -767,9 +795,6 @@ export const ZohoASAPWidget = ({
       fullName.trim() ? `Name: ${fullName.trim()}` : null,
       company.trim() ? `Company: ${company.trim()}` : null,
       category ? `Category: ${category}` : null,
-      attachmentName
-        ? `Visitor noted a file: ${attachmentName} (not uploaded in this form — follow up to collect PNG/JPG/PDF).`
-        : null,
     ]
       .filter(Boolean)
       .join("\n")
@@ -805,8 +830,8 @@ export const ZohoASAPWidget = ({
       setPriority("Medium");
       setCategory("");
       setSelectedTicketChip(null);
-      setAttachmentName(null);
-      if (ticketFileRef.current) ticketFileRef.current.value = "";
+      setTicketFieldErrors({});
+      setTicketSubmitError(null);
 
       toast({
         title: "Ticket created",
@@ -815,14 +840,44 @@ export const ZohoASAPWidget = ({
           : "We’ll be in touch shortly.",
       });
     } catch (error) {
+      const descriptionText = error instanceof Error ? error.message : "Please try again.";
+      setTicketSubmitError(descriptionText);
       toast({
         title: "Couldn’t create the ticket",
-        description: error instanceof Error ? error.message : "Please try again.",
+        description: descriptionText,
         variant: "destructive",
       });
     } finally {
       setIsTicketSending(false);
     }
+  };
+
+  const deskTabs = [
+    { id: "chat" as const, label: "Ask DE", icon: MessageCircle },
+    { id: "ticket" as const, label: "Get Support", icon: FileText },
+    { id: "resources" as const, label: "Client Tools", icon: LayoutGrid },
+  ];
+
+  const onDeskTabListKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft" && event.key !== "Home" && event.key !== "End") {
+      return;
+    }
+    event.preventDefault();
+    const ids = deskTabs.map((tab) => tab.id);
+    const current = ids.indexOf(activeTab);
+    const nextIndex =
+      event.key === "Home"
+        ? 0
+        : event.key === "End"
+          ? ids.length - 1
+          : event.key === "ArrowRight"
+            ? (current + 1) % ids.length
+            : (current - 1 + ids.length) % ids.length;
+    const next = ids[nextIndex];
+    selectTab(next);
+    window.requestAnimationFrame(() => {
+      document.getElementById(`desk-tab-${next}`)?.focus();
+    });
   };
 
   if (!isEnabled) return null;
@@ -893,17 +948,11 @@ export const ZohoASAPWidget = ({
                   <span className="de-desk-avatar-dot" />
                 </div>
                 <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h2 data-testid="text-widget-title">DE Desk</h2>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[9.5px] font-bold tracking-wider text-emerald-400 border border-emerald-500/20 uppercase font-mono">
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      AZ SOC Live
-                    </span>
-                  </div>
+                  <h2 data-testid="text-widget-title">DE Desk</h2>
                   <p data-testid="text-widget-status">
                     {agentLive
                       ? `${agentName || "Specialist"} joined · live handoff`
-                      : "Arizona Engineering & Security Operations"}
+                      : "DE Desk is available"}
                   </p>
                 </div>
               </div>
@@ -938,25 +987,28 @@ export const ZohoASAPWidget = ({
               </button>
             </header>
 
-            <nav className="de-desk-tabs" aria-label="Support options">
-              {(
-                [
-                  { id: "chat" as const, label: "Ask DE", icon: MessageCircle },
-                  { id: "ticket" as const, label: "Get Support", icon: FileText },
-                  { id: "resources" as const, label: "Client Tools", icon: LayoutGrid },
-                ]
-              ).map(({ id, label, icon: Icon }) => {
+            <div
+              className="de-desk-tabs"
+              role="tablist"
+              aria-label="Support options"
+              onKeyDown={onDeskTabListKeyDown}
+            >
+              {deskTabs.map(({ id, label, icon: Icon }) => {
                 const isActive = activeTab === id;
                 return (
                   <button
                     key={id}
+                    id={`desk-tab-${id}`}
                     type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    aria-controls={`desk-panel-${id}`}
+                    tabIndex={isActive ? 0 : -1}
                     onClick={() => selectTab(id)}
                     className={`de-desk-tab${isActive ? " is-active" : ""}${
                       id === "chat" && unreadChatCount > 0 ? " has-unread" : ""
                     }`}
                     data-testid={`button-tab-${id}`}
-                    aria-current={isActive ? "page" : undefined}
                     aria-label={
                       id === "chat" && unreadChatCount > 0
                         ? `Ask DE, ${unreadChatCount} new ${unreadChatCount === 1 ? "message" : "messages"}`
@@ -973,7 +1025,7 @@ export const ZohoASAPWidget = ({
                   </button>
                 );
               })}
-            </nav>
+            </div>
 
             <div className="de-desk-body">
               {headsUp && activeTab !== "chat" ? (
@@ -1018,7 +1070,13 @@ export const ZohoASAPWidget = ({
                 </div>
               ) : null}
               {activeTab === "chat" && (
-                <div className="de-desk-panel" data-testid="panel-support-chat">
+                <div
+                  className="de-desk-panel"
+                  id="desk-panel-chat"
+                  role="tabpanel"
+                  aria-labelledby="desk-tab-chat"
+                  data-testid="panel-support-chat"
+                >
                   <div className="de-desk-scroll" aria-live="polite">
                     {chatMessages.map((chatMessage, index) => {
                       const isUser = chatMessage.role === "user";
@@ -1121,7 +1179,13 @@ export const ZohoASAPWidget = ({
               )}
 
               {activeTab === "ticket" && (
-                <div className="de-desk-panel" data-testid="panel-support-ticket">
+                <div
+                  className="de-desk-panel"
+                  id="desk-panel-ticket"
+                  role="tabpanel"
+                  aria-labelledby="desk-tab-ticket"
+                  data-testid="panel-support-ticket"
+                >
                   <div className="de-desk-scroll">
                     {ticketResult ? (
                       <div className="de-desk-hero de-desk-success">
@@ -1233,11 +1297,22 @@ export const ZohoASAPWidget = ({
                               autoComplete="email"
                               placeholder="you@company.com"
                               value={email}
-                              onChange={(event) => setEmail(event.target.value)}
+                              onChange={(event) => {
+                                setEmail(event.target.value);
+                                setTicketFieldErrors((current) => ({ ...current, email: undefined }));
+                              }}
+                              aria-required="true"
+                              aria-invalid={ticketFieldErrors.email ? true : undefined}
+                              aria-describedby={ticketFieldErrors.email ? "support-email-error" : undefined}
                               data-testid="input-support-email"
                               className="de-desk-input"
                             />
                           </div>
+                          {ticketFieldErrors.email ? (
+                            <p id="support-email-error" className="de-desk-field-error" role="alert">
+                              {ticketFieldErrors.email}
+                            </p>
+                          ) : null}
                         </div>
                         <div className="de-desk-field">
                           <label htmlFor="support-subject">What&apos;s happening?</label>
@@ -1246,10 +1321,21 @@ export const ZohoASAPWidget = ({
                             maxLength={200}
                             placeholder="Short summary"
                             value={subject}
-                            onChange={(event) => setSubject(event.target.value)}
+                            onChange={(event) => {
+                              setSubject(event.target.value);
+                              setTicketFieldErrors((current) => ({ ...current, subject: undefined }));
+                            }}
+                            aria-required="true"
+                            aria-invalid={ticketFieldErrors.subject ? true : undefined}
+                            aria-describedby={ticketFieldErrors.subject ? "support-subject-error" : undefined}
                             data-testid="input-support-subject"
                             className="de-desk-input is-bare"
                           />
+                          {ticketFieldErrors.subject ? (
+                            <p id="support-subject-error" className="de-desk-field-error" role="alert">
+                              {ticketFieldErrors.subject}
+                            </p>
+                          ) : null}
                         </div>
                         <div className="de-desk-field">
                           <label htmlFor="support-message">Details</label>
@@ -1258,11 +1344,22 @@ export const ZohoASAPWidget = ({
                             maxLength={2000}
                             placeholder="What broke, who is affected, and what you already tried."
                             value={message}
-                            onChange={(event) => setMessage(event.target.value)}
+                            onChange={(event) => {
+                              setMessage(event.target.value);
+                              setTicketFieldErrors((current) => ({ ...current, message: undefined }));
+                            }}
                             rows={4}
+                            aria-required="true"
+                            aria-invalid={ticketFieldErrors.message ? true : undefined}
+                            aria-describedby={ticketFieldErrors.message ? "support-message-error" : undefined}
                             className="de-desk-input de-desk-ta is-bare"
                             data-testid="input-support-message"
                           />
+                          {ticketFieldErrors.message ? (
+                            <p id="support-message-error" className="de-desk-field-error" role="alert">
+                              {ticketFieldErrors.message}
+                            </p>
+                          ) : null}
                         </div>
                         <div className="de-desk-field">
                           <span className="de-desk-urgency-label" id="support-urgency-label">
@@ -1306,7 +1403,7 @@ export const ZohoASAPWidget = ({
                           aria-expanded={showTicketMore}
                           onClick={() => setShowTicketMore((open) => !open)}
                         >
-                          {showTicketMore ? "Hide optional fields" : "Add company, category, or a file"}
+                          {showTicketMore ? "Hide optional fields" : "Add company or category"}
                         </button>
                         {showTicketMore ? (
                           <div className="de-desk-more">
@@ -1339,21 +1436,12 @@ export const ZohoASAPWidget = ({
                                 ))}
                               </select>
                             </div>
-                            <input
-                              ref={ticketFileRef}
-                              type="file"
-                              accept="image/png,image/jpeg,application/pdf,.png,.jpg,.jpeg,.pdf"
-                              className="sr-only"
-                              onChange={(event) => handleTicketFile(event.target.files?.[0])}
-                              data-testid="input-support-attachment"
-                            />
-                            <button type="button" onClick={() => ticketFileRef.current?.click()} className="de-desk-attach">
-                              <Paperclip aria-hidden="true" />
-                              <span>
-                                <span className="de-desk-attach-t">{attachmentName || "Attach file or screenshot"}</span>
-                                <span className="de-desk-attach-h">PNG, JPG, or PDF up to 10MB.</span>
-                              </span>
-                            </button>
+                          </div>
+                        ) : null}
+
+                        {ticketSubmitError ? (
+                          <div className="de-desk-form-error" role="alert" data-testid="support-submit-error">
+                            {ticketSubmitError}
                           </div>
                         ) : null}
 
@@ -1366,6 +1454,14 @@ export const ZohoASAPWidget = ({
                         >
                           {isTicketSending ? "Creating ticket…" : "Create ticket"}
                         </button>
+                        <a
+                          href={PRIMARY_PHONE.telHref}
+                          className="de-desk-form-phone"
+                          data-testid="desk-support-phone-link"
+                        >
+                          <Phone aria-hidden="true" />
+                          Call {PRIMARY_PHONE.display}
+                        </a>
                       </div>
                     )}
                   </div>
@@ -1375,6 +1471,9 @@ export const ZohoASAPWidget = ({
               {activeTab === "resources" && (
                 <div
                   className="de-desk-panel de-desk-tools-panel"
+                  id="desk-panel-resources"
+                  role="tabpanel"
+                  aria-labelledby="desk-tab-resources"
                   data-testid="panel-support-resources"
                 >
                   <div className="de-desk-scroll">
@@ -1390,7 +1489,7 @@ export const ZohoASAPWidget = ({
                         {authToolGroups.map((group) => (
                           <div key={group.heading} className="de-desk-launch-group">
                             <p className="de-desk-launch-heading">{group.heading}</p>
-                            <div className="de-desk-launch-list">
+                            <div className="de-desk-tools-list">
                               {group.items.map((item) => {
                                 const Icon = item.icon;
                                 if (item.onSelect) {
@@ -1398,14 +1497,16 @@ export const ZohoASAPWidget = ({
                                     <button
                                       key={item.title}
                                       type="button"
-                                      className="de-desk-launch-row"
+                                      className="de-desk-tool-link"
                                       data-testid={item.testId}
                                       onClick={item.onSelect}
                                     >
-                                      <span className="de-desk-launch-icon">
+                                      <span className="de-desk-tool-icon">
                                         <Icon aria-hidden="true" />
                                       </span>
-                                      <span className="de-desk-launch-title">{item.title}</span>
+                                      <span className="de-desk-tool-copy">
+                                        <span className="de-desk-tool-title">{item.title}</span>
+                                      </span>
                                       <ChevronRight className="de-desk-tool-arrow" aria-hidden="true" />
                                     </button>
                                   );
@@ -1414,16 +1515,18 @@ export const ZohoASAPWidget = ({
                                   <a
                                     key={item.title}
                                     href={item.href}
-                                    className="de-desk-launch-row"
+                                    className="de-desk-tool-link"
                                     data-testid={item.testId}
                                     {...(item.external || item.href?.startsWith("http")
                                       ? { target: "_blank", rel: "noopener noreferrer" }
                                       : {})}
                                   >
-                                    <span className="de-desk-launch-icon">
+                                    <span className="de-desk-tool-icon">
                                       <Icon aria-hidden="true" />
                                     </span>
-                                    <span className="de-desk-launch-title">{item.title}</span>
+                                    <span className="de-desk-tool-copy">
+                                      <span className="de-desk-tool-title">{item.title}</span>
+                                    </span>
                                     {item.external || item.href?.startsWith("http") ? (
                                       <ExternalLink className="de-desk-tool-arrow" aria-hidden="true" />
                                     ) : (
@@ -1455,42 +1558,37 @@ export const ZohoASAPWidget = ({
                         </a>
                         <div className="de-desk-tools-now">
                           <p className="de-desk-launch-heading">Need help right now?</p>
-                          <button
-                            type="button"
-                            className="de-desk-launch-row"
-                            data-testid="resource-link-submit-support-request"
-                            onClick={() => selectTab("ticket")}
-                          >
-                            <span className="de-desk-launch-icon">
-                              <LifeBuoy aria-hidden="true" />
-                            </span>
-                            <span className="de-desk-launch-title">Submit a support request</span>
-                            <ChevronRight className="de-desk-tool-arrow" aria-hidden="true" />
-                          </button>
-                          <a
-                            href={REMOTE_SUPPORT_HREF}
-                            className="de-desk-launch-row"
-                            data-testid="resource-link-start-remote-support"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <span className="de-desk-launch-icon">
-                              <Monitor aria-hidden="true" />
-                            </span>
-                            <span className="de-desk-launch-title">Start remote support</span>
-                            <ExternalLink className="de-desk-tool-arrow" aria-hidden="true" />
-                          </a>
-                          <a
-                            href={PRIMARY_PHONE.telHref}
-                            className="de-desk-launch-row"
-                            data-testid="resource-link-phone-support"
-                          >
-                            <span className="de-desk-launch-icon">
-                              <Phone aria-hidden="true" />
-                            </span>
-                            <span className="de-desk-launch-title">Direct Desk: {PRIMARY_PHONE.display}</span>
-                            <ChevronRight className="de-desk-tool-arrow" aria-hidden="true" />
-                          </a>
+                          <div className="de-desk-tools-list">
+                            <button
+                              type="button"
+                              className="de-desk-tool-link"
+                              data-testid="resource-link-submit-support-request"
+                              onClick={() => selectTab("ticket")}
+                            >
+                              <span className="de-desk-tool-icon">
+                                <LifeBuoy aria-hidden="true" />
+                              </span>
+                              <span className="de-desk-tool-copy">
+                                <span className="de-desk-tool-title">Submit a support request</span>
+                              </span>
+                              <ChevronRight className="de-desk-tool-arrow" aria-hidden="true" />
+                            </button>
+                            <a
+                              href={REMOTE_SUPPORT_HREF}
+                              className="de-desk-tool-link"
+                              data-testid="resource-link-start-remote-support"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <span className="de-desk-tool-icon">
+                                <Monitor aria-hidden="true" />
+                              </span>
+                              <span className="de-desk-tool-copy">
+                                <span className="de-desk-tool-title">Start remote support</span>
+                              </span>
+                              <ExternalLink className="de-desk-tool-arrow" aria-hidden="true" />
+                            </a>
+                          </div>
                         </div>
                       </div>
                     )}
@@ -1540,21 +1638,7 @@ export const ZohoASAPWidget = ({
                     : "Never share passwords, MFA codes, or private keys."}
                 </p>
               </>
-            ) : (
-              <footer className="de-desk-foot">
-                <div className="de-desk-foot-nav">
-                  <span>Arizona Engineering Desk</span>
-                </div>
-                <a
-                  href={PRIMARY_PHONE.telHref}
-                  className="de-desk-foot-cta"
-                  data-testid="desk-foot-phone-link"
-                >
-                  <Phone aria-hidden="true" />
-                  {PRIMARY_PHONE.display}
-                </a>
-              </footer>
-            )}
+            ) : null}
             {canDrag ? (
               <>
                 {(["n", "s", "e", "w", "ne", "nw", "sw"] as const).map((edge) => (
@@ -1585,27 +1669,24 @@ export const ZohoASAPWidget = ({
         dangerouslySetInnerHTML={{
           __html: `
             .de-desk-shell {
-              --desk-shell: #0c0a12;
+              --desk-shell: var(--de-surface, #0a0a0a);
               --desk-shell-soft: rgba(0,0,0,0.28);
-              --desk-shell-border: rgba(255,255,255,0.11);
+              --desk-shell-border: var(--de-hairline, rgba(255,255,255,0.10));
               --desk-shell-border-strong: rgba(255,255,255,0.18);
               --desk-shell-text: #ffffff;
               --desk-shell-muted: rgba(255,255,255,0.72);
               --desk-shell-dim: rgba(255,255,255,0.50);
-              --desk-paper: #0c0a12;
-              --desk-well: #0c0a12;
-              --desk-surface: #0c0a12;
-              --desk-box: #16121e;
-              --desk-inset: #16121e;
-              --desk-border: rgba(255,255,255,0.11);
+              --desk-paper: var(--de-surface, #0a0a0a);
+              --desk-well: var(--de-bg, #050312);
+              --desk-surface: var(--de-surface, #0a0a0a);
+              --desk-box: var(--de-raised, #151217);
+              --desk-inset: var(--de-raised, #151217);
+              --desk-border: var(--de-hairline, rgba(255,255,255,0.10));
               --desk-border-strong: rgba(255,255,255,0.18);
               --desk-ink: #ffffff;
               --desk-ink-muted: rgba(255,255,255,0.72);
               --desk-ink-dim: rgba(255,255,255,0.50);
               --desk-pink: #d3126a;
-              --desk-violet: #8b5cf6;
-              --desk-blue: #3b9eff;
-              --desk-teal: #22d3ee;
               --desk-red: #f0455b;
               --desk-green: #22c55e;
               --desk-cta: #d3126a;
@@ -1614,7 +1695,7 @@ export const ZohoASAPWidget = ({
               position: fixed;
               z-index: 10040;
               color-scheme: dark;
-              background: #0c0a12;
+              background: var(--de-surface, #0a0a0a);
               border: 1px solid rgba(211,18,106,0.28);
               border-radius: 18px;
               box-shadow:
@@ -1635,8 +1716,8 @@ export const ZohoASAPWidget = ({
               color: #fff;
               -webkit-text-fill-color: #fff;
             }
-            .de-desk-shell nav[aria-label="Support options"] ::selection,
-            .de-desk-shell nav[aria-label="Support options"] *::selection {
+            .de-desk-shell [role="tablist"] ::selection,
+            .de-desk-shell [role="tablist"] *::selection {
               background: transparent;
               color: inherit;
               -webkit-text-fill-color: inherit;
@@ -1685,7 +1766,8 @@ export const ZohoASAPWidget = ({
             }
             @media (prefers-reduced-motion: reduce) {
               .de-desk-avatar-dot::after,
-              .de-desk-status-dot.is-on::after { animation: none; }
+              .de-desk-status-dot.is-on::after,
+              .de-desk-shell .animate-pulse { animation: none !important; }
             }
             .de-desk-id h2 {
               font-family: "Space Grotesk", sans-serif;
@@ -1696,7 +1778,7 @@ export const ZohoASAPWidget = ({
             }
             .de-desk-id p { font-size: 13px; color: var(--desk-shell-muted); margin-top: 1px; }
             .de-desk-close {
-              width: 40px; height: 40px; border-radius: 9px;
+              width: 44px; height: 44px; border-radius: 9px;
               border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
               background: transparent;
               color: rgba(255,255,255,0.72);
@@ -1709,43 +1791,114 @@ export const ZohoASAPWidget = ({
               z-index: 1;
               display: grid;
               grid-template-columns: repeat(3, 1fr);
-              gap: 4px;
-              margin: 6px 14px 10px;
-              padding: 4px;
-              background: rgba(255,255,255,0.05);
-              border: 1px solid rgba(255,255,255,0.09);
-              border-radius: 12px;
+              gap: 0;
+              margin: 0 14px 8px;
+              padding: 0;
+              background: transparent;
+              border: 0;
+              border-bottom: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              border-radius: 0;
               flex-shrink: 0;
             }
             .de-desk-tab {
+              box-sizing: border-box;
               background: transparent; border: none;
-              min-height: 38px;
-              padding: 8px 4px;
-              border-radius: 9px;
+              min-height: 44px;
+              padding: 8px 4px 10px;
+              border-radius: 0;
               font-family: "Space Grotesk", sans-serif;
               font-weight: 600; font-size: 13.5px;
-              color: rgba(255,255,255,0.65);
+              color: rgba(255,255,255,0.62);
               display: flex; align-items: center; justify-content: center; gap: 6px;
               position: relative;
-              transition: all 0.18s ease;
+              white-space: nowrap;
+              transition: color 0.16s ease;
             }
             .de-desk-tab svg { width: 14px; height: 14px; opacity: 0.75; }
-            .de-desk-tab:hover { color: #fff; background: rgba(255,255,255,0.06); }
+            .de-desk-tab:hover { color: #fff; background: transparent; }
             .de-desk-tab.is-active {
-              background: #D3126A;
+              background: transparent;
               color: #fff;
               font-weight: 700;
-              box-shadow: 0 4px 12px rgba(211,18,106,0.35);
+              box-shadow: none;
+            }
+            .de-desk-tab.is-active::after {
+              content: "";
+              position: absolute;
+              left: 10px; right: 10px; bottom: 0;
+              height: 2px;
+              background: #D3126A;
+              border-radius: 2px 2px 0 0;
             }
             .de-desk-tab.is-active svg { opacity: 1; }
             .de-desk-tab-badge {
               min-width: 16px; height: 16px; padding: 0 4px;
               border-radius: 999px;
-              background: rgba(0,0,0,0.45); color: #fff;
+              background: #D3126A; color: #fff;
               font-size: 9px; font-weight: 700; line-height: 16px;
               letter-spacing: 0; text-align: center;
             }
             .de-desk-tab.has-unread { color: var(--desk-shell-text); }
+            .de-desk-body {
+              position: relative;
+              z-index: 1;
+              min-height: 0;
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              overflow: hidden;
+            }
+            .de-desk-panel, .de-desk-scroll {
+              min-height: 0;
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+            }
+            .de-desk-scroll { overflow-y: auto; padding: 8px 16px 14px; }
+            .de-desk-hero {
+              display: flex;
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 8px;
+              padding: 16px;
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              border-radius: 14px;
+              background: var(--de-raised, #151217);
+            }
+            .de-desk-hero h3 {
+              font-family: "Space Grotesk", sans-serif;
+              font-size: 18px; font-weight: 700; color: #fff;
+            }
+            .de-desk-hero p { font-size: 14px; color: var(--desk-ink-muted); line-height: 1.5; }
+            .de-desk-hero-ring {
+              display: inline-flex; align-items: center; justify-content: center;
+              width: 36px; height: 36px; border-radius: 999px;
+              background: rgba(34,197,94,0.14); color: #4ade80;
+            }
+            .de-desk-row {
+              display: flex; align-items: center; gap: 10px;
+              min-height: 44px;
+              padding: 11px 12px; border-radius: 10px;
+              background: var(--de-raised, #151217);
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              color: #fff; text-align: left; width: 100%;
+            }
+            .de-desk-msg { display: flex; gap: 10px; align-items: flex-start; }
+            .de-desk-msg.is-user { justify-content: flex-end; }
+            .de-desk-msg-id {
+              position: relative;
+              width: 32px; height: 32px; border-radius: 50%;
+              background: var(--de-raised, #151217); color: #fff;
+              display: flex; align-items: center; justify-content: center;
+              font-size: 9px; font-weight: 700; flex: none;
+            }
+            .de-desk-msg-col { min-width: 0; flex: 1; }
+            .de-desk-msg.is-user .de-desk-msg-col { flex: 0 1 auto; }
+            .de-desk-msg-who {
+              display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px;
+            }
+            .de-desk-msg-who strong { font-size: 13px; font-weight: 700; color: #fff; }
+            .de-desk-msg-who em { font-style: normal; font-size: 12px; font-weight: 600; color: #4ade80; }
             .de-desk-scroll::-webkit-scrollbar {
               width: 6px;
             }
@@ -1806,11 +1959,10 @@ export const ZohoASAPWidget = ({
               flex-direction: column;
               gap: 14px;
               padding: 16px;
-              margin: 4px 14px 16px;
-              background: #141119;
-              border: 1px solid rgba(255, 255, 255, 0.12);
+              margin: 0 0 8px;
+              background: var(--de-raised, #151217);
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
               border-radius: 16px;
-              box-shadow: 0 10px 30px -8px rgba(0,0,0,0.6);
             }
             .de-desk-issue-list {
               display: grid;
@@ -1820,20 +1972,19 @@ export const ZohoASAPWidget = ({
             }
             .de-desk-issue-row {
               width: 100%; text-align: left;
-              min-height: 42px;
+              min-height: 44px;
               padding: 10px 12px;
-              border: 1px solid rgba(255,255,255,0.18);
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
               border-radius: 10px;
-              background: #1b1723;
+              background: var(--de-raised, #151217);
               color: #ffffff;
               font-size: 13px; font-weight: 600;
-              transition: all 0.15s ease;
+              transition: border-color 0.15s ease, background 0.15s ease;
             }
             .de-desk-issue-row:hover {
               border-color: rgba(211,18,106,0.6);
-              background: #231e2d;
+              background: var(--de-raised, #151217);
               color: #fff;
-              transform: translateY(-1px);
             }
             .de-desk-issue-row.is-on {
               border-color: #D3126A;
@@ -1872,11 +2023,11 @@ export const ZohoASAPWidget = ({
               border: 1px solid rgba(255,255,255,0.12);
             }
             .de-desk-urgency button {
-              min-height: 38px; border: none;
+              min-height: 44px; border: none;
               border-radius: 8px;
               background: transparent; color: rgba(255,255,255,0.72);
               font-size: 12.5px; font-weight: 600;
-              transition: all 0.15s ease;
+              transition: background 0.15s ease, color 0.15s ease;
             }
             .de-desk-urgency button:hover {
               background: rgba(255,255,255,0.08);
@@ -1921,6 +2072,39 @@ export const ZohoASAPWidget = ({
               border-color: #D3126A !important;
               box-shadow: 0 0 0 3px rgba(211,18,106,0.25), inset 0 2px 4px rgba(0,0,0,0.4) !important;
             }
+            .de-desk-shell .de-desk-input[aria-invalid="true"] {
+              border-color: #f0455b !important;
+            }
+            .de-desk-field-error {
+              margin: 6px 0 0;
+              color: #fecaca;
+              font-size: 12px;
+              line-height: 1.4;
+            }
+            .de-desk-form-error {
+              padding: 10px 12px;
+              border: 1px solid rgba(240,69,91,0.4);
+              border-radius: 10px;
+              background: var(--de-bg, #050312);
+              color: #fecaca;
+              font-size: 13px;
+              line-height: 1.45;
+            }
+            .de-desk-form-phone {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              gap: 8px;
+              width: 100%;
+              min-height: 44px;
+              margin-top: 2px;
+              color: #fff;
+              font-size: 13.5px;
+              font-weight: 600;
+              text-decoration: none;
+            }
+            .de-desk-form-phone svg { width: 15px; height: 15px; color: #D3126A; }
+            .de-desk-form-phone:hover { color: #D3126A; }
             .de-desk-shell .de-desk-input.is-bare { padding-left: 14px; }
             .de-desk-shell .de-desk-input::placeholder { color: rgba(255,255,255,0.52); }
             .de-desk-shell .de-desk-select { appearance: none; padding-right: 28px; }
@@ -1972,10 +2156,10 @@ export const ZohoASAPWidget = ({
               box-shadow: 0 10px 28px -6px rgba(211,18,106,0.6);
             }
             .de-desk-ticket-lead {
-              padding: 14px 16px 10px;
+              padding: 4px 0 8px;
               margin: 0 0 4px;
-              background: linear-gradient(135deg, #1a1228 0%, #150f1e 100%);
-              border-bottom: 1px solid rgba(211,18,106,0.18);
+              background: transparent;
+              border: 0;
             }
             .de-desk-ticket-lead h3 {
               font-family: "Space Grotesk", sans-serif;
@@ -2015,17 +2199,16 @@ export const ZohoASAPWidget = ({
               border-bottom-right-radius: 6px;
             }
             .de-desk-bubble.is-bot, .de-desk-bubble.is-agent {
-              background: #1b1628; color: #f0eef7;
-              border: 1px solid rgba(255,255,255,0.08);
+              background: var(--de-raised, #151217); color: #f7f5f2;
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
               border-bottom-left-radius: 6px;
             }
             .de-desk-quick-card {
               margin: 12px 0 6px;
               padding: 14px 14px 12px;
-              background: linear-gradient(135deg, #1a1228 0%, #150f1e 100%);
-              border: 1px solid rgba(211,18,106,0.38);
+              background: var(--de-raised, #151217);
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
               border-radius: 14px;
-              box-shadow: 0 8px 28px -6px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.07);
             }
             .de-desk-quick-header { margin-bottom: 8px; }
             .de-desk-quick-kicker {
@@ -2065,6 +2248,7 @@ export const ZohoASAPWidget = ({
               align-items: center;
               gap: 9px;
               width: 100%;
+              min-height: 44px;
               padding: 8px 10px;
               background: transparent;
               border: 1px solid transparent;
@@ -2073,14 +2257,13 @@ export const ZohoASAPWidget = ({
               font-size: 12.5px;
               font-weight: 600;
               text-align: left;
-              transition: all 0.15s ease;
+              transition: background 0.15s ease, border-color 0.15s ease;
               cursor: pointer;
             }
             .de-desk-quick-item:hover {
               background: rgba(211,18,106,0.14);
               border-color: rgba(211,18,106,0.38);
               color: #ffffff;
-              transform: translateX(2px);
             }
             .de-desk-quick-dash {
               color: #D3126A;
@@ -2206,7 +2389,8 @@ export const ZohoASAPWidget = ({
               to { opacity: 1; transform: translateY(0); }
             }
             @media (prefers-reduced-motion: reduce) {
-              .de-desk-heads-up { animation: none; }
+              .de-desk-heads-up,
+              .de-desk-shell .animate-pulse { animation: none !important; }
             }
             .de-desk-composer {
               position: relative;
@@ -2214,8 +2398,8 @@ export const ZohoASAPWidget = ({
               display: flex; gap: 8px;
               margin: 0;
               padding: 12px 16px 10px;
-              border-top: 1px solid rgba(211,18,106,0.18);
-              background: #0f0c16;
+              border-top: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              background: var(--de-surface, #0a0a0a);
               color: #fff;
               flex-shrink: 0;
             }
@@ -2226,8 +2410,8 @@ export const ZohoASAPWidget = ({
             .de-desk-composer input {
               flex: 1;
               min-height: 48px;
-              background: #1a1528;
-              border: 1px solid rgba(255,255,255,0.18);
+              background: var(--de-raised, #151217);
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
               border-radius: 10px;
               padding: 12px 14px;
               color: #fff; font-size: 15px;
@@ -2281,7 +2465,7 @@ export const ZohoASAPWidget = ({
             .de-desk-shell[data-tab="resources"] .de-desk-heads-up-top strong { color: #f7f5f2; }
             .de-desk-tools-panel .de-desk-scroll {
               gap: 0;
-              padding: 0;
+              padding: 16px 16px 14px;
             }
             .de-desk-tools-intro {
               margin: 1px 0 14px;
@@ -2332,6 +2516,15 @@ export const ZohoASAPWidget = ({
             .de-desk-tools-now {
               padding-top: 16px;
               border-top: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+            }
+            .de-desk-tools-list button.de-desk-tool-link {
+              border: 0;
+              background: transparent;
+              cursor: pointer;
+              font: inherit;
+            }
+            .de-desk-tool-link {
+              min-height: 44px;
             }
             .de-desk-launch-group { margin-bottom: 14px; }
             .de-desk-launch-heading {
@@ -2623,46 +2816,7 @@ export const ZohoASAPWidget = ({
               .de-desk-tool-link:hover .de-desk-tool-arrow,
               .de-desk-security-action:hover { transform: none; }
             }
-            .de-desk-foot {
-              position: relative;
-              z-index: 2;
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              padding: 10px 16px;
-              background: #100d18;
-              border-top: 1px solid rgba(211,18,106,0.22);
-              border-radius: 0 0 18px 18px;
-              flex-shrink: 0;
-            }
-            .de-desk-foot-nav {
-              font-size: 12px;
-              font-weight: 600;
-              color: rgba(255,255,255,0.52);
-              letter-spacing: 0.02em;
-              display: flex; align-items: center; gap: 5px; min-width: 0;
-            }
-            .de-desk-foot-nav button,
-            .de-desk-foot-assist {
-              background: none; border: none; padding: 8px 2px;
-              min-height: 44px;
-              font: inherit; color: inherit; cursor: pointer;
-            }
-            .de-desk-foot-nav button:hover,
-            .de-desk-foot-assist:hover { color: rgba(255,255,255,0.85); }
-            .de-desk-foot-nav .is-active { color: var(--desk-pink); font-weight: 700; }
-            .de-desk-foot-assist { text-decoration: underline; text-underline-offset: 2px; }
-            .de-desk-foot-cta {
-              display: inline-flex;
-              align-items: center;
-              gap: 6px;
-              font-size: 12.5px;
-              font-weight: 700;
-              color: #D3126A;
-              transition: color 0.15s ease;
-            }
-            .de-desk-foot-cta:hover { color: #ff3388; }
-            .de-desk-foot-cta svg { width: 13px; height: 13px; }
+            .de-desk-foot { display: none; }
             .de-desk-resize-edge {
               position: absolute;
               border: 0;
@@ -2714,16 +2868,11 @@ export const ZohoASAPWidget = ({
               outline-offset: -4px;
               border-radius: 10px;
             }
-            @media (min-width: 640px) {
-              .de-desk-foot { padding-right: 36px; }
-            }
-            @media (max-width: 480px) {
-              .de-desk-foot-cta { display: none; }
-            }
             @media (max-width: 420px) {
               .de-desk-grid2 { grid-template-columns: 1fr; }
               .de-desk-hero-art { display: none; }
-              .de-desk-tab { font-size: 14px; }
+              .de-desk-tab { font-size: 12.5px; gap: 4px; padding: 8px 2px 10px; }
+              .de-desk-tab svg { width: 13px; height: 13px; }
               .de-desk-hero h3 { font-size: 17px; }
             }
           `,
