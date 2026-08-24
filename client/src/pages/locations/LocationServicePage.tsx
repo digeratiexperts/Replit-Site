@@ -349,12 +349,30 @@ export function LocationServicePage(props: LocationPageProps) {
                 transition={{ duration: prefersReducedMotion ? 0 : 0.45, delay: prefersReducedMotion ? 0 : 0.08 }}
               >
                 <div className="de-paper-lift-lg rounded-2xl p-6 md:p-8">
-                  <h2 className="font-heading text-xl font-semibold tracking-[-0.02em] text-[#1A1228]">
-                    Get Your Free {props.city} Assessment
-                  </h2>
-                  <p className="mb-6 mt-1 text-base text-black/55">
-                    Tell us about your environment. We will follow up within one business day.
+                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#D3126A]">
+                    {props.city} Cyber Risk Assessment
                   </p>
+                  <h2 className="font-heading text-xl md:text-2xl font-bold tracking-[-0.02em] text-[#1A1228] mt-1">
+                    Get Your Free {props.city} Security Assessment
+                  </h2>
+                  <p className="mb-4 mt-1 text-base text-[#2A2438]">
+                    Tell us about your environment. We will follow up with independent findings you can use with your current IT or with us.
+                  </p>
+
+                  <div className="mb-6 grid grid-cols-1 gap-2 rounded-xl border border-[var(--de-paper-hairline)] bg-white px-4 py-3 sm:grid-cols-3">
+                    <div className="flex items-baseline gap-2 text-xs font-semibold text-[#1A1228]">
+                      <span className="mt-[0.55em] h-px w-2.5 shrink-0 bg-[#D3126A]" aria-hidden="true" />
+                      <span>On-site {props.city} support</span>
+                    </div>
+                    <div className="flex items-baseline gap-2 text-xs font-semibold text-[#1A1228]">
+                      <span className="mt-[0.55em] h-px w-2.5 shrink-0 bg-[#D3126A]" aria-hidden="true" />
+                      <span>No switch required</span>
+                    </div>
+                    <div className="flex items-baseline gap-2 text-xs font-semibold text-[#1A1228]">
+                      <span className="mt-[0.55em] h-px w-2.5 shrink-0 bg-[#D3126A]" aria-hidden="true" />
+                      <span>Arizona-based team</span>
+                    </div>
+                  </div>
 
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">

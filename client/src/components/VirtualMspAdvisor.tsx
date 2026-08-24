@@ -407,19 +407,36 @@ export function VirtualMspAdvisor() {
             )}
 
             {leadForm?.open && (
-              <div className="bg-white border border-slate-200 rounded-xl p-3 space-y-2 shadow-sm" data-testid="advisor-lead-form">
-                <p className="text-xs font-semibold text-slate-700">
-                  {leadForm.action === "leave_message"
-                    ? "Leave a message"
-                    : leadForm.action === "request_callback"
-                      ? "Request a callback"
-                      : "Share your details"}
-                </p>
+              <div className="bg-white border border-slate-200 rounded-xl p-3.5 space-y-2.5 shadow-md" data-testid="advisor-lead-form">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#D3126A]">
+                    ARIZONA MSP ADVISOR
+                  </p>
+                  <h4 className="text-sm font-bold text-[#1A1228] mt-0.5">
+                    {leadForm.action === "leave_message"
+                      ? "Leave a message"
+                      : leadForm.action === "request_callback"
+                        ? "Request a callback"
+                        : "Share your details for personalized guidance"}
+                  </h4>
+                </div>
+
+                <div className="rounded-lg border border-slate-100 bg-slate-50/80 p-2 space-y-1">
+                  <div className="flex items-baseline gap-2 text-xs font-semibold text-[#1A1228]">
+                    <span className="mt-[0.55em] h-px w-2 shrink-0 bg-[#D3126A]" aria-hidden="true" />
+                    <span>Independent findings</span>
+                  </div>
+                  <div className="flex items-baseline gap-2 text-xs font-semibold text-[#1A1228]">
+                    <span className="mt-[0.55em] h-px w-2 shrink-0 bg-[#D3126A]" aria-hidden="true" />
+                    <span>Direct Arizona engineer follow-up</span>
+                  </div>
+                </div>
+
                 <Input
                   placeholder="Name"
                   value={leadForm.name}
                   onChange={(e) => setLeadForm({ ...leadForm, name: e.target.value })}
-                  className="h-8 text-sm"
+                  className="h-9 text-sm"
                   data-testid="advisor-lead-name"
                 />
                 <Input
@@ -427,21 +444,21 @@ export function VirtualMspAdvisor() {
                   placeholder="Work email"
                   value={leadForm.email}
                   onChange={(e) => setLeadForm({ ...leadForm, email: e.target.value })}
-                  className="h-8 text-sm"
+                  className="h-9 text-sm"
                   data-testid="advisor-lead-email"
                 />
                 <Input
                   placeholder="Phone (optional)"
                   value={leadForm.phone}
                   onChange={(e) => setLeadForm({ ...leadForm, phone: e.target.value })}
-                  className="h-8 text-sm"
+                  className="h-9 text-sm"
                   data-testid="advisor-lead-phone"
                 />
                 <Input
                   placeholder="Company (optional)"
                   value={leadForm.company}
                   onChange={(e) => setLeadForm({ ...leadForm, company: e.target.value })}
-                  className="h-8 text-sm"
+                  className="h-9 text-sm"
                   data-testid="advisor-lead-company"
                 />
                 {(leadForm.action === "leave_message" || leadForm.action === "request_callback") && (
@@ -449,14 +466,14 @@ export function VirtualMspAdvisor() {
                     placeholder="How can we help?"
                     value={leadForm.message}
                     onChange={(e) => setLeadForm({ ...leadForm, message: e.target.value })}
-                    className="w-full text-sm border rounded-md px-2 py-1.5 min-h-[64px]"
+                    className="w-full text-sm border rounded-md px-2.5 py-1.5 min-h-[64px]"
                     data-testid="advisor-lead-message"
                   />
                 )}
-                <div className="flex gap-2">
+                <div className="flex gap-2 pt-1">
                   <Button
                     size="sm"
-                    className="flex-1 bg-de-accent hover:bg-de-accent"
+                    className="flex-1 bg-[#D3126A] hover:bg-[#bd105f] text-white font-semibold"
                     onClick={submitLeadForm}
                     disabled={loading}
                     data-testid="advisor-lead-submit"
