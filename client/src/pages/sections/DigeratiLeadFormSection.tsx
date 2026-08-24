@@ -115,6 +115,21 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
             viewport={revealViewport}
             transition={revealTransition}
           >
+            <div className="mb-6 grid grid-cols-1 gap-x-6 gap-y-2.5 rounded-xl border border-[var(--de-paper-hairline)] bg-white px-4 py-3.5 sm:grid-cols-3">
+              <div className="flex items-baseline gap-2.5 text-[15px] font-semibold leading-snug text-[#1A1228]">
+                <span className="mt-[0.55em] h-px w-2.5 shrink-0 bg-[#D3126A]" aria-hidden="true" />
+                <span>Independent findings</span>
+              </div>
+              <div className="flex items-baseline gap-2.5 text-[15px] font-semibold leading-snug text-[#1A1228]">
+                <span className="mt-[0.55em] h-px w-2.5 shrink-0 bg-[#D3126A]" aria-hidden="true" />
+                <span>No switch required</span>
+              </div>
+              <div className="flex items-baseline gap-2.5 text-[15px] font-semibold leading-snug text-[#1A1228]">
+                <span className="mt-[0.55em] h-px w-2.5 shrink-0 bg-[#D3126A]" aria-hidden="true" />
+                <span>Arizona-based experts</span>
+              </div>
+            </div>
+
             <Form {...form}>
               <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">

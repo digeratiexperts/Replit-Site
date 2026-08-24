@@ -151,13 +151,31 @@ export const LeadCaptureBand = (): JSX.Element => {
             <div className="absolute -inset-4 bg-de-raised/40 blur-3xl" />
             
             <Card className="relative border border-de-hairline bg-white shadow-none">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-xl xl:text-2xl text-[#D3126A]">
-                  Get Started Today
+              <CardHeader className="pb-3">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#D3126A]">
+                  Cyber Risk Assessment &amp; Consultation
+                </p>
+                <CardTitle className="text-xl xl:text-2xl font-bold text-[#1A1228] mt-1">
+                  Leave with a clear picture of your IT &amp; security risk.
                 </CardTitle>
-                <CardDescription className="text-sm">
-                  Complete the form below and we'll reach out within 24 hours.
+                <CardDescription className="text-sm text-[#2A2438] mt-1">
+                  Drop your details below. We'll follow up with independent findings you can use immediately.
                 </CardDescription>
+
+                <div className="mt-3 grid grid-cols-1 gap-2 rounded-xl border border-[var(--de-paper-hairline)] bg-[var(--de-paper-raised)] px-3.5 py-2.5 sm:grid-cols-3">
+                  <div className="flex items-baseline gap-2 text-xs font-semibold text-[#1A1228]">
+                    <span className="mt-[0.55em] h-px w-2.5 shrink-0 bg-[#D3126A]" aria-hidden="true" />
+                    <span>Independent findings</span>
+                  </div>
+                  <div className="flex items-baseline gap-2 text-xs font-semibold text-[#1A1228]">
+                    <span className="mt-[0.55em] h-px w-2.5 shrink-0 bg-[#D3126A]" aria-hidden="true" />
+                    <span>No switch required</span>
+                  </div>
+                  <div className="flex items-baseline gap-2 text-xs font-semibold text-[#1A1228]">
+                    <span className="mt-[0.55em] h-px w-2.5 shrink-0 bg-[#D3126A]" aria-hidden="true" />
+                    <span>Arizona-based experts</span>
+                  </div>
+                </div>
               </CardHeader>
               <CardContent className="pb-6">
                 <Form {...form}>
