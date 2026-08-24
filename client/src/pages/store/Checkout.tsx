@@ -24,13 +24,26 @@ import {
   MessageSquare,
   Loader2,
   Check,
+  Building,
+  Globe,
+  Truck,
+  ShieldCheck,
 } from "lucide-react";
 
 const billingSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
-  company: z.string().optional(),
-  phone: z.string().optional(),
+  email: z.string().email("Please enter a valid work email address"),
+  company: z.string().min(2, "Company name is required for enterprise licensing"),
+  phone: z.string().min(10, "Please enter a valid phone number"),
+  primaryDomain: z.string().optional(),
+  identityProvider: z.string().optional(),
+  technicalContact: z.string().optional(),
+  shippingAddress: z.string().optional(),
+  shippingCity: z.string().optional(),
+  shippingState: z.string().optional(),
+  shippingZip: z.string().optional(),
+  deliveryNotes: z.string().optional(),
+  termsAgreed: z.boolean().refine((val) => val === true, "You must agree to the Terms of Service and Licensing Agreement"),
 });
 
 type BillingFormData = z.infer<typeof billingSchema>;
@@ -62,6 +75,15 @@ const Checkout = () => {
       email: "",
       company: "",
       phone: "",
+      primaryDomain: "",
+      identityProvider: "Microsoft 365",
+      technicalContact: "",
+      shippingAddress: "",
+      shippingCity: "",
+      shippingState: "AZ",
+      shippingZip: "",
+      deliveryNotes: "",
+      termsAgreed: true,
     },
   });
 
@@ -70,6 +92,9 @@ const Checkout = () => {
       navigate("/store");
     }
   }, [items.length, navigate]);
+
+  const hasRecurring = snapshot.totals.monthly > 0 || snapshot.totals.annual > 0;
+  const hasOneTime = snapshot.totals.dueToday > 0;
 
   const onSubmit = async (data: BillingFormData) => {
     setIsSubmitting(true);
@@ -81,7 +106,7 @@ const Checkout = () => {
         if (!portalToken) {
           toast({
             title: "Sign in required",
-            description: "Please sign in to the Client Portal to complete checkout.",
+            description: "Please sign in to your Client Portal to authorize enterprise licensing and billing.",
             variant: "destructive",
           });
           navigate("/portal/login?redirect=/store/checkout");
@@ -165,97 +190,215 @@ const Checkout = () => {
             transition={{ duration: 0.5 }}
           >
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-2" data-testid="text-checkout-title">
-              Checkout
+              Checkout & Licensing Provisioning
             </h1>
             <p className="text-white/60 mb-8" data-testid="text-checkout-subtitle">
-              Complete your order for IT services and solutions
+              Verify your organizational details and tenant provisioning options.
             </p>
 
             <div className="grid lg:grid-cols-5 gap-8">
               <div className="lg:col-span-3 space-y-8">
-                <div className="bg-white/5 border border-white/10 rounded-xl p-6" data-testid="section-billing-info">
+                {/* Billing Information Card */}
+                <div className="bg-[#151217] border border-white/10 rounded-2xl p-6 shadow-md" data-testid="section-billing-info">
                   <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-de-accent-ink" />
-                    Billing Information
+                    <Building className="w-5 h-5 text-de-magenta-ink" />
+                    Organization & Contact Details
                   </h2>
 
                   <form id="checkout-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="name" className="text-white/80">
-                          Full Name *
+                        <Label htmlFor="company" className="text-xs uppercase font-bold text-white/80 tracking-wider">
+                          Company Name *
+                        </Label>
+                        <Input
+                          id="company"
+                          {...register("company")}
+                          required
+                          placeholder="Acme Corporation"
+                          className="mt-1 bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-[#D3126A]"
+                          data-testid="input-company"
+                        />
+                        {errors.company && (
+                          <p className="text-red-400 text-xs mt-1">{errors.company.message}</p>
+                        )}
+                      </div>
+                      <div>
+                        <Label htmlFor="phone" className="text-xs uppercase font-bold text-white/80 tracking-wider">
+                          Phone Number *
+                        </Label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          {...register("phone")}
+                          required
+                          placeholder="(480) 555-0199"
+                          className="mt-1 bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-[#D3126A]"
+                          data-testid="input-phone"
+                        />
+                        {errors.phone && (
+                          <p className="text-red-400 text-xs mt-1">{errors.phone.message}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="name" className="text-xs uppercase font-bold text-white/80 tracking-wider">
+                          Authorized Contact Name *
                         </Label>
                         <Input
                           id="name"
                           {...register("name")}
                           required
-                          aria-required={true}
-                          placeholder="John Smith"
-                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-de-muted-soft focus:border-de-hairline"
+                          placeholder="Jane Doe"
+                          className="mt-1 bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-[#D3126A]"
                           data-testid="input-name"
                         />
                         {errors.name && (
-                          <p className="text-red-400 text-sm mt-1" data-testid="error-name">
-                            {errors.name.message}
-                          </p>
+                          <p className="text-red-400 text-xs mt-1">{errors.name.message}</p>
                         )}
                       </div>
                       <div>
-                        <Label htmlFor="email" className="text-white/80">
-                          Email Address *
+                        <Label htmlFor="email" className="text-xs uppercase font-bold text-white/80 tracking-wider">
+                          Work Email *
                         </Label>
                         <Input
                           id="email"
                           type="email"
                           {...register("email")}
                           required
-                          aria-required={true}
-                          placeholder="john@company.com"
-                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-de-muted-soft focus:border-de-hairline"
+                          placeholder="jane@acmecorp.com"
+                          className="mt-1 bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-[#D3126A]"
                           data-testid="input-email"
                         />
                         {errors.email && (
-                          <p className="text-red-400 text-sm mt-1" data-testid="error-email">
-                            {errors.email.message}
-                          </p>
+                          <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>
                         )}
                       </div>
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="company" className="text-white/80">
-                          Company Name
-                        </Label>
-                        <Input
-                          id="company"
-                          {...register("company")}
-                          placeholder="Acme Corp"
-                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-white/55 focus:border-de-hairline"
-                          data-testid="input-company"
-                        />
+                    {/* SaaS / Tenant Provisioning Section */}
+                    {hasRecurring && (
+                      <div className="mt-8 border-t border-white/10 pt-6">
+                        <h3 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
+                          <Globe className="w-4 h-4 text-sky-400" />
+                          Cloud & Tenant Provisioning Information
+                        </h3>
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <div>
+                            <Label htmlFor="primaryDomain" className="text-xs uppercase font-bold text-white/80 tracking-wider">
+                              Primary Work Domain
+                            </Label>
+                            <Input
+                              id="primaryDomain"
+                              {...register("primaryDomain")}
+                              placeholder="acmecorp.com"
+                              className="mt-1 bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-[#D3126A]"
+                            />
+                            <p className="text-[11px] text-white/50 mt-1">Used to bind cloud licenses and M365 tenant instances.</p>
+                          </div>
+                          <div>
+                            <Label htmlFor="identityProvider" className="text-xs uppercase font-bold text-white/80 tracking-wider">
+                              Primary Identity Platform
+                            </Label>
+                            <Input
+                              id="identityProvider"
+                              {...register("identityProvider")}
+                              placeholder="Microsoft 365 / Entra ID"
+                              className="mt-1 bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-[#D3126A]"
+                            />
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <Label htmlFor="phone" className="text-white/80">
-                          Phone Number
-                        </Label>
-                        <Input
-                          id="phone"
-                          type="tel"
-                          {...register("phone")}
-                          placeholder="(555) 123-4567"
-                          className="mt-1 bg-white/5 border-white/20 text-white placeholder:text-white/55 focus:border-de-hairline"
-                          data-testid="input-phone"
-                        />
+                    )}
+
+                    {/* Hardware Delivery & Shipping */}
+                    {hasOneTime && (
+                      <div className="mt-8 border-t border-white/10 pt-6">
+                        <h3 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
+                          <Truck className="w-4 h-4 text-emerald-400" />
+                          Hardware Delivery & Receiving Address
+                        </h3>
+                        <div className="space-y-4">
+                          <div>
+                            <Label htmlFor="shippingAddress" className="text-xs uppercase font-bold text-white/80 tracking-wider">
+                              Delivery Street Address
+                            </Label>
+                            <Input
+                              id="shippingAddress"
+                              {...register("shippingAddress")}
+                              placeholder="1234 E Innovation Way, Suite 200"
+                              className="mt-1 bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-[#D3126A]"
+                            />
+                          </div>
+                          <div className="grid grid-cols-3 gap-3">
+                            <div className="col-span-1">
+                              <Label htmlFor="shippingCity" className="text-xs uppercase font-bold text-white/80 tracking-wider">
+                                City
+                              </Label>
+                              <Input
+                                id="shippingCity"
+                                {...register("shippingCity")}
+                                placeholder="Phoenix"
+                                className="mt-1 bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-[#D3126A]"
+                              />
+                            </div>
+                            <div className="col-span-1">
+                              <Label htmlFor="shippingState" className="text-xs uppercase font-bold text-white/80 tracking-wider">
+                                State
+                              </Label>
+                              <Input
+                                id="shippingState"
+                                {...register("shippingState")}
+                                placeholder="AZ"
+                                className="mt-1 bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-[#D3126A]"
+                              />
+                            </div>
+                            <div className="col-span-1">
+                              <Label htmlFor="shippingZip" className="text-xs uppercase font-bold text-white/80 tracking-wider">
+                                ZIP Code
+                              </Label>
+                              <Input
+                                id="shippingZip"
+                                {...register("shippingZip")}
+                                placeholder="85001"
+                                className="mt-1 bg-white/5 border-white/15 text-white placeholder:text-white/40 focus:border-[#D3126A]"
+                              />
+                            </div>
+                          </div>
+                        </div>
                       </div>
+                    )}
+
+                    {/* Legal Consent Checkbox */}
+                    <div className="mt-6 border-t border-white/10 pt-4">
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          {...register("termsAgreed")}
+                          className="mt-1 h-4 w-4 rounded border-white/20 bg-white/5 text-[#D3126A] focus:ring-[#D3126A]"
+                        />
+                        <span className="text-xs leading-relaxed text-white/70">
+                          I agree to the{" "}
+                          <Link href="/legal/terms-of-use" className="text-[#D3126A] hover:underline font-semibold">
+                            Master Services Agreement (MSA)
+                          </Link>{" "}
+                          and authorize Digerati Experts to administer and provision requested software licenses on behalf of our organization.
+                        </span>
+                      </label>
+                      {errors.termsAgreed && (
+                        <p className="text-red-400 text-xs mt-1.5">{errors.termsAgreed.message}</p>
+                      )}
                     </div>
                   </form>
                 </div>
 
-                <div className="bg-white/5 border border-white/10 rounded-xl p-6" data-testid="section-payment-method">
+                {/* Payment Method Card */}
+                <div className="bg-[#151217] border border-white/10 rounded-2xl p-6 shadow-md" data-testid="section-payment-method">
                   <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                    <CreditCard className="w-5 h-5 text-de-accent-ink" />
-                    Payment Method
+                    <CreditCard className="w-5 h-5 text-de-magenta-ink" />
+                    Payment & Invoicing Method
                   </h2>
 
                   <RadioGroup
@@ -265,93 +408,87 @@ const Checkout = () => {
                   >
                     <label
                       htmlFor="payment-zoho"
-                      className={`flex items-center gap-4 p-4 rounded-lg border cursor-pointer transition-all ${
+                      className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${
                         paymentMethod === "zoho"
-                          ? "border-de-hairline bg-de-raised"
-                          : "border-white/20 hover:border-white/40"
+                          ? "border-[#D3126A] bg-[#1e1526]"
+                          : "border-white/15 hover:border-white/30 bg-white/[0.02]"
                       }`}
                     >
                       <RadioGroupItem value="zoho" id="payment-zoho" data-testid="radio-zoho" />
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <CreditCard className="w-5 h-5 text-de-accent-ink" />
-                          <span className="font-medium text-white">Credit / Debit Card</span>
+                          <CreditCard className="w-5 h-5 text-de-magenta-ink" />
+                          <span className="font-medium text-white">Credit Card / Direct Debit</span>
                         </div>
-                        <p className="text-sm text-white/60 mt-1">
-                          Secure payment processing. All major cards accepted.
+                        <p className="text-xs text-white/60 mt-1">
+                          Enterprise gateway processing with automatic recurring invoice setup.
                         </p>
                       </div>
                       {paymentMethod === "zoho" && (
-                        <Check className="w-5 h-5 text-de-accent-ink" />
+                        <Check className="w-5 h-5 text-de-magenta-ink" />
                       )}
                     </label>
 
                     <label
                       htmlFor="payment-quote"
-                      className={`flex items-center gap-4 p-4 rounded-lg border cursor-pointer transition-all ${
+                      className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${
                         paymentMethod === "quote_request"
-                          ? "border-de-hairline bg-de-raised"
-                          : "border-white/20 hover:border-white/40"
+                          ? "border-[#D3126A] bg-[#1e1526]"
+                          : "border-white/15 hover:border-white/30 bg-white/[0.02]"
                       }`}
                     >
                       <RadioGroupItem value="quote_request" id="payment-quote" data-testid="radio-quote" />
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <MessageSquare className="w-5 h-5 text-emerald-400" />
-                          <span className="font-medium text-white">Request Quote</span>
+                          <span className="font-medium text-white">Generate Formal Quote / Purchase Order</span>
                         </div>
-                        <p className="text-sm text-white/60 mt-1">
-                          Get a custom quote from our team. We'll contact you within 1 business day.
+                        <p className="text-xs text-white/60 mt-1">
+                          Receive a formal corporate quote PDF for procurement and PO approval.
                         </p>
                       </div>
                       {paymentMethod === "quote_request" && (
-                        <Check className="w-5 h-5 text-de-accent-ink" />
+                        <Check className="w-5 h-5 text-de-magenta-ink" />
                       )}
                     </label>
                   </RadioGroup>
                 </div>
               </div>
 
+              {/* Order Summary Column */}
               <div className="lg:col-span-2">
                 <SolutionOrderSummary
                   snapshot={snapshot}
                   title="Order Summary"
-                  titleIcon={<ShoppingCart className="h-5 w-5 text-de-accent-ink" />}
+                  titleIcon={<ShoppingCart className="h-5 w-5 text-de-magenta-ink" />}
                   footer={
                     <>
                       <Button
                         type="submit"
                         form="checkout-form"
                         disabled={isSubmitting}
-                        className="mt-6 w-full bg-de-accent py-6 text-lg font-semibold text-white hover:bg-de-accent"
+                        className="mt-6 w-full bg-gradient-to-r from-[#D3126A] to-[#E61E76] py-6 text-lg font-bold text-white shadow-lg shadow-[#D3126A]/30 hover:brightness-110"
                         data-testid="button-submit-order"
                       >
                         {isSubmitting ? (
                           <>
                             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                            Processing...
+                            Authorizing...
                           </>
                         ) : paymentMethod === "quote_request" ? (
                           <>
-                            <MessageSquare className="mr-2 h-5 w-5" />
-                            Request Quote
+                            <FileText className="mr-2 h-5 w-5" />
+                            Generate Formal Quote
                           </>
                         ) : (
                           <>
-                            <CreditCard className="mr-2 h-5 w-5" />
-                            Pay Now
+                            <ShieldCheck className="mr-2 h-5 w-5" />
+                            Pay & Authorize Provisioning
                           </>
                         )}
                       </Button>
-                      <p className="mt-4 text-center text-xs text-white/55">
-                        By completing this order, you agree to our{" "}
-                        <Link href="/legal/terms-of-use" className="text-de-accent-ink hover:underline">
-                          Terms of Service
-                        </Link>{" "}
-                        and{" "}
-                        <Link href="/legal/privacy-policy" className="text-de-accent-ink hover:underline">
-                          Privacy Policy
-                        </Link>
+                      <p className="mt-4 text-center text-[11px] text-white/50 leading-relaxed">
+                        Protected by 256-bit TLS encryption. Licensed under Digerati Experts Master Services Agreement.
                       </p>
                     </>
                   }
