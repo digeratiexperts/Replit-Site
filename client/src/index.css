@@ -611,7 +611,7 @@ html[data-sticky-cta-scrolling="true"] .de-bottom-bar {
     radial-gradient(ellipse 42% 64% at 6% 108%, rgba(91, 69, 224, 0.10) 0%, transparent 56%);
 }
 
-/* Hairline fade between dark graphite and paper chapters. Do not parallax the fade. */
+/* Cinematic chapter fades — dark graphite ↔ paper. Use raw bg color for crisp bleed. */
 .de-chapter-fade-from-dark {
   position: relative;
 }
@@ -620,13 +620,19 @@ html[data-sticky-cta-scrolling="true"] .de-bottom-bar {
   pointer-events: none;
   position: absolute;
   inset: 0 0 auto 0;
-  height: 56px;
-  background: linear-gradient(to bottom, color-mix(in srgb, var(--de-bg) 12%, transparent), transparent);
+  z-index: 1;
+  height: 96px;
+  background: linear-gradient(
+    to bottom,
+    #050312 0%,
+    rgba(5, 3, 18, 0.55) 45%,
+    transparent 100%
+  );
 }
 @media (prefers-reduced-motion: reduce) {
   .de-chapter-fade-from-dark::before {
-    height: 24px;
-    background: linear-gradient(to bottom, color-mix(in srgb, var(--de-bg) 8%, transparent), transparent);
+    height: 32px;
+    background: linear-gradient(to bottom, #050312 0%, transparent 100%);
   }
 }
 
@@ -638,12 +644,19 @@ html[data-sticky-cta-scrolling="true"] .de-bottom-bar {
   pointer-events: none;
   position: absolute;
   inset: auto 0 0 0;
-  height: 72px;
-  background: linear-gradient(to bottom, transparent, var(--de-bg));
+  z-index: 1;
+  height: 140px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(5, 3, 18, 0.52) 55%,
+    #050312 100%
+  );
 }
 @media (prefers-reduced-motion: reduce) {
   .de-chapter-fade-to-dark::after {
-    height: 32px;
+    height: 40px;
+    background: linear-gradient(to bottom, transparent 0%, #050312 100%);
   }
 }
 
@@ -655,13 +668,31 @@ html[data-sticky-cta-scrolling="true"] .de-bottom-bar {
   pointer-events: none;
   position: absolute;
   inset: auto 0 0 0;
-  height: 72px;
-  background: linear-gradient(to bottom, transparent, var(--de-surface));
+  z-index: 1;
+  height: 100px;
+  background: linear-gradient(to bottom, transparent 0%, var(--de-surface) 100%);
 }
 @media (prefers-reduced-motion: reduce) {
   .de-chapter-fade-to-surface::after {
-    height: 32px;
+    height: 36px;
   }
+}
+
+/* Magenta seam divider — optional visual between back-to-back light sections */
+.de-chapter-seam::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(211, 18, 106, 0.35) 20%,
+    rgba(211, 18, 106, 0.55) 50%,
+    rgba(211, 18, 106, 0.35) 80%,
+    transparent 100%
+  );
+  margin-bottom: -1px;
 }
 
 /*

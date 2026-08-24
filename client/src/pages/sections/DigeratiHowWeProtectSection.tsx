@@ -61,7 +61,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
 
   return (
     <>
-      <section className="de-paper-chapter de-chapter-fade-from-dark de-chapter-fade-to-surface de-field-grain-paper relative py-16 lg:py-24">
+      <section className="de-paper-chapter de-chapter-fade-from-dark de-chapter-fade-to-surface de-field-grain-paper de-field-lit relative py-16 lg:py-24">
         <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
           <motion.div
             className="mb-12 max-w-2xl md:mb-16"
@@ -73,10 +73,10 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
             <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-de-magenta">
               What we protect
             </p>
-            <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-gray-900 md:text-4xl">
+            <h2 className="mb-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-[#1A1228] md:text-4xl">
               Six domains. One accountable operating model.
             </h2>
-            <p className="text-lg leading-relaxed text-gray-600">
+            <p className="text-lg leading-relaxed text-[#3A3448]">
               Capability pages live under Solutions. The methodology — assessment through operations —
               is documented on the ProActive Ecosystem overview.
             </p>
@@ -84,7 +84,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
 
           <div
             id="protection-stack"
-            className="de-paper-lift mx-auto grid max-w-[92rem] grid-cols-1 gap-x-10 gap-y-6 rounded-2xl p-6 sm:grid-cols-2 md:p-8 lg:grid-cols-3 lg:p-10"
+            className="mx-auto grid max-w-[92rem] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
           >
             {domains.map((item) => {
               const Icon = item.icon;
@@ -92,14 +92,17 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
                 <Link
                   key={item.title}
                   href={item.link}
-                  className="group flex min-h-11 items-start gap-3 rounded-xl border border-transparent p-2 -m-2 transition-colors hover:border-[var(--de-paper-hairline)] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7f5f2]"
+                  className="group relative flex items-start gap-4 overflow-hidden rounded-xl border border-[var(--de-paper-hairline)] bg-white p-5 transition-all duration-200 hover:border-[#D3126A]/30 hover:shadow-[0_4px_20px_-6px_rgba(211,18,106,0.16)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2"
                 >
-                  <IconWell icon={Icon} size="sm" surface="light" />
+                  <span className="absolute inset-x-0 top-0 h-[2px] rounded-t-xl bg-gradient-to-r from-[#D3126A]/40 via-[#D3126A]/80 to-[#D3126A]/40 opacity-0 transition-opacity duration-200 group-hover:opacity-100" aria-hidden="true" />
+                  <span className="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-[#D3126A]/20 bg-[#D3126A]/8 text-[#D3126A] transition-colors group-hover:border-[#D3126A]/40 group-hover:bg-[#D3126A]/12">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </span>
                   <div className="min-w-0">
-                    <p className="text-base font-semibold text-gray-900 md:text-lg group-hover:text-[#A30E52]">
+                    <p className="text-[15px] font-semibold text-[#1A1228] transition-colors group-hover:text-[#A30E52] md:text-base">
                       {item.title}
                     </p>
-                    <p className="mt-0.5 text-base leading-relaxed text-gray-600">{item.desc}</p>
+                    <p className="mt-0.5 text-sm leading-relaxed text-[#5A5368]">{item.desc}</p>
                   </div>
                 </Link>
               );
@@ -134,7 +137,7 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
             </Link>
           </div>
 
-          <ol className="mx-auto grid max-w-[92rem] grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0">
+          <ol className="mx-auto grid max-w-[92rem] grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0">
             {steps.map((step, index) => {
               const IconComponent = step.icon;
               return (
@@ -145,12 +148,12 @@ export const DigeratiHowWeProtectSection = (): JSX.Element => {
                   <Link
                     href={step.href}
                     data-testid={step.testId}
-                    className="de-interactive-tile group flex h-full flex-col rounded-xl border border-transparent p-3 hover:border-de-hairline hover:bg-white/[0.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]"
+                    className="de-interactive-tile group flex h-full flex-col rounded-xl border border-transparent p-3 hover:border-de-hairline hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)]"
                   >
-                    <p className="font-mono text-base font-semibold tracking-[0.18em] text-de-magenta-ink">
+                    <p className="font-mono text-sm font-bold tracking-[0.18em] text-[#D3126A]" aria-hidden="true">
                       {String(step.number).padStart(2, "0")}
                     </p>
-                    <span className="mt-3 mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-[var(--de-hairline)] bg-[var(--de-bg)] text-[#D3126A] transition-colors group-hover:border-[#D3126A]">
+                    <span className="mt-3 mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-[#D3126A]/30 bg-[#D3126A]/10 text-[#D3126A] shadow-[0_0_16px_-4px_rgba(211,18,106,0.45)] transition-all group-hover:border-[#D3126A]/60 group-hover:shadow-[0_0_20px_-4px_rgba(211,18,106,0.6)]">
                       <IconComponent className="h-5 w-5" aria-hidden="true" />
                     </span>
                     <h4 className="mb-2 text-lg font-semibold text-white">

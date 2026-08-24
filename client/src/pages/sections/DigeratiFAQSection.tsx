@@ -37,7 +37,7 @@ export const DigeratiFAQSection = (): JSX.Element => {
   };
 
   return (
-    <section className="de-paper-chapter de-paper-hairline de-chapter-fade-to-surface de-field-grain-paper py-16 md:py-20 lg:py-24">
+    <section className="de-paper-chapter de-paper-hairline de-chapter-fade-to-surface de-field-grain-paper de-field-lit relative py-16 md:py-20 lg:py-24">
       <FAQJsonLd faqs={faqs} />
       <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-6">
         {/* Header */}
@@ -46,13 +46,16 @@ export const DigeratiFAQSection = (): JSX.Element => {
           whileInView={revealInView}
           viewport={revealViewport}
           transition={revealTransition}
-          className="text-center mb-8 md:mb-10"
+          className="text-center mb-10 md:mb-12"
         >
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#D3126A] md:text-base">
+            Common questions
+          </p>
           <h2 className="mb-4 px-2 font-heading text-3xl font-semibold tracking-[-0.02em] text-[#1A1228] sm:text-4xl md:mb-5 md:text-5xl">
             Frequently Asked Questions
           </h2>
-          <p className="px-4 text-lg text-black/55 md:text-xl">
-            Find answers to common queries about us.
+          <p className="px-4 text-lg text-[#5A5368] md:text-xl">
+            Straight answers on how we work, what we recommend, and why.
           </p>
         </motion.div>
 
@@ -73,8 +76,8 @@ export const DigeratiFAQSection = (): JSX.Element => {
                 <div 
                   className={`de-paper-lift rounded-xl border-l-4 transition-all duration-300 ${
                     isOpen 
-                      ? 'border-l-[#D3126A] shadow-lg'
-                      : 'border-l-[#D3126A]/40 hover:border-l-[#D3126A] hover:shadow-lg'
+                      ? 'border-l-[#D3126A] shadow-[0_6px_28px_-8px_rgba(211,18,106,0.22)]'
+                      : 'border-l-[#D3126A]/30 hover:border-l-[#D3126A] hover:shadow-[0_4px_20px_-8px_rgba(211,18,106,0.18)]'
                   }`}
                 >
                   <button
@@ -90,10 +93,10 @@ export const DigeratiFAQSection = (): JSX.Element => {
                     }`}>
                       {faq.question}
                     </span>
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
+                    <div className={`w-8 h-8 flex-shrink-0 rounded-full flex items-center justify-center transition-all duration-300 ${
                       isOpen 
-                        ? 'bg-[#D3126A] rotate-180' 
-                        : 'bg-[#D3126A]/10 group-hover:bg-[#D3126A]/15'
+                        ? 'bg-[#D3126A] rotate-180 shadow-[0_0_14px_-2px_rgba(211,18,106,0.55)]' 
+                        : 'bg-[#D3126A]/10 group-hover:bg-[#D3126A]/20'
                     }`}>
                       <ChevronDown 
                         className={`h-5 w-5 transition-colors duration-200 flex-shrink-0 ${
@@ -112,9 +115,9 @@ export const DigeratiFAQSection = (): JSX.Element => {
                         transition={{ duration: 0.25, ease: "easeOut" }}
                         className="overflow-hidden"
                       >
-                        <div className="px-5 pb-5 md:px-6 md:pb-6 pt-0">
+                        <div className="px-5 pb-6 md:px-8 md:pb-7 pt-0">
                           <div className="border-t border-[var(--de-paper-hairline)] pt-4">
-                            <p className="text-lg leading-relaxed text-black/60" id={`faq-answer-${index}`} data-testid={`faq-answer-${index}`}>
+                            <p className="text-base leading-relaxed text-[#3A3448] md:text-lg" id={`faq-answer-${index}`} data-testid={`faq-answer-${index}`}>
                               {faq.answer}
                             </p>
                           </div>
