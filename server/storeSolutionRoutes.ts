@@ -35,18 +35,17 @@ function optionalUserId(req: SolutionRequest): string | null {
 
 function parseLines(value: unknown): SolutionLineInput[] {
   if (!Array.isArray(value)) return [];
-  return value
-    .map((raw) => {
-      if (!raw || typeof raw !== "object") return null;
-      const item = raw as Record<string, unknown>;
-      const productId = typeof item.productId === "string" ? item.productId.trim() : "";
-      const sku = typeof item.sku === "string" ? item.sku.trim() : undefined;
-      const quantity = Number(item.quantity);
-      if (!productId || !Number.isFinite(quantity)) return null;
-      return { productId, sku, quantity };
-    })
-    .filter((line): line is SolutionLineInput => !!line)
-    .slice(0, 50);
+  const lines: SolutionLineInput[] = [];
+  for (const raw of value) {
+    if (!raw || typeof raw !== "object") continue;
+    const item = raw as Record<string, unknown>;
+    const productId = typeof item.productId === "string" ? item.productId.trim() : "";
+    const sku = typeof item.sku === "string" ? item.sku.trim() : undefined;
+    const quantity = Number(item.quantity);
+    if (!productId || !Number.isFinite(quantity)) continue;
+    lines.push({ productId, sku, quantity });
+  }
+  return lines.slice(0, 50);
 }
 
 export function registerStoreSolutionRoutes(

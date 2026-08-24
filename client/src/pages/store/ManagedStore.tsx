@@ -57,17 +57,17 @@ const ManagedStore = () => {
     <Link href={`/store/product/${product.sku}`}>
       <motion.div
         variants={itemVariants}
-        className={`relative overflow-hidden rounded-2xl border transition-all duration-300 hover:-translate-y-1 cursor-pointer ${
-          featured
-            ? "bg-de-raised border-de-accent/35"
-            : "border-white/10 bg-white/[0.03] hover:border-de-hairline"
+        className={`relative overflow-hidden rounded-xl border transition-all duration-300 hover:-translate-y-1 cursor-pointer ${
+          featured 
+            ? 'bg-violet-500/10 border-violet-500/40 shadow-[0_0_30px_rgba(139,92,246,0.15)]' 
+            : 'bg-white/[0.03] border-white/10 hover:border-violet-500/30'
         }`}
         data-testid={`product-${product.id}`}
       >
       {featured && (
-        <div className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 px-3 py-1 bg-de-accent text-white text-xs font-bold rounded-full flex items-center gap-1">
+        <div className="absolute top-2 right-2 z-10 px-2.5 py-0.5 bg-violet-600 text-white text-[10px] font-bold rounded-full flex items-center gap-1">
           <Star className="w-3 h-3" />
-          Most Popular
+          Popular
         </div>
       )}
 
@@ -78,43 +78,47 @@ const ManagedStore = () => {
         categoryBadge={categoryLabels[product.category]}
       />
 
-      <div className="p-6">
-      <div className="mb-4">
-        <span className="text-xs text-white/55 uppercase tracking-wider">{categoryLabels[product.category]}</span>
+      <div className="p-4 sm:p-5 flex flex-col h-[calc(100%-140px)]">
+      <div className="mb-2">
+        <span className="text-[10px] text-white/40 uppercase tracking-wider">{categoryLabels[product.category]}</span>
         {visual.vendor && (
-          <span className="ml-2 text-xs text-white/50">{visual.vendor.name}</span>
+          <span className="ml-2 text-[10px] text-white/50">{visual.vendor.name}</span>
         )}
-        <h3 className="text-xl font-bold text-white mt-1">{product.name}</h3>
+        <h3 className="text-base sm:text-lg font-bold text-white mt-0.5 line-clamp-1">{product.name}</h3>
       </div>
 
-      <div className="mb-4">
+      <div className="mb-3">
         {product.basePrice === 0 ? (
-          <span className="text-2xl font-bold text-de-accent-ink">Custom Quote</span>
+          <span className="text-lg font-bold text-violet-400">Custom Quote</span>
         ) : (
           <>
-            <span className="text-3xl font-black text-white">${product.basePrice}</span>
-            <span className="text-white/50 text-sm ml-2">/ {product.pricingUnit || 'user'} / month</span>
+            <span className="text-xl font-black text-white">${product.basePrice}</span>
+            <span className="text-white/50 text-xs ml-1.5">/ {product.pricingUnit || 'user'} / month</span>
           </>
         )}
       </div>
 
-      <p className="text-white/60 text-sm mb-6 leading-relaxed">
+      <p className="text-white/70 text-xs sm:text-sm mb-3 leading-relaxed line-clamp-2">
         {product.description}
       </p>
 
-      <ul className="space-y-2 mb-6">
-        {product.features.map((feature, idx) => (
-          <li key={idx} className="flex items-start gap-2">
-            <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
-            <span className="text-white/80 text-sm">{feature}</span>
+      <ul className="space-y-1 mb-4">
+        {product.features.slice(0, 3).map((feature, idx) => (
+          <li key={idx} className="flex items-start gap-1.5">
+            <CheckCircle className="w-3.5 h-3.5 text-emerald-400 mt-0.5 flex-shrink-0" />
+            <span className="text-white/80 text-xs line-clamp-1">{feature}</span>
           </li>
         ))}
+        {product.features.length > 3 && (
+          <li className="pl-5 text-[11px] text-white/40">+{product.features.length - 3} more</li>
+        )}
       </ul>
 
       <Button 
-        className={`w-full ${
+        size="sm"
+        className={`w-full h-9 text-xs font-semibold mt-auto ${
           featured 
-            ? 'bg-de-accent hover:bg-de-accent text-white' 
+            ? 'bg-violet-600 hover:bg-violet-500 text-white shadow-md shadow-violet-600/30' 
             : 'bg-white/10 hover:bg-white/20 text-white border border-white/20'
         }`}
         onClick={(e) => {
@@ -124,7 +128,7 @@ const ManagedStore = () => {
         }}
         data-testid={`button-schedule-${product.id}`}
       >
-        <Calendar className="w-4 h-4 mr-2" />
+        <Calendar className="w-3.5 h-3.5 mr-1.5" />
         Schedule Consultation
       </Button>
       </div>

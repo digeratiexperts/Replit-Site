@@ -93,7 +93,7 @@ export const ModernHeroSection = (): JSX.Element => {
               </h1>
 
               <p className="de-copy-on-dark max-w-[36rem] text-[17px] leading-[1.6] sm:text-lg">
-                Cybersecurity and managed IT for growing businesses, reducing risk, supporting
+                Cybersecurity and managed IT for growing businesses—reducing risk, supporting
                 compliance, and keeping your team productive without building an internal IT
                 department.
               </p>

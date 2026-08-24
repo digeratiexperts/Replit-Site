@@ -417,7 +417,7 @@ export function ShoppingCart() {
                                       Math.max(1, product.minimumQuantity),
                                       product.basePrice,
                                     );
-                                    analytics.storeAcceptRecommendation(product.name, why);
+                                    analytics.storeAcceptRecommendation(product.name, why ?? "");
                                     toast({ title: "Added to solution", description: product.name });
                                   }}
                                   data-testid={`button-complement-${product.id}`}

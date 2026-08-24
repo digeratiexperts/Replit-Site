@@ -94,7 +94,7 @@ export function KanbanView({ projectId, boards, tasks, searchQuery }: KanbanView
 
   const updateTaskMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<Task> }) =>
-      api.tasks.update(id, data),
+      api.tasks.update(id, data as any),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },

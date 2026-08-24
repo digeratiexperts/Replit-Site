@@ -165,6 +165,7 @@ const documents: Document[] = [
   },
 ].map((doc): Document => ({
   ...doc,
+  type: doc.type as any,
   downloadUrl: resolveDownloadUrl(doc.title),
 }));
 
