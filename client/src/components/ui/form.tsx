@@ -118,7 +118,7 @@ const FormControl = React.forwardRef<
   const isRequired =
     props["aria-required"] === true ||
     props["aria-required"] === "true" ||
-    props.required === true ||
+    (props as any).required === true ||
     !!required
 
   return (
@@ -133,7 +133,7 @@ const FormControl = React.forwardRef<
       aria-invalid={!!error}
       {...props}
       aria-required={isRequired || undefined}
-      required={isRequired || undefined}
+      {...({ required: isRequired || undefined } as any)}
     />
   )
 })

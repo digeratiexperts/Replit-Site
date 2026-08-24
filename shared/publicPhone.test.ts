@@ -45,7 +45,7 @@ describe("public phone NAP", () => {
     const hits: string[] = [];
     for (const dir of SCAN_DIRS) {
       for (const file of walk(join(ROOT, dir))) {
-        const rel = relative(ROOT, file);
+        const rel = relative(ROOT, file).replace(/\\/g, "/");
         if (rel === "shared/publicPhone.test.ts") continue;
         const text = readFileSync(file, "utf8");
         for (const needle of BANNED_480) {
@@ -60,7 +60,7 @@ describe("public phone NAP", () => {
     const hits: string[] = [];
     for (const dir of SCAN_DIRS) {
       for (const file of walk(join(ROOT, dir))) {
-        const rel = relative(ROOT, file);
+        const rel = relative(ROOT, file).replace(/\\/g, "/");
         if (ALLOW_325.has(rel)) continue;
         const text = readFileSync(file, "utf8");
         if (text.includes("325-480-9870") || text.includes("tel:+13254809870")) {

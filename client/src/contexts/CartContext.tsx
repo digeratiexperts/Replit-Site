@@ -78,19 +78,19 @@ function readOrCreateSessionId(): string {
 
 function migrateItems(parsed: unknown): CartItem[] {
   if (!Array.isArray(parsed)) return [];
-  return parsed
-    .map((item: any) => {
-      const product = storeProducts.find((candidate) => candidate.id === item?.product?.id);
-      if (!product) return null;
-      return {
-        product,
-        quantity: Math.max(product.minimumQuantity, Number(item.quantity) || product.minimumQuantity),
-        originalPrice: item.originalPrice ?? product.basePrice,
-        hasClientDiscount: item.hasClientDiscount ?? false,
-        clientPrice: item.clientPrice,
-      } satisfies CartItem;
-    })
-    .filter((item): item is CartItem => !!item);
+  const results: CartItem[] = [];
+  for (const item of parsed) {
+    const product = storeProducts.find((candidate) => candidate.id === item?.product?.id);
+    if (!product) continue;
+    results.push({
+      product,
+      quantity: Math.max(product.minimumQuantity, Number(item.quantity) || product.minimumQuantity),
+      originalPrice: item.originalPrice ?? product.basePrice,
+      hasClientDiscount: item.hasClientDiscount ?? false,
+      clientPrice: item.clientPrice,
+    });
+  }
+  return results;
 }
 
 function snapshotFromItems(items: CartItem[]): SolutionSnapshot {

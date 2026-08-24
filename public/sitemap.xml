@@ -76,7 +76,7 @@
   <url><loc>https://digeratiexperts.com/store</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://digeratiexperts.com/store/managed</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://digeratiexperts.com/store/co-managed</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <!-- Store products (64) -->
+  <!-- Store products (63) -->
   <url><loc>https://digeratiexperts.com/store/product/DE-SVC-MGD-OFFICE-MO</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://digeratiexperts.com/store/product/DE-SVC-MGD-BUSINESS-MO</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://digeratiexperts.com/store/product/DE-SVC-MGD-ENTERPRISE-MO</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
@@ -125,7 +125,6 @@
   <url><loc>https://digeratiexperts.com/store/product/DE-HW-SHIP-HANDLE-OT</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://digeratiexperts.com/store/product/DE-SVC-FIELD-INSTALL-HR</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://digeratiexperts.com/store/product/DE-DIG-ASMT-QUICK-OT</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://digeratiexperts.com/store/product/DE-DIG-ASMT-CSRA-OT</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://digeratiexperts.com/store/product/DE-DIG-ASMT-DMARC-OT</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://digeratiexperts.com/store/product/DE-DIG-ASMT-PHISH-MO</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://digeratiexperts.com/store/product/DE-DIG-TPL-POLICY-CORE-OT</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>

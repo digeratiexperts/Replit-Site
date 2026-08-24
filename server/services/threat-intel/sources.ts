@@ -91,33 +91,33 @@ function rssItems(xml: string): Array<{ title: string; link: string; description
 export async function fetchKev(maxAgeDays = 90): Promise<RawThreat[]> {
   const catalog = await fetchJson<KevCatalog>(KEV_URL);
   const cutoff = Date.now() - maxAgeDays * 24 * 60 * 60 * 1000;
-  return (catalog.vulnerabilities || [])
-    .map((row) => {
-      const publishedAt = parseLooseDate(row.dateAdded);
-      const cve = row.cveID?.toUpperCase();
-      if (!publishedAt || !cve) return null;
-      if (Date.parse(publishedAt) < cutoff) return null;
-      const vendor = row.vendorProject?.trim();
-      const product = row.product?.trim();
-      const name = row.vulnerabilityName?.trim() || `${vendor || "Vendor"} ${product || "product"} vulnerability`;
-      const ransomware = /^known$/i.test(row.knownRansomwareCampaignUse || "");
-      return {
-        id: `kev:${cve}`,
-        title: `Active Exploitation: ${vendor || "Vendor"} ${product || ""}`.trim() + " added to CISA KEV",
-        excerpt: truncate(
-          `${row.shortDescription || name} CISA has confirmed exploitation in the wild.`,
-        ),
-        sourceName: "CISA KEV",
-        sourceUrl: `https://www.cisa.gov/known-exploited-vulnerabilities-catalog?search_api_fulltext=${encodeURIComponent(cve)}`,
-        publishedAt,
-        cve,
-        vendor,
-        product,
-        kev: true,
-        ransomware,
-      } satisfies RawThreat;
-    })
-    .filter((row): row is RawThreat => Boolean(row));
+  const results: RawThreat[] = [];
+  for (const row of catalog.vulnerabilities || []) {
+    const publishedAt = parseLooseDate(row.dateAdded);
+    const cve = row.cveID?.toUpperCase();
+    if (!publishedAt || !cve) continue;
+    if (Date.parse(publishedAt) < cutoff) continue;
+    const vendor = row.vendorProject?.trim();
+    const product = row.product?.trim();
+    const name = row.vulnerabilityName?.trim() || `${vendor || "Vendor"} ${product || "product"} vulnerability`;
+    const ransomware = /^known$/i.test(row.knownRansomwareCampaignUse || "");
+    results.push({
+      id: `kev:${cve}`,
+      title: `Active Exploitation: ${vendor || "Vendor"} ${product || ""}`.trim() + " added to CISA KEV",
+      excerpt: truncate(
+        `${row.shortDescription || name} CISA has confirmed exploitation in the wild.`,
+      ),
+      sourceName: "CISA KEV",
+      sourceUrl: `https://www.cisa.gov/known-exploited-vulnerabilities-catalog?search_api_fulltext=${encodeURIComponent(cve)}`,
+      publishedAt,
+      cve,
+      vendor,
+      product,
+      kev: true,
+      ransomware,
+    });
+  }
+  return results;
 }
 
 export async function fetchCisaAdvisories(maxAgeDays = 90): Promise<RawThreat[]> {
@@ -168,30 +168,30 @@ export async function fetchMsrc(maxAgeDays = 45): Promise<RawThreat[]> {
     headers: { Accept: "application/json" },
   });
   const cutoff = Date.now() - maxAgeDays * 24 * 60 * 60 * 1000;
-  return (payload.value || [])
-    .map((row) => {
-      const cve = row.cveNumber?.toUpperCase();
-      const title = row.cveTitle?.trim();
-      if (!cve || !title || row.isMariner || MSRC_SKIP_RE.test(title)) return null;
-      if (!MSRC_KEEP_RE.test(`${title} ${row.tag || ""}`)) return null;
-      const publishedAt = parseLooseDate(row.releaseDate) || parseLooseDate(row.latestRevisionDate);
-      if (!publishedAt || Date.parse(publishedAt) < cutoff) return null;
-      return {
-        id: `msrc:${cve}`,
-        title,
-        excerpt:
-          "Microsoft published a security update for this vulnerability. Inventory affected systems and apply the vendor update where applicable.",
-        sourceName: "Microsoft MSRC",
-        sourceUrl: `https://msrc.microsoft.com/update-guide/vulnerability/${cve}`,
-        publishedAt,
-        cve,
-        vendor: "Microsoft",
-        product: row.tag || undefined,
-        kev: false,
-        ransomware: false,
-      } satisfies RawThreat;
-    })
-    .filter((row): row is RawThreat => Boolean(row));
+  const results: RawThreat[] = [];
+  for (const row of payload.value || []) {
+    const cve = row.cveNumber?.toUpperCase();
+    const title = row.cveTitle?.trim();
+    if (!cve || !title || row.isMariner || MSRC_SKIP_RE.test(title)) continue;
+    if (!MSRC_KEEP_RE.test(`${title} ${row.tag || ""}`)) continue;
+    const publishedAt = parseLooseDate(row.releaseDate) || parseLooseDate(row.latestRevisionDate);
+    if (!publishedAt || Date.parse(publishedAt) < cutoff) continue;
+    results.push({
+      id: `msrc:${cve}`,
+      title,
+      excerpt:
+        "Microsoft published a security update for this vulnerability. Inventory affected systems and apply the vendor update where applicable.",
+      sourceName: "Microsoft MSRC",
+      sourceUrl: `https://msrc.microsoft.com/update-guide/vulnerability/${cve}`,
+      publishedAt,
+      cve,
+      vendor: "Microsoft",
+      product: row.tag || undefined,
+      kev: false,
+      ransomware: false,
+    });
+  }
+  return results;
 }
 
 export async function fetchEpss(cves: string[]): Promise<Map<string, number>> {
