@@ -92,16 +92,16 @@ export const ModernHeroSection = (): JSX.Element => {
                 <span className="text-[#D3126A]">protected 24/7.</span>
               </h1>
 
-              <div className="relative -mx-3 -my-2.5 p-3 sm:-mx-4 sm:p-4">
+              <div className="relative w-fit max-w-[36.5rem] -mx-2 -my-2 p-2.5 sm:-mx-3 sm:p-3.5">
                 <div
-                  className="pointer-events-none absolute inset-0 -z-10 rounded-[2rem]"
+                  className="pointer-events-none absolute inset-0 -z-10 rounded-[1.5rem]"
                   aria-hidden="true"
                   style={{
                     background:
-                      "radial-gradient(ellipse 95% 90% at 35% 50%, rgba(8, 6, 16, 0.72) 0%, rgba(8, 6, 16, 0.42) 55%, transparent 100%)",
+                      "radial-gradient(ellipse 85% 85% at 30% 50%, rgba(6, 4, 12, 0.42) 0%, rgba(6, 4, 12, 0.18) 55%, transparent 100%)",
                   }}
                 />
-                <p className="de-copy-on-dark max-w-[36rem] text-[17px] leading-[1.6] sm:text-lg text-white/95">
+                <p className="de-copy-on-dark text-[17px] leading-[1.6] sm:text-lg text-white/95">
                   Cybersecurity and managed IT for growing businesses—reducing risk, supporting
                   compliance, and keeping your team productive without building an internal IT
                   department.
