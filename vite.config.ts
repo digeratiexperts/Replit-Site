@@ -3,12 +3,17 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
+const isProduction = process.env.NODE_ENV === "production";
+const isReplitDevelopment = !isProduction && process.env.REPL_ID !== undefined;
+
 export default defineConfig({
   plugins: [
     react(),
-    runtimeErrorOverlay(),
-    ...(process.env.NODE_ENV !== "production" &&
-    process.env.REPL_ID !== undefined
+    // Replit's runtime error overlay is development tooling. Shipping it in a
+    // production build adds avoidable transforms/styles and can leak dev-only
+    // chrome into the public bundle.
+    ...(!isProduction ? [runtimeErrorOverlay()] : []),
+    ...(isReplitDevelopment
       ? [
           await import("@replit/vite-plugin-cartographer").then((m) =>
             m.cartographer(),
