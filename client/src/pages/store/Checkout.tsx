@@ -15,6 +15,8 @@ import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import { SolutionOrderSummary } from "@/components/store/SolutionOrderSummary";
 import { snapshotSubmitLines } from "@/lib/solutionSnapshotView";
+import { portalLoginWithReturn } from "@/lib/portalUrls";
+import { readGuidedSession } from "@/lib/storeGuidedSession";
 
 import {
   ArrowLeft,
@@ -59,7 +61,9 @@ const Checkout = () => {
     resolver: zodResolver(billingSchema),
     defaultValues: {
       name: "",
-      email: "",
+      email:
+        readGuidedSession()?.workEmail ||
+        (typeof window !== "undefined" ? window.localStorage.getItem("userEmail") || "" : ""),
       company: "",
       phone: "",
     },
@@ -80,11 +84,13 @@ const Checkout = () => {
         const portalToken = localStorage.getItem("portalToken");
         if (!portalToken) {
           toast({
-            title: "Sign in required",
-            description: "Please sign in to the Client Portal to complete checkout.",
-            variant: "destructive",
+            title: "Identity captured — portal sign-in still required to pay",
+            description:
+              data.email
+                ? `We have ${data.email}. Existing clients can finish in the portal, or request a quote without waiting on a 403.`
+                : "Request a quote, or sign in if you already have a Client Portal session.",
           });
-          navigate("/portal/login?redirect=/store/checkout");
+          setPaymentMethod("quote_request");
           return;
         }
         const response = await fetch("/api/store/checkout/zoho", {
@@ -101,7 +107,16 @@ const Checkout = () => {
         });
 
         if (!response.ok) {
-          const errorData = await response.json();
+          const errorData = await response.json().catch(() => ({}));
+          if (response.status === 403) {
+            toast({
+              title: "This cart needs a Client Portal role to pay online",
+              description:
+                "We kept your email and solution. Request a quote, or sign in as an existing co-managed client. This is not a dead 403.",
+            });
+            setPaymentMethod("quote_request");
+            return;
+          }
           throw new Error(errorData.error || "Failed to create checkout session");
         }
 
@@ -309,6 +324,21 @@ const Checkout = () => {
                       )}
                     </label>
                   </RadioGroup>
+                  <p className="mt-4 text-sm text-white/45">
+                    Already a co-managed client?{" "}
+                    <a
+                      href={portalLoginWithReturn(
+                        typeof window !== "undefined"
+                          ? `${window.location.origin}/store/checkout`
+                          : "/store/checkout",
+                      )}
+                      className="text-de-accent-ink underline-offset-4 hover:underline"
+                      data-testid="checkout-portal-login"
+                    >
+                      Open Client Portal login
+                    </a>
+                    . Prospects should use Request Quote — card checkout still requires an existing store role.
+                  </p>
                 </div>
               </div>
 

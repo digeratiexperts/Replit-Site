@@ -56,6 +56,11 @@ import { useCart } from "@/contexts/CartContext";
 import { useStoreAuth } from "@/hooks/useStoreAuth";
 import { PORTAL_LOGIN } from "@/lib/portalUrls";
 import { openMspAdvisor } from "@/lib/openMspAdvisor";
+import {
+  isGuidedFullCatalog,
+  markGuidedSkipped,
+  recommendationFromSession,
+} from "@/lib/storeGuidedSession";
 import { StoreTrustStrip } from "@/components/store/StoreTrustStrip";
 import { ShopByOutcome } from "@/components/store/ShopByOutcome";
 import { MerchandisingRails } from "@/components/store/MerchandisingRails";
@@ -175,6 +180,7 @@ const CoManagedStore = () => {
   const [compareOpen, setCompareOpen] = useState(false);
   const [configureProduct, setConfigureProduct] = useState<StoreProduct | null>(null);
   const [guidedOpen, setGuidedOpen] = useState(false);
+  const [guidanceTick, setGuidanceTick] = useState(0);
 
   useEffect(() => {
     if (clientPricing.length > 0) {
@@ -230,13 +236,15 @@ const CoManagedStore = () => {
   });
 
   const checkoutProducts = useMemo(() => getCheckoutEnabledProducts(), []);
+  const guidedRecommendation = useMemo(() => recommendationFromSession(), [searchString, guidanceTick]);
+  const showFullCatalog = isGuidedFullCatalog(searchString) || catalogSearchHasDeepLink(searchString);
 
   const visibleBase = useMemo(() => {
-    if (!isLoggedIn) {
-      return checkoutProducts.filter((p) => !p.isClientOnly);
-    }
-    return checkoutProducts;
-  }, [checkoutProducts, isLoggedIn]);
+    const base = isLoggedIn ? checkoutProducts : checkoutProducts.filter((p) => !p.isClientOnly);
+    if (showFullCatalog || !guidedRecommendation) return base;
+    const allowed = new Set(guidedRecommendation.recommendedSkus);
+    return base.filter((product) => allowed.has(product.sku));
+  }, [checkoutProducts, isLoggedIn, showFullCatalog, guidedRecommendation]);
 
   const categories = useMemo(() => {
     const cats = Array.from(new Set(visibleBase.map((p) => p.category))) as ProductCategory[];
@@ -606,13 +614,35 @@ const CoManagedStore = () => {
               <Button
                 variant="ghost"
                 className="h-12 w-full text-base text-white/70 hover:bg-white/5 hover:text-white sm:w-auto"
-                onClick={scrollToCatalog}
+                onClick={() => {
+                  markGuidedSkipped();
+                  setGuidanceTick((n) => n + 1);
+                  setLocation("/store/co-managed?catalog=full", { replace: true });
+                  scrollToCatalog();
+                }}
                 data-testid="button-browse-everything"
               >
-                Browse everything
+                Browse the full catalog
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
+            {guidedRecommendation && !showFullCatalog && (
+              <p className="mt-4 text-sm text-white/50" data-testid="catalog-guided-filter">
+                Showing the {guidedRecommendation.familyLabel.toLowerCase()} recommended set
+                {guidedRecommendation.workEmail ? ` for ${guidedRecommendation.workEmail}` : ""}.{" "}
+                <button
+                  type="button"
+                  className="underline-offset-4 hover:text-white hover:underline"
+                  onClick={() => {
+                    markGuidedSkipped();
+                    setGuidanceTick((n) => n + 1);
+                    setLocation("/store/co-managed?catalog=full", { replace: true });
+                  }}
+                >
+                  Browse the full catalog
+                </button>
+              </p>
+            )}
           </motion.div>
 
           <StoreTrustStrip />
@@ -944,23 +974,20 @@ const CoManagedStore = () => {
       <GuidedBuyingWizard
         open={guidedOpen}
         onClose={() => setGuidedOpen(false)}
-        onAddStack={(products, seatHint) => {
-          products.forEach((product) => {
-            const { price } = getProductPrice(product.id, product.basePrice);
-            const qty =
-              product.pricingType === "per_endpoint" ||
-              product.pricingType === "per_user" ||
-              product.pricingType === "per_seat" ||
-              product.pricingType === "per_device"
-                ? seatHint
-                : 1;
-            addToCart(product, qty, price);
-          });
+        onSkipCatalog={() => {
+          markGuidedSkipped();
+          setGuidanceTick((n) => n + 1);
+          setLocation("/store/co-managed?catalog=full", { replace: true });
+        }}
+        onComplete={(next) => {
+          setGuidanceTick((n) => n + 1);
+          if (next.outcomeId) {
+            setSelectedOutcome(next.outcomeId);
+          }
           toast({
-            title: "Recommended stack added",
-            description: `${products.length} catalog items added to Your Solution.`,
+            title: "Recommended set ready",
+            description: `${next.familyLabel} filtered to ${next.recommendedSkus.length} catalog items.`,
           });
-          openCart();
         }}
       />
 

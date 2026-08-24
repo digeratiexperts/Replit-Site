@@ -2,6 +2,8 @@
  * Merchandising layer for the IT Store — maps real catalog SKUs to
  * outcomes, rails, and soft "included in" hints. Does not invent products.
  */
+import { CANONICAL_CSRA_ONE_TIME, CANONICAL_CSRA_STORE_SKU } from "@shared/canonicalCsra";
+import { getStoreProductBySku } from "./storeCatalog";
 import {
   storeProducts,
   categoryLabels,
@@ -1245,24 +1247,122 @@ export const storeBundles = [
   },
 ] as const;
 
-/** Guided buying answers (brief point 4). */
+/**
+ * Consultative store entry — 3 slides, not a long wizard.
+ * Buyer type classifies Solutions (prospects) vs Client Marketplace (existing / in-house IT).
+ * Objective maps to the locked Protect · Recover · Communicate · Operate · Compliance taxonomy.
+ */
+export type StoreBuyerType = "prospect" | "existing_client" | "in_house_it";
+export type GuidedObjectiveId = StoreOutcomeId | "specific";
+export type StoreCatalogFamily = "solutions" | "marketplace";
+
 export type GuidedBuyingAnswers = {
+  buyerType: StoreBuyerType;
+  objective: GuidedObjectiveId;
   companySize: "1-10" | "11-49" | "50-199" | "200+";
-  industry: "professional" | "healthcare" | "finance" | "nonprofit" | "other";
   locations: "1" | "2-5" | "6+";
-  productivity: "m365" | "google" | "mixed" | "unsure";
-  itStaff: "internal" | "none" | "partial";
-  objective: StoreOutcomeId;
+  workEmail: string;
 };
 
 export type GuidedRecommendation = {
   headline: string;
   summary: string;
+  catalogFamily: StoreCatalogFamily;
+  familyLabel: string;
+  outcomeId: StoreOutcomeId | null;
+  proactiveTier: StoreProduct | null;
+  csra: StoreProduct | null;
   products: StoreProduct[];
+  recommendedSkus: string[];
   seatHint: number;
   recurringEstimate: number;
   oneTimeEstimate: number;
+  workEmail: string;
 };
+
+export const GUIDED_BUYER_OPTIONS: {
+  value: StoreBuyerType;
+  label: string;
+  blurb: string;
+}[] = [
+  {
+    value: "prospect",
+    label: "New to Digerati",
+    blurb: "Looking for managed IT or a first security read — Solutions, not a hardware wall.",
+  },
+  {
+    value: "existing_client",
+    label: "Existing Digerati client",
+    blurb: "Add tools from the Client Marketplace without replacing your current stack.",
+  },
+  {
+    value: "in_house_it",
+    label: "In-house IT",
+    blurb: "Keep your team; we extend helpdesk, security, and co-managed coverage.",
+  },
+];
+
+export const GUIDED_OBJECTIVE_OPTIONS: {
+  value: GuidedObjectiveId;
+  label: string;
+  blurb: string;
+}[] = [
+  { value: "protect", label: "Protect the business", blurb: "Endpoint, email, and identity defenses" },
+  { value: "operate", label: "Stabilize day-to-day IT", blurb: "Helpdesk, network, and operating coverage" },
+  { value: "communicate", label: "Modernize calling & M365", blurb: "Phones, meetings, and cloud identity" },
+  { value: "recover", label: "Backup & recover", blurb: "Continuity and incident-ready documentation" },
+  { value: "compliance", label: "Insurance / audit readiness", blurb: "CSRA, policies, and evidence — not a cert badge" },
+  { value: "specific", label: "Buy a specific product", blurb: "You already know the SKU or category" },
+];
+
+export const GUIDED_SIZE_OPTIONS: { value: GuidedBuyingAnswers["companySize"]; label: string }[] = [
+  { value: "1-10", label: "1–10 people" },
+  { value: "11-49", label: "11–49 people" },
+  { value: "50-199", label: "50–199 people" },
+  { value: "200+", label: "200+ people" },
+];
+
+export const GUIDED_LOCATION_OPTIONS: { value: GuidedBuyingAnswers["locations"]; label: string }[] = [
+  { value: "1", label: "Single site" },
+  { value: "2-5", label: "2–5 sites" },
+  { value: "6+", label: "6+ sites" },
+];
+
+export const DEFAULT_GUIDED_ANSWERS: GuidedBuyingAnswers = {
+  buyerType: "prospect",
+  objective: "protect",
+  companySize: "11-49",
+  locations: "1",
+  workEmail: "",
+};
+
+/** Soft cap so the default path stays consultative, not the SKU wall. */
+export const GUIDED_ADDON_LIMIT = 5;
+
+export function catalogFamilyForBuyer(buyer: StoreBuyerType): StoreCatalogFamily {
+  return buyer === "prospect" ? "solutions" : "marketplace";
+}
+
+export function catalogFamilyLabel(family: StoreCatalogFamily): string {
+  return family === "solutions" ? "Solutions" : "Client Marketplace";
+}
+
+export function guidedOutcomeFromObjective(objective: GuidedObjectiveId): StoreOutcomeId | null {
+  return objective === "specific" ? null : objective;
+}
+
+export function recommendProactiveSku(size: GuidedBuyingAnswers["companySize"]): string {
+  switch (size) {
+    case "1-10":
+      return "DE-SVC-MGD-IT-MO";
+    case "11-49":
+      return "DE-SVC-MGD-OFFICE-MO";
+    case "50-199":
+      return "DE-SVC-MGD-BUSINESS-MO";
+    default:
+      return "DE-SVC-MGD-ENTERPRISE-MO";
+  }
+}
 
 function sizeToSeats(size: GuidedBuyingAnswers["companySize"]): number {
   switch (size) {
@@ -1277,80 +1377,124 @@ function sizeToSeats(size: GuidedBuyingAnswers["companySize"]): number {
   }
 }
 
-/**
- * Recommend a co-managed stack from the live catalog — soft estimates only.
- * Prefer checkout-enabled SKUs; skip inventing products or discounts.
- */
-export function buildGuidedRecommendation(answers: GuidedBuyingAnswers): GuidedRecommendation {
-  const seats = sizeToSeats(answers.companySize);
+function resolveCanonicalProduct(sku: string): StoreProduct | undefined {
+  return getStoreProductBySku(sku) || getProductBySku(sku);
+}
+
+function addonSkusForGuidance(answers: GuidedBuyingAnswers): string[] {
+  const family = catalogFamilyForBuyer(answers.buyerType);
   const skus: string[] = [];
 
-  if (answers.itStaff === "none" || answers.objective === "operate") {
-    // Full managed packages are consult/contract — recommend a buyable co-managed starter instead.
-    skus.push(
-      "DE-SVC-CM-ENDPOINT-CORE-MO",
-      "DE-SVC-CM-ENDPOINT-EDR-MO",
-      "DE-SVC-CM-EMAIL-SEC-MO",
-      "DE-SVC-CM-IDENTITY-CORE-MO",
-      "DE-SVC-CM-HELPDESK-ASSIST-MO"
-    );
-  } else {
-    skus.push("DE-SVC-CM-ENDPOINT-CORE-MO", "DE-SVC-CM-ENDPOINT-EDR-MO");
-    if (answers.objective === "protect" || answers.objective === "compliance" || answers.itStaff === "internal") {
-      skus.push("DE-SVC-CM-EMAIL-SEC-MO", "DE-SVC-CM-IDENTITY-CORE-MO");
-    }
-    if (answers.productivity === "m365" || answers.productivity === "mixed") {
-      skus.push("DE-SVC-CM-SAAS-MGMT-MO");
-    }
-    if (answers.itStaff === "partial") {
-      skus.push("DE-SVC-CM-HELPDESK-ASSIST-MO");
-    }
+  if (answers.objective === "specific") {
+    return family === "marketplace"
+      ? ["DE-SVC-CM-ENDPOINT-CORE-MO", "DE-SVC-CM-HELPDESK-ASSIST-MO", "DE-SVC-CM-EMAIL-SEC-MO"]
+      : ["DE-DIG-ASMT-QUICK-OT", "DE-SVC-CM-ENDPOINT-CORE-MO", "DE-SVC-UC-SEAT-STD-MO"];
   }
 
-  if (answers.objective === "recover") {
-    skus.push("DE-DIG-TPL-BCP-OT", "DE-DIG-TPL-IR-RUNBOOK-OT");
-  }
-  if (answers.objective === "communicate") {
-    skus.push("DE-SVC-UC-SEAT-STD-MO");
-  }
-  if (answers.objective === "operate" && answers.itStaff !== "none") {
-    skus.push("DE-SVC-NET-MANAGED-CORE-MO");
-  }
-  if (
-    answers.objective === "compliance" ||
-    answers.industry === "healthcare" ||
-    answers.industry === "finance"
-  ) {
-    skus.push("DE-DIG-ASMT-CSRA-OT", "DE-DIG-TRN-AWARE-BASIC-YR");
-  } else if (answers.objective === "protect") {
-    skus.push("DE-DIG-ASMT-QUICK-OT", "DE-DIG-ASMT-PHISH-MO");
+  if (family === "solutions") {
+    if (answers.objective === "protect") {
+      skus.push("DE-SVC-CM-ENDPOINT-EDR-MO", "DE-SVC-CM-EMAIL-SEC-MO", "DE-DIG-ASMT-PHISH-MO");
+    } else if (answers.objective === "operate") {
+      skus.push(
+        "DE-SVC-CM-ENDPOINT-CORE-MO",
+        "DE-SVC-CM-HELPDESK-ASSIST-MO",
+        "DE-SVC-NET-MANAGED-CORE-MO",
+      );
+    } else if (answers.objective === "communicate") {
+      skus.push("DE-SVC-UC-SEAT-STD-MO", "DE-SVC-CM-IDENTITY-CORE-MO", "DE-SVC-CM-SAAS-MGMT-MO");
+    } else if (answers.objective === "recover") {
+      skus.push("DE-DIG-TPL-BCP-OT", "DE-DIG-TPL-IR-RUNBOOK-OT", "DE-SVC-MGD-BCDR-MO");
+    } else if (answers.objective === "compliance") {
+      skus.push("DE-DIG-TPL-POLICY-CORE-OT", "DE-DIG-TRN-AWARE-BASIC-YR", "DE-DIG-TPL-IR-RUNBOOK-OT");
+    }
+  } else {
+    if (answers.objective === "protect") {
+      skus.push("DE-SVC-CM-ENDPOINT-EDR-MO", "DE-SVC-CM-EMAIL-SEC-MO", "DE-SVC-CM-IDENTITY-CORE-MO");
+    } else if (answers.objective === "operate") {
+      skus.push("DE-SVC-CM-HELPDESK-ASSIST-MO", "DE-SVC-CM-SERVER-MON-MO", "DE-SVC-CM-ENDPOINT-CORE-MO");
+    } else if (answers.objective === "communicate") {
+      skus.push("DE-SVC-UC-SEAT-STD-MO", "DE-SVC-UC-AUTOATT-MO");
+    } else if (answers.objective === "recover") {
+      skus.push("DE-DIG-TPL-IR-RUNBOOK-OT", "DE-DIG-TPL-BCP-OT");
+    } else if (answers.objective === "compliance") {
+      skus.push("DE-DIG-TPL-POLICY-CORE-OT", "DE-DIG-TRN-AWARE-BASIC-YR");
+    }
+    if (answers.buyerType === "in_house_it" && !skus.includes("DE-SVC-CM-HELPDESK-ASSIST-MO")) {
+      skus.push("DE-SVC-CM-HELPDESK-ASSIST-MO");
+    }
   }
 
   if (answers.locations !== "1") {
     skus.push("DE-SVC-NET-MANAGED-MSITE-MO");
   }
 
-  const unique = Array.from(new Set(skus));
-  const products = unique
-    .map((sku) => getProductBySku(sku))
-    .filter((p): p is StoreProduct => !!p && p.isCheckoutEnabled && !p.isContractOnly);
+  return skus;
+}
 
-  const recurringEstimate = products
-    .filter((p) => !["one_time", "per_hour"].includes(p.pricingType))
-    .reduce((sum, p) => {
-      const qty =
-        p.pricingType === "per_endpoint" ||
-        p.pricingType === "per_user" ||
-        p.pricingType === "per_seat" ||
-        p.pricingType === "per_device"
-          ? seats
-          : 1;
-      return sum + p.basePrice * qty;
-    }, 0);
+function shouldIncludeCsra(answers: GuidedBuyingAnswers): boolean {
+  if (answers.objective === "specific") return false;
+  if (answers.buyerType === "prospect") return true;
+  return answers.objective === "protect" || answers.objective === "compliance";
+}
 
-  const oneTimeEstimate = products
-    .filter((p) => p.pricingType === "one_time")
-    .reduce((sum, p) => sum + p.basePrice, 0);
+function estimateLine(product: StoreProduct, seats: number): { recurring: number; oneTime: number } {
+  const qty =
+    product.pricingType === "per_endpoint" ||
+    product.pricingType === "per_user" ||
+    product.pricingType === "per_seat" ||
+    product.pricingType === "per_device"
+      ? seats
+      : 1;
+  if (product.pricingType === "one_time") {
+    return { recurring: 0, oneTime: product.basePrice };
+  }
+  if (product.pricingType === "per_hour") {
+    return { recurring: 0, oneTime: 0 };
+  }
+  return { recurring: product.basePrice * qty, oneTime: 0 };
+}
+
+/**
+ * Consultative recommendation from the live catalog.
+ * Soft list-price estimates only — checkout still uses server-canonical SKUs/prices.
+ * At most one ProActive tier. CSRA stays $2,500 and is never treated as a package credit.
+ */
+export function buildGuidedRecommendation(answers: GuidedBuyingAnswers): GuidedRecommendation {
+  const seats = sizeToSeats(answers.companySize);
+  const family = catalogFamilyForBuyer(answers.buyerType);
+  const outcomeId = guidedOutcomeFromObjective(answers.objective);
+
+  const proactive =
+    family === "solutions" ? resolveCanonicalProduct(recommendProactiveSku(answers.companySize)) ?? null : null;
+
+  const csraRaw = shouldIncludeCsra(answers) ? resolveCanonicalProduct(CANONICAL_CSRA_STORE_SKU) : undefined;
+  const csra =
+    csraRaw && csraRaw.basePrice === CANONICAL_CSRA_ONE_TIME && csraRaw.sku === CANONICAL_CSRA_STORE_SKU
+      ? csraRaw
+      : null;
+
+  const addonProducts = Array.from(new Set(addonSkusForGuidance(answers)))
+    .map((sku) => resolveCanonicalProduct(sku))
+    .filter((p): p is StoreProduct => !!p && p.isCheckoutEnabled && !p.isContractOnly)
+    .filter((p) => p.sku !== CANONICAL_CSRA_STORE_SKU)
+    .slice(0, GUIDED_ADDON_LIMIT);
+
+  const products = csra && csra.isCheckoutEnabled && !csra.isContractOnly
+    ? [csra, ...addonProducts]
+    : addonProducts;
+
+  const recommendedSkus = [
+    ...(proactive ? [proactive.sku] : []),
+    ...products.map((p) => p.sku),
+  ];
+
+  let recurringEstimate = 0;
+  let oneTimeEstimate = 0;
+  for (const product of products) {
+    const line = estimateLine(product, seats);
+    recurringEstimate += line.recurring;
+    oneTimeEstimate += line.oneTime;
+  }
 
   const sizeLabel =
     answers.companySize === "1-10"
@@ -1361,29 +1505,42 @@ export function buildGuidedRecommendation(answers: GuidedBuyingAnswers): GuidedR
           ? "mid-size organization"
           : "larger organization";
 
-  const industryLabel =
-    answers.industry === "healthcare"
-      ? "healthcare"
-      : answers.industry === "finance"
-        ? "finance"
-        : answers.industry === "nonprofit"
-          ? "nonprofit"
-          : answers.industry === "professional"
-            ? "professional services"
-            : "business";
+  const familyLabel = catalogFamilyLabel(family);
+  const headline =
+    answers.objective === "specific"
+      ? `A short ${familyLabel} shortlist — not the full catalog`
+      : `Recommended ${familyLabel} for your ${sizeLabel}`;
+
+  const summary =
+    family === "solutions"
+      ? `One ProActive tier (consultative — packages are mutually exclusive), the $2,500 Cybersecurity Risk Assessment when relevant, and a few related add-ons. List rates × ~${seats} seats where unit-priced; checkout uses canonical SKUs and prices.`
+      : `Client Marketplace picks for ${
+          answers.buyerType === "in_house_it" ? "an in-house IT team" : "an existing Digerati client"
+        }. We are not stacking a second ProActive package. Estimates are list rates; checkout still confirms server prices.`;
 
   return {
-    headline: `Recommended for your ${sizeLabel}`,
-    summary: `${
-      answers.itStaff === "none" || answers.objective === "operate"
-        ? "Checkout-ready co-managed starter (full managed packages are consultative). "
-        : ""
-    }Starting stack for a ${industryLabel} shop${
-      answers.productivity === "m365" ? " on Microsoft 365" : ""
-    } — drawn from the live catalog. Estimates use list rates × ~${seats} seats where unit-priced; final pricing confirms at checkout or with an architect.`,
+    headline,
+    summary,
+    catalogFamily: family,
+    familyLabel,
+    outcomeId,
+    proactiveTier: proactive,
+    csra,
     products,
+    recommendedSkus,
     seatHint: seats,
     recurringEstimate: Math.round(recurringEstimate),
     oneTimeEstimate: Math.round(oneTimeEstimate),
+    workEmail: answers.workEmail.trim().toLowerCase(),
   };
+}
+
+export function filterProductsForGuidance(
+  products: StoreProduct[],
+  recommendation: GuidedRecommendation | null,
+  opts: { fullCatalog: boolean },
+): StoreProduct[] {
+  if (opts.fullCatalog || !recommendation) return products;
+  const allowed = new Set(recommendation.recommendedSkus);
+  return products.filter((product) => allowed.has(product.sku));
 }

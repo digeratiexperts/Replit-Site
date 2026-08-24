@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "../sections/DigeratiEnhancedFooterSection";
 import { Button } from "@/components/ui/button";
-import { Link, useLocation } from "wouter";
+import { Link, useLocation, useSearch } from "wouter";
 import {
   ArrowRight,
   Shield,
@@ -35,12 +35,19 @@ import {
 } from "@/data/storeProducts";
 import {
   isConfigurableProduct,
+  type GuidedRecommendation,
   type StoreOutcomeId,
 } from "@/data/storeMerchandising";
 import { useStoreAuth } from "@/hooks/useStoreAuth";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import { openMspAdvisor } from "@/lib/openMspAdvisor";
+import {
+  isGuidedFullCatalog,
+  markGuidedSkipped,
+  readGuidedSession,
+  recommendationFromSession,
+} from "@/lib/storeGuidedSession";
 import { StoreTrustStrip } from "@/components/store/StoreTrustStrip";
 import { ShopByOutcome } from "@/components/store/ShopByOutcome";
 import { MerchandisingRails } from "@/components/store/MerchandisingRails";
@@ -71,15 +78,30 @@ const categoryIcons: Record<ProductCategory, typeof Shield> = {
   professional_services: Cloud,
 };
 
+type LandingMode = "guide" | "recommended" | "catalog";
+
+function initialLandingMode(search: string): LandingMode {
+  if (isGuidedFullCatalog(search)) return "catalog";
+  if (readGuidedSession()?.completed) return "recommended";
+  return "guide";
+}
+
 const StoreLanding = () => {
   const prefersReducedMotion = useReducedMotion();
-  const { isLoggedIn, getProductPrice, loginRedirect } = useStoreAuth();
+  const { isLoggedIn, user, getProductPrice, loginRedirect } = useStoreAuth();
   const { addToCart, openCart } = useCart();
   const { toast } = useToast();
+  const search = useSearch();
   const [, setLocation] = useLocation();
-  const [outcomeHighlight, setOutcomeHighlight] = useState<StoreOutcomeId | null>(null);
+  const [mode, setMode] = useState<LandingMode>(() => initialLandingMode(search));
+  const [recommendation, setRecommendation] = useState<GuidedRecommendation | null>(
+    () => recommendationFromSession(),
+  );
+  const [outcomeHighlight, setOutcomeHighlight] = useState<StoreOutcomeId | null>(
+    () => recommendationFromSession()?.outcomeId ?? null,
+  );
   const [configureProduct, setConfigureProduct] = useState<StoreProduct | null>(null);
-  const [guidedOpen, setGuidedOpen] = useState(false);
+  const showFullCatalog = mode === "catalog";
 
   useSEO({
     title: "IT Services Store | Digerati Experts",
@@ -135,6 +157,33 @@ const StoreLanding = () => {
     }
   };
 
+  const revealFullCatalog = () => {
+    markGuidedSkipped();
+    setMode("catalog");
+    setLocation("/store?catalog=full", { replace: true });
+  };
+
+  const addRecommendedStack = (products: StoreProduct[], seatHint: number) => {
+    products.forEach((product) => {
+      const { price } = getProductPrice(product.id, product.basePrice);
+      const qty =
+        product.pricingType === "per_endpoint" ||
+        product.pricingType === "per_user" ||
+        product.pricingType === "per_seat" ||
+        product.pricingType === "per_device"
+          ? seatHint
+          : 1;
+      addToCart(product, qty, price);
+    });
+    toast({
+      title: "Recommended set added",
+      description: `${products.length} catalog items added to Your Solution.`,
+    });
+    openCart();
+  };
+
+  const recommendedProducts = useMemo(() => recommendation?.products ?? [], [recommendation]);
+
   return (
     <div className="relative min-h-screen bg-[#0a0a0a]">
       <StorePageAtmosphere />
@@ -144,7 +193,7 @@ const StoreLanding = () => {
         <div className="mx-auto max-w-[var(--de-canvas)] px-3 sm:px-4 lg:px-6">
           <StoreClientBar />
 
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
+          <div className={showFullCatalog ? "grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]" : undefined}>
             <div>
               <motion.div
                 className="mb-10"
@@ -156,58 +205,174 @@ const StoreLanding = () => {
                   <Package className="h-4 w-4 text-de-accent-ink" />
                   <span className="text-sm text-de-accent-ink">IT Services & Solutions</span>
                 </div>
-                <h1 className="mb-4 text-[clamp(2rem,6vw,3.5rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white">
-                  Tell us what you&apos;re trying to{" "}
-                  <span className="text-de-accent-ink">accomplish</span>
+                <h1 className="mb-4 text-[clamp(2rem,6vw,3.5rem)] font-bold leading-[1.12] tracking-[-0.03em] text-white break-words">
+                  {mode === "recommended" ? (
+                    <>
+                      A recommended set — not the{" "}
+                      <span className="text-de-accent-ink">whole catalog</span>
+                    </>
+                  ) : (
+                    <>
+                      Tell us what you&apos;re trying to{" "}
+                      <span className="text-de-accent-ink">accomplish</span>
+                    </>
+                  )}
                 </h1>
                 <p className="max-w-2xl text-lg leading-relaxed text-white/70 md:text-xl">
-                  Guided storefront for managed packages and à la carte services — shop by outcome,
-                  ask Digerati to build a stack, then buy from the live catalog.
+                  {mode === "recommended"
+                    ? recommendation?.summary
+                    : "Three short questions. We start identity from your work email in the background, then show Solutions or the Client Marketplace — not every SKU at once."}
                 </p>
-                <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                  <Button
-                    className="h-12 w-full bg-de-accent px-6 text-base text-white hover:bg-[#6548ff] sm:w-auto"
-                    onClick={() => setGuidedOpen(true)}
-                    data-testid="button-build-solution"
-                  >
-                    <Sparkles className="mr-2 h-5 w-5" />
-                    Build my solution
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="h-12 w-full border-white/20 bg-transparent px-6 text-base text-white hover:bg-white/5 sm:w-auto"
-                    onClick={() => openMspAdvisor({ context: "store" })}
-                    data-testid="button-ask-digerati"
-                  >
-                    <MessageCircle className="mr-2 h-5 w-5" />
-                    Ask Digerati
-                  </Button>
-                  <Link href="/store/co-managed">
+                {mode !== "guide" && (
+                  <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                     <Button
-                      variant="ghost"
-                      className="h-12 w-full px-6 text-base text-white/70 hover:bg-white/5 hover:text-white sm:w-auto"
-                      data-testid="button-browse-catalog"
+                      className="h-12 w-full bg-de-accent px-6 text-base text-white hover:bg-[#6548ff] sm:w-auto"
+                      onClick={() => {
+                        setMode("guide");
+                      }}
+                      data-testid="button-build-solution"
                     >
-                      Browse full catalog
-                      <ArrowRight className="ml-2 h-5 w-5" />
+                      <Sparkles className="mr-2 h-5 w-5" />
+                      Retake the three questions
                     </Button>
-                  </Link>
-                </div>
+                    <Button
+                      variant="outline"
+                      className="h-12 w-full border-white/20 bg-transparent px-6 text-base text-white hover:bg-white/5 sm:w-auto"
+                      onClick={() => openMspAdvisor({ context: "store" })}
+                      data-testid="button-ask-digerati"
+                    >
+                      <MessageCircle className="mr-2 h-5 w-5" />
+                      Ask Digerati
+                    </Button>
+                    {showFullCatalog && (
+                      <Link href="/store/co-managed?catalog=full">
+                        <Button
+                          variant="ghost"
+                          className="h-12 w-full px-6 text-base text-white/70 hover:bg-white/5 hover:text-white sm:w-auto"
+                          data-testid="button-browse-catalog"
+                        >
+                          Browse full catalog
+                          <ArrowRight className="ml-2 h-5 w-5" />
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
+                )}
               </motion.div>
 
-              <StoreTrustStrip />
-              <ShopByOutcome selected={outcomeHighlight} onSelect={handleOutcomeSelect} />
+              {mode === "guide" && (
+                <div className="mb-12" data-testid="store-guided-entry">
+                  <GuidedBuyingWizard
+                    variant="inline"
+                    signedInEmail={user?.email}
+                    onSkipCatalog={revealFullCatalog}
+                    onComplete={(next) => {
+                      setRecommendation(next);
+                      setOutcomeHighlight(next.outcomeId);
+                      setMode("recommended");
+                    }}
+                  />
+                </div>
+              )}
+
+              {mode === "recommended" && recommendation && (
+                <section className="mb-14" data-testid="store-recommended-set">
+                  <p className="mb-2 text-xs font-medium uppercase tracking-[0.14em] text-de-accent-ink">
+                    {recommendation.familyLabel}
+                  </p>
+                  <h2 className="text-3xl font-bold text-white md:text-4xl">{recommendation.headline}</h2>
+                  {recommendation.workEmail && (
+                    <p className="mt-2 text-sm text-white/50" data-testid="store-captured-email">
+                      Work email captured: {recommendation.workEmail}
+                    </p>
+                  )}
+
+                  {recommendation.proactiveTier && (
+                    <div className="mt-6 rounded-2xl border border-white/10 bg-[#141414] p-6">
+                      <p className="text-xs font-medium uppercase tracking-[0.14em] text-white/45">
+                        One ProActive tier
+                      </p>
+                      <h3 className="mt-2 text-2xl font-semibold text-white">
+                        {recommendation.proactiveTier.name}
+                      </h3>
+                      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/55">
+                        {recommendation.proactiveTier.shortDescription}. Packages are mutually exclusive —
+                        we are not stacking another tier, and CSRA is not a credit against this plan.
+                      </p>
+                      <div className="mt-4">
+                        <Button asChild className="h-11 bg-de-accent text-white hover:bg-[#6548ff]">
+                          <Link href="/store/managed">See this plan</Link>
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="mt-8 grid gap-6 md:grid-cols-2">
+                    {recommendedProducts.map((product) => {
+                      const pricing = getProductPrice(product.id, product.basePrice);
+                      return (
+                        <StoreProductCard
+                          key={product.id}
+                          product={product}
+                          price={pricing.price}
+                          hasDiscount={pricing.hasDiscount}
+                          discountPercent={pricing.discountPercent}
+                          isLoggedIn={isLoggedIn}
+                          onAddToCart={handleAddToCart}
+                          onConfigure={(item) => setConfigureProduct(item)}
+                          onLoginRequired={loginRedirect}
+                        />
+                      );
+                    })}
+                  </div>
+
+                  <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <Button
+                      className="h-12 bg-de-accent px-6 text-white hover:bg-[#6548ff]"
+                      disabled={!recommendedProducts.length}
+                      onClick={() => addRecommendedStack(recommendedProducts, recommendation.seatHint)}
+                      data-testid="button-add-recommended-stack"
+                    >
+                      Add recommended set
+                    </Button>
+                    <button
+                      type="button"
+                      onClick={revealFullCatalog}
+                      className="text-sm text-white/45 underline-offset-4 hover:text-white/70 hover:underline"
+                      data-testid="button-browse-catalog"
+                    >
+                      Browse the full catalog
+                    </button>
+                  </div>
+                </section>
+              )}
+
+              {mode !== "guide" && (
+                <>
+                  <StoreTrustStrip />
+                  <ShopByOutcome
+                    selected={outcomeHighlight}
+                    onSelect={handleOutcomeSelect}
+                  />
+                </>
+              )}
             </div>
 
-            <div className="hidden lg:block">
-              <StoreAssessmentPanel variant="sticky" onBuildSolution={() => setGuidedOpen(true)} />
+            {showFullCatalog && (
+              <div className="hidden lg:block">
+                <StoreAssessmentPanel variant="sticky" onBuildSolution={() => setMode("guide")} />
+              </div>
+            )}
+          </div>
+
+          {showFullCatalog && (
+            <div className="mb-10 lg:hidden">
+              <StoreAssessmentPanel variant="inline" onBuildSolution={() => setMode("guide")} />
             </div>
-          </div>
+          )}
 
-          <div className="mb-10 lg:hidden">
-            <StoreAssessmentPanel variant="inline" onBuildSolution={() => setGuidedOpen(true)} />
-          </div>
-
+          {showFullCatalog && (
+            <>
           {/* Two Client Type Cards — elevated, not deleted */}
           <motion.section
             className="mb-16"
@@ -419,7 +584,10 @@ const StoreLanding = () => {
               })}
             </motion.div>
           </motion.section>
+            </>
+          )}
 
+          {mode !== "guide" && (
           <motion.section
             className="rounded-2xl border border-white/10 bg-[#141414] p-8 text-center md:p-12"
             initial={{ opacity: 0, y: 30 }}
@@ -467,6 +635,7 @@ const StoreLanding = () => {
               </Button>
             </div>
           </motion.section>
+          )}
         </div>
       </main>
 
@@ -505,29 +674,6 @@ const StoreLanding = () => {
           toast({
             title: "Ready for quote",
             description: "Items added — open Your Solution to request a quote.",
-          });
-          openCart();
-        }}
-      />
-
-      <GuidedBuyingWizard
-        open={guidedOpen}
-        onClose={() => setGuidedOpen(false)}
-        onAddStack={(products, seatHint) => {
-          products.forEach((product) => {
-            const { price } = getProductPrice(product.id, product.basePrice);
-            const qty =
-              product.pricingType === "per_endpoint" ||
-              product.pricingType === "per_user" ||
-              product.pricingType === "per_seat" ||
-              product.pricingType === "per_device"
-                ? seatHint
-                : 1;
-            addToCart(product, qty, price);
-          });
-          toast({
-            title: "Recommended stack added",
-            description: `${products.length} catalog items added to Your Solution.`,
           });
           openCart();
         }}

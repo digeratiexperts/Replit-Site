@@ -1,126 +1,356 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Calendar,
-  MessageCircle,
-  Sparkles,
-  X,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, Mail, Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
+  DEFAULT_GUIDED_ANSWERS,
+  GUIDED_BUYER_OPTIONS,
+  GUIDED_LOCATION_OPTIONS,
+  GUIDED_OBJECTIVE_OPTIONS,
+  GUIDED_SIZE_OPTIONS,
   buildGuidedRecommendation,
   type GuidedBuyingAnswers,
+  type GuidedRecommendation,
 } from "@/data/storeMerchandising";
 import type { StoreProduct } from "@/data/storeProducts";
-import { openMspAdvisor } from "@/lib/openMspAdvisor";
+import {
+  isWorkEmail,
+  markGuidedCompleted,
+  markGuidedSkipped,
+  startStoreBuyerAuth,
+} from "@/lib/storeGuidedSession";
 
-const STEPS = [
-  {
-    key: "companySize" as const,
-    title: "Company size",
-    options: [
-      { value: "1-10", label: "1–10 people" },
-      { value: "11-49", label: "11–49 people" },
-      { value: "50-199", label: "50–199 people" },
-      { value: "200+", label: "200+ people" },
-    ],
-  },
-  {
-    key: "industry" as const,
-    title: "Industry",
-    options: [
-      { value: "professional", label: "Professional services" },
-      { value: "healthcare", label: "Healthcare" },
-      { value: "finance", label: "Finance / accounting" },
-      { value: "nonprofit", label: "Nonprofit" },
-      { value: "other", label: "Other" },
-    ],
-  },
-  {
-    key: "locations" as const,
-    title: "Number of locations",
-    options: [
-      { value: "1", label: "Single site" },
-      { value: "2-5", label: "2–5 sites" },
-      { value: "6+", label: "6+ sites" },
-    ],
-  },
-  {
-    key: "productivity" as const,
-    title: "Productivity suite",
-    options: [
-      { value: "m365", label: "Microsoft 365" },
-      { value: "google", label: "Google Workspace" },
-      { value: "mixed", label: "Mixed / both" },
-      { value: "unsure", label: "Not sure yet" },
-    ],
-  },
-  {
-    key: "itStaff" as const,
-    title: "Internal IT",
-    options: [
-      { value: "internal", label: "We have IT staff" },
-      { value: "partial", label: "Part-time / fractional IT" },
-      { value: "none", label: "No internal IT" },
-    ],
-  },
-  {
-    key: "objective" as const,
-    title: "Main objective",
-    options: [
-      { value: "protect", label: "Protect the business" },
-      { value: "recover", label: "Backup & recover" },
-      { value: "communicate", label: "Calling & meetings" },
-      { value: "operate", label: "Operate IT day to day" },
-      { value: "compliance", label: "Compliance readiness" },
-    ],
-  },
-];
-
-const INITIAL: GuidedBuyingAnswers = {
-  companySize: "11-49",
-  industry: "professional",
-  locations: "1",
-  productivity: "m365",
-  itStaff: "internal",
-  objective: "protect",
-};
+const SLIDE_COUNT = 3;
 
 interface GuidedBuyingWizardProps {
-  open: boolean;
-  onClose: () => void;
-  onAddStack: (products: StoreProduct[], seatHint: number) => void;
+  variant?: "drawer" | "inline";
+  open?: boolean;
+  onClose?: () => void;
+  onAddStack?: (products: StoreProduct[], seatHint: number) => void;
+  onSkipCatalog?: () => void;
+  onComplete?: (recommendation: GuidedRecommendation, answers: GuidedBuyingAnswers) => void;
+  signedInEmail?: string;
 }
 
-export function GuidedBuyingWizard({ open, onClose, onAddStack }: GuidedBuyingWizardProps) {
-  const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<GuidedBuyingAnswers>(INITIAL);
-  const [showResult, setShowResult] = useState(false);
-
-  const recommendation = useMemo(
-    () => (showResult ? buildGuidedRecommendation(answers) : null),
-    [answers, showResult]
+function SkipCatalogLink({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="text-sm text-white/45 underline-offset-4 hover:text-white/70 hover:underline"
+      data-testid="button-skip-full-catalog"
+    >
+      Browse the full catalog
+    </button>
   );
+}
+
+export function GuidedBuyingWizard({
+  variant = "drawer",
+  open = false,
+  onClose,
+  onAddStack,
+  onSkipCatalog,
+  onComplete,
+  signedInEmail,
+}: GuidedBuyingWizardProps) {
+  const [step, setStep] = useState(0);
+  const [answers, setAnswers] = useState<GuidedBuyingAnswers>(() => ({
+    ...DEFAULT_GUIDED_ANSWERS,
+    workEmail: signedInEmail?.trim().toLowerCase() || "",
+  }));
+  const [authHint, setAuthHint] = useState("");
+
+  useEffect(() => {
+    if (signedInEmail && isWorkEmail(signedInEmail) && !answers.workEmail) {
+      setAnswers((prev) => ({ ...prev, workEmail: signedInEmail.trim().toLowerCase() }));
+    }
+  }, [signedInEmail, answers.workEmail]);
+
+  const recommendation = useMemo(() => buildGuidedRecommendation(answers), [answers]);
+  const progress = Math.round(((step + 1) / SLIDE_COUNT) * 100);
+  const emailReady = isWorkEmail(answers.workEmail);
+  const visible = variant === "inline" || open;
 
   const reset = () => {
     setStep(0);
-    setAnswers(INITIAL);
-    setShowResult(false);
+    setAnswers({
+      ...DEFAULT_GUIDED_ANSWERS,
+      workEmail: signedInEmail?.trim().toLowerCase() || "",
+    });
+    setAuthHint("");
   };
 
   const handleClose = () => {
     reset();
-    onClose();
+    onClose?.();
   };
 
-  const current = STEPS[step];
-  const progress = showResult ? 100 : Math.round(((step + 1) / STEPS.length) * 100);
+  const handleSkip = () => {
+    markGuidedSkipped();
+    onSkipCatalog?.();
+    if (variant === "drawer") handleClose();
+  };
+
+  const captureEmailInBackground = (email: string) => {
+    if (!isWorkEmail(email)) return;
+    void startStoreBuyerAuth(email).then((result) => {
+      if (result.sessionPresent) {
+        setAuthHint("Portal session found — checkout can use this identity.");
+      } else if (result.captured) {
+        setAuthHint("Work email saved. You can keep going — we will not bounce you to a login page.");
+      }
+    });
+  };
+
+  const finish = () => {
+    const next = { ...answers, workEmail: answers.workEmail.trim().toLowerCase() };
+    markGuidedCompleted(next);
+    captureEmailInBackground(next.workEmail);
+    const rec = buildGuidedRecommendation(next);
+    onComplete?.(rec, next);
+    if (variant === "drawer") {
+      handleClose();
+    }
+  };
+
+  const body = (
+    <div className={variant === "inline" ? "flex h-full min-h-0 flex-col" : "flex h-full flex-col"}>
+      <div className="flex items-start justify-between gap-3 border-b border-white/10 px-5 py-5 sm:px-6">
+        <div className="flex items-start gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-de-accent/30 bg-de-accent/15">
+            <Sparkles className="h-5 w-5 text-de-accent-ink" />
+          </div>
+          <div>
+            <p className="text-xs font-medium uppercase tracking-[0.14em] text-de-accent-ink">
+              Guided store
+            </p>
+            <h2 className="text-lg font-semibold text-white sm:text-xl">
+              Three questions. Then a recommended set.
+            </h2>
+            <p className="mt-1 text-sm text-white/50">
+              Not a catalog dump. Not a login wall.
+            </p>
+          </div>
+        </div>
+        {variant === "drawer" && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleClose}
+            className="text-white/60 hover:bg-white/5 hover:text-white"
+            data-testid="button-close-guided"
+          >
+            <X className="h-5 w-5" />
+          </Button>
+        )}
+      </div>
+
+      <div className="border-b border-white/10 px-5 py-3 sm:px-6">
+        <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
+          <div className="h-full rounded-full bg-de-accent transition-all" style={{ width: `${progress}%` }} />
+        </div>
+        <p className="mt-2 text-xs text-white/45">
+          Slide {step + 1} of {SLIDE_COUNT}
+        </p>
+      </div>
+
+      <div className="flex-1 overflow-y-auto px-5 py-6 sm:px-6">
+        {step === 0 && (
+          <fieldset>
+            <legend className="mb-4 text-2xl font-semibold text-white">Who are you?</legend>
+            <div className="space-y-3">
+              {GUIDED_BUYER_OPTIONS.map((opt) => {
+                const selected = answers.buyerType === opt.value;
+                return (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setAnswers((prev) => ({ ...prev, buyerType: opt.value }))}
+                    className={`flex min-h-16 w-full flex-col rounded-xl border px-4 py-4 text-left transition-colors ${
+                      selected
+                        ? "border-de-accent/50 bg-de-accent/15 text-white"
+                        : "border-white/10 bg-[#141414] text-white/80 hover:border-white/20 hover:bg-[#171717]"
+                    }`}
+                    data-testid={`guided-option-buyerType-${opt.value}`}
+                  >
+                    <span className="text-base font-semibold">{opt.label}</span>
+                    <span className="mt-1 text-sm text-white/50">{opt.blurb}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
+        )}
+
+        {step === 1 && (
+          <fieldset>
+            <legend className="mb-4 text-2xl font-semibold text-white">What are you trying to do?</legend>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {GUIDED_OBJECTIVE_OPTIONS.map((opt) => {
+                const selected = answers.objective === opt.value;
+                return (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setAnswers((prev) => ({ ...prev, objective: opt.value }))}
+                    className={`flex min-h-16 w-full flex-col rounded-xl border px-4 py-4 text-left transition-colors ${
+                      selected
+                        ? "border-de-accent/50 bg-de-accent/15 text-white"
+                        : "border-white/10 bg-[#141414] text-white/80 hover:border-white/20 hover:bg-[#171717]"
+                    }`}
+                    data-testid={`guided-option-objective-${opt.value}`}
+                  >
+                    <span className="text-base font-semibold">{opt.label}</span>
+                    <span className="mt-1 text-sm text-white/50">{opt.blurb}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
+        )}
+
+        {step === 2 && (
+          <div>
+            <h3 className="mb-4 text-2xl font-semibold text-white">Scale and work email</h3>
+            <p className="mb-5 text-sm text-white/55">
+              People and sites size the recommendation. Work email starts identity in the background —
+              slides do not wait on a portal login page.
+            </p>
+            <p className="mb-2 text-sm font-medium text-white/70">People</p>
+            <div className="mb-5 grid grid-cols-2 gap-2">
+              {GUIDED_SIZE_OPTIONS.map((opt) => {
+                const selected = answers.companySize === opt.value;
+                return (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setAnswers((prev) => ({ ...prev, companySize: opt.value }))}
+                    className={`min-h-12 rounded-xl border px-3 py-3 text-sm font-medium ${
+                      selected
+                        ? "border-de-accent/50 bg-de-accent/15 text-white"
+                        : "border-white/10 bg-[#141414] text-white/75 hover:border-white/20"
+                    }`}
+                    data-testid={`guided-option-companySize-${opt.value}`}
+                  >
+                    {opt.label}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mb-2 text-sm font-medium text-white/70">Sites</p>
+            <div className="mb-5 grid grid-cols-3 gap-2">
+              {GUIDED_LOCATION_OPTIONS.map((opt) => {
+                const selected = answers.locations === opt.value;
+                return (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setAnswers((prev) => ({ ...prev, locations: opt.value }))}
+                    className={`min-h-12 rounded-xl border px-3 py-3 text-sm font-medium ${
+                      selected
+                        ? "border-de-accent/50 bg-de-accent/15 text-white"
+                        : "border-white/10 bg-[#141414] text-white/75 hover:border-white/20"
+                    }`}
+                    data-testid={`guided-option-locations-${opt.value}`}
+                  >
+                    {opt.label}
+                  </button>
+                );
+              })}
+            </div>
+            <label htmlFor="guided-work-email" className="mb-2 block text-sm font-medium text-white/70">
+              Work email
+            </label>
+            <div className="relative">
+              <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
+              <Input
+                id="guided-work-email"
+                type="email"
+                autoComplete="email"
+                inputMode="email"
+                placeholder="you@company.com"
+                value={answers.workEmail}
+                onChange={(event) => {
+                  const workEmail = event.target.value;
+                  setAnswers((prev) => ({ ...prev, workEmail }));
+                }}
+                onBlur={() => captureEmailInBackground(answers.workEmail)}
+                className="h-12 border-white/15 bg-[#141414] pl-10 text-white placeholder:text-white/35"
+                data-testid="guided-work-email"
+              />
+            </div>
+            {signedInEmail ? (
+              <p className="mt-2 text-sm text-de-accent-ink">
+                Signed in as {signedInEmail}. We will attach this recommendation to that session.
+              </p>
+            ) : authHint ? (
+              <p className="mt-2 text-sm text-white/55">{authHint}</p>
+            ) : (
+              <p className="mt-2 text-sm text-white/45">
+                Used to continue checkout later. We do not invent a new store role here.
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+
+      <div className="space-y-3 border-t border-white/10 px-5 py-5 sm:px-6">
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <Button
+            variant="outline"
+            className="h-12 border-white/15 bg-transparent text-white hover:bg-white/5 sm:w-auto"
+            disabled={step === 0}
+            onClick={() => setStep((current) => Math.max(0, current - 1))}
+            data-testid="button-guided-back"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back
+          </Button>
+          <Button
+            className="h-12 w-full flex-1 bg-de-accent text-white hover:bg-[#6548ff]"
+            disabled={step === 2 && !emailReady}
+            onClick={() => {
+              if (step < SLIDE_COUNT - 1) {
+                if (step === 1 && emailReady) captureEmailInBackground(answers.workEmail);
+                setStep((current) => current + 1);
+                return;
+              }
+              finish();
+            }}
+            data-testid="button-guided-next"
+          >
+            {step >= SLIDE_COUNT - 1 ? "See recommended set" : "Continue"}
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+        <div className="text-center">
+          <SkipCatalogLink onClick={handleSkip} />
+        </div>
+        {variant === "drawer" && recommendation.products.length > 0 && step === 2 && (
+          <p className="text-center text-xs text-white/40">
+            Finishing adds {recommendation.products.length} recommended catalog items to Your Solution.
+          </p>
+        )}
+      </div>
+    </div>
+  );
+
+  if (variant === "inline") {
+    return (
+      <section
+        className="overflow-hidden rounded-2xl border border-white/10 bg-[#141414]"
+        data-testid="guided-buying-wizard"
+      >
+        {body}
+      </section>
+    );
+  }
 
   return (
     <AnimatePresence>
-      {open && (
+      {visible && (
         <>
           <motion.div
             initial={{ opacity: 0 }}
@@ -138,189 +368,7 @@ export function GuidedBuyingWizard({ open, onClose, onAddStack }: GuidedBuyingWi
             className="fixed right-0 top-0 z-[71] flex h-full w-full max-w-lg flex-col border-l border-white/10 bg-[#0a0a0a]"
             data-testid="guided-buying-wizard"
           >
-            <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-de-accent/30 bg-de-accent/15">
-                  <Sparkles className="h-5 w-5 text-de-accent-ink" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-semibold text-white">Build my solution</h2>
-                  <p className="text-sm text-white/50">Six quick questions · live catalog</p>
-                </div>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleClose}
-                className="text-white/60 hover:bg-white/5 hover:text-white"
-                data-testid="button-close-guided"
-              >
-                <X className="h-5 w-5" />
-              </Button>
-            </div>
-
-            <div className="border-b border-white/10 px-6 py-3">
-              <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
-                <div
-                  className="h-full rounded-full bg-de-accent transition-all"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-6">
-              {!showResult ? (
-                <div>
-                  <p className="mb-2 text-sm text-white/55">
-                    Step {step + 1} of {STEPS.length}
-                  </p>
-                  <h3 className="mb-5 text-2xl font-semibold text-white">{current.title}</h3>
-                  <div className="space-y-2.5">
-                    {current.options.map((opt) => {
-                      const selected = answers[current.key] === opt.value;
-                      return (
-                        <button
-                          key={opt.value}
-                          type="button"
-                          onClick={() =>
-                            setAnswers((prev) => ({
-                              ...prev,
-                              [current.key]: opt.value,
-                            }))
-                          }
-                          className={`flex w-full items-center rounded-xl border px-4 py-3.5 text-left text-base transition-colors ${
-                            selected
-                              ? "border-de-accent/50 bg-de-accent/15 text-white"
-                              : "border-white/10 bg-[#141414] text-white/75 hover:border-white/20 hover:bg-[#171717]"
-                          }`}
-                          data-testid={`guided-option-${current.key}-${opt.value}`}
-                        >
-                          {opt.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              ) : recommendation ? (
-                <div data-testid="guided-buying-result">
-                  <h3 className="mb-2 text-2xl font-semibold text-white">
-                    {recommendation.headline}
-                  </h3>
-                  <p className="mb-5 text-sm leading-relaxed text-white/55">
-                    {recommendation.summary}
-                  </p>
-                  <ul className="mb-6 space-y-3">
-                    {recommendation.products.map((product) => (
-                      <li
-                        key={product.sku}
-                        className="rounded-xl border border-white/10 bg-[#141414] px-4 py-3"
-                      >
-                        <p className="font-medium text-white">{product.name}</p>
-                        <p className="mt-1 text-sm text-white/50 line-clamp-2">
-                          {product.shortDescription}
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="rounded-xl border border-de-accent/25 bg-de-accent/10 p-4">
-                    <p className="text-sm text-white/60">Estimated list total (soft)</p>
-                    <p className="mt-1 text-3xl font-bold text-white">
-                      ${recommendation.recurringEstimate.toLocaleString()}
-                      <span className="text-lg font-medium text-white/50">/mo</span>
-                    </p>
-                    {recommendation.oneTimeEstimate > 0 && (
-                      <p className="mt-1 text-sm text-white/55">
-                        + ${recommendation.oneTimeEstimate.toLocaleString()} one-time
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ) : null}
-            </div>
-
-            <div className="space-y-2 border-t border-white/10 p-6">
-              {!showResult ? (
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    className="h-11 border-white/15 bg-transparent text-white hover:bg-white/5"
-                    disabled={step === 0}
-                    onClick={() => setStep((s) => Math.max(0, s - 1))}
-                    data-testid="button-guided-back"
-                  >
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back
-                  </Button>
-                  <Button
-                    className="h-11 flex-1 bg-de-accent text-white hover:bg-[#6548ff]"
-                    onClick={() => {
-                      if (step >= STEPS.length - 1) {
-                        setShowResult(true);
-                      } else {
-                        setStep((s) => s + 1);
-                      }
-                    }}
-                    data-testid="button-guided-next"
-                  >
-                    {step >= STEPS.length - 1 ? "See recommendation" : "Continue"}
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </div>
-              ) : (
-                <>
-                  <Button
-                    className="h-12 w-full bg-de-accent text-base text-white hover:bg-[#6548ff]"
-                    disabled={!recommendation?.products.length}
-                    onClick={() => {
-                      if (!recommendation) return;
-                      onAddStack(recommendation.products, recommendation.seatHint);
-                      handleClose();
-                    }}
-                    data-testid="button-add-recommended-stack"
-                  >
-                    Add recommended stack
-                  </Button>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      className="h-11 flex-1 border-white/15 bg-transparent text-white hover:bg-white/5"
-                      onClick={() => {
-                        openMspAdvisor({
-                          context: "store",
-                          seedMessage: `Help me refine this guided stack for a ${answers.companySize} ${answers.industry} company (${answers.itStaff} IT, ${answers.productivity}, goal: ${answers.objective}).`,
-                        });
-                        handleClose();
-                      }}
-                      data-testid="button-guided-ask-advisor"
-                    >
-                      <MessageCircle className="mr-2 h-4 w-4" />
-                      Talk to advisor
-                    </Button>
-                    <Button asChild
-                        variant="outline"
-                        className="h-11 w-full border-white/15 bg-transparent text-white hover:bg-white/5"
-                        data-testid="button-guided-book"
-                      >
-                  <a href="/book" className="flex-1">
-                    <Calendar className="mr-2 h-4 w-4" />
-                        Book architect
-                  </a>
-                </Button>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    className="h-10 w-full text-white/55 hover:bg-white/5 hover:text-white"
-                    onClick={() => {
-                      setShowResult(false);
-                      setStep(0);
-                    }}
-                    data-testid="button-guided-restart"
-                  >
-                    Start over
-                  </Button>
-                </>
-              )}
-            </div>
+            {body}
           </motion.aside>
         </>
       )}
