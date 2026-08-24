@@ -10,8 +10,8 @@ export type ClientPriceEntry = {
 };
 
 /**
- * Demo / admin overlay. Used when Postgres has no active rows for the client.
- * Not a public pricing API — checkout still ignores browser unit prices.
+ * Demo / admin overlay for local development only.
+ * Production commerce must never derive a client price from this map.
  */
 const demoClientPricing = new Map<string, ClientPriceEntry[]>([
   [
@@ -55,11 +55,20 @@ const demoClientPricing = new Map<string, ClientPriceEntry[]>([
   ],
 ]);
 
+export function isDemoClientPricingAllowed(): boolean {
+  return process.env.NODE_ENV !== "production";
+}
+
 export function listDemoClientPricing(clientId: string): ClientPriceEntry[] {
+  if (!isDemoClientPricingAllowed()) return [];
   return [...(demoClientPricing.get(clientId) || [])];
 }
 
 export function upsertDemoClientPricing(clientId: string, entry: ClientPriceEntry): ClientPriceEntry {
+  if (!isDemoClientPricingAllowed()) {
+    throw new Error("Demo client pricing is disabled in production; persist pricing to store_client_pricing");
+  }
+
   const current = listDemoClientPricing(clientId);
   const index = current.findIndex((row) => row.productId === entry.productId);
   if (index >= 0) current[index] = entry;
@@ -69,6 +78,10 @@ export function upsertDemoClientPricing(clientId: string, entry: ClientPriceEntr
 }
 
 export function removeDemoClientPricing(clientId: string, productId: string): ClientPriceEntry | undefined {
+  if (!isDemoClientPricingAllowed()) {
+    throw new Error("Demo client pricing is disabled in production; persist pricing to store_client_pricing");
+  }
+
   const current = listDemoClientPricing(clientId);
   const removed = current.find((row) => row.productId === productId);
   demoClientPricing.set(
@@ -99,11 +112,15 @@ async function loadDbClientPricing(clientId: string): Promise<ClientPriceEntry[]
   }
 }
 
-/** DB rows win when present; otherwise the in-memory overlay. */
+/**
+ * Production pricing is DB-authoritative. The in-memory demo overlay exists only
+ * for local development/test data and can never influence a production charge.
+ */
 export async function resolveClientPricingRows(clientId: string | null | undefined): Promise<ClientPriceEntry[]> {
   if (!clientId) return [];
   const fromDb = await loadDbClientPricing(clientId);
   if (fromDb.length) return fromDb;
+  if (!isDemoClientPricingAllowed()) return [];
   return listDemoClientPricing(clientId);
 }
 
