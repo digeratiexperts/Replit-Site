@@ -28,20 +28,17 @@ import {
   ArrowRight,
   ArrowLeft,
   Calendar,
-  Clock,
   ShoppingCart,
   Minus,
   Plus,
   Check,
   ExternalLink,
-  FileText,
   User,
   Tag,
   Lock,
   Settings2,
   Phone,
   Layers,
-  ShieldCheck,
   Sparkles,
 } from "lucide-react";
 import { useStoreAuth } from "@/hooks/useStoreAuth";
@@ -535,92 +532,6 @@ const ProductDetail = () => {
                 </div>
               )}
             </motion.div>
-          </div>
-
-          {/* Enterprise Technical Specifications & Compliance Section */}
-          <div className="mb-14 rounded-2xl border border-white/10 bg-[#151217] p-6 md:p-8 shadow-lg">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-white/10">
-              <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-[#D3126A]">
-                  Enterprise Architecture & Specifications
-                </span>
-                <h2 className="mt-1 text-2xl font-bold text-white">
-                  Technical Specifications & Compliance Matrix
-                </h2>
-              </div>
-              <a
-                href="/resources/datasheets"
-                className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:border-[#D3126A] hover:bg-white/10"
-              >
-                <FileText className="w-4 h-4 text-[#D3126A]" />
-                Download PDF Datasheet
-              </a>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="rounded-xl border border-white/10 bg-black/30 p-5">
-                <div className="flex items-center gap-2 mb-3">
-                  <ShieldCheck className="w-5 h-5 text-emerald-400" />
-                  <h3 className="font-bold text-white text-base">Compliance Readiness</h3>
-                </div>
-                <ul className="space-y-2 text-xs text-white/70">
-                  <li className="flex items-center gap-2">
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>SOC 2 Type II Certified Architecture</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>HIPAA & HITECH Security Rule Alignment</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>PCI-DSS v4.0 & NIST 800-171 Compatible</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="rounded-xl border border-white/10 bg-black/30 p-5">
-                <div className="flex items-center gap-2 mb-3">
-                  <Layers className="w-5 h-5 text-sky-400" />
-                  <h3 className="font-bold text-white text-base">Deployment Model</h3>
-                </div>
-                <ul className="space-y-2 text-xs text-white/70">
-                  <li className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-sky-400" />
-                    <span>Zero-touch Cloud Tenant Sync (Graph API)</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-sky-400" />
-                    <span>Silent MSI / PKG Background Installer</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-sky-400" />
-                    <span>Automated Policy & Threat Rule Enforcement</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="rounded-xl border border-white/10 bg-black/30 p-5">
-                <div className="flex items-center gap-2 mb-3">
-                  <Clock className="w-5 h-5 text-purple-400" />
-                  <h3 className="font-bold text-white text-base">Support & SLA Terms</h3>
-                </div>
-                <ul className="space-y-2 text-xs text-white/70">
-                  <li className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-purple-400" />
-                    <span>24/7/365 Monitored by Arizona SOC</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-purple-400" />
-                    <span>15-minute Critical Incident Escalation</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-purple-400" />
-                    <span>Dedicated Technical Account Architect</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
           </div>
 
           <StoreTrustStrip />

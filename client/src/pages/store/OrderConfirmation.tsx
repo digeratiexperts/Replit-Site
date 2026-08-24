@@ -265,76 +265,61 @@ const OrderConfirmation = () => {
             </div>
           </motion.div>
 
-          {/* 4-Stage Real-Time Provisioning Pipeline */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-[#151217] border border-white/10 rounded-2xl p-6 md:p-8 mb-8 shadow-lg"
+            className="bg-de-raised border border-de-hairline rounded-xl p-6 md:p-8 mb-8"
             data-testid="section-next-steps"
           >
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-de-magenta-ink" />
-                Live Provisioning & Onboarding Pipeline
-              </h2>
-              <span className="text-xs font-semibold px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                Active Provisioning
-              </span>
-            </div>
+            <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+              <FileText className="w-5 h-5 text-de-accent-ink" />
+              What's Next?
+            </h2>
 
-            <div className="grid md:grid-cols-4 gap-4">
-              <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4 flex flex-col">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="font-mono text-xs font-bold text-emerald-400">STAGE 01</span>
-                  <CheckCircle className="w-4 h-4 text-emerald-400" />
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-de-raised flex items-center justify-center">
+                  <Mail className="w-5 h-5 text-de-accent-ink" />
                 </div>
-                <p className="text-sm font-bold text-white mb-1">Payment & Licensing Authorized</p>
-                <p className="text-xs text-white/60 flex-1">Invoice generated and enterprise order token assigned.</p>
-              </div>
-
-              <div className="rounded-xl border border-sky-500/30 bg-sky-500/5 p-4 flex flex-col">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="font-mono text-xs font-bold text-sky-400">STAGE 02</span>
-                  <Clock className="w-4 h-4 text-sky-400 animate-spin" />
+                <div>
+                  <p className="text-white font-medium mb-1">Confirmation Email</p>
+                  <p className="text-white/60 text-sm">
+                    {isQuoteRequest
+                      ? "You'll receive an email confirming your quote request."
+                      : "Check your inbox for order details and receipt."}
+                  </p>
                 </div>
-                <p className="text-sm font-bold text-white mb-1">Tenant & Seat Allocation</p>
-                <p className="text-xs text-white/60 flex-1">Syncing domain with vendor CSP API and security operations.</p>
               </div>
 
-              <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4 flex flex-col">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="font-mono text-xs font-bold text-white/40">STAGE 03</span>
-                  <Package className="w-4 h-4 text-white/40" />
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-de-raised flex items-center justify-center">
+                  <Clock className="w-5 h-5 text-de-accent-ink" />
                 </div>
-                <p className="text-sm font-bold text-white mb-1">Agent & Deployment Package</p>
-                <p className="text-xs text-white/60 flex-1">MSI/PKG deployment scripts prepared in Client Portal.</p>
-              </div>
-
-              <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4 flex flex-col">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="font-mono text-xs font-bold text-white/40">STAGE 04</span>
-                  <Phone className="w-4 h-4 text-white/40" />
+                <div>
+                  <p className="text-white font-medium mb-1">
+                    {isQuoteRequest ? "Team Contact" : "Provisioning"}
+                  </p>
+                  <p className="text-white/60 text-sm">
+                    {isQuoteRequest
+                      ? "Our team will reach out within 1 business day."
+                      : "We'll begin setting up your services right away."}
+                  </p>
                 </div>
-                <p className="text-sm font-bold text-white mb-1">Engineer Onboarding Kickoff</p>
-                <p className="text-xs text-white/60 flex-1">Direct scheduling with your designated Arizona technical lead.</p>
               </div>
-            </div>
 
-            {/* Quick Action Bar */}
-            <div className="mt-8 border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div>
-                <p className="text-sm font-semibold text-white">Need engineer assistance immediately?</p>
-                <p className="text-xs text-white/60">Our Arizona Security Operations Center is standing by 24/7.</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <a
-                  href="/book"
-                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#D3126A] to-[#E61E76] px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-[#D3126A]/25 hover:brightness-110"
-                >
-                  Schedule Kickoff Call
-                  <ArrowRight className="w-4 h-4" />
-                </a>
+              <div className="flex gap-4">
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-de-raised flex items-center justify-center">
+                  <Package className="w-5 h-5 text-de-accent-ink" />
+                </div>
+                <div>
+                  <p className="text-white font-medium mb-1">Get Started</p>
+                  <p className="text-white/60 text-sm">
+                    {isQuoteRequest
+                      ? "Once approved, we'll guide you through onboarding."
+                      : "Access your services from the client portal."}
+                  </p>
+                </div>
               </div>
             </div>
           </motion.div>
