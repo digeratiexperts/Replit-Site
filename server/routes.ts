@@ -43,7 +43,9 @@ import {
   createProspectClientForUser,
   saveOrderForm,
   updateUserOrgFields,
+  ensureInternalMspClient,
 } from "./portalAuthStore";
+import { annotateTicketOrg, resolveTicketCreateTarget } from "./portalTicketCreate";
 import {
   initPortalChatStore,
   conversationIdForUser,
@@ -1804,17 +1806,23 @@ export async function registerRoutes(app: Express) {
       const isAdmin = req.user?.role === "admin";
       const tickets = await storage.getPortalTickets(isAdmin ? undefined : req.userId || "");
       res.json({
-        tickets: tickets.map(t => ({
-          id: t.id,
-          ticketNumber: t.ticketNumber || `#TK${String(t.id).padStart(3, '0')}`,
-          subject: t.subject,
-          description: t.description,
-          status: t.status,
-          priority: t.priority,
-          category: t.category || "General",
-          createdAt: t.createdAt,
-          updatedAt: t.updatedAt,
-        })),
+        tickets: tickets.map(t => {
+          const org = annotateTicketOrg(t, (id) => portalClients.get(id));
+          return {
+            id: t.id,
+            ticketNumber: t.ticketNumber || `#TK${String(t.id).padStart(3, '0')}`,
+            subject: t.subject,
+            description: t.description,
+            status: t.status,
+            priority: t.priority,
+            category: t.category || "General",
+            createdAt: t.createdAt,
+            updatedAt: t.updatedAt,
+            clientId: t.clientId || null,
+            companyName: org.companyName,
+            isInternal: org.isInternal,
+          };
+        }),
       });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
@@ -1824,7 +1832,7 @@ export async function registerRoutes(app: Express) {
   // Create new ticket
   app.post("/api/portal/tickets", [authMiddleware, validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { subject, description, priority, category } = req.body;
+      const { subject, description, priority, category, clientId: requestedClientId } = req.body;
       
       if (!subject || !description) {
         return res.status(400).json({ error: "Subject and description are required" });
@@ -1832,19 +1840,24 @@ export async function registerRoutes(app: Express) {
 
       const userId = req.userId || "";
       const userEmail = req.user?.email || "";
-      const clientId = req.user?.clientId;
+      const liveUser = userEmail ? portalUsers.get(userEmail) : undefined;
 
-      // Resolve clientId: use JWT claim, or look up from in-memory portal users
-      let resolvedClientId = clientId;
-      if (!resolvedClientId && userEmail) {
-        const portalUser = portalUsers.get(userEmail);
-        if (portalUser) {
-          resolvedClientId = portalUser.clientId;
-        }
+      const target = resolveTicketCreateTarget({
+        actor: {
+          role: req.user?.role || liveUser?.role || "user",
+          clientId: req.user?.clientId || liveUser?.clientId || null,
+          impersonatingCompanyId: req.user?.impersonatingCompanyId || null,
+          impersonatingCompanyName: req.user?.impersonatingCompanyName || null,
+        },
+        requestedClientId: typeof requestedClientId === "string" ? requestedClientId : null,
+        getClient: (id) => portalClients.get(id),
+        listClients: () => Array.from(portalClients.values()),
+        ensureInternalClient: () => ensureInternalMspClient(),
+      });
+      if (!target.ok) {
+        return res.status(target.status).json({ error: target.error });
       }
-      if (!resolvedClientId) {
-        return res.status(400).json({ error: "No client account associated with this user. Please contact support." });
-      }
+      const resolvedClientId = target.clientId;
 
       // Generate ticket number
       const ticketNumber = `TKT-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 5).toUpperCase()}`;
@@ -1906,8 +1919,22 @@ export async function registerRoutes(app: Express) {
         console.warn("Could not sync ticket to Zoho Desk:", zohoError?.message || zohoError);
       }
 
-      res.status(201).json({ success: true, ticket, zohoTicketId });
-      logSecurityEvent("TICKET_CREATED", req, { ticketId: ticket.id, ticketNumber, zohoTicketId });
+      res.status(201).json({
+        success: true,
+        ticket: {
+          ...ticket,
+          companyName: target.companyName,
+          isInternal: target.isInternal,
+        },
+        zohoTicketId,
+      });
+      logSecurityEvent("TICKET_CREATED", req, {
+        ticketId: ticket.id,
+        ticketNumber,
+        zohoTicketId,
+        clientId: resolvedClientId,
+        isInternal: target.isInternal,
+      });
     } catch (error: any) {
       console.error("Ticket creation error:", error);
       res.status(500).json({ error: error.message });
@@ -2004,10 +2031,13 @@ export async function registerRoutes(app: Express) {
         ? comments
         : comments.filter((c) => !c.isInternal);
 
+      const org = annotateTicketOrg(ticket, (id) => portalClients.get(id));
       res.json({
         ticket: {
           ...ticket,
           ticketNumber: ticket.ticketNumber || `#TK${String(ticket.id).padStart(3, '0')}`,
+          companyName: org.companyName,
+          isInternal: org.isInternal,
           comments: visibleComments.map(c => ({
             id: c.id,
             author: c.userId === req.userId ? "You" : "Support",

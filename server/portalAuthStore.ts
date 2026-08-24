@@ -364,6 +364,7 @@ export async function initPortalAuthStore(): Promise<void> {
 
   seedAdmins();
   seedDemoIfNotProduction();
+  ensureInternalMspClient();
   initialized = true;
 }
 
@@ -404,6 +405,37 @@ export function setClient(client: PortalAuthClient): void {
 
 export function listClients(): PortalAuthClient[] {
   return Array.from(clientsById.values());
+}
+
+const INTERNAL_MSP_ID = "msp-digerati";
+
+/** Live Digerati org if one exists; otherwise create the internal MSP tenant. */
+export function findInternalMspClient(): PortalAuthClient | undefined {
+  const all = listClients();
+  return (
+    all.find((c) => c.id === INTERNAL_MSP_ID) ||
+    all.find((c) => c.type === "msp") ||
+    all.find((c) => /digerati experts/i.test(c.companyName || ""))
+  );
+}
+
+export function ensureInternalMspClient(): PortalAuthClient {
+  const existing = findInternalMspClient();
+  if (existing) return existing;
+  const client: PortalAuthClient = {
+    id: INTERNAL_MSP_ID,
+    companyName: "Digerati Experts",
+    contactEmail: "admin@digeratiexperts.com",
+    contactPhone: PRIMARY_PHONE.display,
+    industry: "MSP/MSSP",
+    primaryContact: "Digerati Admin",
+    status: "active",
+    type: "msp",
+    serviceType: "managed",
+    createdAt: new Date(),
+  };
+  setClient(client);
+  return client;
 }
 
 /** Create a prospect client + link user (signup). */

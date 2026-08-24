@@ -8,6 +8,10 @@ import { PortalLayout } from "./PortalLayout";
 import { Phone, Download, CheckCircle, Settings, Headphones, Volume2, Mic, PhoneCall, PhoneOff, Users, Clock } from "lucide-react";
 import { PRIMARY_PHONE } from "@/data/companyContact";
 
+/** Light Quick Actions: navy type on white, magenta fill so hover white type has contrast. */
+const quickActionClass =
+  "border-[#D3126A]/40 bg-white text-[#1A1228] hover:bg-[#D3126A] hover:border-[#D3126A] hover:text-white dark:bg-transparent dark:text-white dark:hover:bg-[#D3126A] dark:hover:text-white";
+
 interface CallHistory {
   id: string;
   type: "inbound" | "outbound" | "missed";
@@ -221,21 +225,21 @@ export default function PortalCytracom() {
         </div>
 
         {/* Quick Actions */}
-        <Card className="bg-gradient-to-r from-[#D3126A]/10 to-blue-500/10 border-[#D3126A]/20">
+        <Card className="border-[#D3126A]/20 bg-gradient-to-r from-[#D3126A]/10 to-blue-500/10 text-[#1A1228] dark:text-white">
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button variant="outline" className="border-[#D3126A]/30 hover:bg-[#D3126A]/10" data-testid="button-check-voicemail">
+              <Button variant="outline" className={quickActionClass} data-testid="button-check-voicemail">
                 <Volume2 className="h-4 w-4 mr-2" />
                 Check Voicemail
               </Button>
-              <Button variant="outline" className="border-[#D3126A]/30 hover:bg-[#D3126A]/10" data-testid="button-update-greeting">
+              <Button variant="outline" className={quickActionClass} data-testid="button-update-greeting">
                 <Mic className="h-4 w-4 mr-2" />
                 Update Greeting
               </Button>
-              <Button variant="outline" className="border-[#D3126A]/30 hover:bg-[#D3126A]/10" data-testid="button-call-forwarding">
+              <Button variant="outline" className={quickActionClass} data-testid="button-call-forwarding">
                 <Phone className="h-4 w-4 mr-2" />
                 Call Forwarding
               </Button>

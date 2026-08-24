@@ -37,7 +37,7 @@ import { useEffect, useMemo, useState } from "react";
 import logoImage from "@assets/DE-Logo-new_1762461524794.webp";
 import { TenantSelector } from "@/components/portal/TenantSelector";
 import { useSEO } from "@/hooks/useSEO";
-import { navAllowed, readPortalUser, type NavKey } from "@/lib/portalRoles";
+import { navAllowed, readImpersonatingCompany, readPortalUser, type NavKey } from "@/lib/portalRoles";
 import { portalGet, redirectToPortalLogin } from "@/lib/portalApi";
 import { usePortalHubEvents } from "@/hooks/usePortalHubEvents";
 
@@ -115,9 +115,7 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
     noIndex: true,
   });
   const [user, setUser] = useState(() => readPortalUser());
-  const impersonatingCompany = localStorage.getItem("impersonatingCompany")
-    ? JSON.parse(localStorage.getItem("impersonatingCompany")!)
-    : null;
+  const impersonatingCompany = readImpersonatingCompany();
 
   // Ensure session is real: Bearer localStorage and/or httpOnly portalAuth cookie
   useEffect(() => {
@@ -290,7 +288,7 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
             )}
             {impersonatingCompany && (
               <Button size="sm" variant="secondary" onClick={handleStopImpersonation}>
-                Exit {impersonatingCompany.companyName || "company"}
+                Exit {impersonatingCompany?.companyName || "company"}
               </Button>
             )}
             <span className="text-sm text-white/70 hidden sm:inline">

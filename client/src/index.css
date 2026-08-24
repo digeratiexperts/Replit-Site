@@ -1490,26 +1490,16 @@ html {
   }
 }
 
-/* Button hover text color fixes */
+/* Button hover text color fixes
+   Do NOT force `color: white` on every `.bg-gradient-to-r:hover`.
+   Portal Quick Actions and other light/lavender cards use that class as a
+   surface tint; white type then inherits onto outline buttons (white on white).
+   Only pin white when the control is already labeled white. */
 @layer utilities {
-  /* Ensure gradient buttons maintain white text on hover */
-  .bg-gradient-to-r:hover {
-    color: white !important;
-  }
-  
-  /* Fix outline button text colors on hover */
-  .border-white:hover {
-    color: inherit !important;
-  }
-  
-  /* Ensure all buttons with gradients keep white text */
-  [class*="from-purple-"][class*="to-blue-"]:hover {
-    color: white !important;
-  }
-  
-  /* Ensure text remains white on gradient buttons */
-  .text-white:hover {
-    color: white !important;
+  button.text-white:hover,
+  a.text-white:hover,
+  [role="button"].text-white:hover {
+    color: white;
   }
 }
 

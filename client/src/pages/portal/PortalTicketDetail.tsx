@@ -36,6 +36,8 @@ interface Ticket {
   createdAt: string;
   updatedAt: string;
   assignedTo?: string;
+  companyName?: string;
+  isInternal?: boolean;
   comments: Comment[];
 }
 
@@ -199,7 +201,14 @@ export default function PortalTicketDetail() {
           <div className="flex items-start justify-between">
             <div className="space-y-2">
               <h1 className="text-3xl font-bold">{ticket.subject}</h1>
-              <p className="text-gray-600 dark:text-gray-400">{ticket.ticketNumber}</p>
+              <p className="text-gray-600 dark:text-gray-400">
+                {ticket.ticketNumber}
+                {ticket.isInternal
+                  ? " · Internal"
+                  : ticket.companyName
+                    ? ` · ${ticket.companyName}`
+                    : ""}
+              </p>
             </div>
             <div className="flex gap-2">
               <Badge className={getStatusColor(ticket.status)}>

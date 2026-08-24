@@ -22,11 +22,22 @@ import {
   validatePortalTicketFile,
 } from "@/lib/portalTicketAttach";
 import { PRIMARY_PHONE } from "@/data/companyContact";
+import { isDeAdmin, readImpersonatingCompany, readPortalUser } from "@/lib/portalRoles";
+import { INTERNAL_COMPANY_NAME, NO_CLIENT_TICKET_ERROR, ticketCompanyName } from "@shared/portalTicketOrg";
 
 const DESK_TICKET_DRAFT_KEY = "de-portal-desk-ticket-draft";
 
 export default function PortalCreateTicket() {
   const [, navigate] = useLocation();
+  const portalUser = readPortalUser();
+  const impersonatingCompany = readImpersonatingCompany();
+  const isAdmin = isDeAdmin(portalUser);
+  const filingCompanyName =
+    ticketCompanyName(impersonatingCompany) ||
+    ticketCompanyName(portalUser?.client) ||
+    (isAdmin ? INTERNAL_COMPANY_NAME : "");
+  const canSubmitWithoutClient = isAdmin;
+  const missingClient = !portalUser?.clientId && !impersonatingCompany?.id && !canSubmitWithoutClient;
   const [formData, setFormData] = useState({
     subject: "",
     category: "",
@@ -104,6 +115,10 @@ export default function PortalCreateTicket() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (missingClient) {
+      setError(NO_CLIENT_TICKET_ERROR);
+      return;
+    }
     setSubmitting(true);
     setError("");
 
@@ -113,6 +128,9 @@ export default function PortalCreateTicket() {
         category: formData.category,
         priority: formData.priority,
         description: formData.description,
+        ...(impersonatingCompany?.id || portalUser?.clientId
+          ? { clientId: impersonatingCompany?.id || portalUser?.clientId }
+          : {}),
       };
 
       const response = await portalFetch("/api/portal/tickets", {
@@ -170,6 +188,30 @@ export default function PortalCreateTicket() {
               <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
               <p className="text-sm text-red-800 dark:text-red-300" data-testid="error-message">
                 {error}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {missingClient && !error && (
+          <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 rounded-lg">
+            <div className="flex gap-3">
+              <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-red-800 dark:text-red-300" data-testid="missing-client-message">
+                {NO_CLIENT_TICKET_ERROR}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {isAdmin && !missingClient && (
+          <div className="rounded-lg border border-[var(--de-paper-hairline)] bg-de-paper p-4 dark:border-de-hairline dark:bg-de-raised">
+            <div className="flex gap-3">
+              <Info className="mt-0.5 h-5 w-5 shrink-0 text-[#1A1228] dark:text-de-magenta-ink" />
+              <p className="text-sm text-[#1A1228] dark:text-white" data-testid="internal-ticket-context">
+                {impersonatingCompany?.id
+                  ? `Filing on behalf of ${filingCompanyName}.`
+                  : `This will file as an internal ticket for ${filingCompanyName}.`}
               </p>
             </div>
           </div>
@@ -353,7 +395,13 @@ export default function PortalCreateTicket() {
               <div className="flex gap-2 pt-4">
                 <Button
                   type="submit"
-                  disabled={!formData.subject || !formData.category || !formData.description || submitting}
+                  disabled={
+                    missingClient ||
+                    !formData.subject ||
+                    !formData.category ||
+                    !formData.description ||
+                    submitting
+                  }
                   className="bg-[#D3126A] hover:bg-[#D3126A]/90 text-white"
                   data-testid="button-submit"
                 >

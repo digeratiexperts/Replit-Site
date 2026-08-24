@@ -8,6 +8,10 @@ import { Link } from "wouter";
 import { portalGet } from "@/lib/portalApi";
 import { readPortalUser } from "@/lib/portalRoles";
 
+/** Light Quick Actions: navy type on white, magenta fill so hover white type has contrast. */
+const quickActionClass =
+  "w-full border-[#D3126A]/40 bg-white text-[#1A1228] hover:bg-[#D3126A] hover:border-[#D3126A] hover:text-white dark:bg-transparent dark:text-white dark:hover:bg-[#D3126A] dark:hover:text-white";
+
 interface DashboardStats {
   openTickets: number;
   resolvedTickets: number;
@@ -263,7 +267,7 @@ export default function PortalDashboard() {
         </div>
 
         {/* Quick Actions */}
-        <Card className="bg-gradient-to-r from-[#D3126A]/10 to-blue-500/10 border-[#D3126A]/20">
+        <Card className="border-[#D3126A]/20 bg-gradient-to-r from-[#D3126A]/10 to-blue-500/10 text-[#1A1228] dark:text-white">
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
           </CardHeader>
@@ -273,7 +277,7 @@ export default function PortalDashboard() {
                 <a>
                   <Button
                     variant="outline"
-                    className="w-full border-[#D3126A]/30 hover:bg-[#D3126A]/10 text-gray-900 dark:text-white hover:text-gray-900 dark:hover:text-white"
+                    className={quickActionClass}
                     data-testid="button-new-ticket"
                   >
                     <Ticket className="h-4 w-4 mr-2" />
@@ -285,7 +289,7 @@ export default function PortalDashboard() {
                 <a>
                   <Button
                     variant="outline"
-                    className="w-full border-[#D3126A]/30 hover:bg-[#D3126A]/10 text-gray-900 dark:text-white hover:text-gray-900 dark:hover:text-white"
+                    className={quickActionClass}
                     data-testid="button-view-kb"
                   >
                     <FileText className="h-4 w-4 mr-2" />
@@ -297,7 +301,7 @@ export default function PortalDashboard() {
                 <a>
                   <Button
                     variant="outline"
-                    className="w-full border-[#D3126A]/30 hover:bg-[#D3126A]/10 text-gray-900 dark:text-white hover:text-gray-900 dark:hover:text-white"
+                    className={quickActionClass}
                     data-testid="button-view-invoices"
                   >
                     <FileText className="h-4 w-4 mr-2" />

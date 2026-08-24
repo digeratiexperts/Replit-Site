@@ -20,12 +20,25 @@ export type PortalUserSession = {
     manageOrg?: boolean;
     clientWide?: boolean;
   };
+  client?: { companyName?: string | null } | null;
 };
 
 export function readPortalUser(): PortalUserSession | null {
   try {
     const raw = localStorage.getItem("portalUser");
     return raw ? (JSON.parse(raw) as PortalUserSession) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function readImpersonatingCompany(): { id?: string; companyName?: string } | null {
+  try {
+    const raw = localStorage.getItem("impersonatingCompany");
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") return null;
+    return parsed as { id?: string; companyName?: string };
   } catch {
     return null;
   }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useLocation, Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -19,6 +19,8 @@ interface Ticket {
   category: string;
   createdAt: string;
   updatedAt: string;
+  companyName?: string;
+  isInternal?: boolean;
 }
 
 interface TicketsResponse {
@@ -26,8 +28,16 @@ interface TicketsResponse {
 }
 
 export default function PortalTickets() {
+  const [, navigate] = useLocation();
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<string>("all");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("new") === "true") {
+      navigate("/portal/tickets/create");
+    }
+  }, [navigate]);
 
   const { data, isLoading, isError, error } = useQuery<TicketsResponse>({
     queryKey: ["/api/portal/tickets"],
@@ -152,6 +162,11 @@ export default function PortalTickets() {
                         <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-slate-800 px-2 py-1 rounded">
                           {ticket.ticketNumber}
                         </span>
+                        {ticket.isInternal && (
+                          <span className="text-xs text-[#D3126A] bg-[#D3126A]/10 px-2 py-1 rounded">
+                            Internal
+                          </span>
+                        )}
                       </div>
                       <div className="flex items-center gap-2 mt-2 text-xs text-gray-500 dark:text-gray-400">
                         <Clock className="h-3 w-3" />

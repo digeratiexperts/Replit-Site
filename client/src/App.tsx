@@ -623,6 +623,11 @@ function Router() {
           <PortalCreateTicket />
         </Suspense>
       )} />
+      <Route path="/portal/tickets/new" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <PortalCreateTicket />
+        </Suspense>
+      )} />
       <Route path="/portal/tickets/:id" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <PortalTicketDetail />

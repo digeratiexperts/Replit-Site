@@ -49,7 +49,7 @@ export function TenantSelector({ currentTenant, onTenantChange }: TenantSelector
       localStorage.setItem("impersonatingCompany", JSON.stringify(data.company));
       toast({ 
         title: "Switched Tenant", 
-        description: `Now viewing as ${data.company.companyName}` 
+        description: `Now viewing as ${data.company?.companyName || "the selected company"}` 
       });
       setIsOpen(false);
       if (onTenantChange) {
