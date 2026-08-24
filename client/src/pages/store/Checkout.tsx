@@ -117,6 +117,24 @@ const Checkout = () => {
             setPaymentMethod("quote_request");
             return;
           }
+          if (errorData.code === "SUBSCRIPTION_BILLING_REQUIRED" && errorData.quoteRequired) {
+            toast({
+              title: "Recurring services move through subscription setup",
+              description:
+                "Your solution is intact. We switched checkout to Request Quote so recurring billing can be provisioned correctly instead of charging it as a one-time purchase.",
+            });
+            setPaymentMethod("quote_request");
+            return;
+          }
+          if (errorData.code === "DURABLE_DATABASE_REQUIRED") {
+            toast({
+              title: "Online payment is temporarily unavailable",
+              description:
+                "We will not accept payment without durable order storage. Your solution is intact, and you can request a quote instead.",
+            });
+            setPaymentMethod("quote_request");
+            return;
+          }
           throw new Error(errorData.error || "Failed to create checkout session");
         }
 
