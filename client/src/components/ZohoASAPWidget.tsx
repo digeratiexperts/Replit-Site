@@ -16,12 +16,14 @@ import {
   Monitor,
   MessageCircle,
   Paperclip,
+  Phone,
   Send,
   ShieldAlert,
   Ticket,
   User,
   X,
 } from "lucide-react";
+import { PRIMARY_PHONE } from "@shared/companyContact";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
@@ -1427,6 +1429,17 @@ export const ZohoASAPWidget = ({
                             <span className="de-desk-launch-title">Start remote support</span>
                             <ExternalLink className="de-desk-tool-arrow" aria-hidden="true" />
                           </a>
+                          <a
+                            href={PRIMARY_PHONE.telHref}
+                            className="de-desk-launch-row"
+                            data-testid="resource-link-phone-support"
+                          >
+                            <span className="de-desk-launch-icon">
+                              <Phone aria-hidden="true" />
+                            </span>
+                            <span className="de-desk-launch-title">Direct Desk: {PRIMARY_PHONE.display}</span>
+                            <ChevronRight className="de-desk-tool-arrow" aria-hidden="true" />
+                          </a>
                         </div>
                       </div>
                     )}
@@ -1476,7 +1489,21 @@ export const ZohoASAPWidget = ({
                     : "Never share passwords, MFA codes, or private keys."}
                 </p>
               </>
-            ) : null}
+            ) : (
+              <footer className="de-desk-foot">
+                <div className="de-desk-foot-nav">
+                  <span>Arizona Engineering Desk</span>
+                </div>
+                <a
+                  href={PRIMARY_PHONE.telHref}
+                  className="de-desk-foot-cta"
+                  data-testid="desk-foot-phone-link"
+                >
+                  <Phone aria-hidden="true" />
+                  {PRIMARY_PHONE.display}
+                </a>
+              </footer>
+            )}
             {canDrag ? (
               <>
                 {(["n", "s", "e", "w", "ne", "nw", "sw"] as const).map((edge) => (
