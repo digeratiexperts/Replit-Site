@@ -1,124 +1,167 @@
-import { Shield, Award, CheckCircle } from "lucide-react";
+import { useId, useRef, useState, type FormEvent } from "react";
+import { ArrowRight, Mail } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { revealInitial, revealInView, revealTransition, revealViewport } from "@/lib/animations";
-import { ParallaxStill } from "@/components/visual/ParallaxStill";
-import ctaBgImage from "@assets/de-section-atmosphere.png";
+import { Input } from "@/components/ui/input";
 import { CTA } from "@/lib/ctaCopy";
+import { PRIMARY_PHONE } from "@/data/companyContact";
 import { useBooking } from "@/contexts/BookingContext";
 
-const badges = [
-  { name: "Audit readiness support", icon: Shield },
-  { name: "Microsoft-aligned stack", icon: Award },
-  { name: "HIPAA-minded controls", icon: CheckCircle },
-  { name: "Documented standards", icon: Shield },
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const operatingPoints = [
+  "Audit readiness support",
+  "Microsoft-aligned stack",
+  "HIPAA-minded controls",
+  "Documented standards",
 ];
 
 export const DigeratiCTASection = (): JSX.Element => {
   const prefersReducedMotion = useReducedMotion();
   const { openBooking } = useBooking();
+  const [email, setEmail] = useState("");
+  const [fieldError, setFieldError] = useState<string | null>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const errorId = useId();
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    const value = email.trim();
+    if (!value) {
+      setFieldError("Enter your work email.");
+      emailRef.current?.focus();
+      return;
+    }
+    if (!EMAIL_RE.test(value)) {
+      setFieldError("Enter a valid work email.");
+      emailRef.current?.focus();
+      return;
+    }
+    setFieldError(null);
+    openBooking("homepage-cta");
+  };
 
   return (
-    <section className="de-dark-well de-chapter-hairline de-field-grain-film de-field-lit relative overflow-hidden py-16 lg:py-24">
-      <ParallaxStill
-        src={ctaBgImage}
-        alt=""
-        travel={4}
-        className="pointer-events-none absolute inset-0 z-0"
-        imgClassName="opacity-[0.22]"
-      />
-
-      <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-3 text-center sm:px-4 lg:px-6">
-        <motion.div
-          initial={prefersReducedMotion ? false : revealInitial}
-          whileInView={revealInView}
-          viewport={revealViewport}
-          transition={revealTransition}
-        >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight mb-6">
-            Start with a{" "}
-            <span className="text-[#D3126A]">Cyber Risk Assessment</span>
-          </h2>
-        </motion.div>
-
-        <motion.p
-          initial={prefersReducedMotion ? false : revealInitial}
-          whileInView={revealInView}
-          viewport={revealViewport}
-          transition={{ ...revealTransition, delay: prefersReducedMotion ? 0 : 0.04 }}
-          className="text-lg md:text-xl text-gray-300 leading-relaxed mb-2"
-        >
-          Discover identity, endpoint, email, backup, and operating gaps before you buy a package.
-        </motion.p>
-        <motion.p
-          initial={prefersReducedMotion ? false : { opacity: 0.55 }}
-          whileInView={{ opacity: 1 }}
-          viewport={revealViewport}
-          transition={{ ...revealTransition, delay: prefersReducedMotion ? 0 : 0.05 }}
-          className="text-base text-gray-300 mb-6"
-        >
-          Assessment-led recommendations. Final scope confirmed after we see the environment.
-        </motion.p>
-
-        <motion.p
-          initial={prefersReducedMotion ? false : { opacity: 0.55 }}
-          whileInView={{ opacity: 1 }}
-          viewport={revealViewport}
-          transition={{ ...revealTransition, delay: prefersReducedMotion ? 0 : 0.06 }}
-          className="text-gray-300 mb-10 font-semibold"
-        >
-          Serving Arizona professional services, healthcare, and growing SMBs.
-        </motion.p>
-
-        <motion.div
-          initial={prefersReducedMotion ? false : revealInitial}
-          whileInView={revealInView}
-          viewport={revealViewport}
-          transition={{ ...revealTransition, delay: prefersReducedMotion ? 0 : 0.06 }}
-          className="flex flex-col items-center gap-4"
-        >
-          <button
-            type="button"
-            className="h-14 px-10 rounded-xl bg-[#D3126A] text-white text-lg font-semibold inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors hover:bg-[#e01874]"
-            data-testid="button-cta-assessment"
-            onClick={() => openBooking("homepage-cta")}
+    <section className="de-paper-chapter de-chapter-fade-from-dark de-chapter-fade-to-dark de-field-grain-paper relative py-16 md:py-20 lg:py-24">
+      <div className="container relative z-10 mx-auto px-3 sm:px-4 lg:px-6">
+        <div className="mx-auto max-w-3xl">
+          <motion.div
+            initial={prefersReducedMotion ? false : revealInitial}
+            whileInView={revealInView}
+            viewport={revealViewport}
+            transition={revealTransition}
           >
-            {CTA.primary}
-          </button>
-          <a
-            href="#contact"
-            className="text-sm font-medium text-white/85 underline-offset-4 transition-colors hover:text-white hover:underline"
-            data-testid="link-cta-contact"
-          >
-            Or send a message below
-          </a>
-        </motion.div>
+            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#D3126A] md:text-base">
+              Cyber Risk Assessment
+            </p>
+            <h2 className="mb-4 font-heading text-3xl font-semibold leading-tight tracking-[-0.02em] text-[#1A1228] md:text-4xl lg:text-5xl">
+              Start with a Cyber Risk Assessment
+            </h2>
+            <p className="max-w-2xl text-base leading-relaxed text-[#2A2438] md:text-lg">
+              Discover identity, endpoint, email, backup, and operating gaps before you buy a package.
+            </p>
+            <p className="mt-3 max-w-2xl text-base leading-relaxed text-[#5A5368]">
+              Assessment-led recommendations. Final scope confirmed after we see the environment.
+            </p>
+            <p className="mt-3 text-base font-semibold text-[#1A1228]">
+              Serving Arizona professional services, healthcare, and growing SMBs.
+            </p>
+          </motion.div>
 
-        <motion.div
-          initial={prefersReducedMotion ? false : revealInitial}
-          whileInView={revealInView}
-          viewport={revealViewport}
-          transition={revealTransition}
-          className="mt-16"
-        >
-          <p className="text-gray-400 text-base uppercase tracking-wider mb-6">
-            How we operate
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            {badges.map((badge) => {
-              const IconComponent = badge.icon;
-              return (
-                <div
-                  key={badge.name}
-                  className="flex min-h-11 items-center gap-2 rounded-xl border border-de-hairline bg-de-raised px-5 py-3 transition-colors hover:border-[#D3126A]"
-                  data-testid={`badge-${badge.name.toLowerCase().replace(/\s+/g, "-")}`}
-                >
-                  <IconComponent className="h-4 w-4 text-[#D3126A]" />
-                  <span className="text-base font-medium text-gray-300">{badge.name}</span>
-                </div>
-              );
-            })}
-          </div>
-        </motion.div>
+          <motion.ul
+            className="mt-8 grid grid-cols-1 gap-x-8 gap-y-3 rounded-2xl border border-[var(--de-paper-hairline)] bg-white px-5 py-5 sm:grid-cols-2 md:px-7 md:py-6"
+            initial={prefersReducedMotion ? false : revealInitial}
+            whileInView={revealInView}
+            viewport={revealViewport}
+            transition={revealTransition}
+          >
+            {operatingPoints.map((item) => (
+              <li
+                key={item}
+                className="flex items-baseline gap-2.5 text-[15px] font-semibold leading-snug text-[#1A1228]"
+                data-testid={`badge-${item.toLowerCase().replace(/\s+/g, "-")}`}
+              >
+                <span className="mt-[0.55em] h-px w-2.5 shrink-0 bg-[#D3126A]" aria-hidden="true" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </motion.ul>
+
+          <motion.form
+            onSubmit={handleSubmit}
+            className="mt-8 space-y-3"
+            noValidate
+            initial={prefersReducedMotion ? false : revealInitial}
+            whileInView={revealInView}
+            viewport={revealViewport}
+            transition={revealTransition}
+          >
+            <div>
+              <label htmlFor="homepage-cta-email" className="mb-1.5 block text-sm font-semibold text-[#1A1228]">
+                Work email
+              </label>
+              <div className="relative">
+                <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#5A5368]" />
+                <Input
+                  ref={emailRef}
+                  id="homepage-cta-email"
+                  type="email"
+                  autoComplete="email"
+                  inputMode="email"
+                  placeholder="name@company.com"
+                  value={email}
+                  aria-invalid={fieldError ? true : undefined}
+                  aria-describedby={fieldError ? errorId : undefined}
+                  onChange={(event) => {
+                    setEmail(event.target.value);
+                    if (fieldError) setFieldError(null);
+                  }}
+                  className="h-12 border-[var(--de-paper-hairline)] bg-white pl-11 text-[16px] text-[#1A1228] placeholder:text-[#8A8496] hover:border-black/25 focus-visible:border-[#D3126A] focus-visible:ring-[#D3126A]/40"
+                  data-testid="input-cta-email"
+                />
+              </div>
+              {fieldError ? (
+                <p id={errorId} role="alert" className="mt-2 text-sm font-medium text-rose-700">
+                  {fieldError}
+                </p>
+              ) : null}
+            </div>
+
+            <button
+              type="submit"
+              className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#D3126A] text-[16px] font-semibold text-white transition-colors hover:bg-[#e01874] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-paper)] sm:w-auto sm:px-8"
+              data-testid="button-cta-assessment"
+            >
+              {CTA.primary}
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          </motion.form>
+
+          <motion.div
+            className="mt-6 flex flex-col gap-2 border-t border-[var(--de-paper-hairline)] pt-5 sm:flex-row sm:items-center sm:justify-between"
+            initial={prefersReducedMotion ? false : { opacity: 0.55 }}
+            whileInView={{ opacity: 1 }}
+            viewport={revealViewport}
+            transition={revealTransition}
+          >
+            <a
+              href="#contact"
+              className="text-sm font-medium text-[#A30E52] underline-offset-4 hover:text-[#D3126A] hover:underline"
+              data-testid="link-cta-contact"
+            >
+              Or send a message below
+            </a>
+            <p className="text-sm font-medium text-[#5A5368]">
+              Prefer to call?{" "}
+              <a
+                href={PRIMARY_PHONE.telHref}
+                className="font-semibold text-[#1A1228] underline-offset-2 hover:text-[#D3126A] hover:underline"
+              >
+                {PRIMARY_PHONE.display}
+              </a>
+            </p>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

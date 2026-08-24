@@ -32,7 +32,7 @@ import { DigeratiTrustPhotoSection } from "./sections/DigeratiTrustPhotoSection"
 const homepageSections: { id: string; label: string; theme: 'dark' | 'light'; showInNav?: boolean }[] = [
   { id: 'hero', label: 'Home', theme: 'dark' },
   { id: 'stats', label: 'Why DE', theme: 'dark' },
-  { id: 'challenges', label: 'Problems', theme: 'dark', showInNav: false },
+  { id: 'challenges', label: 'Problems', theme: 'light', showInNav: false },
   { id: 'services', label: 'How It Works', theme: 'dark' },
   { id: 'protection', label: 'Protect', theme: 'light', showInNav: false },
   { id: 'testimonials', label: 'Proof', theme: 'dark', showInNav: false },
@@ -42,7 +42,7 @@ const homepageSections: { id: string; label: string; theme: 'dark' | 'light'; sh
   { id: 'pricing', label: 'Packages', theme: 'dark' },
   { id: 'insights', label: 'Insights', theme: 'dark', showInNav: false },
   { id: 'faq', label: 'FAQ', theme: 'light', showInNav: false },
-  { id: 'cta', label: 'Next step', theme: 'dark', showInNav: false },
+  { id: 'cta', label: 'Next step', theme: 'light', showInNav: false },
   { id: 'contact', label: 'Contact', theme: 'dark' },
 ];
 
@@ -56,10 +56,10 @@ export const DigeratiHomepage = (): JSX.Element => {
   return (
     <FullPageScrollProvider sections={homepageSections} enableOnMobile={false}>
       {/* Live shade well + A+C canvas base. Ask DE sits bottom-right.
-          Chapter fields are neighbor-aware: well → style-box → well → surface →
-          paper → process band → well → paper → well → style-box → surface →
-          well (insights) → surface (office photo) → paper (lead+FAQ) →
-          surface (newsletter) → cinematic well (CTA) → quiet well (contact). */}
+          Chapter fields are neighbor-aware: hero well → paper (why we exist) →
+          well → paper (problems) → surface → paper (protect) → process band →
+          well → paper (trust) → well → style-box → surface → well (insights) →
+          paper (lead+FAQ) → surface (newsletter) → paper (CTA) → quiet well (contact). */}
       <div className="de-dark-well min-h-screen bg-[#050312] pb-8">
         <OrganizationJsonLd />
         <WebSiteJsonLd />
