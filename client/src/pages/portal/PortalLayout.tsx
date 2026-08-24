@@ -284,7 +284,7 @@ export function PortalLayout({ children, title }: PortalLayoutProps) {
           </div>
           <div className="flex items-center gap-3">
             {user?.role === "admin" && (
-              <TenantSelector currentTenant={impersonatingCompany} />
+              <TenantSelector currentTenant={impersonatingCompany ? { id: impersonatingCompany.id ?? "", companyName: impersonatingCompany.companyName ?? "" } : null} />
             )}
             {impersonatingCompany && (
               <Button size="sm" variant="secondary" onClick={handleStopImpersonation}>
