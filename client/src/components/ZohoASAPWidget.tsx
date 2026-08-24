@@ -5,6 +5,7 @@ import {
   ExternalLink,
   FileText,
   FolderLock,
+  HelpCircle,
   KeyRound,
   LayoutGrid,
   LifeBuoy,
@@ -18,9 +19,12 @@ import {
   Paperclip,
   Phone,
   Send,
+  Shield,
   ShieldAlert,
   Ticket,
   User,
+  Wifi,
+  Wrench,
   X,
 } from "lucide-react";
 import { PRIMARY_PHONE } from "@shared/companyContact";
@@ -87,6 +91,25 @@ type ChatHeadsUp = {
 function previewChatLine(content: string, max = 108) {
   const text = content.replace(/\s+/g, " ").trim();
   return text.length > max ? `${text.slice(0, max - 1)}…` : text;
+}
+
+function getDeskChipIcon(id: DeskTicketChipId) {
+  switch (id) {
+    case "something-not-working":
+      return <Wrench className="w-3.5 h-3.5 text-blue-400 shrink-0" aria-hidden="true" />;
+    case "sign-in":
+      return <KeyRound className="w-3.5 h-3.5 text-purple-400 shrink-0" aria-hidden="true" />;
+    case "email":
+      return <Mail className="w-3.5 h-3.5 text-sky-400 shrink-0" aria-hidden="true" />;
+    case "device":
+      return <Monitor className="w-3.5 h-3.5 text-emerald-400 shrink-0" aria-hidden="true" />;
+    case "network":
+      return <Wifi className="w-3.5 h-3.5 text-teal-400 shrink-0" aria-hidden="true" />;
+    case "security-concern":
+      return <Shield className="w-3.5 h-3.5 text-pink-400 shrink-0" aria-hidden="true" />;
+    default:
+      return <HelpCircle className="w-3.5 h-3.5 text-zinc-400 shrink-0" aria-hidden="true" />;
+  }
 }
 
 const CHAT_WELCOME: ChatMessage = {
@@ -1146,7 +1169,10 @@ export const ZohoASAPWidget = ({
                               data-testid={`ticket-issue-${chip.id}`}
                               onClick={() => applyTicketChip(chip.id)}
                             >
-                              {chip.label}
+                              <span className="flex items-center gap-2 min-w-0">
+                                {getDeskChipIcon(chip.id)}
+                                <span className="truncate">{chip.label}</span>
+                              </span>
                             </button>
                           ))}
                         </div>
@@ -1655,334 +1681,80 @@ export const ZohoASAPWidget = ({
             .de-desk-tabs {
               position: relative;
               z-index: 1;
-              display: flex; justify-content: space-between; gap: 12px;
-              padding: 0 16px;
-              border-bottom: 1px solid rgba(255,255,255,0.12);
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              gap: 4px;
+              margin: 6px 14px 10px;
+              padding: 4px;
+              background: rgba(255,255,255,0.05);
+              border: 1px solid rgba(255,255,255,0.09);
+              border-radius: 12px;
               flex-shrink: 0;
             }
             .de-desk-tab {
-              background: none; border: none;
-              min-height: 44px;
-              padding: 12px 0;
+              background: transparent; border: none;
+              min-height: 38px;
+              padding: 8px 4px;
+              border-radius: 9px;
               font-family: "Space Grotesk", sans-serif;
-              font-weight: 600; font-size: 15px;
-              color: var(--desk-shell-dim);
-              display: flex; align-items: center; gap: 6px;
+              font-weight: 600; font-size: 13.5px;
+              color: rgba(255,255,255,0.65);
+              display: flex; align-items: center; justify-content: center; gap: 6px;
               position: relative;
+              transition: all 0.18s ease;
             }
-            .de-desk-tab svg { width: 14px; height: 14px; }
-            .de-desk-tab.is-active { color: var(--desk-shell-text); }
-            .de-desk-tab.is-active::after {
-              content: "";
-              position: absolute; left: 0; right: 0; bottom: -1px;
-              height: 2px; border-radius: 2px;
-              background: var(--desk-pink);
+            .de-desk-tab svg { width: 14px; height: 14px; opacity: 0.75; }
+            .de-desk-tab:hover { color: #fff; background: rgba(255,255,255,0.06); }
+            .de-desk-tab.is-active {
+              background: #D3126A;
+              color: #fff;
+              font-weight: 700;
+              box-shadow: 0 4px 12px rgba(211,18,106,0.35);
             }
+            .de-desk-tab.is-active svg { opacity: 1; }
             .de-desk-tab-badge {
               min-width: 16px; height: 16px; padding: 0 4px;
               border-radius: 999px;
-              background: var(--desk-pink); color: #fff;
+              background: rgba(0,0,0,0.45); color: #fff;
               font-size: 9px; font-weight: 700; line-height: 16px;
               letter-spacing: 0; text-align: center;
             }
             .de-desk-tab.has-unread { color: var(--desk-shell-text); }
-            .de-desk-status {
-              display: flex; align-items: center; justify-content: space-between;
-              padding: 9px 17px;
-              background: var(--desk-shell);
-              border-bottom: 1px solid var(--desk-shell-border);
-              font-size: 13px;
-              flex-shrink: 0;
+            .de-desk-scroll::-webkit-scrollbar {
+              width: 6px;
             }
-            .de-desk-status-l {
-              display: flex; align-items: center; gap: 6px;
-              color: var(--desk-shell-muted); font-weight: 500;
-            }
-            .de-desk-status-dot {
-              width: 6px; height: 6px; border-radius: 50%;
-              background: #c4c0cc; position: relative;
-            }
-            .de-desk-status-dot.is-on { background: var(--desk-green); }
-            .de-desk-status-dot.is-live { background: #3b9eff; }
-            .de-desk-status-dot.is-wait { background: #e8a23d; }
-            .de-desk-status-r {
-              display: flex; align-items: center; gap: 7px;
-              color: var(--desk-pink); font-weight: 600;
-            }
-            .de-desk-status-ic {
-              width: 22px; height: 22px; border-radius: 7px;
-              border: 1.5px solid var(--desk-pink);
-              display: flex; align-items: center; justify-content: center;
-              background: rgba(211,18,106,0.10);
-            }
-            .de-desk-status-ic svg { width: 11px; height: 11px; }
-            .de-desk-body {
-              position: relative;
-              z-index: 1;
-              min-height: 0; flex: 1;
-              margin: 0;
-              padding: 16px 16px 8px;
-              display: flex; flex-direction: column;
+            .de-desk-scroll::-webkit-scrollbar-track {
               background: transparent;
-              color: var(--desk-ink);
             }
-            .de-desk-shell[data-tab="ticket"] .de-desk-body,
-            .de-desk-shell[data-tab="resources"] .de-desk-body {
-              background: transparent;
-              color: #fff;
+            .de-desk-scroll::-webkit-scrollbar-thumb {
+              background: rgba(255,255,255,0.18);
+              border-radius: 999px;
             }
-            .de-desk-panel, .de-desk-scroll {
-              min-height: 0; flex: 1;
-              display: flex; flex-direction: column;
+            .de-desk-scroll::-webkit-scrollbar-thumb:hover {
+              background: #D3126A;
             }
-            .de-desk-scroll { overflow-y: auto; gap: 0; }
-            .de-desk-hero {
-              position: relative; overflow: hidden;
-              border-radius: 12px;
-              border: 1px solid var(--desk-border);
-              background: var(--desk-box);
-              padding: 16px 16px;
-              display: flex; align-items: center; gap: 12px;
-              flex-shrink: 0;
-            }
-            .de-desk-hero::before {
-              content: "";
-              position: absolute; inset: 0;
-              background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1.15px);
-              background-size: 7px 7px;
-              opacity: 0.35;
-              pointer-events: none;
-            }
-            .de-desk-hero-dots {
-              position: absolute; top: 0; right: 0; bottom: 0; width: 42%;
-              background: transparent;
-              pointer-events: none;
-            }
-            .de-desk-hero-txt { flex: 1; min-width: 0; position: relative; z-index: 1; }
-            .de-desk-hero-ring {
-              width: 38px; height: 38px; border-radius: 50%;
-              border: 1.5px solid var(--desk-pink);
-              display: flex; align-items: center; justify-content: center;
-              color: var(--desk-pink);
-              margin-bottom: 10px;
-              background: rgba(211,18,106,0.10);
-            }
-            .de-desk-hero-ring svg { width: 17px; height: 17px; }
-            .de-desk-hero h3 {
-              font-family: "Space Grotesk", sans-serif;
-              font-size: 18px; font-weight: 700; color: #fff;
-              letter-spacing: -0.01em;
-            }
-            .de-desk-hero p {
-              font-size: 14px; color: var(--desk-ink-muted); margin-top: 5px;
-              line-height: 1.5; max-width: 210px;
-            }
-            .de-desk-hero-art { width: 86px; height: 86px; flex: none; position: relative; z-index: 1; }
-            .de-desk-rows { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
-            .de-desk-rows.is-grid {
-              display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
-            }
-            .de-desk-rows > .de-desk-rows.is-grid { margin-top: 0; }
-            .de-desk-row {
-              display: flex; align-items: center; gap: 10px;
-              min-height: 44px;
-              padding: 11px 12px; border-radius: 10px;
-              background: var(--desk-box);
-              border: 1px solid var(--desk-border);
-              color: #fff; text-align: left; width: 100%;
-              transition: background 0.16s ease, border-color 0.16s ease;
-            }
-            .de-desk-row:hover {
-              background: #1b181e;
-              border-color: var(--desk-border-strong);
-            }
-            .de-desk-row.is-selected {
-              border-color: #D3126A;
-              background: var(--desk-box);
-              box-shadow: inset 0 0 0 1px rgba(211,18,106,0.28);
-            }
-            .de-desk-row.is-selected .de-desk-row-chev { color: #D3126A; }
-            .de-desk-row.is-incident {
-              background: var(--desk-box);
-              border-color: rgba(211,18,106,0.42);
-              box-shadow: inset 3px 0 0 #D3126A;
-              align-items: flex-start;
-            }
-            .de-desk-row.is-incident .de-desk-row-ic {
-              border-color: #D3126A;
-              color: #D3126A;
-              background: rgba(211,18,106,0.12);
-            }
-            .de-desk-row.is-incident .de-desk-row-t {
-              display: flex;
-              flex-wrap: wrap;
-              align-items: center;
-              gap: 6px 0;
-            }
-            .de-desk-row.is-incident:hover {
-              background: #1b181e;
-              border-color: #D3126A;
-            }
-            .de-desk-badge-urgent {
-              display: inline-block;
-              font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em;
-              text-transform: uppercase;
-              color: #fff; background: #D3126A;
-              border-radius: 5px; padding: 2px 6px;
-              vertical-align: middle; margin-left: 8px;
-            }
-            .de-desk-tool-block { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-            .de-desk-sublink {
-              align-self: flex-start;
-              margin: 0 0 2px 42px;
-              padding: 2px 0 4px;
-              font-size: 12.5px; font-weight: 600;
-              color: #D3126A; text-decoration: none;
-            }
-            .de-desk-sublink:hover,
-            .de-desk-sublink:focus-visible { text-decoration: underline; }
-            .de-desk-rows.is-grid .de-desk-row { padding: 9px 10px; align-items: flex-start; }
-            .de-desk-rows.is-grid .de-desk-row-t { font-size: 13.5px; line-height: 1.3; }
-            .de-desk-rows.is-grid .de-desk-tool-block .de-desk-row-actions { display: none; }
-            .de-desk-row[data-tone="violet"] { --c: var(--desk-violet); }
-            .de-desk-row[data-tone="blue"] { --c: var(--desk-blue); }
-            .de-desk-row[data-tone="teal"] { --c: var(--desk-teal); }
-            .de-desk-row[data-tone="red"] { --c: var(--desk-red); }
-            .de-desk-row[data-tone="pink"] { --c: var(--desk-pink); }
-            .de-desk-row-ic {
-              width: 32px; height: 32px; border-radius: 8px;
-              background: #0a0a0a;
-              border: 1px solid var(--desk-border);
-              color: rgba(255,255,255,0.82);
-              display: flex; align-items: center; justify-content: center;
-              flex: none; position: relative; overflow: hidden;
-            }
-            .de-desk-row-ic::after { content: none; }
-            .de-desk-row-ic svg { width: 15px; height: 15px; position: relative; z-index: 1; }
-            .de-desk-row.is-lg .de-desk-row-ic { width: 46px; height: 46px; border-radius: 13px; }
-            .de-desk-row.is-lg .de-desk-row-ic svg { width: 20px; height: 20px; }
-            .de-desk-row-body { flex: 1; min-width: 0; }
-            .de-desk-row-t { font-size: 14.5px; font-weight: 600; color: #fff; }
-            .de-desk-row.is-lg .de-desk-row-t { font-size: 13.5px; }
-            .de-desk-row-d { display: block; font-size: 13px; color: var(--desk-ink-muted); margin-top: 2px; line-height: 1.4; }
-            .de-desk-badge-rec {
-              display: inline-block;
-              font-size: 9.5px; font-weight: 700; letter-spacing: 0.03em;
-              color: var(--desk-pink);
-              background: rgba(211,18,106,0.16);
-              border: 1px solid rgba(211,18,106,0.4);
-              border-radius: 5px; padding: 2px 6px;
-              vertical-align: middle; margin-left: 6px;
-              text-transform: uppercase;
-            }
-            .de-desk-row-chev { width: 14px; height: 14px; color: var(--desk-ink-dim); flex: none; }
-            .de-desk-row-actions { display: flex; align-items: center; gap: 6px; flex: none; }
-            .de-desk-row-ext {
-              width: 27px; height: 27px; border-radius: 8px;
-              border: 1px solid var(--desk-border-strong);
-              display: flex; align-items: center; justify-content: center;
-              color: var(--desk-ink-muted);
-            }
-            .de-desk-row-ext svg { width: 12px; height: 12px; }
-            .de-desk-row:hover .de-desk-row-ext { border-color: var(--c, var(--desk-pink)); color: var(--c, var(--desk-pink)); }
-            .de-desk-row.is-highlight {
-              background: var(--desk-box);
-              border-color: rgba(211,18,106,0.45);
-              box-shadow: inset 0 0 0 1px rgba(211,18,106,0.12);
-            }
-            .de-desk-row.is-alert {
-              background: var(--desk-box);
-              border-color: rgba(240,69,91,0.45);
-              align-items: flex-start;
-            }
-            .de-desk-row.is-alert .de-desk-row-body { padding-top: 2px; }
-            .de-desk-btn-mini {
-              background: var(--desk-cta); color: #fff; border: none;
-              font-weight: 600; font-size: 12px; padding: 9px 14px;
-              border-radius: 9px; flex: none; white-space: nowrap;
-              align-self: center;
-            }
-            .de-desk-section-head {
-              display: flex; align-items: center; justify-content: space-between;
-              margin: 20px 0 2px;
-            }
-            .de-desk-section-head h4 {
-              font-family: "Space Grotesk", sans-serif;
-              font-size: 14.5px; font-weight: 600; color: var(--desk-shell-text);
-            }
-            .de-desk-section-head a { font-size: 12px; color: var(--desk-pink); font-weight: 600; }
-            .de-desk-details-head {
-              display: flex; align-items: center; justify-content: space-between;
-              margin: 12px 0 8px;
-            }
-            .de-desk-details-head h4 {
-              font-family: "Space Grotesk", sans-serif;
-              font-size: 13px; font-weight: 700;
-              letter-spacing: 0.06em; text-transform: uppercase;
-              color: var(--desk-shell-muted);
-            }
-            .de-desk-secure {
-              display: flex; align-items: center; gap: 5px;
-              border: 1px solid rgba(34,197,94,0.45); color: #86efac;
-              border-radius: 999px; padding: 3px 9px;
-              font-size: 12px; font-weight: 600;
-              background: rgba(34,197,94,0.10);
-            }
-            .de-desk-secure svg { width: 10px; height: 10px; }
-            .de-desk-form { display: flex; flex-direction: column; gap: 12px; }
-            .de-desk-ticket-lead h3 {
-              font-family: "Space Grotesk", sans-serif;
-              font-size: 20px; font-weight: 700; color: #fff;
-            }
-            .de-desk-ticket-lead p {
-              margin-top: 6px; font-size: 14px; line-height: 1.45; color: rgba(247,245,242,0.68);
-            }
-            .de-desk-route-note {
-              font-size: 13px; font-weight: 600; color: #F0B4CC;
-            }
-            .de-desk-msg { display: flex; gap: 10px; align-items: flex-start; }
-            .de-desk-msg.is-user { justify-content: flex-end; }
-            .de-desk-msg-id {
-              position: relative;
-              width: 32px; height: 32px; border-radius: 50%;
-              background: #151217; color: #fff;
-              display: flex; align-items: center; justify-content: center;
-              font-size: 9px; font-weight: 700; flex: none;
-            }
-            .de-desk-msg-id .de-desk-avatar-dot { border-color: #0a0a0a; }
-            .de-desk-msg-col { min-width: 0; flex: 1; }
-            .de-desk-msg.is-user .de-desk-msg-col { flex: 0 1 auto; }
-            .de-desk-msg-who {
-              display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px;
-            }
-            .de-desk-msg-who strong { font-size: 13px; font-weight: 700; color: #fff; }
-            .de-desk-msg-who em { font-style: normal; font-size: 12px; font-weight: 600; color: #4ade80; }
-            .de-desk-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-            .de-desk-chip {
-              border: 1px solid var(--desk-border);
-              background: var(--desk-box); color: rgba(255,255,255,0.78);
-              border-radius: 8px;
-              min-height: 40px;
-              padding: 8px 12px;
-              font-size: 12.5px; font-weight: 500;
-            }
-            .de-desk-chip:hover { border-color: #D3126A; color: #fff; }
             .de-desk-incident {
               display: flex; align-items: flex-start; gap: 12px;
               width: 100%; text-align: left;
-              min-height: 52px;
-              margin: 2px 0 14px;
-              padding: 12px 13px;
-              border: 1px solid rgba(211,18,106,0.42);
+              min-height: 54px;
+              margin: 4px 0 14px;
+              padding: 12px 14px;
+              border: 1px solid rgba(211,18,106,0.45);
               border-radius: 12px;
-              background: rgba(211,18,106,0.10);
+              background: linear-gradient(135deg, rgba(211,18,106,0.16) 0%, rgba(211,18,106,0.06) 100%);
               color: #fff;
-              box-shadow: inset 3px 0 0 #D3126A;
+              box-shadow: 0 4px 16px -4px rgba(211,18,106,0.25), inset 3px 0 0 #D3126A;
+              transition: all 0.18s ease;
             }
-            .de-desk-incident:hover { background: rgba(211,18,106,0.16); }
+            .de-desk-incident:hover {
+              border-color: #D3126A;
+              background: linear-gradient(135deg, rgba(211,18,106,0.22) 0%, rgba(211,18,106,0.10) 100%);
+              transform: translateY(-1px);
+            }
             .de-desk-incident.is-on {
               border-color: #D3126A;
-              background: rgba(211,18,106,0.18);
+              background: linear-gradient(135deg, rgba(211,18,106,0.28) 0%, rgba(211,18,106,0.14) 100%);
+              box-shadow: 0 6px 20px -4px rgba(211,18,106,0.4), inset 3px 0 0 #D3126A;
             }
             .de-desk-incident-icon {
               display: inline-flex; flex: none;
@@ -2004,25 +1776,33 @@ export const ZohoASAPWidget = ({
               font-size: 12px; line-height: 1.4;
             }
             .de-desk-issue-list {
-              display: flex; flex-direction: column;
-              gap: 4px;
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 6px;
               margin-bottom: 14px;
             }
             .de-desk-issue-row {
               width: 100%; text-align: left;
-              min-height: 40px;
-              padding: 9px 12px;
-              border: 1px solid var(--desk-border);
-              border-radius: 9px;
-              background: var(--desk-box);
-              color: rgba(255,255,255,0.86);
+              min-height: 42px;
+              padding: 10px 12px;
+              border: 1px solid rgba(255,255,255,0.12);
+              border-radius: 10px;
+              background: linear-gradient(180deg, #18151D 0%, #131017 100%);
+              color: rgba(255,255,255,0.88);
               font-size: 13px; font-weight: 600;
+              transition: all 0.15s ease;
             }
-            .de-desk-issue-row:hover { border-color: rgba(255,255,255,0.22); color: #fff; }
+            .de-desk-issue-row:hover {
+              border-color: rgba(255,255,255,0.25);
+              background: #1D1923;
+              color: #fff;
+              transform: translateY(-1px);
+            }
             .de-desk-issue-row.is-on {
               border-color: #D3126A;
+              background: linear-gradient(180deg, rgba(211,18,106,0.18) 0%, rgba(211,18,106,0.08) 100%);
               color: #fff;
-              box-shadow: inset 0 0 0 1px rgba(211,18,106,0.28);
+              box-shadow: inset 0 0 0 1px #D3126A, 0 4px 12px -3px rgba(211,18,106,0.3);
             }
             .de-desk-issues {
               display: flex; flex-wrap: wrap; gap: 6px;
@@ -2044,20 +1824,30 @@ export const ZohoASAPWidget = ({
             }
             .de-desk-issue.is-incident.is-on { background: rgba(211,18,106,0.12); }
             .de-desk-urgency-label {
-              display: block; font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 6px;
+              display: block; font-size: 11.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(255,255,255,0.8); margin-bottom: 6px;
             }
             .de-desk-urgency {
               display: grid; grid-template-columns: repeat(4, 1fr);
               gap: 4px;
+              background: rgba(255,255,255,0.04);
+              padding: 4px;
+              border-radius: 11px;
+              border: 1px solid rgba(255,255,255,0.08);
             }
             .de-desk-urgency button {
-              min-height: 40px; border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              min-height: 38px; border: none;
               border-radius: 8px;
-              background: var(--de-raised, #151217); color: rgba(255,255,255,0.72);
-              font-size: 13px; font-weight: 600;
+              background: transparent; color: rgba(255,255,255,0.72);
+              font-size: 12.5px; font-weight: 600;
+              transition: all 0.15s ease;
+            }
+            .de-desk-urgency button:hover {
+              background: rgba(255,255,255,0.08);
+              color: #fff;
             }
             .de-desk-urgency button.is-on {
-              background: #D3126A; color: #fff; border-color: #D3126A;
+              background: #D3126A; color: #fff; font-weight: 700;
+              box-shadow: 0 3px 10px rgba(211,18,106,0.35);
             }
             .de-desk-more-toggle {
               align-self: flex-start;
@@ -2068,28 +1858,34 @@ export const ZohoASAPWidget = ({
             .de-desk-more { display: flex; flex-direction: column; gap: 12px; }
             .de-desk-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
             .de-desk-field label {
-              display: block; font-size: 13px; font-weight: 600;
-              color: #fff; margin-bottom: 6px;
+              display: block; font-size: 11.5px; font-weight: 700;
+              letter-spacing: 0.05em; text-transform: uppercase;
+              color: rgba(255,255,255,0.8); margin-bottom: 6px;
             }
             .de-desk-input-wrap { position: relative; }
             .de-desk-input-wrap > svg {
-              position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
-              width: 13px; height: 13px; color: rgba(255,255,255,0.46); pointer-events: none;
+              position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+              width: 14px; height: 14px; color: rgba(255,255,255,0.5); pointer-events: none;
             }
             .de-desk-shell .de-desk-input {
               width: 100%;
-              min-height: 44px;
-              height: 44px;
+              min-height: 46px;
+              height: 46px;
               background: var(--de-raised, #151217) !important;
-              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10)) !important;
+              border: 1px solid rgba(255,255,255,0.14) !important;
               color: #fff !important;
-              border-radius: 10px;
-              padding: 10px 14px 10px 32px;
+              border-radius: 11px;
+              padding: 10px 14px 10px 34px;
               font-size: 14px;
-              box-shadow: none !important;
+              box-shadow: inset 0 1px 2px rgba(0,0,0,0.3) !important;
+              transition: border-color 0.16s ease, box-shadow 0.16s ease;
+            }
+            .de-desk-shell .de-desk-input:focus {
+              border-color: #D3126A !important;
+              box-shadow: 0 0 0 3px rgba(211,18,106,0.2), inset 0 1px 2px rgba(0,0,0,0.3) !important;
             }
             .de-desk-shell .de-desk-input.is-bare { padding-left: 14px; }
-            .de-desk-shell .de-desk-input::placeholder { color: rgba(255,255,255,0.40); }
+            .de-desk-shell .de-desk-input::placeholder { color: rgba(255,255,255,0.38); }
             .de-desk-shell .de-desk-select { appearance: none; padding-right: 28px; }
             .de-desk-shell .de-desk-select option { background: #151217; color: #fff; }
             .de-desk-select-chev {
@@ -2098,7 +1894,7 @@ export const ZohoASAPWidget = ({
             }
             .de-desk-ta-wrap { position: relative; }
             .de-desk-shell .de-desk-ta {
-              min-height: 80px; height: auto; padding-left: 11px; resize: vertical;
+              min-height: 90px; height: auto; padding-left: 14px; resize: vertical;
               line-height: 1.5;
             }
             .de-desk-counter {
@@ -2109,10 +1905,11 @@ export const ZohoASAPWidget = ({
               display: flex; align-items: flex-start; gap: 9px;
               width: 100%; text-align: left;
               margin-top: 2px; padding: 12px;
-              border: 1px dashed var(--desk-border-strong);
-              border-radius: 10px; background: var(--desk-box);
+              border: 1px dashed rgba(255,255,255,0.22);
+              border-radius: 11px; background: rgba(255,255,255,0.03);
+              transition: all 0.15s ease;
             }
-            .de-desk-attach:hover { border-color: var(--desk-pink); }
+            .de-desk-attach:hover { border-color: var(--desk-pink); background: rgba(211,18,106,0.05); }
             .de-desk-attach svg { width: 14px; height: 14px; color: var(--desk-ink-dim); flex: none; margin-top: 2px; }
             .de-desk-attach-t { display: block; font-size: 14px; font-weight: 600; color: #fff; }
             .de-desk-attach-h { display: block; font-size: 12.5px; color: var(--desk-ink-muted); margin-top: 1px; }
@@ -2122,16 +1919,21 @@ export const ZohoASAPWidget = ({
             }
             .de-desk-caption svg { width: 11px; height: 11px; }
             .de-desk-btn-grad {
-              width: 100%; margin-top: 4px;
-              min-height: 44px;
-              background: var(--desk-cta); border: none; color: #fff;
-              font-weight: 600; font-size: 14px; padding: 12px;
-              border-radius: 11px;
+              width: 100%; margin-top: 8px;
+              min-height: 48px;
+              background: linear-gradient(135deg, #D3126A 0%, #E61E76 100%);
+              border: none; color: #fff;
+              font-weight: 700; font-size: 15px; padding: 12px;
+              border-radius: 12px;
               display: flex; align-items: center; justify-content: center; gap: 8px;
+              box-shadow: 0 8px 24px -6px rgba(211,18,106,0.5);
+              transition: all 0.18s ease;
             }
-            .de-desk-btn-grad:hover { filter: brightness(1.08); }
-            .de-desk-btn-grad:disabled { opacity: 0.6; }
-            .de-desk-btn-grad svg { width: 14px; height: 14px; }
+            .de-desk-btn-grad:hover {
+              background: linear-gradient(135deg, #bd105f 0%, #D3126A 100%);
+              transform: translateY(-1px);
+              box-shadow: 0 10px 28px -6px rgba(211,18,106,0.6);
+            }
             .de-desk-bubble {
               max-width: 90%;
               padding: 11px 14px;
