@@ -32,38 +32,38 @@ function categoryBadgeClass(item: ThreatItem): string {
 function InsightCard({ insight, index }: { insight: ThreatItem; index: number }) {
   return (
     <Card
-      className="de-interactive-tile h-full overflow-hidden border-de-hairline bg-de-raised hover:border-[#D3126A]"
+      className="de-interactive-tile group relative h-full overflow-hidden rounded-xl border border-white/10 bg-gradient-to-b from-[#18141f] to-[#0e0c13] shadow-lg transition-all duration-300 hover:border-[#D3126A]/50 hover:-translate-y-1"
       data-testid={`insight-card-${index}`}
     >
-      <div className="h-1 bg-[#D3126A]" />
-      <CardHeader className="pb-3 p-4 sm:p-6">
+      <div className="h-1 bg-gradient-to-r from-[#D3126A] via-[#E61E76] to-transparent opacity-80 group-hover:opacity-100" />
+      <CardHeader className="pb-3 p-5 sm:p-6">
         <div className="flex items-center justify-between mb-3 gap-2">
-          <Badge className={`${categoryBadgeClass(insight)} shrink-0 border text-base`}>
-            <span className="flex items-center gap-1 whitespace-nowrap">
+          <Badge className={`${categoryBadgeClass(insight)} shrink-0 border text-xs font-semibold py-1 px-2.5 rounded-full`}>
+            <span className="flex items-center gap-1.5 whitespace-nowrap">
               {categoryIcon[insight.category]}
               <span className="hidden sm:inline">{insight.category}</span>
               <span className="sm:hidden">{insight.category.split(" ")[0]}</span>
             </span>
           </Badge>
-          <span className="text-base text-gray-400 flex items-center gap-1 whitespace-nowrap">
-            <Calendar className="h-3 w-3" />
+          <span className="text-xs text-white/50 flex items-center gap-1.5 whitespace-nowrap font-mono">
+            <Calendar className="h-3.5 w-3.5 text-[#D3126A]" />
             <span className="hidden sm:inline">{formatThreatDate(insight.publishedAt)}</span>
             <span className="sm:hidden">{formatThreatDate(insight.publishedAt, "short")}</span>
           </span>
         </div>
-        <p className="mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-de-magenta-ink">
+        <p className="mb-1.5 text-xs font-bold uppercase tracking-[0.14em] text-[#D3126A]">
           {insight.kicker}
         </p>
-        <CardTitle className="text-base sm:text-lg text-white line-clamp-2">
+        <CardTitle className="text-base sm:text-lg font-bold text-white line-clamp-2 leading-snug group-hover:text-white">
           {insight.title}
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-4 sm:p-6 pt-0">
-        <CardDescription className="text-gray-400 mb-4 line-clamp-3 text-base">
+      <CardContent className="p-5 sm:p-6 pt-0">
+        <CardDescription className="text-white/70 mb-4 line-clamp-3 text-xs sm:text-sm leading-relaxed">
           {insight.excerpt}
         </CardDescription>
-        <div className="flex items-center justify-between pt-4 border-t border-white/10 gap-3">
-          <span className="text-base text-gray-400 truncate">
+        <div className="flex items-center justify-between pt-4 border-t border-white/10 gap-3 text-xs">
+          <span className="text-white/50 truncate font-mono">
             {insight.sourceName}
             {insight.vendor ? ` · ${insight.vendor}` : ""}
             {insight.cve ? ` · ${insight.cve}` : ""}
@@ -72,10 +72,10 @@ function InsightCard({ insight, index }: { insight: ThreatItem; index: number })
             href={insight.sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 text-base font-medium text-de-magenta-ink hover:text-[#f0187a] shrink-0"
+            className="flex items-center gap-1 font-semibold text-[#D3126A] hover:text-[#f0187a] shrink-0"
           >
             Read source
-            <ExternalLink className="h-3.5 w-3.5" />
+            <ExternalLink className="h-3 w-3" />
           </a>
         </div>
       </CardContent>

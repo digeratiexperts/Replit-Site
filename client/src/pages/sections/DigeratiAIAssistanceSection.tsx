@@ -1,4 +1,4 @@
-import { ArrowRight, CheckCircle, Shield, Radio, Layers } from "lucide-react";
+import { ArrowRight, CheckCircle, Shield, Radio, Layers, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, useReducedMotion } from "framer-motion";
 import { revealTransition, revealViewport } from "@/lib/animations";
@@ -19,9 +19,10 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
   const { openBooking } = useBooking();
 
   return (
-    <section className="de-dark-chapter de-chapter-hairline de-field-grain de-field-lit relative overflow-hidden py-20">
+    <section className="de-dark-chapter de-chapter-hairline de-field-grain de-field-lit relative overflow-hidden py-16 md:py-24">
       <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
         <div className="grid items-stretch gap-12 lg:grid-cols-2">
+          {/* Visual Well Column */}
           <motion.div
             className="order-2 flex justify-center lg:order-1 lg:justify-start"
             initial={prefersReducedMotion ? false : { opacity: 0.55, x: -12 }}
@@ -30,79 +31,94 @@ export const DigeratiAIAssistanceSection = (): JSX.Element => {
             transition={revealTransition}
           >
             <div className="relative w-full max-w-md lg:max-w-none lg:h-full">
-              <div className="relative flex aspect-[4/3] min-h-[16rem] overflow-hidden rounded-2xl border border-white/10 shadow-2xl lg:aspect-auto lg:h-full lg:min-h-[22rem]">
+              <div className="relative flex aspect-[4/3] min-h-[18rem] overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-b from-[#1a1522] to-[#0e0c13] shadow-2xl lg:aspect-auto lg:h-full lg:min-h-[24rem]">
+                <div className="absolute top-4 left-4 z-20 flex items-center gap-2 rounded-full border border-white/15 bg-black/60 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-md">
+                  <Activity className="h-3.5 w-3.5 text-emerald-400 animate-pulse" />
+                  <span>Arizona SOC Operations</span>
+                </div>
                 <ParallaxStill
                   src={officeEveningImg}
                   alt="Arizona professional office where Digerati Experts supports local businesses"
                   travel={6}
                   width={448}
                   height={300}
-                  className="absolute inset-0"
+                  className="absolute inset-0 opacity-90 transition-opacity duration-500 hover:opacity-100"
                 />
-                <div className="relative mt-auto w-full bg-gradient-to-t from-black/90 to-transparent p-6 pt-16">
-                  <p className="text-base font-medium text-white">Local operations. Human judgment.</p>
-                  <p className="text-base text-white/75 mt-1">
-                    Arizona-based · Principal-led · Always-on monitoring
+                <div className="relative mt-auto w-full bg-gradient-to-t from-black/95 via-black/60 to-transparent p-6 pt-20">
+                  <p className="text-lg font-bold text-white">Local Operations · Human Judgment</p>
+                  <p className="text-xs text-white/75 mt-1">
+                    Arizona-Based · Principal-Led · Always-On Telemetry
                   </p>
                 </div>
               </div>
             </div>
           </motion.div>
 
+          {/* Narrative & Capabilities Column */}
           <motion.div
-            className="order-1 lg:order-2"
+            className="order-1 lg:order-2 flex flex-col justify-between"
             initial={prefersReducedMotion ? false : { opacity: 0.55, x: 12 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={revealViewport}
             transition={revealTransition}
           >
-            <div className="inline-flex items-center gap-2 text-base font-medium text-de-magenta-ink mb-4">
-              <Radio className="h-4 w-4" aria-hidden />
-              Detection & response
-            </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-white leading-tight">
-              Monitoring that ends with a person who owns the outcome
-            </h2>
-            <p className="text-lg text-white/70 mb-8 leading-relaxed max-w-xl">
-              We use modern detection tooling so signals surface quickly — then our team investigates,
-              prioritizes, and acts. Automation helps coverage; accountability stays human.
-            </p>
-
-            <ul className="space-y-3 mb-8">
-              {capabilities.map((feature) => (
-                <li key={feature} className="flex items-start gap-3 text-white/85">
-                  <CheckCircle className="h-5 w-5 text-emerald-500 mt-0.5 flex-shrink-0" aria-hidden />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
-
-            <div className="grid sm:grid-cols-2 gap-4 mb-8">
-              <div className="rounded-xl border border-de-hairline bg-de-raised p-5">
-                <Shield className="h-5 w-5 text-pink-400 mb-2" aria-hidden />
-                <p className="text-white font-semibold text-base mb-1">Coverage with context</p>
-                <p className="text-white/55 text-base leading-relaxed">
-                  Alerts are interpreted against your environment — not dumped into a generic queue.
-                </p>
+            <div>
+              <div className="inline-flex items-center gap-2 mb-4 px-3 py-1 rounded-full bg-[#D3126A]/10 border border-[#D3126A]/20">
+                <Radio className="h-3.5 w-3.5 text-[#D3126A]" aria-hidden />
+                <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#D3126A]">
+                  Detection & Response
+                </span>
               </div>
-              <div className="rounded-xl border border-de-hairline bg-de-raised p-5">
-                <Layers className="h-5 w-5 text-[#D3126A] mb-2" aria-hidden />
-                <p className="text-white font-semibold text-base mb-1">Documented next steps</p>
-                <p className="text-white/55 text-base leading-relaxed">
-                  Findings become clear actions your team can follow without decoding jargon.
-                </p>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-white leading-tight tracking-[-0.02em]">
+                Monitoring that ends with a person who owns the outcome
+              </h2>
+              <p className="text-base md:text-lg text-white/75 mb-6 leading-relaxed max-w-xl">
+                We leverage modern threat detection tooling so signals surface immediately — then our team investigates,
+                prioritizes, and acts. Technology scales coverage; accountability remains human.
+              </p>
+
+              <ul className="space-y-3 mb-8">
+                {capabilities.map((feature) => (
+                  <li key={feature} className="flex items-start gap-3 text-white/90 text-sm md:text-base">
+                    <CheckCircle className="h-5 w-5 text-emerald-400 mt-0.5 flex-shrink-0" aria-hidden />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="grid sm:grid-cols-2 gap-4 mb-8">
+                <div className="group rounded-xl border border-white/10 bg-gradient-to-b from-[#18141f] to-[#0e0c13] p-5 shadow-lg transition-all duration-300 hover:border-[#D3126A]/50">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-[#D3126A]/10 text-[#D3126A] mb-3 transition-colors group-hover:bg-[#D3126A] group-hover:text-white">
+                    <Shield className="h-5 w-5" aria-hidden />
+                  </div>
+                  <p className="text-white font-bold text-base mb-1">Coverage with Context</p>
+                  <p className="text-white/65 text-xs md:text-sm leading-relaxed">
+                    Alerts are interpreted against your specific environment — never dumped into an unmonitored ticket queue.
+                  </p>
+                </div>
+                <div className="group rounded-xl border border-white/10 bg-gradient-to-b from-[#18141f] to-[#0e0c13] p-5 shadow-lg transition-all duration-300 hover:border-[#D3126A]/50">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-[#D3126A]/10 text-[#D3126A] mb-3 transition-colors group-hover:bg-[#D3126A] group-hover:text-white">
+                    <Layers className="h-5 w-5" aria-hidden />
+                  </div>
+                  <p className="text-white font-bold text-base mb-1">Documented Next Steps</p>
+                  <p className="text-white/65 text-xs md:text-sm leading-relaxed">
+                    Findings translate into actionable steps your executive and IT teams can execute without decoding cryptic jargon.
+                  </p>
+                </div>
               </div>
             </div>
 
-            <Button
-              type="button"
-              onClick={() => openBooking("ai_assistance_section")}
-              className="min-h-11 bg-[#D3126A] text-base font-semibold text-white hover:bg-[#e01874]"
-              data-testid="button-ai-section-assessment"
-            >
-              {CTA.primary}
-              <ArrowRight className="ml-2 h-4 w-4" aria-hidden />
-            </Button>
+            <div>
+              <Button
+                type="button"
+                onClick={() => openBooking("ai_assistance_section")}
+                className="h-12 bg-gradient-to-r from-[#D3126A] to-[#E61E76] px-8 text-base font-bold text-white shadow-lg shadow-[#D3126A]/25 transition-all hover:brightness-110"
+                data-testid="button-ai-section-assessment"
+              >
+                {CTA.primary}
+                <ArrowRight className="ml-2 h-4 w-4" aria-hidden />
+              </Button>
+            </div>
           </motion.div>
         </div>
       </div>
