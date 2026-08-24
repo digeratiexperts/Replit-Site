@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   check-test-build:
-    name: Baseline typecheck, test, and build
+    name: Typecheck, test, and build
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -32,11 +32,7 @@ jobs:
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
 
-      # Issue #12 tracks pre-existing TypeScript debt across the Website/Portal
-      # repository. Keep the baseline visible without skipping the hard gates
-      # that validate changed runtime code.
-      - name: Baseline typecheck (informational)
-        continue-on-error: true
+      - name: Typecheck
         run: npm run check
 
       - name: Unit tests
