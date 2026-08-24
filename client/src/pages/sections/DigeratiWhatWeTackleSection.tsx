@@ -103,14 +103,14 @@ export const DigeratiWhatWeTackleSection = (): JSX.Element => {
                   <Link
                     href={challenge.href}
                     data-testid={`tackle-card-${index}`}
-                    className="de-interactive-tile group flex gap-4 rounded-xl border border-transparent p-3 hover:border-de-hairline hover:bg-white/[0.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
+                    className="de-interactive-tile group flex gap-4 rounded-xl border border-white/10 bg-gradient-to-b from-[#16131b] to-[#0f0d14] p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#D3126A]/60 hover:shadow-md hover:shadow-[#D3126A]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-bg)]"
                   >
                     <IconWell icon={Icon} size="sm" surface="dark" />
                     <div className="min-w-0">
-                      <h3 className="mb-1 text-base font-semibold text-white md:text-lg">
+                      <h3 className="mb-1 text-base font-semibold text-white transition-colors group-hover:text-de-magenta-ink md:text-lg">
                         {challenge.title}
                       </h3>
-                      <p className="text-base leading-relaxed text-white/55 md:text-lg group-hover:text-white/70">
+                      <p className="text-sm leading-relaxed text-white/60 transition-colors group-hover:text-white/80 md:text-base">
                         {challenge.description}
                       </p>
                     </div>

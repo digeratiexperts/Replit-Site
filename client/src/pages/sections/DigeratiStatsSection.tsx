@@ -30,12 +30,15 @@ function FactCard({
 
   const body = (
     <>
-      <IconWell icon={Icon} size="sm" surface="dark" />
-      <p className="mt-5 font-mono text-3xl font-semibold tracking-tight text-white md:text-4xl">
+      <div className="flex items-center justify-between">
+        <IconWell icon={Icon} size="sm" surface="dark" />
+        <span className="h-1.5 w-1.5 rounded-full bg-[#D3126A]" aria-hidden="true" />
+      </div>
+      <p className="mt-5 font-mono text-3xl font-bold tracking-tight text-white md:text-4xl">
         {fact.metric}
       </p>
-      <p className="mt-2 text-base leading-relaxed text-white/75 md:text-lg">{fact.statement}</p>
-      <p className="mt-4 border-t border-de-hairline pt-3 text-base font-medium text-white/70 group-hover:text-white">
+      <p className="mt-2.5 flex-1 text-base leading-relaxed text-white/75 md:text-lg">{fact.statement}</p>
+      <p className="mt-4 border-t border-white/10 pt-3 text-sm font-medium text-white/60 group-hover:text-white/90">
         {sourceLine}
       </p>
     </>
@@ -54,14 +57,14 @@ function FactCard({
           href={fact.sourceUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="de-interactive-tile de-style-box-inset group flex h-full flex-col rounded-2xl p-6 hover:border-[#D3126A] md:p-7"
+          className="de-interactive-tile group flex h-full flex-col rounded-2xl border border-white/10 bg-gradient-to-b from-[#181520] to-[#0f0d14] p-6 shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:border-[#D3126A] hover:shadow-lg hover:shadow-[#D3126A]/10 md:p-7"
           data-testid={`homepage-stat-${index}`}
         >
           {body}
         </a>
       ) : (
         <div
-          className="de-style-box-inset h-full rounded-2xl p-6 md:p-7"
+          className="flex h-full flex-col rounded-2xl border border-white/10 bg-gradient-to-b from-[#181520] to-[#0f0d14] p-6 shadow-md md:p-7"
           data-testid={`homepage-stat-${index}`}
         >
           {body}

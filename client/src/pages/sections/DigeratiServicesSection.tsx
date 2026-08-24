@@ -139,6 +139,7 @@ export const DigeratiServicesSection = (): JSX.Element => {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8">
           {paths.map((path, index) => {
             const Icon = path.icon;
+            const isFeatured = index === 0;
             return (
               <motion.div
                 key={path.title}
@@ -151,12 +152,23 @@ export const DigeratiServicesSection = (): JSX.Element => {
                 <Link
                   href={path.link}
                   data-testid={path.testId}
-                  className="de-interactive-tile group flex h-full flex-col rounded-2xl border border-de-hairline bg-de-raised p-6 hover:border-[#D3126A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)] lg:p-8"
+                  className={`de-interactive-tile group flex h-full flex-col rounded-2xl border p-6 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--de-surface)] lg:p-8 ${
+                    isFeatured
+                      ? "border-[#D3126A]/60 bg-gradient-to-b from-[#1e1526] via-[#14101b] to-[#0e0c13] shadow-lg shadow-[#D3126A]/15 hover:-translate-y-0.5 hover:border-[#D3126A]"
+                      : "border-white/10 bg-gradient-to-b from-[#16131b] to-[#0f0d14] hover:-translate-y-0.5 hover:border-[#D3126A]/60 hover:shadow-md"
+                  }`}
                 >
-                  <IconWell icon={Icon} size="md" surface="dark" className="mb-5" />
+                  <div className="flex items-center justify-between">
+                    <IconWell icon={Icon} size="md" surface="dark" className="mb-5" />
+                    {isFeatured && (
+                      <span className="rounded-full bg-[#D3126A] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
+                        Full Operations
+                      </span>
+                    )}
+                  </div>
                   <p
                     className={`mb-2 min-h-4 text-base font-semibold uppercase tracking-[0.2em] ${
-                      path.eyebrow ? "text-white/45" : "invisible"
+                      path.eyebrow ? "text-de-magenta-ink" : "invisible"
                     }`}
                     aria-hidden={!path.eyebrow}
                   >
