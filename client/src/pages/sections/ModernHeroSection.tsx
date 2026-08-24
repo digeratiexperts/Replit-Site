@@ -92,28 +92,38 @@ export const ModernHeroSection = (): JSX.Element => {
                 <span className="text-[#D3126A]">protected 24/7.</span>
               </h1>
 
-              <p className="de-copy-on-dark max-w-[36rem] text-[17px] leading-[1.6] sm:text-lg">
-                Cybersecurity and managed IT for growing businesses—reducing risk, supporting
-                compliance, and keeping your team productive without building an internal IT
-                department.
-              </p>
+              <div className="relative -mx-3 -my-2.5 p-3 sm:-mx-4 sm:p-4">
+                <div
+                  className="pointer-events-none absolute inset-0 -z-10 rounded-[2rem]"
+                  aria-hidden="true"
+                  style={{
+                    background:
+                      "radial-gradient(ellipse 95% 90% at 35% 50%, rgba(8, 6, 16, 0.72) 0%, rgba(8, 6, 16, 0.42) 55%, transparent 100%)",
+                  }}
+                />
+                <p className="de-copy-on-dark max-w-[36rem] text-[17px] leading-[1.6] sm:text-lg text-white/95">
+                  Cybersecurity and managed IT for growing businesses—reducing risk, supporting
+                  compliance, and keeping your team productive without building an internal IT
+                  department.
+                </p>
 
-              <div className="grid grid-cols-1 gap-x-4 gap-y-2.5 min-[420px]:grid-cols-2">
-                {features.map((feature, index) => (
-                  <motion.div
-                    key={feature.text}
-                    className="flex min-w-0 items-center gap-2"
-                    initial={prefersReducedMotion ? false : { opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      duration: prefersReducedMotion ? 0 : 0.28,
-                      delay: prefersReducedMotion ? 0 : 0.1 + index * 0.03,
-                    }}
-                  >
-                    <feature.icon className="h-4 w-4 shrink-0 text-[#D3126A]" strokeWidth={1.75} aria-hidden="true" />
-                    <span className="de-copy-on-dark text-[14px] font-medium leading-5">{feature.text}</span>
-                  </motion.div>
-                ))}
+                <div className="mt-4 grid grid-cols-1 gap-x-4 gap-y-2.5 min-[420px]:grid-cols-2">
+                  {features.map((feature, index) => (
+                    <motion.div
+                      key={feature.text}
+                      className="flex min-w-0 items-center gap-2"
+                      initial={prefersReducedMotion ? false : { opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        duration: prefersReducedMotion ? 0 : 0.28,
+                        delay: prefersReducedMotion ? 0 : 0.1 + index * 0.03,
+                      }}
+                    >
+                      <feature.icon className="h-4 w-4 shrink-0 text-[#D3126A]" strokeWidth={1.75} aria-hidden="true" />
+                      <span className="de-copy-on-dark text-[14px] font-medium leading-5 text-white/90">{feature.text}</span>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
 
               <div className="mt-0.5 flex flex-col items-start gap-3" id="assessment-cta">
