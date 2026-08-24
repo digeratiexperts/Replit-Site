@@ -102,7 +102,7 @@ function RailScroller({
           return (
             <div
               key={product.id}
-              className="w-[260px] flex-shrink-0 sm:w-[280px]"
+              className="w-[280px] flex-shrink-0 sm:w-[300px] lg:w-[320px]"
               style={{ scrollSnapAlign: "start" }}
             >
               <StoreProductCard

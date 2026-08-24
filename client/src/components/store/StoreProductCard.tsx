@@ -153,7 +153,7 @@ export function StoreProductCard({
             )}
           </div>
           <h3
-            className={`font-semibold leading-tight text-white transition-colors group-hover:text-[#c4b5fd] ${compact ? "text-sm line-clamp-1" : "text-base sm:text-lg line-clamp-1"}`}
+            className="text-base font-semibold leading-snug text-white transition-colors group-hover:text-[#c4b5fd] line-clamp-2"
           >
             <Link href={`/store/product/${product.sku}`}>
               <span title={product.name}>
@@ -164,66 +164,28 @@ export function StoreProductCard({
         </div>
 
         <p
-          className={`mb-2.5 font-normal leading-relaxed text-white/75 ${compact ? "text-xs line-clamp-2" : "text-xs sm:text-sm line-clamp-2"}`}
+          className="mb-3 text-xs leading-relaxed text-white/70 line-clamp-2 sm:text-sm"
         >
           {getOutcomeLead(product)}
         </p>
-        {bestFor && (
-          <p className="mb-3 text-sm text-white/55">Best for: {bestFor}</p>
+
+        {includedHint && (
+          <div className="mb-3 text-xs font-medium text-[#a78bfa]/95">
+            <p className="line-clamp-1" data-testid={`included-hint-${product.id}`}>{includedHint}</p>
+          </div>
         )}
 
-        {!compact && (
-          <ul className="mb-2.5 space-y-1">
-            {product.features.slice(0, 2).map((feature) => (
-              <li key={feature} className="flex items-center gap-1.5 text-xs text-white/55">
-                <span className="h-1 w-1 flex-shrink-0 rounded-full bg-[#5034ff]/90" />
-                <span className="line-clamp-1">{feature}</span>
-              </li>
+        {solutionChips.length > 0 && (
+          <div className="mb-3 flex flex-wrap gap-1.5" aria-label="Solution status">
+            {solutionChips.map((chip) => (
+              <span
+                key={chip.label}
+                className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-xs text-white/70"
+                data-testid={`solution-chip-${product.id}`}
+              >
+                {chip.label}
+              </span>
             ))}
-            {product.features.length > 2 && (
-              <li className="pl-2.5 text-[11px] text-white/40">+{product.features.length - 2} more</li>
-            )}
-          </ul>
-        )}
-
-        <div className="mb-2.5 flex flex-wrap gap-1">
-          {tags.slice(0, 3).map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[10px] text-white/50"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        {(includedHint || worksWithNames.length > 0 || relationships?.upgradeTo?.length || solutionChips.length > 0) && (
-          <div className="mb-2.5 space-y-0.5 text-xs text-[#a78bfa]/90">
-            {includedHint && (
-              <p className="line-clamp-1" data-testid={`included-hint-${product.id}`}>{includedHint}</p>
-            )}
-            {worksWithNames.length > 0 && (
-              <p className="line-clamp-1 text-white/45">Works with: {worksWithNames.join(", ")}</p>
-            )}
-            {solutionChips.length > 0 && (
-              <div className="flex flex-wrap gap-1.5" aria-label="Solution status">
-                {solutionChips.map((chip) => (
-                  <span
-                    key={chip.label}
-                    className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-xs text-white/70"
-                    data-testid={`solution-chip-${product.id}`}
-                  >
-                    {chip.label}
-                  </span>
-                ))}
-              </div>
-            )}
-            {relationships?.upgradeTo?.[0] && (
-              <p className="text-white/55">
-                Upgrade:{" "}
-                {getProductBySku(relationships.upgradeTo[0])?.name || relationships.upgradeTo[0]}
-              </p>
-            )}
           </div>
         )}
 

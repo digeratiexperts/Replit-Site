@@ -81,7 +81,7 @@ export function ProductMedia({
         )}
       </div>
 
-      {(categoryBadge || visual.vendor) && variant !== "thumb" && (
+      {(categoryBadge || visual.vendor) && variant === "detail" && (
         <div className="absolute left-2.5 top-2.5 z-10 flex max-w-[85%] flex-wrap gap-1.5">
           {categoryBadge && (
             <span className="rounded-full border border-white/20 bg-black/60 px-2 py-0.5 text-[10px] font-medium text-white/90 backdrop-blur-sm">
