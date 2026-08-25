@@ -54,6 +54,13 @@ const SecurityUpdates = lazy(() => import("@/pages/resources/SecurityUpdates"));
 const Videos = lazy(() => import("@/pages/resources/Videos"));
 const SecurityChecklist = lazy(() => import("@/pages/resources/SecurityChecklist"));
 const Datasheets = lazy(() => import("@/pages/resources/Datasheets"));
+const ResourceAssetPage = lazy(() => import("@/pages/resources/ResourceAssetPage"));
+const ExecutiveBriefPage = lazy(() => import("@/pages/resources/ExecutiveBriefPage"));
+const ExecutiveBriefIndex = lazy(() =>
+  import("@/pages/resources/ExecutiveBriefPage").then((m) => ({ default: m.ExecutiveBriefIndex })),
+);
+const CampaignIndex = lazy(() => import("@/pages/campaigns/CampaignIndex"));
+const CampaignLanding = lazy(() => import("@/pages/campaigns/CampaignLanding"));
 const DowntimeCalculator = lazy(() => import("@/pages/resources/DowntimeCalculator"));
 const ResourcesIndex = lazy(() => import("@/pages/resources/ResourcesIndex"));
 const KnowledgeBase = lazy(() => import("@/pages/support/KnowledgeBase"));
@@ -377,6 +384,31 @@ function Router() {
       <Route path="/resources/security-checklist" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <SecurityChecklist />
+        </Suspense>
+      )} />
+      <Route path="/resources/datasheets/:slug" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ResourceAssetPage />
+        </Suspense>
+      )} />
+      <Route path="/resources/reports/:slug" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ResourceAssetPage />
+        </Suspense>
+      )} />
+      <Route path="/resources/checklists/:slug" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ResourceAssetPage />
+        </Suspense>
+      )} />
+      <Route path="/resources/briefs/:slug" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ExecutiveBriefPage />
+        </Suspense>
+      )} />
+      <Route path="/resources/briefs" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <ExecutiveBriefIndex />
         </Suspense>
       )} />
       <Route path="/resources/datasheets" component={() => (
@@ -861,6 +893,16 @@ function Router() {
         </Suspense>
       )} />
       
+      <Route path="/go/:slug" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <CampaignLanding />
+        </Suspense>
+      )} />
+      <Route path="/go" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <CampaignIndex />
+        </Suspense>
+      )} />
       <Route path="/book" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <BookingPage />
@@ -869,6 +911,8 @@ function Router() {
 
       {/* Legacy / shorthand URLs → canonical routes */}
       <Route path="/assessment">{() => <Redirect to="/book" />}</Route>
+      <Route path="/lp/:slug">{(params) => <Redirect to={`/go/${params.slug}`} />}</Route>
+      <Route path="/ads/:slug">{(params) => <Redirect to={`/go/${params.slug}`} />}</Route>
       <Route path="/contact" component={() => (
         <Suspense fallback={<PageLoadingSkeleton />}>
           <ContactPage />
