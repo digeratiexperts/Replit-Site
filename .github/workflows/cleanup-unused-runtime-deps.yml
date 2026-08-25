@@ -23,9 +23,10 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Remove unused production packages and refresh lockfile
+      - name: Remove unused packages and apply non-breaking audit fixes
         run: |
           npm uninstall electron electron-builder stripe-replit-sync --no-audit --no-fund
+          npm audit fix --omit=dev --no-fund
           npm audit --omit=dev --audit-level=high
 
       - name: Remove temporary workflow and commit
@@ -35,5 +36,5 @@ jobs:
           git rm .github/workflows/cleanup-unused-runtime-deps.yml
           git add package.json package-lock.json
           git diff --cached --check
-          git commit -m "chore(deps): remove unused desktop and Replit Stripe packages"
+          git commit -m "chore(deps): remove unused packages and remediate production audit"
           git push origin HEAD:cleanup/runtime-dependencies-audit-20260825
