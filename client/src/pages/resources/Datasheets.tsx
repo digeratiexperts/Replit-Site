@@ -5,13 +5,7 @@ import { ConversionPathBar } from "@/components/ConversionPathBar";
 import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/useSEO";
 import { CTA } from "@/lib/ctaCopy";
-import { resources, resourceLandingMeta, type ResourceType } from "@/data/resourceRegistry";
-
-const TYPE_LABEL: Record<ResourceType, string> = {
-  datasheet: "Datasheet",
-  checklist: "Checklist",
-  report: "Report",
-};
+import { RESOURCE_TYPE_LABEL, resources, resourceLandingMeta } from "@/data/resourceRegistry";
 
 export default function Datasheets() {
   useSEO({
@@ -44,7 +38,7 @@ export default function Datasheets() {
                 </span>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/45">
-                    {TYPE_LABEL[resource.type]}
+                    {RESOURCE_TYPE_LABEL[resource.type]}
                   </p>
                   <h2 className="mt-2 font-heading text-xl font-semibold text-white">
                     <Link href={resource.route} className="hover:text-de-accent-ink">

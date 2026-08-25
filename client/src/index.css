@@ -1229,6 +1229,14 @@ input.de-paper-field:-webkit-autofill:active {
   a[href]::after {
     content: " (" attr(href) ")";
   }
+
+  .de-brief-document {
+    background: #fff !important;
+  }
+
+  .de-brief-document a[href]::after {
+    content: none;
+  }
 }
 
 /* High contrast mode support */

@@ -1,5 +1,5 @@
 import { Link, useParams } from "wouter";
-import { Download } from "lucide-react";
+import { Download, Printer } from "lucide-react";
 import { MegaMenu } from "@/components/MegaMenu";
 import { DigeratiEnhancedFooterSection } from "@/pages/sections/DigeratiEnhancedFooterSection";
 import { ConversionPathBar } from "@/components/ConversionPathBar";
@@ -67,9 +67,11 @@ export default function ExecutiveBriefPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#f7f5f2] text-[#1A1228]">
-      <MegaMenu />
-      <article className="de-nav-clear">
+    <div className="de-brief-document min-h-screen bg-[#f7f5f2] text-[#1A1228]">
+      <div className="print:hidden">
+        <MegaMenu />
+      </div>
+      <article className="de-nav-clear print:pt-0">
         <header className="border-b border-black/10 bg-[#f7f5f2]">
           <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#D3126A]">
@@ -82,6 +84,14 @@ export default function ExecutiveBriefPage() {
             <p className="mt-6 text-sm text-black/45">
               For {brief.audience} · {brief.readingMinutes} minute read · Chandler, Arizona
             </p>
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="mt-8 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-[#1A1228] underline decoration-black/20 underline-offset-4 hover:text-[#D3126A] print:hidden"
+            >
+              <Printer className="h-4 w-4" aria-hidden="true" />
+              Print or save as PDF
+            </button>
           </div>
         </header>
         <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
@@ -112,7 +122,7 @@ export default function ExecutiveBriefPage() {
               );
             })}
           </div>
-          <div className="mt-14 flex flex-col gap-3 border-t border-black/10 pt-8 sm:flex-row">
+          <div className="mt-14 flex flex-col gap-3 border-t border-black/10 pt-8 print:hidden sm:flex-row">
             <Button asChild variant="brand" className="h-12">
               <Link href="/book">{CTA.primary}</Link>
             </Button>
@@ -131,7 +141,7 @@ export default function ExecutiveBriefPage() {
             )}
           </div>
         </div>
-        <div className="bg-[#0a0a0a] px-4 py-16">
+        <div className="bg-[#0a0a0a] px-4 py-16 print:hidden">
           <div className="mx-auto max-w-5xl">
             <ConversionPathBar
               headline="Turn the brief into a recommendation"
@@ -140,7 +150,9 @@ export default function ExecutiveBriefPage() {
           </div>
         </div>
       </article>
-      <DigeratiEnhancedFooterSection />
+      <div className="print:hidden">
+        <DigeratiEnhancedFooterSection />
+      </div>
     </div>
   );
 }

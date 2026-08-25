@@ -9,7 +9,7 @@ import { useSEO } from "@/hooks/useSEO";
 import { CTA } from "@/lib/ctaCopy";
 import { PRIMARY_PHONE } from "@/data/companyContact";
 import { campaignBySlug } from "@/data/campaigns";
-import { resourceBySlug, resourceLandingMeta } from "@/data/resourceRegistry";
+import { RESOURCE_TYPE_LABEL, resourceBySlug, resourceLandingMeta } from "@/data/resourceRegistry";
 import { briefBySlug } from "@/data/executiveBriefs";
 import NotFound from "@/pages/not-found";
 
@@ -36,8 +36,8 @@ export default function CampaignLanding() {
       <MegaMenu />
       <main id="main-content">
         <section className="de-dark-well de-field-grain de-field-lit de-nav-clear border-b border-de-hairline">
-          <div className="mx-auto grid max-w-7xl gap-12 px-4 py-14 sm:px-6 lg:grid-cols-12 lg:px-8 lg:py-20">
-            <div className="lg:col-span-7">
+          <div className="mx-auto grid max-w-7xl gap-12 px-4 py-14 sm:px-6 md:grid-cols-12 md:px-8 md:py-20">
+            <div className="md:col-span-7">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-de-accent-ink">
                 {campaign.eyebrow}
               </p>
@@ -70,7 +70,7 @@ export default function CampaignLanding() {
               </div>
               <p className="mt-5 max-w-xl text-sm leading-relaxed text-white/50">{campaign.pricingNote}</p>
             </div>
-            <aside className="lg:col-span-5">
+            <aside className="md:col-span-5">
               <div className="rounded-2xl border border-de-hairline bg-de-raised p-6 md:p-8">
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/45">Who this is for</p>
                 <p className="mt-3 text-base leading-relaxed text-white/80">{campaign.audience}</p>
@@ -87,11 +87,16 @@ export default function CampaignLanding() {
         </section>
 
         <section className="bg-de-surface">
-          <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-            <StatementHeading as="h2" className="text-3xl md:text-4xl">
-              What is actually at stake
-            </StatementHeading>
-            <ol className="mt-10 max-w-3xl space-y-8">
+          <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:grid md:grid-cols-12 md:gap-16 md:px-8 md:py-20">
+            <div className="md:col-span-5">
+              <StatementHeading as="h2" className="text-3xl md:text-4xl">
+                What is actually at stake
+              </StatementHeading>
+              <p className="mt-4 text-base leading-relaxed text-white/60">
+                These are the operating failures the conversation is built to surface — not scare statistics.
+              </p>
+            </div>
+            <ol className="mt-10 space-y-8 md:col-span-7 md:mt-0">
               {campaign.stakes.map((stake, index) => (
                 <li key={stake.title} className="grid gap-3 sm:grid-cols-[3rem_1fr]">
                   <span className="font-mono text-sm text-de-accent-ink">0{index + 1}</span>
@@ -161,7 +166,9 @@ export default function CampaignLanding() {
               </h2>
               <ul className="mt-6 space-y-3 text-base leading-relaxed text-white/70">
                 {campaign.fitFor.map((item) => (
-                  <li key={item}>{item}</li>
+                  <li key={item} className="border-l border-[#D3126A] pl-4">
+                    {item}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -174,7 +181,9 @@ export default function CampaignLanding() {
               </h2>
               <ul className="mt-6 space-y-3 text-base leading-relaxed text-white/70">
                 {campaign.fitNot.map((item) => (
-                  <li key={item}>{item}</li>
+                  <li key={item} className="border-l border-white/20 pl-4">
+                    {item}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -191,7 +200,7 @@ export default function CampaignLanding() {
                 {asset && (
                   <article className="rounded-2xl border border-de-hairline bg-de-raised p-6 md:p-8">
                     <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/45">
-                      {asset.type}
+                      {RESOURCE_TYPE_LABEL[asset.type]}
                     </p>
                     <h3 className="mt-2 font-heading text-xl font-semibold text-white">{asset.title}</h3>
                     {assetMeta && (
@@ -205,7 +214,7 @@ export default function CampaignLanding() {
                         </a>
                       </Button>
                       <Button asChild variant="outline" className="border-de-hairline text-white hover:bg-de-bg">
-                        <Link href={asset.route}>Asset page</Link>
+                        <Link href={asset.route}>Open {RESOURCE_TYPE_LABEL[asset.type].toLowerCase()} page</Link>
                       </Button>
                     </div>
                   </article>

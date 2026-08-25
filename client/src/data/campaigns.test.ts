@@ -38,6 +38,7 @@ describe("campaign landing catalog", () => {
         ).toBe(true);
       }
       expect(campaign.deeperHref.startsWith("/")).toBe(true);
+      expect(campaign.deeperHref).not.toBe("/book");
     }
     expect(campaignBySlug("cyber-risk-assessment")?.pricingNote).toMatch(/2,500|2500/);
   });

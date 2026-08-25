@@ -53,6 +53,42 @@ export default function CampaignIndex() {
             </li>
           ))}
         </ol>
+
+        <section className="de-paper-chapter de-field-grain-paper rounded-2xl px-6 py-10 sm:px-10">
+          <h2 className="font-heading text-2xl font-semibold tracking-[-0.02em] text-[#1A1228] md:text-3xl">
+            How to advertise these
+            <span className="text-[#D3126A]" aria-hidden="true">
+              :
+            </span>
+          </h2>
+          <p className="mt-4 max-w-3xl text-base leading-relaxed text-black/65">
+            One offer per ad group. Send paid traffic to the matching /go URL — not the homepage. The primary
+            button on every page is Get My Cyber Risk Assessment. Do not add review counts, certifications,
+            response times, or invented case results to the creative.
+          </p>
+          <div className="mt-8 overflow-x-auto">
+            <table className="w-full min-w-[36rem] text-left text-sm">
+              <caption className="sr-only">Recommended search titles and landing URLs</caption>
+              <thead>
+                <tr className="border-b border-black/15 text-xs font-semibold uppercase tracking-[0.12em] text-black/45">
+                  <th className="py-3 pr-4 font-semibold">Offer</th>
+                  <th className="py-3 pr-4 font-semibold">Landing URL</th>
+                  <th className="py-3 font-semibold">Recommended search title</th>
+                </tr>
+              </thead>
+              <tbody>
+                {CAMPAIGNS.map((campaign) => (
+                  <tr key={campaign.slug} className="border-b border-black/10 align-top">
+                    <td className="py-3 pr-4 font-medium text-[#1A1228]">{campaign.offerName}</td>
+                    <td className="py-3 pr-4 font-mono text-xs text-black/70">/go/{campaign.slug}</td>
+                    <td className="py-3 text-black/70">{campaign.seoTitle}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
         <ConversionPathBar
           headline="Not sure which offer is honest?"
           body="Start with the Cyber Risk Assessment conversation. The page you advertise should match the path we would actually recommend."

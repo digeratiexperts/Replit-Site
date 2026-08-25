@@ -120,8 +120,8 @@ export const CAMPAIGNS: CampaignPage[] = [
     pricingNote: `Conversation first. Formal CSRA ${csra} when that document is scoped. ProActive packages are quoted after environment fit is clear.`,
     relatedAssetSlug: "cyber-risk-assessment-sample",
     relatedBriefSlug: "cyber-risk-operating-brief",
-    deeperHref: "/book",
-    deeperLabel: "Open the booking page",
+    deeperHref: "/resources/briefs/cyber-risk-operating-brief",
+    deeperLabel: "Read the operating brief",
   },
   {
     slug: "managed-it",

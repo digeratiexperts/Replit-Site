@@ -55,6 +55,12 @@ export const resourcesByType = (type: ResourceType): ResourceItem[] =>
 export const resourceBySlug = (slug: string): ResourceItem | undefined =>
   resources.find((r) => r.slug === slug);
 
+export const RESOURCE_TYPE_LABEL: Record<ResourceType, string> = {
+  datasheet: "Datasheet",
+  checklist: "Checklist",
+  report: "Report",
+};
+
 export const blogBySlug = (slug: string): BlogItem | undefined =>
   blogs.find((b) => b.slug === slug);
 

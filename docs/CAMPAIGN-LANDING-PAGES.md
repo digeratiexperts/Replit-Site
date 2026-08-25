@@ -35,6 +35,8 @@
 
 Do not add testimonials, review counts, or “DE is SOC 2 certified” language to these pages.
 
+`/go` includes a media table (offer, URL, recommended search title) for buyers placing ads. Creative must not invent facts the landing page does not state.
+
 ## Affected components
 
 - `client/src/data/campaigns.ts`

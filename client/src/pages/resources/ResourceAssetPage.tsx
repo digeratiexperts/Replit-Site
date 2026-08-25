@@ -5,7 +5,7 @@ import { ConversionPathBar } from "@/components/ConversionPathBar";
 import { Button } from "@/components/ui/button";
 import { useSEO } from "@/hooks/useSEO";
 import { CTA } from "@/lib/ctaCopy";
-import { resourceBySlug, resourceLandingMeta } from "@/data/resourceRegistry";
+import { RESOURCE_TYPE_LABEL, resourceBySlug, resourceLandingMeta } from "@/data/resourceRegistry";
 import NotFound from "@/pages/not-found";
 
 export default function ResourceAssetPage() {
@@ -24,8 +24,7 @@ export default function ResourceAssetPage() {
     canonical: resource.route,
   });
 
-  const typeLabel =
-    resource.type === "datasheet" ? "Datasheet" : resource.type === "checklist" ? "Checklist" : "Report";
+  const typeLabel = RESOURCE_TYPE_LABEL[resource.type];
 
   return (
     <PageTemplate
@@ -33,7 +32,7 @@ export default function ResourceAssetPage() {
       subtitle={meta?.tagline}
       breadcrumbs={[
         { label: "Resources", href: "/resources" },
-        { label: "Datasheets", href: "/resources/datasheets" },
+        { label: "Datasheets & documentation", href: "/resources/datasheets" },
         { label: resource.title },
       ]}
       actions={
