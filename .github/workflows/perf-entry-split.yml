@@ -30,28 +30,26 @@ jobs:
           from pathlib import Path
           p = Path('client/src/App.tsx')
           s = p.read_text()
-
           old_import = 'import { DigeratiHomepage } from "@/pages/DigeratiHomepage";\n\n'
           if s.count(old_import) != 1:
               raise SystemExit(f'SAFETY STOP: homepage import count={s.count(old_import)}')
           s = s.replace(old_import, '', 1)
-
           marker = 'const ContactPage = lazy(() => import("@/pages/Contact"));\n'
           if s.count(marker) != 1:
               raise SystemExit(f'SAFETY STOP: contact marker count={s.count(marker)}')
           lazy_home = 'const DigeratiHomepage = lazy(() => import("@/pages/DigeratiHomepage").then((m) => ({ default: m.DigeratiHomepage })));\n'
           s = s.replace(marker, marker + lazy_home, 1)
-
           old_route = '      <Route path="/" component={DigeratiHomepage} />'
-          new_route = '''      <Route path="/" component={() => (
-        <Suspense fallback={<PageLoadingSkeleton />}>
-          <DigeratiHomepage />
-        </Suspense>
-      )} />'''
+          new_route = (
+              '      <Route path="/" component={() => (\n'
+              '        <Suspense fallback={<PageLoadingSkeleton />}>\n'
+              '          <DigeratiHomepage />\n'
+              '        </Suspense>\n'
+              '      )} />'
+          )
           if s.count(old_route) != 1:
               raise SystemExit(f'SAFETY STOP: homepage route count={s.count(old_route)}')
-          s = s.replace(old_route, new_route, 1)
-          p.write_text(s)
+          p.write_text(s.replace(old_route, new_route, 1))
           PY
 
       - name: Locate malformed utility sources
