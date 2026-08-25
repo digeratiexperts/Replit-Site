@@ -32,3 +32,7 @@ Design OS (execution layer, does not replace `.cursorrules`): `.cursor/rules/ui-
 
 - Figma MCP + Code Connect
 - Storybook / Chromatic if needed later
+
+## Master guardrails
+
+Standing operating guardrails for any agent (Cowork, Claude Code, Cursor, Antigravity) working production/security/tax/UI concerns on this repo: `docs/MASTER-GUARDRAILS.md`. Adopted 2026-08-25. Read before autonomous multi-step work.
