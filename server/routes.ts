@@ -5531,31 +5531,58 @@ export async function registerRoutes(app: Express) {
   });
 
   // Create order (for quote requests or other payment methods) - requires 'comanaged' or 'admin' role
+  // Create order (for quote requests or other non-online payment methods) - requires 'comanaged' or 'admin' role.
+  // SECURITY: lineItems/subtotal/total/status are NEVER trusted from the browser here.
+  // Every line item is re-resolved against the real catalog + server-side client pricing
+  // (same canonicalizeCheckoutLineItems used by /api/store/checkout/zoho), the total is
+  // recomputed server-side, and status is always forced to "pending" -- this endpoint has
+  // no payment integration, so nothing here may ever mark an order "paid" (see
+  // docs/MASTER-GUARDRAILS.md #10-12; reconcilePaidOrders() in orderFulfillment.ts fulfills
+  // ANY order row with status "paid" regardless of how it got that way).
   app.post("/api/store/orders", [authMiddleware, requireRole('comanaged', 'admin'), validateInput], async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { lineItems, billing, paymentMethod, status, subtotal, total, notes } = req.body;
-      
-      if (!lineItems || !Array.isArray(lineItems) || lineItems.length === 0) {
-        return res.status(400).json({ error: "Line items are required" });
-      }
-      
+      const { billing, paymentMethod, notes } = req.body;
+
       if (!billing || !billing.email || !billing.name) {
         return res.status(400).json({ error: "Billing name and email are required" });
       }
 
+      const { resolveClientPricingRows, toPriceOverrides } = await import("./storeClientPricing");
+      const { canonicalizeCheckoutLineItems, canonicalCheckoutTotal } = await import("./secureStoreCheckout");
+
+      const role = (req.user?.storeRole || "public") as any;
+      const pricingRows = await resolveClientPricingRows(req.user?.clientId);
+      const priceOverrides = toPriceOverrides(pricingRows);
+      let lineItems;
+      try {
+        lineItems = canonicalizeCheckoutLineItems(req.body?.lineItems, role, priceOverrides);
+      } catch (error: any) {
+        console.warn("[SECURITY] STORE_ORDER_CART_REJECTED", {
+          userId: req.userId,
+          clientId: req.user?.clientId,
+          reason: error?.message || "invalid_cart",
+        });
+        return res.status(400).json({ error: error?.message || "Invalid order cart" });
+      }
+
+      const trustedTotal = canonicalCheckoutTotal(lineItems);
+
+      const allowedPaymentMethods = new Set(["quote_request", "invoice", "purchase_order", "check", "other"]);
+      const safePaymentMethod = allowedPaymentMethods.has(paymentMethod) ? paymentMethod : "quote_request";
+
       const { db } = await import("./db");
       const { storeOrders } = await import("@shared/schema");
-      
+
       const orderNumber = `ORD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 
       const [order] = await db.insert(storeOrders).values({
         orderNumber,
-        status: status || "pending",
-        paymentMethod: paymentMethod || "quote_request",
+        status: "pending",
+        paymentMethod: safePaymentMethod,
         lineItems,
-        subtotal: subtotal.toString(),
+        subtotal: trustedTotal.toFixed(2),
         tax: "0",
-        total: total.toString(),
+        total: trustedTotal.toFixed(2),
         billingEmail: billing.email,
         billingName: billing.name,
         billingCompany: billing.company || null,
@@ -5567,8 +5594,8 @@ export async function registerRoutes(app: Express) {
         orderNumber: order.orderNumber,
         clientId: req.user?.clientId,
         userId: req.userId,
-        total,
-        paymentMethod: paymentMethod || "quote_request",
+        total: trustedTotal,
+        paymentMethod: safePaymentMethod,
         itemCount: lineItems.length
       });
       
