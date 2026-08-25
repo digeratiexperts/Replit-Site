@@ -198,7 +198,7 @@ export const storeProducts: StoreProduct[] = [
     sku: "DE-SVC-MGD-BCDR-MO",
     name: "Managed BCDR",
     shortDescription: "Business continuity and disaster recovery",
-    description: "Complete business continuity and disaster recovery services ensuring your business can recover from any disruption.",
+    description: "Managed business continuity and disaster recovery services focused on backup, recovery planning, testing, and contract-defined recovery objectives.",
     category: "contract_services",
     pricingType: "monthly",
     basePrice: 0,
@@ -207,7 +207,7 @@ export const storeProducts: StoreProduct[] = [
     isClientOnly: false,
     requiredClientType: "public",
     minimumQuantity: 1,
-    features: ["Automated Backups", "Disaster Recovery Planning", "Contract-defined recovery targets", "Regular DR Testing"],
+    features: ["Automated Backups", "Disaster Recovery Planning", "Contract-Defined RTO/RPO Objectives", "Regular DR Testing"],
     sortOrder: 6,
   },
   {
