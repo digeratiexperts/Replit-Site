@@ -204,7 +204,13 @@ export function authMiddleware(req: AuthenticatedRequest, res: Response, next: N
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
     const live = portalAuthGetUser(decoded.email) || (decoded.userId ? findUserById(decoded.userId) : null);
-    if (live && ((live as any).disabled || (live as any).status === "disabled" || (live as any).status === "revoked")) {
+    // Fail closed: a validly-signed JWT for a user with no live record (deleted, never
+    // indexed, or a store that has not finished loading) must be denied, not fall back to
+    // trusting the token's embedded role/storeRole/clientId claims. See docs/MASTER-GUARDRAILS.md #7-8.
+    if (!live) {
+      return res.status(401).json({ error: "Account not found. Please log in again." });
+    }
+    if ((live as any).disabled || (live as any).status === "disabled" || (live as any).status === "revoked") {
       return res.status(401).json({ error: "Account disabled or revoked" });
     }
     req.user = {
