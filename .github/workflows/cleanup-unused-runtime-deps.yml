@@ -23,18 +23,41 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Remove unused packages and apply non-breaking audit fixes
+      - name: Remove unused packages and remediate production dependencies
+        shell: bash
         run: |
+          set -euo pipefail
           npm uninstall electron electron-builder stripe-replit-sync --no-audit --no-fund
-          npm audit fix --omit=dev --no-fund
+
+          # Apply only npm's non-breaking fixes first. A remaining high advisory is
+          # expected until Drizzle is deliberately upgraded below.
+          npm audit fix --omit=dev --no-fund || true
+
+          GCS_VERSION="$(npm view @google-cloud/storage version)"
+          echo "Using @google-cloud/storage ${GCS_VERSION}"
+          npm install --save --no-audit --no-fund \
+            drizzle-orm@0.45.2 \
+            "@google-cloud/storage@${GCS_VERSION}"
+
+          # High/critical production advisories are release blockers.
           npm audit --omit=dev --audit-level=high
 
+          # Breaking-major/minor dependency moves only survive if the real codebase
+          # still typechecks, tests, and builds cleanly.
+          npm run check
+          npm test
+          npm run test:advisor
+          npm run build
+          node scripts/check-bundle-budget.mjs
+
       - name: Remove temporary workflow and commit
+        shell: bash
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git rm .github/workflows/cleanup-unused-runtime-deps.yml
           git add package.json package-lock.json
           git diff --cached --check
-          git commit -m "chore(deps): remove unused packages and remediate production audit"
+          git commit -m "chore(deps): remediate production dependency audit"
           git push origin HEAD:cleanup/runtime-dependencies-audit-20260825
