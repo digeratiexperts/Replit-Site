@@ -123,7 +123,7 @@ async function loadDbClientPricing(clientId: string): Promise<ClientPriceEntry[]
       .where(and(eq(storeClientPricing.clientId, clientId), eq(storeClientPricing.isActive, true)));
     return rows
       .map(rowToEntry)
-      .filter((row): row is ClientPriceEntry => row !== null);
+      .filter((row: ClientPriceEntry | null): row is ClientPriceEntry => row !== null);
   } catch (error: any) {
     if (process.env.NODE_ENV === "production") {
       throw new Error(`Client pricing lookup failed: ${error?.message || error}`);
