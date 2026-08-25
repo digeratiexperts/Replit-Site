@@ -205,7 +205,7 @@ const ManagedStore = () => {
               <p className="text-white/60">All-inclusive managed IT packages. Choose the tier that fits your security and compliance needs.</p>
             </div>
             
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-6">
               {proactiveEcosystemProducts.map((product, idx) => (
                 <ProductCard 
                   key={product.id} 
