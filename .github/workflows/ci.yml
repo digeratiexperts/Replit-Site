@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   check-test-build:
-    name: Typecheck, test, build, and budget
+    name: Typecheck, test, build, audit, and smoke
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -31,6 +31,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
+
+      - name: Production dependency audit
+        run: npm audit --omit=dev --audit-level=high
 
       - name: Typecheck
         run: npm run check
@@ -48,3 +51,36 @@ jobs:
 
       - name: Browser bundle budget
         run: node scripts/check-bundle-budget.mjs
+
+      - name: Local production smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          LOG=/tmp/digerati-ci-production.log
+          NODE_ENV=production PORT=3300 node dist/index.js >"$LOG" 2>&1 &
+          SERVER_PID=$!
+          cleanup() {
+            kill "$SERVER_PID" 2>/dev/null || true
+            wait "$SERVER_PID" 2>/dev/null || true
+          }
+          trap cleanup EXIT
+
+          READY=0
+          for _ in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:3300/healthz >/dev/null; then
+              READY=1
+              break
+            fi
+            if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+
+          if [ "$READY" != "1" ]; then
+            echo "Production server did not become healthy"
+            cat "$LOG"
+            exit 1
+          fi
+
+          BASE_URL=http://127.0.0.1:3300 npm run smoke:public
