@@ -61,8 +61,10 @@ export function useStoreAuth(): StoreAuthState {
         setClientType(data.clientType || "public");
         return data.clientType as ClientType;
       }
+      setClientType("public");
     } catch (error) {
       console.error("Failed to fetch client info:", error);
+      setClientType("public");
     }
     return "public" as ClientType;
   }, []);
@@ -77,10 +79,13 @@ export function useStoreAuth(): StoreAuthState {
 
       if (response.ok) {
         const data = await response.json();
-        setClientPricing(data.pricing || []);
+        setClientPricing(Array.isArray(data.pricing) ? data.pricing : []);
+        return;
       }
+      setClientPricing([]);
     } catch (error) {
       console.error("Failed to fetch client pricing:", error);
+      setClientPricing([]);
     }
   }, []);
 
@@ -147,6 +152,8 @@ export function useStoreAuth(): StoreAuthState {
   const refreshPricing = useCallback(async () => {
     if (token) {
       await fetchClientPricing(token);
+    } else {
+      setClientPricing([]);
     }
   }, [token, fetchClientPricing]);
 
