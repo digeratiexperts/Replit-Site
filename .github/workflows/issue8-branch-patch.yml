@@ -27,32 +27,34 @@ jobs:
           products_path = Path('client/src/data/storeProducts.ts')
           s = products_path.read_text()
 
-          office_marker = '''  {
-            id: "prod-001",
-            sku: "DE-SVC-MGD-OFFICE-MO",
-          '''
+          office_marker = (
+              '  {\n'
+              '    id: "prod-001",\n'
+              '    sku: "DE-SVC-MGD-OFFICE-MO",\n'
+          )
           if s.count(office_marker) != 1:
               raise SystemExit(f'SAFETY STOP: Office marker count={s.count(office_marker)}')
 
-          it_product = '''  {
-            id: "prod-008",
-            sku: "DE-SVC-MGD-IT-MO",
-            name: "ProActive Ecosystem - IT",
-            shortDescription: "Essential managed IT and baseline security",
-            description: pricing.it.note,
-            category: "contract_services",
-            pricingType: "per_user",
-            basePrice: pricing.it.user,
-            pricingUnit: "user",
-            isContractOnly: true,
-            isCheckoutEnabled: false,
-            isClientOnly: false,
-            requiredClientType: "public",
-            minimumQuantity: 1,
-            features: [...pricing.it.inclusions],
-            sortOrder: 0,
-          },
-          '''
+          it_product = (
+              '  {\n'
+              '    id: "prod-008",\n'
+              '    sku: "DE-SVC-MGD-IT-MO",\n'
+              '    name: "ProActive Ecosystem - IT",\n'
+              '    shortDescription: "Essential managed IT and baseline security",\n'
+              '    description: pricing.it.note,\n'
+              '    category: "contract_services",\n'
+              '    pricingType: "per_user",\n'
+              '    basePrice: pricing.it.user,\n'
+              '    pricingUnit: "user",\n'
+              '    isContractOnly: true,\n'
+              '    isCheckoutEnabled: false,\n'
+              '    isClientOnly: false,\n'
+              '    requiredClientType: "public",\n'
+              '    minimumQuantity: 1,\n'
+              '    features: [...pricing.it.inclusions],\n'
+              '    sortOrder: 0,\n'
+              '  },\n'
+          )
           s = s.replace(office_marker, it_product + office_marker, 1)
 
           old_bcdr = 'features: ["Automated Backups", "Disaster Recovery Planning", "RTO/RPO Guarantees", "Regular DR Testing"]'
@@ -68,8 +70,7 @@ jobs:
           new_grid = '<div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-6">'
           if m.count(old_grid) != 1:
               raise SystemExit(f'SAFETY STOP: managed grid count={m.count(old_grid)}')
-          m = m.replace(old_grid, new_grid, 1)
-          managed_path.write_text(m)
+          managed_path.write_text(m.replace(old_grid, new_grid, 1))
 
           test_path = Path('client/src/data/storeProducts.managed.test.ts')
           test_path.write_text('''import { describe, expect, it } from "vitest";
