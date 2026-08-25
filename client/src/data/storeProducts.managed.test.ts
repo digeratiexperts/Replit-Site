@@ -35,10 +35,11 @@ describe("managed Store catalog", () => {
     }
   });
 
-  it("does not publish an unconditional RTO/RPO guarantee", () => {
+  it("uses contract-defined recovery objectives instead of an unconditional guarantee", () => {
     const bcdr = storeProducts.find((product) => product.sku === "DE-SVC-MGD-BCDR-MO");
     expect(bcdr).toBeDefined();
+    expect(bcdr!.features).toContain("Contract-Defined RTO/RPO Objectives");
     expect(bcdr!.features.join(" ")).not.toMatch(/RTO\/RPO Guarantees/i);
-    expect(bcdr!.features.join(" ")).toMatch(/recovery targets/i);
+    expect(bcdr!.description).not.toMatch(/ensuring your business can recover from any disruption/i);
   });
 });
