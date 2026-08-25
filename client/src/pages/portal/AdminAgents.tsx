@@ -23,7 +23,7 @@ interface Agent {
 const sampleAgents: Agent[] = [
   {
     id: "1",
-    name: "Digerati Expert Desktop Agent",
+    name: "Digerati Experts Desktop Agent",
     type: "custom",
     version: "1.0.0",
     downloadUrl: "https://agents.digerati.com/digerati-agent-1.0.0.exe",

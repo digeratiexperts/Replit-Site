@@ -2,7 +2,7 @@
  * Canonical industry cybersecurity awareness facts for the public site.
  *
  * Rules:
- * - Industry context only — never present as Digerati performance proof.
+ * - Industry context only — never present as Digerati Experts performance proof.
  * - Every fact must include a named source + year.
  * - Do not invent DE customer counts, SLAs, savings, or testimonials here.
  * - Never reinstate the indefensible small-business post-attack closure myth (see ban list below).

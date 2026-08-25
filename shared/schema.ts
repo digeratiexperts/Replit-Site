@@ -48,7 +48,7 @@ export const approvalStepStatusEnum = pgEnum("portal_approval_step_status", [
 // - prospect: Registered but unverified users
 // - managed: Managed service clients (can't purchase managed services, schedule only)
 // - comanaged: Co-Managed clients (can purchase co-managed products)
-// - admin: Digerati admin (full access)
+// - admin: Digerati Experts admin (full access)
 export const storeRoleEnum = pgEnum("store_role", ["public", "prospect", "managed", "comanaged", "admin"]);
 
 export const ticketStatusEnum = pgEnum("ticket_status", ["open", "in_progress", "pending_client", "resolved", "closed"]);
@@ -926,7 +926,7 @@ export const externalIntegrationMappings = pgTable("external_integration_mapping
 export const desktopAgents = pgTable("desktop_agents", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   clientId: varchar("client_id").notNull().references(() => portalClients.id, { onDelete: "cascade" }),
-  agentName: text("agent_name").notNull(), // "Digerati", "JumpCloud", "Coro", "BlackPoint"
+  agentName: text("agent_name").notNull(), // "Digerati Experts", "JumpCloud", "Coro", "BlackPoint"
   agentType: text("agent_type").notNull(), // "jumpcloud", "coro", "blackpoint", "other"
   downloadUrl: text("download_url"),
   version: text("version"),

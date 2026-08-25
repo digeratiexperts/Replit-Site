@@ -26,6 +26,8 @@ export interface CompanyPhone {
 
 export const COMPANY = {
   legalName: "Digerati Experts",
+  /** Spoken / UI short form. Always “Digerati Experts” or “DE”. */
+  shortName: "DE",
   email: "info@digeratiexperts.com",
   supportEmail: "support@digeratiexperts.com",
   privacyEmail: "privacy@digeratiexperts.com",

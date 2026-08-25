@@ -107,7 +107,7 @@ export function PortalPeople() {
         <Card>
           <CardContent className="py-10 text-center space-y-3">
             <p className="text-slate-600">
-              Only your Company IT Contact (or a Digerati admin) can manage managers, departments, and
+              Only your Company IT Contact (or a DE admin) can manage managers, departments, and
               IT Contacts.
             </p>
             <Link
@@ -127,7 +127,7 @@ export function PortalPeople() {
       <div className="max-w-5xl mx-auto space-y-6">
         <p className="text-sm text-slate-600">
           Assign each person a manager (boss), optional department, and designate the Company IT Contact
-          who owns day-to-day communication with Digerati. Department IT Contacts are optional.
+          who owns day-to-day communication with DE. Department IT Contacts are optional.
         </p>
 
         {error && (

@@ -14,7 +14,7 @@ interface Agent {
 
 const agents: Agent[] = [
   {
-    name: "Digerati Expert Desktop Agent",
+    name: "Digerati Experts Desktop Agent",
     version: "1.0.0",
     downloadUrl: "/api/portal/agent/download",
     description: "Our native desktop agent for quick support access",
@@ -178,9 +178,9 @@ export default function PortalAgent() {
           </CardContent>
         </Card>
 
-        {/* Digerati Agent Features */}
+        {/* DE Agent Features */}
         <div>
-          <h3 className="text-lg font-bold mb-4">Digerati Expert Agent Features</h3>
+          <h3 className="text-lg font-bold mb-4">Digerati Experts Agent Features</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {digeratiFeatures.map((feature) => {
               const Icon = feature.icon;

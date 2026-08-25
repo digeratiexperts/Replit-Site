@@ -515,7 +515,7 @@ export async function registerRoutes(app: Express) {
         items: [],
         sources: {},
         attribution:
-          "Sources: CISA, NIST NVD, FIRST, and Microsoft MSRC. Digerati prioritizes items based on active exploitation, exploit probability, and relevance to SMB environments.",
+          "Sources: CISA, NIST NVD, FIRST, and Microsoft MSRC. Digerati Experts prioritizes items based on active exploitation, exploit probability, and relevance to SMB environments.",
         message: "Unable to load the threat feed",
       });
     }
@@ -4306,7 +4306,7 @@ export async function registerRoutes(app: Express) {
           companyName: null,
           matchedDeals: [],
           source: "none",
-          message: "No company profile on this portal user. Contact your Company IT Contact or Digerati.",
+          message: "No company profile on this portal user. Contact your Company IT Contact or DE.",
         });
       }
 
@@ -4402,7 +4402,7 @@ export async function registerRoutes(app: Express) {
     try {
       return res.status(501).json({
         message:
-          "E-signature is completed through the Zoho Sign link sent for this document (managed in TechSales). Contact your Company IT Contact or Digerati if you need the signing link resent.",
+          "E-signature is completed through the Zoho Sign link sent for this document (managed in TechSales). Contact your Company IT Contact or DE if you need the signing link resent.",
       });
     } catch (error: any) {
       logger.error("Failed to sign contract", error);
@@ -4414,7 +4414,7 @@ export async function registerRoutes(app: Express) {
     try {
       return res.status(501).json({
         message:
-          "To decline a pending agreement, use the Zoho Sign email link or ask Digerati / your Company IT Contact to recall the request in TechSales.",
+          "To decline a pending agreement, use the Zoho Sign email link or ask DE / your Company IT Contact to recall the request in TechSales.",
       });
     } catch (error: any) {
       logger.error("Failed to decline contract", error);
@@ -4432,7 +4432,7 @@ export async function registerRoutes(app: Express) {
         companyName: client.companyName,
         contactEmail: client.contactEmail,
         status: client.status || "active",
-        type: client.type || "client", // "msp" for Digerati, "client" for customers
+        type: client.type || "client", // "msp" for Digerati Experts, "client" for customers
         userCount: Array.from(portalUsers.values()).filter(u => u.clientId === client.id).length,
         createdAt: client.createdAt,
       }));

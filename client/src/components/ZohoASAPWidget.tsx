@@ -330,7 +330,7 @@ export const ZohoASAPWidget = ({
 
   useEffect(() => {
     // Keep the existing Zoho ASAP bootstrap available for Desk integrations, but
-    // do not make it responsible for the custom Digerati support experience.
+    // do not make it responsible for the custom Digerati Experts support experience.
     if (!isEnabled || !accountId || !portalId) return;
     if (typeof document === "undefined") return;
     if (document.querySelector('script[data-zoho-asap="1"]')) return;
@@ -1634,7 +1634,7 @@ export const ZohoASAPWidget = ({
                 <p className="de-desk-composer-caption">
                   <Lock aria-hidden="true" />
                   {agentLive
-                    ? "A Digerati agent is in this thread. Never share passwords or MFA codes."
+                    ? "A DE agent is in this thread. Never share passwords or MFA codes."
                     : "Never share passwords, MFA codes, or private keys."}
                 </p>
               </>

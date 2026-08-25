@@ -89,10 +89,10 @@ export default function Blog() {
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <Helmet>
-        <title>The Digerati Journal — Cybersecurity & Managed IT Insights | Digerati Experts</title>
+        <title>The DE Journal — Cybersecurity & Managed IT Insights | Digerati Experts</title>
         <meta
           name="description"
-          content="The Digerati Journal: cybersecurity-first insights for Arizona small and growing businesses — managed IT, ransomware defense, cyber risk assessments, AI governance, and compliance."
+          content="The DE Journal: cybersecurity-first insights for Arizona small and growing businesses — managed IT, ransomware defense, cyber risk assessments, AI governance, and compliance."
         />
       </Helmet>
       <MegaMenu />
@@ -100,7 +100,7 @@ export default function Blog() {
       {/* Branded publication banner */}
       <section
         className="relative de-nav-clear overflow-hidden"
-        aria-label="The Digerati Journal masthead"
+        aria-label="The DE Journal masthead"
       >
         <div
           aria-hidden
@@ -140,7 +140,7 @@ export default function Blog() {
                   the
                 </span>
                 <span className="block text-5xl md:text-7xl lg:text-8xl">
-                  Digerati{" "}
+                  DE{" "}
                   <span className="text-de-accent-ink">
                     Journal
                   </span>

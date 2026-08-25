@@ -383,7 +383,7 @@ export const industryPageData = {
 
 export const resourcePageData = {
   'blog': {
-    title: "Digerati Journal",
+    title: "DE Journal",
     subtitle: "Cybersecurity & managed IT field notes for Arizona businesses",
     description: "Stay informed with our latest articles on cybersecurity threats, IT best practices, and technology trends affecting Arizona businesses.",
     features: [

@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 
 const resources = [
   {
-    name: "Digerati Journal",
+    name: "DE Journal",
     href: "/resources/blog",
     description: "Field notes on managed IT, cybersecurity, and Arizona business risk.",
     icon: BookOpen,

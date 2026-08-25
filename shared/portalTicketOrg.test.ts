@@ -16,7 +16,7 @@ describe("ticketCompanyName", () => {
 });
 
 describe("isInternalPortalOrg", () => {
-  it("treats the Digerati MSP org as internal", () => {
+  it("treats the Digerati Experts MSP org as internal", () => {
     expect(isInternalPortalOrg({ id: "msp-digerati", companyName: "Digerati Experts" })).toBe(true);
     expect(isInternalPortalOrg({ id: "client-1", type: "msp" })).toBe(true);
     expect(isInternalPortalOrg({ id: "x", companyName: "Digerati Experts (Internal)" })).toBe(true);

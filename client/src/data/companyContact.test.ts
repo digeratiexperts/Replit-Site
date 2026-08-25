@@ -15,6 +15,8 @@ describe("companyContact", () => {
   });
 
   it("keeps canonical company identity on digeratexperts.com", () => {
+    expect(COMPANY.legalName).toBe("Digerati Experts");
+    expect(COMPANY.shortName).toBe("DE");
     expect(COMPANY.website).toBe("https://digeratiexperts.com");
     expect(COMPANY.addressLocality).toBe("Chandler");
     expect(COMPANY.addressRegion).toBe("AZ");

@@ -26,7 +26,7 @@ describe("resolveTicketCreateTarget", () => {
     expect(ticketCompanyName(undefined, INTERNAL_COMPANY_NAME)).toBe(INTERNAL_COMPANY_NAME);
   });
 
-  it("lets admin create without clientId as an internal Digerati ticket", () => {
+  it("lets admin create without clientId as an internal Digerati Experts ticket", () => {
     const result = resolveTicketCreateTarget({
       actor: { role: "admin", clientId: null },
       ...deps(),

@@ -35,7 +35,7 @@ Archive: score ≥ 15, age ≤ 90 days, max 40 items.
 
 Categories are **not** all called “alert”:
 
-`Active Exploitation · Threat Advisory · Critical Vulnerability · Malware Activity · Ransomware · Microsoft Security · Digerati Advisory`
+`Active Exploitation · Threat Advisory · Critical Vulnerability · Malware Activity · Ransomware · Microsoft Security · DE Advisory`
 
 ## Refresh
 

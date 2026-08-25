@@ -278,7 +278,7 @@ function seedDemoIfNotProduction() {
     contactEmail: "admin@digeratiexperts.com",
     contactPhone: PRIMARY_PHONE.display,
     industry: "MSP/MSSP",
-    primaryContact: "Digerati Admin",
+    primaryContact: "DE Admin",
     status: "active",
     type: "msp",
     serviceType: "managed",
@@ -409,7 +409,7 @@ export function listClients(): PortalAuthClient[] {
 
 const INTERNAL_MSP_ID = "msp-digerati";
 
-/** Live Digerati org if one exists; otherwise create the internal MSP tenant. */
+/** Live Digerati Experts org if one exists; otherwise create the internal MSP tenant. */
 export function findInternalMspClient(): PortalAuthClient | undefined {
   const all = listClients();
   return (
@@ -428,7 +428,7 @@ export function ensureInternalMspClient(): PortalAuthClient {
     contactEmail: "admin@digeratiexperts.com",
     contactPhone: PRIMARY_PHONE.display,
     industry: "MSP/MSSP",
-    primaryContact: "Digerati Admin",
+    primaryContact: "DE Admin",
     status: "active",
     type: "msp",
     serviceType: "managed",

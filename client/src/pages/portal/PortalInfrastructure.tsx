@@ -23,7 +23,7 @@ const ISSUE_TYPES = [
   {
     value: "Infrastructure - Onsite Outage",
     label: "Request IT onsite (outage)",
-    help: "Active outage or major disruption — ask Digerati to come onsite.",
+    help: "Active outage or major disruption — ask DE to come onsite.",
   },
   {
     value: "Infrastructure - Project Onsite",
@@ -162,7 +162,7 @@ export function PortalInfrastructure() {
                   onChange={(e) => setDescription(e.target.value)}
                   required
                   rows={6}
-                  placeholder="Who is affected, when it started, and what you need from Digerati."
+                  placeholder="Who is affected, when it started, and what you need from DE."
                 />
               </div>
 
@@ -173,7 +173,7 @@ export function PortalInfrastructure() {
               )}
 
               <Button type="submit" disabled={submitting} className="w-full sm:w-auto">
-                {submitting ? "Submitting…" : "Submit to Digerati"}
+                {submitting ? "Submitting…" : "Submit to DE"}
               </Button>
             </form>
           </CardContent>

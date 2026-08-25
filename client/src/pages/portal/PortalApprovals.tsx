@@ -109,7 +109,7 @@ export function PortalApprovals() {
       <div className="max-w-5xl mx-auto space-y-4">
         <p className="text-sm text-slate-600">
           Access and spend-style requests route to your manager, optional skip-level (high priority or
-          $1,000+), then your Department or Company IT Contact before Digerati fulfills the work.
+          $1,000+), then your Department or Company IT Contact before DE fulfills the work.
         </p>
 
         {showQueues && (
@@ -229,7 +229,7 @@ export function PortalApprovals() {
 
               {selected.fulfillmentTicketId && (
                 <p className="text-sm text-slate-600">
-                  Fulfillment ticket created for Digerati after final approval.
+                  Fulfillment ticket created for DE after final approval.
                 </p>
               )}
             </CardContent>

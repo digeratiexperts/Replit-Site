@@ -20,7 +20,7 @@ const categoryIcon: Record<ThreatCategory, JSX.Element> = {
   "Malware Activity": <Bug className="h-5 w-5" />,
   Ransomware: <AlertCircle className="h-5 w-5" />,
   "Microsoft Security": <Lock className="h-5 w-5" />,
-  "Digerati Advisory": <Shield className="h-5 w-5" />,
+  "DE Advisory": <Shield className="h-5 w-5" />,
 };
 
 function categoryBadgeClass(item: ThreatItem): string {
@@ -296,7 +296,7 @@ export const DigeratiThreatsInsightsSection = (): JSX.Element => {
             className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-de-hairline bg-transparent px-6 py-2.5 text-base font-semibold text-white transition-colors hover:border-white/25 md:px-8 md:py-3"
             data-testid="view-digerati-journal"
           >
-            Read the Digerati Journal
+            Read the DE Journal
             <ArrowRight className="h-4 w-4" />
           </Link>
         </motion.div>

@@ -618,7 +618,7 @@ export function PortalAdvancedForms() {
               <div className="text-sm text-blue-800 dark:text-blue-300 space-y-2">
                 <p>
                   Submitting starts an approval workflow (your manager → optional skip-level → IT Contact) before
-                  Digerati provisions access. For break/fix issues, open a regular support ticket instead.
+                  DE provisions access. For break/fix issues, open a regular support ticket instead.
                 </p>
                 <p>
                   <strong>Manager / approver email</strong> is optional but recommended for admin/privileged

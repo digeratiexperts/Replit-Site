@@ -151,7 +151,7 @@ export async function handleAdvisorChat(req: AdvisorChatRequest): Promise<Adviso
     } catch (err: any) {
       console.warn("[msp-advisor] agent-live persist failed:", err?.message || err);
     }
-    const agentLabel = agentStatus.agentName || "a Digerati specialist";
+    const agentLabel = agentStatus.agentName || "a DE specialist";
     const reply = `${agentLabel} is with you now — your message was delivered. They’ll reply in this chat shortly.`;
     // Persist the ack so portal sees it; visitor already shows it from this response.
     let messageId: string | undefined;

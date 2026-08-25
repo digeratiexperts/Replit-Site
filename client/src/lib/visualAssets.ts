@@ -1,5 +1,5 @@
 /**
- * Public visual-system registry for Digerati website stills.
+ * Public visual-system registry for Digerati Experts website stills.
  *
  * Rules:
  * - Only optimized derivatives under `/images/...` (never licensed ORIGINAL paths)

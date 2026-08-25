@@ -4,6 +4,7 @@ import { validatePortalOrderSelection } from "@shared/portalOrderCatalog";
 import { storeProducts } from "./storeProducts";
 import {
   DEFAULT_GUIDED_ANSWERS,
+  GUIDED_BUYER_OPTIONS,
   buildGuidedRecommendation,
   filterProductsForGuidance,
   recommendProactiveSku,
@@ -20,6 +21,14 @@ const prospectProtect: GuidedBuyingAnswers = {
 };
 
 describe("consultative store guidance", () => {
+  it("names buyer types as DE or Digerati Experts", () => {
+    expect(GUIDED_BUYER_OPTIONS.map((option) => option.label)).toEqual([
+      "New to DE",
+      "Existing DE client",
+      "In-house IT",
+    ]);
+  });
+
   it("does not dump the unfiltered catalog as the default recommendation", () => {
     const rec = buildGuidedRecommendation(prospectProtect);
     const filtered = filterProductsForGuidance(storeProducts, rec, { fullCatalog: false });
