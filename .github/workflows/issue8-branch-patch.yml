@@ -1,0 +1,131 @@
+name: Apply issue 8 managed catalog patch
+
+on:
+  push:
+    branches:
+      - fix/four-tier-managed-catalog-20260825
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/four-tier-managed-catalog-20260825
+          fetch-depth: 0
+
+      - name: Apply exact managed catalog patch
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          products_path = Path('client/src/data/storeProducts.ts')
+          s = products_path.read_text()
+
+          office_marker = '''  {
+            id: "prod-001",
+            sku: "DE-SVC-MGD-OFFICE-MO",
+          '''
+          if s.count(office_marker) != 1:
+              raise SystemExit(f'SAFETY STOP: Office marker count={s.count(office_marker)}')
+
+          it_product = '''  {
+            id: "prod-008",
+            sku: "DE-SVC-MGD-IT-MO",
+            name: "ProActive Ecosystem - IT",
+            shortDescription: "Essential managed IT and baseline security",
+            description: pricing.it.note,
+            category: "contract_services",
+            pricingType: "per_user",
+            basePrice: pricing.it.user,
+            pricingUnit: "user",
+            isContractOnly: true,
+            isCheckoutEnabled: false,
+            isClientOnly: false,
+            requiredClientType: "public",
+            minimumQuantity: 1,
+            features: [...pricing.it.inclusions],
+            sortOrder: 0,
+          },
+          '''
+          s = s.replace(office_marker, it_product + office_marker, 1)
+
+          old_bcdr = 'features: ["Automated Backups", "Disaster Recovery Planning", "RTO/RPO Guarantees", "Regular DR Testing"]'
+          new_bcdr = 'features: ["Automated Backups", "Disaster Recovery Planning", "Contract-defined recovery targets", "Regular DR Testing"]'
+          if s.count(old_bcdr) != 1:
+              raise SystemExit(f'SAFETY STOP: BCDR phrase count={s.count(old_bcdr)}')
+          s = s.replace(old_bcdr, new_bcdr, 1)
+          products_path.write_text(s)
+
+          managed_path = Path('client/src/pages/store/ManagedStore.tsx')
+          m = managed_path.read_text()
+          old_grid = '<div className="grid md:grid-cols-3 gap-6">'
+          new_grid = '<div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-6">'
+          if m.count(old_grid) != 1:
+              raise SystemExit(f'SAFETY STOP: managed grid count={m.count(old_grid)}')
+          m = m.replace(old_grid, new_grid, 1)
+          managed_path.write_text(m)
+
+          test_path = Path('client/src/data/storeProducts.managed.test.ts')
+          test_path.write_text('''import { describe, expect, it } from "vitest";
+          import { pricing } from "./pricing";
+          import { storeProducts } from "./storeProducts";
+          import { getProductBySku, getRelatedProducts } from "./storeMerchandising";
+
+          const managedSkus = [
+            "DE-SVC-MGD-IT-MO",
+            "DE-SVC-MGD-OFFICE-MO",
+            "DE-SVC-MGD-BUSINESS-MO",
+            "DE-SVC-MGD-ENTERPRISE-MO",
+          ] as const;
+
+          describe("managed Store catalog", () => {
+            it("exposes all four canonical ProActive tiers in display order", () => {
+              const tiers = storeProducts.filter((product) =>
+                managedSkus.includes(product.sku as (typeof managedSkus)[number]),
+              );
+
+              expect(tiers.map((product) => product.sku)).toEqual(managedSkus);
+              expect(tiers.map((product) => product.basePrice)).toEqual([
+                pricing.it.user,
+                pricing.office.user,
+                pricing.business.user,
+                pricing.enterprise.user,
+              ]);
+              expect(tiers.every((product) => product.isContractOnly)).toBe(true);
+              expect(tiers.every((product) => !product.isCheckoutEnabled)).toBe(true);
+            });
+
+            it("resolves every managed tier detail SKU and related-product navigation", () => {
+              for (const sku of managedSkus) {
+                const product = getProductBySku(sku);
+                expect(product, sku).toBeDefined();
+                expect(getRelatedProducts(product!, { limit: 4 })).toBeInstanceOf(Array);
+              }
+            });
+
+            it("does not publish an unconditional RTO/RPO guarantee", () => {
+              const bcdr = storeProducts.find((product) => product.sku === "DE-SVC-MGD-BCDR-MO");
+              expect(bcdr).toBeDefined();
+              expect(bcdr!.features.join(" ")).not.toMatch(/RTO\\/RPO Guarantees/i);
+              expect(bcdr!.features.join(" ")).toMatch(/recovery targets/i);
+            });
+          });
+          ''')
+          PY
+
+      - name: Remove temporary workflow and commit final patch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/issue8-branch-patch.yml
+          git add client/src/data/storeProducts.ts client/src/pages/store/ManagedStore.tsx client/src/data/storeProducts.managed.test.ts
+          git diff --cached --check
+          git commit -m "fix(store): align managed catalog to four tiers"
+          git push origin HEAD:fix/four-tier-managed-catalog-20260825
