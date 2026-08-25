@@ -1,6 +1,12 @@
 import type { Express, NextFunction, Request, Response } from "express";
 import { storeProducts, type StoreProduct } from "../client/src/data/storeProducts";
-import { resolveClientPricingRows, resolveUnitPrice, toPriceOverrides } from "./storeClientPricing";
+import {
+  removeClientPricing,
+  resolveClientPricingRows,
+  resolveUnitPrice,
+  setClientPricing,
+  toPriceOverrides,
+} from "./storeClientPricing";
 
 type StoreRole = "public" | "prospect" | "managed" | "comanaged" | "admin";
 
@@ -142,6 +148,119 @@ export function registerSecureZohoStoreCheckout(
     .catch((error) => {
       console.error("[ORDER FULFILLMENT RECONCILER START ERROR]", error);
     });
+
+  // Canonical client-pricing routes register before routes.ts. Authorization
+  // comes from authMiddleware's live Portal record; the browser never supplies
+  // the tenant whose negotiated pricing is returned.
+  app.get(
+    "/api/store/client-pricing",
+    [authMiddleware as any],
+    async (req: CheckoutRequest, res: Response) => {
+      try {
+        const pricing = await resolveClientPricingRows(req.user?.clientId);
+        return res.json({ pricing });
+      } catch (error: any) {
+        console.error("[STORE CLIENT PRICING ERROR]", error);
+        return res.status(503).json({
+          error: "Client pricing is temporarily unavailable. Catalog pricing remains visible until pricing can be verified.",
+        });
+      }
+    },
+  );
+
+  app.post(
+    "/api/admin/client-pricing/set",
+    [authMiddleware as any],
+    async (req: CheckoutRequest, res: Response) => {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      try {
+        const { clientId, productId, customPrice, discountPercent } = req.body || {};
+        const result = await setClientPricing({ clientId, productId, customPrice, discountPercent });
+        console.info("[SECURITY] CLIENT_PRICING_SET", {
+          adminId: req.userId,
+          adminEmail: req.user?.email,
+          clientId,
+          productId,
+          source: result.source,
+          oldPrice: result.previous?.customPrice ?? null,
+          oldDiscount: result.previous?.discountPercent ?? null,
+          newPrice: result.current?.customPrice ?? null,
+          newDiscount: result.current?.discountPercent ?? null,
+        });
+        return res.json({
+          success: true,
+          clientId,
+          productId,
+          pricing: result.current,
+          source: result.source,
+        });
+      } catch (error: any) {
+        const message = error?.message || "Failed to set client pricing";
+        const status = /required|unknown store product|must be|valid client price/i.test(message)
+          ? 400
+          : /database|pricing lookup failed/i.test(message)
+            ? 503
+            : 500;
+        console.error("[CLIENT PRICING SET ERROR]", error);
+        return res.status(status).json({ error: message });
+      }
+    },
+  );
+
+  app.get(
+    "/api/admin/client-pricing/:clientId",
+    [authMiddleware as any],
+    async (req: CheckoutRequest, res: Response) => {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      try {
+        const clientId = stringValue(req.params.clientId, 100);
+        if (!clientId) return res.status(400).json({ error: "Client ID is required" });
+        const pricing = await resolveClientPricingRows(clientId);
+        return res.json({ clientId, pricing });
+      } catch (error: any) {
+        console.error("[GET CLIENT PRICING ERROR]", error);
+        return res.status(503).json({ error: "Client pricing is temporarily unavailable" });
+      }
+    },
+  );
+
+  app.delete(
+    "/api/admin/client-pricing/:clientId/:productId",
+    [authMiddleware as any],
+    async (req: CheckoutRequest, res: Response) => {
+      if (req.user?.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      try {
+        const clientId = stringValue(req.params.clientId, 100);
+        const productId = stringValue(req.params.productId, 100);
+        const result = await removeClientPricing(clientId, productId);
+        console.info("[SECURITY] CLIENT_PRICING_REMOVED", {
+          adminId: req.userId,
+          adminEmail: req.user?.email,
+          clientId,
+          productId,
+          source: result.source,
+          oldPrice: result.previous?.customPrice ?? null,
+          oldDiscount: result.previous?.discountPercent ?? null,
+        });
+        return res.json({ success: true, clientId, productId, source: result.source });
+      } catch (error: any) {
+        const message = error?.message || "Failed to remove client pricing";
+        const status = /required/i.test(message)
+          ? 400
+          : /database|pricing lookup failed/i.test(message)
+            ? 503
+            : 500;
+        console.error("[DELETE CLIENT PRICING ERROR]", error);
+        return res.status(status).json({ error: message });
+      }
+    },
+  );
 
   app.post(
     "/api/store/checkout/zoho",

@@ -1,12 +1,19 @@
 import { and, eq } from "drizzle-orm";
 import { money } from "@shared/storeCommerce";
 import { storeClientPricing } from "@shared/schema";
+import { storeProducts as catalogProducts } from "../client/src/data/storeProducts";
 import { db, dbReady, initPromise } from "./db";
 
 export type ClientPriceEntry = {
   productId: string;
   customPrice: number;
   discountPercent: number;
+};
+
+export type ClientPricingMutationResult = {
+  previous: ClientPriceEntry | null;
+  current: ClientPriceEntry | null;
+  source: "database" | "demo";
 };
 
 /**
@@ -91,6 +98,21 @@ export function removeDemoClientPricing(clientId: string, productId: string): Cl
   return removed;
 }
 
+function rowToEntry(row: {
+  productId: string;
+  customPrice: string | number;
+  discountPercent?: string | number | null;
+}): ClientPriceEntry | null {
+  const customPrice = money(Number(row.customPrice));
+  const discountPercent = money(Number(row.discountPercent || 0));
+  if (!Number.isFinite(customPrice) || customPrice <= 0) return null;
+  return {
+    productId: row.productId,
+    customPrice,
+    discountPercent: Number.isFinite(discountPercent) ? discountPercent : 0,
+  };
+}
+
 async function loadDbClientPricing(clientId: string): Promise<ClientPriceEntry[]> {
   await initPromise;
   if (!dbReady || !db) return [];
@@ -100,13 +122,12 @@ async function loadDbClientPricing(clientId: string): Promise<ClientPriceEntry[]
       .from(storeClientPricing)
       .where(and(eq(storeClientPricing.clientId, clientId), eq(storeClientPricing.isActive, true)));
     return rows
-      .map((row: { productId: string; customPrice: string | number; discountPercent?: string | number | null }) => ({
-        productId: row.productId,
-        customPrice: Number(row.customPrice),
-        discountPercent: Number(row.discountPercent || 0),
-      }))
-      .filter((row: ClientPriceEntry) => Number.isFinite(row.customPrice) && row.customPrice > 0);
+      .map(rowToEntry)
+      .filter((row: ClientPriceEntry | null): row is ClientPriceEntry => row !== null);
   } catch (error: any) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(`Client pricing lookup failed: ${error?.message || error}`);
+    }
     console.warn("[store-pricing] database lookup skipped:", error?.message || error);
     return [];
   }
@@ -143,4 +164,136 @@ export function resolveUnitPrice(listPrice: number, override?: number): number {
   const custom = money(Number(override));
   if (!Number.isFinite(custom) || custom <= 0 || custom >= list) return list;
   return custom;
+}
+
+/**
+ * Canonical precedence for negotiated pricing:
+ * 1. explicit custom price, when supplied;
+ * 2. otherwise a percentage discount converted from the canonical catalog price;
+ * 3. otherwise no override (catalog price remains authoritative).
+ *
+ * discountPercent is stored as derived metadata whenever customPrice is supplied,
+ * preventing the two fields from disagreeing about what checkout should charge.
+ */
+export function buildClientPriceEntry(input: {
+  productId: string;
+  customPrice?: unknown;
+  discountPercent?: unknown;
+}): ClientPriceEntry {
+  const product = catalogProducts.find((candidate) => candidate.id === input.productId);
+  if (!product) throw new Error("Unknown store product");
+
+  const listPrice = money(Number(product.basePrice));
+  if (!Number.isFinite(listPrice) || listPrice <= 0) {
+    throw new Error("Store product does not have a valid base price");
+  }
+
+  const hasCustom = input.customPrice !== undefined && input.customPrice !== null && input.customPrice !== "";
+  const hasDiscount = input.discountPercent !== undefined && input.discountPercent !== null && input.discountPercent !== "";
+  if (!hasCustom && !hasDiscount) {
+    throw new Error("Either custom price or discount percent is required");
+  }
+
+  if (hasCustom) {
+    const customPrice = money(Number(input.customPrice));
+    if (!Number.isFinite(customPrice) || customPrice <= 0 || customPrice >= listPrice) {
+      throw new Error("Custom price must be greater than zero and lower than catalog price");
+    }
+    const discountPercent = money(((listPrice - customPrice) / listPrice) * 100);
+    return { productId: product.id, customPrice, discountPercent };
+  }
+
+  const discountPercent = money(Number(input.discountPercent));
+  if (!Number.isFinite(discountPercent) || discountPercent <= 0 || discountPercent >= 100) {
+    throw new Error("Discount percent must be greater than zero and less than 100");
+  }
+  const customPrice = money(listPrice * (1 - discountPercent / 100));
+  if (!Number.isFinite(customPrice) || customPrice <= 0 || customPrice >= listPrice) {
+    throw new Error("Discount does not produce a valid client price");
+  }
+  return { productId: product.id, customPrice, discountPercent };
+}
+
+export async function setClientPricing(input: {
+  clientId: string;
+  productId: string;
+  customPrice?: unknown;
+  discountPercent?: unknown;
+}): Promise<ClientPricingMutationResult> {
+  const clientId = String(input.clientId || "").trim();
+  if (!clientId) throw new Error("Client ID is required");
+  const next = buildClientPriceEntry(input);
+
+  await initPromise;
+  if (dbReady && db) {
+    const [existing] = await db
+      .select()
+      .from(storeClientPricing)
+      .where(and(eq(storeClientPricing.clientId, clientId), eq(storeClientPricing.productId, next.productId)))
+      .limit(1);
+    const previous = existing ? rowToEntry(existing) : null;
+
+    if (existing) {
+      await db
+        .update(storeClientPricing)
+        .set({
+          customPrice: next.customPrice.toFixed(2),
+          discountPercent: next.discountPercent.toFixed(2),
+          isActive: true,
+          updatedAt: new Date(),
+        })
+        .where(eq(storeClientPricing.id, existing.id));
+    } else {
+      await db.insert(storeClientPricing).values({
+        clientId,
+        productId: next.productId,
+        customPrice: next.customPrice.toFixed(2),
+        discountPercent: next.discountPercent.toFixed(2),
+        isActive: true,
+      });
+    }
+
+    return { previous, current: next, source: "database" };
+  }
+
+  if (!isDemoClientPricingAllowed()) {
+    throw new Error("Durable client pricing database is unavailable");
+  }
+
+  const previous = listDemoClientPricing(clientId).find((row) => row.productId === next.productId) || null;
+  upsertDemoClientPricing(clientId, next);
+  return { previous, current: next, source: "demo" };
+}
+
+export async function removeClientPricing(
+  clientIdInput: string,
+  productIdInput: string,
+): Promise<ClientPricingMutationResult> {
+  const clientId = String(clientIdInput || "").trim();
+  const productId = String(productIdInput || "").trim();
+  if (!clientId || !productId) throw new Error("Client ID and Product ID are required");
+
+  await initPromise;
+  if (dbReady && db) {
+    const [existing] = await db
+      .select()
+      .from(storeClientPricing)
+      .where(and(eq(storeClientPricing.clientId, clientId), eq(storeClientPricing.productId, productId)))
+      .limit(1);
+    const previous = existing ? rowToEntry(existing) : null;
+    if (existing) {
+      await db
+        .update(storeClientPricing)
+        .set({ isActive: false, updatedAt: new Date() })
+        .where(eq(storeClientPricing.id, existing.id));
+    }
+    return { previous, current: null, source: "database" };
+  }
+
+  if (!isDemoClientPricingAllowed()) {
+    throw new Error("Durable client pricing database is unavailable");
+  }
+
+  const previous = removeDemoClientPricing(clientId, productId) || null;
+  return { previous, current: null, source: "demo" };
 }
