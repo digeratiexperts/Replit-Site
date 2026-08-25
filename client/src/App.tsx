@@ -24,8 +24,6 @@ import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { ShoppingCart } from "@/components/store/ShoppingCart";
 import { SolutionMobileBar } from "@/components/store/SolutionMobileBar";
 
-import { DigeratiHomepage } from "@/pages/DigeratiHomepage";
-
 const SolutionsIndex = lazy(() => import("@/pages/solutions/SolutionsIndex"));
 const ManagedITSupport = lazy(() => import("@/pages/solutions/ManagedITSupport"));
 const ProActiveITEcosystemPage = lazy(() => import("@/pages/solutions/ProActiveITEcosystemPage"));
@@ -146,6 +144,7 @@ const NetworkPlannerOfficial = lazy(() => import("@/pages/NetworkPlannerOfficial
 const Ebook = lazy(() => import("@/pages/resources/Ebook"));
 const BookingPage = lazy(() => import("@/pages/BookingPage"));
 const ContactPage = lazy(() => import("@/pages/Contact"));
+const DigeratiHomepage = lazy(() => import("@/pages/DigeratiHomepage").then((m) => ({ default: m.DigeratiHomepage })));
 
 // Store pages
 const StoreLanding = lazy(() => import("@/pages/store/StoreLanding"));
@@ -166,7 +165,11 @@ function Router() {
   return (
     <Switch>
       {/* Homepage */}
-      <Route path="/" component={DigeratiHomepage} />
+      <Route path="/" component={() => (
+        <Suspense fallback={<PageLoadingSkeleton />}>
+          <DigeratiHomepage />
+        </Suspense>
+      )} />
       
       {/* Solutions Pages */}
       <Route path="/solutions" component={() => (
