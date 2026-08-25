@@ -1,0 +1,71 @@
+name: Remove dead Store routes
+
+on:
+  push:
+    branches:
+      - chore/remove-dead-store-route-handlers-main-20260825
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chore/remove-dead-store-route-handlers-main-20260825
+          fetch-depth: 0
+
+      - name: Remove shadowed handlers exactly
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('server/routes.ts')
+          s = path.read_text()
+          start_marker = "  // Create Zoho Payments checkout session - requires 'comanaged' or 'admin' role for purchasing\n"
+          end_marker = "  // Get order by ID (auth) or payment session ID (post-checkout confirmation only)\n"
+
+          if s.count(start_marker) != 1:
+              raise SystemExit(f'SAFETY STOP: checkout start marker count={s.count(start_marker)}')
+          if s.count(end_marker) != 1:
+              raise SystemExit(f'SAFETY STOP: order lookup marker count={s.count(end_marker)}')
+
+          start = s.index(start_marker)
+          end = s.index(end_marker)
+          if end <= start:
+              raise SystemExit('SAFETY STOP: marker order invalid')
+
+          removed = s[start:end]
+          required = [
+              'app.post("/api/store/checkout/zoho"',
+              'app.post("/api/store/orders"',
+          ]
+          for needle in required:
+              if removed.count(needle) != 1:
+                  raise SystemExit(f'SAFETY STOP: expected one {needle!r} in removed block, found {removed.count(needle)}')
+
+          replacement = (
+              '  // Checkout and order creation are registered earlier via secureStoreCheckout.ts.\n'
+              '  // Keep only the read/confirmation routes here so there is one authoritative write path.\n\n'
+          )
+          path.write_text(s[:start] + replacement + s[end:])
+          PY
+
+          git diff --check
+
+      - name: Commit cleanup and remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/remove-dead-store-routes.yml
+          git add server/routes.ts
+          git diff --cached --check
+          git commit -m "chore(store): remove shadowed legacy write handlers"
+          git push origin HEAD:chore/remove-dead-store-route-handlers-main-20260825
