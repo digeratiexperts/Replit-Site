@@ -1,0 +1,39 @@
+name: Remove unused runtime dependencies
+
+on:
+  push:
+    branches:
+      - cleanup/runtime-dependencies-audit-20260825
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cleanup/runtime-dependencies-audit-20260825
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Remove unused production packages and refresh lockfile
+        run: |
+          npm uninstall electron electron-builder stripe-replit-sync --no-audit --no-fund
+          npm audit --omit=dev --audit-level=high
+
+      - name: Remove temporary workflow and commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/cleanup-unused-runtime-deps.yml
+          git add package.json package-lock.json
+          git diff --cached --check
+          git commit -m "chore(deps): remove unused desktop and Replit Stripe packages"
+          git push origin HEAD:cleanup/runtime-dependencies-audit-20260825
