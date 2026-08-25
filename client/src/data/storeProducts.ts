@@ -88,6 +88,24 @@ export const categoryDescriptions: Record<ProductCategory, string> = {
 export const storeProducts: StoreProduct[] = [
   // A) Contract-only (non-purchasable) - "Schedule Consult" SKUs
   {
+    id: "prod-008",
+    sku: "DE-SVC-MGD-IT-MO",
+    name: "ProActive Ecosystem - IT",
+    shortDescription: "Essential managed IT and baseline security",
+    description: pricing.it.note,
+    category: "contract_services",
+    pricingType: "per_user",
+    basePrice: pricing.it.user,
+    pricingUnit: "user",
+    isContractOnly: true,
+    isCheckoutEnabled: false,
+    isClientOnly: false,
+    requiredClientType: "public",
+    minimumQuantity: 1,
+    features: [...pricing.it.inclusions],
+    sortOrder: 0,
+  },
+  {
     id: "prod-001",
     sku: "DE-SVC-MGD-OFFICE-MO",
     name: "ProActive Ecosystem - Office",
@@ -180,7 +198,7 @@ export const storeProducts: StoreProduct[] = [
     sku: "DE-SVC-MGD-BCDR-MO",
     name: "Managed BCDR",
     shortDescription: "Business continuity and disaster recovery",
-    description: "Complete business continuity and disaster recovery services ensuring your business can recover from any disruption.",
+    description: "Managed business continuity and disaster recovery services focused on backup, recovery planning, testing, and contract-defined recovery objectives.",
     category: "contract_services",
     pricingType: "monthly",
     basePrice: 0,
@@ -189,7 +207,7 @@ export const storeProducts: StoreProduct[] = [
     isClientOnly: false,
     requiredClientType: "public",
     minimumQuantity: 1,
-    features: ["Automated Backups", "Disaster Recovery Planning", "RTO/RPO Guarantees", "Regular DR Testing"],
+    features: ["Automated Backups", "Disaster Recovery Planning", "Contract-Defined RTO/RPO Objectives", "Regular DR Testing"],
     sortOrder: 6,
   },
   {
