@@ -303,4 +303,76 @@ export function registerSecureZohoStoreCheckout(
       }
     },
   );
+
+  // Register before legacy routes.ts so this server-authoritative handler wins.
+  app.post(
+    "/api/store/orders",
+    [authMiddleware as any, requireRole("comanaged", "admin") as any],
+    async (req: CheckoutRequest, res: Response) => {
+      try {
+        const role = (req.user?.storeRole || "public") as StoreRole;
+        const pricingRows = await resolveClientPricingRows(req.user?.clientId);
+        const priceOverrides = toPriceOverrides(pricingRows);
+        const { buildPendingStoreOrderValues } = await import("./storePendingOrder");
+        const orderNumber = `ORD-${Date.now().toString(36).toUpperCase()}-${Math.random()
+          .toString(36)
+          .substring(2, 6)
+          .toUpperCase()}`;
+
+        let orderValues;
+        try {
+          orderValues = buildPendingStoreOrderValues({
+            body: req.body,
+            role,
+            priceOverrides,
+            userId: req.userId || null,
+            clientId: req.user?.clientId || null,
+            orderNumber,
+          });
+        } catch (error: any) {
+          console.warn("[SECURITY] STORE_ORDER_REJECTED", {
+            userId: req.userId,
+            clientId: req.user?.clientId,
+            reason: error?.message || "invalid_order",
+          });
+          return res.status(400).json({ error: error?.message || "Invalid order" });
+        }
+
+        const dbModule = await import("./db");
+        await dbModule.initPromise;
+        if (!dbModule.dbReady || !dbModule.db) {
+          console.error("[SECURITY] STORE_ORDER_DATABASE_UNAVAILABLE", {
+            userId: req.userId,
+            clientId: req.user?.clientId,
+          });
+          return res.status(503).json({
+            code: "DURABLE_DATABASE_REQUIRED",
+            error: "Order creation is temporarily unavailable because durable storage is not connected.",
+          });
+        }
+
+        const { storeOrders } = await import("@shared/schema");
+        const [order] = await dbModule.db
+          .insert(storeOrders)
+          .values(orderValues)
+          .returning();
+
+        console.info("[SECURITY] STORE_ORDER_CREATED", {
+          orderId: order.id,
+          orderNumber: order.orderNumber,
+          userId: orderValues.userId,
+          clientId: orderValues.clientId,
+          status: orderValues.status,
+          total: orderValues.total,
+          paymentMethod: orderValues.paymentMethod,
+          itemCount: orderValues.lineItems.length,
+        });
+
+        return res.json({ orderId: order.id, orderNumber: order.orderNumber });
+      } catch (error: any) {
+        console.error("[SECURE STORE ORDER ERROR]", error);
+        return res.status(500).json({ error: error?.message || "Failed to create order" });
+      }
+    },
+  );
 }
