@@ -34,7 +34,7 @@ export function ProductMedia({
     variant === "detail"
       ? "aspect-square w-[48%] max-w-[14rem] p-6 sm:p-8"
       : variant === "card"
-        ? "h-11 w-11 p-2 sm:h-12 sm:w-12"
+        ? "h-16 w-16 p-2.5 sm:h-20 sm:w-20 sm:p-3"
         : "h-9 w-9 p-1.5";
 
   return (
