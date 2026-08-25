@@ -210,24 +210,44 @@ export function authMiddleware(req: AuthenticatedRequest, res: Response, next: N
     if (!live) {
       return res.status(401).json({ error: "Account not found. Please log in again." });
     }
-    if ((live as any).disabled || (live as any).status === "disabled" || (live as any).status === "revoked") {
+    if (
+      (live as any).disabled ||
+      (live as any).status === "disabled" ||
+      (live as any).status === "revoked" ||
+      (live as any).isActive === false
+    ) {
       return res.status(401).json({ error: "Account disabled or revoked" });
     }
+
+    // JWT proves the session; the live Portal record is authoritative for
+    // authorization and tenancy on every request.
+    const liveRole = live.role || "user";
+    const isLiveAdmin = liveRole === "admin";
+
     req.user = {
-      id: live?.id ?? decoded.userId,
-      email: live?.email ?? decoded.email,
-      role: live?.role ?? decoded.role,
-      storeRole: (live as any)?.storeRole ?? decoded.storeRole ?? "public",
-      clientId: live?.clientId ?? decoded.clientId ?? null,
-      orgRole: live?.orgRole ?? decoded.orgRole ?? "staff",
-      departmentId: live?.departmentId ?? decoded.departmentId ?? null,
-      managerUserId: live?.managerUserId ?? decoded.managerUserId ?? null,
-      isCompanyItContact: live?.isCompanyItContact ?? decoded.isCompanyItContact ?? false,
-      fullName: live?.fullName,
-      impersonatingCompanyId: (decoded as any).impersonatingCompanyId || null,
-      impersonatingCompanyName: (decoded as any).impersonatingCompanyName || null,
+      id: live.id,
+      email: live.email,
+      role: liveRole,
+      storeRole:
+        (live as any).storeRole ??
+        (isLiveAdmin ? "admin" : "public"),
+      clientId: live.clientId ?? null,
+      orgRole:
+        live.orgRole ??
+        (isLiveAdmin ? "company_it_contact" : "staff"),
+      departmentId: live.departmentId ?? null,
+      managerUserId: live.managerUserId ?? null,
+      isCompanyItContact:
+        live.isCompanyItContact ?? isLiveAdmin,
+      fullName: live.fullName,
+      impersonatingCompanyId: isLiveAdmin
+        ? (decoded as any).impersonatingCompanyId || null
+        : null,
+      impersonatingCompanyName: isLiveAdmin
+        ? (decoded as any).impersonatingCompanyName || null
+        : null,
     };
-    req.userId = live?.id ?? decoded.userId;
+    req.userId = live.id;
     
     // Optional session validation from cookies
     const sessionId = req.cookies?.sessionId;
