@@ -1,0 +1,49 @@
+name: Align issue 8 recovery wording
+
+on:
+  push:
+    branches:
+      - fix/four-tier-managed-catalog-20260825
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/four-tier-managed-catalog-20260825
+          fetch-depth: 0
+
+      - name: Apply exact BCDR copy fix
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('client/src/data/storeProducts.ts')
+          s = p.read_text()
+          old_desc = 'description: "Complete business continuity and disaster recovery services ensuring your business can recover from any disruption.",'
+          new_desc = 'description: "Managed business continuity and disaster recovery services focused on backup, recovery planning, testing, and contract-defined recovery objectives.",'
+          old_feature = 'features: ["Automated Backups", "Disaster Recovery Planning", "Contract-defined recovery targets", "Regular DR Testing"]'
+          new_feature = 'features: ["Automated Backups", "Disaster Recovery Planning", "Contract-Defined RTO/RPO Objectives", "Regular DR Testing"]'
+          if s.count(old_desc) != 1:
+              raise SystemExit(f'SAFETY STOP: BCDR description count={s.count(old_desc)}')
+          if s.count(old_feature) != 1:
+              raise SystemExit(f'SAFETY STOP: BCDR feature count={s.count(old_feature)}')
+          s = s.replace(old_desc, new_desc, 1).replace(old_feature, new_feature, 1)
+          p.write_text(s)
+          PY
+
+      - name: Remove temporary workflow and commit
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/issue8-wording-fix.yml
+          git add client/src/data/storeProducts.ts
+          git diff --cached --check
+          git commit -m "fix(store): use contract-defined recovery objectives"
+          git push origin HEAD:fix/four-tier-managed-catalog-20260825
