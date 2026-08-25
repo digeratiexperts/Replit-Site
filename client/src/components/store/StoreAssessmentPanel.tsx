@@ -19,10 +19,19 @@ export function StoreAssessmentPanel({
   onFilterAssessments,
   onBuildSolution,
 }: StoreAssessmentPanelProps) {
-  const shell = variant === "sticky" ? "lg:sticky lg:top-28 space-y-4" : "mb-10";
+  const isSticky = variant === "sticky";
+  const shell = isSticky
+    ? "lg:sticky lg:top-28 space-y-4 lg:overflow-y-auto lg:overscroll-contain"
+    : "mb-10";
+  const stickyStyle = isSticky
+    ? {
+        maxHeight:
+          "calc(100dvh - 8rem - var(--de-sticky-cta-h, 0px) - var(--de-unified-bar-h, 0px) - var(--de-cookie-h, 0px))",
+      }
+    : undefined;
 
   return (
-    <aside className={shell} data-testid="store-assessment-panel">
+    <aside className={shell} style={stickyStyle} data-testid="store-assessment-panel">
       <div className="rounded-xl border border-white/10 bg-[#141414] p-5">
         <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg border border-de-accent/30 bg-de-accent/15">
           <ClipboardList className="h-5 w-5 text-de-accent-ink" />
