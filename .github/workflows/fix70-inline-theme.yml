@@ -35,6 +35,7 @@ jobs:
       - name: Diff sanity
         shell: bash
         run: |
+          git checkout -- public/sitemap.xml || true
           git diff --check
           expected=$(printf '%s\n' \
             client/src/components/store/ShoppingCart.tsx \
@@ -42,6 +43,7 @@ jobs:
             client/src/contexts/CartContext.tsx \
             client/src/index.css | sort)
           actual=$(git diff --name-only | sort)
+          printf 'Changed files:\n%s\n' "$actual"
           test "$actual" = "$expected"
       - name: Commit approved fix and remove temporary helpers
         shell: bash
