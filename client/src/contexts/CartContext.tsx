@@ -52,6 +52,8 @@ interface CartContextType {
   toggleCart: () => void;
   setClientPricing: (pricing: ClientPricing[]) => void;
   getItemPrice: (productId: string) => { price: number; hasDiscount: boolean };
+  panelTheme: "dark" | "light";
+  togglePanelTheme: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -59,6 +61,15 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 const CART_STORAGE_KEY = "digerati-store-cart";
 const SESSION_KEY = "digerati-store-session";
 const SAVED_KEY = "digerati-store-saved";
+const PANEL_THEME_KEY = "digerati-store-panel-theme";
+
+function readStoredPanelTheme(): "dark" | "light" {
+  try {
+    return localStorage.getItem(PANEL_THEME_KEY) === "light" ? "light" : "dark";
+  } catch {
+    return "dark";
+  }
+}
 
 const isRecurringPricing = (pricingType: PricingType): boolean => {
   return ["monthly", "yearly", "per_user", "per_endpoint", "per_device", "per_location", "per_seat"].includes(pricingType);
@@ -109,6 +120,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const [solutionId, setSolutionId] = useState<string | null>(null);
   const [announcement, setAnnouncement] = useState("");
+  const [panelTheme, setPanelTheme] = useState<"dark" | "light">(readStoredPanelTheme);
   const [syncReady, setSyncReady] = useState(false);
   const sessionIdRef = useRef("");
   const solutionIdRef = useRef<string | null>(null);
@@ -395,6 +407,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   }, [getCartTotal, getItemCount]);
 
+  const togglePanelTheme = useCallback(() => {
+    setPanelTheme((prev) => {
+      const next = prev === "dark" ? "light" : "dark";
+      try {
+        localStorage.setItem(PANEL_THEME_KEY, next);
+      } catch {
+        // best-effort persistence only
+      }
+      return next;
+    });
+  }, []);
+
   return (
     <CartContext.Provider
       value={{
@@ -421,6 +445,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         openCart,
         closeCart,
         toggleCart,
+        panelTheme,
+        togglePanelTheme,
         setClientPricing,
         getItemPrice,
       }}

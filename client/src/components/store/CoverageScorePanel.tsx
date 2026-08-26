@@ -24,25 +24,25 @@ export function CoverageScorePanel({
 
   return (
     <div
-      className="rounded-xl border border-white/10 bg-[#141414] p-4"
+      className="rounded-xl border border-[color:var(--dp-border-10)] bg-[color:var(--dp-card-bg)] p-4"
       data-testid="coverage-score-panel"
     >
       <div className="mb-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <Shield className="h-4 w-4 text-de-accent-ink" />
-          <h3 className="text-sm font-semibold text-white">Solution coverage</h3>
+          <h3 className="text-sm font-semibold text-[color:var(--dp-text-primary)]">Solution coverage</h3>
         </div>
         <div className="text-right">
-          <span className="text-lg font-bold text-white" data-testid="text-coverage-score">
+          <span className="text-lg font-bold text-[color:var(--dp-text-primary)]" data-testid="text-coverage-score">
             {score.total}
-            <span className="text-sm font-medium text-white/55"> / 100</span>
+            <span className="text-sm font-medium text-[color:var(--dp-text-55)]"> / 100</span>
           </span>
-          <p className="text-sm text-white/55" data-testid="text-coverage-areas">
+          <p className="text-sm text-[color:var(--dp-text-55)]" data-testid="text-coverage-areas">
             {score.coveredCount} of {score.dimensionCount} areas
           </p>
         </div>
       </div>
-      <p className="mb-4 text-xs leading-relaxed text-white/55">
+      <p className="mb-4 text-xs leading-relaxed text-[color:var(--dp-text-55)]">
         Heuristic stack coverage (endpoint, identity, email, backup, network, compliance) —
         not a security audit or certification claim.
       </p>
@@ -50,20 +50,20 @@ export function CoverageScorePanel({
       <div className="space-y-2.5">
         {score.bars.map((bar) => (
           <div key={bar.id} className="flex items-center gap-3">
-            <span className="flex w-20 items-center gap-1 text-xs text-white/55">
-              {bar.covered && <Check className="h-3 w-3 shrink-0 text-emerald-400" />}
+            <span className="flex w-20 items-center gap-1 text-xs text-[color:var(--dp-text-55)]">
+              {bar.covered && <Check className="h-3 w-3 shrink-0 text-[color:var(--dp-success)]" />}
               {bar.label}
             </span>
-            <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/10">
+            <div className="h-2 flex-1 overflow-hidden rounded-full bg-[color:var(--dp-tint-bg)]">
               <div
                 className={`h-full rounded-full transition-all ${
-                  bar.covered ? "bg-de-accent" : "bg-white/15"
+                  bar.covered ? "bg-de-accent" : "bg-[color:var(--dp-border-15)]"
                 }`}
                 style={{ width: bar.covered ? "100%" : "18%" }}
               />
             </div>
             {bar.coveredBy && (
-              <span className="hidden w-28 truncate text-xs text-white/55 sm:inline">
+              <span className="hidden w-28 truncate text-xs text-[color:var(--dp-text-55)] sm:inline">
                 {bar.coveredBy}
               </span>
             )}
@@ -72,18 +72,18 @@ export function CoverageScorePanel({
       </div>
 
       {score.suggestions.length > 0 ? (
-        <div className="mt-4 space-y-2 border-t border-white/10 pt-4">
-          <p className="text-xs font-medium text-white/70">Recommended because this layer is missing</p>
+        <div className="mt-4 space-y-2 border-t border-[color:var(--dp-border-10)] pt-4">
+          <p className="text-xs font-medium text-[color:var(--dp-text-70)]">Recommended because this layer is missing</p>
           {score.suggestions.map((s) =>
             s.product ? (
               <div
                 key={s.sku}
-                className="flex items-start justify-between gap-2 rounded-lg border border-white/10 bg-white/[0.03] p-3"
+                className="flex items-start justify-between gap-2 rounded-lg border border-[color:var(--dp-border-10)] bg-[color:var(--dp-card-bg)] p-3"
               >
                 <div className="min-w-0">
-                  <p className="text-xs uppercase tracking-wide text-white/55">{s.label}</p>
-                  <p className="truncate text-sm text-white">{s.product.name}</p>
-                  <p className="text-xs text-white/55">
+                  <p className="text-xs uppercase tracking-wide text-[color:var(--dp-text-55)]">{s.label}</p>
+                  <p className="truncate text-sm text-[color:var(--dp-text-primary)]">{s.product.name}</p>
+                  <p className="text-xs text-[color:var(--dp-text-55)]">
                     Coverage {s.from} → {s.to}
                   </p>
                 </div>
@@ -110,7 +110,7 @@ export function CoverageScorePanel({
           )}
         </div>
       ) : (
-        <p className="mt-4 border-t border-white/10 pt-4 text-xs text-emerald-400/90">
+        <p className="mt-4 border-t border-[color:var(--dp-border-10)] pt-4 text-xs text-[color:var(--dp-success)]">
           All six coverage areas are represented in this solution.
         </p>
       )}
