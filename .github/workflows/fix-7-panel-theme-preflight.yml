@@ -31,6 +31,7 @@ jobs:
       - name: Diff sanity and usage report
         shell: bash
         run: |
+          python3 -c 'from pathlib import Path; p=Path("client/src/index.css"); p.write_text(p.read_text(encoding="utf-8").rstrip()+"\n", encoding="utf-8")'
           git diff --check
           echo "CoverageScorePanel usages:"
           grep -R -n --exclude=CoverageScorePanel.tsx 'CoverageScorePanel' client/src || true
