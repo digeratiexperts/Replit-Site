@@ -389,6 +389,25 @@ html[data-sticky-cta-scrolling="true"] .de-bottom-bar {
   );
 }
 
+/*
+ * A full-screen overlay drawer (cart, configure product) is animated with a
+ * Framer Motion `transform`, which traps its z-index inside a local stacking
+ * context — it can never out-rank the fixed bottom chrome above, which lives
+ * in the root stacking context. Rather than fight that with z-index, the
+ * chrome just steps aside while an overlay reports itself open (see
+ * lib/overlayDock.ts). The overlay's own backdrop already dims the page, so
+ * nothing is lost — the chrome fades straight back in on close.
+ */
+html[data-dock-hidden="true"] .de-unified-bar,
+html[data-dock-hidden="true"] .de-fab-rail,
+html[data-dock-hidden="true"] .de-scroll-top,
+html[data-dock-hidden="true"] .de-bottom-bar {
+  opacity: 0 !important;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
 @media (max-width: 639px) {
   .de-unified-bar,
   .de-bottom-bar {

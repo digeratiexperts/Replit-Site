@@ -31,6 +31,7 @@ import { CoverageScorePanel } from "@/components/store/CoverageScorePanel";
 import { analytics } from "@/lib/analytics";
 import { CTA } from "@/lib/ctaCopy";
 import { PRIMARY_PHONE } from "@/data/companyContact";
+import { useDockHiddenWhileOpen } from "@/hooks/useDockHiddenWhileOpen";
 
 export function ShoppingCart() {
   const {
@@ -57,6 +58,7 @@ export function ShoppingCart() {
   const [, setLocation] = useLocation();
   const closeRef = useRef<HTMLButtonElement>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
+  useDockHiddenWhileOpen(isOpen);
 
   const savings = getSavings();
   const cartProducts = useMemo(() => items.map((item) => item.product), [items]);
