@@ -16,7 +16,7 @@ import {
 import { ProductMedia } from "@/components/store/ProductMedia";
 import { PRIMARY_PHONE } from "@/data/companyContact";
 import { useDockHiddenWhileOpen } from "@/hooks/useDockHiddenWhileOpen";
-import { useCart } from "@/contexts/CartContext";
+import { getPanelThemeStyle, useCart } from "@/contexts/CartContext";
 
 export interface ConfigureConfirmPayload {
   product: StoreProduct;
@@ -156,6 +156,7 @@ export function ConfigureProductDrawer({
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
             className="de-panel fixed right-0 top-0 z-[61] flex h-full min-h-0 w-full max-w-md flex-col overflow-hidden border-l border-[color:var(--dp-border-10)] bg-[color:var(--dp-panel-bg)]"
             data-theme={panelTheme}
+            style={getPanelThemeStyle(panelTheme)}
             data-testid="configure-product-drawer"
             role="dialog"
             aria-modal="true"

@@ -18,7 +18,7 @@ import {
   Moon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useCart, isRecurringPricing } from "@/contexts/CartContext";
+import { getPanelThemeStyle, isRecurringPricing, useCart } from "@/contexts/CartContext";
 import { categoryLabels, formatPrice } from "@/data/storeProducts";
 import { solutionGroupFor, getCartComplements } from "@/data/storeMerchandising";
 import { getProductVisual } from "@/data/productImages";
@@ -138,6 +138,7 @@ export function ShoppingCart() {
               isMinimized ? "bottom-0 top-auto rounded-tl-2xl" : "inset-y-0 max-sm:inset-0"
             }`}
             data-theme={panelTheme}
+            style={getPanelThemeStyle(panelTheme)}
             data-testid="shopping-cart-panel"
           >
             <div className="flex items-center justify-between border-b border-[color:var(--dp-border-10)] p-5 sm:p-6">
