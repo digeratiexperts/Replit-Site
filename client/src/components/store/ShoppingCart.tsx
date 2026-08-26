@@ -14,9 +14,11 @@ import {
   BookmarkPlus,
   RotateCcw,
   Clock,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useCart, isRecurringPricing } from "@/contexts/CartContext";
+import { getPanelThemeStyle, isRecurringPricing, useCart } from "@/contexts/CartContext";
 import { categoryLabels, formatPrice } from "@/data/storeProducts";
 import { solutionGroupFor, getCartComplements } from "@/data/storeMerchandising";
 import { getProductVisual } from "@/data/productImages";
@@ -51,6 +53,8 @@ export function ShoppingCart() {
     totals,
     lastUpdated,
     announcement,
+    panelTheme,
+    togglePanelTheme,
   } = useCart();
   const [isMinimized, setIsMinimized] = useState(false);
   const prefersReducedMotion = useReducedMotion();
@@ -130,19 +134,21 @@ export function ShoppingCart() {
             transition={
               prefersReducedMotion ? { duration: 0 } : { type: "spring", damping: 26, stiffness: 320 }
             }
-            className={`fixed right-0 z-[61] flex w-full flex-col border-l border-white/10 bg-[#0a0a0a] sm:max-w-xl ${
+            className={`de-panel fixed right-0 z-[61] flex w-full flex-col border-l border-[color:var(--dp-border-10)] bg-[color:var(--dp-panel-bg)] sm:max-w-xl ${
               isMinimized ? "bottom-0 top-auto rounded-tl-2xl" : "inset-y-0 max-sm:inset-0"
             }`}
+            data-theme={panelTheme}
+            style={getPanelThemeStyle(panelTheme)}
             data-testid="shopping-cart-panel"
           >
-            <div className="flex items-center justify-between border-b border-white/10 p-5 sm:p-6">
+            <div className="flex items-center justify-between border-b border-[color:var(--dp-border-10)] p-5 sm:p-6">
               <div className="flex items-center gap-3">
                 <Layers className="h-5 w-5 text-de-accent-ink" />
                 <div>
-                  <h2 id="solution-drawer-title" className="text-xl font-semibold text-white">
+                  <h2 id="solution-drawer-title" className="text-xl font-semibold text-[color:var(--dp-text-primary)]">
                     Your Solution
                   </h2>
-                  <span className="text-sm text-white/50">
+                  <span className="text-sm text-[color:var(--dp-text-50)]">
                     {items.length} service{items.length === 1 ? "" : "s"}
                     {lastUpdatedLabel ? ` · Updated ${lastUpdatedLabel}` : ""}
                   </span>
@@ -152,8 +158,19 @@ export function ShoppingCart() {
                 <Button
                   variant="ghost"
                   size="icon"
+                  onClick={togglePanelTheme}
+                  className="de-panel-theme-toggle h-11 w-11 text-[color:var(--dp-text-60)] hover:bg-de-accent/10 hover:text-[color:var(--dp-text-hover)]"
+                  data-testid="button-toggle-cart-theme"
+                  title={panelTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+                  aria-label={panelTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+                >
+                  {panelTheme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
                   onClick={() => setIsMinimized(!isMinimized)}
-                  className="hidden h-11 w-11 text-white/60 hover:bg-de-accent/10 hover:text-white sm:inline-flex"
+                  className="hidden h-11 w-11 text-[color:var(--dp-text-60)] hover:bg-de-accent/10 hover:text-[color:var(--dp-text-hover)] sm:inline-flex"
                   data-testid="button-minimize-cart"
                   title={isMinimized ? "Expand solution" : "Minimize"}
                 >
@@ -166,7 +183,7 @@ export function ShoppingCart() {
                   variant="ghost"
                   size="icon"
                   onClick={closeCart}
-                  className="h-11 w-11 text-white/60 hover:bg-de-accent/10 hover:text-white"
+                  className="h-11 w-11 text-[color:var(--dp-text-60)] hover:bg-de-accent/10 hover:text-[color:var(--dp-text-hover)]"
                   data-testid="button-close-cart"
                 >
                   <X className="h-5 w-5" />
@@ -182,11 +199,11 @@ export function ShoppingCart() {
               <div className="flex-1 space-y-5 overflow-y-auto p-5 sm:p-6">
                 {items.length === 0 ? (
                   <div className="flex h-full flex-col items-center justify-center text-center">
-                    <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-white/5">
-                      <Layers className="h-10 w-10 text-white/55" />
+                    <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[color:var(--dp-card-bg)]">
+                      <Layers className="h-10 w-10 text-[color:var(--dp-text-55)]" />
                     </div>
-                    <h3 className="mb-2 text-lg font-medium text-white">No services yet</h3>
-                    <p className="mb-6 text-white/50">
+                    <h3 className="mb-2 text-lg font-medium text-[color:var(--dp-text-primary)]">No services yet</h3>
+                    <p className="mb-6 text-[color:var(--dp-text-50)]">
                       Build a solution from outcomes, rails, or the catalog.
                     </p>
                     <Button
@@ -213,20 +230,20 @@ export function ShoppingCart() {
 
                     {missing.length > 0 && (
                       <div
-                        className="rounded-xl border border-amber-400/25 bg-amber-400/5 p-4"
+                        className="rounded-xl border border-[color:var(--dp-warn-border)] bg-[color:var(--dp-warn-bg)] p-4"
                         data-testid="solution-missing-requirements"
                       >
-                        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-amber-200">
+                        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[color:var(--dp-warn-text)]">
                           Missing prerequisites
                         </p>
                         {missing.map((warning) => (
                           <div key={`${warning.forSku}-${warning.sku}`} className="mb-2 last:mb-0">
-                            <p className="text-sm text-white/80">{warning.message}</p>
+                            <p className="text-sm text-[color:var(--dp-text-80)]">{warning.message}</p>
                             {warning.product && (
                               <Button
                                 size="sm"
                                 variant="outline"
-                                className="mt-2 h-10 border-white/15 bg-transparent text-white hover:bg-white/5"
+                                className="mt-2 h-10 border-[color:var(--dp-border-15)] bg-transparent text-[color:var(--dp-text-primary)] hover:bg-[color:var(--dp-hover-bg)]"
                                 onClick={() =>
                                   addToCart(
                                     warning.product!,
@@ -245,7 +262,7 @@ export function ShoppingCart() {
 
                     {grouped.map(([group, groupItems]) => (
                       <div key={group}>
-                        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-white/55">
+                        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[color:var(--dp-text-55)]">
                           {group}
                         </h3>
                         <div className="space-y-3">
@@ -255,24 +272,24 @@ export function ShoppingCart() {
                             return (
                               <div
                                 key={item.product.id}
-                                className="rounded-lg border border-white/10 bg-white/[0.03] p-4"
+                                className="rounded-lg border border-[color:var(--dp-border-10)] bg-[color:var(--dp-card-bg)] p-4"
                                 data-testid={`cart-item-${item.product.id}`}
                               >
                                 <div className="mb-3 flex items-start gap-3">
                                   <img
                                     src={visual.logoUrl || visual.cardUrl}
                                     alt=""
-                                    className="h-12 w-12 shrink-0 rounded-md border border-white/10 bg-white object-contain p-1"
+                                    className="h-12 w-12 shrink-0 rounded-md border border-[color:var(--dp-border-10)] bg-white object-contain p-1"
                                   />
                                   <div className="min-w-0 flex-1">
-                                    <h4 className="line-clamp-2 font-medium text-white">
+                                    <h4 className="line-clamp-2 font-medium text-[color:var(--dp-text-primary)]">
                                       {item.product.name}
                                     </h4>
-                                    <p className="text-xs text-white/50">
+                                    <p className="text-xs text-[color:var(--dp-text-50)]">
                                       {categoryLabels[item.product.category]} ·{" "}
                                       {billingLabel(item.product.pricingType, item.product.pricingUnit)}
                                     </p>
-                                    <p className="text-sm text-white/50">{formatPrice(item.product)}</p>
+                                    <p className="text-sm text-[color:var(--dp-text-50)]">{formatPrice(item.product)}</p>
                                   </div>
                                 </div>
 
@@ -283,7 +300,7 @@ export function ShoppingCart() {
                                       size="icon"
                                       onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
                                       disabled={item.quantity <= item.product.minimumQuantity}
-                                      className="h-11 w-11 border-de-accent/30 bg-de-accent/10 text-white hover:bg-de-accent/20"
+                                      className="h-11 w-11 border-de-accent/30 bg-de-accent/10 text-[color:var(--dp-text-primary)] hover:bg-de-accent/20"
                                       data-testid={`button-decrease-${item.product.id}`}
                                       aria-label={`Decrease ${item.product.name}`}
                                     >
@@ -296,7 +313,7 @@ export function ShoppingCart() {
                                       onChange={(event) =>
                                         updateQuantity(item.product.id, Number(event.target.value))
                                       }
-                                      className="h-11 w-14 rounded-md border border-white/10 bg-transparent text-center text-sm text-white"
+                                      className="h-11 w-14 rounded-md border border-[color:var(--dp-border-10)] bg-transparent text-center text-sm text-[color:var(--dp-text-primary)]"
                                       data-testid={`quantity-${item.product.id}`}
                                       aria-label={`${item.product.name} quantity`}
                                     />
@@ -304,7 +321,7 @@ export function ShoppingCart() {
                                       variant="outline"
                                       size="icon"
                                       onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                                      className="h-11 w-11 border-de-accent/30 bg-de-accent/10 text-white hover:bg-de-accent/20"
+                                      className="h-11 w-11 border-de-accent/30 bg-de-accent/10 text-[color:var(--dp-text-primary)] hover:bg-de-accent/20"
                                       data-testid={`button-increase-${item.product.id}`}
                                       aria-label={`Increase ${item.product.name}`}
                                     >
@@ -328,7 +345,7 @@ export function ShoppingCart() {
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="h-10 px-2 text-white/60 hover:text-white"
+                                    className="h-10 px-2 text-[color:var(--dp-text-60)] hover:text-[color:var(--dp-text-hover)]"
                                     onClick={() => saveForLater(item.product.id)}
                                     data-testid={`button-save-later-${item.product.id}`}
                                   >
@@ -339,7 +356,7 @@ export function ShoppingCart() {
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => removeFromCart(item.product.id)}
-                                    className="h-10 px-2 text-red-300 hover:bg-red-500/10"
+                                    className="h-10 px-2 text-[color:var(--dp-danger)] hover:bg-[color:var(--dp-danger-hover-bg)]"
                                     data-testid={`button-remove-${item.product.id}`}
                                   >
                                     <Trash2 className="mr-1 h-3.5 w-3.5" />
@@ -356,7 +373,7 @@ export function ShoppingCart() {
                     {canUndoRemove && (
                       <Button
                         variant="outline"
-                        className="h-11 w-full border-white/15 bg-transparent text-white hover:bg-white/5"
+                        className="h-11 w-full border-[color:var(--dp-border-15)] bg-transparent text-[color:var(--dp-text-primary)] hover:bg-[color:var(--dp-hover-bg)]"
                         onClick={undoRemove}
                         data-testid="button-undo-remove"
                       >
@@ -367,20 +384,20 @@ export function ShoppingCart() {
 
                     {savedForLater.length > 0 && (
                       <div data-testid="saved-for-later">
-                        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-white/55">
+                        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[color:var(--dp-text-55)]">
                           Saved for later
                         </h3>
                         <div className="space-y-2">
                           {savedForLater.map((item) => (
                             <div
                               key={item.product.id}
-                              className="flex items-center justify-between gap-2 rounded-lg border border-white/10 px-3 py-2"
+                              className="flex items-center justify-between gap-2 rounded-lg border border-[color:var(--dp-border-10)] px-3 py-2"
                             >
-                              <p className="truncate text-sm text-white">{item.product.name}</p>
+                              <p className="truncate text-sm text-[color:var(--dp-text-primary)]">{item.product.name}</p>
                               <Button
                                 size="sm"
                                 variant="outline"
-                                className="h-10 border-white/15 bg-transparent text-white hover:bg-white/5"
+                                className="h-10 border-[color:var(--dp-border-15)] bg-transparent text-[color:var(--dp-text-primary)] hover:bg-[color:var(--dp-hover-bg)]"
                                 onClick={() => moveToSolution(item.product.id)}
                               >
                                 Move to solution
@@ -393,10 +410,10 @@ export function ShoppingCart() {
 
                     {complements.length > 0 && (
                       <div
-                        className="rounded-xl border border-white/10 bg-white/[0.02] p-4"
+                        className="rounded-xl border border-[color:var(--dp-border-10)] bg-[color:var(--dp-card-bg)] p-4"
                         data-testid="cart-complements"
                       >
-                        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-white/55">
+                        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[color:var(--dp-text-55)]">
                           Recommended because
                         </p>
                         <div className="space-y-3">
@@ -405,14 +422,14 @@ export function ShoppingCart() {
                             return (
                               <div key={product.sku} className="flex items-start justify-between gap-2">
                                 <div className="min-w-0">
-                                  <p className="truncate text-sm text-white">{product.name}</p>
-                                  <p className="text-xs text-white/55">{why}</p>
-                                  <p className="text-xs text-white/45">{formatPrice(product)}</p>
+                                  <p className="truncate text-sm text-[color:var(--dp-text-primary)]">{product.name}</p>
+                                  <p className="text-xs text-[color:var(--dp-text-55)]">{why}</p>
+                                  <p className="text-xs text-[color:var(--dp-text-45)]">{formatPrice(product)}</p>
                                 </div>
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  className="h-10 shrink-0 border-white/15 bg-transparent text-xs text-white hover:bg-white/5"
+                                  className="h-10 shrink-0 border-[color:var(--dp-border-15)] bg-transparent text-xs text-[color:var(--dp-text-primary)] hover:bg-[color:var(--dp-hover-bg)]"
                                   onClick={() => {
                                     addToCart(
                                       product,
@@ -433,7 +450,7 @@ export function ShoppingCart() {
                       </div>
                     )}
 
-                    <p className="text-xs text-white/55">
+                    <p className="text-xs text-[color:var(--dp-text-55)]">
                       Estimated onboarding: typically 7–10 business days after kickoff (varies by
                       stack). Questions?{" "}
                       <a
@@ -450,39 +467,39 @@ export function ShoppingCart() {
             )}
 
             {items.length > 0 && (
-              <div className="border-t border-white/10 bg-white/[0.02] p-5 sm:p-6">
+              <div className="border-t border-[color:var(--dp-border-10)] bg-[color:var(--dp-card-bg)] p-5 sm:p-6">
                 <div className="mb-4 space-y-2">
                   {totals.dueToday > 0 && (
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-white/60">Due today</span>
-                      <span className="text-white">${totals.dueToday.toFixed(2)}</span>
+                      <span className="text-[color:var(--dp-text-60)]">Due today</span>
+                      <span className="text-[color:var(--dp-text-primary)]">${totals.dueToday.toFixed(2)}</span>
                     </div>
                   )}
                   {totals.monthly > 0 && (
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-white/60">Monthly</span>
-                      <span className="text-white">${totals.monthly.toFixed(2)} / month</span>
+                      <span className="text-[color:var(--dp-text-60)]">Monthly</span>
+                      <span className="text-[color:var(--dp-text-primary)]">${totals.monthly.toFixed(2)} / month</span>
                     </div>
                   )}
                   {totals.annual > 0 && (
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-white/60">Annual</span>
-                      <span className="text-white">${totals.annual.toFixed(2)}/yr</span>
+                      <span className="text-[color:var(--dp-text-60)]">Annual</span>
+                      <span className="text-[color:var(--dp-text-primary)]">${totals.annual.toFixed(2)}/yr</span>
                     </div>
                   )}
                   {savings > 0 && (
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-emerald-400">Client pricing save</span>
-                      <span className="font-medium text-emerald-400">-${savings.toFixed(2)}</span>
+                      <span className="text-[color:var(--dp-success)]">Client pricing save</span>
+                      <span className="font-medium text-[color:var(--dp-success)]">-${savings.toFixed(2)}</span>
                     </div>
                   )}
-                  <div className="flex items-center justify-between border-t border-white/10 pt-2">
-                    <span className="font-medium text-white">Ongoing equivalent</span>
+                  <div className="flex items-center justify-between border-t border-[color:var(--dp-border-10)] pt-2">
+                    <span className="font-medium text-[color:var(--dp-text-primary)]">Ongoing equivalent</span>
                     <span className="text-lg font-bold text-de-accent-ink">
                       ${totals.recurringMonthlyEquivalent.toFixed(2)}/mo
                     </span>
                   </div>
-                  <p className="flex items-start gap-1.5 text-xs text-white/45">
+                  <p className="flex items-start gap-1.5 text-xs text-[color:var(--dp-text-45)]">
                     <Clock className="mt-0.5 h-3 w-3 shrink-0" />
                     Recurring services bill on the start date after kickoff. One-time work is due
                     when the order is placed. Tax is calculated at checkout when applicable.
@@ -500,7 +517,7 @@ export function ShoppingCart() {
                   </Button>
                   <Button
                     variant="outline"
-                    className="h-11 w-full border-white/15 bg-transparent text-white hover:bg-white/5"
+                    className="h-11 w-full border-[color:var(--dp-border-15)] bg-transparent text-[color:var(--dp-text-primary)] hover:bg-[color:var(--dp-hover-bg)]"
                     onClick={goQuote}
                     data-testid="button-save-quote"
                   >
@@ -510,7 +527,7 @@ export function ShoppingCart() {
                   <div className="grid grid-cols-2 gap-2">
                     <Button
                       variant="ghost"
-                      className="h-11 text-white/70 hover:bg-white/5 hover:text-white"
+                      className="h-11 text-[color:var(--dp-text-70)] hover:bg-[color:var(--dp-hover-bg)] hover:text-[color:var(--dp-text-hover)]"
                       onClick={closeCart}
                       data-testid="button-continue-shopping"
                     >
@@ -519,7 +536,7 @@ export function ShoppingCart() {
                     <Button
                       asChild
                       variant="ghost"
-                      className="h-11 text-white/70 hover:bg-de-accent/10 hover:text-white"
+                      className="h-11 text-[color:var(--dp-text-70)] hover:bg-de-accent/10 hover:text-[color:var(--dp-text-hover)]"
                       onClick={closeCart}
                       data-testid="button-schedule-from-cart"
                     >
@@ -532,7 +549,7 @@ export function ShoppingCart() {
                   <Button
                     variant="ghost"
                     onClick={clearCart}
-                    className="h-10 w-full text-white/50 hover:bg-white/5 hover:text-white"
+                    className="h-10 w-full text-[color:var(--dp-text-50)] hover:bg-[color:var(--dp-hover-bg)] hover:text-[color:var(--dp-text-hover)]"
                     data-testid="button-clear-cart"
                   >
                     Clear solution

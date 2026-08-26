@@ -1811,3 +1811,8 @@ button, [role="button"], a {
     transition: none;
   }
 }
+
+/* Store drawer theme values are supplied inline on each .de-panel root. */
+.de-panel-theme-toggle {
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}

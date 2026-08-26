@@ -6,6 +6,7 @@ import {
   useCallback,
   useRef,
   type ReactNode,
+  type CSSProperties,
 } from "react";
 import type { StoreProduct, PricingType } from "@/data/storeProducts";
 import { storeProducts } from "@/data/storeProducts";
@@ -52,6 +53,8 @@ interface CartContextType {
   toggleCart: () => void;
   setClientPricing: (pricing: ClientPricing[]) => void;
   getItemPrice: (productId: string) => { price: number; hasDiscount: boolean };
+  panelTheme: "dark" | "light";
+  togglePanelTheme: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -59,6 +62,78 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 const CART_STORAGE_KEY = "digerati-store-cart";
 const SESSION_KEY = "digerati-store-session";
 const SAVED_KEY = "digerati-store-saved";
+const PANEL_THEME_KEY = "digerati-store-panel-theme";
+
+function readStoredPanelTheme(): "dark" | "light" {
+  try {
+    return localStorage.getItem(PANEL_THEME_KEY) === "light" ? "light" : "dark";
+  } catch {
+    return "dark";
+  }
+}
+
+const PANEL_THEME_STYLES: Record<"dark" | "light", CSSProperties> = {
+  dark: {
+    "--dp-panel-bg": "#0a0a0a",
+    "--dp-card-bg": "rgb(255 255 255 / 0.03)",
+    "--dp-tint-bg": "rgb(255 255 255 / 0.10)",
+    "--dp-hover-bg": "rgb(255 255 255 / 0.08)",
+    "--dp-border-10": "rgb(255 255 255 / 0.10)",
+    "--dp-border-15": "rgb(255 255 255 / 0.15)",
+    "--dp-border-20": "rgb(255 255 255 / 0.20)",
+    "--dp-border-25": "rgb(255 255 255 / 0.25)",
+    "--dp-text-primary": "#ffffff",
+    "--dp-text-hover": "#ffffff",
+    "--dp-text-80": "rgb(255 255 255 / 0.80)",
+    "--dp-text-75": "rgb(255 255 255 / 0.75)",
+    "--dp-text-70": "rgb(255 255 255 / 0.70)",
+    "--dp-text-65": "rgb(255 255 255 / 0.65)",
+    "--dp-text-60": "rgb(255 255 255 / 0.60)",
+    "--dp-text-55": "rgb(255 255 255 / 0.55)",
+    "--dp-text-50": "rgb(255 255 255 / 0.50)",
+    "--dp-text-45": "rgb(255 255 255 / 0.45)",
+    "--dp-text-40": "rgb(255 255 255 / 0.40)",
+    "--dp-text-35": "rgb(255 255 255 / 0.35)",
+    "--dp-danger": "#fca5a5",
+    "--dp-danger-hover-bg": "rgb(239 68 68 / 0.10)",
+    "--dp-warn-border": "rgb(251 191 36 / 0.25)",
+    "--dp-warn-bg": "rgb(251 191 36 / 0.05)",
+    "--dp-warn-text": "#fde68a",
+    "--dp-success": "#34d399",
+  } as CSSProperties,
+  light: {
+    "--dp-panel-bg": "#ffffff",
+    "--dp-card-bg": "#f8fafc",
+    "--dp-tint-bg": "#f1f5f9",
+    "--dp-hover-bg": "#f1f5f9",
+    "--dp-border-10": "#e2e8f0",
+    "--dp-border-15": "#cbd5e1",
+    "--dp-border-20": "#cbd5e1",
+    "--dp-border-25": "#cbd5e1",
+    "--dp-text-primary": "#0f172a",
+    "--dp-text-hover": "#0f172a",
+    "--dp-text-80": "#334155",
+    "--dp-text-75": "#475569",
+    "--dp-text-70": "#475569",
+    "--dp-text-65": "#475569",
+    "--dp-text-60": "#64748b",
+    "--dp-text-55": "#64748b",
+    "--dp-text-50": "#64748b",
+    "--dp-text-45": "#94a3b8",
+    "--dp-text-40": "#94a3b8",
+    "--dp-text-35": "#94a3b8",
+    "--dp-danger": "#dc2626",
+    "--dp-danger-hover-bg": "#fef2f2",
+    "--dp-warn-border": "#fde68a",
+    "--dp-warn-bg": "#fffbeb",
+    "--dp-warn-text": "#b45309",
+    "--dp-success": "#059669",
+  } as CSSProperties,
+};
+
+export function getPanelThemeStyle(theme: "dark" | "light"): CSSProperties {
+  return PANEL_THEME_STYLES[theme];
+}
 
 const isRecurringPricing = (pricingType: PricingType): boolean => {
   return ["monthly", "yearly", "per_user", "per_endpoint", "per_device", "per_location", "per_seat"].includes(pricingType);
@@ -109,6 +184,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const [solutionId, setSolutionId] = useState<string | null>(null);
   const [announcement, setAnnouncement] = useState("");
+  const [panelTheme, setPanelTheme] = useState<"dark" | "light">(readStoredPanelTheme);
   const [syncReady, setSyncReady] = useState(false);
   const sessionIdRef = useRef("");
   const solutionIdRef = useRef<string | null>(null);
@@ -395,6 +471,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   }, [getCartTotal, getItemCount]);
 
+  const togglePanelTheme = useCallback(() => {
+    setPanelTheme((prev) => {
+      const next = prev === "dark" ? "light" : "dark";
+      try {
+        localStorage.setItem(PANEL_THEME_KEY, next);
+      } catch {
+        // best-effort persistence only
+      }
+      return next;
+    });
+  }, []);
+
   return (
     <CartContext.Provider
       value={{
@@ -421,6 +509,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         openCart,
         closeCart,
         toggleCart,
+        panelTheme,
+        togglePanelTheme,
         setClientPricing,
         getItemPrice,
       }}
