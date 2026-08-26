@@ -1,0 +1,30 @@
+name: Fix 6 atmosphere preflight
+
+on:
+  push:
+    branches:
+      - fix/atmosphere-mesh-refresh-main-20260825
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: TypeScript check
+        run: npm run check
+      - name: Diff sanity
+        run: |
+          git diff --check origin/main...HEAD
+          changed="$(git diff --name-only origin/main...HEAD | grep -v '^.github/workflows/fix6-atmosphere-preflight.yml$')"
+          test "$changed" = "attached_assets/de-section-atmosphere-electric.svg"
