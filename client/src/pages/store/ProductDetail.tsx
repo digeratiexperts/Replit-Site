@@ -655,7 +655,10 @@ const ProductDetail = () => {
 
       {!product.isContractOnly && !(product.isClientOnly && !isLoggedIn) && (
         <div
-          className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0a0a0a]/95 px-4 py-3 backdrop-blur-md lg:hidden"
+          className="fixed inset-x-0 z-40 border-t border-white/10 bg-[#0a0a0a]/95 px-4 py-3 backdrop-blur-md lg:hidden"
+          style={{
+            bottom: "calc(var(--de-chrome-inset) + var(--de-cookie-h) + var(--de-unified-bar-h))",
+          }}
           data-testid="product-mobile-cta-bar"
         >
           <div className="mx-auto flex max-w-7xl items-center gap-3">
