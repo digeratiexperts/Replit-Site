@@ -306,61 +306,14 @@ export const servicePageData = {
   }
 };
 
+/**
+ * Only 'professional-services' actually renders: App.tsx declares dedicated
+ * routes for accounting-finance, real-estate, and nonprofits earlier in its
+ * <Switch>, which shadow any same-keyed entry here (wouter renders only the
+ * first matching <Route>). Those three keys were removed 2026-08 — the live
+ * pages are pages/industries/{Accounting,RealEstate,Nonprofits}.tsx.
+ */
 export const industryPageData = {
-  'accounting-finance': {
-    title: "IT Solutions for Accounting & Finance",
-    subtitle: "PCI DSS compliance support and financial data protection",
-    description: "Accounting and finance firms handle sensitive financial data and need secure, compliant IT systems that protect client information while meeting industry regulations.",
-    features: [
-      { title: "PCI DSS Compliance", description: "Meet payment card industry security standards" },
-      { title: "Data Encryption", description: "Protect sensitive financial information" },
-      { title: "Secure File Sharing", description: "Encrypted document sharing with clients" }
-    ],
-    benefits: [
-      "Client data protection",
-      "Audit-ready documentation",
-      "Secure remote access",
-      "Backup and recovery",
-      "Cybersecurity insurance support"
-    ],
-    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
-  },
-  'real-estate': {
-    title: "IT Solutions for Real Estate",
-    subtitle: "Transaction security solutions for real estate professionals",
-    description: "Real estate professionals need secure systems to protect sensitive transaction data and client information from wire fraud and cyber threats.",
-    features: [
-      { title: "Wire Fraud Prevention", description: "Secure communication channels for financial transactions" },
-      { title: "Document Security", description: "Encrypted storage and sharing of contracts and documents" },
-      { title: "Mobile Security", description: "Secure access from any device, anywhere" }
-    ],
-    benefits: [
-      "Protection from wire fraud",
-      "Secure client communications",
-      "Mobile device management",
-      "RESPA compliance support",
-      "Transaction monitoring"
-    ],
-    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
-  },
-  'nonprofits': {
-    title: "IT Solutions for Nonprofits",
-    subtitle: "Cost-effective IT management for mission-driven organizations",
-    description: "Nonprofit organizations need reliable, cost-effective IT solutions that maximize their limited budgets while protecting donor data and maintaining operational efficiency.",
-    features: [
-      { title: "Nonprofit Pricing", description: "Special pricing for 501(c)(3) organizations" },
-      { title: "Donor Data Protection", description: "Secure donor information and payment processing" },
-      { title: "Grant Compliance", description: "IT support for grant requirements and reporting" }
-    ],
-    benefits: [
-      "Affordable managed IT",
-      "Microsoft nonprofit grants",
-      "Volunteer remote access",
-      "Fundraising platform support",
-      "Budget-friendly solutions"
-    ],
-    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
-  },
   'professional-services': {
     title: "IT Solutions for Professional Services",
     subtitle: "Secure client data and streamline operations",
@@ -381,136 +334,17 @@ export const industryPageData = {
   }
 };
 
-export const resourcePageData = {
-  'blog': {
-    title: "Digerati Journal",
-    subtitle: "Cybersecurity & managed IT field notes for Arizona businesses",
-    description: "Stay informed with our latest articles on cybersecurity threats, IT best practices, and technology trends affecting Arizona businesses.",
-    features: [
-      { title: "Security Alerts", description: "Latest threat intelligence and security advisories" },
-      { title: "Best Practices", description: "Expert guidance on IT and security management" },
-      { title: "Industry News", description: "Technology trends and regulatory updates" }
-    ],
-    benefits: [
-      "Weekly security updates",
-      "Expert analysis",
-      "Actionable insights",
-      "Compliance updates",
-      "Technology trends"
-    ],
-    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
-  },
-  'videos': {
-    title: "Videos & Webinars",
-    subtitle: "Educational content library",
-    description: "Access our library of educational videos and webinars covering cybersecurity, compliance, and IT management topics.",
-    features: [
-      { title: "On-Demand Webinars", description: "Watch recorded webinars at your convenience" },
-      { title: "How-To Videos", description: "Step-by-step guides for common IT tasks" },
-      { title: "Expert Interviews", description: "Insights from cybersecurity and IT experts" }
-    ],
-    benefits: [
-      "Free educational content",
-      "CPE credits available",
-      "Downloadable resources",
-      "Expert presenters",
-      "Quarterly live webinars"
-    ],
-    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
-  },
-  'security-checklist': {
-    title: "Security Checklist",
-    subtitle: "Complete security assessment tool",
-    description: "Use our comprehensive security checklist to assess your current cybersecurity posture and identify gaps in your protection.",
-    features: [
-      { title: "Comprehensive Assessment", description: "100+ security controls across all domains" },
-      { title: "Risk Scoring", description: "Automated risk scoring based on your responses" },
-      { title: "Recommendations", description: "Personalized recommendations for improvement" }
-    ],
-    benefits: [
-      "Free security assessment",
-      "Instant results",
-      "Actionable recommendations",
-      "Benchmark against peers",
-      "Detailed report"
-    ],
-    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
-  },
-  'datasheets': {
-    title: "Datasheets & Documentation",
-    subtitle: "Technical specifications and service details",
-    description: "Access detailed datasheets and documentation for all our services, including technical specifications, pricing, and SLA details.",
-    features: [
-      { title: "Service Datasheets", description: "Detailed specifications for all services" },
-      { title: "Technical Documentation", description: "Architecture and integration guides" },
-      { title: "Compliance Docs", description: "Security questionnaires and framework-alignment documentation" }
-    ],
-    benefits: [
-      "Vendor evaluation resources",
-      "RFP response materials",
-      "Technical specifications",
-      "Compliance evidence",
-      "Integration guides"
-    ],
-    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
-  }
-};
-
+/**
+ * Only 'system-status' actually renders: App.tsx declares dedicated routes
+ * for remote-support, pay-invoice, and knowledge-base earlier in its
+ * <Switch>, which shadow any same-keyed entry here (wouter renders only the
+ * first matching <Route>). Those three keys were removed 2026-08 — the live
+ * pages are pages/support/{RemoteSupport,PayInvoice,KnowledgeBase}.tsx.
+ * Note: '/support/system-status' itself has no inbound links anywhere in
+ * the app (nav/footer point "Status" at /trust/trust-center instead) — see
+ * the overnight mission report's page audit for the orphan classification.
+ */
 export const supportPageData = {
-  'remote-support': {
-    title: "Remote Support",
-    subtitle: "Get instant remote assistance from our technicians",
-    description: "Need immediate help? Our remote support tools allow our technicians to securely access your computer and resolve issues quickly.",
-    features: [
-      { title: "Instant Access", description: "Connect with a technician in minutes" },
-      { title: "Secure Connection", description: "Encrypted, audited remote sessions" },
-      { title: "Screen Sharing", description: "Share your screen for faster troubleshooting" }
-    ],
-    benefits: [
-      "No software installation required",
-      "Works on any device",
-      "Session recordings available",
-      "Multi-monitor support",
-      "File transfer capability"
-    ],
-    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
-  },
-  'pay-invoice': {
-    title: "Pay Invoice",
-    subtitle: "Secure online payment portal",
-    description: "Pay your invoices securely online with our encrypted payment portal. We accept all major credit cards and ACH transfers.",
-    features: [
-      { title: "Secure Payment Processing", description: "PCI-compliant payment processing" },
-      { title: "Payment History", description: "View and download past invoices and receipts" },
-      { title: "Auto-Pay Options", description: "Set up automatic monthly payments" }
-    ],
-    benefits: [
-      "Credit card or ACH",
-      "Instant payment confirmation",
-      "Automatic receipts",
-      "Payment history",
-      "Secure portal access"
-    ],
-    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
-  },
-  'knowledge-base': {
-    title: "Knowledge Base",
-    subtitle: "Self-service help articles and guides",
-    description: "Find answers to common questions and access helpful guides in our comprehensive knowledge base.",
-    features: [
-      { title: "Searchable Articles", description: "Quickly find answers to your questions" },
-      { title: "Step-by-Step Guides", description: "Detailed instructions with screenshots" },
-      { title: "Video Tutorials", description: "Watch video walkthroughs of common tasks" }
-    ],
-    benefits: [
-      "24/7 self-service",
-      "Searchable content",
-      "Regular updates",
-      "Video tutorials",
-      "Printable guides"
-    ],
-    gradientColors: "from-[#050312] via-[#0a0a0a] to-[#050312]"
-  },
   'system-status': {
     title: "System Status",
     subtitle: "Real-time service status and incident updates",

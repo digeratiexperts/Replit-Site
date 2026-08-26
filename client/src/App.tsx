@@ -159,7 +159,7 @@ const QuoteConfirmationPage = lazy(() => import("@/pages/store/QuoteConfirmation
 // Internal DE sales pages were removed from the public bundle for security.
 // They now live behind authentication in the Intelligence Hub (techsales).
 
-import { servicePageData, industryPageData, resourcePageData, supportPageData } from "@/pages/routes/servicePages";
+import { servicePageData, industryPageData, supportPageData } from "@/pages/routes/servicePages";
 
 function Router() {
   return (
@@ -392,14 +392,6 @@ function Router() {
           <DowntimeCalculator />
         </Suspense>
       )} />
-      {Object.entries(resourcePageData).map(([key, data]) => (
-        <Route key={key} path={`/resources/${key}`} component={() => (
-          <Suspense fallback={<PageLoadingSkeleton />}>
-            <GenericServicePage {...data} canonical={`/resources/${key}`} />
-          </Suspense>
-        )} />
-      ))}
-      
       {/* About Pages */}
       <Route path="/about/mission">{() => <Redirect to="/about/mission-values" />}</Route>
       <Route path="/about/mission-values" component={() => (
