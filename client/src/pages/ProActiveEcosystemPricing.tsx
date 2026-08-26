@@ -14,7 +14,11 @@ import { pricing, estimateMonthly, PRICING_SCOPE_NOTE, NO_BLACK_BOX_TAGLINE, typ
 import { PricingToolsSection } from "./sections/PricingToolsSection";
 import { CTA } from "@/lib/ctaCopy";
 import { ConversionPathBar } from "@/components/ConversionPathBar";
-import { ProActiveCoverageMap } from "@/components/pricing/ProActiveCoverageMap";
+import {
+  ProActiveCoverageMap,
+  type ComplianceLevel,
+  type CoverageHours,
+} from "@/components/pricing/ProActiveCoverageMap";
 import {
   categoryLayer,
   coverageRowIsUniform,
@@ -245,6 +249,8 @@ export default function ProActiveEcosystemPricing() {
   const [userCount, setUserCount] = useState<number | "">(10);
   const [siteCount, setSiteCount] = useState<number | "">(1);
   const [selectedTier, setSelectedTier] = useState<CoverageTier>("business");
+  const [compliance, setCompliance] = useState<ComplianceLevel>("standard");
+  const [coverageHours, setCoverageHours] = useState<CoverageHours>("business");
   const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({});
   const [showDifferencesOnly, setShowDifferencesOnly] = useState(false);
 
@@ -305,7 +311,14 @@ export default function ProActiveEcosystemPricing() {
           </motion.header>
 
           <section className="mb-14">
-            <ProActiveCoverageMap selected={selectedTier} onSelect={setSelectedTier} />
+            <ProActiveCoverageMap
+    selected={selectedTier}
+    onSelect={setSelectedTier}
+    compliance={compliance}
+    onComplianceChange={setCompliance}
+    coverageHours={coverageHours}
+    onCoverageHoursChange={setCoverageHours}
+  />
           </section>
 
           {/* Estimator */}
