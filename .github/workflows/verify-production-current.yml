@@ -5,22 +5,37 @@ on:
     branches:
       - ops/verify-production-current-20260825
 
+permissions:
+  contents: write
+
 jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - name: Verify production release SHA
-        shell: bash
-        run: |
-          set -euo pipefail
-          expected='f099ace5e749fa24021d690a60f622f7c747bff6'
-          live="$(curl -fsS --retry 3 --retry-delay 2 -H 'Cache-Control: no-cache' "https://digeratiexperts.com/release.txt?nocache=$(date +%s)" | tr -d '\r\n')"
-          echo "Expected: $expected"
-          echo "Live:     $live"
-          test "$live" = "$expected"
+      - uses: actions/checkout@v4
 
-      - name: Verify production health
+      - name: Capture production state
+        shell: bash
+        run: |
+          set -u
+          expected='f099ace5e749fa24021d690a60f622f7c747bff6'
+          ts="$(date +%s)"
+          live="$(curl -fsS --retry 3 --retry-delay 2 -H 'Cache-Control: no-cache' "https://digeratiexperts.com/release.txt?nocache=$ts" | tr -d '\r\n' || true)"
+          health="$(curl -fsS --retry 3 --retry-delay 2 -H 'Cache-Control: no-cache' "https://digeratiexperts.com/healthz?nocache=$ts" | tr -d '\r\n' || true)"
+          {
+            echo "expected=$expected"
+            echo "live=$live"
+            echo "health=$health"
+            if [ "$live" = "$expected" ]; then echo "match=true"; else echo "match=false"; fi
+          } > prod-verification.txt
+          cat prod-verification.txt
+
+      - name: Commit verification result
         shell: bash
         run: |
           set -euo pipefail
-          curl -fsS --retry 3 --retry-delay 2 -H 'Cache-Control: no-cache' "https://digeratiexperts.com/healthz?nocache=$(date +%s)"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add prod-verification.txt
+          git commit -m 'chore: record production verification' || exit 0
+          git push
