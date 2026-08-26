@@ -119,28 +119,27 @@ export function StoreProductCard({
         </label>
       )}
 
-      <Link href={`/store/product/${product.sku}`}>
+      <Link href={`/store/product/${product.sku}`} className="relative block">
         <ProductMedia
           product={product}
           variant="card"
           className="rounded-none border-0 border-b border-black/10"
-          categoryBadge={categoryLabels[product.category]}
         />
+        <span
+          className={`absolute left-2.5 top-2.5 z-10 rounded-full bg-[#181520]/90 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm ${accent}`}
+        >
+          {categoryLabels[product.category]}
+        </span>
       </Link>
 
       <div className={`flex flex-1 flex-col ${compact ? "p-3.5" : "p-4 sm:p-5"}`}>
         <div className="mb-2">
-          <div className="mb-1.5 flex flex-wrap items-center gap-1">
-            {vendor && (
-              <span className="rounded-full border border-black/10 bg-black/[0.05] px-2 py-0.5 text-[10px] font-semibold text-[#4A4556]">
-                {vendor.name}
-              </span>
-            )}
-            <span
-              className={`rounded-full bg-[#181520] border border-black/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${accent}`}
-            >
-              {categoryLabels[product.category]}
-            </span>
+          {vendor && (
+            <p className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-[#8A8496]">
+              {vendor.name}
+            </p>
+          )}
+          <div className="mb-1.5 flex flex-wrap items-center gap-1 empty:hidden">
             {product.isClientOnly && (
               <span className="rounded-full border border-de-accent/30 bg-de-accent/10 px-2 py-0.5 text-[10px] font-bold text-de-accent">
                 Client pricing
