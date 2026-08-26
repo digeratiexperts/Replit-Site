@@ -358,7 +358,7 @@ export function StoreCatalogToolbar({
 
   return (
     <div
-      className="mb-7 space-y-4 rounded-xl border border-white/10 bg-[#121212] p-5 lg:sticky lg:top-24 lg:z-20"
+      className="mb-7 space-y-4 rounded-xl border border-white/10 bg-[#121212] p-5 lg:sticky lg:top-24 lg:z-30"
       data-testid="store-catalog-toolbar"
       role="search"
       aria-label="Catalog filters"

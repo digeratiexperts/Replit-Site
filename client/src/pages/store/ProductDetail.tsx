@@ -219,7 +219,7 @@ const ProductDetail = () => {
             </ol>
           </nav>
 
-          <div className="mb-12 grid gap-8 lg:grid-cols-2 lg:gap-12">
+          <div className="mb-12 grid gap-8 lg:grid-cols-2 lg:gap-12 lg:items-start">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
