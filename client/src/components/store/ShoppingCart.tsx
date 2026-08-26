@@ -527,7 +527,7 @@ export function ShoppingCart() {
                   <div className="grid grid-cols-2 gap-2">
                     <Button
                       variant="ghost"
-                      className="h-11 text-[color:var(--dp-text-70)] hover:bg-[color:var(--dp-hover-bg)] hover:text-[color:var(--dp-text-hover)]"
+                      className="h-auto min-h-11 whitespace-normal text-center leading-tight text-[color:var(--dp-text-70)] hover:bg-[color:var(--dp-hover-bg)] hover:text-[color:var(--dp-text-hover)]"
                       onClick={closeCart}
                       data-testid="button-continue-shopping"
                     >
@@ -536,12 +536,12 @@ export function ShoppingCart() {
                     <Button
                       asChild
                       variant="ghost"
-                      className="h-11 text-[color:var(--dp-text-70)] hover:bg-de-accent/10 hover:text-[color:var(--dp-text-hover)]"
+                      className="h-auto min-h-11 whitespace-normal text-center leading-tight text-[color:var(--dp-text-70)] hover:bg-de-accent/10 hover:text-[color:var(--dp-text-hover)]"
                       onClick={closeCart}
                       data-testid="button-schedule-from-cart"
                     >
-                      <a href="/book">
-                        <Calendar className="mr-1 h-4 w-4" />
+                      <a href="/book" className="whitespace-normal text-center leading-tight">
+                        <Calendar className="mr-1 h-4 w-4 shrink-0" />
                         {CTA.primaryShort}
                       </a>
                     </Button>
