@@ -1,0 +1,26 @@
+name: Verify production current release
+
+on:
+  push:
+    branches:
+      - ops/verify-production-current-20260825
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify production release SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected='f099ace5e749fa24021d690a60f622f7c747bff6'
+          live="$(curl -fsS --retry 3 --retry-delay 2 -H 'Cache-Control: no-cache' "https://digeratiexperts.com/release.txt?nocache=$(date +%s)" | tr -d '\r\n')"
+          echo "Expected: $expected"
+          echo "Live:     $live"
+          test "$live" = "$expected"
+
+      - name: Verify production health
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS --retry 3 --retry-delay 2 -H 'Cache-Control: no-cache' "https://digeratiexperts.com/healthz?nocache=$(date +%s)"
