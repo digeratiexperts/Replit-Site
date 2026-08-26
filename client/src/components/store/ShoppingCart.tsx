@@ -113,7 +113,7 @@ export function ShoppingCart() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
-            className="fixed inset-0 z-50 bg-black/60"
+            className="fixed inset-0 z-[60] bg-black/60"
             onClick={closeCart}
             data-testid="cart-overlay"
           />
@@ -128,7 +128,7 @@ export function ShoppingCart() {
             transition={
               prefersReducedMotion ? { duration: 0 } : { type: "spring", damping: 26, stiffness: 320 }
             }
-            className={`fixed right-0 z-50 flex w-full flex-col border-l border-white/10 bg-[#0a0a0a] sm:max-w-md ${
+            className={`fixed right-0 z-[61] flex w-full flex-col border-l border-white/10 bg-[#0a0a0a] sm:max-w-xl ${
               isMinimized ? "bottom-0 top-auto rounded-tl-2xl" : "inset-y-0 max-sm:inset-0"
             }`}
             data-testid="shopping-cart-panel"
