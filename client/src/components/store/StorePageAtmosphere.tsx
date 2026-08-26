@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import atmosphere from "@assets/de-section-atmosphere.png";
+import atmosphere from "@assets/de-section-atmosphere-electric.svg";
 
 /**
  * Store field depth — electric lighting only (store accent lock).
