@@ -279,8 +279,8 @@ export function ConfigureProductDrawer({
                       variant="outline"
                       className={
                         billingPeriod === "monthly"
-                          ? "h-10 flex-1 border-de-accent/40 bg-de-accent/20 text-white"
-                          : "h-10 flex-1 border-white/15 bg-transparent text-white/70"
+                          ? "h-10 flex-1 border-de-accent/40 bg-de-accent/20 text-white hover:text-white"
+                          : "h-10 flex-1 border-white/15 bg-transparent text-white/70 hover:text-white"
                       }
                       onClick={() => setBillingPeriod("monthly")}
                       data-testid="button-billing-monthly"
@@ -292,8 +292,8 @@ export function ConfigureProductDrawer({
                       variant="outline"
                       className={
                         billingPeriod === "yearly"
-                          ? "h-10 flex-1 border-de-accent/40 bg-de-accent/20 text-white"
-                          : "h-10 flex-1 border-white/15 bg-transparent text-white/70"
+                          ? "h-10 flex-1 border-de-accent/40 bg-de-accent/20 text-white hover:text-white"
+                          : "h-10 flex-1 border-white/15 bg-transparent text-white/70 hover:text-white"
                       }
                       onClick={() => setBillingPeriod("yearly")}
                       data-testid="button-billing-yearly"
