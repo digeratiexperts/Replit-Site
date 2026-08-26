@@ -1,0 +1,55 @@
+name: Apply configure billing hover fix
+
+on:
+  push:
+    branches:
+      - fix/configure-billing-hover-20260825
+    paths:
+      - .github/workflows/configure-billing-hover-fix.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Apply exact billing hover changes
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('client/src/components/store/ConfigureProductDrawer.tsx')
+          s = p.read_text()
+          before_active = '"h-10 flex-1 border-de-accent/40 bg-de-accent/20 text-white"'
+          after_active = '"h-10 flex-1 border-de-accent/40 bg-de-accent/20 text-white hover:text-white"'
+          before_inactive = '"h-10 flex-1 border-white/15 bg-transparent text-white/70"'
+          after_inactive = '"h-10 flex-1 border-white/15 bg-transparent text-white/70 hover:text-white"'
+          if s.count(before_active) != 2:
+              raise SystemExit(f'expected 2 active billing strings, found {s.count(before_active)}')
+          if s.count(before_inactive) != 2:
+              raise SystemExit(f'expected 2 inactive billing strings, found {s.count(before_inactive)}')
+          s = s.replace(before_active, after_active)
+          s = s.replace(before_inactive, after_inactive)
+          p.write_text(s)
+          PY
+      - name: Verify TypeScript
+        run: |
+          npm ci --no-audit --no-fund
+          npm run check
+      - name: Commit final change and remove temporary workflow
+        shell: bash
+        run: |
+          rm .github/workflows/configure-billing-hover-fix.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add client/src/components/store/ConfigureProductDrawer.tsx .github/workflows/configure-billing-hover-fix.yml
+          git commit -m "fix(store): preserve white text on billing-period hover"
+          git push origin HEAD:fix/configure-billing-hover-20260825
