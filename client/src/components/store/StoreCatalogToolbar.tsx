@@ -1,12 +1,5 @@
 import { useState } from "react";
-import {
-  Search,
-  Filter,
-  ArrowUpDown,
-  X,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
+import { Search, Filter, ArrowUpDown, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +9,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+} from "@/components/ui/sheet";
 import { categoryLabels, type ProductCategory, type PricingType } from "@/data/storeProducts";
 import {
   billingTypeLabels,
@@ -128,6 +128,18 @@ export function StoreCatalogToolbar({
     (onPriceBandChange && priceBandValue !== "all") ||
     (onPurchasePathChange && purchasePathValue !== "all") ||
     (onCoverageChange && coverageValue !== "all");
+
+  const activeFilterCount = [
+    category !== "all",
+    billingType !== "all",
+    onOutcomeChange && outcomeValue !== "all",
+    onVendorChange && vendorValue !== "all",
+    onComplianceChange && complianceValue !== "all",
+    onSizeChange && sizeValue !== "all",
+    onPriceBandChange && priceBandValue !== "all",
+    onPurchasePathChange && purchasePathValue !== "all",
+    onCoverageChange && coverageValue !== "all",
+  ].filter(Boolean).length;
 
   const clearAll = () => {
     if (onClearAll) {
@@ -366,24 +378,57 @@ export function StoreCatalogToolbar({
         <Button
           type="button"
           variant="outline"
-          className="h-12 border-white/15 bg-transparent text-white hover:bg-white/5 lg:hidden"
-          onClick={() => setMobileOpen((o) => !o)}
+          className="relative h-12 border-white/15 bg-transparent text-white hover:bg-white/5 lg:hidden"
+          onClick={() => setMobileOpen(true)}
           aria-expanded={mobileOpen}
           data-testid="button-toggle-filters"
         >
           <Filter className="mr-2 h-4 w-4" />
-          {mobileOpen ? "Hide filters" : "Show filters"}
-          {mobileOpen ? (
-            <ChevronUp className="ml-2 h-4 w-4" />
-          ) : (
-            <ChevronDown className="ml-2 h-4 w-4" />
+          Filters
+          {activeFilterCount > 0 && (
+            <span className="ml-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-de-accent px-1 text-xs font-bold text-white">
+              {activeFilterCount}
+            </span>
           )}
         </Button>
       </div>
 
-      <div className={`${mobileOpen ? "block" : "hidden"} space-y-4 lg:block`}>
-        {filterControls}
-      </div>
+      <div className="hidden space-y-4 lg:block">{filterControls}</div>
+
+      <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+        <SheetContent
+          side="bottom"
+          className="flex max-h-[85vh] flex-col gap-0 border-white/10 bg-[#121212] p-0 text-white lg:hidden"
+        >
+          <SheetHeader className="border-b border-white/10 px-5 py-4 text-left">
+            <SheetTitle className="flex items-center gap-2 text-white">
+              <Filter className="h-4 w-4" aria-hidden />
+              Filter &amp; sort
+            </SheetTitle>
+          </SheetHeader>
+          <div className="flex-1 space-y-4 overflow-y-auto px-5 py-4">{filterControls}</div>
+          <SheetFooter className="flex-row gap-2 border-t border-white/10 bg-[#121212] px-5 py-4 sm:justify-between">
+            <Button
+              type="button"
+              variant="ghost"
+              className="text-white/60 hover:text-white"
+              onClick={clearAll}
+              disabled={activeFilterCount === 0 && !search}
+              data-testid="button-clear-filters-sheet"
+            >
+              Clear all
+            </Button>
+            <Button
+              type="button"
+              className="flex-1 bg-de-accent text-white hover:bg-[#6548ff]"
+              onClick={() => setMobileOpen(false)}
+              data-testid="button-apply-filters-sheet"
+            >
+              Show {resultCount} {resultCount === 1 ? "result" : "results"}
+            </Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
 
       {activeChips.length > 0 && (
         <div
