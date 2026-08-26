@@ -215,7 +215,7 @@ export function HomepageDockMenu() {
         {items.map(({ section, index }) => {
           const isActive = section.id === conceptualActiveId;
           return (
-            <div key={section.id} className="flex min-w-0 flex-1 justify-center">
+            <div key={section.id} className="flex shrink-0 justify-center">
               <a
                 href={`#${section.id}`}
                 onClick={(event) => {
