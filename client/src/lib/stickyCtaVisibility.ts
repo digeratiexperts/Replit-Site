@@ -19,10 +19,15 @@ const BLOCKING_OVERLAY_SELECTORS = [
   "[data-testid='cookie-consent-banner']",
   ".de-desk-shell",
   // Commerce surfaces with their own CTAs/prices — the assessment bar must not
-  // print over another product's "Add"/price link. Ordinary marketing prose
-  // is left alone; this is scoped to interactive merchandising only.
+  // print over another product's "Add"/price link or a trust claim. Ordinary
+  // marketing prose is left alone; every StoreProductCard (full catalog grid,
+  // every merchandising rail, and the PDP buy box) carries a `product-*`
+  // testid, so this one prefix covers all of them without allowlisting each
+  // container individually. The PDP's bespoke "Recommended with this
+  // service" cards don't reuse StoreProductCard (`related-*` testid instead)
+  // so that section is allowlisted by its own wrapper below.
   "[data-testid='store-trust-strip']",
-  "[data-testid='merchandising-rails']",
+  "[data-testid^='product-']",
   "[data-testid='pdp-related-products']",
 ];
 
