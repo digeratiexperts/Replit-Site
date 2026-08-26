@@ -15,6 +15,7 @@ import {
 } from "@/data/storeMerchandising";
 import { ProductMedia } from "@/components/store/ProductMedia";
 import { PRIMARY_PHONE } from "@/data/companyContact";
+import { useDockHiddenWhileOpen } from "@/hooks/useDockHiddenWhileOpen";
 
 export interface ConfigureConfirmPayload {
   product: StoreProduct;
@@ -55,6 +56,7 @@ export function ConfigureProductDrawer({
   const [selectedAddons, setSelectedAddons] = useState<Set<string>>(new Set());
   const [environmentNotes, setEnvironmentNotes] = useState("");
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">("monthly");
+  useDockHiddenWhileOpen(open);
 
   useEffect(() => {
     if (product) {
