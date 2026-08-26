@@ -1,7 +1,6 @@
 export const STICKY_CTA_SCROLL_IDLE_MS = 900;
 export const STICKY_CTA_AUTO_HIDE_MS = 12_000;
 export const STICKY_CTA_RESHOW_DELTA_PX = 160;
-export const STICKY_CTA_FALLBACK_HEIGHT = 112;
 export const STICKY_CTA_END_RESERVE_PX = 160;
 
 const COMPETING_CHROME_SELECTORS = [
@@ -19,6 +18,12 @@ const BLOCKING_OVERLAY_SELECTORS = [
   "[data-radix-dialog-overlay]",
   "[data-testid='cookie-consent-banner']",
   ".de-desk-shell",
+  // Commerce surfaces with their own CTAs/prices — the assessment bar must not
+  // print over another product's "Add"/price link. Ordinary marketing prose
+  // is left alone; this is scoped to interactive merchandising only.
+  "[data-testid='store-trust-strip']",
+  "[data-testid='merchandising-rails']",
+  "[data-testid='pdp-related-products']",
 ];
 
 export function isStickyCtaRouteAllowed(path: string): boolean {

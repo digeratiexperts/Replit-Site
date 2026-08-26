@@ -8,7 +8,6 @@ import { CTA } from "@/lib/ctaCopy";
 import { PRIMARY_PHONE } from "@/data/companyContact";
 import {
   STICKY_CTA_AUTO_HIDE_MS,
-  STICKY_CTA_FALLBACK_HEIGHT,
   STICKY_CTA_RESHOW_DELTA_PX,
   STICKY_CTA_SCROLL_IDLE_MS,
   isNearDocumentEnd,
@@ -33,7 +32,9 @@ export function StickyCTABar() {
   const { openBooking } = useBooking();
   const barRef = useRef<HTMLDivElement>(null);
   const lastShowScroll = useRef(0);
-  const lastHeight = useRef(STICKY_CTA_FALLBACK_HEIGHT);
+  // 0, not a fallback height: nothing should reserve this bar's space until it has
+  // actually shown once (it publishes its real measured height at that point).
+  const lastHeight = useRef(0);
 
   const routeAllowed = isStickyCtaRouteAllowed(location);
   const visible = shouldShowStickyCta({
