@@ -17,6 +17,7 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 import { categoryLabels, type ProductCategory, type PricingType } from "@/data/storeProducts";
+import { useDockHiddenWhileOpen } from "@/hooks/useDockHiddenWhileOpen";
 import {
   billingTypeLabels,
   storeOutcomes,
@@ -108,6 +109,7 @@ export function StoreCatalogToolbar({
   onClearAll,
 }: StoreCatalogToolbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  useDockHiddenWhileOpen(mobileOpen);
   const outcomeValue = outcome && outcome !== null ? outcome : "all";
   const vendorValue = vendor || "all";
   const complianceValue = compliance || "all";
@@ -169,7 +171,10 @@ export function StoreCatalogToolbar({
           value={category}
           onValueChange={(v) => onCategoryChange(v as ProductCategory | "all")}
         >
-          <SelectTrigger className={`${selectClass()} w-[190px]`} data-testid="select-category">
+          <SelectTrigger
+            className={`${selectClass()} w-auto min-w-[190px]`}
+            data-testid="select-category"
+          >
             <SelectValue placeholder="Category" />
           </SelectTrigger>
           <SelectContent className="border-white/10 bg-[#141414] text-white">
@@ -187,7 +192,10 @@ export function StoreCatalogToolbar({
             value={outcomeValue}
             onValueChange={(v) => onOutcomeChange(v as StoreOutcomeId | "all")}
           >
-            <SelectTrigger className={`${selectClass()} w-[180px]`} data-testid="select-outcome">
+            <SelectTrigger
+              className={`${selectClass()} w-auto min-w-[180px]`}
+              data-testid="select-outcome"
+            >
               <SelectValue placeholder="Outcome" />
             </SelectTrigger>
             <SelectContent className="border-white/10 bg-[#141414] text-white">
@@ -205,7 +213,10 @@ export function StoreCatalogToolbar({
           value={billingType}
           onValueChange={(v) => onBillingTypeChange(v as PricingType | "all")}
         >
-          <SelectTrigger className={`${selectClass()} w-[170px]`} data-testid="select-billing">
+          <SelectTrigger
+            className={`${selectClass()} w-auto min-w-[170px]`}
+            data-testid="select-billing"
+          >
             <SelectValue placeholder="Billing" />
           </SelectTrigger>
           <SelectContent className="border-white/10 bg-[#141414] text-white">
@@ -221,7 +232,10 @@ export function StoreCatalogToolbar({
         <div className="flex items-center gap-1.5">
           <ArrowUpDown className="h-4 w-4 text-white/55" aria-hidden />
           <Select value={sort} onValueChange={(v) => onSortChange(v as StoreSortOption)}>
-            <SelectTrigger className={`${selectClass()} w-[180px]`} data-testid="select-sort">
+            <SelectTrigger
+              className={`${selectClass()} w-auto min-w-[140px]`}
+              data-testid="select-sort"
+            >
               <SelectValue placeholder="Sort" />
             </SelectTrigger>
             <SelectContent className="border-white/10 bg-[#141414] text-white">
@@ -241,7 +255,10 @@ export function StoreCatalogToolbar({
             value={vendorValue}
             onValueChange={(v) => onVendorChange(v as string | "all")}
           >
-            <SelectTrigger className={`${selectClass()} w-[170px]`} data-testid="select-vendor">
+            <SelectTrigger
+              className={`${selectClass()} w-auto min-w-[170px]`}
+              data-testid="select-vendor"
+            >
               <SelectValue placeholder="Vendor" />
             </SelectTrigger>
             <SelectContent className="border-white/10 bg-[#141414] text-white">
@@ -260,7 +277,10 @@ export function StoreCatalogToolbar({
             value={complianceValue}
             onValueChange={(v) => onComplianceChange(v as StoreComplianceId | "all")}
           >
-            <SelectTrigger className={`${selectClass()} w-[190px]`} data-testid="select-compliance">
+            <SelectTrigger
+              className={`${selectClass()} w-auto min-w-[190px]`}
+              data-testid="select-compliance"
+            >
               <SelectValue placeholder="Compliance" />
             </SelectTrigger>
             <SelectContent className="border-white/10 bg-[#141414] text-white">
@@ -279,7 +299,10 @@ export function StoreCatalogToolbar({
             value={sizeValue}
             onValueChange={(v) => onSizeChange(v as StoreSizeId | "all")}
           >
-            <SelectTrigger className={`${selectClass()} w-[200px]`} data-testid="select-size">
+            <SelectTrigger
+              className={`${selectClass()} w-auto min-w-[200px]`}
+              data-testid="select-size"
+            >
               <SelectValue placeholder="Company size" />
             </SelectTrigger>
             <SelectContent className="border-white/10 bg-[#141414] text-white">
@@ -298,7 +321,10 @@ export function StoreCatalogToolbar({
             value={priceBandValue}
             onValueChange={(v) => onPriceBandChange(v as StorePriceBandId | "all")}
           >
-            <SelectTrigger className={`${selectClass()} w-[160px]`} data-testid="select-price-band">
+            <SelectTrigger
+              className={`${selectClass()} w-auto min-w-[160px]`}
+              data-testid="select-price-band"
+            >
               <SelectValue placeholder="Price" />
             </SelectTrigger>
             <SelectContent className="border-white/10 bg-[#141414] text-white">
@@ -318,7 +344,7 @@ export function StoreCatalogToolbar({
             onValueChange={(v) => onPurchasePathChange(v as StorePurchasePathId | "all")}
           >
             <SelectTrigger
-              className={`${selectClass()} w-[170px]`}
+              className={`${selectClass()} w-auto min-w-[170px]`}
               data-testid="select-purchase-path"
             >
               <SelectValue placeholder="Buy path" />
@@ -339,7 +365,10 @@ export function StoreCatalogToolbar({
             value={coverageValue}
             onValueChange={(v) => onCoverageChange(v as CoverageDimension | "all")}
           >
-            <SelectTrigger className={`${selectClass()} w-[170px]`} data-testid="select-coverage">
+            <SelectTrigger
+              className={`${selectClass()} w-auto min-w-[170px]`}
+              data-testid="select-coverage"
+            >
               <SelectValue placeholder="Coverage" />
             </SelectTrigger>
             <SelectContent className="border-white/10 bg-[#141414] text-white">
