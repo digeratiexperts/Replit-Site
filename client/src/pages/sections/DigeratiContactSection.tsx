@@ -20,7 +20,7 @@ import {
   PRIMARY_PHONE,
   formatAddressOneLine,
 } from "@/data/companyContact";
-import contactBgImage from "@assets/de-section-atmosphere.png";
+import contactBgImage from "@assets/de-section-atmosphere-electric.svg";
 
 const contactFormSchema = z.object({
   name: z.string()
