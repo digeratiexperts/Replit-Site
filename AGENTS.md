@@ -1,5 +1,7 @@
 # Agent workflow (Digerati Experts)
 
+Read **`docs/REPOSITORY-AUTHORITY.md`** before touching another Digerati Experts repository. Hub work is `digeratiexperts/Intelligence-Hub` only. `digeratiexperts/TechSales` is legacy and read-only.
+
 Authoritative policy: **`.cursorrules`** (sections 1?42). Always-applied pointer: `.cursor/rules/00-follow-cursorrules.mdc`.
 
 Design OS (execution layer, does not replace `.cursorrules`): `.cursor/rules/ui-ux.mdc`, `brand.mdc`, `frontend.mdc` + `design/DESIGN_SYSTEM.md`. Never judge UI from source code alone. Blog/Journal and Store colors are locked: `.cursor/rules/blog-store-color-lock.mdc`.
@@ -27,6 +29,7 @@ Design OS (execution layer, does not replace `.cursorrules`): `.cursor/rules/ui-
 
 - Site: `https://digeratiexperts.com`
 - Portal login: `https://portal.digeratiexperts.com/portal/login` (never `//login`)
+- Hub / TechSales: `https://techsales.digerati-experts.com` (source is `digeratiexperts/Intelligence-Hub` only)
 
 ## Next steps (out of scope here)
 

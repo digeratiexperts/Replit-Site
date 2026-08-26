@@ -1,0 +1,15 @@
+---
+description: Canonical vs legacy DE repositories — read before touching Hub or TechSales
+alwaysApply: true
+---
+
+# Repository authority
+
+Read `docs/REPOSITORY-AUTHORITY.md` before touching another Digerati Experts repository.
+
+- **Hub / TechSales work:** `digeratiexperts/Intelligence-Hub` only (`master`, `https://techsales.digerati-experts.com`, `/opt/intelligence-hub`).
+- **Website / Store / Client Portal:** `digeratiexperts/digeratiexperts-site` only.
+- **`digeratiexperts/TechSales`:** LEGACY — READ ONLY. Do not edit, merge, cherry-pick, deploy, or auto-sync. Inspect and report if a historical comparison is required.
+- **`digeratiexperts/intelligencehub-`:** empty. Do not use.
+- Committed ≠ merged ≠ deployed ≠ production-verified. Website PRs #57 and #59 are not live until they are on `main` and deployed.
+- Portal login is `https://portal.digeratiexperts.com/portal/login`. Never invent `//login`.
