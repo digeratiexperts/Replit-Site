@@ -622,6 +622,75 @@ html[data-dock-hidden="true"] .de-bottom-bar {
 }
 
 /*
+ * Cyber HUD Chrome — Technical precision micro-styling.
+ * Gives cards, terminal widgets, and live metrics tactical credibility.
+ */
+.de-hud-card {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(180deg, rgba(21, 18, 23, 0.85) 0%, rgba(10, 8, 14, 0.95) 100%);
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.de-hud-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  border-top: 2px solid var(--de-magenta);
+  border-left: 2px solid var(--de-magenta);
+  border-top-left-radius: 1rem;
+  pointer-events: none;
+}
+
+.de-hud-card::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 14px;
+  height: 14px;
+  border-bottom: 2px solid var(--de-magenta);
+  border-right: 2px solid var(--de-magenta);
+  border-bottom-right-radius: 1rem;
+  pointer-events: none;
+}
+
+.de-grid-matrix {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.de-telemetry-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  background: rgba(211, 18, 106, 0.1);
+  border: 1px solid rgba(211, 18, 106, 0.3);
+  font-family: var(--font-mono, "Oxanium", monospace);
+  font-size: 0.75rem;
+  color: var(--de-magenta-ink);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.de-telemetry-live-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background-color: #10B981;
+  box-shadow: 0 0 8px #10B981;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/*
  * Film grain + corner lighting — opt-in per chapter.
  * Grain is a background-image so fade ::before/::after stay available.
  * .de-field-grain-film overlays photography (hero / CTA) above the still
