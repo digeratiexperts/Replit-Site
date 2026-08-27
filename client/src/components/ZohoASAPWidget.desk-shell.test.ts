@@ -92,5 +92,6 @@ describe("DE Desk shell positioning", () => {
     expect(src).toMatch(/Create ticket/);
     expect(src).toMatch(/de-desk-btn-grad/);
     expect(src).toMatch(/de-desk-urgency/);
+    expect(src).toMatch(/\.de-desk-scroll > \* \{ flex-shrink: 0; \}/);
   });
 });

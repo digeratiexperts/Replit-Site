@@ -1866,6 +1866,8 @@ export const ZohoASAPWidget = ({
               flex-direction: column;
             }
             .de-desk-scroll { overflow-y: auto; padding: 14px 16px 16px; }
+            .de-desk-scroll > * { flex-shrink: 0; }
+            .de-desk-shell[data-tab="chat"] .de-desk-scroll { padding-bottom: 8px; }
             .de-desk-hero {
               display: flex;
               flex-direction: column;
@@ -2032,7 +2034,10 @@ export const ZohoASAPWidget = ({
               background: var(--de-bg, #050312);
               color: #D3126A;
             }
-            .de-desk-issue-label { flex: 1; min-width: 0; }
+            .de-desk-issue-label {
+              flex: 1; min-width: 0;
+              overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            }
             .de-desk-issue-arrow {
               width: 15px; height: 15px; flex: none;
               color: rgba(255,255,255,0.38);
@@ -2268,7 +2273,7 @@ export const ZohoASAPWidget = ({
             }
             .de-desk-bubble {
               max-width: 100%;
-              padding: 12px 14px;
+              padding: 10px 13px;
               font-size: 14px; line-height: 1.5;
               border-radius: 12px;
             }
@@ -2282,17 +2287,17 @@ export const ZohoASAPWidget = ({
               border-bottom-left-radius: 5px;
             }
             .de-desk-discover {
-              margin: 14px 0 4px;
+              margin: 12px 0 2px;
               display: flex;
               flex-direction: column;
             }
             .de-desk-discover-intro {
-              margin: 0 0 12px;
+              margin: 0 0 8px;
             }
             .de-desk-discover-intro h3 {
               margin: 0;
               font-family: "Space Grotesk", sans-serif;
-              font-size: 17px;
+              font-size: 16px;
               font-weight: 700;
               line-height: 1.25;
               letter-spacing: -0.015em;
@@ -2318,14 +2323,14 @@ export const ZohoASAPWidget = ({
               align-items: center;
               gap: 12px;
               width: 100%;
-              min-height: 48px;
-              padding: 12px 14px;
+              min-height: 44px;
+              padding: 10px 12px 10px 13px;
               background: transparent;
               border: 0;
               border-bottom: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
               color: #fff;
               font-family: "Space Grotesk", sans-serif;
-              font-size: 14.5px;
+              font-size: 14px;
               font-weight: 650;
               line-height: 1.3;
               text-align: left;
@@ -2344,15 +2349,18 @@ export const ZohoASAPWidget = ({
             }
             .de-desk-discover-icon {
               display: inline-flex; flex: none;
-              width: 36px; height: 36px;
+              width: 32px; height: 32px;
               align-items: center; justify-content: center;
-              border-radius: 10px;
+              border-radius: 9px;
               border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
               background: var(--de-bg, #050312);
               color: #D3126A;
             }
-            .de-desk-discover-icon svg { width: 16px; height: 16px; stroke-width: 1.9; }
-            .de-desk-discover-label { flex: 1; min-width: 0; }
+            .de-desk-discover-icon svg { width: 15px; height: 15px; stroke-width: 1.9; }
+            .de-desk-discover-label {
+              flex: 1; min-width: 0;
+              overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            }
             .de-desk-discover-arrow {
               width: 15px; height: 15px; flex: none;
               color: rgba(255,255,255,0.38);
@@ -2397,7 +2405,10 @@ export const ZohoASAPWidget = ({
               border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
               background: var(--de-bg, #050312);
             }
-            .de-desk-chip-label { flex: 1; min-width: 0; }
+            .de-desk-chip-label {
+              flex: 1; min-width: 0;
+              overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            }
             .de-desk-chip-arrow {
               width: 14px; height: 14px; flex: none;
               color: rgba(255,255,255,0.38);
@@ -2488,7 +2499,7 @@ export const ZohoASAPWidget = ({
               z-index: 1;
               display: flex; gap: 8px;
               margin: 0;
-              padding: 12px 16px 10px;
+              padding: 10px 16px 8px;
               border-top: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
               background: var(--de-surface, #0a0a0a);
               color: #fff;
@@ -2500,11 +2511,11 @@ export const ZohoASAPWidget = ({
             }
             .de-desk-composer input {
               flex: 1;
-              min-height: 48px;
+              min-height: 44px;
               background: var(--de-raised, #151217);
               border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
               border-radius: 10px;
-              padding: 12px 14px;
+              padding: 10px 14px;
               color: #fff; font-size: 14.5px;
             }
             .de-desk-shell input:-webkit-autofill,
@@ -2520,7 +2531,7 @@ export const ZohoASAPWidget = ({
               box-shadow: 0 0 0 3px rgba(211,18,106,0.16);
             }
             .de-desk-send {
-              width: 48px; height: 48px; border-radius: 10px;
+              width: 44px; height: 44px; border-radius: 10px;
               background: #D3126A; border: none;
               display: flex; align-items: center; justify-content: center;
               flex: none;
@@ -2534,7 +2545,7 @@ export const ZohoASAPWidget = ({
               z-index: 1;
               display: flex; align-items: center; gap: 6px;
               margin: 0;
-              padding: 0 16px 14px;
+              padding: 0 16px 10px;
               background: transparent;
               font-size: 12px; color: rgba(255,255,255,0.46);
               flex-shrink: 0;
