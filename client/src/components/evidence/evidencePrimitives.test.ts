@@ -5,23 +5,14 @@ import { describe, expect, it } from "vitest";
 
 const currentDir = dirname(fileURLToPath(import.meta.url));
 
-const evidenceFrameSrc = readFileSync(
-  resolve(currentDir, "EvidenceFrame.tsx"),
-  "utf8"
-);
-const statusTokenSrc = readFileSync(
-  resolve(currentDir, "StatusToken.tsx"),
-  "utf8"
-);
+const evidenceFrameSrc = readFileSync(resolve(currentDir, "EvidenceFrame.tsx"), "utf8");
+const statusTokenSrc = readFileSync(resolve(currentDir, "StatusToken.tsx"), "utf8");
 const proofChipSrc = readFileSync(resolve(currentDir, "ProofChip.tsx"), "utf8");
 const hudFrameSrc = readFileSync(resolve(currentDir, "HUDFrame.tsx"), "utf8");
-const incidentFlowSrc = readFileSync(
-  resolve(currentDir, "IncidentFlow.tsx"),
-  "utf8"
-);
+const incidentFlowSrc = readFileSync(resolve(currentDir, "IncidentFlow.tsx"), "utf8");
 
-describe("DE Visual System v2 Primitives Integrity", () => {
-  it("enforces truthfulness classifications in EvidenceFrame", () => {
+describe("DE Visual System v2 primitives integrity", () => {
+  it("enforces the four truthfulness classifications", () => {
     expect(evidenceFrameSrc).toMatch(/export type EvidenceClassification/);
     expect(evidenceFrameSrc).toMatch(/LIVE/);
     expect(evidenceFrameSrc).toMatch(/SANITIZED_REAL/);
@@ -29,27 +20,41 @@ describe("DE Visual System v2 Primitives Integrity", () => {
     expect(evidenceFrameSrc).toMatch(/ILLUSTRATIVE/);
   });
 
-  it("enforces emerald-only status tokens for live/verified health", () => {
-    expect(statusTokenSrc).toMatch(/active:/);
-    expect(statusTokenSrc).toMatch(/emerald-400/);
-    expect(statusTokenSrc).toMatch(/#D3126A/); // informational brand
+  it("does not introduce cyan or one-off dark surfaces into EvidenceFrame", () => {
+    expect(evidenceFrameSrc).not.toMatch(/cyan-/);
+    expect(evidenceFrameSrc).not.toMatch(/#0d0a14/i);
+    expect(evidenceFrameSrc).toMatch(/bg-de-raised/);
   });
 
-  it("provides factual metrics and Lucide icon support in ProofChip", () => {
+  it("keeps live and verified health semantic states emerald", () => {
+    expect(statusTokenSrc).toMatch(/active:/);
+    expect(statusTokenSrc).toMatch(/verified:/);
+    expect(statusTokenSrc).toMatch(/emerald-400/);
+    expect(statusTokenSrc).toMatch(/#D3126A/);
+  });
+
+  it("supports factual proof chips without requiring invented metrics", () => {
     expect(proofChipSrc).toMatch(/export const ProofChip/);
     expect(proofChipSrc).toMatch(/metric\?:/);
     expect(proofChipSrc).toMatch(/variant\?: "dark" \| "paper"/);
   });
 
-  it("provides precision corner marks and technical ID stamping in HUDFrame", () => {
+  it("keeps HUDFrame on canonical surfaces with restrained precision marks", () => {
     expect(hudFrameSrc).toMatch(/export const HUDFrame/);
     expect(hudFrameSrc).toMatch(/technicalId\?:/);
-    expect(hudFrameSrc).toMatch(/border-t-2 border-l-2 border-\[#D3126A\]/);
+    expect(hudFrameSrc).toMatch(/bg-de-raised/);
+    expect(hudFrameSrc).not.toMatch(/#0e0b14/i);
+    expect(hudFrameSrc).toMatch(/border-t-2 border-\[#D3126A\]/);
   });
 
-  it("marks IncidentFlow explicitly as an EXAMPLE classification", () => {
+  it("marks IncidentFlow as an example and bans unsupported performance-style claims", () => {
     expect(incidentFlowSrc).toMatch(/classification="EXAMPLE"/);
-    expect(incidentFlowSrc).toMatch(/ProActive Incident Containment Architecture/);
-    expect(incidentFlowSrc).toMatch(/OPERATIONAL TIMELINE & CONTAINMENT GATES/);
+    expect(incidentFlowSrc).toMatch(/EXAMPLE MODEL/);
+    expect(incidentFlowSrc).toMatch(/Illustrative resolution/);
+    expect(incidentFlowSrc).toMatch(/not live telemetry/);
+    expect(incidentFlowSrc).not.toMatch(/under 5 minutes/i);
+    expect(incidentFlowSrc).not.toMatch(/18 identical/i);
+    expect(incidentFlowSrc).not.toMatch(/Verified Outcome/);
+    expect(incidentFlowSrc).not.toMatch(/risk score > 85/i);
   });
 });
