@@ -19,6 +19,22 @@ const incidentFlowSrc = readFileSync(
   resolve(currentDir, "IncidentFlow.tsx"),
   "utf8"
 );
+const diagramPrimitivesSrc = readFileSync(
+  resolve(currentDir, "DiagramPrimitives.tsx"),
+  "utf8"
+);
+const assessmentReportSrc = readFileSync(
+  resolve(currentDir, "AssessmentReportSample.tsx"),
+  "utf8"
+);
+const protectionDeckSrc = readFileSync(
+  resolve(currentDir, "../visual/ProtectionCommandDeck.tsx"),
+  "utf8"
+);
+const ecosystemDiagramSrc = readFileSync(
+  resolve(currentDir, "../visual/ProActiveEcosystemDiagram.tsx"),
+  "utf8"
+);
 
 describe("DE Visual System v2 Primitives Integrity", () => {
   it("enforces truthfulness classifications in EvidenceFrame", () => {
@@ -51,5 +67,33 @@ describe("DE Visual System v2 Primitives Integrity", () => {
     expect(incidentFlowSrc).toMatch(/classification="EXAMPLE"/);
     expect(incidentFlowSrc).toMatch(/ProActive Incident Containment Architecture/);
     expect(incidentFlowSrc).toMatch(/OPERATIONAL TIMELINE & CONTAINMENT GATES/);
+  });
+
+  it("exports DiagramPrimitives including SecurityBoundary, DiagramNode, and ControlGate", () => {
+    expect(diagramPrimitivesSrc).toMatch(/export const SecurityBoundary/);
+    expect(diagramPrimitivesSrc).toMatch(/export const DiagramNode/);
+    expect(diagramPrimitivesSrc).toMatch(/export const ControlGate/);
+  });
+
+  it("marks AssessmentReportSample explicitly as SANITIZED_REAL", () => {
+    expect(assessmentReportSrc).toMatch(/classification="SANITIZED_REAL"/);
+    expect(assessmentReportSrc).toMatch(/Sanitized Cyber Risk & Infrastructure Assessment Excerpt/);
+    expect(assessmentReportSrc).toMatch(/30-DAY REMEDIATION ROADMAP/);
+  });
+
+  it("implements 6 domains in ProtectionCommandDeck with explicit ILLUSTRATIVE classification", () => {
+    expect(protectionDeckSrc).toMatch(/classification="ILLUSTRATIVE"/);
+    expect(protectionDeckSrc).toMatch(/identity/);
+    expect(protectionDeckSrc).toMatch(/endpoint/);
+    expect(protectionDeckSrc).toMatch(/email/);
+    expect(protectionDeckSrc).toMatch(/network/);
+    expect(protectionDeckSrc).toMatch(/recovery/);
+    expect(protectionDeckSrc).toMatch(/compliance/);
+  });
+
+  it("implements 4-stage lifecycle in ProActiveEcosystemDiagram", () => {
+    expect(ecosystemDiagramSrc).toMatch(/classification="ILLUSTRATIVE"/);
+    expect(ecosystemDiagramSrc).toMatch(/The ProActive Ecosystem Operating Architecture/);
+    expect(ecosystemDiagramSrc).toMatch(/Discovery & Environmental Assessment/);
   });
 });
