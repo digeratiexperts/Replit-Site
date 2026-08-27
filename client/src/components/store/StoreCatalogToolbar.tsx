@@ -1,12 +1,5 @@
 import { useState } from "react";
-import {
-  Search,
-  Filter,
-  ArrowUpDown,
-  X,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
+import { Search, Filter, ArrowUpDown, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +9,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+} from "@/components/ui/sheet";
 import { categoryLabels, type ProductCategory, type PricingType } from "@/data/storeProducts";
+import { useDockHiddenWhileOpen } from "@/hooks/useDockHiddenWhileOpen";
 import {
   billingTypeLabels,
   storeOutcomes,
@@ -108,6 +109,7 @@ export function StoreCatalogToolbar({
   onClearAll,
 }: StoreCatalogToolbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  useDockHiddenWhileOpen(mobileOpen);
   const outcomeValue = outcome && outcome !== null ? outcome : "all";
   const vendorValue = vendor || "all";
   const complianceValue = compliance || "all";
@@ -128,6 +130,18 @@ export function StoreCatalogToolbar({
     (onPriceBandChange && priceBandValue !== "all") ||
     (onPurchasePathChange && purchasePathValue !== "all") ||
     (onCoverageChange && coverageValue !== "all");
+
+  const activeFilterCount = [
+    category !== "all",
+    billingType !== "all",
+    onOutcomeChange && outcomeValue !== "all",
+    onVendorChange && vendorValue !== "all",
+    onComplianceChange && complianceValue !== "all",
+    onSizeChange && sizeValue !== "all",
+    onPriceBandChange && priceBandValue !== "all",
+    onPurchasePathChange && purchasePathValue !== "all",
+    onCoverageChange && coverageValue !== "all",
+  ].filter(Boolean).length;
 
   const clearAll = () => {
     if (onClearAll) {
@@ -157,7 +171,10 @@ export function StoreCatalogToolbar({
           value={category}
           onValueChange={(v) => onCategoryChange(v as ProductCategory | "all")}
         >
-          <SelectTrigger className={`${selectClass()} w-[190px]`} data-testid="select-category">
+          <SelectTrigger
+            className={`${selectClass()} w-auto min-w-[190px]`}
+            data-testid="select-category"
+          >
             <SelectValue placeholder="Category" />
           </SelectTrigger>
           <SelectContent className="border-white/10 bg-[#141414] text-white">
@@ -175,7 +192,10 @@ export function StoreCatalogToolbar({
             value={outcomeValue}
             onValueChange={(v) => onOutcomeChange(v as StoreOutcomeId | "all")}
           >
-            <SelectTrigger className={`${selectClass()} w-[180px]`} data-testid="select-outcome">
+            <SelectTrigger
+              className={`${selectClass()} w-auto min-w-[180px]`}
+              data-testid="select-outcome"
+            >
               <SelectValue placeholder="Outcome" />
             </SelectTrigger>
             <SelectContent className="border-white/10 bg-[#141414] text-white">
@@ -193,7 +213,10 @@ export function StoreCatalogToolbar({
           value={billingType}
           onValueChange={(v) => onBillingTypeChange(v as PricingType | "all")}
         >
-          <SelectTrigger className={`${selectClass()} w-[170px]`} data-testid="select-billing">
+          <SelectTrigger
+            className={`${selectClass()} w-auto min-w-[170px]`}
+            data-testid="select-billing"
+          >
             <SelectValue placeholder="Billing" />
           </SelectTrigger>
           <SelectContent className="border-white/10 bg-[#141414] text-white">
@@ -209,7 +232,10 @@ export function StoreCatalogToolbar({
         <div className="flex items-center gap-1.5">
           <ArrowUpDown className="h-4 w-4 text-white/55" aria-hidden />
           <Select value={sort} onValueChange={(v) => onSortChange(v as StoreSortOption)}>
-            <SelectTrigger className={`${selectClass()} w-[180px]`} data-testid="select-sort">
+            <SelectTrigger
+              className={`${selectClass()} w-auto min-w-[140px]`}
+              data-testid="select-sort"
+            >
               <SelectValue placeholder="Sort" />
             </SelectTrigger>
             <SelectContent className="border-white/10 bg-[#141414] text-white">
@@ -229,7 +255,10 @@ export function StoreCatalogToolbar({
             value={vendorValue}
             onValueChange={(v) => onVendorChange(v as string | "all")}
           >
-            <SelectTrigger className={`${selectClass()} w-[170px]`} data-testid="select-vendor">
+            <SelectTrigger
+              className={`${selectClass()} w-auto min-w-[170px]`}
+              data-testid="select-vendor"
+            >
               <SelectValue placeholder="Vendor" />
             </SelectTrigger>
             <SelectContent className="border-white/10 bg-[#141414] text-white">
@@ -248,7 +277,10 @@ export function StoreCatalogToolbar({
             value={complianceValue}
             onValueChange={(v) => onComplianceChange(v as StoreComplianceId | "all")}
           >
-            <SelectTrigger className={`${selectClass()} w-[190px]`} data-testid="select-compliance">
+            <SelectTrigger
+              className={`${selectClass()} w-auto min-w-[190px]`}
+              data-testid="select-compliance"
+            >
               <SelectValue placeholder="Compliance" />
             </SelectTrigger>
             <SelectContent className="border-white/10 bg-[#141414] text-white">
@@ -267,7 +299,10 @@ export function StoreCatalogToolbar({
             value={sizeValue}
             onValueChange={(v) => onSizeChange(v as StoreSizeId | "all")}
           >
-            <SelectTrigger className={`${selectClass()} w-[200px]`} data-testid="select-size">
+            <SelectTrigger
+              className={`${selectClass()} w-auto min-w-[200px]`}
+              data-testid="select-size"
+            >
               <SelectValue placeholder="Company size" />
             </SelectTrigger>
             <SelectContent className="border-white/10 bg-[#141414] text-white">
@@ -286,7 +321,10 @@ export function StoreCatalogToolbar({
             value={priceBandValue}
             onValueChange={(v) => onPriceBandChange(v as StorePriceBandId | "all")}
           >
-            <SelectTrigger className={`${selectClass()} w-[160px]`} data-testid="select-price-band">
+            <SelectTrigger
+              className={`${selectClass()} w-auto min-w-[160px]`}
+              data-testid="select-price-band"
+            >
               <SelectValue placeholder="Price" />
             </SelectTrigger>
             <SelectContent className="border-white/10 bg-[#141414] text-white">
@@ -306,7 +344,7 @@ export function StoreCatalogToolbar({
             onValueChange={(v) => onPurchasePathChange(v as StorePurchasePathId | "all")}
           >
             <SelectTrigger
-              className={`${selectClass()} w-[170px]`}
+              className={`${selectClass()} w-auto min-w-[170px]`}
               data-testid="select-purchase-path"
             >
               <SelectValue placeholder="Buy path" />
@@ -327,7 +365,10 @@ export function StoreCatalogToolbar({
             value={coverageValue}
             onValueChange={(v) => onCoverageChange(v as CoverageDimension | "all")}
           >
-            <SelectTrigger className={`${selectClass()} w-[170px]`} data-testid="select-coverage">
+            <SelectTrigger
+              className={`${selectClass()} w-auto min-w-[170px]`}
+              data-testid="select-coverage"
+            >
               <SelectValue placeholder="Coverage" />
             </SelectTrigger>
             <SelectContent className="border-white/10 bg-[#141414] text-white">
@@ -346,7 +387,7 @@ export function StoreCatalogToolbar({
 
   return (
     <div
-      className="mb-7 space-y-4 rounded-xl border border-white/10 bg-[#121212] p-5 lg:sticky lg:top-24 lg:z-20"
+      className="mb-7 space-y-4 rounded-xl border border-white/10 bg-[#121212] p-5 lg:sticky lg:top-24 lg:z-30"
       data-testid="store-catalog-toolbar"
       role="search"
       aria-label="Catalog filters"
@@ -366,24 +407,57 @@ export function StoreCatalogToolbar({
         <Button
           type="button"
           variant="outline"
-          className="h-12 border-white/15 bg-transparent text-white hover:bg-white/5 lg:hidden"
-          onClick={() => setMobileOpen((o) => !o)}
+          className="relative h-12 border-white/15 bg-transparent text-white hover:bg-white/5 lg:hidden"
+          onClick={() => setMobileOpen(true)}
           aria-expanded={mobileOpen}
           data-testid="button-toggle-filters"
         >
           <Filter className="mr-2 h-4 w-4" />
-          {mobileOpen ? "Hide filters" : "Show filters"}
-          {mobileOpen ? (
-            <ChevronUp className="ml-2 h-4 w-4" />
-          ) : (
-            <ChevronDown className="ml-2 h-4 w-4" />
+          Filters
+          {activeFilterCount > 0 && (
+            <span className="ml-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-de-accent px-1 text-xs font-bold text-white">
+              {activeFilterCount}
+            </span>
           )}
         </Button>
       </div>
 
-      <div className={`${mobileOpen ? "block" : "hidden"} space-y-4 lg:block`}>
-        {filterControls}
-      </div>
+      <div className="hidden space-y-4 lg:block">{filterControls}</div>
+
+      <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+        <SheetContent
+          side="bottom"
+          className="flex max-h-[85vh] flex-col gap-0 border-white/10 bg-[#121212] p-0 text-white lg:hidden"
+        >
+          <SheetHeader className="border-b border-white/10 px-5 py-4 text-left">
+            <SheetTitle className="flex items-center gap-2 text-white">
+              <Filter className="h-4 w-4" aria-hidden />
+              Filter &amp; sort
+            </SheetTitle>
+          </SheetHeader>
+          <div className="flex-1 space-y-4 overflow-y-auto px-5 py-4">{filterControls}</div>
+          <SheetFooter className="flex-row gap-2 border-t border-white/10 bg-[#121212] px-5 py-4 sm:justify-between">
+            <Button
+              type="button"
+              variant="ghost"
+              className="text-white/60 hover:text-white"
+              onClick={clearAll}
+              disabled={activeFilterCount === 0 && !search}
+              data-testid="button-clear-filters-sheet"
+            >
+              Clear all
+            </Button>
+            <Button
+              type="button"
+              className="flex-1 bg-de-accent text-white hover:bg-[#6548ff]"
+              onClick={() => setMobileOpen(false)}
+              data-testid="button-apply-filters-sheet"
+            >
+              Show {resultCount} {resultCount === 1 ? "result" : "results"}
+            </Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
 
       {activeChips.length > 0 && (
         <div

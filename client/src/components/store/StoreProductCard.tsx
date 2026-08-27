@@ -102,7 +102,7 @@ export function StoreProductCard({
 
   return (
     <article
-      className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-black/10 bg-[#FAF9F6] text-[#1A1228] transition-all duration-300 hover:border-[#5034ff]/50 hover:bg-white hover:shadow-[0_20px_50px_rgba(0,0,0,0.25)] hover:-translate-y-1.5 group"
+      className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-black/10 bg-[#FAF9F6] text-[#1A1228] transition-all duration-300 hover:border-de-accent/50 hover:bg-white hover:shadow-[0_20px_50px_rgba(0,0,0,0.25)] hover:-translate-y-1.5 group"
       data-testid={`product-${product.id}`}
     >
       {onCompareToggle && !isContract && (
@@ -112,37 +112,36 @@ export function StoreProductCard({
             checked={compareSelected}
             disabled={!compareSelected && compareDisabled}
             onChange={() => onCompareToggle(product)}
-            className="h-3.5 w-3.5 rounded border-black/30 bg-transparent accent-[#5034ff]"
+            className="h-3.5 w-3.5 rounded border-black/30 bg-transparent accent-de-accent"
             data-testid={`compare-check-${product.id}`}
           />
           Compare
         </label>
       )}
 
-      <Link href={`/store/product/${product.sku}`}>
+      <Link href={`/store/product/${product.sku}`} className="relative block">
         <ProductMedia
           product={product}
           variant="card"
           className="rounded-none border-0 border-b border-black/10"
-          categoryBadge={categoryLabels[product.category]}
         />
+        <span
+          className={`absolute left-2.5 top-2.5 z-10 rounded-full bg-[#181520]/90 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm ${accent}`}
+        >
+          {categoryLabels[product.category]}
+        </span>
       </Link>
 
       <div className={`flex flex-1 flex-col ${compact ? "p-3.5" : "p-4 sm:p-5"}`}>
         <div className="mb-2">
-          <div className="mb-1.5 flex flex-wrap items-center gap-1">
-            {vendor && (
-              <span className="rounded-full border border-black/10 bg-black/[0.05] px-2 py-0.5 text-[10px] font-semibold text-[#4A4556]">
-                {vendor.name}
-              </span>
-            )}
-            <span
-              className={`rounded-full bg-[#181520] border border-black/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${accent}`}
-            >
-              {categoryLabels[product.category]}
-            </span>
+          {vendor && (
+            <p className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-[#8A8496]">
+              {vendor.name}
+            </p>
+          )}
+          <div className="mb-1.5 flex flex-wrap items-center gap-1 empty:hidden">
             {product.isClientOnly && (
-              <span className="rounded-full border border-[#5034ff]/30 bg-[#5034ff]/10 px-2 py-0.5 text-[10px] font-bold text-[#5034ff]">
+              <span className="rounded-full border border-de-accent/30 bg-de-accent/10 px-2 py-0.5 text-[10px] font-bold text-de-accent">
                 Client pricing
               </span>
             )}
@@ -153,7 +152,7 @@ export function StoreProductCard({
             )}
           </div>
           <h3
-            className="text-base font-bold leading-snug text-[#1A1228] transition-colors group-hover:text-[#5034ff] line-clamp-2"
+            className="text-base font-bold leading-snug text-[#1A1228] transition-colors group-hover:text-de-accent line-clamp-2"
           >
             <Link href={`/store/product/${product.sku}`}>
               <span title={product.name}>
@@ -170,7 +169,7 @@ export function StoreProductCard({
         </p>
 
         {includedHint && (
-          <div className="mb-3 text-xs font-semibold text-[#5034ff]">
+          <div className="mb-3 text-xs font-semibold text-de-accent">
             <p className="line-clamp-1" data-testid={`included-hint-${product.id}`}>{includedHint}</p>
           </div>
         )}
@@ -201,7 +200,7 @@ export function StoreProductCard({
                     ${product.basePrice.toFixed(2)}
                   </span>
                 </div>
-                <span className="mt-0.5 inline-flex items-center gap-1 text-xs font-semibold text-[#5034ff]">
+                <span className="mt-0.5 inline-flex items-center gap-1 text-xs font-semibold text-de-accent">
                   <Tag className="h-3 w-3" />
                   {discountPercent}% off
                 </span>
@@ -230,7 +229,7 @@ export function StoreProductCard({
               <a href="/book" className="flex-1">
                 <Button
                   size="sm"
-                  className="h-9 w-full bg-[#5034ff] text-xs font-bold text-white hover:bg-[#6548ff] shadow-md shadow-[#5034ff]/25 transition-all"
+                  className="h-9 w-full bg-de-accent text-xs font-bold text-white hover:bg-[#6548ff] shadow-md shadow-de-accent/25 transition-all"
                   data-testid={`button-consult-${product.id}`}
                 >
                   Schedule
@@ -239,7 +238,7 @@ export function StoreProductCard({
             ) : product.isClientOnly && !isLoggedIn ? (
               <Button
                 size="sm"
-                className="h-9 flex-1 bg-[#5034ff] text-xs font-bold text-white hover:bg-[#6548ff] shadow-md shadow-[#5034ff]/25 transition-all"
+                className="h-9 flex-1 bg-de-accent text-xs font-bold text-white hover:bg-[#6548ff] shadow-md shadow-de-accent/25 transition-all"
                 onClick={(e) => {
                   e.preventDefault();
                   onLoginRequired?.();
@@ -252,7 +251,7 @@ export function StoreProductCard({
             ) : configurable ? (
               <Button
                 size="sm"
-                className="h-9 flex-1 bg-[#5034ff] text-xs font-bold text-white hover:bg-[#6548ff] shadow-md shadow-[#5034ff]/25 transition-all"
+                className="h-9 flex-1 bg-de-accent text-xs font-bold text-white hover:bg-[#6548ff] shadow-md shadow-de-accent/25 transition-all"
                 onClick={(e) => {
                   e.preventDefault();
                   onConfigure?.(product);
@@ -265,7 +264,7 @@ export function StoreProductCard({
             ) : (
               <Button
                 size="sm"
-                className="h-9 flex-1 bg-[#5034ff] text-xs font-bold text-white hover:bg-[#6548ff] shadow-md shadow-[#5034ff]/25 transition-all"
+                className="h-9 flex-1 bg-de-accent text-xs font-bold text-white hover:bg-[#6548ff] shadow-md shadow-de-accent/25 transition-all"
                 onClick={(e) => onAddToCart(product, e)}
                 data-testid={`button-add-${product.id}`}
               >

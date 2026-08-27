@@ -204,8 +204,8 @@ const Checkout = () => {
               Complete your order for IT services and solutions
             </p>
 
-            <div className="grid lg:grid-cols-5 gap-8">
-              <div className="lg:col-span-3 space-y-8">
+            <div className="grid lg:grid-cols-5 gap-8 lg:items-start">
+              <div className="order-2 lg:order-1 lg:col-span-3 space-y-8">
                 <div className="bg-white/5 border border-white/10 rounded-xl p-6" data-testid="section-billing-info">
                   <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
                     <FileText className="w-5 h-5 text-de-accent-ink" />
@@ -360,7 +360,7 @@ const Checkout = () => {
                 </div>
               </div>
 
-              <div className="lg:col-span-2">
+              <div className="order-1 lg:order-2 lg:col-span-2">
                 <SolutionOrderSummary
                   snapshot={snapshot}
                   title="Order Summary"

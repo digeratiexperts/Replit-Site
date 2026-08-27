@@ -219,7 +219,7 @@ const ProductDetail = () => {
             </ol>
           </nav>
 
-          <div className="mb-12 grid gap-8 lg:grid-cols-2 lg:gap-12">
+          <div className="mb-12 grid gap-8 lg:grid-cols-2 lg:gap-12 lg:items-start">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -608,6 +608,7 @@ const ProductDetail = () => {
 
           {relatedProducts.length > 0 && (
             <motion.section
+              data-testid="pdp-related-products"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -654,7 +655,10 @@ const ProductDetail = () => {
 
       {!product.isContractOnly && !(product.isClientOnly && !isLoggedIn) && (
         <div
-          className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0a0a0a]/95 px-4 py-3 backdrop-blur-md lg:hidden"
+          className="fixed inset-x-0 z-40 border-t border-white/10 bg-[#0a0a0a]/95 px-4 py-3 backdrop-blur-md lg:hidden"
+          style={{
+            bottom: "calc(var(--de-chrome-inset) + var(--de-cookie-h) + var(--de-unified-bar-h))",
+          }}
           data-testid="product-mobile-cta-bar"
         >
           <div className="mx-auto flex max-w-7xl items-center gap-3">
