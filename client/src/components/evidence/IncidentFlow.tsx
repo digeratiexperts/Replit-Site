@@ -1,21 +1,12 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  AlertTriangle,
-  ArrowRight,
-  ShieldCheck,
-  Terminal,
-  UserX,
-  Lock,
-  MailCheck,
-  CheckCircle2,
-} from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { EvidenceFrame } from "./EvidenceFrame";
 
 export interface IncidentStep {
   label: string;
   detail: string;
-  actor: "SYSTEM" | "SOC_HUMAN" | "AUTOMATION";
+  actor: "CONTROL" | "HUMAN_REVIEW" | "WORKFLOW";
 }
 
 export interface ScenarioDefinition {
@@ -27,188 +18,126 @@ export interface ScenarioDefinition {
   outcome: string;
 }
 
+/**
+ * Educational scenarios only. They deliberately avoid vendor-specific actions,
+ * measured response times, event counts, and claims of guaranteed outcomes.
+ */
 const defaultScenarios: ScenarioDefinition[] = [
   {
-    id: "SCN-M365-AUTH",
+    id: "EXAMPLE-IDENTITY-ACCESS",
     category: "IDENTITY",
-    title: "Suspicious Off-Hours Session Hijack",
-    vector: "Adversary replay of stolen session cookie bypassing basic SMS MFA.",
+    title: "Suspicious account access",
+    vector: "An identity signal indicates access that does not match the expected user context.",
     steps: [
-      {
-        label: "Anomalous Login Detected",
-        detail: "Simultaneous session token active from unrecognized foreign IP subnet.",
-        actor: "AUTOMATION",
-      },
-      {
-        label: "Conditional Access Enforcement",
-        detail: "Identity threat detection flags risk score > 85 and isolates session.",
-        actor: "SYSTEM",
-      },
-      {
-        label: "SOC Analyst Triage & Session Revocation",
-        detail: "Analyst confirms credential reuse, revokes all refresh tokens, and enforces FIDO2 re-auth.",
-        actor: "SOC_HUMAN",
-      },
-      {
-        label: "Mailbox Rule Audit",
-        detail: "Automated scan confirms zero forwarding or exfiltration rules created.",
-        actor: "SYSTEM",
-      },
+      { label: "Signal reviewed", detail: "Available identity and session context is reviewed to determine whether the activity needs containment.", actor: "HUMAN_REVIEW" },
+      { label: "Access contained as appropriate", detail: "Sessions, credentials, or access paths can be restricted according to the client environment and approved operating procedure.", actor: "CONTROL" },
+      { label: "Related exposure checked", detail: "Relevant audit history and account settings are reviewed for additional indicators that require follow-up.", actor: "WORKFLOW" },
+      { label: "Follow-up documented", detail: "Required remediation, user actions, and validation steps are recorded for the client team.", actor: "HUMAN_REVIEW" },
     ],
-    outcome: "Adversary evicted before data access. Tenant hardened.",
+    outcome: "The access path is addressed and required validation and follow-up actions are documented.",
   },
   {
-    id: "SCN-ENDPOINT-MALWARE",
+    id: "EXAMPLE-ENDPOINT-PROCESS",
     category: "ENDPOINT",
-    title: "Malicious Macro Execution on Workstation",
-    vector: "Accounting workstation executes obfuscated PowerShell command from supplier invoice zip.",
+    title: "Suspicious endpoint behavior",
+    vector: "Endpoint telemetry indicates a process or behavior that warrants investigation.",
     steps: [
-      {
-        label: "Behavioral Heuristic Trigger",
-        detail: "Process tree anomaly: Excel spawning unapproved powershell.exe with base64 payload.",
-        actor: "SYSTEM",
-      },
-      {
-        label: "Automated Host Isolation",
-        detail: "Endpoint immediately severed from local network to prevent lateral spread to domain controller.",
-        actor: "AUTOMATION",
-      },
-      {
-        label: "Analyst Artifact Analysis",
-        detail: "SOC analyst inspects parent process memory, terminates staging script, and restores clean state.",
-        actor: "SOC_HUMAN",
-      },
+      { label: "Endpoint signal triaged", detail: "Process, device, and available security context is reviewed to determine severity and scope.", actor: "HUMAN_REVIEW" },
+      { label: "Device contained when required", detail: "The affected endpoint can be isolated or otherwise restricted when the deployed controls and client policy support that action.", actor: "CONTROL" },
+      { label: "Recovery path selected", detail: "Remediation may include removal, restoration, rebuild, credential follow-up, or another documented recovery step based on findings.", actor: "WORKFLOW" },
     ],
-    outcome: "Contained on single host in under 5 minutes without lateral spread.",
+    outcome: "The endpoint is moved into a controlled remediation path with scope and next actions documented.",
   },
   {
-    id: "SCN-QR-PHISHING",
+    id: "EXAMPLE-EMAIL-MESSAGE",
     category: "EMAIL",
-    title: "QR Code Quishing Bypassing Traditional Gateway",
-    vector: "Inbound PDF with embedded image QR code linking to fraudulent Microsoft login portal.",
+    title: "Suspicious email or link",
+    vector: "A message or destination is identified as suspicious and requires review before normal business activity continues.",
     steps: [
-      {
-        label: "Computer Vision / OCR Scanning",
-        detail: "In-line mail inspection extracts QR payload URL and detonates in cloud sandbox.",
-        actor: "SYSTEM",
-      },
-      {
-        label: "Global Tenant Quarantine",
-        detail: "Message quarantined before delivery; 18 identical variants pulled from other employee inboxes.",
-        actor: "AUTOMATION",
-      },
-      {
-        label: "Targeted Micro-Training Dispatch",
-        detail: "Targeted department receives instant 60-second micro-training alert on QR attack patterns.",
-        actor: "SYSTEM",
-      },
+      { label: "Message context reviewed", detail: "Sender, destination, authentication, and available security signals are evaluated using the controls present in the environment.", actor: "HUMAN_REVIEW" },
+      { label: "Exposure reduced", detail: "The message, link, session, or related access can be restricted using available controls when appropriate.", actor: "CONTROL" },
+      { label: "Related activity checked", detail: "Relevant accounts and audit information are reviewed to identify follow-up work that may be necessary.", actor: "WORKFLOW" },
     ],
-    outcome: "Zero credential compromises. Automated user awareness reinforced.",
+    outcome: "The suspicious activity is addressed and any required user, identity, or security follow-up is documented.",
   },
 ];
 
-export const IncidentFlow: React.FC<{ scenarios?: ScenarioDefinition[] }> = ({
-  scenarios = defaultScenarios,
-}) => {
+const actorLabel: Record<IncidentStep["actor"], string> = {
+  CONTROL: "Control",
+  HUMAN_REVIEW: "Human review",
+  WORKFLOW: "Workflow",
+};
+
+export const IncidentFlow: React.FC<{ scenarios?: ScenarioDefinition[] }> = ({ scenarios = defaultScenarios }) => {
   const [selectedIdx, setSelectedIdx] = useState(0);
   const activeScenario = scenarios[selectedIdx];
+  if (!activeScenario) return null;
 
   return (
     <EvidenceFrame
       classification="EXAMPLE"
-      title="ProActive Incident Containment Architecture"
-      subtitle="How multi-layered automated detection and human SOC analysts isolate threat vectors before damage occurs."
-      status="active"
-      statusLabel="DEFENSE MODEL"
-      sourceNote="Digerati Experts Security Operations Playbook (Representative Scenario)"
+      title="Example incident response flow"
+      subtitle="An educational view of how detection, review, containment, remediation, and documentation can connect in a managed operating model."
+      status="informational"
+      statusLabel="EXAMPLE MODEL"
+      sourceNote="Illustrative DE operating-model sequence — not live telemetry, client data, a guaranteed control action, or a measured SLA."
       variant="dark"
-      className="max-w-4xl mx-auto"
+      className="mx-auto max-w-4xl"
     >
-      {/* Category Scenario Switcher */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-white/10 pb-4">
-        {scenarios.map((scn, idx) => {
-          const isSelected = idx === selectedIdx;
+      <div className="flex flex-wrap items-center gap-2 border-b border-de-hairline pb-4">
+        {scenarios.map((scenario, index) => {
+          const isSelected = index === selectedIdx;
           return (
             <button
-              key={scn.id}
-              onClick={() => setSelectedIdx(idx)}
-              className={`px-3 py-1.5 rounded-lg font-mono text-xs font-semibold transition-all ${
-                isSelected
-                  ? "bg-[#D3126A] text-white shadow-md shadow-[#D3126A]/30"
-                  : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white"
-              }`}
-              data-testid={`scenario-tab-${scn.category.toLowerCase()}`}
+              key={scenario.id}
+              type="button"
+              onClick={() => setSelectedIdx(index)}
+              className={`min-h-11 rounded-lg border px-3 py-2 font-mono text-xs font-semibold transition-colors ${isSelected ? "border-[#D3126A] bg-[#D3126A] text-white" : "border-de-hairline bg-de-bg text-white/65 hover:border-white/20 hover:text-white"}`}
+              data-testid={`scenario-tab-${scenario.category.toLowerCase()}`}
             >
-              {scn.category} SCENARIO
+              {scenario.category}
             </button>
           );
         })}
       </div>
 
-      {/* Active Scenario Flow Display */}
       <AnimatePresence mode="wait">
-        <motion.div
-          key={activeScenario.id}
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -6 }}
-          transition={{ duration: 0.2 }}
-          className="mt-4 space-y-4"
-        >
-          {/* Header Summary */}
-          <div className="rounded-lg border border-white/10 bg-black/40 p-4">
-            <p className="font-mono text-xs text-[#F04C97] uppercase tracking-wider font-semibold">
-              Threat Vector: {activeScenario.title}
-            </p>
-            <p className="mt-1 text-sm text-white/80 leading-relaxed">
-              {activeScenario.vector}
-            </p>
+        <motion.div key={activeScenario.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.2 }} className="mt-4 space-y-5">
+          <div className="rounded-lg border border-de-hairline bg-de-bg p-4">
+            <p className="font-mono text-xs font-semibold uppercase tracking-wider text-[#F04C97]">Example vector / {activeScenario.category}</p>
+            <h5 className="mt-2 font-heading text-lg font-semibold text-white">{activeScenario.title}</h5>
+            <p className="mt-1 text-sm leading-relaxed text-white/70">{activeScenario.vector}</p>
           </div>
 
-          {/* Sequential Defense Steps */}
           <div className="space-y-3">
-            <p className="font-mono text-[11px] uppercase tracking-widest text-white/40">
-              OPERATIONAL TIMELINE & CONTAINMENT GATES
-            </p>
-            <div className="relative pl-6 space-y-4 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-px before:bg-white/15">
+            <p className="font-mono text-[11px] uppercase tracking-widest text-white/45">Example response sequence</p>
+            <ol className="space-y-3">
               {activeScenario.steps.map((step, stepIdx) => (
-                <div key={stepIdx} className="relative group">
-                  <span
-                    className={`absolute -left-6 top-1 h-4 w-4 rounded-full border flex items-center justify-center font-mono text-[9px] font-bold ${
-                      step.actor === "SOC_HUMAN"
-                        ? "bg-[#D3126A] border-[#D3126A] text-white"
-                        : "bg-[#0d0a14] border-white/30 text-white/70"
-                    }`}
-                  >
-                    {stepIdx + 1}
-                  </span>
-                  <div className="rounded-lg border border-white/5 bg-[#151217]/70 p-3 hover:border-white/15 transition-colors">
+                <li key={`${activeScenario.id}-${step.label}`} className="grid grid-cols-[2rem_1fr] gap-3">
+                  <span className="mt-1 flex h-7 w-7 items-center justify-center rounded-full border border-[#D3126A]/35 bg-de-bg font-mono text-[10px] font-bold text-[#F04C97]">{String(stepIdx + 1).padStart(2, "0")}</span>
+                  <div className="rounded-lg border border-de-hairline bg-de-bg/70 p-4">
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <p className="text-sm font-semibold text-white">
-                        {step.label}
-                      </p>
-                      <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-white/5 text-white/50 border border-white/10">
-                        {step.actor === "SOC_HUMAN" ? "Human Analyst" : "Automated Control"}
-                      </span>
+                      <p className="font-semibold text-white">{step.label}</p>
+                      <span className="rounded border border-de-hairline bg-white/[0.03] px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-white/50">{actorLabel[step.actor]}</span>
                     </div>
-                    <p className="mt-1 text-xs text-white/70 leading-relaxed font-sans">
-                      {step.detail}
-                    </p>
+                    <p className="mt-1 text-sm leading-relaxed text-white/70">{step.detail}</p>
                   </div>
-                </div>
+                </li>
               ))}
+            </ol>
+          </div>
+
+          <div className="flex items-start gap-3 rounded-lg border border-[#D3126A]/25 bg-[#D3126A]/[0.06] p-4">
+            <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-[#F04C97]" aria-hidden="true" />
+            <div>
+              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#F04C97]">Illustrative resolution</span>
+              <p className="mt-1 text-sm leading-relaxed text-white/85">{activeScenario.outcome}</p>
             </div>
           </div>
 
-          {/* Verified Outcome Reassurance */}
-          <div className="flex items-center gap-3 rounded-lg border border-emerald-500/30 bg-emerald-950/20 p-3.5 text-xs text-emerald-300">
-            <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
-            <div>
-              <span className="font-mono font-bold uppercase tracking-wider block text-emerald-400">
-                Verified Outcome
-              </span>
-              <p className="text-white/90 mt-0.5">{activeScenario.outcome}</p>
-            </div>
+          <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-white/40">
+            <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+            Actual response depends on the client stack, permissions, policy, and event context.
           </div>
         </motion.div>
       </AnimatePresence>
