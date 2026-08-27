@@ -11,7 +11,7 @@ with the locked engage-path sculpture set.
 - Engage path cards and small cards (Tackle, capabilities, Protect stack, `/solutions`) use Lucide `IconWell`
 - Homepage engage-path cards no longer bleed 3D sculptures — DE: IconWell reads as a principal-led firm, not a tech demo
 - Meshy Batch 01 retired from public marketing placement
-- Homepage section jumps live in MegaMenu (`Protected?` / On this page) — no floating bottom dock
+- Homepage section jumps: MegaMenu spy at rest, plus the expanding charcoal/magenta `SiteBottomBar` dock after scroll. Keep both — DE restored the dock 2026-08-27.
 - Assessment CTA uses the same brand gradient as MegaMenu (`from-fuchsia-600 via-pink-600 to-rose-500`)
 
 ## Rules kept
