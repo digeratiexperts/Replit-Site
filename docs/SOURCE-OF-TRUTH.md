@@ -1,33 +1,38 @@
-# Source of truth (stop Replit from overwriting Cursor work)
+# Website source of truth
 
-**Canonical repo:** GitHub `digeratiexperts/Replit-Site`  
-**Canonical authoring:** Cursor / local clone → git push → VPS deploy  
-**Not canonical:** Replit Agent auto-commits or Replit GitHub sync pushing over our branches
+This repository is the canonical source for the Digerati Experts public website.
 
-## Prevent Replit from syncing over us
+- **Canonical repository:** `github.com/digeratiexperts/digeratiexperts-site`
+- **Default / production integration branch:** `main`
+- **Public website:** `https://digeratiexperts.com`
+- **Production deployment:** CyberPanel + systemd `digeratiexperts-site` on the DE VPS. See `deploy/vps/README.md` for the current deploy procedure.
 
-Do these in the Replit UI for **digerati Experts Offical Website**:
+## Repository authority
 
-1. **Pause or disconnect GitHub sync** (Settings → Git / Version control) so Replit cannot push to `main` or `fix/*` from the Repl.
-2. **Do not click “Publish / Deploy from Replit”** for production — production is CyberPanel + systemd `digeratiexperts-site` as `diger7051` on de-vps (`/home/digeratiexperts.com/current` → :3300). See `deploy/vps/README.md`.
-3. If the Repl must stay open for reference, treat it as **read-only**. Pull from GitHub into Replit only when you explicitly want a preview; never let Replit be the push source.
-4. Prefer working on GitHub branches (`fix/homepage-hero-nav-2026-08-08`, `preserve/*`) and merge via PR.
+The authoritative repository matrix is maintained in [`docs/REPOSITORY-AUTHORITY.md`](./REPOSITORY-AUTHORITY.md).
 
-## Preserve branches (do not delete)
+For website work:
 
-| Branch | Why |
-|--------|-----|
-| `preserve/live-pink-sticky-nav` | Pink sticky section bar chrome |
-| `preserve/internal-pages-pre-redact` | Internal sales pages removed in Aug 2026 cleanup (renamed from replit-prefixed branch) |
+1. Branch from the current `digeratiexperts/digeratiexperts-site` `main`.
+2. Push the branch to this repository.
+3. Open the pull request against this repository's `main`.
+4. Reconcile against current `main` before merge because multiple agents may be working concurrently.
+5. Do not redirect new website work to a historical repository name because an old Cursor/Cloud Agent task says to do so.
 
-## Recovered from Replit (do not full-sync)
+## `Replit-Site` is historical, not authoritative
 
-**Digerati Journal + read-aloud** was restored from the live Replit preview into git (not via full Repl sync):
+`digeratiexperts/Replit-Site` and references to it as the "canonical website repo" are historical migration-era instructions. They must **not** be used as the target for new branches, pull requests, agent environments, deployment decisions, or source-of-truth checks.
 
-- `client/src/pages/resources/Blog.tsx` / `BlogPost.tsx`
-- `client/src/components/BlogAudioPlayer.tsx` (OpenAI `/api/tts` + browser `speechSynthesis` failover, word highlight, play/pause/stop/speed/voice)
-- `client/src/data/resourceRegistry.ts` + `resourceRegistry.v2.json` (16 articles)
-- `client/public/assets/covers/blog/*`
-- `server` `POST /api/tts` + `generateSpeech` in `openaiService.ts`
+If an old task, chat, PR, branch, or document conflicts with this file and `REPOSITORY-AUTHORITY.md`, treat the old instruction as stale and re-check current repository state before taking action.
 
-If something else is still missing from git, recover surgically from Replit Checkpoints — never let Replit push over Cursor/git HEAD.
+Replit may still be useful as historical/reference material where explicitly needed, but it is not an authoring or push authority for the production website.
+
+## Preserve recovered content without restoring stale authority
+
+Historical content recovered from Replit or older branches can remain in this repository when it is still valid. Recover content surgically; do not restore old repository-authority instructions along with it.
+
+Examples of previously recovered website content include Journal/read-aloud assets and resource registry material. Their presence does not make Replit the source of truth.
+
+## Non-destructive rule
+
+Do not archive, delete, force-push, or replace another DE repository merely because it is not canonical for the website. Repository retirement is a separate decision and requires explicit verification/approval.

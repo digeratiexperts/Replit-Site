@@ -94,7 +94,7 @@ function previewChatLine(content: string, max = 108) {
 }
 
 function getDeskChipIcon(id: DeskTicketChipId) {
-  const iconClass = "w-3.5 h-3.5 text-[#D3126A] shrink-0";
+  const iconClass = "w-4 h-4 text-[#D3126A] shrink-0";
   switch (id) {
     case "something-not-working":
       return <Wrench className={iconClass} aria-hidden="true" />;
@@ -108,6 +108,8 @@ function getDeskChipIcon(id: DeskTicketChipId) {
       return <Wifi className={iconClass} aria-hidden="true" />;
     case "security-concern":
       return <Shield className={iconClass} aria-hidden="true" />;
+    case "security-incident":
+      return <ShieldAlert className={iconClass} aria-hidden="true" />;
     default:
       return <HelpCircle className={iconClass} aria-hidden="true" />;
   }
@@ -123,12 +125,13 @@ const CHAT_WELCOME: ChatMessage = {
 const QUICK_CHAT_PROMPTS: Array<{
   label: string;
   ticketChip?: DeskTicketChipId;
+  icon: typeof Wrench;
 }> = [
-  { label: "I need IT help" },
-  { label: "I'm concerned about cybersecurity" },
-  { label: "I need help with compliance" },
-  { label: "I'm evaluating managed IT" },
-  { label: "Possible security incident", ticketChip: "security-incident" },
+  { label: "I need IT help", icon: Wrench },
+  { label: "I'm concerned about cybersecurity", icon: Shield },
+  { label: "I need help with compliance", icon: FileText },
+  { label: "I'm evaluating managed IT", icon: LayoutGrid },
+  { label: "Possible security incident", ticketChip: "security-incident", icon: ShieldAlert },
 ];
 
 const ASK_IT_HELP_CHIPS: DeskTicketChipId[] = [
@@ -1109,36 +1112,6 @@ export const ZohoASAPWidget = ({
                             >
                               <p className="whitespace-pre-wrap">{chatMessage.content}</p>
                             </div>
-                            {isOpening && chatMessages.length === 1 ? (
-                              <div className="de-desk-quick-card">
-                                <div className="de-desk-quick-header">
-                                  <p className="de-desk-quick-kicker">ENGINEERING &amp; IT ADVISOR</p>
-                                  <h4 className="de-desk-quick-title">How can our Arizona team assist you?</h4>
-                                  <p className="de-desk-quick-sub">Choose a prompt or type below for real-time guidance:</p>
-                                </div>
-                                <div className="de-desk-quick-inset" role="group" aria-label="Common questions">
-                                  {QUICK_CHAT_PROMPTS.map(({ label, ticketChip }) => (
-                                    <button
-                                      key={label}
-                                      type="button"
-                                      data-testid={`ask-prompt-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
-                                      onClick={() => {
-                                        if (ticketChip) {
-                                          selectTab("ticket");
-                                          applyTicketChip(ticketChip);
-                                          return;
-                                        }
-                                        void handleSendChat(label);
-                                      }}
-                                      className="de-desk-quick-item"
-                                    >
-                                      <span className="de-desk-quick-dash">—</span>
-                                      <span className="de-desk-quick-label">{label}</span>
-                                    </button>
-                                  ))}
-                                </div>
-                              </div>
-                            ) : null}
                             {chatMessage.supportChips?.length ? (
                               <div className="de-desk-chips" role="group" aria-label="Open a support ticket">
                                 {chatMessage.supportChips.map((chipId) => {
@@ -1152,7 +1125,9 @@ export const ZohoASAPWidget = ({
                                       onClick={() => openSupportWithChip(chip.id)}
                                       className="de-desk-chip"
                                     >
-                                      {chip.label}
+                                      <span className="de-desk-chip-icon">{getDeskChipIcon(chip.id)}</span>
+                                      <span className="de-desk-chip-label">{chip.label}</span>
+                                      <ChevronRight className="de-desk-chip-arrow" aria-hidden="true" />
                                     </button>
                                   );
                                 })}
@@ -1163,13 +1138,50 @@ export const ZohoASAPWidget = ({
                       );
                     })}
 
+                    {chatMessages.length === 1 && chatMessages[0]?.id === "welcome" ? (
+                      <div className="de-desk-discover">
+                        <div className="de-desk-discover-intro">
+                          <p className="de-desk-launch-heading">Engineering &amp; IT advisor</p>
+                          <h3>How can our Arizona team assist you?</h3>
+                          <p>Choose a prompt or type below for real-time guidance:</p>
+                        </div>
+                        <div className="de-desk-discover-list" role="group" aria-label="Common questions">
+                          {QUICK_CHAT_PROMPTS.map(({ label, ticketChip, icon: PromptIcon }) => (
+                            <button
+                              key={label}
+                              type="button"
+                              data-testid={`ask-prompt-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+                              onClick={() => {
+                                if (ticketChip) {
+                                  selectTab("ticket");
+                                  applyTicketChip(ticketChip);
+                                  return;
+                                }
+                                void handleSendChat(label);
+                              }}
+                              className={`de-desk-discover-row${ticketChip ? " is-incident" : ""}`}
+                            >
+                              <span className="de-desk-discover-icon">
+                                <PromptIcon aria-hidden="true" />
+                              </span>
+                              <span className="de-desk-discover-label">{label}</span>
+                              <ChevronRight className="de-desk-discover-arrow" aria-hidden="true" />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
+
                     {isChatSending && (
-                      <div className="flex justify-start">
-                        <div className="de-desk-bubble is-bot">
-                          <span className="inline-flex items-center gap-2">
-                            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#D3126A]" />
-                            {agentLive ? "Delivering to specialist…" : "Thinking it through…"}
-                          </span>
+                      <div className="de-desk-msg is-bot" aria-live="polite">
+                        <div className="de-desk-msg-id" aria-hidden="true">DE</div>
+                        <div className="de-desk-msg-col">
+                          <div className="de-desk-bubble is-bot">
+                            <span className="inline-flex items-center gap-2">
+                              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#D3126A]" />
+                              {agentLive ? "Delivering to specialist…" : "Thinking it through…"}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     )}
@@ -1214,21 +1226,16 @@ export const ZohoASAPWidget = ({
                         </div>
                       </div>
                     ) : (
-                      <div className="de-desk-form" ref={ticketDetailsRef}>
+                      <>
+                        <div className="de-desk-ticket-upper">
                         <div className="de-desk-ticket-lead">
-                          <p className="de-desk-quick-kicker">INCIDENT REPORTING &amp; SUPPORT</p>
+                          <p className="de-desk-launch-heading">Incident reporting &amp; support</p>
                           <h3>Direct Engineering Support</h3>
                           <p>Tell us what happened. We&apos;ll immediately route your request to our Arizona desk.</p>
-                          <div className="de-desk-perks-inset">
-                            <div className="de-desk-perks-row">
-                              <span className="de-desk-quick-dash">—</span>
-                              <span>100% Arizona-based engineering desk</span>
-                            </div>
-                            <div className="de-desk-perks-row">
-                              <span className="de-desk-quick-dash">—</span>
-                              <span>Direct portal tracking &amp; phone escalation</span>
-                            </div>
-                          </div>
+                          <ul className="de-desk-perk-list">
+                            <li>100% Arizona-based engineering desk</li>
+                            <li>Direct portal tracking &amp; phone escalation</li>
+                          </ul>
                         </div>
 
                         <button
@@ -1246,9 +1253,10 @@ export const ZohoASAPWidget = ({
                             <strong>Possible security incident</strong>
                             <span>{DESK_INCIDENT_CHIP.blurb}</span>
                           </span>
+                          <ChevronRight className="de-desk-incident-arrow" aria-hidden="true" />
                         </button>
 
-                        <p className="de-desk-urgency-label" id="support-issue-label">What do you need help with?</p>
+                        <p className="de-desk-launch-heading" id="support-issue-label">What do you need help with?</p>
                         <div className="de-desk-issue-list" role="group" aria-labelledby="support-issue-label">
                           {DESK_STANDARD_TICKET_CHIPS.map((chip) => (
                             <button
@@ -1258,10 +1266,9 @@ export const ZohoASAPWidget = ({
                               data-testid={`ticket-issue-${chip.id}`}
                               onClick={() => applyTicketChip(chip.id)}
                             >
-                              <span className="flex items-center gap-2 min-w-0">
-                                {getDeskChipIcon(chip.id)}
-                                <span className="truncate">{chip.label}</span>
-                              </span>
+                              <span className="de-desk-issue-icon">{getDeskChipIcon(chip.id)}</span>
+                              <span className="de-desk-issue-label">{chip.label}</span>
+                              <ChevronRight className="de-desk-issue-arrow" aria-hidden="true" />
                             </button>
                           ))}
                         </div>
@@ -1271,6 +1278,9 @@ export const ZohoASAPWidget = ({
                             Routed as a possible security incident.
                           </p>
                         ) : null}
+                        </div>
+
+                        <div className="de-desk-form" ref={ticketDetailsRef}>
 
                         <div className="de-desk-field">
                           <label htmlFor="support-name">Name</label>
@@ -1462,7 +1472,8 @@ export const ZohoASAPWidget = ({
                           <Phone aria-hidden="true" />
                           Call {PRIMARY_PHONE.display}
                         </a>
-                      </div>
+                        </div>
+                      </>
                     )}
                   </div>
                 </div>
@@ -1854,7 +1865,9 @@ export const ZohoASAPWidget = ({
               display: flex;
               flex-direction: column;
             }
-            .de-desk-scroll { overflow-y: auto; padding: 8px 16px 14px; }
+            .de-desk-scroll { overflow-y: auto; padding: 14px 16px 16px; }
+            .de-desk-scroll > * { flex-shrink: 0; }
+            .de-desk-shell[data-tab="chat"] .de-desk-scroll { padding-bottom: 8px; }
             .de-desk-hero {
               display: flex;
               flex-direction: column;
@@ -1884,20 +1897,26 @@ export const ZohoASAPWidget = ({
               color: #fff; text-align: left; width: 100%;
             }
             .de-desk-msg { display: flex; gap: 10px; align-items: flex-start; }
+            .de-desk-msg + .de-desk-msg { margin-top: 12px; }
             .de-desk-msg.is-user { justify-content: flex-end; }
             .de-desk-msg-id {
               position: relative;
-              width: 32px; height: 32px; border-radius: 50%;
+              width: 32px; height: 32px; border-radius: 9px;
               background: var(--de-raised, #151217); color: #fff;
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
               display: flex; align-items: center; justify-content: center;
-              font-size: 9px; font-weight: 700; flex: none;
+              font-family: "Space Grotesk", sans-serif;
+              font-size: 10px; font-weight: 700; letter-spacing: 0.02em; flex: none;
             }
             .de-desk-msg-col { min-width: 0; flex: 1; }
-            .de-desk-msg.is-user .de-desk-msg-col { flex: 0 1 auto; }
+            .de-desk-msg.is-user .de-desk-msg-col { flex: 0 1 auto; max-width: min(86%, 280px); }
             .de-desk-msg-who {
               display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px;
             }
-            .de-desk-msg-who strong { font-size: 13px; font-weight: 700; color: #fff; }
+            .de-desk-msg-who strong {
+              font-family: "Space Grotesk", sans-serif;
+              font-size: 13.5px; font-weight: 650; color: #fff;
+            }
             .de-desk-msg-who em { font-style: normal; font-size: 12px; font-weight: 600; color: #4ade80; }
             .de-desk-scroll::-webkit-scrollbar {
               width: 6px;
@@ -1913,47 +1932,52 @@ export const ZohoASAPWidget = ({
               background: #D3126A;
             }
             .de-desk-incident {
-              display: flex; align-items: flex-start; gap: 12px;
+              display: flex; align-items: center; gap: 12px;
               width: 100%; text-align: left;
               min-height: 54px;
-              margin: 4px 0 14px;
+              margin: 2px 0 16px;
               padding: 12px 14px;
-              border: 1px solid rgba(211,18,106,0.45);
-              border-radius: 12px;
-              background: linear-gradient(135deg, rgba(211,18,106,0.16) 0%, rgba(211,18,106,0.06) 100%);
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              border-radius: 13px;
+              background: var(--de-raised, #151217);
               color: #fff;
-              box-shadow: 0 4px 16px -4px rgba(211,18,106,0.25), inset 3px 0 0 #D3126A;
-              transition: all 0.18s ease;
+              box-shadow: inset 3px 0 0 #D3126A;
+              transition: border-color 0.16s ease, background 0.16s ease;
             }
             .de-desk-incident:hover {
-              border-color: #D3126A;
-              background: linear-gradient(135deg, rgba(211,18,106,0.22) 0%, rgba(211,18,106,0.10) 100%);
-              transform: translateY(-1px);
+              border-color: rgba(255,255,255,0.22);
+              background: #1a171c;
             }
             .de-desk-incident.is-on {
-              border-color: #D3126A;
-              background: linear-gradient(135deg, rgba(211,18,106,0.28) 0%, rgba(211,18,106,0.14) 100%);
-              box-shadow: 0 6px 20px -4px rgba(211,18,106,0.4), inset 3px 0 0 #D3126A;
+              border-color: rgba(211,18,106,0.45);
+              background: var(--de-raised, #151217);
+              box-shadow: inset 3px 0 0 #D3126A, 0 0 0 1px rgba(211,18,106,0.28);
             }
             .de-desk-incident-icon {
               display: inline-flex; flex: none;
-              width: 32px; height: 32px; margin-top: 1px;
+              width: 39px; height: 39px;
               align-items: center; justify-content: center;
-              border-radius: 9px;
-              border: 1px solid rgba(211,18,106,0.38);
-              background: rgba(211,18,106,0.16);
+              border-radius: 11px;
+              border: 1px solid rgba(211,18,106,0.32);
+              background: rgba(211,18,106,0.12);
               color: #D3126A;
             }
-            .de-desk-incident-icon svg { width: 16px; height: 16px; }
-            .de-desk-incident-copy { display: flex; flex-direction: column; min-width: 0; }
+            .de-desk-incident-icon svg { width: 17px; height: 17px; stroke-width: 1.9; }
+            .de-desk-incident-copy { display: flex; flex-direction: column; min-width: 0; flex: 1; }
             .de-desk-incident-copy strong {
-              font-size: 13.5px; font-weight: 700; line-height: 1.3;
+              font-family: "Space Grotesk", sans-serif;
+              font-size: 14.5px; font-weight: 650; line-height: 1.3;
             }
             .de-desk-incident-copy span {
-              margin-top: 3px;
-              color: rgba(255,255,255,0.64);
-              font-size: 12px; line-height: 1.4;
+              margin-top: 2px;
+              color: rgba(255,255,255,0.62);
+              font-size: 12.75px; line-height: 1.4;
             }
+            .de-desk-incident-arrow {
+              width: 15px; height: 15px; flex: none;
+              color: rgba(255,255,255,0.42);
+            }
+            .de-desk-incident:hover .de-desk-incident-arrow { color: #D3126A; }
             .de-desk-form {
               display: flex;
               flex-direction: column;
@@ -1965,33 +1989,61 @@ export const ZohoASAPWidget = ({
               border-radius: 16px;
             }
             .de-desk-issue-list {
-              display: grid;
-              grid-template-columns: 1fr 1fr;
-              gap: 6px;
-              margin-bottom: 14px;
+              overflow: hidden;
+              width: 100%;
+              display: flex;
+              flex-direction: column;
+              margin: 0 0 16px;
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              border-radius: 15px;
+              background: var(--de-raised, #151217);
             }
             .de-desk-issue-row {
-              width: 100%; text-align: left;
-              min-height: 44px;
-              padding: 10px 12px;
-              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
-              border-radius: 10px;
-              background: var(--de-raised, #151217);
-              color: #ffffff;
-              font-size: 13px; font-weight: 600;
-              transition: border-color 0.15s ease, background 0.15s ease;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              width: 100%;
+              text-align: left;
+              min-height: 48px;
+              padding: 12px 14px;
+              border: 0;
+              border-bottom: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              border-radius: 0;
+              background: transparent;
+              color: #fff;
+              font-family: "Space Grotesk", sans-serif;
+              font-size: 14.5px; font-weight: 650; line-height: 1.3;
+              transition: background 0.15s ease;
             }
+            .de-desk-issue-row:last-child { border-bottom: 0; }
             .de-desk-issue-row:hover {
-              border-color: rgba(211,18,106,0.6);
-              background: var(--de-raised, #151217);
+              background: rgba(255,255,255,0.04);
               color: #fff;
             }
             .de-desk-issue-row.is-on {
-              border-color: #D3126A;
-              background: linear-gradient(180deg, rgba(211,18,106,0.22) 0%, rgba(211,18,106,0.10) 100%);
+              background: rgba(211,18,106,0.10);
+              box-shadow: inset 3px 0 0 #D3126A;
               color: #fff;
-              box-shadow: inset 0 0 0 1px #D3126A, 0 4px 14px -3px rgba(211,18,106,0.4);
             }
+            .de-desk-issue-icon {
+              display: inline-flex; flex: none;
+              width: 36px; height: 36px;
+              align-items: center; justify-content: center;
+              border-radius: 10px;
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              background: var(--de-bg, #050312);
+              color: #D3126A;
+            }
+            .de-desk-issue-label {
+              flex: 1; min-width: 0;
+              overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            }
+            .de-desk-issue-arrow {
+              width: 15px; height: 15px; flex: none;
+              color: rgba(255,255,255,0.38);
+            }
+            .de-desk-issue-row:hover .de-desk-issue-arrow,
+            .de-desk-issue-row.is-on .de-desk-issue-arrow { color: #D3126A; }
             .de-desk-issues {
               display: flex; flex-wrap: wrap; gap: 6px;
             }
@@ -2155,25 +2207,56 @@ export const ZohoASAPWidget = ({
               transform: translateY(-1px);
               box-shadow: 0 10px 28px -6px rgba(211,18,106,0.6);
             }
+            .de-desk-ticket-upper {
+              display: flex;
+              flex-direction: column;
+              margin: 0 0 14px;
+            }
             .de-desk-ticket-lead {
-              padding: 4px 0 8px;
-              margin: 0 0 4px;
+              padding: 0;
+              margin: 0 0 14px;
               background: transparent;
               border: 0;
             }
             .de-desk-ticket-lead h3 {
               font-family: "Space Grotesk", sans-serif;
-              font-size: 16px;
+              font-size: 17px;
               font-weight: 700;
+              letter-spacing: -0.015em;
               color: #ffffff;
-              margin: 0 0 4px;
-              line-height: 1.3;
+              margin: 0;
+              line-height: 1.25;
             }
             .de-desk-ticket-lead > p {
-              font-size: 13px;
-              color: rgba(255,255,255,0.72);
-              margin: 0 0 10px;
+              font-size: 13.5px;
+              color: rgba(255,255,255,0.68);
+              margin: 4px 0 0;
               line-height: 1.45;
+            }
+            .de-desk-perk-list {
+              list-style: none;
+              margin: 12px 0 0;
+              padding: 4px 0 0;
+              border-top: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              display: flex;
+              flex-direction: column;
+              gap: 6px;
+            }
+            .de-desk-perk-list li {
+              position: relative;
+              padding: 0 0 0 14px;
+              font-size: 12.75px;
+              line-height: 1.4;
+              color: rgba(255,255,255,0.62);
+              font-weight: 500;
+            }
+            .de-desk-perk-list li::before {
+              content: "";
+              position: absolute;
+              left: 0; top: 0.55em;
+              width: 6px; height: 6px;
+              border-radius: 50%;
+              background: #D3126A;
             }
             .de-desk-route-note {
               display: inline-flex;
@@ -2189,129 +2272,148 @@ export const ZohoASAPWidget = ({
               margin-bottom: 4px;
             }
             .de-desk-bubble {
-              max-width: 90%;
-              padding: 11px 14px;
-              font-size: 13.5px; line-height: 1.5;
-              border-radius: 14px;
+              max-width: 100%;
+              padding: 10px 13px;
+              font-size: 14px; line-height: 1.5;
+              border-radius: 12px;
             }
             .de-desk-bubble.is-user {
-              background: var(--desk-pink); color: #fff;
-              border-bottom-right-radius: 6px;
+              background: #D3126A; color: #fff;
+              border-bottom-right-radius: 5px;
             }
             .de-desk-bubble.is-bot, .de-desk-bubble.is-agent {
-              background: var(--de-raised, #151217); color: #f7f5f2;
+              background: var(--de-raised, #151217); color: #fff;
               border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
-              border-bottom-left-radius: 6px;
+              border-bottom-left-radius: 5px;
             }
-            .de-desk-quick-card {
-              margin: 12px 0 6px;
-              padding: 14px 14px 12px;
-              background: var(--de-raised, #151217);
-              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
-              border-radius: 14px;
+            .de-desk-discover {
+              margin: 12px 0 2px;
+              display: flex;
+              flex-direction: column;
             }
-            .de-desk-quick-header { margin-bottom: 8px; }
-            .de-desk-quick-kicker {
-              margin: 0 0 4px;
-              color: #D3126A;
-              font-size: 10px;
-              font-weight: 800;
-              letter-spacing: 0.12em;
-              text-transform: uppercase;
+            .de-desk-discover-intro {
+              margin: 0 0 8px;
             }
-            .de-desk-quick-title {
-              margin: 0 0 3px;
-              color: #ffffff;
-              font-family: "Space Grotesk", sans-serif;
-              font-size: 14px;
-              font-weight: 700;
-              line-height: 1.3;
-            }
-            .de-desk-quick-sub {
+            .de-desk-discover-intro h3 {
               margin: 0;
-              color: rgba(255,255,255,0.65);
-              font-size: 12px;
-              line-height: 1.4;
-            }
-            .de-desk-quick-inset {
-              display: flex;
-              flex-direction: column;
-              gap: 4px;
-              margin-top: 10px;
-              padding: 6px;
-              background: rgba(255,255,255,0.035);
-              border: 1px solid rgba(255,255,255,0.08);
-              border-radius: 10px;
-            }
-            .de-desk-quick-item {
-              display: flex;
-              align-items: center;
-              gap: 9px;
-              width: 100%;
-              min-height: 44px;
-              padding: 8px 10px;
-              background: transparent;
-              border: 1px solid transparent;
-              border-radius: 8px;
-              color: rgba(255,255,255,0.88);
-              font-size: 12.5px;
-              font-weight: 600;
-              text-align: left;
-              transition: background 0.15s ease, border-color 0.15s ease;
-              cursor: pointer;
-            }
-            .de-desk-quick-item:hover {
-              background: rgba(211,18,106,0.14);
-              border-color: rgba(211,18,106,0.38);
-              color: #ffffff;
-            }
-            .de-desk-quick-dash {
-              color: #D3126A;
-              font-weight: 800;
-              font-size: 14px;
-              line-height: 1;
-              flex: none;
-            }
-            .de-desk-quick-label {
-              flex: 1;
-              min-width: 0;
-            }
-            .de-desk-perks-inset {
-              display: flex;
-              flex-direction: column;
-              gap: 4px;
-              margin-top: 10px;
-              padding: 8px 10px;
-              background: rgba(255,255,255,0.035);
-              border: 1px solid rgba(255,255,255,0.08);
-              border-radius: 10px;
-            }
-            .de-desk-perks-row {
-              display: flex;
-              align-items: center;
-              gap: 8px;
-              font-size: 11.5px;
-              color: rgba(255,255,255,0.72);
-              font-weight: 500;
-            }
-            .de-desk-chips {
-              display: flex; flex-wrap: wrap; gap: 6px;
-              margin-top: 8px;
-            }
-            .de-desk-chip {
-              border: 1px solid rgba(255,255,255,0.12);
-              background: rgba(255,255,255,0.04);
-              color: rgba(255,255,255,0.85);
-              border-radius: 8px;
-              padding: 6px 11px;
-              font-size: 12px; font-weight: 600;
-              transition: all 0.15s ease;
-            }
-            .de-desk-chip:hover {
-              border-color: #D3126A;
-              background: rgba(211,18,106,0.14);
+              font-family: "Space Grotesk", sans-serif;
+              font-size: 16px;
+              font-weight: 700;
+              line-height: 1.25;
+              letter-spacing: -0.015em;
               color: #fff;
             }
+            .de-desk-discover-intro p {
+              margin: 4px 0 0;
+              color: rgba(255,255,255,0.68);
+              font-size: 13.5px;
+              line-height: 1.45;
+            }
+            .de-desk-discover-list {
+              overflow: hidden;
+              width: 100%;
+              display: flex;
+              flex-direction: column;
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              border-radius: 15px;
+              background: var(--de-raised, #151217);
+            }
+            .de-desk-discover-row {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              width: 100%;
+              min-height: 44px;
+              padding: 10px 12px 10px 13px;
+              background: transparent;
+              border: 0;
+              border-bottom: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              color: #fff;
+              font-family: "Space Grotesk", sans-serif;
+              font-size: 14px;
+              font-weight: 650;
+              line-height: 1.3;
+              text-align: left;
+              cursor: pointer;
+              transition: background 0.15s ease;
+            }
+            .de-desk-discover-row:last-child { border-bottom: 0; }
+            .de-desk-discover-row:hover {
+              background: rgba(255,255,255,0.04);
+            }
+            .de-desk-discover-row.is-incident {
+              box-shadow: inset 3px 0 0 #D3126A;
+            }
+            .de-desk-discover-row.is-incident:hover {
+              background: rgba(211,18,106,0.10);
+            }
+            .de-desk-discover-icon {
+              display: inline-flex; flex: none;
+              width: 32px; height: 32px;
+              align-items: center; justify-content: center;
+              border-radius: 9px;
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              background: var(--de-bg, #050312);
+              color: #D3126A;
+            }
+            .de-desk-discover-icon svg { width: 15px; height: 15px; stroke-width: 1.9; }
+            .de-desk-discover-label {
+              flex: 1; min-width: 0;
+              overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            }
+            .de-desk-discover-arrow {
+              width: 15px; height: 15px; flex: none;
+              color: rgba(255,255,255,0.38);
+            }
+            .de-desk-discover-row:hover .de-desk-discover-arrow { color: #D3126A; }
+            .de-desk-chips {
+              display: flex; flex-direction: column;
+              gap: 0;
+              margin-top: 10px;
+              overflow: hidden;
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              border-radius: 15px;
+              background: var(--de-raised, #151217);
+            }
+            .de-desk-chip {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              width: 100%;
+              min-height: 44px;
+              padding: 10px 12px;
+              border: 0;
+              border-bottom: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              border-radius: 0;
+              background: transparent;
+              color: #fff;
+              font-family: "Space Grotesk", sans-serif;
+              font-size: 13.5px; font-weight: 650;
+              text-align: left;
+              transition: background 0.15s ease;
+            }
+            .de-desk-chip:last-child { border-bottom: 0; }
+            .de-desk-chip:hover {
+              background: rgba(211,18,106,0.10);
+              color: #fff;
+            }
+            .de-desk-chip-icon {
+              display: inline-flex; flex: none;
+              width: 32px; height: 32px;
+              align-items: center; justify-content: center;
+              border-radius: 9px;
+              border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
+              background: var(--de-bg, #050312);
+            }
+            .de-desk-chip-label {
+              flex: 1; min-width: 0;
+              overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            }
+            .de-desk-chip-arrow {
+              width: 14px; height: 14px; flex: none;
+              color: rgba(255,255,255,0.38);
+            }
+            .de-desk-chip:hover .de-desk-chip-arrow { color: #D3126A; }
             .de-desk-bubble-meta {
               display: flex; align-items: center; gap: 8px;
               margin-bottom: 6px;
@@ -2397,7 +2499,7 @@ export const ZohoASAPWidget = ({
               z-index: 1;
               display: flex; gap: 8px;
               margin: 0;
-              padding: 12px 16px 10px;
+              padding: 10px 16px 8px;
               border-top: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
               background: var(--de-surface, #0a0a0a);
               color: #fff;
@@ -2409,12 +2511,12 @@ export const ZohoASAPWidget = ({
             }
             .de-desk-composer input {
               flex: 1;
-              min-height: 48px;
+              min-height: 44px;
               background: var(--de-raised, #151217);
               border: 1px solid var(--de-hairline, rgba(255,255,255,0.10));
               border-radius: 10px;
-              padding: 12px 14px;
-              color: #fff; font-size: 15px;
+              padding: 10px 14px;
+              color: #fff; font-size: 14.5px;
             }
             .de-desk-shell input:-webkit-autofill,
             .de-desk-shell textarea:-webkit-autofill {
@@ -2425,23 +2527,25 @@ export const ZohoASAPWidget = ({
             .de-desk-composer input::placeholder { color: var(--desk-ink-dim); }
             .de-desk-composer input:focus {
               outline: none;
-              border-color: var(--desk-pink);
-              box-shadow: 0 0 0 3px rgba(211,18,106,0.12);
+              border-color: #D3126A;
+              box-shadow: 0 0 0 3px rgba(211,18,106,0.16);
             }
             .de-desk-send {
-              width: 44px; height: 44px; border-radius: 11px;
-              background: var(--desk-cta); border: none;
+              width: 44px; height: 44px; border-radius: 10px;
+              background: #D3126A; border: none;
               display: flex; align-items: center; justify-content: center;
               flex: none;
+              box-shadow: 0 8px 18px -10px rgba(211,18,106,0.8);
             }
-            .de-desk-send:disabled { opacity: 0.5; }
+            .de-desk-send:hover:not(:disabled) { background: #bd105f; }
+            .de-desk-send:disabled { opacity: 0.5; box-shadow: none; }
             .de-desk-send svg { width: 16px; height: 16px; color: #fff; }
             .de-desk-composer-caption {
               position: relative;
               z-index: 1;
               display: flex; align-items: center; gap: 6px;
               margin: 0;
-              padding: 0 16px 14px;
+              padding: 0 16px 10px;
               background: transparent;
               font-size: 12px; color: rgba(255,255,255,0.46);
               flex-shrink: 0;
@@ -2812,7 +2916,12 @@ export const ZohoASAPWidget = ({
             @media (prefers-reduced-motion: reduce) {
               .de-desk-tool-link,
               .de-desk-tool-arrow,
-              .de-desk-security-action { transition: none; }
+              .de-desk-security-action,
+              .de-desk-discover-row,
+              .de-desk-issue-row,
+              .de-desk-chip,
+              .de-desk-incident,
+              .de-desk-send { transition: none; }
               .de-desk-tool-link:hover .de-desk-tool-arrow,
               .de-desk-security-action:hover { transform: none; }
             }

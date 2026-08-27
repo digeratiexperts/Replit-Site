@@ -78,4 +78,20 @@ describe("DE Desk shell positioning", () => {
     expect(src).toMatch(/aria-invalid=\{ticketFieldErrors/);
     expect(src).toMatch(/support-submit-error/);
   });
+
+  it("styles Ask DE discovery and Get Support issues as graphite grouped stacks", () => {
+    expect(src).toMatch(/de-desk-discover/);
+    expect(src).toMatch(/de-desk-discover-list/);
+    expect(src).toMatch(/How can our Arizona team assist you\?/);
+    expect(src).toMatch(/de-desk-ticket-upper/);
+    expect(src).toMatch(/de-desk-perk-list/);
+    expect(src).toMatch(/\.de-desk-issue-list \{[\s\S]*?border-radius: 15px;/);
+    expect(src).not.toMatch(/linear-gradient\(135deg, rgba\(211,18,106,0\.16\)/);
+    expect(src).toMatch(/background: #fff;/);
+    expect(src).toMatch(/Sign in to Client Tools/);
+    expect(src).toMatch(/Create ticket/);
+    expect(src).toMatch(/de-desk-btn-grad/);
+    expect(src).toMatch(/de-desk-urgency/);
+    expect(src).toMatch(/\.de-desk-scroll > \* \{ flex-shrink: 0; \}/);
+  });
 });

@@ -1,5 +1,7 @@
 # Brand
 
+Layer 0 of Visual System v2. Companion layers: `VISUAL_SYSTEM_V2.md` (does not replace this file).
+
 The website represents a premium enterprise managed IT and cybersecurity company.
 
 The visual identity should communicate:
