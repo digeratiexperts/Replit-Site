@@ -1,5 +1,7 @@
 # Imagery
 
+Layer 0–1 stills and concept-not-noun. v2 photography / plates / product media: `PHOTOGRAPHY.md`, `PRODUCT_MEDIA.md`, `VISUAL_SYSTEM_V2.md` (do not replace this file).
+
 Images are part of the brand identity. Never treat website imagery as isolated assets.
 
 Create a coherent visual family across the entire site. All imagery should feel as though it came from the same art director, renderer, and brand system.

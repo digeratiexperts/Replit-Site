@@ -1,8 +1,8 @@
 # Design rationale library
 
-Use this folder with the mandatory root `.cursorrules` policy (sections 4�14, 27�28, 31, 40�42).
+Use this folder with the mandatory root `.cursorrules` policy (sections 4–14, 27–28, 31, 40–42).
 
-Design OS (tokens, brand, UX, imagery): `DESIGN_SYSTEM.md`, `BRAND.md`, `UX_PRINCIPLES.md`, `IMAGERY.md`. Cursor execution layer: `.cursor/rules/ui-ux.mdc`, `brand.mdc`, `frontend.mdc`. Audit before implementing: `.cursor/skills/visual-audit/SKILL.md`.
+Design OS (tokens, brand, UX, imagery): `DESIGN_SYSTEM.md`, `BRAND.md`, `UX_PRINCIPLES.md`, `IMAGERY.md`. Visual System v2 (layers on that foundation, does not replace it): `VISUAL_SYSTEM_V2.md`. Cursor execution layer: `.cursor/rules/ui-ux.mdc`, `brand.mdc`, `frontend.mdc`, `visual-system-v2.mdc`. Audit before implementing: `.cursor/skills/visual-audit/SKILL.md`. Ledger: `docs/SITE-VISUAL-TASKS.md`.
 
 ## Layout
 
@@ -12,9 +12,18 @@ Design OS (tokens, brand, UX, imagery): `DESIGN_SYSTEM.md`, `BRAND.md`, `UX_PRIN
 | `design/BRAND.md` | Visual identity constraints |
 | `design/UX_PRINCIPLES.md` | Design-first / visual QA / definition of done |
 | `design/IMAGERY.md` | Dark technical sculpture system; concept-not-noun |
+| `design/VISUAL_SYSTEM_V2.md` | Canonical v2 layers + master rule (does not replace BRAND / DESIGN_SYSTEM / UX / IMAGERY) |
+| `design/VISUAL_EVIDENCE.md` | LIVE / SANITIZED REAL / EXAMPLE / ILLUSTRATIVE + EvidenceFrame contract |
+| `design/HUD_CHROME.md` | Technical HUD yes/no; HUDFrame / StatusToken contracts |
+| `design/DIAGRAM_SYSTEM.md` | Diagram grammar; primitives later |
+| `design/PRODUCT_MEDIA.md` | Store visual grammar (P0, docs until VIS-011) |
+| `design/PROOF_SYSTEM.md` | Human + client proof; no fabricated trust |
+| `design/PHOTOGRAPHY.md` | Photography set plan |
+| `design/EDITORIAL_ASSETS.md` | Publication templates / threat storytelling |
+| `design/MOTION_LANGUAGE.md` | Motion: state / hierarchy / continuity / feedback |
 | `design/references/` | Inspiration and competitor/industry refs (not yet approved for DE) |
 | `design/approved/` | Ship-quality examples agents should match or elevate toward |
-| `design/rejected/` | Anti-patterns � do not recreate these looks or structures |
+| `design/rejected/` | Anti-patterns — do not recreate these looks or structures |
 
 ## How agents should use this
 
@@ -29,4 +38,4 @@ Steal Lucide.dev’s nested neutrals, not their layout. Homepage chapters should
 
 ## Naming
 
-Prefer descriptive filenames, e.g. `homepage-hero-fullbleed-2026-08.png` plus a sibling `.md` with 2�5 bullets on why it works or fails.
+Prefer descriptive filenames, e.g. `homepage-hero-fullbleed-2026-08.png` plus a sibling `.md` with 2–5 bullets on why it works or fails.
