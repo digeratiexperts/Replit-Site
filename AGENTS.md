@@ -6,6 +6,22 @@ Design OS (execution layer, does not replace `.cursorrules`): `.cursor/rules/ui-
 
 Task ledger: `docs/SITE-VISUAL-TASKS.md`. Do not start a visual task marked IN PROGRESS by another owner. Do not invent HUD/evidence primitives ad hoc.
 
+## Repository authority — check this before starting work
+
+- This repository, `digeratiexperts/digeratiexperts-site`, is the **canonical public website repository**.
+- Website work branches from and opens PRs back to this repository's current `main`.
+- `Replit-Site` references are historical and must not redirect new website work.
+- `digeratiexperts/Intelligence-Hub` is the canonical internal Intelligence Hub / Tech Sales application repository.
+- `digeratiexperts/TechSales` is legacy/reference-only by default; do not start new work there or archive/delete it without an explicit migration decision.
+- Full authority matrix: `docs/REPOSITORY-AUTHORITY.md`.
+- Website source-of-truth details: `docs/SOURCE-OF-TRUTH.md`.
+
+If an old Cursor task, chat, PR description, screenshot, or migration note conflicts with current GitHub state and the authority files above, treat the old instruction as stale and re-check before acting.
+
+## Company naming
+
+Customer-facing company naming is **Digerati Experts** or **DE**, never standalone **Digerati** as the company label. See `.cursor/rules/digerati-naming.mdc`.
+
 ## DE SITE-WIDE VISUAL COMPLETION DIRECTIVE
 
 You are working in a multi-agent repository. Other agents may be modifying the site concurrently.
