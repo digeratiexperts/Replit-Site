@@ -19,14 +19,18 @@ export function ShopByOutcome({ selected, onSelect }: ShopByOutcomeProps) {
         </p>
       </div>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-        {storeOutcomes.map((outcome) => {
+        {storeOutcomes.map((outcome, index) => {
           const isActive = selected === outcome.id;
+          const isDanglingLast =
+            index === storeOutcomes.length - 1 && storeOutcomes.length % 2 === 1;
           return (
             <button
               key={outcome.id}
               type="button"
               onClick={() => onSelect(isActive ? null : outcome.id)}
               className={`group rounded-xl border p-3.5 text-left transition-all duration-200 sm:p-5 md:p-6 ${
+                isDanglingLast ? "col-span-2 sm:col-span-1" : ""
+              } ${
                 isActive
                   ? "border-[#D3126A]/55 bg-[#D3126A]/10 shadow-[0_0_24px_rgba(211,18,106,0.12)]"
                   : "border-white/10 bg-[#121212] hover:border-white/20 hover:bg-[#161616]"
