@@ -4,9 +4,19 @@ import { PageTemplate } from "@/components/PageTemplate";
 import { ConversionPathBar } from "@/components/ConversionPathBar";
 import { Button } from "@/components/ui/button";
 import {
-  Shield, Users, DollarSign, Clock,
-  ExternalLink, Copy, Check, RefreshCw, Sparkles,
-  Filter, ChevronDown, Lock, MapPin,
+  Shield,
+  Users,
+  DollarSign,
+  Clock,
+  ExternalLink,
+  Copy,
+  Check,
+  RefreshCw,
+  Sparkles,
+  Filter,
+  ChevronDown,
+  Lock,
+  MapPin,
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { useToast } from "@/hooks/use-toast";
@@ -17,9 +27,6 @@ import {
   type CyberAwarenessFact,
 } from "@/data/cyberAwarenessFacts";
 import { ProofChip } from "@/components/evidence/ProofChip";
-import { EvidenceFrame } from "@/components/evidence/EvidenceFrame";
-import { HUDFrame } from "@/components/evidence/HUDFrame";
-import { StatusToken } from "@/components/evidence/StatusToken";
 
 type FactCategory = "ransomware" | "identity" | "human" | "recovery" | "financial" | "arizona";
 
@@ -145,32 +152,32 @@ const FactCard = forwardRef<HTMLDivElement, FactCardProps>(function FactCard(
       className={`de-hud-card relative transition-all duration-200 hover:border-[#D3126A]/40 ${featured ? "p-8 md:p-10" : "p-6"}`}
       data-testid={`fact-card-${fact.id}`}
     >
-      <div className="absolute top-4 right-4 flex items-center gap-2">
-        <span className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-black/40 px-2.5 py-1 text-xs font-mono font-medium text-white/70">
+      <div className="absolute right-4 top-4 flex items-center gap-2">
+        <span className="inline-flex items-center gap-1.5 rounded-md border border-de-hairline bg-de-bg px-2.5 py-1 font-mono text-xs font-medium text-white/70">
           {categoryInfo[fact.category].icon}
           {categoryInfo[fact.category].label}
         </span>
       </div>
 
-      <div className={`flex flex-wrap items-baseline gap-4 ${featured ? "mb-6 border-b border-white/10 pb-6" : "mb-4"}`}>
-        <span className={`font-black font-mono de-tabular-nums tracking-tight text-de-accent-ink ${featured ? "text-5xl md:text-7xl" : "text-3xl md:text-4xl"}`}>
+      <div className={`flex flex-wrap items-baseline gap-4 ${featured ? "mb-6 border-b border-de-hairline pb-6" : "mb-4"}`}>
+        <span className={`de-tabular-nums font-mono font-black tracking-tight text-de-accent-ink ${featured ? "text-5xl md:text-7xl" : "text-3xl md:text-4xl"}`}>
           {fact.stat}
         </span>
-        <span className={`font-bold font-mono uppercase tracking-wider text-white/60 ${featured ? "text-base" : "text-xs"}`}>
+        <span className={`font-mono font-bold uppercase tracking-wider text-white/60 ${featured ? "text-base" : "text-xs"}`}>
           {fact.label}
         </span>
       </div>
 
-      <p className={`font-medium leading-relaxed text-white/80 ${featured ? "mb-6 text-lg md:text-xl font-heading" : "mb-4 text-sm"}`}>
+      <p className={`font-medium leading-relaxed text-white/80 ${featured ? "mb-6 font-heading text-lg md:text-xl" : "mb-4 text-sm"}`}>
         {fact.text}
       </p>
 
-      <div className={`flex flex-wrap items-center justify-between gap-4 ${featured ? "rounded-xl border border-white/10 bg-black/30 p-4" : ""}`}>
+      <div className={`flex flex-wrap items-center justify-between gap-4 ${featured ? "rounded-xl border border-de-hairline bg-de-bg p-4" : ""}`}>
         <a
           href={fact.sourceUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-sm font-mono text-de-accent-ink hover:underline"
+          className="inline-flex items-center gap-2 font-mono text-sm text-de-accent-ink hover:underline"
           data-testid={`fact-source-${fact.id}`}
         >
           <span className="text-white/55">Source:</span>
@@ -211,9 +218,9 @@ const CyberFacts = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   useSEO({
-    title: 'Cybersecurity Facts - Credibility Layer | Digerati Experts',
-    description: 'Real cybersecurity statistics with sources. Use these facts across the site to support why proactive cybersecurity matters.',
-    canonical: '/resources/cyber-facts',
+    title: "Cybersecurity Facts - Credibility Layer | Digerati Experts",
+    description: "Real cybersecurity statistics with sources. Use these facts across the site to support why proactive cybersecurity matters.",
+    canonical: "/resources/cyber-facts",
   });
 
   useEffect(() => {
@@ -221,33 +228,45 @@ const CyberFacts = () => {
     setRandomFact(pick);
   }, []);
 
-  const handleCopy = (fact: CyberFact) => {
-    navigator.clipboard.writeText(`${fact.stat} ${fact.text} (${fact.source})`);
-    setCopiedId(fact.id);
-    toast({
-      title: "Fact Copied",
-      description: "Statistic and source copied to clipboard.",
-    });
-    setTimeout(() => setCopiedId(null), 2000);
+  const handleCopy = async (fact: CyberFact) => {
+    const text = `${fact.stat} ${fact.text}\n\nSource: ${fact.source}\n${fact.sourceUrl}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedId(fact.id);
+      toast({
+        title: "Copied to clipboard",
+        description: `"${fact.label}" fact copied successfully.`,
+      });
+      setTimeout(() => setCopiedId(null), 2000);
+    } catch {
+      toast({
+        title: "Copy failed",
+        description: "Please try again or copy manually.",
+        variant: "destructive",
+      });
+    }
   };
 
   const refreshRandomFact = () => {
-    const remaining = featuredFacts.filter(f => f.id !== randomFact?.id);
-    const pick = remaining[Math.floor(Math.random() * remaining.length)];
-    setRandomFact(pick);
+    const currentIndex = featuredFacts.findIndex((f) => f.id === randomFact?.id);
+    let newIndex;
+    do {
+      newIndex = Math.floor(Math.random() * featuredFacts.length);
+    } while (newIndex === currentIndex && featuredFacts.length > 1);
+    setRandomFact(featuredFacts[newIndex]);
   };
 
   const filteredFacts = useMemo(() => {
     if (selectedCategory === "all") return allFacts;
-    return allFacts.filter(f => f.category === selectedCategory);
+    return allFacts.filter((f) => f.category === selectedCategory);
   }, [selectedCategory]);
 
   const containerVariants = prefersReducedMotion ? undefined : {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.08 }
-    }
+      transition: { staggerChildren: 0.08 },
+    },
   };
 
   return (
@@ -263,163 +282,130 @@ const CyberFacts = () => {
       }
     >
       <div className="space-y-16" data-testid="heading-cyber-facts">
-        {/* Sourced Proof Chips */}
-        <div className="flex flex-wrap items-center gap-3">
-          <ProofChip metric="SOURCED" label="Peer-Reviewed Industry Data" icon={Shield} />
-          <ProofChip metric="GOVERNMENT" label="CISA & FBI IC3 Audited" icon={Lock} />
-          <ProofChip metric="ARIZONA" label="State Breach Law Ready" icon={MapPin} />
+        <div className="flex flex-wrap items-center gap-3" aria-label="Fact library provenance">
+          <ProofChip metric={`${allFacts.length} FACTS`} label="Source-linked library" icon={Shield} />
+          <ProofChip metric="ARIZONA" label="State-specific facts included" icon={MapPin} />
         </div>
 
         <section>
-          <div className="flex items-center justify-between gap-4 flex-wrap mb-8">
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-white mb-1">Today's Cyber Fact</h2>
-                <p className="text-sm text-white/55 uppercase tracking-wider font-semibold">Auto-randomizes on load</p>
-              </div>
+          <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2 className="mb-1 text-2xl font-bold text-white md:text-3xl">Today&apos;s Cyber Fact</h2>
+              <p className="font-mono text-sm font-semibold uppercase tracking-wider text-white/55">Source attached</p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={refreshRandomFact}
+              className="border-white/20 text-white/70 hover:bg-white/10 hover:text-white"
+              data-testid="btn-refresh-fact"
+            >
+              <RefreshCw className="mr-2 h-4 w-4" />
+              New Fact
+            </Button>
+          </div>
+
+          <AnimatePresence mode="wait">
+            {randomFact && (
+              <FactCard key={randomFact.id} fact={randomFact} featured onCopy={handleCopy} copiedId={copiedId} />
+            )}
+          </AnimatePresence>
+
+          <div className="mt-6 rounded-xl border-l-4 border-de-hairline bg-de-raised p-4 text-sm text-white/60">
+            <strong className="text-white/80">Usage:</strong> Keep the source link attached when a statistic is reused elsewhere on the site.
+          </div>
+        </section>
+
+        <div className="mb-16 h-px bg-gradient-to-r from-transparent to-transparent" />
+
+        <section className="mb-20">
+          <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2 className="mb-1 text-2xl font-bold text-white md:text-3xl">Quick Proof</h2>
+              <p className="font-mono text-sm font-semibold uppercase tracking-wider text-white/55">Two sourced examples</p>
+            </div>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            <FactCard fact={allFacts.find((f) => f.id === "microsoft-mfa-blocks-2025")!} onCopy={handleCopy} copiedId={copiedId} />
+            <FactCard fact={allFacts.find((f) => f.id === "ransomware-recovery")!} onCopy={handleCopy} copiedId={copiedId} />
+          </div>
+        </section>
+
+        <div className="mb-16 h-px bg-gradient-to-r from-transparent via-de-accent/30 to-transparent" />
+
+        <section>
+          <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2 className="mb-1 text-2xl font-bold text-white md:text-3xl">Fact Library</h2>
+              <p className="font-mono text-sm font-semibold uppercase tracking-wider text-white/55">
+                Source-linked · {filteredFacts.length} facts
+              </p>
+            </div>
+
+            <div className="relative">
               <Button
                 variant="outline"
                 size="sm"
-                onClick={refreshRandomFact}
-                className="border-white/20 text-white/70 hover:text-white hover:bg-white/10"
-                data-testid="btn-refresh-fact"
+                onClick={() => setIsFilterOpen(!isFilterOpen)}
+                className="border-white/20 text-white/70 hover:bg-white/10 hover:text-white"
+                data-testid="btn-filter-facts"
               >
-                <RefreshCw className="w-4 h-4 mr-2" />
-                New Fact
+                <Filter className="mr-2 h-4 w-4" />
+                {selectedCategory === "all" ? "All Categories" : categoryInfo[selectedCategory].label}
+                <ChevronDown className={`ml-2 h-4 w-4 transition-transform ${isFilterOpen ? "rotate-180" : ""}`} />
               </Button>
-            </div>
 
-            <AnimatePresence mode="wait">
-              {randomFact && (
-                <FactCard 
-                  key={randomFact.id}
-                  fact={randomFact} 
-                  featured 
-                  onCopy={handleCopy}
-                  copiedId={copiedId}
-                />
-              )}
-            </AnimatePresence>
-
-            <div className="mt-6 p-4 rounded-xl bg-de-raised border-l-4 border-de-hairline text-white/60 text-sm">
-              <strong className="text-white/80">Tip:</strong> Put this under your hero or above pricing to add immediate proof without adding clutter.
-            </div>
-          </section>
-
-          {/* Divider */}
-          <div className="h-px bg-gradient-to-r from-transparent to-transparent mb-16" />
-
-          {/* Section 2: Quick Proof */}
-          <section className="mb-20">
-            <div className="flex items-center justify-between gap-4 flex-wrap mb-8">
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-white mb-1">Quick Proof</h2>
-                <p className="text-sm text-white/55 uppercase tracking-wider font-semibold">Most persuasive • 2 cards is the sweet spot</p>
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              <FactCard 
-                fact={allFacts.find(f => f.id === "microsoft-mfa-blocks-2025")!}
-                onCopy={handleCopy}
-                copiedId={copiedId}
-              />
-              <FactCard 
-                fact={allFacts.find(f => f.id === "ransomware-recovery")!}
-                onCopy={handleCopy}
-                copiedId={copiedId}
-              />
-            </div>
-          </section>
-
-          {/* Divider */}
-          <div className="h-px bg-gradient-to-r from-transparent via-de-accent/30 to-transparent mb-16" />
-
-          {/* Section 3: Full Fact Library */}
-          <section>
-            <div className="flex items-center justify-between gap-4 flex-wrap mb-8">
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-white mb-1">Fact Library</h2>
-                <p className="text-sm text-white/55 uppercase tracking-wider font-semibold">
-                  Copy anywhere • Use 1–3 per page • {filteredFacts.length} facts
-                </p>
-              </div>
-
-              {/* Filter Dropdown */}
-              <div className="relative">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsFilterOpen(!isFilterOpen)}
-                  className="border-white/20 text-white/70 hover:text-white hover:bg-white/10"
-                  data-testid="btn-filter-facts"
-                >
-                  <Filter className="w-4 h-4 mr-2" />
-                  {selectedCategory === "all" ? "All Categories" : categoryInfo[selectedCategory].label}
-                  <ChevronDown className={`w-4 h-4 ml-2 transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
-                </Button>
-                
-                <AnimatePresence>
-                  {isFilterOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-xl border border-de-hairline bg-de-raised"
+              <AnimatePresence>
+                {isFilterOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-xl border border-de-hairline bg-de-raised"
+                  >
+                    <button
+                      onClick={() => { setSelectedCategory("all"); setIsFilterOpen(false); }}
+                      className={`flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-colors hover:bg-white/5 ${selectedCategory === "all" ? "bg-de-raised text-de-accent-ink" : "text-white/70"}`}
+                      data-testid="filter-all"
                     >
+                      <Sparkles className="h-4 w-4" />
+                      All Categories
+                    </button>
+                    {Object.entries(categoryInfo).map(([key, info]) => (
                       <button
-                        onClick={() => { setSelectedCategory("all"); setIsFilterOpen(false); }}
-                        className={`w-full px-4 py-3 text-left text-sm hover:bg-white/5 transition-colors flex items-center gap-3
-                          ${selectedCategory === "all" ? 'text-de-accent-ink bg-de-raised' : 'text-white/70'}`}
-                        data-testid="filter-all"
+                        key={key}
+                        onClick={() => { setSelectedCategory(key as FactCategory); setIsFilterOpen(false); }}
+                        className={`flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-colors hover:bg-white/5 ${selectedCategory === key ? "bg-de-raised text-de-accent-ink" : "text-white/70"}`}
+                        data-testid={`filter-${key}`}
                       >
-                        <Sparkles className="w-4 h-4" />
-                        All Categories
+                        {info.icon}
+                        {info.label}
                       </button>
-                      {Object.entries(categoryInfo).map(([key, info]) => (
-                        <button
-                          key={key}
-                          onClick={() => { setSelectedCategory(key as FactCategory); setIsFilterOpen(false); }}
-                          className={`w-full px-4 py-3 text-left text-sm hover:bg-white/5 transition-colors flex items-center gap-3
-                            ${selectedCategory === key ? 'text-de-accent-ink bg-de-raised' : 'text-white/70'}`}
-                          data-testid={`filter-${key}`}
-                        >
-                          {info.icon}
-                          {info.label}
-                        </button>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-
-            <motion.div
-              className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <AnimatePresence mode="popLayout">
-                {filteredFacts.map(fact => (
-                  <FactCard 
-                    key={fact.id}
-                    fact={fact}
-                    onCopy={handleCopy}
-                    copiedId={copiedId}
-                  />
-                ))}
+                    ))}
+                  </motion.div>
+                )}
               </AnimatePresence>
-            </motion.div>
-
-            <div className="mt-8 p-4 rounded-xl bg-de-raised border-l-4 border-de-hairline text-white/60 text-sm">
-              <strong className="text-white/80">Best practice:</strong> Keep "Source:" links clickable. It builds trust and reduces skepticism.
             </div>
-          </section>
+          </div>
 
-          <ConversionPathBar
-            headline="Want these facts applied to your environment?"
-            body="A Cyber Risk Assessment maps sourced industry risk to what is actually running in your Arizona office."
-          />
+          <motion.div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" variants={containerVariants} initial="hidden" animate="visible">
+            <AnimatePresence mode="popLayout">
+              {filteredFacts.map((fact) => (
+                <FactCard key={fact.id} fact={fact} onCopy={handleCopy} copiedId={copiedId} />
+              ))}
+            </AnimatePresence>
+          </motion.div>
+
+          <div className="mt-8 rounded-xl border-l-4 border-de-hairline bg-de-raised p-4 text-sm text-white/60">
+            <strong className="text-white/80">Evidence rule:</strong> Keep source links clickable and preserve the original scope/date when reusing a fact.
+          </div>
+        </section>
+
+        <ConversionPathBar
+          headline="Want these facts applied to your environment?"
+          body="A Cyber Risk Assessment maps sourced industry risk to what is actually running in your Arizona office."
+        />
       </div>
     </PageTemplate>
   );
