@@ -86,7 +86,7 @@ Do not introduce a new purple, magenta, or near-black. Reuse these.
 
 - Container: centered, padding `1rem`, `2xl` max `1680px`
 - Sticky nav clearance: `--de-nav-offset` (MegaMenu ResizeObserver)
-- Homepage section jumps live in MegaMenu (`HomepageOnPageNav`) — no floating bottom dock
+- Homepage section jumps: MegaMenu `HomepageOnPageNav` at rest, plus the expanding `SiteBottomBar` dock after scroll. Keep both — DE restored the dock 2026-08-27.
 - Dark marketing cards: `rounded-2xl border border-de-hairline bg-de-raised` with Lucide in `IconWell` (quiet well, magenta icon)
 - Section padding pattern: `py-10 md:py-14 lg:py-16` (and nearby variants already in sections)
 - Touch targets: ~44×44px where practical (`min-h-11`)
