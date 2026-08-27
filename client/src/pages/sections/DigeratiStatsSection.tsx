@@ -34,7 +34,7 @@ function FactCard({
         <IconWell icon={Icon} size="sm" surface="dark" />
         <span className="h-1.5 w-1.5 rounded-full bg-[#D3126A]" aria-hidden="true" />
       </div>
-      <p className="mt-5 font-mono text-3xl font-bold tracking-tight text-white md:text-4xl">
+      <p className="mt-5 font-mono de-tabular-nums text-3xl font-bold tracking-tight text-white md:text-4xl">
         {fact.metric}
       </p>
       <p className="mt-2.5 flex-1 text-base leading-relaxed text-white/75 md:text-lg">{fact.statement}</p>

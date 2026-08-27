@@ -20,6 +20,16 @@ html {
   font-size: 16px;
   /* Keep in-page anchors clear of fixed MegaMenu chrome */
   scroll-padding-top: var(--de-nav-offset);
+  background-color: var(--de-bg, #050312);
+  color: var(--de-fg, #ffffff);
+}
+
+body {
+  background-color: var(--de-bg, #050312);
+  color: var(--de-fg, #ffffff);
+  font-family: "Inter", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /*
@@ -87,6 +97,12 @@ html.de-store-gesture-lock body {
   transform: translateZ(0);
   backface-visibility: hidden;
   will-change: transform, opacity;
+}
+
+/* Tabular figures for animated counters, stats, and pricing metrics */
+.de-tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
 }
 
 /* Smooth momentum scrolling for trackpads */
@@ -269,7 +285,8 @@ html.de-marketing-canvas,
 html.de-marketing-canvas body {
   /* var(--de-bg), not pure #000 — sections that go transparent to share a
    * continuous field (per DESIGN_SYSTEM.md) should fall through to the
-   * documented graphite well, not an undocumented third dark. */
+   * documented graphite well, not an undocumented third dark. Also set as
+   * the base html/body background above so portal pages get it too. */
   background-color: var(--de-bg);
   overflow-x: clip;
 }
@@ -578,6 +595,30 @@ html[data-dock-hidden="true"] .de-bottom-bar {
   background-color: var(--de-paper-raised);
   border: 1px solid var(--de-paper-hairline);
   box-shadow: 0 8px 32px rgba(26, 18, 16, 0.1);
+}
+
+/* Elevated, floating paper showcase island over dark cyber canvas */
+.de-paper-island {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--de-paper);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 1.75rem;
+  box-shadow:
+    0 0 0 1px rgba(211, 18, 106, 0.12),
+    0 24px 60px -12px rgba(0, 0, 0, 0.65),
+    0 12px 24px -6px rgba(211, 18, 106, 0.08);
+  overflow: hidden;
+}
+
+.de-paper-island::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--de-field-grain-paper);
+  background-size: 180px 180px;
 }
 
 /*

@@ -86,184 +86,186 @@ export const DigeratiLeadFormSection = (): JSX.Element => {
   return (
     <section 
       id="assessment-form"
-      className="de-paper-chapter de-chapter-fade-from-dark de-field-grain-paper relative overflow-hidden py-16 md:py-20 lg:py-24"
+      className="de-dark-well relative py-8 md:py-14"
     >
-      <div className="container mx-auto px-3 sm:px-4 lg:px-6 relative z-10">
-        <div className="max-w-4xl mx-auto">
-          <motion.div 
-            className="text-center mb-10"
-            initial={prefersReducedMotion ? false : revealInitial}
-            whileInView={revealInView}
-            viewport={revealViewport}
-            transition={revealTransition}
-          >
-            <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#D3126A]">
-              Cyber Risk Assessment
-            </p>
-            <h2 className="mb-4 font-heading text-3xl font-semibold leading-tight tracking-[-0.02em] text-[#1A1228] md:text-4xl lg:text-5xl">
-              Get Your Free Security Assessment
-            </h2>
-            <p className="mx-auto max-w-2xl text-lg leading-relaxed text-black/60 md:text-xl">
-              Discover vulnerabilities before attackers do. Our experts will analyze your security posture and provide actionable recommendations.
-            </p>
-          </motion.div>
-
-          <motion.div
-            className="de-paper-lift-lg rounded-2xl p-8 md:p-10"
-            initial={prefersReducedMotion ? false : revealInitial}
-            whileInView={revealInView}
-            viewport={revealViewport}
-            transition={revealTransition}
-          >
-            <div className="mb-6 grid grid-cols-1 gap-x-6 gap-y-2.5 rounded-xl border border-[var(--de-paper-hairline)] bg-white px-4 py-3.5 sm:grid-cols-3">
-              <div className="flex items-baseline gap-2.5 text-[15px] font-semibold leading-snug text-[#1A1228]">
-                <span className="mt-[0.55em] h-px w-2.5 shrink-0 bg-[#D3126A]" aria-hidden="true" />
-                <span>Independent findings</span>
-              </div>
-              <div className="flex items-baseline gap-2.5 text-[15px] font-semibold leading-snug text-[#1A1228]">
-                <span className="mt-[0.55em] h-px w-2.5 shrink-0 bg-[#D3126A]" aria-hidden="true" />
-                <span>No switch required</span>
-              </div>
-              <div className="flex items-baseline gap-2.5 text-[15px] font-semibold leading-snug text-[#1A1228]">
-                <span className="mt-[0.55em] h-px w-2.5 shrink-0 bg-[#D3126A]" aria-hidden="true" />
-                <span>Arizona-based experts</span>
-              </div>
-            </div>
-
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <FormField
-                    control={form.control}
-                    name="fullName"
-                    render={({ field }) => (
-                      <FormItem required>
-                        <FormLabel className="text-base font-medium text-[#1A1228]">Full Name *</FormLabel>
-                        <FormControl>
-                          <Input 
-                            placeholder="John Smith" 
-                            data-testid="input-lead-full-name"
-                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/55 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
-                            disabled={isSubmitting}
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem required>
-                        <FormLabel className="text-base font-medium text-[#1A1228]">Work Email *</FormLabel>
-                        <FormControl>
-                          <Input 
-                            type="email" 
-                            placeholder="john@company.com" 
-                            data-testid="input-lead-email"
-                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/55 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
-                            disabled={isSubmitting}
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="phone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-base font-medium text-[#1A1228]">Phone (Optional)</FormLabel>
-                        <FormControl>
-                          <Input 
-                            type="tel" 
-                            placeholder="(555) 123-4567" 
-                            data-testid="input-lead-phone"
-                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/55 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
-                            disabled={isSubmitting}
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="company"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-base font-medium text-[#1A1228]">Company (Optional)</FormLabel>
-                        <FormControl>
-                          <Input 
-                            placeholder="Acme Corp" 
-                            data-testid="input-lead-company"
-                            className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/55 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
-                            disabled={isSubmitting}
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <Button 
-                  type="submit"
-                  size="lg"
-                  data-testid="button-lead-submit"
-                  disabled={isSubmitting}
-                  className="h-14 w-full justify-center gap-2 border-0 !bg-[#D3126A] text-lg font-semibold text-white shadow-none transition-colors hover:!bg-[#e01874] hover:shadow-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="h-5 w-5 animate-spin" />
-                      Submitting...
-                    </>
-                  ) : (
-                    <>
-                      {CTA.primary}
-                      <ArrowRight className="w-5 h-5" />
-                    </>
-                  )}
-                </Button>
-
-                <div className="flex flex-wrap items-center justify-center gap-6 pt-4">
-                  {benefits.map((benefit) => (
-                    <div key={benefit.text} className="flex items-center gap-2">
-                      <benefit.icon className="w-4 h-4 text-[#D3126A]" />
-                      <span className="text-base text-black/60">{benefit.text}</span>
-                    </div>
-                  ))}
-                </div>
-              </form>
-            </Form>
-          </motion.div>
-
-          <motion.p 
-            className="mt-6 text-center text-base text-black/70"
-            initial={prefersReducedMotion ? false : { opacity: 0.55 }}
-            whileInView={{ opacity: 1 }}
-            viewport={revealViewport}
-            transition={revealTransition}
-          >
-            Prefer to call?{" "}
-            <a 
-              href={PRIMARY_PHONE.telHref}
-              data-testid="link-lead-phone"
-              className="text-[#D3126A] hover:text-[#f0187a] font-medium transition-colors"
+      <div className="mx-auto max-w-[var(--de-canvas)] px-3 sm:px-4 lg:px-6">
+        <div className="de-paper-island relative px-6 py-10 sm:px-10 sm:py-14 md:px-12 md:py-16">
+          <div className="max-w-4xl mx-auto relative z-10">
+            <motion.div 
+              className="text-center mb-10"
+              initial={prefersReducedMotion ? false : revealInitial}
+              whileInView={revealInView}
+              viewport={revealViewport}
+              transition={revealTransition}
             >
-              {PRIMARY_PHONE.display}
-            </a>
-          </motion.p>
+              <p className="mb-3 text-base font-semibold uppercase tracking-[0.2em] text-[#D3126A]">
+                Cyber Risk Assessment
+              </p>
+              <h2 className="mb-4 font-heading text-3xl font-semibold leading-tight tracking-[-0.02em] text-[#1A1228] md:text-4xl lg:text-5xl">
+                Get Your Free Security Assessment
+              </h2>
+              <p className="mx-auto max-w-2xl text-lg leading-relaxed text-black/60 md:text-xl">
+                Discover vulnerabilities before attackers do. Our experts will analyze your security posture and provide actionable recommendations.
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="de-paper-lift-lg rounded-2xl p-8 md:p-10"
+              initial={prefersReducedMotion ? false : revealInitial}
+              whileInView={revealInView}
+              viewport={revealViewport}
+              transition={revealTransition}
+            >
+              <div className="mb-6 grid grid-cols-1 gap-x-6 gap-y-2.5 rounded-xl border border-[var(--de-paper-hairline)] bg-white px-4 py-3.5 sm:grid-cols-3">
+                <div className="flex items-baseline gap-2.5 text-[15px] font-semibold leading-snug text-[#1A1228]">
+                  <span className="mt-[0.55em] h-px w-2.5 shrink-0 bg-[#D3126A]" aria-hidden="true" />
+                  <span>Independent findings</span>
+                </div>
+                <div className="flex items-baseline gap-2.5 text-[15px] font-semibold leading-snug text-[#1A1228]">
+                  <span className="mt-[0.55em] h-px w-2.5 shrink-0 bg-[#D3126A]" aria-hidden="true" />
+                  <span>No switch required</span>
+                </div>
+                <div className="flex items-baseline gap-2.5 text-[15px] font-semibold leading-snug text-[#1A1228]">
+                  <span className="mt-[0.55em] h-px w-2.5 shrink-0 bg-[#D3126A]" aria-hidden="true" />
+                  <span>Arizona-based experts</span>
+                </div>
+              </div>
+
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="fullName"
+                      render={({ field }) => (
+                        <FormItem required>
+                          <FormLabel className="text-base font-medium text-[#1A1228]">Full Name *</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="John Smith" 
+                              data-testid="input-lead-full-name"
+                              className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/55 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
+                              disabled={isSubmitting}
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem required>
+                          <FormLabel className="text-base font-medium text-[#1A1228]">Work Email *</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="email" 
+                              placeholder="john@company.com" 
+                              data-testid="input-lead-email"
+                              className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/55 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
+                              disabled={isSubmitting}
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-base font-medium text-[#1A1228]">Phone (Optional)</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="tel" 
+                              placeholder="(555) 123-4567" 
+                              data-testid="input-lead-phone"
+                              className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/55 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
+                              disabled={isSubmitting}
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="company"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-base font-medium text-[#1A1228]">Company (Optional)</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Acme Corp" 
+                              data-testid="input-lead-company"
+                              className="h-12 border-[var(--de-paper-hairline)] bg-white text-base text-[#1A1228] placeholder:text-black/55 focus-visible:border-[#D3126A] focus-visible:ring-2 focus-visible:ring-[#D3126A]/40"
+                              disabled={isSubmitting}
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <Button 
+                    type="submit"
+                    size="lg"
+                    data-testid="button-lead-submit"
+                    disabled={isSubmitting}
+                    className="h-14 w-full justify-center gap-2 border-0 !bg-[#D3126A] text-lg font-semibold text-white shadow-none transition-colors hover:!bg-[#e01874] hover:shadow-none focus-visible:ring-2 focus-visible:ring-[#D3126A]/70"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      <>
+                        {CTA.primary}
+                        <ArrowRight className="w-5 h-5" />
+                      </>
+                    )}
+                  </Button>
+
+                  <div className="flex flex-wrap items-center justify-center gap-6 pt-4">
+                    {benefits.map((benefit) => (
+                      <div key={benefit.text} className="flex items-center gap-2">
+                        <benefit.icon className="w-4 h-4 text-[#D3126A]" />
+                        <span className="text-base text-black/60">{benefit.text}</span>
+                      </div>
+                    ))}
+                  </div>
+                </form>
+              </Form>
+            </motion.div>
+
+            <motion.p 
+              className="mt-6 text-center text-base text-black/70"
+              initial={prefersReducedMotion ? false : { opacity: 0.55 }}
+              whileInView={{ opacity: 1 }}
+              viewport={revealViewport}
+              transition={revealTransition}
+            >
+              Prefer to call?{" "}
+              <a 
+                href={PRIMARY_PHONE.telHref}
+                data-testid="link-lead-phone"
+                className="text-[#D3126A] hover:text-[#f0187a] font-medium transition-colors"
+              >
+                {PRIMARY_PHONE.display}
+              </a>
+            </motion.p>
+          </div>
         </div>
       </div>
     </section>
