@@ -5,36 +5,15 @@ import { describe, expect, it } from "vitest";
 
 const currentDir = dirname(fileURLToPath(import.meta.url));
 
-const evidenceFrameSrc = readFileSync(
-  resolve(currentDir, "EvidenceFrame.tsx"),
-  "utf8"
-);
-const statusTokenSrc = readFileSync(
-  resolve(currentDir, "StatusToken.tsx"),
-  "utf8"
-);
+const evidenceFrameSrc = readFileSync(resolve(currentDir, "EvidenceFrame.tsx"), "utf8");
+const statusTokenSrc = readFileSync(resolve(currentDir, "StatusToken.tsx"), "utf8");
 const proofChipSrc = readFileSync(resolve(currentDir, "ProofChip.tsx"), "utf8");
 const hudFrameSrc = readFileSync(resolve(currentDir, "HUDFrame.tsx"), "utf8");
-const incidentFlowSrc = readFileSync(
-  resolve(currentDir, "IncidentFlow.tsx"),
-  "utf8"
-);
-const diagramPrimitivesSrc = readFileSync(
-  resolve(currentDir, "DiagramPrimitives.tsx"),
-  "utf8"
-);
-const assessmentReportSrc = readFileSync(
-  resolve(currentDir, "AssessmentReportSample.tsx"),
-  "utf8"
-);
-const protectionDeckSrc = readFileSync(
-  resolve(currentDir, "../visual/ProtectionCommandDeck.tsx"),
-  "utf8"
-);
-const ecosystemDiagramSrc = readFileSync(
-  resolve(currentDir, "../visual/ProActiveEcosystemDiagram.tsx"),
-  "utf8"
-);
+const incidentFlowSrc = readFileSync(resolve(currentDir, "IncidentFlow.tsx"), "utf8");
+const diagramPrimitivesSrc = readFileSync(resolve(currentDir, "DiagramPrimitives.tsx"), "utf8");
+const assessmentReportSrc = readFileSync(resolve(currentDir, "AssessmentReportSample.tsx"), "utf8");
+const protectionDeckSrc = readFileSync(resolve(currentDir, "../visual/ProtectionCommandDeck.tsx"), "utf8");
+const ecosystemDiagramSrc = readFileSync(resolve(currentDir, "../visual/ProActiveEcosystemDiagram.tsx"), "utf8");
 
 describe("DE Visual System v2 Primitives Integrity", () => {
   it("enforces truthfulness classifications in EvidenceFrame", () => {
@@ -45,10 +24,10 @@ describe("DE Visual System v2 Primitives Integrity", () => {
     expect(evidenceFrameSrc).toMatch(/ILLUSTRATIVE/);
   });
 
-  it("enforces emerald-only status tokens for live/verified health", () => {
+  it("keeps health-state semantics separate from brand/action color", () => {
     expect(statusTokenSrc).toMatch(/active:/);
     expect(statusTokenSrc).toMatch(/emerald-400/);
-    expect(statusTokenSrc).toMatch(/#D3126A/); // informational brand
+    expect(statusTokenSrc).toMatch(/#D3126A/);
   });
 
   it("provides factual metrics and Lucide icon support in ProofChip", () => {
@@ -57,16 +36,18 @@ describe("DE Visual System v2 Primitives Integrity", () => {
     expect(proofChipSrc).toMatch(/variant\?: "dark" \| "paper"/);
   });
 
-  it("provides precision corner marks and technical ID stamping in HUDFrame", () => {
-    expect(hudFrameSrc).toMatch(/export const HUDFrame/);
+  it("scopes HUDFrame to precision framing with DE magenta corner marks", () => {
+    expect(hudFrameSrc).toMatch(/Precision framing for evidence, diagrams, and operational UI only/);
     expect(hudFrameSrc).toMatch(/technicalId\?:/);
-    expect(hudFrameSrc).toMatch(/border-t-2 border-l-2 border-\[#D3126A\]/);
+    expect(hudFrameSrc).toMatch(/border-\[#D3126A\]/);
   });
 
-  it("marks IncidentFlow explicitly as an EXAMPLE classification", () => {
+  it("marks IncidentFlow explicitly as an EXAMPLE and disclaims live telemetry or SLA claims", () => {
     expect(incidentFlowSrc).toMatch(/classification="EXAMPLE"/);
-    expect(incidentFlowSrc).toMatch(/ProActive Incident Containment Architecture/);
-    expect(incidentFlowSrc).toMatch(/OPERATIONAL TIMELINE & CONTAINMENT GATES/);
+    expect(incidentFlowSrc).toMatch(/Example incident response flow/);
+    expect(incidentFlowSrc).toMatch(/not live telemetry/);
+    expect(incidentFlowSrc).toMatch(/not .*measured SLA|measured SLA/);
+    expect(incidentFlowSrc).not.toMatch(/Neutralized in \d+m/i);
   });
 
   it("exports DiagramPrimitives including SecurityBoundary, DiagramNode, and ControlGate", () => {
@@ -75,10 +56,13 @@ describe("DE Visual System v2 Primitives Integrity", () => {
     expect(diagramPrimitivesSrc).toMatch(/export const ControlGate/);
   });
 
-  it("marks AssessmentReportSample explicitly as SANITIZED_REAL", () => {
-    expect(assessmentReportSrc).toMatch(/classification="SANITIZED_REAL"/);
-    expect(assessmentReportSrc).toMatch(/Sanitized Cyber Risk & Infrastructure Assessment Excerpt/);
-    expect(assessmentReportSrc).toMatch(/30-DAY REMEDIATION ROADMAP/);
+  it("keeps AssessmentReportSample explicitly ILLUSTRATIVE until approved real evidence exists", () => {
+    expect(assessmentReportSrc).toMatch(/classification="ILLUSTRATIVE"/);
+    expect(assessmentReportSrc).toMatch(/Illustrative Cyber Risk Assessment excerpt/);
+    expect(assessmentReportSrc).toMatch(/not a real client report/);
+    expect(assessmentReportSrc).not.toMatch(/classification="SANITIZED_REAL"/);
+    expect(assessmentReportSrc).not.toMatch(/35-user medical practice/i);
+    expect(assessmentReportSrc).not.toMatch(/Delivered: Day 7/i);
   });
 
   it("implements 6 domains in ProtectionCommandDeck with explicit ILLUSTRATIVE classification", () => {
@@ -91,9 +75,9 @@ describe("DE Visual System v2 Primitives Integrity", () => {
     expect(protectionDeckSrc).toMatch(/compliance/);
   });
 
-  it("implements 4-stage lifecycle in ProActiveEcosystemDiagram", () => {
+  it("implements 4-stage lifecycle in ProActiveEcosystemDiagram without claiming live telemetry", () => {
     expect(ecosystemDiagramSrc).toMatch(/classification="ILLUSTRATIVE"/);
-    expect(ecosystemDiagramSrc).toMatch(/The ProActive Ecosystem Operating Architecture/);
-    expect(ecosystemDiagramSrc).toMatch(/Discovery & Environmental Assessment/);
+    expect(ecosystemDiagramSrc).toMatch(/ProActive Ecosystem/);
+    expect(ecosystemDiagramSrc).not.toMatch(/classification="LIVE"/);
   });
 });
