@@ -13,8 +13,6 @@ module.exports = {
         sans: ['"Inter"', 'system-ui', 'sans-serif'],
         body: ['"Inter"', 'system-ui', 'sans-serif'],
         mono: ['"Oxanium"', '"JetBrains Mono"', 'monospace'],
-        // Legacy support
-        poppins: ['"Poppins"', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
