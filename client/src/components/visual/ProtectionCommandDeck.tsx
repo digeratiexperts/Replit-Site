@@ -1,244 +1,214 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
-  Shield,
+  CheckCircle2,
+  Eye,
+  FileCheck,
+  HardDrive,
   Lock,
   Mail,
-  HardDrive,
+  Shield,
   Wifi,
-  FileCheck,
-  CheckCircle2,
-  Server,
-  Smartphone,
-  Eye,
-  AlertCircle,
-  Clock,
-  UserCheck,
   type LucideIcon,
 } from "lucide-react";
-import { SecurityBoundary, DiagramNode, ControlGate } from "../evidence/DiagramPrimitives";
+import { ControlGate, DiagramNode, SecurityBoundary } from "../evidence/DiagramPrimitives";
 import { EvidenceFrame } from "../evidence/EvidenceFrame";
-import { StatusToken } from "../evidence/StatusToken";
 
 export interface ProtectionDomain {
   id: string;
   name: string;
   shortName: string;
   icon: LucideIcon;
-  tagline: string;
-  risksAddressed: string[];
-  architectureNodes: {
+  purpose: string;
+  commonQuestions: string[];
+  architecture: {
     boundaryName: string;
-    nodes: { title: string; subtitle: string; metrics: string }[];
+    nodes: { title: string; subtitle: string; detail: string }[];
     gate: { label: string; policy: string };
   };
   operatingModel: {
-    protectedScope: string[];
-    deManagement: string[];
-    monitoredSignals: string[];
-    clientDeliverables: string[];
+    scopeExamples: string[];
+    managementExamples: string[];
+    signalExamples: string[];
+    deliverableExamples: string[];
   };
 }
 
 export const protectionDomains: ProtectionDomain[] = [
   {
     id: "identity",
-    name: "Identity & Access Control",
+    name: "Identity & Access",
     shortName: "Identity",
     icon: Lock,
-    tagline: "Your identity perimeter is the primary target. We enforce zero-trust access and session telemetry.",
-    risksAddressed: [
-      "Credential stuffing & brute force",
-      "M365 session cookie theft & replay",
-      "Offboarded accounts remaining active",
-    ],
-    architectureNodes: {
-      boundaryName: "Identity Perimeter (Entra ID / M365)",
+    purpose: "Control who can access business systems, how access is verified, and how accounts are changed or removed over time.",
+    commonQuestions: ["Is MFA appropriate and enforced where required?", "Are privileged accounts separated and reviewed?", "Does offboarding remove access consistently?"],
+    architecture: {
+      boundaryName: "Identity boundary",
       nodes: [
-        { title: "User & Admin Accounts", subtitle: "FIDO2 & Number-Match MFA", metrics: "100% MFA Enforced" },
-        { title: "Conditional Access Engine", subtitle: "Geo-IP & Device Health Rules", metrics: "Real-Time Risk Scoring" },
+        { title: "Users & administrators", subtitle: "Accounts, roles, authentication", detail: "Access inventory" },
+        { title: "Access policy", subtitle: "Authentication and device/context rules", detail: "Policy layer" },
       ],
-      gate: { label: "Session Gate", policy: "Revoke token on impossible travel or anomalous user risk" },
+      gate: { label: "Access decision", policy: "Apply the approved authentication and access rules for the environment" },
     },
     operatingModel: {
-      protectedScope: ["M365 accounts", "Google Workspace", "Admin privileged credentials", "SSO applications"],
-      deManagement: ["Hardened Conditional Access rules", "MFA enforcement", "Lifecycle onboarding/offboarding"],
-      monitoredSignals: ["Impossible travel alerts", "Anomalous OAuth app grants", "Password spray attempts"],
-      clientDeliverables: ["Quarterly identity audit", "Active account roster", "Privileged access report"],
+      scopeExamples: ["User accounts", "Admin access", "SSO applications", "Joiner/mover/leaver workflow"],
+      managementExamples: ["Access-policy review", "MFA configuration", "Onboarding/offboarding support"],
+      signalExamples: ["Risky sign-ins", "Unexpected access changes", "Privilege changes"],
+      deliverableExamples: ["Account review", "Access findings", "Remediation roadmap"],
     },
   },
   {
     id: "endpoint",
-    name: "Endpoint Detection & Isolation",
+    name: "Endpoint Protection",
     shortName: "Endpoint",
     icon: Shield,
-    tagline: "Behavioral AI monitoring and 24/7 human SOC analysts isolating compromised workstations within minutes.",
-    risksAddressed: [
-      "Ransomware execution & lateral spread",
-      "Fileless malware & memory injections",
-      "Unpatched OS and browser vulnerabilities",
-    ],
-    architectureNodes: {
-      boundaryName: "Workstation & Server Fleet",
+    purpose: "Keep managed devices visible, maintained, and protected with controls matched to device ownership, user role, and business risk.",
+    commonQuestions: ["Which devices are actually in scope?", "Are security and patch states visible?", "What happens when a device needs containment or rebuild?"],
+    architecture: {
+      boundaryName: "Managed device boundary",
       nodes: [
-        { title: "Behavioral EDR Agent", subtitle: "Kernel-level anomaly tracking", metrics: "24/7 Active Heuristics" },
-        { title: "Automated Host Isolation", subtitle: "Instant network quarantine", metrics: "< 1s Trigger Velocity" },
+        { title: "Workstations & servers", subtitle: "Company-managed devices in scope", detail: "Device inventory" },
+        { title: "Security controls", subtitle: "Endpoint, patch, configuration, and policy tooling", detail: "Control layer" },
       ],
-      gate: { label: "Process Gate", policy: "Terminate untrusted child process & sever network stack" },
+      gate: { label: "Device decision", policy: "Use the deployed controls and authorized procedure appropriate to the event" },
     },
     operatingModel: {
-      protectedScope: ["Windows & Mac laptops", "On-prem servers", "Virtual machines", "Executive devices"],
-      deManagement: ["EDR sensor deployment", "Rapid patch cadence", "Vulnerability management"],
-      monitoredSignals: ["Process injection attempts", "PowerShell anomalies", "Unauthorized persistence mechanisms"],
-      clientDeliverables: ["Executive threat containment logs", "Patch status metrics", "Fleet health dashboard"],
+      scopeExamples: ["Laptops/desktops", "Servers where contracted", "Device configuration", "Patch posture"],
+      managementExamples: ["Agent deployment", "Patch/configuration management", "Device lifecycle support"],
+      signalExamples: ["Security alerts", "Patch drift", "Device-health exceptions"],
+      deliverableExamples: ["Device inventory", "Posture findings", "Remediation actions"],
     },
   },
   {
     id: "email",
-    name: "Email & Collaboration Defense",
+    name: "Email & Collaboration",
     shortName: "Email",
     icon: Mail,
-    tagline: "In-line inspection detonating malicious attachments, QR quishing, and executive impersonation attempts.",
-    risksAddressed: [
-      "Business Email Compromise (BEC)",
-      "QR code quishing bypassing spam filters",
-      "Secret forwarding & exfiltration rules",
-    ],
-    architectureNodes: {
-      boundaryName: "Inbound & Outbound Mail Stream",
+    purpose: "Reduce email-driven risk while keeping authentication, filtering, user behavior, and account settings understandable and supportable.",
+    commonQuestions: ["Are domain-authentication records configured correctly?", "Are risky mailbox rules or forwarding visible?", "How are users trained and supported after suspicious messages?"],
+    architecture: {
+      boundaryName: "Messaging boundary",
       nodes: [
-        { title: "Deep Content Detonation", subtitle: "Cloud sandbox link & QR inspection", metrics: "Sub-Second Latency" },
-        { title: "Tenant Forwarding Auditor", subtitle: "Anti-exfiltration scanning", metrics: "Continuous Watch" },
+        { title: "Mail & collaboration", subtitle: "Tenant, domains, users, and shared resources", detail: "Service scope" },
+        { title: "Protection layer", subtitle: "Authentication, filtering, policy, and awareness controls", detail: "Control layer" },
       ],
-      gate: { label: "Mail Gate", policy: "Quarantine weaponized payload before delivery & purge variants" },
+      gate: { label: "Message decision", policy: "Apply the mail-security controls and investigation path available in the environment" },
     },
     operatingModel: {
-      protectedScope: ["All company inboxes", "Shared distribution lists", "Microsoft Teams chat", "SharePoint links"],
-      deManagement: ["SPF/DKIM/DMARC enforcement", "Mail filter tuning", "Phishing simulation training"],
-      monitoredSignals: ["Lookalike domain spoofing", "Hidden inbox rules", "High-risk attachment execution"],
-      clientDeliverables: ["Phishing susceptibility reports", "Mailbox hygiene score", "Quarantine summary"],
+      scopeExamples: ["Mailboxes", "Domain authentication", "Shared resources", "User awareness"],
+      managementExamples: ["Configuration review", "Filter/policy tuning", "Awareness support where included"],
+      signalExamples: ["Suspicious messages", "Forwarding changes", "Account-related alerts"],
+      deliverableExamples: ["Mail posture findings", "Configuration actions", "User/security follow-up"],
     },
   },
   {
     id: "network",
-    name: "Network & Zero Trust Perimeter",
+    name: "Network & Connectivity",
     shortName: "Network",
     icon: Wifi,
-    tagline: "Segmented local networks, enterprise firewalls, and encrypted Zero Trust remote access.",
-    risksAddressed: [
-      "Rogue IoT devices on internal LAN",
-      "Unencrypted guest Wi-Fi exposure",
-      "Lateral movement between departments",
-    ],
-    architectureNodes: {
-      boundaryName: "Corporate Office & Remote Edge",
+    purpose: "Document and manage the business network so internet edge, switching, Wi-Fi, segmentation, and remote access match the operating model.",
+    commonQuestions: ["Who owns and administers the network equipment?", "Are guest/IoT/business networks separated appropriately?", "Is the configuration documented and recoverable?"],
+    architecture: {
+      boundaryName: "Network boundary",
       nodes: [
-        { title: "Managed Next-Gen Firewall", subtitle: "Deep packet inspection & IPS", metrics: "Zero Trust Encrypted" },
-        { title: "VLAN Segmentation", subtitle: "Isolated Guest, IoT, & Core", metrics: "Strict Layer-3 ACLs" },
+        { title: "Internet edge", subtitle: "Firewall/router and provider handoff", detail: "Edge layer" },
+        { title: "LAN & wireless", subtitle: "Switching, Wi-Fi, segmentation, and devices", detail: "Internal layer" },
       ],
-      gate: { label: "Network Gate", policy: "Block unauthorized inter-VLAN communications by default" },
+      gate: { label: "Traffic decision", policy: "Apply documented network policy and segmentation appropriate to the client environment" },
     },
     operatingModel: {
-      protectedScope: ["Firewalls", "Managed switches", "Corporate & guest Wi-Fi", "Remote VPN endpoints"],
-      deManagement: ["Firmware updates", "Port security policies", "Bandwidth & QoS tuning"],
-      monitoredSignals: ["Port scans", "Unusual outbound data bursts", "DNS tunnel queries"],
-      clientDeliverables: ["Network topology map", "Firewall change log", "Bandwidth health stats"],
+      scopeExamples: ["Firewall/router", "Switching", "Business/guest Wi-Fi", "Remote-access configuration"],
+      managementExamples: ["Configuration management", "Firmware/change planning", "Network documentation"],
+      signalExamples: ["Availability alerts", "Configuration exceptions", "Unexpected network behavior"],
+      deliverableExamples: ["Topology/documentation", "Risk findings", "Change roadmap"],
     },
   },
   {
     id: "recovery",
-    name: "Data Resilience & Verified BCDR",
+    name: "Data & Recovery",
     shortName: "Recovery",
     icon: HardDrive,
-    tagline: "Air-gapped immutable copies and scheduled restore drills to guarantee business continuity.",
-    risksAddressed: [
-      "Ransomware backup encryption attacks",
-      "Catastrophic hardware / server failure",
-      "Accidental or malicious database deletion",
-    ],
-    architectureNodes: {
-      boundaryName: "Immutable Backup Architecture",
+    purpose: "Make backup and recovery an evidenced operating practice: define what is protected, who owns recovery, and how restore confidence is validated.",
+    commonQuestions: ["What data and systems are actually protected?", "Are retention and separation appropriate to the risk?", "Has the required recovery path been tested and documented?"],
+    architecture: {
+      boundaryName: "Recovery boundary",
       nodes: [
-        { title: "Local Flash Appliance", subtitle: "Instant local virtualization", metrics: "Hourly Snapshots" },
-        { title: "Air-Gapped Cloud Vault", subtitle: "Immutable WORM storage", metrics: "RTO < 4 Hours" },
+        { title: "Protected workloads", subtitle: "Systems and data explicitly in scope", detail: "Protection scope" },
+        { title: "Backup & recovery controls", subtitle: "Retention, separation, monitoring, and restore workflow", detail: "Recovery layer" },
       ],
-      gate: { label: "Integrity Gate", policy: "Verify checksum integrity & run automated sandbox spin-up" },
+      gate: { label: "Recovery decision", policy: "Use the approved restore path and validation procedure for the protected workload" },
     },
     operatingModel: {
-      protectedScope: ["Servers & VMs", "M365 mail & OneDrive", "SaaS databases", "Critical workstations"],
-      deManagement: ["Backup schedule optimization", "Immutable storage tiering", "Quarterly restore tests"],
-      monitoredSignals: ["Backup job failures", "Storage consumption spikes", "Ransomware encryption attempts"],
-      clientDeliverables: ["Quarterly restore drill reports", "Documented RTO/RPO SLAs", "DR recovery runbook"],
+      scopeExamples: ["Selected endpoints", "Servers/VMs where included", "Cloud/SaaS data where contracted", "Recovery documentation"],
+      managementExamples: ["Backup monitoring", "Retention/configuration review", "Restore validation where included"],
+      signalExamples: ["Job failures", "Capacity/retention exceptions", "Restore-test findings"],
+      deliverableExamples: ["Backup scope", "Restore evidence", "Recovery roadmap"],
     },
   },
   {
     id: "compliance",
-    name: "Governance, Risk & Compliance",
+    name: "Governance & Compliance Support",
     shortName: "Compliance",
     icon: FileCheck,
-    tagline: "Aligning your infrastructure to NIST CSF, HIPAA, and Cyber Insurance underwriting mandates.",
-    risksAddressed: [
-      "Failed Cyber Insurance renewal audits",
-      "HIPAA regulatory non-compliance fines",
-      "Unmanaged vendor & supply-chain risk",
-    ],
-    architectureNodes: {
-      boundaryName: "Governance & Evidence Engine",
+    purpose: "Translate technical posture into evidence, priorities, and framework-oriented reporting that helps the business manage risk and third-party requirements.",
+    commonQuestions: ["Which requirements actually apply to this organization?", "What technical evidence can support questionnaires or reviews?", "Which gaps belong on the roadmap rather than being hidden?"],
+    architecture: {
+      boundaryName: "Governance boundary",
       nodes: [
-        { title: "Continuous Risk Scanner", subtitle: "Control mapping against NIST CSF", metrics: "Automated Evidence" },
-        { title: "Executive IT Strategy (vCIO)", subtitle: "Quarterly alignment & budgeting", metrics: "Clear Roadmap" },
+        { title: "Requirements & controls", subtitle: "Framework/customer/insurance requirements in scope", detail: "Requirement layer" },
+        { title: "Evidence & roadmap", subtitle: "Findings, documentation, owners, and priorities", detail: "Evidence layer" },
       ],
-      gate: { label: "Compliance Gate", policy: "Track non-compliant assets & trigger remediation workflows" },
+      gate: { label: "Evidence decision", policy: "Map verified technical evidence to the requirement without claiming certification that DE does not hold" },
     },
     operatingModel: {
-      protectedScope: ["All technical controls", "Security policies", "Vendor questionnaires", "Employee roster"],
-      deManagement: ["Cyber insurance questionnaire support", "Audit evidence collation", "Risk register updates"],
-      monitoredSignals: ["Control drift alerts", "Unenforced policy exceptions", "Overdue access reviews"],
-      clientDeliverables: ["Executive QBR packs", "Cyber insurance readiness packet", "Compliance matrix"],
+      scopeExamples: ["Control evidence", "Questionnaire support", "Risk findings", "Roadmap ownership"],
+      managementExamples: ["Evidence collation", "Control mapping", "Review support where contracted"],
+      signalExamples: ["Control drift", "Open findings", "Overdue remediation items"],
+      deliverableExamples: ["Risk summary", "Evidence package", "Roadmap/QBR inputs"],
     },
   },
 ];
 
 export const ProtectionCommandDeck: React.FC = () => {
-  const [selectedId, setSelectedId] = useState<string>("identity");
-  const activeDomain = protectionDomains.find((d) => d.id === selectedId) || protectionDomains[0];
+  const [selectedId, setSelectedId] = useState("identity");
+  const activeDomain = protectionDomains.find((domain) => domain.id === selectedId) ?? protectionDomains[0];
   const DomainIcon = activeDomain.icon;
 
   return (
     <EvidenceFrame
       classification="ILLUSTRATIVE"
-      title="ProActive Six Domains Security Architecture"
-      subtitle="How Digerati Experts coordinates technical controls, active telemetry, and engineering operations across your entire business."
-      status="active"
-      statusLabel="UNIFIED ARCHITECTURE"
-      sourceNote="Digerati Experts Security Engineering Specification v2"
+      title="Six-domain protection model"
+      subtitle="Explore how DE thinks about identity, endpoints, email, network, recovery, and compliance support without implying every client receives the same controls or tooling."
+      status="informational"
+      statusLabel="INTERACTIVE MODEL"
+      sourceNote="Illustrative architecture. Exact scope, controls, monitoring, deliverables, vendors, and cadence depend on the selected operating model and client environment."
       variant="dark"
       className="w-full"
     >
-      {/* Domain Navigation Tabs */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-white/10 pb-4">
+      <div className="flex flex-wrap items-center gap-2 border-b border-de-hairline pb-4">
         {protectionDomains.map((domain) => {
           const isSelected = domain.id === selectedId;
           const Icon = domain.icon;
           return (
             <button
               key={domain.id}
+              type="button"
               onClick={() => setSelectedId(domain.id)}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-lg font-mono text-xs font-semibold transition-all ${
+              aria-pressed={isSelected}
+              className={`flex min-h-11 items-center gap-2 rounded-lg border px-3.5 py-2 font-mono text-xs font-semibold transition-colors ${
                 isSelected
-                  ? "bg-[#D3126A] text-white shadow-md shadow-[#D3126A]/30"
-                  : "bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
+                  ? "border-[#D3126A] bg-[#D3126A] text-white"
+                  : "border-de-hairline bg-de-bg text-white/70 hover:border-white/20 hover:text-white"
               }`}
               data-testid={`domain-tab-${domain.id}`}
             >
-              <Icon className="h-4 w-4 shrink-0" />
+              <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
               <span>{domain.shortName}</span>
             </button>
           );
         })}
       </div>
 
-      {/* 3-Column Command Deck Content */}
       <AnimatePresence mode="wait">
         <motion.div
           key={activeDomain.id}
@@ -246,108 +216,82 @@ export const ProtectionCommandDeck: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.2 }}
-          className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6"
+          className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-12"
         >
-          {/* Column 1: Purpose & Risks (3 cols) */}
-          <div className="lg:col-span-4 space-y-4">
+          <div className="space-y-4 lg:col-span-4">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-black/40 text-[#F04C97]">
-                <DomainIcon className="h-5 w-5" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-de-hairline bg-de-bg text-[#F04C97]">
+                <DomainIcon className="h-5 w-5" aria-hidden="true" />
               </div>
-              <h3 className="text-lg font-bold text-white font-heading">{activeDomain.name}</h3>
+              <h3 className="font-heading text-lg font-bold text-white">{activeDomain.name}</h3>
             </div>
-            <p className="text-xs md:text-sm text-white/70 leading-relaxed">
-              {activeDomain.tagline}
-            </p>
+            <p className="text-sm leading-relaxed text-white/70">{activeDomain.purpose}</p>
 
-            <div className="rounded-lg border border-white/10 bg-black/40 p-3.5">
-              <p className="font-mono text-[10px] uppercase tracking-wider text-[#F04C97] font-semibold mb-2">
-                Primary Threat Vectors Mitigated
-              </p>
-              <ul className="space-y-1.5 text-xs text-white/80 font-sans">
-                {activeDomain.risksAddressed.map((risk, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <span className="text-[#D3126A] mt-0.5">•</span>
-                    <span>{risk}</span>
+            <div className="rounded-lg border border-de-hairline bg-de-bg p-3.5">
+              <p className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-wider text-[#F04C97]">Questions the assessment should answer</p>
+              <ul className="space-y-2 text-xs leading-relaxed text-white/80">
+                {activeDomain.commonQuestions.map((question) => (
+                  <li key={question} className="flex items-start gap-2">
+                    <span className="mt-1 text-[#D3126A]" aria-hidden="true">•</span>
+                    <span>{question}</span>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
 
-          {/* Column 2: Architectural Defense Diagram (4 cols) */}
-          <div className="lg:col-span-4 space-y-3">
-            <SecurityBoundary
-              label={activeDomain.architectureNodes.boundaryName}
-              variant="perimeter"
-              className="h-full flex flex-col justify-between"
-            >
-              <div className="space-y-2.5 mb-3">
-                {activeDomain.architectureNodes.nodes.map((node, i) => (
+          <div className="space-y-3 lg:col-span-4">
+            <SecurityBoundary label={activeDomain.architecture.boundaryName} variant="perimeter" className="h-full">
+              <div className="mb-3 space-y-2.5">
+                {activeDomain.architecture.nodes.map((node) => (
                   <DiagramNode
-                    key={i}
+                    key={node.title}
                     title={node.title}
                     subtitle={node.subtitle}
-                    metrics={node.metrics}
+                    metrics={node.detail}
                     icon={DomainIcon}
-                    status="healthy"
+                    status="monitored"
                   />
                 ))}
               </div>
-              <ControlGate
-                label={activeDomain.architectureNodes.gate.label}
-                policy={activeDomain.architectureNodes.gate.policy}
-                enforced={true}
-              />
+              <ControlGate label={activeDomain.architecture.gate.label} policy={activeDomain.architecture.gate.policy} enforced={false} />
             </SecurityBoundary>
           </div>
 
-          {/* Column 3: DE Operating Model (4 cols) */}
-          <div className="lg:col-span-4 rounded-xl border border-white/10 bg-[#151217]/70 p-4 space-y-4">
+          <div className="space-y-4 rounded-xl border border-de-hairline bg-de-raised p-4 lg:col-span-4">
             <div>
-              <p className="font-mono text-[11px] font-bold text-white uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                <CheckCircle2 className="h-3.5 w-3.5 text-[#F04C97]" />
-                What DE Manages & Protects
+              <p className="mb-2 flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-white">
+                <CheckCircle2 className="h-3.5 w-3.5 text-[#F04C97]" aria-hidden="true" />
+                Representative scope
               </p>
               <div className="flex flex-wrap gap-1.5">
-                {activeDomain.operatingModel.protectedScope.map((item, i) => (
-                  <span
-                    key={i}
-                    className="font-mono text-[10px] px-2 py-0.5 rounded bg-white/5 border border-white/10 text-white/80"
-                  >
-                    {item}
-                  </span>
+                {activeDomain.operatingModel.scopeExamples.map((item) => (
+                  <span key={item} className="rounded border border-de-hairline bg-de-bg px-2 py-0.5 font-mono text-[10px] text-white/80">{item}</span>
                 ))}
               </div>
             </div>
 
-            <div className="border-t border-white/5 pt-3">
-              <p className="font-mono text-[11px] font-bold text-white uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                <Eye className="h-3.5 w-3.5 text-emerald-400" />
-                Continuous Monitored Telemetry
-              </p>
+            <div className="border-t border-de-hairline pt-3">
+              <p className="mb-2 font-mono text-[11px] font-bold uppercase tracking-wider text-white">Management may include</p>
               <ul className="space-y-1 text-xs text-white/70">
-                {activeDomain.operatingModel.monitoredSignals.map((sig, i) => (
-                  <li key={i} className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                    <span>{sig}</span>
-                  </li>
-                ))}
+                {activeDomain.operatingModel.managementExamples.map((item) => <li key={item}>• {item}</li>)}
               </ul>
             </div>
 
-            <div className="border-t border-white/5 pt-3">
-              <p className="font-mono text-[11px] font-bold text-white uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                <UserCheck className="h-3.5 w-3.5 text-cyan-400" />
-                Verified Client Deliverables
+            <div className="border-t border-de-hairline pt-3">
+              <p className="mb-2 flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-white">
+                <Eye className="h-3.5 w-3.5 text-[#F04C97]" aria-hidden="true" />
+                Signal examples
               </p>
               <ul className="space-y-1 text-xs text-white/70">
-                {activeDomain.operatingModel.clientDeliverables.map((del, i) => (
-                  <li key={i} className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
-                    <span>{del}</span>
-                  </li>
-                ))}
+                {activeDomain.operatingModel.signalExamples.map((item) => <li key={item}>• {item}</li>)}
+              </ul>
+            </div>
+
+            <div className="border-t border-de-hairline pt-3">
+              <p className="mb-2 font-mono text-[11px] font-bold uppercase tracking-wider text-white">Representative outputs</p>
+              <ul className="space-y-1 text-xs text-white/70">
+                {activeDomain.operatingModel.deliverableExamples.map((item) => <li key={item}>• {item}</li>)}
               </ul>
             </div>
           </div>
